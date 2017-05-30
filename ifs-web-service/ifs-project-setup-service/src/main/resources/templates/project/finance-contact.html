@@ -37,16 +37,14 @@
 
                         <div class="multiple-choice" th:each="user : ${model.organisationUsers}">
                             <input type="radio" th:field="*{financeContact}" th:value="${user.id}" th:attr="data-required-errormessage=#{validation.financecontactform.financecontact.required}" required="required" />
-                            <label data-set-section-valid="#finance-contact-section" data-clear-inputs="#name-finance-contact,#email-finance-contact" th:for="${#ids.next('financeContact')}">
+                            <label data-set-section-valid="#finance-contact-section" data-clear-inputs="#name-finance-contact,#email-finance-contact" th:for="${#ids.prev('financeContact')}">
                                 <th:block th:text="${user.name}" />
                             </label>
                         </div>
 
                         <div class="multiple-choice" th:each="user : ${model.invitedUsers}">
-                            <input type="radio" th:unless="${user == null or user.status != 'EXISTING'}" th:field="*{financeContact}" th:value="${user.id}" th:attr="data-required-errormessage=#{validation.financecontactform.financecontact.required}" required="required" />
-                            <label data-set-section-valid="#finance-contact-section" data-clear-inputs="#name-finance-contact,#email-finance-contact" th:for="${#ids.next('financeContact')}">
-                                <th:block th:text="${user.name}" />
-                            </label>
+                            <input type="radio" th:field="*{financeContact}" th:value="${user.id}" th:attr="disabled=${user.status != 'EXISTING'} ? 'disabled' : null,data-required-errormessage=#{validation.financecontactform.financecontact.required}" required="required" />
+                            <label data-set-section-valid="#finance-contact-section" data-clear-inputs="#name-finance-contact,#email-finance-contact" th:for="${#ids.prev('financeContact')}" th:text="${user.name}">Username</label>
                         </div>
 
                         <div class="multiple-choice" data-target="finance-contact-table">
