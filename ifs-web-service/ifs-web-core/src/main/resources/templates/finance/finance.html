@@ -940,7 +940,7 @@
                                    required="required"
                                    th:checked="${cost.existing == 'New'}"
                                    th:disabled="${viewmode == 'readonly'}" />
-                            <label>
+                            <label th:for="${'cost-capital_usage-'+costIdentifier+'-existing_0'}">
                                 New
                             </label>
                         </div>
@@ -953,7 +953,7 @@
                                    required="required"
                                    th:checked="${cost.existing == 'Existing'}"
                                    th:disabled="${viewmode == 'readonly'}" />
-                            <label>
+                            <label th:for="${'cost-capital_usage-'+costIdentifier+'-existing_1'}">
                                 Existing
                             </label>
                         </div>

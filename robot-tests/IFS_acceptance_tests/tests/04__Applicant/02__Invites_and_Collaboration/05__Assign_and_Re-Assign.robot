@@ -294,5 +294,4 @@ Steve smith assigns a question to the collaborator
 the user fills out the research category
     # Often those labels need double click. Thus i made a separate keyword to looks more tidy
     the user clicks the button/link    jQuery=label[for="researchCategoryChoice-33"]
-    the user clicks the button/link    jQuery=label[for="researchCategoryChoice-33"]
     the user clicks the button/link    jQuery=button:contains(Save)
