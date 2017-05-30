@@ -19,7 +19,7 @@ public class ProjectInviteBuilder extends BaseInviteBuilder<Project, ProjectInvi
         super(multiActions);
     }
 
-    public static ProjectInviteBuilder newInvite() {
+    public static ProjectInviteBuilder newProjectInvite() {
         return new ProjectInviteBuilder(emptyList()).with(uniqueIds());
     }
 

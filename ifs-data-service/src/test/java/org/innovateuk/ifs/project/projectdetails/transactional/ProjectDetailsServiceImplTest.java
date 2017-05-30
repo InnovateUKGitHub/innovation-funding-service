@@ -56,7 +56,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_P
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newInvite;
+import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newProjectInvite;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
@@ -468,7 +468,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .build();
 
 
-        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newInvite().withEmail("a@b.com").withName("A B").build());
+        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite().withEmail("a@b.com").withName("A B").build());
 
         when(projectRepositoryMock.findOne(projectId)).thenThrow(new IllegalArgumentException());
 
@@ -542,7 +542,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         when(projectEmailService.sendEmail(singletonList(to), globalArgs, ProjectDetailsServiceImpl.Notifications.INVITE_PROJECT_MANAGER)).
                 thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
 
-        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newInvite().withEmail("a@b.com").withName("A B").build());
+        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite().withEmail("a@b.com").withName("A B").build());
 
         ServiceResult<Void> result = service.inviteProjectManager(projectId, inviteResource);
 
@@ -578,7 +578,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         globalArgs.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
         when(projectEmailService.sendEmail(singletonList(to), globalArgs, ProjectDetailsServiceImpl.Notifications.INVITE_PROJECT_MANAGER)).thenReturn(serviceSuccess());
 
-        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newInvite().withEmail("a@b.com").withName("A B").build());
+        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite().withEmail("a@b.com").withName("A B").build());
 
         ServiceResult<Void> result = service.inviteProjectManager(projectId, inviteResource);
 
@@ -614,7 +614,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         globalArgs.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
         when(projectEmailService.sendEmail(singletonList(to), globalArgs, ProjectDetailsServiceImpl.Notifications.INVITE_FINANCE_CONTACT)).thenReturn(serviceSuccess());
 
-        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newInvite().withName("A B").withEmail("a@b.com").build());
+        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite().withName("A B").withEmail("a@b.com").build());
 
         ServiceResult<Void> result = service.inviteFinanceContact(projectId, inviteResource);
 
@@ -740,7 +740,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         globalArgs.put("inviteOrganisationName", "Invite Organisation 1");
         globalArgs.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + invite.getHash());
         when(projectEmailService.sendEmail(singletonList(to), globalArgs, ProjectDetailsServiceImpl.Notifications.INVITE_FINANCE_CONTACT)).thenReturn(serviceSuccess());
-        when(inviteProjectMapperMock.mapToDomain(invite)).thenReturn(newInvite().withEmail("a@b.com").withName("A B").build());
+        when(inviteProjectMapperMock.mapToDomain(invite)).thenReturn(newProjectInvite().withEmail("a@b.com").withName("A B").build());
 
         ServiceResult<Void> success = service.inviteFinanceContact(project.getId(), invite);
 
