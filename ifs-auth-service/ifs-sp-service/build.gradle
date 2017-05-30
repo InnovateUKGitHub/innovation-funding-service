@@ -21,15 +21,6 @@ def String idpEncryptionCertificateFile = "${spCertsVolume}/idp-encryption.crt"
 task prepareDockerFile(type: Copy) {
     dependsOn ':ifs-auth-service:prepareSecrets'
 
-    doFirst {
-        assert file(spProxyKeyFile).exists()
-        assert file(spProxyCertificateFile).exists()
-        assert file(spProxyCacertificateFile).exists()
-
-        assert file(idpSigningCertificateFile).exists()
-        assert file(idpEncryptionCertificateFile).exists()
-    }
-
     outputs.upToDateWhen { false }
 
     def String spProxyKey = file(spProxyKeyFile).text.trim().replace('\n', '\\n')

@@ -31,17 +31,6 @@ def String authIdpRegapiKey = project.properties['auth.idp.regapikey'] ?:"123456
 task prepareDockerFile(type: Copy) {
     dependsOn ':ifs-auth-service:prepareSecrets'
 
-    doFirst {
-        assert file(idpProxyKeyFile).exists()
-        assert file(idpProxyCertificateFile).exists()
-        assert file(idpProxyCacertificateFile).exists()
-
-        assert file(idpSigningKeyFile).exists()
-        assert file(idpSigningCertificateFile).exists()
-        assert file(idpEncryptionKeyFile).exists()
-        assert file(idpEncryptionCertificateFile).exists()
-    }
-
     outputs.upToDateWhen { false }
 
     def String idpProxyKey = file(idpProxyKeyFile).text.trim().replace('\n', '\\n')

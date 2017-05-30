@@ -140,10 +140,6 @@ function pushApplicationImages() {
 
     docker login -p ${REGISTRY_TOKEN} -e unused -u unused ${REGISTRY}
 
-   echo " "
-   echo "${REGISTRY}/${PROJECT}/data-service:${VERSION}"
-   echo ""
-
     docker push ${REGISTRY}/${PROJECT}/data-service:${VERSION}
     docker push ${REGISTRY}/${PROJECT}/project-setup-service:${VERSION}
     docker push ${REGISTRY}/${PROJECT}/project-setup-management-service:${VERSION}
@@ -169,7 +165,7 @@ function cloneConfig() {
 }
 
 function cleanUp() {
-    #rm -rf os-files-tmp
+    rm -rf os-files-tmp
     rm -rf shibboleth
 }
 
