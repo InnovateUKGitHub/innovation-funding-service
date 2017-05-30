@@ -84,33 +84,10 @@ get tomorrow
     ${tomorrow} =     Add time To Date    ${today}    1 day
     [Return]    ${tomorrow}
 
-get tomorrow full
-    ${today}=    get time
-    ${tomorrow} =    Add time To Date    ${today}    1 day    result_format=%-d %B %Y    exclude_millis=true
-    # This format is like: 4 February 2017
-    [Return]    ${tomorrow}
-
 get tomorrow day
     ${today}=    get time
     ${tomorrow} =    Add time To Date    ${today}    1 day    result_format=%d    exclude_millis=true
     [Return]    ${tomorrow}
-
-get the day after tomorrow
-    ${today}=    get time
-    ${aftertomorrow} =    Add time To Date    ${today}    2 days    result_format=%d    exclude_millis=true
-    [Return]    ${aftertomorrow}
-
-get two days after tomorrow
-    ${today}=    get time
-    ${twoaftertomorrow} =    Add time To Date    ${today}    3 days    result_format=%d    exclude_millis=true
-    [Return]    ${twoaftertomorrow}
-
-get the day after tomorrow full next year
-    ${today} =    get time
-    ${tommorow} =    Add time To Date    ${today}    2 days    result_format=%-d %B    exclude_millis=true
-    ${nextyear} =    get next year
-    ${tomorrow_nextyear} =    Catenate    ${tommorow}    ${nextyear}
-    [Return]    ${tomorrow_nextyear}
 
 get tomorrow month
     ${today}=    get time
@@ -122,10 +99,11 @@ get next month
     ${month} =  Add time To Date  ${today}    31 days    result_format=%m    exclude_millis=true
     [Return]    ${month}
 
-get tomorrow year
-    ${today}=    get time
-    ${tomorrow} =    Add time To Date    ${today}    1 day    result_format=%Y    exclude_millis=true
-    [Return]    ${tomorrow}
+get next month as word
+    ${today}=  get time
+    ${month} =  Add time To Date  ${today}    31 days    result_format=%B    exclude_millis=true
+    # This format is like June instead of 06
+    [Return]    ${month}
 
 get next year
     ${year} =    get time    year    NOW + 370d
