@@ -14,7 +14,6 @@ import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.form.builder.FormInputResourceBuilder;
 import org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
@@ -98,6 +97,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
                 .withId(organisationId).build();
         Optional<OrganisationResource> userOrganisation = Optional.of(organisationResource);
         Optional<SectionResource> section = Optional.of(parentSection);
+        Optional<Boolean> markAsCompleteEnabled = Optional.of(Boolean.FALSE);
         Model model = mock(Model.class);
         when(sectionService.getAllByCompetitionId(competition.getId())).thenReturn(allSections);
         when(sectionService.filterParentSections(allSections)).thenReturn(asList(parentSection));
@@ -106,7 +106,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
 
         allSections.forEach(loopSection -> when(sectionService.getById(loopSection.getId())).thenReturn(loopSection));
 
-        target.addMappedSectionsDetails(model, application, competition, section, userOrganisation);
+        target.addMappedSectionsDetails(model, application, competition, section, userOrganisation, markAsCompleteEnabled);
 
         verify(model).addAttribute(eq("completedSections"), anyMap());
         verify(model).addAttribute(eq("sections"), anyMap());

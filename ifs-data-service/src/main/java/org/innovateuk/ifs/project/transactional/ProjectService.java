@@ -5,7 +5,6 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.springframework.security.access.method.P;
@@ -15,7 +14,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * Transactional and secure service for Project processing work
@@ -52,9 +50,6 @@ public interface ProjectService {
     @SecuredBySpring(value = "ADD_PARTNER",
             description = "The System Registration user can add a partner to a project")
     ServiceResult<ProjectUser> addPartner(Long projectId, Long userId, Long organisationId);
-
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_TEAM_STATUS')")
-    ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'READ')")
     ServiceResult<ProjectUserResource> getProjectManager(Long projectId);
