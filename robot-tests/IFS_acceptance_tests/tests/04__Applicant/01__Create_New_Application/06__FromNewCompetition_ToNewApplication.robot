@@ -32,10 +32,10 @@ Comp Admin starts a new Competition
     # Then continue with the applying to this Competition, in order to see the new Fields applied
     Given the user navigates to the page    ${CA_UpcomingComp}
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
-    Then the user fills in the CS Initial details    ${compWithoutGrowth}    ${tomorrowday}    ${month}    ${nextyear}
+    Then the user fills in the CS Initial details  ${compWithoutGrowth}  ${month}  ${nextyear}
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility
-    And the user fills in the CS Milestones  ${tomorrowday}  ${dayAfterTomorrow}  ${twoDaysAfterTomorrow}  ${month}  ${nextMonth}  ${nextyear}
+    And the user fills in the CS Milestones  ${month}  ${nextMonth}  ${nextyear}
 
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     [Documentation]    INFUND-7820
@@ -119,10 +119,10 @@ Once the project growth table is selected
     Given the user navigates to the page    ${CA_UpcomingComp}
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
     # For the testing of story IFS-40, turning this competition into Sector with All innovation areas
-    Then the user fills in the Open-All Initial details  ${compWITHGrowth}  ${tomorrowday}  ${month}  ${nextyear}
+    Then the user fills in the Open-All Initial details  ${compWITHGrowth}  ${month}  ${nextyear}
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility
-    And the user fills in the CS Milestones  ${tomorrowday}  ${dayAfterTomorrow}  ${twoDaysAfterTomorrow}  ${month}  ${nextMonth}  ${nextyear}
+    And the user fills in the CS Milestones  ${month}  ${nextMonth}  ${nextyear}
     When the user decides about the growth table    yes    Yes
     Then the user marks the Application as done
     And the user fills in the CS Assessors
@@ -352,26 +352,18 @@ Non-lead can can edit and remark Organisation as Complete
 Custom Suite Setup
     ${tomorrowday} =    get tomorrow day
     Set suite variable    ${tomorrowday}
-    ${dayAfterTomorrow} =    get the day after tomorrow
-    Set suite variable    ${dayAfterTomorrow}
-    ${twoDaysAfterTomorrow} =    get two days after tomorrow
-    Set suite variable    ${twoDaysAfterTomorrow}
     ${month} =    get tomorrow month
     set suite variable    ${month}
     ${nextMonth} =  get next month
     set suite variable  ${nextMonth}
-    ${year} =    get tomorrow year
-    Set suite variable    ${year}
+    ${nextMonthWord} =  get next month as word
+    set suite variable  ${nextMonthWord}
     ${nextyear} =    get next year
     Set suite variable    ${nextyear}
-    ${tomorrowfull} =    get tomorrow full
-    Set suite variable    ${tomorrowfull}
-    ${dateDayAfterNextYear} =    get the day after tomorrow full next year
-    Set suite variable    ${dateDayAfterNextYear}
     Delete the emails from both test mailboxes
 
 the user should see the dates in full format
-    the user should see the element    jQuery=td:contains("Allocate assessors") ~ td:contains("${dateDayAfterNextYear}")
+    the user should see the element    jQuery=td:contains("Allocate assessors") ~ td:contains("3 ${nextMonthWord} ${nextyear}")
 
 the the user should see that the funding depends on the research area
     the user should see the element    jQuery=h3:contains("Your funding") + p:contains("You must select a research category in application details ")
@@ -536,13 +528,13 @@ the user completes the new account creation
     the user clicks the button/link    jQuery=button:contains("Sign in")
 
 the user fills in the Open-All Initial details
-    [Arguments]  ${compTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    [Arguments]  ${compTitle}  ${month}  ${nextyear}
     the user clicks the button/link                      link=Initial details
     the user enters text to a text field                 css=#title  ${compTitle}
     the user selects the option from the drop-down menu  Sector  id=competitionTypeId
     the user selects the option from the drop-down menu  Open  id=innovationSectorCategoryId
     the user selects the option from the drop-down menu  All  css=select[id^=innovationAreaCategory]
-    the user enters text to a text field                 css=#openingDateDay  ${tomorrowday}
+    the user enters text to a text field                 css=#openingDateDay  1
     the user enters text to a text field                 css=#openingDateMonth  ${month}
     the user enters text to a text field                 css=#openingDateYear  ${nextyear}
     the user selects the option from the drop-down menu  Ian Cooper  id=leadTechnologistUserId

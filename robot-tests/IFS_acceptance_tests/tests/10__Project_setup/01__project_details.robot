@@ -388,20 +388,20 @@ Invited Fin Contact for non lead partner
 Non lead partner not eligible for funding
     [Documentation]    INFUND-7090, INFUND-7174
     [Tags]  HappyPath
-    Given the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
+    Given the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(2)
     Then the user should not see the element    jQuery=ul li.require-action:nth-child(4)
     When The user navigates to the page and gets a custom error message     ${project_in_setup_page}/bank-details    ${403_error_message}
-    When the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
+    When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=status of my partners
-    Then the user should be redirected to the correct page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/team-status
+    Then the user should be redirected to the correct page    ${project_in_setup_team_status_page}
     And the user should see the element    jQuery=#table-project-status tr:nth-child(3) td.status.na:nth-child(4)
 
 Other partners can see who needs to provide Bank Details
     [Documentation]    INFUND-7090
     [Tags]
     [Setup]    log in as a different user   &{lead_applicant_credentials}
-    Given the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/team-status
+    Given the user navigates to the page    ${project_in_setup_team_status_page}
     Then the user should see the element    jQuery=#table-project-status tr:nth-child(3) td.status.na:nth-child(4)
     And the user should see the element     jQuery=#table-project-status tr:nth-child(2) td:nth-child(4):contains("")
 
