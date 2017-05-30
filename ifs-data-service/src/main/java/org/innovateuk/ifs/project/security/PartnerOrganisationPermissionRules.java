@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
 
-@Component
 @PermissionRules
+@Component
 public class PartnerOrganisationPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ", description = "A partner can see a list of all partner organisations on their project")
     public boolean partnersOnProjectCanView(final PartnerOrganisationResource partnerOrganisation, final UserResource user) {

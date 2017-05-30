@@ -61,7 +61,6 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
     }
 
     @Test
-    @Ignore
     public void testCompAdminCanSeePartnerOrganisation(){
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build());
         ServiceResult<PartnerOrganisationResource> result = classUnderTest.getPartnerOrganisation(123L, 234L);
