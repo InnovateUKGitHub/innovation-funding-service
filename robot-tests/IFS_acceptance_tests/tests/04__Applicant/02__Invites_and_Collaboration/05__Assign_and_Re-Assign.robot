@@ -292,6 +292,5 @@ Steve smith assigns a question to the collaborator
     When the applicant assigns the question to the collaborator  css=#form-input-1040 .editor  test1233  Jessica Doe
 
 the user fills out the research category
-    # Often those labels need double click. Thus i made a separate keyword to looks more tidy
     the user clicks the button/link    jQuery=label[for="researchCategoryChoice-33"]
     the user clicks the button/link    jQuery=button:contains(Save)
