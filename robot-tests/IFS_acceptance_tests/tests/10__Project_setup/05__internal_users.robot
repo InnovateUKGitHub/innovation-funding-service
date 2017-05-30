@@ -36,7 +36,6 @@ Project Finance has a dashboard and can see projects in PS
     [Tags]
     [Setup]  Log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page  ${COMP_MANAGEMENT_PROJECT_SETUP}
-    Then the user should see the element    link=${PROJECT_SETUP_COMPETITION_NAME}
     When the user clicks the button/link    link=${PROJECT_SETUP_COMPETITION_NAME}
     Then the user should see the element    jQuery=.column-third.alignright.extra-margin h2:contains("Projects in setup")
     And the user should see the element     jQuery=tr:nth-child(2) th:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
