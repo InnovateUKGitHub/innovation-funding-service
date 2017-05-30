@@ -355,14 +355,14 @@ Custom Suite Setup
     set suite variable    ${month}
     ${nextMonth} =  get next month
     set suite variable  ${nextMonth}
-    ${nxtMonthWord} =  get next month as word
-    set suite variable  ${nxtMonthWord}
+    ${nextMonthWord} =  get next month as word
+    set suite variable  ${nextMonthWord}
     ${nextyear} =    get next year
     Set suite variable    ${nextyear}
     Delete the emails from both test mailboxes
 
 the user should see the dates in full format
-    the user should see the element    jQuery=td:contains("Allocate assessors") ~ td:contains("3 ${nxtMonthWord} ${nextyear}")
+    the user should see the element    jQuery=td:contains("Allocate assessors") ~ td:contains("3 ${nextMonthWord} ${nextyear}")
 
 the the user should see that the funding depends on the research area
     the user should see the element    jQuery=h3:contains("Your funding") + p:contains("You must select a research category in application details ")

@@ -203,7 +203,7 @@ Dates: Add, remove dates and submit
     [Documentation]    INFUND-6919
     [Tags]  HappyPath
     When the user clicks the button/link                         link=Dates
-    Then the user should see the text in the page                ${nxtMonthWord} ${nextyear}
+    Then the user should see the text in the page                ${nextMonthWord} ${nextyear}
     And the user should see the text in the page                 Competition opens
     And the user should see the text in the page                 Submission deadline, competition closed.
     And the user should see the text in the page                 Applicants notified
@@ -384,8 +384,8 @@ Custom suite setup
     set suite variable  ${month}
     ${nextMonth} =  get next month
     set suite variable  ${nextMonth}
-    ${nxtMonthWord} =  get next month as word
-    set suite variable  ${nxtMonthWord}
+    ${nextMonthWord} =  get next month as word
+    set suite variable  ${nextMonthWord}
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
     User creates a new competition   ${public_content_competition_name}
