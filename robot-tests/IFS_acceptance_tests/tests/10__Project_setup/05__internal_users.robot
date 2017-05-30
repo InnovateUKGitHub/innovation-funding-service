@@ -46,7 +46,7 @@ Project Finance has a dashboard and can see projects in PS
     And the user should see the element     jQuery=tr:nth-child(3) th:contains("Office Chair for Life")
     And the user should see the element     jQuery=tr:nth-child(1) th:contains("Elbow grease")
     When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_NUMBER}
-    Then the user navigates to the page     ${server}/management/competition/${PROJECT_SETUP_COMPETITION}/application/${PROJECT_SETUP_APPLICATION_1}
+    Then the user should be redirected to the correct page     ${server}/management/competition/${PROJECT_SETUP_COMPETITION}/application/${PROJECT_SETUP_APPLICATION_1}
     And the user should not see an error in the page
 
 
@@ -91,7 +91,7 @@ Comp Admin user can see the internal project summary page
 
 the project is completed if it is not already complete
     log in as user    &{lead_applicant_credentials}
-    the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details
+    the user navigates to the page    ${project_in_setup_page}/details
     ${project_manager_not_set}    ${value}=    run keyword and ignore error without screenshots    The user should not see the element    jQuery=#project-manager-status.yes
     run keyword if    '${project_manager_not_set}' == 'PASS'     all previous sections of the project are completed
     run keyword if    '${project_manager_not_set}' == 'FAIL'    login as a different user    &{internal_finance_credentials}
@@ -122,7 +122,7 @@ partners submit their finance contacts
 
 navigate to external finance contact page, choose finance contact and save
     [Arguments]  ${org_id}   ${financeContactSelector}
-    the user navigates to the page     ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/finance-contact?organisation=${org_id}
+    the user navigates to the page     ${project_in_setup_page}/details/finance-contact?organisation=${org_id}
     the user selects the radio button  financeContact  ${financeContactSelector}
     the user clicks the button/link    jQuery=.button:contains("Save")
 
