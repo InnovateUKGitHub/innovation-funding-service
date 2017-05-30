@@ -423,11 +423,12 @@ the user can add and remove multiple content groups
     And the user enters text to a text field    jQuery=.editor:eq(2)     Content 3
     When the user uploads the file              id=contentGroups-2.attachment  ${text_file}
     Then the user should see the element        jQuery=.error-summary-list:contains("Please upload a file in .pdf format only.")
-    #    And the user uploads the file               id=contentGroups-2.attachment  ${too_large_pdf}
-    #    Then the user should see the element        jQuery=h1:contains("Attempt to upload a large file")
-    #    and the user goes back to the previous page
-    #    And the user should not see an error in the page
-    # I comment those lines out due to TODO INFUND-8358
+    And the user uploads the file               id=contentGroups-2.attachment  ${too_large_pdf}
+    Then the user should see the element        jQuery=h1:contains("Attempt to upload a large file")
+    And the user goes back to the previous page
+    And the user reloads the page
+    # TODO this reload is required for now due to INFUND-8358
+    And the user should not see an error in the page
     And the user clicks the button/link         jQuery=button:contains("Remove section"):eq(1)
     Then the user should not see the element    id=heading-2
     And the user should not see the element     jQuery=.editor:eq(2)

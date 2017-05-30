@@ -12,11 +12,12 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerForm;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewModel;
+import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -51,6 +52,9 @@ public class MonitoringOfficerController {
 
 	@Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private StatusService statusService;
 
     @Autowired
     private MonitoringOfficerService monitoringOfficerService;
@@ -129,7 +133,7 @@ public class MonitoringOfficerController {
     }
 
     private void checkInCorrectStateToUseMonitoringOfficerPage(Long projectId) {
-        ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
+        ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
 
         if (!COMPLETE.equals(teamStatus.getLeadPartnerStatus().getProjectDetailsStatus())) {
             throw new ForbiddenActionException("Unable to assign Monitoring Officers until the Project Details have been submitted");

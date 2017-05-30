@@ -89,7 +89,6 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
 
     @Test
     public void testAddMappedSectionsDetails() {
-        ApplicationResource application = ApplicationResourceBuilder.newApplicationResource().build();
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().build();
         Long organisationId = 3L;
         List<SectionResource> allSections = newSectionResource().build(3);
@@ -100,6 +99,8 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
                 .withId(organisationId).build();
         Optional<OrganisationResource> userOrganisation = Optional.of(organisationResource);
         Optional<SectionResource> section = Optional.of(parentSection);
+        Optional<Boolean> markAsCompleteEnabled = Optional.empty();
+
         Model model = mock(Model.class);
         when(sectionService.getAllByCompetitionId(competition.getId())).thenReturn(allSections);
         when(sectionService.filterParentSections(allSections)).thenReturn(asList(parentSection));
@@ -108,7 +109,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
 
         allSections.forEach(loopSection -> when(sectionService.getById(loopSection.getId())).thenReturn(loopSection));
 
-        target.addMappedSectionsDetails(model, competition, section, userOrganisation, emptyMap());
+        target.addMappedSectionsDetails(model, competition, section, userOrganisation, emptyMap(), markAsCompleteEnabled);
 
         verify(model).addAttribute(eq("completedSections"), anyMap());
         verify(model).addAttribute(eq("sections"), anyMap());
@@ -201,6 +202,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
         sectionsMarkedAsComplete.add(completedSectionId);
         List<ResearchCategoryResource> categoryResources = ResearchCategoryResourceBuilder.newResearchCategoryResource().build(3);
 
+        when(sectionService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(completedSectionsByOrganisation);
         when(questionService.getMarkedAsComplete(application.getId(), organisationId)).thenReturn(markedAsComplete);
         when(sectionService.allSectionsMarkedAsComplete(application.getId())).thenReturn(allQuestionsCompleted);
         when(sectionService.getFinanceSection(application.getCompetition())).thenReturn(financeSection);

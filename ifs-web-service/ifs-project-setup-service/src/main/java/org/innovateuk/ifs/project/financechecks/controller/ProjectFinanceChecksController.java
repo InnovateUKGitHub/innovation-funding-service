@@ -39,6 +39,7 @@ import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.thread.viewmodel.ThreadPostViewModel;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModel;
@@ -94,6 +95,9 @@ public class ProjectFinanceChecksController {
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private StatusService statusService;
 
     @Autowired
     private ApplicationService applicationService;
@@ -386,7 +390,7 @@ public class ProjectFinanceChecksController {
     }
 
     private boolean isApproved(final ProjectOrganisationCompositeId compositeId) {
-        Optional<ProjectPartnerStatusResource> organisationStatus = projectService.getProjectTeamStatus(compositeId.getProjectId(), Optional.empty()).getPartnerStatusForOrganisation(compositeId.getOrganisationId());
+        Optional<ProjectPartnerStatusResource> organisationStatus = statusService.getProjectTeamStatus(compositeId.getProjectId(), Optional.empty()).getPartnerStatusForOrganisation(compositeId.getOrganisationId());
         return COMPLETE.equals(organisationStatus.map(ProjectPartnerStatusResource::getFinanceChecksStatus).orElse(null));
     }
 

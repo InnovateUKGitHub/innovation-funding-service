@@ -83,6 +83,7 @@ public class ApplicationPrintPopulatorTest {
         List<ProcessRoleResource> userApplicationRoles = ProcessRoleResourceBuilder.newProcessRoleResource().build(1);
         Optional<OrganisationResource> userOrganisation = Optional.of(OrganisationResourceBuilder.newOrganisationResource().build());
         Map<Long, FormInputResponseResource> mappedResponses = mock(Map.class);
+        Optional<Boolean> markAsCompleteEnabled = Optional.empty();
 
         when(applicationService.getById(applicationId)).thenReturn(application);
         when(competitionService.getById(application.getCompetition())).thenReturn(competition);
@@ -105,7 +106,7 @@ public class ApplicationPrintPopulatorTest {
         verify(applicationSectionAndQuestionModelPopulator).addQuestionsDetails(model, application, null);
         verify(applicationModelPopulator).addUserDetails(model, user, userApplicationRoles);
         verify(applicationModelPopulator).addApplicationInputs(application, model);
-        verify(applicationSectionAndQuestionModelPopulator).addMappedSectionsDetails(model, competition, Optional.empty(), userOrganisation, emptyMap());
+        verify(applicationSectionAndQuestionModelPopulator).addMappedSectionsDetails(model, competition, Optional.empty(), userOrganisation, emptyMap(), markAsCompleteEnabled);
         verify(applicationFinanceOverviewModelManager).addFinanceDetails(model, competition.getId(), applicationId, userOrganisation.map(OrganisationResource::getId));
 
     }
