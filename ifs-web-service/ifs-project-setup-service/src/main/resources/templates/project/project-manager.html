@@ -30,9 +30,9 @@
                             <label th:for="${#ids.prev('projectManager')}" th:text="${user.name}" data-set-section-valid="#project-manager-section" data-clear-inputs="#name-project-manager,#email-project-manager"></label>
                         </div>
 
-                        <div class="multiple-choice" th:each="user : ${model.invitedUsers}" th:for="${#ids.next('projectManager')}">
-                            <input th:field="*{projectManager}" type="radio" disabled="disabled" />
-                            <label th:for="${#ids.prev('projectManager')}" th:text="${user.name}"></label>
+                        <div class="multiple-choice" th:each="user : ${model.invitedUsers}">
+                            <input th:id="'invite-'+${user.id}" value="" type="radio" disabled="disabled" />
+                            <label th:for="'invite-'+${user.id}" th:text="${user.name}"></label>
                         </div>
 
                         <div class="multiple-choice" data-target="project-manager-table">
