@@ -65,7 +65,7 @@ tr.form-group {
     vertical-align: top;
   }
 
-  &.error {
+  &.form-group-error {
     border-left:none;
   }
 }
@@ -209,7 +209,7 @@ table td{
   }
 }
 
-tr.form-group-row.error {
+tr.form-group-row.form-group-error {
   border:none;
   background-position: 4px 50%;
 
@@ -355,7 +355,7 @@ td.autosave-info {
   padding: 16px 16px 8px 16px;
   margin: 16px 0;
 
-  &.error {
+  &.form-group-error {
     @extend .warning-alert;
     background: none;
     padding-left: 16px;
