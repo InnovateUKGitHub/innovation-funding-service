@@ -11,7 +11,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
-import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInvitesToSendResourceBuilder.newAssessorInvitesToSendResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceBuilder.newNewUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
@@ -41,11 +41,11 @@ public class CompetitionInviteDocs {
             fieldWithPath("rejectComment").description("Optional comments about why the invite was rejected"),
     };
 
-    public static final FieldDescriptor[] assessorInviteToSendResourceFields = {
-            fieldWithPath("recipient").description("Name of the recipient of the invite"),
+    public static final FieldDescriptor[] assessorInvitesToSendResourceFields = {
+            fieldWithPath("recipients").description("Names of the invite recipients"),
             fieldWithPath("competitionId").description("The id of the competition"),
             fieldWithPath("competitionName").description("The name of the competition"),
-            fieldWithPath("content").description("Template for the invite email which the user can edit")
+            fieldWithPath("content").description("The read-only content that will be a part of every invite")
     };
 
     public static final FieldDescriptor[] assessorInviteSendResourceFields = {
@@ -88,7 +88,7 @@ public class CompetitionInviteDocs {
             .withSubject("Subject to send")
             .withContent("E-mail body to send");
 
-    public static final AssessorInviteToSendResourceBuilder assessorInviteToSendResourceBuilder = newAssessorInviteToSendResource()
+    public static final AssessorInvitesToSendResourceBuilder assessorInvitesToSendResourceBuilder = newAssessorInvitesToSendResource()
             .withCompetitionId(1L)
             .withCompetitionName("Connected digital additive manufacturing")
             .withContent("E-mail body content which is editable")
