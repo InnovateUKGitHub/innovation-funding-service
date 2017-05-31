@@ -47,6 +47,7 @@ ext.csrfEncryptionPassword=project.properties['ifs.csrf.encryption.password'] ?:
 ext.encryptionSalt=project.properties['ifs.csrf.encryption.salt'] ?: "fa7814848e5f2691"
 
 ext.ifsWebSystemUserUid=project.properties['ifs.web.system.user.id'] ?: "8394d970-b250-4b15-9621-3534325691b4"
+ext.springCloudVersion = 'Dalston.RELEASE'
 
 processResources {
     filesMatching("*.properties") {

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;

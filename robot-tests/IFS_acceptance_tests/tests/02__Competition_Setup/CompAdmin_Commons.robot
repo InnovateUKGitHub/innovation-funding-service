@@ -30,13 +30,13 @@ the user sees the correct assessed question information
     the user should not see the text in the page    The business opportunity is plausible
 
 the user fills in the CS Initial details
-    [Arguments]  ${compTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    [Arguments]  ${compTitle}  ${month}  ${nextyear}
     the user clicks the button/link                      link=Initial details
     the user enters text to a text field                 css=#title  ${compTitle}
     the user selects the option from the drop-down menu  Programme  id=competitionTypeId
     the user selects the option from the drop-down menu  Emerging and enabling  id=innovationSectorCategoryId
     the user selects the option from the drop-down menu  Robotics and autonomous systems  css=select[id^=innovationAreaCategory]
-    the user enters text to a text field                 css=#openingDateDay  ${tomorrowday}
+    the user enters text to a text field                 css=#openingDateDay  1
     the user enters text to a text field                 css=#openingDateMonth  ${month}
     the user enters text to a text field                 css=#openingDateYear  ${nextyear}
     the user selects the option from the drop-down menu  Ian Cooper  id=leadTechnologistUserId
@@ -75,44 +75,44 @@ the user fills in the CS Eligibility
     #Elements in this page need double clicking
 
 the user fills in the CS Milestones
-    [Arguments]  ${tomorrowday}  ${dayaftertomorrow}  ${twoDaysForward}  ${month}  ${nextyear}
+    [Arguments]  ${month}  ${nextMonth}  ${nextyear}
     the user clicks the button/link       link=Milestones
-    the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.day input    ${tomorrowday}
+    the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.day input  2
     the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.month input  ${month}
     the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Submission date") ~ td.day input  ${tomorrowday}
+    the user enters text to a text field  jQuery=th:contains("Submission date") ~ td.day input  2
     the user enters text to a text field  jQuery=th:contains("Submission date") ~ td.month input  ${month}
     the user enters text to a text field  jQuery=th:contains("Submission date") ~ td.year input  ${nextyear}
     # the below dates need to be in a future date
-    the user enters text to a text field  jQuery=th:contains("Allocate assessors") ~ td.day input  ${dayAfterTomorrow}
-    the user enters text to a text field  jQuery=th:contains("Allocate assessors") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Allocate assessors") ~ td.day input  3
+    the user enters text to a text field  jQuery=th:contains("Allocate assessors") ~ td.month input  ${nextMonth}
     the user enters text to a text field  jQuery=th:contains("Allocate assessors") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Assessor briefing") ~ td.day input  ${dayAfterTomorrow}
-    the user enters text to a text field  jQuery=th:contains("Assessor briefing") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Assessor briefing") ~ td.day input  3
+    the user enters text to a text field  jQuery=th:contains("Assessor briefing") ~ td.month input  ${nextMonth}
     the user enters text to a text field  jQuery=th:contains("Assessor briefing") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Assessor accepts") ~ td.day input  ${dayAfterTomorrow}
-    the user enters text to a text field  jQuery=th:contains("Assessor accepts") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Assessor accepts") ~ td.day input  3
+    the user enters text to a text field  jQuery=th:contains("Assessor accepts") ~ td.month input  ${nextMonth}
     the user enters text to a text field  jQuery=th:contains("Assessor accepts") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Assessor deadline") ~ td.day input  ${dayAfterTomorrow}
-    the user enters text to a text field  jQuery=th:contains("Assessor deadline") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Assessor deadline") ~ td.day input  3
+    the user enters text to a text field  jQuery=th:contains("Assessor deadline") ~ td.month input  ${nextMonth}
     the user enters text to a text field  jQuery=th:contains("Assessor deadline") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Line draw") ~ td.day input  ${twoDaysForward}
-    the user enters text to a text field  jQuery=th:contains("Line draw") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Line draw") ~ td.day input  4
+    the user enters text to a text field  jQuery=th:contains("Line draw") ~ td.month input  ${nextMonth}
     the user enters text to a text field  jQuery=th:contains("Line draw") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Assessment panel") ~ td.day input  ${twoDaysForward}
-    the user enters text to a text field  jQuery=th:contains("Assessment panel") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Assessment panel") ~ td.day input  4
+    the user enters text to a text field  jQuery=th:contains("Assessment panel") ~ td.month input  ${nextMonth}
     the user enters text to a text field  jQuery=th:contains("Assessment panel") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Panel date") ~ td.day input  ${twoDaysForward}
-    the user enters text to a text field  jQuery=th:contains("Panel date") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Panel date") ~ td.day input  4
+    the user enters text to a text field  jQuery=th:contains("Panel date") ~ td.month input  ${nextMonth}
     the user enters text to a text field  jQuery=th:contains("Panel date") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Funders panel") ~ td.day input  ${twoDaysForward}
-    the user enters text to a text field  jQuery=th:contains("Funders panel") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Funders panel") ~ td.day input  4
+    the user enters text to a text field  jQuery=th:contains("Funders panel") ~ td.month input  ${nextMonth}
     the user enters text to a text field  jQuery=th:contains("Funders panel") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Notifications") ~ td.day input  ${twoDaysForward}
-    the user enters text to a text field  jQuery=th:contains("Notifications") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Notifications") ~ td.day input  4
+    the user enters text to a text field  jQuery=th:contains("Notifications") ~ td.month input  ${nextMonth}
     the user enters text to a text field  jQuery=th:contains("Notifications") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Release feedback") ~ td.day input  ${twoDaysForward}
-    the user enters text to a text field  jQuery=th:contains("Release feedback") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Release feedback") ~ td.day input  4
+    the user enters text to a text field  jQuery=th:contains("Release feedback") ~ td.month input  ${nextMonth}
     the user enters text to a text field  jQuery=th:contains("Release feedback") ~ td.year input  ${nextyear}
     the user clicks the button/link       jQuery=button:contains("Done")
     the user clicks the button/link       link=Competition setup
@@ -184,6 +184,11 @@ Change the open date of the Competition in the database to one day before
     [Arguments]  ${competition}
     ${yesterday} =  get yesterday
     execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${yesterday}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'OPEN_DATE';
+
+Change the close date of the Competition in the database to tomorrow
+    [Arguments]  ${competition}
+    ${tomorrow} =  get tomorrow
+    execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${tomorrow}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'SUBMISSION_DATE';
 
 the internal user navigates to public content
     [Arguments]  ${comp}

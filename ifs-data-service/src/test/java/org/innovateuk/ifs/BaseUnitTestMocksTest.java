@@ -88,6 +88,7 @@ import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficer
 import org.innovateuk.ifs.project.monitoringofficer.transactional.MonitoringOfficerService;
 import org.innovateuk.ifs.project.notes.service.FinanceCheckNotesService;
 import org.innovateuk.ifs.project.otherdocuments.transactional.OtherDocumentsService;
+import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesService;
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
@@ -96,7 +97,7 @@ import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
-import org.innovateuk.ifs.project.transactional.ProjectStatusService;
+import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.innovateuk.ifs.project.users.ProjectUsersHelper;
 import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
@@ -430,6 +431,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ProjectService projectServiceMock;
 
     @Mock
+    protected ProjectDetailsService projectDetailsServiceMock;
+
+    @Mock
     protected MonitoringOfficerService monitoringOfficerServiceMock;
 
     @Mock
@@ -439,7 +443,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected GrantOfferLetterService grantOfferLetterServiceMock;
 
     @Mock
-    protected ProjectStatusService projectStatusServiceMock;
+    protected StatusService statusServiceMock;
 
     @Mock
     protected ProjectMapper projectMapperMock;
@@ -607,7 +611,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected SpendProfileTableCalculator spendProfileTableCalculatorMock;
 
     @Mock
-    protected NotificationSender notificationSender;
+    protected NotificationSender notificationSenderMock;
 
     @Mock
     protected NotificationTemplateRenderer notificationTemplateRendererMock;

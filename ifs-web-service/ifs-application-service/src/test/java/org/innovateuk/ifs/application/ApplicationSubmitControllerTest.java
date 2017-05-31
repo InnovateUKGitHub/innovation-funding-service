@@ -1,16 +1,17 @@
 package org.innovateuk.ifs.application;
 
 import com.google.common.collect.ImmutableMap;
-import org.hamcrest.Matchers;
+import org.hamcrest.*;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.populator.*;
+import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentFeedbackResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -25,10 +26,12 @@ import org.springframework.test.context.TestPropertySource;
 
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.HashSet;
 
 import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
+import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.application.service.Futures.settable;
@@ -36,7 +39,6 @@ import static org.innovateuk.ifs.assessment.builder.ApplicationAssessmentFeedbac
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
-import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.any;
@@ -75,6 +77,11 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
     @InjectMocks
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
 
+    @Mock
+    private ApplicantRestService applicantRestService;
+    @Mock
+    private FormInputViewModelGenerator formInputViewModelGenerator;
+
     @Override
     protected ApplicationSubmitController supplyControllerUnderTest() {
         return new ApplicationSubmitController();
@@ -90,6 +97,9 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
         this.loginDefaultUser();
         this.setupFinances();
         this.setupInvites();
+
+        questionResources.forEach((id, questionResource) -> when(applicantRestService.getQuestion(any(), any(), eq(questionResource.getId()))).thenReturn(newApplicantQuestionResource().build()));
+        when(formInputViewModelGenerator.fromQuestion(any(), any())).thenReturn(Collections.emptyList());
         when(organisationService.getOrganisationForUser(anyLong(), anyList())).thenReturn(ofNullable(organisations.get(0)));
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(newResearchCategoryResource().build(2)));
     }
