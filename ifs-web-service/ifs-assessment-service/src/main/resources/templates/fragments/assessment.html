@@ -73,7 +73,7 @@
 
 
 <!-- ======== Assessment - assessor summary section ======= -->
-<div th:fragment="assessment-summary-section (question)">
+<th:block th:fragment="assessment-summary-section (question)">
     <h2>
         <span th:text="${question.displayLabel}" />
         <div th:if="${question.isComplete()}" class="section-status section-complete">Complete</div>
@@ -94,7 +94,7 @@
             </p>
         </div>
     </div>
-</div>
+</th:block>
 
 
 <!-- ======== Assessment - assessor summary total score ======= -->
