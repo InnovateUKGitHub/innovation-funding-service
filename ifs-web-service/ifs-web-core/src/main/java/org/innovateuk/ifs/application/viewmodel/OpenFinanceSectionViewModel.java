@@ -19,7 +19,7 @@ public class OpenFinanceSectionViewModel extends BaseSectionViewModel {
     private Long yourOrganisationSectionId;
     private boolean notRequestingFunding;
 
-	private SectionResource fundingSection;
+    private SectionResource fundingSection;
 
 
     public OpenFinanceSectionViewModel(NavigationViewModel navigationViewModel, SectionResource currentSection,
@@ -68,7 +68,7 @@ public class OpenFinanceSectionViewModel extends BaseSectionViewModel {
     /* Your finances display logic */
     public boolean showSectionAsNotRequired(SectionResource subSection) {
         return notRequestingFunding && (SectionType.ORGANISATION_FINANCES.equals(subSection.getType())
-            || SectionType.FUNDING_FINANCES.equals(subSection.getType()));
+                || SectionType.FUNDING_FINANCES.equals(subSection.getType()));
     }
 
     public boolean showSectionAsLockedFunding(SectionResource subSection) {
