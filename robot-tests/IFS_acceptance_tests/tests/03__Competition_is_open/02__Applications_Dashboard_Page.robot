@@ -193,7 +193,7 @@ the finance Project cost breakdown calculations should be correct
 
 the applicant edits the Subcontracting costs section
     the user clicks the button/link    link=Your project costs
-    the user clicks the button/link    jQuery=#form-input-1085 button:contains("Subcontracting costs")
+    the user clicks the button/link    jQuery=button:contains("Subcontracting costs")
     the user should see the text in the page    Subcontractor name
     The user enters text to a text field    css=#collapsible-4 .form-row:nth-child(2) input[id$=subcontractingCost]    2000
     The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-name"]    Jackson Ltd

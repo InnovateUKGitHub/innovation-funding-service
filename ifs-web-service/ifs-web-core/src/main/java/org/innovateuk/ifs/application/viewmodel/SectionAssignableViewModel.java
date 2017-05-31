@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.viewmodel;
 
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.application.viewmodel.section.AbstractSectionViewModel;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
@@ -13,7 +14,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /**
- * Shared assignable viewModel used by {@link BaseSectionViewModel}
+ * Shared assignable viewModel used by {@link AbstractSectionViewModel}
  */
 public class SectionAssignableViewModel {
     private Future<List<ProcessRoleResource>> assignableUsers;

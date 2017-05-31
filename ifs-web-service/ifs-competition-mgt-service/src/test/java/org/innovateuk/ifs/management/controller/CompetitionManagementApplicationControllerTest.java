@@ -2,8 +2,10 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
+import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
@@ -26,6 +28,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
@@ -38,6 +41,7 @@ import java.util.*;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeResourceBuilder.newIneligibleOutcomeResource;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
@@ -53,6 +57,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourc
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
@@ -80,6 +85,12 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     @InjectMocks
     private CompetitionManagementApplicationServiceImpl competitionManagementApplicationServiceImpl;
 
+    @Mock
+    private ApplicantRestService applicantRestService;
+
+    @Mock
+    private FormInputViewModelGenerator formInputViewModelGenerator;
+
     @Spy
     @InjectMocks
     private ReinstateIneligibleApplicationModelPopulator reinstateIneligibleApplicationModelPopulator;
@@ -95,6 +106,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
+        setupApplicantResource();
     }
 
 
@@ -107,6 +119,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         this.setupInvites();
         this.setupOrganisationTypes();
         this.setupResearchCategories();
+        setupApplicantResource();
 
         String expectedBackUrl = "/competition/" + competitionResource.getId() + "/applications/all?param1=abc&param2=def%26ghi";
 
@@ -127,6 +140,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         this.setupInvites();
         this.setupOrganisationTypes();
         this.setupResearchCategories();
+        setupApplicantResource();
 
         String expectedBackUrl = "/competition/" + competitionResource.getId() + "/applications/all?p1=%26&p2=%3D&p3=%25&p4=%20";
 
@@ -149,6 +163,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         this.setupInvites();
         this.setupOrganisationTypes();
         this.setupResearchCategories();
+        setupApplicantResource();
 
         ZonedDateTime now = ZonedDateTime.now();
 
@@ -185,6 +200,12 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     public void displayApplicationOverview_manageApplicationsOrigin() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();
+        this.setupApplicationResponses();
+        this.loginDefaultUser();
+        this.setupInvites();
+        this.setupOrganisationTypes();
+        this.setupResearchCategories();
+        setupApplicantResource();
 
         assertApplicationOverviewWithBackUrl("MANAGE_APPLICATIONS",
                 "/assessment/competition/" + competitionResource.getId());
@@ -194,6 +215,15 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     public void displayApplicationOverview_applicationProgressOrigin() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();
+        this.setupApplicationResponses();
+        this.loginDefaultUser();
+        this.setupInvites();
+        this.setupOrganisationTypes();
+        this.setupResearchCategories();
+        setupApplicantResource();
+
+        long competitionId = competitionResource.getId();
+        long applicationId = applications.get(0).getId();
 
         assertApplicationOverviewWithBackUrl("APPLICATION_PROGRESS",
                 "/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "/assessors");
@@ -203,6 +233,12 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     public void displayApplicationOverview_fundingApplicationsOrigin() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();
+        this.setupApplicationResponses();
+        this.loginDefaultUser();
+        this.setupInvites();
+        this.setupOrganisationTypes();
+        this.setupResearchCategories();
+        setupApplicantResource();
 
         assertApplicationOverviewWithBackUrl("FUNDING_APPLICATIONS",
                 "/competition/" + competitionResource.getId() + "/funding");
@@ -224,6 +260,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
+        setupApplicantResource();
 
         mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId())
                 .param("origin", "NOT_A_VALID_ORIGIN"))
@@ -239,6 +276,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
             this.loginDefaultUser();
             this.setupInvites();
             this.setupOrganisationTypes();
+            setupApplicantResource();
 
             competitionResource.setCompetitionStatus(status);
         });
@@ -264,6 +302,12 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     public void reinstateIneligibleApplication_failureUpdatingState() throws Exception {
         long competitionId = 1L;
 
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+        this.loginDefaultUser();
+        this.setupInvites();
+        this.setupOrganisationTypes();
+        setupApplicantResource();
         ApplicationResource applicationResource = newApplicationResource()
                 .withCompetition(competitionId)
                 .withName("Plastic reprocessing with zero waste")
@@ -301,6 +345,12 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     public void reinstateIneligibleApplicationConfirm() throws Exception {
         long competitionId = 1L;
 
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+        this.loginDefaultUser();
+        this.setupInvites();
+        this.setupOrganisationTypes();
+        setupApplicantResource();
         ApplicationResource applicationResource = newApplicationResource()
                 .withCompetition(competitionId)
                 .withName("Plastic reprocessing with zero waste")
@@ -329,6 +379,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
+        setupApplicantResource();
 
         IneligibleOutcomeResource ineligibleOutcomeResource = newIneligibleOutcomeResource().build();
         when(applicationService.markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource))).thenReturn(serviceSuccess());
@@ -348,6 +399,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
+        setupApplicantResource();
 
         IneligibleOutcomeResource ineligibleOutcomeResource = newIneligibleOutcomeResource().build();
         ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(applications.get(0).getId()).withOrganisation(organisations.get(0).getId()).build();
@@ -498,6 +550,11 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().build(3);
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
         return researchCategories;
+    }
+
+    private void setupApplicantResource() {
+        when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(newApplicantQuestionResource().build());
+        when(formInputViewModelGenerator.fromQuestion(any(), any())).thenReturn(Collections.emptyList());
     }
 
     @Override

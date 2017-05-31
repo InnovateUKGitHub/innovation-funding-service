@@ -1,19 +1,20 @@
 package org.innovateuk.ifs.application.populator;
 
+import org.innovateuk.ifs.applicant.resource.*;
+import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.application.viewmodel.SectionAssignableViewModel;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
-import org.innovateuk.ifs.form.service.FormInputResponseRestService;
-import org.innovateuk.ifs.form.service.FormInputRestService;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
@@ -22,12 +23,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
 import java.util.*;
-import java.util.concurrent.Future;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 
 /**
  * class with methods that are used on every model for sectionPages
@@ -43,79 +41,56 @@ abstract class BaseSectionModelPopulator extends BaseModelPopulator {
     private SectionService sectionService;
 
     @Autowired
+    private FormInputResponseService formInputResponseService;
+
+    @Autowired
     private UserService userService;
-
-    @Autowired
-    private FormInputResponseRestService formInputResponseRestService;
-
-    @Autowired
-    private FormInputRestService formInputRestService;
 
     @Autowired
     private ApplicationNavigationPopulator applicationNavigationPopulator;
 
-    public abstract BaseSectionViewModel populateModel(ApplicationForm form, Model model, ApplicationResource application, SectionResource section, UserResource user, BindingResult bindingResult, List<SectionResource> allSections, Long organisationId);
+    public abstract BaseSectionViewModel populateModel(ApplicationForm form, Model model, BindingResult bindingResult, ApplicantSectionResource applicantSection);
 
     protected NavigationViewModel addNavigation(SectionResource section, Long applicationId) {
         return applicationNavigationPopulator.addNavigation(section, applicationId);
     }
 
-    protected Boolean calculateAllReadOnly(CompetitionResource competition, Long currentSectionId, Set<Long> markedAsCompleteSections) {
-        return (null != competition && !competition.isOpen()) ||
-                (null != markedAsCompleteSections && markedAsCompleteSections.contains(currentSectionId));
+    protected Boolean calculateAllReadOnly(BaseSectionViewModel sectionViewModel, ApplicantSectionResource applicantSectionResource) {
+        return (null != applicantSectionResource.getCompetition() && !applicantSectionResource.getCompetition().isOpen()) ||
+                (null != sectionViewModel.getCompletedSections() && sectionViewModel.getCompletedSections().contains(applicantSectionResource.getSection().getId()));
     }
 
-    protected void addUserDetails(BaseSectionViewModel viewModel, ApplicationResource application, Long userId) {
-        Boolean userIsLeadApplicant = userService.isLeadApplicant(userId, application);
-        ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
-        UserResource leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
-
+    protected void addUserDetails(BaseSectionViewModel viewModel, ApplicantSectionResource applicantSection) {
+        Boolean userIsLeadApplicant = applicantSection.getCurrentApplicant().getProcessRole().getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName());
+        UserResource leadApplicant = applicantSection.getApplicants().stream()
+                .filter(ApplicantResource::isLead)
+                .map(ApplicantResource::getProcessRole)
+                .map(ProcessRoleResource::getUser)
+                .map(userId -> userService.retrieveUserById(userId))
+                .findAny().orElse(null);
         viewModel.setUserIsLeadApplicant(userIsLeadApplicant);
         viewModel.setLeadApplicant(leadApplicant);
     }
 
-    protected List<FormInputResponseResource> getFormInputResponses(ApplicationResource application) {
-        return formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccessObjectOrThrowException();
-    }
+    protected void addMappedSectionsDetails(BaseSectionViewModel viewModel, ApplicantSectionResource applicantSection) {
 
-    protected Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
-        Long organisationId = 0L;
-        if(userOrganisation.isPresent()) {
-            organisationId = userOrganisation.get().getId();
-        }
-        return questionService.getMarkedAsComplete(application.getId(), organisationId);
-    }
-
-    protected void addMappedSectionsDetails(BaseSectionViewModel viewModel,
-                                            ApplicationResource application, CompetitionResource competition,
-                                            SectionResource currentSection, Optional<OrganisationResource> userOrganisation,
-                                            List<SectionResource> allSections, List<FormInputResource> inputs,
-                                            List<SectionResource> parentSections) {
-
-        Map<Long, SectionResource> sections =
-                parentSections.stream().collect(Collectors.toMap(SectionResource::getId,
-                    Function.identity()));
-
-        List<QuestionResource> questions = questionService.findByCompetition(competition.getId());
-
-        Map<Long, List<QuestionResource>> sectionQuestions = parentSections.stream()
-            .collect(Collectors.toMap(
-                SectionResource::getId,
-                s -> getQuestionsBySection(s.getQuestions(), questions)
-            ));
-
-        Map<Long, List<QuestionResource>> subsectionQuestions;
+        Map<Long, SectionResource> sections = new HashMap<>();
+        Map<Long, List<QuestionResource>> sectionQuestions = new HashMap<>();
         Map<Long, List<SectionResource>> subSections = new HashMap<>();
-        subSections.put(currentSection.getId(), getSectionsFromListByIdList(currentSection.getChildSections(), allSections));
+        Map<Long, List<QuestionResource>> subsectionQuestions;
+        Map<Long, List<FormInputResource>> subSectionQuestionFormInputs;
 
-        subsectionQuestions = subSections.get(currentSection.getId()).stream()
-                .collect(Collectors.toMap(SectionResource::getId,
-                        ss -> getQuestionsBySection(ss.getQuestions(), questions)
-                ));
+        sections.put(applicantSection.getSection().getId(), applicantSection.getSection());
+        sectionQuestions.put(applicantSection.getSection().getId(), applicantSection.getApplicantQuestions().stream().map(ApplicantQuestionResource::getQuestion).collect(Collectors.toList()));
+        subSections.put(applicantSection.getSection().getId(), applicantSection.getApplicantChildrenSections().stream().map(ApplicantSectionResource::getSection).collect(Collectors.toList()));
+        subsectionQuestions = simpleToMap(applicantSection.getApplicantChildrenSections(),
+                childSection -> childSection.getSection().getId(),
+                childSection -> childSection.getApplicantQuestions().stream().map(ApplicantQuestionResource::getQuestion).collect(Collectors.toList()));
+        subSectionQuestionFormInputs = simpleToMap(applicantSection.getApplicantChildrenSections().stream().map(ApplicantSectionResource::getApplicantQuestions).flatMap(List::stream).collect(Collectors.toList()),
+                applicantQuestion -> applicantQuestion.getQuestion().getId(),
+                applicantQuestion -> applicantQuestion.getApplicantFormInputs().stream().map(ApplicantFormInputResource::getFormInput).collect(Collectors.toList()));
 
-        Map<Long, List<FormInputResource>> subSectionQuestionFormInputs = subsectionQuestions.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> findFormInputByQuestion(k.getId(), inputs)));
-
-        userOrganisation.ifPresent(organisationResource -> viewModel.setCompletedSections(sectionService.getCompleted(application.getId(), organisationResource.getId())));
+        viewModel.setCompletedSections(sectionService.getCompleted(applicantSection.getApplication().getId(), applicantSection.getCurrentApplicant().getOrganisation().getId()));
         viewModel.setSections(sections);
         viewModel.setSectionQuestions(sectionQuestions);
         viewModel.setSubSections(subSections);
@@ -123,31 +98,60 @@ abstract class BaseSectionModelPopulator extends BaseModelPopulator {
         viewModel.setSubSectionQuestionFormInputs(subSectionQuestionFormInputs);
     }
 
-    protected List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource> questions) {
-        return simpleFilter(questions, q -> questionIds.contains(q.getId()));
-    }
-
-    protected void addSectionDetails(BaseSectionViewModel viewModel, SectionResource currentSection) {
-        List<QuestionResource> questions = getQuestionsBySection(currentSection.getQuestions(), questionService.findByCompetition(currentSection.getCompetition()));
-        questions.sort((QuestionResource q1, QuestionResource q2) -> q1.getPriority().compareTo(q2.getPriority()));
+    protected void addSectionDetails(BaseSectionViewModel viewModel, ApplicantSectionResource sectionResource) {
+        List<ApplicantQuestionResource> questions = sectionResource.getApplicantQuestions();
         Map<Long, List<QuestionResource>> sectionQuestions = new HashMap<>();
-        sectionQuestions.put(currentSection.getId(), questions);
-        Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream()
-                .flatMap(Collection::stream)
-                .collect(Collectors.toMap(QuestionResource::getId, question ->
-                        formInputRestService.getByQuestionIdAndScope(question.getId(), APPLICATION).getSuccessObjectOrThrowException()));
+        sectionQuestions.put(sectionResource.getSection().getId(), questions.stream().map(ApplicantQuestionResource::getQuestion).collect(Collectors.toList()));
+        Map<Long, List<FormInputResource>> questionFormInputs = simpleToMap(questions,
+                question -> question.getQuestion().getId(),
+                question -> question.getApplicantFormInputs().stream().map(ApplicantFormInputResource::getFormInput).collect(Collectors.toList()));
 
         viewModel.setQuestionFormInputs(questionFormInputs);
-        viewModel.setCurrentSection(currentSection);
+        viewModel.setCurrentSection(sectionResource.getSection());
         viewModel.setSectionQuestions(sectionQuestions);
-        viewModel.setTitle(currentSection.getName());
+        viewModel.setTitle(sectionResource.getSection().getName());
     }
 
-    private List<SectionResource> getSectionsFromListByIdList(final List<Long> childSections, final List<SectionResource> allSections) {
-        return simpleFilter(allSections, section -> childSections.contains(section.getId()));
+
+    protected void addQuestionsDetails(BaseSectionViewModel viewModel, ApplicantSectionResource applicantSection, Form form) {
+        List<FormInputResponseResource> responses = applicantSection.allResponses()
+                .map(ApplicantFormInputResponseResource::getResponse)
+                .collect(Collectors.toList());
+        Map<Long, FormInputResponseResource> mappedResponses = formInputResponseService.mapFormInputResponsesToFormInput(responses);
+
+        viewModel.setResponses(mappedResponses);
+
+        if(form == null){
+            form = new Form();
+        }
+        Map<String, String> values = form.getFormInput();
+        mappedResponses.forEach((k, v) ->
+                values.put(k.toString(), v.getValue())
+        );
+        form.setFormInput(values);
     }
 
-    private List<FormInputResource> findFormInputByQuestion(final Long id, final List<FormInputResource> list) {
-        return simpleFilter(list, input -> input.getQuestion().equals(id));
+    protected void addSectionsMarkedAsComplete(BaseSectionViewModel viewModel, ApplicantSectionResource applicantSection) {
+        Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(applicantSection.getApplication().getId());
+        Set<Long> sectionsMarkedAsComplete = completedSectionsByOrganisation.get(applicantSection.getCurrentApplicant().getOrganisation().getId());
+        viewModel.setSectionsMarkedAsComplete(sectionsMarkedAsComplete);
     }
+
+    protected SectionAssignableViewModel addAssignableDetails(ApplicantSectionResource applicantSection) {
+
+        if (isApplicationInViewMode(applicantSection.getApplication(), Optional.of(applicantSection.getCurrentApplicant().getOrganisation()))) {
+            return new SectionAssignableViewModel();
+        }
+
+        Map<Long, QuestionStatusResource> questionAssignees;
+
+        questionAssignees = simpleToMap(applicantSection.allAssignedQuestionStatuses().filter(status -> status.getAssignee().isSameUser(applicantSection.getCurrentApplicant())).collect(Collectors.toList()),
+                status -> status.getStatus().getQuestion(), ApplicantQuestionStatusResource::getStatus);
+
+        List<QuestionStatusResource> notifications = questionService.getNotificationsForUser(questionAssignees.values(), applicantSection.getCurrentUser().getId());
+        questionService.removeNotifications(notifications);
+
+        return new SectionAssignableViewModel(questionAssignees, notifications);
+    }
+
 }
