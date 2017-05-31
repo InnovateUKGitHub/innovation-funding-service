@@ -41,10 +41,12 @@ cursor.execute("SELECT `id`,`name` FROM competition")
 # Fetch all competition records
 competition_ids = {}
 for comp in cursor.fetchall():
+    competitionId = comp[0]
+    competitionName = comp[1]
     if comp[1] is None:
-        competition_ids['none'] = str(comp[0])
+        competition_ids['none'] = str(competitionId)
     else:
-        competition_ids[comp[1]] = str(comp[0])
+        competition_ids[competitionName] = str(competitionId)
 
 # execute SQL query using execute() method, to fetch the Applications
 cursor.execute("SELECT `id`,`name` FROM application")
@@ -52,7 +54,9 @@ cursor.execute("SELECT `id`,`name` FROM application")
 # Fetch the application records
 application_ids = {}
 for app in cursor.fetchall():
-    application_ids[app[1]] = str(app[0])
+    applicationId = app[0]
+    applicationName = app[1]
+    application_ids[applicationName] = str(applicationId)
 
 # execute SQL query using execute() method, to fetch the Application Assessments
 cursor.execute("select p.id, pa.email, a.name from application a join process p on p.target_id = a.id and p.process_type = 'Assessment' join process_role pr on pr.id = p.participant_id join user pa on pa.id = pr.user_id")
@@ -60,16 +64,17 @@ cursor.execute("select p.id, pa.email, a.name from application a join process p 
 # Fetch the assessment records and store as a map of application names to maps of assessor email addresses and their assessment ids
 assessment_ids = {}
 for ass in cursor.fetchall():
+    assessmentId = ass[0]
+    assessmentName = ass[1]
+    applicationName = ass[2]
 
-    application_name = ass[2]
-
-    if application_name in assessment_ids:
-        existing_record = assessment_ids[application_name]
-        existing_record[ass[1]] = str(ass[0])
+    if applicationName in assessment_ids:
+        existing_record = assessment_ids[applicationName]
+        existing_record[assessmentName] = str(assessmentId)
     else:
         first_record = {}
-        first_record[ass[1]] = str(ass[0])
-        assessment_ids[application_name] = first_record
+        first_record[assessmentName] = str(assessmentId)
+        assessment_ids[applicationName] = first_record
 
 
 # execute SQL query using execute() method, to fetch the Applications
@@ -78,7 +83,9 @@ cursor.execute("SELECT `id`,`name` FROM project")
 # Fetch the project records
 project_ids = {}
 for proj in cursor.fetchall():
-    project_ids[proj[1]] = str(proj[0])
+    projectId = proj[0]
+    projectName = proj[1]
+    project_ids[projectName] = str(projectId)
 
 
 # disconnect from server
