@@ -155,9 +155,7 @@
             </div>
         </div>
     </form>
-    <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
-
-
+    <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 

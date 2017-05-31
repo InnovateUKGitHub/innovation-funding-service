@@ -35,9 +35,9 @@
             <fieldset class="inline">
                 <legend>
                     <span class="form-label-bold">Finances form</span>
-                    <span th:if="${#fields.hasErrors('fullApplicationFinance')}" th:remove="tag">
-		                      <span class="error-message"  th:each="err : ${#fields.errors('fullApplicationFinance')}" th:text="${err}" />
-                    </span>
+                    <th:block th:if="${#fields.hasErrors('fullApplicationFinance')}">
+                        <span class="error-message"  th:each="err : ${#fields.errors('fullApplicationFinance')}" th:text="${err}"></span>
+                    </th:block>
                 </legend>
                 <div class="multiple-choice">
                     <input id="full-application-finance-yes" value="true" type="radio" th:field="*{fullApplicationFinance}" required="required" />
@@ -58,9 +58,9 @@
             <fieldset class="inline">
                 <legend>
                     <span class="form-label-bold">Include project growth table</span>
-                    <span th:if="${#fields.hasErrors('includeGrowthTable')}" th:remove="tag">
-		                      <span class="error-message"  th:each="err : ${#fields.errors('includeGrowthTable')}" th:text="${err}" />
-		                </span>
+                    <th:block th:if="${#fields.hasErrors('includeGrowthTable')}">
+	                    <span class="error-message"  th:each="err : ${#fields.errors('includeGrowthTable')}" th:text="${err}"></span>
+	                </th:block>
                 </legend>
                 <div class="multiple-choice">
                     <input id="include-growth-table-yes" value="true" type="radio" th:field="*{includeGrowthTable}" required="required" />

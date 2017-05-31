@@ -97,7 +97,7 @@
             <dt>Project size</dt>
             <dd th:text="${form.projectSize}"></dd>
         </dl>
-        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
+        <th:block th:insert="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <p>Text entered into this section will appear in the summary tab.</p>
@@ -157,7 +157,7 @@
                        th:attr="data-required-errormessage=#{validation.publiccontent.summaryform.projectSize.required}" />
             </div>
 
-        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})" />
+        <th:block th:insert="fragments/public-content :: content-groups(form=${form},model=${model})" />
 
     </th:block>
 </div>
@@ -165,12 +165,12 @@
 <!-- =================== Public content section - Eligibility  ===================================================== -->
 <div th:fragment="section-eligibility(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:if="${model.readOnly}">
-        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
+        <th:block th:insert="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <p>Text entered into this section will appear within the eligibility tab.</p>
         <h2 class="heading-medium no-margin">Content</h2>
-        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})" />
+        <th:block th:insert="fragments/public-content :: content-groups(form=${form},model=${model})" />
     </th:block>
 </div>
 
@@ -289,12 +289,12 @@
 <!-- =================== Public content section - Scope  =========================================================== -->
 <div th:fragment="section-scope(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:if="${model.readOnly}">
-        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
+        <th:block th:insert="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <p>Text entered into this section will appear within the scope tab.</p>
         <h2 class="heading-medium no-margin">Content</h2>
-        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})" />
+        <th:block th:insert="fragments/public-content :: content-groups(form=${form},model=${model})" />
     </th:block>
 </div>
 
@@ -302,23 +302,23 @@
 <div th:fragment="section-supporting-information(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <p>Text entered into this section will appear within the supporting information tab.</p>
     <th:block th:if="${model.readOnly}">
-        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
+        <th:block th:insert="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <h2 class="heading-medium no-margin">Content</h2>
-        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})" />
+        <th:block th:insert="fragments/public-content :: content-groups(form=${form},model=${model})" />
     </th:block>
 </div>
 
 <!-- =================== Public content section - How to apply  ==================================================== -->
 <div th:fragment="section-how-to-apply(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:if="${model.readOnly}">
-        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
+        <th:block th:insert="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <p>Text entered into this section will appear within the how to apply tab.</p>
         <h2 class="heading-medium">Content</h2>
-        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})" />
+        <th:block th:insert="fragments/public-content :: content-groups(form=${form},model=${model})" />
     </th:block>
 </div>
 

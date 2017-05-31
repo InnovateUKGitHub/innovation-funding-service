@@ -26,7 +26,7 @@
             <h2 class="heading-medium">Review assessment</h2>
             <div class="collapsible section-overview">
                 <th:block th:each="question : ${model.questionsForReview}">
-                    <th:block th:include="fragments/assessment :: assessment-summary-section (question=${question})" />
+                    <th:block th:insert="fragments/assessment :: assessment-summary-section (question=${question})" />
                 </th:block>
             </div>
 

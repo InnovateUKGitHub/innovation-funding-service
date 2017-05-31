@@ -227,9 +227,9 @@
 
                     <th:block th:if="${userIsLeadApplicant}">
                         <!--/*  we show mark as complete buttons and the question should be assigned to you or */-->
-                        <th:block th:include="question-type/form-elements :: form-mark-as-complete-buttons" />
+                        <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons" />
                         <!--/* if  readonly we show the edit form button */-->
-                        <th:block th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button" />
+                        <th:block th:if="${readonly}" th:insert="question-type/form-elements :: form-edit-question-button" />
                     </th:block>
 
                 </th:block>
@@ -243,7 +243,7 @@
                 <span class="update-label">Last updated: </span>
                 <th:block th:if="${response?.getUpdateDate()}">
                     <span class="update-details">
-                        <th:block th:include="fragments/elements :: pretty-date (date=${response?.getUpdateDate()})"/> by
+                        <th:block th:insert="fragments/elements :: pretty-date (date=${response?.getUpdateDate()})"/> by
                         <th:block th:if="${response?.getUpdatedByUser() == currentUser.getId()}">you</th:block>
                         <th:block th:unless="${response?.getUpdatedByUser() == currentUser.getId()}"
                                   th:text="${response?.getUpdatedByUserName()}"/>
@@ -363,7 +363,7 @@
             <button type="submit">Reassign</button>
         </div>
         <th:block th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${hideAssignedTo}"
-                  th:include="question-type/form-elements :: current-assignee" />
+                  th:insert="question-type/form-elements :: current-assignee" />
 
     </div>
 
@@ -413,7 +413,7 @@
 <th:block th:fragment="last-update-info">
       <th:block th:if="${response?.getUpdateDate()}">
         <small>
-          Last updated: <th:block th:include="fragments/elements :: pretty-date (date=${response?.getUpdateDate()})" /> by <th:block th:if="${response?.getUpdatedByUser() == currentUser.getId()}">you</th:block>
+          Last updated: <th:block th:insert="fragments/elements :: pretty-date (date=${response?.getUpdateDate()})" /> by <th:block th:if="${response?.getUpdatedByUser() == currentUser.getId()}">you</th:block>
           <th:block th:unless="${response?.getUpdatedByUser() == currentUser.getId()}" th:text="${response?.getUpdatedByUserName()}" />
         </small>
       </th:block>

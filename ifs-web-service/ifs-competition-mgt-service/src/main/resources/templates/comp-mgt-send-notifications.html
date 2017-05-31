@@ -94,9 +94,9 @@
         <div th:class="${#fields.hasErrors('message')}? 'form-group form-group-error':'form-group'">
             <label class="form-label" for="message">
                 <span class="form-label-bold">Message</span>
-                <span th:if="${#fields.hasErrors('message')}" th:remove="tag">
-                    <span class="error-message"  th:each="err : ${#fields.errors('message')}" th:text="${err}" />
-                </span>
+                <th:block th:if="${#fields.hasErrors('message')}">
+                    <span class="error-message"  th:each="err : ${#fields.errors('message')}" th:text="${err}"></span>
+                </th:block>
             </label>
             <div class="textarea-wrapped">
                     <textarea id="message"

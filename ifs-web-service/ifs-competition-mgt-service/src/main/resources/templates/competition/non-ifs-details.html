@@ -25,9 +25,9 @@
             <div th:class="${#fields.hasErrors('title')}? 'form-group form-group-error':'form-group'">
                 <label class="form-label" for="title">
                     <span class="form-label-bold">Competition title</span>
-                    <span th:if="${#fields.hasErrors('title')}" th:remove="tag">
-                          <span class="error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}" />
-                    </span>
+                    <th:block th:if="${#fields.hasErrors('title')}">
+                          <span class="error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}"></span>
+                    </th:block>
                 </label>
                 <input id="title"
                        class="form-control width-xlarge"
@@ -41,9 +41,9 @@
             <div th:class="${#fields.hasErrors('innovationSectorCategoryId')}? 'form-group form-group-error':'form-group'">
                 <label class="form-label" for="innovationSector">
                     <span class="form-label-bold">Innovation sector</span>
-                    <span th:if="${#fields.hasErrors('innovationSectorCategoryId')}" th:remove="tag">
-                          <span class="error-message"  th:each="err : ${#fields.errors('innovationSectorCategoryId')}" th:text="${err}" />
-                    </span>
+                    <th:block th:if="${#fields.hasErrors('innovationSectorCategoryId')}">
+                          <span class="error-message"  th:each="err : ${#fields.errors('innovationSectorCategoryId')}" th:text="${err}"></span>
+                    </th:block>
                 </label>
 
                 <select class="form-control width-x-large"
@@ -59,9 +59,9 @@
             <div th:class="${#fields.hasErrors('innovationAreaCategoryId')}? 'form-group form-group-error':'form-group'">
                 <label class="form-label" for="innovationArea">
                     <span class="form-label-bold">Innovation area</span>
-                    <span th:if="${#fields.hasErrors('innovationAreaCategoryId')}" th:remove="tag">
-                          <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}" />
-                    </span>
+                    <th:block th:if="${#fields.hasErrors('innovationAreaCategoryId')}">
+                          <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}"></span>
+                    </th:block>
                 </label>
                 <select class="form-control width-x-large"
                         th:field="${form.innovationAreaCategoryId}"
@@ -78,9 +78,9 @@
                     <h3 class="heading-small no-margin">Opening date</h3>
                     <legend>
                         <span class="visuallyhidden">Opening date</span>
-                        <span th:if="${#fields.hasErrors('openDate*')}" th:remove="tag">
-                            <span class="error-message"  th:each="err : ${#fields.errors('openDate*')}" th:text="${err}" />
-                      </span>
+                        <th:block th:if="${#fields.hasErrors('openDate*')}">
+                            <span class="error-message"  th:each="err : ${#fields.errors('openDate*')}" th:text="${err}"></span>
+                        </th:block>
                     </legend>
                     <div class="date-group"
                          th:attr="data-date-invalid-errormessage=#{validation.standard.date.format}">
@@ -138,9 +138,9 @@
                     <h3 class="heading-small no-margin">Competition close date / submission deadline</h3>
                     <legend>
                         <span class="visuallyhidden">Competition close date / submission deadline</span>
-                        <span th:if="${#fields.hasErrors('closeDate*')}" th:remove="tag">
-                            <span class="error-message"  th:each="err : ${#fields.errors('closeDate*')}" th:text="${err}" />
-                      </span>
+                        <th:block th:if="${#fields.hasErrors('closeDate*')}">
+                            <span class="error-message"  th:each="err : ${#fields.errors('closeDate*')}" th:text="${err}"></span>
+                        </th:block>
                     </legend>
                     <div class="date-group"
                          th:attr="data-date-invalid-errormessage=#{validation.standard.date.format}">
@@ -213,9 +213,9 @@
                     <h3 class="heading-small no-margin">Applicants notified date</h3>
                     <legend>
                         <span class="visuallyhidden">Applicants notified date</span>
-                        <span th:if="${#fields.hasErrors('applicantNotifiedDate*')}" th:remove="tag">
-                            <span class="error-message"  th:each="err : ${#fields.errors('applicantNotifiedDate*')}" th:text="${err}" />
-                      </span>
+                        <th:block th:if="${#fields.hasErrors('applicantNotifiedDate*')}">
+                            <span class="error-message"  th:each="err : ${#fields.errors('applicantNotifiedDate*')}" th:text="${err}"></span>
+                        </th:block>
                     </legend>
                     <div class="date-group"
                          th:attr="data-date-invalid-errormessage=#{validation.standard.date.format}">
@@ -273,9 +273,9 @@
                 <label class="form-label" for="url">
                     <span class="form-label-bold">Competition URL</span>
                     <span class="form-hint">This is the non-IFS page that the public will go to when they 'apply'</span>
-                    <span th:if="${#fields.hasErrors('url')}" th:remove="tag">
-                          <span class="error-message"  th:each="err : ${#fields.errors('url')}" th:text="${err}" />
-                    </span>
+                    <th:block th:if="${#fields.hasErrors('url')}">
+                        <span class="error-message"  th:each="err : ${#fields.errors('url')}" th:text="${err}"></span>
+                    </th:block>
                 </label>
                 <input id="url"
                        class="form-control width-x-large"

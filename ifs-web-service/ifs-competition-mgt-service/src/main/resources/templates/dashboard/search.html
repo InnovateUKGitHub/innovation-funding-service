@@ -24,7 +24,7 @@
                 <ul class="list-overview">
                     <li class="grid-row section" th:each="competition : ${openComps}">
                         <th:block
-                                th:include="competition/dashboard :: dashboard-row"
+                                th:insert="competition/dashboard :: dashboard-row"
                                 th:with="competition=${competition},
                             innovationAreas=competition.innovationAreaNames,
                             cell4=${competition.numberOfApplications + ' applicants'}">
@@ -41,7 +41,7 @@
                 <ul class="list-overview">
                     <li class="grid-row section" th:each="competition : ${closedComps}">
                         <th:block
-                                th:include="competition/dashboard :: dashboard-row"
+                                th:insert="competition/dashboard :: dashboard-row"
                                 th:with="competition=${competition},
                             innovationAreas=competition.innovationAreaNames,
                             cell4=${competition.numberOfApplications + ' applicants'}">
@@ -58,7 +58,7 @@
                 <ul class="list-overview">
                     <li class="grid-row section" th:each="competition : ${inAssesmentComps}">
                         <th:block
-                                th:include="competition/dashboard :: dashboard-row"
+                                th:insert="competition/dashboard :: dashboard-row"
                                 th:with="competition=${competition},
                             innovationAreas=competition.innovationAreaNames,
                             cell4=${competition.numberOfApplications + ' applicants'}">
@@ -76,7 +76,7 @@
                 <ul class="list-overview">
                     <li class="grid-row section" th:each="competition : ${panelComps}">
                         <th:block
-                                th:include="competition/dashboard :: dashboard-row"
+                                th:insert="competition/dashboard :: dashboard-row"
                                 th:with="competition=${competition},
                             innovationAreas=competition.innovationAreaNames,
                             cell4=${competition.numberOfApplications + ' applicants'}">
@@ -94,7 +94,7 @@
                 <ul class="list-overview">
                     <li class="grid-row section" th:each="competition : ${informComps}">
                         <th:block
-                                th:include="competition/dashboard :: dashboard-row"
+                                th:insert="competition/dashboard :: dashboard-row"
                                 th:with="competition=${competition},
                             innovationAreas=competition.innovationAreaNames,
                             cell4=${competition.numberOfApplications + ' applicants'}">
@@ -111,7 +111,7 @@
                 <ul class="list-overview">
                     <li class="grid-row section" th:each="competition : ${inPrepComps}">
                         <th:block
-                            th:include="competition/dashboard :: dashboard-row"
+                            th:insert="competition/dashboard :: dashboard-row"
                             th:with="competition=${competition},
                             innovationAreas=competition.innovationAreaNames,
                             cell4=${competition.startDateDisplay}">
@@ -128,7 +128,7 @@
                 <ul class="list-overview">
                     <li class="grid-row section" th:each="competition : ${readyToOpenComps}">
                         <th:block
-                            th:include="competition/dashboard :: dashboard-row"
+                            th:insert="competition/dashboard :: dashboard-row"
                             th:with="competition=${competition},
                             innovationAreas=competition.innovationAreaNames,
                             cell4=${competition.startDateDisplay}">
@@ -145,7 +145,7 @@
                 <ul class="list-overview">
                     <li class="grid-row" th:each="competition : ${projectSetupComps}">
                         <th:block
-                                th:include="competition/dashboard :: dashboard-row"
+                                th:insert="competition/dashboard :: dashboard-row"
                                 th:with="competition=${competition},
                             innovationAreas=competition.innovationAreaNames,
                             cell4=${competition.projectsCount + ' projects'}">

@@ -115,7 +115,7 @@
         </div>
 
     </form>
-    <th:block th:include="fragments/elements :: general-pagination(pagination=${pagination})" />
+    <th:block th:insert="fragments/elements :: general-pagination(pagination=${pagination})" />
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
