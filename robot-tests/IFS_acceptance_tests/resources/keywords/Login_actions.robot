@@ -79,9 +79,9 @@ Close any open browsers
     Run Keyword And Ignore Error Without Screenshots    Close all browsers
 
 the guest user enters the log in credentials
-    [Arguments]    ${USER_NAME}    ${PASSWORD}
-    Input Text    id=username    ${USER_NAME}
-    Input Password    id=password    ${PASSWORD}
+    [Arguments]    ${email}    ${password}
+    Input Text    id=username    ${email}
+    Input Password    id=password    ${password}
 
 the user cannot login with their new details
     [Arguments]    ${email}    ${password}

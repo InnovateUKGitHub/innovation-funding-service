@@ -13,8 +13,7 @@ allprojects {
 }
 
 apply from: "openshift-support.gradle"
-
-
+apply from: "zipkin-support.gradle"
 
 if(!project.hasProperty('osTestArgs')) {
     ext.osTestArgs = ""
@@ -68,6 +67,7 @@ subprojects {
         testCompile 'org.springframework.boot:spring-boot-starter-test'
         testCompile 'org.mockito:mockito-core'
         testCompile group: 'org.hamcrest', name: 'hamcrest-library'
+
     }
 
     repositories {

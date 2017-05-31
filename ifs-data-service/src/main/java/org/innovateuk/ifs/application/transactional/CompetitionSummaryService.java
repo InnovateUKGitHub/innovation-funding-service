@@ -8,8 +8,8 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 
 public interface CompetitionSummaryService {
 	
-	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
+	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support')")
 	@SecuredBySpring(value = "VIEW", securedType = CompetitionSummaryResource.class,
-			description = "Comp Admins and Project Finance team members can see Competition Summaries")
+			description = "Internal users can see Competition Summaries")
 	ServiceResult<CompetitionSummaryResource> getCompetitionSummaryByCompetitionId(Long competitionId);
 }

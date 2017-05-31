@@ -612,7 +612,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected SpendProfileTableCalculator spendProfileTableCalculatorMock;
 
     @Mock
-    protected NotificationSender notificationSender;
+    protected NotificationSender notificationSenderMock;
 
     @Mock
     protected NotificationTemplateRenderer notificationTemplateRendererMock;
