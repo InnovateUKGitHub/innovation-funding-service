@@ -384,6 +384,24 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     }
 
     @Test
+    public void getAvailableAssessors_all() throws Exception {
+        List<AvailableAssessorResource> expectedAvailableAssessorResources = newAvailableAssessorResource().build(2);
+
+        Optional<Long> innovationArea = of(4L);
+
+        when(competitionInviteServiceMock.getAvailableAssessors(COMPETITION_ID, innovationArea))
+                .thenReturn(serviceSuccess(expectedAvailableAssessorResources));
+
+        mockMvc.perform(get("/competitioninvite/getAvailableAssessors/{competitionId}", COMPETITION_ID)
+                .param("all", "")
+                .param("innovationArea", "4"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expectedAvailableAssessorResources)));
+
+        verify(competitionInviteServiceMock, only()).getAvailableAssessors(COMPETITION_ID, innovationArea);
+    }
+
+    @Test
     public void getAvailableAssessors_defaultParameters() throws Exception {
         int page = 0;
         int pageSize = 20;

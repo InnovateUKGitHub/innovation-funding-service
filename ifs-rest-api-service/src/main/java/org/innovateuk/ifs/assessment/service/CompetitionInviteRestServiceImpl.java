@@ -2,10 +2,12 @@ package org.innovateuk.ifs.assessment.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.List;
 import java.util.Optional;
 
 import static java.lang.String.format;
@@ -58,6 +60,18 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
         innovationArea.ifPresent(innovationAreaId -> builder.queryParam("innovationArea", innovationAreaId));
 
         return getWithRestResult(builder.toUriString(), AvailableAssessorPageResource.class);
+    }
+
+    @Override
+    public RestResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId, Optional<Long> innovationArea) {
+        String baseUrl = format("%s/%s/%s", competitionInviteRestUrl, "getAvailableAssessors", competitionId);
+
+        UriComponentsBuilder builder = UriComponentsBuilder
+                .fromPath(baseUrl)
+                .queryParam("all");
+        innovationArea.ifPresent(innovationAreaId -> builder.queryParam("innovationArea", innovationAreaId));
+
+        return getWithRestResult(builder.toUriString(), ParameterizedTypeReferences.availableAssessorResourceListType());
     }
 
     @Override

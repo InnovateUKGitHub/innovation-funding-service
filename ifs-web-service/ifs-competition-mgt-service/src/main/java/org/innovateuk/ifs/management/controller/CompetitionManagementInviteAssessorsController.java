@@ -143,7 +143,7 @@ public class CompetitionManagementInviteAssessorsController {
             AssessorSelectionForm selectionForm = getAssessorSelectionFormFromCookie(request).orElse(new AssessorSelectionForm());
 
             if (addAll) {
-                selectionForm.setAssessorEmails(getAllAssessorEmails(competitionId, page, innovationArea));
+                selectionForm.setAssessorEmails(getAllAssessorEmails(competitionId, innovationArea));
                 selectionForm.setAllSelected(true);
             } else {
                 selectionForm.getAssessorEmails().clear();
@@ -157,7 +157,6 @@ public class CompetitionManagementInviteAssessorsController {
         }
     }
 
-    // TODO replace with a service call to return all emails.
     private List<String> getAllAssessorEmails(long competitionId, int currentPage, Optional<Long> innovationArea) {
         AvailableAssessorPageResource pageResource = competitionInviteRestService.getAvailableAssessors(competitionId, currentPage, innovationArea)
                 .getSuccessObjectOrThrowException();
@@ -170,6 +169,12 @@ public class CompetitionManagementInviteAssessorsController {
         });
 
         return allAssessors;
+    }
+
+    private List<String> getAllAssessorEmails(long competitionId, Optional<Long> innovationArea) {
+        List<AvailableAssessorResource> pageResource =
+                competitionInviteRestService.getAvailableAssessors(competitionId, innovationArea).getSuccessObjectOrThrowException();
+        return simpleMap(pageResource, AvailableAssessorResource::getEmail);
     }
 
     // proposed for non-js call from 'add all' checkbox

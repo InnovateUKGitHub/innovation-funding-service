@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
 
@@ -142,6 +143,23 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
 
         AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId, page, innovationArea).getSuccessObject();
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getAvailableAssessors_all() throws Exception {
+        long competitionId = 1L;
+        Optional<Long> innovationArea = of(2L);
+
+        List<AvailableAssessorResource> assessorItems = newAvailableAssessorResource().build(2);
+
+        setupGetWithRestResultExpectations(
+                format("%s/%s/%s?all&innovationArea=2", restUrl, "getAvailableAssessors", competitionId),
+                ParameterizedTypeReferences.availableAssessorResourceListType(),
+                assessorItems
+        );
+
+        List<AvailableAssessorResource> actual = service.getAvailableAssessors(competitionId, innovationArea).getSuccessObject();
+        assertEquals(assessorItems, actual);
     }
 
     @Test

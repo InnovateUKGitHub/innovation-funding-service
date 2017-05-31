@@ -61,6 +61,12 @@ public interface CompetitionInviteService {
     ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable, Optional<Long> innovationArea);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "READ_ASSESSORS_BY_COMPETITION",
+            description = "Competition Administrators and Executives can retrieve available assessors by competition",
+            additionalComments = "The service additionally checks if the assessor does not have an invite for the competition which is either Pending or Accepted")
+    ServiceResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId, Optional<Long> innovationArea);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_INVITES_BY_COMPETITION",
             description = "Competition Administrators and Executives can retrieve created invites by competition")
     ServiceResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, Pageable pageable);

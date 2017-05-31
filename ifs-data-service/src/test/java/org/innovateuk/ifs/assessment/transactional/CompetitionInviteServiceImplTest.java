@@ -979,6 +979,67 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
     }
 
     @Test
+    public void getAvailableAssessors_all() throws Exception {
+        long competitionId = 1L;
+
+        List<InnovationAreaResource> innovationAreaResources = newInnovationAreaResource()
+                .withName("Emerging Tech and Industries")
+                .build(1);
+
+        List<AvailableAssessorResource> assessorItems = newAvailableAssessorResource()
+                .withId(4L, 8L)
+                .withName("Jeremy Alufson", "Felix Wilson")
+                .withCompliant(TRUE)
+                .withEmail("worth.email.test+assessor1@gmail.com", "felix.wilson@gmail.com")
+                .withBusinessType(BUSINESS, ACADEMIC)
+                .withInnovationAreas(innovationAreaResources)
+                .build(2);
+
+        InnovationArea innovationArea = newInnovationArea()
+                .withName("Emerging Tech and Industries")
+                .build();
+
+        List<Profile> profile = newProfile()
+                .withSkillsAreas("Java", "Javascript")
+                .withInnovationArea(innovationArea)
+                .withBusinessType(BUSINESS, ACADEMIC)
+                .withAgreementSignedDate(now())
+                .build(2);
+        List<User> expectedAssessors = newUser()
+                .withId(4L, 8L)
+                .withFirstName("Jeremy", "Felix")
+                .withLastName("Alufson", "Wilson")
+                .withEmailAddress("worth.email.test+assessor1@gmail.com", "felix.wilson@gmail.com")
+                .withAffiliations(newAffiliation()
+                        .withAffiliationType(EMPLOYER)
+                        .withOrganisation("Hive IT")
+                        .withPosition("Software Developer")
+                        .withExists(true)
+                        .build(1))
+                .withProfileId(profile.get(0).getId(), profile.get(1).getId())
+                .build(2);
+
+        Optional<Long> innovationAreaId = of(innovationArea.getId());
+
+
+        when(userRepositoryMock.findAssessorsByCompetitionAndInnovationArea(competitionId, innovationArea.getId()))
+                .thenReturn(expectedAssessors);
+        when(profileRepositoryMock.findOne(expectedAssessors.get(0).getProfileId())).thenReturn(profile.get(0));
+        when(profileRepositoryMock.findOne(expectedAssessors.get(1).getProfileId())).thenReturn(profile.get(1));
+        when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(innovationAreaResources.get(0));
+
+        List<AvailableAssessorResource> actualAssessors = service.getAvailableAssessors(competitionId, innovationAreaId)
+                .getSuccessObjectOrThrowException();
+
+        verify(userRepositoryMock).findAssessorsByCompetitionAndInnovationArea(competitionId, innovationArea.getId());
+        verify(profileRepositoryMock).findOne(expectedAssessors.get(0).getProfileId());
+        verify(profileRepositoryMock).findOne(expectedAssessors.get(1).getProfileId());
+        verify(innovationAreaMapperMock, times(2)).mapToResource(innovationArea);
+
+        assertEquals(expectedAssessors, actualAssessors);
+    }
+
+    @Test
     public void getCreatedInvites() throws Exception {
         long competitionId = 1L;
 

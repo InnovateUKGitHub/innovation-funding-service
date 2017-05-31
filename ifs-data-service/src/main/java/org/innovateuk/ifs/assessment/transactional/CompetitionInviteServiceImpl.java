@@ -194,41 +194,46 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Override
     public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable, Optional<Long> innovationArea) {
-        Page<User> pagedResult;
-
-        if (innovationArea.isPresent()) {
-            pagedResult = userRepository.findAssessorsByCompetitionAndInnovationArea(
-                    competitionId,
-                    innovationArea.orElse(null),
-                    pageable
-            );
-        } else {
-            pagedResult = userRepository.findAssessorsByCompetition(competitionId, pageable);
-        }
-
-        List<AvailableAssessorResource> availableAssessors = simpleMap(pagedResult.getContent(), assessor -> {
-            Profile profile = profileRepository.findOne(assessor.getProfileId());
-
-            AvailableAssessorResource availableAssessor = new AvailableAssessorResource();
-            availableAssessor.setId(assessor.getId());
-            availableAssessor.setEmail(assessor.getEmail());
-            availableAssessor.setName(assessor.getName());
-            availableAssessor.setBusinessType(profile.getBusinessType());
-            availableAssessor.setCompliant(profile.isCompliant(assessor));
-            availableAssessor.setInnovationAreas(simpleMap(profile.getInnovationAreas(), innovationAreaMapper::mapToResource));
-
-            return availableAssessor;
-        });
+        final Page<User> pagedResult = innovationArea.map(i -> userRepository.findAssessorsByCompetitionAndInnovationArea(competitionId, i, pageable))
+                .orElse(userRepository.findAssessorsByCompetition(competitionId, pageable));
 
         return serviceSuccess(new AvailableAssessorPageResource(
                 pagedResult.getTotalElements(),
                 pagedResult.getTotalPages(),
-                availableAssessors,
+                simpleMap(pagedResult.getContent(), this::mapToAvailableAssessorResource),
                 pagedResult.getNumber(),
                 pagedResult.getSize()
         ));
     }
 
+    @Override
+    public ServiceResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId, Optional<Long> innovationArea) {
+        final List<User> result;
+        if (innovationArea.isPresent()) {
+            result = userRepository.findAssessorsByCompetitionAndInnovationArea(
+                    competitionId,
+                    innovationArea.get()
+            );
+        } else {
+            result = userRepository.findAssessorsByCompetition(competitionId);
+        }
+
+        return serviceSuccess(simpleMap(result, this::mapToAvailableAssessorResource));
+    }
+
+    private AvailableAssessorResource mapToAvailableAssessorResource(User assessor) {
+        Profile profile = profileRepository.findOne(assessor.getProfileId());
+
+        AvailableAssessorResource availableAssessor = new AvailableAssessorResource();
+        availableAssessor.setId(assessor.getId());
+        availableAssessor.setEmail(assessor.getEmail());
+        availableAssessor.setName(assessor.getName());
+        availableAssessor.setBusinessType(profile.getBusinessType());
+        availableAssessor.setCompliant(profile.isCompliant(assessor));
+        availableAssessor.setInnovationAreas(simpleMap(profile.getInnovationAreas(), innovationAreaMapper::mapToResource));
+
+        return availableAssessor;
+    }
 
     @Override
     public ServiceResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, Pageable pageable) {

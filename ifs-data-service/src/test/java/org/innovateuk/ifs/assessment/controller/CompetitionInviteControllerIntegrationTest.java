@@ -908,6 +908,23 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         assertEquals("Robert Stark", items.get(5).getName());
     }
 
+    @Test
+    public void getAvailableAssessors_all() throws Exception {
+        loginCompAdmin();
+        addTestAssessors();
+
+        Optional<Long> innovationArea = Optional.of(5L);
+
+        List<AvailableAssessorResource> availableAssessorResources = controller.getAvailableAssessors(competition.getId(), innovationArea)
+                .getSuccessObjectOrThrowException();
+
+        assertEquals(4, availableAssessorResources.size());
+        assertEquals("Jessica Alba", availableAssessorResources.get(0).getName());
+        assertEquals("Victoria Beckham", availableAssessorResources.get(1).getName());
+        assertEquals("James Blake", availableAssessorResources.get(2).getName());
+        assertEquals("Andrew Marr", availableAssessorResources.get(3).getName());
+    }
+
     private void addTestAssessors() {
         InnovationArea innovationArea = innovationAreaRepository.findOne(INNOVATION_AREA_ID);
 
