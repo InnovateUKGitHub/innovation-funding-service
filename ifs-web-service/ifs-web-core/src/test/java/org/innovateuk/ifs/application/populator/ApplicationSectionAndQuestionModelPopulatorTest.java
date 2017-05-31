@@ -46,7 +46,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
@@ -89,6 +89,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
         ApplicationResource application = ApplicationResourceBuilder.newApplicationResource().build();
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().build();
         Long organisationId = 3L;
+        Long userId = 1L;
         List<SectionResource> allSections = newSectionResource().build(3);
         SectionResource parentSection = newSectionResource()
                 .withChildSections(simpleMap(allSections, SectionResource::getId)).build();
@@ -106,7 +107,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
 
         allSections.forEach(loopSection -> when(sectionService.getById(loopSection.getId())).thenReturn(loopSection));
 
-        target.addMappedSectionsDetails(model, application, competition, section, userOrganisation, markAsCompleteEnabled);
+        target.addMappedSectionsDetails(model, application, competition, section, userOrganisation, userId, markAsCompleteEnabled);
 
         verify(model).addAttribute(eq("completedSections"), anyMap());
         verify(model).addAttribute(eq("sections"), anyMap());
@@ -115,6 +116,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
         verify(model).addAttribute(eq("subSections"), anyMap());
         verify(model).addAttribute(eq("subsectionQuestions"), anyMap());
         verify(model).addAttribute(eq("subSectionQuestionFormInputs"), anyMap());
+        verify(model).addAttribute(eq("formInputViewModels"), anyMap());
         verifyNoMoreInteractions(model);
     }
 

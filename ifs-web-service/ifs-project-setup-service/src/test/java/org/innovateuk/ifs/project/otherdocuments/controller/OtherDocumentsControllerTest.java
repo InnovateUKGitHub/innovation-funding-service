@@ -530,6 +530,52 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
     }
 
     @Test
+    public void testSubmitShownWhenFromLeadOrgAndProjectManager() throws Exception {
+        long projectId = 123L;
+        ProjectResource project = newProjectResource().withId(projectId).withOtherDocumentsApproved(ApprovalType.REJECTED).withDocumentsSubmittedDate(ZonedDateTime.now()).build();
+
+        when(projectService.getById(projectId)).thenReturn(project);
+        when(projectService.isProjectManager(loggedInUser.getId(), projectId)).thenReturn(true);
+        when(otherDocumentsService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
+        when(otherDocumentsService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(emptyList());
+        when(otherDocumentsService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(true);
+
+        MvcResult result = mockMvc.perform(
+                get("/project/123/partner/documents")).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/other-documents")).
+                andExpect(model().attributeDoesNotExist("readOnlyView")).
+                andReturn();
+
+        OtherDocumentsViewModel model = (OtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
+        assertTrue(model.isShowDisabledSubmitDocumentsButton());
+    }
+
+    @Test
+    public void testSubmitNotShownWhenFromLeadOrgButNotProjectManager() throws Exception {
+        long projectId = 123L;
+        ProjectResource project = newProjectResource().withId(projectId).withOtherDocumentsApproved(ApprovalType.REJECTED).withDocumentsSubmittedDate(ZonedDateTime.now()).build();
+
+        when(projectService.getById(projectId)).thenReturn(project);
+        when(projectService.isProjectManager(loggedInUser.getId(), projectId)).thenReturn(false);
+        when(otherDocumentsService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
+        when(otherDocumentsService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(emptyList());
+        when(otherDocumentsService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(true);
+
+        MvcResult result = mockMvc.perform(
+                get("/project/123/partner/documents")).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/other-documents")).
+                andExpect(model().attributeDoesNotExist("readOnlyView")).
+                andReturn();
+
+        OtherDocumentsViewModel model = (OtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
+        assertFalse(model.isShowDisabledSubmitDocumentsButton());
+    }
+
+    @Test
     public void testSubmitPartnerDocuments() throws Exception {
         when(otherDocumentsService.setPartnerDocumentsSubmitted(1L)).thenReturn(serviceSuccess());
 

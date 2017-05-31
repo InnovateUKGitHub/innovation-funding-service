@@ -23,7 +23,8 @@ public enum UserRoleType {
     FINANCE_CONTACT("finance_contact", "Finance Contact"),
     PARTNER("partner", "Partner"),
     PROJECT_MANAGER("project_manager", "Project Manager"),
-    IFS_ADMIN("ifs_admin", "IFS Administrator")
+    IFS_ADMIN("ifs_admin", "IFS Administrator"),
+    SUPPORT("support", "IFS Support User")
     ;
 
     private String name;
