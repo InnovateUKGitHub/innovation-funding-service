@@ -130,30 +130,33 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
-    public void getCreatedInvite() {
+    public void getAllInvitesToSend() {
         InnovationArea innovationArea = newInnovationArea().withName("innovation area").build();
-        long createdId = competitionInviteRepository.save(newCompetitionInvite()
-                .with(id(null))
-                .withName("tom poly")
-                .withEmail("tom@poly.io")
-                .withUser((User) null)
-                .withHash("hash")
-                .withCompetition(competition)
-                .withStatus(InviteStatus.CREATED)
-                .withInnovationArea(innovationArea)
-                .build())
-                .getId();
+        competitionInviteRepository.save(
+                newCompetitionInvite()
+                        .with(id(null))
+                        .withName("James Smith", "Peter Mason")
+                        .withEmail("james@email.com", "peter@email.com")
+                        .withUser()
+                        .withHash("hash1", "hash2")
+                        .withCompetition(competition)
+                        .withStatus(InviteStatus.CREATED)
+                        .withInnovationArea(innovationArea)
+                        .build(2)
+        );
 
         loginCompAdmin();
 
-        RestResult<AssessorInvitesToSendResource> serviceResult = controller.getCreatedInvite(createdId);
+        RestResult<AssessorInvitesToSendResource> serviceResult = controller.getAllInvitesToSend(competition.getId());
         assertTrue(serviceResult.isSuccess());
 
         AssessorInvitesToSendResource inviteResource = serviceResult.getSuccessObjectOrThrowException();
         assertEquals(1L, inviteResource.getCompetitionId());
         assertEquals("Connected digital additive manufacturing", inviteResource.getCompetitionName());
-        assertEquals("tom poly", inviteResource.getRecipients());
-        assertTrue(inviteResource.getContent().startsWith("Dear tom poly\n\nWe are inviting you to assess "));
+        assertEquals(2, inviteResource.getRecipients().size());
+        assertEquals("James Smith", inviteResource.getRecipients().get(0));
+        assertEquals("Peter Mason", inviteResource.getRecipients().get(1));
+        assertTrue(inviteResource.getContent().startsWith("Dear [recipient name]\n\nWe are inviting you to assess "));
     }
 
     @Test
@@ -706,17 +709,18 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
-    public void sendInvite() throws Exception {
-        long createdId = competitionInviteRepository.save(newCompetitionInvite()
-                .with(id(null))
-                .withName("tom poly")
-                .withEmail("tom@poly.io")
-                .withUser((User) null)
-                .withHash("hash")
-                .withCompetition(competition)
-                .withStatus(InviteStatus.CREATED)
-                .build())
-                .getId();
+    public void sendAllInvites() throws Exception {
+        competitionInviteRepository.save(
+                newCompetitionInvite()
+                        .with(id(null))
+                        .withName("tom poly")
+                        .withEmail("tom@poly.io")
+                        .withUser()
+                        .withHash("hash")
+                        .withCompetition(competition)
+                        .withStatus(InviteStatus.CREATED)
+                        .build()
+        );
 
         AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
                 .withSubject("subject")
@@ -725,24 +729,26 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         loginCompAdmin();
 
-        RestResult<Void> serviceResult = controller.sendInvite(createdId, assessorInviteSendResource);
+        RestResult<Void> serviceResult = controller.sendAllInvites(competition.getId(), assessorInviteSendResource);
         assertTrue(serviceResult.isSuccess());
     }
 
     @Test
-    public void sendInvite_toExistingApplicant() throws Exception {
+    public void sendAllInvites_toExistingApplicant() throws Exception {
         final UserResource applicantUser = getSteveSmith();
-        long createdId = competitionInviteRepository.save(newCompetitionInvite()
-                .with(id(null))
-                .withName(applicantUser.getName())
-                .withEmail(applicantUser.getEmail())
-                .withUser((User) null)
-                .withHash("hash")
-                .withCompetition(competition)
-                .withStatus(InviteStatus.CREATED)
-                .withInnovationArea(innovationAreaRepository.findOne(INNOVATION_AREA_ID)) // 'new invite'
-                .build())
-                .getId();
+
+        competitionInviteRepository.save(
+                newCompetitionInvite()
+                        .with(id(null))
+                        .withName(applicantUser.getName())
+                        .withEmail(applicantUser.getEmail())
+                        .withUser()
+                        .withHash("hash")
+                        .withCompetition(competition)
+                        .withStatus(InviteStatus.CREATED)
+                        .withInnovationArea(innovationAreaRepository.findOne(INNOVATION_AREA_ID)) // 'new invite'
+                        .build()
+        );
 
         AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
                 .withSubject("subject")
@@ -751,7 +757,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         loginCompAdmin();
 
-        controller.sendInvite(createdId, assessorInviteSendResource).getSuccessObjectOrThrowException();
+        controller.sendAllInvites(competition.getId(), assessorInviteSendResource).getSuccessObjectOrThrowException();
 
         User invitedUser = userRepository.findByEmail(applicantUser.getEmail()).get();
         assertTrue(invitedUser.getRoles().contains(roleRepository.findOneByName(UserRoleType.ASSESSOR.getName())));

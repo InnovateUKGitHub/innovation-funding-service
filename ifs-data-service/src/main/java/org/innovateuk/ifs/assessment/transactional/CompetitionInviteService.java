@@ -17,16 +17,10 @@ import java.util.Optional;
  */
 public interface CompetitionInviteService {
 
-
-    @SecuredBySpring(value = "GET_CREATED_INVITE",
-            description = "Competition Admins and Project Finance users can get a competition invite that has been created")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-    ServiceResult<AssessorInvitesToSendResource> getCreatedInvite(long inviteId);
-
     @SecuredBySpring(value = "GET_ALL_CREATED_INVITES",
             description = "Competition Admins and Project Finance users can get all invites that have been created for a competition")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-    ServiceResult<AssessorInvitesToSendResource> getAllCreatedInvites(long competitionId);
+    ServiceResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "READ_INVITE_ON_HASH",
@@ -97,11 +91,6 @@ public interface CompetitionInviteService {
     @SecuredBySpring(value = "INVITE_EXISTING_USER",
             description = "The Competition Admins and Project Finance users can create a competition invite for an existing user")
     ServiceResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource existingUserStagedInviteResource);
-
-    @SecuredBySpring(value = "SEND_INVITE",
-            description = "The Competition Admins and Project Finance users can send a competition invite")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-    ServiceResult<Void> sendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource);
 
     @SecuredBySpring(value = "SEND_ALL_INVITES",
             description = "The Competition Admins and Project Finance users can send all competition invites")

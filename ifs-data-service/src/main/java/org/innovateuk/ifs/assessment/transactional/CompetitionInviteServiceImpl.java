@@ -129,23 +129,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     @Override
-    public ServiceResult<AssessorInvitesToSendResource> getCreatedInvite(long inviteId) {
-        return getById(inviteId).andOnSuccess(invite -> {
-            if (invite.getStatus() != CREATED) {
-                return ServiceResult.serviceFailure(new Error(COMPETITION_INVITE_ALREADY_SENT, invite.getTarget().getName()));
-            }
-
-            return serviceSuccess(new AssessorInvitesToSendResource(
-                    singletonList(invite.getName()),
-                    invite.getTarget().getId(),
-                    invite.getTarget().getName(),
-                    getInvitePreviewContent(invite.getTarget())
-            ));
-        });
-    }
-
-    @Override
-    public ServiceResult<AssessorInvitesToSendResource> getAllCreatedInvites(long competitionId) {
+    public ServiceResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
             List<CompetitionInvite> invites = competitionInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED);
 
@@ -442,26 +426,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     private ServiceResult<User> getUserByEmail(String email) {
         return find(userRepository.findByEmail(email), notFoundError(User.class, email));
-    }
-
-    @Override
-    public ServiceResult<Void> sendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource) {
-        return getById(inviteId).andOnSuccessReturnVoid(invite -> {
-            competitionParticipantRepository.save(new CompetitionParticipant(invite.send(loggedInUserSupplier.get(), ZonedDateTime.now())));
-
-            if (invite.isNewAssessorInvite()) {
-                userRepository.findByEmail(invite.getEmail()).ifPresent(this::addAssessorRoleToUser);
-            }
-
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
-
-            // Strip any HTML that may have been added to the content by the user.
-            String customTextPlain = stripHtml(assessorInviteSendResource.getContent());
-            // HTML'ify the plain content to add line breaks.
-            String customTextHtml = plainTextToHtml(customTextPlain);
-
-            sendInviteNotification(assessorInviteSendResource.getSubject(), formatter, customTextPlain, customTextHtml, invite);
-        });
     }
 
     @Override

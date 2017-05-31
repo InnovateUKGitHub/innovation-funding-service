@@ -25,14 +25,9 @@ public class CompetitionInviteController {
     @Autowired
     private CompetitionInviteService competitionInviteService;
 
-    @GetMapping("/getCreated/{inviteId}")
-    public RestResult<AssessorInvitesToSendResource> getCreatedInvite(@PathVariable long inviteId) {
-        return competitionInviteService.getCreatedInvite(inviteId).toGetResponse();
-    }
-
-    @GetMapping("/getAllCreated/{competitionId}")
-    public RestResult<AssessorInvitesToSendResource> getAllCreatedInvites(@PathVariable long competitionId) {
-        return competitionInviteService.getAllCreatedInvites(competitionId).toGetResponse();
+    @GetMapping("/getAllInvitesToSend/{competitionId}")
+    public RestResult<AssessorInvitesToSendResource> getAllInvitesToSend(@PathVariable long competitionId) {
+        return competitionInviteService.getAllInvitesToSend(competitionId).toGetResponse();
     }
 
     @GetMapping("/getInvite/{inviteHash}")
@@ -118,11 +113,6 @@ public class CompetitionInviteController {
     @DeleteMapping("/deleteAllInvites")
     public RestResult<Void> deleteAllInvites(@RequestParam long competitionId) {
         return competitionInviteService.deleteAllInvites(competitionId).toDeleteResponse();
-    }
-
-    @PostMapping("/sendInvite/{inviteId}")
-    public RestResult<Void> sendInvite(@PathVariable long inviteId, @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
-        return competitionInviteService.sendInvite(inviteId, assessorInviteSendResource).toPostWithBodyResponse();
     }
 
     @PostMapping("/sendAllInvites/{competitionId}")

@@ -18,7 +18,6 @@ import java.util.Optional;
 import static java.lang.Boolean.TRUE;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.of;
-import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
@@ -177,11 +176,6 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     @Test
-    public void sendInvite() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.sendInvite(1L, newAssessorInviteSendResource().build()), COMP_ADMIN, PROJECT_FINANCE);
-    }
-
-    @Test
     public void deleteInvite() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.deleteInvite("email", 1L), COMP_ADMIN, PROJECT_FINANCE);
     }
@@ -194,12 +188,7 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
     public static class TestCompetitionInviteService implements CompetitionInviteService {
 
         @Override
-        public ServiceResult<AssessorInvitesToSendResource> getCreatedInvite(long inviteId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<AssessorInvitesToSendResource> getAllCreatedInvites(long competitionId) {
+        public ServiceResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId) {
             return null;
         }
 
@@ -265,11 +254,6 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
 
         @Override
         public ServiceResult<Void> inviteNewUsers(List<NewUserStagedInviteResource> newUserStagedInvites, long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> sendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource) {
             return null;
         }
 

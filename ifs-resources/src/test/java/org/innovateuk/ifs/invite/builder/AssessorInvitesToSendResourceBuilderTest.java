@@ -6,10 +6,10 @@ import org.junit.Test;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInvitesToSendResourceBuilder.newAssessorInvitesToSendResource;
 import static org.junit.Assert.assertEquals;
 
-public class AssessorInviteToSendResourceBuilderTest {
+public class AssessorInvitesToSendResourceBuilderTest {
 
     @Test
     public void buildOne() {
@@ -18,7 +18,7 @@ public class AssessorInviteToSendResourceBuilderTest {
         String expectedCompetitionName = "comp-name";
         String expectedContent = "content";
 
-        AssessorInvitesToSendResource assessorInviteToSendResource = newAssessorInviteToSendResource()
+        AssessorInvitesToSendResource assessorInviteToSendResource = newAssessorInvitesToSendResource()
                 .withRecipients(expectedRecipient)
                 .withCompetitionId(expectedCompetitionId)
                 .withCompetitionName(expectedCompetitionName)
@@ -39,7 +39,7 @@ public class AssessorInviteToSendResourceBuilderTest {
         String[] expectedCompetitionNames = {"comp-name", "name-comp"};
         String[] expectedContent = {"content1", "content2"};
 
-        List<AssessorInvitesToSendResource> resources = newAssessorInviteToSendResource()
+        List<AssessorInvitesToSendResource> resources = newAssessorInvitesToSendResource()
                 .withRecipients(expectedRecipients1, expectedRecipients2)
                 .withCompetitionId(expectedCompetitionIds)
                 .withCompetitionName(expectedCompetitionNames)
