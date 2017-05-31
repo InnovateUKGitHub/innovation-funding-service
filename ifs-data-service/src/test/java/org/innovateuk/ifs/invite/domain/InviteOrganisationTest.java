@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newInvite;
+import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 
 public class InviteOrganisationTest {
@@ -23,7 +23,7 @@ public class InviteOrganisationTest {
     public void setUp() throws Exception {
         name = "organisationTestName";
         organisation = newOrganisation().build();
-        invites = newInvite().build(5);
+        invites = newApplicationInvite().build(5);
         id = 1L;
 
         setInviteOrganisation = new InviteOrganisation();

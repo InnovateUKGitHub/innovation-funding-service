@@ -4,7 +4,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
-import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
@@ -30,7 +29,6 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInvitePageResourceBuilder.newAssessorCreatedInvitePageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewPageResourceBuilder.newAssessorInviteOverviewPageResource;
@@ -63,14 +61,25 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     }
 
     @Test
-    public void getCreatedInvite() throws Exception {
+    public void getCreatedInviteToSend() throws Exception {
         AssessorInviteToSendResource resource = new AssessorInviteToSendResource();
         long inviteId = 1L;
 
-        when(competitionInviteServiceMock.getCreatedInvite(inviteId)).thenReturn(serviceSuccess(resource));
-        mockMvc.perform(get("/competitioninvite/getCreated/{inviteId}", inviteId)).andExpect(status().isOk());
+        when(competitionInviteServiceMock.getCreatedInviteToSend(inviteId)).thenReturn(serviceSuccess(resource));
+        mockMvc.perform(get("/competitioninvite/getCreatedInviteToSend/{inviteId}", inviteId)).andExpect(status().isOk());
 
-        verify(competitionInviteServiceMock, only()).getCreatedInvite(inviteId);
+        verify(competitionInviteServiceMock, only()).getCreatedInviteToSend(inviteId);
+    }
+
+    @Test
+    public void getInviteToSend() throws Exception {
+        AssessorInviteToSendResource resource = new AssessorInviteToSendResource();
+        long inviteId = 1L;
+
+        when(competitionInviteServiceMock.getInviteToSend(inviteId)).thenReturn(serviceSuccess(resource));
+        mockMvc.perform(get("/competitioninvite/getInviteToSend/{inviteId}", inviteId)).andExpect(status().isOk());
+
+        verify(competitionInviteServiceMock, only()).getInviteToSend(inviteId);
     }
 
     @Test
@@ -621,5 +630,23 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .andExpect(status().isOk());
 
         verify(competitionInviteServiceMock, only()).sendInvite(inviteId, assessorInviteSendResource);
+    }
+
+    @Test
+    public void resendInvite() throws Exception {
+        long inviteId = 1L;
+        AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
+                .withSubject("subject")
+                .withContent("content")
+                .build();
+
+        when(competitionInviteServiceMock.resendInvite(inviteId, assessorInviteSendResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competitioninvite/resendInvite/{inviteId}", inviteId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(assessorInviteSendResource)))
+                .andExpect(status().isOk());
+
+        verify(competitionInviteServiceMock, only()).resendInvite(inviteId, assessorInviteSendResource);
     }
 }
