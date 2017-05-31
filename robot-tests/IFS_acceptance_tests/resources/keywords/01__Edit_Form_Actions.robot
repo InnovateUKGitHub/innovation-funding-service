@@ -28,7 +28,7 @@ the user unselects the checkbox
 
 the user should see the checkbox
     [Arguments]    ${checkbox}
-    Wait Until Element Is Visible Without Screenshots    css=[id="${checkbox}]:checked ~ label, [name="${checkbox}"]:checked ~ label
+    Wait Until Element Is Visible Without Screenshots    css=[id="${checkbox}"]:checked ~ label, [name="${checkbox}"]:checked ~ label
     # Error checking
     the user should not see an error in the page
     # Header checking (INFUND-1892)
