@@ -16,6 +16,7 @@ services:
     hostname: assessment-svc
     links:
       - admin
+      - zipkin
     ports:
       - "8082:8080"
       - "9002:8000"
@@ -29,6 +30,7 @@ services:
       - JAVA_OPTS=-Xmx150m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
     links:
       - admin
+      - zipkin
     ports:
       - "8083:8080"
       - "9003:8000"
@@ -37,6 +39,7 @@ services:
     hostname: project-setup-mgt-svc
     links:
       - admin
+      - zipkin
     ports:
       - "8084:8080"
       - "9004:8000"
@@ -47,6 +50,7 @@ services:
     hostname: project-setup-svc
     links:
       - admin
+      - zipkin
     ports:
       - "8085:8080"
       - "9005:8000"
