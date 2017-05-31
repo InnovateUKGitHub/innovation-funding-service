@@ -28,7 +28,7 @@ import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newInvite;
+import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newProjectInvite;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.builder.CostCategoryBuilder.newCostCategory;
@@ -125,7 +125,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withRole(PROJECT_FINANCE_CONTACT).
                 withUser(u).
                 withOrganisation(o).
-                withInvite(newInvite().
+                withInvite(newProjectInvite().
                         build()).
                 build(1);
 
@@ -289,7 +289,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
         when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
         when(userRepositoryMock.findOne(newUser.getId())).thenReturn(u);
-        List<ProjectInvite> projectInvites = newInvite().withUser(user).build(1);
+        List<ProjectInvite> projectInvites = newProjectInvite().withUser(user).build(1);
         projectInvites.get(0).open();
         when(inviteProjectRepositoryMock.findByProjectId(p.getId())).thenReturn(projectInvites);
 
