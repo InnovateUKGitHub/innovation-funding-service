@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     INFUND-7058 As an assessor I can read the terms and conditions so that I know what I have agreed to
-Suite Setup       guest user log-in    ${test_mailbox_one}+jeremy.alufson@gmail.com    Passw0rd
+Suite Setup       guest user log-in    &{existing_assessor1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor    Pending
 Resource          ../../../resources/defaultResources.robot
