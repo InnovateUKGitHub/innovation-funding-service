@@ -99,6 +99,7 @@ public class ApplicationModelPopulatorTest {
                 .withId(leadApplicantId).build();
         ProcessRoleResource leadApplicantProcessRole  = ProcessRoleResourceBuilder.newProcessRoleResource()
                 .withUser(leadApplicant).build();
+        Optional<Boolean> markAsCompleteEnabled = Optional.of(Boolean.FALSE);
 
         when(organisationService.getOrganisationById(organisationId)).thenReturn(organisationResource);
         when(userService.getLeadApplicantProcessRoleOrNull(application)).thenReturn(leadApplicantProcessRole);
@@ -106,7 +107,8 @@ public class ApplicationModelPopulatorTest {
         when(processRoleService.findProcessRolesByApplicationId(application.getId())).thenReturn(userApplicationRoles);
 
 
-        applicationModelPopulator.addApplicationAndSections(application, competition, userId, section, currentQuestionId, model, form);
+
+        applicationModelPopulator.addApplicationAndSections(application, competition, userId, section, currentQuestionId, model, form, markAsCompleteEnabled);
 
         //Verify added attributes
         verify(model).addAttribute("currentApplication", application);
@@ -120,7 +122,7 @@ public class ApplicationModelPopulatorTest {
 
         //Verify other model calls
         verify(applicationSectionAndQuestionModelPopulator).addQuestionsDetails(model, application, form);
-        verify(applicationSectionAndQuestionModelPopulator).addMappedSectionsDetails(model, application, competition, section, userOrganisation);
+        verify(applicationSectionAndQuestionModelPopulator).addMappedSectionsDetails(model, application, competition, section, userOrganisation, userId, markAsCompleteEnabled);
         verify(applicationSectionAndQuestionModelPopulator).addAssignableDetails(model, application, organisationResource, userId, section, currentQuestionId);
         verify(applicationSectionAndQuestionModelPopulator).addCompletedDetails(model, application, userOrganisation);
         verify(applicationSectionAndQuestionModelPopulator).addSectionDetails(model, section);
