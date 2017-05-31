@@ -10,7 +10,7 @@
 
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
-            <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${model.application.currentApplication},linkTitle=${backTitle},linkClass='link-back',linkUrl=${backURL}" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${model.application},linkTitle=${backTitle},linkClass='link-back',linkUrl=${backURL}" />
 
             <div class="error-summary" th:attr="aria-hidden=${!#fields.hasErrors('${form.*}')}">
                 <h2 class="heading-medium error-summary-heading">There is a problem on this page</h2>
@@ -21,107 +21,51 @@
                 </ul>
             </div>
 
-            <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${model.application.currentCompetition})" />
+            <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${model.competition})" />
 
-            <th:block th:with="applicationName=${#strings.isEmpty(model.application.currentApplication.name)} ? #{ifs.application.no_title} : ${model.application.currentApplication.name}">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.title},subTitle=${applicationName},size='heading-xlarge'" />
+            <th:block th:with="applicationName=${#strings.isEmpty(model.application.name)} ? #{ifs.application.no_title} : ${model.application.name}">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.title},subTitle=${model.application.name},size='heading-xlarge'" />
             </th:block>
 
             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" data-autosave="application" enctype="multipart/form-data"
-                    th:with="appIsClosed=${model.application.applicationIsClosed}, readonly=${model.application.applicationIsReadOnly}" novalidate="novalidate">
+                    th:with="appIsClosed=${model.applicationIsClosed}, readonly=${model.applicationIsReadOnly}" novalidate="novalidate">
                 <!--/* To disable submission on pressing return (INFUND-6892) */-->
-                <th:block th:unless="${model.application.allReadOnly}">
+                <th:block th:unless="${model.allReadOnly}">
                     <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
                 </th:block>
 
-                <div class="question" th:if="${model.hasCurrentQuestionFormInputs}" th:each="formInput, status : ${model.currentQuestionFormInputs}" th:id="'form-input-'+${formInput.id}"
-                     th:with="formInputIndex=(${status.index}), response=(${model.responses.get(formInput.id)}), question=(${model.currentQuestion}),
-                     questionAssignee=(${model.assignable.questionAssignee}), markedAsComplete=(${model.application.markedAsComplete}), userIsLeadApplicant=(${model.userIsLeadApplicant}),
-                     currentApplication=(${model.application.currentApplication}), currentUser=(${model.currentUser}), assignableUsers=(${model.assignable.assignableUsers}),
-                     pendingAssignableUsers=(${model.assignable.pendingAssignableUsers}), leadOrganisation=(${model.leadOrganisation}), pendingOrganisationNames=(${model.pendingOrganisationNames}),
-                     applicationOrganisations=(${model.applicationOrganisations}), leadApplicant=(${model.leadApplicant}), subFinanceSection=${false}, summary=false">
+                <!--/* Application Form for a Question. */-->
+                <th:block th:if="${model.isQuestion()}">
+                    <div class="question"
+                         th:each="formInputViewModel : ${model.formInputViewModels}"
+                         th:with="formInput=${formInputViewModel.formInput}"
+                         th:id="'form-input-'+${formInput.id}">
 
-                    <th:block th:if="${formInput.type.displayableQuestionType}">
-                        <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
-                    </th:block>
-                </div>
-                <th:block th:if="${model.isSection}">
-                    <p class="subtitle" th:if="${model.currentSection.getDescription()}" th:text="${model.currentSection.getDescription()}" />
-                    <th:block th:unless="${model.hasFinanceView}">
-                        <div class="warning-alert">
-                            Registration is now closed, you are no longer able to submit your application.
-                        </div>
-                    </th:block>
-
-                    <th:block th:if="${model.hasFinanceView and model.isSection}" th:each="question : ${model.sectionQuestions.get(model.currentSection.id)}">
-                        <th:block th:if="${model.isOrgFinancialOverview(question.id)}">
-                            <div th:replace="finance/your-finances-sub-sections :: your_organisation" />
+                        <th:block th:if="${formInput.type.displayableQuestionType}">
+                            <th:block th:insert="question-type/types :: ${formInput.type.nameLower} (${formInputViewModel})" />
                         </th:block>
-                        <th:block th:unless="${model.isOrgFinancialOverview(question.id)}">
-                            <div class="question" th:each="formInput, status : ${model.questionFormInputs?.get(question?.id)}" th:id="'form-input-'+${formInput.getId()}"
-                                th:with="formInputIndex=(${status.index}), response=(${model.responses.get(formInput.id)}),questionAssignee=(${model.assignable.questionAssignees.get(question.getId())})">
-
-                                <th:block th:with="userOrganisation=(${model.application.userOrganisation}), subSections=(${model.subSections}),
-                                                markedAsComplete=(${model.application.markedAsComplete}), formInput=(${formInput}), currentSectionId=(${model.currentSectionId}),
-                                                subsectionQuestions=(${model.subsectionQuestions}), subSectionQuestionFormInputs=(${model.subSectionQuestionFormInputs}),
-                                                currentCompetition=(${model.application.currentCompetition}), hasFinanceSection=(${model.hasFinanceSection}),
-                                                currentApplication=(${model.application.currentApplication}), userIsLeadApplicant=(${model.userIsLeadApplicant}),
-                                                subFinanceSection=${model.subFinanceSection}, filename=${model.financeViewModel.filename}">
-                                    <th:block th:if="${formInput.type.displayableQuestionType}">
-                                        <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
-                                    </th:block>
-
-                                    <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}"
-                                              th:with="organisationFinance=(${model.finance.organisationFinance}), organisationGrantClaimPercentage=(${model.finance.organisationGrantClaimPercentage}),
-                                                       organisationGrantClaimPercentageId=(${model.finance.organisationGrantClaimPercentageId}), organisationFinanceTotal=(${model.finance.organisationFinanceTotal}),
-                                                       organisationFinanceSize=(${model.finance.organisationFinanceSize}), organisationSizes=(${model.finance.organisationSizes}),
-                                                       maximumGrantClaimPercentage=(${model.finance.maximumGrantClaimPercentage}), financeQuestions=(${model.finance.financeQuestions})">
-                                        <div th:replace="'finance/'+${model.finance.financeView} :: ${formInput.type.nameLower}" />
-                                    </th:block>
-
-                                    <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and !model.finance.hasOrganisationFinance}"
-                                              th:with="academicFinance=(${model.finance.academicFinance}), title=(${model.finance.title})">
-                                        <div th:replace="'finance/'+${model.finance.financeView} :: ${formInput.type.nameLower}" />
-                                    </th:block>
-
-                                    <th:block th:if="${model.isFinanceOverview && formInput.type.displayableFinancialSummaryType}">
-                                        <th:block th:with="sectionsMarkedAsComplete=(${model.sectionsMarkedAsComplete}), applicationOrganisations=(${model.applicationOrganisations}),
-                                                currentApplication=(${model.application.currentApplication}), financeSectionId=(${model.financeSectionId}), leadOrganisation=(${model.leadOrganisation}),
-                                                completedSectionsByOrganisation=(${model.completedSectionsByOrganisation}), academicOrganisations=(${model.academicOrganisations}), eachCollaboratorFinanceSectionId=(${model.eachCollaboratorFinanceSectionId})">
-
-                                            <div th:replace="finance/finance-summary :: ${formInput.type.nameLower}" />
-
-                                        </th:block>
-
-                                    </th:block>
-                                </th:block>
-                            </div>
-                        </th:block>
-                    </th:block>
-
-                    <th:block th:include="finance/your-finances-sub-sections :: your_finances" />
-
-                    <th:block th:include="finance/your-finances-sub-sections :: agree_terms" />
-
-                    <th:block th:include="finance/your-finances-sub-sections :: subsection_buttons" />
-
-                </th:block>
-
-                <input type="hidden" id="application_id" th:value="${model.application.currentApplication.id}"/>
-                <input type="hidden" id="competition_id" th:value="${model.application.currentCompetition.id}"/>
-
-                <th:block th:if="${model.showReturnButtons}">
-                    <th:block th:if="${model.application.allReadOnly}">
+                    </div>
+                    <th:block th:if="${model.allReadOnly}">
                         <a th:href="${backURL}" class="button-secondary" th:text="${'Return to ' + #strings.toLowerCase(backTitle)}">Return to application overview</a>
                     </th:block>
-                    <th:block th:unless="${model.application.allReadOnly}">
-                        <button th:unless="${model.isSection}" type="submit" class="button app-submit-btn" name="submit-section">Save and return to application overview</button>
+                    <th:block th:unless="${model.allReadOnly}">
+                        <button th:unless="${model.isSection()}" type="submit" class="button app-submit-btn" name="submit-section">Save and return to application overview</button>
                     </th:block>
                 </th:block>
-            </form>
-            <input type="hidden" id="cacheTest" value="" />
 
-            <th:block th:insert="fragments/layout :: main-content-end" />
+                <!--/* Application Form for a Section. */-->
+                <th:block th:if="${model.isSection()}">
+                    <p class="subtitle" th:if="${model.section.description}" th:text="${model.section.description}" />
+                    <th:block th:include="finance/your-finances-sub-sections :: ${model.section.type.nameLower} (${model})" />
+                </th:block>
+
+                <input type="hidden" id="application_id" th:value="${model.application.id}"/>
+                <input type="hidden" id="competition_id" th:value="${model.competition.id}"/>
+
+                <input type="hidden" id="cacheTest" value="" />
+
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </form>
         </main>
 
         <th:block th:insert="fragments/layout :: footer" />

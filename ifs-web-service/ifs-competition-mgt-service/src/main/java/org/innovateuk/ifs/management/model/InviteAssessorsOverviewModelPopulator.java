@@ -75,7 +75,8 @@ public class InviteAssessorsOverviewModelPopulator extends InviteAssessorsModelP
                 assessorInviteOverviewResource.isCompliant(),
                 assessorInviteOverviewResource.getBusinessType(),
                 assessorInviteOverviewResource.getStatus(),
-                assessorInviteOverviewResource.getDetails());
+                assessorInviteOverviewResource.getDetails(),
+                assessorInviteOverviewResource.getInviteId());
     }
 
     @Override

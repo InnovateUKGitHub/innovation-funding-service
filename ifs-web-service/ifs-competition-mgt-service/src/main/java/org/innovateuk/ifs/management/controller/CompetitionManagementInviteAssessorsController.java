@@ -98,8 +98,10 @@ public class CompetitionManagementInviteAssessorsController {
         selectionForm.setAssessorEmails(storedSelectionForm.getAssessorEmails());
         if (selectionForm.getAllSelected()) {
             selectionForm.setAssessorEmails(getAllAssessorEmails(competitionId, page, filterForm.getInnovationArea()));
-            cookieUtil.saveToCookie(response, SELECTION_FORM, getSerializedObject(selectionForm));
+        } else {
+            selectionForm.getAssessorEmails().retainAll(getAllAssessorEmails(competitionId, page, filterForm.getInnovationArea()));
         }
+        cookieUtil.saveToCookie(response, SELECTION_FORM, getSerializedObject(selectionForm));
 
         return "assessors/find";
     }
@@ -215,20 +217,22 @@ public class CompetitionManagementInviteAssessorsController {
     // Invite all selected users
     @PostMapping(value = "/find/addSelected")
     public String addSelectedAssessorsToInviteList(Model model,
-                                          @PathVariable("competitionId") long competitionId,
-                                          @RequestParam(defaultValue = "0") int page,
-                                          @RequestParam Optional<Long> innovationArea,
-                                          @ModelAttribute(SELECTION_FORM) AssessorSelectionForm selectionForm,
-                                          ValidationHandler validationHandler,
-                                          HttpServletRequest request,
+                                                   @PathVariable("competitionId") long competitionId,
+                                                   @RequestParam(defaultValue = "0") int page,
+                                                   @RequestParam Optional<Long> innovationArea,
+                                                   @ModelAttribute(SELECTION_FORM) AssessorSelectionForm selectionForm,
+                                                   ValidationHandler validationHandler,
+                                                   HttpServletRequest request,
                                                    HttpServletResponse response) {
 
-        AssessorSelectionForm storedSelectionForm = getAssessorSelectionFormFromCookie(request).orElse(selectionForm);
+        AssessorSelectionForm submittedSelectionForm = getAssessorSelectionFormFromCookie(request)
+                .filter(form -> !form.getAssessorEmails().isEmpty())
+                .orElse(selectionForm);
         Supplier<String> failureView = () -> redirectToFind(competitionId, page, innovationArea);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             // Could be possibly be optimised in similar fashion to INFUND-4105
-            storedSelectionForm.getAssessorEmails().stream().forEach(email -> {
+            submittedSelectionForm.getAssessorEmails().stream().forEach(email -> {
                 ServiceResult<CompetitionInviteResource> updateResult = competitionInviteRestService.inviteUser(new ExistingUserStagedInviteResource(email, competitionId)).toServiceResult();
                 validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors());
             });
@@ -239,16 +243,6 @@ public class CompetitionManagementInviteAssessorsController {
             });
         });
     }
-
-    private Optional<AssessorSelectionForm> getAssessorSelectionFormFromCookie(HttpServletRequest request) {
-        String organisationFormJson = cookieUtil.getCookieValue(request, SELECTION_FORM);
-        if (isNotBlank(organisationFormJson)) {
-            return Optional.ofNullable(getObjectFromJson(organisationFormJson, AssessorSelectionForm.class));
-        } else {
-            return Optional.empty();
-        }
-    }
-
 
     private String redirectToFind(long competitionId, int page, Optional<Long> innovationArea) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/competition/{competitionId}/assessors/find")
@@ -394,5 +388,14 @@ public class CompetitionManagementInviteAssessorsController {
         node.put("success", success ? "true" : "false");
 
         return node;
+    }
+
+    private Optional<AssessorSelectionForm> getAssessorSelectionFormFromCookie(HttpServletRequest request) {
+        String organisationFormJson = cookieUtil.getCookieValue(request, SELECTION_FORM);
+        if (isNotBlank(organisationFormJson)) {
+            return Optional.ofNullable(getObjectFromJson(organisationFormJson, AssessorSelectionForm.class));
+        } else {
+            return Optional.empty();
+        }
     }
 }

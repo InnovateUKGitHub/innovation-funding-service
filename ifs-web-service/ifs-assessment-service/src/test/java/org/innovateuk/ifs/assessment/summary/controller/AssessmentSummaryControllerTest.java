@@ -5,7 +5,6 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
-import org.innovateuk.ifs.assessment.common.service.AssessorFormInputResponseService;
 import org.innovateuk.ifs.assessment.resource.AssessmentDetailsResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
@@ -57,15 +56,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
 public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<AssessmentSummaryController> {
-    @Mock
-    private AssessmentService assessmentService;
 
     @Mock
-    private AssessorFormInputResponseService assessorFormInputResponseService;
+    private AssessmentService assessmentService;
 
     @Spy
     @InjectMocks
     private AssessmentSummaryModelPopulator assessmentSummaryModelPopulator;
+
     private List<FormInputResource> formInputsForQuestion4;
     private List<FormInputResource> formInputsForQuestion3;
     private List<FormInputResource> formInputsForQuestion2;
@@ -513,8 +511,8 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
 
         assessorResponses = combineLists(question1AssessorResponse, question2AssessorResponse, question3AssessorResponse, question4AssessorResponse);
 
-        when(assessorFormInputResponseService.getAllAssessorFormInputResponses(assessmentId))
-                .thenReturn(assessorResponses);
+        when(assessorFormInputResponseRestService.getAllAssessorFormInputResponses(assessmentId))
+                .thenReturn(restSuccess(assessorResponses));
 
         return questionResources;
     }

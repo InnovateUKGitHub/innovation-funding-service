@@ -7,9 +7,7 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.security.BasePermissionRules;
-import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isCompAdmin;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;

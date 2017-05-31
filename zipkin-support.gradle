@@ -1,0 +1,29 @@
+def zipkinEnabled = project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false
+
+if(zipkinEnabled) {
+    subprojects {
+        apply plugin: 'io.spring.dependency-management'
+
+        ext {
+            springCloudVersion = 'Dalston.RELEASE'
+            zipkinLogTraceLevel = 'DEBUG'
+        }
+
+        dependencies {
+            compile "org.springframework.cloud:spring-cloud-starter-sleuth"
+            compile "org.springframework.cloud:spring-cloud-sleuth-zipkin"
+        }
+
+        dependencyManagement {
+            imports {
+                mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+            }
+        }
+    }
+} else  {
+    subprojects {
+        ext {
+            zipkinLogTraceLevel = 'ERROR'
+        }
+    }
+}

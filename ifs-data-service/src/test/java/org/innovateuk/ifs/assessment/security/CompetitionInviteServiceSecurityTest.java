@@ -189,7 +189,12 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
     public static class TestCompetitionInviteService implements CompetitionInviteService {
 
         @Override
-        public ServiceResult<AssessorInviteToSendResource> getCreatedInvite(long inviteId) {
+        public ServiceResult<AssessorInviteToSendResource> getCreatedInviteToSend(long inviteId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<AssessorInviteToSendResource> getInviteToSend(long inviteId) {
             return null;
         }
 
@@ -265,6 +270,11 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
 
         @Override
         public ServiceResult<Void> sendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> resendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource) {
             return null;
         }
 

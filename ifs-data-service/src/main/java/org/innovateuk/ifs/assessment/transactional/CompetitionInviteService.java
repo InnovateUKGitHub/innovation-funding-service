@@ -22,7 +22,12 @@ public interface CompetitionInviteService {
     @SecuredBySpring(value = "GET_CREATED_INVITE",
             description = "The Competition Admin user, or the Competition Executive user can get a competition invite that has been created")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-    ServiceResult<AssessorInviteToSendResource> getCreatedInvite(long inviteId);
+    ServiceResult<AssessorInviteToSendResource> getCreatedInviteToSend(long inviteId);
+
+    @SecuredBySpring(value = "GET_INVITE",
+            description = "The Competition Admin user, or the Competition Executive user can get a competition invite that has been created")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    ServiceResult<AssessorInviteToSendResource> getInviteToSend(long inviteId);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "READ_INVITE_ON_HASH",
@@ -104,6 +109,11 @@ public interface CompetitionInviteService {
             description = "The Competition Admin user, or the Competition Executive user can send a competition invite")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<Void> sendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource);
+
+    @SecuredBySpring(value = "RESEND_INVITE",
+            description = "The Competition Admin user, or the Competition Executive user can send a competition invite")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    ServiceResult<Void> resendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource);
 
     @SecuredBySpring(value = "DELETE_INVITE",
             description = "The Competition Admin user, or the Competition Executive user can delete a competition invite")

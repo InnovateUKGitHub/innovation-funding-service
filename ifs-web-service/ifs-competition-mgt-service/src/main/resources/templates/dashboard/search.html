@@ -26,8 +26,9 @@
                         <th:block
                                 th:include="competition/dashboard :: dashboard-row"
                                 th:with="competition=${competition},
-                            cell3=${#strings.setJoin(competition.innovationAreaNames, ', ')},
-                            cell4=${competition.numberOfApplications + ' applicants'}">
+                            innovationAreas=competition.innovationAreaNames,
+                            cell4=${competition.numberOfApplications + ' applicants'},
+                            supportView=${supportView}">
                         </th:block>
                     </li>
                 </ul>
@@ -43,8 +44,9 @@
                         <th:block
                                 th:include="competition/dashboard :: dashboard-row"
                                 th:with="competition=${competition},
-                            cell3=${#strings.setJoin(competition.innovationAreaNames, ', ')},
-                            cell4=${competition.numberOfApplications + ' applicants'}">
+                            innovationAreas=competition.innovationAreaNames,
+                            cell4=${competition.numberOfApplications + ' applicants'},
+                            supportView=${supportView}">
                         </th:block>
                     </li>
                 </ul>
@@ -60,8 +62,9 @@
                         <th:block
                                 th:include="competition/dashboard :: dashboard-row"
                                 th:with="competition=${competition},
-                            cell3=${#strings.setJoin(competition.innovationAreaNames, ', ')},
-                            cell4=${competition.numberOfApplications + ' applicants'}">
+                            innovationAreas=competition.innovationAreaNames,
+                            cell4=${competition.numberOfApplications + ' applicants'},
+                            supportView=${supportView}">
                         </th:block>
                     </li>
                 </ul>
@@ -78,8 +81,9 @@
                         <th:block
                                 th:include="competition/dashboard :: dashboard-row"
                                 th:with="competition=${competition},
-                            cell3=${#strings.setJoin(competition.innovationAreaNames, ', ')},
-                            cell4=${competition.numberOfApplications + ' applicants'}">
+                            innovationAreas=competition.innovationAreaNames,
+                            cell4=${competition.numberOfApplications + ' applicants'},
+                            supportView=${supportView}">
                         </th:block>
                     </li>
                 </ul>
@@ -96,8 +100,9 @@
                         <th:block
                                 th:include="competition/dashboard :: dashboard-row"
                                 th:with="competition=${competition},
-                            cell3=${#strings.setJoin(competition.innovationAreaNames, ', ')},
-                            cell4=${competition.numberOfApplications + ' applicants'}">
+                            innovationAreas=competition.innovationAreaNames,
+                            cell4=${competition.numberOfApplications + ' applicants'},
+                            supportView=${supportView}">
                         </th:block>
                     </li>
                 </ul>
@@ -113,8 +118,9 @@
                         <th:block
                             th:include="competition/dashboard :: dashboard-row"
                             th:with="competition=${competition},
-                            cell3=${#strings.setJoin(competition.innovationAreaNames, ', ')},
-                            cell4=${competition.startDateDisplay}">
+                            innovationAreas=competition.innovationAreaNames,
+                            cell4=${competition.startDateDisplay},
+                            supportView=${supportView}">
                         </th:block>
                     </li>
                 </ul>
@@ -130,8 +136,9 @@
                         <th:block
                             th:include="competition/dashboard :: dashboard-row"
                             th:with="competition=${competition},
-                            cell3=${#strings.setJoin(competition.innovationAreaNames, ', ')},
-                            cell4=${competition.startDateDisplay}">
+                            innovationAreas=competition.innovationAreaNames,
+                            cell4=${competition.startDateDisplay},
+                            supportView=${supportView}">
                         </th:block>
                     </li>
                 </ul>
@@ -147,8 +154,9 @@
                         <th:block
                                 th:include="competition/dashboard :: dashboard-row"
                                 th:with="competition=${competition},
-                            cell3=${#strings.setJoin(competition.innovationAreaNames, ', ')},
-                            cell4=${competition.projectsCount + ' projects'}">
+                            innovationAreas=competition.innovationAreaNames,
+                            cell4=${competition.projectsCount + ' projects'},
+                            supportView=${supportView}">
                         </th:block>
                     </li>
                 </ul>
