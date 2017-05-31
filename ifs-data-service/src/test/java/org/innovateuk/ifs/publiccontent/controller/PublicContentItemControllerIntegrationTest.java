@@ -26,7 +26,8 @@ import java.util.Optional;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.publiccontent.builder.KeywordBuilder.newKeyword;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 public class PublicContentItemControllerIntegrationTest extends BaseControllerIntegrationTest<PublicContentItemController> {
@@ -57,7 +58,9 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     @Before
     public void setLoggedInUserOnThread() {
         loginSystemRegistrationUser();
-        setupKeywords();
+
+        setupCompetitionWithKeywords();
+        setupPrivateCompetition();
     }
 
 
@@ -185,7 +188,18 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         assertEquals(COMPETITION_ID, resultObject.getPublicContentResource().getCompetitionId());
     }
 
-    private void setupKeywords() {
+    @Test
+    @Rollback
+    public void findFilteredItems_inviteOnlyCompetitionsWontBeFound() throws Exception {
+        RestResult<PublicContentItemPageResource> result = controller.findFilteredItems(Optional.empty(), Optional.of("keywordoninviteonly"), Optional.of(0), 20);
+
+        assertTrue(result.isSuccess());
+        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccessObject();
+
+        assertEquals(0, publicContentItemResourcesFive.getTotalElements());
+    }
+
+    private void setupCompetitionWithKeywords() {
         PublicContent publicContentResult = publicContentRepository.save(newPublicContent()
                 .withCompetitionId(1L)
                 .withPublishDate(ZonedDateTime.now().minusDays(1))
@@ -202,5 +216,22 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         competition.setInnovationSector(innovationArea.getSector());
 
         competitionRepository.save(competition);
+    }
+
+    private void setupPrivateCompetition() {
+        PublicContent publicContentResult = publicContentRepository.save(newPublicContent()
+                .withCompetitionId(2L)
+                .withPublishDate(ZonedDateTime.now().minusDays(1))
+                .withInviteOnly(true)
+                .build());
+
+        Keyword keywordOne = newKeyword().withKeyword("keywordoninviteonly").withPublicContent(publicContentResult).build();
+        keywordRepository.save(asList(keywordOne));
+
+        //InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
+        //Competition competition = competitionRepository.findOne(2L);
+        //competition.setInnovationSector(innovationArea.getSector());
+
+        //competitionRepository.save(competition);
     }
 }
