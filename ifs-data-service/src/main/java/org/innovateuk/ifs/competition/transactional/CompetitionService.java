@@ -35,12 +35,12 @@ public interface CompetitionService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionSearchResultItem>> findNonIfsCompetitions();
 
-    @SecuredBySpring(value = "SEARCH", description = "Only those with either comp admin or project finance roles can search for competitions")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "SEARCH", description = "Only internal users can search for competitions")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
     ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size);
 
-    @SecuredBySpring(value = "COUNT", description = "Only those with either comp admin or project finance roles count competitions")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "COUNT", description = "Only internal users count competitions")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
     ServiceResult<CompetitionCountResource> countCompetitions();
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
