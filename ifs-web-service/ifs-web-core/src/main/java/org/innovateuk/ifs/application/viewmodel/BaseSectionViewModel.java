@@ -321,7 +321,7 @@ public abstract class BaseSectionViewModel {
     private List<FormInputResource> getFormInputsByType(Long questionId, FormInputType formInputType) {
         if(questionFormInputs.containsKey(questionId)) {
             return questionFormInputs.get(questionId).stream().filter(formInputResource -> formInputType.equals(formInputResource.getType())).collect(toList());
-        } 
+        }
         return Collections.emptyList();
     }
 
