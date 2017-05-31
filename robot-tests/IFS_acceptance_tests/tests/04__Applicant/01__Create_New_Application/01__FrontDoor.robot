@@ -13,8 +13,8 @@ Guest user navigates to Front Door
     [Tags]
     [Setup]    the user navigates to the front door
     When the user should see the element     jQuery=a:contains("Innovate UK")
-    When the user should see the element     jQuery=h1:contains("Innovation competitions")
-    When the user should see the element     css=#keywords
+    Then the user should see the element     jQuery=h1:contains("Innovation competitions")
+    And the user should see the element     css=#keywords
     Then the user should see the element     css=#innovation-area
     When the user clicks the button/link     link=Contact us
     Then the user should see the element     jQuery=h1:contains("Contact us")
