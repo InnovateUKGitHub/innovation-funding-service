@@ -204,9 +204,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
             OrganisationAddress newOrganisationAddress;
             if (bankOrganisationAddresses != null && bankOrganisationAddresses.size() > 0) {
                 newOrganisationAddress = bankOrganisationAddresses.get(0);
-                long oldAddressId = newOrganisationAddress.getAddress().getId();
-                newOrganisationAddress.setAddress(addressMapper.mapToDomain(addressResource));
-                addressRepository.delete(oldAddressId);
+                newOrganisationAddress.getAddress().updateFrom(addressResource);
             } else {
                 newOrganisationAddress = organisationAddressRepository.save(organisationAddressMapper.mapToDomain(organisationAddressResource));
             }
