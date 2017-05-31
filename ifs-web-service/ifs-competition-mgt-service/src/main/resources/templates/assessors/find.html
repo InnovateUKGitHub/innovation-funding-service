@@ -4,7 +4,7 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite assessors'" />
 </head>
 
-<body th:with="context='comp-management'" class="competition-management competition-overview">
+<body th:with="context='comp-management'" class="competition-management competition-overview invite-assessors">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
@@ -110,12 +110,13 @@
             <thead>
             <tr>
                 <th scope="col" id="select-all">
-                    <label class="block-label selection-button-checkbox">
+                    <label class="block-label selection-button-checkbox" id="select-all-checkbox" aria-hidden="true">
                         <input type="checkbox"
-                               data-switches-button-status="[name=addToInviteList]"
+                               data-switches-button-status="[name=addSelected]"
                                id="select-all-check" th:field="*{allSelected}" />
-                        <span>Add all to invite list</span>
+                        <span>Select&nbsp;all</span>
                     </label>
+                    <button class="button button-secondary" id="select-all-button" aria-hidden="false">Select all</button>
                 </th>
                 <th scope="col">Assessor name</th>
                 <th scope="col">Type</th>
@@ -128,9 +129,11 @@
                 <td>
                     <label class="block-label selection-button-checkbox">
                         <input type="checkbox"
-                               data-switches-button-status="[name=addToInviteList]"
-                               th:id="${assessor.id}"  th:field="*{assessorEmails}" th:value="${assessor.email}"/>
-                        <span>Add</span>
+                               data-switches-button-status="[name=addSelected]"
+                               th:id="${assessor.id}"
+                               th:field="*{assessorEmails}"
+                               th:value="${assessor.email}"/>
+                        <span class="invisible">Add</span>
                     </label>
                 </td>
                 <td>
@@ -165,8 +168,11 @@
 	// <![CDATA[
            jQuery(document).ready(function(){
 
+                $('#select-all-button').attr('aria-hidden', 'true')
+                $('#select-all-checkbox').attr('aria-hidden', 'false')
+
                 var $checkboxes = $("td :checkbox");
-                var $button = $("#select-all-check");
+                var $selectAll = $("#select-all-check");
                 var competitionId = jQuery('#competition_id').val();
                 var url = 'competition/' + competitionId + '/assessors/find';
                 var data;
@@ -175,19 +181,17 @@
                   return $checkboxes.length === $checkboxes.filter(":checked").length;
                 }
 
-                function updateButtonStatus(){
-                    // $button.text(allChecked()? "Unselect all" : "Select all");
-
-                  $button.prop("checked", allChecked()? true : false)
+                function updateSelectAllStatus(){
+                  $selectAll.prop("checked", allChecked()? true : false)
 
                   if (allChecked()) {
-                    $button.addClass('selected')
+                    $selectAll.addClass('selected')
                   } else {
-                    $button.parent().removeClass('selected')
+                    $selectAll.parent().removeClass('selected')
                   }
                 }
 
-                function handleButtonClick(){
+                function handleSelectAllClick(){
                   $checkboxes.prop("checked", allChecked()? false : true)
 
                   if (allChecked()) {
@@ -212,16 +216,17 @@
                     })
                 }
 
-                $button.on("click", function(e) {
+                $selectAll.on("click", function(e) {
                   var addAll = "addAll=" + this.checked;
                   data = addAll;
 
-                  handleButtonClick();
-                  updateButtonStatus();
+                  handleSelectAllClick();
+                  updateSelectAllStatus();
                   updateController();
                 });
 
-                $checkboxes.on("change", function(){
+                $checkboxes.change(function(){
+
                   var addAssessor = "assessor=";
                   var isSelected = "&isSelected=";
 
@@ -229,7 +234,7 @@
                   addAssessor = addAssessor + this.value;
                   isSelected = isSelected + this.checked;
                   data = addAssessor + isSelected;
-                  updateButtonStatus();
+                  updateSelectAllStatus();
                   updateController()
                 });
 
