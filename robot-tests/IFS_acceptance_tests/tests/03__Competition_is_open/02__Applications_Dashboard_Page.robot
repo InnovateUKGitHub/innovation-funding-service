@@ -79,9 +79,9 @@ Application has team link and team details
     [Documentation]  IFS-43
     [Tags]  HappyPath
     Given the user clicks the button/link    link=${OPEN_COMPETITION_APPLICATION_1_NUMBER}
-    Then the user should see the element  link=View application team details.
+    Then the user should see the element  link=view application team details
     And the user should see the text in the page  ${OPEN_COMPETITION_APPLICATION_NAME}
-    When the user clicks the button/link  link=View application team details.
+    When the user clicks the button/link  link=view application team details
     Then the user should see the text in the page  Application team
     And the user should see the text in the page  View application participants for both the lead and collaborating organisations.
     And the user should see the element    jQuery=h2:nth-of-type(1):contains("${EMPIRE_LTD_NAME} (Lead)")
