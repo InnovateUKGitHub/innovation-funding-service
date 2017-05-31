@@ -57,6 +57,28 @@ public class CompetitionInviteTest {
         invite.open().send(newUser().build(), ZonedDateTime.now());
     }
 
+    @Test
+    public void resend() {
+        invite
+                .send(newUser().build(), ZonedDateTime.now())
+                .sendOrResend(newUser().build(), ZonedDateTime.now());
+        assertEquals(SENT, invite.getStatus());
+    }
+
+    @Test
+    public void resend_created() {
+        invite.sendOrResend(newUser().build(), ZonedDateTime.now());
+        assertEquals(SENT, invite.getStatus());
+    }
+
+    @Test
+    public void resend_opened() {
+        invite
+                .open()
+                .sendOrResend(newUser().build(), ZonedDateTime.now());
+        assertEquals(SENT, invite.getStatus());
+    }
+
     @Test(expected = NullPointerException.class)
     public void sent_nullBy() {
         invite.send(null, ZonedDateTime.now());
@@ -68,15 +90,14 @@ public class CompetitionInviteTest {
     }
 
     @Test
-    public void open_created() {
-        // this probably shouldn't allow an invite that hasn't been sent from being opened
-        invite.open();
+    public void open() {
+        invite.send(newUser().build(), ZonedDateTime.now()).open();
         assertEquals(OPENED, invite.getStatus());
     }
 
     @Test
-    public void open_sent() {
-        invite.send(newUser().build(), ZonedDateTime.now()).open();
+    public void open_created() {
+        invite.open();
         assertEquals(OPENED, invite.getStatus());
     }
 

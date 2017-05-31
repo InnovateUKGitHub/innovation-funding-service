@@ -85,6 +85,8 @@
                     <th:block th:if="${publicContentDate.mustBeStrong}">
                         <dd class="extra-margin"><strong th:text="${publicContentDate.content}"></strong></dd>
                     </th:block>
+
+
                     <th:block th:unless="${publicContentDate.mustBeStrong}">
                         <dd class="extra-margin" ifs:utext="${publicContentDate.content}"></dd>
                     </th:block>

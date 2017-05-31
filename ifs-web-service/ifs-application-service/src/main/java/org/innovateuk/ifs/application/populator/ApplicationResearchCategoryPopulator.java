@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * Populates the research category selection viewmodel.
  */
 @Component
-public class ApplicationResearchCategoryPopulator extends BaseModelPopulator {
+public class ApplicationResearchCategoryPopulator {
 
     @Autowired
     private ApplicationRestService applicationRestService;

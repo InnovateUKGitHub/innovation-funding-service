@@ -18,3 +18,4 @@
 &{comp_tect_two}                          email=peter.freeman@innovateuk.test    password=Passw0rd
 &{Multiple_user_credentials}              email=jo.peters@ntag.example.com    password=Passw0rd
 &{Ineligible_user}                        email=nancy.peterson@gmail.com    password=Passw0rd
+&{support_user_credentials}               email=support@innovateuk.test    password=Passw0rd

@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.management.viewmodel;
 
-import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
-
 import java.util.List;
 
 /***
@@ -13,6 +11,8 @@ public class AllApplicationsViewModel extends BaseApplicationsViewModel<AllAppli
     private int applicationsStarted;
     private int applicationsInProgress;
     private int applicationsSubmitted;
+    private String backTitle;
+    private String backURL;
 
     public AllApplicationsViewModel(long competitionId,
                                     String competitionName,
@@ -23,12 +23,16 @@ public class AllApplicationsViewModel extends BaseApplicationsViewModel<AllAppli
                                     String sorting,
                                     String filter,
                                     List<AllApplicationsRowViewModel> applications,
-                                    PaginationViewModel pagination) {
+                                    PaginationViewModel pagination,
+                                    String backTitle,
+                                    String backURL) {
         super(competitionId, competitionName, applications, pagination, sorting, filter);
         this.totalNumberOfApplications = totalNumberOfApplications;
         this.applicationsStarted = applicationsStarted;
         this.applicationsInProgress = applicationsInProgress;
         this.applicationsSubmitted = applicationsSubmitted;
+        this.backTitle = backTitle;
+        this.backURL = backURL;
     }
 
     public int getTotalNumberOfApplications() {
@@ -45,5 +49,13 @@ public class AllApplicationsViewModel extends BaseApplicationsViewModel<AllAppli
 
     public int getApplicationsSubmitted() {
         return applicationsSubmitted;
+    }
+
+    public String getBackURL() {
+        return backURL;
+    }
+
+    public String getBackTitle() {
+        return backTitle;
     }
 }

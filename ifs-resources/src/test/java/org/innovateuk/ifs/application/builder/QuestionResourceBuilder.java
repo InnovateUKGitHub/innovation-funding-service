@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.application.resource.QuestionType;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
@@ -10,8 +11,8 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 
 public class QuestionResourceBuilder extends BaseBuilder<QuestionResource, QuestionResourceBuilder> {
 
@@ -75,6 +76,11 @@ public class QuestionResourceBuilder extends BaseBuilder<QuestionResource, Quest
     public QuestionResourceBuilder withAssessorMaximumScore(Integer... assessorMaximumScores) {
         return withArray((assessorMaximumScore, object) -> setField("assessorMaximumScore", assessorMaximumScore, object), assessorMaximumScores);
     }
+
+    public QuestionResourceBuilder withType(QuestionType... types) {
+        return withArray((type, object) -> setField("type", type, object), types);
+    }
+
 
     public QuestionResourceBuilder withCompetitionAndSectionAndPriority(CompetitionResource competition, SectionResource section, Integer priority) {
         return with(question -> {

@@ -6,6 +6,7 @@ import org.innovateuk.ifs.management.model.ApplicationsMenuModelPopulator;
 import org.innovateuk.ifs.management.model.IneligibleApplicationsModelPopulator;
 import org.innovateuk.ifs.management.model.SubmittedApplicationsModelPopulator;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -14,7 +15,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Optional;
 
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 
@@ -24,7 +24,7 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/applications")
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
 public class CompetitionManagementApplicationsController {
 
     private static final String FILTER_FORM_ATTR_NAME = "filterForm";
@@ -53,9 +53,10 @@ public class CompetitionManagementApplicationsController {
                                   @RequestParam MultiValueMap<String, String> queryParams,
                                   @RequestParam(value = "page", defaultValue = "0") int page,
                                   @RequestParam(value = "sort", defaultValue = "") String sort,
-                                  @RequestParam(value = "filterSearch", defaultValue = "") String filter) {
+                                  @RequestParam(value = "filterSearch", defaultValue = "") String filter,
+                                  UserResource user) {
         String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.ALL_APPLICATIONS, queryParams);
-        model.addAttribute("model", allApplicationsPageModelPopulator.populateModel(competitionId, originQuery, page, sort, filter));
+        model.addAttribute("model", allApplicationsPageModelPopulator.populateModel(competitionId, originQuery, page, sort, filter, user));
         model.addAttribute("originQuery", originQuery);
 
         return "competition/all-applications";
