@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.user.transactional;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.google.common.collect.Sets;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.*;
@@ -25,6 +26,7 @@ import java.util.*;
 
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -124,8 +126,14 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
             Notification notification = new Notification(from, singletonList(to), Notifications.RESET_PASSWORD, notificationArguments);
             return notificationService.sendNotification(notification, EMAIL);
-        } else if (user.hasRole(UserRoleType.APPLICANT)
-                && userNotYetVerified(user)) {
+        } else if (user.getRoles().stream().filter(r ->
+                    UserRoleType.COLLABORATOR.name().equals(r.getName()) ||
+                    UserRoleType.APPLICANT.name().equals(r.getName()) ||
+                    UserRoleType.FINANCE_CONTACT.name().equals(r.getName()) ||
+                    UserRoleType.LEADAPPLICANT.name().equals(r.getName()) ||
+                    UserRoleType.PARTNER.name().equals(r.getName()) ||
+                    UserRoleType.PROJECT_MANAGER.name().equals(r.getName())).count() > 0 &&
+                userNotYetVerified(user)) {
             return registrationService.resendUserVerificationEmail(user);
         } else {
             return serviceFailure(notFoundError(UserResource.class, user.getEmail(), UserStatus.ACTIVE));

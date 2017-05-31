@@ -178,8 +178,30 @@ Business organisation (partner accepts invitation)
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user fills the create account form    Adrian    Booth
-    And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Please verify your email address    Once verified you can sign into your account
-    And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
+    And the user reads his email locally    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Please verify your email address    Once verified you can sign into your account
+
+Partner requests new verification email via password reset
+    [Documentation]  IFS-52
+    [Tags]  HappyPath  Email
+    [Setup]    Run Keywords    delete the emails from the default test mailbox
+        ...    AND    the guest user opens the browser
+    Given the user navigates to the page    ${LOGIN_URL}
+    When the user clicks the forgot psw link
+    And the user enters text to a text field    id=id_email    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com
+    And the user clicks the button/link    css=input.button
+    Then the user should see the text in the page    If your email address is recognised and valid, you’ll receive a notification with instructions about how to reset your password. If you do not receive a notification, please check your junk folder or try again.
+    And the user reads his email locally    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Please verify your email address    Once verified you can sign into your account
+    And the user should see the text in the page    Password reset
+
+Complete account verification
+    [Documentation]    INFUND-1005
+    ...    INFUND-2286
+    ...    INFUND-1779
+    ...    INFUND-2336
+    [Tags]  HappyPath  Email  SmokeTest
+    [Setup]    The guest user opens the browser
+    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Please verify your email address    Once verified you can sign into your account
+    Then the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
 
 Partner should be able to log-in and see the new company name
     [Documentation]    INFUND-2083
