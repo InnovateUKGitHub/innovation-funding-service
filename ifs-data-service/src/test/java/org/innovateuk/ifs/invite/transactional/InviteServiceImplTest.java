@@ -11,6 +11,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
+import org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.mapper.ApplicationInviteMapper;
@@ -53,7 +54,7 @@ import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newAp
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
-import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newInvite;
+import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.invite.builder.InviteResourceBuilder.newInviteResource;
@@ -110,7 +111,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(application).withUser(leadApplicant).withRole(role1).withOrganisationId(leadOrganisation.getId()).build();
         application.setProcessRoles(asList(processRole1));
 
-        ApplicationInvite invite = newInvite().withApplication(application).build();
+        ApplicationInvite invite = ApplicationInviteBuilder.newApplicationInvite().withApplication(application).build();
         Errors errors = new BeanPropertyBindingResult(invite, invite.getClass().getName());
         localValidatorFactory.validate(invite, errors);
 
@@ -127,7 +128,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(application).withUser(leadApplicant).withRole(role1).withOrganisationId(leadOrganisation.getId()).build();
         application.setProcessRoles(asList(processRole1));
 
-        ApplicationInvite invite = newInvite().withApplication(application).build();
+        ApplicationInvite invite = ApplicationInviteBuilder.newApplicationInvite().withApplication(application).build();
         invite.setName("Nico");
         invite.setEmail("email-invalid");
         Errors errors = new BeanPropertyBindingResult(invite, invite.getClass().getName());
@@ -153,7 +154,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(application).withUser(leadApplicant).withRole(role1).withOrganisationId(leadOrganisation.getId()).build();
         application.setProcessRoles(asList(processRole1));
 
-        ApplicationInvite invite = newInvite().withApplication(application).build();
+        ApplicationInvite invite = ApplicationInviteBuilder.newApplicationInvite().withApplication(application).build();
         invite.setName("Nico");
         invite.setEmail("nico@test.nl");
         InviteOrganisation inviteOrganisation = new InviteOrganisation("SomeOrg", null, Arrays.asList(invite));
@@ -173,7 +174,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(application).withUser(leadApplicant).withRole(role1).withOrganisationId(leadOrganisation.getId()).build();
         application.setProcessRoles(asList(processRole1));
 
-        ApplicationInvite invite = newInvite().withApplication(application).build();
+        ApplicationInvite invite = ApplicationInviteBuilder.newApplicationInvite().withApplication(application).build();
         invite.setName("Nico");
         invite.setEmail("nicotest.nl");
 
@@ -206,7 +207,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
 
         when(inviteOrganisationRepositoryMock.findAll(isA(List.class))).thenReturn(newInviteOrganisation().build(inviteResources.size()));
 
-        List<ApplicationInvite> savedInvites = newInvite().build(5);
+        List<ApplicationInvite> savedInvites = ApplicationInviteBuilder.newApplicationInvite().build(5);
 
         List<ApplicationInvite> saveInvitesExpectations = argThat(lambdaMatches(invites -> {
             assertEquals(5, invites.size());
@@ -295,7 +296,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         ProcessRole leadApplicantProcessRole = newProcessRole().withUser(user).withRole(leadApplicantRole).withOrganisationId(organisation.getId()).build();
         Application application = newApplication().withCompetition(competition).withProcessRoles(leadApplicantProcessRole).build();
         InviteOrganisation inviteOrganisation = newInviteOrganisation().build();
-        ApplicationInvite invite = newInvite().withInviteOrganisation(inviteOrganisation).withApplication(application).build();
+        ApplicationInvite invite = ApplicationInviteBuilder.newApplicationInvite().withInviteOrganisation(inviteOrganisation).withApplication(application).build();
         ApplicationInviteResource inviteResource = newInviteResource().withOrganisation(1L).withApplication(application.getId()).build();
 
 
@@ -348,7 +349,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
                 .withApplication(application)
                 .withInviteOrganisation(
                         newInviteOrganisation()
-                                .withInvites(newInvite().build(2))
+                                .withInvites(ApplicationInviteBuilder.newApplicationInvite().build(2))
                                 .build()
                 )
                 .build();
@@ -447,7 +448,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
                 .withApplication(application)
                 .withInviteOrganisation(
                         newInviteOrganisation()
-                                .withInvites(newInvite().build(2))
+                                .withInvites(ApplicationInviteBuilder.newApplicationInvite().build(2))
                                 .build())
                 .build();
 
@@ -536,7 +537,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
                 .withApplication(application)
                 .withInviteOrganisation(
                         newInviteOrganisation()
-                                .withInvites(newInvite().build(2))
+                                .withInvites(ApplicationInviteBuilder.newApplicationInvite().build(2))
                                 .build()
                 )
                 .build();
