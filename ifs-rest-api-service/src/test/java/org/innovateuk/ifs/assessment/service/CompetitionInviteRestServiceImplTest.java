@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
@@ -17,6 +18,7 @@ import static org.innovateuk.ifs.invite.builder.AssessorCreatedInvitePageResourc
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewPageResourceBuilder.newAssessorInviteOverviewPageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInvitesToSendResourceBuilder.newAssessorInvitesToSendResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBuilder.newAvailableAssessorPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
@@ -36,6 +38,19 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     protected CompetitionInviteRestServiceImpl registerRestServiceUnderTest() {
         CompetitionInviteRestServiceImpl competitionInviteRestService = new CompetitionInviteRestServiceImpl();
         return competitionInviteRestService;
+    }
+
+    @Test
+    public void getAllInvitesToSend() throws Exception {
+        long competitionId = 1L;
+
+        AssessorInvitesToSendResource expected = newAssessorInvitesToSendResource()
+                .withRecipients(asList("James", "John"))
+                .build();
+
+        setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getAllInvitesToSend", competitionId), AssessorInvitesToSendResource.class, expected);
+        AssessorInvitesToSendResource actual = service.getAllInvitesToSend(competitionId).getSuccessObject();
+        assertEquals(expected, actual);
     }
 
     @Test

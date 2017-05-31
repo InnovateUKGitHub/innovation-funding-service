@@ -20,7 +20,7 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
 
     @Override
     public RestResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId) {
-        return getWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "getAllCreated", competitionId), AssessorInvitesToSendResource.class);
+        return getWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "getAllInvitesToSend", competitionId), AssessorInvitesToSendResource.class);
     }
 
     @Override
