@@ -46,7 +46,7 @@ the user should see Business automatically selected in the confirm organisation 
     the user should see the text in the element  jQuery=fieldset p:first  Business
 
 the user should skip the choice page
-    the user should see the text in the page  Confirm your organisation details are correct
+    the user should see the text in the element  css=h2  Confirm your organisation details are correct
 
 the user fills out the organisation form for a competition with default RTO organisation type
     the user opens a competition and fills out the organisation form  Predicting market trends programme
