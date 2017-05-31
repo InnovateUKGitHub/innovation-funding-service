@@ -1,12 +1,13 @@
 package org.innovateuk.ifs.management.controller;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
+import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
+import org.innovateuk.ifs.invite.resource.NewUserStagedInviteListResource;
+import org.innovateuk.ifs.invite.resource.NewUserStagedInviteResource;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
 import org.innovateuk.ifs.management.form.FindAssessorsFilterForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;

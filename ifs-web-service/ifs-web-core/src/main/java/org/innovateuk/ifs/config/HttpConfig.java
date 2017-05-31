@@ -10,6 +10,7 @@ import org.apache.http.impl.nio.conn.PoolingNHttpClientConnectionManager;
 import org.apache.http.impl.nio.reactor.DefaultConnectingIOReactor;
 import org.apache.http.impl.nio.reactor.IOReactorConfig;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.AsyncClientHttpRequestFactory;
@@ -32,7 +33,7 @@ public class HttpConfig {
     @Value("${ifs.web.rest.connections.timeout.millis}")
     int connectionsTimeoutMillis;
 
-    @Bean
+    @Bean(name="clientHttpRequestFactory")
     public ClientHttpRequestFactory httpRequestFactory() {
         return new HttpComponentsClientHttpRequestFactory(httpClient());
     }
@@ -61,7 +62,7 @@ public class HttpConfig {
         return defaultHttpClient;
     }
 
-    @Bean
+    @Bean(name="asyncClientHttpRequestFactory")
     public AsyncClientHttpRequestFactory asyncHttpRequestFactory() {
         return new HttpComponentsAsyncClientHttpRequestFactory(
                 asyncHttpClient());
