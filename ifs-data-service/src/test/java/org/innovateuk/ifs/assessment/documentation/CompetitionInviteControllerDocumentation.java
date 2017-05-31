@@ -73,6 +73,23 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
     }
 
     @Test
+    public void getInviteToSend() throws Exception {
+        long inviteId = 1L;
+        AssessorInvitesToSendResource resource = assessorInvitesToSendResourceBuilder.build();
+
+        when(competitionInviteServiceMock.getInviteToSend(inviteId)).thenReturn(serviceSuccess(resource));
+
+        mockMvc.perform(get("/competitioninvite/getInviteToSend/{inviteId}", inviteId))
+                .andExpect(status().isOk())
+                .andDo(document("competitioninvite/{method-name}",
+                        pathParameters(
+                                parameterWithName("inviteId").description("Id of the invite being requested")
+                        ),
+                        responseFields(assessorInvitesToSendResourceFields)
+                ));
+    }
+
+    @Test
     public void getInvite() throws Exception {
         String hash = "invitehash";
         CompetitionInviteResource competitionInviteResource = competitionInviteResourceBuilder.build();
@@ -400,5 +417,24 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
                 ));
 
         verify(competitionInviteServiceMock, only()).sendAllInvites(competitionId, assessorInviteSendResource);
+    }
+
+    @Test
+    public void resendInvite() throws Exception {
+        long inviteId = 1L;
+
+        AssessorInviteSendResource assessorInviteSendResource = assessorInviteSendResourceBuilder.build();
+        when(competitionInviteServiceMock.resendInvite(inviteId, assessorInviteSendResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competitioninvite/resendInvite/{inviteId}", inviteId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(assessorInviteSendResource)))
+                .andExpect(status().isOk())
+                .andDo(document("competitioninvite/{method-name}",
+                        pathParameters(
+                                parameterWithName("inviteId").description("Id of the invite being resent")
+                        ),
+                        requestFields(assessorInviteSendResourceFields)
+                ));
     }
 }

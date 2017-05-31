@@ -12,6 +12,8 @@ public interface CompetitionInviteRestService {
 
     RestResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId);
 
+    RestResult<AssessorInvitesToSendResource> getInviteToSend(long inviteId);
+
     RestResult<CompetitionInviteResource> getInvite(String inviteHash);
 
     RestResult<CompetitionInviteResource> openInvite(String inviteHash);
@@ -43,4 +45,6 @@ public interface CompetitionInviteRestService {
     RestResult<Void> deleteAllInvites(long competitionId);
 
     RestResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource);
+
+    RestResult<Void> resendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource);
 }

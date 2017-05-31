@@ -193,6 +193,11 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
         }
 
         @Override
+        public ServiceResult<AssessorInvitesToSendResource> getInviteToSend(long inviteId) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<CompetitionInviteResource> getInvite(@P("inviteHash") String inviteHash) {
             return null;
         }
@@ -259,6 +264,11 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
 
         @Override
         public ServiceResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInvitesToSendResource) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> resendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource) {
             return null;
         }
 

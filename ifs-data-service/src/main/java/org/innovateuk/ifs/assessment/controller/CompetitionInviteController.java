@@ -30,6 +30,11 @@ public class CompetitionInviteController {
         return competitionInviteService.getAllInvitesToSend(competitionId).toGetResponse();
     }
 
+    @GetMapping("/getInviteToSend/{inviteId}")
+    public RestResult<AssessorInvitesToSendResource> getInviteToSend(@PathVariable long inviteId) {
+        return competitionInviteService.getInviteToSend(inviteId).toGetResponse();
+    }
+
     @GetMapping("/getInvite/{inviteHash}")
     public RestResult<CompetitionInviteResource> getInvite(@PathVariable String inviteHash) {
         return competitionInviteService.getInvite(inviteHash).toGetResponse();
@@ -119,5 +124,10 @@ public class CompetitionInviteController {
     public RestResult<Void> sendAllInvites(@PathVariable long competitionId,
                                            @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
         return competitionInviteService.sendAllInvites(competitionId, assessorInviteSendResource).toPostResponse();
+    }
+
+    @PostMapping("/resendInvite/{inviteId}")
+    public RestResult<Void> resendInvite(@PathVariable long inviteId, @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
+        return competitionInviteService.resendInvite(inviteId, assessorInviteSendResource).toPostWithBodyResponse();
     }
 }

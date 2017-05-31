@@ -24,6 +24,11 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     }
 
     @Override
+    public RestResult<AssessorInvitesToSendResource> getInviteToSend(long inviteId) {
+        return getWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "getInviteToSend", inviteId), AssessorInvitesToSendResource.class);
+    }
+
+    @Override
     public RestResult<CompetitionInviteResource> getInvite(String inviteHash) {
         return getWithRestResultAnonymous(format("%s/%s/%s", competitionInviteRestUrl, "getInvite", inviteHash), CompetitionInviteResource.class);
     }
@@ -116,5 +121,10 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     @Override
     public RestResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
         return postWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "sendAllInvites", competitionId), assessorInviteSendResource, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> resendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource) {
+        return postWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "resendInvite", inviteId), assessorInviteSendResource, Void.class);
     }
 }

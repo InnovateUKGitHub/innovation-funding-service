@@ -74,6 +74,17 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     }
 
     @Test
+    public void getInviteToSend() throws Exception {
+        AssessorInvitesToSendResource resource = new AssessorInvitesToSendResource();
+        long inviteId = 1L;
+
+        when(competitionInviteServiceMock.getInviteToSend(inviteId)).thenReturn(serviceSuccess(resource));
+        mockMvc.perform(get("/competitioninvite/getInviteToSend/{inviteId}", inviteId)).andExpect(status().isOk());
+
+        verify(competitionInviteServiceMock, only()).getInviteToSend(inviteId);
+    }
+
+    @Test
     public void getInvite() throws Exception {
         CompetitionInviteResource resource = new CompetitionInviteResource();
 
@@ -635,5 +646,23 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .andExpect(status().isOk());
 
         verify(competitionInviteServiceMock).sendAllInvites(competitionId, assessorInviteSendResource);
+    }
+
+    @Test
+    public void resendInvite() throws Exception {
+        long inviteId = 1L;
+        AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
+                .withSubject("subject")
+                .withContent("content")
+                .build();
+
+        when(competitionInviteServiceMock.resendInvite(inviteId, assessorInviteSendResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competitioninvite/resendInvite/{inviteId}", inviteId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(assessorInviteSendResource)))
+                .andExpect(status().isOk());
+
+        verify(competitionInviteServiceMock, only()).resendInvite(inviteId, assessorInviteSendResource);
     }
 }

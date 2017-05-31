@@ -1,23 +1,23 @@
 package org.innovateuk.ifs.invite.builder;
 
-import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.domain.ApplicationInvite;
-import org.innovateuk.ifs.invite.domain.InviteOrganisation;
+import org.innovateuk.ifs.invite.domain.ProjectInvite;
+import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Test;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
-import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
+import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newProjectInvite;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
+import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 
-public class ApplicationInviteBuilderTest {
+public class ProjectInviteBuilderTest {
 
     @Test
     public void buildOne() {
@@ -25,30 +25,30 @@ public class ApplicationInviteBuilderTest {
         String expectedName = "name";
         String expectedEmail = "example@test.com";
         User expectedUser = newUser().build();
-        Application expectedApplication = newApplication().build();
-        InviteOrganisation expectedInviteOrganisation = newInviteOrganisation().build();
         String expectedHash = "68656c6c6f";
         InviteStatus expectedStatus = SENT;
+        Project expectedProject = newProject().build();
+        Organisation expectedOrganisation = newOrganisation().build();
 
-        ApplicationInvite applicationInvite = newApplicationInvite()
+        ProjectInvite applicationInvite = newProjectInvite()
                 .withId(expectedId)
                 .withName(expectedName)
                 .withEmail(expectedEmail)
                 .withUser(expectedUser)
-                .withApplication(expectedApplication)
-                .withInviteOrganisation(expectedInviteOrganisation)
                 .withHash(expectedHash)
                 .withStatus(expectedStatus)
+                .withProject(expectedProject)
+                .withOrganisation(expectedOrganisation)
                 .build();
 
         assertEquals(expectedId, applicationInvite.getId());
         assertEquals(expectedName, applicationInvite.getName());
         assertEquals(expectedEmail, applicationInvite.getEmail());
         assertEquals(expectedUser, applicationInvite.getUser());
-        assertEquals(expectedApplication, applicationInvite.getTarget());
-        assertEquals(expectedInviteOrganisation, applicationInvite.getInviteOrganisation());
         assertEquals(expectedHash, applicationInvite.getHash());
         assertEquals(expectedStatus, applicationInvite.getStatus());
+        assertEquals(expectedProject, applicationInvite.getTarget());
+        assertEquals(expectedOrganisation, applicationInvite.getOrganisation());
     }
 
     @Test
@@ -57,40 +57,41 @@ public class ApplicationInviteBuilderTest {
         String[] expectedNames = {"name1", "name2"};
         String[] expectedEmails = {"example1@test.com", "example2@test.com"};
         User[] expectedUsers = newUser().withId(5L, 11L).buildArray(2, User.class);
-        Application[] expectedApplications = newApplication().buildArray(2, Application.class);
-        InviteOrganisation[] expectedInviteOrganisations = newInviteOrganisation().buildArray(2, InviteOrganisation.class);
         InviteStatus[] expectedStatuses = { SENT, OPENED };
         String[] expectedHashes = { "68656c6c6f", "776f726c64" };
+        Project[] expectedProjects = newProject().buildArray(2, Project.class);
+        Organisation[] expectedOrganisations = newOrganisation().buildArray(2, Organisation.class);
 
-        List<ApplicationInvite> applicationInvites = newApplicationInvite()
+        List<ProjectInvite> applicationInvites = newProjectInvite()
                 .withId(expectedIds)
                 .withName(expectedNames)
                 .withEmail(expectedEmails)
                 .withUser(expectedUsers)
-                .withApplication(expectedApplications)
-                .withInviteOrganisation(expectedInviteOrganisations)
                 .withStatus(expectedStatuses)
                 .withHash(expectedHashes)
+                .withTarget(expectedProjects)
+                .withOrganisation(expectedOrganisations)
                 .build(2);
 
-        ApplicationInvite first = applicationInvites.get(0);
+        ProjectInvite first = applicationInvites.get(0);
         assertEquals(expectedIds[0], first.getId());
         assertEquals(expectedNames[0], first.getName());
         assertEquals(expectedEmails[0], first.getEmail());
         assertEquals(expectedUsers[0], first.getUser());
-        assertEquals(expectedApplications[0], first.getTarget());
-        assertEquals(expectedInviteOrganisations[0], first.getInviteOrganisation());
         assertEquals(expectedStatuses[0], first.getStatus());
         assertEquals(expectedHashes[0], first.getHash());
+        assertEquals(expectedProjects[0], first.getTarget());
+        assertEquals(expectedOrganisations[0], first.getOrganisation());
 
-        ApplicationInvite second = applicationInvites.get(1);
+        ProjectInvite second = applicationInvites.get(1);
         assertEquals(expectedIds[1], second.getId());
         assertEquals(expectedNames[1], second.getName());
         assertEquals(expectedEmails[1], second.getEmail());
         assertEquals(expectedUsers[1], second.getUser());
-        assertEquals(expectedApplications[1], second.getTarget());
-        assertEquals(expectedInviteOrganisations[1], second.getInviteOrganisation());
         assertEquals(expectedStatuses[1], second.getStatus());
         assertEquals(expectedHashes[1], second.getHash());
+        assertEquals(expectedHashes[1], second.getHash());
+        assertEquals(expectedProjects[1], second.getTarget());
+        assertEquals(expectedOrganisations[1], second.getOrganisation());
     }
 }
