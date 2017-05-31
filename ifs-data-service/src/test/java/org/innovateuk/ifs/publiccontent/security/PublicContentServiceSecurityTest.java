@@ -17,10 +17,12 @@ import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResourc
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.UserRoleType.SUPPORT;
 
 public class PublicContentServiceSecurityTest extends BaseServiceSecurityTest<PublicContentService> {
 
     private static final EnumSet<UserRoleType> COMP_ADMIN_ROLES = EnumSet.of(COMP_ADMIN, PROJECT_FINANCE);
+    private static final EnumSet<UserRoleType> ALL_INTERNAL_USERS = EnumSet.of(COMP_ADMIN, PROJECT_FINANCE, SUPPORT);
 
 
     @Override
@@ -30,7 +32,7 @@ public class PublicContentServiceSecurityTest extends BaseServiceSecurityTest<Pu
 
     @Test
     public void testGetByCompetitionId() {
-        runAsAllowedRoles(COMP_ADMIN_ROLES, () -> classUnderTest.findByCompetitionId(1L));
+        runAsAllowedRoles(ALL_INTERNAL_USERS, () -> classUnderTest.findByCompetitionId(1L));
     }
 
     @Test

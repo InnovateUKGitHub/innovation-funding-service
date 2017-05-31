@@ -13,7 +13,7 @@
     <form role="search" method="get" id="searchform" th:action="@{'/dashboard/search'}">
         <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})" />
     </form>
-    <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'live'}, counts=${model.counts})" />
+    <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'live'}, counts=${model.counts}, supportView=${model.supportView})" />
 
     <section th:with="openComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN)}">
         <h2 class="heading-medium"
@@ -24,7 +24,8 @@
                     th:insert="competition/dashboard :: dashboard-row"
                     th:with="competition=${competition},
                         innovationAreas=competition.innovationAreaNames,
-                        cell4=${competition.numberOfApplications + ' applicants'}"/>
+                        cell4=${competition.numberOfApplications + ' applicants'},
+                        supportView=${model.supportView}"/>
             </li>
         </ul>
     </section>
@@ -38,7 +39,8 @@
                     th:insert="competition/dashboard :: dashboard-row"
                     th:with="competition=${competition},
                         innovationAreas=competition.innovationAreaNames,
-                        cell4=${competition.numberOfApplications + ' applicants'}"/>
+                        cell4=${competition.numberOfApplications + ' applicants'},
+                        supportView=${model.supportView}"/>
             </li>
         </ul>
     </section>
@@ -52,7 +54,8 @@
                     th:insert="competition/dashboard :: dashboard-row"
                     th:with="competition=${competition},
                         innovationAreas=competition.innovationAreaNames,
-                        cell4=${competition.numberOfApplications + ' applicants'}"/>
+                        cell4=${competition.numberOfApplications + ' applicants'},
+                        supportView=${model.supportView}"/>
             </li>
         </ul>
     </section>
@@ -67,7 +70,8 @@
                     th:insert="competition/dashboard :: dashboard-row"
                     th:with="competition=${competition},
                         innovationAreas=competition.innovationAreaNames,
-                        cell4=${competition.numberOfApplications + ' applicants'}"/>
+                        cell4=${competition.numberOfApplications + ' applicants'},
+                        supportView=${model.supportView}"/>
             </li>
         </ul>
     </section>
@@ -82,7 +86,8 @@
                     th:insert="competition/dashboard :: dashboard-row"
                     th:with="competition=${competition},
                         innovationAreas=competition.innovationAreaNames,
-                        cell4=${competition.numberOfApplications + ' applicants'}"/>
+                        cell4=${competition.numberOfApplications + ' applicants'},
+                        supportView=${model.supportView}"/>
             </li>
         </ul>
     </section>
