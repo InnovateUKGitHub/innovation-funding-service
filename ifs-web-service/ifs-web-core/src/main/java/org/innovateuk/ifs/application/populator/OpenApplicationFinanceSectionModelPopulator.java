@@ -1,26 +1,23 @@
 package org.innovateuk.ifs.application.populator;
 
+import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.resource.*;
-import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.resource.QuestionType;
+import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.SectionApplicationViewModel;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Class for populating the model for the "Your Finances" section
@@ -30,40 +27,28 @@ public class OpenApplicationFinanceSectionModelPopulator extends BaseOpenFinance
     public static final String MODEL_ATTRIBUTE_FORM = "form";
 
     @Autowired
-    private QuestionService questionService;
-
-    @Autowired
-    private CompetitionService competitionService;
-
-    @Autowired
     private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
     @Autowired
     private FinanceHandler financeHandler;
 
-    @Autowired
-    private OrganisationService organisationService;
-
     @Override
-    public BaseSectionViewModel populateModel(ApplicationForm form, Model model, ApplicationResource application, SectionResource section, UserResource user, BindingResult bindingResult, List<SectionResource> allSections, Long organisationId){
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-        List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(section.getId(), QuestionType.COST);
-        Optional<OrganisationResource> organisationResource = Optional.of(organisationService.getOrganisationById(organisationId));
+    public BaseSectionViewModel populateModel(ApplicationForm form, Model model, BindingResult bindingResult, ApplicantSectionResource applicantSection) {
 
-        OpenFinanceSectionViewModel openFinanceSectionViewModel = new OpenFinanceSectionViewModel(addNavigation(section, application.getId()),
-                section, true, section.getId(), user, isSubFinanceSection(section));
+        OpenFinanceSectionViewModel openFinanceSectionViewModel = new OpenFinanceSectionViewModel(addNavigation(applicantSection.getSection(), applicantSection.getApplication().getId()),
+                applicantSection.getSection(), true, applicantSection.getSection().getId(), applicantSection.getCurrentUser(), isSubFinanceSection(applicantSection.getSection()));
         SectionApplicationViewModel sectionApplicationViewModel = new SectionApplicationViewModel();
 
-        sectionApplicationViewModel.setCurrentApplication(application);
-        sectionApplicationViewModel.setCurrentCompetition(competition);
+        sectionApplicationViewModel.setCurrentApplication(applicantSection.getApplication());
+        sectionApplicationViewModel.setCurrentCompetition(applicantSection.getCompetition());
 
-        addQuestionsDetails(openFinanceSectionViewModel, application, form);
-        addApplicationAndSections(openFinanceSectionViewModel, sectionApplicationViewModel, application, competition, user.getId(), section, form, allSections, organisationResource);
-        addOrganisationAndUserFinanceDetails(openFinanceSectionViewModel, application.getCompetition(), application.getId(), costsQuestions, user, form, organisationId);
-        addFundingSection(openFinanceSectionViewModel, application.getCompetition());
+        addQuestionsDetails(openFinanceSectionViewModel, applicantSection, form);
+        addApplicationAndSections(openFinanceSectionViewModel, sectionApplicationViewModel, form, applicantSection);
+        addOrganisationAndUserFinanceDetails(openFinanceSectionViewModel, form, applicantSection);
+            addFundingSection(openFinanceSectionViewModel, applicantSection);
 
-        sectionApplicationViewModel.setAllReadOnly(calculateAllReadOnly(competition, section.getId(), openFinanceSectionViewModel.getSectionsMarkedAsComplete())
-                || SectionType.FINANCE.equals(section.getType()));
+        sectionApplicationViewModel.setAllReadOnly(calculateAllReadOnly(openFinanceSectionViewModel, applicantSection)
+                || SectionType.FINANCE.equals(applicantSection.getSection().getType()));
 
         form.setBindingResult(bindingResult);
         form.setObjectErrors(bindingResult.getAllErrors());
@@ -71,7 +56,7 @@ public class OpenApplicationFinanceSectionModelPopulator extends BaseOpenFinance
         openFinanceSectionViewModel.setSectionApplicationViewModel(sectionApplicationViewModel);
         if(openFinanceSectionViewModel.getFinance() instanceof FinanceViewModel) {
             FinanceViewModel financeViewModel = (FinanceViewModel) openFinanceSectionViewModel.getFinance();
-            populateSubSectionMenuOptions(openFinanceSectionViewModel, allSections, openFinanceSectionViewModel.getSectionApplicationViewModel().getUserOrganisation().getId(), financeViewModel.getOrganisationGrantClaimPercentage());
+            populateSubSectionMenuOptions(openFinanceSectionViewModel, applicantSection.allSections().map(ApplicantSectionResource::getSection).collect(Collectors.toList()), openFinanceSectionViewModel.getSectionApplicationViewModel().getUserOrganisation().getId(), financeViewModel.getOrganisationGrantClaimPercentage());
         }
 
         model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
@@ -79,11 +64,10 @@ public class OpenApplicationFinanceSectionModelPopulator extends BaseOpenFinance
         return openFinanceSectionViewModel;
     }
 
-    private void addOrganisationAndUserFinanceDetails(OpenFinanceSectionViewModel financeSectionViewModel, Long competitionId, Long applicationId, List<QuestionResource> costsQuestions, UserResource user,
-                                                      ApplicationForm form, Long organisationId) {
+    private void addOrganisationAndUserFinanceDetails(OpenFinanceSectionViewModel financeSectionViewModel, ApplicationForm form, ApplicantSectionResource applicantSection) {
+        List<ApplicantQuestionResource> costsQuestions = applicantSection.questionsWithType(QuestionType.COST);
 
-        financeSectionViewModel.setFinanceOverviewViewModel(applicationFinanceOverviewModelManager.getFinanceDetailsViewModel(competitionId, applicationId));
-        Long organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-        financeSectionViewModel.setFinanceViewModel(financeHandler.getFinanceModelManager(organisationType).getFinanceViewModel(applicationId, costsQuestions, user.getId(), form, organisationId));
+        financeSectionViewModel.setFinanceOverviewViewModel(applicationFinanceOverviewModelManager.getFinanceDetailsViewModel(applicantSection.getCompetition().getId(), applicantSection.getApplication().getId()));
+        financeSectionViewModel.setFinanceViewModel(financeHandler.getFinanceModelManager(applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType()).getFinanceViewModel(applicantSection.getApplication().getId(), costsQuestions.stream().map(ApplicantQuestionResource::getQuestion).collect(Collectors.toList()), applicantSection.getCurrentUser().getId(), form, applicantSection.getCurrentApplicant().getOrganisation().getId()));
     }
 }
