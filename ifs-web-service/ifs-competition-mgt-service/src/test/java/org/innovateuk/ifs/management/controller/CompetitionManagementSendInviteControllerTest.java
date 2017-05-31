@@ -70,23 +70,23 @@ public class CompetitionManagementSendInviteControllerTest extends BaseControlle
 
     @Test
     public void getInviteToResend() throws Exception {
+        long competitionId = 1L;
         long inviteId = 4L;
         AssessorInvitesToSendResource invite = newAssessorInvitesToSendResource()
                 .withRecipients(singletonList("Jessica Doe"))
                 .withCompetitionId(1L)
                 .withCompetitionName("Photonics for health")
-                .withContent("Editable content...")
+                .withContent("Readonly content")
                 .build();
 
         when(competitionInviteRestService.getInviteToSend(inviteId)).thenReturn(restSuccess(invite));
 
         SendInviteForm expectedForm = new SendInviteForm();
         expectedForm.setSubject("Invitation to assess 'Photonics for health'");
-        expectedForm.setContent("Editable content...");
 
-        SendInviteViewModel expectedViewModel = new SendInviteViewModel(1L, inviteId, "Photonics for health", "Jessica Doe", "Readonly content");
+        SendInviteViewModel expectedViewModel = new SendInviteViewModel(competitionId, inviteId, "Photonics for health", "Jessica Doe", "Readonly content");
 
-        mockMvc.perform(get("/competition/assessors/invite/{inviteId}/resend", inviteId))
+        mockMvc.perform(get("/competition/{competitionId}/assessors/invite/{inviteId}/resend", competitionId, inviteId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(model().attribute("model", expectedViewModel))
@@ -98,7 +98,6 @@ public class CompetitionManagementSendInviteControllerTest extends BaseControlle
 
     @Test
     public void sendInvites() throws Exception {
-        long inviteId = 4L;
         long competitionId = 5L;
 
         AssessorInviteSendResource expectedAssessorInviteSendResource = newAssessorInviteSendResource()
@@ -135,7 +134,7 @@ public class CompetitionManagementSendInviteControllerTest extends BaseControlle
         when(competitionInviteRestService.getInviteToSend(inviteId)).thenReturn(restSuccess(invite));
         when(competitionInviteRestService.resendInvite(inviteId, expectedAssessorInviteSendResource)).thenReturn(restSuccess());
 
-        mockMvc.perform(post("/competition/assessors/invite/{inviteId}/resend", inviteId)
+        mockMvc.perform(post("/competition/{competitionId}/assessors/invite/{inviteId}/resend", competitionId, inviteId)
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("subject", "Subject...")
                 .param("content", "Editable content..."))

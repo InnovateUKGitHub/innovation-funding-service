@@ -58,7 +58,7 @@ public class CompetitionManagementSendInviteController {
         return "assessors/send-invites";
     }
 
-    @GetMapping("/resend")
+    @GetMapping("/{inviteId}/resend")
     public String getInviteToResend(Model model,
                                     @PathVariable("inviteId") long inviteId,
                                     @ModelAttribute(name = "form", binding = false) SendInviteForm form,
@@ -99,7 +99,7 @@ public class CompetitionManagementSendInviteController {
         });
     }
 
-    @PostMapping("/resend")
+    @PostMapping("/{inviteId}/resend")
     public String resendInvite (Model model,
                                 @PathVariable("inviteId") long inviteId,
                                 @ModelAttribute("form") @Valid SendInviteForm form,
