@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.financechecks;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.applicant.resource.ApplicantResource;
+import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.finance.view.ProjectFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.form.Form;
@@ -9,6 +11,7 @@ import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.OpenProjectFinanceSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -23,7 +26,7 @@ import org.innovateuk.ifs.project.financechecks.controller.ProjectFinanceChecksC
 import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceChecksViewModel;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -43,7 +46,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
+import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.application.resource.SectionType.PROJECT_COST_FINANCES;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -55,6 +63,7 @@ import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilde
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
@@ -79,6 +88,9 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
 
     @Mock
     private ApplicationNavigationPopulator applicationNavigationPopulator;
+
+    @Mock
+    private ApplicantRestService applicantRestService;
 
     @Mock
     private Model model;
@@ -127,6 +139,10 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
         when(sectionService.getAllByCompetitionId(anyLong())).thenReturn(sectionResources);
         when(applicationService.getById(application.getId())).thenReturn(application);
 
+        ApplicantResource applicant = newApplicantResource().withProcessRole(processRoles.get(0)).withOrganisation(industrialOrganisation).build();
+        when(applicantRestService.getSection(loggedInUser.getId(), application.getId(), simpleFilter(sectionResources, s -> s.getType().equals(PROJECT_COST_FINANCES)).get(0).getId())).thenReturn(newApplicantSectionResource().withApplication(application).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(newSectionResource().withType(SectionType.FINANCE).build()).withCurrentUser(loggedInUser).build());
+        when(userService.retrieveUserById(loggedInUser.getId())).thenReturn(loggedInUser);
+
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getByApplicationId(application.getId())).thenReturn(project);
         when(organisationService.getOrganisationById(industrialOrganisation.getId())).thenReturn(industrialOrganisation);
@@ -158,7 +174,7 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationService.getOrganisationById(organisationId)).thenReturn(partnerOrganisation);
-        when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
+        when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.getQueries(any())).thenReturn(ServiceResult.serviceSuccess(Collections.emptyList()));
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(newProjectUserResource().withUser(loggedInUser.getId()).withOrganisation(organisationId).withRoleName(UserRoleType.PARTNER.getName()).build(1));
@@ -197,7 +213,7 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(newProjectUserResource().withUser(loggedInUser.getId()).withOrganisation(organisationId).withRoleName(UserRoleType.PARTNER.getName()).build(1));
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationService.getOrganisationById(organisationId)).thenReturn(partnerOrganisation);
-        when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
+        when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.getQueries(projectFinanceResource.getId())).thenReturn(ServiceResult.serviceSuccess(Collections.singletonList(sampleQuery())));
         when(organisationService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(organisationId);

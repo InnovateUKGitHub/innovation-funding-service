@@ -239,16 +239,6 @@ public class CompetitionManagementInviteAssessorsController {
         });
     }
 
-    private Optional<AssessorSelectionForm> getAssessorSelectionFormFromCookie(HttpServletRequest request) {
-        String organisationFormJson = cookieUtil.getCookieValue(request, SELECTION_FORM);
-        if (isNotBlank(organisationFormJson)) {
-            return Optional.ofNullable(getObjectFromJson(organisationFormJson, AssessorSelectionForm.class));
-        } else {
-            return Optional.empty();
-        }
-    }
-
-
     private String redirectToFind(long competitionId, int page, Optional<Long> innovationArea) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/competition/{competitionId}/assessors/find")
                 .queryParam("page", page);
@@ -393,5 +383,14 @@ public class CompetitionManagementInviteAssessorsController {
         node.put("success", success ? "true" : "false");
 
         return node;
+    }
+
+    private Optional<AssessorSelectionForm> getAssessorSelectionFormFromCookie(HttpServletRequest request) {
+        String organisationFormJson = cookieUtil.getCookieValue(request, SELECTION_FORM);
+        if (isNotBlank(organisationFormJson)) {
+            return Optional.ofNullable(getObjectFromJson(organisationFormJson, AssessorSelectionForm.class));
+        } else {
+            return Optional.empty();
+        }
     }
 }

@@ -6,9 +6,10 @@ import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.management.viewmodel.AllApplicationsRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.AllApplicationsViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class AllApplicationsPageModelPopulator {
     @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
 
-    public AllApplicationsViewModel populateModel(long competitionId, String origin, int page, String sorting, String filter) {
+    public AllApplicationsViewModel populateModel(long competitionId, String origin, int page, String sorting, String filter, UserResource user) {
         CompetitionSummaryResource competitionSummaryResource = applicationSummaryRestService
                 .getCompetitionSummary(competitionId)
                 .getSuccessObjectOrThrowException();
@@ -42,7 +43,9 @@ public class AllApplicationsPageModelPopulator {
                 sorting,
                 filter,
                 getApplications(applicationSummaryPageResource),
-                new PaginationViewModel(applicationSummaryPageResource, origin)
+                new PaginationViewModel(applicationSummaryPageResource, origin),
+                user.hasRole(UserRoleType.SUPPORT) ? "Dashboard" : "Applications",
+                user.hasRole(UserRoleType.SUPPORT) ? "/dashboard/live" : "/competition/" + competitionId + "/applications"
         );
     }
 

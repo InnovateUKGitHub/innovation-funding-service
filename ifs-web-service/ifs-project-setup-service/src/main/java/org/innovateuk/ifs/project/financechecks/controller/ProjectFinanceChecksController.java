@@ -2,6 +2,8 @@ package org.innovateuk.ifs.project.financechecks.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
+import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.finance.view.DefaultProjectFinanceModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
@@ -39,6 +41,7 @@ import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.thread.viewmodel.ThreadPostViewModel;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModel;
@@ -94,6 +97,9 @@ public class ProjectFinanceChecksController {
     private ProjectService projectService;
 
     @Autowired
+    private StatusService statusService;
+
+    @Autowired
     private ApplicationService applicationService;
 
     @Autowired
@@ -131,6 +137,9 @@ public class ProjectFinanceChecksController {
 
     @Autowired
     private FinanceUtil financeUtil;
+
+    @Autowired
+    private ApplicantRestService applicantRestService;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping
@@ -381,7 +390,7 @@ public class ProjectFinanceChecksController {
     }
 
     private boolean isApproved(final ProjectOrganisationCompositeId compositeId) {
-        Optional<ProjectPartnerStatusResource> organisationStatus = projectService.getProjectTeamStatus(compositeId.getProjectId(), Optional.empty()).getPartnerStatusForOrganisation(compositeId.getOrganisationId());
+        Optional<ProjectPartnerStatusResource> organisationStatus = statusService.getProjectTeamStatus(compositeId.getProjectId(), Optional.empty()).getPartnerStatusForOrganisation(compositeId.getOrganisationId());
         return COMPLETE.equals(organisationStatus.map(ProjectPartnerStatusResource::getFinanceChecksStatus).orElse(null));
     }
 
@@ -491,7 +500,8 @@ public class ProjectFinanceChecksController {
 
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
 
-        BaseSectionViewModel openFinanceSectionViewModel = openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections, organisationId);
+        ApplicantSectionResource applicantSection = applicantRestService.getSection(user.getId(), application.getId(), section.getId());
+        BaseSectionViewModel openFinanceSectionViewModel = openFinanceSectionModel.populateModel(form, model, bindingResult, applicantSection);
 
         model.addAttribute("model", openFinanceSectionViewModel);
 

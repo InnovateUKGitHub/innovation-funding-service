@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
@@ -107,30 +108,6 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
         return status;
     }
 
-    protected void setStatus(final InviteStatus newStatus) {
-        if (newStatus == null) {
-            throw new NullPointerException("status cannot be null");
-        }
-
-        switch (newStatus) {
-            case CREATED:
-                if (this.status != null) {
-                    throw new IllegalStateException("(" + this.status + ") -> (" + newStatus + ") Cannot create an Invite that has already been created.");
-                }
-                break;
-            case SENT:
-                if (this.status != InviteStatus.CREATED) {
-                    throw new IllegalStateException("(" + this.status + ") -> (" + newStatus + ") Cannot send an Invite that has already been sent.");
-                }
-                break;
-            case OPENED:
-                // TODO check legal invite transitions
-//                if (this.status != InviteStatus.SENT || this.status != InviteStatus.OPENED)
-//                    throw new IllegalStateException("(" + this.status + ") -> (" + newStatus + ") Cannot accept an Invite that hasn't been sent");
-                break;
-        }
-        this.status = newStatus;
-    }
     public User getUser() {
         return user;
     }
@@ -158,17 +135,23 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
 
     public abstract void setTarget(T target);
 
-    public I send(User sentBy, ZonedDateTime sentOn) {
+    protected final I doSend(User sentBy, ZonedDateTime sentOn) {
         this.sentBy = requireNonNull(sentBy, "sentBy cannot be null");
         this.sentOn = requireNonNull(sentOn, "sendOn cannot be null");
-        setStatus(InviteStatus.SENT);
-
+        this.status = InviteStatus.SENT;
         return (I) this; // for object chaining
     }
 
+    public I send(User sentBy, ZonedDateTime sentOn) {
+        if (this.status != InviteStatus.CREATED) {
+            throw new IllegalStateException("(" + this.status + ") -> (" + InviteStatus.CREATED + ") Cannot send an Invite that has already been sent.");
+        }
+        return doSend(sentBy, sentOn);
+    }
+
     public I open () {
-        setStatus(InviteStatus.OPENED);
-        return (I) this; // for object chaining
+        this.status = InviteStatus.OPENED;
+        return (I) this;
     }
 
     @Override

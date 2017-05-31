@@ -36,11 +36,11 @@ public class CompetitionManagementSendInviteController {
     private SendInviteModelPopulator sendInviteModelPopulator;
 
     @GetMapping
-    public String getSendInvites(Model model,
-                                 @PathVariable("inviteId") long inviteId,
-                                 @ModelAttribute(name = "form", binding = false) SendInviteForm form,
-                                 BindingResult bindingResult) {
-        AssessorInviteToSendResource invite = competitionInviteRestService.getCreated(inviteId).getSuccessObjectOrThrowException();
+    public String getInviteToSend(Model model,
+                                  @PathVariable("inviteId") long inviteId,
+                                  @ModelAttribute(name = "form", binding = false) SendInviteForm form,
+                                  BindingResult bindingResult) {
+        AssessorInviteToSendResource invite = competitionInviteRestService.getCreatedInviteToSend(inviteId).getSuccessObjectOrThrowException();
         model.addAttribute("model", sendInviteModelPopulator.populateModel(inviteId, invite));
         if (!bindingResult.hasErrors()) {
             populateFormWithExistingValues(form, invite);
@@ -48,21 +48,53 @@ public class CompetitionManagementSendInviteController {
         return "assessors/send-invites";
     }
 
-    @PostMapping("/send")
-    public String sendEmail(Model model,
-                            @PathVariable("inviteId") long inviteId,
-                            @ModelAttribute("form") @Valid SendInviteForm form,
-                            BindingResult bindingResult,
-                            ValidationHandler validationHandler) {
-        AssessorInviteToSendResource invite = competitionInviteRestService.getCreated(inviteId).getSuccessObjectOrThrowException();
+    @GetMapping("/resend")
+    public String getInviteToResend(Model model,
+                                  @PathVariable("inviteId") long inviteId,
+                                  @ModelAttribute(name = "form", binding = false) SendInviteForm form,
+                                  BindingResult bindingResult) {
+        AssessorInviteToSendResource invite = competitionInviteRestService.getInviteToSend(inviteId).getSuccessObjectOrThrowException();
+        model.addAttribute("model", sendInviteModelPopulator.populateModel(inviteId, invite));
+        if (!bindingResult.hasErrors()) {
+            populateFormWithExistingValues(form, invite);
+        }
+        return "assessors/resend-invite";
+    }
 
-        Supplier<String> failureView = () -> getSendInvites(model, inviteId, form, bindingResult);
+    // TODO Remove as part of IFS-36 and IFS-21
+    @PostMapping("/send")
+    public String sendInvite(Model model,
+                             @PathVariable("inviteId") long inviteId,
+                             @ModelAttribute("form") @Valid SendInviteForm form,
+                             BindingResult bindingResult,
+                             ValidationHandler validationHandler) {
+        AssessorInviteToSendResource invite = competitionInviteRestService.getInviteToSend(inviteId).getSuccessObjectOrThrowException();
+
+        Supplier<String> failureView = () -> getInviteToSend(model, inviteId, form, bindingResult);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> sendResult = competitionInviteRestService.sendInvite(inviteId, new AssessorInviteSendResource(
                     form.getSubject(), form.getContent())).toServiceResult();
             return validationHandler.addAnyErrors(sendResult, fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(failureView, () -> format("redirect:/competition/%s/assessors/invite", invite.getCompetitionId()));
+        });
+    }
+
+    @PostMapping("/resend")
+    public String resendInvite(Model model,
+                               @PathVariable("inviteId") long inviteId,
+                               @ModelAttribute("form") @Valid SendInviteForm form,
+                               BindingResult bindingResult,
+                               ValidationHandler validationHandler) {
+        AssessorInviteToSendResource invite = competitionInviteRestService.getInviteToSend(inviteId).getSuccessObjectOrThrowException();
+
+        Supplier<String> failureView = () -> getInviteToSend(model, inviteId, form, bindingResult);
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            ServiceResult<Void> sendResult = competitionInviteRestService.resendInvite(inviteId, new AssessorInviteSendResource(
+                    form.getSubject(), form.getContent())).toServiceResult();
+            return validationHandler.addAnyErrors(sendResult, fieldErrorsToFieldErrors(), asGlobalErrors())
+                    .failNowOrSucceedWith(failureView, () -> format("redirect:/competition/%s/assessors/overview", invite.getCompetitionId()));
         });
     }
 

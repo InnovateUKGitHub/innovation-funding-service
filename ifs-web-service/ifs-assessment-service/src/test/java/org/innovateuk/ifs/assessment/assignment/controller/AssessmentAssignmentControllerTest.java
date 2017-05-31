@@ -4,10 +4,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.assignment.form.AssessmentAssignmentForm;
 import org.innovateuk.ifs.assessment.assignment.populator.AssessmentAssignmentModelPopulator;
-import org.innovateuk.ifs.assessment.assignment.populator.RejectAssessmentModelPopulator;
 import org.innovateuk.ifs.assessment.assignment.viewmodel.AssessmentAssignmentViewModel;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
-import org.innovateuk.ifs.assessment.overview.viewmodel.RejectAssessmentViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -68,10 +66,6 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
     @Spy
     @InjectMocks
     private AssessmentAssignmentModelPopulator assessmentAssignmentModelPopulator;
-
-    @Spy
-    @InjectMocks
-    private RejectAssessmentModelPopulator rejectAssessmentModelPopulator;
 
     @Mock
     private AssessmentService assessmentService;

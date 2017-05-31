@@ -20,10 +20,10 @@ IFS.projectSetup.spendProfile = (function () {
       var eligibleTotal = parseInt(totalTd.next().find('input').attr('data-calculation-rawvalue'), 10)
       if (currentTotal > eligibleTotal) {
         totalTd.addClass('cell-error')
-        IFS.core.formValidation.setInvalid(inst, s.message)
+        IFS.core.formValidation.setInvalid(inst, s.message, 'show')
       } else {
         totalTd.removeClass('cell-error')
-        IFS.core.formValidation.setValid(inst, s.message)
+        IFS.core.formValidation.setValid(inst, s.message, 'show')
       }
     }
   }

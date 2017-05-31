@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.viewmodel.overview;
 
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,8 +14,7 @@ import java.util.SortedMap;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -30,11 +30,12 @@ public class ApplicationOverviewSectionViewModelTest {
         SortedMap<Long, SectionResource> sections = mock(SortedMap.class);
         Map<Long, List<SectionResource>> subSections = asMap(1L, asList(), 2L, asList(2L, 3L));
         Map<Long, List<QuestionResource>> sectionQuestions = asMap();
+        Map<Long, AssignButtonsViewModel> assignButtonViewModels = asMap();
         List<SectionResource> financeSections = asList();
         Boolean hasFinanceSection = Boolean.TRUE;
         Long financeSectionId = 123L;
 
-        viewModel = new ApplicationOverviewSectionViewModel(sections, subSections, sectionQuestions, financeSections, hasFinanceSection, financeSectionId);
+        viewModel = new ApplicationOverviewSectionViewModel(sections, subSections, sectionQuestions, financeSections, hasFinanceSection, financeSectionId, assignButtonViewModels);
     }
 
     @Test

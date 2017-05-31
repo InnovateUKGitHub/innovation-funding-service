@@ -17,7 +17,11 @@ public class AssessorFormInputResponseDocs {
             fieldWithPath("updatedDate").description("when the response was last updated"),
     };
 
-    public static final AssessorFormInputResponseResourceBuilder assessorFormInputResponseResourceBuilder  = newAssessorFormInputResponseResource()
+    public static final FieldDescriptor[] assessorFormInputResponsesFields = {
+            fieldWithPath("responses").description("Array of form input responses"),
+    };
+
+    public static final AssessorFormInputResponseResourceBuilder assessorFormInputResponseResourceBuilder = newAssessorFormInputResponseResource()
             .withId(1L)
             .withAssessment(2L)
             .withFormInput(3L)

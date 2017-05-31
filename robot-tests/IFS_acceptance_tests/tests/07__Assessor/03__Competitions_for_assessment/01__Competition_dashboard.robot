@@ -18,7 +18,7 @@ Documentation     INFUND-1188 As an assessor I want to be able to review my asse
 ...               INFUND-4797 Handle scenario where invitation to assess an application has been removed from this user before they have responded
 ...
 ...               INFUND-5494 An assessor CAN follow a link to the competition brief from the competition dashboard
-Suite Setup       Log in as user    email=felix.wilson@gmail.com    password=Passw0rd
+Suite Setup       Guest user log-in  &{assessor2_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
