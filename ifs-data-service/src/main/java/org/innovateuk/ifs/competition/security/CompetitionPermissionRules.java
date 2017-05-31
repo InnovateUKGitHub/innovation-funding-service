@@ -9,9 +9,7 @@ import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isCompAdmin;
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
+import static org.innovateuk.ifs.security.SecurityRuleUtil.*;
 
 /**
  * Provides the permissions around CRUD for Competitions
