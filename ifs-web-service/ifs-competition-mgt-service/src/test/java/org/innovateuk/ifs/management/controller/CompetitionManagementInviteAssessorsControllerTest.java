@@ -156,6 +156,8 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
         FindAssessorsFilterForm filterForm = (FindAssessorsFilterForm) result.getModelAndView().getModel().get("filterForm");
         assertEquals(of(3L), filterForm.getInnovationArea());
+        AssessorSelectionForm selectionForm = (AssessorSelectionForm) result.getModelAndView().getModel().get("selectionForm");
+        assertTrue(selectionForm.getAssessorEmails().isEmpty());
 
         assertCompetitionDetails(competition, result);
         assertAvailableAssessors(availableAssessorPageResource.getContent(), result);
@@ -167,7 +169,6 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         inOrder.verify(competitionInviteRestService, times(2)).getAvailableAssessors(competition.getId(), page, innovationArea);
         inOrder.verifyNoMoreInteractions();
     }
-
 
     @Test
     public void find_defaultParams() throws Exception {
@@ -189,8 +190,9 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .andReturn();
 
         FindAssessorsFilterForm filterForm = (FindAssessorsFilterForm) result.getModelAndView().getModel().get("filterForm");
-
         assertEquals(empty(), filterForm.getInnovationArea());
+        AssessorSelectionForm selectionForm = (AssessorSelectionForm) result.getModelAndView().getModel().get("selectionForm");
+        assertTrue(selectionForm.getAssessorEmails().isEmpty());
 
         assertCompetitionDetails(competition, result);
         assertAvailableAssessors(availableAssessorPageResource.getContent(), result);
@@ -200,6 +202,50 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(categoryRestServiceMock).getInnovationSectors();
         inOrder.verify(competitionInviteRestService, times(2)).getAvailableAssessors(competition.getId(), page, innovationArea);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void find_existingCookie() throws Exception {
+        int page = 0;
+        Optional<Long> innovationArea = empty();
+        String expectedAssessorEmail = "dave@email.com";
+        AssessorSelectionForm expectedSelectionForm = new AssessorSelectionForm();
+        expectedSelectionForm.getAssessorEmails().add(expectedAssessorEmail);
+        Cookie selectionFormCookie = createFormCookie(expectedSelectionForm);
+
+        AvailableAssessorPageResource availableAssessorPageResource = newAvailableAssessorPageResource()
+                .withTotalPages(1)
+                .withContent(setUpAvailableAssessorResources())
+                .build();
+        List<InnovationSectorResource> expectedInnovationSectorOptions = newInnovationSectorResource().build(4);
+
+        when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(expectedInnovationSectorOptions));
+        when(competitionInviteRestService.getAvailableAssessors(competition.getId(), page, innovationArea)).thenReturn(restSuccess(availableAssessorPageResource));
+
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/find", competition.getId())
+                .cookie(selectionFormCookie))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessors/find"))
+                .andReturn();
+
+        FindAssessorsFilterForm filterForm = (FindAssessorsFilterForm) result.getModelAndView().getModel().get("filterForm");
+        assertEquals(empty(), filterForm.getInnovationArea());
+        AssessorSelectionForm selectionForm = (AssessorSelectionForm) result.getModelAndView().getModel().get("selectionForm");
+        assertEquals(expectedSelectionForm, selectionForm);
+
+        Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), "selectionForm");
+        assertTrue(resultForm.get().getAssessorEmails().contains(expectedAssessorEmail));
+
+        assertCompetitionDetails(competition, result);
+        assertAvailableAssessors(availableAssessorPageResource.getContent(), result);
+        assertFindFilterOptionsAreCorrect(expectedInnovationSectorOptions, result);
+
+        InOrder inOrder = inOrder(competitionRestService, competitionInviteRestService, categoryRestServiceMock);
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
+        inOrder.verify(categoryRestServiceMock).getInnovationSectors();
+        inOrder.verify(competitionInviteRestService, times(3)).getAvailableAssessors(competition.getId(), page, innovationArea);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -333,7 +379,6 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), "selectionForm");
         assertTrue(resultForm.get().getAssessorEmails().contains(email));
-
     }
 
     @Test

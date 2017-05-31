@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.management.form;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
 import java.util.ArrayList;
@@ -32,5 +34,27 @@ public class AssessorSelectionForm extends BaseBindingResultTarget {
 
     public void setAssessorEmails(List<String> assessorEmails) {
         this.assessorEmails = assessorEmails;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AssessorSelectionForm that = (AssessorSelectionForm) o;
+
+        return new EqualsBuilder()
+                .append(allSelected, that.allSelected)
+                .append(assessorEmails, that.assessorEmails)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(allSelected)
+                .append(assessorEmails)
+                .toHashCode();
     }
 }
