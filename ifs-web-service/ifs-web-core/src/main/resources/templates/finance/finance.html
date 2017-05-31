@@ -197,7 +197,7 @@
             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
         </label>
         <input class="form-control width-medium"
-               th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+               th:disabled="${model.readonly or model.complete}"
                type="number"
                th:id="${formInput.id}"
                th:name="'formInput['+${formInput.id}+']'"
