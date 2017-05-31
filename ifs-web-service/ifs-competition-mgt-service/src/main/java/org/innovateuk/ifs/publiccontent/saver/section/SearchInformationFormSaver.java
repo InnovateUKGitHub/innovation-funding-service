@@ -32,7 +32,12 @@ public class SearchInformationFormSaver extends AbstractPublicContentFormSaver<S
         publicContentResource.setProjectFundingRange(form.getProjectFundingRange());
         publicContentResource.setEligibilitySummary(form.getEligibilitySummary());
         publicContentResource.setKeywords(splitAndNormaliseKeywords(form.getKeywords()));
+        publicContentResource.setInviteOnly(convertToInviteBoolean(form.getPublishSetting()));
         return validateKeywords(publicContentResource.getKeywords());
+    }
+
+    private boolean convertToInviteBoolean(String publishSetting) {
+        return publishSetting.equals("invite");
     }
 
     private List<Error> validateKeywords(List<String> keywords) {
