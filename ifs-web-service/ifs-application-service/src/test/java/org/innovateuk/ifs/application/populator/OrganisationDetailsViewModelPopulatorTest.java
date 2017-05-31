@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder;
+import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.viewmodel.QuestionOrganisationDetailsViewModel;
 import org.innovateuk.ifs.commons.error.Error;
@@ -22,15 +25,18 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
+import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.invite.builder.InviteResourceBuilder.newInviteResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -69,8 +75,12 @@ public class OrganisationDetailsViewModelPopulatorTest extends BaseUnitTestMocks
     @Test
     public void testPopulateModelWithValidObjects() throws Exception {
         setupSuccess();
+        List<ApplicantResource> applicantResources = userApplicationRoles.stream().map(processRoleResource -> newApplicantResource().withProcessRole(processRoleResource).withOrganisation(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.RESEARCH.getId()).withId(processRoleResource.getOrganisationId()).build()).build()).collect(Collectors.toList());
+        ApplicantQuestionResource question = newApplicantQuestionResource().withApplication(newApplicationResource().build()).withApplicants(applicantResources).build();
+        question.getApplication().setId(applicationId);
 
-        QuestionOrganisationDetailsViewModel viewModel = populator.populateModel(applicationId, userApplicationRoles);
+
+        QuestionOrganisationDetailsViewModel viewModel = populator.populateModel(question);
         assertNotEquals(null, viewModel);
 
         assertEquals(Long.valueOf(3L), viewModel.getAcademicOrganisations().first().getId());
@@ -85,16 +95,20 @@ public class OrganisationDetailsViewModelPopulatorTest extends BaseUnitTestMocks
                 processRoleResource -> setupOrganisationServicesFailure(processRoleResource.getOrganisationId()));
 
         setupInviteServicesFailure(applicationId);
+        ApplicantQuestionResource question = ApplicantQuestionResourceBuilder.newApplicantQuestionResource().build();
 
-        QuestionOrganisationDetailsViewModel viewModel = populator.populateModel(applicationId, userApplicationRoles);
+        QuestionOrganisationDetailsViewModel viewModel = populator.populateModel(question);
     }
 
     @Test
     public void testPopulateModelOnlyLong() throws Exception {
         setupSuccess();
         when(processRoleService.findProcessRolesByApplicationId(applicationId)).thenReturn(userApplicationRoles);
+        List<ApplicantResource> applicantResources = userApplicationRoles.stream().map(processRoleResource -> newApplicantResource().withProcessRole(processRoleResource).withOrganisation(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.RESEARCH.getId()).withId(processRoleResource.getOrganisationId()).build()).build()).collect(Collectors.toList());
+        ApplicantQuestionResource question = newApplicantQuestionResource().withApplication(newApplicationResource().build()).withApplicants(applicantResources).build();
+        question.getApplication().setId(applicationId);
 
-        QuestionOrganisationDetailsViewModel viewModel = populator.populateModel(applicationId);
+        QuestionOrganisationDetailsViewModel viewModel = populator.populateModel(question);
 
         assertNotEquals(null, viewModel);
 
