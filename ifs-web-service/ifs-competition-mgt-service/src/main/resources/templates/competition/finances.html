@@ -31,7 +31,7 @@
           data-section="application"
           data-subsection="finance">
 
-        <div th:class="${#fields.hasErrors('fullApplicationFinance')}? 'form-group form-group-error':'form-group'">
+        <div class="form-group" th:classappend="${#fields.hasErrors('fullApplicationFinance')}? 'form-group-error'">
             <fieldset class="inline">
                 <legend>
                     <span class="form-label-bold">Finances form</span>
@@ -54,7 +54,7 @@
             </fieldset>
         </div>
 
-        <div th:class="${#fields.hasErrors('includeGrowthTable')}? 'form-group form-group-error':'form-group'">
+        <div class="form-group" th:classappend="${#fields.hasErrors('includeGrowthTable')} ? 'form-group-error'">
             <fieldset class="inline">
                 <legend>
                     <span class="form-label-bold">Include project growth table</span>

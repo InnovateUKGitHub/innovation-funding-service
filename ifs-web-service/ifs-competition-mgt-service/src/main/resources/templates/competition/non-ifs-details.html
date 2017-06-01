@@ -22,7 +22,7 @@
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Non-IFS competition details',size='heading-xlarge'" />
 
     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST" th:object="${form}" novalidate="novalidate">
-            <div th:class="${#fields.hasErrors('title')}? 'form-group form-group-error':'form-group'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('title')} ? 'form-group-error'">
                 <label class="form-label" for="title">
                     <span class="form-label-bold">Competition title</span>
                     <th:block th:if="${#fields.hasErrors('title')}">
@@ -38,7 +38,7 @@
                        th:attr="data-required-errormessage=#{validation.standard.title.required}" />
             </div>
 
-            <div th:class="${#fields.hasErrors('innovationSectorCategoryId')}? 'form-group form-group-error':'form-group'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('innovationSectorCategoryId')} ? 'form-group-error'">
                 <label class="form-label" for="innovationSector">
                     <span class="form-label-bold">Innovation sector</span>
                     <th:block th:if="${#fields.hasErrors('innovationSectorCategoryId')}">
@@ -56,7 +56,7 @@
                 </select>
             </div>
 
-            <div th:class="${#fields.hasErrors('innovationAreaCategoryId')}? 'form-group form-group-error':'form-group'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('innovationAreaCategoryId')} ? 'form-group-error'">
                 <label class="form-label" for="innovationArea">
                     <span class="form-label-bold">Innovation area</span>
                     <th:block th:if="${#fields.hasErrors('innovationAreaCategoryId')}">
@@ -74,7 +74,7 @@
             </div>
 
             <fieldset>
-                <div id="openingDate" th:class="${#fields.hasErrors('openDate*')}? 'form-group form-group-error':'form-group'">
+                <div id="openingDate" class="form-group" th:classappend="${#fields.hasErrors('openDate*')} ? 'form-group-error'">
                     <h3 class="heading-small no-margin">Opening date</h3>
                     <legend>
                         <span class="visuallyhidden">Opening date</span>
@@ -209,7 +209,7 @@
             </fieldset>
 
             <fieldset>
-                <div id="applicantNotifiedDate" th:class="${#fields.hasErrors('applicantNotifiedDate*')}? 'form-group form-group-error':'form-group'">
+                <div id="applicantNotifiedDate" class="form-group" th:classappend="${#fields.hasErrors('applicantNotifiedDate*')} ? 'form-group-error'">
                     <h3 class="heading-small no-margin">Applicants notified date</h3>
                     <legend>
                         <span class="visuallyhidden">Applicants notified date</span>
