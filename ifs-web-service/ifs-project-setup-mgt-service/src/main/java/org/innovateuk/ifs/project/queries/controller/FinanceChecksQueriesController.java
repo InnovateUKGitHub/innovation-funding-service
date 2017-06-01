@@ -84,6 +84,7 @@ public class FinanceChecksQueriesController {
                            @PathVariable Long organisationId,
                            @RequestParam(value = "query_section", required = false) String querySection,
                            Model model) {
+        projectService.getPartnerOrganisation(projectId, organisationId);
         FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, null, querySection, null);
         model.addAttribute("model", viewModel);
         return QUERIES_VIEW;
@@ -96,6 +97,7 @@ public class FinanceChecksQueriesController {
     ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,
                                                          @PathVariable Long organisationId,
                                                          @PathVariable Long attachmentId) {
+        projectService.getPartnerOrganisation(projectId, organisationId);
         return getFileResponseEntity(financeCheckService.downloadFile(attachmentId), financeCheckService.getAttachmentInfo(attachmentId));
     }
 
@@ -108,6 +110,7 @@ public class FinanceChecksQueriesController {
                                   Model model,
                                   @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                   HttpServletRequest request) {
+        projectService.getPartnerOrganisation(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         model.addAttribute("model", populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments));
         model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId, queryId).orElse(new FinanceChecksQueriesAddResponseForm()));
@@ -216,6 +219,7 @@ public class FinanceChecksQueriesController {
                                                                  @PathVariable Long queryId,
                                                                  @PathVariable Long attachmentId,
                                                                  HttpServletRequest request) {
+        projectService.getPartnerOrganisation(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
 
         if (attachments.contains(attachmentId)) {
@@ -254,6 +258,7 @@ public class FinanceChecksQueriesController {
                                 @RequestParam(value = "query_section", required = false) String querySection,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
+        projectService.getPartnerOrganisation(projectId, organisationId);
         loadAttachmentsFromCookie(request, projectId, organisationId, queryId).forEach(financeCheckService::deleteFile);
         deleteCookies(response, projectId, organisationId, queryId);
         return redirectToQueryPage(projectId, organisationId, querySection);
