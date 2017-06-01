@@ -4,11 +4,13 @@ import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.notes.controller.FinanceChecksNotesAddNoteController;
 import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesAddNoteForm;
 import org.innovateuk.ifs.project.notes.viewmodel.FinanceChecksNotesAddNoteViewModel;
+import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -60,6 +62,8 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
 
     ProjectUserResource projectUser = newProjectUserResource().withOrganisation(applicantOrganisationId).withUserName("User1").withEmail("e@mail.com").withPhoneNumber("0117").withRoleName(UserRoleType.FINANCE_CONTACT).build();
 
+    PartnerOrganisationResource partnerOrg = new PartnerOrganisationResource();
+
     @Captor
     ArgumentCaptor<NoteResource> saveNoteArgumentCaptor;
 
@@ -71,12 +75,11 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
         when(organisationService.getOrganisationById(applicantOrganisationId)).thenReturn(leadOrganisationResource);
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisationResource);
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(Arrays.asList(projectUser));
+        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenReturn(partnerOrg);
     }
 
     @Test
     public void testViewNewNote() throws Exception {
-
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
 
         Cookie formCookie;
         FinanceChecksNotesAddNoteForm form = new FinanceChecksNotesAddNoteForm();
@@ -110,7 +113,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     @Test
     public void testViewNewNoteInvalidOrganisation() throws Exception {
 
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
+        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId + 1)).thenThrow(new ObjectNotFoundException());
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1)+ "/note/new-note"))
                 .andExpect(status().isNotFound());
@@ -305,7 +308,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     @Test
     public void testDownloadAttachmentFailsNoContent() throws Exception {
 
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
+        when(projectService.getPartnerOrganisation(projectId,applicantOrganisationId)).thenThrow(new ObjectNotFoundException());
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/new-note/attachment/1"))
                 .andExpect(status().isNotFound())
@@ -322,6 +325,9 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
 
     @Test
     public void testDownloadAttachmentFailsInvalidOrganisation() throws Exception {
+
+        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId + 1)).thenThrow(new ObjectNotFoundException());
+
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1) + "/note/new-note/attachment/1"))
                 .andExpect(status().isNotFound())
                 .andReturn();
@@ -343,8 +349,6 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
 
         FinanceChecksNotesAddNoteForm formIn = new FinanceChecksNotesAddNoteForm();
         Cookie formCookie = createFormCookie(formIn);
-
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
 
         when(financeCheckServiceMock.deleteFile(1L)).thenReturn(ServiceResult.serviceSuccess());
 
@@ -375,7 +379,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     @Test
     public void testCancelNewNoteInvalidOrganisation() throws Exception {
 
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
+        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId + 1)).thenThrow(new ObjectNotFoundException());
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1) + "/note/new-note/cancel"))
                 .andExpect(status().isNotFound());
@@ -386,7 +390,6 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
 
         AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
         when(financeCheckServiceMock.getAttachment(1L)).thenReturn(ServiceResult.serviceSuccess(attachment));
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
 
         List<Long> attachmentIds = new ArrayList<>();
         attachmentIds.add(1L);
@@ -419,9 +422,9 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     @Test
     public void testViewNewNoteWithAttachmentsInvalidOrganisation() throws Exception {
 
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
+        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId + 1)).thenThrow(new ObjectNotFoundException());
 
-        mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId +1) + "/note/new-note"))
+        mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1) + "/note/new-note"))
                 .andExpect(status().isNotFound());
     }
 

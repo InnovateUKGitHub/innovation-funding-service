@@ -68,7 +68,7 @@ public class Competition implements ProcessActivity {
     @JoinColumn(name = "leadTechnologistUserId", referencedColumnName = "id")
     private User leadTechnologist;
 
-    @OneToOne(mappedBy = "template")
+    @OneToOne(mappedBy = "template", fetch = FetchType.LAZY)
     private CompetitionType templateForType;
 
     private String pafCode;
