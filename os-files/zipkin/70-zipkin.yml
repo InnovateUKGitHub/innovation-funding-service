@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: zipkin
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: zipkin
+    strategy:
+      resources: {}
+    template:
+      metadata:
+        labels:
+          deploymentconfig: zipkin
+      spec:
+        containers:
+        - image: openzipkin/zipkin
+          name: zipkin
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 9410
+          - containerPort: 9411
+          resources:
+            limits:
+              memory: 1300M
+    test: false
+    triggers:
+    - type: ConfigChange
+  status: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: zipkin
+  spec:
+    ports:
+    - name: 9410-tcp
+      port: 9410
+      targetPort: 9410
+    - name: 9411-tcp
+      port: 9411
+      targetPort: 9411
+    selector:
+      deploymentconfig: zipkin
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Route
+  metadata:
+    name: zipkin
+  spec:
+    host: <<ZIPKIN-ADDRESS>>
+    port:
+      targetPort: 9411-tcp
+    to:
+      kind: Service
+      name: zipkin

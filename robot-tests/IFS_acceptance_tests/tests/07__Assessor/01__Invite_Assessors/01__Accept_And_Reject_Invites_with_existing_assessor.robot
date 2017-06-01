@@ -111,7 +111,7 @@ Existing Assessor tries to accept closed competition
     [Tags]
     [Setup]    Close the competition in assessment
     Given Log in as a different user    &{existing_assessor1_credentials}
-    Then The user should not see the element    link=Sustainable living models for the future
+    Then The user should not see the element    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
     Then The user should see the text in the page    This invitation is now closed
     [Teardown]    Run Keywords    Connect to Database    @{database}

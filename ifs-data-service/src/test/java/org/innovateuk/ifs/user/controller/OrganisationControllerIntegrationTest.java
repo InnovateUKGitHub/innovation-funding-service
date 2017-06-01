@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
-import java.util.List;
+import java.util.Set;
 
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -71,7 +71,7 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
     @Rollback
     @Test
     public void testFindByApplicationId() throws Exception {
-        List<OrganisationResource> organisations = controller.findByApplicationId(1L).getSuccessObject();
+        Set<OrganisationResource> organisations = controller.findByApplicationId(1L).getSuccessObject();
         assertEquals("There should be 4 organisation in this application", 4, organisations.size());
 
         OrganisationResource organisation = controller.findById(3L).getSuccessObject();

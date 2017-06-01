@@ -608,10 +608,13 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected OrganisationMapper organisationMapperMock;
 
     @Mock
+    protected OrganisationTypeMapper organisationTypeMapperMock;
+
+    @Mock
     protected SpendProfileTableCalculator spendProfileTableCalculatorMock;
 
     @Mock
-    protected NotificationSender notificationSender;
+    protected NotificationSender notificationSenderMock;
 
     @Mock
     protected NotificationTemplateRenderer notificationTemplateRendererMock;
