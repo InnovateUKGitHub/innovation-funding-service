@@ -28,7 +28,7 @@ public class PublicContentResource {
 
     private String summary;
 
-    private String inviteOnly;
+    private Boolean inviteOnly;
 
     private FundingType fundingType;
 
@@ -134,11 +134,11 @@ public class PublicContentResource {
         this.contentEvents = contentEvents;
     }
 
-    public String getInviteOnly() {
+    public Boolean getInviteOnly() {
         return inviteOnly;
     }
 
-    public void setInviteOnly(String inviteOnly) {
+    public void setInviteOnly(Boolean inviteOnly) {
         this.inviteOnly = inviteOnly;
     }
 
