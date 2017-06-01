@@ -8,7 +8,7 @@ import org.junit.Test;
 import java.util.Optional;
 
 import static java.util.Optional.empty;
-import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
+import static org.innovateuk.ifs.invite.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
