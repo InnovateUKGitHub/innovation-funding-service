@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.builder.QuestionResourceBuilder;
-import org.innovateuk.ifs.application.builder.SectionResourceBuilder;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.finance.view.FinanceModelManager;
@@ -16,8 +15,6 @@ import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder;
-import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -128,7 +125,7 @@ public class ApplicationModelPopulatorTest {
 
         //Verify other model calls
         verify(applicationSectionAndQuestionModelPopulator).addQuestionsDetails(model, application, form);
-        verify(applicationSectionAndQuestionModelPopulator).addMappedSectionsDetails(model, competition, section, userOrganisation, emptyMap(), markAsCompleteEnabled);
+        verify(applicationSectionAndQuestionModelPopulator).addMappedSectionsDetails(model, application, competition, section, userOrganisation, userId, emptyMap(), markAsCompleteEnabled);
         verify(applicationSectionAndQuestionModelPopulator).addAssignableDetails(model, application, organisationResource, user, section, currentQuestionId);
         verify(applicationSectionAndQuestionModelPopulator).addCompletedDetails(model, application, userOrganisation, emptyMap());
         verify(applicationSectionAndQuestionModelPopulator).addSectionDetails(model, section);

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * This RestController exposes CRUD operations to both the
@@ -24,7 +25,7 @@ public class OrganisationController {
     private OrganisationService organisationService;
 
     @GetMapping("/findByApplicationId/{applicationId}")
-    public RestResult<List<OrganisationResource>> findByApplicationId(@PathVariable("applicationId") final Long applicationId) {
+    public RestResult<Set<OrganisationResource>> findByApplicationId(@PathVariable("applicationId") final Long applicationId) {
         return organisationService.findByApplicationId(applicationId).toGetResponse();
     }
 

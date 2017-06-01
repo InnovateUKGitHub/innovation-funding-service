@@ -122,4 +122,8 @@ public class ProjectServiceImpl implements ProjectService {
         return getProjectManager(projectId).map(maybePM -> maybePM.isUser(userId)).orElse(false);
     }
 
+    @Override
+    public PartnerOrganisationResource getPartnerOrganisation(Long projectId, Long organisationId) {
+        return projectRestService.getPartnerOrganisation(projectId, organisationId).getSuccessObjectOrThrowException();
+    }
 }

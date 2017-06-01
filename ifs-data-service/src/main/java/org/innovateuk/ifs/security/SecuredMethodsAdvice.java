@@ -34,8 +34,7 @@ public class SecuredMethodsAdvice extends AbstractIfsMethodsAdvice {
             PostFilter.class, PreFilter.class, PreAuthorize.class, PostAuthorize.class);
 
     private static final BiFunction<Method, Class, Boolean> FILTER =
-            (m, c) -> c.getName().startsWith("org.innovateuk") &&
-                      !simpleFilter(SECURED_ANNOTATIONS, a -> findAnnotation(m, a) != null).isEmpty();
+            (m, c) -> !simpleFilter(SECURED_ANNOTATIONS, a -> findAnnotation(m, a) != null).isEmpty();
 
     @Autowired
     public SecuredMethodsAdvice(final SecuredMethodsInStackCountInterceptor interceptor) {

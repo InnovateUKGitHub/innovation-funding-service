@@ -840,26 +840,26 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         when(applicationRepositoryMock.findOne(applicationTwoId)).thenReturn(applications.get(1));
         when(applicationRepositoryMock.findOne(applicationThreeId)).thenReturn(applications.get(2));
 
-        when(notificationSender.renderTemplates(Matchers.eq(notifications.get(0))))
+        when(notificationSenderMock.renderTemplates(Matchers.eq(notifications.get(0))))
                 .thenReturn(serviceSuccess(asMap(notificationTargets.get(0), emailContents.get(0))));
-        when(notificationSender.renderTemplates(Matchers.eq(notifications.get(1))))
+        when(notificationSenderMock.renderTemplates(Matchers.eq(notifications.get(1))))
                 .thenReturn(serviceSuccess(asMap(notificationTargets.get(1), emailContents.get(1))));
-        when(notificationSender.renderTemplates(Matchers.eq(notifications.get(2))))
+        when(notificationSenderMock.renderTemplates(Matchers.eq(notifications.get(2))))
                 .thenReturn(serviceSuccess(asMap(notificationTargets.get(2), emailContents.get(2))));
 
-        when(notificationSender.sendEmailWithContent(
+        when(notificationSenderMock.sendEmailWithContent(
                 Matchers.eq(notifications.get(0)),
                 Matchers.eq(notificationTargets.get(0)),
                 Matchers.eq(emailContents.get(0))))
                 .thenReturn(serviceSuccess(
                         singletonList(new EmailAddress(users.get(0).getEmail(), users.get(0).getName()))));
-        when(notificationSender.sendEmailWithContent(
+        when(notificationSenderMock.sendEmailWithContent(
                 Matchers.eq(notifications.get(1)),
                 Matchers.eq(notificationTargets.get(1)),
                 Matchers.eq(emailContents.get(1))))
                 .thenReturn(serviceSuccess(
                         singletonList(new EmailAddress(users.get(1).getEmail(), users.get(1).getName()))));
-        when(notificationSender.sendEmailWithContent(
+        when(notificationSenderMock.sendEmailWithContent(
                 Matchers.eq(notifications.get(2)),
                 Matchers.eq(notificationTargets.get(2)),
                 Matchers.eq(emailContents.get(2))))
@@ -868,22 +868,22 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
 
-        InOrder inOrder = inOrder(applicationRepositoryMock, notificationSender);
+        InOrder inOrder = inOrder(applicationRepositoryMock, notificationSenderMock);
         inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES);
 
         inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
-        inOrder.verify(notificationSender).renderTemplates(notifications.get(0));
-        inOrder.verify(notificationSender)
+        inOrder.verify(notificationSenderMock).renderTemplates(notifications.get(0));
+        inOrder.verify(notificationSenderMock)
                 .sendEmailWithContent(notifications.get(0), notificationTargets.get(0), emailContents.get(0));
 
         inOrder.verify(applicationRepositoryMock).findOne(applicationTwoId);
-        inOrder.verify(notificationSender).renderTemplates(notifications.get(1));
-        inOrder.verify(notificationSender)
+        inOrder.verify(notificationSenderMock).renderTemplates(notifications.get(1));
+        inOrder.verify(notificationSenderMock)
                 .sendEmailWithContent(notifications.get(1), notificationTargets.get(1), emailContents.get(1));
 
         inOrder.verify(applicationRepositoryMock).findOne(applicationThreeId);
-        inOrder.verify(notificationSender).renderTemplates(notifications.get(2));
-        inOrder.verify(notificationSender)
+        inOrder.verify(notificationSenderMock).renderTemplates(notifications.get(2));
+        inOrder.verify(notificationSenderMock)
                 .sendEmailWithContent(notifications.get(2), notificationTargets.get(2), emailContents.get(2));
 
         inOrder.verifyNoMoreInteractions();
@@ -972,26 +972,26 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         when(applicationRepositoryMock.findOne(applicationTwoId)).thenReturn(applications.get(1));
         when(applicationRepositoryMock.findOne(applicationThreeId)).thenReturn(applications.get(2));
 
-        when(notificationSender.renderTemplates(Matchers.eq(notifications.get(0))))
+        when(notificationSenderMock.renderTemplates(Matchers.eq(notifications.get(0))))
                 .thenReturn(serviceSuccess(asMap(notificationTargets.get(0), emailContents.get(0))));
-        when(notificationSender.renderTemplates(Matchers.eq(notifications.get(1))))
+        when(notificationSenderMock.renderTemplates(Matchers.eq(notifications.get(1))))
                 .thenReturn(serviceSuccess(asMap(notificationTargets.get(1), emailContents.get(1))));
-        when(notificationSender.renderTemplates(Matchers.eq(notifications.get(2))))
+        when(notificationSenderMock.renderTemplates(Matchers.eq(notifications.get(2))))
                 .thenReturn(serviceSuccess(asMap(notificationTargets.get(2), emailContents.get(2))));
 
-        when(notificationSender.sendEmailWithContent(
+        when(notificationSenderMock.sendEmailWithContent(
                 Matchers.eq(notifications.get(0)),
                 Matchers.eq(notificationTargets.get(0)),
                 Matchers.eq(emailContents.get(0))))
                 .thenReturn(serviceSuccess(
                         singletonList(new EmailAddress(users.get(0).getEmail(), users.get(0).getName()))));
-        when(notificationSender.sendEmailWithContent(
+        when(notificationSenderMock.sendEmailWithContent(
                 Matchers.eq(notifications.get(1)),
                 Matchers.eq(notificationTargets.get(1)),
                 Matchers.eq(emailContents.get(1))))
                 .thenReturn(serviceSuccess(
                         singletonList(new EmailAddress(users.get(1).getEmail(), users.get(1).getName()))));
-        when(notificationSender.sendEmailWithContent(
+        when(notificationSenderMock.sendEmailWithContent(
                 Matchers.eq(notifications.get(2)),
                 Matchers.eq(notificationTargets.get(2)),
                 Matchers.eq(emailContents.get(2))))
@@ -999,22 +999,22 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
 
-        InOrder inOrder = inOrder(applicationRepositoryMock, notificationSender);
+        InOrder inOrder = inOrder(applicationRepositoryMock, notificationSenderMock);
         inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES);
 
         inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
-        inOrder.verify(notificationSender).renderTemplates(notifications.get(0));
-        inOrder.verify(notificationSender)
+        inOrder.verify(notificationSenderMock).renderTemplates(notifications.get(0));
+        inOrder.verify(notificationSenderMock)
                 .sendEmailWithContent(notifications.get(0), notificationTargets.get(0), emailContents.get(0));
 
         inOrder.verify(applicationRepositoryMock).findOne(applicationTwoId);
-        inOrder.verify(notificationSender).renderTemplates(notifications.get(1));
-        inOrder.verify(notificationSender)
+        inOrder.verify(notificationSenderMock).renderTemplates(notifications.get(1));
+        inOrder.verify(notificationSenderMock)
                 .sendEmailWithContent(notifications.get(1), notificationTargets.get(1), emailContents.get(1));
 
         inOrder.verify(applicationRepositoryMock).findOne(applicationThreeId);
-        inOrder.verify(notificationSender).renderTemplates(notifications.get(2));
-        inOrder.verify(notificationSender)
+        inOrder.verify(notificationSenderMock).renderTemplates(notifications.get(2));
+        inOrder.verify(notificationSenderMock)
                 .sendEmailWithContent(notifications.get(2), notificationTargets.get(2), emailContents.get(2));
 
         inOrder.verifyNoMoreInteractions();
@@ -1106,24 +1106,24 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         when(applicationRepositoryMock.findOne(applicationTwoId)).thenReturn(applications.get(1));
         when(applicationRepositoryMock.findOne(applicationThreeId)).thenReturn(applications.get(2));
 
-        when(notificationSender.renderTemplates(Matchers.eq(notifications.get(0))))
+        when(notificationSenderMock.renderTemplates(Matchers.eq(notifications.get(0))))
                 .thenReturn(serviceSuccess(asMap(notificationTargets.get(0), emailContents.get(0))));
-        when(notificationSender.renderTemplates(Matchers.eq(notifications.get(1))))
+        when(notificationSenderMock.renderTemplates(Matchers.eq(notifications.get(1))))
                 .thenReturn(serviceSuccess(asMap(notificationTargets.get(1), emailContents.get(1))));
-        when(notificationSender.renderTemplates(Matchers.eq(notifications.get(2))))
+        when(notificationSenderMock.renderTemplates(Matchers.eq(notifications.get(2))))
                 .thenReturn(serviceSuccess(asMap(notificationTargets.get(2), emailContents.get(2))));
 
-        when(notificationSender.sendEmailWithContent(
+        when(notificationSenderMock.sendEmailWithContent(
                 Matchers.eq(notifications.get(0)),
                 Matchers.eq(notificationTargets.get(0)),
                 Matchers.eq(emailContents.get(0))))
                 .thenReturn(serviceFailure(new Error("error", INTERNAL_SERVER_ERROR)));
-        when(notificationSender.sendEmailWithContent(
+        when(notificationSenderMock.sendEmailWithContent(
                 Matchers.eq(notifications.get(1)),
                 Matchers.eq(notificationTargets.get(1)),
                 Matchers.eq(emailContents.get(1))))
                 .thenReturn(serviceFailure(new Error("error", INTERNAL_SERVER_ERROR)));
-        when(notificationSender.sendEmailWithContent(
+        when(notificationSenderMock.sendEmailWithContent(
                 Matchers.eq(notifications.get(2)),
                 Matchers.eq(notificationTargets.get(2)),
                 Matchers.eq(emailContents.get(2))))
@@ -1131,22 +1131,22 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
 
-        InOrder inOrder = inOrder(applicationRepositoryMock, notificationSender);
+        InOrder inOrder = inOrder(applicationRepositoryMock, notificationSenderMock);
         inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES);
 
         inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
-        inOrder.verify(notificationSender).renderTemplates(notifications.get(0));
-        inOrder.verify(notificationSender)
+        inOrder.verify(notificationSenderMock).renderTemplates(notifications.get(0));
+        inOrder.verify(notificationSenderMock)
                 .sendEmailWithContent(notifications.get(0), notificationTargets.get(0), emailContents.get(0));
 
         inOrder.verify(applicationRepositoryMock).findOne(applicationTwoId);
-        inOrder.verify(notificationSender).renderTemplates(notifications.get(1));
-        inOrder.verify(notificationSender)
+        inOrder.verify(notificationSenderMock).renderTemplates(notifications.get(1));
+        inOrder.verify(notificationSenderMock)
                 .sendEmailWithContent(notifications.get(1), notificationTargets.get(1), emailContents.get(1));
 
         inOrder.verify(applicationRepositoryMock).findOne(applicationThreeId);
-        inOrder.verify(notificationSender).renderTemplates(notifications.get(2));
-        inOrder.verify(notificationSender)
+        inOrder.verify(notificationSenderMock).renderTemplates(notifications.get(2));
+        inOrder.verify(notificationSenderMock)
                 .sendEmailWithContent(notifications.get(2), notificationTargets.get(2), emailContents.get(2));
 
         inOrder.verifyNoMoreInteractions();
@@ -1353,16 +1353,16 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(applicationWorkflowHandlerMock.informIneligible(application)).thenReturn(true);
-        when(notificationSender.sendNotification(notification)).thenReturn(serviceSuccess(notification));
+        when(notificationSenderMock.sendNotification(notification)).thenReturn(serviceSuccess(notification));
 
         ServiceResult<Void> serviceResult = service.informIneligible(applicationId, resource);
         assertTrue(serviceResult.isSuccess());
 
-        InOrder inOrder = inOrder(applicationRepositoryMock, applicationWorkflowHandlerMock, notificationSender);
+        InOrder inOrder = inOrder(applicationRepositoryMock, applicationWorkflowHandlerMock, notificationSenderMock);
         inOrder.verify(applicationRepositoryMock).findOne(applicationId);
         inOrder.verify(applicationWorkflowHandlerMock).informIneligible(application);
         inOrder.verify(applicationRepositoryMock).save(application);
-        inOrder.verify(notificationSender).sendNotification(notification);
+        inOrder.verify(notificationSenderMock).sendNotification(notification);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -1389,7 +1389,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         assertTrue(serviceResult.isFailure());
         assertEquals(APPLICATION_MUST_BE_INELIGIBLE.getErrorKey(), serviceResult.getErrors().get(0).getErrorKey());
 
-        InOrder inOrder = inOrder(applicationRepositoryMock, applicationWorkflowHandlerMock, notificationSender);
+        InOrder inOrder = inOrder(applicationRepositoryMock, applicationWorkflowHandlerMock, notificationSenderMock);
         inOrder.verify(applicationRepositoryMock).findOne(applicationId);
         inOrder.verify(applicationWorkflowHandlerMock).informIneligible(application);
         inOrder.verifyNoMoreInteractions();

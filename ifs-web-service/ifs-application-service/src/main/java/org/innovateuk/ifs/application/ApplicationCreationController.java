@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.application;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
@@ -35,9 +33,6 @@ import static org.innovateuk.ifs.registration.AbstractAcceptInviteController.INV
 @PreAuthorize("permitAll")
 public class ApplicationCreationController {
     public static final String COMPETITION_ID = "competitionId";
-    public static final String USER_ID = "userId";
-    private static final String APPLICATION_ID = "applicationId";
-    private static final Log log = LogFactory.getLog(ApplicationCreationController.class);
 
     @Autowired
     private ApplicationService applicationService;

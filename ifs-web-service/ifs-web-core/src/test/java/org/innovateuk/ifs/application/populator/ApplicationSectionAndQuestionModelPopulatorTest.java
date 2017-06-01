@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.populator;
 
-import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder;
 import org.innovateuk.ifs.application.form.ApplicationForm;
@@ -12,7 +11,6 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
-import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -43,8 +41,10 @@ import java.util.function.Function;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static org.hamcrest.Matchers.equalTo;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -89,11 +89,13 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
 
     @Test
     public void testAddMappedSectionsDetails() {
-        CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().build();
+        CompetitionResource competition = newCompetitionResource().build();
+        ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).build();
         Long organisationId = 3L;
         List<SectionResource> allSections = newSectionResource().build(3);
         SectionResource parentSection = newSectionResource()
                 .withChildSections(simpleMap(allSections, SectionResource::getId)).build();
+        UserResource user = newUserResource().build();
 
         OrganisationResource organisationResource = OrganisationResourceBuilder.newOrganisationResource()
                 .withId(organisationId).build();
@@ -109,7 +111,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
 
         allSections.forEach(loopSection -> when(sectionService.getById(loopSection.getId())).thenReturn(loopSection));
 
-        target.addMappedSectionsDetails(model, competition, section, userOrganisation, emptyMap(), markAsCompleteEnabled);
+        target.addMappedSectionsDetails(model, application, competition, section, userOrganisation, user.getId(), emptyMap(), markAsCompleteEnabled);
 
         verify(model).addAttribute(eq("completedSections"), anyMap());
         verify(model).addAttribute(eq("sections"), anyMap());
@@ -118,12 +120,13 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
         verify(model).addAttribute(eq("subSections"), anyMap());
         verify(model).addAttribute(eq("subsectionQuestions"), anyMap());
         verify(model).addAttribute(eq("subSectionQuestionFormInputs"), anyMap());
+        verify(model).addAttribute(eq("formInputViewModels"), anyMap());
         verifyNoMoreInteractions(model);
     }
 
     @Test
     public void testAddAssignableDetails() {
-        ApplicationResource application = ApplicationResourceBuilder.newApplicationResource()
+        ApplicationResource application = newApplicationResource()
                 .withApplicationState(ApplicationState.OPEN).build();
         Long userId = 1L;
         UserResource user = newUserResource().withId(userId).build();
@@ -162,7 +165,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
     @Test
     public void testAddQuestionsDetails() {
         Model model = mock(Model.class);
-        ApplicationResource application = ApplicationResourceBuilder.newApplicationResource().build();
+        ApplicationResource application = newApplicationResource().build();
         Form form = new ApplicationForm();
         List<FormInputResponseResource> responses = FormInputResponseResourceBuilder.newFormInputResponseResource().build(2);
         Map<Long, FormInputResponseResource> mappedResponses = simpleToMap(responses, FormInputResponseResource::getId, Function.identity());
@@ -186,7 +189,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
 
     @Test
     public void testAddCompletedDetails() {
-        ApplicationResource application = ApplicationResourceBuilder.newApplicationResource().build();
+        ApplicationResource application = newApplicationResource().build();
         Long organisationId = 3L;
         OrganisationResource userOrganisation = OrganisationResourceBuilder.newOrganisationResource()
                 .withId(organisationId).build();

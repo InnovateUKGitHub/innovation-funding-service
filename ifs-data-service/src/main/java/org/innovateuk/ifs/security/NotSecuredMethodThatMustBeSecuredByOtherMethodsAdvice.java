@@ -23,8 +23,7 @@ public class NotSecuredMethodThatMustBeSecuredByOtherMethodsAdvice extends Abstr
     private static final long serialVersionUID = 1L;
 
     private static final BiFunction<Method, Class, Boolean> FILTER = //
-            (m, c) -> c.getName().startsWith("org.innovateuk") &&
-                      findAnnotation(m, NotSecured.class) != null &&
+            (m, c) -> findAnnotation(m, NotSecured.class) != null &&
                       findAnnotation(m, NotSecured.class).mustBeSecuredByOtherServices();
 
     @Autowired

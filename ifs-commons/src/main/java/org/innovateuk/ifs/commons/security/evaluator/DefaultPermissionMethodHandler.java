@@ -39,7 +39,7 @@ public class DefaultPermissionMethodHandler implements PermissionMethodHandler {
     @Override
     public boolean hasPermission(Authentication authentication, Object targetObject, Object permission, Class<?> targetClass) {
 
-        ListOfOwnerAndMethod securingMethods = getSecuringMethodsForClassAndPermission(permission, targetClass);
+        ListOfOwnerAndMethod securingMethods = lookupAndCacheSecuringMethodsForClassAndPermission(permission, targetClass);
 
         for (Pair<Object, Method> methodAndBean : securingMethods) {
 
@@ -58,7 +58,7 @@ public class DefaultPermissionMethodHandler implements PermissionMethodHandler {
         ).sorted().collect(toList());
     }
 
-    private ListOfOwnerAndMethod getSecuringMethodsForClassAndPermission(Object permission, Class<?> targetClass) {
+    private ListOfOwnerAndMethod lookupAndCacheSecuringMethodsForClassAndPermission(Object permission, Class<?> targetClass) {
 
         Pair<Class<?>, Object> classAndPermissionPair = Pair.of(targetClass, permission);
         ListOfOwnerAndMethod cachedPermissions = securingMethodsPerClassAndPermission.get(classAndPermissionPair);

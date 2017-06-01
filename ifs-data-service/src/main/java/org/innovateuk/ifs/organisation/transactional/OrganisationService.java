@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Represents operations surrounding the use of Organisations in the system
@@ -18,7 +19,7 @@ import java.util.List;
 public interface OrganisationService {
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<OrganisationResource>> findByApplicationId(Long applicationId);
+    ServiceResult<Set<OrganisationResource>> findByApplicationId(Long applicationId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<OrganisationResource> findById(Long organisationId);

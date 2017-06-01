@@ -87,7 +87,10 @@ public class OtherDocumentsViewModel implements BasicProjectDetailsViewModel {
         return projectManager && !otherDocumentsSubmitted && submitAllowed && !isRejected();
     }
 
-    public boolean isShowDisabledSubmitDocumentsButton() { return (projectManager && !otherDocumentsSubmitted && !submitAllowed)  || isRejected(); }
+    public boolean isShowDisabledSubmitDocumentsButton() {
+        return projectManager &&
+                ((!otherDocumentsSubmitted && !submitAllowed)  || isRejected());
+    }
 
     public boolean isShowRejectionMessages() {
         return !rejectionReasons.isEmpty();

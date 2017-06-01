@@ -43,7 +43,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
-import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
+import static org.innovateuk.ifs.invite.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
@@ -128,7 +128,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
-    public void getCreatedInvite() {
+    public void getCreatedInviteToSend() {
         InnovationArea innovationArea = newInnovationArea().withName("innovation area").build();
         long createdId = competitionInviteRepository.save(newCompetitionInvite()
                 .with(id(null))
@@ -144,7 +144,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         loginCompAdmin();
 
-        RestResult<AssessorInviteToSendResource> serviceResult = controller.getCreatedInvite(createdId);
+        RestResult<AssessorInviteToSendResource> serviceResult = controller.getCreatedInviteToSend(createdId);
         assertTrue(serviceResult.isSuccess());
 
         AssessorInviteToSendResource inviteResource = serviceResult.getSuccessObjectOrThrowException();

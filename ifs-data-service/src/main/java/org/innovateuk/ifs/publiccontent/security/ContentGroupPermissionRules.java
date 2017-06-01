@@ -23,7 +23,7 @@ public class ContentGroupPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "DOWNLOAD_CONTENT_GROUP_FILE", description = "Internal users can see all content group files")
     public boolean internalUsersCanViewAllContentGroupFiles(Long contentGroupId, UserResource user) {
-        return isCompAdmin(user) || isProjectFinanceUser(user);
+        return isInternal(user);
     }
 
     @PermissionRule(value = "DOWNLOAD_CONTENT_GROUP_FILE", description = "External users can only see published content group files")

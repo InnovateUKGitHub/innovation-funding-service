@@ -54,14 +54,14 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     private AddressMapper addressMapper;
 
     @Override
-    public ServiceResult<List<OrganisationResource>> findByApplicationId(final Long applicationId) {
+    public ServiceResult<Set<OrganisationResource>> findByApplicationId(final Long applicationId) {
 
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
         Set<ProcessRole> applicantRoles = new HashSet<>(simpleFilter(roles, ProcessRole::isLeadApplicantOrCollaborator));
         List<Organisation> organisations = simpleMap(applicantRoles, role -> organisationRepository.findOne(role.getOrganisationId()));
         List<OrganisationResource> organisationResources = new ArrayList<>(simpleMap(organisations, organisationMapper::mapToResource));
         organisationResources.sort(Comparator.comparing(OrganisationResource::getId));
-        return serviceSuccess(organisationResources);
+        return serviceSuccess(new LinkedHashSet<>(organisationResources));
     }
 
     @Override

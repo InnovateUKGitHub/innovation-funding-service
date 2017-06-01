@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
@@ -47,7 +48,7 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
     @Test
     public void testFindByApplicationId() {
 
-        ServiceResult<List<OrganisationResource>> results = classUnderTest.findByApplicationId(1L);
+        ServiceResult<Set<OrganisationResource>> results = classUnderTest.findByApplicationId(1L);
         assertEquals(0, results.getSuccessObject().size());
 
         verify(rules, times(2)).systemRegistrationUserCanSeeOrganisationsNotYetConnectedToApplications(isA(OrganisationResource.class), eq(getLoggedInUser()));
@@ -141,8 +142,8 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
     public static class TestOrganisationService implements OrganisationService {
 
         @Override
-        public ServiceResult<List<OrganisationResource>> findByApplicationId(Long applicationId) {
-            return serviceSuccess(newOrganisationResource().build(2));
+        public ServiceResult<Set<OrganisationResource>> findByApplicationId(Long applicationId) {
+            return serviceSuccess(newOrganisationResource().buildSet(2));
         }
 
         @Override

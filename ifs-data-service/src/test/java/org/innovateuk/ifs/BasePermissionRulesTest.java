@@ -66,6 +66,10 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
         return getUserWithRole(PROJECT_FINANCE);
     }
 
+    protected UserResource supportUser() {
+        return getUserWithRole(SUPPORT);
+    }
+
     protected UserResource assessorUser() {
         return getUserWithRole(ASSESSOR);
     }
@@ -87,7 +91,7 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
         allRoles = newRole().withType(UserRoleType.values()).build(UserRoleType.values().length);
         allRolesResources = allRoles.stream().map(role -> newRoleResource().withType(UserRoleType.fromName(role.getName())).build()).collect(toList());
         allGlobalRoleUsers = simpleMap(allRolesResources, role -> newUserResource().withRolesGlobal(singletonList(role)).build());
-        allInternalUsers = asList(compAdminUser(), projectFinanceUser());
+        allInternalUsers = asList(compAdminUser(), projectFinanceUser(), supportUser());
 
         // Set up global role method mocks
         for (Role role : allRoles) {
