@@ -10,6 +10,9 @@
             <dd><div class="wysiwyg-styles" ifs:utext="${form.eligibilitySummary}"></div></dd>
             <dt>Keywords</dt>
             <dd th:text="${form.keywords}"></dd>
+            <dt>Publish setting</dt>
+            <dd th:if="${form.publishSetting == 'public'}">Public</dd>
+            <dd th:if="${form.publishSetting == 'invite'}">Invite only</dd>
         </dl>
     </th:block>
     <th:block th:unless="${model.readOnly}">
@@ -82,6 +85,45 @@
                    required="required"
                    maxlength="255"
                    th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.keywords.required}" />
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('publishSetting')} ? 'error'">
+            <label for="keywords">
+                <span class="form-label-bold">Publish setting</span>
+                <span class="form-hint">In this competition:</span>
+                <th:block th:if="${#fields.hasErrors('publishSetting')}">
+                    <span class="error-message"  th:each="err : ${#fields.errors('publishSetting')}" th:text="${err}" />
+                </th:block>
+            </label>
+            <div class="multiple-choice">
+                <label class="block-label selection-button-radio" for="publishSetting-0">
+                    <input id="publishSetting-0"
+                           type="radio"
+                           th:field="${form.publishSetting}"
+                           value="public"
+                           th:errorclass="field-error"
+                           required="required"
+                           th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.publishsetting.required}" />
+                    Public
+                </label>
+            </div>
+            <div class="multiple-choice" data-target="invite-only-guidance">
+                <label class="block-label selection-button-radio" for="publishSetting-1">
+                    <input id="publishSetting-1"
+                           type="radio"
+                           th:field="${form.publishSetting}"
+                           th:errorclass="field-error"
+                           required="required"
+                           value="invite"
+                           th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.publishsetting.required}" />
+                    Invite only
+                </label>
+            </div>
+        </div>
+        <div id="invite-only-guidance" class="panel">
+            <p>
+                Selecting invite only excludes the competition from the competition listing page available to the public.
+                A url to the competition overview page displays below when the competition is published.
+            </p>
         </div>
     </th:block>
 </div>
