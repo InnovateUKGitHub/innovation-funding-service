@@ -118,8 +118,7 @@
                                    id="select-all-check" th:field="*{allSelected}"/>
                             <span>Select&nbsp;all</span>
                         </label>
-                        <button class="button button-secondary" id="select-all-button" aria-hidden="false">Select all
-                        </button>
+                        <span id="select-assessor-header" aria-hidden="false">Select assessor</span>
                     </th>
                     <th scope="col">Assessor name</th>
                     <th scope="col">Type</th>
@@ -172,7 +171,7 @@
 	// <![CDATA[
            jQuery(document).ready(function(){
 
-                $('#select-all-button').attr('aria-hidden', 'true')
+                $('#select-assessor-header').attr('aria-hidden', 'true')
                 $('#select-all-checkbox').attr('aria-hidden', 'false')
 
                 var $checkboxes = $("td :checkbox");
