@@ -120,6 +120,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
         verify(model).addAttribute(eq("subSections"), anyMap());
         verify(model).addAttribute(eq("subsectionQuestions"), anyMap());
         verify(model).addAttribute(eq("subSectionQuestionFormInputs"), anyMap());
+        verify(model).addAttribute(eq("formInputViewModels"), anyMap());
         verifyNoMoreInteractions(model);
     }
 
