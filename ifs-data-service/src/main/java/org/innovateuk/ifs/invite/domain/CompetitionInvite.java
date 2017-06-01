@@ -20,7 +20,7 @@ public class CompetitionInvite extends Invite<Competition, CompetitionInvite> im
     @JoinColumn(name = "target_id", referencedColumnName = "id")
     private Competition competition;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="innovation_category_id", referencedColumnName = "id")
     private InnovationArea innovationArea;
 
