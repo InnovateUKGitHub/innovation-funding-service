@@ -27,15 +27,8 @@ Invalid Login
     Then the guest user should get an error message
 
 Valid login as Applicant
+    [Documentation]    IFS-32
     [Tags]    HappyPath
-    Given the user is not logged-in
-    When the guest user enters the log in credentials    steve.smith@empire.com    Passw0rd
-    And the user clicks the button/link    css=button[name="_eventId_proceed"]
-    Then the user should see the element    link=Sign out
-    And the user should be redirected to the correct page    ${DASHBOARD_URL}
-    [Teardown]    Logout as user
-
-Should not see Sign in link when already signed in
     Given the user is not logged-in
     When the guest user enters the log in credentials    steve.smith@empire.com    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
