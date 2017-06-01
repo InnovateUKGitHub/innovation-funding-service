@@ -145,6 +145,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
         when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(expectedInnovationSectorOptions));
         when(competitionInviteRestService.getAvailableAssessors(competition.getId(), page, innovationArea)).thenReturn(restSuccess(availableAssessorPageResource));
+        when(competitionInviteRestService.getAvailableAssessors(competition.getId(), innovationArea)).thenReturn(restSuccess(emptyList()));
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/find", competition.getId())
                 .param("page", "2")
@@ -166,7 +167,8 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         InOrder inOrder = inOrder(competitionRestService, competitionInviteRestService, categoryRestServiceMock);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(categoryRestServiceMock).getInnovationSectors();
-        inOrder.verify(competitionInviteRestService, times(2)).getAvailableAssessors(competition.getId(), page, innovationArea);
+        inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), page, innovationArea);
+        inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), innovationArea);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -182,6 +184,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
         when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(expectedInnovationSectorOptions));
         when(competitionInviteRestService.getAvailableAssessors(competition.getId(), page, innovationArea)).thenReturn(restSuccess(availableAssessorPageResource));
+        when(competitionInviteRestService.getAvailableAssessors(competition.getId(), innovationArea)).thenReturn(restSuccess(emptyList()));
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/find", competition.getId()))
                 .andExpect(status().isOk())
@@ -201,7 +204,8 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         InOrder inOrder = inOrder(competitionRestService, competitionInviteRestService, categoryRestServiceMock);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(categoryRestServiceMock).getInnovationSectors();
-        inOrder.verify(competitionInviteRestService, times(2)).getAvailableAssessors(competition.getId(), page, innovationArea);
+        inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), page, innovationArea);
+        inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), innovationArea);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -219,9 +223,13 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .withContent(setUpAvailableAssessorResources())
                 .build();
         List<InnovationSectorResource> expectedInnovationSectorOptions = newInnovationSectorResource().build(4);
+        List<AvailableAssessorResource> availableAssessorResources = newAvailableAssessorResource()
+                .withEmail("dave@email.com", "john@email.com")
+                .build(2);
 
         when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(expectedInnovationSectorOptions));
         when(competitionInviteRestService.getAvailableAssessors(competition.getId(), page, innovationArea)).thenReturn(restSuccess(availableAssessorPageResource));
+        when(competitionInviteRestService.getAvailableAssessors(competition.getId(), innovationArea)).thenReturn(restSuccess(availableAssessorResources));
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/find", competition.getId())
                 .cookie(selectionFormCookie))
@@ -245,7 +253,8 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         InOrder inOrder = inOrder(competitionRestService, competitionInviteRestService, categoryRestServiceMock);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(categoryRestServiceMock).getInnovationSectors();
-        inOrder.verify(competitionInviteRestService, times(3)).getAvailableAssessors(competition.getId(), page, innovationArea);
+        inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), page, innovationArea);
+        inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), innovationArea);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -402,12 +411,11 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     public void addAllAssessorsFromFindView_defaultParams() throws Exception {
         Cookie formCookie = createFormCookie(new AssessorSelectionForm());
 
-        AvailableAssessorPageResource availableAssessorPageResource = newAvailableAssessorPageResource()
-                .withTotalPages(1)
-                .withContent(setUpAvailableAssessorResources())
-                .build();
+        List<AvailableAssessorResource> availableAssessorPageResource = newAvailableAssessorResource()
+                .withEmail("dave@email.com", "john@email.com")
+                .build(2);
 
-        when(competitionInviteRestService.getAvailableAssessors(competition.getId(), 0, Optional.empty())).thenReturn(restSuccess(availableAssessorPageResource));
+        when(competitionInviteRestService.getAvailableAssessors(competition.getId(), Optional.empty())).thenReturn(restSuccess(availableAssessorPageResource));
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/find", competition.getId())
                 .param("addAll", "true")
@@ -419,7 +427,6 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), "selectionForm");
         assertEquals(2, resultForm.get().getAssessorEmails().size());
     }
-
 
     @Test
     public void removeAssessorSelectionFromFindView() throws Exception {

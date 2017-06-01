@@ -97,9 +97,9 @@ public class CompetitionManagementInviteAssessorsController {
         selectionForm.setAllSelected(storedSelectionForm.getAllSelected());
         selectionForm.setAssessorEmails(storedSelectionForm.getAssessorEmails());
         if (selectionForm.getAllSelected()) {
-            selectionForm.setAssessorEmails(getAllAssessorEmails(competitionId, page, filterForm.getInnovationArea()));
+            selectionForm.setAssessorEmails(getAllAssessorEmails(competitionId, filterForm.getInnovationArea()));
         } else {
-            selectionForm.getAssessorEmails().retainAll(getAllAssessorEmails(competitionId, page, filterForm.getInnovationArea()));
+            selectionForm.getAssessorEmails().retainAll(getAllAssessorEmails(competitionId, filterForm.getInnovationArea()));
         }
         cookieUtil.saveToCookie(response, SELECTION_FORM, getSerializedObject(selectionForm));
 
@@ -157,20 +157,6 @@ public class CompetitionManagementInviteAssessorsController {
         } catch (Exception e) {
             return createJsonObjectNode(false);
         }
-    }
-
-    private List<String> getAllAssessorEmails(long competitionId, int currentPage, Optional<Long> innovationArea) {
-        AvailableAssessorPageResource pageResource = competitionInviteRestService.getAvailableAssessors(competitionId, currentPage, innovationArea)
-                .getSuccessObjectOrThrowException();
-        List<String> allAssessors = new ArrayList<>();
-
-        IntStream.range(0, pageResource.getTotalPages()).forEach( page -> {
-            AvailableAssessorPageResource currentResource = competitionInviteRestService.getAvailableAssessors(competitionId, page, innovationArea)
-                    .getSuccessObjectOrThrowException();
-            allAssessors.addAll(simpleMap(currentResource.getContent(), AvailableAssessorResource::getEmail));
-        });
-
-        return allAssessors;
     }
 
     private List<String> getAllAssessorEmails(long competitionId, Optional<Long> innovationArea) {
