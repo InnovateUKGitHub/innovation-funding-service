@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.user.transactional;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.google.common.collect.Sets;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.*;
@@ -26,7 +25,6 @@ import java.util.*;
 
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -195,12 +193,11 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         return user
                 .getRoles()
                 .stream()
-                .filter(r -> UserRoleType.COLLABORATOR.getName().equals(r.getName()) ||
+                .anyMatch(r -> UserRoleType.COLLABORATOR.getName().equals(r.getName()) ||
                              UserRoleType.APPLICANT.getName().equals(r.getName()) ||
                              UserRoleType.FINANCE_CONTACT.getName().equals(r.getName()) ||
                              UserRoleType.LEADAPPLICANT.getName().equals(r.getName()) ||
                              UserRoleType.PARTNER.getName().equals(r.getName()) ||
-                             UserRoleType.PROJECT_MANAGER.getName().equals(r.getName()))
-                .count() > 0;
+                             UserRoleType.PROJECT_MANAGER.getName().equals(r.getName()));
     }
 }
