@@ -2,14 +2,13 @@ package org.innovateuk.ifs;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
-import org.innovateuk.ifs.commons.security.CustomPermissionEvaluator;
 import org.innovateuk.ifs.commons.security.PermissionRule;
+import org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluator;
+import org.innovateuk.ifs.commons.security.evaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.condition.NameValueExpression;
@@ -23,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluatorTestUtil.getRulesMap;
 
 /**
  * Find all the endpoints in the WebApplicationContext and their security settings,
@@ -58,11 +59,10 @@ public abstract class EndpointDocumentationTest extends BaseIntegrationTest {
      * Get a list of properties (name, description, state, comments) for all permission rules
      * defined in the given PermissionEvaluator
      */
-    private List<String[]> getPermissionRules(PermissionEvaluator evaluator) {
+    private List<String[]> getPermissionRules(CustomPermissionEvaluator evaluator) {
         List<String[]> permissionRuleRows = new ArrayList<>();
 
-        CustomPermissionEvaluator.PermissionedObjectClassToPermissionsToPermissionsMethods ruleMap =
-                (CustomPermissionEvaluator.PermissionedObjectClassToPermissionsToPermissionsMethods) ReflectionTestUtils.getField(evaluator, "rulesMap");
+        PermissionedObjectClassToPermissionsToPermissionsMethods ruleMap = getRulesMap(evaluator);
 
         ruleMap.values().forEach(mapEntry -> {
             mapEntry.entrySet().forEach(ruleEntry -> {

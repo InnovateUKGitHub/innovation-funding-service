@@ -2,11 +2,9 @@ package org.innovateuk.ifs.alert.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.alert.resource.AlertResource;
-import org.innovateuk.ifs.commons.security.CustomPermissionEvaluator;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.innovateuk.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_MAINTAINER;
@@ -16,14 +14,11 @@ import static org.junit.Assert.assertTrue;
 public class AlertPermissionRulesTest extends BasePermissionRulesTest<AlertPermissionRules> {
 
     private AlertResource alertResource;
-    private UserResource anonymousUser;
 
     @Before
     public void setUp() throws Exception {
         alertResource = newAlertResource()
                 .build();
-
-        anonymousUser = (UserResource) ReflectionTestUtils.getField(new CustomPermissionEvaluator(), "ANONYMOUS_USER");
     }
 
     @Override
@@ -38,7 +33,7 @@ public class AlertPermissionRulesTest extends BasePermissionRulesTest<AlertPermi
 
     @Test
     public void test_systemMaintenanceUserCanCreateAlerts_anonymous() throws Exception {
-        assertFalse(rules.systemMaintenanceUserCanCreateAlerts(alertResource, anonymousUser));
+        assertFalse(rules.systemMaintenanceUserCanCreateAlerts(alertResource, anonymousUser()));
     }
 
     @Test
@@ -48,7 +43,7 @@ public class AlertPermissionRulesTest extends BasePermissionRulesTest<AlertPermi
 
     @Test
     public void test_systemMaintenanceUserCanDeleteAlerts_anonymous() throws Exception {
-        assertFalse(rules.systemMaintenanceUserCanDeleteAlerts(alertResource, anonymousUser));
+        assertFalse(rules.systemMaintenanceUserCanDeleteAlerts(alertResource, anonymousUser()));
     }
 
     private UserResource systemMaintenanceUser() {

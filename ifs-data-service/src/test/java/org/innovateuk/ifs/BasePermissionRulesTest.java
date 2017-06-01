@@ -1,5 +1,7 @@
 package org.innovateuk.ifs;
 
+import org.innovateuk.ifs.commons.security.evaluator.DefaultPermissionMethodHandler;
+import org.innovateuk.ifs.commons.security.evaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
@@ -12,6 +14,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.mockito.InjectMocks;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 
@@ -77,6 +80,10 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
 
     protected UserResource systemRegistrationUser() {
         return getUserWithRole(SYSTEM_REGISTRATION_USER);
+    }
+
+    protected UserResource anonymousUser() {
+        return (UserResource) ReflectionTestUtils.getField(new DefaultPermissionMethodHandler(new PermissionedObjectClassToPermissionsToPermissionsMethods()), "ANONYMOUS_USER");
     }
 
     @Before

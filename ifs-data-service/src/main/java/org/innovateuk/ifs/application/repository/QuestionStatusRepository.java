@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.repository;
 
 import org.innovateuk.ifs.application.domain.QuestionStatus;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -13,14 +12,15 @@ import java.util.List;
  */
 public interface QuestionStatusRepository extends CrudRepository<QuestionStatus, Long> {
     QuestionStatus findByQuestionIdAndApplicationIdAndMarkedAsCompleteById(Long questionId, Long applicationId, Long markAsCompleteById);
-    QuestionStatus findByQuestionIdAndApplicationIdAndAssigneeId(@Param("questionId") Long questionId, @Param("applicationId") Long applicationId, @Param("assigneeId") Long assigneeId);
-    List<QuestionStatus> findByQuestionIdAndApplicationId(@Param("questionId") Long questionId, @Param("applicationId") Long applicationId);
-    List<QuestionStatus> findByQuestionIdIsInAndApplicationId(@Param("questionIds") List<Long> questionIds, @Param("applicationId") Long applicationId);
-    List<QuestionStatus> findByApplicationId(@Param("applicationId") Long applicationId);
-    List<QuestionStatus> findByApplicationIdAndAssigneeId(@Param("applicationId") Long applicationId, @Param("assigneeId") Long assigneeId);
-    List<QuestionStatus> findByApplicationIdAndAssigneeIdOrAssignedById(@Param("applicationId") Long applicationId, @Param("assigneeId") Long assigneeId, @Param("assignedById") Long assignedById);
-    int countByApplicationIdAndAssigneeId(@Param("applicationId") Long applicationId, @Param("assigneeId") Long assigneeId);
-    List<QuestionStatus> findByApplicationIdAndMarkedAsCompleteById(@Param("applicationId") Long applicationId, @Param("markedAsCompleteById") Long markedAsCompleteById);
+    QuestionStatus findByQuestionIdAndApplicationIdAndAssigneeId(Long questionId, Long applicationId, Long assigneeId);
+    List<QuestionStatus> findByQuestionIdAndApplicationId(Long questionId, Long applicationId);
+    List<QuestionStatus> findByQuestionIdAndApplicationIdAndMarkedAsComplete(Long questionId, Long applicationId, boolean markedAsComplete);
+    List<QuestionStatus> findByQuestionIdIsInAndApplicationId(List<Long> questionIds, Long applicationId);
+    List<QuestionStatus> findByApplicationId(Long applicationId);
+    List<QuestionStatus> findByApplicationIdAndAssigneeIdOrAssignedById(Long applicationId, Long assigneeId, Long assignedById);
+    int countByApplicationIdAndAssigneeId(Long applicationId, Long assigneeId);
+    List<QuestionStatus> findByApplicationIdAndMarkedAsCompleteById(Long applicationId, Long markedAsCompleteById);
+    List<QuestionStatus> findByQuestionIdAndApplicationIdAndMarkedAsCompleteAndMarkedAsCompleteByOrganisationId(Long questionId, Long applicationId, boolean markedAsComplete, Long organisationId);
     List<QuestionStatus> findByApplicationIdAndMarkedAsCompleteByIdOrAssigneeIdOrAssignedById(long applicationId,
                                                                                               long markedAsCompleteById,
                                                                                               long assigneeId,

@@ -29,10 +29,10 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
     @OneToMany(mappedBy = "assessment")
     private List<AssessorFormInputResponse> responses;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "process")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "process", fetch = FetchType.LAZY)
     private AssessmentFundingDecisionOutcome fundingDecision;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "process")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "process", fetch = FetchType.LAZY)
     private AssessmentRejectOutcome rejection;
 
     public Assessment() {

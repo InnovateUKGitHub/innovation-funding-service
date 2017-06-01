@@ -8,6 +8,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
  */
 public interface ServiceFailureExceptionHandlingAdviceInternalTestService {
 
-    @NotSecured("just a test method")
+    @NotSecured(value = "just a test method", mustBeSecuredByOtherServices = false)
     ServiceResult<String> internalFailingCall();
 }
