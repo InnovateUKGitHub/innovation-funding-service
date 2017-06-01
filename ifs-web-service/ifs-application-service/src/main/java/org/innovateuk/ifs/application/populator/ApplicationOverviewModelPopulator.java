@@ -2,9 +2,13 @@ package org.innovateuk.ifs.application.populator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
+import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.application.viewmodel.ApplicationOverviewViewModel;
+import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
 import org.innovateuk.ifs.application.viewmodel.overview.ApplicationOverviewAssignableViewModel;
 import org.innovateuk.ifs.application.viewmodel.overview.ApplicationOverviewCompletedViewModel;
 import org.innovateuk.ifs.application.viewmodel.overview.ApplicationOverviewSectionViewModel;
@@ -36,6 +40,7 @@ import java.util.stream.Collectors;
 import static org.innovateuk.ifs.application.resource.SectionType.FINANCE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
+
 /**
  * view model for the application overview page
  */
@@ -44,6 +49,12 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 public class ApplicationOverviewModelPopulator {
 
     private static final Log LOG = LogFactory.getLog(ApplicationOverviewModelPopulator.class);
+
+    @Autowired
+    private AssignButtonsPopulator assignButtonsPopulator;
+
+    @Autowired
+    private ApplicationService applicationService;
 
     @Autowired
     private CompetitionService competitionService;
@@ -71,6 +82,9 @@ public class ApplicationOverviewModelPopulator {
 
     @Autowired
     private CategoryRestService categoryRestService;
+
+    @Autowired
+    private ApplicantRestService applicantRestService;
     
     public ApplicationOverviewViewModel populateModel(ApplicationResource application, Long userId){
         CompetitionResource competition = competitionService.getById(application.getCompetition());
@@ -81,7 +95,7 @@ public class ApplicationOverviewModelPopulator {
         ApplicationOverviewUserViewModel userViewModel = getUserDetails(application, userId);
         ApplicationOverviewAssignableViewModel assignableViewModel = getAssignableDetails(application, userOrganisation.orElse(null), userId);
         ApplicationOverviewCompletedViewModel completedViewModel = getCompletedDetails(application, userOrganisation);
-        ApplicationOverviewSectionViewModel sectionViewModel = getSections(competition);
+        ApplicationOverviewSectionViewModel sectionViewModel = getSections(competition, application, userId);
         Long yourFinancesSectionId = getYourFinancesSectionId(application);
 
         Integer completedQuestionsPercentage = application.getCompletion() == null ? 0 : application.getCompletion().intValue();
@@ -93,10 +107,10 @@ public class ApplicationOverviewModelPopulator {
                 researchCategories);
     }
     
-    private ApplicationOverviewSectionViewModel getSections(CompetitionResource competition) {
+    private ApplicationOverviewSectionViewModel getSections(CompetitionResource competition, ApplicationResource application, Long userId) {
         final List<SectionResource> allSections = sectionService.getAllByCompetitionId(competition.getId());
         final List<SectionResource> parentSections = sectionService.filterParentSections(allSections);
-        final List<QuestionResource> questions = questionService.findByCompetition(competition.getId());
+        final List<ApplicantSectionResource> parentApplicantSections = parentSections.stream().map(sectionResource -> applicantRestService.getSection(userId, application.getId(), sectionResource.getId())).collect(Collectors.toList());
 
         final SortedMap<Long, SectionResource> sections = CollectionFunctions.toSortedMap(parentSections, SectionResource::getId,
                 Function.identity());
@@ -106,11 +120,11 @@ public class ApplicationOverviewModelPopulator {
                 SectionResource::getId, s -> getSectionsFromListByIdList(s.getChildSections(), allSections)
             ));
 
-        final Map<Long, List<QuestionResource>> sectionQuestions = parentSections.stream()
+        final Map<Long, List<QuestionResource>> sectionQuestions = parentApplicantSections.stream()
             .collect(Collectors.toMap(
-                SectionResource::getId,
-                s -> getQuestionsBySection(s.getQuestions(), questions)
-            ));
+                s -> s.getSection().getId(),
+                s -> s.getApplicantQuestions().stream().map(ApplicantQuestionResource::getQuestion).collect(Collectors.toList()))
+            );
 
         final List<SectionResource> financeSections = getFinanceSectionIds(parentSections);
 
@@ -121,7 +135,15 @@ public class ApplicationOverviewModelPopulator {
             financeSectionId = financeSections.get(0).getId();
         }
 
-        return new ApplicationOverviewSectionViewModel(sections, subSections, sectionQuestions, financeSections, hasFinanceSection, financeSectionId);
+        Map<Long, AssignButtonsViewModel> assignButtonViewModels = new HashMap<>();
+        parentApplicantSections.forEach(applicantSectionResource -> {
+            applicantSectionResource.getApplicantQuestions().forEach(questionResource -> {
+                assignButtonViewModels.put(questionResource.getQuestion().getId(), assignButtonsPopulator.populate(applicantSectionResource, questionResource, questionResource.isCompleteByApplicant(applicantSectionResource.getCurrentApplicant())));
+            });
+        });
+
+
+        return new ApplicationOverviewSectionViewModel(sections, subSections, sectionQuestions, financeSections, hasFinanceSection, financeSectionId, assignButtonViewModels);
     }
 
     private List<SectionResource> getFinanceSectionIds(List<SectionResource> sections){

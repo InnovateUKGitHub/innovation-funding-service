@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,8 @@ public interface CompetitionService {
     List<CompetitionResource> getAllCompetitionsNotInSetup();
 
     List<CompetitionTypeResource> getAllCompetitionTypes();
+
+    List<OrganisationTypeResource> getOrganisationTypes(long id);
 
     ServiceResult<Void> update(CompetitionResource competition);
 

@@ -10,7 +10,7 @@ import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
@@ -156,7 +156,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         when(competitionService.getById(competitionId)).thenReturn(competition);
         when(applicationSummaryRestService.getCompetitionSummary(competitionId)).thenReturn(RestResult.restSuccess(competitionSummary));
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(newOrganisationResource().withName("Partner Org 1", "Partner Org 2").build(2));
-        when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
+        when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
         List<ProjectUserResource> projectUsers = newProjectUserResource().with(id(999L)).withUserName("Dave Smith").
                 withRoleName(PROJECT_MANAGER.getName()).build(1);
 

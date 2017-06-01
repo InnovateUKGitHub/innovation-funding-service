@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite to be an assessor'" />
+    </head>
+
+    <body th:with="context='comp-management'" class="competition-management competition-overview">
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
+
+        <main tabindex="-1" id="content">
+            <th:block th:insert="fragments/layout :: main-content-start" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to invite assessors',linkClass='link-back',linkUrl=@{/competition/{competitionId}/assessors/overview(competitionId=${model.competitionId})}" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite to be an assessor',subTitle=${model.competitionName},size='heading-xlarge'" />
+
+            <p class="heading-medium" th:text="|Recipient: ${model.recipient}|">Dave smith</p>
+
+            <form th:action="@{/competition/assessors/invite/{inviteId}/resend(inviteId=${model.inviteId})}" method="post" enctype="multipart/form-data" th:object="${form}">
+                <div class="form-group">
+                    <label class="form-label-bold" for="subject">Subject</label>
+                    <input class="form-control width-full" id="subject" type="text" th:field="*{subject}" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label-bold" for="message">Message</label>
+                    <textarea id="message" rows="16" class="form-control width-full" th:field="*{content}"></textarea>
+                </div>
+
+                <div class="alignright">
+                    <button type="submit" class="button button-large">Send invite</button>
+                </div>
+            </form>
+
+            <th:block th:insert="fragments/layout :: main-content-end" />
+        </main>
+
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
+    </body>
+</html>

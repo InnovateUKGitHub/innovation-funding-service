@@ -7,21 +7,22 @@ import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
+import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
-import org.innovateuk.ifs.application.finance.viewmodel.AcademicFinanceViewModel;
+import org.innovateuk.ifs.application.finance.view.jes.JESFinanceFormHandler;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.*;
+import org.innovateuk.ifs.application.populator.section.AbstractSectionPopulator;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.*;
-import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
-import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
-import org.innovateuk.ifs.application.viewmodel.QuestionOrganisationDetailsViewModel;
 import org.innovateuk.ifs.application.viewmodel.QuestionViewModel;
+import org.innovateuk.ifs.application.viewmodel.section.AbstractSectionViewModel;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.exception.AutosaveElementException;
@@ -70,12 +71,13 @@ import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.ErrorConverterFactory.toField;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.collectValidationMessages;
@@ -85,7 +87,6 @@ import static org.innovateuk.ifs.controller.ErrorLookupHelper.lookupErrorMessage
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.HttpUtils.requestParameterPresent;
 import static org.springframework.util.StringUtils.hasText;
@@ -189,6 +190,17 @@ public class ApplicationFormController {
     @Autowired
     private OverheadFileSaver overheadFileSaver;
 
+    @Autowired
+    private ApplicantRestService applicantRestService;
+
+    private Map<SectionType, AbstractSectionPopulator> sectionPopulators;
+
+
+    @Autowired
+    private void setPopulators(List<AbstractSectionPopulator> populators) {
+        sectionPopulators = populators.stream().collect(toMap(AbstractSectionPopulator::getSectionType, Function.identity()));
+    }
+
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
         dataBinder.registerCustomEditor(String.class, new StringMultipartFileEditor());
@@ -204,8 +216,8 @@ public class ApplicationFormController {
                                @PathVariable(QUESTION_ID) final Long questionId,
                                UserResource user) {
 
-        QuestionOrganisationDetailsViewModel organisationDetailsViewModel = organisationDetailsViewModelPopulator.populateModel(applicationId);
-        QuestionViewModel questionViewModel = questionModelPopulator.populateModel(questionId, applicationId, user, model, form, organisationDetailsViewModel);
+        ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
+        QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, model, form);
 
         model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null);
@@ -242,42 +254,20 @@ public class ApplicationFormController {
                                                  @PathVariable(APPLICATION_ID) final Long applicationId,
                                                  @PathVariable("sectionId") final Long sectionId,
                                                  UserResource user) {
-        ApplicationResource application = applicationService.getById(applicationId);
-        List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
-        SectionResource section = simpleFilter(allSections, s -> sectionId.equals(s.getId())).get(0);
 
-        Long organisationId = userService.getUserOrganisationId(user.getId(), applicationId);
-
-        populateSection(model, form, bindingResult, application, user, organisationId, section, allSections);
-
+        ApplicantSectionResource applicantSection = applicantRestService.getSection(user.getId(), applicationId, sectionId);
+        populateSection(model, form, bindingResult, applicantSection);
         return APPLICATION_FORM;
     }
 
     private void populateSection(Model model,
                                  ApplicationForm form,
                                  BindingResult bindingResult,
-                                 ApplicationResource application,
-                                 UserResource user,
-                                 Long organisationId,
-                                 SectionResource section,
-                                 List<SectionResource> allSections) {
-        if (SectionType.GENERAL.equals(section.getType())
-                || SectionType.OVERVIEW_FINANCES.equals(section.getType())) {
-            OpenSectionViewModel viewModel = (OpenSectionViewModel) openSectionModel.populateModel(
-                    form, model, application, section, user, bindingResult, allSections, organisationId);
-            model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
-        } else {
-            OpenFinanceSectionViewModel viewModel = (OpenFinanceSectionViewModel) openFinanceSectionModel.populateModel(
-                    form, model, application, section, user, bindingResult, allSections, organisationId);
-
-            if (viewModel.getFinanceViewModel() instanceof AcademicFinanceViewModel) {
-                viewModel.setNavigationViewModel(applicationNavigationPopulator.addNavigation(section, application.getId(),
-                        asList(SectionType.ORGANISATION_FINANCES, SectionType.FUNDING_FINANCES)));
-            }
-
-            model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
-        }
-        applicationNavigationPopulator.addAppropriateBackURLToModel(application.getId(), model, section);
+                                 ApplicantSectionResource applicantSection) {
+        AbstractSectionViewModel sectionViewModel = sectionPopulators.get(applicantSection.getSection().getType()).populate(applicantSection, form, model, bindingResult);
+        applicationNavigationPopulator.addAppropriateBackURLToModel(applicantSection.getApplication().getId(), model, applicantSection.getSection());
+        model.addAttribute("model", sectionViewModel);
+        model.addAttribute("form", form);
     }
 
     @ProfileExecution
@@ -332,8 +322,8 @@ public class ApplicationFormController {
                 validationHandler.addAnyErrors(errors);
 
                 // Add any validated fields back in invalid entries are displayed on re-render
-                QuestionOrganisationDetailsViewModel organisationDetailsViewModel = organisationDetailsViewModelPopulator.populateModel(applicationId);
-                QuestionViewModel questionViewModel = questionModelPopulator.populateModel(questionId, applicationId, user, model, form, organisationDetailsViewModel);
+                ApplicantQuestionResource applicantQuestion = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
+                QuestionViewModel questionViewModel = questionModelPopulator.populateModel(applicantQuestion, model, form);
 
                 model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
                 applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null);
@@ -370,6 +360,8 @@ public class ApplicationFormController {
                 request.getParameter(MARK_AS_COMPLETE) != null ||
                 request.getParameter(REMOVE_UPLOADED_FILE) != null ||
                 request.getParameter(UPLOAD_FILE) != null ||
+                request.getParameter(JESFinanceFormHandler.REMOVE_FINANCE_DOCUMENT) != null ||
+                request.getParameter(JESFinanceFormHandler.UPLOAD_FINANCE_DOCUMENT) != null ||
                 request.getParameter(EDIT_QUESTION) != null ||
                 request.getParameter(REQUESTING_FUNDING) != null ||
                 request.getParameter(NOT_REQUESTING_FUNDING) != null ||
@@ -407,7 +399,7 @@ public class ApplicationFormController {
         financeHandler.getFinanceModelManager(organisationType).addCost(model, costItem, applicationId, organisationId, user.getId(), questionId, costType);
 
         form.setBindingResult(bindingResult);
-        return String.format("finance/finance :: %s_row", costType.getType());
+        return String.format("finance/finance :: %s_row(viewmode='edit')", costType.getType());
     }
 
     @GetMapping("/remove_cost/{costId}")
@@ -721,18 +713,14 @@ public class ApplicationFormController {
 
         logSaveApplicationBindingErrors(validationHandler);
 
-        ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-        List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
-        SectionResource section = sectionService.getById(sectionId);
-        Long organisationId = userService.getUserOrganisationId(user.getId(), applicationId);
+        ApplicantSectionResource applicantSection = applicantRestService.getSection(user.getId(), applicationId, sectionId);
 
         model.addAttribute("form", form);
 
         Map<String, String[]> params = request.getParameterMap();
 
-        Boolean validFinanceTerms = validFinanceTermsForMarkAsComplete(form, bindingResult, section, params, user.getId(), applicationId);
-        ValidationMessages saveApplicationErrors = saveApplicationForm(application, competition, form, sectionId, null, user, request, response, bindingResult, validFinanceTerms);
+        Boolean validFinanceTerms = validFinanceTermsForMarkAsComplete(form, bindingResult, applicantSection.getSection(), params, user.getId(), applicationId);
+        ValidationMessages saveApplicationErrors = saveApplicationForm(applicantSection.getApplication(), applicantSection.getCompetition(), form, sectionId, null, user, request, response, bindingResult, validFinanceTerms);
         logSaveApplicationErrors(bindingResult);
 
         if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
@@ -742,10 +730,10 @@ public class ApplicationFormController {
 
         if (saveApplicationErrors.hasErrors() || !validFinanceTerms || overheadFileSaver.isOverheadFileRequest(request)) {
             validationHandler.addAnyErrors(saveApplicationErrors);
-            populateSection(model, form, bindingResult, application, user, organisationId, section, allSections);
+            populateSection(model, form, bindingResult, applicantSection);
             return APPLICATION_FORM;
         } else {
-            return getRedirectUrl(request, applicationId, Optional.of(section.getType()));
+            return getRedirectUrl(request, applicationId, Optional.of(applicantSection.getSection().getType()));
         }
     }
 
