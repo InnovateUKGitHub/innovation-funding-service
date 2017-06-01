@@ -187,10 +187,10 @@ Select to add all assessors to invite list
     [Documentation]    IFS-33
     [Tags]
     [Setup]    the user clicks the button/link    link=Find
-    Given the user selects the checkbox    select-all-checkbox
+    Given the user selects the checkbox    select-all-check
     When the user clicks the button/link    jQuery=button:contains("Add selected to invite list")
     And the user clicks the button/link    link=Find
-    Then the user should not see the element    jQuery=td:contains("No available assessors found")
+    Then the user should see the element    jQuery=td:contains("No available assessors found")
 
 *** Keywords ***
 The key statistics are calculated
