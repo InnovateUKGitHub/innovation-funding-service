@@ -203,6 +203,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         PublicContent publicContentResult = publicContentRepository.save(newPublicContent()
                 .withCompetitionId(1L)
                 .withPublishDate(ZonedDateTime.now().minusDays(1))
+                .withInviteOnly(false)
                 .build());
 
         Keyword keywordOne = newKeyword().withKeyword("keyword").withPublicContent(publicContentResult).build();
@@ -220,18 +221,12 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
 
     private void setupPrivateCompetition() {
         PublicContent publicContentResult = publicContentRepository.save(newPublicContent()
-                .withCompetitionId(2L)
+                .withCompetitionId(7L)
                 .withPublishDate(ZonedDateTime.now().minusDays(1))
                 .withInviteOnly(true)
                 .build());
 
         Keyword keywordOne = newKeyword().withKeyword("keywordoninviteonly").withPublicContent(publicContentResult).build();
         keywordRepository.save(asList(keywordOne));
-
-        //InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
-        //Competition competition = competitionRepository.findOne(2L);
-        //competition.setInnovationSector(innovationArea.getSector());
-
-        //competitionRepository.save(competition);
     }
 }
