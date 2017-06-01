@@ -18,7 +18,7 @@
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
         <th:block th:if="${editable}" id="section-1-edit">
-            <div th:class="${#fields.hasErrors('title')}? 'form-group form-group-error':'form-group'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('title')} ? 'form-group-error'">
                 <label class="form-label" for="title">
                     <span class="form-label-bold">Competition title</span>
                     <th:block th:if="${#fields.hasErrors('title')}">
@@ -35,7 +35,7 @@
                        th:readonly="${isSetupAndLive}" />
             </div>
 
-            <div th:class="${#fields.hasErrors('competitionTypeId')}? 'form-group form-group-error':'form-group'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('competitionTypeId')} ? 'form-group-error'">
                 <label class="form-label" for="competitionTypeId">
                     <span class="form-label-bold">Competition type</span>
                     <th:block th:if="${#fields.hasErrors('competitionTypeId')}">
@@ -54,15 +54,13 @@
                 <input th:if="${!#strings.isEmpty(restrictInitialDetailsEdit) or isSetupAndLive}" type="hidden" th:field="${competitionSetupForm.competitionTypeId}" />
             </div>
 
-
-            <div th:class="${#fields.hasErrors('innovationSectorCategoryId')}? 'form-group form-group-error':'form-group'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('innovationSectorCategoryId')} ? 'form-group-error'">
                 <label class="form-label" for="innovationSectorCategoryId">
                     <span class="form-label-bold">Innovation sector</span>
                     <th:block th:if="${#fields.hasErrors('innovationSectorCategoryId')}">
                           <span class="error-message"  th:each="err : ${#fields.errors('innovationSectorCategoryId')}" th:text="${err}"></span>
                     </th:block>
                 </label>
-
                 <select th:disabled="${isSetupAndLive}"
                         th:readonly="${isSetupAndLive}"
                         class="form-control width-x-large"
@@ -78,7 +76,7 @@
             </div>
 
             <th:block th:each="innovationAreaCategoryId,status : ${competitionSetupForm.innovationAreaCategoryIds}">
-                <div th:class="${#fields.hasErrors('innovationAreaCategoryIds[__${status.index}__]')}? 'form-group form-group-error':'form-group'" th:id="innovation-row-__${status.index}__">
+                <div class="form-group" th:classappend="${#fields.hasErrors('innovationAreaCategoryIds[__${status.index}__]')} ? 'form-group-error'" th:id="innovation-row-__${status.index}__">
                     <label class="form-label" th:for="innovationAreaCategoryId-__${status.index}__">
                         <span class="form-label-bold" th:classappend="${status.index > 0} ? 'visuallyhidden': ''">Innovation area</span>
                         <th:block th:if="${#fields.hasErrors('innovationAreaCategoryIds[__${status.index}__]')}">
@@ -100,7 +98,7 @@
                 </div>
             </th:block>
             <th:block th:if="${competitionSetupForm.innovationAreaCategoryIds == null or competitionSetupForm.innovationAreaCategoryIds.size() == 0}">
-                <div th:class="${#fields.hasErrors('innovationAreaCategoryIds')}? 'form-group form-group-error':'form-group'" th:id="innovation-row-0">
+                <div class="form-group" th:classappend="${#fields.hasErrors('innovationAreaCategoryIds')}? 'form-group-error'" th:id="innovation-row-0">
                     <label class="form-label" th:for="innovationAreaCategoryId-0">
                         <span class="form-label-bold">Innovation area</span>
                         <th:block th:if="${#fields.hasErrors('innovationAreaCategoryIds')}">
@@ -323,7 +321,7 @@
 
             <div th:each="(funder, iteration : ${competitionSetupForm.funders})" class="grid-row funder-row" th:id="'funder-row-'+${iteration.index}">
                 <div class="column-half">
-                    <div th:class="${#fields.hasErrors('funders[__${iteration.index}__].funder')}? 'form-group form-group-error':'form-group'">
+                    <div class="form-group" th:classappend="${#fields.hasErrors('funders[__${iteration.index}__].funder')} ? 'form-group-error'">
                         <label class="form-label" th:for="funders[__${iteration.index}__].funder">
                             <th:block th:if="${#fields.hasErrors('funders[__${iteration.index}__].funder')}">
                                 <span class="error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funder')}" th:text="${err}"></span>
@@ -338,7 +336,7 @@
                 </div>
 
                 <div class="column-half">
-                    <div th:class="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget')}? 'form-group form-group-error':'form-group'">
+                    <div class="form-group" th:classappend="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget')} ? 'form-group-error'">
                         <label class="form-label" th:for="funders[__${iteration.index}__].funderBudget">
                             <th:block th:if="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget')}">
                                 <span class="error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funderBudget')}" th:text="${err}"></span>
@@ -382,7 +380,7 @@
             <fieldset>
                 <legend class="heading-medium">Reporting fields</legend>
 
-                <div th:class="${#fields.hasErrors('pafNumber')}? 'form-group form-group-error':'form-group'">
+                <div class="form-group" th:classappend="${#fields.hasErrors('pafNumber')} ? 'form-group-error'">
                     <label class="form-label" for="pafNumber">
                         <span class="form-label-bold">PAF number</span>
                     <th:block th:if="${#fields.hasErrors('pafNumber')}">
@@ -395,7 +393,7 @@
                            th:field="${competitionSetupForm.pafNumber}" />
                 </div>
 
-                <div th:class="${#fields.hasErrors('budgetCode')}? 'form-group form-group-error':'form-group'">
+                <div class="form-group" th:classappend="${#fields.hasErrors('budgetCode')} ? 'form-group-error'">
                     <label class="form-label" for="budgetCode">
                         <span class="form-label-bold">Budget code</span>
                         <th:block th:if="${#fields.hasErrors('budgetCode')}">
@@ -409,7 +407,7 @@
                 </div>
 
 
-                <div th:class="${#fields.hasErrors('activityCode')}? 'form-group form-group-error':'form-group'">
+                <div class="form-group" th:classappend="${#fields.hasErrors('activityCode')} ? 'form-group-error'">
                     <label class="form-label" for="competitionSetupForm.activityCode">
                         <span class="form-label-bold">Activity code</span>
                         <th:block th:if="${#fields.hasErrors('activityCode')}">
@@ -425,7 +423,7 @@
 
                 </div>
 
-                <div th:class="${#fields.hasErrors('competitionCode')}? 'form-group form-group-error':'form-group'">
+                <div class="form-group" th:classappend="${#fields.hasErrors('competitionCode')} ? 'form-group-error'">
                     <label class="form-label" for="competitionCode">
                         <span class="form-label-bold">Competition code</span>
                         <th:block th:if="${#fields.hasErrors('competitionCode')}">
@@ -522,7 +520,7 @@
 
             <!--/* INFUND-5682 : Competition streams options have been hidden rather than removed, since they will be required when new competition types are added */-->
             <!--/*
-                <div th:class="${#fields.hasErrors('multipleStream')}? 'form-group form-group-error':'form-group'">
+                <div class="form-group" th:classappend="${#fields.hasErrors('multipleStream')} ? 'form-group-error'">
                     <fieldset class="inline">
                         <legend>
                             <span class="form-label-bold">Does the competition have multiple streams?</span>
@@ -574,7 +572,7 @@
             */-->
             <!--/* INFUND-5682 : remove hidden input once multiplestreams above becomes available */-->
             <input type="hidden" th:field="*{multipleStream}" />
-            <div th:class="${#fields.hasErrors('singleOrCollaborative')}? 'form-group form-group-error':'form-group'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('singleOrCollaborative')} ? 'form-group-error'">
                 <fieldset class="inline">
                     <legend>
                         <span class="form-label-bold">Please choose the project type.</span>
