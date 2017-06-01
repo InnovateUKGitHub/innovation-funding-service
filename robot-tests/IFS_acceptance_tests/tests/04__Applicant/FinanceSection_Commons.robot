@@ -14,7 +14,7 @@ the user should see all the Your-Finances Sections
 the user navigates to Your-finances page
     [Arguments]  ${Application}
     the user navigates to the page  ${DASHBOARD_URL}
-    the user clicks the button/link  link=${Application}
+    the user clicks the button/link  jQuery=.in-progress a:contains("${Application}")
     the user clicks the button/link  link=Your finances
 
 Applicant navigates to the finances of the Robot application
