@@ -126,13 +126,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
             Notification notification = new Notification(from, singletonList(to), Notifications.RESET_PASSWORD, notificationArguments);
             return notificationService.sendNotification(notification, EMAIL);
-        } else if (user.getRoles().stream().filter(r ->
-                    UserRoleType.COLLABORATOR.name().equals(r.getName()) ||
-                    UserRoleType.APPLICANT.name().equals(r.getName()) ||
-                    UserRoleType.FINANCE_CONTACT.name().equals(r.getName()) ||
-                    UserRoleType.LEADAPPLICANT.name().equals(r.getName()) ||
-                    UserRoleType.PARTNER.name().equals(r.getName()) ||
-                    UserRoleType.PROJECT_MANAGER.name().equals(r.getName())).count() > 0 &&
+        } else if (userIsExternalNotOnlyAssessor(user) &&
                 userNotYetVerified(user)) {
             return registrationService.resendUserVerificationEmail(user);
         } else {
@@ -195,5 +189,18 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     private boolean userNotYetVerified(UserResource user) {
         return UserStatus.INACTIVE.equals(user.getStatus())
                 && tokenRepository.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getCanonicalName(), user.getId()).isPresent();
+    }
+
+    private boolean userIsExternalNotOnlyAssessor(UserResource user) {
+        return user
+                .getRoles()
+                .stream()
+                .filter(r -> UserRoleType.COLLABORATOR.getName().equals(r.getName()) ||
+                             UserRoleType.APPLICANT.getName().equals(r.getName()) ||
+                             UserRoleType.FINANCE_CONTACT.getName().equals(r.getName()) ||
+                             UserRoleType.LEADAPPLICANT.getName().equals(r.getName()) ||
+                             UserRoleType.PARTNER.getName().equals(r.getName()) ||
+                             UserRoleType.PROJECT_MANAGER.getName().equals(r.getName()))
+                .count() > 0;
     }
 }
