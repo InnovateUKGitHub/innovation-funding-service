@@ -94,26 +94,30 @@
                     <span class="error-message"  th:each="err : ${#fields.errors('publishSetting')}" th:text="${err}" />
                 </th:block>
             </label>
-            <label class="block-label selection-button-radio" for="publishSetting-0">
-                <input id="publishSetting-0"
-                       type="radio"
-                       th:field="${form.publishSetting}"
-                       value="public"
-                       th:errorclass="field-error"
-                       required="required"
-                       th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.publishsetting.required}" />
-                Public
-            </label>
-            <label class="block-label selection-button-radio" for="publishSetting-1" data-target="invite-only-guidance">
-                <input id="publishSetting-1"
-                       type="radio"
-                       th:field="${form.publishSetting}"
-                       th:errorclass="field-error"
-                       required="required"
-                       value="invite"
-                       th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.publishsetting.required}" />
-                Invite only
-            </label>
+            <div class="multiple-choice">
+                <label class="block-label selection-button-radio" for="publishSetting-0">
+                    <input id="publishSetting-0"
+                           type="radio"
+                           th:field="${form.publishSetting}"
+                           value="public"
+                           th:errorclass="field-error"
+                           required="required"
+                           th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.publishsetting.required}" />
+                    Public
+                </label>
+            </div>
+            <div class="multiple-choice" data-target="invite-only-guidance">
+                <label class="block-label selection-button-radio" for="publishSetting-1">
+                    <input id="publishSetting-1"
+                           type="radio"
+                           th:field="${form.publishSetting}"
+                           th:errorclass="field-error"
+                           required="required"
+                           value="invite"
+                           th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.publishsetting.required}" />
+                    Invite only
+                </label>
+            </div>
         </div>
         <div id="invite-only-guidance" class="panel">
             <p>

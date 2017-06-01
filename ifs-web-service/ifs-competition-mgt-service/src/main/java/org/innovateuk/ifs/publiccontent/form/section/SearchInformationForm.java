@@ -16,7 +16,7 @@ public class SearchInformationForm extends AbstractPublicContentForm {
     private String eligibilitySummary;
     @NotEmpty (message="{validation.publiccontent.searchinformationform.keywords.required}")
     private String keywords;
-    @NotEmpty (message="{validation.publiccontent.searchinformationform.publishSetting.required}")
+    @NotEmpty (message="{validation.publiccontent.searchinformationform.publishsetting.required}")
     private String publishSetting;
 
     public String getShortDescription() {
