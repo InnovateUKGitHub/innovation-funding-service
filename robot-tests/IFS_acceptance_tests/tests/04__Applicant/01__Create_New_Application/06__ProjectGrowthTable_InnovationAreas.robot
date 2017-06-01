@@ -18,10 +18,11 @@ Resource          ../FinanceSection_Commons.robot
 Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Variables ***
-${compWithoutGrowth}    FromCompToNewAppl without GrowthT
-${applicationTitle}    NewApplFromNewComp without GrowthT
-${compWITHGrowth}    All-Innov-Areas With GrowthT
-${newUsersEmail}  liam@innovate.com
+${compWithoutGrowth}         FromCompToNewAppl without GrowthT
+${applicationWithoutGrowth}  NewApplFromNewComp without GrowthT
+${compWITHGrowth}            All-Innov-Areas With GrowthT
+${applicationWithGrowth}     All-Innov-Areas Application With GrowthT
+${newUsersEmail}             liam@innovate.com
 
 *** Test Cases ***
 Comp Admin starts a new Competition
@@ -86,22 +87,9 @@ Applicant visits his Finances
     [Teardown]    the user clicks the button/link    jQuery=a:contains("Return to application overview")
 
 Applicant fills in the Application Details
-    [Documentation]    INFUND-6895
-    ...
-    ...    INFUND-9151
+    [Documentation]    INFUND-6895 INFUND-9151
     [Tags]    HappyPath
-    Given the user should see the element    jQuery=h1:contains("Application overview")
-    When the user clicks the button/link    link=Application details
-    Then the user enters text to a text field    css=#application_details-title    ${applicationTitle}
-    And The user should not see the element    link=Choose your innovation area
-    And the user selects feasibility studies and no to resubmission
-    And the user enters text to a text field    css=#application_details-startdate_day    ${tomorrowday}
-    And the user enters text to a text field    css=#application_details-startdate_month    ${month}
-    And the user enters text to a text field    css=#application_details-startdate_year    ${nextyear}
-    And the user enters text to a text field    css=#application_details-duration    24
-    When The user clicks the button/link    jQuery=button[name="mark_as_complete"]
-    Then the user clicks the button/link    link=Application overview
-    And the user should see the element    jQuery=li:contains("Application details") > .task-status-complete
+    Given the user fills in the Application details  ${applicationWithoutGrowth}
 
 Turnover and Staff count fields
     [Documentation]    INFUND-6393
@@ -149,7 +137,7 @@ Organisation server side validation when no
     [Documentation]    INFUND-6393
     [Tags]    HappyPath
     [Setup]    log in as a different user    &{lead_applicant_credentials}
-    Given the user navigates to Your-finances page    ${applicationTitle}
+    Given the user navigates to Your-finances page    ${applicationWithoutGrowth}
     Then the user clicks the button/link    link=Your organisation
     When the user clicks the button/link    jQuery=button:contains("Mark as complete")
     Then the user should see the element    jQuery=.error-summary-list:contains("Enter your organisation size.")
@@ -198,7 +186,7 @@ Funding subsection opens when Appl details and organisation info are provided
     [Documentation]    INFUND-6895
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${dashboard_url}
-    And the user clicks the button/link    link=${applicationTitle}
+    And the user clicks the button/link    link=${applicationWithoutGrowth}
     When the user should see the element    jQuery=li:contains("Application details") > .task-status-complete
     And the user clicks the button/link    link=Your finances
     And the user should see the element    jQuery=li:contains("Your organisation") > .task-status-complete
@@ -218,7 +206,7 @@ Organisation server side validation when yes
     And The user should see a field error    This field cannot be left blank.
     And The user should see a field error    Please enter a valid date.
     #And The user should see a field error    Enter your organisation size
-    #TODO Enable the above checks when INFUND-8297 is ready
+    #TODO Enable the above checks when INFUND-  is ready
 
 Organisation client side validation when yes
     [Documentation]    INFUND-6395
@@ -298,14 +286,17 @@ Applicant can view and edit project growth table
     And the user populates the project growth table
     and the user clicks the button/link    jQuery=button:contains("Mark as complete")
 
+The Lead Applicant fills in the Application Details for App with Growth
+    [Documentation]  This step is required for following test cases
+    [Tags]
+    Given the user clicks the button/link  link=Application overview
+    And the user fills in the Application details  ${applicationWithGrowth}
+
 Newly created collaborator can view and edit project Growth table
     [Documentation]    INFUND-8426
     [Tags]
     [Setup]    Invite a non-existing collaborator in Application with Growth table
-    Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    jQuery=a:contains('Untitled application'):last
-    And the user clicks the button/link    jQuery=a:contains("Begin application")
-    And the user clicks the button/link    link=Your finances
+    Given the user navigates to Your-finances page  ${applicationWithGrowth}
     and the user clicks the button/link    link=Your organisation
     and the user selects medium organisation size
     then the user enters text to a text field    css=input[name$="month"]    12
@@ -323,13 +314,13 @@ Invite Collaborator in Application with Growth table
     Then the user reads his email and clicks the link  ${collaborator1_credentials["email"]}  Invitation to collaborate in ${compWITHGrowth}  You will be joining as part of the organisation  3
     When the user should see the element  jQuery=h2:contains("We have found an account with the invited email address")
     Then the user clicks the button/link  link=Continue or sign in
-    And the user clicks the button/link  link=Confirm and accept invitation
+    And the user clicks the button/link   link=Confirm and accept invitation
 
 
 Non-lead can mark Organisation as complete
     [Documentation]    INFUND-8518 INFUND-8561
     [Tags]
-    Given the user navigates to Your-finances page  Untitled application (start here)
+    Given the user navigates to Your-finances page  ${applicationWithGrowth}
     And the user clicks the button/link    link=Your organisation
     Then the user selects medium organisation size
     And the user enters text to a text field    css=input[name$="month"]    12
@@ -437,7 +428,7 @@ the user should view the project growth table
 
 the user can edit the project growth table
     the user clicks the button/link    jQuery=button.buttonlink:contains('Edit')
-    then the user selects the radio button    financePosition-organisationSize    ${SMALL_ORGANISATION_SIZE}
+    the user selects the radio button    financePosition-organisationSize    ${SMALL_ORGANISATION_SIZE}
     the user enters text to a text field    jQuery=tr:nth-child(1) .form-control    4000
     the user enters text to a text field    jQuery=td input[value="65000"]    5000
 
@@ -462,9 +453,9 @@ the user can edit resubmit and read only of the organisation
 
 the lead applicant invites an existing user
     [Arguments]    ${comp_title}    ${EMAIL_INVITED}
-    log in as a different user  &{lead_applicant_credentials}
-    the user navigates to the page   ${dashboard_url}
-    the user clicks the button/link  jquery=.in-progress a:contains("Untitled application"):last
+    log in as a different user           &{lead_applicant_credentials}
+    the user navigates to the page        ${dashboard_url}
+    the user clicks the button/link       jquery=.in-progress a:contains("${applicationWithGrowth}")
     the user fills in the inviting steps  ${EMAIL_INVITED}
 
 the user navigates to the growth table finances
@@ -473,7 +464,7 @@ the user navigates to the growth table finances
     the user clicks the button/link    link=Your finances
 
 Invite a non-existing collaborator in Application with Growth table
-    the user clicks the button/link    jQuery=a:contains("Application overview")
+    the user should see the element       jQuery=h1:contains("Application overview")
     the user fills in the inviting steps  ${newUsersEmail}
     newly invited collaborator can create account and sign in
 
@@ -539,3 +530,19 @@ the user fills in the Open-All Initial details
     the user clicks the button/link                      jQuery=button:contains("Done")
     the user clicks the button/link                      link=Competition setup
     the user should see the element                      jQuery=div:contains("Initial details") ~ .task-status-complete
+
+the user fills in the Application details
+    # I am not using a global keyword, because in this suite we are testing differently the innovation areas
+    [Arguments]  ${appTitle}
+    the user should see the element       jQuery=h1:contains("Application overview")
+    the user clicks the button/link       link=Application details
+    the user enters text to a text field  css=#application_details-title  ${appTitle}
+    The user should not see the element   link=Choose your innovation area
+    the user selects feasibility studies and no to resubmission
+    the user enters text to a text field  css=#application_details-startdate_day    ${tomorrowday}
+    the user enters text to a text field  css=#application_details-startdate_month    ${month}
+    the user enters text to a text field  css=#application_details-startdate_year    ${nextyear}
+    the user enters text to a text field  css=#application_details-duration    24
+    The user clicks the button/link       jQuery=button[name="mark_as_complete"]
+    the user clicks the button/link       link=Application overview
+    the user should see the element       jQuery=li:contains("Application details") > .task-status-complete
