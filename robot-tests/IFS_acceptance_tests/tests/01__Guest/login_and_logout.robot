@@ -32,7 +32,7 @@ Valid login as Applicant
     [Documentation]    IFS-32
     [Tags]    HappyPath
     Given the user is not logged-in
-    When the guest user enters the log in credentials    ${lead_applicant_credentials["email"]}    ${lead_applicant_credentials["password"]}
+    When the guest user enters the log in credentials    &{lead_applicant_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=Sign out
     And the user should not see the element    link=Sign in
