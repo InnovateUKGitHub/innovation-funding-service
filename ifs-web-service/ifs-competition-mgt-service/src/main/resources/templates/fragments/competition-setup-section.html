@@ -123,7 +123,7 @@
                 <button class="buttonlink" type="button" data-add-row="innovationArea">+ add another innovation area</button>
             </div>
 
-            <div id="openingDate" th:class="${#fields.hasErrors('openingDate*')}? 'form-group form-group-error':'form-group'">
+            <div id="openingDate" class="form-group" th:classappend="${#fields.hasErrors('openingDate*')} ? 'form-group-error'">
                 <fieldset>
                     <legend>
                       <span class="heading-small">Opening date</span>
@@ -189,7 +189,7 @@
                 </fieldset>
             </div>
 
-            <div th:class="${#fields.hasErrors('leadTechnologistUserId')}? 'form-group form-group-error':'form-group'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('leadTechnologistUserId')} ? 'form-group-error'">
                 <label class="form-label" for="leadTechnologistUserId">
                     <span class="form-label-bold">Competition Innovation Lead</span>
                     <th:block th:if="${#fields.hasErrors('leadTechnologistUserId')}">
@@ -206,7 +206,7 @@
                 </select>
             </div>
 
-            <div th:class="${#fields.hasErrors('executiveUserId')}? 'form-group form-group-error':'form-group'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('executiveUserId')} ? 'form-group-error'">
                 <label class="form-label" for="executiveUserId">
                     <span class="form-label-bold">Competition Executive</span>
                     <th:block th:if="${#fields.hasErrors('executiveUserId')}">
@@ -596,7 +596,7 @@
             </div>
 
 
-            <div th:class="${#fields.hasErrors('researchCategoryId')}? 'form-group form-group-error':'form-group'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('researchCategoryId')} ? 'form-group-error'">
                 <fieldset class="inline">
                     <legend>
                         <span class="form-label-bold">Please choose the research categories.</span>
@@ -642,7 +642,7 @@
                 </fieldset>
             </div>
 
-            <div th:class="${#fields.hasErrors('researchParticipationAmountId')}? 'form-group form-group-error':'form-group'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('researchParticipationAmountId')} ? 'form-group-error'">
                 <fieldset class="inline">
                     <legend>
                         <span class="form-label-bold">Research participation</span>
@@ -661,7 +661,7 @@
                 </fieldset>
             </div>
 
-            <div th:class="${#fields.hasErrors('resubmission')}? 'form-group form-group-error':'form-group'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('resubmission')} ? 'form-group-error'">
                 <fieldset class="inline">
                     <legend>
                         <span class="form-label-bold">Are resubmissions allowed?</span>
@@ -985,7 +985,7 @@
     <form th:action="@{(${editable} ? '' : 'assessors/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate"
           th:attr="data-competition=${competition.id},data-autosave=${setupComplete != true}?compSetup" data-section="assessors">
         <th:block th:if="${editable}" id="section-assessors-edit">
-            <div th:class="${#fields.hasErrors('assessorCount')}? 'form-group form-group-error':'form-group'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('assessorCount')} ? 'form-group-error'">
                 <fieldset class="inline">
                     <legend class="heading-small">
                         How many assessors are required for each application?
@@ -1003,7 +1003,7 @@
                     </div>
                 </fieldset>
             </div>
-            <div th:class="${#fields.hasErrors('assessorPay')}? 'form-group form-group-error':'form-group'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('assessorPay')} ? 'form-group-error'">
                 <label class="form-label" for="assessorPay">
                     <span class="form-label-bold">How much do assessors receive per application?</span>
                     <span class="form-hint">This information will be available in the assessor invites.</span>
