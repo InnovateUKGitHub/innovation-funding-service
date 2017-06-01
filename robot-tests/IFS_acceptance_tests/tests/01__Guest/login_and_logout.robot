@@ -116,6 +116,7 @@ Valid login as Project Finance role
     [Documentation]    INFUND-2609
     [Tags]
     Given the user is not logged-in
+    And the user navigates to the page    ${LOGIN_URL}
     When the guest user enters the log in credentials  &{internal_finance_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
