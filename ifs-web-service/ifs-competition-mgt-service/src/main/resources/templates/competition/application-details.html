@@ -31,7 +31,7 @@
 
         <h2 class="heading-medium extra-margin extra-margin-bottom">To be included:</h2>
 
-        <div th:class="${#fields.hasErrors('useResubmissionQuestion')}? 'form-group form-group-error':'form-group'">
+        <div class="form-group" th:classappend="${#fields.hasErrors('useResubmissionQuestion')} ? 'form-group-error'">
             <fieldset class="inline">
                 <legend>
                     <span class="form-label-bold">Resubmission question</span>
