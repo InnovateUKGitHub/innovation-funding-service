@@ -28,6 +28,8 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...               INFUND-6403 Filter and Pagination on 'Find' tab of Invite dashboard
 ...
 ...               INFUND-6453 Filter and pagination on 'Overview' tab of Invite assessors dashboard
+...
+...               IFS-33 As a comp exec I can select and add multiple assessors to the invite list
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
@@ -58,8 +60,8 @@ The User can Add and Remove Assessors
     [Tags]
     Given The user clicks the button/link    link=Find
     And the user clicks the button/link    jQuery=a:contains(41 to)
-    When The user clicks the button/link    jQuery=td:contains("Will Smith") ~ td .button:contains("Add")
-    And The user clicks the button/link    link=Invite
+    When the user selects the checkbox    159
+    And the user clicks the button/link    jQuery=button:contains("Add selected to invite list")
     Then The user should see the text in the page    will.smith@gmail.com
     And The user should see the text in the page    Will Smith
     And The user should see the element    jQuery=td:contains("Will Smith") ~ td .yes
@@ -124,8 +126,8 @@ Innovation sector and area are correct
 Invite Individual Assessors
     [Documentation]    INFUND-6414
     [Tags]
-    Given The user clicks the button/link    jQuery=td:contains("Will Smith") ~ td .button:contains("Add")
-    And The user clicks the button/link    link=Invite
+    Given the user selects the checkbox    159
+    And the user clicks the button/link    jQuery=button:contains("Add selected to invite list")
     When the user clicks the button/link    jQuery=td:contains("Will Smith") .button:contains("Invite individual")
     And The user should see the text in the page    Please visit our new online Innovation Funding Service to respond to this request
     And The user enters text to a text field    css=#subject    Invitation to assess 'Sustainable living models for the future' @
@@ -180,6 +182,15 @@ Assessor overview information
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Yes")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Invite declined as not available")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Assembly / disassembly / joining")
+
+Select to add all assessors to invite list
+    [Documentation]    IFS-33
+    [Tags]
+    [Setup]    the user clicks the button/link    link=Find
+    Given the user selects the checkbox    select-all-checkbox
+    When the user clicks the button/link    jQuery=button:contains("Add selected to invite list")
+    And the user clicks the button/link    link=Find
+    Then the user should not see the element    jQuery=td:contains("No available assessors found")
 
 *** Keywords ***
 The key statistics are calculated
