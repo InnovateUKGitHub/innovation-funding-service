@@ -35,6 +35,15 @@ Valid login as Applicant
     And the user should be redirected to the correct page    ${DASHBOARD_URL}
     [Teardown]    Logout as user
 
+Should not see Sign in link when already signed in
+    Given the user is not logged-in
+    When the guest user enters the log in credentials    steve.smith@empire.com    Passw0rd
+    And the user clicks the button/link    css=button[name="_eventId_proceed"]
+    Then the user should see the element    link=Sign out
+    And the user should not see the element    link=Sign in
+    And the user should be redirected to the correct page    ${DASHBOARD_URL}
+    [Teardown]    Logout as user
+
 Valid login as Collaborator
     [Tags]    HappyPath
     Given the user is not logged-in
@@ -98,8 +107,23 @@ Valid login as Project Finance role
     When the guest user enters the log in credentials    lee.bowman@innovateuk.test    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
+    [Teardown]    Logout as user
     # note that this has been updated as per the most recent requirements.
     # project finance users now use the same dashboard as other internal users
+
+Should not see the Sign in link when on the login page
+    Given the user navigates to the page    ${LOGIN_URL}
+    Then the user should not see the element    link=Sign in
+
+Should see the Sign in link when not logged in
+    Given the user is not logged-in
+    And the user navigates to the page    ${frontDoor}
+    Then the user should see the element    link=Sign in
+    And the user navigates to the page    ${LOGIN_URL}
+    And the guest user enters the log in credentials    lee.bowman@innovateuk.test    Passw0rd
+    And the user clicks the button/link    css=button[name="_eventId_proceed"]
+    And the user navigates to the page    ${frontDoor}
+    Then the user should not see the element    link=Sign in
 
 Page not found
     [Documentation]    INFUND-8712
@@ -113,6 +137,7 @@ Reset password
     ...    AND    the guest user opens the browser
     Given the user navigates to the page    ${LOGIN_URL}
     When the user clicks the forgot psw link
+    Then the user should see the element    link=Sign in
     And the user enters text to a text field    id=id_email    ${test_mailbox_one}+changepsw@gmail.com
     And the user clicks the button/link    css=input.button
     Then the user should see the text in the page    If your email address is recognised and valid, you’ll receive a notification with instructions about how to reset your password. If you do not receive a notification, please check your junk folder or try again.
