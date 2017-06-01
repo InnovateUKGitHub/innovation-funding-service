@@ -69,7 +69,7 @@ public class ApplicationPrintPopulator {
         applicationSectionAndQuestionModelPopulator.addQuestionsDetails(model, application, null);
         applicationModelPopulator.addUserDetails(model, application, user.getId());
         applicationModelPopulator.addApplicationInputs(application, model);
-        applicationSectionAndQuestionModelPopulator.addMappedSectionsDetails(model, application, competition, Optional.empty(), userOrganisation, Optional.empty());
+        applicationSectionAndQuestionModelPopulator.addMappedSectionsDetails(model, application, competition, Optional.empty(), userOrganisation, user.getId(), Optional.empty());
         applicationFinanceOverviewModelManager.addFinanceDetails(model, competition.getId(), applicationId, userOrganisation.map(OrganisationResource::getId));
 
         return "application/print";
