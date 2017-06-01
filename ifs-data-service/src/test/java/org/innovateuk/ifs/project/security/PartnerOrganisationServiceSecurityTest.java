@@ -34,6 +34,7 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
     public void testGetProjectPartnerOrganisationsIsNotOpenToAll(){
         assertPostFilter(classUnderTest.getProjectPartnerOrganisations(123L).getSuccessObject(), () -> {
             verify(partnerOrganisationPermissionRules, times(3)).partnersOnProjectCanView(isA(PartnerOrganisationResource.class), isA(UserResource.class));
+            verify(partnerOrganisationPermissionRules, times(3)).internalUsersCanView(isA(PartnerOrganisationResource.class), isA(UserResource.class));
             verifyNoMoreInteractions(partnerOrganisationPermissionRules);
         });
     }
@@ -43,6 +44,7 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build());
         ServiceResult<List<PartnerOrganisationResource>> result = classUnderTest.getProjectPartnerOrganisations(123L);
         verify(partnerOrganisationPermissionRules, times(3)).partnersOnProjectCanView(isA(PartnerOrganisationResource.class), isA(UserResource.class));
+        verify(partnerOrganisationPermissionRules, times(3)).internalUsersCanView(isA(PartnerOrganisationResource.class), isA(UserResource.class));
         verifyNoMoreInteractions(partnerOrganisationPermissionRules);
         assertTrue(result.isSuccess());
     }

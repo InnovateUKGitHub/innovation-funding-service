@@ -16,6 +16,7 @@ import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUs
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -28,7 +29,7 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
     }
 
     @Test
-    public void testInternalUsersCanView() {
+    public void testInternalUsersCanViewPartnerOrgs() {
 
         UserResource user = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build();
 
@@ -38,7 +39,7 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
     }
 
     @Test
-    public void testExternalUsersCannotView() {
+    public void testExternalUsersCannotViewPartnerOrgs() {
 
         UserResource user = newUserResource().build();
 
@@ -72,5 +73,27 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
         PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().withProject(project.getId()).build();
 
         assertFalse(rules.partnersOnProjectCanView(partnerOrg, user));
+    }
+
+    @Test
+    public void testInternalUserCanView() {
+
+        UserResource user = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build();
+        Project project = newProject().build();
+
+        PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().withProject(project.getId()).build();
+
+        assertTrue(rules.internalUsersCanView(partnerOrg, user));
+    }
+
+    @Test
+    public void testExternalUsersCannotView() {
+
+        UserResource user = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PARTNER).build())).build();
+        Project project = newProject().build();
+
+        PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().withProject(project.getId()).build();
+
+        assertFalse(rules.internalUsersCanView(partnerOrg, user));
     }
 }
