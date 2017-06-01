@@ -37,7 +37,7 @@ public class SearchInformationFormSaver extends AbstractPublicContentFormSaver<S
     }
 
     private boolean convertToInviteBoolean(String publishSetting) {
-        return publishSetting.equals("invite");
+        return null != publishSetting && publishSetting.equals("invite");
     }
 
     private List<Error> validateKeywords(List<String> keywords) {
