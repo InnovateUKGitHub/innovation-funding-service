@@ -10,7 +10,7 @@ Resource            ../../FinanceSection_Commons.robot
 funding level available for lead business ResearchCategory: Fundamental Research
     [Documentation]    IFS-338
     [Tags]
-    Given we create a new user
+    Given we create a new user                           Oscar  business   oscar@innovateuk.com
     When the user clicks the button/link                 link=Untitled application (start here)
     and the user clicks the button/link                  link=Begin application
     and the user clicks the button/link                  link=Your finances
