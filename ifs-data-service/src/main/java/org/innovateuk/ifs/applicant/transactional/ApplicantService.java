@@ -10,9 +10,9 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
  */
 public interface ApplicantService {
 
-    @NotSecured("Service should only be calling other services to receive data and should be using their permission rules.")
+    @NotSecured(value = "Service should only be calling other services to receive data and should be using their permission rules.", mustBeSecuredByOtherServices = false)
     ServiceResult<ApplicantQuestionResource> getQuestion(Long userId, Long questionId, Long applicationId);
 
-    @NotSecured("Service should only be calling other services to receive data and should be using their permission rules.")
+    @NotSecured(value = "Service should only be calling other services to receive data and should be using their permission rules.", mustBeSecuredByOtherServices = false)
     ServiceResult<ApplicantSectionResource> getSection(Long userId, Long sectionId, Long applicationId);
 }

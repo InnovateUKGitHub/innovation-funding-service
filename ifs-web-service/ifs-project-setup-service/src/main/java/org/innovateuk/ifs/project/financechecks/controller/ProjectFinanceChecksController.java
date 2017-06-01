@@ -46,7 +46,9 @@ import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.thread.viewmodel.ThreadPostViewModel;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
@@ -137,6 +139,9 @@ public class ProjectFinanceChecksController {
 
     @Autowired
     private FinanceUtil financeUtil;
+
+    @Autowired
+    private ProcessRoleService processRoleService;
 
     @Autowired
     private ApplicantRestService applicantRestService;
@@ -498,7 +503,7 @@ public class ProjectFinanceChecksController {
 
         SectionResource section = simpleFilter(allSections, s -> s.getType().equals(PROJECT_COST_FINANCES)).get(0);
 
-        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, Optional.ofNullable(section), Optional.empty(), model, form);
 
         ApplicantSectionResource applicantSection = applicantRestService.getSection(user.getId(), application.getId(), section.getId());
         BaseSectionViewModel openFinanceSectionViewModel = openFinanceSectionModel.populateModel(form, model, bindingResult, applicantSection);
@@ -508,8 +513,9 @@ public class ProjectFinanceChecksController {
         model.addAttribute("project", project);
     }
 
-    private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final Long userId, Optional<SectionResource> section, Optional<Long> currentQuestionId, final Model model, final ApplicationForm form) {
-        applicationModelPopulator.addApplicationAndSections(application, competition, userId, section, currentQuestionId, model, form);
+    private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final UserResource user, Optional<SectionResource> section, Optional<Long> currentQuestionId, final Model model, final ApplicationForm form) {
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        applicationModelPopulator.addApplicationAndSections(application, competition, user, section, currentQuestionId, model, form, userApplicationRoles);
     }
 
     private FinanceChecksEligibilityForm getEligibilityForm(EligibilityResource eligibility) {

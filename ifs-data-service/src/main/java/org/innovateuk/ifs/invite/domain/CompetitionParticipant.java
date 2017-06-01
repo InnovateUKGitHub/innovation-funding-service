@@ -31,7 +31,7 @@ public class CompetitionParticipant extends Participant<Competition, Competition
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "invite_id")
     private CompetitionInvite invite;
 

@@ -9,6 +9,7 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 /**
