@@ -28,13 +28,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -55,14 +53,14 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     private AddressMapper addressMapper;
 
     @Override
-    public ServiceResult<List<OrganisationResource>> findByApplicationId(final Long applicationId) {
+    public ServiceResult<Set<OrganisationResource>> findByApplicationId(final Long applicationId) {
 
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
         Set<ProcessRole> applicantRoles = new HashSet<>(simpleFilter(roles, ProcessRole::isLeadApplicantOrCollaborator));
         List<Organisation> organisations = simpleMap(applicantRoles, role -> organisationRepository.findOne(role.getOrganisationId()));
         List<OrganisationResource> organisationResources = new ArrayList<>(simpleMap(organisations, organisationMapper::mapToResource));
         organisationResources.sort(Comparator.comparing(OrganisationResource::getId));
-        return serviceSuccess(organisationResources);
+        return serviceSuccess(new LinkedHashSet<>(organisationResources));
     }
 
     @Override
