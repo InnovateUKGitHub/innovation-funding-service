@@ -2,6 +2,9 @@
 
 set -e
 
+echo "Please enter your sudo password"
+sudo echo ""
+
 ## reset the db
 cd ../..
 ./gradlew initDB

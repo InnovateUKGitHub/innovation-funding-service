@@ -8,9 +8,9 @@ import org.innovateuk.ifs.competition.domain.Competition;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
  * Section defines database relations and a model to use client side and server side.
@@ -70,16 +70,10 @@ public class Section implements Comparable<Section> {
      * Get questions from this section and childSections.
      */
     @JsonIgnore
-    public List<Question> fetchAllChildQuestions() {
-        LinkedList<Question> sectionQuestions = new LinkedList<>(questions);
-        if(childSections != null && !childSections.isEmpty()){
-            LinkedList<Question> childQuestions = childSections.stream()
-                    .filter(s -> s.fetchAllChildQuestions() != null && s.fetchAllChildQuestions().size() > 0)
-                    .flatMap(s -> s.fetchAllChildQuestions().stream())
-                    .collect(Collectors.toCollection(LinkedList::new));
-            sectionQuestions.addAll(childQuestions);
-        }
-        return sectionQuestions;
+    public List<Question> fetchAllQuestionsAndChildQuestions() {
+        List<Section> nonEmptyChildSections = simpleFilterNot(childSections, child -> child.getChildSections().isEmpty() && child.getQuestions().isEmpty());
+        List<List<Question>> allChildQuestions = simpleMap(nonEmptyChildSections, Section::fetchAllQuestionsAndChildQuestions);
+        return combineLists(questions, flattenLists(allChildQuestions));
     }
 
 

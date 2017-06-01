@@ -43,6 +43,7 @@ import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -316,6 +317,8 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         when(questionService.getByIdAndAssessmentId(questionResource.getId(), assessmentResource.getId()))
                 .thenReturn(questionResource);
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
+
+        when(organisationRestService.getOrganisationsByApplicationId(applicationResource.getId())).thenReturn(restSuccess(emptyList()));
 
         setupQuestionNavigation(questionResource.getId(), empty(), of(nextQuestionResource));
 

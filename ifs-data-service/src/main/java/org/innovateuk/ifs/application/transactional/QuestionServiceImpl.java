@@ -127,14 +127,16 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return find(application(applicationId)).andOnSuccess(application -> {
 
             List<Question> questions = questionRepository.findByCompetitionId(application.getCompetition().getId());
+            List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationId(applicationId);
+
             Set<Long> markedAsCompleteQuestions = questions
                     .stream()
-                    .filter(q -> q.isMarkAsCompletedEnabled() && questionStatusRepository.findByQuestionIdAndApplicationId(q.getId(), applicationId)
-                            .stream()
-                            .anyMatch(qs ->
-                                    (q.hasMultipleStatuses() && isMarkedAsCompleteForOrganisation(qs, organisationId).orElse(Boolean.FALSE)) ||
-                                            (!q.hasMultipleStatuses() && isMarkedAsCompleteForSingleStatus(qs).orElse(Boolean.FALSE))))
-                    .map(Question::getId).collect(Collectors.toSet());
+                    .filter(Question::isMarkAsCompletedEnabled)
+                    .filter(q -> simpleAnyMatch(questionStatuses, qs -> {
+                        return qs.getQuestion().getId().equals(q.getId()) &&
+                                ((q.hasMultipleStatuses() && isMarkedAsCompleteForOrganisation(qs, organisationId).orElse(false)) ||
+                                 (!q.hasMultipleStatuses() && isMarkedAsCompleteForSingleStatus(qs).orElse(false)));
+                    })).map(Question::getId).collect(Collectors.toSet());
             return serviceSuccess(markedAsCompleteQuestions);
         });
     }
@@ -429,23 +431,13 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     private Boolean isMarkedAsCompleteForOrganisation(Long questionId, Long applicationId, Long organisationId) {
-        List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
-
-        for (QuestionStatus questionStatus : questionStatuses) {
-            Optional<Boolean> markedAsComplete = isMarkedAsCompleteForOrganisation(questionStatus, organisationId);
-            if (markedAsComplete.isPresent()) {
-                return markedAsComplete.get();
-            }
-        }
-        return Boolean.FALSE;
+        List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationIdAndMarkedAsCompleteAndMarkedAsCompleteByOrganisationId(questionId, applicationId, true, organisationId);
+        return !questionStatuses.isEmpty();
     }
 
     private Boolean isMarkedAsCompleteForSingleStatus(Long questionId, Long applicationId) {
-        List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
-        if (questionStatuses != null && !questionStatuses.isEmpty()) {
-            return isMarkedAsCompleteForSingleStatus(questionStatuses.get(0)).orElse(Boolean.FALSE);
-        }
-        return Boolean.FALSE;
+        List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationIdAndMarkedAsComplete(questionId, applicationId, true);
+        return !questionStatuses.isEmpty();
     }
 
 

@@ -40,7 +40,7 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
     @OrderBy("id ASC")
     protected List<ProcessOutcome> processOutcomes;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="internal_participant_id", referencedColumnName = "id")
     protected User internalParticipant;
 
