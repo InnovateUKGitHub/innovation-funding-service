@@ -8,38 +8,51 @@ IFS.core.collapsible = (function () {
   return {
     settings: {
       collapsibleEl: '.collapsible',
-      collapsibleTabs: '.tabs section'
+      collapsibleTabs: '.tabs section',
+      statelessClass: 'collapsible-stateless',
+      expandedClass: 'collapsible-expanded'
     },
     init: function (type) {
       s = this.settings
       s.collapsible = type === 'tabs' ? s.collapsibleTabs : s.collapsibleEl
-      // if this has to be more dynamicly updated in the future we can add a custom event
-      jQuery(s.collapsible + ' > h2, ' + s.collapsible + ' > h3').each(function () {
-        IFS.core.collapsible.initCollapsibleHTML(this)
-      })
-      jQuery('body').on('click', s.collapsible + ' > h2 > [aria-controls], ' + s.collapsible + ' > h3 > [aria-controls]', function () {
-        IFS.core.collapsible.toggleCollapsible(this)
+      // if this has to be more dynamically updated in the future we can add a custom event
+      jQuery(s.collapsible).each(function () {
+        var $el = jQuery(this)
+        var stateless = $el.hasClass(s.statelessClass)
+        var expanded = $el.hasClass(s.expandedClass)
+
+        IFS.core.collapsible.initCollapsibleHTML(this, stateless, expanded)
+
+        jQuery(this).on('click', 'h2 > [aria-controls], h3 > [aria-controls]', function () {
+          IFS.core.collapsible.toggleCollapsible(this, stateless)
+        })
       })
     },
-    initCollapsibleHTML: function (el) {
-      var inst = jQuery(el)
-      var id = 'collapsible-' + index   // create unique id for a11y relationship
-      var loadstate = IFS.core.collapsible.getLoadstateFromCookie(id)
+    initCollapsibleHTML: function (el, stateless, expanded) {
+      jQuery(el).children('h2,h3').each(function () {
+        var inst = jQuery(this)
+        var id = 'collapsible-' + index   // create unique id for a11y relationship
+        // don't save state if we've asked it not to
+        var loadstate = expanded || (!stateless && IFS.core.collapsible.getLoadstateFromCookie(id))
+
         // wrap the content and make it focusable
-      inst.nextUntil('h2,h3').wrapAll('<div id="' + id + '" aria-hidden="' + !loadstate + '">')
+        inst.nextUntil('h2,h3').wrapAll('<div id="' + id + '" aria-hidden="' + !loadstate + '">')
 
         // Add the button inside the <h2> so both the heading and button semantics are read
-      inst.wrapInner('<button aria-expanded="' + loadstate + '" aria-controls="' + id + '" type="button">')
-      index++
+        inst.wrapInner('<button aria-expanded="' + loadstate + '" aria-controls="' + id + '" type="button">')
+        index++
+      })
     },
-    toggleCollapsible: function (el) {
+    toggleCollapsible: function (el, stateless) {
       var inst = jQuery(el)
       var panel = jQuery('#' + inst.attr('aria-controls'))
       var state = inst.attr('aria-expanded') === 'false'
-        // toggle the current
+      // toggle the current
       inst.attr('aria-expanded', state)
       panel.attr('aria-hidden', !state)
-      IFS.core.collapsible.setLoadStateInCookie(panel.attr('id'), state)
+      if (!stateless) {
+        IFS.core.collapsible.setLoadStateInCookie(panel.attr('id'), state)
+      }
     },
     getLoadstateFromCookie: function (index) {
       if (typeof (Cookies.getJSON('collapsibleStates')) !== 'undefined') {
@@ -65,11 +78,11 @@ IFS.core.collapsible = (function () {
       if (state === true) {
         json[pathname][index] = state
       } else if (typeof (json[pathname][index]) !== 'undefined') {
-          // removing of false and empty objects from the json object as we store this in a cookie,
-          // only == true will be opened on pageload so those are the only ones we have to store
+        // removing of false and empty objects from the json object as we store this in a cookie,
+        // only == true will be opened on pageload so those are the only ones we have to store
         delete json[pathname][index]
 
-          // options other than looping over for getting the object count break in ie8
+        // options other than looping over for getting the object count break in ie8
         var count = 0
         jQuery.each(json[pathname], function () {
           count++

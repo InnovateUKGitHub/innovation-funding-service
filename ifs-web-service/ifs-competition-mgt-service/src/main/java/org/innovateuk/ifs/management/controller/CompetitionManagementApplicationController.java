@@ -26,19 +26,22 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
+import static org.innovateuk.ifs.util.HttpUtils.getQueryStringParameters;
 
 /**
  * Handles the Competition Management Application overview page (and associated actions).
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/application")
-@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
+@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support')")
 public class CompetitionManagementApplicationController {
 
     @Autowired
@@ -59,7 +62,7 @@ public class CompetitionManagementApplicationController {
     public String displayApplicationOverview(@PathVariable("applicationId") final Long applicationId,
                                              @PathVariable("competitionId") final Long competitionId,
                                              @ModelAttribute(name = "form", binding = false) ApplicationForm form,
-                                             @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
+                                             UserResource user,
                                              @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
                                              @RequestParam MultiValueMap<String, String> queryParams,
                                              Model model) {
@@ -68,23 +71,34 @@ public class CompetitionManagementApplicationController {
                         .displayApplicationOverview(user, competitionId, form, origin, queryParams, model, application));
     }
 
-    @GetMapping("/{applicationId}/markIneligible")
+    @PostMapping(value = "/{applicationId}", params = {"markAsIneligible"})
     public String markAsIneligible(@PathVariable("applicationId") final long applicationId,
                                    @PathVariable("competitionId") final long competitionId,
                                    @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
-                                   @RequestParam MultiValueMap<String, String> queryParams,
-                                   @ModelAttribute("form") ApplicationForm applicationForm,
-                                   @ModelAttribute("loggedInUser") UserResource user,
+                                   @ModelAttribute("form") @Valid ApplicationForm applicationForm,
+                                   @SuppressWarnings("unused") BindingResult bindingResult,
+                                   ValidationHandler validationHandler,
+                                   HttpServletRequest request,
+                                   UserResource user,
                                    Model model) {
-        return competitionManagementApplicationService
-                .markApplicationAsIneligible(
-                        applicationId,
-                        competitionId,
-                        origin,
-                        queryParams,
-                        applicationForm,
-                        user,
-                        model);
+        // This is nasty, but we have to map the query parameters manually as Spring
+        // will try to automatically map the POST request body to MultiValueMap
+        // (causing issues with back links).
+        // TODO: IFS-253 bind query parameters to maps properly
+        MultiValueMap<String, String> queryParams = getQueryStringParameters(request);
+
+        return validationHandler.failNowOrSucceedWith(
+                () -> displayApplicationOverview(applicationId, competitionId, applicationForm, user, origin, queryParams, model),
+                () -> competitionManagementApplicationService
+                                .markApplicationAsIneligible(
+                                        applicationId,
+                                        competitionId,
+                                        origin,
+                                        queryParams,
+                                        applicationForm,
+                                        user,
+                                        model)
+        );
     }
 
     @PostMapping(value = "/{applicationId}/reinstateIneligibleApplication")
@@ -118,7 +132,7 @@ public class CompetitionManagementApplicationController {
     ResponseEntity<ByteArrayResource> downloadQuestionFile(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("formInputId") final Long formInputId,
-            @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) throws ExecutionException, InterruptedException {
+            UserResource user) throws ExecutionException, InterruptedException {
         ProcessRoleResource processRole;
         if (user.hasRole(UserRoleType.COMP_ADMIN)) {
             long processRoleId = formInputResponseRestService.getByFormInputIdAndApplication(formInputId, applicationId).getSuccessObjectOrThrowException().get(0).getUpdatedBy();
@@ -139,7 +153,7 @@ public class CompetitionManagementApplicationController {
     @GetMapping(value = "/{applicationId}/print")
     public String printManagementApplication(@PathVariable("applicationId") Long applicationId,
                                              @PathVariable("competitionId") Long competitionId,
-                                             @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
+                                             UserResource user,
                                              Model model) {
         return competitionManagementApplicationService
                 .validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> applicationPrintPopulator.print(applicationId, model, user));

@@ -62,7 +62,7 @@ The applications can be sorted by lead applicant
 Filter on application number
     [Documentation]    INFUND-8010
     [Tags]    HappyPath
-    Given the user enters text to a text field    id=filterSearch    146
+    Given the user enters text to a text field    id=filterSearch    ${application_ids["Safeguarding pollinators and their values to human well-being"]}
     When the user clicks the button/link    jQuery=button:contains("Filter")
     Then the user should see the text in the page    Safeguarding pollinators and their values to human well-being
     And the user should not see the text in the page    Climate science the history of Greenland's ice
@@ -159,7 +159,7 @@ the finance Project cost breakdown calculations should be correct
 
 the applicant edits the Subcontracting costs section
     the user clicks the button/link    link=Your project costs
-    the user clicks the button/link    jQuery=#form-input-1085 button:contains("Subcontracting costs")
+    the user clicks the button/link    jQuery=button:contains("Subcontracting costs")
     the user should see the text in the page    Subcontractor name
     The user enters text to a text field    css=#collapsible-4 .form-row:nth-child(2) input[id$=subcontractingCost]    2000
     The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-name"]    Jackson Ltd
@@ -172,35 +172,6 @@ the user should see the correct finances change
     Wait Until Element Contains Without Screenshots    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}
     Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}
     Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(6)    £${DEFAULT_SUBCONTRACTING_COSTS_WITH_COMMAS_PLUS_2000}
-
-the application list is sorted by
-    [Arguments]    ${sorting_factor}
-    Select From List    name=sort    ${sorting_factor}
-
-the applications should be sorted by column
-    [Arguments]    ${column_number}
-    ${row_count}=    get matching xpath count    //*[td]
-    @{sorted_column_contents}=    Create List
-    : FOR    ${row}    IN RANGE    2    ${row_count}
-    \    ${cell_contents}=    get table cell    css=table    ${row}    ${column_number}
-    \    append to list    ${sorted_column_contents}    ${cell_contents}
-    ${test_sorting_list}=    Copy List    ${sorted_column_contents}
-    Sort List    ${test_sorting_list}
-    Lists Should Be Equal    ${sorted_column_contents}    ${test_sorting_list}
-
-the applications should be sorted in reverse order by column
-    [Arguments]    ${column_number}
-    ${row_count}=    get matching xpath count    //*[td]
-    ${column_contents}=    Create List
-    ${also_column_contents}=    Create List
-    : FOR    ${row}    IN RANGE    2    ${row_count}
-    \    ${cell_contents}=    get table cell    css=table    ${row}    ${column_number}
-    \    ${cell_contents_number}=    convert to number    ${cell_contents}
-    \    append to list    ${column_contents}    ${cell_contents_number}
-    \    append to list    ${also_column_contents}    ${cell_contents_number}
-    Sort List    ${column_contents}
-    Reverse List    ${also_column_contents}
-    Lists Should Be Equal    ${column_contents}    ${also_column_contents}
 
 The calculations should be correct
     [Arguments]    ${LIST_LOCATOR}    ${SUMMARY_LOCATOR}

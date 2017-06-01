@@ -105,7 +105,6 @@ the user fills in the project costs
     the user selects the checkbox    agree-state-aid-page
     the user clicks the button/link  jQuery=button:contains("Mark as complete")
     the user clicks the button/link  link=Your project costs
-    the user should see the element       jQuery=button:contains("Edit")
     the user has read only view once section is marked complete
 
 the user has read only view once section is marked complete
@@ -114,14 +113,14 @@ the user has read only view once section is marked complete
     the user clicks the button/link     jQuery=a:contains("Return to finances")
 
 the user fills in Labour
-    the user clicks the button/link            jQuery=#form-input-1085 button:contains("Labour")
+    the user clicks the button/link            jQuery=button:contains("Labour")
     the user should see the element            css=.labour-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input
     the user enters text to a text field       jQuery=input[id$="labourDaysYearly"]    230
     the user should see the element            jQuery=input.form-control[name^=labour-role]:text[value=""]:first
     the user enters text to a text field       jQuery=input.form-control[name^=labour-role]:text[value=""]:first    anotherrole
     the user enters text to a text field       jQuery=input.form-control[name^=labour-gross][value=""]:first    120000
     the user enters text to a text field       jQuery=input.form-control[name^=labour-labour][value=""]:first    100
-    the user clicks the button/link            jQuery=#form-input-1085 button:contains("Labour")
+    the user clicks the button/link            jQuery=button:contains("Labour")
 
 the user fills in Overhead costs
     [Arguments]  ${Application_name}
@@ -130,14 +129,14 @@ the user fills in Overhead costs
     run keyword if  '${status}'=='FAIL'  the user chooses 20% overheads option
 
 the user chooses Calculate overheads option
-    When the user clicks the button/link    jQuery=button:contains("Overhead costs")
-    and the user clicks the button/link     jQuery=label:contains("Calculate overheads")
-    then the user should see the element     jQuery=h3:contains("Calculate overheads")
-    and the user uploads the file      css=#overheadfile   ${excel_file}
+    the user clicks the button/link                         jQuery=button:contains("Overhead costs")
+    the user clicks the button/link                         jQuery=label:contains("Calculate overheads")
+    the user should see the element                         jQuery=h3:contains("Calculate overheads")
+    the user uploads the file                               css=#overheadfile   ${excel_file}
     wait for autosave
-    and the user enters text to a text field    css=input[name^="overheads-total"][id^="cost-overheads"]   40
+    the user enters text to a text field                    css=input[name^="overheads-total"][id^="cost-overheads"]   40
     wait for autosave
-    and the total overhead costs should reflect rate entered    css=#total-cost  £ 185,997
+    the total overhead costs should reflect rate entered    css=#total-cost  £ 185,997
 
 the total overhead costs should reflect rate entered
     [Arguments]    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
@@ -146,20 +145,20 @@ the total overhead costs should reflect rate entered
 
 the user chooses 20% overheads option
     # overheads option : 20% Labour
-    the user clicks the button/link    jQuery=#form-input-1085 button:contains("Overhead costs")
+    the user clicks the button/link    jQuery=button:contains("Overhead costs")
     the user clicks the button/link    css=label[data-target="overhead-default-percentage"]
-    the user clicks the button/link    jQuery=#form-input-1085 button:contains("Overhead costs")
+    the user clicks the button/link    jQuery=button:contains("Overhead costs")
 
 the user fills in Material
-    the user clicks the button/link       jQuery=#form-input-1085 button:contains("Materials")
+    the user clicks the button/link       jQuery=button:contains("Materials")
     the user should see the element       css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     the user enters text to a text field  css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
     the user enters text to a text field  css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
     the user enters text to a text field  css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
-    the user clicks the button/link       jQuery=#form-input-1085 button:contains("Materials")
+    the user clicks the button/link       jQuery=button:contains("Materials")
 
 the user fills in Capital usage
-    the user clicks the button/link       jQuery=#form-input-1085 button:contains("Capital usage")
+    the user clicks the button/link       jQuery=button:contains("Capital usage")
     the user enters text to a text field  jQuery=textarea.form-control[name^=capital_usage-description]  some description
     Click Element                         jQuery=label:contains("New")
     the user enters text to a text field  css=.form-finances-capital-usage-depreciation  10
@@ -169,33 +168,33 @@ the user fills in Capital usage
     focus                                 jQuery=.section-total-summary > [data-mirror="#section-total-192"]
     the user should see the element       jQuery=.section-total-summary > [data-mirror="#section-total-192"]
     textfield should contain              css=#capital_usage .form-row:nth-of-type(1) [readonly]  £ 4,975
-    the user clicks the button/link       jQuery=#form-input-1085 button:contains("Capital usage")
+    the user clicks the button/link       jQuery=button:contains("Capital usage")
 
 the user fills in Subcontracting costs
-    the user clicks the button/link       jQuery=#form-input-1085 button:contains("Subcontracting costs")
+    the user clicks the button/link       jQuery=button:contains("Subcontracting costs")
     the user enters text to a text field  css=.form-finances-subcontracting-company  SomeName
     the user enters text to a text field  jQuery=input.form-control[name^=subcontracting-country]  Netherlands
     the user enters text to a text field  jQuery=textarea.form-control[name^=subcontracting-role]  Quality Assurance
     the user enters text to a text field  jQuery=input.form-control[name^=subcontracting-subcontractingCost]  1000
     #focus                                 css=#section-total-193[readonly]  # values will differ with runs. INFUND-8152
     #textfield should contain              css=#section-total-193[readonly]  £ 1,000  # values will differ with runs. INFUND-8152.
-    the user clicks the button/link       jQuery=#form-input-1085 button:contains("Subcontracting costs")
+    the user clicks the button/link       jQuery=button:contains("Subcontracting costs")
 
 the user fills in Travel and subsistence
-    the user clicks the button/link       jQuery=#form-input-1085 button:contains("Travel and subsistence")
+    the user clicks the button/link       jQuery=button:contains("Travel and subsistence")
     the user enters text to a text field  css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
     the user enters text to a text field  css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
     the user enters text to a text field  css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
     #focus                                css=#section-total-194[readonly]    # values will differ with runs. INFUND-8152
     #textfield should contain             css=#section-total-194[readonly]    £ 1,000 # values will differ with runs. INFUND-8152.
-    the user clicks the button/link       jQuery=#form-input-1085 button:contains("Travel and subsistence")
+    the user clicks the button/link       jQuery=button:contains("Travel and subsistence")
 
 the user fills in Other costs
-    the user clicks the button/link       jQuery=#form-input-1085 button:contains("Other costs")
+    the user clicks the button/link       jQuery=button:contains("Other costs")
     the user removes prev costs if there are any
     the user enters text to a text field  jQuery=textarea.form-control[name^=other_costs-description]  some other costs
     the user enters text to a text field  jQuery=input.form-control[name^=other_costs-otherCost]  50
-    the user clicks the button/link       jQuery=#form-input-1085 button:contains("Other costs")
+    the user clicks the button/link       jQuery=button:contains("Other costs")
 
 the user removes prev costs if there are any
     ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  jQuery=table[id="other-costs-table"] tr:contains("Remove")

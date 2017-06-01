@@ -25,10 +25,7 @@ import org.springframework.web.multipart.support.StandardMultipartHttpServletReq
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.noErrors;
@@ -49,7 +46,8 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     @Autowired
     private QuestionService questionService;
 
-    private static final String REMOVE_FINANCE_DOCUMENT = "remove_finance_document";
+    public static final String REMOVE_FINANCE_DOCUMENT = "remove_finance_document";
+    public static final String UPLOAD_FINANCE_DOCUMENT = "upload_finance_document";
 
     @Override
     public ValidationMessages update(HttpServletRequest request, Long userId, Long applicationId, Long competitionId) {
@@ -186,9 +184,11 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         if (params.containsKey(REMOVE_FINANCE_DOCUMENT)) {
             ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
             financeService.removeFinanceDocument(applicationFinance.getId()).getSuccessObjectOrThrowException();
-        } else {
+        } else if(params.containsKey(UPLOAD_FINANCE_DOCUMENT)) {
             final Map<String, MultipartFile> fileMap = ((StandardMultipartHttpServletRequest) request).getFileMap();
-            final MultipartFile file = fileMap.get("jes-upload");
+            final String formInputJesId = getJesFormInputId(fileMap.keySet());
+            final MultipartFile file = fileMap.get(formInputJesId);
+
             if (file != null && !file.isEmpty()) {
             	ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
                 try {
@@ -201,7 +201,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
                     if (result.isFailure()) {
 
                         List<Error> errors = simpleMap(result.getFailure().getErrors(),
-                                e -> fieldError("formInput[jes-upload]", e.getFieldRejectedValue(), e.getErrorKey(), e.getArguments()));
+                                e -> fieldError("formInput[" + formInputJesId + "]", e.getFieldRejectedValue(), e.getErrorKey(), e.getArguments()));
 
                         return new ValidationMessages(errors);
                     }
@@ -213,6 +213,14 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         }
 
         return noErrors();
+    }
+
+    private String getJesFormInputId(Set<String> keys) {
+        if(keys.size() == 1) {
+            return keys.iterator().next();
+        }
+
+        return null;
     }
 
     @Override

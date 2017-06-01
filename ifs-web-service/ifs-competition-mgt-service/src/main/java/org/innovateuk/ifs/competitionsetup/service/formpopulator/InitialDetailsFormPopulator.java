@@ -7,12 +7,15 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.service.CategoryFormatter;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
+import org.innovateuk.ifs.competitionsetup.utils.CompetitionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static java.util.Arrays.asList;
 
 /**
  * Form populator for the initial details competition setup section.
@@ -33,15 +36,16 @@ public class InitialDetailsFormPopulator implements CompetitionSetupFormPopulato
 
 	@Override
 	public CompetitionSetupForm populateForm(CompetitionResource competitionResource) {
-		InitialDetailsForm competitionSetupForm = new InitialDetailsForm();
+        final List<InnovationAreaResource> allInnovationAreas = categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException();
+	    InitialDetailsForm competitionSetupForm = new InitialDetailsForm();
 
 		competitionSetupForm.setCompetitionTypeId(competitionResource.getCompetitionType());
 		competitionSetupForm.setExecutiveUserId(competitionResource.getExecutive());
 
 		competitionSetupForm.setInnovationSectorCategoryId(competitionResource.getInnovationSector());
 		Set<Long> innovationAreaCategoryIds = competitionResource.getInnovationAreas();
-		competitionSetupForm.setInnovationAreaCategoryIds(innovationAreaCategoryIds.stream().collect(Collectors.toList()));
-		competitionSetupForm.setInnovationAreaNamesFormatted(getFormattedInnovationAreaNames(innovationAreaCategoryIds));
+		competitionSetupForm.setInnovationAreaCategoryIds(setInnovationAreas(innovationAreaCategoryIds, allInnovationAreas));
+		competitionSetupForm.setInnovationAreaNamesFormatted(getFormattedInnovationAreaNames(innovationAreaCategoryIds, allInnovationAreas));
 		competitionSetupForm.setLeadTechnologistUserId(competitionResource.getLeadTechnologist());
 
 		if (competitionResource.getStartDate() != null) {
@@ -55,8 +59,23 @@ public class InitialDetailsFormPopulator implements CompetitionSetupFormPopulato
 		return competitionSetupForm;
 	}
 
-	private String getFormattedInnovationAreaNames(Set<Long> ids) {
-		List<InnovationAreaResource> allAreas = categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException();
-		return categoryFormatter.format(ids, allAreas);
+    private List<Long> setInnovationAreas(Set<Long> innovationAreaCategoryIds, List<InnovationAreaResource> allInnovationAreas) {
+	    if(innovationAreasAreMatching(innovationAreaCategoryIds, allInnovationAreas)) {
+	        return asList(CompetitionUtils.ALL_INNOVATION_AREAS);
+        }
+
+        return innovationAreaCategoryIds.stream().collect(Collectors.toList());
+    }
+
+    private String getFormattedInnovationAreaNames(Set<Long> ids, List<InnovationAreaResource> allInnovationAreas) {
+        if(innovationAreasAreMatching(ids, allInnovationAreas)) {
+            return "All";
+        }
+	    return categoryFormatter.format(ids, allInnovationAreas);
 	}
+
+    private boolean innovationAreasAreMatching(Set<Long> innovationAreaCategoryIds, List<InnovationAreaResource> allInnovationAreas) {
+        return allInnovationAreas.stream().allMatch(innovationAreaResource -> innovationAreaCategoryIds.contains(innovationAreaResource.getId()))
+                && innovationAreaCategoryIds.size() == allInnovationAreas.size();
+    }
 }

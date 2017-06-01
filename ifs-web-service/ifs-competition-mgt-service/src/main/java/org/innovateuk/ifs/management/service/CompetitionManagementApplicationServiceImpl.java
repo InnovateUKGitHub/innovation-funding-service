@@ -63,7 +63,13 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
     private FileEntryRestService fileEntryRestService;
 
     @Override
-    public String displayApplicationOverview(UserResource user, long competitionId, ApplicationForm form, String origin, MultiValueMap<String, String> queryParams, Model model, ApplicationResource application) {
+    public String displayApplicationOverview(UserResource user,
+                                             long competitionId,
+                                             ApplicationForm form,
+                                             String origin,
+                                             MultiValueMap<String, String> queryParams,
+                                             Model model,
+                                             ApplicationResource application) {
         form.setAdminMode(true);
 
         List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccessObjectOrThrowException();
@@ -100,7 +106,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         ServiceResult<Void> result = applicationService.markAsIneligible(applicationId, ineligibleOutcomeResource);
 
         if (result != null && result.isSuccess()) {
-            return "redirect:/competition/" + competitionId + "/applications/submitted";
+            return "redirect:/competition/" + competitionId + "/applications/ineligible";
         } else {
             return displayApplicationOverview(user,
                     competitionId,

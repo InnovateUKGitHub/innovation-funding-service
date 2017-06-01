@@ -58,7 +58,7 @@ public class ProfileController {
 
     @GetMapping("/view")
     public String viewUserProfile(Model model,
-                                  @ModelAttribute(name = "loggedInUser", binding = false) UserResource userResource) {
+                                  UserResource userResource) {
         final OrganisationResource organisationResource = organisationService.getOrganisationForUser(userResource.getId());
 
         model.addAttribute("model", new UserDetailsViewModel(userResource, organisationResource, ethnicityRestService.findAllActive().getSuccessObjectOrThrowException()));
@@ -107,7 +107,7 @@ public class ProfileController {
     @PostMapping("/edit")
     public String submitUserProfile(@Valid @ModelAttribute("userDetailsForm") UserDetailsForm userDetailsForm, BindingResult bindingResult,
                                     Model model,
-                                    @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                                    UserResource loggedInUser,
                                     HttpServletRequest request) {
         String destination = "profile/edit-user-profile";
 
@@ -126,7 +126,7 @@ public class ProfileController {
     }
 
     @GetMapping("/edit")
-    public String editUserProfile(@ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
+    public String editUserProfile(UserResource user,
                                   HttpServletRequest request, Model model) {
         populateUserDetailsForm(model, user);
         model.addAttribute("ethnicityOptions", getEthnicityOptions());

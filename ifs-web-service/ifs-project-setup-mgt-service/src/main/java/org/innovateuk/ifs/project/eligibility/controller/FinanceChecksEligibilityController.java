@@ -2,6 +2,9 @@ package org.innovateuk.ifs.project.eligibility.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.innovateuk.ifs.applicant.resource.ApplicantResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
+import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.DefaultProjectFinanceModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
@@ -110,6 +113,9 @@ public class FinanceChecksEligibilityController {
     @Autowired
     private FinanceService financeService;
 
+    @Autowired
+    private ApplicantRestService applicantRestService;
+
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping
     public String viewEligibility(@PathVariable("projectId") Long projectId,
@@ -117,7 +123,7 @@ public class FinanceChecksEligibilityController {
                                   @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ApplicationForm form,
                                   BindingResult bindingResult,
                                   Model model,
-                                  @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
+                                  UserResource user) {
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(project.getApplication());
         OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
@@ -180,7 +186,7 @@ public class FinanceChecksEligibilityController {
                              @PathVariable("projectId") Long projectId,
                              @PathVariable("organisationId") Long organisationId,
                              @PathVariable(QUESTION_ID) final Long questionId,
-                             @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
+                             UserResource user) {
         Long organisationType = organisationService.getOrganisationById(organisationId).getOrganisationType();
 
         FinanceRowItem costItem = addCost(organisationType, organisationId, projectId, questionId);
@@ -188,7 +194,7 @@ public class FinanceChecksEligibilityController {
         financeHandler.getProjectFinanceModelManager(organisationType).addCost(model, costItem, projectId, organisationId, user.getId(), questionId, costType);
 
         form.setBindingResult(bindingResult);
-        return String.format("project/financecheck/fragments/finance:: %s_row", costType.getType());
+        return String.format("project/financecheck/fragments/finance:: %s_row(viewmode='edit')", costType.getType());
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
@@ -211,7 +217,7 @@ public class FinanceChecksEligibilityController {
                                            BindingResult bindingResult,
                                            ValidationHandler validationHandler,
                                            Model model,
-                                           @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
+                                           UserResource user,
                                            HttpServletRequest request) {
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
@@ -275,7 +281,7 @@ public class FinanceChecksEligibilityController {
                                      @ModelAttribute("eligibilityForm") FinanceChecksEligibilityForm eligibilityForm,
                                      ValidationHandler validationHandler,
                                      Model model,
-                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
+                                     UserResource user) {
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
         OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
@@ -301,7 +307,7 @@ public class FinanceChecksEligibilityController {
                                   @SuppressWarnings("unused") BindingResult bindingResult,
                                   ValidationHandler validationHandler,
                                   Model model,
-                                  @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
+                                  UserResource user) {
 
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
@@ -318,7 +324,7 @@ public class FinanceChecksEligibilityController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping("/changes")
-    public String viewExternalEligibilityChanges(@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") final Long organisationId, Model model, @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser){
+    public String viewExternalEligibilityChanges(@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") final Long organisationId, Model model, UserResource loggedInUser){
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
         return doViewEligibilityChanges(project, organisation, loggedInUser.getId(), model);
@@ -355,7 +361,11 @@ public class FinanceChecksEligibilityController {
 
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
 
-        BaseSectionViewModel openFinanceSectionViewModel = openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections, organisationId);
+
+        ApplicantSectionResource applicantSection = applicantRestService.getSection(user.getId(), application.getId(), section.getId());
+        Optional<ApplicantResource> currentApplicant = applicantSection.getApplicants().stream().filter(applicant -> applicant.getOrganisation().getId().equals(organisationId)).findAny();
+        currentApplicant.ifPresent(applicantSection::setCurrentApplicant);
+        BaseSectionViewModel openFinanceSectionViewModel = openFinanceSectionModel.populateModel(form, model, bindingResult, applicantSection);
 
         model.addAttribute("model", openFinanceSectionViewModel);
 

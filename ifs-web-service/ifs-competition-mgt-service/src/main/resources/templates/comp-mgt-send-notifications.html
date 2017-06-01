@@ -5,8 +5,9 @@
 </head>
 
 <body th:with="context='comp-management'" class="competition-management">
-<th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+    <th:block th:insert="fragments/modals :: modal-overlay" />
+    <th:block th:insert="fragments/layout :: body-start" />
+    <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage funding notifications',linkClass='link-back',linkUrl=@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}" />
@@ -79,25 +80,21 @@
             </div>
         </details>
 
-        <div th:class="${#fields.hasErrors('subject')}? 'form-group error':'form-group extra-margin'">
-            <label class="form-label" for="subject">
-                <span class="form-label-bold">Subject</span>
-                <span th:if="${#fields.hasErrors('subject')}" th:remove="tag">
-                    <span class="error-message"  th:each="err : ${#fields.errors('subject')}" th:text="${err}" />
-                </span>
+        <div class="form-group extra-margin">
+            <label class="form-label-bold" for="subject">
+                Subject
             </label>
-            <input th:class="${#fields.hasErrors('subject') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+            <input class="form-control width-full"
                    id="subject"
                    type="text"
-                   th:field="${form.subject}"
-                   required="required"
-                   th:attr="data-required-errormessage=#{validation.manage.funding.notifications.title.required}" />
+                   readonly="readonly"
+                   value="Notification regarding your application <application number>: <application title>" />
         </div>
 
         <div th:class="${#fields.hasErrors('message')}? 'form-group error':'form-group'">
             <label class="form-label" for="message">
                 <span class="form-label-bold">Message</span>
-                <span th:if="${#fields.hasErrors('subject')}" th:remove="tag">
+                <span th:if="${#fields.hasErrors('message')}" th:remove="tag">
                     <span class="error-message"  th:each="err : ${#fields.errors('message')}" th:text="${err}" />
                 </span>
             </label>
@@ -119,11 +116,11 @@
         <th:block th:each="entry : ${model.fundingDecisions}" >
             <input type="hidden"  th:name="'fundingDecisions[' + ${entry.key} + ']'" th:value="${entry.value}"/>
         </th:block>
-        <button name="send-emails" class="button">Send email to all applicants</button>
-
+        <button class="button" data-js-modal="send-to-all-applicants-modal">Send email to all applicants</button>
         <a class="button button-clear" th:href="@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}">
             Cancel
         </a>
+        <th:block th:insert="fragments/competition-setup :: comp-setup-send-to-all-applicants-modal" />
     </form>
 
     <th:block th:insert="fragments/layout :: main-content-end" />

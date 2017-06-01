@@ -55,6 +55,7 @@ IFS.competitionManagement.repeater = (function () {
           IFS.competitionManagement.repeater.reindexRows('.form-group[id^="innovation-row"]')
           IFS.competitionManagement.initialDetails.disableAlreadySelectedOptions()
           IFS.competitionManagement.initialDetails.autosaveInnovationAreaIds()
+          IFS.competitionManagement.initialDetails.rebindInnovationAreas()
           break
         case 'contentGroup':
           inst.closest('[id^="contentGroup-row-"]').remove()
@@ -94,7 +95,9 @@ IFS.competitionManagement.repeater = (function () {
       newRow.append('<button data-remove-row="innovationArea" value="' + count + '" class="buttonlink" type="button">Remove</button>')
 
       rows.last().after(newRow)
+
       IFS.competitionManagement.initialDetails.disableAlreadySelectedOptions()
+      IFS.competitionManagement.initialDetails.rebindInnovationAreas()
     },
     addContentGroup: function (buttonEl) {
       var rows = jQuery('[id^="contentGroup-row-"]')

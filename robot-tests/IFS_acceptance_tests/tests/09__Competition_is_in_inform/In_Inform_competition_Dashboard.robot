@@ -50,14 +50,14 @@ Filtering on the Manage funding applications page
     [Documentation]    INFUND-8066
     [Tags]
     Given The user clicks the button/link    jQuery=.button:contains("Manage funding notifications")
-    And the user enters text to a text field    id=stringFilter    109
+    And the user enters text to a text field    id=stringFilter    ${application_ids['Climate control solution']}
     And the user selects the option from the drop-down menu    Yes    id=sendFilter
     And the user selects the option from the drop-down menu    Successful    id=fundingFilter
     When the user clicks the button/link    jQuery=button:contains("Filter")
-    Then the user should see the element    jQuery=td:nth-child(2):contains("109")
-    And the user should not see the element    jQuery=td:nth-child(2):contains("111")
+    Then the user should see the element    jQuery=td:nth-child(2):contains("${application_ids['Climate control solution']}")
+    And the user should not see the element    jQuery=td:nth-child(2):contains("${application_ids['Electric Drive']}")
     And the user clicks the button/link    jQuery=.button:contains("Clear all filters")
-    And the user should see the element    jQuery=td:nth-child(2):contains("111")
+    And the user should see the element    jQuery=td:nth-child(2):contains("${application_ids['Electric Drive']}")
     [Teardown]    The user clicks the button/link    link=Competition
 
 Checking release feedback button state is correct
@@ -112,7 +112,7 @@ User can see feedback to individual questions
     [Documentation]    INFUND-8005
     [Tags]
     Given the user clicks the button/link    jQuery=a:contains("6. Innovation")
-    Then the user should see the element    jQuery=h3:contains("Your answer") ~ p:contains("This is the applicant response for innovation.")
+    Then the user should see the element    jQuery=h3:contains("Your answer") ~ p:contains("This is the applicant response for what is innovative about your project?.")
     And the user should see the element    jQuery=h4:contains("Assessor 1") ~ p:contains("This is the innovation feedback")
     [Teardown]    the user clicks the button/link    jQuery=.link-back:contains("Feedback overview")
 
@@ -156,9 +156,9 @@ User sends the notification to enable release feedback
     the user clicks the button/link    jQuery=button:contains("Unsuccessful")
     the user clicks the button/link    jQuery=.link-back:contains("Competition")
     the user clicks the button/link    jQuery=a:contains("Manage funding notifications")
-    the user selects the checkbox     app-row-111
+    the user selects the checkbox     app-row-${application_ids['Electric Drive']}
     the user clicks the button/link    jQuery=button:contains("Write and send email")
-    the user enters text to a text field    id=subject    Subject
     the user enters text to a text field    jQuery=.editor    Text
     the user clicks the button/link    jQuery=button:contains("Send email to all applicants")
+    the user clicks the button/link    jQuery=.send-to-all-applicants-modal button:contains("Send email to all applicants")
     the user clicks the button/link    jQuery=.link-back:contains("Competition")

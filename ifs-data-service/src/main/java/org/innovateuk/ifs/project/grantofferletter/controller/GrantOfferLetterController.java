@@ -3,9 +3,9 @@ package org.innovateuk.ifs.project.grantofferletter.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
-import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.resource.ApprovalType;
-import org.innovateuk.ifs.project.grantofferletter.service.GrantOfferLetterService;
+import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -169,7 +169,7 @@ public class GrantOfferLetterController {
     }
 
     @GetMapping("/{projectId}/grant-offer-letter/state")
-    public RestResult<GOLState> getGrantOfferLetterWorkflowState(@PathVariable("projectId") final Long projectId) {
+    public RestResult<GrantOfferLetterState> getGrantOfferLetterWorkflowState(@PathVariable("projectId") final Long projectId) {
         return grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId).toGetResponse();
     }
 }

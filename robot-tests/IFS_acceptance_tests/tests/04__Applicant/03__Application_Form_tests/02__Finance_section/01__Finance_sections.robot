@@ -69,7 +69,7 @@ Guidance in the your project costs
     [Tags]
     [Setup]  Applicant navigates to the finances of the Robot application
     Given the user clicks the button/link   link=Your project costs
-    When the user clicks the button/link    jQuery=#form-input-1085 button:contains("Labour")
+    When the user clicks the button/link    jQuery=button:contains("Labour")
     And the user clicks the button/link     css=#collapsible-0 summary
     Then the user should see the element    css=#details-content-0 p
     And the user should see the element     jQuery=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input[value=""]
@@ -121,32 +121,35 @@ Academic partner can upload file for field J-es PDF
     Then the user should see the element     css=a.uploaded-file
     When The user clicks the button/link       jQuery=button:contains("Remove")
     then the user should see the element       jQuery=label[class="button-secondary extra-margin"]
-    and the user uploads the file   name=jes-upload   ${valid_pdf}
+    and the user uploads the file  css=.upload-section input  ${valid_pdf}
     and the user should see the text in the page    ${valid_pdf}
 
 File upload mandatory for Academic partner to mark section as complete
     [Documentation]    INFUND-8469
-    [Tags]    HappyPath    Pending
-    #TODO pending due to INFUND-8469
+    [Tags]    HappyPath
     # This will also check the auto-save as we hvaen't marked finances as complete yet
     Given the user navigates to Your-finances page  ${applicationName}
     and the user clicks the button/link      link=Your project costs
-    and the user clicks the button/link      jQuery=button:contains("Edit")
     and the user clicks the button/link       jQuery=button:contains("Remove")
     When the user selects the checkbox      jQuery=label[for="agree-terms-page"]
     and the user clicks the button/link     jQuery=button:contains("Mark as complete")
-    then the user should see a field error     css=a.uploaded-file
+    then the user should see a field error     You must upload a Je-S file
 
 Applicant chooses Calculate overheads option
-    [Documentation]     INFUND-6788, INFUND-8191, INFUND-7405 , INFUND-8355
-    [Tags]      Failing
-    # TODO Failing due to timing . Will investigate once the fixes to upload and download are fixed
-    [Setup]  log in as a different user    &{lead_applicant_credentials}
+    [Documentation]     INFUND-6788  INFUND-8191  INFUND-7405  INFUND-8355
+    [Tags]
+    [Setup]  log in as a different user                     &{lead_applicant_credentials}
     # This test also checks read only view of the overheads once section is marked as complete
-    When the user navigates to Your-finances page  ${applicationName}
-    then the user fills in the project costs       ${applicationName}
-    When the user clicks the button/link      link=Your project costs
-    then the user should see the text in the page     ${excel_file}
+    When the user navigates to Your-finances page           ${applicationName}
+    Then the user fills in the project costs                ${applicationName}
+    And wait until element is not visible without screenshots   css=.task-list li:nth-of-type(1) .task-status-incomplete
+    When the user clicks the button/link                    link=Your project costs
+    Then the user should see the text in the page           ${excel_file}
+    And the user clicks the button/link                     jQuery=button:contains("Edit your project costs")
+    And the user clicks the button/link                     css=button[name="overheadfiledelete"]
+    When the user selects the checkbox                      agree-state-aid-page
+    And the user clicks the button/link                     jQuery=button:contains("Mark as complete")
+    Then the user should see a summary error                You cannot mark as complete.
 
 *** Keywords ***
 Custom Suite Setup

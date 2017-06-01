@@ -32,31 +32,7 @@ function dbReset() {
       sleep 10
     done
 
-    oc rsh ${SVC_ACCOUNT_CLAUSE} $(oc get pods ${SVC_ACCOUNT_CLAUSE} | grep data-service | awk '{ print $1 }') /bin/bash -c 'cd /mnt/ifs_storage && ls | grep -v .trashcan | xargs rm -rf'
-}
-
-function blockUntilServiceIsUp() {
-    UNREADY_PODS=1
-    while [ ${UNREADY_PODS} -ne "0" ]
-    do
-        UNREADY_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} -o custom-columns='NAME:{.metadata.name},READY:{.status.conditions[?(@.type=="Ready")].status}' | grep -v True | sed 1d | wc -l)
-        oc get pods ${SVC_ACCOUNT_CLAUSE}
-        echo "$UNREADY_PODS pods still not ready"
-        sleep 5s
-    done
-    oc get routes ${SVC_ACCOUNT_CLAUSE}
-}
-
-function shibInit() {
-     oc rsh ${SVC_ACCOUNT_CLAUSE} $(oc get pods  ${SVC_ACCOUNT_CLAUSE} | awk '/ldap/ { print $1 }') /usr/local/bin/ldap-sync-from-ifs-db.sh ifs-database
-}
-
-function createProject() {
-    until oc new-project $PROJECT ${SVC_ACCOUNT_CLAUSE}
-    do
-      oc delete project $PROJECT ${SVC_ACCOUNT_CLAUSE} || true
-      sleep 10
-    done
+    oc rsh ${SVC_ACCOUNT_CLAUSE} $(oc get pods ${SVC_ACCOUNT_CLAUSE} | grep -m 1 data-service | awk '{ print $1 }') /bin/bash -c 'cd /mnt/ifs_storage && ls | grep -v .trashcan | xargs rm -rf'
 }
 
 . $(dirname $0)/deploy-functions.sh
@@ -77,12 +53,18 @@ fi
 
 dbReset
 
-echo Waiting for completion
-while [ "$(oc get jobs dbreset -o go-template --template '{{.status.completionTime}}' ${SVC_ACCOUNT_CLAUSE})" == '<no value>' ]
+echo Waiting for container to start
+until [ "$(oc get po dbreset ${SVC_ACCOUNT_CLAUSE} &> /dev/null; echo $?)" == 0 ] && [ "$(oc get po dbreset -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" == 'Running' ]
 do
   echo -n .
   sleep 5
 done
 
-[ "$(oc get -o template job dbreset --template={{.status.succeeded}} ${SVC_ACCOUNT_CLAUSE})" != 1 ] && exit -1
+oc logs -f dbreset ${SVC_ACCOUNT_CLAUSE}
+
+echo Waiting for container to terminate before checking its status
+sleep 5
+
+if [[ "$(oc get po dbreset -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" != "Succeeded" ]]; then exit -1; fi
+
 exit 0

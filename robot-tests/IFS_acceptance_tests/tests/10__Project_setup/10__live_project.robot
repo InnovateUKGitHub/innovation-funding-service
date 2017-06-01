@@ -1,8 +1,8 @@
 *** Settings ***
-Documentation    INFUND-6376 As a partner I want to be shown information in IFS when I have successfully completed Project Setup so I am clear on what steps to take now the project is live
-Resource          ../../resources/defaultResources.robot
-Resource          PS_Variables.robot
-Suite Setup    the project is completed if it is not already complete
+Documentation     INFUND-6376 As a partner I want to be shown information in IFS when I have successfully completed Project Setup so I am clear on what steps to take now the project is live
+Resource          PS_Common.robot
+Suite Setup       the project is completed if it is not already complete
+Suite Teardown    the user closes the browser
 
 *** Test Cases ***
 
@@ -16,12 +16,9 @@ Project dashboard shows message that the project is live
     And the user navigates to the page    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     Then the user should see the text in the page    The project is live, you can review progress at
 
-
-
 Status indicators should not show
     [Documentation]    INFUND-6376
-    [Tags]    Pending
-    # TODO Pending due to INFUND-7922
+    [Tags]
     When the user should not see the element    link=status of my partners
     And the user should not see the element    css.complete
     And the user should not see the element    css=.action
@@ -95,8 +92,7 @@ Project dashboard shows message that the project is live for industrial partner
 
 Status indicators should not show for industrial partner
     [Documentation]    INFUND-6376
-    [Tags]    Pending
-    # TODO Pending due to INFUND-7922
+    [Tags]
     When the user should not see the element    link=status of my partners
     And the user should not see the element    css.complete
     And the user should not see the element    css=.action
@@ -104,8 +100,7 @@ Status indicators should not show for industrial partner
 
 Project details section is read-only for industrial partner
     [Documentation]    INFUND-6376
-    [Tags]    Pending
-    # TODO Pending due to INFUND-7924
+    [Tags]
     When the user clicks the button/link    link=Project details
     Then the user should not see the element    link=Target start date
     And the user should not see the element    link=Project address
@@ -317,26 +312,26 @@ the user approves project costs
     the user clicks the button/link    name=confirm-eligibility
 
 all partners submit their Spend Profile
-    log in as a different user         ${PS_GOL_APPLICATION_PARTNER_EMAIL}    Passw0rd
-    the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Kazio_Id}/spend-profile
+    log in as a different user         ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${short_password}
+    the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/partner-organisation/${Kazio_Id}/spend-profile
     the user clicks the button/link    jQuery=a:contains("Submit to lead partner")
     the user clicks the button/link    jQuery=.button:contains("Submit")
-    log in as a different user         ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}    Passw0rd
-    the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Cogilith_Id}/spend-profile
+    log in as a different user         ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}  ${short_password}
+    the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/partner-organisation/${Cogilith_Id}/spend-profile
     the user clicks the button/link    jQuery=a:contains("Submit to lead partner")
     the user clicks the button/link    jQuery=.button:contains("Submit")
-    log in as a different user         ${PS_GOL_APPLICATION_LEAD_PARTNER_EMAIL}    Passw0rd
-    the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Gabtype_Id}/spend-profile
+    log in as a different user         ${PS_GOL_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
+    the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/partner-organisation/${Gabtype_Id}/spend-profile
     the user clicks the button/link    link=${Gabtype_Name}
     the user clicks the button/link    jQuery=.button:contains("Mark as complete")
-    the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Gabtype_Id}/spend-profile
+    the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/partner-organisation/${Gabtype_Id}/spend-profile
     the user clicks the button/link    jQuery=.button:contains("Review and send total project spend profile")
     the user clicks the button/link    jQuery=.button:contains("Send project spend profile")
     the user clicks the button/link    jQuery=.modal-confirm-spend-profile-totals .button[value="Send"]
 
 proj finance approves the spend profiles
     log in as a different user         &{internal_finance_credentials}
-    the user navigates to the page     ${server}/project-setup-management/project/${PS_GOL_Competition_Id}/spend-profile/approval
+    the user navigates to the page     ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/spend-profile/approval
     the user selects the checkbox      approvedByLeadTechnologist
     the user clicks the button/link    jQuery=.button:contains("Approved")
     the user clicks the button/link    jQuery=.modal-accept-profile button:contains("Approve")
@@ -353,7 +348,7 @@ users upload signed grant offer letter and submit
     the user clicks the button/link    link=${PS_GOL_APPLICATION_HEADER}
     the user clicks the button/link    link=Grant offer letter
     choose file    signedGrantOfferLetter    ${upload_folder}/testing.pdf
-    the user clicks the button/link    jQuery=.button:contains("Send signed offer letter")
+    the user clicks the button/link    jQuery=a:contains("Send to Innovate UK")
     the user clicks the button/link    jQuery=button:contains("Send to Innovate UK")
 
 

@@ -64,8 +64,7 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
-Resource          ../../resources/defaultResources.robot
-Resource          PS_Variables.robot
+Resource          PS_Common.robot
 
 *** Variables ***
 ${project_overview}    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
@@ -105,7 +104,7 @@ Lead partner can view spend profile page
     [Documentation]    INFUND-3970, INFUND-6138, INFUND-5899, INFUND-7685
     [Tags]    HappyPath
     [Setup]    Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
-    Given the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    Given the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
     When the user clicks the button/link             link=status of my partners
     Then the user should see the text in the page    Project team status
     And the user should see the element              jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
@@ -148,12 +147,11 @@ Calculations in the spend profile table
 
 Lead Partner can see Spend profile summary
     [Documentation]    INFUND-3971, INFUND-6148
-    [Tags]    Failing
-    #TODO this test case needs to be moved, to another project where the PM != Lead partner. INFUND-9289
+    [Tags]
     Given the user navigates to the page            ${external_spendprofile_summary}/review
     And the user should see the text in the page    Project costs for financial year
     And the user moves focus to the element         jQuery=.grid-container table
-    Then the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 10,957
+    Then the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 83,761
 
 Lead partner can edit his spend profile with invalid values
     [Documentation]    INFUND-3765, INFUND-6907, INFUND-6801, INFUND-7409, INFUND-6148
@@ -253,7 +251,7 @@ Links to other sections in Project setup dependent on project details (applicabl
     [Documentation]    INFUND-4428
     [Tags]    HappyPath
     [Setup]    Log in as a different user           ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
-    Given the user clicks the button/link           link=${PS_SP_APPLICATION_HEADER}
+    Given the user clicks the button/link           link=${PS_SP_APPLICATION_TITLE}
     And the user should see the element             jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
     Then the user should see the element            link = Monitoring Officer
@@ -267,7 +265,7 @@ Non-lead partner can view spend profile page
     [Documentation]    INFUND-3970, INFUND-6138, INFUND-5899
     [Tags]    HappyPath
     [Setup]    Log in as a different user           ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
-    Given the user clicks the button/link           link=${PS_SP_APPLICATION_HEADER}
+    Given the user clicks the button/link           link=${PS_SP_APPLICATION_TITLE}
     When the user clicks the button/link             link=status of my partners
     Then the user should see the text in the page    Project team status
     And the user should see the element              jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
@@ -314,7 +312,7 @@ Project Manager doesn't have the option to send spend profiles until all partner
     [Documentation]    INFUND-3767, INFUND-6138
     [Tags]
     [Setup]    log in as a different user       ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
-    Given the user clicks the button/link       link=${PS_SP_APPLICATION_HEADER}
+    Given the user clicks the button/link       link=${PS_SP_APPLICATION_TITLE}
     And the user clicks the button/link             link=status of my partners
     Then the user should see the text in the page    Project team status
     And the user should see the element              jQuery=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(5)
@@ -328,7 +326,7 @@ Academic partner can view spend profile page
     [Documentation]    INFUND-3970, INFUND-5899
     [Tags]    HappyPath
     [Setup]    Log in as a different user           ${PS_SP_APPLICATION_ACADEMIC_EMAIL}    ${short_password}
-    Given the user clicks the button/link           link=${PS_SP_APPLICATION_HEADER}
+    Given the user clicks the button/link           link=${PS_SP_APPLICATION_TITLE}
     When the user clicks the button/link            link=Spend profile
     Then the user should not see an error in the page
     And the user should see the text in the page    We have reviewed and confirmed your project costs.
@@ -373,15 +371,11 @@ Academic partner spend profile client side validations
     And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(9) td:nth-of-type(1) input    0  # Other - Exceptions
     And the user moves focus to the element            link=Project setup status
     Then the user should not see the text in the page  This field should be 0 or higher
-    When the user makes all values zeros               2    ${project_duration}  # Travel
-    Then the user makes all values zeros               3    ${project_duration}  # Other - Directly incurred
-    And the user makes all values zeros                5    ${project_duration}  # Estates
     When the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(2) input   0  # Other - Directly allocated
     And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(3) input    0  # Other - Directly allocated
     And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(9) td:nth-of-type(2) input    0  # Other - Exceptions
     And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(9) td:nth-of-type(3) input    0  # Other - Exceptions
     And the user should not see the text in the page   Your total costs are higher than your eligible costs
-    #TODO Replace keyword -the user makes all values zeros- ticket: INFUND-6851
 
 Academic partner edits spend profile and this updates on the table
     [Documentation]    INFUND-5846
@@ -389,7 +383,7 @@ Academic partner edits spend profile and this updates on the table
     When the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should see the element    jQuery=.button:contains("Edit spend profile")
     And element should contain    css=.spend-profile-table tbody tr:nth-of-type(1) td:nth-of-type(1)    3
-    And element should contain    css=.spend-profile-table tbody tr:nth-of-type(2) td:nth-of-type(3)    0
+    And element should contain    css=.spend-profile-table tbody tr:nth-of-type(2) td:nth-of-type(3)    1
 
 Academic partner can choose cancel on the dialogue
     [Documentation]    INFUND-6852
@@ -418,7 +412,7 @@ Project Manager can view partners' spend profiles
     [Documentation]    INFUND-3767, INFUND-3766, INFUND-5609
     [Tags]    HappyPath
     [Setup]    log in as a different user           ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
-    Given the user clicks the button/link           link=${PS_SP_APPLICATION_HEADER}
+    Given the user clicks the button/link           link=${PS_SP_APPLICATION_TITLE}
     When the user clicks the button/link            link=Spend profile
     Then the user should not see an error in the page
     Then the user clicks the button/link            link=${PS_SP_APPLICATION_LEAD_ORGANISATION_NAME}
@@ -441,9 +435,9 @@ Partners are not able to see the spend profile summary page
     [Documentation]    INFUND-3766
     [Tags]
     Given log in as a different user               ${PS_SP_APPLICATION_PARTNER_EMAIL}  ${short_password}
-    And the user navigates to the page and gets a custom error message  ${external_spendprofile_summary}    You do not have the necessary permissions for your request
+    And the user navigates to the page and gets a custom error message  ${external_spendprofile_summary}    ${403_error_message}
     Given log in as a different user               ${PS_SP_APPLICATION_ACADEMIC_EMAIL}    ${short_password}
-    And the user navigates to the page and gets a custom error message  ${external_spendprofile_summary}    You do not have the necessary permissions for your request
+    And the user navigates to the page and gets a custom error message  ${external_spendprofile_summary}    ${403_error_message}
 
 Project Manager can view combined spend profile
     [Documentation]    INFUND-3767
@@ -525,16 +519,16 @@ Partners can see the Spend Profile section completed
     [Documentation]    INFUND-3767,INFUND-3766
     [Tags]
     Given Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
-    And the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    And the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
     Then the user should see the element    jQuery=li.waiting:nth-of-type(6)
     Given Log in as a different user    ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}    ${short_password}
-    And the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    And the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
     Then the user should see the element    jQuery=li.waiting:nth-of-type(6)
     Given Log in as a different user    ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
-    And the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    And the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
     Then the user should see the element    jQuery=li.complete:nth-of-type(6)
     Given Log in as a different user    ${PS_SP_APPLICATION_ACADEMIC_EMAIL}    ${short_password}
-    And the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    And the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
     Then the user should see the element    jQuery=li.complete:nth-of-type(6)
 
 Project Finance is able to see Spend Profile approval page
@@ -631,9 +625,8 @@ Status updates to a cross for the internal user's table
 Lead partner can see that the spend profile has been rejected
     [Documentation]    INFUND-6977
     [Tags]
-    Given log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
-    # TODO please switch out the PM login above with lead partner once INFUND-8136 is completed
-    When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    Given log in as a different user    ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}    ${short_password}
+    When the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
     Then the user should see the element    jQuery=li.require-action:nth-of-type(6)
     When the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
@@ -643,12 +636,12 @@ Non Lead partners should still see a tick instead of an hourglass when spend pro
     [Documentation]    INFUND-7422
     [Tags]
     Given log in as a different user        ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
-    When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    When the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
     Then the user should see the element    jQuery=li.complete:nth-of-type(6)
     When the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(5)
     Given log in as a different user        ${PS_SP_APPLICATION_ACADEMIC_EMAIL}   ${short_password}
-    When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    When the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
     Then the user should see the element    jQuery=li.complete:nth-of-type(6)
     When the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(5)
@@ -656,7 +649,7 @@ Non Lead partners should still see a tick instead of an hourglass when spend pro
 Lead partner no longer has the 'submitted' view of the spend profiles
     [Documentation]    INFUND-6977, INFUND-7422
     Given Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
-    When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    When the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
     And the user clicks the button/link    link=Spend profile
     Then the user should not see the element    jQuery=.success-alert.extra-margin-bottom p:contains("All project spend profiles have been sent to Innovate UK.")
     And the user should see the text in the page    This overview shows the spend profile status of each organisation in your project.
@@ -679,7 +672,7 @@ Lead partner can edit own spend profile and mark as complete
 Industrial partner receives edit rights and can submit their spend profile
     [Documentation]    INFUND-6977
     Given log in as a different user    ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
-    When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    When the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
     Then the user should see the element    jQuery=li.require-action:nth-of-type(6)
     When the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.action:nth-of-type(5)
@@ -696,7 +689,7 @@ Industrial partner receives edit rights and can submit their spend profile
 Academic partner receives edit rights and can submit their spend profile
     [Documentation]    INFUND-6977
     Given log in as a different user    ${PS_SP_APPLICATION_ACADEMIC_EMAIL}    ${short_password}
-    When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    When the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
     Then the user should see the element    jQuery=li.require-action:nth-of-type(6)
     When the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(5)
@@ -759,7 +752,7 @@ Project Finance still has a link to the spend profile after approval
 Project finance user cannot access external users' spend profile page
     [Documentation]    INFUND-5911
     [Tags]
-    When the user navigates to the page and gets a custom error message  ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile    You do not have the necessary permissions for your request
+    When the user navigates to the page and gets a custom error message  ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile    ${403_error_message}
 
 
 *** Keywords ***
@@ -780,12 +773,6 @@ the sum of tds equals the total
     \    ${cell} =    convert to integer    ${formatted}
     \    ${sum} =    Evaluate    ${sum}+${cell}
     Should Be Equal As Integers    ${sum}    ${total}
-
-
-the user makes all values zeros
-    [Arguments]    ${row}    ${project_duration}
-    : FOR    ${i}    IN RANGE    1    ${project_duration}
-    \    the user enters text to a text field  css=.spend-profile-table tbody .form-group-row:nth-child(${row}) td:nth-of-type(${i}) input  0
 
 the text box should be editable
     [Arguments]    ${element}
@@ -826,19 +813,9 @@ partners submit their finance contacts
     the user clicks the button/link    jQuery=.button:contains("Save")
 
 partners submit bank details
-    partner submits his bank details  ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}
-    partner submits his bank details  ${PS_SP_APPLICATION_PARTNER_EMAIL}
-    partner submits his bank details  ${PS_SP_APPLICATION_ACADEMIC_EMAIL}
-
-partner submits his bank details
-    [Arguments]  ${email}
-    log in as a different user            ${email}    ${short_password}
-    the user navigates to the page        ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/bank-details
-    the user enters text to a text field  id=bank-acc-number  51406795
-    the user enters text to a text field  id=bank-sort-code  404745
-    the user selects the radio button     addressType    REGISTERED
-    the user clicks the button/link       jQuery=.button:contains("Submit bank account details")
-    the user clicks the button/link       jQuery=.button:contains("Submit")
+    partner submits his bank details  ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}  ${PS_SP_APPLICATION_PROJECT}  ${account_one}  ${sortCode_one}
+    partner submits his bank details  ${PS_SP_APPLICATION_PARTNER_EMAIL}  ${PS_SP_APPLICATION_PROJECT}  ${account_one}  ${sortCode_one}
+    partner submits his bank details  ${PS_SP_APPLICATION_ACADEMIC_EMAIL}  ${PS_SP_APPLICATION_PROJECT}  ${account_one}  ${sortCode_one}
 
 project finance approves bank details
     log in as a different user                   &{internal_finance_credentials}

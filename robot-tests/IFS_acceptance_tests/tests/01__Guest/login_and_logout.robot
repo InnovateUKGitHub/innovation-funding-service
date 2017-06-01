@@ -8,6 +8,8 @@ Documentation     INFUND-399 As a client, I would like to demo the system with r
 ...               INFUND-2130 As a competition administrator I want to be able to log into IFS so that I can access the system with appropriate permissions for my role
 ...
 ...               INFUND-1479 As an assessor with an existing Applicant AND Assessor account I want to be able to choose the correct profile when I log in, so that I don't access the wrong profile information
+...
+...               IFS-188 Stakeholder views – Support team
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Guest
 Resource          ../../resources/defaultResources.robot
@@ -46,8 +48,7 @@ Valid login as Collaborator
 
 Valid login as Assessor
     [Documentation]    INFUND-286
-    [Tags]    HappyPath    Pending
-    #TODO INFUND-5990    Assessor bin slow in building
+    [Tags]    HappyPath
     Given the user is not logged-in
     When the guest user enters the log in credentials    ${assessor_credentials["email"]}    ${assessor_credentials["password"]}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
@@ -85,17 +86,26 @@ Valid login as Comp Admin
     [Documentation]    INFUND-2130
     [Tags]    HappyPath
     Given the user is not logged-in
-    When the guest user enters the log in credentials    john.doe@innovateuk.test    Passw0rd
+    When the guest user enters the log in credentials  &{Comp_admin1_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=Sign out
     And the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
+    [Teardown]    Logout as user
+
+Valid login as Support role
+    [Documentation]    IFS-188
+    [Tags]
+    Given the user is not logged-in
+    When the guest user enters the log in credentials   &{support_user_credentials}
+    And the user clicks the button/link    css=button[name="_eventId_proceed"]
+    Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
     [Teardown]    Logout as user
 
 Valid login as Project Finance role
     [Documentation]    INFUND-2609
     [Tags]
     Given the user is not logged-in
-    When the guest user enters the log in credentials    lee.bowman@innovateuk.test    Passw0rd
+    When the guest user enters the log in credentials  &{internal_finance_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
     # note that this has been updated as per the most recent requirements.
@@ -103,9 +113,7 @@ Valid login as Project Finance role
 
 Page not found
     [Documentation]    INFUND-8712
-    Given the user navigates to the page    ${SERVER}/ibble/dibble
-    Then the user should see the text in the page    Page not found
-    And the user should see the text in the page    Please check the web address or search term you entered for any errors. You can return to your dashboard or go back to the Innovate UK homepage.
+    When the user navigates to the page and gets a custom error message    ${SERVER}/ibble/dibble    ${404_error_message}
     [Teardown]    the user closes the browser
 
 Reset password
@@ -127,6 +135,7 @@ Reset password user enters new psw
     [Tags]    Email    HappyPath
     [Setup]    Clear the login fields
     When the user enters text to a text field    id=id_password    Passw0rdnew
+    And the user moves focus to the element    jQuery=input[value*="Save password"]
     And the user clicks the button/link    jQuery=input[value*="Save password"]
     Then the user should see the text in the page    Your password is updated, you can now sign in with your new password
     And the user clicks the button/link    jQuery=.button:contains("Sign in")

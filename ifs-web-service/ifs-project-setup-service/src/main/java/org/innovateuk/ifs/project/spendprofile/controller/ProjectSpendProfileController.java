@@ -7,7 +7,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.form.SpendProfileForm;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
@@ -15,6 +15,7 @@ import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResourc
 import org.innovateuk.ifs.project.spendprofile.service.SpendProfileService;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileProjectSummaryViewModel;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileViewModel;
+import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -55,6 +56,9 @@ public class ProjectSpendProfileController {
     private ProjectService projectService;
 
     @Autowired
+    private StatusService statusService;
+
+    @Autowired
     private OrganisationService organisationService;
 
     @Autowired
@@ -75,7 +79,7 @@ public class ProjectSpendProfileController {
     public String viewSpendProfile(Model model,
                                    @PathVariable("projectId") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
-                                   @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                   UserResource loggedInUser) {
 
         if (isUserPartOfLeadOrganisation(projectId, loggedInUser)) {
             return viewProjectManagerSpendProfile(model, projectId, loggedInUser);
@@ -88,7 +92,7 @@ public class ProjectSpendProfileController {
     public String reviewSpendProfilePage(Model model,
                                          @PathVariable("projectId") final Long projectId,
                                          @PathVariable("organisationId") final Long organisationId,
-                                         @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                         UserResource loggedInUser) {
 
         model.addAttribute("model", buildSpendProfileViewModel(projectId, organisationId, loggedInUser));
 
@@ -104,7 +108,7 @@ public class ProjectSpendProfileController {
                                    ValidationHandler validationHandler,
                                    @PathVariable("projectId") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
-                                   @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                   UserResource loggedInUser) {
 
         String failureView = "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile";
 
@@ -132,7 +136,7 @@ public class ProjectSpendProfileController {
                                    ValidationHandler validationHandler,
                                    @PathVariable("projectId") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
-                                   @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                   UserResource loggedInUser) {
 
         Supplier<String> failureView = () -> {
 
@@ -172,7 +176,7 @@ public class ProjectSpendProfileController {
                                                    ValidationHandler validationHandler,
                                                    @PathVariable("projectId") final Long projectId,
                                                    @PathVariable("organisationId") final Long organisationId,
-                                                   @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                                   UserResource loggedInUser) {
 
         Supplier<String> failureView = () -> reviewSpendProfilePage(model, projectId, organisationId, loggedInUser);
         String successView = "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile";
@@ -187,7 +191,7 @@ public class ProjectSpendProfileController {
     public String markAsCompleteSpendProfile(Model model,
                                              @PathVariable("projectId") final Long projectId,
                                              @PathVariable("organisationId") final Long organisationId,
-                                             @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                             UserResource loggedInUser) {
         return markSpendProfileComplete(model, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile", loggedInUser);
     }
 
@@ -197,7 +201,7 @@ public class ProjectSpendProfileController {
     public String viewConfirmSpendProfilePage(@PathVariable("projectId") final Long projectId,
                                               @PathVariable("organisationId") final Long organisationId,
                                               Model model,
-                                              @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                              UserResource loggedInUser) {
         ProjectSpendProfileViewModel viewModel = buildSpendProfileViewModel(projectId, organisationId, loggedInUser);
         model.addAttribute("model", viewModel);
         return "project/spend-profile-confirm";
@@ -208,7 +212,7 @@ public class ProjectSpendProfileController {
     public String viewConfirmEditSpendProfilePage(@PathVariable("projectId") final Long projectId,
                                                   @PathVariable("organisationId") final Long organisationId,
                                                   Model model,
-                                                  @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                                  UserResource loggedInUser) {
         ProjectSpendProfileViewModel viewModel = buildSpendProfileViewModel(projectId, organisationId, loggedInUser);
         model.addAttribute("model", viewModel);
         return "project/spend-profile-confirm-edits";
@@ -328,7 +332,7 @@ public class ProjectSpendProfileController {
     }
 
     private boolean isApproved(final Long projectId) {
-        ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
+        ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
         return COMPLETE.equals(teamStatus.getLeadPartnerStatus().getSpendProfileStatus());
     }
 

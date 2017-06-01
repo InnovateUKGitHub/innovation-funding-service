@@ -69,7 +69,7 @@ public class ApplicationTeamManagementController {
     public String getUpdateOrganisation(Model model,
                                         @PathVariable("applicationId") long applicationId,
                                         @RequestParam(name = "organisation") long organisationId,
-                                        @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                                        UserResource loggedInUser,
                                         @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ApplicationTeamUpdateForm form) {
         return validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
             ApplicationTeamManagementViewModel viewModel = applicationTeamManagementModelPopulator.populateModelByOrganisationId(
@@ -84,7 +84,7 @@ public class ApplicationTeamManagementController {
     public String getUpdateOrganisationByInviteOrganisation(Model model,
                                                             @PathVariable("applicationId") long applicationId,
                                                             @RequestParam(name = "inviteOrganisation") long inviteOrganisationId,
-                                                            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                                                            UserResource loggedInUser,
                                                             @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ApplicationTeamUpdateForm form) {
         return validateOrganisationInviteAndApplicationId(applicationId, inviteOrganisationId, () -> {
             ApplicationTeamManagementViewModel viewModel = applicationTeamManagementModelPopulator.populateModelByInviteOrganisationId(
@@ -99,7 +99,7 @@ public class ApplicationTeamManagementController {
     public String submitUpdateOrganisation(Model model,
                                            @PathVariable("applicationId") Long applicationId,
                                            @RequestParam(name = "organisation") long organisationId,
-                                           @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                                           UserResource loggedInUser,
                                            @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
                                            @SuppressWarnings("unused") BindingResult bindingResult,
                                            ValidationHandler validationHandler) {
@@ -120,7 +120,7 @@ public class ApplicationTeamManagementController {
     public String submitUpdateOrganisationByInviteOrganisation(Model model,
                                                                @PathVariable("applicationId") Long applicationId,
                                                                @RequestParam(name = "inviteOrganisation") long inviteOrganisationId,
-                                                               @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                                                               UserResource loggedInUser,
                                                                @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
                                                                @SuppressWarnings("unused") BindingResult bindingResult,
                                                                ValidationHandler validationHandler) {
@@ -141,7 +141,7 @@ public class ApplicationTeamManagementController {
     public String addApplicant(Model model,
                                @PathVariable("applicationId") long applicationId,
                                @RequestParam(name = "organisation") long organisationId,
-                               @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                               UserResource loggedInUser,
                                @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
         return validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
             form.getApplicants().add(new ApplicantInviteForm());
@@ -153,7 +153,7 @@ public class ApplicationTeamManagementController {
     public String addApplicantByInviteOrganisation(Model model,
                                                    @PathVariable("applicationId") long applicationId,
                                                    @RequestParam(name = "inviteOrganisation") long inviteOrganisationId,
-                                                   @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                                                   UserResource loggedInUser,
                                                    @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
         return validateOrganisationInviteAndApplicationId(applicationId, inviteOrganisationId, () -> {
             form.getApplicants().add(new ApplicantInviteForm());
@@ -165,7 +165,7 @@ public class ApplicationTeamManagementController {
     public String removeApplicant(Model model,
                                   @PathVariable("applicationId") long applicationId,
                                   @RequestParam(name = "organisation") long organisationId,
-                                  @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                                  UserResource loggedInUser,
                                   @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
                                   @RequestParam(name = "removeApplicant") Integer position) {
 
@@ -179,7 +179,7 @@ public class ApplicationTeamManagementController {
     public String removeApplicantByInviteOrganisation(Model model,
                                                       @PathVariable("applicationId") long applicationId,
                                                       @RequestParam(name = "inviteOrganisation") long inviteOrganisationId,
-                                                      @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                                                      UserResource loggedInUser,
                                                       @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
                                                       @RequestParam(name = "removeApplicant") Integer position) {
         return validateOrganisationInviteAndApplicationId(applicationId, inviteOrganisationId, () -> {
@@ -192,7 +192,7 @@ public class ApplicationTeamManagementController {
     public String markForRemoval(Model model,
                                  @PathVariable("applicationId") long applicationId,
                                  @RequestParam(name = "organisation") long organisationId,
-                                 @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                                 UserResource loggedInUser,
                                  @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
                                  @RequestParam(name = "markForRemoval") long applicationInviteId) {
 
@@ -206,7 +206,7 @@ public class ApplicationTeamManagementController {
     public String markForRemovalByInviteOrganisation(Model model,
                                                      @PathVariable("applicationId") long applicationId,
                                                      @RequestParam(name = "inviteOrganisation") long inviteOrganisationId,
-                                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                                                     UserResource loggedInUser,
                                                      @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
                                                      @RequestParam(name = "markForRemoval") long applicationInviteId) {
         return validateOrganisationInviteAndApplicationId(applicationId, inviteOrganisationId, () -> {
@@ -219,7 +219,7 @@ public class ApplicationTeamManagementController {
     public String confirmDeleteOrganisation(Model model,
                                             @PathVariable("applicationId") long applicationId,
                                             @RequestParam("organisation") long organisationId,
-                                            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                            UserResource loggedInUser) {
 
         return validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
             model.addAttribute("model", applicationTeamManagementModelPopulator.populateModelByOrganisationId(
@@ -236,7 +236,7 @@ public class ApplicationTeamManagementController {
     public String confirmDeleteInviteOrganisation(Model model,
                                                   @PathVariable("applicationId") long applicationId,
                                                   @RequestParam("inviteOrganisation") long inviteOrganisationId,
-                                                  @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                                  UserResource loggedInUser) {
         return validateOrganisationInviteAndApplicationId(applicationId, inviteOrganisationId, () -> {
             model.addAttribute("model", applicationTeamManagementModelPopulator.populateModelByInviteOrganisationId(
                     applicationId,
@@ -252,7 +252,7 @@ public class ApplicationTeamManagementController {
     public String deleteOrganisation(Model model,
                                      @PathVariable("applicationId") Long applicationId,
                                      @RequestParam("organisation") long organisationId,
-                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                                     UserResource loggedInUser,
                                      @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
 
         return validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
@@ -277,7 +277,7 @@ public class ApplicationTeamManagementController {
     public String deleteInviteOrganisation(Model model,
                                            @PathVariable("applicationId") Long applicationId,
                                            @RequestParam("inviteOrganisation") long inviteOrganisationId,
-                                           @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                                           UserResource loggedInUser,
                                            @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
         return validateOrganisationInviteAndApplicationId(applicationId, inviteOrganisationId, () -> {
             List<Long> existingApplicantIds = inviteOrganisationRestService.getById(inviteOrganisationId)

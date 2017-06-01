@@ -16,8 +16,9 @@ The invited user should not follow the registration flow again
     [Documentation]    INFUND-1458
     [Tags]    HappyPath
     [Setup]    Delete the emails from both test mailboxes
-    Given we create a new user    ${test_mailbox_one}+invitedregistered@gmail.com
-    Given the lead applicant invites a registered user    ${test_mailbox_one}+invite2@gmail.com    ${test_mailbox_one}+invitedregistered@gmail.com
+    Given we create a new user                            Stuart   Anderson   ${test_mailbox_one}+invitedregistered@gmail.com
+    and the user closes the browser
+    Given the lead applicant invites a registered user          ${test_mailbox_one}+invite2@gmail.com    ${test_mailbox_one}+invitedregistered@gmail.com
     When the user reads his email and clicks the link    ${test_mailbox_one}+invitedregistered@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation    3
     Then the user should see the text in the page    We have found an account with the invited email address
 
@@ -72,16 +73,14 @@ the user should see the change in the view team members page
     The user should see the element    jQuery=.table-overflow:eq(1) td:nth-child(1):contains("Dennis Bergkamp")
 
 Existing user creates a new application and invites a user from the same organisation
-    the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    the user clicks the button/link    jQuery=.button:contains("Apply now")
-    the user clicks the button/link    jQuery=.button:contains("Apply now")
+    the user navigates to the page      ${COMPETITION_OVERVIEW_URL}
+    the user clicks the button/link     jQuery=a:contains("Start new application")
     the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application.")
     the user clicks the button/link    jQuery=.button:contains("Continue")
     the user clicks the button/link    jQuery=a:contains("Update INNOVATE LTD")
     The user clicks the button/link    jQuery=button:contains("Add new applicant")
     The user enters text to a text field    name=applicants[0].name    Olivier Giroud
     The user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+invite2@gmail.com
-    #the user clicks the button/link    jQuery=a:contains("Update organisation")
     the user clicks the button/link    jQuery=button:contains("Update organisation")
     the user clicks the button/link    jQuery=a:contains("Begin application")
     the user clicks the button/link    link=Application details

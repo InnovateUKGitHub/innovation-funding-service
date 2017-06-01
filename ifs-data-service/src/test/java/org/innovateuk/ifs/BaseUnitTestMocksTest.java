@@ -79,24 +79,25 @@ import org.innovateuk.ifs.project.financechecks.repository.FinanceCheckRepositor
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
-import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GOLWorkflowHandler;
-import org.innovateuk.ifs.project.grantofferletter.service.GrantOfferLetterService;
+import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.monitoringofficer.mapper.MonitoringOfficerMapper;
 import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficerRepository;
-import org.innovateuk.ifs.project.monitoringofficer.transactional.ProjectMonitoringOfficerService;
+import org.innovateuk.ifs.project.monitoringofficer.transactional.MonitoringOfficerService;
 import org.innovateuk.ifs.project.notes.service.FinanceCheckNotesService;
-import org.innovateuk.ifs.project.otherdocuments.transactional.ProjectOtherDocumentsService;
+import org.innovateuk.ifs.project.otherdocuments.transactional.OtherDocumentsService;
+import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
-import org.innovateuk.ifs.project.queries.service.FinanceCheckQueriesService;
+import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesService;
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
-import org.innovateuk.ifs.project.transactional.ProjectStatusService;
+import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.innovateuk.ifs.project.users.ProjectUsersHelper;
 import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
@@ -430,16 +431,19 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ProjectService projectServiceMock;
 
     @Mock
-    protected ProjectMonitoringOfficerService projectMonitoringOfficerServiceMock;
+    protected ProjectDetailsService projectDetailsServiceMock;
 
     @Mock
-    protected ProjectOtherDocumentsService projectOtherDocumentsServiceMock;
+    protected MonitoringOfficerService monitoringOfficerServiceMock;
+
+    @Mock
+    protected OtherDocumentsService otherDocumentsServiceMock;
 
     @Mock
     protected GrantOfferLetterService grantOfferLetterServiceMock;
 
     @Mock
-    protected ProjectStatusService projectStatusServiceMock;
+    protected StatusService statusServiceMock;
 
     @Mock
     protected ProjectMapper projectMapperMock;
@@ -550,7 +554,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected EligibilityWorkflowHandler eligibilityWorkflowHandlerMock;
 
     @Mock
-    protected GOLWorkflowHandler golWorkflowHandlerMock;
+    protected GrantOfferLetterWorkflowHandler golWorkflowHandlerMock;
 
     @Mock
     protected ProjectWorkflowHandler projectWorkflowHandlerMock;

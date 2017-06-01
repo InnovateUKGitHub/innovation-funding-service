@@ -37,28 +37,11 @@ Edit link navigates to the application form
     And The user enters text to a text field    css=#form-input-1039 .editor    Test text 123
     [Teardown]    The user clicks the button/link    jQuery=Button:contains(Save and return to application overview)
 
-Mark as complete possible for questions with text
-    [Documentation]    INFUND-3954
-    [Tags]    HappyPath
-    [Setup]
-    Given The user navigates to the summary page of the Robot test application
-    When the user clicks the button/link    jQuery=#form-input-1039 button:contains("Mark as complete")
-    Then the Project summary question should be marked as complete
-    And The user should not see the element    jQuery=#form-input-1039 button:contains("Mark as complete")
-    [Teardown]  the user clicks the button/link    jQuery=#form-input-1039 button:contains("Return and edit")
-
-Mark as complete not possible for empty questions
-    [Documentation]    INFUND-3954
+Application overview button
+    [Documentation]    INFUND-1075 INFUND-8139 INFUND-841
+    [Tags]
     Given The user navigates to the summary page of the Robot test application
     And the user clicks the button/link    jQuery=button:contains("Technical approach")
-    When the user clicks the button/link    jQuery=#form-input-1061 button:contains("Mark as complete")
-    Then the user should see the element    jQuery=#form-input-1061 button:contains("Mark as complete")
-
-Application overview button
-    [Documentation]    INFUND-1075
-    ...
-    ...    INFUND-841
-    [Tags]
     When the user clicks the button/link    link=Application overview
     Then the user redirects to the page    Please provide information about your project.    Application overview
 
