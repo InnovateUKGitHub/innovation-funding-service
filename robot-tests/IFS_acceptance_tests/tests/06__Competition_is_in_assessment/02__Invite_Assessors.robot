@@ -71,7 +71,7 @@ The User can Add and Remove Assessors
     And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Energy systems")
     And the calculations of the Assessors on invite list should be correct
     When The user clicks the button/link    link=Invite
-    And The user clicks the button/link    jQuery=td:contains("Will Smith") ~ td .button:contains("Remove")
+    And The user clicks the button/link    jQuery=td:contains("Will Smith") ~ td .buttonlink:contains("Remove")
     Then The user should not see the text in the page    Will Smith
     [Teardown]    The user clicks the button/link    link=Find
 
@@ -176,7 +176,7 @@ Invite non-registered users
     And The user should see the element    jQuery=td:contains("Olivier Giroud")
     And The user should see the element    jQuery=td:contains("Olivier Giroud") ~ td:contains(${test_mailbox_one}+OlivierGiroud@gmail.com)
     And The user should see the element    jQuery=td:contains("Olivier Giroud") ~ td:contains("Emerging technology")
-    And The user should see the element    jQuery=td:contains("Olivier Giroud") ~ td .button:contains("Remove")
+    And The user should see the element    jQuery=td:contains("Olivier Giroud") ~ td .buttonlink:contains("Remove")
 
 Assessor overview information
     [Documentation]    INFUND-6450
@@ -214,8 +214,8 @@ The key statistics are calculated
 
 the calculations of the Assessors on invite list should be correct
     #Calculation of the Assessors on invite list
-    ${ASSESSORS_ON_LIST}=    Get matching xpath count    //form/table/tbody/tr
-    ${ASSESSORS_COUNT}=    Get text    css=div:nth-child(4) > div > span
+    ${ASSESSORS_ON_LIST}=    Get matching xpath count    //*[@id="content"]/form/div[2]/table/tbody/tr
+    ${ASSESSORS_COUNT}=    Get text    jQuery=.highlight-panel:contains("assessors on invite list") .heading-large
     Should Be Equal As Integers    ${ASSESSORS_ON_LIST}    ${ASSESSORS_COUNT}
 
 the user invites multiple assessors
