@@ -108,6 +108,6 @@ Applicant goes to the registration form
     And the user clicks the button/link    Link=${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
     And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=button:contains("Continue")
-    the user selects the radio button    organisationTypeId    radio-1
+    And the user selects the radio button    organisationTypeId    radio-1
     And the user clicks the button/link    jQuery=button:contains("Save and continue")
     And the user clicks the button/link    jQuery=a:contains("Save and continue")
