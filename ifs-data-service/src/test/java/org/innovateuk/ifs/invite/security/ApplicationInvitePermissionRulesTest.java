@@ -18,7 +18,7 @@ import org.mockito.Mock;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newInvite;
+import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -59,7 +59,7 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
             final Organisation organisation = OrganisationBuilder.newOrganisation().build();
             final Application application = newApplication().withApplicationState(ApplicationState.OPEN).withCompetition(competition).build();
             final InviteOrganisation inviteOrganisation = newInviteOrganisation().withOrganisation(organisation).build();
-            invite = newInvite().withApplication(application).withInviteOrganisation(inviteOrganisation).build();
+            invite = newApplicationInvite().withApplication(application).withInviteOrganisation(inviteOrganisation).build();
             inviteResource = new ApplicationInviteResource();
             inviteResource.setApplication(application.getId());
             inviteResource.setInviteOrganisation(inviteOrganisation.getId());
@@ -77,7 +77,7 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
             final Application otherApplication = newApplication().withApplicationState(ApplicationState.OPEN).build();
             final Organisation otherOrganisation = OrganisationBuilder.newOrganisation().build();
             final InviteOrganisation otherInviteOrganisation = newInviteOrganisation().withOrganisation(otherOrganisation).build();
-            otherInvite = newInvite().withApplication(otherApplication).withInviteOrganisation(otherInviteOrganisation).build();
+            otherInvite = newApplicationInvite().withApplication(otherApplication).withInviteOrganisation(otherInviteOrganisation).build();
             when(processRoleRepositoryMock.findByUserIdAndApplicationId(otherApplication.getId(), otherApplication.getId())).thenReturn(newProcessRole().withRole(getRole(LEADAPPLICANT)).build());
             when(processRoleRepositoryMock.findByUserIdAndApplicationId(otherCollaborator.getId(), otherApplication.getId())).thenReturn(newProcessRole().withRole(getRole(COLLABORATOR)).build());
             when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(otherCollaborator.getId(), getRole(COLLABORATOR).getId(), otherApplication.getId(), otherOrganisation.getId())).thenReturn(newProcessRole().withRole(getRole(COLLABORATOR)).build());
@@ -139,7 +139,7 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
         Organisation organisation = OrganisationBuilder.newOrganisation().build();
         Application application = newApplication().withApplicationState(ApplicationState.SUBMITTED).withCompetition(competition).build();
         InviteOrganisation inviteOrganisation = newInviteOrganisation().withOrganisation(organisation).build();
-        invite = newInvite().withApplication(application).withInviteOrganisation(inviteOrganisation).build();
+        invite = newApplicationInvite().withApplication(application).withInviteOrganisation(inviteOrganisation).build();
         inviteResource.setApplication(application.getId());
         inviteResource.setInviteOrganisation(inviteOrganisation.getId());
         when(applicationRepository.findOne(invite.getTarget().getId())).thenReturn(application);
