@@ -172,36 +172,36 @@
 	// <![CDATA[
            jQuery(document).ready(function(){
 
-                $('#select-assessor-header').attr('aria-hidden', 'true')
-                $('#select-all-checkbox').attr('aria-hidden', 'false')
+                jQuery('#select-assessor-header').attr('aria-hidden', 'true')
+                jQuery('#select-all-checkbox').attr('aria-hidden', 'false')
 
-                var $checkboxes = $("td :checkbox");
-                var $selectAll = $("#select-all-check");
+                var checkboxes = jQuery("td :checkbox");
+                var selectAll = jQuery("#select-all-check");
                 var competitionId = jQuery('#competition_id').val();
                 var url = 'competition/' + competitionId + '/assessors/find';
                 var data;
 
                 function allChecked(){
-                  return $checkboxes.length === $checkboxes.filter(":checked").length;
+                  return checkboxes.length === checkboxes.filter(":checked").length;
                 }
 
                 function updateSelectAllStatus(){
-                  $selectAll.prop("checked", allChecked()? true : false)
+                  selectAll.prop("checked", allChecked()? true : false)
 
                   if (allChecked()) {
-                    $selectAll.addClass('selected')
+                    selectAll.addClass('selected')
                   } else {
-                    $selectAll.parent().removeClass('selected')
+                    selectAll.parent().removeClass('selected')
                   }
                 }
 
                 function handleSelectAllClick(){
-                  $checkboxes.prop("checked", allChecked()? false : true)
+                  checkboxes.prop("checked", allChecked()? false : true)
 
                   if (allChecked()) {
-                    $checkboxes.parent().addClass('selected')
+                    checkboxes.parent().addClass('selected')
                   } else {
-                    $checkboxes.parent().removeClass('selected')
+                    checkboxes.parent().removeClass('selected')
                   }
                 }
 
@@ -220,7 +220,7 @@
                     })
                 }
 
-                $selectAll.on("click", function(e) {
+                selectAll.on("click", function(e) {
                   var addAll = "addAll=" + this.checked;
                   data = addAll;
 
@@ -229,7 +229,7 @@
                   updateController();
                 });
 
-                $checkboxes.change(function(){
+                checkboxes.change(function(){
 
                   var addAssessor = "assessor=";
                   var isSelected = "&isSelected=";
