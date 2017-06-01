@@ -585,6 +585,21 @@ public final class CollectionFunctions {
     }
 
     /**
+     * A simple wrapper around an anyMatch function, to remove boilerplate from production code
+     *
+     * @param list
+     * @param filterFn
+     * @param <T>
+     * @return
+     */
+    public static <T> boolean simpleAnyMatch(List<T> list, Predicate<T> filterFn) {
+        if (list == null || list.isEmpty()) {
+            return false;
+        }
+        return list.stream().anyMatch(filterFn);
+    }
+
+    /**
      * A simple wrapper around a String joining function.  Returns a string of the given list, separated by the given
      * joinString
      *

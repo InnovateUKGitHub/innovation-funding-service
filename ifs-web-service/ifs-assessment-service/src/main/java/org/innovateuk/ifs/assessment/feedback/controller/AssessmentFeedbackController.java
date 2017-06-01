@@ -21,6 +21,8 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -73,6 +75,9 @@ public class AssessmentFeedbackController {
 
     @Autowired
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
+
+    @Autowired
+    private ProcessRoleService processRoleService;
 
     @GetMapping("/question/{questionId}")
     public String getQuestion(Model model,
@@ -178,7 +183,9 @@ public class AssessmentFeedbackController {
         AssessmentFeedbackNavigationViewModel navigationViewModel = assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, question);
         model.addAttribute("model", viewModel);
         model.addAttribute("navigation", navigationViewModel);
-        organisationDetailsModelPopulator.populateModel(model, viewModel.getApplicationId());
+
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(viewModel.getApplicationId());
+        organisationDetailsModelPopulator.populateModel(model, viewModel.getApplicationId(), userApplicationRoles);
 
         return "assessment/application-details";
     }
