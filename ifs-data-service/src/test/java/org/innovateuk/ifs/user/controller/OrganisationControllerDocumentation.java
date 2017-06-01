@@ -6,7 +6,7 @@ import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
 
-import java.util.List;
+import java.util.Set;
 
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -31,7 +31,7 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
     @Test
     public void findByApplicationId() throws Exception {
         long applicationId = 1L;
-        List<OrganisationResource> organisationResourceSet = organisationResourceBuilder.build(1);
+        Set<OrganisationResource> organisationResourceSet = organisationResourceBuilder.buildSet(1);
         when(organisationServiceMock.findByApplicationId(applicationId)).thenReturn(serviceSuccess(organisationResourceSet));
 
         mockMvc.perform(get("/organisation/findByApplicationId/{applicationId}", applicationId))
