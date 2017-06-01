@@ -34,7 +34,7 @@ Force Tags        CompAdmin    Assessor
 Resource          ../../resources/defaultResources.robot
 
 *** Variables ***
-${assessor_to_add}    Addison Shannon
+${assessor_to_add}    Alexis Kinney
 
 *** Test Cases ***
 Check the initial key statistics
@@ -219,6 +219,6 @@ the calculations of the Assessors on invite list should be correct
     Should Be Equal As Integers    ${ASSESSORS_ON_LIST}    ${ASSESSORS_COUNT}
 
 the user invites multiple assessors
-    the user clicks the button/link      jQuery=td:contains("Addison Shannon") ~ td:contains("Add")
     the user clicks the button/link      jQuery=td:contains("Alexis Kinney") ~ td:contains("Add")
     the user clicks the button/link      jQuery=td:contains("Angel Spencer") ~ td:contains("Add")
+    the user clicks the button/link      jQuery=td:contains("Angel Witt") ~ td:contains("Add")
