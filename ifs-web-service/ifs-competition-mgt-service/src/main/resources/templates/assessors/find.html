@@ -106,53 +106,57 @@
             </div>
         </div>
 
-        <table>
-            <thead>
-            <tr>
-                <th scope="col" id="select-all">
-                    <label class="block-label selection-button-checkbox" id="select-all-checkbox" aria-hidden="true">
-                        <input type="checkbox"
-                               data-switches-button-status="[name=addSelected]"
-                               id="select-all-check" th:field="*{allSelected}" />
-                        <span>Select&nbsp;all</span>
-                    </label>
-                    <button class="button button-secondary" id="select-all-button" aria-hidden="false">Select all</button>
-                </th>
-                <th scope="col">Assessor name</th>
-                <th scope="col">Type</th>
-                <th scope="col">Innovation area</th>
-                <th scope="col">Contract and DOI</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="assessor : ${model.assessors}">
-                <td>
-                    <label class="block-label selection-button-checkbox">
-                        <input type="checkbox"
-                               data-switches-button-status="[name=addSelected]"
-                               th:id="${assessor.id}"
-                               th:field="*{assessorEmails}"
-                               th:value="${assessor.email}"/>
-                        <span class="invisible">Add</span>
-                    </label>
-                </td>
-                <td>
-                    <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${originQuery}"
-                       th:text="${assessor.name}">John Barnes
-                    </a>
-                </td>
-                <td th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Industry</td>
-                <td th:text="${assessor.innovationAreas}">Electronics, sensors &amp; photonics, Materials</td>
-                <td>
-                    <span class="yes" th:if="${assessor.compliant}">Yes</span>
-                    <span class="no" th:unless="${assessor.compliant}">No</span>
-                </td>
-            </tr>
-            <tr th:if="${#lists.isEmpty(model.assessors)}">
-                <td colspan="5">No available assessors found.</td>
-            </tr>
-            </tbody>
-        </table>
+        <div class="table-overflow">
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col" id="select-all" class="width-medium">
+                        <label class="block-label selection-button-checkbox" id="select-all-checkbox"
+                               aria-hidden="true">
+                            <input type="checkbox"
+                                   data-switches-button-status="[name=addSelected]"
+                                   id="select-all-check" th:field="*{allSelected}"/>
+                            <span>Select&nbsp;all</span>
+                        </label>
+                        <button class="button button-secondary" id="select-all-button" aria-hidden="false">Select all
+                        </button>
+                    </th>
+                    <th scope="col">Assessor name</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Innovation area</th>
+                    <th scope="col">Contract and DOI</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="assessor : ${model.assessors}">
+                    <td>
+                        <label class="block-label selection-button-checkbox">
+                            <input type="checkbox"
+                                   data-switches-button-status="[name=addSelected]"
+                                   th:id="${assessor.id}"
+                                   th:field="*{assessorEmails}"
+                                   th:value="${assessor.email}"/>
+                            <span class="invisible">Add</span>
+                        </label>
+                    </td>
+                    <td>
+                        <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${originQuery}"
+                           th:text="${assessor.name}">John Barnes
+                        </a>
+                    </td>
+                    <td th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Industry</td>
+                    <td th:text="${assessor.innovationAreas}">Electronics, sensors &amp; photonics, Materials</td>
+                    <td>
+                        <span class="yes" th:if="${assessor.compliant}">Yes</span>
+                        <span class="no" th:unless="${assessor.compliant}">No</span>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(model.assessors)}">
+                    <td colspan="5">No available assessors found.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </form>
 
     <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
