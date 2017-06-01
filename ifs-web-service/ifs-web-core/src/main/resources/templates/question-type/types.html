@@ -316,7 +316,7 @@
                     <div class="column-half">
                         <dl class="font-xsmall">
                             <dt>Competition name</dt>
-                            <dd th:text="${currentCompetition.name}"></dd>
+                            <dd th:text="${competition.name}"></dd>
                             <dt>When do you wish to start your project?</dt>
                             <dd th:if="${model.application.startDate}" th:text="${#temporals.format(model.application.startDate, 'd MMMM yyyy')}"></dd>
                             <dt>Duration in months</dt>
@@ -341,7 +341,7 @@
                         <th:block th:if="${showApplicationTeamLink}">
                             <ul class="list list-bullet">
                                 <li>
-                                    <a th:href="@{/competition/{competitionId}/application/{applicationId}/team(competitionId=${currentCompetition.id},applicationId=${model.application.id})}+${queryParams}">
+                                    <a th:href="@{/competition/{competitionId}/application/{applicationId}/team(competitionId=${competition.id},applicationId=${model.application.id})}+${queryParams}">
                                         view application team details
                                     </a>
                                 </li>
