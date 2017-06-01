@@ -204,7 +204,6 @@ public class CompetitionManagementInviteAssessorsController {
                 .toUriString();
     }
 
-
     @GetMapping("/overview")
     public String overview(Model model,
                            @Valid @ModelAttribute(FILTER_FORM_ATTR_NAME) OverviewAssessorsFilterForm filterForm,
