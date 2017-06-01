@@ -17,7 +17,7 @@ Invite a new Assessor to assess a competition
     And the user clicks the button/link    link=Invite
     And the user clicks the button/link    jQuery=span:contains("Add a non-registered assessor to your list")
     And The user enters text to a text field    css=#invite-table tr:nth-of-type(1) td:nth-of-type(1) input    E2E
-    And The user enters text to a text field    css=#invite-table tr:nth-of-type(1) td:nth-of-type(2) input    ${test_mailbox_one}+AJE2E@gmail.com
+    And The user enters text to a text field    css=#invite-table tr:nth-of-type(1) td:nth-of-type(2) input    ${Assessor_e2e["email"]}
     And the user selects the option from the drop-down menu    Emerging and enabling    css=.js-progressive-group-select
     And the user selects the option from the drop-down menu    Emerging technology    id=grouped-innovation-area
     And the user clicks the button/link    jQuery=.button:contains("Add assessors to list")
@@ -31,9 +31,8 @@ Invited User gets an email to assess the competition
     [Documentation]    INFUND-8092
     [Tags]
     [Setup]    The guest user opens the browser
-    User reads the email and clicks the link to accept the assessment    ${test_mailbox_one}+AJE2E@gmail.com  Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'  This is custom text
-    [Teardown]    Run keywords    Delete the emails from both test mailboxes
-    ...    AND       The user closes the browser
+    User reads the email and clicks the link to accept the assessment    ${Assessor_e2e["email"]}  Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'  This is custom text
+    [Teardown]    Delete the emails from both test mailboxes
 
 Resend the invite to the assessor again
     [Documentation]    IFS-39
@@ -58,16 +57,14 @@ Invited user accepts the invitation and follows the registration flow
     And the user selects the radio button  acceptInvitation  true
     And The user clicks the button/link    jQuery=button:contains("Confirm")
     When the user clicks the button/link    jQuery=.button:contains("Create account")
-    And the user should see the text in the page    ${test_mailbox_one}+AJE2E@gmail.com
+    And the user should see the text in the page    ${Assessor_e2e["email"]}
     And The user fills and submits the registration form
     And the user clicks the button/link    jQuery=a:contains("Sign into your account")
     Then the user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
 
 New assessor can login with the new account
     [Documentation]    INFUND-8092
-    When The user enters text to a text field    id=username    ${test_mailbox_one}+AJE2E@gmail.com
-    And The user enters text to a text field    id=password    Passw0rd123
-    And the user clicks the button/link    css=button[name="_eventId_proceed"]
+    Given Invited guest user log in    &{Assessor_e2e}
     Then The user should see the element    link=${IN_ASSESSMENT_COMPETITION_NAME}
 
 New assessor should have the correct innovation area
@@ -82,7 +79,7 @@ New assessor has no assements
 
 CompAdmin should see Assessor's profile and Innovation Area
     [Documentation]    INFUND-8092
-    [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
+    [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
     And the user clicks the button/link    link=Overview
@@ -101,25 +98,22 @@ CompAdmin Invites assessor to assess an application
     And the user clicks the button/link    jQuery=a:contains("Competition")
     And the user clicks the button/link    jQuery=button:contains("Notify assessors")
     And the element should be disabled    jQuery=button:contains("Notify assessors")
-    [Teardown]    The user closes the browser
 
 New assessor has one assessment to accept
     [Documentation]  INFUND-9007
-    [Setup]   Guest user log-in    ${test_mailbox_one}+AJE2E@gmail.com    Passw0rd123
+    [Setup]   Log in as a different user    &{Assessor_e2e}
     Then The user navigates to the page    ${assessor_dashboard_url}
     And the user should see the text in the page    1 applications awaiting acceptance
 
 Assessor is notified by Email
     [Setup]    The guest user opens the browser
-    Given the user reads his email and clicks the link    ${test_mailbox_one}+AJE2E@gmail.com    Your applications for the competition    You have been allocated some applications
+    Given the user reads his email and clicks the link    ${Assessor_e2e["email"]}    Your applications for the competition    You have been allocated some applications
 
 Assessor accepts the invite for the Application
-    When The user enters text to a text field    id=username    ${test_mailbox_one}+AJE2E@gmail.com
-    And The user enters text to a text field    id=password    Passw0rd123
-    And the user clicks the button/link    css=button[name="_eventId_proceed"]
+    Given Invited guest user log in    &{Assessor_e2e}
     When The user clicks the button/link    Link=Park living
     And the user selects the radio button  assessmentAccept  true
-        And The user clicks the button/link    jQuery=button:contains("Confirm")
+    And The user clicks the button/link    jQuery=button:contains("Confirm")
     Then the user should be redirected to the correct page    ${Assessor_application_dashboard}
 
 New assessor has one assessment
@@ -171,5 +165,5 @@ The user fills and submits the registration form
     And the user clicks the button/link    id=postcode-lookup
     And the user should see the element    id=addressForm.selectedPostcodeIndex
     And the user clicks the button/link    css=#select-address-block button
-    And The user enters text to a text field    id=password    Passw0rd123
+    And The user enters text to a text field    id=password    ${correct_password}
     And the user clicks the button/link    jQuery=button:contains("Continue")
