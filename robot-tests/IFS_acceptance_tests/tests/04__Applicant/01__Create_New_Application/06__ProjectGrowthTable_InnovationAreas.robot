@@ -206,7 +206,7 @@ Organisation server side validation when yes
     And The user should see a field error    This field cannot be left blank.
     And The user should see a field error    Please enter a valid date.
     #And The user should see a field error    Enter your organisation size
-    #TODO Enable the above checks when INFUND-  is ready
+    #TODO Enable the above checks when INFUND-8297 is ready
 
 Organisation client side validation when yes
     [Documentation]    INFUND-6395

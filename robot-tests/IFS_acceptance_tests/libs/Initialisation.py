@@ -65,15 +65,15 @@ cursor.execute("select p.id, pa.email, a.name from application a join process p 
 assessment_ids = {}
 for ass in cursor.fetchall():
     assessmentId = ass[0]
-    assessmentName = ass[1]
+    assessorEmail = ass[1]
     applicationName = ass[2]
 
     if applicationName in assessment_ids:
         existing_record = assessment_ids[applicationName]
-        existing_record[assessmentName] = str(assessmentId)
+        existing_record[assessorEmail] = str(assessmentId)
     else:
         first_record = {}
-        first_record[assessmentName] = str(assessmentId)
+        first_record[assessorEmail] = str(assessmentId)
         assessment_ids[applicationName] = first_record
 
 
