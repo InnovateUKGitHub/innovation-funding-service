@@ -11,6 +11,8 @@ SELECT @turnover_id := id FROM form_input WHERE competition_id = @comp_id AND qu
 SELECT @headcount_id := id FROM form_input WHERE competition_id = @comp_id AND question_id=@question_id AND form_input_type_id =25;
 SELECT @user_id := id FROM user WHERE email = 'steve.smith@empire.com';
 SELECT @user_id_4 := id FROM user WHERE email = 'jessica.doe@ludlow.co.uk';
+SELECT @process_role_id := id FROM process_role WHERE user_id = @user_id AND application_id = @app_id;
+SELECT @process_role_id_4 := id FROM process_role WHERE user_id = @user_id_4 AND application_id = @app_id;
 SELECT @financial_turnover_id := id FROM form_input WHERE competition_id = @comp_id AND question_id=@question_id AND form_input_type_id =26;
 SELECT @financial_overview_id1 := id FROM form_input WHERE competition_id = @comp_id AND question_id=@question_id AND form_input_type_id =27 AND description='Annual turnover';
 SELECT @financial_overview_id2 := id FROM form_input WHERE competition_id = @comp_id AND question_id=@question_id AND form_input_type_id =27 AND description='Annual profits';
@@ -25,10 +27,10 @@ UPDATE form_input SET active = 1 WHERE id = @financial_turnover_id;
 UPDATE form_input SET active = 1 WHERE id = @financial_headcount_id;
 UPDATE form_input SET active = 0 WHERE id = @turnover_id;
 UPDATE form_input SET active = 0 WHERE id = @headcount_id;
-INSERT INTO form_input_response (update_date, value, form_input_id, updated_by_id, application_id) VALUES(NOW(), '4560000', @financial_turnover_id, @user_id, @app_id);
-INSERT INTO form_input_response (update_date, value, form_input_id, updated_by_id, application_id) VALUES(NOW(), '1230', @financial_headcount_id, @user_id, @app_id);
-INSERT INTO form_input_response (update_date, value, form_input_id, updated_by_id, application_id) VALUES(NOW(), '1230000', @financial_turnover_id, @user_id_4, @app_id);
-INSERT INTO form_input_response (update_date, value, form_input_id, updated_by_id, application_id) VALUES(NOW(), '4560', @financial_headcount_id, @user_id_4, @app_id);
+INSERT INTO form_input_response (update_date, value, form_input_id, updated_by_id, application_id) VALUES(NOW(), '4560000', @financial_turnover_id, @process_role_id, @app_id);
+INSERT INTO form_input_response (update_date, value, form_input_id, updated_by_id, application_id) VALUES(NOW(), '1230', @financial_headcount_id, @process_role_id, @app_id);
+INSERT INTO form_input_response (update_date, value, form_input_id, updated_by_id, application_id) VALUES(NOW(), '1230000', @financial_turnover_id, @process_role_id_4, @app_id);
+INSERT INTO form_input_response (update_date, value, form_input_id, updated_by_id, application_id) VALUES(NOW(), '4560', @financial_headcount_id, @process_role_id_4, @app_id);
 
 --Update project in setup to use the non growth table values
 SELECT @comp_id_2 := id FROM competition WHERE name = 'Rolling stock future developments';
@@ -40,9 +42,11 @@ SELECT @your_organisation_section_id_2 := id FROM section WHERE competition_id =
 SELECT @question_id_2 := id FROM question WHERE section_id = @your_organisation_section_id_2;
 SELECT @user_id_2 := id FROM user WHERE email = 'ralph.young@ooba.example.com';
 SELECT @user_id_3 := id FROM user WHERE email = 'tina.taylor@wordpedia.example.com';
+SELECT @process_role_id_2 := id FROM process_role WHERE user_id = @user_id_2 AND application_id = @app_id_2;
+SELECT @process_role_id_3 := id FROM process_role WHERE user_id = @user_id_3 AND application_id = @app_id_2;
 SELECT @turnover_id_2 := id FROM form_input WHERE competition_id = @comp_id_2 AND question_id=@question_id_2 AND form_input_type_id =24;
 SELECT @headcount_id_2 := id FROM form_input WHERE competition_id = @comp_id_2 AND question_id=@question_id_2 AND form_input_type_id =25;
-INSERT INTO form_input_response (update_date, value, form_input_id, updated_by_id, application_id) VALUES(NOW(), '123000', @turnover_id_2, @user_id_2, @app_id_2);
-INSERT INTO form_input_response (update_date, value, form_input_id, updated_by_id, application_id) VALUES(NOW(), '456', @headcount_id_2, @user_id_2, @app_id_2);
-INSERT INTO form_input_response (update_date, value, form_input_id, updated_by_id, application_id) VALUES(NOW(), '456000', @turnover_id_2, @user_id_3, @app_id_2);
-INSERT INTO form_input_response (update_date, value, form_input_id, updated_by_id, application_id) VALUES(NOW(), '123', @headcount_id_2, @user_id_3, @app_id_2);
+INSERT INTO form_input_response (update_date, value, form_input_id, updated_by_id, application_id) VALUES(NOW(), '123000', @turnover_id_2, @process_role_id_2, @app_id_2);
+INSERT INTO form_input_response (update_date, value, form_input_id, updated_by_id, application_id) VALUES(NOW(), '456', @headcount_id_2, @process_role_id_2, @app_id_2);
+INSERT INTO form_input_response (update_date, value, form_input_id, updated_by_id, application_id) VALUES(NOW(), '456000', @turnover_id_2, @process_role_id_3, @app_id_2);
+INSERT INTO form_input_response (update_date, value, form_input_id, updated_by_id, application_id) VALUES(NOW(), '123', @headcount_id_2, @process_role_id_3, @app_id_2);

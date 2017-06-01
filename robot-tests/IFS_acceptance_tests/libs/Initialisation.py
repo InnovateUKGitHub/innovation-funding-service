@@ -4,50 +4,36 @@ import pymysql
 import os
 config = ''
 
-try:
-    os.environ['bamboo_IFS_MYSQL_USER_NAME']
-    print("Using server mysql config")
-    config = {
-        'user': os.environ['bamboo_IFS_MYSQL_USER_NAME'],
-        'passwd': os.environ['bamboo_IFS_MYSQL_PASSWORD'],
-        'host': os.environ['bamboo_IFS_MYSQL_HOSTNAME'],
-        'db': os.environ['bamboo_IFS_MYSQL_DB_NAME'],
-        'port': 3306,
-    }
-except KeyError:
-    print("Using local mysql config")
-    config = {
-        'user': 'root',
-        'passwd': 'password',
-        'host': 'ifs-database',
-        'db': 'ifs',
-        'port': 3306,
-    }
+def connectToDb():
+    try:
+        os.environ['bamboo_IFS_MYSQL_USER_NAME']
+        print("Using server mysql config")
+        config = {
+            'user': os.environ['bamboo_IFS_MYSQL_USER_NAME'],
+            'passwd': os.environ['bamboo_IFS_MYSQL_PASSWORD'],
+            'host': os.environ['bamboo_IFS_MYSQL_HOSTNAME'],
+            'db': os.environ['bamboo_IFS_MYSQL_DB_NAME'],
+            'port': 3306,
+        }
+    except KeyError:
+        print("Using local mysql config")
+        config = {
+            'user': 'root',
+            'passwd': 'password',
+            'host': 'ifs-database',
+            'db': 'ifs',
+            'port': 3306,
+        }
 
-_open_competition_application_name =     'Climate science the history of Greenland\'s ice'
-_open_competition_application_2_name =   'Planetary science Pluto\'s telltale heart'
-_open_competition_application_3_name =   'Hydrology the dynamics of Earth\'s surface water'
-_open_competition_application_4_name =   'Greenland was nearly ice-free for extended periods during the Pleistocene'
-_open_competition_application_5_name =   'Evolution of the global phosphorus cycle'
-_closed_competition_application_name =   'A new innovative solution'
-_funders_panel_application_1_title =     'Sensing & Control network using the lighting infrastructure'
-_funders_panel_application_2_title =     'Matter - Planning for Web'
-_in_assessment_application_1_title =     '3D-printed buildings'
-_in_assessment_application_3_title =     'Intelligent Building'
-_in_assessment_application_4_title =     'Park living'
-_in_assessment_application_5_title =     'Products and Services Personalised'
+    # Open database connection
+    db = pymysql.connect(**config)
 
-_application_list = { _open_competition_application_name, _open_competition_application_2_name, _open_competition_application_3_name,
-                      _open_competition_application_4_name, _open_competition_application_5_name, _closed_competition_application_name,
-                      _funders_panel_application_1_title, _funders_panel_application_2_title, _in_assessment_application_1_title,
-                      _in_assessment_application_3_title, _in_assessment_application_4_title, _in_assessment_application_5_title}
-_formatted_app_list = ','.join(['%s'] * len(_application_list))
+    # prepare a cursor object using cursor() method
+    cursor = db.cursor()
 
-# Open database connection
-db = pymysql.connect(**config)
+    return db, cursor
 
-# prepare a cursor object using cursor() method
-cursor = db.cursor()
+db, cursor = connectToDb()
 
 # execute SQL query using execute() method, to fetch the Competitions
 cursor.execute("SELECT `id`,`name` FROM competition")
@@ -55,20 +41,70 @@ cursor.execute("SELECT `id`,`name` FROM competition")
 # Fetch all competition records
 competition_ids = {}
 for comp in cursor.fetchall():
+    competitionId = comp[0]
+    competitionName = comp[1]
     if comp[1] is None:
-        competition_ids['none'] = int(comp[0])
+        competition_ids['none'] = str(competitionId)
     else:
-        competition_ids[comp[1]] = int(comp[0])
+        competition_ids[competitionName] = str(competitionId)
 
 # execute SQL query using execute() method, to fetch the Applications
-cursor.execute("SELECT `id`,`name` FROM application WHERE name IN (%s)" % _formatted_app_list,
-               tuple(_application_list))
+cursor.execute("SELECT `id`,`name` FROM application")
 
-# Fetch only required application records
+# Fetch the application records
 application_ids = {}
 for app in cursor.fetchall():
-    application_ids[app[1]] = int(app[0])
+    applicationId = app[0]
+    applicationName = app[1]
+    application_ids[applicationName] = str(applicationId)
+
+# execute SQL query using execute() method, to fetch the Application Assessments
+cursor.execute("select p.id, pa.email, a.name from application a join process p on p.target_id = a.id and p.process_type = 'Assessment' join process_role pr on pr.id = p.participant_id join user pa on pa.id = pr.user_id")
+
+# Fetch the assessment records and store as a map of application names to maps of assessor email addresses and their assessment ids
+assessment_ids = {}
+for ass in cursor.fetchall():
+    assessmentId = ass[0]
+    assessorEmail = ass[1]
+    applicationName = ass[2]
+
+    if applicationName in assessment_ids:
+        existing_record = assessment_ids[applicationName]
+        existing_record[assessorEmail] = str(assessmentId)
+    else:
+        first_record = {}
+        first_record[assessorEmail] = str(assessmentId)
+        assessment_ids[applicationName] = first_record
+
+
+# execute SQL query using execute() method, to fetch the Applications
+cursor.execute("SELECT `id`,`name` FROM project")
+
+# Fetch the project records
+project_ids = {}
+for proj in cursor.fetchall():
+    projectId = proj[0]
+    projectName = proj[1]
+    project_ids[projectName] = str(projectId)
+
 
 # disconnect from server
 cursor.close()
 db.close()
+
+
+# different from the project_ids dictionary that we create during startup, this method can be used to look up
+# new project ids that were not present during the start of the test runs
+def getProjectId(name):
+    db, cursor = connectToDb()
+
+    # execute SQL query using execute() method, to fetch the Applications
+    cursor.execute("SELECT `id` FROM project where `name` = '" + name + "'")
+
+    id = cursor.fetchone()[0]
+
+    # disconnect from server
+    cursor.close()
+    db.close()
+
+    return id

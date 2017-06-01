@@ -6,6 +6,7 @@ import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.function.Consumer;
 
 import static java.util.Objects.requireNonNull;
@@ -19,7 +20,7 @@ public class CompetitionInvite extends Invite<Competition, CompetitionInvite> im
     @JoinColumn(name = "target_id", referencedColumnName = "id")
     private Competition competition;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="innovation_category_id", referencedColumnName = "id")
     private InnovationArea innovationArea;
 
@@ -84,5 +85,9 @@ public class CompetitionInvite extends Invite<Competition, CompetitionInvite> im
             throw new IllegalStateException(("Cannot get InnovationArea for an existing assessor CompetitionInvite"));
         }
         return requireNonNull(innovationArea, "Unexpected null innovationArea for new Assessor CompetitionInvite");
+    }
+
+    public CompetitionInvite sendOrResend(User sentBy, ZonedDateTime sentOn) {
+        return doSend(sentBy, sentOn);
     }
 }

@@ -1,10 +1,14 @@
 package org.innovateuk.ifs.application.populator;
 
+import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.form.Form;
+import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -19,7 +23,9 @@ import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -63,9 +69,22 @@ public class ApplicationSectionAndQuestionModelPopulator {
     @Autowired
     private CategoryRestService categoryRestService;
 
+    @Autowired
+    private ApplicantRestService applicantRestService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private FormInputViewModelGenerator formInputViewModelGenerator;
+
     public void addMappedSectionsDetails(Model model, ApplicationResource application, CompetitionResource competition,
                                          Optional<SectionResource> currentSection,
-                                         Optional<OrganisationResource> userOrganisation) {
+                                         Optional<OrganisationResource> userOrganisation,
+                                         Long userId,
+                                         Map<Long, Set<Long>> completedSectionsByOrganisation,
+                                         Optional<Boolean> markAsCompleteEnabled) {
+
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(competition.getId());
         List<SectionResource> parentSections = sectionService.filterParentSections(allSections);
 
@@ -73,9 +92,15 @@ public class ApplicationSectionAndQuestionModelPopulator {
                 parentSections.stream().collect(Collectors.toMap(SectionResource::getId,
                         Function.identity()));
 
-        userOrganisation.ifPresent(org -> model.addAttribute("completedSections", sectionService.getCompleted(application.getId(), org.getId())));
+        userOrganisation.ifPresent(org -> {
+            Set<Long> completedSectionsForThisOrganisation = completedSectionsByOrganisation.get(userOrganisation);
+            model.addAttribute("completedSections", completedSectionsForThisOrganisation);
+        });
 
         List<QuestionResource> questions = questionService.findByCompetition(competition.getId());
+        markAsCompleteEnabled.ifPresent(markAsCompleteEnabledBoolean -> {
+            questions.forEach(questionResource -> questionResource.setMarkAsCompletedEnabled(markAsCompleteEnabledBoolean));
+        });
 
         List<FormInputResource> formInputResources = formInputRestService.getByCompetitionIdAndScope(
                 competition.getId(), APPLICATION).getSuccessObjectOrThrowException();
@@ -92,6 +117,27 @@ public class ApplicationSectionAndQuestionModelPopulator {
         model.addAttribute("questionFormInputs", questionFormInputs);
         model.addAttribute("sectionQuestions", sectionQuestions);
 
+
+        //Comp admin user doesn't have user organisation
+        long applicantId;
+        if (!userOrganisation.isPresent())  {
+            ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
+            applicantId = leadApplicantProcessRole.getUser();
+        } else {
+            applicantId = userId;
+        }
+        Map<Long, AbstractFormInputViewModel> formInputViewModels = sectionQuestions.values().stream().flatMap(List::stream).map(question -> applicantRestService.getQuestion(applicantId, application.getId(), question.getId()))
+                .map(question -> formInputViewModelGenerator.fromQuestion(question, new ApplicationForm()))
+                .flatMap(List::stream)
+                .collect(Collectors.toMap(viewModel -> viewModel.getFormInput().getId(), Function.identity()));
+        model.addAttribute("formInputViewModels", formInputViewModels);
+        formInputViewModels.values().forEach(viewModel -> {
+            viewModel.setClosed(true);
+            viewModel.setReadonly(true);
+            viewModel.setSummary(true);
+        });
+
+
         addSubSections(currentSection, model, parentSections, allSections, questions, formInputResources);
     }
 
@@ -100,7 +146,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
         model.addAttribute("currentSection", currentSection.orElse(null));
         if (currentSection.isPresent()) {
             List<QuestionResource> questions = getQuestionsBySection(currentSection.get().getQuestions(), questionService.findByCompetition(currentSection.get().getCompetition()));
-            questions.sort((QuestionResource q1, QuestionResource q2) -> q1.getPriority().compareTo(q2.getPriority()));
+            questions.sort(Comparator.comparing(QuestionResource::getPriority));
             Map<Long, List<QuestionResource>> sectionQuestions = new HashMap<>();
             sectionQuestions.put(currentSection.get().getId(), questions);
             Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream()
@@ -131,7 +177,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
     }
 
     public void addAssignableDetails(Model model, ApplicationResource application, OrganisationResource userOrganisation,
-                                     Long userId, Optional<SectionResource> currentSection, Optional<Long> currentQuestionId) {
+                                     UserResource user, Optional<SectionResource> currentSection, Optional<Long> currentQuestionId) {
 
         if (isApplicationInViewMode(model, application, userOrganisation)) {
             return;
@@ -142,7 +188,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
             QuestionStatusResource questionAssignee = questionAssignees.get(currentQuestionId.get());
             model.addAttribute("questionAssignee", questionAssignee);
         }
-        List<QuestionStatusResource> notifications = questionService.getNotificationsForUser(questionAssignees.values(), userId);
+        List<QuestionStatusResource> notifications = questionService.getNotificationsForUser(questionAssignees.values(), user.getId());
         questionService.removeNotifications(notifications);
         List<ApplicationInviteResource> pendingAssignableUsers = pendingInvitations(application);
 
@@ -152,18 +198,14 @@ public class ApplicationSectionAndQuestionModelPopulator {
         model.addAttribute("notifications", notifications);
     }
 
-    public void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
+    public void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation, Map<Long, Set<Long>> completedSectionsByOrganisation) {
+
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
         model.addAttribute("markedAsComplete", markedAsComplete);
 
-        Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
-        Set<Long> currentUserSectionsMarkedAsComplete = completedSectionsByOrganisation.get(userOrganisation.map(OrganisationResource::getId).orElse(-1L));
-        final Set<Long> sectionsMarkedAsComplete;
-        if(null != currentUserSectionsMarkedAsComplete) {
-            sectionsMarkedAsComplete = new HashSet<>(currentUserSectionsMarkedAsComplete);
+        Set<Long> sectionsMarkedAsComplete = completedSectionsByOrganisation.get(userOrganisation.map(OrganisationResource::getId).orElse(-1L));
+        if(null != sectionsMarkedAsComplete) {
             completedSectionsByOrganisation.forEach((key, values) -> sectionsMarkedAsComplete.retainAll(values));
-        } else {
-            sectionsMarkedAsComplete = null;
         }
 
         model.addAttribute("completedSectionsByOrganisation", completedSectionsByOrganisation);

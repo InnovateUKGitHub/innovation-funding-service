@@ -302,9 +302,9 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
 
         allGlobalRoleUsers.forEach(user -> {
             if (user.equals(projectFinanceUser()) || user.equals(compAdminUser())) {
-                assertTrue(rules.internalUserCanViewSendGrantOfferLetterStatus(project, user));
+                assertTrue(rules.internalAdminUserCanViewSendGrantOfferLetterStatus(project, user));
             } else {
-                assertFalse(rules.internalUserCanViewSendGrantOfferLetterStatus(project, user));
+                assertFalse(rules.internalAdminUserCanViewSendGrantOfferLetterStatus(project, user));
             }
         });
     }

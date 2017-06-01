@@ -11,7 +11,9 @@ import java.util.Optional;
  */
 public interface CompetitionInviteRestService {
 
-    RestResult<AssessorInviteToSendResource> getCreated(long inviteId);
+    RestResult<AssessorInviteToSendResource> getCreatedInviteToSend(long inviteId);
+
+    RestResult<AssessorInviteToSendResource> getInviteToSend(long inviteId);
 
     RestResult<CompetitionInviteResource> getInvite(String inviteHash);
 
@@ -42,4 +44,6 @@ public interface CompetitionInviteRestService {
     RestResult<Void> deleteInvite(String email, long competitionId);
 
     RestResult<Void> sendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource);
+
+    RestResult<Void> resendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource);
 }

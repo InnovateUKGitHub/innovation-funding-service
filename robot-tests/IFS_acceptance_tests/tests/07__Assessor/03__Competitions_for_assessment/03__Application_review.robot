@@ -14,7 +14,7 @@ Documentation     INFUND-3780: As an Assessor I want the system to autosave my w
 ...               INFUND-6281 As an Assessor I want to see specific scoring guidance text for each application question so that I can score the question accurately
 ...
 ...               INFUND-8065 File download links are broken for assessors
-Suite Setup       guest user log-in    paul.plum@gmail.com    Passw0rd
+Suite Setup       guest user log-in    &{assessor_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
@@ -23,7 +23,7 @@ Resource          ../../../resources/defaultResources.robot
 Navigation using previous button
     [Documentation]    INFUND-4264
     [Tags]    HappyPath
-    Given the user clicks the button/link    link=Sustainable living models for the future
+    Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And The user clicks the button/link    link=Products and Services Personalised
     When the user clicks the button/link    link=4. Economic benefit
     Then the user should see the text in the page    Economic benefit
@@ -50,7 +50,7 @@ Project details sections should not be scorable
     And the user should see the text in the page    This is the applicant response for public description.
     Then the user should not see the text in the page    Question score
     And the user clicks the button/link    jQuery=span:contains(Next)
-    And the user should see the text in the page    This is the applicant response for scope.
+    And the user should see the text in the page    This is the applicant response for how does your project align with the scope of this competition?.
     Then the user should not see the text in the page    Question score
 
 Application questions should be scorable
@@ -58,43 +58,43 @@ Application questions should be scorable
     [Tags]
     When the user clicks the button/link    jQuery=span:contains(Next)
     And The user should see the text in the page    What is the business opportunity that your project addresses?
-    And the user should see the text in the page    This is the applicant response for business opportunity.
+    And the user should see the text in the page    This is the applicant response for what is the business opportunity that your project addresses?.
     Then The user should see the element    jQuery=label:contains(Question score)
     When the user clicks the button/link    jQuery=span:contains(Next)
     And The user should see the text in the page    What is the size of the potential market for your project
-    And the user should see the text in the page    This is the applicant response for potential market.
+    And the user should see the text in the page    This is the applicant response for what is the size of the potential market for your project?.
     Then The user should see the element    jQuery=label:contains(Question score)
     When the user clicks the button/link    jQuery=span:contains(Next)
     And The user should see the text in the page    How will you exploit and market your project?
-    And the user should see the text in the page    This is the applicant response for project exploitation.
+    And the user should see the text in the page    This is the applicant response for how will you exploit and market your project?.
     Then The user should see the element    jQuery=label:contains(Question score)
     When the user clicks the button/link    jQuery=span:contains(Next)
     And The user should see the text in the page    What economic, social and environmental benefits do you expect
-    And the user should see the text in the page    This is the applicant response for economic benefit.
+    And the user should see the text in the page    This is the applicant response for what economic, social and environmental benefits do you expect your project to deliver and when?.
     Then The user should see the element    jQuery=label:contains(Question score)
     When the user clicks the button/link    jQuery=span:contains(Next)
     And The user should see the text in the page    What technical approach will you use and how will you manage your project?
-    And the user should see the text in the page    This is the applicant response for technical approach.
+    And the user should see the text in the page    This is the applicant response for what technical approach will you use and how will you manage your project?.
     Then The user should see the element    jQuery=label:contains(Question score)
     When the user clicks the button/link    jQuery=span:contains(Next)
     And The user should see the text in the page    What is innovative about your project
-    And the user should see the text in the page    This is the applicant response for innovation.
+    And the user should see the text in the page    This is the applicant response for what is innovative about your project?.
     Then The user should see the element    jQuery=label:contains(Question score)
     When the user clicks the button/link    jQuery=span:contains(Next)
     And The user should see the text in the page    What are the risks
-    And the user should see the text in the page    This is the applicant response for risks.
+    And the user should see the text in the page    This is the applicant response for what are the risks (technical, commercial and environmental) to your project's success? what is your risk management strategy?.
     Then The user should see the element    jQuery=label:contains(Question score)
     When the user clicks the button/link    jQuery=span:contains(Next)
     And The user should see the text in the page    Does your project team have the skills,
-    And the user should see the text in the page    This is the applicant response for project team.
+    And the user should see the text in the page    This is the applicant response for does your project team have the skills, experience and facilities to deliver this project?.
     Then The user should see the element    jQuery=label:contains(Question score)
     When the user clicks the button/link    jQuery=span:contains(Next)
     And The user should see the text in the page    What will your project cost
-    And the user should see the text in the page    This is the applicant response for funding.
+    And the user should see the text in the page    This is the applicant response for what will your project cost?.
     Then The user should see the element    jQuery=label:contains(Question score)
     When the user clicks the button/link    jQuery=span:contains(Next)
     And The user should see the text in the page    How does financial support from Innovate UK
-    And the user should see the text in the page    This is the applicant response for adding value.
+    And the user should see the text in the page    This is the applicant response for how does financial support from innovate uk and its funding partners add value?.
     Then The user should see the element    jQuery=label:contains(Question score)
     [Teardown]    the user clicks the button/link    link=Back to your assessment overview
 
@@ -194,7 +194,7 @@ Status of the application should be In Progress
     [Documentation]    INFUND-6358
     [Tags]
     [Setup]    The user navigates to the page    ${assessor_dashboard_url}
-    When The user clicks the button/link    link=Sustainable living models for the future
+    When The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     Then The user should see the text in the page    In progress
 
 *** Keywords ***
