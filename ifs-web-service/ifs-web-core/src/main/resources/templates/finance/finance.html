@@ -65,7 +65,7 @@
                                th:checked="${size.id == model.organisationFinanceSize}"
                                required="required"
                                th:attr="data-required-errormessage=#{APPLICATION_ORGANISATION_SIZE_REQUIRED}"/>
-                               <label class="block-label selection-button-radio" th:for="'financePosition-organisationSize-'+${size.id}" th:text="${size.description}">Label</label>
+                        <label th:for="'financePosition-organisationSize-'+${size.id}" th:text="${size.description}">Label</label>
                     </div>
                 </fieldset>
             </div>
