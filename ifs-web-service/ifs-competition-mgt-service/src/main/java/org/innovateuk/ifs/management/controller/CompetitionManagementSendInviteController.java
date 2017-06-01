@@ -52,7 +52,7 @@ public class CompetitionManagementSendInviteController {
         ));
 
         if (!bindingResult.hasErrors()) {
-            populateFormWithExistingValues(form, invites);
+            populateGroupInviteFormWithExistingValues(form, invites);
         }
 
         return "assessors/send-invites";
@@ -122,6 +122,11 @@ public class CompetitionManagementSendInviteController {
     }
 
     private void populateFormWithExistingValues(SendInviteForm form, AssessorInvitesToSendResource assessorInviteToSendResource) {
+        form.setSubject(format("Invitation to assess '%s'", assessorInviteToSendResource.getCompetitionName()));
+        form.setContent(assessorInviteToSendResource.getContent());
+    }
+
+    private void populateGroupInviteFormWithExistingValues(SendInviteForm form, AssessorInvitesToSendResource assessorInviteToSendResource) {
         form.setSubject(format("Invitation to assess '%s'", assessorInviteToSendResource.getCompetitionName()));
     }
 }

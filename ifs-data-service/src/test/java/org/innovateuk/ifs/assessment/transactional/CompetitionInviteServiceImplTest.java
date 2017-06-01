@@ -38,6 +38,7 @@ import java.util.Optional;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static java.lang.Boolean.TRUE;
+import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Arrays.asList;
@@ -49,7 +50,7 @@ import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.invite.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
-import static org.innovateuk.ifs.assessment.transactional.CompetitionInviteServiceImpl.Notifications.INVITE_ASSESSOR;
+import static org.innovateuk.ifs.assessment.transactional.CompetitionInviteServiceImpl.Notifications.INVITE_ASSESSOR_GROUP;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -232,14 +233,15 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         CompetitionInvite invite = setUpCompetitionInvite(competition, email, name, CREATED, innovationArea, null);
 
         Map<String, Object> expectedNotificationArguments = asMap(
-                "competitionName", competition.getName(),
+                "name", name,
+                "competitionName", "my competition",
                 "acceptsDate", acceptsDate.format(ofPattern("dd MMMM yyyy")),
-                "deadlineDate", deadlineDate.format(ofPattern("dd MMMM yyyy"))
-        );
+                "deadlineDate", deadlineDate.format(ofPattern("dd MMMM yyyy")),
+                "inviteUrl", format("%s/invite/competition/%s", "https://ifs-local-dev/assessment", invite.getHash()));
 
         NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
 
-        String templatePath = "invite_assessor_preview_text.txt";
+        String templatePath = "invite_assessor_editable_text.txt";
 
         when(competitionInviteRepositoryMock.findOne(invite.getId())).thenReturn(invite);
         when(notificationTemplateRendererMock.renderTemplate(systemNotificationSourceMock, notificationTarget, templatePath,
@@ -279,14 +281,15 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         CompetitionInvite invite = setUpCompetitionInvite(competition, email, name, SENT, innovationArea, null);
 
         Map<String, Object> expectedNotificationArguments = asMap(
-                "competitionName", competition.getName(),
+                "name", name,
+                "competitionName", "my competition",
                 "acceptsDate", acceptsDate.format(ofPattern("dd MMMM yyyy")),
-                "deadlineDate", deadlineDate.format(ofPattern("dd MMMM yyyy"))
-        );
+                "deadlineDate", deadlineDate.format(ofPattern("dd MMMM yyyy")),
+                "inviteUrl", format("%s/invite/competition/%s", "https://ifs-local-dev/assessment", invite.getHash()));
 
         NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
 
-        String templatePath = "invite_assessor_preview_text.txt";
+        String templatePath = "invite_assessor_editable_text.txt";
 
         when(competitionInviteRepositoryMock.findOne(invite.getId())).thenReturn(invite);
         when(notificationTemplateRendererMock.renderTemplate(systemNotificationSourceMock, notificationTarget, templatePath,
@@ -794,8 +797,8 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         NotificationTarget to2 = new ExternalUserNotificationTarget(names.get(1), emails.get(1));
 
         List<Notification> notifications = newNotification()
-                .withSource(from)
-                .withMessageKey(INVITE_ASSESSOR)
+                .withSource(from, from)
+                .withMessageKey(INVITE_ASSESSOR_GROUP, INVITE_ASSESSOR_GROUP)
                 .withTargets(singletonList(to1), singletonList(to2))
                 .withGlobalArguments(expectedNotificationArguments1, expectedNotificationArguments2)
                 .build(2);
@@ -890,13 +893,8 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         String email = "john@email.com";
         String name = "John Barnes";
 
-        Competition competition = newCompetition()
-                .withName("my competition")
-                .withAssessorAcceptsDate(ZonedDateTime.parse("2017-05-24T12:00:00+01:00"))
-                .withAssessorDeadlineDate(ZonedDateTime.parse("2017-05-30T12:00:00+01:00"))
-                .build();
-
-        CompetitionInvite invite = setUpCompetitionInvite(competition, email, name, SENT, null, newUser().build());
+        CompetitionInvite invite = setUpCompetitionInvite(newCompetition().withName("my competition").build(), email, name, SENT, null, newUser()
+                .build());
 
         competitionParticipant = newCompetitionParticipant().withInvite(invite).build();
 
@@ -904,13 +902,8 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         Map<String, Object> expectedNotificationArguments = asMap(
                 "subject", assessorInviteSendResource.getSubject(),
-                "name", invite.getName(),
-                "competitionName", invite.getTarget().getName(),
-                "acceptsDate", "24 May 2017",
-                "deadlineDate", "30 May 2017",
-                "inviteUrl", "https://ifs-local-dev/assessment/invite/competition/" + invite.getHash(),
-                "customTextPlain", "content",
-                "customTextHtml", "content"
+                "bodyPlain", "content",
+                "bodyHtml", "content"
         );
 
         SystemNotificationSource from = systemNotificationSourceMock;

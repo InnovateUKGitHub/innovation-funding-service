@@ -76,15 +76,16 @@ public class CompetitionManagementSendInviteControllerTest extends BaseControlle
                 .withRecipients(singletonList("Jessica Doe"))
                 .withCompetitionId(1L)
                 .withCompetitionName("Photonics for health")
-                .withContent("Readonly content")
+                .withContent("Editable content...")
                 .build();
 
         when(competitionInviteRestService.getInviteToSend(inviteId)).thenReturn(restSuccess(invite));
 
         SendInviteForm expectedForm = new SendInviteForm();
         expectedForm.setSubject("Invitation to assess 'Photonics for health'");
+        expectedForm.setContent("Editable content...");
 
-        SendInviteViewModel expectedViewModel = new SendInviteViewModel(competitionId, inviteId, "Photonics for health", "Jessica Doe", "Readonly content");
+        SendInviteViewModel expectedViewModel = new SendInviteViewModel(competitionId, inviteId, "Photonics for health", "Jessica Doe", "Editable content...");
 
         mockMvc.perform(get("/competition/{competitionId}/assessors/invite/{inviteId}/resend", competitionId, inviteId))
                 .andExpect(status().isOk())

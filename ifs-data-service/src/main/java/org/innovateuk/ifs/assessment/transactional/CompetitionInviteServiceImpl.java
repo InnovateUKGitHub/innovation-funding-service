@@ -125,7 +125,8 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     private String webBaseUrl;
 
     enum Notifications {
-        INVITE_ASSESSOR
+        INVITE_ASSESSOR,
+        INVITE_ASSESSOR_GROUP
     }
 
     @Override
@@ -152,16 +153,30 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                         singletonList(invite.getName()),
                         invite.getTarget().getId(),
                         invite.getTarget().getName(),
-                        getInvitePreviewContent(invite.getTarget())
+                        getInviteContent(invite)
                 ))
         );
+    }
+
+    private String getInviteContent(CompetitionInvite invite) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
+        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
+        Competition competition = invite.getTarget();
+
+        return getInviteContent(notificationTarget, asMap(
+                "competitionName", competition.getName(),
+                "acceptsDate", competition.getAssessorAcceptsDate().format(formatter),
+                "deadlineDate", competition.getAssessorDeadlineDate().format(formatter),
+                "name", invite.getName(),
+                "inviteUrl", format("%s/invite/competition/%s", webBaseUrl + WEB_CONTEXT, invite.getHash())
+        ));
     }
 
     private String getInvitePreviewContent(Competition competition) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
         NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
 
-        return getInviteContent(notificationTarget, asMap(
+        return getInvitePreviewContent(notificationTarget, asMap(
                 "competitionName", competition.getName(),
                 "acceptsDate", competition.getAssessorAcceptsDate().format(formatter),
                 "deadlineDate", competition.getAssessorDeadlineDate().format(formatter)
@@ -465,7 +480,8 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                                 formatter,
                                 customTextPlain,
                                 customTextHtml,
-                                invite
+                                invite,
+                                Notifications.INVITE_ASSESSOR_GROUP
                         );
                     }
             ));
@@ -475,33 +491,41 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     @Override
     public ServiceResult<Void> resendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource) {
         return getParticipantByInviteId(inviteId)
-                .andOnSuccess(participant -> {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
-
-                    String customTextPlain = stripHtml(assessorInviteSendResource.getContent());
-                    String customTextHtml = plainTextToHtml(customTextPlain);
-
-                    return sendInviteNotification(
-                            assessorInviteSendResource.getSubject(),
-                            formatter,
-                            customTextPlain,
-                            customTextHtml,
-                            participant.getInvite().sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now())
-                    );
-                })
+                .andOnSuccess(participant ->
+                        resendInviteNotification( participant.getInvite().sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now()), assessorInviteSendResource)
+                )
                 .andOnSuccessReturnVoid();
+    }
+
+    private ServiceResult<Notification> resendInviteNotification(CompetitionInvite invite, AssessorInviteSendResource assessorInviteSendResource) {
+        // Strip any HTML that may have been added to the content by the user.
+        String bodyPlain = stripHtml(assessorInviteSendResource.getContent());
+
+        // HTML'ify the plain content to add line breaks.
+        String bodyHtml = plainTextToHtml(bodyPlain);
+
+        NotificationTarget recipient = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
+        Notification notification = new Notification(systemNotificationSource, singletonList(recipient),
+                Notifications.INVITE_ASSESSOR, asMap(
+                "subject", assessorInviteSendResource.getSubject(),
+                "bodyPlain", bodyPlain,
+                "bodyHtml", bodyHtml
+        ));
+
+        return notificationSender.sendNotification(notification);
     }
 
     private ServiceResult<Void> sendInviteNotification(String subject,
                                                        DateTimeFormatter formatter,
                                                        String customTextPlain,
                                                        String customTextHtml,
-                                                       CompetitionInvite invite) {
+                                                       CompetitionInvite invite,
+                                                       Notifications notificationType) {
         NotificationTarget recipient = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
         Notification notification = new Notification(
                 systemNotificationSource,
                 recipient,
-                Notifications.INVITE_ASSESSOR,
+                notificationType,
                 asMap(
                         "subject", subject,
                         "name", invite.getName(),
@@ -546,6 +570,11 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     private String getInviteContent(NotificationTarget notificationTarget, Map<String, Object> arguments) {
+        return renderer.renderTemplate(systemNotificationSource, notificationTarget, "invite_assessor_editable_text.txt",
+                arguments).getSuccessObject();
+    }
+
+    private String getInvitePreviewContent(NotificationTarget notificationTarget, Map<String, Object> arguments) {
         return renderer.renderTemplate(systemNotificationSource, notificationTarget, "invite_assessor_preview_text.txt",
                 arguments).getSuccessObject();
     }
