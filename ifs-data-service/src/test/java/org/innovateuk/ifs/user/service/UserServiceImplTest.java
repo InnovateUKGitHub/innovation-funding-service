@@ -37,7 +37,7 @@ import static org.mockito.Mockito.*;
  */
 public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
-    private static final String webBaseUrl = "baseUrl";
+    private static final String WEB_BASE_URL = "baseUrl";
 
     @Captor
     ArgumentCaptor<Notification> notificationArgumentCaptor;
@@ -255,7 +255,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Override
     protected UserService supplyServiceUnderTest() {
         UserServiceImpl spendProfileService = new UserServiceImpl();
-        ReflectionTestUtils.setField(spendProfileService, "webBaseUrl", webBaseUrl);
+        ReflectionTestUtils.setField(spendProfileService, "webBaseUrl", WEB_BASE_URL);
         return spendProfileService;
     }
 }
