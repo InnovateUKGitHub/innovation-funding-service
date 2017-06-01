@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 /**
@@ -34,7 +34,7 @@ public class SecuredMethodsAdvice extends AbstractIfsMethodsAdvice {
             PostFilter.class, PreFilter.class, PreAuthorize.class, PostAuthorize.class);
 
     private static final BiFunction<Method, Class, Boolean> FILTER =
-            (m, c) -> simpleFilterNot(SECURED_ANNOTATIONS, a -> findAnnotation(m, a) == null).isEmpty();
+            (m, c) -> !simpleFilter(SECURED_ANNOTATIONS, a -> findAnnotation(m, a) != null).isEmpty();
 
     @Autowired
     public SecuredMethodsAdvice(final SecuredMethodsInStackCountInterceptor interceptor) {
