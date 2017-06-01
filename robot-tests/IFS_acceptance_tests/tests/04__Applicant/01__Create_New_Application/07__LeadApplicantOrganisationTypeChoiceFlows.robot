@@ -17,9 +17,9 @@ User can choose RTO organisation when both organisation types are allowed
     Given the user fills out the organisation form for a competition with choice for organisation types
     And the user submits the organisation details form
     When the user chooses the RTO organisation type
-    Then The user should see the text in the page    You can only lead an application as an RTO if both the following rules are met
+    Then the user should see the text in the element  css=#rto-guidance h2  You can only lead an application as an RTO if both the following rules are met:
     And the user clicks the button/link    jQuery=button:contains("Save and continue")
-    And The user should see the text in the page    Confirm your organisation
+    And the user should see the text in the element  css=h2  Confirm your organisation
 
 User organisation type is selected by default when Business is the only allowed type
     [Documentation]    IFS-47
