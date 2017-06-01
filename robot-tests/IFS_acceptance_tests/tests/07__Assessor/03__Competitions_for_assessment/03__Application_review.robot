@@ -23,7 +23,7 @@ Resource          ../../../resources/defaultResources.robot
 Navigation using previous button
     [Documentation]    INFUND-4264
     [Tags]    HappyPath
-    Given the user clicks the button/link    link=Sustainable living models for the future
+    Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And The user clicks the button/link    link=Products and Services Personalised
     When the user clicks the button/link    link=4. Economic benefit
     Then the user should see the text in the page    Economic benefit
@@ -194,7 +194,7 @@ Status of the application should be In Progress
     [Documentation]    INFUND-6358
     [Tags]
     [Setup]    The user navigates to the page    ${assessor_dashboard_url}
-    When The user clicks the button/link    link=Sustainable living models for the future
+    When The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     Then The user should see the text in the page    In progress
 
 *** Keywords ***

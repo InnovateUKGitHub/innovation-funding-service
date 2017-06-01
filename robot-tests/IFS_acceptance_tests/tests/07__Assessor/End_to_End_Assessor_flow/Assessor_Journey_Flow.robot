@@ -30,7 +30,7 @@ Invited User gets an email to assess the competition
     [Documentation]    INFUND-8092
     [Tags]
     [Setup]    The guest user opens the browser
-    User reads the email and clicks the link to accept the assessment    ${Assessor_e2e["email"]}    Invitation to assess 'Sustainable living models for the future'    Assessment period:
+    User reads the email and clicks the link to accept the assessment    ${Assessor_e2e["email"]}    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'    Assessment period:
     [Teardown]    Delete the emails from both test mailboxes
 
 Resend the invite to the assessor again
