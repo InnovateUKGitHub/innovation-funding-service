@@ -8,11 +8,11 @@ import org.innovateuk.ifs.competition.service.CompetitionsRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.publiccontent.service.ContentGroupRestService;
 import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
+import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
-import java.time.ZonedDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -66,6 +66,11 @@ public class CompetitionServiceImpl implements CompetitionService {
                 .stream()
                 .filter(competition -> competition.getCompetitionStatus() == null || !competition.getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrganisationTypeResource> getOrganisationTypes(long id) {
+        return competitionsRestService.getCompetitionOrganisationType(id).getSuccessObjectOrThrowException();
     }
 
     @Override
