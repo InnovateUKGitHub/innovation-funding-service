@@ -110,13 +110,14 @@
             <table>
                 <thead>
                 <tr>
-                    <th scope="col" id="select-all" class="width-medium">
-                        <label class="block-label selection-button-checkbox" id="select-all-checkbox"
+                    <th scope="col" id="select-all">
+                        <label class="block-label selection-button-checkbox"
+                               id="select-all-checkbox"
                                aria-hidden="true">
                             <input type="checkbox"
                                    data-switches-button-status="[name=addSelected]"
                                    id="select-all-check" th:field="*{allSelected}"/>
-                            <span>Select&nbsp;all</span>
+                            <span class="invisible">Select&nbsp;all</span>
                         </label>
                         <span id="select-assessor-header" aria-hidden="false">Select assessor</span>
                     </th>
