@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.QuestionStatus;
+import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
 import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
@@ -19,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
@@ -37,6 +37,9 @@ public class FormInputResponsePermissionRules {
 
     @Autowired
     private FormInputRepository formInputRepository;
+
+    @Autowired
+    private QuestionStatusRepository questionStatusRepository;
 
     @PermissionRule(value = "READ", description = "The consortium can see the input responses of their organisation and application")
     public boolean consortiumCanSeeTheInputResponsesForTheirOrganisationAndApplication(final FormInputResponseResource response, final UserResource user) {
@@ -99,10 +102,7 @@ public class FormInputResponsePermissionRules {
 
     private List<QuestionStatus> getQuestionStatuses(FormInputResponseCommand responseCommand) {
         FormInput formInput = formInputRepository.findOne(responseCommand.getFormInputId());
-        List<QuestionStatus> questionStatuses = formInput.getQuestion().getQuestionStatuses();
-
-        return questionStatuses.stream()
-                .filter(questionStatus -> questionStatus.getApplication().getId().equals(responseCommand.getApplicationId())).collect(Collectors.toList());
+        return questionStatusRepository.findByQuestionIdAndApplicationId(formInput.getQuestion().getId(), responseCommand.getApplicationId());
     }
 
 

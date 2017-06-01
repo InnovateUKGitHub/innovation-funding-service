@@ -13,6 +13,9 @@ import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.user.domain.OrganisationType;
+import org.innovateuk.ifs.user.mapper.OrganisationTypeMapper;
+import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +33,8 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CAN
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
+
 /**
  * Service for operations around the usage and processing of Competitions
  */
@@ -45,6 +50,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     private CompetitionMapper competitionMapper;
 
     @Autowired
+    private OrganisationTypeMapper organisationTypeMapper;
+
+    @Autowired
     private ProjectRepository projectRepository;
 
     @Autowired
@@ -55,12 +63,12 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(Long id) {
-        Competition competition = competitionRepository.findById(id);
-        if (competition == null) {
-            return serviceFailure(notFoundError(Competition.class, id));
-        }
+        return find(competitionRepository.findById(id), notFoundError(Competition.class, id)).andOnSuccess(comp -> serviceSuccess(competitionMapper.mapToResource(comp)));
+    }
 
-        return serviceSuccess(competitionMapper.mapToResource(competition));
+    @Override
+    public ServiceResult<List<OrganisationTypeResource>> getCompetitionOrganisationTypes(long id) {
+        return find(competitionRepository.findById(id), notFoundError(OrganisationType.class, id)).andOnSuccess(comp -> serviceSuccess((List) organisationTypeMapper.mapToResource(comp.getLeadApplicantTypes())));
     }
 
     @Override

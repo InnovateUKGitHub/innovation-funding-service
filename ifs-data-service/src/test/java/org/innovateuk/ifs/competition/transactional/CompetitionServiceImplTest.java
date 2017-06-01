@@ -9,6 +9,8 @@ import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
+import org.innovateuk.ifs.user.domain.OrganisationType;
+import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.Page;
@@ -18,7 +20,6 @@ import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 
-import static java.time.LocalDateTime.now;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -26,6 +27,8 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
+import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
+import static org.innovateuk.ifs.user.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -368,5 +371,21 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         assertTrue(response.isSuccess());
         assertEquals(CompetitionStatus.FUNDERS_PANEL, competition.getCompetitionStatus());
+    }
+
+    @Test
+    public void getCompetitionOrganisationTypesById() throws Exception {
+        Long competitionId = 1L;
+        List<OrganisationType> organisationTypes  = newOrganisationType().build(2);
+        List<OrganisationTypeResource> organisationTypeResources = newOrganisationTypeResource().build(2);
+        Competition competition = new Competition();
+        competition.setLeadApplicantTypes(organisationTypes);
+
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
+        when(organisationTypeMapperMock.mapToResource(organisationTypes)).thenReturn(organisationTypeResources);
+
+        List<OrganisationTypeResource> response = service.getCompetitionOrganisationTypes(competitionId).getSuccessObjectOrThrowException();
+
+        assertEquals(organisationTypeResources, response);
     }
 }
