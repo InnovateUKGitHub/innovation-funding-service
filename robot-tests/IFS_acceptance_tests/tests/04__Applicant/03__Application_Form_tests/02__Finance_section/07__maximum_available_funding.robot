@@ -140,7 +140,7 @@ the applicant completes the application details
 Invite a non-existing collaborator
     the user should see the element       jQuery=h1:contains("Application overview")
     the user fills in the inviting steps  ${newUsersEmail}
-    newly invited collaborator can create account and sign in
+    newly invited collaborator can create account and sign in    ${UNTITLED_APPLICATION_NAME}
 
 the user fills in the inviting steps
     [Arguments]  ${email}
@@ -153,7 +153,8 @@ the user fills in the inviting steps
     logout as user
 
 Newly invited collaborator can create account and sign in
-    the user reads his email and clicks the link  ${newUsersEmail}  Invitation to collaborate in ${compWithGrowth}  You will be joining as part of the organisation  3
+    [Arguments]  ${Application_name}
+    the user reads his email and clicks the link  ${newUsersEmail}  Invitation to collaborate in ${Application_name}  You will be joining as part of the organisation  3
     the user clicks the button/link    jQuery=a:contains("Yes, accept invitation")
     the user should see the element    jquery=h1:contains("Choose your organisation type")
     the user completes the new account creation
