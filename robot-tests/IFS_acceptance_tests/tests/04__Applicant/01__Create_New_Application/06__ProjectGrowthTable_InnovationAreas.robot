@@ -20,7 +20,7 @@ Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
 *** Variables ***
 ${compWithoutGrowth}         FromCompToNewAppl without GrowthTable
 ${applicationWithoutGrowth}  NewApplFromNewComp without GrowthTable
-${compWITHGrowth}            All-Innov-Areas With GrowthTable
+${compWithGrowth}            All-Innov-Areas With GrowthTable
 ${applicationWithGrowth}     All-Innov-Areas Application With GrowthTable
 ${newUsersEmail}             liam@innovate.com
 
@@ -107,7 +107,7 @@ Once the project growth table is selected
     Given the user navigates to the page    ${CA_UpcomingComp}
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
     # For the testing of story IFS-40, turning this competition into Sector with All innovation areas
-    Then the user fills in the Open-All Initial details  ${compWITHGrowth}  ${month}  ${nextyear}
+    Then the user fills in the Open-All Initial details  ${compWithGrowth}  ${month}  ${nextyear}
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility
     And the user fills in the CS Milestones  ${month}  ${nextMonth}  ${nextyear}
@@ -120,13 +120,13 @@ Once the project growth table is selected
     And the user should see the element    jQuery=div:contains("Public content") ~ .task-status-complete
     When the user clicks the button/link    jQuery=a:contains("Save")
     And the user navigates to the page    ${CA_UpcomingComp}
-    Then the user should see the element    jQuery=h2:contains("Ready to open") ~ ul a:contains("${compWITHGrowth}")
-    [Teardown]    The competitions date changes so it is now Open    ${compWITHGrowth}
+    Then the user should see the element    jQuery=h2:contains("Ready to open") ~ ul a:contains("${compWithGrowth}")
+    [Teardown]    The competitions date changes so it is now Open    ${compWithGrowth}
 
 As next step the Applicant cannot see the turnover field
     [Documentation]    INFUND-6393, INFUND-6395
     [Tags]    MySQL
-    Given Lead Applicant applies to the new created competition    ${compWITHGrowth}
+    Given Lead Applicant applies to the new created competition    ${compWithGrowth}
     When the user clicks the button/link    link=Your finances
     And the user clicks the button/link    link=Your organisation
     Then the user should not see the text in the page    Turnover (£)
@@ -309,9 +309,9 @@ Invite Collaborator in Application with Growth table
     [Documentation]    INFUND-8518 INFUND-8561
     [Tags]  Email  MySQL
     [Setup]
-    Given the lead applicant invites an existing user  ${compWITHGrowth}  ${collaborator1_credentials["email"]}
+    Given the lead applicant invites an existing user  ${compWithGrowth}  ${collaborator1_credentials["email"]}
     When guest user log-in  &{collaborator1_credentials}
-    Then the user reads his email and clicks the link  ${collaborator1_credentials["email"]}  Invitation to collaborate in ${compWITHGrowth}  You will be joining as part of the organisation  3
+    Then the user reads his email and clicks the link  ${collaborator1_credentials["email"]}  Invitation to collaborate in ${compWithGrowth}  You will be joining as part of the organisation  3
     When the user should see the element  jQuery=h2:contains("We have found an account with the invited email address")
     Then the user clicks the button/link  link=Continue or sign in
     And the user clicks the button/link   link=Confirm and accept invitation
@@ -479,7 +479,7 @@ the user fills in the inviting steps
     logout as user
 
 Newly invited collaborator can create account and sign in
-    the user reads his email and clicks the link  ${newUsersEmail}  Invitation to collaborate in ${compWITHGrowth}  You will be joining as part of the organisation  3
+    the user reads his email and clicks the link  ${newUsersEmail}  Invitation to collaborate in ${compWithGrowth}  You will be joining as part of the organisation  3
     the user clicks the button/link    jQuery=a:contains("Yes, accept invitation")
     the user should see the element    jquery=h1:contains("Choose your organisation type")
     the user completes the new account creation
