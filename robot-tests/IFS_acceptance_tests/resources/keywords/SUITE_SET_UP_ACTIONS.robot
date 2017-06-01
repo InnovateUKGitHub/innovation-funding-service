@@ -251,7 +251,7 @@ the user enters the details and clicks the create account
     Input Text    id=lastName       ${last_name}
     Input Text    id=phoneNumber    23232323
     Input Text    id=email          ${REG_EMAIL}
-    Input Password    id=password    Passw0rd123
+    Input Password    id=password    ${correct_password}
     the user selects the checkbox    termsAndConditions
     the user selects the checkbox    allowMarketingEmails
     Submit Form
@@ -261,7 +261,7 @@ the user fills the create account form
     Input Text    id=firstName    ${NAME}
     Input Text    id=lastName    ${LAST_NAME}
     Input Text    id=phoneNumber    0612121212
-    Input Password    id=password    Passw0rd123
+    Input Password    id=password    ${correct_password}
     the user selects the checkbox    termsAndConditions
     the user clicks the button/link    jQuery=.button:contains("Create account")
 

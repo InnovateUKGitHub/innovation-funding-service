@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newInvite;
+import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.invite.builder.InviteResourceBuilder.newInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteResultResourceBuilder.newInviteResultResource;
@@ -45,7 +45,7 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
     public void testInviteCollaborators() {
         final int nInvites = 2;
         final String baseUrl = "test";
-        final List<ApplicationInvite> invites = newInvite().build(nInvites);
+        final List<ApplicationInvite> invites = newApplicationInvite().build(nInvites);
         classUnderTest.inviteCollaborators(baseUrl, invites);
         verify(invitePermissionRules, times(nInvites)).leadApplicantCanInviteToTheApplication(any(ApplicationInvite.class), any(UserResource.class));
         verify(invitePermissionRules, times(nInvites)).collaboratorCanInviteToApplicationForTheirOrganisation(any(ApplicationInvite.class), any(UserResource.class));
@@ -54,7 +54,7 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
     @Test
     public void testInviteCollaboratorToApp() {
         final String baseUrl = "test";
-        final ApplicationInvite invite = newInvite().build();
+        final ApplicationInvite invite = newApplicationInvite().build();
         assertAccessDenied(
                 () -> classUnderTest.inviteCollaboratorToApplication(baseUrl, invite),
                 () -> {
@@ -122,7 +122,7 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
 
         @Override
         public ServiceResult<ApplicationInvite> findOne(Long id) {
-            return serviceSuccess(newInvite().build());
+            return serviceSuccess(newApplicationInvite().build());
         }
 
         @Override

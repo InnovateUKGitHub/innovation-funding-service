@@ -22,6 +22,8 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...               INFUND-7345 As an internal user I want to be able to view resubmitted documents in the "Other Documents" section of Project Setup so that they can be reviewed again for approval
 ...
 ...               INFUND-5490 document upload non-user
+...
+...               IFS-218 After rejection of mandatory documents, lead partner has a submit button
 Suite Setup       the project is completed if it is not already complete
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -321,14 +323,16 @@ CompAdmin rejects other documents
 
 
 Partners can see the documents rejected
-    [Documentation]    INFUND-5559, INFUND-5424, INFUND-7342
+    [Documentation]    INFUND-5559, INFUND-5424, INFUND-7342, IFS-218
     [Tags]
     Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}  #Project Manager
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
     Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.")
+    And the user should see the element  jQuery=.button:contains("Submit documents")
     Given log in as a different user    &{lead_applicant_credentials}
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
     Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.")
+    And the user should not see the element  jQuery=.button:contains("Submit documents")
     Given log in as a different user   &{collaborator2_credentials}
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
     Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.")
@@ -639,15 +643,5 @@ the user should see the file without error
     the user goes back to the previous page
 
 partners submit bank details
-    partner submits his bank details   ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}
-    partner submits his bank details   ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}
-
-partner submits his bank details
-    [Arguments]  ${user}
-    log in as a different user            ${user}  ${short_password}
-    the user navigates to the page        ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/bank-details
-    the user enters text to a text field  id=bank-acc-number  ${account_number}
-    the user enters text to a text field  id=bank-sort-code  ${sort_code}
-    the user selects the radio button     addressType    REGISTERED
-    the user clicks the button/link       jQuery=.button:contains("Submit bank account details")
-    the user clicks the button/link       jQuery=.button:contains("Submit")
+    partner submits his bank details   ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
+    partner submits his bank details   ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}

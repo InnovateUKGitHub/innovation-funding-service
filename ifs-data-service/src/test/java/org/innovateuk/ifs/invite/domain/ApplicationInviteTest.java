@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
 
 public class ApplicationInviteTest {
@@ -30,14 +31,15 @@ public class ApplicationInviteTest {
         inviteOrganisation = newInviteOrganisation().build();
         status = InviteStatus.OPENED;
 
-        setInvite = new ApplicationInvite();
-        setInvite.setId(inviteId);
-        setInvite.setName(name);
-        setInvite.setEmail(email);
-        setInvite.setTarget(application);
-        setInvite.setHash(hash);
-        setInvite.setInviteOrganisation(inviteOrganisation);
-        setInvite.setStatus(status);
+        setInvite = newApplicationInvite()
+                .withId(inviteId)
+                .withName(name)
+                .withEmail(email)
+                .withApplication(application)
+                .withHash(hash)
+                .withInviteOrganisation(inviteOrganisation)
+                .withStatus(status)
+                .build();
 
         constructedInvite = new ApplicationInvite(name, email, application, inviteOrganisation, hash, status);
     }
