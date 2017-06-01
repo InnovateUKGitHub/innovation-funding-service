@@ -18,10 +18,10 @@ Resource          ../FinanceSection_Commons.robot
 Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Variables ***
-${compWithoutGrowth}         FromCompToNewAppl without GrowthT
-${applicationWithoutGrowth}  NewApplFromNewComp without GrowthT
-${compWITHGrowth}            All-Innov-Areas With GrowthT
-${applicationWithGrowth}     All-Innov-Areas Application With GrowthT
+${compWithoutGrowth}         FromCompToNewAppl without GrowthTable
+${applicationWithoutGrowth}  NewApplFromNewComp without GrowthTable
+${compWITHGrowth}            All-Innov-Areas With GrowthTable
+${applicationWithGrowth}     All-Innov-Areas Application With GrowthTable
 ${newUsersEmail}             liam@innovate.com
 
 *** Test Cases ***
@@ -50,7 +50,7 @@ Comp Admin fills in the Milestone Dates and can see them formatted afterwards
 Application Finances should not include project growth
     [Documentation]    INFUND-6393
     [Tags]
-    Given the user decides about the growth table    no    No
+    The user decides about the growth table    no    No
 
 Comp admin completes ths competition setup
     [Documentation]    INFUND-6393
@@ -89,7 +89,7 @@ Applicant visits his Finances
 Applicant fills in the Application Details
     [Documentation]    INFUND-6895 INFUND-9151
     [Tags]    HappyPath
-    Given the user fills in the Application details  ${applicationWithoutGrowth}
+    The user fills in the Application details  ${applicationWithoutGrowth}
 
 Turnover and Staff count fields
     [Documentation]    INFUND-6393
@@ -180,14 +180,14 @@ Mark Organisation as complete when no
 The Lead applicant is able to edit and re-submit when no
     [Documentation]    INFUND-8518
     [Tags]
-    Given the user can edit resubmit and read only of the organisation
+    The user can edit resubmit and read only of the organisation
 
 Funding subsection opens when Appl details and organisation info are provided
     [Documentation]    INFUND-6895
     [Tags]    HappyPath
-    [Setup]    the user navigates to the page    ${dashboard_url}
+    Given the user navigates to the page   ${dashboard_url}
     And the user clicks the button/link    link=${applicationWithoutGrowth}
-    When the user should see the element    jQuery=li:contains("Application details") > .task-status-complete
+    When the user should see the element   jQuery=li:contains("Application details") > .task-status-complete
     And the user clicks the button/link    link=Your finances
     And the user should see the element    jQuery=li:contains("Your organisation") > .task-status-complete
     Then the user should see the element    jQuery=li:contains("Your funding") > .action-required
@@ -470,12 +470,12 @@ Invite a non-existing collaborator in Application with Growth table
 
 the user fills in the inviting steps
     [Arguments]  ${email}
-    the user clicks the button/link    link=view team members and add collaborators
-    the user clicks the button/link    link=Add partner organisation
-    Input Text  css=#organisationName  New Organisation's Name
-    Input Text  css=input[id="applicants0.name"]  Partner's name
-    Input Text  css=input[id="applicants0.email"]  ${email}
-    the user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
+    the user clicks the button/link       link=view team members and add collaborators
+    the user clicks the button/link       link=Add partner organisation
+    the user enters text to a text field  css=#organisationName  New Organisation's Name
+    the user enters text to a text field  css=input[id="applicants0.name"]  Partner's name
+    the user enters text to a text field  css=input[id="applicants0.email"]  ${email}
+    the user clicks the button/link       jQuery=button:contains("Add organisation and invite applicants")
     logout as user
 
 Newly invited collaborator can create account and sign in
