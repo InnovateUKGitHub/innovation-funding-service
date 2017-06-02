@@ -89,14 +89,30 @@
 <!-- =================== Public content section - Summary  ========================================================= -->
 <div th:fragment="section-summary(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:if="${model.readOnly}">
-        <dl class="readonly-data">
-            <dt>Competition description</dt>
-            <dd><div class="wysiwyg-styles" ifs:utext="${form.description}"></div></dd>
-            <dt>Funding type</dt>
-            <dd th:text="${form.fundingType}"></dd>
-            <dt>Project size</dt>
-            <dd th:text="${form.projectSize}"></dd>
-        </dl>
+        <div class="grid-row extra-margin-bottom">
+            <div class="column-third">
+                <h2 class="heading-medium no-margin">Description</h2>
+            </div>
+            <div class="column-two-thirds">
+                <div class="wysiwyg-styles extra-margin-bottom" ifs:utext="${form.description}"></div>
+            </div>
+        </div>
+        <div class="grid-row extra-margin-bottom">
+            <div class="column-third">
+                <h2 class="heading-medium no-margin">Funding type</h2>
+            </div>
+            <div class="column-two-thirds">
+                <p th:text="${form.fundingType}"></p>
+            </div>
+        </div>
+        <div class="grid-row extra-margin-bottom">
+            <div class="column-third">
+                <h2 class="heading-medium no-margin">Project size</h2>
+            </div>
+            <div class="column-two-thirds">
+                <p th:text="${form.projectSize}"></p>
+            </div>
+        </div>
         <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
@@ -176,24 +192,32 @@
 
 <!-- =================== Public content section - Dates  =========================================================== -->
 <div th:fragment="section-dates(model, form)" xmlns:th="http://www.w3.org/1999/html">
-    <div th:if="${model.readOnly}" class="readonly-data">
-        <dl>
-            <th:block th:each="event : ${model.sortedEvents}">
-                <dt th:text="${event.dateTimeFormatted}"></dt>
-                <dd ifs:utext="${event.content}" class="wysiwyg-styles extra-margin-bottom"></dd>
-            </th:block>
-        </dl>
-    </div>
+    <th:block th:if="${model.readOnly}">
+        <th:block th:each="event : ${model.sortedEvents}">
+            <div class="grid-row extra-margin-bottom">
+                <div class="column-third">
+                    <h2 class="heading-medium no-margin" th:text="${event.dateTimeFormatted}"></h2>
+                </div>
+                <div class="column-two-thirds">
+                    <div class="wysiwyg-styles extra-margin-bottom" ifs:utext="${event.content}"></div>
+                </div>
+            </div>
+        </th:block>
+    </th:block>
     <th:block th:unless="${model.readOnly}">
         <p>Text entered into this section will appear within the dates tab.</p>
         <hr />
         <p>Generated automatically from the competition milestones.</p>
-        <dl>
-            <th:block th:each="event : ${model.sortedEvents}">
-                <dt th:text="${event.dateTimeFormatted}"></dt>
-                <dd th:text="${event.content}" class="extra-margin-bottom"></dd>
-            </th:block>
-        </dl>
+        <th:block th:each="event : ${model.sortedEvents}">
+            <div class="grid-row extra-margin-bottom">
+                <div class="column-third">
+                    <h2 class="heading-medium no-margin" th:text="${event.dateTimeFormatted}"></h2>
+                </div>
+                <div class="column-two-thirds">
+                    <div class="wysiwyg-styles extra-margin-bottom" ifs:utext="${event.content}"></div>
+                </div>
+            </div>
+        </th:block>
         <th:block th:each="formDate, iteration : ${form.dates}" th:with="index=${iteration.index}">
             <div class="contentGroup" th:id="${'contentDateGroup-row-'+index}">
                 <div class="form-group" th:classappend="${#fields.hasErrors('dates[__${index}__].day') || #fields.hasErrors('dates[__${index}__].month') || #fields.hasErrors('dates[__${index}__].year')} ? 'error' : ''">
@@ -321,6 +345,7 @@
     </th:block>
 </div>
 
+<!-- =================== Public content group ==================================================== -->
 <div th:fragment="content-groups(form, model)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:each="contentGroup,iter: ${form.contentGroups}" th:with="index=${iter.index}">
         <div class="contentGroup" th:id="${'contentGroup-row-'+index}">
@@ -357,13 +382,20 @@
     </div>
 </div>
 
+<!-- =================== Public content group - Read only  ==================================================== -->
 <div th:fragment="content-groups-read-only(form, model)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:each="contentGroup: ${form.contentGroups}">
-        <h2 class="heading-small no-margin-bottom" th:text="${contentGroup.heading}"></h2>
-        <div class="wysiwyg-styles" ifs:utext="${contentGroup.content}"></div>
-        <th:block th:if="${model.hasAttachment(contentGroup.id)}">
-            <p><a th:href="@{/competition/setup/public-content/{sectionPath}/{compId}/edit/{groupId}(sectionPath=${model.section.type.path},compId=${model.competition.id},groupId=${contentGroup.id})}"
-                   th:text="${model.fileName(contentGroup.id)}">Filename.pdf</a></p>
-        </th:block>
+        <div class="grid-row extra-margin-bottom">
+            <div class="column-third">
+                <h2 class="heading-medium no-margin" th:text="${contentGroup.heading}"></h2>
+            </div>
+            <div class="column-two-thirds">
+                <div class="wysiwyg-styles" ifs:utext="${contentGroup.content}"></div>
+                <th:block th:if="${model.hasAttachment(contentGroup.id)}">
+                    <p><a th:href="@{/competition/setup/public-content/{sectionPath}/{compId}/edit/{groupId}(sectionPath=${model.section.type.path},compId=${model.competition.id},groupId=${contentGroup.id})}"
+                          th:text="${model.fileName(contentGroup.id)}">Filename.pdf</a></p>
+                </th:block>
+            </div>
+        </div>
     </th:block>
 </div>
