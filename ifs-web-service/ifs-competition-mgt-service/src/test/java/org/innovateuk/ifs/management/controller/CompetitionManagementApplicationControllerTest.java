@@ -1,23 +1,27 @@
 package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
+import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.management.form.ReinstateIneligibleApplicationForm;
 import org.innovateuk.ifs.management.model.ApplicationOverviewIneligibilityModelPopulator;
+import org.innovateuk.ifs.management.model.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.management.model.ReinstateIneligibleApplicationModelPopulator;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
 import org.innovateuk.ifs.management.viewmodel.ApplicationOverviewIneligibilityViewModel;
+import org.innovateuk.ifs.management.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.management.viewmodel.ReinstateIneligibleApplicationViewModel;
+import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.junit.Test;
@@ -36,6 +40,7 @@ import java.util.*;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeResourceBuilder.newIneligibleOutcomeResource;
@@ -48,8 +53,10 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
@@ -87,6 +94,10 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     @Spy
     @InjectMocks
     private ReinstateIneligibleApplicationModelPopulator reinstateIneligibleApplicationModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private ApplicationTeamModelPopulator applicationTeamModelPopulator;
 
     @Test
     public void displayApplicationOverview() throws Exception {
@@ -407,6 +418,85 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
                 .andExpect(view().name("competition-mgt-application-overview"));
 
         verify(applicationService).markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource));
+    }
+
+    @Test
+    public void showApplicationTeam() throws Exception {
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+        ApplicationTeamResource teamResource = new ApplicationTeamResource();
+        ApplicationTeamOrganisationResource leadOrg = new ApplicationTeamOrganisationResource();
+        leadOrg.setOrganisationName("lead");
+        AddressResource regAddress = newAddressResource().withAddressLine1("1").withAddressLine2("Floor 1").withAddressLine3("Polaris House").withCounty("Wilts").withPostcode("SN1 1AB").withTown("Swindon").build();
+        AddressResource opAddress = newAddressResource().withAddressLine1("A").withAddressLine2("Floor G").withAddressLine3("North Star House").withCounty("Somerset").withPostcode("TN1 1ZZ").withTown("Taunton").build();
+        OrganisationAddressResource regAddressResource = newOrganisationAddressResource().withAddress(regAddress).build();
+        OrganisationAddressResource opAddressResource = newOrganisationAddressResource().withAddress(opAddress).build();
+        leadOrg.setOperatingAddress(opAddressResource);
+        leadOrg.setRegisteredAddress(regAddressResource);
+        ApplicationTeamUserResource leaderUser = new ApplicationTeamUserResource();
+        leaderUser.setEmail("lee.der@email.com");
+        leaderUser.setName("Lee Der");
+        leaderUser.setPhoneNumber("0800 0800");
+        leaderUser.setLead(true);
+        leadOrg.setUsers(Collections.singletonList(leaderUser));
+        ApplicationTeamOrganisationResource partnerOrg = new ApplicationTeamOrganisationResource();
+        partnerOrg.setOrganisationName("Partner");
+        partnerOrg.setOperatingAddress(regAddressResource);
+        partnerOrg.setRegisteredAddress(opAddressResource);
+        ApplicationTeamUserResource partnerUser = new ApplicationTeamUserResource();
+        partnerUser.setEmail("pard.ner@email.com");
+        partnerUser.setName("Pard Ner");
+        partnerUser.setPhoneNumber("0900 9999");
+        partnerUser.setLead(false);
+        partnerOrg.setUsers(Collections.singletonList(partnerUser));
+        teamResource.setLeadOrganisation(leadOrg);
+        teamResource.setPartnerOrganisations(Collections.singletonList(partnerOrg));
+        when(applicationRestService.getApplicationById(applications.get(0).getId())).thenReturn(restSuccess(applications.get(0)));
+        when(applicationSummaryRestService.getApplicationTeam(applications.get(0).getId())).thenReturn(restSuccess(teamResource));
+        MvcResult mvcResult = mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "/team"))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("application/team-read-only"))
+                .andReturn();
+
+        ApplicationTeamViewModel resultModel = (ApplicationTeamViewModel) mvcResult.getModelAndView().getModel().get("model");
+        assertEquals(applications.get(0).getId().longValue(), resultModel.getApplicationId());
+        assertEquals(applications.get(0).getCompetition().longValue(), resultModel.getCompetitionId());
+        assertEquals(applications.get(0).getName(), resultModel.getApplicationName());
+        assertEquals("lead", resultModel.getTeam().getLeadOrganisation().getOrganisationName());
+        assertEquals("TN1 1ZZ", resultModel.getTeam().getLeadOrganisation().getOperatingAddress().getAddress().getPostcode());
+        assertEquals("SN1 1AB", resultModel.getTeam().getLeadOrganisation().getRegisteredAddress().getAddress().getPostcode());
+        assertEquals("TN1 1ZZ", resultModel.getTeam().getPartnerOrganisations().get(0).getRegisteredAddress().getAddress().getPostcode());
+        assertEquals("SN1 1AB", resultModel.getTeam().getPartnerOrganisations().get(0).getOperatingAddress().getAddress().getPostcode());
+        assertEquals("lee.der@email.com", resultModel.getTeam().getLeadOrganisation().getUsers().get(0).getEmail());
+        assertEquals("pard.ner@email.com", resultModel.getTeam().getPartnerOrganisations().get(0).getUsers().get(0).getEmail());
+        verify(applicationRestService).getApplicationById(applications.get(0).getId());
+        verify(applicationSummaryRestService).getApplicationTeam(applications.get(0).getId());
+    }
+
+    @Test
+    public void showApplicationTeamNoApplication() throws Exception {
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+
+        when(applicationRestService.getApplicationById(applications.get(0).getId())).thenThrow(new ForbiddenActionException());
+        mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "/team"))
+                .andExpect(status().isForbidden())
+                .andExpect(view().name("forbidden"));
+        verify(applicationRestService).getApplicationById(applications.get(0).getId());
+    }
+
+    @Test
+    public void showApplicationTeamNoTeam() throws Exception {
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+
+        when(applicationRestService.getApplicationById(applications.get(0).getId())).thenReturn(restSuccess(applications.get(0)));
+        when(applicationSummaryRestService.getApplicationTeam(applications.get(0).getId())).thenThrow(new ObjectNotFoundException());
+        mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "/team"))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("404"));
+        verify(applicationRestService).getApplicationById(applications.get(0).getId());
+        verify(applicationSummaryRestService).getApplicationTeam(applications.get(0).getId());
     }
 
     @Test

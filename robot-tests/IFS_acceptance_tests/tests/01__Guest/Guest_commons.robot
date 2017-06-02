@@ -2,7 +2,7 @@
 Resource          ../../resources/defaultResources.robot
 
 *** Variables ***
-${correct_email}    steve.smith@empire.com
+${correct_email}    ${lead_applicant}
 ${incorrect_email}    steve.smith@idontexist.com
 ${invalid_email}    notavalidemailaddress
 ${correct_password}    Passw0rd

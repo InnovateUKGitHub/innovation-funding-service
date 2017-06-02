@@ -71,7 +71,7 @@
             <h2 class="heading-large">Before you apply</h2>
             <p>Before you apply for a competition you must first create an account. If you already have an account you'll need to sign in.</p>
             <th:block th:insert="competition/fragments :: apply-button" />
-            <span class="form-hint">Closing date: <span th:remove="tag" th:text="${#temporals.format(currentCompetition.endDate, 'dd MMM yyyy')}" /></span>
+            <span class="form-hint">Closing date: <th:block th:text="${#temporals.format(currentCompetition.endDate, 'dd MMM yyyy')}" /></span>
         </div>
     </div>
 

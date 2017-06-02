@@ -15,7 +15,7 @@ Mark as complete Your funding with only one input should not be possible
     [Setup]  Applicant navigates to the finances of the Robot application
     When the user clicks the button/link      link=Your funding
     And the user enters text to a text field  css=#cost-financegrantclaim  80
-    And the user moves focus to the element   jQuery=label[data-target="other-funding-table"]
+    And the user moves focus to the element   jQuery=[data-target="other-funding-table"] label
     Then the user should see the element      jQuery=.button[disabled]:contains("Mark as complete")
 
 Other funding client side
@@ -264,7 +264,7 @@ Funding level server side
     And the user clicks the button/link  jQuery=.button:contains("Mark as complete")
     Then the user should see an error    This field should be 60% or lower.
     Then the user enters text to a text field    css=#cost-financegrantclaim  59
-    And the user moves focus to the element      jQuery=label[data-target="other-funding-table"]
+    And the user moves focus to the element      jQuery=[data-target="other-funding-table"] label
     And the user should not see the element      jQuery=.error-message
 
 *** Keywords ***

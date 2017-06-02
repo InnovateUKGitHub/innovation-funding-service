@@ -4,6 +4,7 @@ Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
+Resource          ../../10__Project_setup/PS_Common.robot
 
 *** Test Cases ***
 Invite the same partner under the lead organisation
@@ -20,7 +21,7 @@ Create a new application
     the user clicks the button/link                      jQuery=a:contains("Start new application")
     the user clicks the button/link                      jQuery=Label:contains("Yes, I want to create a new application.")
     the user clicks the button/link                      jQuery=.button:contains("Continue")
-    the user clicks the button/link                      jQuery=a:contains("Update Empire Ltd")
+    the user clicks the button/link                      jQuery=a:contains("Update ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}")
     the user clicks the button/link                      jQuery=button:contains("Add new applicant")
     The user enters text to a text field                 name=applicants[0].name    ${NAME}
     The user enters text to a text field                 name=applicants[0].email   ${EMAIL}

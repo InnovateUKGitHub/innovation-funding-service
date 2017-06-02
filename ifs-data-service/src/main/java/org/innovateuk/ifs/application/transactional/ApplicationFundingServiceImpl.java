@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -73,6 +74,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> saveFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
             List<Application> allowedApplicationForCompetition = findAllowedApplicationsForCompetition(competitionId);
@@ -82,6 +84,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisions(FundingNotificationResource fundingNotificationResource) {
 
         List<Application> applications = getFundingApplications(fundingNotificationResource.getFundingDecisions());

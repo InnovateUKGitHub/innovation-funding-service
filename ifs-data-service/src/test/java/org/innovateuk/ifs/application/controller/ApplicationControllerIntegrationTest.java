@@ -214,4 +214,5 @@ public class ApplicationControllerIntegrationTest extends ApplicationSubmissionC
         RestResult<Void> result = controller.informIneligible(APPLICATION_ID, applicationIneligibleSendResource);
         assertTrue(result.isSuccess());
     }
+
 }

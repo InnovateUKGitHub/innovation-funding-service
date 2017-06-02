@@ -135,6 +135,9 @@ public class GenerateTestData extends BaseIntegrationTest {
     @Autowired
     private PublicContentRepository publicContentRepository;
 
+    @Autowired
+    private TestService testService;
+
     private CompetitionDataBuilder competitionDataBuilder;
     private CompetitionFunderDataBuilder competitionFunderDataBuilder;
     private PublicContentGroupDataBuilder publicContentGroupDataBuilder;
@@ -350,19 +353,21 @@ public class GenerateTestData extends BaseIntegrationTest {
             return currentBuilder;
         };
 
-        assignProjectManagerIfNecessary.
-                andThen(setProjectAddressIfNecessary).
-                andThen(submitProjectDetailsIfNecessary).
-                andThen(setMonitoringOfficerIfNecessary).
-                andThen(selectFinanceContactsIfNecessary).
-                andThen(submitBankDetailsIfNecessary).
-                apply(baseBuilder).
-                build();
+        testService.doWithinTransaction(() ->
+            assignProjectManagerIfNecessary.
+                    andThen(setProjectAddressIfNecessary).
+                    andThen(submitProjectDetailsIfNecessary).
+                    andThen(setMonitoringOfficerIfNecessary).
+                    andThen(selectFinanceContactsIfNecessary).
+                    andThen(submitBankDetailsIfNecessary).
+                    apply(baseBuilder).
+                    build());
 
     }
 
     private void createExternalUsers() {
-        externalUserLines.forEach(line -> createUser(externalUserBuilder, line, true));
+        testService.doWithinTransaction(() ->
+            externalUserLines.forEach(line -> createUser(externalUserBuilder, line, true)));
     }
 
     private void createAssessors() {
@@ -370,17 +375,19 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private void createNonRegisteredAssessorInvites() {
-        List<InviteLine> assessorInvites = simpleFilter(inviteLines, invite -> "COMPETITION".equals(invite.type));
-        List<InviteLine> nonRegisteredAssessorInvites = simpleFilter(assessorInvites, invite -> !userRepository.findByEmail(invite.email).isPresent());
-        nonRegisteredAssessorInvites.forEach(line -> createAssessorInvite(assessorInviteUserBuilder, line));
+        testService.doWithinTransaction(() -> {
+            List<InviteLine> assessorInvites = simpleFilter(inviteLines, invite -> "COMPETITION".equals(invite.type));
+            List<InviteLine> nonRegisteredAssessorInvites = simpleFilter(assessorInvites, invite -> !userRepository.findByEmail(invite.email).isPresent());
+            nonRegisteredAssessorInvites.forEach(line -> createAssessorInvite(assessorInviteUserBuilder, line));
+        });
     }
 
     private void createAssessments() {
         LOG.info("Creating assessments...");
 
-        assessmentLines.forEach(this::createAssessment);
-        assessorResponseLines.forEach(this::createAssessorResponse);
-        assessmentLines.forEach(this::submitAssessment);
+        testService.doWithinTransaction(() -> assessmentLines.forEach(this::createAssessment));
+        testService.doWithinTransaction(() -> assessorResponseLines.forEach(this::createAssessorResponse));
+        testService.doWithinTransaction(() -> assessmentLines.forEach(this::submitAssessment));
     }
 
     private void createAssessment(AssessmentLine line) {
@@ -417,15 +424,15 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private void createCompetitionFunders() {
-        competitionFunderLines.forEach(this::createCompetitionFunder);
+        testService.doWithinTransaction(() -> competitionFunderLines.forEach(this::createCompetitionFunder));
     }
 
     private void createPublicContentGroups() {
-        publicContentGroupLines.forEach(this::createPublicContentGroup);
+        testService.doWithinTransaction(() -> publicContentGroupLines.forEach(this::createPublicContentGroup));
     }
 
     private void createPublicContentDates() {
-        publicContentDateLines.forEach(this::createPublicContentDate);
+        testService.doWithinTransaction(() -> publicContentDateLines.forEach(this::createPublicContentDate));
     }
 
     private void createCompetitionFunder(CompetitionFunderLine line) {
@@ -458,26 +465,25 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private void createInternalUsers() {
-        internalUserLines.forEach(line -> {
+        testService.doWithinTransaction(() ->
+            internalUserLines.forEach(line -> {
 
-            UserRoleType role = UserRoleType.fromName(line.role);
+                UserRoleType role = UserRoleType.fromName(line.role);
 
-            InternalUserDataBuilder baseBuilder = internalUserBuilder.
-                    withRole(role).
-                    createPreRegistrationEntry(line.emailAddress);
+                InternalUserDataBuilder baseBuilder = internalUserBuilder.
+                        withRole(role).
+                        createPreRegistrationEntry(line.emailAddress);
 
-            if (line.emailVerified) {
-                createUser(baseBuilder, line, !COMP_TECHNOLOGIST.equals(role));
-            } else {
-                baseBuilder.build();
-            }
-        });
+                if (line.emailVerified) {
+                    createUser(baseBuilder, line, !COMP_TECHNOLOGIST.equals(role));
+                } else {
+                    baseBuilder.build();
+                }
+            }));
     }
 
     private void createCompetitions() {
         competitionLines.forEach(line -> {
-            LOG.info("Creating competition '{}'", line.name);
-
             if ("Connected digital additive manufacturing".equals(line.name)) {
                 createCompetitionWithApplications(line, Optional.of(1L));
             } else {

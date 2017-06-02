@@ -5,18 +5,22 @@ import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.testdata.builders.data.OrganisationData;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static java.util.Collections.emptyList;
 
 /**
  * Creates Organisations
  */
 public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, OrganisationDataBuilder> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(OrganisationDataBuilder.class);
 
     public OrganisationDataBuilder createOrganisation(String organisationName,
                                                       String companyRegistrationNumber,
@@ -80,5 +84,11 @@ public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, O
     @Override
     protected OrganisationData createInitial() {
         return new OrganisationData();
+    }
+
+    @Override
+    protected void postProcess(int index, OrganisationData instance) {
+        super.postProcess(index, instance);
+        LOG.info("Created Organisation '{}'", instance.getOrganisation().getName());
     }
 }

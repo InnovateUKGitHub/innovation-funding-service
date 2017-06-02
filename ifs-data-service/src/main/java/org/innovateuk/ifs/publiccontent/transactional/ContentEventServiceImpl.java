@@ -8,6 +8,7 @@ import org.innovateuk.ifs.publiccontent.repository.ContentEventRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class ContentEventServiceImpl extends BaseTransactionalService implements
     private ContentEventMapper contentEventMapper;
 
     @Override
+    @Transactional
     public ServiceResult<Void> resetAndSaveEvents(Long publicContentId, List<ContentEventResource> eventResources) {
         if(eventResourcesAllHaveIDOrEmpty(publicContentId, eventResources)) {
             contentEventRepository.deleteByPublicContentId(publicContentId);

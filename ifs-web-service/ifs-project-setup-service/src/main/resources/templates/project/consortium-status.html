@@ -11,7 +11,7 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.projectId})}" th:remove="tag"></div>
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.projectId})}" />
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project team status',size='heading-xlarge'" />
     <p>Additional information is needed before your project can begin. This table will help you to keep track of what tasks have been completed and what is outstanding.</p>

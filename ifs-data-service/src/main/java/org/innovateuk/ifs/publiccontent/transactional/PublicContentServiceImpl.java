@@ -1,12 +1,10 @@
 package org.innovateuk.ifs.publiccontent.transactional;
 
-import org.innovateuk.ifs.application.transactional.SectionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.ContentEventResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.competition.transactional.MilestoneService;
 import org.innovateuk.ifs.publiccontent.domain.ContentSection;
@@ -19,6 +17,7 @@ import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.Collections;
@@ -30,7 +29,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.*;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.CONTENT;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -71,6 +70,7 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
 
 
     @Override
+    @Transactional
     public ServiceResult<Void> initialiseByCompetitionId(Long competitionId) {
         if (publicContentRepository.findByCompetitionId(competitionId) != null) {
             return serviceFailure(PUBLIC_CONTENT_ALREADY_INITIALISED);
@@ -92,6 +92,7 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> publishByCompetitionId(Long competitionId) {
         return find(publicContentRepository.findByCompetitionId(competitionId), notFoundError(PublicContent.class, competitionId))
                 .andOnSuccess(this::publish)
@@ -131,11 +132,13 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> updateSection(PublicContentResource resource, PublicContentSectionType section) {
         return saveSection(resource, section).andOnSuccessReturnVoid();
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> markSectionAsComplete(PublicContentResource resource, PublicContentSectionType section) {
         return saveSection(resource, section)
                 .andOnSuccessReturnVoid(publicContent -> markSectionAsComplete(publicContent, section));

@@ -28,6 +28,7 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.*;
 
 import static java.util.stream.Collectors.toList;
@@ -93,6 +94,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> createProjectsFromFundingDecisions(Map<Long, FundingDecision> applicationFundingDecisions) {
         applicationFundingDecisions.keySet().stream().filter(d -> applicationFundingDecisions.get(d).equals(FundingDecision.FUNDED)).forEach(this::createSingletonProjectFromApplicationId);
         return serviceSuccess();
@@ -111,6 +113,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
+    @Transactional
     public ServiceResult<ProjectUser> addPartner(Long projectId, Long userId, Long organisationId) {
         return find(getProject(projectId), getOrganisation(organisationId), getUser(userId)).
                 andOnSuccess((project, organisation, user) -> {
@@ -154,6 +157,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
+    @Transactional
     public ServiceResult<ProjectResource> createProjectFromApplication(Long applicationId) {
         return createSingletonProjectFromApplicationId(applicationId);
     }
