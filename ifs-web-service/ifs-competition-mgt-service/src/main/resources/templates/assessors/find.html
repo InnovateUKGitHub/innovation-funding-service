@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite assessors'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite assessors'"/>
 </head>
 
 <body th:with="context='comp-management'" class="competition-management competition-overview invite-assessors">
-<th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
+    <th:block th:insert="fragments/layout :: main-content-start"/>
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}"/>
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite assessors',subTitle=${model.competitionName},size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title"
+              th:with="pageTitle='Invite assessors',subTitle=${model.competitionName},size='heading-xlarge'"/>
     <h2 class="heading-medium">Key statistics</h2>
 
     <div class="grid-row">
@@ -66,7 +68,8 @@
 
     <div class="grid-row">
         <div class="column-three-quarters">
-            <h2 class="heading-small no-margin-top">Find registered assessors. Select them using the checkboxes and add them to your invite list.</h2>
+            <h2 class="heading-small no-margin-top">Find registered assessors. Select them using the checkboxes and add
+                them to your invite list.</h2>
         </div>
     </div>
 
@@ -79,7 +82,8 @@
                             id="filterInnovationArea" class="form-control extra-margin-bottom"
                             th:field="*{innovationArea}">
                         <option value="">Any</option>
-                        <optgroup th:each="innovationSector : ${model.innovationSectorOptions}" th:label="${innovationSector.name}">
+                        <optgroup th:each="innovationSector : ${model.innovationSectorOptions}"
+                                  th:label="${innovationSector.name}">
                             <option th:each="innovationArea : ${innovationSector.children}"
                                     th:value="${innovationArea.id}"
                                     th:text="${innovationArea.name}">
@@ -95,14 +99,18 @@
         </div>
     </form>
 
-    <form method="POST" th:action="@{/competition/{competitionId}/assessors/find/addSelected(competitionId=${model.competitionId})}" th:object="${selectionForm}">
+    <form method="POST"
+          th:action="@{/competition/{competitionId}/assessors/find/addSelected(competitionId=${model.competitionId})}"
+          th:object="${selectionForm}">
         <div class="grid-row sorting">
             <div class="column-half">
                 <span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">20</span>
                 <span class="heading-small">assessors</span>
             </div>
             <div class="column-half alignright">
-                <button class="button" name="addSelected" data-enable-button-when="one-checked">Add selected to invite list</button>
+                <button class="button" name="addSelected" data-enable-button-when="one-checked">Add selected to invite
+                    list
+                </button>
             </div>
         </div>
 
@@ -161,11 +169,11 @@
 
     <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
+    <th:block th:insert="fragments/layout :: main-content-end"/>
 </main>
 
-<th:block th:insert="fragments/layout :: footer" />
-<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
 </body>
 
 <script type="text/javascript">
@@ -241,9 +249,9 @@
                   updateSelectAllStatus();
                   updateController()
                 });
-
            });
 	// ]]>
+
 </script>
 
 </html>
