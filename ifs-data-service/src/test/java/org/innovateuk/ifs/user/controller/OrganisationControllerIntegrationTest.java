@@ -17,7 +17,8 @@ import java.util.Set;
 
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class OrganisationControllerIntegrationTest extends BaseControllerIntegrationTest<OrganisationController> {
 

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.config.audit;
 
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,18 +23,15 @@ public class AuditConfig {
     private UserMapper userMapper;
 
     @Bean
-    public AuditorAware<UserResource> auditorProvider() {
-        return new AuditorAware() {
-            @Override
-            public Object getCurrentAuditor() {
-                UserAuthentication authentication = (UserAuthentication) SecurityContextHolder.getContext().getAuthentication();
+    public AuditorAware<User> auditorProvider() {
+        return () -> {
+            UserAuthentication authentication = (UserAuthentication) SecurityContextHolder.getContext().getAuthentication();
 
-                if (authentication == null || !authentication.isAuthenticated()) {
-                    return null;
-                }
-                else {
-                    return userMapper.mapToDomain(authentication.getDetails());
-                }
+            if (authentication == null || !authentication.isAuthenticated()) {
+                return null;
+            }
+            else {
+                return userMapper.mapToDomain(authentication.getDetails());
             }
         };
     }

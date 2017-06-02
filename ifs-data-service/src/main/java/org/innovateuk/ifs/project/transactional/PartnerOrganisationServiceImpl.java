@@ -29,4 +29,11 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
                 notFoundError(PartnerOrganisation.class, id)).
                 andOnSuccessReturn(lst -> simpleMap(lst, partnerOrganisationMapper::mapToResource));
     }
+
+    @Override
+    public ServiceResult<PartnerOrganisationResource> getPartnerOrganisation(Long projectId, Long organisationId) {
+        return find(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId),
+                notFoundError(PartnerOrganisation.class)).
+                andOnSuccessReturn(partnerOrganisationMapper::mapToResource);
+    }
 }

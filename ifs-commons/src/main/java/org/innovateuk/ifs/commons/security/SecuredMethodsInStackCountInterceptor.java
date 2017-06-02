@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.security;
+package org.innovateuk.ifs.commons.security;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
@@ -17,8 +17,7 @@ public class SecuredMethodsInStackCountInterceptor implements MethodInterceptor 
         final Integer numberSecuredMethodsInStackBeforeCalling = securedMethodsInStackCount.get() != null ? securedMethodsInStackCount.get() : 0;
         try {
             securedMethodsInStackCount.set(numberSecuredMethodsInStackBeforeCalling + 1);
-            final Object proceed = invocation.proceed();
-            return proceed;
+            return invocation.proceed();
         } finally {
             securedMethodsInStackCount.set(numberSecuredMethodsInStackBeforeCalling);
         }
@@ -26,5 +25,9 @@ public class SecuredMethodsInStackCountInterceptor implements MethodInterceptor 
 
     public boolean isStackSecured() {
         return securedMethodsInStackCount.get() != null && securedMethodsInStackCount.get() > 0;
+    }
+
+    public boolean isStackSecuredAtHigherLevel() {
+        return securedMethodsInStackCount.get() != null && securedMethodsInStackCount.get() > 1;
     }
 }

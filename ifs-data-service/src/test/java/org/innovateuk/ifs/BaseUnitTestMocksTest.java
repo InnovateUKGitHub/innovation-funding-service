@@ -96,6 +96,7 @@ import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
+import org.innovateuk.ifs.project.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.innovateuk.ifs.project.users.ProjectUsersHelper;
@@ -608,6 +609,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected OrganisationMapper organisationMapperMock;
 
     @Mock
+    protected OrganisationTypeMapper organisationTypeMapperMock;
+
+    @Mock
     protected SpendProfileTableCalculator spendProfileTableCalculatorMock;
 
     @Mock
@@ -669,6 +673,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected IneligibleOutcomeMapper ineligibleOutcomeMapperMock;
+
+    @Mock
+    protected PartnerOrganisationService partnerOrganisationServiceMock;
 
     @Before
     public void setupMockInjection() {
