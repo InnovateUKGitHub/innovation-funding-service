@@ -120,6 +120,12 @@ IFS.core.autoSave = (function () {
             value: field.val()
           }
           break
+        case 'findAssessor':
+          jsonObj = {
+            assessor: field.val(),
+            isSelected: field.prop('checked')
+          }
+          break
         default :
           jsonObj = false
       }
@@ -154,6 +160,9 @@ IFS.core.autoSave = (function () {
           var formInputId = field.closest('.question').prop('id').replace('form-input-', '')
           var assessmentId = form.attr('action').split('/')[2]
           url = '/assessment/' + assessmentId + '/formInput/' + formInputId
+          break
+        case 'findAssessor':
+          url = window.location.href
           break
         default:
           url = false
