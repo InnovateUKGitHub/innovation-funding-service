@@ -95,26 +95,26 @@
                 </th:block>
             </label>
             <div class="multiple-choice">
-                <label class="block-label selection-button-radio" for="publishSetting-0">
-                    <input id="publishSetting-0"
-                           type="radio"
-                           th:field="${form.publishSetting}"
-                           value="public"
-                           th:errorclass="field-error"
-                           required="required"
-                           th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.publishsetting.required}" />
+                <input id="publishSetting-0"
+                       type="radio"
+                       th:field="${form.publishSetting}"
+                       value="public"
+                       th:errorclass="field-error"
+                       required="required"
+                       th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.publishsetting.required}" />
+                <label for="publishSetting-0">
                     Public
                 </label>
             </div>
             <div class="multiple-choice" data-target="invite-only-guidance">
-                <label class="block-label selection-button-radio" for="publishSetting-1">
-                    <input id="publishSetting-1"
-                           type="radio"
-                           th:field="${form.publishSetting}"
-                           th:errorclass="field-error"
-                           required="required"
-                           value="invite"
-                           th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.publishsetting.required}" />
+                <input id="publishSetting-1"
+                       type="radio"
+                       th:field="${form.publishSetting}"
+                       th:errorclass="field-error"
+                       required="required"
+                       value="invite"
+                       th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.publishsetting.required}" />
+                <label for="publishSetting-1">
                     Invite only
                 </label>
             </div>
