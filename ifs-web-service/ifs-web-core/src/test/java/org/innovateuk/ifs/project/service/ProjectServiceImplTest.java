@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.project.service;
 
 import java.util.List;
-import java.util.Optional;
 
+import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
@@ -131,7 +131,6 @@ public class ProjectServiceImplTest {
     @Test
     public void testGetProjectManagerWhenNotFound() {
         Long projectId = 123L;
-        final Long projectManagerId = 987L;
         when(projectRestService.getProjectManager(projectId))
                 .thenReturn(restSuccess(null, HttpStatus.NOT_FOUND));
         assertFalse(service.getProjectManager(projectId).isPresent());
@@ -154,7 +153,6 @@ public class ProjectServiceImplTest {
 
         when(projectRestService.getProjectManager(projectId)).thenReturn(restSuccess(null, HttpStatus.NOT_FOUND));
 
-        final Optional<ProjectUserResource> projectManager = service.getProjectManager(projectId);
         assertFalse(service.isProjectManager(projectManagerId, projectId));
     }
 
@@ -168,5 +166,18 @@ public class ProjectServiceImplTest {
                 .thenReturn(restSuccess(newProjectUserResource().withUser(projectManagerId).build()));
 
         assertFalse(service.isProjectManager(loggedInUserId, projectId));
+    }
+
+    @Test
+    public void testGetPartnerOrganisation() {
+        PartnerOrganisationResource partnerOrg = new PartnerOrganisationResource();
+        when(projectRestService.getPartnerOrganisation(123L, 234L)).thenReturn(restSuccess(partnerOrg));
+        assertTrue(service.getPartnerOrganisation(123L, 234L).equals(partnerOrg));
+    }
+
+    @Test(expected = ObjectNotFoundException.class)
+    public void testGetPartnerOrganisationNotFound() {
+        when(projectRestService.getPartnerOrganisation(123L, 234L)).thenThrow(new ObjectNotFoundException());
+        service.getPartnerOrganisation(123L, 234L);
     }
 }

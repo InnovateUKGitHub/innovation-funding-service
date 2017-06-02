@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.status.security;
 
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
+import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.project.sections.SectionAccess;
@@ -78,7 +79,6 @@ public class SetupSectionsPermissionRules {
         return doSectionCheck(projectId, user, SetupSectionInternalUser::canAccessFinanceChecksNotesSection);
     }
 
-
     private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<SetupSectionInternalUser, UserResource, SectionAccess> sectionCheckFn) {
         ProjectStatusResource projectStatusResource;
 
@@ -91,13 +91,15 @@ public class SetupSectionsPermissionRules {
         } catch (ForbiddenActionException e) {
             LOG.error("Internal user is not allowed to access this project " + projectId);
             return false;
+        } catch (ObjectNotFoundException e) {
+            LOG.error("Status for project " + projectId + " cannot be found.");
+            return false;
         }
 
         SetupSectionInternalUser sectionAccessor = new SetupSectionInternalUser(projectStatusResource);
 
         return sectionCheckFn.apply(sectionAccessor, user) == ACCESSIBLE;
     }
-
 
     private boolean isInternal(UserResource user) {
         return user.hasRole(UserRoleType.COMP_ADMIN)

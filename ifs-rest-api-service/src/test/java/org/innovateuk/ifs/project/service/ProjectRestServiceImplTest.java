@@ -88,4 +88,19 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         Optional<ProjectUserResource> result = service.getProjectManager(123L).toOptionalIfNotFound().getSuccessObject();
         Assert.assertFalse(result.isPresent());
     }
+
+    @Test
+    public void testGetPartnerOrganisation() {
+        PartnerOrganisationResource partnerOrg = new PartnerOrganisationResource();
+        setupGetWithRestResultExpectations(projectRestURL + "/123/partner/234", PartnerOrganisationResource.class, partnerOrg);
+        RestResult<PartnerOrganisationResource> result = service.getPartnerOrganisation(123L, 234L);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testGetPartnerOrganisationNotFound() {
+        setupGetWithRestResultExpectations(projectRestURL + "/123/partner/234", PartnerOrganisationResource.class, null, NOT_FOUND);
+        RestResult<PartnerOrganisationResource> result = service.getPartnerOrganisation(123L, 234L);
+        assertTrue(result.isFailure());
+    }
 }

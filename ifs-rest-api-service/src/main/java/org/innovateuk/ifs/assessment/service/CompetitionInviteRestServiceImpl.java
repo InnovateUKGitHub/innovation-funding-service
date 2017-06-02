@@ -19,8 +19,13 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     private static final String competitionInviteRestUrl = "/competitioninvite";
 
     @Override
-    public RestResult<AssessorInviteToSendResource> getCreated(long inviteId) {
-        return getWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "getCreated", inviteId), AssessorInviteToSendResource.class);
+    public RestResult<AssessorInviteToSendResource> getCreatedInviteToSend(long inviteId) {
+        return getWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "getCreatedInviteToSend", inviteId), AssessorInviteToSendResource.class);
+    }
+
+    @Override
+    public RestResult<AssessorInviteToSendResource> getInviteToSend(long inviteId) {
+        return getWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "getInviteToSend", inviteId), AssessorInviteToSendResource.class);
     }
 
     @Override
@@ -111,5 +116,10 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     @Override
     public RestResult<Void> sendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource) {
         return postWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "sendInvite", inviteId), assessorInviteSendResource, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> resendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource) {
+        return postWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "resendInvite", inviteId), assessorInviteSendResource, Void.class);
     }
 }

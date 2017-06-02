@@ -2,6 +2,9 @@ package org.innovateuk.ifs.commons.security;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
+import org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluator;
+import org.innovateuk.ifs.commons.security.evaluator.ListOfOwnerAndMethod;
+import org.innovateuk.ifs.commons.security.evaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
 import org.innovateuk.ifs.security.StatelessAuthenticationFilter;
 import org.junit.Test;
 import org.springframework.aop.framework.Advised;
@@ -14,7 +17,6 @@ import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.access.prepost.PreFilter;
 import org.springframework.stereotype.Service;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -22,8 +24,10 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
+
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluatorTestUtil.getRulesMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.junit.Assert.*;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
@@ -197,21 +201,18 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
     private List<String[]> getPermissionRulesBasedSecurity(CustomPermissionEvaluator evaluator) {
         List<String[]> permissionRuleRows = new ArrayList<>();
 
-        CustomPermissionEvaluator.PermissionedObjectClassToPermissionsToPermissionsMethods rulesMap =
-                (CustomPermissionEvaluator.PermissionedObjectClassToPermissionsToPermissionsMethods) ReflectionTestUtils.getField(evaluator, "rulesMap");
+        PermissionedObjectClassToPermissionsToPermissionsMethods rulesMap = getRulesMap(evaluator);
 
         Set<Class<?>> securedEntities = rulesMap.keySet();
 
         securedEntities.forEach(clazz -> {
 
-
-            Map<String, CustomPermissionEvaluator.ListOfOwnerAndMethod> rulesForSecuringEntity = rulesMap.get(clazz);
+            Map<String, ListOfOwnerAndMethod> rulesForSecuringEntity = rulesMap.get(clazz);
             Set<String> actionsSecuredForEntity = rulesForSecuringEntity.keySet();
-
 
             actionsSecuredForEntity.forEach(actionName -> {
 
-                CustomPermissionEvaluator.ListOfOwnerAndMethod permissionRuleMethodsForThisAction = rulesForSecuringEntity.get(actionName);
+                ListOfOwnerAndMethod permissionRuleMethodsForThisAction = rulesForSecuringEntity.get(actionName);
 
                 permissionRuleMethodsForThisAction.forEach(serviceAndMethod -> {
 
@@ -263,8 +264,6 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
         }
 
     }
-
-    ;
 
     private boolean hasOneOf(Method method, List<Class<? extends Annotation>> annotations) {
         for (Class<? extends Annotation> clazz : annotations) {

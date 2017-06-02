@@ -151,7 +151,7 @@ public class ValidationUtil {
     public List<ValidationMessages> isSectionValid(Long markedAsCompleteById, Section section, Application application) {
         LOG.debug("VALIDATE SECTION " + section.getName());
         List<ValidationMessages> validationMessages = new ArrayList<>();
-        for (Question question : section.fetchAllChildQuestions()) {
+        for (Question question : section.fetchAllQuestionsAndChildQuestions()) {
             if (question.getMarkAsCompletedEnabled()) {
                 validationMessages.addAll(isQuestionValid(question, application, markedAsCompleteById));
             }

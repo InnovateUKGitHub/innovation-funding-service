@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Method;
 import java.util.function.BiFunction;
 
+import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
+
 /**
  * Advice to be called on methods marked as {@link NotSecured} with {@link NotSecured#mustBeSecuredByOtherServices()}
  * set to true.
@@ -17,9 +19,12 @@ import java.util.function.BiFunction;
 public class NotSecuredMethodThatMustBeSecuredByOtherMethodsAdvice extends AbstractIfsMethodsAdvice {
 
     public static final int NOT_SECURED_METHOD_THAT_MUST_BE_SECURED_BY_OTHER_METHODS_ORDER = Ordered.LOWEST_PRECEDENCE - 1;
+
     private static final long serialVersionUID = 1L;
+
     private static final BiFunction<Method, Class, Boolean> FILTER = //
-            (m, c) -> m.isAnnotationPresent(NotSecured.class) && m.getAnnotation(NotSecured.class).mustBeSecuredByOtherServices();
+            (m, c) -> findAnnotation(m, NotSecured.class) != null &&
+                      findAnnotation(m, NotSecured.class).mustBeSecuredByOtherServices();
 
     @Autowired
     public NotSecuredMethodThatMustBeSecuredByOtherMethodsAdvice(NotSecuredMethodInterceptor interceptor) {
