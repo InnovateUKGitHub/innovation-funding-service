@@ -786,7 +786,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build());
 
         User applicant = newUser()
-                .withRoles(new HashSet(asList(applicantRole)))
+                .withRoles(new HashSet(singletonList(applicantRole)))
                 .build();
 
         AssessorInviteSendResource assessorInviteSendResource = setUpAssessorInviteSendResource();
@@ -1175,7 +1175,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withId(2L)
                 .withName("Earth Observation")
                 .build();
-        List<InnovationAreaResource> innovationAreaList = asList(innovationAreaResource);
+        List<InnovationAreaResource> innovationAreaList = singletonList(innovationAreaResource);
 
         Profile profile1 = newProfile()
                 .withSkillsAreas("Java")
@@ -1350,6 +1350,49 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         inOrder.verify(competitionInviteMapperMock).mapToResource(competitionInvite);
         inOrder.verifyNoMoreInteractions();
     }
+
+    @Test
+    public void inviteUsers_existing() throws Exception {
+        List<User> existingUsers = newUser()
+                .withEmailAddress("fred.smith@abc.com", "joe.brown@abc.com")
+                .withFirstName("fred", "joe")
+                .withLastName("smith", "brown")
+                .build(2);
+
+        Competition competition = newCompetition()
+                .withName("competition name")
+                .build();
+
+        List<ExistingUserStagedInviteResource> existingAssessors = newExistingUserStagedInviteResource()
+                .withCompetitionId(competition.getId())
+                .withEmail(existingUsers.get(0).getEmail(), existingUsers.get(1).getEmail())
+                .build(2);
+
+        CompetitionInvite competitionInvite = newCompetitionInvite()
+                .withCompetition(competition)
+                .withHash(Invite.generateInviteHash())
+                .withEmail(existingUsers.get(0).getEmail(), existingUsers.get(1).getEmail())
+                .withName(existingUsers.get(0).getName(), existingUsers.get(1).getName())
+                .withInnovationArea(newInnovationArea().build())
+                .build();
+
+        when(userRepositoryMock.findByEmail(existingUsers.get(0).getEmail())).thenReturn(of(existingUsers.get(0)));
+        when(userRepositoryMock.findByEmail(existingUsers.get(1).getEmail())).thenReturn(of(existingUsers.get(1)));
+        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
+        when(competitionInviteRepositoryMock.save(isA(CompetitionInvite.class))).thenReturn(new CompetitionInvite());
+
+        ServiceResult<Void> serviceResult = service.inviteUsers(existingAssessors);
+        assertTrue(serviceResult.isSuccess());
+
+        InOrder inOrder = inOrder(userRepositoryMock, competitionRepositoryMock, competitionInviteRepositoryMock);
+        inOrder.verify(userRepositoryMock).findByEmail(existingUsers.get(0).getEmail());
+        inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
+        inOrder.verify(competitionInviteRepositoryMock).save(createInviteExpectations(existingUsers.get(0).getName(), existingUsers.get(0).getEmail(), CREATED, competition, null));
+        inOrder.verify(userRepositoryMock).findByEmail(existingUsers.get(1).getEmail());
+        inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
+        inOrder.verify(competitionInviteRepositoryMock).save(createInviteExpectations(existingUsers.get(1).getName(), existingUsers.get(1).getEmail(), CREATED, competition, null));
+        inOrder.verifyNoMoreInteractions();
+   }
 
     @Test
     public void inviteUser_new() {

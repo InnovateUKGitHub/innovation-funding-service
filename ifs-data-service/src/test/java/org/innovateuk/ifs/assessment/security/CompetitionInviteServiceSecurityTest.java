@@ -177,6 +177,13 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     @Test
+    public void inviteExistingUsers() throws Exception {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.inviteUsers(
+                newExistingUserStagedInviteResource().build(2))
+                , COMP_ADMIN, PROJECT_FINANCE);
+    }
+
+    @Test
     public void sendInvite() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.sendInvite(1L, newAssessorInviteSendResource().build()), COMP_ADMIN, PROJECT_FINANCE);
     }
@@ -260,6 +267,11 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
 
         @Override
         public ServiceResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource existingUserStagedInviteResource) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> inviteUsers(List<ExistingUserStagedInviteResource> existingUserStagedInviteResource) {
             return null;
         }
 

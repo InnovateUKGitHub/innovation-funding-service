@@ -105,6 +105,11 @@ public interface CompetitionInviteService {
             description = "The Competition Admin user, or the Competition Executive user can create a competition invite for an existing user")
     ServiceResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource existingUserStagedInviteResource);
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "INVITE_EXISTING_USERS",
+            description = "The Competition Admin user, or the Competition Executive user can create a competition invite for an existing users")
+    ServiceResult<Void> inviteUsers(List<ExistingUserStagedInviteResource> existingUserStagedInvites);
+
     @SecuredBySpring(value = "SEND_INVITE",
             description = "The Competition Admin user, or the Competition Executive user can send a competition invite")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")

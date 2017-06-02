@@ -11,6 +11,7 @@ import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBui
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
+import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteListResourceBuilder.newExistingUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceBuilder.newNewUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
@@ -105,4 +106,7 @@ public class CompetitionInviteDocs {
 
     public static final NewUserStagedInviteListResourceBuilder newUserStagedInviteListResourceBuilder = newNewUserStagedInviteListResource()
             .withInvites(newUserStagedInviteResourceBuilder.build(2));
+
+    public static final ExistingUserStagedInviteListResourceBuilder existingUserStagedInviteListResourceBuilder = newExistingUserStagedInviteListResource()
+            .withInvites(existingUserStagedInviteResourceBuilder.build(2));
 }
