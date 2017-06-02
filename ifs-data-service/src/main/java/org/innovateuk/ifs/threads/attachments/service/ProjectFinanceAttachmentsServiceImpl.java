@@ -83,7 +83,6 @@ public class ProjectFinanceAttachmentsServiceImpl implements ProjectFinanceAttac
     }
 
     @Override
-    @Transactional
     public ServiceResult<FileAndContents> attachmentFileAndContents(Long attachmentId) {
         return findOne(attachmentId)
                 .andOnSuccessReturn(a -> mapper.mapToDomain(a))
