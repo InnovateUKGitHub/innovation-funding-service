@@ -82,7 +82,7 @@ The user can remove all people from the list
     And the user invites multiple assessors
     And The user clicks the button/link    link=Invite
     And the user should see the element    jQuery=td:contains("${assessor_to_add}")
-    When the user clicks the button/link    jQuery=button:contains("Remove all from list")
+    When the user clicks the button/link    jQuery=button:contains("Remove all")
     Then the user should not see the element    jQuery=td:contains("${assessor_to_add}")
     [Teardown]    The user clicks the button/link    link=Find
 

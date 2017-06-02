@@ -31,6 +31,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -92,6 +93,7 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
 public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<CompetitionInviteServiceImpl> {
     private static final String UID = "5cc0ac0d-b969-40f5-9cc5-b9bdd98c86de";
     private static final String INVITE_HASH = "inviteHash";
+    private static final DateTimeFormatter inviteFormatter = ofPattern("d MMMM yyyy");
 
     private CompetitionParticipant competitionParticipant;
     private UserResource userResource;
@@ -185,8 +187,8 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         Map<String, Object> expectedNotificationArguments = asMap(
                 "competitionName", competition.getName(),
-                "acceptsDate", acceptsDate.format(ofPattern("dd MMMM yyyy")),
-                "deadlineDate", deadlineDate.format(ofPattern("dd MMMM yyyy"))
+                "acceptsDate", acceptsDate.format(inviteFormatter),
+                "deadlineDate", deadlineDate.format(inviteFormatter)
         );
 
         NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
@@ -235,8 +237,8 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         Map<String, Object> expectedNotificationArguments = asMap(
                 "name", name,
                 "competitionName", "my competition",
-                "acceptsDate", acceptsDate.format(ofPattern("dd MMMM yyyy")),
-                "deadlineDate", deadlineDate.format(ofPattern("dd MMMM yyyy")),
+                "acceptsDate", acceptsDate.format(inviteFormatter),
+                "deadlineDate", deadlineDate.format(inviteFormatter),
                 "inviteUrl", format("%s/invite/competition/%s", "https://ifs-local-dev/assessment", invite.getHash()));
 
         NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
@@ -283,8 +285,8 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         Map<String, Object> expectedNotificationArguments = asMap(
                 "name", name,
                 "competitionName", "my competition",
-                "acceptsDate", acceptsDate.format(ofPattern("dd MMMM yyyy")),
-                "deadlineDate", deadlineDate.format(ofPattern("dd MMMM yyyy")),
+                "acceptsDate", acceptsDate.format(inviteFormatter),
+                "deadlineDate", deadlineDate.format(inviteFormatter),
                 "inviteUrl", format("%s/invite/competition/%s", "https://ifs-local-dev/assessment", invite.getHash()));
 
         NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");

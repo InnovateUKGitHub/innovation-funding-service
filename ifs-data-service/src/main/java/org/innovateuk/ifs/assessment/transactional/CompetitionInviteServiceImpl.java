@@ -48,6 +48,7 @@ import java.util.Optional;
 
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
+import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.lowerCase;
@@ -75,6 +76,8 @@ import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
 public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     private static final String WEB_CONTEXT = "/assessment";
+    private static final DateTimeFormatter inviteFormatter = ofPattern("d MMMM yyyy");
+    private static final DateTimeFormatter detailsFormatter = ofPattern("dd MMM yyyy");
 
     @Autowired
     private CompetitionInviteRepository competitionInviteRepository;
@@ -159,27 +162,25 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     private String getInviteContent(CompetitionInvite invite) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
         NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
         Competition competition = invite.getTarget();
 
         return getInviteContent(notificationTarget, asMap(
                 "competitionName", competition.getName(),
-                "acceptsDate", competition.getAssessorAcceptsDate().format(formatter),
-                "deadlineDate", competition.getAssessorDeadlineDate().format(formatter),
+                "acceptsDate", competition.getAssessorAcceptsDate().format(inviteFormatter),
+                "deadlineDate", competition.getAssessorDeadlineDate().format(inviteFormatter),
                 "name", invite.getName(),
                 "inviteUrl", format("%s/invite/competition/%s", webBaseUrl + WEB_CONTEXT, invite.getHash())
         ));
     }
 
     private String getInvitePreviewContent(Competition competition) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
         NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
 
         return getInvitePreviewContent(notificationTarget, asMap(
                 "competitionName", competition.getName(),
-                "acceptsDate", competition.getAssessorAcceptsDate().format(formatter),
-                "deadlineDate", competition.getAssessorDeadlineDate().format(formatter)
+                "acceptsDate", competition.getAssessorAcceptsDate().format(inviteFormatter),
+                "deadlineDate", competition.getAssessorDeadlineDate().format(inviteFormatter)
         ));
     }
 
@@ -415,9 +416,8 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         if (participant.getStatus() == REJECTED) {
             details = format("Invite declined as %s", lowerCase(participant.getRejectionReason().getReason()));
         } else if (participant.getStatus() == PENDING) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
             if (participant.getInvite().getSentOn() != null) {
-                details = format("Invite sent: %s", participant.getInvite().getSentOn().format(formatter));
+                details = format("Invite sent: %s", participant.getInvite().getSentOn().format(detailsFormatter));
             }
         }
 
@@ -459,7 +459,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     @Override
     public ServiceResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
 
             String customTextPlain = stripHtml(assessorInviteSendResource.getContent());
             String customTextHtml = plainTextToHtml(customTextPlain);
@@ -477,7 +476,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
                         return sendInviteNotification(
                                 assessorInviteSendResource.getSubject(),
-                                formatter,
+                                inviteFormatter,
                                 customTextPlain,
                                 customTextHtml,
                                 invite,
@@ -492,7 +491,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     public ServiceResult<Void> resendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource) {
         return getParticipantByInviteId(inviteId)
                 .andOnSuccess(participant ->
-                        resendInviteNotification( participant.getInvite().sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now()), assessorInviteSendResource)
+                        resendInviteNotification(participant.getInvite().sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now()), assessorInviteSendResource)
                 )
                 .andOnSuccessReturnVoid();
     }
