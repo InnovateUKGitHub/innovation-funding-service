@@ -98,4 +98,9 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     public RestResult<Void> informIneligible(long applicationId, ApplicationIneligibleSendResource applicationIneligibleSendResource) {
         return postWithRestResult(applicationRestURL + "/informIneligible/" + applicationId, applicationIneligibleSendResource, Void.class);
     }
+
+    @Override
+    public RestResult<Boolean> showApplicationTeam(Long applicationId, Long userId) {
+        return getWithRestResult(applicationRestURL + "/showApplicationTeam/" + applicationId + "/" + userId, Boolean.class);
+    }
 }

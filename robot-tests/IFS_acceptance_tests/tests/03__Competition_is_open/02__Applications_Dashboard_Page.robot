@@ -14,6 +14,7 @@ Suite Setup       Log in as user    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
+Resource          ../10__Project_setup/PS_Common.robot
 
 *** Variables ***
 ${valid_pdf}      testing.pdf
@@ -73,6 +74,39 @@ All Applications page: Key Statistics
     [Documentation]    INFUND-2259 INFUND-7369
     [Tags]
     Then the totals in the Key statistics should be correct
+
+Application has team link and team details
+    [Documentation]  IFS-43
+    [Tags]  HappyPath
+    Given the user clicks the button/link    link=${OPEN_COMPETITION_APPLICATION_1_NUMBER}
+    Then the user should see the element  link=view application team details
+    And the user should see the text in the page  ${OPEN_COMPETITION_APPLICATION_NAME}
+    When the user clicks the button/link  link=view application team details
+    Then the user should see the text in the page  Application team
+    And the user should see the text in the page  View application participants for both the lead and collaborating organisations.
+    And the user should see the element    jQuery=h2:nth-of-type(1):contains("${EMPIRE_LTD_NAME} (Lead)")
+    And the user should see the element    jQuery=div#applicationTeamOrganisationRegisteredAddress0 span:nth-of-type(1):contains("1")
+    And the user should see the element    jQuery=div#applicationTeamOrganisationRegisteredAddress0 span:nth-of-type(2):contains("Empire Road")
+    And the user should see the element    jQuery=table#applicationTeamOrganisationUser0 tbody tr:nth-of-type(1) td:contains("Steve Smith (Lead)")
+    And the user should see the element    jQuery=table#applicationTeamOrganisationUser0 tbody tr:nth-of-type(1) td:contains("${lead_applicant}")
+    And the user should see the element    jQuery=table#applicationTeamOrganisationUser0 tbody tr:nth-of-type(1) td:contains("46439359578")
+    And the user should see the element    jQuery=h2:nth-of-type(2):contains("${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}")
+    And the user should see the element    jQuery=div#applicationTeamOrganisationRegisteredAddress1 span:nth-of-type(1):contains("43")
+    And the user should see the element    jQuery=div#applicationTeamOrganisationRegisteredAddress1 span:nth-of-type(2):contains("Deer Rise")
+    And the user should see the element    jQuery=table#applicationTeamOrganisationUser1 tbody tr:nth-of-type(1) td:contains("Pete Tom")
+    And the user should see the element    jQuery=table#applicationTeamOrganisationUser1 tbody tr:nth-of-type(1) td:contains("${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}")
+    And the user should see the element    jQuery=table#applicationTeamOrganisationUser1 tbody tr:nth-of-type(1) td:contains("81877706440")
+    And the user should see the element    jQuery=h2:nth-of-type(3):contains("${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}")
+    And the user should see the element    jQuery=div#applicationTeamOrganisationRegisteredAddress2 span:nth-of-type(1):contains("Electric Works, Sheffield Digital Campus")
+    And the user should see the element    jQuery=table#applicationTeamOrganisationUser2 tbody tr:nth-of-type(1) td:contains("Ewan Cormack")
+    And the user should see the element    jQuery=table#applicationTeamOrganisationUser2 tbody tr:nth-of-type(1) td:contains("${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_EMAIL}")
+    And the user should see the element    jQuery=table#applicationTeamOrganisationUser2 tbody tr:nth-of-type(1) td:contains("36267829240")
+    And the user should see the element    jQuery=h2:nth-of-type(4):contains("${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}")
+    And the user should see the element    jQuery=div#applicationTeamOrganisationRegisteredAddress3 span:nth-of-type(1):contains("20")
+    And the user should see the element    jQuery=div#applicationTeamOrganisationRegisteredAddress3 span:nth-of-type(2):contains("Fallow Lane")
+    And the user should see the element    jQuery=table#applicationTeamOrganisationUser3 tbody tr:nth-of-type(1) td:contains("Jessica Doe")
+    And the user should see the element    jQuery=table#applicationTeamOrganisationUser3 tbody tr:nth-of-type(1) td:contains("${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}")
+    And the user should see the element    jQuery=table#applicationTeamOrganisationUser3 tbody tr:nth-of-type(1) td:contains("15247172589")
 
 Comp admin can open the view mode of the application
     [Documentation]    INFUND-2300,INFUND-2304, INFUND-2435, INFUND-7503

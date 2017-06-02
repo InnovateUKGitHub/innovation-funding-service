@@ -68,4 +68,9 @@ public class ApplicationServiceImpl implements ApplicationService {
     public ServiceResult<Void> markAsIneligible(long applicationId, IneligibleOutcomeResource reason) {
         return applicationRestService.markAsIneligible(applicationId, reason).toServiceResult();
     }
+
+    @Override
+    public Boolean showApplicationTeam(Long applicationId, Long userId) {
+        return applicationRestService.showApplicationTeam(applicationId, userId).getSuccessObjectOrThrowException();
+    }
 }
