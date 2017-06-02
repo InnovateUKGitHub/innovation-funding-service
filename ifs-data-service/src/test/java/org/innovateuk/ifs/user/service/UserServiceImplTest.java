@@ -55,8 +55,8 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(passwordPolicyValidatorMock.validatePassword("mypassword", userResource)).thenReturn(ServiceResult.serviceSuccess());
         when(idpServiceMock.updateUserPassword("myuid", "mypassword")).thenReturn(ServiceResult.serviceSuccess("mypassword"));
 
-        ServiceResult<Void> result = service.changePassword("myhash", "mypassword");
-        assertTrue(result.isSuccess());
+        service.changePassword("myhash", "mypassword").getSuccessObjectOrThrowException();
+
         verify(tokenRepositoryMock).delete(token);
     }
 
@@ -81,7 +81,11 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Test
     public void testFindInactiveByEmail() {
         final User user = UserBuilder.newUser().build();
-        final UserResource userResource = UserResourceBuilder.newUserResource().withEmail("a@b.c").withLastName("A").withLastName("Bee").build();
+        final UserResource userResource = UserResourceBuilder.newUserResource()
+                .withEmail("a@b.c")
+                .withLastName("A")
+                .withLastName("Bee")
+                .build();
         final String email = "sample@me.com";
 
         when(userRepositoryMock.findByEmailAndStatus(email, UserStatus.INACTIVE)).thenReturn(of(user));
@@ -95,14 +99,18 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testSendPasswordResetNotification() {
-        final UserResource user = UserResourceBuilder.newUserResource().withStatus(UserStatus.ACTIVE).withEmail("a@b.c").withFirstName("A").withLastName("Bee").build();
+        final UserResource user = UserResourceBuilder.newUserResource()
+                .withStatus(UserStatus.ACTIVE)
+                .withEmail("a@b.c")
+                .withFirstName("A")
+                .withLastName("Bee")
+                .build();
 
         when(notificationServiceMock.sendNotification(any(), eq(NotificationMedium.EMAIL))).thenReturn(ServiceResult.serviceSuccess());
 
-        ServiceResult<Void> result = service.sendPasswordResetNotification(user);
-        verify(notificationServiceMock).sendNotification(notificationArgumentCaptor.capture(), eq(NotificationMedium.EMAIL));
+        service.sendPasswordResetNotification(user).getSuccessObjectOrThrowException();
 
-        assertTrue(result.isSuccess());
+        verify(notificationServiceMock).sendNotification(notificationArgumentCaptor.capture(), eq(NotificationMedium.EMAIL));
 
         assertEquals(UserServiceImpl.Notifications.RESET_PASSWORD, notificationArgumentCaptor.getValue().getMessageKey());
         assertEquals(user.getEmail(), notificationArgumentCaptor.getValue().getTo().get(0).getEmailAddress());
@@ -112,7 +120,17 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testSendPasswordResetNotificationInactiveApplicantNoVerifyToken() {
-        final UserResource user = UserResourceBuilder.newUserResource().withStatus(UserStatus.INACTIVE).withRolesGlobal(Collections.singletonList(newRoleResource().withType(UserRoleType.APPLICANT).build())).withEmail("a@b.c").withFirstName("A").withLastName("Bee").build();
+        final UserResource user = UserResourceBuilder.newUserResource()
+                .withStatus(UserStatus.INACTIVE)
+                .withRolesGlobal(
+                        Collections.singletonList(
+                                newRoleResource()
+                                        .withType(UserRoleType.APPLICANT)
+                                        .build()))
+                .withEmail("a@b.c")
+                .withFirstName("A")
+                .withLastName("Bee")
+                .build();
 
         when(tokenRepositoryMock.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getCanonicalName(), user.getId())).thenReturn(Optional.empty());
         ServiceResult<Void> result = service.sendPasswordResetNotification(user);
@@ -125,21 +143,42 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testSendPasswordResetNotificationInactiveApplicantHasVerifyToken() {
-        final UserResource user = UserResourceBuilder.newUserResource().withStatus(UserStatus.INACTIVE).withRolesGlobal(Arrays.asList(newRoleResource().withType(UserRoleType.APPLICANT).build(),newRoleResource().withType(UserRoleType.ASSESSOR).build())).withEmail("a@b.c").withFirstName("A").withLastName("Bee").build();
+        final UserResource user = UserResourceBuilder.newUserResource()
+                .withStatus(UserStatus.INACTIVE)
+                .withRolesGlobal(
+                        Arrays.asList(
+                                newRoleResource()
+                                        .withType(UserRoleType.APPLICANT)
+                                        .build(),
+                                newRoleResource()
+                                        .withType(UserRoleType.ASSESSOR)
+                                        .build()))
+                .withEmail("a@b.c")
+                .withFirstName("A")
+                .withLastName("Bee")
+                .build();
 
         when(tokenRepositoryMock.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getCanonicalName(), user.getId())).thenReturn(Optional.of(new Token()));
         when(registrationServiceMock.resendUserVerificationEmail(user)).thenReturn(ServiceResult.serviceSuccess());
 
-        ServiceResult<Void> result = service.sendPasswordResetNotification(user);
+        service.sendPasswordResetNotification(user).getSuccessObjectOrThrowException();
 
         verify(tokenRepositoryMock).findByTypeAndClassNameAndClassPk(any(), any(), any());
-
-        assertTrue(result.isSuccess());
     }
 
     @Test
     public void testSendPasswordResetNotificationInactiveAssessor() {
-        final UserResource user = UserResourceBuilder.newUserResource().withStatus(UserStatus.INACTIVE).withRolesGlobal(Collections.singletonList(newRoleResource().withType(UserRoleType.ASSESSOR).build())).withEmail("a@b.c").withFirstName("A").withLastName("Bee").build();
+        final UserResource user = UserResourceBuilder.newUserResource()
+                .withStatus(UserStatus.INACTIVE)
+                .withRolesGlobal(
+                        Collections.singletonList(
+                                newRoleResource()
+                                        .withType(UserRoleType.ASSESSOR)
+                                        .build()))
+                .withEmail("a@b.c")
+                .withFirstName("A")
+                .withLastName("Bee")
+                .build();
 
         ServiceResult<Void> result = service.sendPasswordResetNotification(user);
 
@@ -149,7 +188,17 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testSendPasswordResetNotificationInactiveProjectFinance() {
-        final UserResource user = UserResourceBuilder.newUserResource().withStatus(UserStatus.INACTIVE).withRolesGlobal(Collections.singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).withEmail("a@b.c").withFirstName("A").withLastName("Bee").build();
+        final UserResource user = UserResourceBuilder.newUserResource()
+                .withStatus(UserStatus.INACTIVE)
+                .withRolesGlobal(
+                        Collections.singletonList(
+                                newRoleResource()
+                                        .withType(UserRoleType.PROJECT_FINANCE)
+                                        .build()))
+                .withEmail("a@b.c")
+                .withFirstName("A")
+                .withLastName("Bee")
+                .build();
 
         ServiceResult<Void> result = service.sendPasswordResetNotification(user);
 
@@ -159,7 +208,17 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testSendPasswordResetNotificationInactiveCompAdmin() {
-        final UserResource user = UserResourceBuilder.newUserResource().withStatus(UserStatus.INACTIVE).withRolesGlobal(Collections.singletonList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).withEmail("a@b.c").withFirstName("A").withLastName("Bee").build();
+        final UserResource user = UserResourceBuilder.newUserResource()
+                .withStatus(UserStatus.INACTIVE)
+                .withRolesGlobal(
+                        Collections.singletonList(
+                                newRoleResource()
+                                        .withType(UserRoleType.COMP_ADMIN)
+                                        .build()))
+                .withEmail("a@b.c")
+                .withFirstName("A")
+                .withLastName("Bee")
+                .build();
 
         ServiceResult<Void> result = service.sendPasswordResetNotification(user);
 
@@ -169,7 +228,17 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testSendPasswordResetNotificationInactiveCompExec() {
-        final UserResource user = UserResourceBuilder.newUserResource().withStatus(UserStatus.INACTIVE).withRolesGlobal(Collections.singletonList(newRoleResource().withType(UserRoleType.COMP_EXEC).build())).withEmail("a@b.c").withFirstName("A").withLastName("Bee").build();
+        final UserResource user = UserResourceBuilder.newUserResource()
+                .withStatus(UserStatus.INACTIVE)
+                .withRolesGlobal(
+                        Collections.singletonList(
+                                newRoleResource()
+                                        .withType(UserRoleType.COMP_EXEC)
+                                        .build()))
+                .withEmail("a@b.c")
+                .withFirstName("A")
+                .withLastName("Bee")
+                .build();
 
         ServiceResult<Void> result = service.sendPasswordResetNotification(user);
 
@@ -179,7 +248,17 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testSendPasswordResetNotificationInactiveCompTechnologist() {
-        final UserResource user = UserResourceBuilder.newUserResource().withStatus(UserStatus.INACTIVE).withRolesGlobal(Collections.singletonList(newRoleResource().withType(UserRoleType.COMP_TECHNOLOGIST).build())).withEmail("a@b.c").withFirstName("A").withLastName("Bee").build();
+        final UserResource user = UserResourceBuilder.newUserResource()
+                .withStatus(UserStatus.INACTIVE)
+                .withRolesGlobal(
+                        Collections.singletonList(
+                                newRoleResource()
+                                        .withType(UserRoleType.COMP_TECHNOLOGIST)
+                                        .build()))
+                .withEmail("a@b.c")
+                .withFirstName("A")
+                .withLastName("Bee")
+                .build();
 
         ServiceResult<Void> result = service.sendPasswordResetNotification(user);
 
@@ -189,7 +268,16 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testSendPasswordResetNotificationInactiveLeadApplicantNoVerifyToken() {
-        final UserResource user = UserResourceBuilder.newUserResource().withStatus(UserStatus.INACTIVE).withRolesGlobal(Collections.singletonList(newRoleResource().withType(UserRoleType.LEADAPPLICANT).build())).withEmail("a@b.c").withFirstName("A").withLastName("Bee").build();
+        final UserResource user = UserResourceBuilder.newUserResource()
+                .withStatus(UserStatus.INACTIVE).withRolesGlobal(
+                        Collections.singletonList(
+                                newRoleResource()
+                                        .withType(UserRoleType.LEADAPPLICANT)
+                                        .build()))
+                .withEmail("a@b.c")
+                .withFirstName("A")
+                .withLastName("Bee")
+                .build();
 
         when(tokenRepositoryMock.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getCanonicalName(), user.getId())).thenReturn(Optional.empty());
         ServiceResult<Void> result = service.sendPasswordResetNotification(user);
@@ -202,7 +290,16 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testSendPasswordResetNotificationInactivePartnerNoVerifyToken() {
-        final UserResource user = UserResourceBuilder.newUserResource().withStatus(UserStatus.INACTIVE).withRolesGlobal(Collections.singletonList(newRoleResource().withType(UserRoleType.PARTNER).build())).withEmail("a@b.c").withFirstName("A").withLastName("Bee").build();
+        final UserResource user = UserResourceBuilder.newUserResource()
+                .withStatus(UserStatus.INACTIVE).withRolesGlobal(
+                        Collections.singletonList(
+                                newRoleResource()
+                                        .withType(UserRoleType.PARTNER)
+                                        .build()))
+                .withEmail("a@b.c")
+                .withFirstName("A")
+                .withLastName("Bee")
+                .build();
 
         when(tokenRepositoryMock.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getCanonicalName(), user.getId())).thenReturn(Optional.empty());
         ServiceResult<Void> result = service.sendPasswordResetNotification(user);
@@ -215,7 +312,16 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testSendPasswordResetNotificationInactiveProjectManagerNoVerifyToken() {
-        final UserResource user = UserResourceBuilder.newUserResource().withStatus(UserStatus.INACTIVE).withRolesGlobal(Collections.singletonList(newRoleResource().withType(UserRoleType.PROJECT_MANAGER).build())).withEmail("a@b.c").withFirstName("A").withLastName("Bee").build();
+        final UserResource user = UserResourceBuilder.newUserResource()
+                .withStatus(UserStatus.INACTIVE).withRolesGlobal(
+                        Collections.singletonList(
+                                newRoleResource()
+                                        .withType(UserRoleType.PROJECT_MANAGER)
+                                        .build()))
+                .withEmail("a@b.c")
+                .withFirstName("A")
+                .withLastName("Bee")
+                .build();
 
         when(tokenRepositoryMock.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getCanonicalName(), user.getId())).thenReturn(Optional.empty());
         ServiceResult<Void> result = service.sendPasswordResetNotification(user);
@@ -228,7 +334,17 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testSendPasswordResetNotificationInactiveCollaboratorNoVerifyToken() {
-        final UserResource user = UserResourceBuilder.newUserResource().withStatus(UserStatus.INACTIVE).withRolesGlobal(Collections.singletonList(newRoleResource().withType(UserRoleType.COLLABORATOR).build())).withEmail("a@b.c").withFirstName("A").withLastName("Bee").build();
+        final UserResource user = UserResourceBuilder.newUserResource()
+                .withStatus(UserStatus.INACTIVE)
+                .withRolesGlobal(
+                        Collections.singletonList(
+                                newRoleResource()
+                                        .withType(UserRoleType.COLLABORATOR)
+                                        .build()))
+                .withEmail("a@b.c")
+                .withFirstName("A")
+                .withLastName("Bee")
+                .build();
 
         when(tokenRepositoryMock.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getCanonicalName(), user.getId())).thenReturn(Optional.empty());
         ServiceResult<Void> result = service.sendPasswordResetNotification(user);
@@ -241,7 +357,17 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testSendPasswordResetNotificationInactiveFinanceContactNoVerifyToken() {
-        final UserResource user = UserResourceBuilder.newUserResource().withStatus(UserStatus.INACTIVE).withRolesGlobal(Collections.singletonList(newRoleResource().withType(UserRoleType.FINANCE_CONTACT).build())).withEmail("a@b.c").withFirstName("A").withLastName("Bee").build();
+        final UserResource user = UserResourceBuilder.newUserResource()
+                .withStatus(UserStatus.INACTIVE)
+                .withRolesGlobal(
+                        Collections.singletonList(
+                                newRoleResource()
+                                        .withType(UserRoleType.FINANCE_CONTACT)
+                                        .build()))
+                .withEmail("a@b.c")
+                .withFirstName("A")
+                .withLastName("Bee")
+                .build();
 
         when(tokenRepositoryMock.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getCanonicalName(), user.getId())).thenReturn(Optional.empty());
         ServiceResult<Void> result = service.sendPasswordResetNotification(user);
