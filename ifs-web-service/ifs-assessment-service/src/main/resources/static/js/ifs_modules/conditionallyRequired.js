@@ -25,10 +25,10 @@ IFS.assessment.conditionallyRequired = (function () {
         var inst = jQuery(this)
         var parentGroup = inst.closest('.form-group')
 
-        inst.removeProp('required').removeClass('field-error')
+        inst.removeProp('required').removeClass('form-control-error')
 
         // remove any existing error messages and classes
-        parentGroup.removeClass('error')
+        parentGroup.removeClass('form-group-error')
         parentGroup.find('.error-message').remove()
       })
     }

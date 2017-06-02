@@ -3,6 +3,8 @@ package org.innovateuk.ifs.testdata.builders;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.publiccontent.domain.ContentEvent;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.ZonedDateTime;
 import java.util.Collections;
@@ -13,6 +15,8 @@ import java.util.function.BiConsumer;
  * Generates data from Competition Funders and attaches it to a competition
  */
 public class PublicContentDateDataBuilder extends BaseDataBuilder<Void, PublicContentDateDataBuilder>{
+
+    private static final Logger LOG = LoggerFactory.getLogger(PublicContentDateDataBuilder.class);
 
     public PublicContentDateDataBuilder withPublicContentDate(String competitionName, ZonedDateTime date, String content) {
         return with(data -> {
@@ -47,5 +51,11 @@ public class PublicContentDateDataBuilder extends BaseDataBuilder<Void, PublicCo
     @Override
     protected Void createInitial() {
         return null;
+    }
+
+    @Override
+    protected void postProcess(int index, Void instance) {
+        super.postProcess(index, instance);
+        LOG.info("Created Public Content");
     }
 }

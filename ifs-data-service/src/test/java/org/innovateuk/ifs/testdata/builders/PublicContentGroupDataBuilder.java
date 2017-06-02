@@ -1,14 +1,16 @@
 package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.publiccontent.resource.ContentGroupResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
-import org.innovateuk.ifs.publiccontent.domain.ContentGroup;
-import org.innovateuk.ifs.publiccontent.domain.ContentSection;
-import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
+
+import static java.util.Collections.singletonList;
 
 /**
  * Generates data from Competition Funders and attaches it to a competition
@@ -16,18 +18,20 @@ import java.util.function.BiConsumer;
 public class PublicContentGroupDataBuilder extends BaseDataBuilder<Void, PublicContentGroupDataBuilder>{
 
     public PublicContentGroupDataBuilder withPublicContentGroup(String competitionName, String heading, String content, PublicContentSectionType type) {
-        return with(data -> {
+        return asCompAdmin(data -> {
             if (competitionName != null) {
                 Competition competition = retrieveCompetitionByName(competitionName);
-                PublicContent publicContent = publicContentRepository.findByCompetitionId(competition.getId());
-                ContentSection section = publicContent.getContentSections().stream().filter(filterSection -> type.equals(filterSection.getType())).findAny().get();
+                PublicContentResource publicContent = publicContentService.findByCompetitionId(competition.getId()).getSuccessObjectOrThrowException();
+                PublicContentSectionResource section = publicContent.getContentSections().stream().filter(filterSection -> type.equals(filterSection.getType())).findAny().get();
 
-                ContentGroup contentGroup = new ContentGroup();
+                ContentGroupResource contentGroup = new ContentGroupResource();
                 contentGroup.setContent(content);
-                contentGroup.setContentSection(section);
+                contentGroup.setSectionType(type);
                 contentGroup.setHeading(heading);
                 contentGroup.setPriority(0);
-                contentGroupRepository.save(contentGroup);
+                section.setContentGroups(singletonList(contentGroup));
+
+                publicContentService.updateSection(publicContent, section.getType());
             }
         });
     }

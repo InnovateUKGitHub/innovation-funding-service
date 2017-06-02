@@ -42,6 +42,7 @@ import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.io.File;
@@ -111,6 +112,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private String webBaseUrl;
 
     @Override
+    @Transactional
     public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
         return find(user(userId), competition(competitionId)).andOnSuccess((user, competition) -> createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, user, competition));
     }
@@ -156,6 +158,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
+    @Transactional
     public ServiceResult<FormInputResponseFileEntryResource> createFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile, Supplier<InputStream> inputStreamSupplier) {
 
         long applicationId = formInputResponseFile.getCompoundId().getApplicationId();
@@ -203,6 +206,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> updateFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile, Supplier<InputStream> inputStreamSupplier) {
 
         ServiceResult<FormInputResponseFileAndContents> existingFileResult =
@@ -221,6 +225,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
+    @Transactional
     public ServiceResult<FormInputResponse> deleteFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntry) {
         return getOpenApplication(fileEntry.getApplicationId()).andOnSuccess(application -> deleteFormInputResponseFileUploadonGetApplicationAndSuccess(fileEntry));
     }
@@ -343,6 +348,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
+    @Transactional
     public ServiceResult<ApplicationResource> saveApplicationDetails(final Long id, ApplicationResource application) {
         if (!applicationBelongsToOpenCompetition(id)) {
             return serviceFailure(COMPETITION_NOT_OPEN);
@@ -364,6 +370,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
+    @Transactional
     public ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(final Long id, ZonedDateTime date) {
         return getOpenApplication(id).andOnSuccessReturn(existingApplication -> {
             existingApplication.setSubmittedDate(date);
@@ -373,6 +380,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
+    @Transactional
     public ServiceResult<ApplicationResource> setApplicationFundingEmailDateTime(final Long applicationId, final ZonedDateTime fundingEmailDateTime) {
         return getApplication(applicationId).andOnSuccessReturn(application -> {
             application.setManageFundingEmailDate(fundingEmailDateTime);
@@ -391,6 +399,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
+    @Transactional
     public ServiceResult<ApplicationResource> updateApplicationState(final Long id, final ApplicationState state) {
         if (Arrays.asList(ApplicationState.SUBMITTED).contains(state) && !applicationReadyToSubmit(id)) {
                 return serviceFailure(CommonFailureKeys.GENERAL_FORBIDDEN);
@@ -502,6 +511,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> markAsIneligible(long applicationId, IneligibleOutcome reason) {
         return find(application(applicationId)).andOnSuccess((application) -> {
             if (!applicationWorkflowHandler.markIneligible(application, reason)) {
@@ -513,6 +523,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> informIneligible(long applicationId, ApplicationIneligibleSendResource applicationIneligibleSendResource) {
         return getApplication(applicationId).andOnSuccess(application -> {
 

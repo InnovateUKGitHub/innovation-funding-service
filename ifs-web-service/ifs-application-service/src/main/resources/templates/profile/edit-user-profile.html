@@ -24,15 +24,15 @@
     <form th:action="${userDetailsForm.getActionUrl()}" method="post" th:object="${userDetailsForm}">
         <fieldset>
             <legend class="visuallyhidden">Your details</legend>
-            <div th:class="${#fields.hasErrors('firstName')}? 'form-group error':'form-group'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'form-group-error'">
                 <label class="form-label" for="firstName">
                     <span class="form-label-bold">First name</span>
-                    <span th:if="${#fields.hasErrors('firstName')}" th:remove="tag">
-                          <span class="error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}" />
-                    </span>
+                    <th:block th:if="${#fields.hasErrors('firstName')}">
+                          <span class="error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
+                    </th:block>
                 </label>
-                <input th:class="${#fields.hasErrors('firstName') ? 'form-control field-error' : 'form-control'}"
-                       class="form-control"
+                <input class="form-control"
+                       th:errorclass="form-control-error"
                        type="text"
                        th:field="*{firstName}"
                        required="required"
@@ -42,14 +42,15 @@
                                 data-maxlength-errormessage=#{validation.standard.firstname.length.max},
                                 data-required-errormessage=#{validation.standard.firstname.required}" />
             </div>
-            <div th:class="${#fields.hasErrors('lastName')}? 'form-group error':'form-group'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'form-group-error'">
                 <label class="form-label" for="lastName">
                     <span class="form-label-bold">Last name</span>
-                    <span th:if="${#fields.hasErrors('lastName')}" th:remove="tag">
-                          <span class="error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}" />
-                    </span>
+                    <th:block th:if="${#fields.hasErrors('lastName')}">
+                          <span class="error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
+                    </th:block>
                 </label>
-                <input th:class="${#fields.hasErrors('lastName') ? 'form-control field-error' : 'form-control'}"
+                <input class="form-control"
+                       th:errorclass="form-control-error"
                        type="text"
                        th:field="*{lastName}"
                        required="required"
@@ -59,17 +60,17 @@
                                 data-maxlength-errormessage=#{validation.standard.lastname.length.max},
                                 data-required-errormessage=#{validation.standard.lastname.required}" />
             </div>
-            <div th:class="${#fields.hasErrors('phoneNumber')}? 'form-group error':'form-group'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'form-group-error'">
                 <label class="form-label" for="phoneNumber">
                     <span class="form-label-bold">Phone number</span>
                     <span class="form-hint">We may use this to contact you about the application</span>
-                    <span th:if="${#fields.hasErrors('phoneNumber')}" th:remove="tag">
-                          <span class="error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}" />
-                    </span>
+                    <th:block th:if="${#fields.hasErrors('phoneNumber')}">
+                        <span class="error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
+                    </th:block>
                 </label>
                 <input class="form-control"
                        type="tel"
-                       th:errorclass="field-error"
+                       th:errorclass="form-control-error"
                        th:field="*{phoneNumber}"
                        minlength="8"
                        maxlength="20"
@@ -83,11 +84,11 @@
                 <p class="form-hint">Your email address cannot be changed in the system <br /><strong th:text="*{email}" /></p>
             </div>
             <p>To change your email address please contact Innovate UK by emailing <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a></p>
-            <div th:class="${#fields.hasErrors('allowMarketingEmails')}? 'form-group error':'form-group'">
-                <label class="block-label selection-button-checkbox" for="allow-marketing-emails">
+            <div class="form-group" th:classappend="${#fields.hasErrors('allowMarketingEmails')} ? 'form-group-error'">
+                <div class="multiple-choice">
                     <input id="allow-marketing-emails" th:field="*{allowMarketingEmails}" type="checkbox" value="yes"/>
-                    Email me competition updates, events, deadlines and announcements.
-                </label>
+                    <label for="allow-marketing-emails">Email me competition updates, events, deadlines and announcements.</label>
+                </div>
             </div>
         </fieldset>
         <button class="button button-large extra-margin" name="create-account" type="submit">Save changes</button>

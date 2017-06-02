@@ -10,8 +10,8 @@
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:include="fragments/layout :: main-content-start" />
-            <th:block th:include="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Back',linkClass='link-back',linkUrl=@{${backUrl}})" th:remove="tag"></th:block>
+            <th:block th:insert="fragments/layout :: main-content-start" />
+            <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Back',linkClass='link-back',linkUrl=@{${backUrl}})" />
 
             <th:block th:with="applicationName=${#strings.isEmpty(currentApplication.name)} ? #{ifs.application.no_title} : ${currentApplication.name}">
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application overview',subTitle=${applicationName},size='heading-xlarge'" />
@@ -57,7 +57,7 @@
                   method="post" enctype="multipart/form-data"
                   th:object="${form}" class="form-serialize-js section-overview">
 
-                <th:block th:include="fragments/application :: application-summary (isApplicant = false)" />
+                <th:block th:insert="fragments/application :: application-summary (isApplicant = false)" />
             </form>
 
             <div class="extra-margin">
@@ -94,19 +94,19 @@
                           th:object="${form}"
                           method="POST">
 
-                        <div class="form-group word-count" th:classappend="${#fields.hasErrors('ineligibleReason')} ? 'error'">
+                        <div class="form-group word-count" th:classappend="${#fields.hasErrors('ineligibleReason')} ? 'form-group-error'">
                             <label class="form-label" th:for="ineligibleReason">
                                 Please enter the reason for removing this application from assessment
-                                <span th:if="${#fields.hasErrors('ineligibleReason')}" th:remove="tag">
-                                    <span class="error-message" th:each="err : ${#fields.errors('ineligibleReason')}" th:text="${err}" />
-                                </span>
+                                <th:block th:if="${#fields.hasErrors('ineligibleReason')}">
+                                    <span class="error-message" th:each="err : ${#fields.errors('ineligibleReason')}" th:text="${err}"></span>
+                                </th:block>
                             </label>
                             <textarea class="form-control width-full"
                                       maxlength="5000"
                                       data-max_words="400"
                                       data-maxwordslength="400"
                                       th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5,000')}, data-maxwordslength-errormessage=#{validation.field.max.word.count(null, '400')}"
-                                      th:errorclass="field-error"
+                                      th:errorclass="form-control-error"
                                       rows="10"
                                       th:field="*{ineligibleReason}"></textarea>
                             <div class="textarea-footer" th:with="content=*{ineligibleReason}">

@@ -16,6 +16,8 @@ import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -40,6 +42,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * Generates an Application for a Competition.  Additionally generates finances for each Organisation on the Application
  */
 public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, ApplicationDataBuilder> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ApplicationDataBuilder.class);
 
     public ApplicationDataBuilder withCompetition(CompetitionResource competition) {
         return with(data -> data.setCompetition(competition));
@@ -161,9 +165,6 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
     public ApplicationDataBuilder submitApplication() {
 
         return asLeadApplicant(data -> {
-
-            testService.flushAndClearSession();
-
             applicationService.updateApplicationState(data.getApplication().getId(), ApplicationState.SUBMITTED).
                     getSuccessObjectOrThrowException();
 
@@ -230,10 +231,6 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
 
     private ApplicationDataBuilder asLeadApplicant(Consumer<ApplicationData> action) {
         return with(data -> doAs(data.getLeadApplicant(), () -> action.accept(data)));
-    }
-
-    private ApplicationDataBuilder asCompAdmin(Consumer<ApplicationData> action) {
-        return with(data -> {doAs(compAdmin(), () -> action.accept(data));});
     }
 
     private void doApplicationDetailsUpdate(ApplicationData data, Consumer<ApplicationResource> updateFn) {
@@ -310,7 +307,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                         withAssignee(data.getLeadApplicant().getEmail()).
                         withAnswer("This is the applicant response for " + question.getName().toLowerCase() + ".", data.getLeadApplicant().getEmail());
 
-                List<FormInputResource> formInputs = formInputService.findByQuestionId(question.getId()).getSuccessObjectOrThrowException();
+                List<FormInputResource> formInputs = retrieveFormInputsByQuestionId(question);
 
                 if (formInputs.stream().anyMatch(fi -> fi.getType().equals(FormInputType.FILEUPLOAD))) {
 
@@ -325,5 +322,11 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
 
             responseBuilders.forEach(QuestionResponseDataBuilder::build);
         });
+    }
+
+    @Override
+    protected void postProcess(int index, ApplicationData instance) {
+        super.postProcess(index, instance);
+        LOG.info("Created Application '{}'", instance.getApplication().getName());
     }
 }

@@ -59,7 +59,7 @@ Non pdf uploads not allowed
     [Documentation]    INFUND-2720
     [Tags]    Upload
     When the academic partner uploads a file    ${text_file}
-    Then the user should get an error page    ${wrong_filetype_validation_error}
+    Then the user should see an error    ${wrong_filetype_validation_error}
 
 Lead applicant can't upload a JeS file
     [Documentation]    INFUND-2720
