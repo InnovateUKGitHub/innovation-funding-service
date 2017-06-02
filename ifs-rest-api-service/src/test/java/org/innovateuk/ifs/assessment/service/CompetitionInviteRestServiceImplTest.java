@@ -22,6 +22,8 @@ import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuil
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBuilder.newAvailableAssessorPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
+import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteListResourceBuilder.newExistingUserStagedInviteListResource;
+import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceBuilder.newNewUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
@@ -258,6 +260,25 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
         setupPostWithRestResultExpectations(format("%s/%s/%s", restUrl, "inviteNewUsers", competitionId), newUserStagedInviteListResource, OK);
 
         RestResult<Void> restResult = service.inviteNewUsers(newUserStagedInviteListResource, competitionId);
+        assertTrue(restResult.isSuccess());
+    }
+
+    @Test
+    public void inviteExistingUsers() throws Exception {
+        long competitionId = 1L;
+
+        ExistingUserStagedInviteListResource existingUserStagedInviteListResource = newExistingUserStagedInviteListResource()
+                .withInvites(
+                        newExistingUserStagedInviteResource()
+                                .withEmail("test1@test.com", "test2@test.com")
+                                .withCompetitionId(competitionId)
+                                .build(2)
+                )
+                .build();
+
+        setupPostWithRestResultExpectations(format("%s/%s", restUrl, "inviteUsers"), existingUserStagedInviteListResource, OK);
+
+        RestResult<Void> restResult = service.inviteUsers(existingUserStagedInviteListResource);
         assertTrue(restResult.isSuccess());
     }
 

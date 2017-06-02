@@ -23,7 +23,7 @@ import java.util.Optional;
 @RequestMapping("/competitioninvite")
 public class CompetitionInviteController {
 
-    public static final int DEFAULT_PAGE_SIZE = 20;
+    private static final int DEFAULT_PAGE_SIZE = 20;
 
     @Autowired
     private CompetitionInviteService competitionInviteService;
@@ -123,6 +123,11 @@ public class CompetitionInviteController {
     @PostMapping("/inviteUser")
     public RestResult<CompetitionInviteResource> inviteUser(@Valid @RequestBody ExistingUserStagedInviteResource existingUserStagedInvite) {
         return competitionInviteService.inviteUser(existingUserStagedInvite).toPostWithBodyResponse();
+    }
+
+    @PostMapping("/inviteUsers")
+    public RestResult<Void> inviteUsers(@Valid @RequestBody ExistingUserStagedInviteListResource existingUserStagedInvites) {
+        return competitionInviteService.inviteUsers(existingUserStagedInvites.getInvites()).toPostWithBodyResponse();
     }
 
     @PostMapping("/inviteNewUser")

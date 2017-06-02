@@ -41,6 +41,8 @@ public interface CompetitionInviteRestService {
 
     RestResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource existingUserStagedInvite);
 
+    RestResult<Void> inviteUsers(ExistingUserStagedInviteListResource existingUserStagedInvite);
+
     RestResult<Void> inviteNewUsers(NewUserStagedInviteListResource newUserStagedInvites, long competitionId);
 
     RestResult<Void> deleteInvite(String email, long competitionId);

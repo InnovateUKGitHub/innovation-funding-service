@@ -165,41 +165,6 @@ public class CompetitionManagementInviteAssessorsController {
         return simpleMap(pageResource, AvailableAssessorResource::getEmail);
     }
 
-    // proposed for non-js call from 'add all' checkbox
-    @PostMapping(value = "/find/addAll")
-    public String addAllAssessorsFromCurrentPageToInviteList(Model model,
-                                        @PathVariable("competitionId") long competitionId,
-                                        @RequestParam("addAll") boolean email,
-                                        @RequestParam(defaultValue = "0") int page,
-                                        @RequestParam Optional<Long> innovationArea,
-                                        HttpServletRequest request,
-                                        HttpServletResponse response) {
-
-        AssessorSelectionForm selectionForm = getAssessorSelectionFormFromCookie(request).orElse(new AssessorSelectionForm());
-        AvailableAssessorPageResource pageResource = competitionInviteRestService.getAvailableAssessors(competitionId, page, innovationArea)
-                .getSuccessObjectOrThrowException();
-
-        List<String> assessorEmails = simpleMap(pageResource.getContent(), AvailableAssessorResource::getEmail);
-        selectionForm.setAssessorEmails(assessorEmails);
-        cookieUtil.saveToCookie(response, SELECTION_FORM, getSerializedObject(selectionForm));
-        return redirectToFind(competitionId, page, innovationArea);
-    }
-
-    // proposed for non-js call from 'add all' checkbox
-    @PostMapping(value = "/find/removeAll")
-    public String removeAllAssessorsFromFromCurrentPageInviteList(Model model,
-                                             @PathVariable("competitionId") long competitionId,
-                                             @RequestParam(defaultValue = "0") int page,
-                                             @RequestParam Optional<Long> innovationArea,
-                                             HttpServletRequest request,
-                                             HttpServletResponse response) {
-
-        AssessorSelectionForm selectionForm = getAssessorSelectionFormFromCookie(request).orElse(new AssessorSelectionForm());
-        selectionForm.getAssessorEmails().clear();
-        cookieUtil.saveToCookie(response, SELECTION_FORM, getSerializedObject(selectionForm));
-        return redirectToFind(competitionId, page, innovationArea);
-    }
-
     // Invite all selected users
     @PostMapping(value = "/find/addSelected")
     public String addSelectedAssessorsToInviteList(Model model,
@@ -217,13 +182,11 @@ public class CompetitionManagementInviteAssessorsController {
         Supplier<String> failureView = () -> redirectToFind(competitionId, page, innovationArea);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            // Could be possibly be optimised in similar fashion to INFUND-4105
-            submittedSelectionForm.getAssessorEmails().stream().forEach(email -> {
-                ServiceResult<CompetitionInviteResource> updateResult = competitionInviteRestService.inviteUser(new ExistingUserStagedInviteResource(email, competitionId)).toServiceResult();
-                validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors());
-            });
+            RestResult<Void> restResult = competitionInviteRestService.inviteUsers(
+                    newSelectionFormToResource(submittedSelectionForm, competitionId));
 
-            return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            return validationHandler.addAnyErrors(restResult)
+                                    .failNowOrSucceedWith(failureView, () -> {
                 cookieUtil.removeCookie(response, SELECTION_FORM);
                 return redirectToInvite(competitionId, 0);
             });
@@ -347,10 +310,6 @@ public class CompetitionManagementInviteAssessorsController {
         return "assessors/overview";
     }
 
-    private ServiceResult<CompetitionInviteResource> inviteUser(String email, long competitionId) {
-        return competitionInviteRestService.inviteUser(new ExistingUserStagedInviteResource(email, competitionId)).toServiceResult();
-    }
-
     private ServiceResult<Void> deleteInvite(String email, long competitionId) {
         return competitionInviteRestService.deleteInvite(email, competitionId).toServiceResult();
     }
@@ -367,6 +326,18 @@ public class CompetitionManagementInviteAssessorsController {
 
         return new NewUserStagedInviteListResource(invites);
     }
+
+    private ExistingUserStagedInviteListResource newSelectionFormToResource(AssessorSelectionForm form, long competitionId) {
+        List<ExistingUserStagedInviteResource> invites = form.getAssessorEmails().stream()
+                .map(email -> new ExistingUserStagedInviteResource(
+                        email,
+                        competitionId
+                ))
+                .collect(Collectors.toList());
+
+        return new ExistingUserStagedInviteListResource(invites);
+    }
+
 
     private ObjectNode createJsonObjectNode(boolean success) {
         ObjectMapper mapper = new ObjectMapper();

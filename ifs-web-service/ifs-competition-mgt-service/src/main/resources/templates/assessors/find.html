@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite assessors'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite assessors'"/>
 </head>
 
 <body th:with="context='comp-management'" class="competition-management competition-overview invite-assessors">
-<th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
+    <th:block th:insert="fragments/layout :: main-content-start"/>
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}"/>
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite assessors',subTitle=${model.competitionName},size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title"
+              th:with="pageTitle='Invite assessors',subTitle=${model.competitionName},size='heading-xlarge'"/>
     <h2 class="heading-medium">Key statistics</h2>
 
     <div class="grid-row">
@@ -66,7 +68,8 @@
 
     <div class="grid-row">
         <div class="column-three-quarters">
-            <h2 class="heading-small no-margin-top">Find registered assessors. Select them using the checkboxes and add them to your invite list.</h2>
+            <h2 class="heading-small no-margin-top">Find registered assessors. Select them using the checkboxes and add
+                them to your invite list.</h2>
         </div>
     </div>
 
@@ -79,7 +82,8 @@
                             id="filterInnovationArea" class="form-control extra-margin-bottom"
                             th:field="*{innovationArea}">
                         <option value="">Any</option>
-                        <optgroup th:each="innovationSector : ${model.innovationSectorOptions}" th:label="${innovationSector.name}">
+                        <optgroup th:each="innovationSector : ${model.innovationSectorOptions}"
+                                  th:label="${innovationSector.name}">
                             <option th:each="innovationArea : ${innovationSector.children}"
                                     th:value="${innovationArea.id}"
                                     th:text="${innovationArea.name}">
@@ -95,7 +99,9 @@
         </div>
     </form>
 
-    <form method="POST" th:action="@{/competition/{competitionId}/assessors/find/addSelected(competitionId=${model.competitionId})}" th:object="${selectionForm}" data-autosave="findAssessor">
+    <form method="POST"
+          th:action="@{/competition/{competitionId}/assessors/find/addSelected(competitionId=${model.competitionId})}"
+          th:object="${selectionForm}">
         <div class="grid-row sorting">
             <div class="column-half">
                 <span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">20</span>
@@ -160,12 +166,12 @@
 
     <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
+    <th:block th:insert="fragments/layout :: main-content-end"/>
 </main>
 
-            <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
-            <th:block th:insert="fragments/layout :: main-content-end" />
-        </main>
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+</body>
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
@@ -249,5 +255,78 @@
             //                        // ]]>
             </script>
 
-    </body>
+                jQuery('#select-assessor-header').attr('aria-hidden', 'true')
+                jQuery('#select-all-checkbox').attr('aria-hidden', 'false')
+
+                var checkboxes = jQuery("td :checkbox");
+                var selectAll = jQuery("#select-all-check");
+                var competitionId = jQuery('#competition_id').val();
+                var url = 'competition/' + competitionId + '/assessors/find';
+                var data;
+
+                function allChecked(){
+                  return checkboxes.length === checkboxes.filter(":checked").length;
+                }
+
+                function updateSelectAllStatus(){
+                  selectAll.prop("checked", allChecked()? true : false)
+
+                  if (allChecked()) {
+                    selectAll.addClass('selected')
+                  } else {
+                    selectAll.parent().removeClass('selected')
+                  }
+                }
+
+                function handleSelectAllClick(){
+                  checkboxes.prop("checked", allChecked()? false : true)
+
+                  if (allChecked()) {
+                    checkboxes.parent().addClass('selected')
+                  } else {
+                    checkboxes.parent().removeClass('selected')
+                  }
+                }
+
+                function updateController() {
+                    jQuery.ajaxProtected({
+                    url: window.location.href,
+                    method: 'POST',
+                    dataType: 'json', // for requests headers so that the back-end can give a version without 302 redirect
+                    data: data
+                    })
+                    .done(function (data) {
+                        //alert("done");
+                    })
+                    .fail(function (jqXHR, data) {
+                        //alert("error");
+                    })
+                }
+
+                selectAll.on("click", function(e) {
+                  var addAll = "addAll=" + this.checked;
+                  data = addAll;
+
+                  handleSelectAllClick();
+                  updateSelectAllStatus();
+                  updateController();
+                });
+
+                checkboxes.change(function(){
+
+                  var addAssessor = "assessor=";
+                  var isSelected = "&isSelected=";
+
+                  data = "";
+                  addAssessor = addAssessor + this.value;
+                  isSelected = isSelected + this.checked;
+                  data = addAssessor + isSelected;
+                  updateSelectAllStatus();
+                  updateController()
+                });
+           });
+	// ]]>
+
+</script>
+
 </html>
