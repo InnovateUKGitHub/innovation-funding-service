@@ -65,13 +65,15 @@ Competition information and search: server side validation
     Then the user should see a summary error        Please enter a project funding range.
     Then the user should see a summary error        Please enter an eligibility summary.
     Then the user should see a summary error        Please enter a valid set of keywords.
+    Then the user should see a summary error        Please select a publish setting.
 
 Competition information and search: Valid values
     [Documentation]    INFUND-6915, INFUND-8363
     [Tags]  HappyPath
-    When the user enters text to a text field       id=short-description        Short public description
-    And the user enters text to a text field        id=funding-range            Up to £1million
-    And the user enters text to a text field        css=[labelledby="eligibility-summary"]      Summary of eligiblity
+    When the user enters text to a text field       id=short-description  Short public description
+    And the user enters text to a text field        id=funding-range  Up to £1million
+    And the user selects the radio button           publishSetting  invite
+    And the user enters text to a text field        css=[labelledby="eligibility-summary"]  Summary of eligiblity
     When the user enters text to a text field       id=keywords  hellohellohellohellohellohellohellohellohellohellou
     And the user clicks the button/link             jQuery=button:contains("Save and return")
     Then the user should see the element            jQuery=.error-summary-list:contains("Each keyword must be less than 50 characters long.")
@@ -87,6 +89,7 @@ Competition information and search: ReadOnly
     And the user should see the element   jQuery=dt:contains("Project funding range") + dd:contains("Up to £1million")
     And the user should see the element   jQuery=dt:contains("Eligibility summary") + dd:contains("Summary of eligiblity")
     And the user should see the element   jQuery=dt:contains("Keywords") + dd:contains("Search,Testing,Robot")
+    And the user should see the element   jQuery=dt:contains("Publish setting") + dd:contains("Invite only")
     When the user clicks the button/link  link=Edit
     Then the user should see the element  css=#short-description[value="Short public description"]
     And the user clicks the button/link   jQuery=.button:contains("Save and return")

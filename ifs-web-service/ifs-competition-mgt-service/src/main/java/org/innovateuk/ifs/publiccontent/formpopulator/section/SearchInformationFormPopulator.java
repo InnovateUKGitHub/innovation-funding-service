@@ -29,6 +29,9 @@ public class SearchInformationFormPopulator extends AbstractPublicContentFormPop
     }
 
     private String convertToPublishSettingString(Boolean inviteOnly) {
+        if(null == inviteOnly) {
+            return "";
+        }
         return inviteOnly ? "invite" : "public";
     }
 
