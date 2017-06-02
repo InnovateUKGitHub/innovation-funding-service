@@ -4,9 +4,9 @@ import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_SERVICE_RESULT_EXCEPTION_THROWN_DURING_PROCESSING;
@@ -21,8 +21,12 @@ public class ServiceFailureExceptionHandlingAdviceTest extends BaseIntegrationTe
     @Autowired
     private UserRepository userRepository;
 
+    @Before
+    public void assertExpectedStartingStateBeforeEachTest() {
+        assertEquals("Steve Smith", getUser().getName());
+    }
+
     @Test
-    @Rollback
     public void testSuccessfulMethodUpdatesDatabaseSuccessfully() {
 
         testService.successfulMethod();
@@ -33,7 +37,6 @@ public class ServiceFailureExceptionHandlingAdviceTest extends BaseIntegrationTe
     }
 
     @Test
-    @Rollback
     public void testFailingMethodRollsBackDatabaseSuccessfully() {
 
         ServiceResult<String> result = testService.failingMethod();
@@ -48,7 +51,6 @@ public class ServiceFailureExceptionHandlingAdviceTest extends BaseIntegrationTe
      * service methods fail (as in legitimate failures, like handled "Not Founds"
      */
     @Test
-    @Rollback
     public void testSuccessfulMethodWithFailingInternalCallUpdatesDatabaseSuccessfully() {
 
         testService.successfulMethodWithInternalFailingCall();
@@ -63,7 +65,6 @@ public class ServiceFailureExceptionHandlingAdviceTest extends BaseIntegrationTe
      * prior internal calls failing 
      */
     @Test
-    @Rollback
     public void testFailingMethodWithFailingInternalCallRollsBackDatabaseSuccessfully() {
 
         testService.failingMethodWithInternalFailingCall();
@@ -71,7 +72,6 @@ public class ServiceFailureExceptionHandlingAdviceTest extends BaseIntegrationTe
     }
 
     @Test
-    @Rollback
     public void testExceptionThrowingMethodCreatesServiceFailureAndRollsBackDatabaseSuccessfully() {
 
         ServiceResult<String> result = testService.exceptionThrowingMethod();

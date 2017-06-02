@@ -20,7 +20,6 @@ public class TravelCostHandler extends FinanceRowHandler<TravelCost> {
 
     @Override
     public ApplicationFinanceRow toCost(TravelCost travel) {
-        LOG.info("COST TRAVEL UPDATE");
         ApplicationFinanceRow applicationFinanceRow = null;
         if (travel != null && travel.getCostType() != null && travel.getCostType().equals(FinanceRowType.TRAVEL)) {
             applicationFinanceRow = new ApplicationFinanceRow(travel.getId(), COST_KEY, travel.getItem(), "", travel.getQuantity(), travel.getCost(), null, null);
@@ -30,7 +29,6 @@ public class TravelCostHandler extends FinanceRowHandler<TravelCost> {
 
     @Override
     public ProjectFinanceRow toProjectCost(TravelCost travel) {
-        LOG.info("PROJECT COST TRAVEL UPDATE");
         ProjectFinanceRow projectFinanceRow = null;
         if (travel != null && travel.getCostType() != null && travel.getCostType().equals(FinanceRowType.TRAVEL)) {
             projectFinanceRow =  new ProjectFinanceRow(travel.getId(), COST_KEY, travel.getItem(), "", travel.getQuantity(), travel.getCost(), null, null);

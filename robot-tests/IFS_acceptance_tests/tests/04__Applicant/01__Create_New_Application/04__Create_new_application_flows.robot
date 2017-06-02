@@ -14,6 +14,7 @@ Suite Setup       The guest user opens the browser
 Suite Teardown    the user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
+Resource          ../../10__Project_setup/PS_Common.robot
 
 *** Test Cases ***
 The email address does not stay in the cookie
@@ -160,7 +161,7 @@ Applicant goes to the registration form
     And the user clicks the button/link    jQuery=.button:contains("Create account")
     When the user enters text to a text field    id=organisationSearchName    Hive IT
     And the user clicks the button/link    id=org-search
-    And the user clicks the button/link    Link=HIVE IT LIMITED
+    And the user clicks the button/link    Link=${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
     And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=button:contains("Continue")
     the user selects the radio button    organisationTypeId    ${ORG_TYPE}

@@ -4,12 +4,15 @@ import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationPrintPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.management.form.ReinstateIneligibleApplicationForm;
+import org.innovateuk.ifs.management.model.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.management.model.ReinstateIneligibleApplicationModelPopulator;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -25,6 +28,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -54,6 +58,10 @@ public class CompetitionManagementApplicationController {
     private FormInputResponseRestService formInputResponseRestService;
     @Autowired
     private CompetitionManagementApplicationService competitionManagementApplicationService;
+    @Autowired
+    private ApplicationSummaryRestService applicationSummaryRestService;
+    @Autowired
+    private ApplicationTeamModelPopulator applicationTeamModelPopulator;
 
     @Autowired
     private ReinstateIneligibleApplicationModelPopulator reinstateIneligibleApplicationModelPopulator;
@@ -159,13 +167,27 @@ public class CompetitionManagementApplicationController {
                 .validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> applicationPrintPopulator.print(applicationId, model, user));
     }
 
+    @GetMapping("/{applicationId}/team")
+    public String displayApplicationTeam(@PathVariable("applicationId") final Long applicationId,
+                                         @PathVariable("competitionId") final Long competitionId,
+                                         @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
+                                         @RequestParam MultiValueMap<String, String> queryParams,
+                                         Model model) {
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccessObjectOrThrowException();
+        ApplicationTeamResource teamResource = applicationSummaryRestService.getApplicationTeam(applicationId).getSuccessObjectOrThrowException();
+
+        String params = UriComponentsBuilder.newInstance()
+                .queryParams(queryParams)
+                .build()
+                .encode()
+                .toUriString();
+        model.addAttribute("model", applicationTeamModelPopulator.populateModel(application, teamResource, params));
+        return "application/team-read-only";
+    }
+
     private String doReinstateIneligibleApplicationConfirm(final Model model, final long applicationId) {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObjectOrThrowException();
         model.addAttribute("model", reinstateIneligibleApplicationModelPopulator.populateModel(applicationResource));
         return "application/reinstate-ineligible-application-confirm";
-    }
-
-    private String redirectToApplicationOverview(Long competitionId, Long applicationId) {
-        return "redirect:/competition/" + competitionId + "/application/" + applicationId;
     }
 }

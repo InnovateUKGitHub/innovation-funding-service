@@ -24,6 +24,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -111,6 +112,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     }
 
     @Override
+    @Transactional
     public ServiceResult<List<ValidationMessages>> markSectionAsComplete(final Long sectionId,
                                                                          final Long applicationId,
                                                                          final Long markedAsCompleteById) {
@@ -128,6 +130,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> markSectionAsNotRequired(Long sectionId, Long applicationId, Long markedAsCompleteById) {
         return find(section(sectionId), application(applicationId)).andOnSuccess((section, application) -> {
             markSectionAsComplete(section, application, markedAsCompleteById);
@@ -145,6 +148,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
 
 
     @Override
+    @Transactional
     public ServiceResult<Void> markSectionAsInComplete(final Long sectionId,
                                                        final Long applicationId,
                                                        final Long markedAsInCompleteById) {

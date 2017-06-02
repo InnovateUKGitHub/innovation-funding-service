@@ -11,10 +11,12 @@ import org.innovateuk.threads.resource.NoteResource;
 import org.innovateuk.threads.resource.PostResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 public class FinanceCheckNotesServiceImpl implements FinanceCheckNotesService {
     private final ThreadService<NoteResource, PostResource> service;
 
@@ -24,6 +26,7 @@ public class FinanceCheckNotesServiceImpl implements FinanceCheckNotesService {
     }
 
     @Override
+    @Transactional
     public ServiceResult<Long> create(NoteResource note) {
         return service.create(note);
     }
@@ -39,6 +42,7 @@ public class FinanceCheckNotesServiceImpl implements FinanceCheckNotesService {
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> addPost(PostResource post, Long threadId) {
         return service.addPost(post, threadId);
     }
