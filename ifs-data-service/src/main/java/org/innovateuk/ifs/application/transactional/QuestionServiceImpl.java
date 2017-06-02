@@ -23,6 +23,7 @@ import org.innovateuk.ifs.user.transactional.UserService;
 import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
@@ -83,18 +84,21 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     @Override
+    @Transactional
     public ServiceResult<List<ValidationMessages>> markAsComplete(final QuestionApplicationCompositeId ids,
                                               final Long markedAsCompleteById) {
         return setComplete(ids.questionId, ids.applicationId, markedAsCompleteById, true);
     }
 
     @Override
+    @Transactional
     public ServiceResult<List<ValidationMessages>> markAsInComplete(final QuestionApplicationCompositeId ids,
                                                 final Long markedAsInCompleteById) {
         return setComplete(ids.questionId, ids.applicationId, markedAsInCompleteById, false);
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> assign(final QuestionApplicationCompositeId ids, final Long assigneeId, final Long assignedById) {
         return find(getQuestionSupplier(ids.questionId), openApplication(ids.applicationId), processRole(assigneeId), processRole(assignedById))
                 .andOnSuccess((question, application, assignee, assignedBy) -> {
@@ -142,6 +146,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> updateNotification(final Long questionStatusId,
                                                   final Boolean notify) {
 
@@ -317,6 +322,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 	}
 
     @Override
+    @Transactional
     public ServiceResult<QuestionResource> save(QuestionResource questionResource) {
         Question questionUpdated = questionRepository.save(questionMapper.mapToDomain(questionResource));
         return serviceSuccess(questionMapper.mapToResource(questionUpdated));

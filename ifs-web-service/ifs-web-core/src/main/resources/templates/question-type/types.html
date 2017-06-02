@@ -34,7 +34,7 @@
         <th:block th:if="${!model.assignButtonsViewModel.currentUserIsLead}">
             <th:block th:unless="${model.complete or model.closed}">
                 <div class="assign-container" th:classappend="${model.assignButtonsViewModel.assignedToCurrentUser} ? 'assign-alert' : 'assigned-alert'">
-                    <th:block th:include="question-type/form-elements :: current-assignee (${model.assignButtonsViewModel})"/>
+                    <th:block th:insert="question-type/form-elements :: current-assignee (${model.assignButtonsViewModel})"/>
                 </div>
             </th:block>
         </th:block>
@@ -122,7 +122,7 @@
                 #fields.hasErrors('notBindedField') will throw an exception, and there is no quick way of checking if a
                 field has been binded
             */-->
-            <div th:classappend="${!#strings.isEmpty(validationField)} ? (${#fields.hasErrors('__${validationField}__')} ? 'error')">
+            <div th:classappend="${!#strings.isEmpty(validationField)} ? (${#fields.hasErrors('__${validationField}__')} ? 'form-group-error')">
                 <th:block th:if="${!#strings.isEmpty(validationField)}">
                     <th:block th:if="${#fields.hasErrors('__${validationField}__')}">
                         <span class="error-message" th:each="err : ${#fields.errors('__${validationField}__')}" th:text="${err}"/>
@@ -202,7 +202,7 @@
                 This could be fixed by doing a total refactor of javascript or set two different messages (Your project should be more than 1, less than 36), or like this with a regex */-->
             </div>
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.researchCategory__}')} ? 'error'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.researchCategory__}')} ? 'form-group-error'">
                 <label for="researchCategory">
                     <span class="heading-medium">Research category</span>
                     <th:block th:insert="question-type/form-elements :: form-hint (hint='The type of research affects the level of funding a business can receive under UK state aid rules. Changing the research category will reset the funding level for all business participants.')" />
@@ -221,7 +221,7 @@
 
             <div class="form-group"
                  th:if="${model.canSelectInnovationArea}"
-                 th:classappend="${#fields.hasErrors('*{__application.innovationArea__}')} ? 'error'">
+                 th:classappend="${#fields.hasErrors('*{__application.innovationArea__}')} ? 'form-group-error'">
 
                 <label for="researchArea">
                     <span class="heading-medium">Innovation area</span>
@@ -242,17 +242,14 @@
             <!--/* Input is used here to easily check if a Innovation Area has been selected for mark as complete validation */-->
             <input type="hidden" th:if="${model.innovationAreaHasBeenSelected}" th:field="*{__application.innovationArea.name__}" value="Innovation area name has been selected"/>
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.resubmission__}')} ? 'error'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.resubmission__}')} ? 'form-group-error'">
                 <fieldset>
                     <legend>
                         <span class="form-label form-label-bold">Is this application a resubmission?</span>
                         <th:block th:insert="question-type/form-elements :: form-hint (hint='Let us know if this application has been previously submitted to Innovate UK.')" />
                         <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.resubmission')" />
                     </legend>
-                    <label class="block-label selection-button-radio "
-                           th:classappend="${model.application.resubmission != null and model.application.resubmission} ? 'selected'"
-                           for="application.resubmission-yes"
-                           data-target="resubmission-details">
+                    <div class="multiple-choice" data-target="resubmission-details">
                         <input type="radio"
                                id="application.resubmission-yes"
                                th:field="*{__application.resubmission__}"
@@ -260,24 +257,26 @@
                                required="required"
                                th:checked="${model.application.resubmission != null and model.application.resubmission}"
                                th:attr="data-required-errormessage=#{validation.application.must.indicate.resubmission.or.not}"/>
+                        <label for="application.resubmission-yes">
                                 Yes
-                    </label>
-                    <label class="block-label selection-button-radio"
-                           th:classappend="${model.application.resubmission != null and !model.application.resubmission} ? 'selected'"
-                           for="application.resubmission-no">
-                            <input type="radio"
+                        </label>
+                    </div>
+                    <div class="multiple-choice">
+                        <input type="radio"
                                    id="application.resubmission-no"
                                    th:field="*{__application.resubmission__}"
                                    value="false"
                                    required="required"
                                    th:checked="${model.application.resubmission != null and !model.application.resubmission}"
                                    th:attr="data-required-errormessage=#{validation.application.must.indicate.resubmission.or.not}"/>
+                        <label for="application.resubmission-no">
                                 No
-                    </label>
+                        </label>
+                    </div>
                 </fieldset>
             </div>
             <div id="resubmission-details">
-                <div class="form-group"  th:classappend="${#fields.hasErrors('*{__application.previousApplicationNumber__}')} ? 'error'">
+                <div class="form-group"  th:classappend="${#fields.hasErrors('*{__application.previousApplicationNumber__}')} ? 'form-group-error'">
                     <h2 class="heading-medium no-margin-top">Please provide the details of this previous application</h2>
                     <label for="application_details-previousapplicationnumber">
                         <span class="form-label form-label-bold">Previous application number</span>
@@ -288,7 +287,7 @@
                                id="application_details-previousapplicationnumber"
                                th:field="*{__application.previousApplicationNumber__}"
                                required="required"
-                               th:errorclass="field-error"
+                               th:errorclass="form-control-error"
                                th:attr="data-required-errormessage=#{validation.application.previous.application.number.required}" />
                 </div>
                 <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.previousApplicationTitle__}')} ? 'error'">
@@ -301,7 +300,7 @@
                            id="application_details-previousapplicationtitle"
                            th:field="*{__application.previousApplicationTitle__}"
                            required="required"
-                           th:errorclass="field-error"
+                           th:errorclass="form-control-error"
                            th:attr="data-required-errormessage=#{validation.application.previous.application.title.required}" />
                 </div>
             </div>

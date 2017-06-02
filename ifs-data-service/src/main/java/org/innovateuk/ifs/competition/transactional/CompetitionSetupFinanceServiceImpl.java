@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -20,6 +21,7 @@ public class CompetitionSetupFinanceServiceImpl extends BaseTransactionalService
     private CompetitionSetupTransactionalService competitionSetupTransactionalService;
 
     @Override
+    @Transactional
     public ServiceResult<Void> save(CompetitionSetupFinanceResource compSetupFinanceRes) {
         Long compId = compSetupFinanceRes.getCompetitionId();
 

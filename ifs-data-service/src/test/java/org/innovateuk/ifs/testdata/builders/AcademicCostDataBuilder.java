@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.testdata.builders;
 
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.domain.FileEntry;
@@ -8,6 +9,9 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.testdata.builders.data.AcademicCostData;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -20,6 +24,8 @@ import static java.util.Collections.emptyList;
  * Generates Academic Finances for an Organisation on an Application
  */
 public class AcademicCostDataBuilder extends BaseDataBuilder<AcademicCostData, AcademicCostDataBuilder> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ApplicationDataBuilder.class);
 
     public AcademicCostDataBuilder withApplicationFinance(ApplicationFinanceResource applicationFinance) {
         return with(data -> data.setApplicationFinance(applicationFinance));
@@ -110,5 +116,13 @@ public class AcademicCostDataBuilder extends BaseDataBuilder<AcademicCostData, A
     @Override
     protected AcademicCostData createInitial() {
         return new AcademicCostData();
+    }
+
+    @Override
+    protected void postProcess(int index, AcademicCostData instance) {
+        super.postProcess(index, instance);
+        OrganisationResource organisation = organisationService.findById(instance.getApplicationFinance().getOrganisation()).getSuccessObjectOrThrowException();
+        ApplicationResource application = applicationService.getApplicationById(instance.getApplicationFinance().getApplication()).getSuccessObjectOrThrowException();
+        LOG.info("Created Academic Costs for Application '{}', Organisation '{}'", application.getName(), organisation.getName());
     }
 }

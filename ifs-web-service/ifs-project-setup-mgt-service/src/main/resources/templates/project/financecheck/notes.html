@@ -60,7 +60,7 @@
                         <h2 class="heading-medium">Add your comment</h2>
                         <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}"
                               method="post" enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
-                            <div th:class="${#fields.hasErrors('comment')} ? 'form-group error':'form-group'">
+                            <div class="form-group" th:classappend="${#fields.hasErrors('comment')} ? 'form-group-error'">
                                 <label for="comment">
                                     <span class="form-label-bold">Comment</span>
                                     <th:block th:if="${#fields.hasErrors('comment')}">
@@ -80,7 +80,7 @@
                                                data-maxwordslength-errormessage=#{validation.field.max.word.count(null,${model.maxNoteWords})},
                                                data-maxlength-errormessage=#{validation.field.too.many.characters(null, ${model.maxNoteCharacters})},
                                                data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                      th:classappend="${#fields.hasErrors('comment')} ? 'field-error'"></textarea>
+                                      th:errorclass="field-group-error"></textarea>
                                     <div class="textarea-footer" th:with="comment=*{comment}">
                                         <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxNoteWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxNoteWords, content)})" />
                                     </div>
@@ -97,7 +97,7 @@
                                     </ul>
                                 </th:block>
                                 <h3 class="heading-small no-margin">Upload supporting documentation in pdf format</h3>
-                                <div th:class="${#fields.hasErrors('attachment')} ? 'error' : ''">
+                                <div th:class="${#fields.hasErrors('attachment')} ? 'form-group-error' : ''">
                                     <th:block th:if="${#fields.hasErrors('attachment')}">
                                         <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
                                     </th:block>

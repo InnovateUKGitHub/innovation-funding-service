@@ -61,7 +61,7 @@
                         </tr>
 
                         <tr th:each="applicant, applicantStat: *{applicants}" class="repeatable-row">
-                            <td th:class="${#fields.hasErrors('applicants[__${applicantStat.index}__].name') ? 'form-group error':'form-group'}">
+                            <td class="form-group" th:classappend="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')} ? 'form-group-error'">
                                 <label th:for="'applicants'+${applicantStat.index}+'.name'">
                                     <span class="visually-hidden">Applicant name</span>
                                     <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}">
@@ -74,11 +74,11 @@
                                 <input type="text"
                                        th:field="*{applicants[__${applicantStat.index}__].name}"
                                        class="form-control width-full"
-                                       th:errorclass="field-error"
+                                       th:errorclass="form-control-error"
                                        required="required"
                                        th:attr="data-required-errormessage=#{validation.standard.name.required}" />
                             </td>
-                            <td th:class="${#fields.hasErrors('applicants[__${applicantStat.index}__].email') ? 'form-group error':'form-group'}">
+                            <td class="form-group" th:classappend="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')} ? 'form-group-error'">
                                 <label th:for="'applicants'+${applicantStat.index}+'.email'">
                                     <span class="visually-hidden">Applicant email</span>
                                     <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}">
@@ -91,7 +91,7 @@
                                 <input type="email"
                                        th:field="*{applicants[__${applicantStat.index}__].email}"
                                        class="form-control width-full"
-                                       th:errorclass="field-error"
+                                       th:errorclass="form-control-error"
                                        required="required"
                                        th:attr="data-required-errormessage=#{validation.invite.email.required},
                                                 data-email-errormessage=#{validation.standard.email.format},
