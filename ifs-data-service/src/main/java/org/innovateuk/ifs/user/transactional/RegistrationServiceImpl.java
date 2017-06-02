@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.method.P;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
@@ -120,6 +121,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    @Transactional
     public ServiceResult<UserResource> createUser(@P("user") UserRegistrationResource userRegistrationResource) {
         final UserResource userResource = userRegistrationResource.toUserResource();
 
@@ -131,6 +133,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    @Transactional
     public ServiceResult<UserResource> createOrganisationUser(long organisationId, UserResource userResource) {
         String roleName;
         if (isUserCompAdmin(userResource.getEmail())) {
@@ -155,6 +158,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> activateUser(long userId) {
         return getUser(userId).andOnSuccessReturnVoid(this::activateUser);
     }
@@ -169,6 +173,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> activateApplicantAndSendDiversitySurvey(long userId) {
         return getUser(userId)
                 .andOnSuccess(this::activateUser)
@@ -176,6 +181,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> activateAssessorAndSendDiversitySurvey(long userId) {
         return getUser(userId)
                 .andOnSuccess(this::activateUser)
@@ -238,6 +244,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> sendUserVerificationEmail(final UserResource user, final Optional<Long> competitionId) {
         final Token token = createEmailVerificationToken(user, competitionId);
         final Notification notification = getEmailVerificationNotification(user, token);
@@ -245,6 +252,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> resendUserVerificationEmail(final UserResource user) {
         final Token token = refreshEmailVerificationToken(user);
         final Notification notification = getEmailVerificationNotification(user, token);

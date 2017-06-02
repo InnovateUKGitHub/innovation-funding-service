@@ -10,7 +10,6 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPageResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.publiccontent.domain.Keyword;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 import org.innovateuk.ifs.publiccontent.mapper.PublicContentMapper;
@@ -53,9 +52,6 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
 
     @Autowired
     private CompetitionRepository competitionRepository;
-
-    @Autowired
-    private MilestoneRepository milestoneRepository;
 
     public static Integer MAX_ALLOWED_KEYWORDS = 10;
 

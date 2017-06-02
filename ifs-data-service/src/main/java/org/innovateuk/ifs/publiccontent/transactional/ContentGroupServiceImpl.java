@@ -9,11 +9,9 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectio
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
-import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.publiccontent.domain.ContentGroup;
 import org.innovateuk.ifs.publiccontent.domain.ContentSection;
@@ -23,6 +21,7 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.InputStream;
 import java.util.HashSet;
@@ -43,11 +42,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 public class ContentGroupServiceImpl extends BaseTransactionalService implements ContentGroupService {
 
     @Autowired
-    private FileEntryRepository fileEntryRepository;
-
-    @Autowired
-    private FileEntryService fileEntryService;
-    @Autowired
     private FileEntryMapper fileEntryMapper;
 
     @Autowired
@@ -57,6 +51,7 @@ public class ContentGroupServiceImpl extends BaseTransactionalService implements
     private ContentGroupRepository contentGroupRepository;
 
     @Override
+    @Transactional
     public ServiceResult<Void> uploadFile(long contentGroupId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         BasicFileAndContents fileAndContents = new BasicFileAndContents(fileEntryResource, inputStreamSupplier);
 
@@ -66,6 +61,7 @@ public class ContentGroupServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> removeFile(Long contentGroupId) {
         return find(contentGroupRepository.findOne(contentGroupId), notFoundError(ContentGroup.class, contentGroupId))
                 .andOnSuccess(contentGroup -> {
@@ -79,6 +75,8 @@ public class ContentGroupServiceImpl extends BaseTransactionalService implements
                 });
     }
 
+    @Override
+    @Transactional
     public ServiceResult<Void> saveContentGroups(PublicContentResource resource, PublicContent publicContent, PublicContentSectionType sectionType) {
         Optional<PublicContentSectionResource> optionalResource = CollectionFunctions.simpleFindFirst(resource.getContentSections(),
                 contentSectionResource -> sectionType.equals(contentSectionResource.getType()));

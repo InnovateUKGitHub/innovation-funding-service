@@ -132,7 +132,9 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
 
         // save a new alert
         AlertResource alertResource = newAlertResource()
+                .withId()
                 .build();
+
         AlertResource created = controller.create(alertResource).getSuccessObjectOrThrowException();
 
         // check that it can be found
