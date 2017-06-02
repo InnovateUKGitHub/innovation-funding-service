@@ -692,4 +692,20 @@ include::{snippets}/project/get-finance-check-eligibility-details/curl-request.a
 === Get Finance Check Eligibility
 include::{snippets}/project/get-finance-check-eligibility-details/curl-request.adoc[]
 
+=== Get Partner Organisation
+==== Success
+===== Request
+include::{snippets}/project/get-partner-organisation/http-request.adoc[]
+include::{snippets}/project/get-partner-organisation/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-partner-organisation/http-response.adoc[]
+include::{snippets}/project/get-partner-organisation/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-partner-organisation/curl-request.adoc[]
+
+=== Get Finance Check Eligibility
+include::{snippets}/project/get-partner-organisation/curl-request.adoc[]
+
 
