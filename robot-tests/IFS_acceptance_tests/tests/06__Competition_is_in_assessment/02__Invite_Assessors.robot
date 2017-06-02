@@ -142,7 +142,7 @@ Invite multiple assessors
     Given the user invites multiple assessors
     And The user clicks the button/link    link=Invite
     When the user clicks the button/link    jQuery=a:contains("Review and send invites")
-    And The user should see the text in the page    Please visit our new online Innovation Funding Service to respond to this request
+    And The user should see the text in the page    Please visit our online Innovation Funding Service to respond to this request
     And The user enters text to a text field    css=#subject    Invitation to assess 'Sustainable living models for the future' @
     And the user clicks the button/link    jQuery=.button:contains("Send invite")
     Then The user should not see the text in the page    ${assessor_to_add}
