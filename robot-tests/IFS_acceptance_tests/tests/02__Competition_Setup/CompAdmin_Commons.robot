@@ -195,3 +195,6 @@ the internal user navigates to public content
     the user navigates to the page     ${CA_UpcomingComp}
     the user clicks the button/link    link=${comp}
     the user clicks the button/link    link=Public content
+
+the compadmin logs in
+    Guest user log-in    &{Comp_admin1_credentials}

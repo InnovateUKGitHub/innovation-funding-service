@@ -10,6 +10,9 @@
             <dd><div class="wysiwyg-styles" ifs:utext="${form.eligibilitySummary}"></div></dd>
             <dt>Keywords</dt>
             <dd th:text="${form.keywords}"></dd>
+            <dt>Publish setting</dt>
+            <dd th:unless="${form.publishSetting == 'invite'}">Public</dd>
+            <dd th:if="${form.publishSetting == 'invite'}">Invite only</dd>
         </dl>
     </th:block>
     <th:block th:unless="${model.readOnly}">
@@ -19,7 +22,7 @@
                 <span class="form-label-bold">Short description</span>
                 <span class="form-hint">Appears at the top of the competition page.</span>
                 <th:block th:if="${#fields.hasErrors('shortDescription')}">
-                    <span class="error-message"  th:each="err : ${#fields.errors('shortDescription')}" th:text="${err}" />
+                    <span class="error-message" th:each="err : ${#fields.errors('shortDescription')}" th:text="${err}" />
                 </th:block>
             </label>
             <input class="form-control width-full"
@@ -36,7 +39,7 @@
                 <span class="form-label-bold">Project funding range</span>
                 <span class="form-hint">Appears against the competition search result.</span>
                 <th:block th:if="${#fields.hasErrors('projectFundingRange')}">
-                    <span class="error-message"  th:each="err : ${#fields.errors('projectFundingRange')}" th:text="${err}" />
+                    <span class="error-message" th:each="err : ${#fields.errors('projectFundingRange')}" th:text="${err}" />
                 </th:block>
             </label>
             <input class="form-control"
@@ -53,7 +56,7 @@
                 <span class="form-label-bold">Eligibility summary</span>
                 <span class="form-hint">Appears against the competition search result.</span>
                 <th:block th:if="${#fields.hasErrors('eligibilitySummary')}">
-                    <span class="error-message"  th:each="err : ${#fields.errors('eligibilitySummary')}" th:text="${err}" />
+                    <span class="error-message" th:each="err : ${#fields.errors('eligibilitySummary')}" th:text="${err}" />
                 </th:block>
             </label>
             <div class="textarea-wrapped">
@@ -71,7 +74,7 @@
                 <span class="form-label-bold">Keywords</span>
                 <span class="form-hint"> Keywords help competitions appear in search results but are not visible to applicants. Separate keywords with commas.</span>
                 <th:block th:if="${#fields.hasErrors('keywords')}">
-                    <span class="error-message"  th:each="err : ${#fields.errors('keywords')}" th:text="${err}" />
+                    <span class="error-message" th:each="err : ${#fields.errors('keywords')}" th:text="${err}" />
                 </th:block>
             </label>
             <input class="form-control width-full"
@@ -82,6 +85,45 @@
                    required="required"
                    maxlength="255"
                    th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.keywords.required}" />
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('publishSetting')} ? 'error'">
+            <label for="keywords">
+                <span class="form-label-bold">Publish setting</span>
+                <span class="form-hint">In this competition:</span>
+                <th:block th:if="${#fields.hasErrors('publishSetting')}">
+                    <span class="error-message" th:each="err : ${#fields.errors('publishSetting')}" th:text="${err}" />
+                </th:block>
+            </label>
+            <div class="multiple-choice">
+                <input id="publishSetting-0"
+                       type="radio"
+                       th:field="${form.publishSetting}"
+                       value="public"
+                       th:errorclass="field-error"
+                       required="required"
+                       th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.publishsetting.required}" />
+                <label for="publishSetting-0">
+                    Public
+                </label>
+            </div>
+            <div class="multiple-choice" data-target="invite-only-guidance">
+                <input id="publishSetting-1"
+                       type="radio"
+                       th:field="${form.publishSetting}"
+                       th:errorclass="field-error"
+                       required="required"
+                       value="invite"
+                       th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.publishsetting.required}" />
+                <label for="publishSetting-1">
+                    Invite only
+                </label>
+            </div>
+        </div>
+        <div id="invite-only-guidance" class="panel">
+            <p>
+                Selecting invite only excludes the competition from the competition listing page available to the public.
+                A url to the competition overview page displays below when the competition is published.
+            </p>
         </div>
     </th:block>
 </div>
@@ -105,7 +147,7 @@
                 <label for="description">
                     <span class="form-label-bold">Competition description</span>
                     <th:block th:if="${#fields.hasErrors('description')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('description')}" th:text="${err}" />
+                        <span class="error-message" th:each="err : ${#fields.errors('description')}" th:text="${err}" />
                     </th:block>
                 </label>
                 <div class="textarea-wrapped">
@@ -128,7 +170,7 @@
                     <legend>
                         <span class="form-label-bold">Funding type</span>
                         <th:block th:if="${#fields.hasErrors('fundingType')}">
-                            <span class="error-message"  th:each="err : ${#fields.errors('fundingType')}" th:text="${err}" />
+                            <span class="error-message" th:each="err : ${#fields.errors('fundingType')}" th:text="${err}" />
                         </th:block>
                     </legend>
                     <div th:each="fundingType : ${model.fundingTypes}" class="multiple-choice">
@@ -147,7 +189,7 @@
                 <label for="project-size">
                     <span class="form-label-bold">Project size</span>
                     <th:block th:if="${#fields.hasErrors('projectSize')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('projectSize')}" th:text="${err}" />
+                        <span class="error-message" th:each="err : ${#fields.errors('projectSize')}" th:text="${err}" />
                     </th:block>
                </label>
                 <input class="form-control" id="project-size" type="text"
@@ -202,13 +244,13 @@
                         <legend>
                             <span class="form-label form-label-bold">Date</span>
                             <th:block th:if="${#fields.hasErrors('dates[__${index}__].day')}">
-                                  <span class="error-message"  th:each="err : ${#fields.errors('dates[__${index}__].day')}" th:text="${err}" />
+                                  <span class="error-message" th:each="err : ${#fields.errors('dates[__${index}__].day')}" th:text="${err}" />
                             </th:block>
                             <th:block th:if="${#fields.hasErrors('dates[__${index}__].month')}">
-                                  <span class="error-message"  th:each="err : ${#fields.errors('dates[__${index}__].month')}" th:text="${err}" />
+                                  <span class="error-message" th:each="err : ${#fields.errors('dates[__${index}__].month')}" th:text="${err}" />
                             </th:block>
                             <th:block th:if="${#fields.hasErrors('dates[__${index}__].year')}">
-                                  <span class="error-message"  th:each="err : ${#fields.errors('dates[__${index}__].year')}" th:text="${err}" />
+                                  <span class="error-message" th:each="err : ${#fields.errors('dates[__${index}__].year')}" th:text="${err}" />
                             </th:block>
                         </legend>
                         <div class="date-group">
@@ -262,7 +304,7 @@
                     <label class="form-label" th:for="${'dates-'+index+'-content'}">
                         <span class="form-label-bold">Content</span>
                         <th:block th:if="${#fields.hasErrors('dates[__${index}__].content')}">
-                              <span class="error-message"  th:each="err : ${#fields.errors('dates[__${index}__].content')}" th:text="${err}" />
+                              <span class="error-message" th:each="err : ${#fields.errors('dates[__${index}__].content')}" th:text="${err}" />
                         </th:block>
                     </label>
                     <textarea cols="30" rows="5"

@@ -28,6 +28,8 @@ public class PublicContent {
 
     private String projectSize;
 
+    private Boolean inviteOnly;
+
     @Column(length=5000)
     private String summary;
 
@@ -137,5 +139,13 @@ public class PublicContent {
 
     public void setContentEvents(List<ContentEvent> contentEvents) {
         this.contentEvents = contentEvents;
+    }
+
+    public Boolean getInviteOnly() {
+        return inviteOnly;
+    }
+
+    public void setInviteOnly(Boolean inviteOnly) {
+        this.inviteOnly = inviteOnly;
     }
 }

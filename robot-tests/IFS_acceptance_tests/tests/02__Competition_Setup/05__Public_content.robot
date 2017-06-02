@@ -55,7 +55,7 @@ External users do not have access to the Public content sections
     Then the user should see permissions error message
 
 Competition information and search: server side validation
-    [Documentation]    INFUND-6915
+    [Documentation]    INFUND-6915, IFS-179
     [Tags]  HappyPath
     [Setup]  log in as a different user    &{Comp_admin1_credentials}
     Given the internal user navigates to public content  ${public_content_competition_name}
@@ -65,13 +65,15 @@ Competition information and search: server side validation
     Then the user should see a summary error        Please enter a project funding range.
     Then the user should see a summary error        Please enter an eligibility summary.
     Then the user should see a summary error        Please enter a valid set of keywords.
+    Then the user should see a summary error        Please select a publish setting.
 
 Competition information and search: Valid values
-    [Documentation]    INFUND-6915, INFUND-8363
+    [Documentation]    INFUND-6915, INFUND-8363, IFS-179
     [Tags]  HappyPath
-    When the user enters text to a text field       id=short-description        Short public description
-    And the user enters text to a text field        id=funding-range            Up to £1million
-    And the user enters text to a text field        css=[labelledby="eligibility-summary"]      Summary of eligiblity
+    When the user enters text to a text field       id=short-description  Short public description
+    And the user enters text to a text field        id=funding-range  Up to £1million
+    And the user selects the radio button           publishSetting  invite
+    And the user enters text to a text field        css=[labelledby="eligibility-summary"]  Summary of eligiblity
     When the user enters text to a text field       id=keywords  hellohellohellohellohellohellohellohellohellohellou
     And the user clicks the button/link             jQuery=button:contains("Save and return")
     Then the user should see the element            jQuery=.error-summary-list:contains("Each keyword must be less than 50 characters long.")
@@ -80,13 +82,14 @@ Competition information and search: Valid values
     Then the user should see the element            jQuery=li:nth-of-type(1) .task-status-complete
 
 Competition information and search: ReadOnly
-    [Documentation]  INFUND-6915
+    [Documentation]  INFUND-6915, IFS-179
     [Tags]
     When the user clicks the button/link  link=Competition information and search
     Then the user should see the element  jQuery=dt:contains("Short description") + dd:contains("Short public description")
     And the user should see the element   jQuery=dt:contains("Project funding range") + dd:contains("Up to £1million")
     And the user should see the element   jQuery=dt:contains("Eligibility summary") + dd:contains("Summary of eligiblity")
     And the user should see the element   jQuery=dt:contains("Keywords") + dd:contains("Search,Testing,Robot")
+    And the user should see the element   jQuery=dt:contains("Publish setting") + dd:contains("Invite only")
     When the user clicks the button/link  link=Edit
     Then the user should see the element  css=#short-description[value="Short public description"]
     And the user clicks the button/link   jQuery=.button:contains("Save and return")
@@ -302,6 +305,30 @@ The user is able to edit and publish again
     And the user should not see the element     jQuery=button:contains("Publish and return")
     When the user clicks the button/link        link=Return to setup overview
     Then the user should see the element        JQuery=.notification:contains("${today}")
+    [Teardown]  the user logs out if they are logged in
+
+Guest user not find the invite only competition by Keywords
+    [Documentation]  IFS-261
+    [Tags]  HappyPath
+    [Setup]  The guest user opens the browser
+    Given the user navigates to the page  ${frontDoor}
+    When the user enters text to a text field  id=keywords  Robot
+    And the user clicks the button/link        jQuery=button:contains("Update results")
+    Then the user should not see the element   jQuery=a:contains("${public_content_competition_name}")
+
+The user is able to make the competition public
+    [Documentation]  IFS-261, IFS-179
+    [Tags]  HappyPath
+    [Setup]  the compadmin logs in
+    Given the internal user navigates to public content  ${public_content_competition_name}
+    Then the user should see the element    link=Competition information and search
+    When the user clicks the button/link    link=Competition information and search
+    And the user clicks the button/link    link=Edit
+    Then the user selects the radio button    publishSetting  public
+    And the user clicks the button/link    jQuery=.button:contains("Publish and return")
+    Then the user should see the element    jQuery=.button:contains("Return to setup overview")
+    [Teardown]  the user logs out if they are logged in
+
 
 Guest user can filter competitions by Keywords
     [Documentation]  INFUND-6923
@@ -373,7 +400,7 @@ Guest user can see the updated How-to-apply information
 
 *** Keywords ***
 Custom suite setup
-    Guest user log-in    &{Comp_admin1_credentials}
+    the compadmin logs in
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
     ${today} =  get today
