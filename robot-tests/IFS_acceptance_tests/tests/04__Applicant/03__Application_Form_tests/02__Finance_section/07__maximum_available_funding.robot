@@ -4,7 +4,7 @@ Suite Setup         the guest user opens the browser
 Test Setup          the user navigates to the competition overview
 Suite Teardown      the user closes the browser
 Force Tags          Applicant
-Resource            ../../../resources/defaultResources.robot
+Resource          ../../../../resources/defaultResources.robot
 Resource            ../../FinanceSection_Commons.robot
 *** Test Cases ***
 funding level available for lead business ResearchCategory: Fundamental Research
@@ -15,25 +15,29 @@ funding level available for lead business ResearchCategory: Fundamental Research
     and the user clicks the button/link                  link=Begin application
     and the user clicks the button/link                  link=Your finances
     then the user fills in the project costs             Untitled application (start here)
-    and the user fills in the organisation information   ${SMALL_ORGANISATION_SIZE}
+    and the user fills in the organisation information   Untitled application (start here)  ${SMALL_ORGANISATION_SIZE}
+    and the user should see the element                  link=application details
     #  fill the application details
-    and the applicant completes the application details   application_details  Experimental development
+    and the applicant completes the application details   application details  Experimental development
     and the user clicks the button/link                  link=Your finances
     and the user clicks the button/link                  link=Your funding
     the user should see the text in the page             Enter your funding level (maximum 45%).
     the user clicks the button/link                      jQuery=a:contains("Return to finances")
-    the user fills in the organisation information       ${MEDIUM_ORGANISATION_SIZE}
-    and the applicant completes the application details   application_details  Feasibility studies
+    the user fills in the organisation information       Untitled application (start here)  ${MEDIUM_ORGANISATION_SIZE}
+#    and the user clicks the button/link                  link=Application overview
+    and the applicant completes the application details   application details  Feasibility studies
     and the user clicks the button/link                   link=Your finances
     and the user clicks the button/link                   link=Your funding
     the user should see the text in the page              Enter your funding level (maximum 60%).
     the user clicks the button/link                       jQuery=a:contains("Return to finances")
-    the user fills in the organisation information        ${LARGE_ORGANISATION_SIZE}
-    and the applicant completes the application details   application_details  Industrial research
+    the user fills in the organisation information        Untitled application (start here)  ${LARGE_ORGANISATION_SIZE}
+  #  and the user clicks the button/link                  link=Application overview
+    and the applicant completes the application details   application details  Industrial research
     and the user clicks the button/link                   link=Your finances
     and the user clicks the button/link                   link=Your funding
     the user should see the text in the page              Enter your funding level (maximum 50%)
     the user clicks the button/link                       jQuery=a:contains("Return to finances")
+    and the user clicks the button/link                  link=Application overview
 
 funding level available for business user ResearchCategory: Feasibility Studies
     [Documentation]    IFS-338
