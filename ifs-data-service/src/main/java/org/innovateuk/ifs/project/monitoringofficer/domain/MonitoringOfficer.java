@@ -22,7 +22,7 @@ public class MonitoringOfficer {
 
     private String phoneNumber;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "projectId", referencedColumnName = "id")
     private Project project;
 

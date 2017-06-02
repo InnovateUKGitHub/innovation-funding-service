@@ -18,7 +18,9 @@ import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.management.model.ApplicationOverviewIneligibilityModelPopulator;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -62,6 +64,9 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
     @Autowired
     private FileEntryRestService fileEntryRestService;
 
+    @Autowired
+    private ProcessRoleService processRoleService;
+
     @Override
     public String displayApplicationOverview(UserResource user,
                                              long competitionId,
@@ -75,8 +80,9 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccessObjectOrThrowException();
 
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        applicationModelPopulator.addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
-        organisationDetailsModelPopulator.populateModel(model, application.getId());
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        applicationModelPopulator.addApplicationAndSections(application, competition, user, Optional.empty(), Optional.empty(), model, form, userApplicationRoles);
+        organisationDetailsModelPopulator.populateModel(model, application.getId(), userApplicationRoles);
 
         // Having to pass getImpersonateOrganisationId here because look at the horrible code inside addOrganisationAndUserFinanceDetails with impersonation org id :(
         applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), application.getId(), user, model, form, form.getImpersonateOrganisationId());
