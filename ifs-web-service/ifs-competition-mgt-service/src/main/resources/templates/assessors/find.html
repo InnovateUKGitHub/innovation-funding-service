@@ -133,7 +133,7 @@
                         <label class="block-label selection-button-checkbox">
                             <input type="checkbox"
                                    data-switches-button-status="[name=addSelected]"
-                                   th:id="${assessor.id}"
+                                   th:id="|assessor-id-${assessor.id}|"
                                    th:field="*{assessorEmails}"
                                    th:value="${assessor.email}"/>
                             <span class="invisible">Add</span>
