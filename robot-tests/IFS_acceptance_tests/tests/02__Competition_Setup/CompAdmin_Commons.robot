@@ -140,42 +140,42 @@ the user fills in the Public content and publishes
     the user enters text to a text field    id=funding-range  Up to £1million
     the user enters text to a text field    css=[labelledby="eligibility-summary"]  Summary of eligiblity
     the user enters text to a text field    id=keywords  Search, Testing, Robot
-    the user clicks the button/link         jQuery=button:contains("Save and return")
+    the user clicks the button/link         jQuery=button:contains("Save and review")
     the user should see the element         jQuery=div:contains("Competition information and search") ~ .task-status-complete
     # Fill in the Summary
     the user clicks the button/link         link=Summary
     the user enters text to a text field    css=.editor  This is a Summary description
     the user selects the radio button       fundingType  Grant
     the user enters text to a text field    id=project-size   10 millions
-    the user clicks the button/link         jQuery=button:contains("Save and return")
+    the user clicks the button/link         jQuery=button:contains("Save and review")
     the user should see the element         jQuery=div:contains("Summary") ~ .task-status-complete
     # Fill in the Eligibility
     the user clicks the button/link         link=Eligibility
     the user enters text to a text field    id=heading-0  Heading 1
     the user enters text to a text field    jQuery=div.editor:first-of-type  Content 1
-    the user clicks the button/link         jQuery=button:contains("Save and return")
+    the user clicks the button/link         jQuery=button:contains("Save and review")
     the user should see the element         jQuery=div:contains("Eligibility") ~ .task-status-complete
     # Fill in the Scope
     the user clicks the button/link         link=Scope
     the user enters text to a text field    id=heading-0  Heading 1
     the user enters text to a text field    jQuery=div.editor:first-of-type  Content 1
-    the user clicks the button/link         jQuery=button:contains("Save and return")
+    the user clicks the button/link         jQuery=button:contains("Save and review")
     the user should see the element         jQuery=div:contains("Scope") ~ .task-status-complete
     # Save the dates
     the user clicks the button/link  link=Dates
-    the user clicks the button/link  jQuery=button:contains("Save and return")
+    the user clicks the button/link  jQuery=button:contains("Save and review")
     the user should see the element  jQuery=div:contains("Dates") ~ .task-status-complete
     # Fill in the How to apply
     the user clicks the button/link         link=How to apply
     the user enters text to a text field    id=heading-0    Heading 1
     the user enters text to a text field    jQuery=div.editor:first-of-type  Content 1
-    the user clicks the button/link         jQuery=button:contains("Save and return")
+    the user clicks the button/link         jQuery=button:contains("Save and review")
     the user should see the element         jQuery=div:contains("How to apply") ~ .task-status-complete
     # Fill in the Supporting information
     the user clicks the button/link         link=Supporting information
     the user enters text to a text field    id=heading-0    Heading 1
     the user enters text to a text field    jQuery=div.editor:first-of-type  Content 1
-    the user clicks the button/link         jQuery=button:contains("Save and return")
+    the user clicks the button/link         jQuery=button:contains("Save and review")
     the user should see the element         jQuery=div:contains("Supporting information") ~ .task-status-complete
     # Publish and return
     the user clicks the button/link         jQuery=button:contains("Publish public content")
