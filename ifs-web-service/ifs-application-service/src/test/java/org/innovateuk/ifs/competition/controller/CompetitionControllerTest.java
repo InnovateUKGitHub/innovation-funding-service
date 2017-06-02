@@ -58,17 +58,6 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
     }
 
     @Test
-    public void competitionDetails() throws Exception {
-        final CompetitionResource competitionResource = newCompetitionResource().build();
-        when(competitionService.getPublishedById(competitionResource.getId())).thenReturn(competitionResource);
-
-        mockMvc.perform(get("/competition/{id}/details/", competitionResource.getId()))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("currentCompetition", competitionResource))
-                .andExpect(view().name("competition/details"));
-    }
-
-    @Test
     public void beforeYouApply() throws Exception {
         final CompetitionResource competitionResource = newCompetitionResource().build();
         when(competitionService.getPublishedById(competitionResource.getId())).thenReturn(competitionResource);
