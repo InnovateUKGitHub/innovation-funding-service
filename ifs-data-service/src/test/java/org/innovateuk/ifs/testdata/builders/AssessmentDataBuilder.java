@@ -6,6 +6,8 @@ import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -21,6 +23,8 @@ import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESS
  */
 public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataBuilder> {
 
+    private static final Logger LOG = LoggerFactory.getLogger(AssessmentDataBuilder.class);
+
     public AssessmentDataBuilder withAssessmentData(String assessorEmail,
                                                     String applicationName,
                                                     AssessmentRejectOutcomeValue rejectReason,
@@ -30,30 +34,34 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
                                                     String recommendComment) {
         return with(data -> {
 
-            Application application = applicationRepository.findByName(applicationName).get(0);
             UserResource assessor = retrieveUserByEmail(assessorEmail);
+
+            Application application = applicationRepository.findByName(applicationName).get(0);
 
             AssessmentResource assessmentResource = doAs(compAdmin(), () -> assessmentService.createAssessment(
                     new AssessmentCreateResource(application.getId(), assessor.getId())).getSuccessObjectOrThrowException()
             );
 
-            Assessment assessment = assessmentRepository.findOne(assessmentResource.getId());
-            doAs(compAdmin(), () -> assessmentWorkflowHandler.notify(assessment));
+            testService.doWithinTransaction(() -> {
+
+                Assessment assessment = assessmentRepository.findOne(assessmentResource.getId());
+                doAs(compAdmin(), () -> assessmentWorkflowHandler.notify(assessment));
+            });
 
             switch (state) {
                 case ACCEPTED:
                 case READY_TO_SUBMIT:
                 case SUBMITTED:
-                    doAs(assessor, () -> assessmentService.acceptInvitation(assessment.getId())
+                    doAs(assessor, () -> assessmentService.acceptInvitation(assessmentResource.getId())
                             .getSuccessObjectOrThrowException());
                     break;
                 case REJECTED:
-                    doAs(assessor, () -> assessmentService.rejectInvitation(assessment.getId(), new
+                    doAs(assessor, () -> assessmentService.rejectInvitation(assessmentResource.getId(), new
                             AssessmentRejectOutcomeResource(rejectReason, rejectComment))
                             .getSuccessObjectOrThrowException());
                     break;
                 case WITHDRAWN:
-                    doAs(compAdmin(), () -> assessmentService.withdrawAssessment(assessment.getId())
+                    doAs(compAdmin(), () -> assessmentService.withdrawAssessment(assessmentResource.getId())
                             .getSuccessObjectOrThrowException());
                     break;
             }
@@ -63,7 +71,11 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
                         APPLICATION_ASSESSMENT,
                         state.getBackingState()
                 );
-                assessment.setActivityState(activityState);
+
+                testService.doWithinTransaction(() -> {
+                    Assessment assessment = assessmentRepository.findOne(assessmentResource.getId());
+                    assessment.setActivityState(activityState);
+                });
             }
 
             doAs(assessor, () -> {
@@ -77,7 +89,7 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
                         recommendComment
                 );
 
-                assessmentService.recommend(assessment.getId(), fundingDecision).getSuccessObjectOrThrowException();
+                assessmentService.recommend(assessmentResource.getId(), fundingDecision).getSuccessObjectOrThrowException();
             });
         });
     }
@@ -131,5 +143,11 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
     @Override
     protected Void createInitial() {
         return null;
+    }
+
+    @Override
+    protected void postProcess(int index, Void instance) {
+        super.postProcess(index, instance);
+        LOG.info("Created Assessment", instance);
     }
 }

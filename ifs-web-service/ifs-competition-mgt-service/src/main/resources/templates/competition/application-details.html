@@ -31,27 +31,30 @@
 
         <h2 class="heading-medium extra-margin extra-margin-bottom">To be included:</h2>
 
-        <div th:class="${#fields.hasErrors('useResubmissionQuestion')}? 'form-group error':'form-group'">
+        <div class="form-group" th:classappend="${#fields.hasErrors('useResubmissionQuestion')} ? 'form-group-error'">
             <fieldset class="inline">
                 <legend>
                     <span class="form-label-bold">Resubmission question</span>
-                    <span th:if="${#fields.hasErrors('useResubmissionQuestion')}" th:remove="tag">
-                              <span class="error-message"  th:each="err : ${#fields.errors('useResubmissionQuestion')}" th:text="${err}" />
-                        </span>
+                    <th:block th:if="${#fields.hasErrors('useResubmissionQuestion')}">
+                        <span class="error-message"  th:each="err : ${#fields.errors('useResubmissionQuestion')}" th:text="${err}"></span>
+                    </th:block>
                 </legend>
-                <label class="block-label selection-button-radio" for="use-resubmission-question-yes">
+                <div class="multiple-choice">
                     <input id="use-resubmission-question-yes" value="true" type="radio" th:field="*{useResubmissionQuestion}" required="required" />
-                    Yes
-                </label>
-                <label class="block-label selection-button-radio" for="use-resubmission-question-no">
+                    <label for="use-resubmission-question-yes">
+                        Yes
+                    </label>
+                </div>
+                <div class="multiple-choice">
                     <input id="use-resubmission-question-no" value="false" type="radio" th:field="*{useResubmissionQuestion}" required="required" />
-                    No
-                </label>
+                    <label for="use-resubmission-question-no">
+                        No
+                    </label>
+                </div>
             </fieldset>
         </div>
 
         <button type="submit" class="button">Save and close</button>
-
     </form>
 
     <th:block th:unless="${editable}">

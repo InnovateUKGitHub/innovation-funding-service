@@ -37,12 +37,12 @@
             </ul>
 
             <form th:action="@{/profile/skills/edit}" method="post" th:object="${form}" class="extra-margin">
-                <div class="form-group" th:classappend="${#fields.hasErrors('skillAreas')}? error">
+                <div class="form-group" th:classappend="${#fields.hasErrors('skillAreas')} ? 'form-group-error'">
                     <label class="form-label" th:for="skillAreas">
                         <span class="heading-medium">Skill areas</span>
-                        <span th:if="${#fields.hasErrors('skillAreas')}" th:remove="tag">
+                        <th:block th:if="${#fields.hasErrors('skillAreas')}">
                             <span class="error-message"  th:each="err : ${#fields.errors('skillAreas')}" th:text="${err}" />
-                        </span>
+                        </th:block>
                     </label>
                     <p class="form-hint">
                         Please tell us about your main areas of expertise or any specialist skills you have. This will help us to assign you the most appropriate applications for assessment.<br />
@@ -65,25 +65,23 @@
                     </div>
                 </div>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('assessorType')}? error">
+                <div class="form-group" th:classappend="${#fields.hasErrors('assessorType')} ? 'form-group-error'">
                     <fieldset>
                         <legend>
                             <span class="heading-medium">Assessor type</span>
-                            <span th:if="${#fields.hasErrors('assessorType')}" th:remove="tag">
+                            <th:block th:if="${#fields.hasErrors('assessorType')}">
                                 <span class="error-message"  th:each="err : ${#fields.errors('assessorType')}" th:text="${err}" />
-                            </span>
+                            </th:block>
                         </legend>
                         <p class="form-hint">Please select your current area of work. If you are working in both areas please select the most dominant.</p>
-                        <label class="block-label selection-button-radio"
-                               th:for="${#ids.next('assessorType')}"
-                               th:each="type : ${T(org.innovateuk.ifs.user.resource.BusinessType).values()}">
+                        <div class="multiple-choice" th:each="type : ${T(org.innovateuk.ifs.user.resource.BusinessType).values()}">
                             <input th:field="*{assessorType}"
                                    th:value="${type}"
                                    type="radio"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.standard.assessortype.required}" />
-                            <span th:text="${type.displayName}" th:remove="tag"/>
-                        </label>
+                            <label th:for="${#ids.prev('assessorType')}" th:text="${type.displayName}">Label</label>
+                        </div>
                     </fieldset>
                 </div>
 

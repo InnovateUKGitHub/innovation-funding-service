@@ -40,6 +40,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -124,6 +125,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     @Override
+    @Transactional
     public List<ServiceResult<Void>> inviteCollaborators(String baseUrl, List<ApplicationInvite> invites) {
         return invites.stream().map(invite -> processCollaboratorInvite(baseUrl, invite)).collect(toList());
     }
@@ -164,6 +166,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> inviteCollaboratorToApplication(String baseUrl, ApplicationInvite invite) {
         User loggedInUser = loggedInUserSupplier.get();
         NotificationSource from = systemNotificationSource;
@@ -204,6 +207,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     @Override
+    @Transactional
     public ServiceResult<InviteResultsResource> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource) {
         return validateInviteOrganisationResource(inviteOrganisationResource).andOnSuccess(() ->
                 validateUniqueEmails(inviteOrganisationResource.getInviteResources())).andOnSuccess(() ->
@@ -230,6 +234,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     @Override
+    @Transactional
     public ServiceResult<InviteResultsResource> saveInvites(List<ApplicationInviteResource> inviteResources) {
         return validateUniqueEmails(inviteResources).andOnSuccess(() -> {
             List<ApplicationInvite> invites = simpleMap(inviteResources, invite -> mapInviteResourceToInvite(invite, null));
@@ -239,6 +244,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> acceptInvite(String inviteHash, Long userId) {
         return find(invite(inviteHash), user(userId)).andOnSuccess((invite, user) -> {
             if (invite.getEmail().equalsIgnoreCase(user.getEmail())) {
@@ -295,6 +301,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> removeApplicationInvite(long applicationInviteId) {
         return find(applicationInviteMapper.mapIdToDomain(applicationInviteId), notFoundError(ApplicationInvite.class))
                 .andOnSuccessReturnVoid(applicationInvite -> {
@@ -344,7 +351,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
         long failures = results.stream().filter(BaseEitherBackedResult::isFailure).count();
         long successes = results.stream().filter(BaseEitherBackedResult::isSuccess).count();
-        LOG.info(format("Invite sending requests %s Success: %s Failures: %s", invites.size(), successes, failures));
+        LOG.debug(format("Invite sending requests %s Success: %s Failures: %s", invites.size(), successes, failures));
 
         InviteResultsResource resource = new InviteResultsResource();
         resource.setInvitesSendFailure((int) failures);

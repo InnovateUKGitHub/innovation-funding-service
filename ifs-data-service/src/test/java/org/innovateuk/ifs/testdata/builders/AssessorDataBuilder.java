@@ -98,15 +98,19 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
 
     public AssessorDataBuilder addAssessorRole() {
         return with((AssessorData data) -> {
-            User user = userRepository.findByEmail(data.getEmail()).get();
 
-            Role assessorRole = roleRepository.findOneByName(UserRoleType.ASSESSOR.getName());
+            testService.doWithinTransaction(() -> {
 
-            if (!user.getRoles().contains(assessorRole)) {
-                user.getRoles().add(assessorRole);
-            }
+                User user = userRepository.findByEmail(data.getEmail()).get();
 
-            userRepository.save(user);
+                Role assessorRole = roleRepository.findOneByName(UserRoleType.ASSESSOR.getName());
+
+                if (!user.getRoles().contains(assessorRole)) {
+                    user.getRoles().add(assessorRole);
+                }
+
+                userRepository.save(user);
+            });
 
             UserResource userResource = doAs(systemRegistrar(), () -> userService.findByEmail(data.getEmail()).getSuccessObjectOrThrowException());
 
@@ -116,29 +120,33 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
 
     public AssessorDataBuilder addSkills(String skillAreas, BusinessType businessType, List<String> innovationAreas) {
         return with((AssessorData data) -> {
-            User user = userRepository.findOne(data.getUser().getId());
-            Profile profile = profileRepository.findOne(user.getProfileId());
 
-            Set<String> userInnovationAreaNames = profile.getInnovationAreas().stream()
-                    .map(InnovationArea::getName)
-                    .collect(toSet());
+            testService.doWithinTransaction(() -> {
 
-            Set<InnovationArea> additionalInnovationAreas = innovationAreas.stream()
-                    .filter(innovationAreaName -> !userInnovationAreaNames.contains(innovationAreaName))
-                    .map(innovationAreaName -> {
-                        InnovationArea innovationArea = innovationAreaRepository.findByName(innovationAreaName);
+                User user = userRepository.findOne(data.getUser().getId());
+                Profile profile = profileRepository.findOne(user.getProfileId());
 
-                        if (innovationArea == null) {
-                            throw new IllegalArgumentException("Invalid innovation area '" + innovationAreaName + "' for assessor user");
-                        }
+                Set<String> userInnovationAreaNames = profile.getInnovationAreas().stream()
+                        .map(InnovationArea::getName)
+                        .collect(toSet());
 
-                        return innovationArea;
-                    })
-                    .collect(toSet());
+                Set<InnovationArea> additionalInnovationAreas = innovationAreas.stream()
+                        .filter(innovationAreaName -> !userInnovationAreaNames.contains(innovationAreaName))
+                        .map(innovationAreaName -> {
+                            InnovationArea innovationArea = innovationAreaRepository.findByName(innovationAreaName);
 
-            profile.addInnovationAreas(additionalInnovationAreas);
+                            if (innovationArea == null) {
+                                throw new IllegalArgumentException("Invalid innovation area '" + innovationAreaName + "' for assessor user");
+                            }
 
-            profileRepository.save(profile);
+                            return innovationArea;
+                        })
+                        .collect(toSet());
+
+                profile.addInnovationAreas(additionalInnovationAreas);
+
+                profileRepository.save(profile);
+            });
 
             if (skillAreas.isEmpty() || businessType == null) {
                 return;
@@ -151,7 +159,6 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
                 profileSkillsEditResource.setUser(data.getUser().getId());
 
                 profileService.updateProfileSkills(data.getUser().getId(), profileSkillsEditResource);
-                testService.flushAndClearSession();
             });
         });
     }
@@ -195,7 +202,6 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
         return with((AssessorData data) ->
                 doAs(data.getUser(), () -> {
                     profileService.updateProfileAgreement(data.getUser().getId());
-                    testService.flushAndClearSession();
                 })
         );
     }

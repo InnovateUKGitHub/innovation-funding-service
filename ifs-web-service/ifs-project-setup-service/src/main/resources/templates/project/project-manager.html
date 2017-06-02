@@ -17,28 +17,31 @@
 
             <form method="POST" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" th:object="${form}">
                 <fieldset>
-                    <div class="form-group" id="project-manager-section" th:classappend="${#fields.hasErrors('*') ? 'error' : ''}">
+                    <div class="form-group" id="project-manager-section" th:classappend="${#fields.hasErrors('*') ? 'form-group-error' : ''}">
                         <legend>
                             <span class="heading-medium">Project Manager</span>
-                            <div th:if="${#fields.hasErrors('*')}" th:remove="tag">
-                                <span class="error-message" th:each="err : ${#fields.errors('*')}" th:text="${err}" />
-                            </div>
+                            <th:block th:if="${#fields.hasErrors('*')}">
+                                <span class="error-message" th:each="err : ${#fields.errors('*')}" th:text="${err}"></span>
+                            </th:block>
                         </legend>
                         <p class="form-hint">Who will be the Project Manager for your project?</p>
-                        <label data-set-section-valid="#project-manager-section" data-clear-inputs="#name-project-manager,#email-project-manager" th:each="user : ${model.organisationUsers}" th:for="${#ids.next('projectManager')}" class="block-label selection-button-radio">
+                        <div class="multiple-choice" th:each="user : ${model.organisationUsers}" >
                             <input type="radio" th:field="*{projectManager}" th:value="${user.id}" required="required" th:attr="data-required-errormessage=#{validation.projectmanagerform.projectmanager.required}" />
-                            <span th:text="${user.name}" th:remove="tag"></span>
-                        </label>
+                            <label th:for="${#ids.prev('projectManager')}" th:text="${user.name}" data-set-section-valid="#project-manager-section" data-clear-inputs="#name-project-manager,#email-project-manager"></label>
+                        </div>
 
-                        <label th:each="user : ${model.invitedUsers}" th:for="${#ids.next('projectManager')}" class="block-label">
-                            <span th:text="${user.name}" th:remove="tag"></span>
-                        </label>
+                        <div class="multiple-choice" th:each="user : ${model.invitedUsers}">
+                            <input th:id="'invite-'+${user.id}" value="" type="radio" disabled="disabled" />
+                            <label th:for="'invite-'+${user.id}" th:text="${user.name}"></label>
+                        </div>
 
-                        <label for="new" class="block-label selection-button-radio" data-target="project-manager-table">
+                        <div class="multiple-choice" data-target="project-manager-table">
                             <input id="new" name="projectManager" th:checked="${model.inviteAction} or *{projectManager == -1}" required="required"  type="radio" value="-1" th:attr="data-required-errormessage=#{validation.projectmanagerform.projectmanager.required}" />
-                            Add new team member
-                            <span class="form-hint">A new team member will be invited to join the project</span>
-                        </label>
+                            <label for="new">
+                                Add new team member
+                                <span class="form-hint">A new team member will be invited to join the project</span>
+                            </label>
+                        </div>
 
                         <table id="project-manager-table">
                             <thead>
@@ -57,11 +60,11 @@
                                         <label for="name-project-manager">
                                           <span class="visuallyhidden">name</span>
                                         </label>
-                                        <input type="text" class="form-control width-full" th:value="*{name}" th:classappend="${#fields.hasErrors('name') ? 'field-error' : ''}" name="name" id="name-project-manager" required="required" th:attr="data-required-errormessage=#{validation.project.invite.name.required}"/>
+                                        <input type="text" class="form-control width-full" th:value="*{name}" th:classappend="${#fields.hasErrors('name')} ? 'form-control-error'" name="name" id="name-project-manager" required="required" th:attr="data-required-errormessage=#{validation.project.invite.name.required}"/>
                                     </td>
                                     <td>
                                         <label for="email-project-manager" class="visuallyhidden">email</label>
-                                        <input type="email" class="form-control width-full" th:value="*{inviteEmail}" th:classappend="${#fields.hasErrors('inviteEmail') ? 'field-error' : ''}" name="inviteEmail" id="email-project-manager" required="required" th:attr="data-required-errormessage=#{validation.project.invite.email.required}"/>
+                                        <input type="email" class="form-control width-full" th:value="*{inviteEmail}" th:classappend="${#fields.hasErrors('inviteEmail')} ? 'form-control-error'" name="inviteEmail" id="email-project-manager" required="required" th:attr="data-required-errormessage=#{validation.project.invite.email.required}"/>
                                     </td>
                                     <td class="alignright">
                                         <button class="buttonlink no-margin-bottom" id="invite-project-manager" name="invite_pm">Invite to project</button>
