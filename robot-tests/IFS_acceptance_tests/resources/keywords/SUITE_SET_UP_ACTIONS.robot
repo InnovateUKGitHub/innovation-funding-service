@@ -207,7 +207,8 @@ invite a registered user
     the guest user opens the browser
 
 we create a new user
-    [Arguments]    ${first_name}  ${last_name}  ${EMAIL_INVITED}
+    [Arguments]    ${COMPETITION_ID}  ${first_name}  ${last_name}  ${EMAIL_INVITED}
+    the user navigates to the page                             ${SERVER}/competition/${COMPETITION_ID}/overview/
     the user follows the flow to register their organisation
     the user verifies email    ${first_name}   ${last_name}    ${EMAIL_INVITED}
 
@@ -222,7 +223,7 @@ the user verifies email
     The guest user clicks the log-in button
 
 the user follows the flow to register their organisation
-    the user navigates to the page              ${COMPETITION_OVERVIEW_URL}
+    #the user navigates to the page              ${COMPETITION_OVERVIEW_URL}
     the user clicks the button/link             jQuery=a:contains("Start new application")
     the user clicks the button/link             jQuery=a:contains("Create account")
     the user enters text to a text field        id=organisationSearchName    Innovate

@@ -106,7 +106,6 @@ ${COMP_ADMINISTRATOR_DASHBOARD}    ${SERVER}/management/dashboard
 ${UNTITLED_APPLICATION_DASHBOARD_LINK}    Untitled application (start here)
 ${UNTITLED_APPLICATION_NAME}    Untitled application
 ${OPEN_COMPETITION_LINK}    ${OPEN_COMPETITION_NAME}
-
 ${application_name}    Submit test application
 ${Competition_E2E}    Evolution of the global phosphorus cycle
 ${test_title}     test title
