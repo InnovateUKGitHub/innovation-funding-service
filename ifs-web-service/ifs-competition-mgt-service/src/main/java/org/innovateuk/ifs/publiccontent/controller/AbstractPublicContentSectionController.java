@@ -95,7 +95,7 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
         }
 
         PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
-        Supplier<String> successView = () -> "redirect:/competition/setup/public-content/" + competitionId;
+        Supplier<String> successView = () -> getPage(publicContent, model, Optional.of(form), true);
         Supplier<String> failureView = () -> getPage(publicContent, model, Optional.of(form), false);
 
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView, () -> formSaver().markAsComplete(form, publicContent));
