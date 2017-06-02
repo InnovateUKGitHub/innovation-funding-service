@@ -37,8 +37,6 @@ create new account for submitting
     And the user clicks the button/link         link=${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
     And the user selects the checkbox           address-same
     And the user clicks the button/link         jQuery=.button:contains("Continue")
-    And the user selects the radio button       organisationTypeId  radio-1
-    And the user clicks the button/link         jQuery=.button:contains("Save and continue")
     And the user clicks the button/link         jQuery=.button:contains("Save and continue")
     And the user enters text to a text field    name=email    ${test_mailbox_one}+submittest@gmail.com
     And the user fills the create account form    Temur    Ketsbaia
@@ -195,7 +193,7 @@ The user marks the academic application finances as incomplete
 invite a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
     the guest user opens the browser
-    the user follows the flow to register their organisation    radio-1
+    the user follows the flow to register their organisation
     the user verifies email                                    Stuart   Anderson    ${EMAIL_LEAD}
     the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link    jQuery=a:contains("Add partner organisation")
@@ -210,7 +208,7 @@ invite a registered user
 
 we create a new user
     [Arguments]    ${first_name}  ${last_name}  ${EMAIL_INVITED}
-    the user follows the flow to register their organisation     radio-1
+    the user follows the flow to register their organisation
     the user verifies email    ${first_name}   ${last_name}    ${EMAIL_INVITED}
 
 the user verifies email
@@ -224,7 +222,6 @@ the user verifies email
     The guest user clicks the log-in button
 
 the user follows the flow to register their organisation
-    [Arguments]     ${orgType}
     the user navigates to the page              ${COMPETITION_OVERVIEW_URL}
     the user clicks the button/link             jQuery=a:contains("Start new application")
     the user clicks the button/link             jQuery=a:contains("Create account")
@@ -234,13 +231,6 @@ the user follows the flow to register their organisation
     the user selects the checkbox               address-same
     the user should not see the element         jQuery=h3:contains("Organisation type")
     the user clicks the button/link             jQuery=.button:contains("Continue")
-    the user clicks the button/link             jQuery=.button:contains("Save and continue")
-    the user should see an error                Please select an organisation type.
-    # Lead applicant can be with Business or RTO as this comp is setup to have either of it
-    the user should see the element             jQuery=label[for="radio-1"]:contains("Business")
-    the user should see the element             jQuery=label[for="radio-3"]:contains("Research and technology organisations (RTOs)")
-    the user selects the radio button           organisationTypeId   ${orgType}
-    the user clicks the button/link             jQuery=.button:contains("Save and continue")
     the user clicks the button/link             jQuery=.button:contains("Save and continue")
 
 the user enters the details and clicks the create account
