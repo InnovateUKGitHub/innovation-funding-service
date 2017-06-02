@@ -41,6 +41,7 @@ import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 import org.xhtmlrenderer.resource.XMLResource;
@@ -196,6 +197,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<FileEntryResource> createSignedGrantOfferLetterFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
                 andOnSuccess(project -> fileService.createFile(fileEntryResource, inputStreamSupplier).
@@ -204,6 +206,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<FileEntryResource> createGrantOfferLetterFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
                 andOnSuccess(project -> fileService.createFile(fileEntryResource, inputStreamSupplier).
@@ -211,6 +214,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<FileEntryResource> generateGrantOfferLetter(Long projectId, FileEntryResource fileEntryResource) {
 
         return getProject(projectId).
@@ -296,6 +300,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> generateGrantOfferLetterIfReady(Long projectId) {
         if (isProjectReadyForGrantOffer(projectId)) {
             FileEntryResource generatedGrantOfferLetterFileEntry = new FileEntryResource(null, DEFAULT_GOL_NAME, GOL_CONTENT_TYPE, DEFAULT_GOL_SIZE);
@@ -327,6 +332,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> removeGrantOfferLetterFileEntry(Long projectId) {
         return getProject(projectId).andOnSuccess(this::validateProjectIsInSetup)
                 .andOnSuccess(project ->
@@ -356,6 +362,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> removeSignedGrantOfferLetterFileEntry(Long projectId) {
         return getProject(projectId).andOnSuccess(this::validateProjectIsInSetup)
                 .andOnSuccess(project ->
@@ -378,6 +385,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<FileEntryResource> createAdditionalContractFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
                 andOnSuccess(project -> fileService.createFile(fileEntryResource, inputStreamSupplier).
@@ -392,6 +400,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> updateSignedGrantOfferLetterFile(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).andOnSuccess(this::validateProjectIsInSetup).
                 andOnSuccess(project -> {
@@ -405,6 +414,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> submitGrantOfferLetter(Long projectId) {
         return getProject(projectId).andOnSuccess(project -> {
             if (project.getSignedGrantOfferLetter() == null) {
@@ -427,6 +437,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> sendGrantOfferLetter(Long projectId) {
 
         return getProject(projectId).andOnSuccess(project -> {
@@ -486,6 +497,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType) {
 
         return getProject(projectId).andOnSuccess(project -> {

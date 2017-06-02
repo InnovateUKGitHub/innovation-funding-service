@@ -39,6 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
@@ -119,6 +120,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerUserId) {
         return getProject(projectId).
                 andOnSuccess(this::validateIfProjectAlreadySubmitted).
@@ -127,6 +129,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
         return validateProjectStartDate(projectStartDate).
                 andOnSuccess(() -> getProject(projectId)).
@@ -135,6 +138,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId) {
         return getProject(composite.getProjectId()).
                 andOnSuccess(this::validateProjectIsInSetup).
@@ -144,6 +148,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> updateProjectAddress(Long organisationId, Long projectId, OrganisationAddressType organisationAddressType, AddressResource address) {
 
         Project project = projectRepository.findOne(projectId);
@@ -170,6 +175,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> submitProjectDetails(final Long projectId, ZonedDateTime date) {
 
         return getProject(projectId).andOnSuccess(project ->
@@ -189,11 +195,13 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource) {
         return inviteContact(projectId, inviteResource, Notifications.INVITE_FINANCE_CONTACT);
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource) {
 
         return getProject(projectId)

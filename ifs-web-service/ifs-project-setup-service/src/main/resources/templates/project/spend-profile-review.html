@@ -14,27 +14,27 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.projectId})}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Spend profile',subTitle=${model.projectName},size='heading-xlarge'" />
 
-    <div th:if="${model.submitted and !model.approved}" th:remove="tag">
+    <th:block th:if="${model.submitted and !model.approved}">
         <div class="success-alert extra-margin-bottom">
             <p><strong>All project spend profiles have been sent to Innovate UK.</strong></p>
         </div>
-    </div>
+    </th:block>
 
-    <div th:if="${model.submitted and model.approved}" th:remove="tag">
+    <th:block th:if="${model.submitted and model.approved}">
         <div class="success-alert extra-margin-bottom">
             <p><strong>All project spend profiles have been accepted by Innovate UK.</strong></p>
         </div>
-    </div>
+    </th:block>
 
     <p>This overview shows the spend profile status of each organisation in your project.</p>
 
-    <div th:if="${model.submitted}" th:remove="tag">
+    <th:block th:if="${model.submitted}">
         <h2 class="heading-medium">Spend profile</h2>
         <p th:if="${!model.approved}" >All spend profiles have been sent to Innovate UK and the Monitoring Officer assigned to this application.
            You may view these profiles.</p>
         <p th:if="${model.approved}" >All spend profiles have been accepted by Innovate UK and the Monitoring Officer assigned to this application.
             You may view these profiles.</p>
-    </div>
+    </th:block>
 
     <h2 class="heading-medium">Partner progress</h2>
 
@@ -60,13 +60,10 @@
         </li>
     </ul>
 
-    <div th:if="${model.markAsComplete and !model.submitted}" th:remove="tag">
-
+    <th:block th:if="${model.markAsComplete and !model.submitted}">
         <p class="extra-margin">Please review each partner's spend profile once they are marked as complete.</p>
-
         <a th:href="@{/project/{id}/spend-profile/total(id=${model.projectId})}" class="button">Review and send total project spend profile</a>
-
-    </div>
+    </th:block>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>

@@ -30,7 +30,7 @@
     <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}"
           th:object="${form}" method="post" enctype="multipart/form-data" data-single-submit="" novalidate="novalidate">
             <h2 class="heading-medium">Post new query</h2>
-            <div class="form-group" th:classappend="${#fields.hasErrors('queryTitle')}? 'error'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('queryTitle')}? 'form-group-error'">
                 <label for="queryTitle">
                     <span class="form-label-bold">Title</span>
                     <th:block th:if="${#fields.hasErrors('queryTitle')}">
@@ -42,13 +42,13 @@
                        type="text"
                        class="form-control width-full"
                        required="required"
-                       th:errorclass="field-error"
+                       th:errorclass="field-group-error"
                        th:field="*{queryTitle}"
                        th:attr="maxlength=${model.maxTitleCharacters},
                                 data-required-errormessage=#{validation.field.must.not.be.blank},
                                 data-maxlength-errormessage=#{validation.field.too.many.characters(null,${model.maxTitleCharacters})}" />
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('section')}? 'error'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('section')}? 'form-group-error'">
                 <label for="section">
                     <span class="form-label-bold">Section</span>
                     <th:block th:if="${#fields.hasErrors('section')}">
@@ -76,7 +76,7 @@
                     </th:block>
                 </select>
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('query')}? 'error'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('query')}? 'form-group-error'">
                 <label for="query">
                     <span class="form-label-bold">Query</span>
                     <th:block th:if="${#fields.hasErrors('query')}">
@@ -90,7 +90,7 @@
                               id="query"
                               name="query"
                               th:field="*{query}"
-                              th:errorclass="field-error"
+                              th:errorclass="field-group-error"
                               th:attr="maxlength=${model.maxQueryCharacters},
                       data-max_words=${model.maxQueryWords},
                       data-maxwordslength=${model.maxQueryWords},
@@ -113,7 +113,7 @@
                     </ul>
                 </th:block>
                 <h3 class="heading-small no-margin-bottom">Upload supporting documentation in pdf format</h3>
-                <div th:class="${#fields.hasErrors('attachment')} ? 'error': ''">
+                <div th:class="${#fields.hasErrors('attachment')} ? 'form-group-error': ''">
                     <th:block th:if="${#fields.hasErrors('attachment')}">
                         <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}"></span>
                     </th:block>

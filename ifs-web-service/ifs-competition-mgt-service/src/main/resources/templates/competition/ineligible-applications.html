@@ -10,10 +10,7 @@
 
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
-
-            <div th:include="fragments/layout :: header-sub"
-                 th:with="linkTitle='Applications',linkClass='link-back',linkUrl=@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}"
-                 th:remove="tag" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Applications',linkClass='link-back',linkUrl=@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}" />
 
             <h1 class="heading-xlarge">
                 <span class="heading-secondary">
@@ -96,8 +93,7 @@
                     </tbody>
                 </table>
             </div>
-            <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
-
+            <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
             <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 

@@ -1,10 +1,11 @@
 package org.innovateuk.ifs.address.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.Length;
+import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -108,6 +109,15 @@ public class Address {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void updateFrom(AddressResource other) {
+        this.addressLine1 = other.getAddressLine1();
+        this.addressLine2 = other.getAddressLine2();
+        this.addressLine3 = other.getAddressLine3();
+        this.town = other.getTown();
+        this.county = other.getCounty();
+        this.postcode = other.getPostcode();
     }
 
     @Override

@@ -16,17 +16,13 @@
             <p th:text="|You have agreed to be an assessor for the upcoming competition '${model.competitionName}'|">You have agreed to be an assessor for the upcoming competition 'My Competition'</p>
 
             <section class="boxed" th:with="dateFormat=${model.assessmentPeriodDateFrom.year!=model.assessmentPeriodDateTo.year} ? 'dd MMMM yyyy' : 'dd MMMM'">
-                <h2 class="heading-medium no-margin">
-                    <span th:text="|${#temporals.format(model.assessmentPeriodDateFrom,dateFormat)} to ${#temporals.format(model.assessmentPeriodDateTo,dateFormat)}: Assessment period|" th:remove="tag"/>
-                </h2>
+                <h2 class="heading-medium no-margin" th:text="|${#temporals.format(model.assessmentPeriodDateFrom,dateFormat)} to ${#temporals.format(model.assessmentPeriodDateTo,dateFormat)}: Assessment period|"></h2>
                 <p>Assessment period for reading, scoring, providing written comments and submitting to our online
                     service. Each assessor could receive up to 10 applications to assess. This depends on the
-                    application response. Our assessment fee for this competition is &pound;<span
-                            th:text="${#numbers.formatDecimal(model.assessorPay,0, 'COMMA', 0, 'POINT')}" th:remove="tag">100</span> per application.</p>
+                    application response. Our assessment fee for this competition is &pound;<th:block th:text="${#numbers.formatDecimal(model.assessorPay,0, 'COMMA', 0, 'POINT')}">100</th:block> per application.</p>
 
                 <p th:if="${model.assessorBriefingDate}">The assessor briefing is mandatory. It will consist of a one
-                    hour webinar on <span th:text="${#temporals.format(model.assessorBriefingDate,dateFormat)}"
-                                          th:remove="tag">21 March 2017</span>.</p>
+                    hour webinar on <th:block th:text="${#temporals.format(model.assessorBriefingDate,dateFormat)}">21 March 2017</th:block>.</p>
             </section>
 
             <section>

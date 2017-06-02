@@ -8,6 +8,7 @@ import org.innovateuk.ifs.user.mapper.AffiliationMapper;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class AffiliationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> updateUserAffiliations(long userId, List<AffiliationResource> affiliations) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId)).andOnSuccess(user -> {
             List<Affiliation> targetAffiliations = user.getAffiliations();
