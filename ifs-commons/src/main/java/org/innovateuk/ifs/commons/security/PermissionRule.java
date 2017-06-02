@@ -26,7 +26,7 @@ public @interface PermissionRule {
 
     /**
      * @return A description of a particular state of affairs that makes this rule alter its behaviour if key entities
-     * involved in the business logic are in particular states (e.g. this Rule being enforeced only if a Competition is
+     * involved in the business logic are in particular states (e.g. this Rule being enforced only if a Competition is
      * in the Funders' Panel state)
      */
     String particularBusinessState() default "";
