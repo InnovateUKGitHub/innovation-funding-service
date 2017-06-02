@@ -182,12 +182,6 @@ public class CompetitionManagementInviteAssessorsController {
         Supplier<String> failureView = () -> redirectToFind(competitionId, page, innovationArea);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            // Could be possibly be optimised in similar fashion to INFUND-4105
-//            submittedSelectionForm.getAssessorEmails().stream().forEach(email -> {
-//                ServiceResult<CompetitionInviteResource> updateResult = competitionInviteRestService.inviteUser(new ExistingUserStagedInviteResource(email, competitionId)).toServiceResult();
-//                validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors());
-//            });
-
             RestResult<Void> restResult = competitionInviteRestService.inviteUsers(
                     newSelectionFormToResource(submittedSelectionForm, competitionId));
 
