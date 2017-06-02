@@ -27,23 +27,23 @@
 
     <div class="boxed">
     		<span>
-            <p th:text="${messageForUser}" th:remove="tag">An unexpected error occurred.</p>
+            <th:block th:text="${messageForUser}">An unexpected error occurred.</th:block>
             Please click on the back button to return to the page you were on, or go to the <a href="https://www.gov.uk/government/organisations/innovate-uk">Innovate UK homepage</a>.
         </span>
     </div>
 
 
-    <span th:if="${message} and ${message.length() != 0}" ifs:utext="${'&lt;!--' + message + ' --&gt;'}" th:remove="tag">
+    <th:block th:if="${message} and ${message.length() != 0}" ifs:utext="${'&lt;!--' + message + ' --&gt;'}">
         Error message will be displayed here for developers on dev/UAT environment
-    </span>
+    </th:block>
 
 
     <p th:unless="${exception} or (${message} and ${message.length() != 0})">
         Cause unknown (no exception details available)</p>
 
-    <pre ifs:utext="${'&lt;!-- Stack trace for debugging (for developers): ' + stacktrace + ' --&gt;'}" th:remove="tag">
+    <th:block ifs:utext="${'&lt;!-- Stack trace for debugging (for developers): ' + stacktrace + ' --&gt;'}">
         Stack trace will be printed here...
-    </pre>
+    </th:block>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>

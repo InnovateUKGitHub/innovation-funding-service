@@ -679,7 +679,7 @@ Mark as complete button should be enabled
     Then Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Mark as complete")
 
 the user should not see duplicated select options
-    ${NO_OPTIONs}=    Get Matching Xpath Count    //div/fieldset/label
+    ${NO_OPTIONs}=    Get Matching Xpath Count    //*[@class="multiple-choice"]
     Should Be Equal As Integers    ${NO_OPTIONs}    5    # note that an extra option shows here due to the invited project manager appearing in the list for lead partner organisation members
 
 the user can see all project details completed
