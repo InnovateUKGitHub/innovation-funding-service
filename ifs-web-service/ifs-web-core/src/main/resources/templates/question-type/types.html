@@ -311,32 +311,44 @@
                 <div class="success-alert extra-margin-bottom">Application details are marked as complete</div>
             </th:block>
 
-            <dl class="readonly-data">
-                <dt>Application title</dt>
-                <dd th:text="${model.application.name}"></dd>
-            </dl>
-            <h2 class="heading-medium">Estimated timescales</h2>
-            <dl class="readonly-data">
-                <dt>When do you wish to start your project?</dt>
-                <dd th:if="${model.application.startDate}" th:text="${#temporals.format(model.application.startDate, 'd MMMM yyyy')}"></dd>
-                <dt>Duration in months</dt>
-                <dd><th:block th:text="${model.application.durationInMonths}"/> months</dd>
-                <dt>Research category</dt>
-                <dd th:text="${model.application.researchCategory.name}"></dd>
-                <dt>Innovation area</dt>
-                <dd th:text="${model.application.innovationArea.name} ?: 'Not listed'"></dd>
-                <th:block th:unless="${model.application.resubmission == null}">
-                    <dt>Is this application a resubmission?</dt>
-                    <dd th:text="${model.application.resubmission ? 'Yes' : 'No'}"></dd>
-                    <th:block th:if="${model.application.resubmission == true}">
-                        <dt>Previous application number</dt>
-                        <dd th:text="${model.application.previousApplicationNumber}"></dd>
-                        <dt>Previous application title</dt>
-                        <dd th:text="${model.application.previousApplicationTitle}"></dd>
-                    </th:block>
-                </th:block>
-            </dl>
-        </th:block>
+                <div class="grid-row">
+                    <div class="column-half">
+                        <dl class="font-xsmall">
+                            <dt>Competition name</dt>
+                            <dd th:text="${competition.name}"></dd>
+                            <dt>When do you wish to start your project?</dt>
+                            <dd th:if="${model.application.startDate}" th:text="${#temporals.format(model.application.startDate, 'd MMMM yyyy')}"></dd>
+                            <dt>Duration in months</dt>
+                            <dd><th:block th:text="${model.application.durationInMonths}"/> months</dd>
+                            <dt>Research category</dt>
+                            <dd th:text="${model.application.researchCategory.name}"></dd>
+                            <dt>Innovation area</dt>
+                            <dd th:text="${model.application.innovationArea.name} ?: 'Not listed'"></dd>
+                            <th:block th:unless="${model.application.resubmission == null}">
+                                <dt>Is this application a resubmission?</dt>
+                                <dd th:text="${model.application.resubmission ? 'Yes' : 'No'}"></dd>
+                                <th:block th:if="${model.application.resubmission == true}">
+                                    <dt>Previous application number</dt>
+                                    <dd th:text="${model.application.previousApplicationNumber}"></dd>
+                                    <dt>Previous application title</dt>
+                                    <dd th:text="${model.application.previousApplicationTitle}"></dd>
+                                </th:block>
+                            </th:block>
+                        </dl>
+                    </div>
+                    <div class="column-half">
+                        <th:block th:if="${showApplicationTeamLink}">
+                            <ul class="list list-bullet">
+                                <li>
+                                    <a th:href="@{/competition/{competitionId}/application/{applicationId}/team(competitionId=${competition.id},applicationId=${model.application.id})}+${queryParams}">
+                                        view application team details
+                                    </a>
+                                </li>
+                            </ul>
+                        </th:block>
+                    </div>
+                </div>
+            </th:block>
         <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (${model})"/>
     </th:block>
 
