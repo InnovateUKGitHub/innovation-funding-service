@@ -200,6 +200,11 @@ Project finance user can upload a pdf file
     Then the user uploads the file      name=attachment    ${valid_pdf}
     And the user should see the text in the page    ${valid_pdf}
 
+Project finance user cannot add query for an organisation not part of the project
+    [Documentation]  IFS-281
+    [Tags]
+    When the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/23/query/new-query    ${404_error_message}
+    [Teardown]    the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/22/query/new-query
 
 Project finance can remove the file
     [Documentation]    INFUND-4840
@@ -1134,7 +1139,7 @@ Project Finance user can edit and save Lead Partner's 20% of labour costs option
     [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button
     And the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
-    And the user clicks the button/link    jQuery=label[data-target="overhead-default-percentage"]
+    And the user clicks the button/link    jQuery=[data-target="overhead-default-percentage"] label
     Then the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 12,120")
     And the user should see the element     jQuery=section:nth-of-type(2) input[id^="section-total"][id$="default"]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
@@ -1147,7 +1152,7 @@ Project Finance user can Edit and Save Lead Partner's no overhead costs option
     [Documentation]     INFUND-7577
     [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
-    And the user clicks the button/link    jQuery=label[data-target="overhead-none"]
+    And the user clicks the button/link    jQuery=[data-target="overhead-none"] label
     Then the user should see the element     jQuery=h3:contains("No overhead costs")
     And the user should see the element     jQuery=p:contains("You are not currently applying for overhead costs")
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
@@ -1158,7 +1163,7 @@ Project Finance user can edit and save Lead Partner's calculate overheads option
     [Documentation]     INFUND-7577
     [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
-    And the user clicks the button/link    jQuery=label[data-target="overhead-total"]
+    And the user clicks the button/link    jQuery=[data-target="overhead-total"] label
     And the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
     Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%")
     And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 0")
@@ -1284,7 +1289,7 @@ Project Finance user can edit and save partner's 20% of labour costs option
     [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button
     And the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
-    And the user clicks the button/link    jQuery=label[data-target="overhead-default-percentage"]
+    And the user clicks the button/link    jQuery=[data-target="overhead-default-percentage"] label
     Then the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 11,956")
     And the user should see the element     jQuery=section:nth-of-type(2) input[id^="section-total"][id$="default"]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
@@ -1297,7 +1302,7 @@ Project Finance user can edit and save Partner's no overhead costs option
     [Documentation]     INFUND-7577
     [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
-    And the user clicks the button/link    jQuery=label[data-target="overhead-none"]
+    And the user clicks the button/link    jQuery=[data-target="overhead-none"] label
     Then the user should see the element     jQuery=h3:contains("No overhead costs")
     And the user should see the element     jQuery=p:contains("You are not currently applying for overhead costs")
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
@@ -1308,7 +1313,7 @@ Project Finance user can edit and save in Partner's calculate overheads option
     [Documentation]     INFUND-7577
     [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
-    And the user clicks the button/link    jQuery=label[data-target="overhead-total"]
+    And the user clicks the button/link    jQuery=[data-target="overhead-total"] label
     And the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
     Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%")
     And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 0")

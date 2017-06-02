@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -78,6 +79,7 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> saveProjectInvite(@P("inviteProjectResource") InviteProjectResource inviteProjectResource) {
 
         return validateProjectInviteResource(inviteProjectResource).andOnSuccess(() ->
@@ -121,6 +123,7 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> acceptProjectInvite(String inviteHash, Long userId) {
         return find(invite(inviteHash), user(userId)).andOnSuccess((invite, user) -> {
             if(invite.getEmail().equalsIgnoreCase(user.getEmail())){

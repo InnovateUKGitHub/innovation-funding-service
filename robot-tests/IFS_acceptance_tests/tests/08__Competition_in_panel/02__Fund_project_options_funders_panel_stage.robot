@@ -154,7 +154,7 @@ the user sets the funding decision of application
     the user clicks the button/link    jQuery=button:contains("${decision_button}")
 
 the server side validation should be triggered
-    the user should see the element  jQuery=.error:contains("Please enter the email message.")
+    the user should see the element  jQuery=.error-message:contains("Please enter the email message.")
     the user should see the element  jQuery=.error-summary-list:contains("Please enter the email message.")
 
 the user cancels the process needs to re-select the reciepients

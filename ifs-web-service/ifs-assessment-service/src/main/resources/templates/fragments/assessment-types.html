@@ -4,7 +4,7 @@
 
 <!-- ======== Assessment - research category ======= -->
 <div th:fragment="assessor_research_category (field)">
-    <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('${form.formInput[__${field.id}__]}')}? error">
+    <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('${form.formInput[__${field.id}__]}')} ? 'form-group-error'">
         <label class="form-label" for="research-category">
             <span class="form-label-bold">Please select the research category for this project</span>
             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${field.id})" />
@@ -22,7 +22,7 @@
 
 <!-- ======== Assessment - assessor feedback textarea and word count ======= -->
 <div th:fragment="textarea (field)">
-    <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[__${field.id}__]}')}? error">
+    <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[__${field.id}__]}')} ? 'form-group-error'">
         <label class="form-label form-label-bold" th:for="'form-textarea-'+${field.id}" th:id="'form-label-'+${field.id}">Feedback
             <span class="form-hint">Please justify your score by writing 2 or 3 sentences which will be returned to the applicant as feedback.</span>
             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${field.id})" />
@@ -59,7 +59,7 @@
 
 <!-- =================== Assessment feedback score ============================== -->
 <div th:fragment="assessor_score (field)">
-    <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[__${field.id}__]}')}? error">
+    <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[__${field.id}__]}')} ? 'form-group-error'">
         <label class="form-label form-label-bold" for="assessor-question-score">Question score
             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${field.id})"/>
         </label>
@@ -84,10 +84,10 @@
     <fieldset class="inline">
         <legend class="visuallyhidden">Is this application in scope?</legend>
         <div class="form-group">
-            <label class="block-label selection-button-radio" th:each="option : ${ { true, false } }">
-                <input th:field="*{formInput[__${field.id}__]}" th:value="${option}" type="radio" />
-                <span th:text="${option ? 'Yes' : 'No'}" th:remove="tag" />
-            </label>
+            <div class="multiple-choice" th:each="option : ${ { true, false } }">
+                <input th:id="'in-scope-'+${option}" th:field="*{formInput[__${field.id}__]}" th:value="${option}" type="radio" />
+                <label th:for="'in-scope-'+${option}" th:text="${option ? 'Yes' : 'No'}">Yes/No</label>
+            </div>
         </div>
     </fieldset>
 </div>

@@ -10,7 +10,6 @@ import org.innovateuk.ifs.sil.crm.resource.SilAddress;
 import org.innovateuk.ifs.sil.crm.resource.SilContact;
 import org.innovateuk.ifs.sil.crm.resource.SilOrganisation;
 import org.innovateuk.ifs.sil.crm.service.SilCrmEndpoint;
-import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
@@ -30,7 +29,7 @@ import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
-public class CrmServiceImpl extends BaseTransactionalService implements CrmService {
+public class CrmServiceImpl implements CrmService {
 
     private static final Log LOG = LogFactory.getLog(CrmServiceImpl.class);
     @Autowired

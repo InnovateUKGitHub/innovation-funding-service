@@ -27,18 +27,18 @@
             <li th:each="competition: ${competitions}">
                 <div class="column-two-thirds">
                     <h3 class="heading-small">
-                        <a th:href="@{'competition/setup/'+${competition.id}}" th:if="${competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP ||
-                        competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN}" >
-                          <span th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}" th:remove="tag" />
-                          <span th:if="${#strings.isEmpty(competition.name)}" th:text="#{ifs.competition.no_title}" th:remove="tag" />
+                        <a th:href="@{'competition/setup/'+${competition.id}}"
+                           th:if="${competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP || competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN}"
+                           th:text="${#strings.isEmpty(competition.name)} ? #{ifs.competition.no_title} : ${competition.name}">
+                           Competition name
                         </a>
-                        <a th:href="@{'competition/'+${competition.id}}" th:unless="${competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP ||
-                        competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN }"  >
-                          <span th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}" th:remove="tag" />
-                          <span th:if="${#strings.isEmpty(competition.name)}" th:text="#{ifs.competition.no_title}" th:remove="tag" />
+                        <a th:href="@{'competition/'+${competition.id}}"
+                           th:unless="${competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP || competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN }"
+                           th:text="${#strings.isEmpty(competition.name)} ? #{ifs.competition.no_title} : ${competition.name}">
+                            competition Name
                         </a>
                     </h3>
-                    <p>Ref number: <span th:text="${competition.id}" th:remove="tag" /></p>
+                    <p>Ref number: <th:block th:text="${competition.id}" /></p>
                 </div>
                 <div class="column-third">
                   <p class="status" th:text="${#messages.msg('ifs.competition.status.'+competition.competitionStatus)}"/>

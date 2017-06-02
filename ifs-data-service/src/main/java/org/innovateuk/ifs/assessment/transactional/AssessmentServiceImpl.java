@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
 import org.innovateuk.ifs.assessment.mapper.AssessmentFundingDecisionOutcomeMapper;
@@ -16,13 +15,13 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -107,6 +106,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> recommend(long assessmentId, AssessmentFundingDecisionOutcomeResource assessmentFundingDecision) {
         return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
             if (!assessmentWorkflowHandler.fundingDecision(found, assessmentFundingDecisionOutcomeMapper.mapToDomain(assessmentFundingDecision))) {
@@ -129,6 +129,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> rejectInvitation(long assessmentId,
                                                 AssessmentRejectOutcomeResource assessmentRejectOutcomeResource) {
         return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId))
@@ -142,6 +143,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> withdrawAssessment(long assessmentId) {
         return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
             if (!assessmentWorkflowHandler.withdraw(found)) {
@@ -152,6 +154,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> acceptInvitation(long assessmentId) {
         return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
             if (!assessmentWorkflowHandler.acceptInvitation(found)) {
@@ -162,6 +165,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> submitAssessments(AssessmentSubmissionsResource assessmentSubmissionsResource) {
         List<Assessment> assessments = assessmentRepository.findAll(assessmentSubmissionsResource.getAssessmentIds());
         List<Error> failures = new ArrayList<>();
@@ -190,6 +194,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     @Override
+    @Transactional
     public ServiceResult<AssessmentResource> createAssessment(AssessmentCreateResource assessmentCreateResource) {
         return getAssessor(assessmentCreateResource.getAssessorId())
                 .andOnSuccess(assessor -> getApplication(assessmentCreateResource.getApplicationId())

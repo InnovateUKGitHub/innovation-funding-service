@@ -3,7 +3,6 @@ package org.innovateuk.ifs.testdata.builders;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
@@ -13,14 +12,14 @@ import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
@@ -31,7 +30,6 @@ import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.*;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -40,6 +38,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
  * Generates data from Competitions, including any Applications taking part in this Competition
  */
 public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, CompetitionDataBuilder> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(CompetitionDataBuilder.class);
 
     public CompetitionDataBuilder createCompetition() {
 
@@ -200,15 +200,10 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             applicationFundingService.notifyLeadApplicantsOfFundingDecisions(fundingNotificationResource).
                     getSuccessObjectOrThrowException();
 
-            doAs(anyProjectFinanceUser(),
+            doAs(projectFinanceUser(),
                     () -> projectService.createProjectsFromFundingDecisions(pairsToMap(applicationIdAndDecisions)).getSuccessObjectOrThrowException());
 
         });
-    }
-
-    private UserResource anyProjectFinanceUser() {
-        List<User> projectFinanceUsers = userRepository.findByRolesName(UserRoleType.PROJECT_FINANCE.getName());
-        return retrieveUserById(projectFinanceUsers.get(0).getId());
     }
 
     private void shiftMilestoneToTomorrow(CompetitionData data, MilestoneType milestoneType) {
@@ -349,7 +344,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     public CompetitionDataBuilder withApplications(List<UnaryOperator<ApplicationDataBuilder>> applicationDataBuilders) {
-        return with(data -> applicationDataBuilders.forEach(fn -> fn.apply(newApplicationData(serviceLocator).withCompetition(data.getCompetition())).build()));
+        return with(data -> applicationDataBuilders.forEach(fn ->
+            testService.doWithinTransaction(() -> fn.apply(newApplicationData(serviceLocator).withCompetition(data.getCompetition())).build())));
     }
 
     public CompetitionDataBuilder withPublicContent(boolean published, String shortDescription, String fundingRange, String eligibilitySummary, String competitionDescription, FundingType fundingType, String projectSize, List<String> keywords) {
@@ -377,12 +373,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         competitionData.setCompetition(newCompetitionSaved);
     }
 
-    private CompetitionDataBuilder asCompAdmin(Consumer<CompetitionData> action) {
-        return with(data -> {
-            doAs(compAdmin(), () -> action.accept(data));
-        });
-    }
-
     public static CompetitionDataBuilder newCompetitionData(ServiceLocator serviceLocator) {
         return new CompetitionDataBuilder(emptyList(), serviceLocator);
     }
@@ -400,5 +390,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     @Override
     protected CompetitionData createInitial() {
         return new CompetitionData();
+    }
+
+    @Override
+    protected void postProcess(int index, CompetitionData instance) {
+        super.postProcess(index, instance);
+        LOG.info("Created Competition '{}'", instance.getCompetition().getName());
     }
 }
