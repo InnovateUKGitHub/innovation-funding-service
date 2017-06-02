@@ -10,7 +10,6 @@ import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -18,6 +17,7 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.transactional.UsersRolesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -55,6 +55,7 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
     private UsersRolesService usersRolesService;
 
     @Override
+    @Transactional
     public ServiceResult<ApplicationResource> setResearchCategory(Long applicationId, Long researchCategoryId) {
         return find(application(applicationId)).andOnSuccess(application ->
                 findResearchCategory(researchCategoryId).andOnSuccess(researchCategory ->

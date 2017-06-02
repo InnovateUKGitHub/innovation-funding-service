@@ -14,7 +14,7 @@
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <p>This information is used for search results and the opening section of the competition page.</p>
-        <div class="form-group" th:classappend="${#fields.hasErrors('shortDescription')} ? 'error'">
+        <div class="form-group" th:classappend="${#fields.hasErrors('shortDescription')} ? 'form-group-error'">
             <label for="short-description">
                 <span class="form-label-bold">Short description</span>
                 <span class="form-hint">Appears at the top of the competition page.</span>
@@ -25,13 +25,13 @@
             <input class="form-control width-full"
                    id="short-description"
                    type="text"
-                   th:errorclass="field-error"
+                   th:errorclass="form-control-error"
                    th:field="${form.shortDescription}"
                    required="required"
                    maxlength="255"
                    th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.shortDescription.required}" />
         </div>
-        <div class="form-group" th:classappend="${#fields.hasErrors('projectFundingRange')} ? 'error'">
+        <div class="form-group" th:classappend="${#fields.hasErrors('projectFundingRange')} ? 'form-group-error'">
             <label for="funding-range">
                 <span class="form-label-bold">Project funding range</span>
                 <span class="form-hint">Appears against the competition search result.</span>
@@ -42,13 +42,13 @@
             <input class="form-control"
                    id="funding-range"
                    type="text"
-                   th:errorclass="field-error"
+                   th:errorclass="form-control-error"
                    th:field="${form.projectFundingRange}"
                    required="required"
                    maxlength="255"
                    th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.projectFundingRange.required}" />
         </div>
-        <div class="form-group" th:classappend="${#fields.hasErrors('eligibilitySummary')} ? 'error'">
+        <div class="form-group" th:classappend="${#fields.hasErrors('eligibilitySummary')} ? 'form-group-error'">
             <label for="eligibility-summary">
                 <span class="form-label-bold">Eligibility summary</span>
                 <span class="form-hint">Appears against the competition search result.</span>
@@ -66,7 +66,7 @@
                        th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.eligibilitySummary.required}"></textarea>
             </div>
         </div>
-        <div class="form-group" th:classappend="${#fields.hasErrors('keywords')} ? 'error'">
+        <div class="form-group" th:classappend="${#fields.hasErrors('keywords')} ? 'form-group-error'">
             <label for="keywords">
                 <span class="form-label-bold">Keywords</span>
                 <span class="form-hint"> Keywords help competitions appear in search results but are not visible to applicants. Separate keywords with commas.</span>
@@ -78,7 +78,7 @@
                    id="keywords"
                    type="text"
                    th:field="${form.keywords}"
-                   th:errorclass="field-error"
+                   th:errorclass="form-control-error"
                    required="required"
                    maxlength="255"
                    th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.keywords.required}" />
@@ -97,11 +97,11 @@
             <dt>Project size</dt>
             <dd th:text="${form.projectSize}"></dd>
         </dl>
-        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
+        <th:block th:insert="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <p>Text entered into this section will appear in the summary tab.</p>
-            <div class="form-group" th:classappend="${#fields.hasErrors('description')} ? 'error'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('description')} ? 'form-group-error'">
                 <label for="description">
                     <span class="form-label-bold">Competition description</span>
                     <th:block th:if="${#fields.hasErrors('description')}">
@@ -113,7 +113,7 @@
                             class="form-control width-full"
                             data-editor="html"
                             maxlength="5000"
-                            th:errorclass="field-error"
+                            th:errorclass="form-control-error"
                             rows="4"
                             th:field="${form.description}"
                             required="required"
@@ -123,7 +123,7 @@
                 </div>
             </div>
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('fundingType')} ? 'error'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('fundingType')} ? 'form-group-error'">
                 <fieldset>
                     <legend>
                         <span class="form-label-bold">Funding type</span>
@@ -131,7 +131,7 @@
                             <span class="error-message"  th:each="err : ${#fields.errors('fundingType')}" th:text="${err}" />
                         </th:block>
                     </legend>
-                    <label th:for="${'fundingType-'+fundingType.displayName}" class="block-label selection-button-radio" th:each="fundingType : ${model.fundingTypes}" >
+                    <div th:each="fundingType : ${model.fundingTypes}" class="multiple-choice">
                         <input type="radio"
                                name="fundingType"
                                th:id="${'fundingType-'+fundingType.displayName}"
@@ -139,11 +139,11 @@
                                required="required"
                                th:checked="${form.fundingType == fundingType.displayName}"
                                th:attr="data-required-errormessage=#{validation.publiccontent.summaryform.fundingType.required}" />
-                        <th:block th:text="${fundingType.displayName}" />
-                    </label>
+                        <label th:for="${'fundingType-'+fundingType.displayName}" th:text="${fundingType.displayName}"></label>
+                    </div>
                 </fieldset>
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('projectSize')} ? 'error'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('projectSize')} ? 'form-group-error'">
                 <label for="project-size">
                     <span class="form-label-bold">Project size</span>
                     <th:block th:if="${#fields.hasErrors('projectSize')}">
@@ -153,11 +153,11 @@
                 <input class="form-control" id="project-size" type="text"
                        th:field="${form.projectSize}"
                        required="required"
-                       th:errorclass="field-error"
+                       th:errorclass="form-control-error"
                        th:attr="data-required-errormessage=#{validation.publiccontent.summaryform.projectSize.required}" />
             </div>
 
-        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})" />
+        <th:block th:insert="fragments/public-content :: content-groups(form=${form},model=${model})" />
 
     </th:block>
 </div>
@@ -165,12 +165,12 @@
 <!-- =================== Public content section - Eligibility  ===================================================== -->
 <div th:fragment="section-eligibility(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:if="${model.readOnly}">
-        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
+        <th:block th:insert="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <p>Text entered into this section will appear within the eligibility tab.</p>
         <h2 class="heading-medium no-margin">Content</h2>
-        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})" />
+        <th:block th:insert="fragments/public-content :: content-groups(form=${form},model=${model})" />
     </th:block>
 </div>
 
@@ -196,7 +196,7 @@
         </dl>
         <th:block th:each="formDate, iteration : ${form.dates}" th:with="index=${iteration.index}">
             <div class="contentGroup" th:id="${'contentDateGroup-row-'+index}">
-                <div class="form-group" th:classappend="${#fields.hasErrors('dates[__${index}__].day') || #fields.hasErrors('dates[__${index}__].month') || #fields.hasErrors('dates[__${index}__].year')} ? 'error' : ''">
+                <div class="form-group" th:classappend="${#fields.hasErrors('dates[__${index}__].day') || #fields.hasErrors('dates[__${index}__].month') || #fields.hasErrors('dates[__${index}__].year')} ? 'form-group-error' : ''">
                     <fieldset>
                         <input type="hidden" th:id="${'dates'+index+'-id'}" th:field="${form.dates[__${index}__].id}">
                         <legend>
@@ -220,7 +220,7 @@
                                 <label class="form-label" th:for="${'dates-'+index+'-day'}">Day</label>
                                 <input class="form-control width-extra-small"
                                        placeholder="DD"
-                                       th:errorclass="field-error"
+                                       th:errorclass="form-control-error"
                                        type="number"
                                        th:id="${'dates-'+index+'-day'}"
                                        th:field="${form.dates[__${index}__].day}"
@@ -234,7 +234,7 @@
                                 <input class="form-control width-extra-small"
                                        placeholder="MM"
                                        type="number"
-                                       th:errorclass="field-error"
+                                       th:errorclass="form-control-error"
                                        th:id="${'dates-'+index+'-month'}"
                                        th:field="${form.dates[__${index}__].month}"
                                        min="1"
@@ -247,7 +247,7 @@
                                 <input class="form-control width-extra-small"
                                        placeholder="YYYY"
                                        type="number"
-                                       th:errorclass="field-error"
+                                       th:errorclass="form-control-error"
                                        th:id="${'dates-'+index+'-year'}"
                                        th:field="${form.dates[__${index}__].year}"
                                        min="1"
@@ -258,7 +258,7 @@
                     </fieldset>
 
                 </div>
-                <div class="form-group textarea-wrapped" th:classappend="${#fields.hasErrors('dates[__${index}__].content')}? 'error':''">
+                <div class="form-group textarea-wrapped" th:classappend="${#fields.hasErrors('dates[__${index}__].content')}? 'form-group-error':''">
                     <label class="form-label" th:for="${'dates-'+index+'-content'}">
                         <span class="form-label-bold">Content</span>
                         <th:block th:if="${#fields.hasErrors('dates[__${index}__].content')}">
@@ -268,7 +268,8 @@
                     <textarea cols="30" rows="5"
                               data-editor="html"
                               th:id="${'dates-'+index+'-content'}"
-                              th:class="${#fields.hasErrors('dates[__${index}__].content') ? 'width-full field-error' : 'width-full'}"
+                              class="width-full"
+                              th:errorclass="form-control-error"
                               th:field="${form.dates[__${iteration.index}__].content}"
                               required="required"
                               th:attr="data-required-errormessage=#{validation.publiccontent.datesform.content.required}">
@@ -288,12 +289,12 @@
 <!-- =================== Public content section - Scope  =========================================================== -->
 <div th:fragment="section-scope(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:if="${model.readOnly}">
-        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
+        <th:block th:insert="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <p>Text entered into this section will appear within the scope tab.</p>
         <h2 class="heading-medium no-margin">Content</h2>
-        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})" />
+        <th:block th:insert="fragments/public-content :: content-groups(form=${form},model=${model})" />
     </th:block>
 </div>
 
@@ -301,23 +302,23 @@
 <div th:fragment="section-supporting-information(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <p>Text entered into this section will appear within the supporting information tab.</p>
     <th:block th:if="${model.readOnly}">
-        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
+        <th:block th:insert="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <h2 class="heading-medium no-margin">Content</h2>
-        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})" />
+        <th:block th:insert="fragments/public-content :: content-groups(form=${form},model=${model})" />
     </th:block>
 </div>
 
 <!-- =================== Public content section - How to apply  ==================================================== -->
 <div th:fragment="section-how-to-apply(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:if="${model.readOnly}">
-        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
+        <th:block th:insert="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <p>Text entered into this section will appear within the how to apply tab.</p>
         <h2 class="heading-medium">Content</h2>
-        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})" />
+        <th:block th:insert="fragments/public-content :: content-groups(form=${form},model=${model})" />
     </th:block>
 </div>
 
@@ -325,15 +326,15 @@
     <th:block th:each="contentGroup,iter: ${form.contentGroups}" th:with="index=${iter.index}">
         <div class="contentGroup" th:id="${'contentGroup-row-'+index}">
             <input type="hidden" th:field="*{contentGroups[__${index}__].id}" />
-            <div class="form-group" th:classappend="${#fields.hasErrors('contentGroups[__${index}__].heading')}? 'error':''">
+            <div class="form-group" th:classappend="${#fields.hasErrors('contentGroups[__${index}__].heading')}? 'form-group-error':''">
                 <label class="form-label-bold" th:for="${'heading-'+index}">Heading</label>
                 <input class="form-control" th:id="${'heading-'+index}" type="text" th:field="*{contentGroups[__${index}__].heading}"
                        required="required"
                        th:attr="data-required-errormessage=#{validation.publiccontent.contentgroup.heading.required}" />
             </div>
-            <div class="form-group textarea-wrapped" th:classappend="${#fields.hasErrors('contentGroups[__${index}__].content')}? 'error':''">
+            <div class="form-group textarea-wrapped" th:classappend="${#fields.hasErrors('contentGroups[__${index}__].content')}? 'form-group-error':''">
                 <label class="form-label-bold" th:for="${'content-'+index}">Content</label>
-                    <textarea th:errorclass="field-error" th:id="${'content-'+index}" cols="30" rows="10" class="width-full form-control" data-editor="html" th:field="*{contentGroups[__${index}__].content}"
+                    <textarea th:errorclass="form-control-error" th:id="${'content-'+index}" cols="30" rows="10" class="width-full form-control" data-editor="html" th:field="*{contentGroups[__${index}__].content}"
                               required="required"
                               th:attr="data-required-errormessage=#{validation.publiccontent.contentgroup.content.required}"></textarea>
             </div>

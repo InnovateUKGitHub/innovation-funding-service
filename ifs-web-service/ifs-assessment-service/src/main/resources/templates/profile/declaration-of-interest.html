@@ -16,8 +16,8 @@
 
             <h2 class="heading-medium no-margin-bottom">Principal employer and role</h2>
             <p th:if="${model.principalEmployer}">
-                <span th:text="${model.principalEmployer}" th:remove="tag">ASDF solutions</span><br />
-                <span th:text="${model.role}" th:remove="tag">CEO</span>
+                <th:block th:text="${model.principalEmployer}">ASDF solutions</th:block><br />
+                <th:block th:text="${model.role}">CEO</th:block>
             </p>
             <p th:unless="${model.principalEmployer}">Not answered</p>
 

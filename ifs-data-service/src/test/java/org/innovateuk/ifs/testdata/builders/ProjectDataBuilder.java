@@ -10,8 +10,11 @@ import org.innovateuk.ifs.testdata.builders.data.ProjectData;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -24,6 +27,8 @@ import static java.util.Collections.emptyList;
  * Generates data from Competitions, including any Applications taking part in this Competition
  */
 public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectDataBuilder> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ProjectData.class);
 
     public ProjectDataBuilder withExistingProject(String projectName) {
         return with(data -> {
@@ -96,16 +101,16 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
             doAs(findAnyPartnerForOrganisation(data, organisation.getId()), () -> {
 
                 OrganisationResource organisationResource = organisationService.findById(organisation.getId()).getSuccessObjectOrThrowException();
-
+                OrganisationTypeResource organisationType = organisationTypeService.findOne(organisationResource.getOrganisationType()).getSuccessObjectOrThrowException();
                 BankDetailsResource bankDetails = new BankDetailsResource();
                 bankDetails.setAccountNumber(accountNumber);
                 bankDetails.setSortCode(sortCode);
                 bankDetails.setProject(data.getProject().getId());
-                bankDetails.setOrganisation(organisation.getId());
-                bankDetails.setCompanyName(organisation.getName());
+                bankDetails.setOrganisation(organisationResource.getId());
+                bankDetails.setCompanyName(organisationResource.getName());
                 bankDetails.setOrganisationAddress(organisationResource.getAddresses().get(0));
-                bankDetails.setOrganisationTypeName(organisation.getOrganisationType().getName());
-                bankDetails.setRegistrationNumber(organisation.getCompanyHouseNumber());
+                bankDetails.setOrganisationTypeName(organisationType.getName());
+                bankDetails.setRegistrationNumber(organisationResource.getCompanyHouseNumber());
 
                 bankDetailsService.submitBankDetails(bankDetails).getSuccessObjectOrThrowException();
             });
@@ -118,9 +123,10 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
     }
 
     private UserResource findAnyPartnerForOrganisation(ProjectData data, Long organisationId) {
-
-        List<ProjectUser> organisationPartners = projectUserRepository.findByProjectIdAndOrganisationId(data.getProject().getId(), organisationId);
-        return retrieveUserById(organisationPartners.get(0).getUser().getId());
+        return testService.doWithinTransaction(() -> {
+            List<ProjectUser> organisationPartners = projectUserRepository.findByProjectIdAndOrganisationId(data.getProject().getId(), organisationId);
+            return retrieveUserById(organisationPartners.get(0).getUser().getId());
+        });
     }
 
     public static ProjectDataBuilder newProjectData(ServiceLocator serviceLocator) {
@@ -142,5 +148,9 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
         return new ProjectData();
     }
 
-
+    @Override
+    protected void postProcess(int index, ProjectData instance) {
+        super.postProcess(index, instance);
+        LOG.info("Created Project '{}'", instance.getProject().getName());
+    }
 }

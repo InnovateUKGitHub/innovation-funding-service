@@ -70,7 +70,7 @@
         </div>
       </div>
       <div id="global-cookie-message">
-          <p>GOV.UK uses cookies to make the site simpler. <a href="https://www.gov.uk/help/cookies">Find out more about cookies</a></p>
+          <p>GOV.UK uses cookies to make the site simpler. <a href="https://www.gov.uk/help/cookies">Find out more about cookies</a>.</p>
       </div>
       <header role="banner" id="global-header" class="with-proposition">
         <div class="header-wrapper">
@@ -106,7 +106,7 @@
 
             #if ($passwordEnabled)
               #if ($message)
-                <div class="form-group error">
+                <div class="form-group form-group-error">
                   <label for="username">
                     <span class="form-label">Email address</span>
                   </label>
@@ -116,7 +116,7 @@
                       data-required-errormessage="Please enter your email address."
                       data-email-errormessage="Please enter a valid email address." />
                 </div>
-                <div class="form-group error">
+                <div class="form-group form-group-error">
                   <label for="password">
                     <span class="form-label">#springMessageText("idp.login.password", "Password")</span>
                   </label>
