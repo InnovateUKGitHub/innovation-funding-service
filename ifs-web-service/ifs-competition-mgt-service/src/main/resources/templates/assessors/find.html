@@ -119,14 +119,16 @@
                 <thead>
                 <tr>
                     <th scope="col" id="select-all">
-                        <label class="block-label selection-button-checkbox"
+                        <div class="multiple-choice"
                                id="select-all-checkbox"
                                aria-hidden="true">
                             <input type="checkbox"
                                    data-switches-button-status="[name=addSelected]"
                                    id="select-all-check" th:field="*{allSelected}"/>
-                            <span class="invisible">Select&nbsp;all</span>
-                        </label>
+                            <label for="select-all-check">
+                                <span class="invisible">All</span>
+                            </label>
+                        </div>
                         <span id="select-assessor-header" aria-hidden="false">Select assessor</span>
                     </th>
                     <th scope="col">Assessor name</th>
@@ -138,14 +140,16 @@
                 <tbody>
                 <tr th:each="assessor : ${model.assessors}">
                     <td>
-                        <label class="block-label selection-button-checkbox">
+                        <div class="multiple-choice">
                             <input type="checkbox"
                                    data-switches-button-status="[name=addSelected]"
                                    th:id="|assessor-id-${assessor.id}|"
                                    th:field="*{assessorEmails}"
                                    th:value="${assessor.email}"/>
-                            <span class="invisible">Add</span>
-                        </label>
+                            <label th:for="|assessor-id-${assessor.id}|">
+                                <span class="invisible">Add</span>
+                            </label>
+                        </div>
                     </td>
                     <td>
                         <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${originQuery}"
