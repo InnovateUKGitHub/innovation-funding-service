@@ -10,6 +10,7 @@ import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.function.Supplier;
 
@@ -35,15 +36,18 @@ public class FileEntryServiceImpl extends BaseTransactionalService implements Fi
     }
 
     @Override
+    @Transactional
     public ServiceResult<FileEntryResource> saveFile(FileEntryResource newFile) {
         return serviceSuccess(mapper.mapToResource(repository.save(mapper.mapToDomain(newFile))));
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> removeFile(Long fileId) {
         repository.delete(fileId);
         return serviceSuccess();
     }
+
     @Override
     public ServiceResult<FileEntryResource> getFileEntryByApplicationFinanceId(Long applicationFinanceId) {
         return find(applicationFinance(applicationFinanceId)).andOnSuccessReturn(finance -> mapper.mapToResource(finance.getFinanceFileEntry()));

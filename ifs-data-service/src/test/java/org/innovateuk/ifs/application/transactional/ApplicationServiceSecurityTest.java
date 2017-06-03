@@ -210,7 +210,6 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         verify(fileUploadRules).applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser());
     }
 
-
     @Test
     public void testDeleteFormInputResponseFileUpload() {
 
@@ -453,6 +452,11 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
         @Override
         public ServiceResult<Void> informIneligible(long applicationId, ApplicationIneligibleSendResource applicationIneligibleSendResource) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Boolean> showApplicationTeam(Long applicationId, Long userId) {
             return null;
         }
     }

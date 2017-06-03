@@ -39,8 +39,8 @@
 
                 <div class="form-group">
                     <h2 class="heading-medium">
-                        <span th:if="${model.questionNumber != null}" th:text="${model.questionNumber} + '. '" th:remove="tag" />
-                        <span th:text="${model.questionName}" th:remove="tag" />
+                        <th:block th:if="${model.questionNumber != null}" th:text="${model.questionNumber} + '. '" />
+                        <th:block th:text="${model.questionName}" />
                     </h2>
 
                     <p th:text="${model.applicantResponse}" data-md-to-html="" class="wysiwyg-styles">This is the applicant response.</p>
@@ -63,16 +63,16 @@
                 <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to assessment overview</button>
             </form>
 
-            <div th:unless="${responseRequired}" th:remove="tag">
+            <th:block th:unless="${responseRequired}">
                 <div class="form-group">
                     <h2 class="heading-medium">
-                        <span th:if="${model.questionNumber != null}" th:text="${model.questionNumber} + '. '" th:remove="tag" />
-                        <span th:text="${model.questionName}" th:remove="tag" />
+                        <th:block th:if="${model.questionNumber != null}" th:text="${model.questionNumber} + '. '" />
+                        <th:block th:text="${model.questionName}"  />
                     </h2>
 
                     <p th:text="${model.applicantResponse}" />
                 </div>
-            </div>
+            </th:block>
             <input type="hidden" id="cacheTest" value="" />
 
             <th:block th:insert="fragments/assessment :: assessment-pagination" />

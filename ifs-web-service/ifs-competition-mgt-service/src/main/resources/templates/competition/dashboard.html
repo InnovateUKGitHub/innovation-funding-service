@@ -46,24 +46,24 @@
         <h3 class="heading-small">
             <a th:href="@{'/non-ifs-competition/setup/'+${competition.id}}"
                th:if="${nonIfs}">
-                <th:block th:include="competition/dashboard :: competition-name" />
+                <th:block th:insert="competition/dashboard :: competition-name" />
             </a>
             <th:block th:unless="${nonIfs}">
                 <a th:href="@{'/competition/setup/'+${competition.id}}"
                    th:if="${competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP}">
-                    <th:block th:include="competition/dashboard :: competition-name" />
+                    <th:block th:insert="competition/dashboard :: competition-name" />
                 </a>
                 <th:block th:if="${competition.competitionStatus.inFlight}">
                     <a th:href="@{/competition/{competitionId}/applications/all(competitionId=${competition.id})}" th:if="${supportView}">
-                        <th:block th:include="competition/dashboard :: competition-name" />
+                        <th:block th:insert="competition/dashboard :: competition-name" />
                     </a>
                     <a th:href="@{/competition/{competitionId}(competitionId=${competition.id})}" th:unless="${supportView}">
-                        <th:block th:include="competition/dashboard :: competition-name" />
+                        <th:block th:insert="competition/dashboard :: competition-name" />
                     </a>
                 </th:block>
                 <a th:href="${'/project-setup-management/competition/'+competition.id+'/status'}"
                    th:if="${T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PROJECT_SETUP == competition.competitionStatus}">
-                    <th:block th:include="competition/dashboard :: competition-name" />
+                    <th:block th:insert="competition/dashboard :: competition-name" />
                 </a>
             </th:block>
         </h3>

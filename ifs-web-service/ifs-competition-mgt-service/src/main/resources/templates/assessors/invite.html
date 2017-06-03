@@ -82,14 +82,12 @@
                         <button class="hidden-save" type="submit" name="inviteNewUsers" tabindex="-1" aria-hidden="true">Add assessors to list</button>
                         <p>Enter the new assessor's details below to add them to your invite list.</p>
 
-                        <div class="form-group" th:classappend="${#fields.hasErrors('selectedInnovationArea')}? error">
+                        <div class="form-group" th:classappend="${#fields.hasErrors('selectedInnovationArea')} ? 'form-group-error'">
                             <label for="grouped-innovation-area" class="form-label-bold">
                                 Innovation area
-                                <span th:if="${#fields.hasErrors('selectedInnovationArea')}" th:remove="tag">
-                                    <span class="error-message"
-                                          th:each="err : ${#fields.errors('selectedInnovationArea')}"
-                                          th:text="${err}" />
-                                </span>
+                                <th:block th:if="${#fields.hasErrors('selectedInnovationArea')}">
+                                    <span class="error-message" th:each="err : ${#fields.errors('selectedInnovationArea')}" th:text="${err}"></span>
+                                </th:block>
                             </label>
                             <p class="form-hint">The innovation area will remain the same until you click 'Add assessors to list'.</p>
                             <select th:field="*{selectedInnovationArea}"
@@ -110,12 +108,10 @@
                             </select>
                         </div>
 
-                        <div class="form-group" th:classappend="${#fields.hasErrors('invites')}? error">
-                            <span th:if="${#fields.hasErrors('invites')}" th:remove="tag">
-                                <span class="error-message"
-                                      th:each="err : ${#fields.errors('invites')}"
-                                      th:text="${err}" />
-                            </span>
+                        <div class="form-group" th:classappend="${#fields.hasErrors('invites')} ? 'form-group-error'">
+                            <th:block th:if="${#fields.hasErrors('invites')}">
+                                <span class="error-message" th:each="err : ${#fields.errors('invites')}" th:text="${err}"></span>
+                            </th:block>
 
                             <table id="invite-table">
                                 <thead>
@@ -129,35 +125,31 @@
                                 <tr th:each="row, iterStat : *{invites}">
                                     <td class="width-40-percent form-group" th:classappend="${#fields.hasErrors('invites[__${iterStat.index}__].name')} ? error">
                                         <label>
-                                             <span th:if="${#fields.hasErrors('invites[__${iterStat.index}__].name')}" th:remove="tag">
-                                                 <span class="error-message"
-                                                       th:each="err : ${#fields.errors('invites[__${iterStat.index}__].name')}"
-                                                       th:text="${err}" />
-                                             </span>
+                                             <th:block th:if="${#fields.hasErrors('invites[__${iterStat.index}__].name')}">
+                                                 <span class="error-message" th:each="err : ${#fields.errors('invites[__${iterStat.index}__].name')}" th:text="${err}"></span>
+                                             </th:block>
                                         </label>
                                         <input type="text"
                                                aria-labelledby="invite-label-assessor-name"
                                                class="form-control width-full"
                                                required="required"
-                                               th:errorclass="field-error"
+                                               th:errorclass="form-control-error"
                                                th:attr="data-required-errormessage=#{validation.standard.name.required}"
                                                th:field="*{invites[__${iterStat.index}__].name}"
                                         />
                                     </td>
                                     <td class="width-40-percent form-group" th:classappend="${#fields.hasErrors('invites[__${iterStat.index}__].email')} ? error">
                                         <label>
-                                             <span th:if="${#fields.hasErrors('invites[__${iterStat.index}__].email')}" th:remove="tag">
-                                                 <span class="error-message"
-                                                       th:each="err : ${#fields.errors('invites[__${iterStat.index}__].email')}"
-                                                       th:text="${err}" />
-                                             </span>
+                                             <th:block th:if="${#fields.hasErrors('invites[__${iterStat.index}__].email')}">
+                                                 <span class="error-message" th:each="err : ${#fields.errors('invites[__${iterStat.index}__].email')}" th:text="${err}"></span>
+                                             </th:block>
                                         </label>
                                         <input type="email"
                                                aria-labelledby="invite-label-assessor-email"
                                                class="form-control width-full"
                                                required="required"
                                                th:attr="data-required-errormessage=#{validation.inviteNewAssessorsForm.invites.email.required}"
-                                               th:errorclass="field-error"
+                                               th:errorclass="form-control-error"
                                                th:field="*{invites[__${iterStat.index}__].email}"
                                         />
                                     </td>
@@ -222,9 +214,7 @@
                     </tbody>
                 </table>
             </form>
-
-            <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
-
+            <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
             <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 

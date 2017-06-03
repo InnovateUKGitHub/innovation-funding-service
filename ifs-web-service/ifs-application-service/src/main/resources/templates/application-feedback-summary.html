@@ -41,8 +41,8 @@
 
                     <div class="column-half">
                         <h3 class="heading-small">Project timescales</h3>
-                        <p>Project start date: <br /><span th:text="${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}" th:remove="tag">4 November 2016</span></p>
-                        <p>Duration: <br /><span th:text="${currentApplication.durationInMonths}" th:remove="tag">51</span> months</p>
+                        <p>Project start date: <br /><th:block th:text="${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}" /></p>
+                        <p>Duration: <br /><th:block th:text="${currentApplication.durationInMonths}" /> months</p>
 
                         <h3 class="heading-small extra-margin">Total project cost</h3>
                         <p th:text="'£'+${#numbers.formatDecimal(totalFundingSought, 0, 'COMMA', 0, 'POINT')}">£203,567</p>

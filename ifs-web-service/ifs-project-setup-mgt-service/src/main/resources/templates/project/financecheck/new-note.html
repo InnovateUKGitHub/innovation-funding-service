@@ -20,7 +20,7 @@
             <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" method="post"
                   enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                 <h2 class="heading-medium">New note</h2>
-                <div class="form-group" th:classappend="${#fields.hasErrors('noteTitle')} ? 'error'">
+                <div class="form-group" th:classappend="${#fields.hasErrors('noteTitle')} ? 'form-group-error'">
                     <label for="noteTitle">
                         <span class="form-label-bold">Title</span>
                         <th:block th:if="${#fields.hasErrors('noteTitle')}">
@@ -32,13 +32,13 @@
                            type="text"
                            class="form-control width-full"
                            required="required"
-                           th:errorclass="field-error"
+                           th:errorclass="form-control-error"
                            th:field="*{noteTitle}"
                            th:attr="maxlength=${model.maxTitleCharacters},
                                     data-required-errormessage=#{validation.field.must.not.be.blank},
                                     data-maxlength-errormessage=#{validation.field.too.many.characters(null,${model.maxTitleCharacters})}" />
                 </div>
-                <div class="form-group" th:classappend="${#fields.hasErrors('note')} ? 'error'">
+                <div class="form-group" th:classappend="${#fields.hasErrors('note')} ? 'form-group-error'">
                     <label for="note">
                         <span class="form-label-bold">Note</span>
                         <th:block th:if="${#fields.hasErrors('note')}">
@@ -50,7 +50,7 @@
                                   required = "required"
                                   th:field="*{note}"
                                   class="form-control"
-                                  th:errorclass="field-error"
+                                  th:errorclass="form-control-error"
                                   id="note"
                                   name="note"
                                   th:attr="maxlength=${model.maxNoteCharacters},
@@ -75,7 +75,7 @@
                         </ul>
                     </th:block>
                     <h2 class="heading-small">Upload supporting documentation in pdf format</h2>
-                    <div th:class="${#fields.hasErrors('attachment')} ? 'error' : ''">
+                    <div th:class="${#fields.hasErrors('attachment')} ? 'form-group-error' : ''">
                         <th:block th:if="${#fields.hasErrors('attachment')}">
                             <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
                         </th:block>
