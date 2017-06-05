@@ -25,11 +25,12 @@ import static org.innovateuk.ifs.token.resource.TokenType.VERIFY_EMAIL_ADDRESS;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class TokenServiceImpl implements TokenService {
 
     @Autowired
     private TokenRepository repository;
+
     @Autowired
     private ApplicationService applicationService;
 
@@ -48,6 +49,7 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
+    @Transactional
     public void removeToken(Token token) {
         repository.delete(token);
     }
@@ -56,6 +58,7 @@ public class TokenServiceImpl implements TokenService {
      * if there are extra attributes in the token, then maybe we need to create a new application, or add the user to a application.
      */
     @Override
+    @Transactional
     public void handleExtraAttributes(Token token) {
         JsonNode extraInfo = token.getExtraInfo();
         if (User.class.getName().equals(token.getClassName()) && extraInfo.has("competitionId")) {

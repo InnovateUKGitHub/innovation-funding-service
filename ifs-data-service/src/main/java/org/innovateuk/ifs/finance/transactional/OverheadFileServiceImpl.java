@@ -18,6 +18,7 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.InputStream;
 import java.util.function.Supplier;
@@ -52,6 +53,8 @@ public class OverheadFileServiceImpl extends BaseTransactionalService implements
     @Autowired
     private FileEntryRepository fileEntryRepository;
 
+    @Override
+    @Transactional
     public ServiceResult<FileEntryResource> createFileEntry(@P("overheadId") long overheadId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         BasicFileAndContents fileAndContents = new BasicFileAndContents(fileEntryResource, inputStreamSupplier);
 
@@ -59,6 +62,7 @@ public class OverheadFileServiceImpl extends BaseTransactionalService implements
                 andOnSuccess(overheadFinanceRow -> createOrUpdateFileByMetaField(overheadFinanceRow, fileAndContents));
     }
 
+    @Override
     public ServiceResult<FileAndContents> getFileEntryContents(long overheadId) {
         return findMetaValueByFinanceRow(overheadId).andOnSuccess(metaValue ->
                 find(fileEntryRepository.findOne(Long.valueOf(metaValue.getValue())), notFoundError(FileEntry.class, metaValue.getValue())).andOnSuccess(fileEntry ->
@@ -66,16 +70,21 @@ public class OverheadFileServiceImpl extends BaseTransactionalService implements
                                 new BasicFileAndContents(fileEntryMapper.mapToResource(fileEntry), fileContentsResult))));
     }
 
+    @Override
     public ServiceResult<FileEntryResource> getFileEntryDetails(long overheadId) {
         return findMetaValueByFinanceRow(overheadId).andOnSuccess(metaValue ->
                 find(fileEntryRepository.findOne(Long.valueOf(metaValue.getValue())), notFoundError(FileEntry.class, metaValue.getValue())).andOnSuccess(fileEntry ->
                         serviceSuccess(fileEntryMapper.mapToResource(fileEntry))));
     }
 
+    @Override
+    @Transactional
     public ServiceResult<FileEntryResource> updateFileEntry(long overheadId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return createFileEntry(overheadId, fileEntryResource, inputStreamSupplier);
     }
 
+    @Override
+    @Transactional
     public ServiceResult<Void> deleteFileEntry(long overheadId) {
         return findMetaValueByFinanceRow(overheadId).andOnSuccess(metaValue -> deleteMetaValueAndFileByMetaValue(metaValue));
     }

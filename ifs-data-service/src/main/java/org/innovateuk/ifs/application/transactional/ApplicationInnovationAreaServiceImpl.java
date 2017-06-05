@@ -6,12 +6,12 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
-import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,15 +34,13 @@ public class ApplicationInnovationAreaServiceImpl extends BaseTransactionalServi
     private ApplicationRepository applicationRepository;
 
     @Autowired
-    private InnovationAreaRepository innovationAreaRepository;
-
-    @Autowired
     private ApplicationMapper applicationMapper;
 
     @Autowired
     private InnovationAreaMapper innovationAreaMapper;
 
     @Override
+    @Transactional
     public ServiceResult<ApplicationResource> setInnovationArea(Long applicationId, Long innovationAreaId) {
         return find(application(applicationId)).andOnSuccess(application ->
                 findInnovationAreaInAllowedList(application, innovationAreaId).andOnSuccess(innovationArea ->
@@ -50,6 +48,7 @@ public class ApplicationInnovationAreaServiceImpl extends BaseTransactionalServi
     }
 
     @Override
+    @Transactional
     public ServiceResult<ApplicationResource> setNoInnovationAreaApplies(Long applicationId) {
         return find(application(applicationId)).andOnSuccess(this::saveWithNoInnovationAreaApplies)
                 .andOnSuccess(application -> serviceSuccess(applicationMapper.mapToResource(application)));

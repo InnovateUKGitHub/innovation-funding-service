@@ -6,10 +6,9 @@ import org.innovateuk.ifs.competition.repository.CompetitionFunderRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service for operations around the usage and processing of Competitions
@@ -17,8 +16,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class CompetitionFunderServiceImpl extends BaseTransactionalService implements CompetitionFunderService {
     
-	private static final Log LOG = LogFactory.getLog(CompetitionFunderServiceImpl.class);
-
     @Autowired
     private CompetitionFunderRepository competitionFunderRepository;
 
@@ -26,6 +23,7 @@ public class CompetitionFunderServiceImpl extends BaseTransactionalService imple
     private CompetitionRepository competitionRepository;
 
     @Override
+    @Transactional
     public void reinsertFunders(CompetitionResource resource) {
         Competition competition = competitionRepository.findById(resource.getId());
 

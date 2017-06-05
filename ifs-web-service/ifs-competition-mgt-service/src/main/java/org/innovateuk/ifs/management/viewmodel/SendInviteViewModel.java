@@ -4,19 +4,22 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Holder of model attributes for the Send Invites view.
+ * Holder of model attributes for the Send Invite view.
  */
 public class SendInviteViewModel {
+
     private long competitionId;
     private long inviteId;
     private String competitionName;
     private String recipient;
+    private String content;
 
-    public SendInviteViewModel(long competitionId, long inviteId, String competitionName, String recipient) {
+    public SendInviteViewModel(long competitionId, long inviteId, String competitionName, String recipient, String content) {
         this.competitionId = competitionId;
         this.inviteId = inviteId;
         this.competitionName = competitionName;
         this.recipient = recipient;
+        this.content = content;
     }
 
     public long getCompetitionId() {
@@ -33,6 +36,10 @@ public class SendInviteViewModel {
 
     public String getRecipient() {
         return recipient;
+    }
+
+    public String getContent() {
+        return content;
     }
 
     @Override
@@ -52,6 +59,7 @@ public class SendInviteViewModel {
                 .append(inviteId, that.inviteId)
                 .append(competitionName, that.competitionName)
                 .append(recipient, that.recipient)
+                .append(content, that.content)
                 .isEquals();
     }
 
@@ -62,6 +70,7 @@ public class SendInviteViewModel {
                 .append(inviteId)
                 .append(competitionName)
                 .append(recipient)
+                .append(content)
                 .toHashCode();
     }
 }

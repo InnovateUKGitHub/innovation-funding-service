@@ -114,3 +114,14 @@ include::{snippets}/application/inform-ineligible/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/application/inform-ineligible/curl-request.adoc[]
+
+=== Check if user is able to view the application team
+==== Request
+include::{snippets}/application/show-application-team/http-request.adoc[]
+include::{snippets}/application/show-application-team/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/application/show-application-team/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/application/show-application-team/curl-request.adoc[]

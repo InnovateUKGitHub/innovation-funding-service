@@ -13,9 +13,7 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-
-    <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}" th:remove="tag"></div>
-
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}" />
     <div class="grid-row">
         <div class="column-two-thirds">
             <th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionSummary.competitionName)} ? |${model.competitionSummary.competitionId} : $#{ifs.competition.no_title}| : |${model.competitionSummary.competitionId} : ${model.competitionSummary.competitionName}|">
@@ -53,9 +51,9 @@
         <p th:unless="${#strings.isEmpty(model.leadTechnologist)}" th:text="${model.leadTechnologist}" >
             Innovation Lead
         </p>
-        <div th:if="${model.notApprovedOrRejected}" th:remove="tag">
+        <th:block th:if="${model.notApprovedOrRejected}">
             <p>The spend profile must be sent to Innovate UK for their review and approval.</p>
-        </div>
+        </th:block>
 
         <h2 class="heading-medium">Project spend profile</h2>
 
@@ -67,13 +65,15 @@
             </li>
         </ul>
 
-        <div th:if="${model.notApprovedOrRejected}" th:remove="tag">
+        <th:block th:if="${model.notApprovedOrRejected}">
             <h2 class="heading-medium">Approved by Innovate UK</h2>
             <div class="form-group">
-            <label class="block-label selection-button-checkbox" for="approvedByLeadTechnologist" >
-                <input id="approvedByLeadTechnologist" value="yes" type="checkbox" data-switches-button-status="#accept-profile"/>
-                The spend profile has been approved by Innovate UK.
-            </label>
+                <div class="multiple-choice">
+                    <input id="approvedByLeadTechnologist" value="yes" type="checkbox" data-switches-button-status="#accept-profile" />
+                    <label for="approvedByLeadTechnologist" >
+                        The spend profile has been approved by Innovate UK.
+                    </label>
+                </div>
             </div>
             <button data-js-modal="modal-accept-profile" id="accept-profile" class="button large">
                 Approved
@@ -81,7 +81,7 @@
             <button data-js-modal="modal-reject-profile" class="button button-warning large">
                 Reject
             </button>
-        </div>
+        </th:block>
     </th:block>
 
     <th:block th:insert="fragments/layout :: main-content-end" />

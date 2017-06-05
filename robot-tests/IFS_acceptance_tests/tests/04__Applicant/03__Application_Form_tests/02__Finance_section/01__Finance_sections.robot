@@ -61,8 +61,8 @@ Organisation name visible in the Finance section
     [Documentation]    INFUND-1815
     [Tags]
     When the user clicks the button/link             link=Your project costs
-    Then the user should see the text in the page    Provide the project costs for 'Empire Ltd'
-    And the user should see the text in the page     'Empire Ltd' Total project costs
+    Then the user should see the text in the page    Provide the project costs for '${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}'
+    And the user should see the text in the page     '${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}' Total project costs
 
 Guidance in the your project costs
     [Documentation]    INFUND-192
@@ -127,7 +127,7 @@ Academic partner can upload file for field J-es PDF
 File upload mandatory for Academic partner to mark section as complete
     [Documentation]    INFUND-8469
     [Tags]    HappyPath
-    # This will also check the auto-save as we hvaen't marked finances as complete yet
+    # This will also check the auto-save as we haven't marked finances as complete yet
     Given the user navigates to Your-finances page  ${applicationName}
     and the user clicks the button/link      link=Your project costs
     and the user clicks the button/link       jQuery=button:contains("Remove")

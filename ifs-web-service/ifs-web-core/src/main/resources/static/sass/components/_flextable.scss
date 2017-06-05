@@ -25,7 +25,7 @@
     max-width:100%;
 }
 
-.spend-profile-table .form-group-row.error .fix-right,
+.spend-profile-table .form-group-row.form-group-error .fix-right,
 .spend-profile-table .fix-right {
   background: $grey-3;
   font-weight:bold;
@@ -44,10 +44,10 @@
 
 .spend-profile-table tfoot .fix-right,
 .spend-profile-table tfoot th[scope="row"],
-.spend-profile-table tfoot tr.form-group-row.error th[scope="row"]{
+.spend-profile-table tfoot tr.form-group-row.form-group-error th[scope="row"]{
   margin-top:-1px;
 }
-.spend-profile-table tbody tr.form-group-row.error th:first-of-type {
+.spend-profile-table tbody tr.form-group-row.form-group-error th:first-of-type {
   margin-top:1px;
 }
 .spend-profile-table input[readonly]{

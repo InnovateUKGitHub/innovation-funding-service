@@ -34,7 +34,7 @@ create new account for submitting
     the user clicks the button/link             jQuery=a:contains("Create account")
     And the user enters text to a text field    id=organisationSearchName    Hive IT
     And the user clicks the button/link         jQuery=.button:contains("Search")
-    And the user clicks the button/link         link=HIVE IT LIMITED
+    And the user clicks the button/link         link=${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
     And the user selects the checkbox           address-same
     And the user clicks the button/link         jQuery=.button:contains("Continue")
     And the user clicks the button/link         jQuery=.button:contains("Save and continue")

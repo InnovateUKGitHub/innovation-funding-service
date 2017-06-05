@@ -7,14 +7,14 @@ IFS.core.conditionalForms = (function () {
   'use strict'
   return {
     init: function () {
-      jQuery('label[data-target]').each(function () {
-        var label = jQuery(this)
-        var dataTarget = label.attr('data-target')
-        var inputEl = label.find('input[type="radio"],input[type="checkbox"]')
+      jQuery('[data-target]').each(function () {
+        var dataTargetContainer = jQuery(this)
+        var dataTarget = dataTargetContainer.attr('data-target')
+        var inputEl = dataTargetContainer.find('input[type="radio"],input[type="checkbox"]')
 
         // for having inverted show/hide
         var isInverted = false
-        if (label.attr('data-target-inverted')) {
+        if (dataTargetContainer.attr('data-target-inverted')) {
           isInverted = true
         }
         if (inputEl && dataTarget) {

@@ -73,6 +73,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> updateMilestones(List<MilestoneResource> milestones) {
         ValidationMessages messages = validate(milestones);
 
@@ -86,12 +87,14 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> updateMilestone(MilestoneResource milestoneResource) {
         milestoneRepository.save(milestoneMapper.mapToDomain(milestoneResource));
         return serviceSuccess();
     }
 
     @Override
+    @Transactional
     public ServiceResult<MilestoneResource> create(MilestoneType type, Long id) {
         Competition competition = competitionRepository.findById(id);
 
