@@ -106,7 +106,6 @@ public class CompetitionManagementInviteAssessorsController {
         return "assessors/find";
     }
 
-    // add/remove assessors via AJAX call
     @PostMapping(value = "/find", params = {"assessor"})
     public @ResponseBody JsonNode selectAssessorForInviteList(
             @PathVariable("competitionId") long competitionId,
@@ -131,7 +130,6 @@ public class CompetitionManagementInviteAssessorsController {
         }
     }
 
-    // add/remove all assessors via AJAX call
     @PostMapping(value = "/find", params = {"addAll"})
     public @ResponseBody JsonNode addAllAssessorsToInviteList(Model model,
                                               @PathVariable("competitionId") long competitionId,
@@ -165,7 +163,6 @@ public class CompetitionManagementInviteAssessorsController {
         return simpleMap(pageResource, AvailableAssessorResource::getEmail);
     }
 
-    // Invite all selected users
     @PostMapping(value = "/find/addSelected")
     public String addSelectedAssessorsToInviteList(Model model,
                                                    @PathVariable("competitionId") long competitionId,

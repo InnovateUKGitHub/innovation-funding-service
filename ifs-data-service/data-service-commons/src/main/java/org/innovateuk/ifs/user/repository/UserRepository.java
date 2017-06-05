@@ -30,7 +30,6 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
             "WHERE user.id NOT IN (" + USERS_WITH_COMPETITION_INVITE + ") " +
             "AND roles.name = 'assessor' "+
             "GROUP BY user.id ";
-//            "ORDER BY user.lastName";
 
     /**
      * We have to explicitly join {@link User} and Profile due to the relational mapping
@@ -54,7 +53,6 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
             "AND user.id NOT IN (" + USERS_WITH_COMPETITION_INVITE + ") " +
             "AND roles.name = 'assessor' "+
             "GROUP BY user.id ";
-//            "ORDER BY user.lastName";
 
     Optional<User> findByEmail(@Param("email") String email);
 
