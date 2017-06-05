@@ -1,11 +1,12 @@
 *** Settings ***
 Documentation       IFS-338 Update 'Funding level' calculated maximum values and validation
 Suite Setup         the guest user opens the browser
-Test Setup          the user navigates to the competition overview
 Suite Teardown      the user closes the browser
 Force Tags          Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource            ../../FinanceSection_Commons.robot
+*** Variables ***
+${newUsersEmail}             liamCharity@innovateuk.com
 *** Test Cases ***
 funding level available for lead business ResearchCategory: Fundamental Research
     [Documentation]    IFS-338
@@ -82,9 +83,18 @@ lead applicant invites a Charity member
     [Tags]
     #  the user clicks the button/link                        link=view team members and add collaborators
     Invite a non-existing collaborator
-    the user navigates to your-finances page                  link=Untitled Application(Start here)
+    the user navigates to your-finances page                  link=Maximum Funding Allowed for Business
     the user fills in the project costs
    the user clicks the button/link                            link=Your organisation
+    the user enters text to a text field                    css=input[name$="month"]    12
+       and the user enters text to a text field                css=input[name$="year"]    2016
+       the user selects the radio button                       financePosition-organisationSize  ${SMALL_ORGANISATION_SIZE}
+       the user enters text to a text field                    jQuery=td:contains("Annual turnover") + td input   5600
+       the user enters text to a text field                    jQuery=td:contains("Annual profit") + td input    3000
+       the user enters text to a text field                    jQuery=td:contains("Annual export") + td input    4000
+       the user enters text to a text field                    jQuery=td:contains("Research and development spend") + td input    5660
+       the user enters text to a text field                    jQuery=label:contains("employees") + input    0
+       the user clicks the button/link                         jQuery=button:contains("Mark as complete")
     and the user clicks the button/link                       link=Your finances
     and the user clicks the button/link                       link=Your funding
     the user should see the text in the page                  Enter your funding level (maximum 100%).
@@ -175,7 +185,7 @@ the applicant completes the application details
 Invite a non-existing collaborator
     the user should see the element       jQuery=h1:contains("Application overview")
     the user fills in the inviting steps  ${newUsersEmail}
-    newly invited collaborator can create account and sign in    ${UNTITLED_APPLICATION_NAME}
+    newly invited collaborator can create account and sign in    Maximum Funding Allowed for Business
 
 the user fills in the inviting steps
     [Arguments]  ${email}
