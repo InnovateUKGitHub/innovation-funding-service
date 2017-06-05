@@ -7,6 +7,7 @@ import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  * Transactional and secured service providing operations around {@link org.innovateuk.ifs.invite.domain.RejectionReason} data.
  */
 @Service
+@Transactional(readOnly = true)
 public class RejectionReasonServiceImpl implements RejectionReasonService {
 
     @Autowired

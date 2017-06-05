@@ -276,9 +276,10 @@
 <!-- Confirm return of edit rights to partner for spend profiles. -->
 <th:block th:fragment="modal-confirm-allow-spend-profile-edits (orgName)">
     <div class="modal-confirm-allow-spend-profile-edits" role="dialog" aria-hidden="true">
-        <div th:insert="fragments/modals :: close-button" th:remove="tag"/>
+        <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="heading-medium no-margin">Allow partner to edit</h2>
-        <p><span class="heading-small no-margin"><th:block th:text="${orgName}" />'s</span> spend profile will be returned to them. They will be informed by email. If you have any specific requirements please contact them directly.</p>
+        <p>
+            <span class="heading-small no-margin"><th:block th:text="${orgName}" />'s</span> spend profile will be returned to them. They will be informed by email. If you have any specific requirements please contact them directly.</p>
         <hr />
         <form th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete(projectId=${model.projectId},organisationId=${model.organisationId})}" method="POST" >
             <div>

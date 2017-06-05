@@ -86,7 +86,7 @@
            type="number"
            th:id="${id}"
            th:field="*{__${field}__}"
-           th:errorclass="field-error"
+           th:errorclass="form-control-error"
            th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
            th:min="${min}"
            th:max="${max}"
@@ -172,49 +172,22 @@
                 rows="4"
                 th:readonly="${readonly}"
                 th:required="${required}"
-                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-'+name+']}')} ? 'field-error' : ''">
+                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-'+name+']}')} ? 'form-control-error'">
                 >
 		</textarea>
 </th:block>
 
 <!-- ========================= textarea wrapped within all extra's =========================== -->
 
-<th:block th:fragment="form-textarea-wrapped">
-
-    <th:block th:unless="${hideAlerts}">
-        <th:block th:insert="question-type/form-elements :: ready-for-review" th:if="${!userIsLeadApplicant}"/>
-        <th:block th:insert="question-type/form-elements :: assign-buttons"
-                  th:unless="${readonly} or ${question.isAssignEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}"/>
-    </th:block>
-
-    <div th:unless="${readonly} or ${hideAlerts}" class="textarea-header">
-
-        <th:block th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
-            <div class="success-alert assignee">This question is <strong>marked as complete</strong></div>
-        </th:block>
-
-    </div>
-
-    <div th:class="'textarea-wrapped ' +
-                   (${readonly} ? '' : (
-                            (${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} ? 'marked-as-complete' :
-                                (${!(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) and ((currentUser.getId() == questionAssignee?.assigneeUserId) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == currentUser.getId())))} ? 'assigned-to-me ' : '')
-                            )
-                       )
-                       + ' ' +
-                       (${formInput.getWordCount() == 0} ? '' : 'word-count')
-                   )
-                  "
-
+<th:block th:fragment="form-textarea-wrapped(model)" th:with="formInput=${model.formInput}, question=${model.question}">
+    <div class="textarea-wrapped"
+         th:classappend="${model.complete ? 'marked-as-complete' : ''} + ' ' + ${model.assignButtonsViewModel.assignedToCurrentUser ? 'assigned-to-me' : ''} + ' ' + ${formInput.getWordCount() == 0 ? '' : 'word-count'}"
          th:with="currentUser=${#authentication.getDetails()},validationId='formInput['+${question.getId()}+']'">
 
         <textarea th:id="'form-textarea-'+${formInput.id}"
                   th:name="'formInput['+${formInput.id}+']'"
                   th:field="*{formInput[__${formInput.id}__]}"
-                  th:readonly="${readonly} or ${question.isMarkAsCompletedEnabled() and
-                              markedAsComplete?.contains(question.id)} or
-                              ${(currentUser.getId() != questionAssignee?.assigneeUserId and  questionAssignee?.assignee!=null) or
-                              (questionAssignee?.assignee==null and !userIsLeadApplicant)}"
+                  th:readonly="${model.readonly}"
                   th:attrappend="data-max_words=${formInput.getWordCount()}, data-maxwordslength=${formInput.getWordCount()},data-maxwordslength-errormessage=${'Maximum word count exceeded. Please reduce your word count to '+formInput.getWordCount()+'.'}"
                   data-editor="md"
                   th:attr="data-required-errormessage=#{validation.field.please.enter.some.text}"
@@ -223,30 +196,28 @@
         <div class="form-footer">
 
             <div class="form-footer__actions">
-                <th:block th:if="${competitionIsOpen} == null or ${competitionIsOpen}">
+                <th:block th:unless="${model.closed and !model.summary}">
 
-                    <th:block th:if="${userIsLeadApplicant}">
+                    <th:block th:if="${model.assignButtonsViewModel.currentUserIsLead}">
                         <!--/*  we show mark as complete buttons and the question should be assigned to you or */-->
-                        <th:block th:include="question-type/form-elements :: form-mark-as-complete-buttons" />
+                        <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (${model})" />
                         <!--/* if  readonly we show the edit form button */-->
-                        <th:block th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button" />
+                        <th:block th:if="${readonly}" th:insert="question-type/form-elements :: form-edit-question-button (${model})" />
                     </th:block>
 
                 </th:block>
 
-                <th:block th:insert="question-type/form-elements :: ready-for-review" th:if="${!userIsLeadApplicant}" th:with="displayBlock=${true}" />
+                <th:block th:insert="question-type/form-elements :: ready-for-review" th:unless="${model.assignButtonsViewModel.currentUserIsLead}" th:with="displayBlock=${true}, model=${model.assignButtonsViewModel}" />
             </div>
 
             <div class="form-footer__info">
 
                 <span class="textarea-footer"></span>
                 <span class="update-label">Last updated: </span>
-                <th:block th:if="${response?.getUpdateDate()}">
+                <th:block th:if="${model.hasResponse}">
                     <span class="update-details">
-                        <th:block th:include="fragments/elements :: pretty-date (date=${response?.getUpdateDate()})"/> by
-                        <th:block th:if="${response?.getUpdatedByUser() == currentUser.getId()}">you</th:block>
-                        <th:block th:unless="${response?.getUpdatedByUser() == currentUser.getId()}"
-                                  th:text="${response?.getUpdatedByUserName()}"/>
+                        <th:block th:insert="fragments/elements :: pretty-date (date=${model.response.updateDate})"/>
+                        <th:block th:text="${model.lastUpdatedText}"></th:block>
                     </span>
                 </th:block>
 
@@ -259,180 +230,182 @@
     </div>
 </th:block>
 <!-- ========================= Current Assignee =========================== -->
-<th:block th:fragment="current-assignee">
-    <div class="assignee" th:if="(${currentUser.id == questionAssignee?.assignedByUserId} and ${questionAssignee?.assignee})"
-         th:classappend="(${currentUser.id == questionAssignee?.assigneeUserId} ? 'assigned-to-me')"
-         th:unless="${leadApplicant?.id == currentUser.id}">
-      <span th:if="${questionAssignee?.assigneeUserId == leadApplicant?.id}">You have reassigned this question to</span>
-      <span th:unless="${questionAssignee?.assigneeUserId == leadApplicant?.id}">You have assigned this question to</span>
-      <span th:text="${currentUser.id == questionAssignee.assigneeUserId} ? 'you' : ${questionAssignee?.assigneeName}" />
-    </div>
+<th:block th:fragment="current-assignee(model)" th:with="question=${model.question}">
+    <th:block th:if="${model.assigned}">
+        <div class="assignee" th:if="${model.assignedByCurrentUser}"
+             th:classappend="(${model.assignedToCurrentUser} ? 'assigned-to-me')"
+             th:unless="${model.currentUserIsLead}">
+          <span th:if="${model.assignedToLead}">You have reassigned this question to</span>
+          <span th:unless="${model.assignedToLead}">You have assigned this question to</span>
+          <span th:text="${model.assignedToCurrentUser} ? 'you' : ${model.assignee.name}" />
+        </div>
 
-    <div class="assignee" th:if="${questionAssignee?.assignee}"
-         th:unless="${currentUser.id == questionAssignee?.assignedByUserId}"
-         th:classappend="${currentUser.id == questionAssignee?.assigneeUserId} ? 'assigned-to-me'">
-        <th:block th:unless="${questionAssignee?.assignedByUserId != leadApplicant?.id}">This question is assigned to
-          <span th:text="${currentUser.id == questionAssignee.assigneeUserId} ? 'you' : ${questionAssignee?.assigneeName}"/>
-        </th:block>
-    </div>
+        <div class="assignee" th:unless="${model.assignedByCurrentUser}"
+             th:classappend="${model.assignedToCurrentUser} ? 'assigned-to-me'">
+            <th:block th:if="${model.assignedByLead}">This question is assigned to
+              <span th:text="${model.assignedToCurrentUser} ? 'you' : ${model.assignee.name}"/>
+            </th:block>
+        </div>
+    </th:block>
 
 </th:block>
 <!-- ========================= Assign / reassign buttons =========================== -->
 <th:block th:fragment="ready-for-review">
-  <div class="ready-for-review-container" th:if="${question.isAssignEnabled()} and ${currentUser.id == questionAssignee?.assigneeUserId}">
-    <button type="submit"
-            name="assign_question"
-            th:value="${question.id}+'_'+${questionAssignee?.assignedBy}"
-            th:class="'buttonlink'">Assign to lead for review
-    </button>
-  </div>
-</th:block>
-
-<th:block th:fragment="assign-buttons-dialog">
-
-    <div th:class="(${currentUser.id == questionAssignee?.assigneeUserId} or ${questionAssignee?.assignee == null} ? 'assign-container assign-alert' : 'assign-container assigned-alert')"
-         th:if="${question.isAssignEnabled()}">
-        <th:block th:insert="question-type/form-elements :: assign-button-body" />
-    </div>
-
-    <th:block th:unless="${question.isAssignEnabled()}">
-        <th:block th:insert="question-type/form-elements :: assigned-to" />
+    <th:block th:if="${model != null}" th:with="question=${model.question}">
+      <div class="ready-for-review-container" th:if="${question.isAssignEnabled()} and ${model.assignedToCurrentUser}">
+        <button type="submit"
+                name="assign_question"
+                th:value="${question.id}+'_'+${model.assignedBy.processRole.id}"
+                th:class="'buttonlink'">Assign to lead for review
+        </button>
+      </div>
     </th:block>
 </th:block>
 
-<th:block th:fragment="assign-buttons">
-    <div th:class="(${currentUser.id == questionAssignee?.assigneeUserId} or ${questionAssignee?.assignee == null} ? 'assign-container action-required' : 'assign-container')"
+<th:block th:fragment="assign-buttons-dialog(model)" th:with="question=${model.question}">
+
+    <div class="assign-container assigned-alert"
          th:if="${question.isAssignEnabled()}">
-        <th:block th:insert="question-type/form-elements :: assign-button-body" />
+        <th:block th:insert="question-type/form-elements :: assign-button-body (${model})" />
     </div>
 
     <th:block th:unless="${question.isAssignEnabled()}">
-      <th:block th:insert="question-type/form-elements :: assigned-to" />
+        <th:block th:insert="question-type/form-elements :: assigned-to (${model})" />
+    </th:block>
+</th:block>
+
+<th:block th:fragment="assign-buttons(model)" th:with="question=${model.question}">
+    <div th:class="(${model.assignedToCurrentUser} ? 'assign-container action-required' : 'assign-container')"
+         th:if="${question.isAssignEnabled()}">
+        <th:block th:insert="question-type/form-elements :: assign-button-body (${model})" />
+    </div>
+
+    <th:block th:unless="${question.isAssignEnabled()}">
+      <th:block th:insert="question-type/form-elements :: assigned-to (${model})" />
     </th:block>
 </th:block>
 
 <!-- ========================= Assign - make selection =========================== -->
-<th:block th:fragment="assign-button-body">
-    <th:block th:if="${questionAssignee?.assignee != null}">
-        <span class="action-required" th:if="${questionAssignee?.assigneeUserId == currentUser.id}">
-          <th:block th:if="${questionAssignee?.assignedByUserId == leadApplicant?.id}"
+<th:block th:fragment="assign-button-body (model)" th:with="question=${model.question}">
+    <th:block th:if="${model.assigned}">
+        <span class="action-required" th:if="${model.assignedToCurrentUser}">
+          <th:block th:if="${model.assignedByLead}"
                     th:text="${fullButtonText} ? 'Assigned to you.' : 'Assigned to'">Assigned to you </th:block>
-          <th:block th:unless="${questionAssignee?.assignedByUserId == leadApplicant?.id}"
+          <th:block th:unless="${model.assignedByLead}"
                     th:text="${fullButtonText} ? 'Reassigned to you.' : 'Reassigned to'">Reassigned to you </th:block>
         </span>
         <span class="secondary-notification"
-              th:unless="${questionAssignee?.assigneeUserId == currentUser.id}"
+              th:unless="${model.assignedToCurrentUser}"
               th:text="${fullButtonText} ? |Assigned to ${name}. | : 'Assigned to'"
-              th:with="name=${questionAssignee?.getAssigneeName()}">
+              th:with="name=${model.assignee.name}">
         </span>
     </th:block>
 
-    <th:block th:if="${questionAssignee?.assignee == null}">
-        <span class="action-required" th:if="${leadApplicant?.id == currentUser.id}">
+    <th:block th:if="${model.notAssigned}">
+        <span class="action-required" th:if="${model.currentUserIsLead}">
             <th:block th:text="${fullButtonText} ? 'Assigned to you.' : 'Assigned to'">Assigned to you</th:block>
         </span>
-        <span class="secondary-notification" th:unless="${leadApplicant?.id == currentUser.id}">
-            Assigned to <span th:text="${name}" th:with="name=${leadApplicant?.getName()}"></span>
+        <span class="secondary-notification" th:unless="${model.currentUserIsLead}">
+            Assigned to <span th:text="${name}" th:with="name=${model.leadApplicant.name}"></span>
         </span>
     </th:block>
 
     <div class="assign-button-container">
 
         <div class="assign-button">
-            <th:block th:insert="question-type/form-elements :: assigned-to"/>
+            <th:block th:insert="question-type/form-elements :: assigned-to (${model})"/>
         </div>
 
         <div class="assign-team">
             <!--/* Reassign question */-->
             <label th:for="'assign'+${question.id}">Assign question to</label>
             <select name="assign_question" th:id="'assign'+${question.id}" class="prog-menu">
-                <th:block th:each="assignableUser : ${assignableUsers}">
-                    <option th:value="${question.id}+'_'+${assignableUser.getId()}"
-                            th:unless="${(questionAssignee?.assigneeUserId == assignableUser.getUser()) or ((questionAssignee?.assignee == null) and (leadApplicant?.id == assignableUser.getUser()))}"
-                            th:text="${assignableUser.userName}"
+                <th:block th:each="assignableApplicant : ${model.assignableApplicants}">
+                    <option th:value="${question.id}+'_'+${assignableApplicant.processRole.id}"
+                            th:unless="${model.isAssignedTo(assignableApplicant)}"
+                            th:text="${assignableApplicant.name}"
                     />
-                    <option th:if="${(questionAssignee?.assigneeUserId == assignableUser.getUser()) or ((questionAssignee?.assignee == null) and (leadApplicant?.id == assignableUser.getUser()))}"
-                            th:text="${assignableUser?.userName}"
+                    <option th:if="${model.isAssignedTo(assignableApplicant)}"
+                            th:text="${assignableApplicant.name}"
                             selected="selected"
                             disabled="disabled"/>
                 </th:block>
-                <th:block th:each="pendingAssignableUser : ${pendingAssignableUsers}">
+                <th:block th:each="pendingAssignableUser : ${model.pendingAssignableUsers}">
                     <option th:text="${pendingAssignableUser.name + ' (pending)'}"  disabled="disabled"/>
                 </th:block>
             </select>
             <button type="submit">Reassign</button>
         </div>
-        <th:block th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${hideAssignedTo}"
-                  th:include="question-type/form-elements :: current-assignee" />
+        <th:block th:unless="${hideAssignedTo}"
+                  th:include="question-type/form-elements :: current-assignee (${model})" />
 
     </div>
 
 </th:block>
 
 <!-- ========================= Assigned to =========================== -->
-<th:block th:fragment="assigned-to">
-  <th:block th:if="${questionAssignee?.assignee} ">
+<th:block th:fragment="assigned-to (model)" th:with="question=${model.question}">
+  <th:block th:unless="${model.notAssigned} ">
 
-    <th:block th:if="${(leadApplicant?.id == currentUser.id)}">
-        <span class="action-required" th:if="${questionAssignee?.assigneeUserId == currentUser.id}">
-            <th:block th:if="${questionAssignee?.assignedByUserId == leadApplicant?.id}"
+    <th:block th:if="${model.currentUserIsLead}">
+        <span class="action-required" th:if="${model.assignedToCurrentUser}">
+            <th:block th:if="${model.assignedByLead}"
                       th:text="${fullButtonText == TRUE} ? 'Assign this question to someone else' : 'you'">ASSIGN BUTTON TEXT</th:block>
-            <th:block th:unless="${questionAssignee?.assignedByUserId == leadApplicant?.id}"
+            <th:block th:unless="${model.assignedByLead}"
                       th:text="${fullButtonText == TRUE} ? 'Assign this question to someone else' : 'you'">REASSIGN BUTTON TEXT</th:block>
         </span>
     </th:block>
 
-    <th:block th:unless="${(leadApplicant?.id == currentUser.id)}">
-        <span class="action-required" th:if="${questionAssignee?.assigneeUserId == currentUser.id}">
-            <th:block th:if="${questionAssignee?.assignedByUserId == leadApplicant?.id}">Assigned to you</th:block>
-            <th:block th:unless="${questionAssignee?.assignedByUserId == leadApplicant?.id}">Reassigned to you</th:block>
+    <th:block th:unless="${model.currentUserIsLead}">
+        <span class="action-required" th:if="${model.assignedToCurrentUser}">
+            <th:block th:if="${model.assignedByLead}">Assigned to you</th:block>
+            <th:block th:unless="${model.assignedByLead}">Reassigned to you</th:block>
         </span>
     </th:block>
 
-    <span class="secondary-notification secondary-notification-button" th:unless="${questionAssignee?.assigneeUserId == currentUser.id}">
-        <th:block th:unless="${leadApplicant?.id == currentUser.id}">Assigned to</th:block>
+    <span class="secondary-notification secondary-notification-button" th:unless="${model.assignedToCurrentUser}">
+        <th:block th:unless="${model.currentUserIsLead}">Assigned to</th:block>
         <span th:text="${fullButtonText == TRUE} ? 'Assign this question to someone else' : ${name}"
-              th:with="name=${questionAssignee?.getAssigneeName()}"></span>
+              th:with="name=${model.assignee.name}">
+
         </span>
+    </span>
+
   </th:block>
 
-  <th:block th:if="${questionAssignee?.assignee == null}">
-    <span class="action-required" th:if="${leadApplicant?.id == currentUser.id}">
+  <th:block th:if="${model.notAssigned}">
+    <span class="action-required" th:if="${model.currentUserIsLead}">
         <th:block th:text="${fullButtonText == TRUE} ? 'Assign this question to someone else' : 'you'"
                   th:if="${question.isAssignEnabled()}">ASSIGN BUTTON TEXT</th:block>
         <th:block th:unless="${question.isAssignEnabled()}">Assigned to you</th:block>
     </span>
-    <span class="secondary-notification" th:unless="${leadApplicant?.id == currentUser.id}">
-      Assigned to <span th:text="${name}" th:with="name=${leadApplicant?.getName()}"></span>
+    <span class="secondary-notification" th:unless="${model.currentUserIsLead}">
+      Assigned to <span th:text="${name}" th:with="name=${model.leadApplicant.name}"></span>
     </span>
   </th:block>
 </th:block>
 
 <!-- ========================= Last update info =========================== -->
 
-<th:block th:fragment="last-update-info">
+<th:block th:fragment="last-update-info (model)" th:with="response=${model.response}">
       <th:block th:if="${response?.getUpdateDate()}">
         <small>
-          Last updated: <th:block th:include="fragments/elements :: pretty-date (date=${response?.getUpdateDate()})" /> by <th:block th:if="${response?.getUpdatedByUser() == currentUser.getId()}">you</th:block>
-          <th:block th:unless="${response?.getUpdatedByUser() == currentUser.getId()}" th:text="${response?.getUpdatedByUserName()}" />
+          Last updated: <th:block th:insert="fragments/elements :: pretty-date (date=${response?.getUpdateDate()})" /><th:block th:text="${model.lastUpdatedText}"></th:block>
         </small>
       </th:block>
 </th:block>
 
 <!-- ========================= Mark as complete buttons =========================== -->
 
-<th:block th:fragment="form-mark-as-complete-buttons">
+<th:block th:fragment="form-mark-as-complete-buttons (model)" th:with="formInput=${model.formInput}, question=${model.question}">
     <th:block th:unless="${appIsClosed}">
-        <button th:unless="${readonly}"
-                th:if="${markedAsComplete?.contains(question.id)}"
+        <button th:if="${model.complete}"
                 type="submit"
                 name="mark_as_incomplete"
                 th:value="${question.getId()}"
-                th:class="${costCategory!=null} ? 'button' : 'buttonlink'">Edit
+                class="buttonlink">Edit
         </button>
-        <button th:if="${(question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id)
-                            and (questionAssignee?.assigneeUserId == currentUser?.getId()
-                            or (questionAssignee?.getAssignee() == null)))}"
+        <button th:if="${!model.complete and model.assignButtonsViewModel.assignedToCurrentUser}"
             type="submit"
             name="mark_as_complete"
             class="buttonlink"
@@ -466,14 +439,14 @@
 
 <!-- ========================= edit link =========================== -->
 
-<th:block th:fragment="form-edit-question-button">
+<th:block th:fragment="form-edit-question-button (model)" th:with="formInput=${model.formInput}, question=${model.question}">
     <button class="buttonlink"
             type="submit"
             name="edit_question"
             th:unless="${appIsClosed}"
-            th:value="${question.getId()}"
-            th:attrappend="formaction='/application/'+${currentApplication.getId()}+'/form/question/edit/'+${question.getId()}"
-            th:text="${summary ? 'Return and edit' : 'Edit'}" />
+            th:value="${question.id}"
+            th:attrappend="formaction='/application/'+${model.application.id}+'/form/question/edit/'+${question.id}"
+            th:text="${model.summary ? 'Return and edit' : 'Edit'}" />
 </th:block>
 
 <!-- ========================= word count =========================== -->

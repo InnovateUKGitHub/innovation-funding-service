@@ -10,7 +10,7 @@
 
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Applications',linkClass='link-back',linkUrl=@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle=${model.backTitle},linkClass='link-back',linkUrl=@{${model.backURL}}" />
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='All applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
 
             <h2 class="heading-medium">Key statistics</h2>

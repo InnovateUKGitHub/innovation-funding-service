@@ -2,6 +2,9 @@ package org.innovateuk.ifs.project.eligibility.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.innovateuk.ifs.applicant.resource.ApplicantResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
+import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.DefaultProjectFinanceModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
@@ -39,7 +42,9 @@ import org.innovateuk.ifs.project.financecheck.eligibility.viewmodel.FinanceChec
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.util.AjaxResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -109,6 +114,12 @@ public class FinanceChecksEligibilityController {
 
     @Autowired
     private FinanceService financeService;
+
+    @Autowired
+    private ProcessRoleService processRoleService;
+
+    @Autowired
+    private ApplicantRestService applicantRestService;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping
@@ -353,9 +364,12 @@ public class FinanceChecksEligibilityController {
 
         SectionResource section = simpleFilter(allSections, s -> s.getType().equals(PROJECT_COST_FINANCES)).get(0);
 
-        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, Optional.ofNullable(section), Optional.empty(), model, form);
 
-        BaseSectionViewModel openFinanceSectionViewModel = openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections, organisationId);
+        ApplicantSectionResource applicantSection = applicantRestService.getSection(user.getId(), application.getId(), section.getId());
+        Optional<ApplicantResource> currentApplicant = applicantSection.getApplicants().stream().filter(applicant -> applicant.getOrganisation().getId().equals(organisationId)).findAny();
+        currentApplicant.ifPresent(applicantSection::setCurrentApplicant);
+        BaseSectionViewModel openFinanceSectionViewModel = openFinanceSectionModel.populateModel(form, model, bindingResult, applicantSection);
 
         model.addAttribute("model", openFinanceSectionViewModel);
 
@@ -363,10 +377,12 @@ public class FinanceChecksEligibilityController {
     }
 
     private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application,
-                                                                 final CompetitionResource competition, final Long userId,
+                                                                 final CompetitionResource competition, final UserResource user,
                                                                  Optional<SectionResource> section, Optional<Long> currentQuestionId,
                                                                  final Model model, final ApplicationForm form) {
-        applicationModelPopulator.addApplicationAndSections(application, competition, userId, section, currentQuestionId, model, form);
+
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        applicationModelPopulator.addApplicationAndSections(application, competition, user, section, currentQuestionId, model, form, userApplicationRoles);
     }
 
     private String doViewEligibilityChanges(ProjectResource project, OrganisationResource organisation, Long userId, Model model) {

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.transactional.ApplicationSummaryService;
 import org.innovateuk.ifs.application.transactional.CompetitionSummaryService;
@@ -82,5 +83,10 @@ public class ApplicationSummaryController {
             @RequestParam(value = "filter", required = false) Optional<String> filter,
             @RequestParam(value = "informFilter", required = false) Optional<Boolean> informFilter) {
         return applicationSummaryService.getIneligibleApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize, filter, informFilter).toGetResponse();
+    }
+
+    @GetMapping("/applicationTeam/{applicationId}")
+    public RestResult<ApplicationTeamResource> getApplicationTeamByApplicationId(@PathVariable("applicationId") long applicationId) {
+        return applicationSummaryService.getApplicationTeamByApplicationId(applicationId).toGetResponse();
     }
 }

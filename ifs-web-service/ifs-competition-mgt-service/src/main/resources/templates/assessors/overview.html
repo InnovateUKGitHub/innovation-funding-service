@@ -170,16 +170,21 @@
                             <span class="no" th:unless="${assessor.compliant}">No</span>
                         </td>
                         <td th:text="${assessor.status.displayName}">Invite accepted</td>
-                        <td th:text="${assessor.details}">Invite declined as person is too busy</td>
+                        <td>
+                            <span th:if="${assessor.status == T(org.innovateuk.ifs.invite.resource.ParticipantStatusResource).PENDING}" th:remove="tag">
+                                <span th:text="${assessor.details}">Invite sent: 22-May-2017</span>
+                                <br />
+                                <a th:href="@{/competition/{competitionId}/assessors/invite/{inviteId}/resend(competitionId=${model.competitionId}, inviteId=${assessor.inviteId})}">Resend invite</a>
+                            </span>
+                            <span th:unless="${assessor.status == T(org.innovateuk.ifs.invite.resource.ParticipantStatusResource).PENDING}" th:text="${assessor.details}">Invite declined as person is too busy</span>
+                        </td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(model.assessors)}">
                         <td colspan="6">There are no assessors invited to this competition.</td>
                     </tr>
                 </tbody>
             </table>
-
-            <th:block th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
-
+            <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
             <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 

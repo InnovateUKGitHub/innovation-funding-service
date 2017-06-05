@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.service;
 
+import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
@@ -92,6 +93,11 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 	@Override
 	public RestResult<CompetitionSummaryResource> getCompetitionSummary(long competitionId) {
 		return getWithRestResult(applicationSummaryRestUrl + "/getCompetitionSummary/" + competitionId, CompetitionSummaryResource.class);
+	}
+
+	@Override
+	public RestResult<ApplicationTeamResource> getApplicationTeam(long applicationId) {
+		return getWithRestResult(applicationSummaryRestUrl + "/applicationTeam/" + applicationId, ApplicationTeamResource.class);
 	}
 
 	public void setApplicationSummaryRestUrl(String applicationSummaryRestUrl) {

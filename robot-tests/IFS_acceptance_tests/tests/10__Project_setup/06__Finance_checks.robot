@@ -113,10 +113,11 @@ Project Finance user can see the finance check summary page
     And the user should see the element    link=Projects in setup
 
 
+
 Project finance user cannot view viability section if this is not applicable for the org in question
     [Documentation]    INFUND-9517
     [Tags]
-    When the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/40/viability    ${404_error_message}
+    When the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}/viability    ${404_error_message}
 
 
 Status of the Eligibility column (workaround for private beta competition)
@@ -132,10 +133,10 @@ Status of the Eligibility column (workaround for private beta competition)
 Query section is disabled before finance contacts have been selected
     [Documentation]    IFS-236
     [Tags]    HappyPath
-    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/22/eligibility
+    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}/eligibility
     And the user clicks the button/link    jQuery=.button:contains("Queries")
     Then the user should see the element    jQuery=.button:contains("Post a new query")[disabled]
-    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/40/eligibility
+    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}/eligibility
     And the user clicks the button/link    jQuery=.button:contains("Queries")
     Then the user should see the element    jQuery=.button:contains("Post a new query")[disabled]
     [Teardown]    finance contacts are selected and bank details are approved
@@ -143,7 +144,7 @@ Query section is disabled before finance contacts have been selected
 Queries section is linked from eligibility and this selects eligibility on the query dropdown
     [Documentation]    INFUND-4840
     [Tags]
-    Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/22/eligibility
+    Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/eligibility
     When the user clicks the button/link    jQuery=.button:contains("Queries")
     Then the user should see the text in the page    Raise finance queries to the organisation in this section
     When the user clicks the button/link    jQuery=.button:contains("Post a new query")
@@ -199,6 +200,11 @@ Project finance user can upload a pdf file
     Then the user uploads the file      name=attachment    ${valid_pdf}
     And the user should see the text in the page    ${valid_pdf}
 
+Project finance user cannot add query for an organisation not part of the project
+    [Documentation]  IFS-281
+    [Tags]
+    When the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/23/query/new-query    ${404_error_message}
+    [Teardown]    the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/22/query/new-query
 
 Project finance can remove the file
     [Documentation]    INFUND-4840
@@ -539,7 +545,7 @@ Link to notes from viability section
 Link to notes from eligibility section
     [Documentation]    INFUND-4845
     [Tags]
-    Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/22/eligibility
+    Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/eligibility
     And the user clicks the button/link    jQuery=.button:contains("Notes")
     Then the user should see the text in the page    Use this section to make notes related to the finance checks
     And the user should see the element    jQuery=.button:contains("Create a new note")
@@ -820,14 +826,14 @@ Project finance user can view finances summary for the consortium
     [Tags]
     Given the user should see the element   jQuery=h3:contains("Finances summary")
     #Check finances summary for lead partner
-    Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(1) th:nth-of-type(1) strong      Empire Ltd
+    Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(1) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
     # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
     And the Categories Are Verified For Finances Summary Section   1   £ 301,355   30%     £ 90,406    £ 3,702     £ 207,246
     #Check finances summary for academic user
-    When the user should see the text in the element    jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(2) th:nth-of-type(1) strong      EGGS
+    When the user should see the text in the element    jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(2) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
     Then the Categories Are Verified For Finances Summary Section   2   £ 990   0%  £ 0     £ 0     £ 990
     #Check finances summary for non lead partner
-    When the user should see the text in the element    jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(3) th:nth-of-type(1) strong      Ludlow
+    When the user should see the text in the element    jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(3) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
     Then the Categories Are Verified For Finances Summary Section   3   £ 200,903   30%     £ 60,271    £ 2,468     £ 138,164
     #Check total
     When the user should see the text in the element    jQuery=h3:contains("Finances summary") + * tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
@@ -1133,7 +1139,7 @@ Project Finance user can edit and save Lead Partner's 20% of labour costs option
     [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button
     And the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
-    And the user clicks the button/link    jQuery=label[data-target="overhead-default-percentage"]
+    And the user clicks the button/link    jQuery=[data-target="overhead-default-percentage"] label
     Then the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 12,120")
     And the user should see the element     jQuery=section:nth-of-type(2) input[id^="section-total"][id$="default"]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
@@ -1146,7 +1152,7 @@ Project Finance user can Edit and Save Lead Partner's no overhead costs option
     [Documentation]     INFUND-7577
     [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
-    And the user clicks the button/link    jQuery=label[data-target="overhead-none"]
+    And the user clicks the button/link    jQuery=[data-target="overhead-none"] label
     Then the user should see the element     jQuery=h3:contains("No overhead costs")
     And the user should see the element     jQuery=p:contains("You are not currently applying for overhead costs")
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
@@ -1157,7 +1163,7 @@ Project Finance user can edit and save Lead Partner's calculate overheads option
     [Documentation]     INFUND-7577
     [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
-    And the user clicks the button/link    jQuery=label[data-target="overhead-total"]
+    And the user clicks the button/link    jQuery=[data-target="overhead-total"] label
     And the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
     Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%")
     And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 0")
@@ -1283,7 +1289,7 @@ Project Finance user can edit and save partner's 20% of labour costs option
     [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button
     And the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
-    And the user clicks the button/link    jQuery=label[data-target="overhead-default-percentage"]
+    And the user clicks the button/link    jQuery=[data-target="overhead-default-percentage"] label
     Then the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 11,956")
     And the user should see the element     jQuery=section:nth-of-type(2) input[id^="section-total"][id$="default"]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
@@ -1296,7 +1302,7 @@ Project Finance user can edit and save Partner's no overhead costs option
     [Documentation]     INFUND-7577
     [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
-    And the user clicks the button/link    jQuery=label[data-target="overhead-none"]
+    And the user clicks the button/link    jQuery=[data-target="overhead-none"] label
     Then the user should see the element     jQuery=h3:contains("No overhead costs")
     And the user should see the element     jQuery=p:contains("You are not currently applying for overhead costs")
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
@@ -1307,7 +1313,7 @@ Project Finance user can edit and save in Partner's calculate overheads option
     [Documentation]     INFUND-7577
     [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
-    And the user clicks the button/link    jQuery=label[data-target="overhead-total"]
+    And the user clicks the button/link    jQuery=[data-target="overhead-total"] label
     And the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
     Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%")
     And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 0")
@@ -1434,14 +1440,14 @@ Project finance user can view updated finances summary for the consortium
     [Tags]
     Given the user should see the element   jQuery=h3:contains("Finances summary")
     #check summary for lead partner
-    Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tbody tr:nth-of-type(1) th:nth-of-type(1) strong      Empire Ltd
+    Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tbody tr:nth-of-type(1) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
     # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
     And the Categories Are Verified For Finances Summary Section   1   £ 206,867   30%     £ 62,060    £ 3,702     £ 141,105
     #check breakdown for academic user
-    When the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tbody tr:nth-of-type(2) th:nth-of-type(1) strong      EGGS
+    When the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tbody tr:nth-of-type(2) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
     Then the Categories Are Verified For Finances Summary Section   2   £ 990   0%  £ 0     £ 0     £ 990
     #check breakdown for non lead partner
-    When the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tbody tr:nth-of-type(3) th:nth-of-type(1) strong      Ludlow
+    When the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tbody tr:nth-of-type(3) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
     Then the Categories Are Verified For Finances Summary Section   3   £ 114,256   30%     £ 34,277    £ 2,468     £ 77,511
     #check total
     And the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
@@ -1741,7 +1747,7 @@ Academic user can view Finance checks page
     When the user clicks the button/link    link=Finance checks
     Then the user should see the text in the page   The finance checks have been completed and your finances approved.
     And the user should not see the text in the page    View finances
-    Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/partner-organisation/40/finance-checks/eligibility    ${404_error_message}
+    Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/partner-organisation/${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}/finance-checks/eligibility    ${404_error_message}
     Then the user clicks the button/link    link=your dashboard
 
 Non Lead Partner can view finance checks page

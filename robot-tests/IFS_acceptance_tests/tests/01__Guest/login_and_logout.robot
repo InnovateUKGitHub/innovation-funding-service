@@ -8,6 +8,8 @@ Documentation     INFUND-399 As a client, I would like to demo the system with r
 ...               INFUND-2130 As a competition administrator I want to be able to log into IFS so that I can access the system with appropriate permissions for my role
 ...
 ...               INFUND-1479 As an assessor with an existing Applicant AND Assessor account I want to be able to choose the correct profile when I log in, so that I don't access the wrong profile information
+...
+...               IFS-188 Stakeholder views – Support team
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Guest
 Resource          ../../resources/defaultResources.robot
@@ -22,14 +24,14 @@ Log-out
 Invalid Login
     [Tags]
     Given the user is not logged-in
-    When the guest user enters the log in credentials    steve.smith@empire.com    Passw0rd2
+    When the guest user enters the log in credentials    ${lead_applicant}   Passw0rd2
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the guest user should get an error message
 
 Valid login as Applicant
     [Tags]    HappyPath
     Given the user is not logged-in
-    When the guest user enters the log in credentials    steve.smith@empire.com    Passw0rd
+    When the guest user enters the log in credentials    ${lead_applicant}    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=Sign out
     And the user should be redirected to the correct page    ${DASHBOARD_URL}
@@ -84,17 +86,26 @@ Valid login as Comp Admin
     [Documentation]    INFUND-2130
     [Tags]    HappyPath
     Given the user is not logged-in
-    When the guest user enters the log in credentials    john.doe@innovateuk.test    Passw0rd
+    When the guest user enters the log in credentials  &{Comp_admin1_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=Sign out
     And the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
+    [Teardown]    Logout as user
+
+Valid login as Support role
+    [Documentation]    IFS-188
+    [Tags]
+    Given the user is not logged-in
+    When the guest user enters the log in credentials   &{support_user_credentials}
+    And the user clicks the button/link    css=button[name="_eventId_proceed"]
+    Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
     [Teardown]    Logout as user
 
 Valid login as Project Finance role
     [Documentation]    INFUND-2609
     [Tags]
     Given the user is not logged-in
-    When the guest user enters the log in credentials    lee.bowman@innovateuk.test    Passw0rd
+    When the guest user enters the log in credentials  &{internal_finance_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
     # note that this has been updated as per the most recent requirements.

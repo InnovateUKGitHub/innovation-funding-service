@@ -6,6 +6,8 @@ import org.innovateuk.ifs.user.domain.ProjectFinanceEmail;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,6 +19,8 @@ import static java.util.Collections.emptyList;
  * Generates internal users (Comp Admins, Project Finance, Comp Execs and Comp Technologists)
  */
 public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserData, InternalUserDataBuilder> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(InternalUserDataBuilder.class);
 
     @Override
     public InternalUserDataBuilder registerUser(String firstName, String lastName, String emailAddress, String organisationName, String phoneNumber) {
@@ -85,5 +89,11 @@ public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserDat
 
             data.setEmailAddress(emailAddress);
         });
+    }
+
+    @Override
+    protected void postProcess(int index, InternalUserData instance) {
+        super.postProcess(index, instance);
+        LOG.info("Created Internal User '{}'", instance.getEmailAddress());
     }
 }

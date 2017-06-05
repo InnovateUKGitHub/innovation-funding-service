@@ -59,29 +59,29 @@
                             </th:block>
                         </legend>
 
-                        <label class="block-label selection-button-radio" data-target="accept-application" for="acceptAssessment">
+                        <div class="multiple-choice" data-target="accept-application">
                             <input id="acceptAssessment" value="true" th:field="*{assessmentAccept}" type="radio" required="required">
-                            Accept, I am able to assess this application
-                        </label>
+                            <label for="acceptAssessment">Accept, I am able to assess this application</label>
+                        </div>
 
                         <div class="panel js-hidden" id="accept-application">
                             <p>You will still have the option to reject after accepting and viewing the full application</p>
                         </div>
 
-                        <label class="block-label selection-button-radio" data-target="reject-application" for="rejectAssessment">
+                        <label class="multiple-choice" data-target="reject-application">
                             <input id="rejectAssessment" value="false" th:field="*{assessmentAccept}" type="radio" required="required">
-                            Reject, I am not able to assess this application
+                            <label for="rejectAssessment">Reject, I am not able to assess this application</label>
                         </label>
 
                         <div class="panel js-hidden" id="reject-application">
-                            <div class="form-group" th:classappend="${#fields.hasErrors('rejectReasonValid')}? error">
+                            <div class="form-group" th:classappend="${#fields.hasErrors('rejectReasonValid')} ? 'form-group-error'">
                                 <label class="form-label" th:for="${#ids.next('rejectReasonValid')}">
                                     Please select a reason for rejecting the competition
                                     <th:block th:if="${#fields.hasErrors('rejectReasonValid')}">
                                         <span class="error-message"  th:each="err : ${#fields.errors('rejectReasonValid')}" th:text="${err}" />
                                     </th:block>
                                 </label>
-                                <select class="form-control" th:attr="data-required-errormessage=#{validation.assessmentRejectOutcome.rejectReason.required}" th:errorclass="field-error" required="required" th:field="*{rejectReason}">
+                                <select class="form-control" th:attr="data-required-errormessage=#{validation.assessmentRejectOutcome.rejectReason.required}" th:errorclass="form-control-error" required="required" th:field="*{rejectReason}">
                                     <option value="">Select a reason</option>
                                     <option th:each="reason : ${T(org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue).values()}"
                                             th:value="${reason}"
@@ -90,7 +90,7 @@
                                 </select>
                             </div>
 
-                            <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')}? error">
+                            <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')} ? 'form-group-error'">
                                 <label class="form-label" th:for="${#ids.next('rejectComment')}">
                                     Use this space to provide more information
                                     <th:block th:if="${#fields.hasErrors('rejectComment')}">
@@ -103,7 +103,7 @@
                                           data-maxwordslength="100"
                                           data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
                                           th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
-                                          th:errorclass="field-error"
+                                          th:errorclass="form-control-error"
                                           rows="4"
                                           th:field="*{rejectComment}"></textarea>
                                 <div class="textarea-footer" th:with="rejectComment=*{rejectComment}">

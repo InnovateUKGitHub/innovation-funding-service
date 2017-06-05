@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.populator;
 
+import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.form.ApplicationForm;
@@ -16,7 +17,6 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,6 +25,9 @@ import org.springframework.ui.Model;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 @Component
 public class ApplicationModelPopulator {
@@ -54,30 +57,28 @@ public class ApplicationModelPopulator {
     @Autowired
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
 
-    @Autowired
-    protected UserRestService userRestService;
-
     public ApplicationResource addApplicationAndSections(ApplicationResource application,
                                                          CompetitionResource competition,
-                                                         Long userId,
-                                                         Optional<SectionResource> section,
-                                                         Optional<Long> currentQuestionId,
-                                                         Model model,
-                                                         ApplicationForm form) {
-        return addApplicationAndSections(application, competition, userId, section, currentQuestionId, model, form, Optional.empty());
-    }
-
-    public ApplicationResource addApplicationAndSections(ApplicationResource application,
-                                                         CompetitionResource competition,
-                                                         Long userId,
+                                                         UserResource user,
                                                          Optional<SectionResource> section,
                                                          Optional<Long> currentQuestionId,
                                                          Model model,
                                                          ApplicationForm form,
+                                                         List<ProcessRoleResource> userApplicationRoles) {
+        return addApplicationAndSections(application, competition, user, section, currentQuestionId, model, form, userApplicationRoles, Optional.empty());
+    }
+
+    public ApplicationResource addApplicationAndSections(ApplicationResource application,
+                                                         CompetitionResource competition,
+                                                         UserResource user,
+                                                         Optional<SectionResource> section,
+                                                         Optional<Long> currentQuestionId,
+                                                         Model model,
+                                                         ApplicationForm form,
+                                                         List<ProcessRoleResource> userApplicationRoles,
                                                          Optional<Boolean> markAsCompleteEnabled) {
 
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-        application = addApplicationDetails(application, competition, userId, section, currentQuestionId, model, form, userApplicationRoles, markAsCompleteEnabled);
+        application = addApplicationDetails(application, competition, user, section, currentQuestionId, model, form, userApplicationRoles, markAsCompleteEnabled);
 
         model.addAttribute("completedQuestionsPercentage", application.getCompletion());
         applicationSectionAndQuestionModelPopulator.addSectionDetails(model, section);
@@ -87,7 +88,7 @@ public class ApplicationModelPopulator {
 
     public ApplicationResource addApplicationDetails(ApplicationResource application,
                                                      CompetitionResource competition,
-                                                     Long userId,
+                                                     UserResource user,
                                                      Optional<SectionResource> section,
                                                      Optional<Long> currentQuestionId,
                                                      Model model,
@@ -97,7 +98,7 @@ public class ApplicationModelPopulator {
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
 
-        Optional<OrganisationResource> userOrganisation = getUserOrganisation(userId, userApplicationRoles);
+        Optional<OrganisationResource> userOrganisation = getUserOrganisation(user.getId(), userApplicationRoles);
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
 
         if(form == null){
@@ -105,13 +106,15 @@ public class ApplicationModelPopulator {
         }
         form.setApplication(application);
 
-        applicationSectionAndQuestionModelPopulator.addQuestionsDetails(model, application, form);
-        addUserDetails(model, application, userId);
-        addApplicationFormDetailInputs(application, form);
-        applicationSectionAndQuestionModelPopulator.addMappedSectionsDetails(model, application, competition, section, userOrganisation, markAsCompleteEnabled);
+        Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
 
-        applicationSectionAndQuestionModelPopulator.addAssignableDetails(model, application, userOrganisation.orElse(null), userId, section, currentQuestionId);
-        applicationSectionAndQuestionModelPopulator.addCompletedDetails(model, application, userOrganisation);
+        applicationSectionAndQuestionModelPopulator.addQuestionsDetails(model, application, form);
+        addUserDetails(model, user, userApplicationRoles);
+        addApplicationFormDetailInputs(application, form);
+        applicationSectionAndQuestionModelPopulator.addMappedSectionsDetails(model, application, competition, section, userOrganisation, user.getId(), completedSectionsByOrganisation, markAsCompleteEnabled);
+
+        applicationSectionAndQuestionModelPopulator.addAssignableDetails(model, application, userOrganisation.orElse(null), user, section, currentQuestionId);
+        applicationSectionAndQuestionModelPopulator.addCompletedDetails(model, application, userOrganisation, completedSectionsByOrganisation);
 
         model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
         return application;
@@ -135,10 +138,14 @@ public class ApplicationModelPopulator {
     }
 
 
-    public void addUserDetails(Model model, ApplicationResource application, Long userId) {
-        Boolean userIsLeadApplicant = userIsLeadApplicant(application, userId);
-        ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
-        UserResource leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
+    public void addUserDetails(Model model, UserResource user, List<ProcessRoleResource> userApplicationRoles) {
+
+        ProcessRoleResource leadApplicantProcessRole =
+                simpleFindFirst(userApplicationRoles, role -> role.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())).get();
+
+        boolean userIsLeadApplicant = leadApplicantProcessRole.getUser().equals(user.getId());
+
+        UserResource leadApplicant = userIsLeadApplicant ? user : userService.findById(leadApplicantProcessRole.getUser());
 
         model.addAttribute("userIsLeadApplicant", userIsLeadApplicant);
         model.addAttribute("leadApplicant", leadApplicant);

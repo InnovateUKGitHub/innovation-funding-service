@@ -2,177 +2,156 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
 
     <!-- ===========================Your finances section view =========================== -->
-    <th:block th:fragment="your_finances">
-        <th:block th:if="${model.currentSection.type == T(org.innovateuk.ifs.application.resource.SectionType).FINANCE}">
-            <div class="your-finances">
-                <h2 class="heading-medium no-margin-bottom">Finances</h2>
-                <p>Please complete your project finances.</p>
+    <th:block th:fragment="finance(model)">
+        <div class="your-finances">
+            <h2 class="heading-medium no-margin-bottom">Finances</h2>
+            <p>Please complete your project finances.</p>
 
-                <details th:unless="${readonly or model.isAcademicFinance}" class="extra-margin-bottom" th:attr="open=${model.notRequestingFunding ? 'open' : null}">
-                    <summary><span class="summary">Not requesting funding</span></summary>
-                    <div class="panel-indent">
-                        <p>If your organisation is not funded by Innovate UK then you do not need to submit organisational or funding details. <span th:unless="${model.notRequestingFunding}">Please confirm below.</span></p>
-                        <button th:unless="${model.notRequestingFunding}" class="button" name="not_requesting_funding">Not requesting funding</button>
-                        <button th:if="${model.notRequestingFunding}" class="button" name="requesting_funding">Requesting funding</button>
-                    </div>
-                </details>
-                <ul class="task-list">
-                    <th:block th:each="subSection : ${model.subSections.get(model.currentSection.id)}">
-                        <th:block th:if="${model.isSectionDisplayed(subSection)}" th:insert="finance/your-finances-sub-sections :: finance_sub_section_row" />
-                    </th:block>
-                </ul>
-            </div>
+            <details th:unless="${model.canNotRequestFunding}" class="extra-margin-bottom" th:attr="open=${model.notRequestingFunding ? 'open' : null}">
+                <summary><span class="summary">Not requesting funding</span></summary>
+                <div class="panel-indent">
+                    <p>If your organisation is not funded by Innovate UK then you do not need to submit organisational or funding details. <span th:unless="${model.notRequestingFunding}">Please confirm below.</span></p>
+                    <button th:unless="${model.notRequestingFunding}" class="button" name="not_requesting_funding">Not requesting funding</button>
+                    <button th:if="${model.notRequestingFunding}" class="button" name="requesting_funding">Requesting funding</button>
+                </div>
+            </details>
+            <ul class="task-list">
+                <th:block th:each="childSection : ${model.applicantResource.applicantChildrenSections}">
+                    <th:block th:if="${model.isSectionDisplayed(childSection)}" th:insert="finance/your-finances-sub-sections :: finance_sub_section_row(${model}, ${childSection})" />
+                </th:block>
+            </ul>
+        </div>
 
-            <h2 class="heading-medium">Finance summary</h2>
-            <p>This is a breakdown of your project costs and sources of funding for this project.</p>
-            <th:block th:insert="finance/your-finances-sub-sections :: your_finance_summary" />
-        </th:block>
+        <h2 class="heading-medium">Finance summary</h2>
+        <p>This is a breakdown of your project costs and sources of funding for this project.</p>
+
+        <th:block th:insert="finance/your-finances-sub-sections :: your_finance_summary (${model})" />
+
+        <a th:href="@{/application/{applicationId}(applicationId=${model.application.id})}" class="button-secondary">Return to application overview</a>
     </th:block>
 
 
     <!-- =========================== Your organisation =========================== -->
-    <th:block th:fragment="your_organisation">
-        <th:block th:with="markedAsComplete=(${model.application.markedAsComplete}),
-                           organisationFinanceSize=(${model.finance.organisationFinanceSize}),
-                           organisationSizes=(${model.finance.organisationSizes}),
-                           maximumGrantClaimPercentage=(${model.finance.maximumGrantClaimPercentage})">
-            <div class="question" th:each="formInput, status : ${model.getFormInputsOrganisationSize(question.id)}" th:id="'form-input-'+${formInput.getId()}">
-                <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}">
-                    <div th:replace="'finance/'+${model.finance.financeView} :: organisation_size" />
-                </th:block>
-            </div>
+    <th:block th:fragment="organisation_finances (model)">
+        <div class="question" th:with="formInputViewModel=${model.organisationSizeFormInputViewModel}" th:id="'form-input-'+${formInputViewModel.formInput.getId()}">
+            <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})" />
+        </div>
 
-            <div class="question" th:each="formInput, status : ${model.getFormInputsFinancialEndYear(question.id)}" th:id="'form-input-'+${formInput.getId()}">
-                <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}">
-                    <div th:replace="'finance/'+${model.finance.financeView} :: financial_year_end" />
-                </th:block>
+        <th:block th:with="formInputViewModel=${model.financialEndYearFormInputViewModel}">
+            <div class="question" th:if="${formInputViewModel != null}" th:id="'form-input-'+${formInputViewModel.formInput.getId()}">
+                <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})" />
             </div>
+        </th:block>
 
-            <fieldset>
-                <legend class="heading-medium no-margin-bottom">Financial overview</legend>
-                <span class="form-hint">Details relating to your organisation over the last financial year.</span><br>
-                <div class="grid-row">
-                    <div class="column-half">
-                        <table class="extra-margin-bottom">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Section</th>
-                                    <th scope="col" class="numeric" id="last-year">Last financial year (£)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr th:each="formInput, status : ${model.getFormInputsFinancialOverview(question.id)}" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'error' : ''" class="form-group">
-                                    <td>
-                                        <label th:for="${'input-'+formInput.id}">
-                                            <span th:text="${formInput.description}"></span>
-                                            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
-                                        </label>
-                                    </td>
-                                    <td class="numeric">
-                                        <input class="form-control width-small"
-                                               th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and model.application.markedAsComplete?.contains(question.id))}"
-                                               th:id="${'input-'+formInput.id}"
-                                               th:name="'formInput['+${formInput.id}+']'"
-                                               th:value="*{formInput[__${formInput.id}__]}"
-                                               th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'field-error' : ''"
-                                               required="required"
-                                               min="-2147483647"
-                                               max="2147483647"
-                                               type="number"/>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+        <fieldset th:unless="${model.financeOverviewRows.isEmpty()}">
+            <legend class="heading-medium no-margin-bottom">Financial overview</legend>
+            <span class="form-hint">Details relating to your organisation over the last financial year.</span><br>
+            <div class="grid-row">
+                <div class="column-half">
+                    <table class="extra-margin-bottom">
+                        <thead>
+                        <tr>
+                            <th scope="col">Section</th>
+                            <th scope="col" class="numeric" id="last-year">Last financial year (£)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="formInputViewModel, status : ${model.financeOverviewRows}" th:with="formInput=${formInputViewModel.formInput}" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'error' : ''" class="form-group">
+                            <td>
+                                <label th:for="${'input-'+formInput.id}">
+                                    <span th:text="${formInput.description}"></span>
+                                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
+                                </label>
+                            </td>
+                            <td class="numeric">
+                                <input class="form-control width-small"
+                                       th:disabled="${formInputViewModel.readonly}"
+                                       th:id="${'input-'+formInput.id}"
+                                       th:name="'formInput['+${formInput.id}+']'"
+                                       th:value="*{formInput[__${formInput.id}__]}"
+                                       th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'form-control-error'"
+                                       required="required"
+                                       min="-2147483647"
+                                       max="2147483647"
+                                       type="number"/>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </fieldset>
-            <div class="question" th:each="formInput, status : ${model.getFormInputsFinancialStaffCount(question.id)}" th:id="'form-input-'+${formInput.getId()}">
-                <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}">
-                    <div th:replace="'finance/'+${model.finance.financeView} :: staff_count" />
-                </th:block>
+            </div>
+        </fieldset>
+
+        <th:block th:each="formInputViewModel : ${model.standardInputViewModels}">
+            <div class="question" th:id="'form-input-'+${formInputViewModel.formInput.getId()}">
+                <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})" />
             </div>
         </th:block>
+        <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})" />
     </th:block>
-
-    <!-- ===========================Your finances agree terms view =========================== -->
-    <th:block th:fragment="agree_terms">
-        <th:block th:if="${(model.application.currentCompetition.isOpen())} and ${null != model.currentSection}"
-            th:with="currentSection=(${model.currentSection}), completedSections=(${model.completedSections})">
-            <th:block th:if="${model.showAgreeToStateAidOption}">
-                <div th:insert="fragments/elements :: application-agree-to-state-aid" th:with="fieldName='form.stateAidAgreed'" class="agree-to-terms-container"></div>
-            </th:block>
-            <th:block th:if="${model.showAgreeToTermsOption}">
-                <div th:insert="fragments/elements :: application-agree-to-terms" th:with="fieldName='form.termsAgreed'" class="agree-to-terms-container"></div>
-            </th:block>
-        </th:block>
-    </th:block>
-
 
     <!-- ===========================Subsection buttons =========================== -->
-    <th:block th:fragment="subsection_buttons">
-        <th:block th:if="${model.subFinanceSection}"
-                  th:with="markedAsComplete=${model.sectionsMarkedAsComplete.contains(model.currentSection.id)}">
-            <div th:unless="${readonly}" class="form-footer">
-                <div class="form-footer__actions">
-                    <button id="mark-all-as-complete"
-                            th:unless="${markedAsComplete}"
-                            type="submit" name="mark_section_as_complete" class="buttonlink">Mark as complete
-                    </button>
-                    <button th:if="${markedAsComplete}"
-                            type="submit" name="mark_section_as_incomplete" class="buttonlink"
-                            th:text="${'Edit ' + #strings.toLowerCase(model.currentSection.name)}">Edit
-                    </button>
-                </div>
+    <th:block th:fragment="subsection_buttons (model)">
+        <div th:unless="${model.applicationIsReadOnly}" class="form-footer">
+            <div class="form-footer__actions">
+                <button id="mark-all-as-complete"
+                        th:unless="${model.complete}"
+                        type="submit" name="mark_section_as_complete" class="buttonlink">Mark as complete
+                </button>
+                <button th:if="${model.complete}"
+                        type="submit" name="mark_section_as_incomplete" class="buttonlink"
+                        th:text="${'Edit ' + #strings.toLowerCase(model.section.name)}">Edit
+                </button>
             </div>
-            <div>
-                <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.currentApplication.id}, sectionId=${model.currentSection.getParentSection()})}"
-                   class="extra-margin"
-                   th:classappend="${markedAsComplete} ? 'button-secondary' : 'button'"
-                   th:text="${markedAsComplete} ? 'Return to finances' : 'Save and return to finances'" />
-            </div>
-        </th:block>
+        </div>
+        <div>
+            <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.section.parentSection})}"
+               class="extra-margin"
+               th:classappend="${model.complete} ? 'button-secondary' : 'button'"
+               th:text="${model.complete} ? 'Return to finances' : 'Save and return to finances'"></a>
+        </div>
     </th:block>
 
-    <th:block th:fragment="finance_sub_section_row">
-        <th:block th:if="${model.showSectionAsNotRequired(subSection)}">
+    <th:block th:fragment="finance_sub_section_row (model, childSection)">
+        <th:block th:if="${model.showSectionAsNotRequired(childSection)}">
             <li class="read-only">
                 <div class="task">
-                    <h3 class="heading-small" th:text="${subSection.name}"></h3>
+                    <h3 class="heading-small" th:text="${childSection.section.name}"></h3>
                 </div>
                 <div class="task-status"><span>No action required</span></div>
             </li>
         </th:block>
-        <th:block th:unless="${model.showSectionAsNotRequired(subSection)}">
+        <th:block th:unless="${model.showSectionAsNotRequired(childSection)}">
             <li>
-                <th:block th:if="${model.showSectionAsLink(subSection)}">
+                <th:block th:if="${model.showSectionAsLink(childSection)}">
                     <div class="task">
                         <h3 class="heading-small">
-                            <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.currentApplication.id},sectionId=${subSection.id})}"
-                               th:text="${subSection.name}"></a>
+                            <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id},sectionId=${childSection.section.id})}"
+                               th:text="${childSection.section.name}"></a>
                         </h3>
                     </div>
                 </th:block>
-                <th:block th:if="${model.showSectionAsLockedFunding(subSection)}">
+                <th:block th:if="${model.showSectionAsLockedFunding(childSection)}">
                     <div class="task full-width">
-                        <h3 class="heading-small" th:text="${subSection.name}"></h3>
+                        <h3 class="heading-small" th:text="${childSection.section.name}"></h3>
                         <p>
-                            <th:block th:if="${model.userIsLeadApplicant}">You must select a research category in <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.application.currentApplication.id}, questionId=${model.applicationDetailsQuestionId})}">application details</a> before you can supply funding.</th:block>
+                            <th:block th:if="${model.userIsLeadApplicant}">You must select a research category in <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.application.id}, questionId=${model.applicationDetailsQuestionId})}">application details</a> before you can supply funding.</th:block>
                             <th:block th:unless="${model.userIsLeadApplicant}">The lead applicant must select a research category in application details before you can supply funding.</th:block>
                             <br />
-                            You must also state your organisation size in the <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.currentApplication.id}, sectionId=${model.yourOrganisationSectionId})}">your organisation</a> section.
+                            You must also state your organisation size in the <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.yourOrganisationSectionId})}">your organisation</a> section.
                         </p>
                     </div>
                 </th:block>
-                <th:block th:if="${model.showSectionStatus(subSection)}">
-                    <div th:if="${model.sectionsMarkedAsComplete.contains(subSection.id)}" class="task-status-complete"><span>Complete</span></div>
-                    <span th:unless="${model.sectionsMarkedAsComplete.contains(subSection.id)}" class="action-required"><strong>Incomplete</strong></span>
+                <th:block th:if="${model.showSectionStatus(childSection)}">
+                    <div th:if="${model.completedSectionIds.contains(childSection.section.id)}" class="task-status-complete"><span>Complete</span></div>
+                    <span th:unless="${model.completedSectionIds.contains(childSection.section.id)}" class="action-required"><strong>Incomplete</strong></span>
                 </th:block>
             </li>
         </th:block>
     </th:block>
-    <th:block th:fragment="your_finance_summary">
+    <th:block th:fragment="your_finance_summary (model)">
         <div class="form-group" style="overflow:auto;">
-            <table th:with="organisationId=${model.application.userOrganisation.id},hasOrganisationFinance=${model.financeOverview.hasFinancesForOrganisation(organisationId)}">
+            <table>
                 <thead>
                     <tr>
                         <th scope="col" class="numeric width-small">Total project costs</th>
@@ -183,23 +162,51 @@
                     </tr>
                 </thead>
                 <tbody>
-                <tr th:if="${hasOrganisationFinance}" th:with="organisationFinance=${model.financeOverview.organisationFinances.get(organisationId)}">
-                    <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}" /></strong></td>
-                    <td class="numeric"><th:block th:text="${organisationFinance.grantClaimPercentage}+'%'" /></td>
-                    <td class="numeric">&pound;<th:block th:text="${#numbers.formatDecimal(organisationFinance.totalFundingSought, 0, 'COMMA', 0, 'POINT')}" /></td>
-                    <td class="numeric">&pound;<th:block th:text="${#numbers.formatDecimal(organisationFinance.totalOtherFunding, 0, 'COMMA', 0, 'POINT')}" /></td>
-                    <td class="numeric">&pound;<th:block th:text="${#numbers.formatDecimal(organisationFinance.totalContribution, 0, 'COMMA', 0, 'POINT')}" /></td>
-                </tr>
-                <tr th:unless="${hasOrganisationFinance}">
-                    <td class="numeric"><strong>&pound;0</strong></td>
-                    <td class="numeric">0%</td>
-                    <td class="numeric">&pound;0</td>
-                    <td class="numeric">&pound;0</td>
-                    <td class="numeric">&pound;0</td>
+                <tr>
+                    <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatDecimal(model.organisationFinance.total, 0, 'COMMA', 0, 'POINT')}" /></strong></td>
+                    <td class="numeric"><th:block th:text="${model.organisationFinance.grantClaimPercentage}+'%'" /></td>
+                    <td class="numeric">&pound;<th:block th:text="${#numbers.formatDecimal(model.organisationFinance.totalFundingSought, 0, 'COMMA', 0, 'POINT')}" /></td>
+                    <td class="numeric">&pound;<th:block th:text="${#numbers.formatDecimal(model.organisationFinance.totalOtherFunding, 0, 'COMMA', 0, 'POINT')}" /></td>
+                    <td class="numeric">&pound;<th:block th:text="${#numbers.formatDecimal(model.organisationFinance.totalContribution, 0, 'COMMA', 0, 'POINT')}" /></td>
                 </tr>
                 </tbody>
             </table>
         </div>
+    </th:block>
+
+    <th:block th:fragment="project_cost_finances(model)">
+        <th:block th:insert="'finance/'+${model.financeView} :: your_finance(${model})" />
+        <div th:insert="fragments/elements :: application-agree-to-state-aid" th:with="fieldName='form.stateAidAgreed'" class="agree-to-terms-container" th:if="${model.showTerms}"></div>
+        <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})" />
+    </th:block>
+
+    <th:block th:fragment="funding_finances(model)">
+        <th:block th:each="formInputViewModel : ${model.formInputViewModels}">
+            <div class="question" th:id="'form-input-'+${formInputViewModel.formInput.getId()}">
+                <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (model=${formInputViewModel})" />
+            </div>
+        </th:block>
+        <div th:insert="fragments/elements :: application-agree-to-terms (${model.competition.id})" th:with="fieldName='form.termsAgreed'" class="agree-to-terms-container"  th:unless="${model.allReadOnly}"></div>
+        <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})" />
+    </th:block>
+
+    <th:block th:fragment="overview_finances(model)">
+        <th:block th:each="formInputViewModel : ${model.formInputViewModels}" th:with="formInput=${formInputViewModel.formInput}">
+            <th:block th:if="${formInput.type.displayableFinancialSummaryType}"  th:with="model=${model.openSectionViewModel}" >
+                <th:block th:with="sectionsMarkedAsComplete=(${model.sectionsMarkedAsComplete}), applicationOrganisations=(${model.applicationOrganisations}),
+                                                currentApplication=(${model.application.currentApplication}), financeSectionId=(${model.financeSectionId}), leadOrganisation=(${model.leadOrganisation}),
+                                                completedSectionsByOrganisation=(${model.completedSectionsByOrganisation}), academicOrganisations=(${model.academicOrganisations}),
+                                                eachCollaboratorFinanceSectionId=(${model.eachCollaboratorFinanceSectionId}), currentCompetition=(${model.application.currentCompetition}),
+                                                currentApplication=(${model.application.currentApplication}), hasFinanceSection=(${model.hasFinanceSection}),
+                                                userOrganisation=(${model.application.userOrganisation})">
+                    <div th:replace="finance/finance-summary :: ${formInput.type.nameLower}"/>
+                </th:block>
+            </th:block>
+            <th:block th:if="${formInputViewModel.formInput.type.displayableQuestionType}">
+                <th:block th:insert="question-type/types :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})" ></th:block>
+            </th:block>
+        </th:block>
+        <a th:href="@{/application/{applicationId}(applicationId=${model.application.id})}" class="button-secondary">Return to application overview</a>
     </th:block>
 
 </html>
