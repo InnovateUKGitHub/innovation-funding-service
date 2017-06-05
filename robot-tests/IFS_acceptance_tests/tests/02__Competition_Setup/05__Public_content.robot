@@ -76,7 +76,8 @@ Competition information and search: Valid values
     And the user clicks the button/link             jQuery=button:contains("Save and review")
     Then the user should see the element            jQuery=.error-summary-list:contains("Each keyword must be less than 50 characters long.")
     And the user enters text to a text field        id=keywords  Search, Testing, Robot
-    And the user clicks the button/link             jQuery=.button:contains("Save and review")
+    Then the user clicks the button/link            jQuery=.button:contains("Save and review")
+    And the user clicks the button/link             jQuery=.button:contains("Return to public content")
     Then the user should see the element            jQuery=li:nth-of-type(1) .task-status-complete
 
 Competition information and search: ReadOnly
@@ -90,6 +91,7 @@ Competition information and search: ReadOnly
     When the user clicks the button/link  link=Edit
     Then the user should see the element  css=#short-description[value="Short public description"]
     And the user clicks the button/link   jQuery=.button:contains("Save and review")
+    Then the user clicks the button/link  jQuery=.button:contains("Return to public content")
 
 Summary: server side validation and autosave
     [Documentation]    INFUND-6916, INFUND-7486
@@ -106,30 +108,34 @@ Summary: server side validation and autosave
 Summary: User enters valid values and saves
     [Documentation]    INFUND-6916, INFUND-7486
     [Tags]  HappyPath
-    Given the internal user navigates to public content  ${public_content_competition_name}
-    And the user clicks the button/link        link=Summary
+    Given the internal user navigates to public content     ${public_content_competition_name}
+    And the user clicks the button/link                     link=Summary
     When the user enters valid data in the summary details
-    And the user clicks the button/link        jQuery=button:contains("+ add new section")
-    When the user enters text to a text field  css=#heading-0  A nice new Heading
-    Then the user enters text to a text field   jQuery=.editor:eq(1)  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco ullamco
-    And the user uploads the file              id=contentGroups-0.attachment  ${valid_pdf}
-    When the user clicks the button/link       jQuery=button:contains("Save and review")
+    And the user clicks the button/link                     jQuery=button:contains("+ add new section")
+    When the user enters text to a text field               css=#heading-0  A nice new Heading
+    Then the user enters text to a text field               jQuery=.editor:eq(1)  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco ullamco
+    And the user uploads the file                           id=contentGroups-0.attachment  ${valid_pdf}
+    When the user clicks the button/link                    jQuery=button:contains("Save and review")
+    And the user clicks the button/link                     jQuery=.button:contains("Return to public content")
     Then the user should be redirected to the correct page  ${public_content_overview}
-    And the user should see the element      link=Summary
-    And the user should see the element      jQuery=li:nth-child(2) .task-status-complete
+    And the user should see the element                     link=Summary
+    And the user should see the element                     jQuery=li:nth-child(2) .task-status-complete
 
 Summary: Contains the correct values when viewed
     [Documentation]    INFUND-6916, INFUND-7486
     [Tags]
     When the user clicks the button/link      link=Summary
-    Then the user should see the element      jQuery=dt:contains("Funding type") + dd:contains("Grant")
-    And the user should see the element       jQuery=dt:contains("Project size") + dd:contains("10 millions")
+    Then the user should see the element      jQuery=h2:contains("Funding type")
+    And the user should see the element       jQuery=p:contains("Grant")
+    And the user should see the element       jQuery=h2:contains("Project size")
+    And the user should see the element       jQuery=p:contains("10 millions")
     And the user should see the element       jQuery=h2:contains("A nice new Heading")
     And the user should see the element       jQuery=a:contains("${valid_pdf}")
     And the user should see the element       jQuery=.button:contains("Return to public content")
     When the user clicks the button/link      jQuery=.button-secondary:contains("Edit")
     And the user enters text to a text field  jQuery=.editor:eq(1)  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
     When the user clicks the button/link      jQuery=button:contains("Save and review")
+    And the user clicks the button/link       jQuery=.button:contains("Return to public content")
     Then the user should see the element      jQuery=li:nth-child(2) .task-status-complete
 
 Eligibility: server side validation and autosave
@@ -157,6 +163,7 @@ Eligibility: User enters valid values and saves
     And The user enters text to a text field                jQuery=.contentGroup:nth-of-type(2) .editor    One of the important new changes we are introducing through these reforms is establishing the national eligibility criteria for adult care and support
     And the user uploads the file                           jQuery=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]   ${valid_pdf}
     When the user clicks the button/link                    jQuery=button:contains("Save and review")
+    And the user clicks the button/link                     jQuery=.button:contains("Return to public content")
     Then the user should be redirected to the correct page  ${public_content_overview}
     And the user should see the element                     link=Eligibility
     And the user should see the element                     jQuery=li:nth-child(3) .task-status-complete
@@ -182,7 +189,8 @@ Eligibility: Contains the correct values when viewed, Edit sections
     Then the user clicks the button/link                        jQuery=.contentGroup:nth-of-type(3) button:contains("Remove")
     And the user uploads the file                               jQuery=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
     When the user clicks the button/link                        jQuery=button:contains("Save and review")
-    And the user should see the element                         jQuery=li:nth-child(3) .task-status-complete
+    And the user clicks the button/link                         jQuery=.button:contains("Return to public content")
+    Then the user should see the element                        jQuery=li:nth-child(3) .task-status-complete
 
 Scope: Server side validation
     [Documentation]  INFUND-7488
@@ -197,7 +205,8 @@ Scope: Add, remove sections and submit
     [Tags]  HappyPath
     Given the user can add and remove multiple content groups
     When the user clicks the button/link                        jQuery=button:contains("Save and review")
-    And the user should see the element  jQuery=li:nth-child(4) .task-status-complete
+    And the user clicks the button/link                         jQuery=.button:contains("Return to public content")
+    Then the user should see the element                        jQuery=li:nth-child(4) .task-status-complete
 
 Dates: Add, remove dates and submit
     [Documentation]    INFUND-6919
@@ -236,6 +245,7 @@ How to apply: User enters valid values and saves
     And The user enters text to a text field                jQuery=.contentGroup:nth-of-type(2) .editor    Application questions are available for reference and to assist with preparation. If you need more information, contact the competition helpline on 0700 123 98765 or email us at support@innovateTest.worth.com
     And the user uploads the file                           jQuery=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
     When the user clicks the button/link                    jQuery=button:contains("Save and review")
+    And the user clicks the button/link                     jQuery=.button:contains("Return to public content")
     Then the user should be redirected to the correct page  ${public_content_overview}
     And the user should see the element                     link=How to apply
     And the user should see the element                     jQuery=li:nth-child(6) .task-status-complete
@@ -270,15 +280,17 @@ How to apply: Contains the correct values when viewed, Edit sections
     And the user uploads the file                   jQuery=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
     And the user uploads the file                   jQuery=.contentGroup:nth-of-type(5) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
     When the user clicks the button/link            jQuery=button:contains("Save and review")
-    And the user should see the element             jQuery=li:nth-child(6) .task-status-complete
+    And the user clicks the button/link             jQuery=.button:contains("Return to public content")
+    Then the user should see the element            jQuery=li:nth-child(6) .task-status-complete
 
 Supporting information: Add, remove sections and submit
     [Documentation]    INFUND-6921 INFUND-7602
     [Tags]  HappyPath
     When the user clicks the button/link                         link=Supporting information
     Then the user can add and remove multiple content groups
-    When the user clicks the button/link                        jQuery=button:contains("Save and review")
-    And the user should see the element  jQuery=li:nth-child(7) .task-status-complete
+    When the user clicks the button/link                         jQuery=button:contains("Save and review")
+    And the user clicks the button/link                          jQuery=.button:contains("Return to public content")
+    Then the user should see the element                         jQuery=li:nth-child(7) .task-status-complete
 
 Publish public content: Publish once all sections are complete
     [Documentation]    INFUND-6914
@@ -297,6 +309,7 @@ The user is able to edit and publish again
     [Tags]
     Given the user enters text to a text field  css=[labelledby="eligibility-summary"]  Some other summary
     And the user clicks the button/link         jQuery=button:contains("Publish and review")
+    Then the user clicks the button/link        jQuery=.button:contains("Return to public content")
     When the user should see all sections completed
     Then the user should see the element        jQuery=small:contains("${today}")
     And the user should not see the element     jQuery=button:contains("Publish and review")
@@ -486,6 +499,7 @@ the user can add and remove multiple event groups
     And the user should not see the element     id=dates-2-year
     And the user should not see the element     jQuery=.editor:eq(2)
     And the user clicks the button/link         jQuery=button:contains("Save and review")
+    And the user clicks the button/link         jQuery=.button:contains("Return to public content")
 
 the user visits the sub sections then he should not see any errors
     the user visits  Competition information and search
