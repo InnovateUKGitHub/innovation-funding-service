@@ -235,6 +235,13 @@ function runTests() {
     fi
 }
 
+function deleteEmails() {
+    section "=> SCRUBBING DOWN THE TEST MAILBOXES"
+    cd ${scriptDir}
+    pybot --pythonpath IFS_acceptance_tests/libs --outputdir target/set_up_steps IFS_acceptance_tests/tests/00__Set_Up_Tests/delete_emails.robot 2>&1 >/dev/null
+    echo "...done"
+}
+
 function clearOldReports() {
   section "=> REMOVING OLD REPORTS"
   rm -rf target
@@ -386,6 +393,7 @@ if [[ ${quickTest} -eq 1 ]]
 then
     coloredEcho "=> Using quickTest: TRUE" blue
     addTestFiles
+    deleteEmails
     runTests
 elif [[ ${testScrub} ]]
 then
@@ -394,12 +402,14 @@ then
     buildAndDeploy
     resetDB
     addTestFiles
+    deleteEmails
 else
     coloredEcho "=> Using quickTest: FALSE" blue
 
     buildAndDeploy
     resetDB
     addTestFiles
+    deleteEmails
     runTests
 fi
 
