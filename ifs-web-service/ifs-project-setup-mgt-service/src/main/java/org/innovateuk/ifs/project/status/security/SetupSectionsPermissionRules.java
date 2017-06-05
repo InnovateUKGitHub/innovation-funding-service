@@ -82,9 +82,9 @@ public class SetupSectionsPermissionRules {
     }
 
     @PermissionRule(value = "ACCESS_FINANCE_CHECKS_QUERIES_SECTION_ADD_QUERY", description = "A finance team user cannot add a query until a finance contact has been allocated")
-    public boolean internalCanAccessFinanceChecksAddQuery(Long projectId, Long organisationId, UserResource user) {
+    public boolean internalCanAccessFinanceChecksAddQuery(Long projectId, UserResource user) {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-        simpleFindFirst(projectUsers, pr -> pr.isFinanceContact() && organisationId.equals(pr.getOrganisation())).isPresent();
+        simpleFindFirst(projectUsers, pr -> pr.isFinanceContact()).isPresent();
         return doSectionCheck(projectId, user, SetupSectionInternalUser::canAccessFinanceChecksQueriesSection);
     }
 
