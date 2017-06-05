@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation       IFS-338 Update 'Funding level' calculated maximum values and validation
-Suite Setup         the guest user opens the browser
+Suite Setup         custom-suite setup
 Suite Teardown      the user closes the browser
 Force Tags          Applicant
 Resource          ../../../../resources/defaultResources.robot
@@ -158,6 +158,10 @@ Newly invited Public sector member allowed funding level
     [Tags]
 
 *** Keywords ***
+custom-suite setup
+    the guest user opens the browser
+    Delete the emails from both test mailboxes
+
 the user navigates to the competition overview
     the user navigates to the page    ${frontDoor}
 
@@ -200,7 +204,7 @@ the user fills in the inviting steps
 
 Newly invited collaborator can create account and sign in
     [Arguments]  ${Application_name}
-    the user reads his email and clicks the link   ${newUsersEmail}  Invitation to collaborate in ${Application_name}  You will be joining as part of the organisation  3
+    the user reads his email and clicks the link   liamCharity@innovateuk.com  Invitation to collaborate in ${Application_name}  You will be joining as part of the organisation  3
     the user clicks the button/link    jQuery=a:contains("Yes, accept invitation")
     the user should see the element    jquery=h1:contains("Choose your organisation type")
     the user completes the new account creation
