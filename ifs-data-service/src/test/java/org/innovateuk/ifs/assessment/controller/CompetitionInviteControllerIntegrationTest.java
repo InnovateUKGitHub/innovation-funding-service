@@ -140,7 +140,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                         .withUser()
                         .withHash("hash1", "hash2")
                         .withCompetition(competition)
-                        .withStatus(InviteStatus.CREATED)
+                        .withStatus(CREATED)
                         .withInnovationArea(innovationArea)
                         .build(2)
         );
@@ -710,17 +710,16 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
     @Test
     public void sendAllInvites() throws Exception {
-        competitionInviteRepository.save(
-                newCompetitionInvite()
-                        .with(id(null))
-                        .withName("tom poly")
-                        .withEmail("tom@poly.io")
-                        .withUser()
-                        .withHash("hash")
-                        .withCompetition(competition)
-                        .withStatus(InviteStatus.CREATED)
-                        .build()
-        );
+        List<CompetitionInvite> invitesToSend = newCompetitionInvite()
+                .with(id(null))
+                .withName("tom poly", "cari poly")
+                .withEmail("tom@poly.io", "cari@poly.io")
+                .withUser()
+                .withHash("hash1", "hash2")
+                .withCompetition(competition, competition)
+                .withStatus(CREATED, CREATED)
+                .build(2);
+        competitionInviteRepository.save(invitesToSend);
 
         AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
                 .withSubject("subject")
@@ -745,7 +744,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                         .withUser()
                         .withHash("hash")
                         .withCompetition(competition)
-                        .withStatus(InviteStatus.CREATED)
+                        .withStatus(CREATED)
                         .withInnovationArea(innovationAreaRepository.findOne(INNOVATION_AREA_ID)) // 'new invite'
                         .build()
         );
