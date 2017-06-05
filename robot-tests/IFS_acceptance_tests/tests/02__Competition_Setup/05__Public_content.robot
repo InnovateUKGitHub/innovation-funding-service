@@ -334,12 +334,13 @@ The user is able to make the competition public
     [Tags]  HappyPath
     [Setup]  the compadmin logs in
     Given the internal user navigates to public content  ${public_content_competition_name}
-    Then the user should see the element    link=Competition information and search
-    When the user clicks the button/link    link=Competition information and search
-    And the user clicks the button/link    link=Edit
-    Then the user selects the radio button    publishSetting  public
-    And the user clicks the button/link    jQuery=.button:contains("Publish and return")
-    Then the user should see the element    jQuery=.button:contains("Return to setup overview")
+    Then the user should see the element                 link=Competition information and search
+    When the user clicks the button/link                 link=Competition information and search
+    And the user clicks the button/link                  link=Edit
+    Then the user selects the radio button               publishSetting  public
+    When the user clicks the button/link                 jQuery=.button:contains("Publish and review")
+    And the user clicks the button/link                  jQuery=.button:contains("Return to public content")
+    Then the user should see the element                 jQuery=.button:contains("Return to setup overview")
     [Teardown]  the user logs out if they are logged in
 
 
