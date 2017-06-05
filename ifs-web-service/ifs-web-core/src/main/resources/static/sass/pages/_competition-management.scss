@@ -140,10 +140,10 @@
   border-bottom: 1px solid $border-colour;
 }
 
-
 .select-all {
   padding-top: 14px;
   padding-left: 20px;
+  padding-right: 0;
 
   .form-hint {
     display:inline-block;
