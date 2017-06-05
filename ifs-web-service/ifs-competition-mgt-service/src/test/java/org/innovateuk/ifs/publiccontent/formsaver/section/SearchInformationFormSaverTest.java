@@ -44,6 +44,7 @@ public class SearchInformationFormSaverTest {
         form.setProjectFundingRange(FUNDING_RANGE);
         form.setEligibilitySummary(ELIGIBILITY_SUMMARY);
         form.setShortDescription(SHORT_DESCRIPTION);
+        form.setPublishSetting("invite");
 
         PublicContentResource resource = newPublicContentResource().build();
 
@@ -52,6 +53,7 @@ public class SearchInformationFormSaverTest {
         assertThat(resource.getEligibilitySummary(), equalTo(ELIGIBILITY_SUMMARY));
         assertThat(resource.getProjectFundingRange(), equalTo(FUNDING_RANGE));
         assertThat(resource.getShortDescription(), equalTo(SHORT_DESCRIPTION));
+        assertThat(resource.getInviteOnly(), equalTo(Boolean.TRUE));
         KEYWORDS.forEach(keyword -> assertTrue(resource.getKeywords().contains(keyword)));
 
         verify(publicContentService).updateSection(resource, PublicContentSectionType.SEARCH);

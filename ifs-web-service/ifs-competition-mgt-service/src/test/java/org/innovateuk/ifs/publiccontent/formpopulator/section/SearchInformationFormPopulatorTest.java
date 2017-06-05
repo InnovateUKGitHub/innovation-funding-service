@@ -32,7 +32,8 @@ public class SearchInformationFormPopulatorTest {
                 .withProjectFundingRange(FUNDING_RANGE)
                 .withEligibilitySummary(ELIGIBILITY_SUMMARY)
                 .withKeywords(KEYWORDS)
-                .withShortDescription(SHORT_DESCRIPTION).build();
+                .withShortDescription(SHORT_DESCRIPTION).
+                withInviteOnly(Boolean.TRUE).build();
 
         SearchInformationForm form = target.populate(resource);
 
@@ -40,6 +41,6 @@ public class SearchInformationFormPopulatorTest {
         assertThat(form.getProjectFundingRange(), equalTo(FUNDING_RANGE));
         assertThat(form.getShortDescription(), equalTo(SHORT_DESCRIPTION));
         KEYWORDS.forEach(keyword -> assertThat(form.getKeywords(), containsString(keyword)));
-
+        assertThat(form.getPublishSetting(), equalTo("invite"));
     }
 }
