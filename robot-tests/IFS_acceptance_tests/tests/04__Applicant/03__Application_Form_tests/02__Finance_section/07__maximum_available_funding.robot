@@ -88,8 +88,8 @@ lead applicant invites a Charity member
     the user fills in the project costs
     the user clicks the button/link                            link=Your organisation
     the user enters text to a text field                    css=input[name$="month"]    12
-       and the user enters text to a text field                css=input[name$="year"]    2016
-       the user selects the radio button                       financePosition-organisationSize  ${SMALL_ORGANISATION_SIZE}
+    and the user enters text to a text field                css=input[name$="year"]    2016
+    the user selects the radio button                       financePosition-organisationSize  ${SMALL_ORGANISATION_SIZE}
        the user enters text to a text field                    jQuery=td:contains("Annual turnover") + td input   5600
        the user enters text to a text field                    jQuery=td:contains("Annual profit") + td input    3000
        the user enters text to a text field                    jQuery=td:contains("Annual export") + td input    4000
@@ -200,7 +200,7 @@ the user fills in the inviting steps
 
 Newly invited collaborator can create account and sign in
     [Arguments]  ${Application_name}
-    the user reads his email and clicks the link  ${newUsersEmail}  Invitation to collaborate in ${Application_name}  You will be joining as part of the organisation  3
+    the user reads his email and clicks the link   ${newUsersEmail}  Invitation to collaborate in ${Application_name}  You will be joining as part of the organisation  3
     the user clicks the button/link    jQuery=a:contains("Yes, accept invitation")
     the user should see the element    jquery=h1:contains("Choose your organisation type")
     the user completes the new account creation
