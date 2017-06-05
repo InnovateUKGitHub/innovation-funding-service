@@ -22,46 +22,16 @@ funding level available for lead business ResearchCategory: Fundamental Research
     and the user clicks the button/link                  link=Your finances
     then the user fills in the project costs
     the user fills the organisation details with Project growth table     ${SMALL_ORGANISATION_SIZE}
-    the user clicks the button/link                          link=Your funding
-    the user should see the text in the page                  Enter your funding level (maximum 45%).
-    the user edits the research category                    Feasibility studies
-#    the user clicks the button/link                      jQuery=a:contains("Your finances")
-#    the user clicks the button/link                           link=Application overview
-#    the user clicks the button/link                           link=Application details
-#   the user clicks the button/link                          jQuery=button:contains("Edit")
-#    the user clicks the button/link                          jQuery=button:contains("research category")
-#   the user clicks the button/link                          jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
-#   the user clicks the button/link                          jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
-#   the user clicks the button/link       jQuery=button:contains(Save)
-#   the user clicks the button/link                          jQuery=button:contains("Mark as complete")
-#   the user clicks the button/link                          link=Application overview
-#   and the user clicks the button/link                  link=Your finances
-    the user clicks the button/link                        link=Your organisation
-    the user clicks the button/link                        jQuery=button:contains("Edit")
-    the user selects the radio button                       financePosition-organisationSize  ${MEDIUM_ORGANISATION_SIZE}
-    the user clicks the button/link                         jQuery=button:contains("Mark as complete")
-    and the user clicks the button/link                  link=Your funding
-    the user should see the text in the page              Enter your funding level (maximum 60%).
-    the user edits the research category                    Industrial research
-#    the user clicks the button/link                      jQuery=a:contains("Your finances")
-#    the user clicks the button/link                           link=Application overview
-#    the user clicks the button/link                           link=Application details
-#    the user clicks the button/link                          jQuery=button:contains("Edit")
-#    the user clicks the button/link                          jQuery=button:contains("research category")
-#    the user clicks the button/link                          jQuery=label[for^="researchCategoryChoice"]:contains("Industrial research")
-#    the user clicks the button/link                          jQuery=label[for^="researchCategoryChoice"]:contains("Industrial research")
-#    the user clicks the button/link       jQuery=button:contains(Save)
-#    the user clicks the button/link                          jQuery=button:contains("Mark as complete")
-#    the user clicks the button/link                          link=Application overview
-#    and the user clicks the button/link                  link=Your finances
-    the user clicks the button/link                        link=Your organisation
-    the user clicks the button/link                        jQuery=button:contains("Edit")
-    the user selects the radio button                       financePosition-organisationSize  ${LARGE_ORGANISATION_SIZE}
-    the user clicks the button/link                         jQuery=button:contains("Mark as complete")
-     and the user clicks the button/link                  link=Your funding
+    the user clicks the button/link                      link=Your funding
+    the user should see the text in the page             Enter your funding level (maximum 45%).
+    the user edits the research category                 Feasibility studies
+    the user edits the organisation size                 ${MEDIUM_ORGANISATION_SIZE}
+    the user should see the text in the page             Enter your funding level (maximum 60%).
+    the user edits the research category                 Industrial research
+    the user edits the organisation size                 ${LARGE_ORGANISATION_SIZE}
     the user should see the text in the page              Enter your funding level (maximum 50%).
-     the user clicks the button/link                      jQuery=a:contains("Your finances")
-        the user clicks the button/link                           link=Application overview
+    the user clicks the button/link                      jQuery=a:contains("Your finances")
+    the user clicks the button/link                      link=Application overview
 
 lead applicant invites a Charity member
     [Documentation]    IFS-338
@@ -74,11 +44,7 @@ lead applicant invites a Charity member
     and the user clicks the button/link                           link=Your funding
     the user should see the text in the page                      Enter your funding level (maximum 100%).
     the user clicks the button/link                               jQuery=a:contains("Your finances")
-    the user clicks the button/link                              link=Your organisation
-    the user clicks the button/link                              jQuery=button:contains("Edit")
-    the user selects the radio button                            financePosition-organisationSize  ${LARGE_ORGANISATION_SIZE}
-    the user clicks the button/link                              jQuery=button:contains("Mark as complete")
-    and the user clicks the button/link                          link=Your funding
+    the user edits the organisation size                          ${LARGE_ORGANISATION_SIZE}
     the user should see the text in the page                     Enter your funding level (maximum 100%).
 
 Invite existing academic collaborator
@@ -110,39 +76,19 @@ funding level available for RTO lead user ResearchCategory: Fundamental Research
     When the user clicks the button/link                 link=Untitled application (start here)
     and the user clicks the button/link                  link=Begin application
     the applicant completes the application details for RTO lead appln   Application details  Experimental development
-    and the user clicks the button/link                 link=Your finances
+    and the user clicks the button/link                  link=Your finances
     then the user fills in the project costs
     the user fills the organisation details without Project growth table    ${SMALL_ORGANISATION_SIZE}
     the user clicks the button/link                      link=Your funding
-    the user should see the text in the page          Enter your funding level (maximum 100%).
-    the user edits the research category                Feasibility studies
-
-        the user clicks the button/link                        link=Your organisation
-        the user clicks the button/link                        jQuery=button:contains("Edit")
-        the user selects the radio button                       financePosition-organisationSize  ${MEDIUM_ORGANISATION_SIZE}
-        the user clicks the button/link                         jQuery=button:contains("Mark as complete")
-        and the user clicks the button/link                  link=Your funding
-        the user should see the text in the page              Enter your funding level (maximum 100%).
-      the user edits the research category                    Industrial research
-#        the user clicks the button/link                      jQuery=a:contains("Your finances")
-#        the user clicks the button/link                           link=Application overview
-#        the user clicks the button/link                           link=Application details
-#        the user clicks the button/link                          jQuery=button:contains("Edit")
-#        the user clicks the button/link                          jQuery=button:contains("research category")
-#        the user clicks the button/link                          jQuery=label[for^="researchCategoryChoice"]:contains("Industrial research")
-#        the user clicks the button/link                          jQuery=label[for^="researchCategoryChoice"]:contains("Industrial research")
-#        the user clicks the button/link       jQuery=button:contains(Save)
-#        the user clicks the button/link                          jQuery=button:contains("Mark as complete")
-#        the user clicks the button/link                          link=Application overview
-#        and the user clicks the button/link                  link=Your finances
-        the user clicks the button/link                        link=Your organisation
-        the user clicks the button/link                        jQuery=button:contains("Edit")
-        the user selects the radio button                       financePosition-organisationSize  ${LARGE_ORGANISATION_SIZE}
-        the user clicks the button/link                         jQuery=button:contains("Mark as complete")
-         and the user clicks the button/link                  link=Your funding
-        the user should see the text in the page              Enter your funding level (maximum 100%).
-         the user clicks the button/link                      jQuery=a:contains("Your finances")
-            the user clicks the button/link                           link=Application overview
+    the user should see the text in the page             Enter your funding level (maximum 100%).
+    the user edits the research category                 Feasibility studies
+    the user edits the organisation size                 ${MEDIUM_ORGANISATION_SIZE}
+    the user should see the text in the page             Enter your funding level (maximum 100%).
+    the user edits the research category                 Industrial research
+    the user edits the organisation size                 ${LARGE_ORGANISATION_SIZE}
+    the user should see the text in the page             Enter your funding level (maximum 100%).
+    the user clicks the button/link                      jQuery=a:contains("Your finances")
+    the user clicks the button/link                      link=Application overview
 
 lead RTO applicant invites a Charity member
     [Documentation]    IFS-338
@@ -153,15 +99,11 @@ lead RTO applicant invites a Charity member
    #the user fills in the project costs
     the user fills the organisation details without Project growth table    ${SMALL_ORGANISATION_SIZE}
     and the user clicks the button/link                       link=Your funding
-    the user should see the text in the page                  Enter your funding level (maximum 100%).
-    the user clicks the button/link                            jQuery=a:contains("Your finances")
-    the user clicks the button/link                            link=Your organisation
-    the user clicks the button/link                            jQuery=button:contains("Edit")
-    the user selects the radio button                          financePosition-organisationSize  ${LARGE_ORGANISATION_SIZE}
-    the user clicks the button/link                            jQuery=button:contains("Mark as complete")
-    and the user clicks the button/link                        link=Your funding
     the user should see the text in the page                   Enter your funding level (maximum 100%).
-#    logout as user
+    the user clicks the button/link                            jQuery=a:contains("Your finances")
+    the user edits the organisation size                       ${LARGE_ORGANISATION_SIZE}
+    the user should see the text in the page                   Enter your funding level (maximum 100%).
+    logout as user
 
 *** Keywords ***
 the user navigates to the competition overview
@@ -279,9 +221,9 @@ the user fills the organisation details without Project growth table
 
 the user edits the research category
     [Arguments]   ${research_category}
-    the user clicks the button/link                           jQuery=a:contains("Your finances")
-    the user clicks the button/link                           link=Application overview
-    the user clicks the button/link                           link=Application details
+    the user clicks the button/link                          jQuery=a:contains("Your finances")
+    the user clicks the button/link                          link=Application overview
+    the user clicks the button/link                          link=Application details
     the user clicks the button/link                          jQuery=button:contains("Edit")
     the user clicks the button/link                          jQuery=button:contains("research category")
     the user clicks the button/link                          jQuery=label[for^="researchCategoryChoice"]:contains("${research_category}")
@@ -293,10 +235,10 @@ the user edits the research category
 
 the user edits the organisation size
     [Arguments]  ${org_size}
-    the user clicks the button/link                        link=Your organisation
-    the user clicks the button/link                        jQuery=button:contains("Edit")
+    the user clicks the button/link                         link=Your organisation
+    the user clicks the button/link                         jQuery=button:contains("Edit")
     the user selects the radio button                       financePosition-organisationSize  ${org_size}
     the user clicks the button/link                         jQuery=button:contains("Mark as complete")
-    and the user clicks the button/link                     link=Your funding
+    the user clicks the button/link                         link=Your funding
 
 
