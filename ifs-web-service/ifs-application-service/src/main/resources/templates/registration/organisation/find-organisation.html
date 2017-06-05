@@ -30,7 +30,7 @@
         </div>
     </th:block>
     <form th:action="@{/organisation/create/find-organisation}" th:object="${organisationForm}" method="POST">
-        <div class="form-group" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'error'">
+        <div class="form-group" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'form-group-error'">
             <label class="form-label" th:for="*{organisationSearchName}">
                 <span class="form-label-bold" th:text="${searchLabel}">Find your ? organisation</span>
                 <span class="form-hint" th:text="${searchHint}">Enter your organisation name</span>
@@ -38,7 +38,7 @@
                       <span class="error-message"  th:each="err : ${#fields.errors('*{organisationSearchName}')}" th:text="${err}" />
                 </th:block>
             </label>
-            <input class="form-control" th:field="*{organisationSearchName}" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'field-error'" type="text" value="" />
+            <input class="form-control" th:field="*{organisationSearchName}" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'form-control-error'" type="text" value="" />
             <button type="submit" id="org-search" name="search-organisation" class="button">Search</button>
         </div>
         <th:block th:if="${organisationForm.organisationSearching and organisationForm.organisationSearchResults.size() > 0}" th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
@@ -59,10 +59,10 @@
                        th:text="${organisation.name}">
                     </a>
                 </h3>
-                <span th:if="${organisationForm.notResearch}" th:remove="tag">
+                <th:block th:if="${organisationForm.notResearch}">
                     <p class="meta crumbtrail" th:text="${organisation.extraAttributes.description}"></p>
                     <p th:text="${organisation.location}"></p>
-                </span>
+                </th:block>
             </li>
             <li th:unless="${organisationForm.organisationSearchResults.size()}">
                 <p>No results found.<br/>Please check your search criteria and try again.</p>

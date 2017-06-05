@@ -8,11 +8,15 @@ import org.innovateuk.ifs.form.mapper.FormInputMapper;
 import org.innovateuk.ifs.form.mapper.FormInputResponseMapper;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
-import org.innovateuk.ifs.form.resource.*;
+import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.FormInputResponseCommand;
+import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -20,7 +24,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -91,6 +94,7 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
     }
 
     @Override
+    @Transactional
     public ServiceResult<FormInputResponse> saveQuestionResponse(FormInputResponseCommand formInputResponseCommand) {
         long applicationId = formInputResponseCommand.getApplicationId();
         long formInputId = formInputResponseCommand.getFormInputId();
@@ -113,11 +117,13 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
     }
 
     @Override
+    @Transactional
     public ServiceResult<FormInputResource> save(FormInputResource formInputResource) {
         return serviceSuccess(formInputMapper.mapToResource(formInputRepository.save(formInputMapper.mapToDomain(formInputResource))));
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> delete(Long id) {
         formInputRepository.delete(formInputMapper.mapIdToDomain(id));
         return serviceSuccess();

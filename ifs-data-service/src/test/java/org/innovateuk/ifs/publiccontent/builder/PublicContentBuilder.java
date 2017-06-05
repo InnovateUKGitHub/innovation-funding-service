@@ -69,6 +69,10 @@ public class PublicContentBuilder extends BaseBuilder<PublicContent, PublicConte
         return with(publicContent -> setField("keywords", keywords, publicContent));
     }
 
+    public PublicContentBuilder withInviteOnly(Boolean inviteOnly) {
+        return with(publicContent -> setField("inviteOnly", inviteOnly, publicContent));
+    }
+
     @Override
     protected PublicContentBuilder createNewBuilderWithActions(List<BiConsumer<Integer, PublicContent>> actions) {
         return new PublicContentBuilder(actions);

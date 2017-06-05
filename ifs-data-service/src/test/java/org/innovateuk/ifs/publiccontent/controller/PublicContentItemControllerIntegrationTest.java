@@ -7,9 +7,12 @@ import org.innovateuk.ifs.category.repository.CategoryRepository;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPageResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competition.repository.MilestoneRepository;
+import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.publiccontent.domain.Keyword;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 import org.innovateuk.ifs.publiccontent.repository.KeywordRepository;
@@ -22,15 +25,21 @@ import org.springframework.test.annotation.Rollback;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.publiccontent.builder.KeywordBuilder.newKeyword;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 
 public class PublicContentItemControllerIntegrationTest extends BaseControllerIntegrationTest<PublicContentItemController> {
     private static final Long COMPETITION_ID = 1L;
+    private static final String PRIVATE_OR_PUBLIC_COMP_NAME = "Private Competition";
 
     @Autowired
     private CompetitionRepository competitionRepository;
@@ -47,6 +56,9 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     @Autowired
     private InnovationAreaRepository innovationAreaRepository;
 
+    @Autowired
+    private MilestoneRepository milestoneRepository;
+
     @Override
     @Autowired
     protected void setControllerUnderTest(PublicContentItemController controller) {
@@ -57,7 +69,9 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     @Before
     public void setLoggedInUserOnThread() {
         loginSystemRegistrationUser();
-        setupKeywords();
+
+        setupCompetitionWithKeywords();
+        createPrivateCompetition();
     }
 
 
@@ -185,10 +199,117 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         assertEquals(COMPETITION_ID, resultObject.getPublicContentResource().getCompetitionId());
     }
 
-    private void setupKeywords() {
+    @Test
+    @Rollback
+    public void findFilteredItems_privateCompetitionsWontBeFoundByKeyword() throws Exception {
+        RestResult<PublicContentItemPageResource> result = controller.findFilteredItems(Optional.empty(), Optional.of("keywordoninviteonly"), Optional.of(0), 20);
+
+        assertTrue(result.isSuccess());
+        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccessObject();
+
+        assertFalse(privateOrgPublicCompetitionIsInPage().test(publicContentItemResourcesFive));
+    }
+
+    @Test
+    @Rollback
+    public void findFilteredItems_publicCompetitionsWillBeFoundByKeyword() throws Exception {
+        setPrivateCompetitionToPublic();
+
+        RestResult<PublicContentItemPageResource> result = controller.findFilteredItems(Optional.empty(), Optional.of("keywordoninviteonly"), Optional.of(0), 20);
+
+
+        assertTrue(result.isSuccess());
+        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccessObject();
+
+        assertTrue(privateOrgPublicCompetitionIsInPage().test(publicContentItemResourcesFive));
+    }
+
+    @Test
+    @Rollback
+    public void findFilteredItems_noPrivateCompetitionsWillBeFound() throws Exception {
+        setPublicCompetitionToPrivate();
+
+        RestResult<PublicContentItemPageResource> result = controller.findFilteredItems(Optional.empty(), Optional.empty(), Optional.of(0), 20);
+
+        assertTrue(result.isSuccess());
+        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccessObject();
+
+        assertFalse(privateOrgPublicCompetitionIsInPage().test(publicContentItemResourcesFive));
+    }
+
+    @Test
+    @Rollback
+    public void findFilteredItems_allPublicCompetitionsWillBeFound() throws Exception {
+        setPrivateCompetitionToPublic();
+
+        RestResult<PublicContentItemPageResource> result = controller.findFilteredItems(Optional.empty(), Optional.empty(), Optional.of(0), 20);
+
+
+        assertTrue(result.isSuccess());
+        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccessObject();
+
+        assertTrue(privateOrgPublicCompetitionIsInPage().test(publicContentItemResourcesFive));
+    }
+
+    @Test
+    @Rollback
+    public void findFilteredItems_noPrivateCompetitionsWillBeFoundByInnovationArea() throws Exception {
+        setPublicCompetitionToPrivate();
+
+        RestResult<PublicContentItemPageResource> result = controller.findFilteredItems(Optional.of(6L), Optional.empty(), Optional.of(0), 20);
+
+        assertTrue(result.isSuccess());
+        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccessObject();
+
+        assertFalse(privateOrgPublicCompetitionIsInPage().test(publicContentItemResourcesFive));
+    }
+
+    @Test
+    @Rollback
+    public void findFilteredItems_allPublicCompetitionsWillBeFoundByInnovationArea() throws Exception {
+        setPrivateCompetitionToPublic();
+
+        RestResult<PublicContentItemPageResource> result = controller.findFilteredItems(Optional.of(6L), Optional.empty(), Optional.of(0), 20);
+
+
+        assertTrue(result.isSuccess());
+        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccessObject();
+
+        assertTrue(privateOrgPublicCompetitionIsInPage().test(publicContentItemResourcesFive));
+    }
+
+    @Test
+    @Rollback
+    public void findFilteredItems_noPrivateCompetitionsWillBeFoundByInnovationAreaAndKeyword() throws Exception {
+        setPublicCompetitionToPrivate();
+
+        RestResult<PublicContentItemPageResource> result = controller.findFilteredItems(Optional.of(6L), Optional.of("keywordoninviteonly"), Optional.of(0), 20);
+
+        assertTrue(result.isSuccess());
+        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccessObject();
+
+        assertFalse(privateOrgPublicCompetitionIsInPage().test(publicContentItemResourcesFive));
+    }
+
+    @Test
+    @Rollback
+    public void findFilteredItems_allPublicCompetitionsWillBeFoundByInnovationAreaAndKeyword() throws Exception {
+        setPrivateCompetitionToPublic();
+
+        RestResult<PublicContentItemPageResource> result = controller.findFilteredItems(Optional.of(6L), Optional.of("keywordoninviteonly"), Optional.of(0), 20);
+
+
+        assertTrue(result.isSuccess());
+        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccessObject();
+
+        assertTrue(privateOrgPublicCompetitionIsInPage().test(publicContentItemResourcesFive));
+    }
+
+    private void setupCompetitionWithKeywords() {
         PublicContent publicContentResult = publicContentRepository.save(newPublicContent()
                 .withCompetitionId(1L)
                 .withPublishDate(ZonedDateTime.now().minusDays(1))
+                .withInviteOnly(false)
                 .build());
 
         Keyword keywordOne = newKeyword().withKeyword("keyword").withPublicContent(publicContentResult).build();
@@ -202,5 +323,56 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         competition.setInnovationSector(innovationArea.getSector());
 
         competitionRepository.save(competition);
+    }
+
+    private void createPrivateCompetition() {
+        InnovationArea innovationArea = innovationAreaRepository.findOne(6L);
+
+        Competition privateCompetition = competitionRepository.save(newCompetition().withName(PRIVATE_OR_PUBLIC_COMP_NAME).build());
+        privateCompetition.setInnovationSector(innovationArea.getSector());
+
+        ZonedDateTime yesterday = ZonedDateTime.now().minusDays(1);
+        ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
+
+        Milestone closedMilestone = newMilestone()
+                .withCompetition(privateCompetition)
+                .withType(MilestoneType.SUBMISSION_DATE)
+                .withDate(tomorrow).build();
+
+        milestoneRepository.save(closedMilestone);
+
+
+        PublicContent publicContentResult = publicContentRepository.save(newPublicContent()
+                .withCompetitionId(privateCompetition.getId())
+                .withPublishDate(yesterday)
+                .withInviteOnly(true)
+                .build());
+
+        Keyword keywordOne = newKeyword().withKeyword("keywordoninviteonly").withPublicContent(publicContentResult).build();
+        keywordRepository.save(asList(keywordOne));
+    }
+
+    private void setPrivateCompetitionToPublic(){
+        Competition privateCompetition = competitionRepository.findByName(PRIVATE_OR_PUBLIC_COMP_NAME).get(0);
+        PublicContent publicContent = publicContentRepository.findByCompetitionId(privateCompetition.getId());
+
+        publicContent.setInviteOnly(false);
+
+        publicContentRepository.save(publicContent);
+    }
+
+    private void setPublicCompetitionToPrivate(){
+        Competition privateCompetition = competitionRepository.findByName(PRIVATE_OR_PUBLIC_COMP_NAME).get(0);
+        PublicContent publicContent = publicContentRepository.findByCompetitionId(privateCompetition.getId());
+
+        publicContent.setInviteOnly(true);
+
+        publicContentRepository.save(publicContent);
+    }
+
+    private static Predicate<PublicContentItemPageResource> privateOrgPublicCompetitionIsInPage() {
+        return publicContentItemResourcesFive -> publicContentItemResourcesFive
+                .getContent().stream().anyMatch(publicContent ->
+                        publicContent.getCompetitionTitle().equals(PRIVATE_OR_PUBLIC_COMP_NAME));
     }
 }

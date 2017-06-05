@@ -164,4 +164,15 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .content(objectMapper.writeValueAsString(resource)))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void showApplicationTeam() throws Exception {
+        long applicationId = 1L;
+        long userId = 2L;
+        when(applicationServiceMock.showApplicationTeam(applicationId, userId)).thenReturn(serviceSuccess(Boolean.TRUE));
+
+        mockMvc.perform(get("/application/showApplicationTeam/{applicationId}/{userId}", applicationId, userId))
+                .andExpect(status().isOk())
+                .andExpect(content().string(objectMapper.writeValueAsString(Boolean.TRUE)));
+    }
 }

@@ -24,7 +24,7 @@ Log-out
 Invalid Login
     [Tags]
     Given the user is not logged-in
-    When the guest user enters the log in credentials    steve.smith@empire.com    Passw0rd2
+    When the guest user enters the log in credentials    ${lead_applicant}   Passw0rd2
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the guest user should get an error message
 

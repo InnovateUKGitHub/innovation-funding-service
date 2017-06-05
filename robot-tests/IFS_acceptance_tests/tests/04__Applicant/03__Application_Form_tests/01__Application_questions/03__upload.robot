@@ -47,7 +47,7 @@ Non pdf uploads not allowed
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
     When the user uploads the file      name=formInput[1062]    ${text_file}
-    Then the user should get an error page    ${wrong_filetype_validation_error}
+    The user should see an error    ${wrong_filetype_validation_error}
 
 
 Lead applicant can upload a pdf file

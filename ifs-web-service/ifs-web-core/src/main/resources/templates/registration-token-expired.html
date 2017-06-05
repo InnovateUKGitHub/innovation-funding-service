@@ -19,7 +19,7 @@
 
     <div class="boxed">
 		<span>
-            <p th:text="${messageForUser}" th:remove="tag">An unexpected error occurred.</p>
+            <th:block th:text="${messageForUser}">An unexpected error occurred.</th:block>
             You can choose to <a th:href="@{/registration/resend-email-verification}">send a new verification link</a> by e-mail or go back to the <a href="https://www.gov.uk/government/organisations/innovate-uk">Innovate UK homepage</a>.
         </span>
     </div>

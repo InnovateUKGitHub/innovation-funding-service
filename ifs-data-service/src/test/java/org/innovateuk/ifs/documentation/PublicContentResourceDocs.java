@@ -7,11 +7,10 @@ import org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.time.ZonedDateTime;
-import java.time.ZonedDateTime;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.publiccontent.builder.ContentGroupResourceBuilder.newContentGroupResource;
 import static org.innovateuk.ifs.publiccontent.builder.ContentEventResourceBuilder.newContentEventResource;
+import static org.innovateuk.ifs.publiccontent.builder.ContentGroupResourceBuilder.newContentGroupResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentSectionResourceBuilder.newPublicContentSectionResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -23,6 +22,7 @@ public class PublicContentResourceDocs {
             fieldWithPath("eligibilitySummary").description("The summary of the eligibility"),
             fieldWithPath("fundingType").description("The type of competition funding"),
             fieldWithPath("keywords[]").description("List of keywords that will match the search on"),
+            fieldWithPath("inviteOnly").description("Indicates if the competition will public or only by invite"),
             fieldWithPath("projectFundingRange").description("The range of project funding"),
             fieldWithPath("projectSize").description("The size of the project"),
             fieldWithPath("publishDate").description("The date the public content was last published on"),
@@ -52,6 +52,7 @@ public class PublicContentResourceDocs {
             .withPublishDate(ZonedDateTime.now())
             .withShortDescription("short")
             .withSummary("sum")
+            .withInviteOnly(Boolean.FALSE)
             .withContentSections(
                     newPublicContentSectionResource()
                             .withStatus(PublicContentStatus.IN_PROGRESS)

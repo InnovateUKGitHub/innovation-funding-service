@@ -4,9 +4,9 @@ Resource          ../defaultResources.robot
 *** Keywords ***
 the user selects the checkbox
     [Arguments]    ${checkbox}
-    ${status}    ${value}=    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label[not(contains(@class,"selected"))]
+    ${status}    ${value}=    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible    css=[id="${checkbox}"]:not(:checked) ~ label, [name="${checkbox}"]:not(:checked) ~ label
     Execute Javascript    jQuery('form label a').contents().unwrap();    # we cannot click the checkbox itself as it is hidden, however if we click the label it will click the anchor in the label, therefore I remove the <a> before submit, but keep the text
-    Run Keyword If    '${status}' == 'PASS'    Click Element    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label
+    Run Keyword If    '${status}' == 'PASS'    Click Element    css=[id="${checkbox}"] ~ label, [name="${checkbox}"] ~ label
     # Error checking
     the user should not see an error in the page
     # Header checking (INFUND-1892)
@@ -15,9 +15,9 @@ the user selects the checkbox
 
 the user unselects the checkbox
     [Arguments]    ${checkbox}
-    ${status}    ${value}=    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label[contains(@class,"selected")]
+    ${status}    ${value}=    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible    css=[id="${checkbox}"]:checked ~ label,[name="${checkbox}"]:checked ~ label
     Execute Javascript    jQuery('form label a').contents().unwrap();    # we cannot click the checkbox itself as it is hidden, however if we click the label it will click the anchor in the label, therefore I remove the <a> before submit, but keep the text
-    Run Keyword If    '${status}' == 'PASS'    Click Element    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label
+    Run Keyword If    '${status}' == 'PASS'    Click Element    css=[id="${checkbox}"] ~ label,[name="${checkbox}"] ~ label
     # Error checking
     the user should not see an error in the page
     # Header checking (INFUND-1892)
@@ -26,7 +26,7 @@ the user unselects the checkbox
 
 the user should see the checkbox
     [Arguments]    ${checkbox}
-    Wait Until Element Is Visible Without Screenshots    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label[contains(@class,"selected")]
+    Wait Until Element Is Visible Without Screenshots    css=[id="${checkbox}"]:checked ~ label, [name="${checkbox}"]:checked ~ label
     # Error checking
     the user should not see an error in the page
     # Header checking (INFUND-1892)
@@ -36,7 +36,7 @@ the user should see the checkbox
 
 the user should see that the checkbox is disabled
     [Arguments]    ${checkbox}
-    Wait Until Element Is Visible Without Screenshots    xpath=//*[@id="${checkbox}" or @name="${checkbox}" and @disabled='disabled']/ancestor::label[contains(@class,"selected")]
+    Wait Until Element Is Visible Without Screenshots    css=[id="${checkbox}"][disabled="disabled"]:checked ~ label, [name="${checkbox}"][disabled="disabled"]:checked ~ label
     # Error checking
     the user should not see an error in the page
     # Header checking (INFUND-1892)
@@ -45,7 +45,7 @@ the user should see that the checkbox is disabled
 
 the user should see that the checkbox is selected
     [Arguments]    ${checkbox}
-     Wait Until Element Is Visible Without Screenshots    xpath=//*[@id="${checkbox}" or @name="${checkbox}" and @checked='checked']/ancestor::label[contains(@class,"selected")]
+     Wait Until Element Is Visible Without Screenshots    css=[id="${checkbox}"][checked="checked"]:checked ~ label, [name="${checkbox}"][checked="checked"]:checked ~ label
      # Error checking
      the user should not see an error in the page
      # Header checking (INFUND-1892)
@@ -55,7 +55,7 @@ the user should see that the checkbox is selected
 
 the user should not see the checkbox
     [Arguments]    ${checkbox}
-    Wait Until Element Is Not Visible Without Screenshots    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label[contains(@class,"selected")]
+    Wait Until Element Is Not Visible Without Screenshots    css=[id="${checkbox}"]:checked ~ label, [name="${checkbox}"]:checked ~ label
     # Error checking
     the user should not see an error in the page
     # Header checking (INFUND-1892)
@@ -65,8 +65,8 @@ the user should not see the checkbox
 
 the user selects the radio button
     [Arguments]    ${RADIO_BUTTON}    ${RADIO_BUTTON_OPTION}
-    the user should see the element    xpath=//*[starts-with(@name,"${RADIO_BUTTON}")][@value="${RADIO_BUTTON_OPTION}" or @id="${RADIO_BUTTON_OPTION}"]/ancestor::label
-    Click Element    xpath=//*[starts-with(@name,"${RADIO_BUTTON}")][@value="${RADIO_BUTTON_OPTION}" or @id="${RADIO_BUTTON_OPTION}"]/ancestor::label
+    the user should see the element    css=[name^="${RADIO_BUTTON}"][value="${RADIO_BUTTON_OPTION}"] ~ label, [id="${RADIO_BUTTON_OPTION}"] ~ label
+    Click Element     css=[name^="${RADIO_BUTTON}"][value="${RADIO_BUTTON_OPTION}"] ~ label, [id="${RADIO_BUTTON_OPTION}"] ~ label
     # Error checking
     the user should not see an error in the page
     # Header checking (INFUND-1892)
@@ -85,7 +85,7 @@ the user moves focus to the element
 
 the user should see the radio button in the page
     [Arguments]    ${RADIO_BUTTON}
-    the user should see the element    xpath=//*[starts-with(@name,"${RADIO_BUTTON}")]/ancestor::label
+    the user should see the element    css=[name^="${RADIO_BUTTON}"] ~ label
     # Error checking
     the user should not see an error in the page
     # Header checking (INFUND-1892)
@@ -95,7 +95,7 @@ the user should see the radio button in the page
 
 the user sees that the radio button is selected
     [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
-    Wait Until Element Is Visible Without Screenshots    xpath=//*[@name="${RADIO_BUTTON}"][@value="${SELECTION}" or @id="${SELECTION}"]/ancestor::label[contains(@class,"selected")]
+    Wait Until Element Is Visible Without Screenshots    css=[name="${RADIO_BUTTON}"][value="${SELECTION}"]:checked ~ label, [id="${SELECTION}"]:checked ~ label
     #[contains(@class,"selected")]
     # Error checking
     the user should not see an error in the page
@@ -105,7 +105,7 @@ the user sees that the radio button is selected
 
 the user sees that the radio button is not selected
     [Arguments]    ${RADIO_BUTTON}
-    Wait Until Element Is Visible Without Screenshots    xpath=//*[@name="${RADIO_BUTTON}"]/ancestor::label[not(contains(@class,"selected"))]
+    Wait Until Element Is Visible Without Screenshots    css=[name="${RADIO_BUTTON}"]:not(:checked) ~ label
     # Error checking
     the user should not see an error in the page
     # Header checking (INFUND-1892)
@@ -238,4 +238,3 @@ The user enters multiple strings into a text field
     ${concatenated_string} =    repeat string    ${string}    ${multiplicity}
     Wait Until Element Is Visible Without Screenshots   ${field}
     Wait Until Keyword Succeeds Without Screenshots    30s    200ms    Input Text    ${field}    ${concatenated_string}
-
