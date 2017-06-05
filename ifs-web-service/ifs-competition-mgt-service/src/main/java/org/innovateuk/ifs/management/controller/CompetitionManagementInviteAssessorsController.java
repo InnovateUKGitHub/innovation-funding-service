@@ -226,8 +226,17 @@ public class CompetitionManagementInviteAssessorsController {
                                              @PathVariable("competitionId") long competitionId,
                                              @RequestParam(name = "remove") String email,
                                              @RequestParam(defaultValue = "0") int page,
-                                             @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
-        deleteInvite(email, competitionId);
+                                             @SuppressWarnings("unused") @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
+        deleteInvite(email, competitionId).getSuccessObjectOrThrowException();
+        return redirectToInvite(competitionId, page);
+    }
+
+    @PostMapping(value = "/invite", params = {"removeAll"})
+    public String removeAllInvitesFromInviteView(Model model,
+                                                 @PathVariable("competitionId") long competitionId,
+                                                 @RequestParam(defaultValue = "0") int page,
+                                                 @SuppressWarnings("unused") @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
+        deleteAllInvites(competitionId).getSuccessObjectOrThrowException();
         return redirectToInvite(competitionId, page);
     }
 
@@ -257,13 +266,13 @@ public class CompetitionManagementInviteAssessorsController {
     }
 
     @PostMapping(value = "/invite", params = {"inviteNewUsers"})
-    public String inviteNewsUsersFromInviteView(Model model,
-                                                @PathVariable("competitionId") long competitionId,
-                                                @RequestParam(defaultValue = "0") int page,
-                                                @RequestParam MultiValueMap<String, String> queryParams,
-                                                @Valid @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
-                                                @SuppressWarnings("unused") BindingResult bindingResult,
-                                                ValidationHandler validationHandler) {
+    public String inviteNewUsersFromInviteView(Model model,
+                                               @PathVariable("competitionId") long competitionId,
+                                               @RequestParam(defaultValue = "0") int page,
+                                               @RequestParam MultiValueMap<String, String> queryParams,
+                                               @Valid @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
+                                               @SuppressWarnings("unused") BindingResult bindingResult,
+                                               ValidationHandler validationHandler) {
         form.setVisible(true);
 
         return validationHandler.failNowOrSucceedWith(
@@ -312,6 +321,10 @@ public class CompetitionManagementInviteAssessorsController {
 
     private ServiceResult<Void> deleteInvite(String email, long competitionId) {
         return competitionInviteRestService.deleteInvite(email, competitionId).toServiceResult();
+    }
+
+    private ServiceResult<Void> deleteAllInvites(long competitionId) {
+        return competitionInviteRestService.deleteAllInvites(competitionId).toServiceResult();
     }
 
     private NewUserStagedInviteListResource newInviteFormToResource(InviteNewAssessorsForm form, long competitionId) {

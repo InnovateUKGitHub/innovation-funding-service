@@ -21,8 +21,9 @@ Invite a new Assessor to assess a competition
     And the user selects the option from the drop-down menu    Emerging and enabling    css=.js-progressive-group-select
     And the user selects the option from the drop-down menu    Emerging technology    id=grouped-innovation-area
     And the user clicks the button/link    jQuery=.button:contains("Add assessors to list")
-    When the user clicks the button/link    jQuery=tr:nth-child(1) .button:contains(Invite individual)
-    And the user clicks the button/link    jQuery=.button:contains(Send invite)
+    When the user clicks the button/link    jQuery=a:contains("Review and send invites")
+    And the user enters text to a text field    id=message    This is custom text
+    And the user clicks the button/link    jQuery=.button:contains("Send invite")
     And The user should see the element    jQuery=span:contains("Add a non-registered assessor to your list")
     [Teardown]    The user closes the browser
 
@@ -30,7 +31,7 @@ Invited User gets an email to assess the competition
     [Documentation]    INFUND-8092
     [Tags]
     [Setup]    The guest user opens the browser
-    User reads the email and clicks the link to accept the assessment    ${Assessor_e2e["email"]}    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'    Assessment period:
+    User reads the email and clicks the link to accept the assessment    ${Assessor_e2e["email"]}  Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'  This is custom text
     [Teardown]    Delete the emails from both test mailboxes
 
 Resend the invite to the assessor again

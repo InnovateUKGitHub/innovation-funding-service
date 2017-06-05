@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.transactional;
 
-import org.innovateuk.ifs.assessment.mapper.AssessorInviteToSendMapper;
 import org.innovateuk.ifs.assessment.mapper.CompetitionInviteMapper;
 import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.category.domain.InnovationArea;
@@ -47,6 +46,7 @@ import java.util.*;
 
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
+import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.lowerCase;
@@ -75,6 +75,8 @@ import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
 public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     private static final String WEB_CONTEXT = "/assessment";
+    private static final DateTimeFormatter inviteFormatter = ofPattern("d MMMM yyyy");
+    private static final DateTimeFormatter detailsFormatter = ofPattern("dd MMM yyyy");
 
     @Autowired
     private CompetitionInviteRepository competitionInviteRepository;
@@ -96,9 +98,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Autowired
     private InnovationAreaMapper innovationAreaMapper;
-
-    @Autowired
-    private AssessorInviteToSendMapper toSendMapper;
 
     @Autowired
     private ParticipantStatusMapper participantStatusMapper;
@@ -128,45 +127,60 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     private String webBaseUrl;
 
     enum Notifications {
-        INVITE_ASSESSOR
+        INVITE_ASSESSOR,
+        INVITE_ASSESSOR_GROUP
     }
 
-    // TODO remove as part of IFS-36
     @Override
-    public ServiceResult<AssessorInviteToSendResource> getCreatedInviteToSend(long inviteId) {
-        return getById(inviteId).andOnSuccess(invite -> {
-            if (invite.getStatus() != CREATED) {
-                return ServiceResult.serviceFailure(new Error(COMPETITION_INVITE_ALREADY_SENT, invite.getTarget().getName()));
-            }
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
-            NotificationTarget notificationTarget = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
+    public ServiceResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId) {
+        return getCompetition(competitionId).andOnSuccess(competition -> {
+            List<CompetitionInvite> invites = competitionInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED);
 
-            AssessorInviteToSendResource resource = toSendMapper.mapToResource(invite);
-            resource.setContent(getInviteContent(notificationTarget, asMap("name", invite.getName(),
-                    "competitionName", invite.getTarget().getName(),
-                    "acceptsDate", invite.getTarget().getAssessorAcceptsDate().format(formatter),
-                    "deadlineDate", invite.getTarget().getAssessorDeadlineDate().format(formatter),
-                    "inviteUrl", format("%s/invite/competition/%s", webBaseUrl + WEB_CONTEXT, invite.getHash()))));
+            List<String> recipients = simpleMap(invites, CompetitionInvite::getName);
+            recipients.sort(String::compareTo);
 
-            return serviceSuccess(resource);
+            return serviceSuccess(new AssessorInvitesToSendResource(
+                    recipients,
+                    competition.getId(),
+                    competition.getName(),
+                    getInvitePreviewContent(competition)
+            ));
         });
     }
 
     @Override
-    public ServiceResult<AssessorInviteToSendResource> getInviteToSend(long inviteId) {
-        return getById(inviteId).andOnSuccess(invite -> {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
-            NotificationTarget notificationTarget = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
+    public ServiceResult<AssessorInvitesToSendResource> getInviteToSend(long inviteId) {
+        return getById(inviteId).andOnSuccess(invite ->
+                serviceSuccess(new AssessorInvitesToSendResource(
+                        singletonList(invite.getName()),
+                        invite.getTarget().getId(),
+                        invite.getTarget().getName(),
+                        getInviteContent(invite)
+                ))
+        );
+    }
 
-            AssessorInviteToSendResource resource = toSendMapper.mapToResource(invite);
-            resource.setContent(getInviteContent(notificationTarget, asMap("name", invite.getName(),
-                    "competitionName", invite.getTarget().getName(),
-                    "acceptsDate", invite.getTarget().getAssessorAcceptsDate().format(formatter),
-                    "deadlineDate", invite.getTarget().getAssessorDeadlineDate().format(formatter),
-                    "inviteUrl", format("%s/invite/competition/%s", webBaseUrl + WEB_CONTEXT, invite.getHash()))));
+    private String getInviteContent(CompetitionInvite invite) {
+        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
+        Competition competition = invite.getTarget();
 
-            return serviceSuccess(resource);
-        });
+        return getInviteContent(notificationTarget, asMap(
+                "competitionName", competition.getName(),
+                "acceptsDate", competition.getAssessorAcceptsDate().format(inviteFormatter),
+                "deadlineDate", competition.getAssessorDeadlineDate().format(inviteFormatter),
+                "name", invite.getName(),
+                "inviteUrl", format("%s/invite/competition/%s", webBaseUrl + WEB_CONTEXT, invite.getHash())
+        ));
+    }
+
+    private String getInvitePreviewContent(Competition competition) {
+        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
+
+        return getInvitePreviewContent(notificationTarget, asMap(
+                "competitionName", competition.getName(),
+                "acceptsDate", competition.getAssessorAcceptsDate().format(inviteFormatter),
+                "deadlineDate", competition.getAssessorDeadlineDate().format(inviteFormatter)
+        ));
     }
 
     @Override
@@ -406,9 +420,8 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         if (participant.getStatus() == REJECTED) {
             details = format("Invite declined as %s", lowerCase(participant.getRejectionReason().getReason()));
         } else if (participant.getStatus() == PENDING) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
             if (participant.getInvite().getSentOn() != null) {
-                details = format("Invite sent: %s", participant.getInvite().getSentOn().format(formatter));
+                details = format("Invite sent: %s", participant.getInvite().getSentOn().format(detailsFormatter));
             }
         }
 
@@ -459,18 +472,46 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     @Override
-    public ServiceResult<Void> sendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource) {
-        return getById(inviteId).andOnSuccess(invite -> {
-            competitionParticipantRepository.save(new CompetitionParticipant(invite.send(loggedInUserSupplier.get(), ZonedDateTime.now())));
+    public ServiceResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
+        return getCompetition(competitionId).andOnSuccess(competition -> {
 
-            if (invite.isNewAssessorInvite()) {
-                userRepository.findByEmail(invite.getEmail()).ifPresent(this::addAssessorRoleToUser);
-            }
-            return sendNotification(invite, assessorInviteSendResource);
-        }).andOnSuccessReturnVoid();
+            String customTextPlain = stripHtml(assessorInviteSendResource.getContent());
+            String customTextHtml = plainTextToHtml(customTextPlain);
+
+            return ServiceResult.processAnyFailuresOrSucceed(simpleMap(
+                    competitionInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED),
+                    invite -> {
+                        competitionParticipantRepository.save(
+                                new CompetitionParticipant(invite.send(loggedInUserSupplier.get(), ZonedDateTime.now()))
+                        );
+
+                        if (invite.isNewAssessorInvite()) {
+                            userRepository.findByEmail(invite.getEmail()).ifPresent(this::addAssessorRoleToUser);
+                        }
+
+                        return sendInviteNotification(
+                                assessorInviteSendResource.getSubject(),
+                                inviteFormatter,
+                                customTextPlain,
+                                customTextHtml,
+                                invite,
+                                Notifications.INVITE_ASSESSOR_GROUP
+                        );
+                    }
+            ));
+        });
     }
 
-    private ServiceResult<Notification> sendNotification(CompetitionInvite invite, AssessorInviteSendResource assessorInviteSendResource) {
+    @Override
+    public ServiceResult<Void> resendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource) {
+        return getParticipantByInviteId(inviteId)
+                .andOnSuccess(participant ->
+                        resendInviteNotification(participant.getInvite().sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now()), assessorInviteSendResource)
+                )
+                .andOnSuccessReturnVoid();
+    }
+
+    private ServiceResult<Notification> resendInviteNotification(CompetitionInvite invite, AssessorInviteSendResource assessorInviteSendResource) {
         // Strip any HTML that may have been added to the content by the user.
         String bodyPlain = stripHtml(assessorInviteSendResource.getContent());
 
@@ -488,13 +529,29 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         return notificationSender.sendNotification(notification);
     }
 
-    @Override
-    public ServiceResult<Void> resendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource) {
-        return getParticipantByInviteId(inviteId)
-                .andOnSuccess(participant ->
-                        sendNotification( participant.getInvite().sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now()), assessorInviteSendResource)
-                )
-                .andOnSuccessReturnVoid();
+    private ServiceResult<Void> sendInviteNotification(String subject,
+                                                       DateTimeFormatter formatter,
+                                                       String customTextPlain,
+                                                       String customTextHtml,
+                                                       CompetitionInvite invite,
+                                                       Notifications notificationType) {
+        NotificationTarget recipient = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
+        Notification notification = new Notification(
+                systemNotificationSource,
+                recipient,
+                notificationType,
+                asMap(
+                        "subject", subject,
+                        "name", invite.getName(),
+                        "competitionName", invite.getTarget().getName(),
+                        "acceptsDate", invite.getTarget().getAssessorAcceptsDate().format(formatter),
+                        "deadlineDate", invite.getTarget().getAssessorDeadlineDate().format(formatter),
+                        "inviteUrl", format("%s/invite/competition/%s", webBaseUrl + WEB_CONTEXT, invite.getHash()),
+                        "customTextPlain", customTextPlain,
+                        "customTextHtml", customTextHtml
+                ));
+
+        return notificationSender.sendNotification(notification).andOnSuccessReturnVoid();
     }
 
     private void addAssessorRoleToUser(User user) {
@@ -505,6 +562,13 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     @Override
     public ServiceResult<Void> deleteInvite(String email, long competitionId) {
         return getByEmailAndCompetition(email, competitionId).andOnSuccess(this::deleteInvite);
+    }
+
+    @Override
+    public ServiceResult<Void> deleteAllInvites(long competitionId) {
+        return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId))
+                .andOnSuccessReturnVoid(competition ->
+                        competitionInviteRepository.deleteByCompetitionIdAndStatus(competition.getId(), CREATED));
     }
 
     private ServiceResult<CompetitionInvite> getByHash(String inviteHash) {
@@ -521,6 +585,11 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     private String getInviteContent(NotificationTarget notificationTarget, Map<String, Object> arguments) {
         return renderer.renderTemplate(systemNotificationSource, notificationTarget, "invite_assessor_editable_text.txt",
+                arguments).getSuccessObject();
+    }
+
+    private String getInvitePreviewContent(NotificationTarget notificationTarget, Map<String, Object> arguments) {
+        return renderer.renderTemplate(systemNotificationSource, notificationTarget, "invite_assessor_preview_text.txt",
                 arguments).getSuccessObject();
     }
 

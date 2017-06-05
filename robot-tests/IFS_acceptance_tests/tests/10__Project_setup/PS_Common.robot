@@ -143,6 +143,8 @@ ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}            ${collaborator1_credenti
 ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}      40
 ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}    EGGS
 ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}   ${collaborator2_credentials["email"]}
+${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}    HIVE IT LIMITED
+${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_EMAIL}   ewan+1@hiveit.co.uk
 
 ${project_in_setup_page}                ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
 ${project_in_setup_details_page}        ${project_in_setup_page}/details

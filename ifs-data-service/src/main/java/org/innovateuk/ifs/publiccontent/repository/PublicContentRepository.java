@@ -22,7 +22,8 @@ public interface PublicContentRepository extends PagingAndSortingRepository<Publ
             "WHERE EXISTS(   SELECT p " +
                             "FROM PublicContent p " +
                             "WHERE p.competitionId = c.id " +
-                                "AND p.publishDate < CURRENT_TIMESTAMP) " +
+                            "AND p.publishDate < CURRENT_TIMESTAMP " +
+                            "AND p.inviteOnly = false)" +
             "AND c.id IN :competitionIds " +
             "ORDER BY closed_milestone.date ASC")
     Page<Competition> findAllPublishedForOpenCompetitionByInnovationId(@Param(value="competitionIds") List<Long> competitionIds, Pageable pageable);
@@ -33,7 +34,8 @@ public interface PublicContentRepository extends PagingAndSortingRepository<Publ
                             "FROM PublicContent p " +
                             "WHERE p.competitionId = c.id " +
                                 "AND p.id IN :filteredPublicContentIds " +
-                                "AND p.publishDate < CURRENT_TIMESTAMP) " +
+                                "AND p.publishDate < CURRENT_TIMESTAMP " +
+                                "AND p.inviteOnly = false)" +
             "ORDER BY closed_milestone.date ASC")
     Page<Competition> findAllPublishedForOpenCompetitionByKeywords(@Param(value="filteredPublicContentIds") Set<Long> filteredPublicContentIds, Pageable pageable);
     
@@ -43,7 +45,8 @@ public interface PublicContentRepository extends PagingAndSortingRepository<Publ
                             "FROM PublicContent p " +
                             "WHERE p.competitionId = c.id " +
                                 "AND p.id IN :filteredPublicContentIds " +
-                                "AND p.publishDate < CURRENT_TIMESTAMP) " +
+                                "AND p.publishDate < CURRENT_TIMESTAMP " +
+                                "AND p.inviteOnly = false)" +
             "AND c.id IN :competitionIds " +
             "ORDER BY closed_milestone.date ASC")
 
@@ -53,7 +56,8 @@ public interface PublicContentRepository extends PagingAndSortingRepository<Publ
             "WHERE EXISTS(   SELECT p " +
                             "FROM PublicContent p " +
                             "WHERE p.competitionId = c.id " +
-                                "AND p.publishDate < CURRENT_TIMESTAMP) " +
+                            "AND p.publishDate < CURRENT_TIMESTAMP " +
+                            "AND p.inviteOnly = false)" +
             "ORDER BY closed_milestone.date ASC")
     Page<Competition> findAllPublishedForOpenCompetition(Pageable pageable);
 

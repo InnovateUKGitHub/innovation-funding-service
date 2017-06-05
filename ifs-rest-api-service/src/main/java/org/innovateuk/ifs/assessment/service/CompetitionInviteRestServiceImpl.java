@@ -21,13 +21,13 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     private static final String competitionInviteRestUrl = "/competitioninvite";
 
     @Override
-    public RestResult<AssessorInviteToSendResource> getCreatedInviteToSend(long inviteId) {
-        return getWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "getCreatedInviteToSend", inviteId), AssessorInviteToSendResource.class);
+    public RestResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId) {
+        return getWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "getAllInvitesToSend", competitionId), AssessorInvitesToSendResource.class);
     }
 
     @Override
-    public RestResult<AssessorInviteToSendResource> getInviteToSend(long inviteId) {
-        return getWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "getInviteToSend", inviteId), AssessorInviteToSendResource.class);
+    public RestResult<AssessorInvitesToSendResource> getInviteToSend(long inviteId) {
+        return getWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "getInviteToSend", inviteId), AssessorInvitesToSendResource.class);
     }
 
     @Override
@@ -133,8 +133,13 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<Void> sendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource) {
-        return postWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "sendInvite", inviteId), assessorInviteSendResource, Void.class);
+    public RestResult<Void> deleteAllInvites(long competitionId) {
+        return deleteWithRestResult(format("%s/%s?competitionId=%s", competitionInviteRestUrl, "deleteAllInvites", competitionId), Void.class);
+    }
+
+    @Override
+    public RestResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
+        return postWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "sendAllInvites", competitionId), assessorInviteSendResource, Void.class);
     }
 
     @Override

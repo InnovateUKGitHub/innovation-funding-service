@@ -14,6 +14,7 @@ Suite Setup       Applicant goes to the registration form
 Suite Teardown    the user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
+Resource          ../../10__Project_setup/PS_Common.robot
 
 *** Test Cases ***
 Your details: Server-side validations
@@ -77,7 +78,7 @@ Email duplication check
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
-    And the user enters text to a text field    id=email    steve.smith@empire.com
+    And the user enters text to a text field    id=email    ${lead_applicant}
     And the user enters text to a text field    id=password    ${correct_password}
     And the user submits their information
     Then the user should see an error    The email address is already registered with us. Please sign into your account
@@ -104,7 +105,7 @@ Applicant goes to the registration form
     And the user clicks the button/link    jQuery=.button:contains("Create account")
     When the user enters text to a text field    id=organisationSearchName    Hive IT
     And the user clicks the button/link    id=org-search
-    And the user clicks the button/link    Link=HIVE IT LIMITED
+    And the user clicks the button/link    Link=${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
     And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=button:contains("Continue")
     And the user selects the radio button    organisationTypeId    radio-1

@@ -1,0 +1,44 @@
+
+<th:block th:fragment="organisation(organisation, isLead, orgId)" xmlns:th="http://www.w3.org/1999/html">
+    <h2 class="heading-medium">
+        <th:block th:text="${isLead} ? ${organisation.organisationName} + ' (Lead)' : ${organisation.organisationName}">Organisation name</th:block>
+    </h2>
+
+    <div class="grid-row">
+        <div class="column-third" th:id="applicationTeamOrganisationRegisteredAddress + ${orgId}">
+            <h3 class="heading-small">Registered Address</h3>
+            <p th:if="organisation.registeredAddress">
+                <th:block th:each="addressLine : ${organisation.registeredAddress.getAddress().getNonEmptyLines()}">
+                    <span th:text="${addressLine}">An address line</span><br />
+                </th:block>
+            </p>
+        </div>
+        <div class="column-third" th:id="applicationTeamOrganisationOperatingAddress + ${orgId}">
+            <h3 class="heading-small">Operating Address</h3>
+            <p th:if="organisation.operatingAddress">
+                <th:block th:each="addressLine : ${organisation.operatingAddress.getAddress().getNonEmptyLines()}">
+                    <span th:text="${addressLine}">An address line</span><br />
+                </th:block>
+            </p>
+        </div>
+    </div>
+
+    <div class="table-overflow extra-margin">
+        <table th:id="${'applicationTeamOrganisationUser' + orgId}">
+            <thead>
+            <tr>
+                <th class="width-30-percent" scope="col">Full name</th>
+                <th class="width-30-percent" scope="col">Email</th>
+                <th class="width-30-percent" scope="col">Telephone</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${organisation.users}">
+                <td th:text="${user.lead} ? ${user.name} + ' (Lead)' :  ${user.name}">Steve Smith</td>
+                <td th:text="${user.email}">steve.smith@empire.com</td>
+                <td th:text="${user.phoneNumber}">0800</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</th:block>

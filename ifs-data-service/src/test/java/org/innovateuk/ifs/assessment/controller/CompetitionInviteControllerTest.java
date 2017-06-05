@@ -34,6 +34,7 @@ import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBui
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewPageResourceBuilder.newAssessorInviteOverviewPageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInvitesToSendResourceBuilder.newAssessorInvitesToSendResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBuilder.newAvailableAssessorPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
@@ -63,19 +64,20 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     }
 
     @Test
-    public void getCreatedInviteToSend() throws Exception {
-        AssessorInviteToSendResource resource = new AssessorInviteToSendResource();
-        long inviteId = 1L;
+    public void getAllInvitesToSend() throws Exception {
+        AssessorInvitesToSendResource resource = newAssessorInvitesToSendResource().build();
 
-        when(competitionInviteServiceMock.getCreatedInviteToSend(inviteId)).thenReturn(serviceSuccess(resource));
-        mockMvc.perform(get("/competitioninvite/getCreatedInviteToSend/{inviteId}", inviteId)).andExpect(status().isOk());
+        when(competitionInviteServiceMock.getAllInvitesToSend(COMPETITION_ID)).thenReturn(serviceSuccess(resource));
 
-        verify(competitionInviteServiceMock, only()).getCreatedInviteToSend(inviteId);
+        mockMvc.perform(get("/competitioninvite/getAllInvitesToSend/{competitionId}", COMPETITION_ID).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(competitionInviteServiceMock, only()).getAllInvitesToSend(COMPETITION_ID);
     }
 
     @Test
     public void getInviteToSend() throws Exception {
-        AssessorInviteToSendResource resource = new AssessorInviteToSendResource();
+        AssessorInvitesToSendResource resource = new AssessorInvitesToSendResource();
         long inviteId = 1L;
 
         when(competitionInviteServiceMock.getInviteToSend(inviteId)).thenReturn(serviceSuccess(resource));
@@ -656,21 +658,35 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     }
 
     @Test
-    public void sendInvite() throws Exception {
-        long inviteId = 1L;
+    public void deleteAllInvites() throws Exception {
+        long competitionId = 1L;
+
+        when(competitionInviteServiceMock.deleteAllInvites(competitionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(delete("/competitioninvite/deleteAllInvites")
+                .param("competitionId", String.valueOf(competitionId)))
+                .andExpect(status().isNoContent());
+
+        verify(competitionInviteServiceMock).deleteAllInvites(competitionId);
+    }
+
+    @Test
+    public void sendAllInvites() throws Exception {
+        long competitionId = 1L;
+
         AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
                 .withSubject("subject")
                 .withContent("content")
                 .build();
 
-        when(competitionInviteServiceMock.sendInvite(inviteId, assessorInviteSendResource)).thenReturn(serviceSuccess());
+        when(competitionInviteServiceMock.sendAllInvites(competitionId, assessorInviteSendResource)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/competitioninvite/sendInvite/{inviteId}", inviteId)
+        mockMvc.perform(post("/competitioninvite/sendAllInvites/{competitionId}", competitionId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(assessorInviteSendResource)))
                 .andExpect(status().isOk());
 
-        verify(competitionInviteServiceMock, only()).sendInvite(inviteId, assessorInviteSendResource);
+        verify(competitionInviteServiceMock).sendAllInvites(competitionId, assessorInviteSendResource);
     }
 
     @Test

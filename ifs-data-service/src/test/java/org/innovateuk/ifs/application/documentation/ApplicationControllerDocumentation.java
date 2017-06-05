@@ -152,7 +152,6 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     public void applicationReadyForSubmit() throws Exception {
         Long applicationId = 1L;
 
-
         when(applicationServiceMock.applicationReadyForSubmit(applicationId)).thenReturn(serviceSuccess(Boolean.TRUE));
 
         mockMvc.perform(get("/application/applicationReadyForSubmit/{applicationId}", applicationId))
@@ -232,6 +231,23 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
                                 parameterWithName("applicationId").description("Id of the application to inform of being ineligible")
                         ),
                         requestFields(applicationIneligibleSendResourceFields)
+                ));
+    }
+
+    @Test
+    public void showApplicationTeam() throws Exception {
+        Long applicationId = 1L;
+        Long userId = 2L;
+
+        when(applicationServiceMock.showApplicationTeam(applicationId, userId)).thenReturn(serviceSuccess(Boolean.TRUE));
+
+        mockMvc.perform(get("/application/showApplicationTeam/{applicationId}/{userId}", applicationId, userId))
+                .andExpect(status().isOk())
+                .andDo(document("application/{method-name}",
+                        pathParameters(
+                                parameterWithName("applicationId").description("Id of the application"),
+                                parameterWithName("userId").description("Id of the user who wants to view the application team")
+                        )
                 ));
     }
 }

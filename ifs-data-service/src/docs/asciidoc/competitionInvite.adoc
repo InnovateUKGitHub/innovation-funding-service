@@ -1,14 +1,14 @@
-=== Get created invite by id
+=== Get all invites to send
 ==== Request
-include::{snippets}/competitioninvite/get-created-invite/http-request.adoc[]
-include::{snippets}/competitioninvite/get-created-invite/path-parameters.adoc[]
+include::{snippets}/competitioninvite/get-all-invites-to-send/http-request.adoc[]
+include::{snippets}/competitioninvite/get-all-invites-to-send/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/competitioninvite/get-created-invite/http-response.adoc[]
-include::{snippets}/competitioninvite/get-created-invite/response-fields.adoc[]
+include::{snippets}/competitioninvite/get-all-invites-to-send/http-response.adoc[]
+include::{snippets}/competitioninvite/get-all-invites-to-send/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/competitioninvite/get-created-invite/curl-request.adoc[]
+include::{snippets}/competitioninvite/get-all-invites-to-send/curl-request.adoc[]
 
 === Get invite by hash
 ==== Request
@@ -176,14 +176,11 @@ include::{snippets}/competitioninvite/delete-invite/http-response.adoc[]
 ==== Curl Example
 include::{snippets}/competitioninvite/delete-invite/curl-request.adoc[]
 
-=== Send invite
+=== Send all invites
 ==== Request
-include::{snippets}/competitioninvite/send-invite/http-request.adoc[]
-include::{snippets}/competitioninvite/send-invite/path-parameters.adoc[]
-include::{snippets}/competitioninvite/send-invite/request-fields.adoc[]
-
-==== Response
-include::{snippets}/competitioninvite/send-invite/http-response.adoc[]
+include::{snippets}/competitioninvite/send-all-invites/http-request.adoc[]
+include::{snippets}/competitioninvite/send-all-invites/path-parameters.adoc[]
+include::{snippets}/competitioninvite/send-all-invites/request-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/competitioninvite/send-invite/curl-request.adoc[]
+include::{snippets}/competitioninvite/send-all-invites/curl-request.adoc[]
