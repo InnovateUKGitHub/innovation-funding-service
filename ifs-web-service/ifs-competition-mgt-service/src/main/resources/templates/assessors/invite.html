@@ -66,8 +66,7 @@
 
             <div class="grid-row">
                 <div class="column-three-quarters">
-                    <h2 class="heading-small no-margin-top">Invite a person to become an assessor for this competition.</h2>
-                    <p>You can invite people on your list individually or as a group.</p>
+                    <h2 class="heading-small no-margin-top extra-margin-bottom">Invite assessors for this competition.</h2>
                 </div>
             </div>
 
@@ -178,20 +177,37 @@
             </details>
 
             <form method="POST" th:action="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">
-                <table class="extra-margin">
-                    <thead>
-                    <tr>
-                        <th scope="col">Assessor name</th>
-                        <th scope="col">Email address</th>
-                        <th scope="col">Innovation area</th>
-                        <th scope="col">Contract and DOI</th>
-                        <th scope="col"><span class="hidden">Actions</span></th>
-                    </tr>
-                    </thead>
-                    <tbody>
+
+                <div class="grid-row sorting">
+                    <div class="column-half">
+                        <h2 class="heading-small">Invite list</h2>
+                    </div>
+                    <div class="column-half alignright" th:if="${!#lists.isEmpty(model.assessors)}">
+                        <a th:href="@{/competition/{competitionId}/assessors/invite/send(competitionId=${model.competitionId})}" class="button">Review and send invites</a>
+                    </div>
+                </div>
+
+                <div class="table-overflow">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th scope="col">Assessor name</th>
+                            <th scope="col">Email address</th>
+                            <th scope="col">Innovation area</th>
+                            <th scope="col">Contract and DOI</th>
+                            <td scope="col">
+                                <button name="removeAll" class="buttonlink alignright"
+                                        th:if="${!#lists.isEmpty(model.assessors)}">
+                                    Remove all
+                                </button>
+                            </td>
+                        </tr>
+                        </thead>
+                        <tbody>
                         <tr th:each="assessor : ${model.assessors}">
                             <td>
-                                <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${originQuery}" th:if="${assessor.id}"
+                                <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${originQuery}"
+                                   th:if="${assessor.id}"
                                    th:text="${assessor.name}">John Barnes
                                 </a>
                                 <span th:text="${assessor.name}" th:if="${assessor.id == null}">John Barnes</span>
@@ -203,16 +219,17 @@
                                 <span class="no" th:unless="${assessor.compliant}">No</span>
                             </td>
                             <td class="alignright">
-                                <a class="button no-margin-right" th:href="@{/competition/assessors/invite/{inviteId}(inviteId=${assessor.inviteId})}">Invite individual</a>
-                                <br />
-                                <button class="button button-clear no-margin-right" name="remove" th:value="${assessor.email}"><span class="hidden" th:text="${assessor.name}">John Barnes </span>Remove from list</button>
+                                <button class="buttonlink alignright" name="remove" th:value="${assessor.email}">
+                                    <span class="hidden" th:text="${assessor.name}">John Barnes </span>Remove
+                                </button>
                             </td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(model.assessors)}">
                             <td colspan="5">There are no assessors to be invited to this competition.</td>
                         </tr>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </form>
             <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
             <th:block th:insert="fragments/layout :: main-content-end" />

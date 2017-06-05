@@ -131,7 +131,7 @@ Partner organisation Client-side validations
     [Tags]    HappyPath
     When The user enters text to a text field    name=organisationName    Fannie May
     And The user enters text to a text field    name=applicants[0].name    Adrian Booth
-    And The user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com
+    And The user enters text to a text field    name=applicants[0].email    ${invite_email}
     Then the user cannot see a validation error in the page
 
 Valid invitation submit
@@ -167,7 +167,7 @@ Business organisation (partner accepts invitation)
     ...    INFUND-2336
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    The guest user opens the browser
-    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation    3
+    When the user reads his email and clicks the link    ${invite_email}   Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation    3
     And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
     And the user selects the radio button    organisationType    1
     And the user clicks the button/link    jQuery=.button:contains("Continue")
@@ -178,8 +178,28 @@ Business organisation (partner accepts invitation)
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user fills the create account form    Adrian    Booth
-    And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Please verify your email address    Once verified you can sign into your account
-    And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
+    And the user reads his email locally    ${invite_email}   Please verify your email address    Once verified you can sign into your account
+
+Partner requests new verification email via password reset
+    [Documentation]  IFS-52
+    [Tags]  HappyPath  Email
+    [Setup]    Run Keywords    delete the emails from the default test mailbox
+        ...    AND    the guest user opens the browser
+    Given the user navigates to the page    ${LOGIN_URL}
+    When the user clicks the forgot psw link
+    And the user enters text to a text field    id=id_email    ${invite_email}
+    And the user clicks the button/link    css=input.button
+    Then the user should see the text in the page    If your email address is recognised and valid, you’ll receive a notification
+
+Complete account verification
+    [Documentation]    INFUND-1005
+    ...    INFUND-2286
+    ...    INFUND-1779
+    ...    INFUND-2336
+    [Tags]  HappyPath  Email  SmokeTest
+    [Setup]    The guest user opens the browser
+    When the user reads his email and clicks the link    ${invite_email}    Please verify your email address    Once verified you can sign into your account
+    Then the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
 
 Partner should be able to log-in and see the new company name
     [Documentation]    INFUND-2083
@@ -187,10 +207,10 @@ Partner should be able to log-in and see the new company name
     ...    INFUND-7976
     [Tags]    Email    HappyPath    SmokeTest
     Given the user clicks the button/link    jQuery=.button:contains("Sign in")
-    When guest user log-in    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com    ${correct_password}
+    When guest user log-in    ${invite_email}    ${correct_password}
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     And the user can see the updated company name throughout the application
-    And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Innovate UK applicant questionnaire    diversity survey
+    And the user reads his email and clicks the link    ${invite_email}    Innovate UK applicant questionnaire    diversity survey
     [Teardown]    the user navigates to the page    ${DASHBOARD_URL}
 
 Parner can see the Application team
