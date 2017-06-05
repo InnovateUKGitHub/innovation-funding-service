@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.*;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
