@@ -8,102 +8,102 @@ Resource          ../../../../resources/defaultResources.robot
 Resource            ../../FinanceSection_Commons.robot
 *** Variables ***
 ${Application_name_business}           Maximum funding allowed Business
-${Application_name_RTO}
-${Competition_name_business_only}
-${Competition_name_rto_only}
+${Application_name_RTO}                Maximum funding allowed RTO
+${Competition_name_business_only}      Aerospace technology investment sector
+${Competition_name_rto_only}           Predicting market trends programme
 *** Test Cases ***
 funding level available for lead business ResearchCategory: Fundamental Research
     [Documentation]    IFS-338
     [Tags]
-    Given we create a new user                           ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}   Oscar  business   oscar@innovateuk.com
-    When the user clicks the button/link                 link=Untitled application (start here)
-    and the user clicks the button/link                  link=Begin application
-    and the applicant completes the application details  Application details  Experimental development
-    and the user clicks the button/link                  link=Your finances
-    then the user fills in the project costs
-    the user fills the organisation details with Project growth table     ${SMALL_ORGANISATION_SIZE}
-    the user clicks the button/link                      link=Your funding
-    the user should see the text in the page             Enter your funding level (maximum 45%).
-    the user edits the research category                 Feasibility studies
-    the user edits the organisation size                 ${MEDIUM_ORGANISATION_SIZE}
-    the user should see the text in the page             Enter your funding level (maximum 60%).
-    the user edits the research category                 Industrial research
-    the user edits the organisation size                 ${LARGE_ORGANISATION_SIZE}
-    the user should see the text in the page              Enter your funding level (maximum 50%).
-    the user clicks the button/link                      jQuery=a:contains("Your finances")
-    the user clicks the button/link                      link=Application overview
+    Given we create a new user                                ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}   Oscar  business   oscar@innovateuk.com
+    When the user clicks the button/link                     link=Untitled application (start here)
+    And the user clicks the button/link                      link=Begin application
+    And the applicant completes the application details      Application details  Experimental development
+    Then the user clicks the button/link                     link=Your finances
+    And the user fills in the project costs
+    When the user fills the organisation details with Project growth table     ${SMALL_ORGANISATION_SIZE}
+    And the user clicks the button/link                      link=Your funding
+    Then the user should see the text in the page             Enter your funding level (maximum 45%).
+    When the user edits the research category                 Feasibility studies
+    And the user edits the organisation size                 ${MEDIUM_ORGANISATION_SIZE}
+    Then the user should see the text in the page             Enter your funding level (maximum 60%).
+    When the user edits the research category                 Industrial research
+    And the user edits the organisation size                 ${LARGE_ORGANISATION_SIZE}
+    Then the user should see the text in the page             Enter your funding level (maximum 50%).
+    the user clicks the button/link                          jQuery=a:contains("Your finances")
+    [Teardown]  the user clicks the button/link              link=Application overview
 
 lead applicant invites a Charity member
     [Documentation]    IFS-338
     [Tags]
-    Invite a non-existing collaborator                              liamCharity@innovateuk.com   Aerospace technology investment sector
-    the user clicks the button/link                                 link=Maximum funding allowed Business
-    the user clicks the button/link                                 link=Your finances
-    the user fills in the project costs
-    the user fills the organisation details with Project growth table     ${SMALL_ORGANISATION_SIZE}
-    and the user clicks the button/link                           link=Your funding
-    the user should see the text in the page                      Enter your funding level (maximum 100%).
-    the user clicks the button/link                               jQuery=a:contains("Your finances")
-    the user edits the organisation size                          ${LARGE_ORGANISATION_SIZE}
-    the user should see the text in the page                     Enter your funding level (maximum 100%).
+    Given Invite a non-existing collaborator                           liamCharity@innovateuk.com   Aerospace technology investment sector
+    When the user clicks the button/link                               link=Maximum funding allowed Business
+    And the user clicks the button/link                                link=Your finances
+    And the user fills in the project costs
+    And the user fills the organisation details with Project growth table     ${SMALL_ORGANISATION_SIZE}
+    And the user clicks the button/link                                link=Your funding
+    Then the user should see the text in the page                      Enter your funding level (maximum 100%).
+    When the user clicks the button/link                               jQuery=a:contains("Your finances")
+    And the user edits the organisation size                           ${LARGE_ORGANISATION_SIZE}
+    Then the user should see the text in the page                      Enter your funding level (maximum 100%).
 
 Invite existing academic collaborator
     [Documentation]  IFS-338
     [Tags]
-    log in as a different user                               oscar@innovateuk.com  ${correct_password}
-    the user clicks the button/link                          link=Maximum funding allowed Business
-    the user clicks the button/link                          link=view team members and add collaborators
-    the user clicks the button/link                          link=Add partner organisation
-    the user enters text to a text field                     css=#organisationName  eggs
-    the user enters text to a text field                     css=input[id="applicants0.name"]  Pete
-    the user enters text to a text field                     css=input[id="applicants0.email"]  pete.tom@egg.com
-    the user clicks the button/link                          jQuery=button:contains("Add organisation and invite applicants")
+    [Setup]  log in as a different user                               oscar@innovateuk.com  ${correct_password}
+    When the user clicks the button/link                          link=Maximum funding allowed Business
+    And the user clicks the button/link                          link=view team members and add collaborators
+    And the user clicks the button/link                          link=Add partner organisation
+    Then the user enters text to a text field                     css=#organisationName  eggs
+    And the user enters text to a text field                     css=input[id="applicants0.name"]  Pete
+    And the user enters text to a text field                     css=input[id="applicants0.email"]  pete.tom@egg.com
+    And the user clicks the button/link                          jQuery=button:contains("Add organisation and invite applicants")
     logout as user
-    the user reads his email and clicks the link             pete.tom@egg.com  Invitation to collaborate in  You will be joining as part of the organisation  3
-    the user clicks the button/link                          jQuery=a:contains("Continue or sign in")
-    the guest user inserts user email & password             pete.tom@egg.com  Passw0rd
-    The guest user clicks the log-in button
-    the user clicks the button/link                          jQuery=a:contains("Confirm and accept invitation")
-    the user clicks the button/link                          link=Your finances
-    the user clicks the button/link                          link=Your project costs
-#   the the user should see the element                         css=td:nth-child(2):contains("100%")
+    When the user reads his email and clicks the link             pete.tom@egg.com  Invitation to collaborate in  You will be joining as part of the organisation  3
+    And the user clicks the button/link                          jQuery=a:contains("Continue or sign in")
+    Then the guest user inserts user email & password             pete.tom@egg.com  Passw0rd
+    And The guest user clicks the log-in button
+    And the user clicks the button/link                          jQuery=a:contains("Confirm and accept invitation")
+    And the user clicks the button/link                          link=Your finances
+    And the user clicks the button/link                          link=Your project costs
+    #the user should see the element                          css=td:nth-child(2):contains("100%")
+    And logout as user
 
 funding level available for RTO lead user ResearchCategory: Fundamental Research
     [Documentation]  IFS-338
     [Tags]
-    logout as user
-    Given we create a new user                           15  Smith  rto   oscarRTO@innovateuk.com
+    Given we create a new user                           ${OPEN_COMPETITION}  Smith  rto   oscarRTO@innovateuk.com
     When the user clicks the button/link                 link=Untitled application (start here)
-    and the user clicks the button/link                  link=Begin application
-    the applicant completes the application details for RTO lead appln   Application details  Experimental development
-    and the user clicks the button/link                  link=Your finances
-    then the user fills in the project costs
-    the user fills the organisation details without Project growth table    ${SMALL_ORGANISATION_SIZE}
-    the user clicks the button/link                      link=Your funding
-    the user should see the text in the page             Enter your funding level (maximum 100%).
-    the user edits the research category                 Feasibility studies
-    the user edits the organisation size                 ${MEDIUM_ORGANISATION_SIZE}
-    the user should see the text in the page             Enter your funding level (maximum 100%).
-    the user edits the research category                 Industrial research
-    the user edits the organisation size                 ${LARGE_ORGANISATION_SIZE}
-    the user should see the text in the page             Enter your funding level (maximum 100%).
-    the user clicks the button/link                      jQuery=a:contains("Your finances")
-    the user clicks the button/link                      link=Application overview
+    And the user clicks the button/link                  link=Begin application
+    And the applicant completes the application details for RTO lead appln   Application details  Experimental development
+    And the user clicks the button/link                  link=Your finances
+    And the user fills in the project costs
+    And the user fills the organisation details without Project growth table    ${SMALL_ORGANISATION_SIZE}
+    And the user clicks the button/link                  link=Your funding
+    Then the user should see the text in the page        Enter your funding level (maximum 100%).
+    When the user edits the research category            Feasibility studies
+    And the user edits the organisation size             ${MEDIUM_ORGANISATION_SIZE}
+    Then the user should see the text in the page        Enter your funding level (maximum 100%).
+    When the user edits the research category            Industrial research
+    And the user edits the organisation size             ${LARGE_ORGANISATION_SIZE}
+    Then the user should see the text in the page        Enter your funding level (maximum 100%).
+    And the user clicks the button/link                  jQuery=a:contains("Your finances")
+    [Teardown]  the user clicks the button/link          link=Application overview
 
 lead RTO applicant invites a Charity member
     [Documentation]    IFS-338
     [Tags]
-    Invite a non-existing collaborator                         liamRTO@innovateuk.com   Predicting market trends programme
-    the user clicks the button/link                            link=Maximum funding allowed RTO
-    the user clicks the button/link                            link=Your finances
-   #the user fills in the project costs
-    the user fills the organisation details without Project growth table    ${SMALL_ORGANISATION_SIZE}
-    and the user clicks the button/link                       link=Your funding
-    the user should see the text in the page                   Enter your funding level (maximum 100%).
-    the user clicks the button/link                            jQuery=a:contains("Your finances")
-    the user edits the organisation size                       ${LARGE_ORGANISATION_SIZE}
-    the user should see the text in the page                   Enter your funding level (maximum 100%).
-    logout as user
+    Given Invite a non-existing collaborator                       liamRTO@innovateuk.com   Predicting market trends programme
+    When the user clicks the button/link                           link=Maximum funding allowed RTO
+    And the user clicks the button/link                            link=Your finances
+    And the user fills in the project costs
+    And the user fills the organisation details without Project growth table    ${SMALL_ORGANISATION_SIZE}
+    And the user clicks the button/link                             link=Your funding
+    Then the user should see the text in the page                   Enter your funding level (maximum 100%).
+    When the user clicks the button/link                            jQuery=a:contains("Your finances")
+    And the user edits the organisation size                        ${LARGE_ORGANISATION_SIZE}
+    Then the user should see the text in the page                   Enter your funding level (maximum 100%).
+    [Teardown]  logout as user
 
 *** Keywords ***
 the user navigates to the competition overview
