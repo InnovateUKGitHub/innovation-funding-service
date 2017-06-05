@@ -7,6 +7,7 @@ Resource          ../../../../resources/defaultResources.robot
 Resource            ../../FinanceSection_Commons.robot
 *** Variables ***
 ${newUsersEmail}             liamCharity@innovateuk.com
+${Application_name}           Maximum Funding Allowed for Business
 *** Test Cases ***
 funding level available for lead business ResearchCategory: Fundamental Research
     [Documentation]    IFS-338
@@ -83,9 +84,9 @@ lead applicant invites a Charity member
     [Tags]
     #  the user clicks the button/link                        link=view team members and add collaborators
     Invite a non-existing collaborator
-    the user navigates to your-finances page                  link=Maximum Funding Allowed for Business
+    the user navigates to your-finances page                  link=${Application_name}
     the user fills in the project costs
-   the user clicks the button/link                            link=Your organisation
+    the user clicks the button/link                            link=Your organisation
     the user enters text to a text field                    css=input[name$="month"]    12
        and the user enters text to a text field                css=input[name$="year"]    2016
        the user selects the radio button                       financePosition-organisationSize  ${SMALL_ORGANISATION_SIZE}
@@ -163,7 +164,7 @@ the user navigates to the competition overview
 the applicant completes the application details
     [Arguments]   ${Application_details}   ${Research_category}
     the user clicks the button/link       link=${Application_details}
-    the user enters text to a text field   id=application_details-title  Maximum Funding Allowed for Business
+    the user enters text to a text field   id=application_details-title  ${Application_name}
     the user clicks the button/link       jQuery=button:contains("research category")
     the user clicks the button/link       jQuery=label[for^="researchCategoryChoice"]:contains("${Research_category}")
     the user clicks the button/link       jQuery=label[for^="researchCategoryChoice"]:contains("${Research_category}")
@@ -185,7 +186,7 @@ the applicant completes the application details
 Invite a non-existing collaborator
     the user should see the element       jQuery=h1:contains("Application overview")
     the user fills in the inviting steps  ${newUsersEmail}
-    newly invited collaborator can create account and sign in    Maximum Funding Allowed for Business
+    newly invited collaborator can create account and sign in    ${Application_name}
 
 the user fills in the inviting steps
     [Arguments]  ${email}
