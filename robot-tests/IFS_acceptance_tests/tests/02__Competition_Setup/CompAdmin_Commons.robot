@@ -139,6 +139,7 @@ the user fills in the Public content and publishes
     the user enters text to a text field    id=short-description  Short public description
     the user enters text to a text field    id=funding-range  Up to £1million
     the user enters text to a text field    css=[labelledby="eligibility-summary"]  Summary of eligiblity
+    And the user selects the radio button   publishSetting  public
     the user enters text to a text field    id=keywords  Search, Testing, Robot
     the user clicks the button/link         jQuery=button:contains("Save and return")
     the user should see the element         jQuery=div:contains("Competition information and search") ~ .task-status-complete
