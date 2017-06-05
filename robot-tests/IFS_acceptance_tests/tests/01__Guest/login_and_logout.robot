@@ -165,8 +165,3 @@ Clear the login fields
     When the user enters text to a text field    id=id_password    ${EMPTY}
     Mouse Out    id=id_password
     wait for autosave
-
-the user clicks the forgot psw link
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    click element    link=forgot your password?
-    Run Keyword If    '${status}' == 'FAIL'    click element    jQuery=summary:contains("Need help signing in or creating an account?")
-    Run Keyword If    '${status}' == 'FAIL'    click element    link=Forgotten your password?
