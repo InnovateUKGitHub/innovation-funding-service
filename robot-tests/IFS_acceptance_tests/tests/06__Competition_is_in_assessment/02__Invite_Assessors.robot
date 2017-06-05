@@ -31,7 +31,7 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...
 ...               IFS-33 As a comp exec I can select and add multiple assessors to the invite list
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
-Suite Teardown    The user closes the browser
+Suite Teardown    Custom teardown
 Force Tags        CompAdmin    Assessor
 Resource          ../../resources/defaultResources.robot
 
@@ -82,7 +82,7 @@ The user can remove all people from the list
     [Tags]
     Given the user clicks the button/link    jQuery=a:contains("1 to 20")
     And the user invites multiple assessors
-    And The user clicks the button/link    link=Invite
+    And the user clicks the button/link    jQuery=button:contains("Add selected to invite list")
     And the user should see the element    jQuery=td:contains("${assessor_to_add}")
     When the user clicks the button/link    jQuery=button:contains("Remove all")
     Then the user should not see the element    jQuery=td:contains("${assessor_to_add}")
@@ -141,8 +141,8 @@ Invite multiple assessors
     [Documentation]    INFUND-6414
     [Tags]
     Given the user clicks the button/link    jQuery=a:contains("1 to 20")
-    Given the user invites multiple assessors
-    And The user clicks the button/link    link=Invite
+    And the user invites multiple assessors
+    And the user clicks the button/link    jQuery=button:contains("Add selected to invite list")
     When the user clicks the button/link    jQuery=a:contains("Review and send invites")
     And The user should see the text in the page    Please visit our online Innovation Funding Service to respond to this request
     And The user enters text to a text field    css=#subject    Invitation to assess 'Sustainable living models for the future' @
@@ -230,6 +230,11 @@ the calculations of the Assessors on invite list should be correct
     Should Be Equal As Integers    ${ASSESSORS_ON_LIST}    ${ASSESSORS_COUNT}
 
 the user invites multiple assessors
-    the user clicks the button/link      jQuery=td:contains("Alexis Kinney") ~ td:contains("Add")
-    the user clicks the button/link      jQuery=td:contains("Angel Spencer") ~ td:contains("Add")
-    the user clicks the button/link      jQuery=td:contains("Angel Witt") ~ td:contains("Add")
+    the user selects the checkbox      assessor-id-189
+    the user selects the checkbox      assessor-id-174
+    the user selects the checkbox      assessor-id-203
+
+Custom teardown
+    the user clicks the button/link    link=Invite
+    the user clicks the button/link    jQuery=button:contains("Remove all")
+    the user closes the browser
