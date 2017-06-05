@@ -18,6 +18,7 @@ import java.util.Optional;
 import static java.lang.Boolean.TRUE;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.of;
+import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
@@ -179,6 +180,13 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
     public void inviteExistingUsers() throws Exception {
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.inviteUsers(
                 newExistingUserStagedInviteResource().build(2))
+                , COMP_ADMIN, PROJECT_FINANCE);
+    }
+
+    @Test
+    public void sendAllInvites() throws Exception {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.sendAllInvites(1L,
+                newAssessorInviteSendResource().build())
                 , COMP_ADMIN, PROJECT_FINANCE);
     }
 
