@@ -139,6 +139,7 @@ the user fills in the Public content and publishes
     the user enters text to a text field    id=short-description  Short public description
     the user enters text to a text field    id=funding-range  Up to £1million
     the user enters text to a text field    css=[labelledby="eligibility-summary"]  Summary of eligiblity
+    the user selects the radio button       publishSetting  public
     the user enters text to a text field    id=keywords  Search, Testing, Robot
     the user clicks the button/link         jQuery=button:contains("Save and review")
     the user clicks the button/link         jQuery=.button:contains("Return to public content")
@@ -201,3 +202,6 @@ the internal user navigates to public content
     the user navigates to the page     ${CA_UpcomingComp}
     the user clicks the button/link    link=${comp}
     the user clicks the button/link    link=Public content
+
+the compadmin logs in
+    Guest user log-in    &{Comp_admin1_credentials}

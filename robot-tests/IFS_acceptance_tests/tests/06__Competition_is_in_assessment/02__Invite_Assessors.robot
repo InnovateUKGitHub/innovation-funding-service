@@ -33,6 +33,9 @@ Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
 Resource          ../../resources/defaultResources.robot
 
+*** Variables ***
+${assessor_to_add}    Alexis Kinney
+
 *** Test Cases ***
 Check the initial key statistics
     [Documentation]    INFUND-6388
@@ -68,8 +71,19 @@ The User can Add and Remove Assessors
     And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Energy systems")
     And the calculations of the Assessors on invite list should be correct
     When The user clicks the button/link    link=Invite
-    And The user clicks the button/link    jQuery=td:contains("Will Smith") ~ td .button:contains("Remove")
+    And The user clicks the button/link    jQuery=td:contains("Will Smith") ~ td .buttonlink:contains("Remove")
     Then The user should not see the text in the page    Will Smith
+    [Teardown]    The user clicks the button/link    link=Find
+
+The user can remove all people from the list
+    [Documentation]    IFS-36
+    [Tags]
+    Given the user clicks the button/link    jQuery=a:contains("1 to 20")
+    And the user invites multiple assessors
+    And The user clicks the button/link    link=Invite
+    And the user should see the element    jQuery=td:contains("${assessor_to_add}")
+    When the user clicks the button/link    jQuery=button:contains("Remove all")
+    Then the user should not see the element    jQuery=td:contains("${assessor_to_add}")
     [Teardown]    The user clicks the button/link    link=Find
 
 Filter on innovation area
@@ -78,7 +92,7 @@ Filter on innovation area
     Given the user selects the option from the drop-down menu    Offshore wind    id=filterInnovationArea
     When the user clicks the button/link    jQuery=button:contains(Filter)
     Then the user should see the element    jQuery=td:contains("Laura Weaver")
-    And the user should not see the element    jQuery=td:contains("Addison Shannon")
+    And the user should not see the element    jQuery=td:contains("${assessor_to_add}")
     And the user clicks the button/link    jQuery=a:contains("Clear all filters")
     And the user should not see the element    jQuery=td:contains("Laura Weaver")
     And the user should see the element    jQuery=td:contains("Addison Shannon")
@@ -121,18 +135,19 @@ Innovation sector and area are correct
     And the user should see the element    jQuery=.standard-definition-list dd:contains("Materials and manufacturing")
     And the user should see the element    jQuery=.standard-definition-list dd:contains("Digital manufacturing")
 
-Invite Individual Assessors
+Invite multiple assessors
     [Documentation]    INFUND-6414
     [Tags]
-    Given The user clicks the button/link    jQuery=td:contains("Will Smith") ~ td .button:contains("Add")
+    Given the user clicks the button/link    jQuery=a:contains("1 to 20")
+    Given the user invites multiple assessors
     And The user clicks the button/link    link=Invite
-    When the user clicks the button/link    jQuery=td:contains("Will Smith") .button:contains("Invite individual")
-    And The user should see the text in the page    Please visit our new online Innovation Funding Service to respond to this request
+    When the user clicks the button/link    jQuery=a:contains("Review and send invites")
+    And The user should see the text in the page    Please visit our online Innovation Funding Service to respond to this request
     And The user enters text to a text field    css=#subject    Invitation to assess 'Sustainable living models for the future' @
     And the user clicks the button/link    jQuery=.button:contains("Send invite")
-    Then The user should not see the text in the page    Will Smith
+    Then The user should not see the text in the page    ${assessor_to_add}
     And The user clicks the button/link    link=Find
-    And the user should not see the text in the page    Will Smith
+    And the user should not see the text in the page    ${assessor_to_add}
 
 Invite non-registered assessors server side validations
     [Documentation]    INFUND-6411
@@ -161,7 +176,7 @@ Invite non-registered users
     And The user should see the element    jQuery=td:contains("Olivier Giroud")
     And The user should see the element    jQuery=td:contains("Olivier Giroud") ~ td:contains(${test_mailbox_one}+OlivierGiroud@gmail.com)
     And The user should see the element    jQuery=td:contains("Olivier Giroud") ~ td:contains("Emerging technology")
-    And The user should see the element    jQuery=td:contains("Olivier Giroud") ~ td .button:contains("Remove")
+    And The user should see the element    jQuery=td:contains("Olivier Giroud") ~ td .buttonlink:contains("Remove")
 
 Assessor overview information
     [Documentation]    INFUND-6450
@@ -170,16 +185,17 @@ Assessor overview information
     [Tags]
     Given The user clicks the button/link    link=Overview
     And the user clicks the button/link    jQuery=.pagination-label:contains("Next")
-    Then the user should see the element    jQuery=td:contains("Paul Plum") ~ td:contains("Invite accepted")
     And the user clicks the button/link    jQuery=.pagination-label:contains("Next")
-    And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-of-type(5):contains("Awaiting response")
-    And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-of-type(6):contains("Invite sent:")
+    Then the user should see the element    jQuery=td:contains("Paul Plum") ~ td:contains("Invite accepted")
     And the user clicks the button/link    jQuery=.pagination-label:contains("Previous")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:nth-of-type(5):contains("Invite declined")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Academic")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Yes")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Invite declined as not available")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Assembly / disassembly / joining")
+    And the user clicks the button/link    jQuery=.pagination-label:contains("Previous")
+    And the user should see the element    jQuery=td:contains("${assessor_to_add}") ~ td:nth-of-type(5):contains("Awaiting response")
+    And the user should see the element    jQuery=td:contains("${assessor_to_add}") ~ td:nth-of-type(6):contains("Invite sent:")
 
 *** Keywords ***
 The key statistics are calculated
@@ -198,6 +214,11 @@ The key statistics are calculated
 
 the calculations of the Assessors on invite list should be correct
     #Calculation of the Assessors on invite list
-    ${ASSESSORS_ON_LIST}=    Get matching xpath count    //form/table/tbody/tr
-    ${ASSESSORS_COUNT}=    Get text    css=div:nth-child(4) > div > span
+    ${ASSESSORS_ON_LIST}=    Get matching xpath count    //*[@id="content"]/form/div[2]/table/tbody/tr
+    ${ASSESSORS_COUNT}=    Get text    jQuery=.highlight-panel:contains("assessors on invite list") .heading-large
     Should Be Equal As Integers    ${ASSESSORS_ON_LIST}    ${ASSESSORS_COUNT}
+
+the user invites multiple assessors
+    the user clicks the button/link      jQuery=td:contains("Alexis Kinney") ~ td:contains("Add")
+    the user clicks the button/link      jQuery=td:contains("Angel Spencer") ~ td:contains("Add")
+    the user clicks the button/link      jQuery=td:contains("Angel Witt") ~ td:contains("Add")

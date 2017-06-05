@@ -15,7 +15,7 @@
 
             <p class="heading-medium" th:text="|Recipient: ${model.recipient}|">Dave smith</p>
 
-            <form th:action="@{/competition/assessors/invite/{inviteId}/resend(inviteId=${model.inviteId})}" method="post" enctype="multipart/form-data" th:object="${form}">
+            <form th:action="@{/competition/{competitionId}/assessors/invite/{inviteId}/resend(competitionId=${model.competitionId}, inviteId=${model.inviteId})}" method="post" enctype="multipart/form-data" th:object="${form}">
                 <div class="form-group">
                     <label class="form-label-bold" for="subject">Subject</label>
                     <input class="form-control width-full" id="subject" type="text" th:field="*{subject}" />
