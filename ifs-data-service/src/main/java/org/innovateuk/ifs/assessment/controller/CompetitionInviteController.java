@@ -25,28 +25,13 @@ public class CompetitionInviteController {
     @Autowired
     private CompetitionInviteService competitionInviteService;
 
-    // TODO we might be able to remove this as part of IFS-39
-    /**
-     * Gets the {@link AssessorInviteToSendResource} with the given {@code inviteId} only if it's in the
-     * {@link org.innovateuk.ifs.invite.constant.InviteStatus#CREATED} state.
-     *
-     * @param inviteId the id of the {@link AssessorInviteToSendResource} to get
-     * @return the {@link AssessorInviteToSendResource} with the given {@code inviteId} only if it's in the
-     * {@link org.innovateuk.ifs.invite.constant.InviteStatus#CREATED} state.
-     */
-    @GetMapping("/getCreatedInviteToSend/{inviteId}")
-    public RestResult<AssessorInviteToSendResource> getCreatedInviteToSend(@PathVariable long inviteId) {
-        return competitionInviteService.getCreatedInviteToSend(inviteId).toGetResponse();
+    @GetMapping("/getAllInvitesToSend/{competitionId}")
+    public RestResult<AssessorInvitesToSendResource> getAllInvitesToSend(@PathVariable long competitionId) {
+        return competitionInviteService.getAllInvitesToSend(competitionId).toGetResponse();
     }
 
-    /**
-     * Gets the {@link AssessorInviteToSendResource} with the given {@code inviteId} irrespective of it's state.
-     *
-     * @param inviteId the id of the {@link AssessorInviteToSendResource} to get
-     * @return the {@link AssessorInviteToSendResource} with the given {@code inviteId}
-     */
     @GetMapping("/getInviteToSend/{inviteId}")
-    public RestResult<AssessorInviteToSendResource> getInviteToSend(@PathVariable long inviteId) {
+    public RestResult<AssessorInvitesToSendResource> getInviteToSend(@PathVariable long inviteId) {
         return competitionInviteService.getInviteToSend(inviteId).toGetResponse();
     }
 
@@ -126,13 +111,19 @@ public class CompetitionInviteController {
     }
 
     @DeleteMapping("/deleteInvite")
-    public RestResult<Void> deleteInvite(@RequestParam String email, @RequestParam Long competitionId) {
+    public RestResult<Void> deleteInvite(@RequestParam String email, @RequestParam long competitionId) {
         return competitionInviteService.deleteInvite(email, competitionId).toDeleteResponse();
     }
 
-    @PostMapping("/sendInvite/{inviteId}")
-    public RestResult<Void> sendInvite(@PathVariable long inviteId, @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
-        return competitionInviteService.sendInvite(inviteId, assessorInviteSendResource).toPostWithBodyResponse();
+    @DeleteMapping("/deleteAllInvites")
+    public RestResult<Void> deleteAllInvites(@RequestParam long competitionId) {
+        return competitionInviteService.deleteAllInvites(competitionId).toDeleteResponse();
+    }
+
+    @PostMapping("/sendAllInvites/{competitionId}")
+    public RestResult<Void> sendAllInvites(@PathVariable long competitionId,
+                                           @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
+        return competitionInviteService.sendAllInvites(competitionId, assessorInviteSendResource).toPostResponse();
     }
 
     @PostMapping("/resendInvite/{inviteId}")
