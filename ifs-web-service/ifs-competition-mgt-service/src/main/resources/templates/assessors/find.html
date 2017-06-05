@@ -99,16 +99,33 @@
         </div>
     </form>
 
+    <div class="grid-row sorting">
+        <div class="column-one">
+            <span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">20</span>
+            <span class="heading-small">assessors</span>
+        </div>
+    </div>
+
     <form method="POST"
           th:action="@{/competition/{competitionId}/assessors/find/addSelected(competitionId=${model.competitionId})}"
           th:object="${selectionForm}"
           data-autosave="findAssessor">
+
         <div class="grid-row sorting">
-            <div class="column-half">
-                <span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">20</span>
-                <span class="heading-small">assessors</span>
+            <div class="column-half select-all">
+                <div class="multiple-choice">
+                    <input type="checkbox"
+                           data-select-all="[name=assessorEmails]"
+                           data-switches-button-status="[name=addSelected]"
+                           id="select-all-check"
+                           th:field="*{allSelected}"/>
+                    <label for="select-all-check">
+                        Select all assessors
+                    </label>
+                </div>
+                <span class="form-hint"><span data-count-selected="[id^=app-row-]">3</span> applications selected</span>
             </div>
-            <div class="column-half alignright">
+            <div class="column-half select-all alignright">
                 <button class="button" name="addSelected" data-enable-button-when="one-checked">Add selected to invite list</button>
             </div>
         </div>
@@ -117,18 +134,7 @@
             <table>
                 <thead>
                 <tr>
-                    <th scope="col" id="select-all">
-                        <div class="multiple-choice">
-                            <input type="checkbox"
-                                   data-select-all="[name=assessorEmails]"
-                                   data-switches-button-status="[name=addSelected]"
-                                   id="select-all-check"
-                                   th:field="*{allSelected}"/>
-                            <label for="select-all-check">
-                                <span class="invisible">All</span>
-                            </label>
-                        </div>
-                    </th>
+                    <th scope="col">Select assessor</th>
                     <th scope="col">Assessor name</th>
                     <th scope="col">Type</th>
                     <th scope="col">Innovation area</th>
