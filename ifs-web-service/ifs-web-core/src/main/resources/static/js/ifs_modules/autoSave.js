@@ -121,10 +121,17 @@ IFS.core.autoSave = (function () {
           }
           break
         case 'findAssessor':
-          jsonObj = {
-            assessor: field.val(),
-            isSelected: field.prop('checked')
+          if (field.attr('id') === 'select-all-check') {
+            jsonObj = {
+              addAll: field.prop('checked')
+            }
+          } else {
+            jsonObj = {
+              isSelected: field.prop('checked'),
+              assessor: field.val()
+            }
           }
+
           break
         default :
           jsonObj = false

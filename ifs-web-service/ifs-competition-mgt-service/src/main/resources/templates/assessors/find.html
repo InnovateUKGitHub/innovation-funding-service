@@ -101,14 +101,17 @@
 
     <form method="POST"
           th:action="@{/competition/{competitionId}/assessors/find/addSelected(competitionId=${model.competitionId})}"
-          th:object="${selectionForm}">
+          th:object="${selectionForm}"
+          data-autosave="findAssessor">
         <div class="grid-row sorting">
             <div class="column-half">
                 <span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">20</span>
                 <span class="heading-small">assessors</span>
             </div>
             <div class="column-half alignright">
-                <button class="button" name="addSelected" data-enable-button-when="one-checked">Add selected to invite list</button>
+                <button class="button" name="addSelected" data-enable-button-when="one-checked">Add selected to invite
+                    list
+                </button>
             </div>
         </div>
 
@@ -118,7 +121,11 @@
                 <tr>
                     <th scope="col" id="select-all">
                         <div class="multiple-choice">
-                            <input type="checkbox" data-select-all="[name=assessorEmails]" data-switches-button-status="[name=addSelected]" id="select-all-check" th:field="*{allSelected}"/>
+                            <input type="checkbox"
+                                   data-select-all="[name=assessorEmails]"
+                                   data-switches-button-status="[name=addSelected]"
+                                   id="select-all-check"
+                                   th:field="*{allSelected}"/>
                             <label for="select-all-check">
                                 <span class="invisible">All</span>
                             </label>
@@ -171,162 +178,6 @@
 
 <th:block th:insert="fragments/layout :: footer"/>
 <th:block th:insert="fragments/layout :: body-end"/>
+
 </body>
-
-        <th:block th:insert="fragments/layout :: footer" />
-        <th:block th:insert="fragments/layout :: body-end" />
-
-
-        <script type="text/javascript">
-            // <![CDATA[
-            // jQuery(document).ready(function(){
-            //
-            //                        jQuery('#select-assessor-header').attr('aria-hidden', 'true')
-            //                        jQuery('#select-all-checkbox').attr('aria-hidden', 'false')
-            //
-            //                        var checkboxes = jQuery("td :checkbox");
-            //                        var selectAll = jQuery("#select-all-check");
-            //                        var competitionId = jQuery('#competition_id').val();
-            //                        var url = 'competition/' + competitionId + '/assessors/find';
-            //                        var data;
-            //
-            //                        function allChecked(){
-            //                        return checkboxes.length === checkboxes.filter(":checked").length;
-            //                        }
-            //
-            //                        function updateSelectAllStatus(){
-            //                        selectAll.prop("checked", allChecked()? true : false)
-            //
-            //                        if (allChecked()) {
-            //                        selectAll.addClass('selected')
-            //                        } else {
-            //                        selectAll.parent().removeClass('selected')
-            //                        }
-            //                        }
-            //
-            //                        function handleSelectAllClick(){
-            //                        checkboxes.prop("checked", allChecked()? false : true)
-            //
-            //                        if (allChecked()) {
-            //                        checkboxes.parent().addClass('selected')
-            //                        } else {
-            //                        checkboxes.parent().removeClass('selected')
-            //                        }
-            //                        }
-            //
-            //                        function updateController() {
-            //                        jQuery.ajaxProtected({
-            //                                             url: window.location.href,
-            //                                             method: 'POST',
-            //                                             dataType: 'json', // for requests headers so that the back-end can give a version without 302 redirect
-            //                                             data: data
-            //                                             })
-            //                        .done(function (data) {
-            //                              //alert("done");
-            //                              })
-            //                        .fail(function (jqXHR, data) {
-            //                              //alert("error");
-            //                              })
-            //                        }
-            //
-            //                        selectAll.on("click", function(e) {
-            //                                     var addAll = "addAll=" + this.checked;
-            //                                     data = addAll;
-            //
-            //                                     handleSelectAllClick();
-            //                                     updateSelectAllStatus();
-            //                                     updateController();
-            //                                     });
-            //
-                                //    checkboxes.change(function(){
-                                   //
-                                //                      var addAssessor = "assessor=";
-                                //                      var isSelected = "&isSelected=";
-                                   //
-                                //                      data = "";
-                                //                      addAssessor = addAssessor + this.value;
-                                //                      isSelected = isSelected + this.checked;
-                                //                      data = addAssessor + isSelected;
-                                //                      updateSelectAllStatus();
-                                //                      updateController()
-                                //                      });
-                                   //
-                                //    });
-            //                        // ]]>
-            </script>
-
-                jQuery('#select-assessor-header').attr('aria-hidden', 'true')
-                jQuery('#select-all-checkbox').attr('aria-hidden', 'false')
-
-                var checkboxes = jQuery("td :checkbox");
-                var selectAll = jQuery("#select-all-check");
-                var competitionId = jQuery('#competition_id').val();
-                var url = 'competition/' + competitionId + '/assessors/find';
-                var data;
-
-                function allChecked(){
-                  return checkboxes.length === checkboxes.filter(":checked").length;
-                }
-
-                function updateSelectAllStatus(){
-                  selectAll.prop("checked", allChecked()? true : false)
-
-                  if (allChecked()) {
-                    selectAll.addClass('selected')
-                  } else {
-                    selectAll.parent().removeClass('selected')
-                  }
-                }
-
-                function handleSelectAllClick(){
-                  checkboxes.prop("checked", allChecked()? false : true)
-
-                  if (allChecked()) {
-                    checkboxes.parent().addClass('selected')
-                  } else {
-                    checkboxes.parent().removeClass('selected')
-                  }
-                }
-
-                function updateController() {
-                    jQuery.ajaxProtected({
-                    url: window.location.href,
-                    method: 'POST',
-                    dataType: 'json', // for requests headers so that the back-end can give a version without 302 redirect
-                    data: data
-                    })
-                    .done(function (data) {
-                        //alert("done");
-                    })
-                    .fail(function (jqXHR, data) {
-                        //alert("error");
-                    })
-                }
-
-                selectAll.on("click", function(e) {
-                  var addAll = "addAll=" + this.checked;
-                  data = addAll;
-
-                  handleSelectAllClick();
-                  updateSelectAllStatus();
-                  updateController();
-                });
-
-                checkboxes.change(function(){
-
-                  var addAssessor = "assessor=";
-                  var isSelected = "&isSelected=";
-
-                  data = "";
-                  addAssessor = addAssessor + this.value;
-                  isSelected = isSelected + this.checked;
-                  data = addAssessor + isSelected;
-                  updateSelectAllStatus();
-                  updateController()
-                });
-           });
-	// ]]>
-
-</script>
-
 </html>
