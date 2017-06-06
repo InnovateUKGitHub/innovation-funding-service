@@ -1,4 +1,4 @@
-FROM innovateuk/idp-base:@version@
+FROM ifshibdev/idp-base
 
 ENV DEBIAN_FRONTEND=noninteractive \
   HTTPPORT=9080 \

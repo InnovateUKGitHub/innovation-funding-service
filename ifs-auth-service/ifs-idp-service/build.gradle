@@ -88,7 +88,8 @@ task buildDockerBaseImage(type: Docker) {
 }
 
 task buildDocker(type: Docker) {
-    dependsOn 'buildDockerBaseImage'
+    dependsOn ':ifs-auth-service:ifs-registration-service:build'
+    dependsOn prepareDockerFile
 
     push = false
     applicationName = 'idp-service'
