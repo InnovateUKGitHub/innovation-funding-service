@@ -255,3 +255,9 @@ the user fills the create account form
     Input Password    id=password    ${correct_password}
     the user selects the checkbox    termsAndConditions
     the user clicks the button/link    jQuery=.button:contains("Create account")
+
+the user clicks the forgot psw link
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    click element    link=forgot your password?
+    Run Keyword If    '${status}' == 'FAIL'    click element    jQuery=summary:contains("Need help signing in or creating an account?")
+    Run Keyword If    '${status}' == 'FAIL'    click element    link=Forgotten your password?
+
