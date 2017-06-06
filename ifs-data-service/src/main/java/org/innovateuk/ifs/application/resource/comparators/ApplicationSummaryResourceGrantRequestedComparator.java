@@ -6,7 +6,7 @@ import java.util.Comparator;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 
 /**
- * Camporator, handling nulls, and using id if grant requested is equal.
+ * Comparator, handling nulls, and using id if grant requested is equal.
  */
 public class ApplicationSummaryResourceGrantRequestedComparator extends DualFieldComparator<BigDecimal, Long> implements Comparator<ApplicationSummaryResource> {
 
