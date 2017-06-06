@@ -12,16 +12,16 @@ IFS.competitionManagement.selectAll = (function () {
       })
     },
     changeState: function (el) {
-      var selectAllcheckbox = jQuery(el)
-      var selectAllSelector = selectAllcheckbox.attr(s.selectAllAttribute)
-      var selectCheckboxes = jQuery(selectAllSelector)
-      var status = selectAllcheckbox.prop('checked')
+      var $selectAllCheckbox = jQuery(el)
+      var selectAllSelector = $selectAllCheckbox.attr(s.selectAllAttribute)
+      var $selectCheckboxes = jQuery(selectAllSelector)
+      var status = $selectAllCheckbox.prop('checked')
 
-      if (selectCheckboxes.length) {
+      if ($selectCheckboxes.length) {
         if (status === true) {
-          selectCheckboxes.prop('checked', 'checked')
+          $selectCheckboxes.prop('checked', 'checked').trigger('checked')
         } else {
-          selectCheckboxes.removeProp('checked')
+          $selectCheckboxes.removeProp('checked').trigger('unchecked')
         }
       }
     }
