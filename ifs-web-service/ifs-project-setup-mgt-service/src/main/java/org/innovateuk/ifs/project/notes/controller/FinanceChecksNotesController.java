@@ -113,9 +113,21 @@ public class FinanceChecksNotesController {
         projectService.getPartnerOrganisation(projectId, organisationId);
         saveOriginCookie(response, projectId, organisationId, noteId, loggedInUser.getId());
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, noteId);
-        model.addAttribute("model", populateNoteViewModel(projectId, organisationId, noteId, attachments));
+        populateNoteViewModel(projectId, organisationId, noteId, model, attachments);
         model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId, noteId).orElse(new FinanceChecksNotesAddCommentForm()));
         return NOTES_VIEW;
+    }
+
+    private void populateNoteViewModel(Long projectId, Long organisationId, Long noteId, Model model, List<Long> attachments) {
+        FinanceChecksNotesViewModel financeChecksNotesViewModel = populateNoteViewModel(projectId, organisationId, noteId, attachments);
+        validateNoteId(financeChecksNotesViewModel, noteId);
+        model.addAttribute("model", financeChecksNotesViewModel);
+    }
+
+    private void validateNoteId(FinanceChecksNotesViewModel financeChecksNotesViewModel, Long noteId) {
+        if (financeChecksNotesViewModel.getNotes().stream().noneMatch(threadViewModel -> threadViewModel.getId().equals(noteId))) {
+            throw new ObjectNotFoundException();
+        }
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
