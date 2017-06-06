@@ -64,6 +64,7 @@ The User can Add and Remove Assessors
     Given The user clicks the button/link    link=Find
     And the user clicks the button/link    jQuery=a:contains(41 to)
     When the user selects the checkbox    assessor-id-159
+    And the user should see the element    jQuery=.form-hint:contains("1 assessor(s) selected")
     And the user clicks the button/link    jQuery=button:contains("Add selected to invite list")
     Then The user should see the text in the page    will.smith@gmail.com
     And The user should see the text in the page    Will Smith
