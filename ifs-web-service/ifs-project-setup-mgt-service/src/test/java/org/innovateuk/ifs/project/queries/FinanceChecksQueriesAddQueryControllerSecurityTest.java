@@ -30,7 +30,7 @@ public class FinanceChecksQueriesAddQueryControllerSecurityTest extends BaseProj
 
     @Override
     protected Consumer<SetupSectionsPermissionRules> getVerification() {
-        return permissionRules -> permissionRules.internalCanAccessFinanceChecksAddQuery(eq(1L), isA(UserResource.class));
+        return permissionRules -> permissionRules.internalCanAccessFinanceChecksAddQuery(isA(ProjectOrganisationTarget.class), isA(UserResource.class));
     }
 
     @Test

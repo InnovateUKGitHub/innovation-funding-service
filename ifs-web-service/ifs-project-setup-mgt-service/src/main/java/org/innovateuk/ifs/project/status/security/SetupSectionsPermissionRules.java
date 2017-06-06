@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.queries.ProjectOrganisationTarget;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.project.status.StatusService;
@@ -81,10 +82,10 @@ public class SetupSectionsPermissionRules {
         return doSectionCheck(projectId, user, SetupSectionInternalUser::canAccessFinanceChecksQueriesSection);
     }
 
-    @PermissionRule(value = "ACCESS_FINANCE_CHECKS_QUERIES_SECTION_ADD_QUERY", description = "A finance team user cannot add a query until a finance contact has been allocated")
-    public boolean internalCanAccessFinanceChecksAddQuery(Long projectId, UserResource user) {
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-        return simpleFindFirst(projectUsers, pr -> pr.isFinanceContact()).isPresent() && doSectionCheck(projectId, user, SetupSectionInternalUser::canAccessFinanceChecksQueriesSection);
+    @PermissionRule(value = "ACCESS_FINANCE_CHECKS_QUERIES_SECTION_ADD_QUERY", description = "A finance team user cannot add a query until a finance contact has been allocated for the organisation")
+    public boolean internalCanAccessFinanceChecksAddQuery(ProjectOrganisationTarget target, UserResource user) {
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(target.getProjectId());
+        return simpleFindFirst(projectUsers, pu -> pu.isFinanceContact() && pu.getOrganisation() == target.getOrganisationId()).isPresent() && doSectionCheck(target.getProjectId(), user, SetupSectionInternalUser::canAccessFinanceChecksQueriesSection);
     }
 
     @PermissionRule(value = "ACCESS_FINANCE_CHECKS_NOTES_SECTION", description = "A finance team can always access the Finance checks notes section")
