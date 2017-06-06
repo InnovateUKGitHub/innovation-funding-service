@@ -207,6 +207,7 @@ public class ApplicationFormController {
     }
 
     @ProfileExecution
+    @PreAuthorize("hasAuthority('applicant')")
     @GetMapping(value = {QUESTION_URL + "{" + QUESTION_ID + "}", QUESTION_URL + "edit/{" + QUESTION_ID + "}"})
     public String showQuestion(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
                                @SuppressWarnings("unused") BindingResult bindingResult,
@@ -249,6 +250,7 @@ public class ApplicationFormController {
     }
 
     @ProfileExecution
+    @PreAuthorize("hasAuthority('applicant')")
     @GetMapping(SECTION_URL + "{sectionId}")
     public String applicationFormWithOpenSection(@Valid @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form, BindingResult bindingResult, Model model,
                                                  @PathVariable(APPLICATION_ID) final Long applicationId,
@@ -1149,6 +1151,7 @@ public class ApplicationFormController {
 
 
     @ProfileExecution
+    @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/{sectionType}")
     public String redirectToSection(@PathVariable("sectionType") SectionType type,
                                     @PathVariable(APPLICATION_ID) Long applicationId) {
