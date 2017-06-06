@@ -1,14 +1,14 @@
-package org.innovateuk.ifs.application.populator;
+package org.innovateuk.ifs.application.forms.populator;
 
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.forms.populator.QuestionModelPopulator;
+import org.innovateuk.ifs.application.forms.viewmodel.QuestionViewModel;
+import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
-import org.innovateuk.ifs.application.forms.viewmodel.QuestionViewModel;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
@@ -29,7 +29,7 @@ import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuild
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
 public class QuestionModelPopulatorTest extends BaseUnitTest {

@@ -1,6 +1,5 @@
-package org.innovateuk.ifs.application.overview.viewmodel.overview;
+package org.innovateuk.ifs.application.overview.viewmodel;
 
-import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewSectionViewModel;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
@@ -15,7 +14,8 @@ import java.util.SortedMap;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 /**

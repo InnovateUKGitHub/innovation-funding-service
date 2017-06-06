@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application;
+package org.innovateuk.ifs.application.areas.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.areas.controller.ResearchCategoryController;

@@ -1,11 +1,9 @@
-package org.innovateuk.ifs.application;
+package org.innovateuk.ifs.application.team.controller;
 
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.registration.AbstractAcceptInviteController;
 import org.innovateuk.ifs.registration.AcceptInviteController;
-import org.innovateuk.ifs.registration.OrganisationCreationController;
-import org.innovateuk.ifs.registration.RegistrationController;
 import org.innovateuk.ifs.registration.model.AcceptRejectApplicationInviteModelPopulator;
 import org.innovateuk.ifs.registration.service.RegistrationService;
 import org.innovateuk.ifs.registration.viewmodel.AcceptRejectApplicationInviteViewModel;

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application;
+package org.innovateuk.ifs.application.forms.controller;
 
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.forms.validator.ApplicationDetailsEditableValidator;

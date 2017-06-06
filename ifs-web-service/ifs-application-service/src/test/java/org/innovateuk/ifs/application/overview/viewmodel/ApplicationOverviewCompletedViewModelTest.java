@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.overview.viewmodel.overview;
+package org.innovateuk.ifs.application.overview.viewmodel;
 
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewCompletedViewModel;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewSectionViewModel;

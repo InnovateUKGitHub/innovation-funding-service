@@ -1,12 +1,12 @@
-package org.innovateuk.ifs.application;
+package org.innovateuk.ifs.application.overhead;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.areas.controller.InnovationAreaController;
+import org.innovateuk.ifs.application.areas.populator.ApplicationInnovationAreaPopulator;
+import org.innovateuk.ifs.application.areas.viewmodel.InnovationAreaViewModel;
 import org.innovateuk.ifs.application.forms.controller.ApplicationFormController;
 import org.innovateuk.ifs.application.forms.validator.ApplicationDetailsEditableValidator;
-import org.innovateuk.ifs.application.areas.populator.ApplicationInnovationAreaPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.areas.viewmodel.InnovationAreaViewModel;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
@@ -19,14 +19,10 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class InnovationAreaControllerTest extends BaseControllerMockMVCTest<InnovationAreaController> {
     @Override

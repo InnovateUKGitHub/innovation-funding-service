@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.populator;
+package org.innovateuk.ifs.application.areas.populator;
 
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.areas.populator.ApplicationInnovationAreaPopulator;

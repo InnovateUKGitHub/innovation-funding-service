@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.populator;
+package org.innovateuk.ifs.application.forms.populator;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder;

@@ -1,7 +1,7 @@
-package org.innovateuk.ifs.application;
+package org.innovateuk.ifs.application.team.controller;
 
+import org.innovateuk.ifs.application.overview.controller.BaseApplicationControllerSecurityTest;
 import org.innovateuk.ifs.application.team.security.ApplicationPermissionRules;
-import org.innovateuk.ifs.application.team.controller.ApplicationTeamController;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 

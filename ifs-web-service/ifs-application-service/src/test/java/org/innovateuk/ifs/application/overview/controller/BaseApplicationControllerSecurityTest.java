@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application;
+package org.innovateuk.ifs.application.overview.controller;
 
 import org.innovateuk.ifs.security.BaseControllerSecurityTest;
 import org.mockito.Mockito;

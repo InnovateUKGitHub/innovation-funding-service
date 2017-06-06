@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application;
+package org.innovateuk.ifs.application.team.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.team.form.ApplicantInviteForm;
