@@ -23,6 +23,8 @@ echo "$IDP_ENCRYPTION_KEY" > /opt/shibboleth-idp/credentials/idp-encryption.key 
 echo "$IDP_ENCRYPTION_CERTIFICATE" > /opt/shibboleth-idp/credentials/idp-encryption.crt
 
 # idp configuration
+sed -i "s#\/\/ifs.local-dev#\/\/$SPHOST#g" /etc/shibboleth/*
+
 proxy_certificate=$(sed '/^-----/d' /etc/shibboleth/sp_proxy_certificate.pem | sed '{:q;N;s/\n/\\n/g;t q}')
 sed -i "s#\${PROXY_CERTIFICATE}#$proxy_certificate#g" /etc/shibboleth/metadata.xml
 
