@@ -49,12 +49,6 @@ public class CompetitionController {
         return getFileResponseEntity(resource, fileDetails);
     }
 
-    @GetMapping("details")
-    public String competitionDetails(final Model model, @PathVariable("competitionId") final long competitionId) {
-        addCompetitionToModel(model, competitionId);
-        return "competition/details";
-    }
-
     @GetMapping("info/before-you-apply")
     public String beforeYouApply(final Model model, @PathVariable("competitionId") final long competitionId) {
         addCompetitionToModel(model, competitionId);
