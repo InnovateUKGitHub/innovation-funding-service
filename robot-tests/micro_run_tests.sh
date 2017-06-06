@@ -238,7 +238,7 @@ function runTests() {
 function deleteEmails() {
     section "=> SCRUBBING DOWN THE TEST MAILBOXES"
     cd ${scriptDir}
-    pybot --pythonpath IFS_acceptance_tests/libs --outputdir target/set_up_steps IFS_acceptance_tests/tests/00__Set_Up_Tests/delete_emails.robot 2>&1 >/dev/null
+    pybot --pythonpath IFS_acceptance_tests/libs --outputdir target/set_up_steps IFS_acceptance_tests/tests/00__Set_Up_Tests/delete_emails.robot
     echo "...done"
 }
 
