@@ -11,12 +11,19 @@ IFS.competitionManagement.countSelected = (function () {
       jQuery('[' + s.selectAllAttribute + ']').each(function () {
         var countEl = jQuery(this)
         var selector = IFS.competitionManagement.countSelected.getSelector(countEl)
-        var count = IFS.competitionManagement.countSelected.countChecked(selector)
-        IFS.competitionManagement.countSelected.setCount(countEl, count)
+
+        var currentCount = countEl.data('countSelectedInitial')
+
+        if (typeof currentCount !== 'number') {
+          currentCount = IFS.competitionManagement.countSelected.countChecked(selector)
+        }
+
+        IFS.competitionManagement.countSelected.setCount(countEl, currentCount)
 
         jQuery('body').on('change', selector, function () {
-          var count = IFS.competitionManagement.countSelected.countChecked(selector)
-          IFS.competitionManagement.countSelected.setCount(countEl, count)
+          jQuery(this).prop('checked') ? currentCount++ : currentCount--
+
+          IFS.competitionManagement.countSelected.setCount(countEl, currentCount)
         })
       })
     },

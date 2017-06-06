@@ -123,10 +123,20 @@
                         Select all assessors
                     </label>
                 </div>
-                <span class="form-hint"><span data-count-selected="[id^=app-row-]">3</span> assessors selected</span>
+                <span class="form-hint">
+                    <span data-count-selected="table input[type=checkbox]"
+                          th:attr="
+                          data-count-selected-initial=${#lists.size(selectionForm.assessorEmails)},
+                          data-count-selected-max=${model.pagination.totalCount}">
+                    </span> assessor(s) selected
+                </span>
             </div>
             <div class="column-half select-all alignright">
-                <button class="button" name="addSelected" data-enable-button-when="one-checked">Add selected to invite list</button>
+                <button class="button" name="addSelected"
+                        data-enable-button-when="one-checked"
+                        th:attr="data-enable-initial=${!#lists.isEmpty(selectionForm.assessorEmails)}">
+                    Add selected to invite list
+                </button>
             </div>
         </div>
 
