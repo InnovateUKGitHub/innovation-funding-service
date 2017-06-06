@@ -78,6 +78,7 @@ import static org.innovateuk.ifs.testdata.builders.PublicContentGroupDataBuilder
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
+import static org.innovateuk.ifs.user.resource.UserRoleType.SUPPORT;
 import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.junit.Assert.fail;
@@ -473,7 +474,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                         createPreRegistrationEntry(line.emailAddress);
 
                 if (line.emailVerified) {
-                    createUser(baseBuilder, line, !COMP_TECHNOLOGIST.equals(role));
+                    createUser(baseBuilder, line, !asList(COMP_TECHNOLOGIST, SUPPORT).contains(role));
                 } else {
                     baseBuilder.build();
                 }
