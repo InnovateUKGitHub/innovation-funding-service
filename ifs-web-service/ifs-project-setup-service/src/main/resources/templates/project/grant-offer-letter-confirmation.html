@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Grant Offer Letter Confirmation'" />
+</head>
+<body>
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <h2 class="heading-medium no-margin">Confirm submission</h2>
+    <p>Once you submit the signed grant offer letter, we'll review it and will contact you if we need further information.</p>
+    <div class="alignright-button">
+        <form th:action="@{/project/{id}/offer/submit(id=${projectId})}" method="post">
+            <button class="button large" name="confirmSubmit">Confirm submission</button>
+        </form>
+    </div>
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>
