@@ -13,6 +13,8 @@ dependencies{
     runtime project(path: ':ifs-auth-service:ifs-registration-service', configuration: 'war')
 }
 
+def String oracleJdkDomain = project.properties['oracle.jdk.domain'] ?:"http://download.oracle.com"
+
 def String idpCertsVolume = 'src/main/docker/certs'
 
 def String idpProxyKeyFile = "${idpCertsVolume}/idp_proxy_key.pem"
@@ -28,7 +30,7 @@ def String idpEncryptionCertificateFile = "${idpCertsVolume}/idp-encryption.crt"
 
 def String authIdpRegapiKey = project.properties['auth.idp.regapikey'] ?:"1234567890"
 
-task prepareDockerFile(type: Copy) {
+task prepareDockerFile {
     dependsOn ':ifs-auth-service:prepareSecrets'
 
     outputs.upToDateWhen { false }
@@ -44,20 +46,30 @@ task prepareDockerFile(type: Copy) {
     def String idpEncryptionKey = file(idpEncryptionKeyFile).text.trim().replace('\n', '\\n')
     def String idpEncryptionCertificate = file(idpEncryptionCertificateFile).text.trim().replace('\n', '\\n')
 
-    from 'src/main/docker/'
-    into 'src/main/docker/'
-    include 'Dockerfile-template'
-    rename 'Dockerfile-template', 'Dockerfile'
-    filter(ReplaceTokens, tokens: [auth_idp_regapikey: authIdpRegapiKey,
-                                   auth_idp_proxy_key: idpProxyKey,
-                                   auth_idp_proxy_certificate: idpProxyCertificate,
-                                   auth_idp_proxy_cacertificate: idpProxyCacertificate,
-                                   auth_sp_proxy_certificate: spProxyCertificate,
-                                   auth_idp_signing_key: idpSigningKey,
-                                   auth_idp_signing_certificate: idpSigningCertificate,
-                                   auth_idp_encryption_key: idpEncryptionKey,
-                                   auth_idp_encryption_certificate: idpEncryptionCertificate,
-                                   version: project.properties['version']])
+    copy {
+        from 'src/main/docker/'
+        into 'src/main/docker/'
+        include 'Dockerfile-base-template'
+        rename 'Dockerfile-base-template', 'Dockerfile-base'
+        filter(ReplaceTokens, tokens: [oracle_jdk_domain: oracleJdkDomain])
+    }
+
+    copy {
+        from 'src/main/docker/'
+        into 'src/main/docker/'
+        include 'Dockerfile-template'
+        rename 'Dockerfile-template', 'Dockerfile'
+        filter(ReplaceTokens, tokens: [auth_idp_regapikey: authIdpRegapiKey,
+                                       auth_idp_proxy_key: idpProxyKey,
+                                       auth_idp_proxy_certificate: idpProxyCertificate,
+                                       auth_idp_proxy_cacertificate: idpProxyCacertificate,
+                                       auth_sp_proxy_certificate: spProxyCertificate,
+                                       auth_idp_signing_key: idpSigningKey,
+                                       auth_idp_signing_certificate: idpSigningCertificate,
+                                       auth_idp_encryption_key: idpEncryptionKey,
+                                       auth_idp_encryption_certificate: idpEncryptionCertificate,
+                                       version: project.properties['version']])
+    }
 }
 
 task buildDockerBaseImage(type: Docker) {
@@ -74,6 +86,7 @@ task buildDockerBaseImage(type: Docker) {
         }
     }
 }
+
 task buildDocker(type: Docker) {
     dependsOn 'buildDockerBaseImage'
 

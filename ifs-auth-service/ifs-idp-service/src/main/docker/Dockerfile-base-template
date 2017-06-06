@@ -4,7 +4,8 @@ ENV DEBIAN_FRONTEND=noninteractive \
   JAVAVER=8 \
   JAVAUPD=131 \
   JAVABLD=11 \
-  JAVASIG=d54c1d3a095b4ff2b6607d096fa80163
+  JAVASIG=d54c1d3a095b4ff2b6607d096fa80163 \
+  ORACLE_JDK_DOMAIN=@oracle_jdk_domain@
 
 ENV JAVA_HOME=/usr/lib/jvm/java-${JAVAVER}-oracle
 ENV JRE_HOME=${JAVA_HOME}/jre
@@ -16,9 +17,9 @@ RUN apt-get update --fix-missing && \
 # Oracle JDK \
   apt-get -y install ca-certificates gcc libc6-dev libssl-dev make java-common openssl unzip curl apt-transport-https bsdtar && \
   curl --connect-timeout 30 -m 120 -L -s --retry 5 --cacert /etc/ssl/certs/GeoTrust_Global_CA.pem --header "Cookie: oraclelicense=accept-securebackup-cookie;" \
-    http://download.oracle.com/otn-pub/java/jdk/${JAVAVER}u${JAVAUPD}-b${JAVABLD}/${JAVASIG}/jdk-${JAVAVER}u${JAVAUPD}-linux-x64.tar.gz | bsdtar -C /tmp -xf - && \
+    ${ORACLE_JDK_DOMAIN}/otn-pub/java/jdk/${JAVAVER}u${JAVAUPD}-b${JAVABLD}/${JAVASIG}/jdk-${JAVAVER}u${JAVAUPD}-linux-x64.tar.gz | bsdtar -C /tmp -xf - && \
   mkdir -p /usr/lib/jvm && mv /tmp/jdk1.${JAVAVER}.0_${JAVAUPD} ${JAVA_HOME} && \
-  curl -jksSLH "Cookie: oraclelicense=accept-securebackup-cookie" -o /tmp/unlimited_jce_policy.zip "http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip" && \
+  curl -jksSLH "Cookie: oraclelicense=accept-securebackup-cookie" -o /tmp/unlimited_jce_policy.zip "${ORACLE_JDK_DOMAIN}/otn-pub/java/jce/8/jce_policy-8.zip" && \
   unzip -jo -d ${JAVA_HOME}/jre/lib/security /tmp/unlimited_jce_policy.zip && \
   update-alternatives --install "/usr/bin/java" "java" "${JRE_HOME}/bin/java" 1 && \
   update-alternatives --install "/usr/bin/javac" "javac" "${JAVA_HOME}/bin/javac" 1 && \
