@@ -293,6 +293,26 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
+    public void testViewNewCommentWhenNoteIdDoesNotExist() throws Exception {
+
+        Cookie formCookie;
+        FinanceChecksNotesAddCommentForm form = new FinanceChecksNotesAddCommentForm();
+        form.setComment("comment");
+        formCookie = createFormCookie(form);
+
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
+
+        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
+        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
+        when(financeCheckServiceMock.loadNotes(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(Collections.emptyList()));
+
+        mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/"+ noteId +"/new-comment")
+                .cookie(formCookie))
+                .andExpect(status().isNotFound())
+                .andReturn();
+    }
+
+    @Test
     public void testViewNewCommentInvalidOrganisation() throws Exception {
 
         Cookie formCookie;
