@@ -15,16 +15,17 @@ IFS.competitionManagement.inviteAssessorsFind = (function () {
     },
     onSelectAllCheckboxChange: function () {
       var $selectedCounter = jQuery('[data-count-selected]')
-      var maxCount = $selectedCounter.data('countSelectedMax')
+      var maxCount = $selectedCounter.data(IFS.competitionManagement.countSelected.settings.maxCountData)
+      var countDataField = IFS.competitionManagement.countSelected.settings.currentCountData
 
       jQuery('[name="allSelected"]').on('change', function () {
         var $allSelectedCheckbox = jQuery(this)
         var isChecked = $allSelectedCheckbox.prop('checked')
 
         if (isChecked) {
-          $selectedCounter.text(maxCount)
+          $selectedCounter.data(countDataField, maxCount).text(maxCount)
         } else {
-          $selectedCounter.text(0)
+          $selectedCounter.data(countDataField, 0).text(0)
         }
       })
     }
