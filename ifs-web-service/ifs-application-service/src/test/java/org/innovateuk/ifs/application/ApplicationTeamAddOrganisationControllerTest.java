@@ -1,11 +1,12 @@
 package org.innovateuk.ifs.application;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.form.ApplicantInviteForm;
-import org.innovateuk.ifs.application.form.ApplicationTeamAddOrganisationForm;
-import org.innovateuk.ifs.application.populator.ApplicationTeamAddOrganisationModelPopulator;
+import org.innovateuk.ifs.application.team.form.ApplicantInviteForm;
+import org.innovateuk.ifs.application.team.form.ApplicationTeamAddOrganisationForm;
+import org.innovateuk.ifs.application.team.populator.ApplicationTeamAddOrganisationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.viewmodel.team.ApplicationTeamAddOrganisationViewModel;
+import org.innovateuk.ifs.application.team.controller.ApplicationTeamAddOrganisationController;
+import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamAddOrganisationViewModel;
 import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.user.resource.UserResource;

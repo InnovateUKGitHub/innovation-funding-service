@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.application;
 
-import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
-import org.innovateuk.ifs.application.security.OrganisationPermissionRules;
+import org.innovateuk.ifs.application.team.security.ApplicationPermissionRules;
+import org.innovateuk.ifs.application.team.security.OrganisationPermissionRules;
+import org.innovateuk.ifs.application.team.controller.ApplicationTeamAddOrganisationController;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 

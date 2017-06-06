@@ -1,8 +1,9 @@
 package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.BaseUnitTest;
+import org.innovateuk.ifs.application.areas.populator.ApplicationInnovationAreaPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.viewmodel.InnovationAreaViewModel;
+import org.innovateuk.ifs.application.areas.viewmodel.InnovationAreaViewModel;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;

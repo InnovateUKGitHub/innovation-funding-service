@@ -1,8 +1,9 @@
 package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.BaseUnitTest;
+import org.innovateuk.ifs.application.areas.populator.ApplicationResearchCategoryPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.viewmodel.ResearchCategoryViewModel;
+import org.innovateuk.ifs.application.areas.viewmodel.ResearchCategoryViewModel;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.junit.Test;

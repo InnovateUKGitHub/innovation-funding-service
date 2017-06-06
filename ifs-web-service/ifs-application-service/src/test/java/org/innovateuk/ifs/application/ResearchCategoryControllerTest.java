@@ -1,9 +1,12 @@
 package org.innovateuk.ifs.application;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.populator.ApplicationResearchCategoryPopulator;
+import org.innovateuk.ifs.application.areas.controller.ResearchCategoryController;
+import org.innovateuk.ifs.application.forms.controller.ApplicationFormController;
+import org.innovateuk.ifs.application.forms.validator.ApplicationDetailsEditableValidator;
+import org.innovateuk.ifs.application.areas.populator.ApplicationResearchCategoryPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.viewmodel.ResearchCategoryViewModel;
+import org.innovateuk.ifs.application.areas.viewmodel.ResearchCategoryViewModel;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;

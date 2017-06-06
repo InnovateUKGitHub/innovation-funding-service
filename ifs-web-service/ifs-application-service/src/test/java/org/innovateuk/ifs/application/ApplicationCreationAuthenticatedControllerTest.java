@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application;
 
 import org.innovateuk.ifs.BaseUnitTest;
+import org.innovateuk.ifs.application.creation.controller.ApplicationCreationAuthenticatedController;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
