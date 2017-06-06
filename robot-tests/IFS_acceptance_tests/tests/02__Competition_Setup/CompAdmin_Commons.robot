@@ -164,6 +164,7 @@ the user fills in the Public content and publishes
     the user enters text to a text field    id=heading-0  Heading 1
     the user enters text to a text field    jQuery=div.editor:first-of-type  Content 1
     the user clicks the button/link         jQuery=button:contains("Save and review")
+    the user clicks the button/link         jQuery=.button:contains("Return to public content")
     the user should see the element         jQuery=div:contains("Scope") ~ .task-status-complete
     # Save the dates
     the user clicks the button/link  link=Dates
