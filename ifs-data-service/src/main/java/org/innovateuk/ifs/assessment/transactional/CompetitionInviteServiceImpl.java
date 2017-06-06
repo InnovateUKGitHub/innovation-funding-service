@@ -449,8 +449,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     public ServiceResult<Void> inviteUsers(List<ExistingUserStagedInviteResource> stagedInvites) {
         stagedInvites.forEach(stagedInvite -> {
             getUserByEmail(stagedInvite.getEmail())
-                    .andOnSuccess(user -> inviteUserToCompetition(user, stagedInvite.getCompetitionId()))
-                    .andOnSuccessReturnVoid();
+                    .andOnSuccess(user -> inviteUserToCompetition(user, stagedInvite.getCompetitionId()));
 
         });
         return serviceSuccess();

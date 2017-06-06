@@ -268,7 +268,7 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     }
 
     @Test
-    public void inviteExistingUsers() throws Exception {
+    public void inviteUsers() throws Exception {
         long competitionId = 1L;
 
         ExistingUserStagedInviteListResource existingUserStagedInviteListResource = newExistingUserStagedInviteListResource()
