@@ -12,7 +12,7 @@ ${test_mailbox_one}             worth.email.test
 ${test_mailbox_two}             worth.email.test.two
 ${unique_email_number}          1
 ${submit_test_email}            ${test_mailbox_one}+submittest@gmail.com
-${local_imap}                   mail
-${local_imap_port}              8143
+${local_imap}
+${local_imap_port}              9876
 ${invite_email}                 ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com
 ${lead_applicant}               steve.smith@empire.com

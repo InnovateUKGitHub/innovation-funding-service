@@ -15,7 +15,6 @@ Resource          ../../../resources/defaultResources.robot
 The invited user should not follow the registration flow again
     [Documentation]    INFUND-1458
     [Tags]    HappyPath
-    [Setup]    Delete the emails from both test mailboxes
     Given we create a new user                            Stuart   Anderson   ${test_mailbox_one}+invitedregistered@gmail.com
     and the user closes the browser
     Given the lead applicant invites a registered user          ${test_mailbox_one}+invite2@gmail.com    ${test_mailbox_one}+invitedregistered@gmail.com
