@@ -124,9 +124,24 @@ Academic partner can upload file for field J-es PDF
     and the user uploads the file  css=.upload-section input  ${valid_pdf}
     and the user should see the text in the page    ${valid_pdf}
 
+Compadmin can open the jes-file in applications
+    [Documentation]     IFS-102
+    [Tags]
+    [Setup]  log in as a different user   &{Comp_admin1_credentials}
+    Given the user navigates to the page  ${OPEN_COMPETITION_MAN}
+    and the user clicks the button/link  link=Applications: All, submitted, ineligible
+    and the user clicks the button/link  link=All applications
+    and the user clicks the button/link  link=${OPEN_COMPETITION_APPLICATION_5_NUMBER}
+    Then the user clicks the button/link  jQuery=button:contains("Finances summary")
+    And the user should see the text in the page    ${valid_pdf}
+    and the user clicks the button/link  link=${valid_pdf} (opens in a new window)
+    and the user should not see an error in the page
+    and the user navigates to the page  ${OPEN_COMPETITION_MAN}
+
 File upload mandatory for Academic partner to mark section as complete
     [Documentation]    INFUND-8469
     [Tags]    HappyPath
+    [Setup]  Log in as a different user       &{collaborator2_credentials}
     # This will also check the auto-save as we haven't marked finances as complete yet
     Given the user navigates to Your-finances page  ${applicationName}
     and the user clicks the button/link      link=Your project costs
