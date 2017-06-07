@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.service.ApplicationCountSummaryRestService
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.model.ManageApplicationsModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.ManageApplicationsViewModel;
-import org.innovateuk.ifs.management.viewmodel.PaginationLinkViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -26,7 +25,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class ApplicationAssessmentManagementControllerTest extends BaseControllerMockMVCTest<ApplicationAssessmentManagementController> {
+public class CompetitionManagementApplicationAssessmentsControllerTest extends BaseControllerMockMVCTest<CompetitionManagementApplicationAssessmentsController> {
 
     @Mock
     private ApplicationCountSummaryRestService applicationCountSummaryRestService;
@@ -36,8 +35,8 @@ public class ApplicationAssessmentManagementControllerTest extends BaseControlle
     private ManageApplicationsModelPopulator manageApplicationsPopulator;
 
     @Override
-    protected ApplicationAssessmentManagementController supplyControllerUnderTest() {
-        return new ApplicationAssessmentManagementController();
+    protected CompetitionManagementApplicationAssessmentsController supplyControllerUnderTest() {
+        return new CompetitionManagementApplicationAssessmentsController();
     }
 
     @Test
@@ -59,7 +58,7 @@ public class ApplicationAssessmentManagementControllerTest extends BaseControlle
         when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
         when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionId(competitionResource.getId(), 1,20,"filter")).thenReturn(restSuccess(expectedPageResource));
 
-        ManageApplicationsViewModel model = (ManageApplicationsViewModel) mockMvc.perform(get("/assessment/competition/{competitionId}?page=1&filterSearch=filter", competitionResource.getId()))
+        ManageApplicationsViewModel model = (ManageApplicationsViewModel) mockMvc.perform(get("/assessment/competition/{competitionId}/applications?page=1&filterSearch=filter", competitionResource.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/manage-applications"))
                 .andExpect(model().attributeExists("model"))
