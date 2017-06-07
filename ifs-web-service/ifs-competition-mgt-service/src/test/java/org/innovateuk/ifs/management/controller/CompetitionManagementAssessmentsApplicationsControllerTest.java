@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class CompetitionManagementApplicationAssessmentsControllerTest extends BaseControllerMockMVCTest<CompetitionManagementApplicationAssessmentsController> {
+public class CompetitionManagementAssessmentsApplicationsControllerTest extends BaseControllerMockMVCTest<CompetitionManagementAssessmentsApplicationsController> {
 
     @Mock
     private ApplicationCountSummaryRestService applicationCountSummaryRestService;
@@ -35,8 +35,8 @@ public class CompetitionManagementApplicationAssessmentsControllerTest extends B
     private ManageApplicationsModelPopulator manageApplicationsPopulator;
 
     @Override
-    protected CompetitionManagementApplicationAssessmentsController supplyControllerUnderTest() {
-        return new CompetitionManagementApplicationAssessmentsController();
+    protected CompetitionManagementAssessmentsApplicationsController supplyControllerUnderTest() {
+        return new CompetitionManagementAssessmentsApplicationsController();
     }
 
     @Test

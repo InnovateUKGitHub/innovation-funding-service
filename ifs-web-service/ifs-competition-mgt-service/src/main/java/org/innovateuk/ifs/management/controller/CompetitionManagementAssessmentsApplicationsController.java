@@ -24,7 +24,7 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 @Controller
 @RequestMapping("/assessment/competition/{competitionId}")
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-public class CompetitionManagementApplicationAssessmentsController {
+public class CompetitionManagementAssessmentsApplicationsController {
 
     @Autowired
     private ApplicationCountSummaryRestService applicationCountSummaryRestService;
