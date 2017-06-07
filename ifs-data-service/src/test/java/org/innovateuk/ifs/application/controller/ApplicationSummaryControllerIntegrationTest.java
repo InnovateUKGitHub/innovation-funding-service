@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.controller;
 
-import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
