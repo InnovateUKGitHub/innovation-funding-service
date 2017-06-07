@@ -214,21 +214,6 @@ the user fills the organisation details with Project growth table
     the user enters text to a text field                    jQuery=label:contains("employees") + input    0
     the user clicks the button/link                         jQuery=button:contains("Mark as complete")
 
-#the user fills the organisation details without Project growth table
-#    [Arguments]   ${Application}  ${org_size}
-#    the user navigates to Your-finances page                ${Application}
-#    the user clicks the button/link                         link=Your organisation
-#    ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  jQuery=button:contains("Edit")
-#    Run Keyword If    '${status}' == 'PASS'    the user clicks the button/link  jQuery=button:contains("Edit")
-#    the user selects the radio button                       financePosition-organisationSize   ${org_size}
-#    the user selects the radio button                       financePosition-organisationSize   ${org_size}
-#    the user enters text to a text field                    jQuery=label:contains("Turnover") + input    150
-#    the user enters text to a text field                    jQuery=label:contains("employees") + input    0
-#    the user clicks the button/link                         jQuery=button:contains("Mark as complete")
-#    the user clicks the button/link                         link=Your organisation
-#    the user should see the element                         jQuery=button:contains("Edit")
-#    the user has read only view once section is marked complete
-
 the user fills in the organisation information
     [Arguments]  ${Application}  ${org_size}
     the user navigates to Your-finances page  ${Application}

@@ -66,8 +66,7 @@ Invite existing academic collaborator
     And The guest user clicks the log-in button
     And the user clicks the button/link                          jQuery=a:contains("Confirm and accept invitation")
     And the user clicks the button/link                          link=Your finances
-    And the user clicks the button/link                          link=Your project costs
-    the user should see the element                              jQuery=td:contains("100%")
+    Then the user should see the element                         jQuery=td:contains("100%")
     And logout as user
 
 funding level available for RTO lead user ResearchCategory: Fundamental Research
