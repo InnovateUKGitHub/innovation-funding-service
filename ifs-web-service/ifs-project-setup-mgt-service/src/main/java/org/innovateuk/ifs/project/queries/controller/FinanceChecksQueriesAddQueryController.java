@@ -89,7 +89,7 @@ public class FinanceChecksQueriesAddQueryController {
         return NEW_QUERY_VIEW;
     }
 
-    @PreAuthorize("hasPermission(new org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId#projectId, #organisationId),  'ACCESS_FINANCE_CHECKS_QUERIES_SECTION_ADD_QUERY')")
+    @PreAuthorize("hasPermission(new org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId(#projectId, #organisationId),  'ACCESS_FINANCE_CHECKS_QUERIES_SECTION_ADD_QUERY')")
     @PostMapping
     public String saveQuery(@PathVariable final Long projectId,
                             @PathVariable final Long organisationId,
