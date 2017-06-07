@@ -317,7 +317,7 @@ Lead partner selects a project manager
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see the text in the page    Steve Smith
     And the user clicks the button/link    link=Project Manager
-    And the user sees that the radio button is selected    projectManager    ${STEVE_SMITH_ID}
+    And the user should see the element    css=#projectManager1:checked ~ label
     And the user selects the radio button    projectManager    projectManager2
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
