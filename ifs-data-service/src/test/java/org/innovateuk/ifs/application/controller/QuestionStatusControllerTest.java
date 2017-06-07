@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.primitives.Longs;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder;
@@ -9,7 +8,6 @@ import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.transactional.QuestionService;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.stream.Collectors;
