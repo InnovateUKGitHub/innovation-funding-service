@@ -99,7 +99,7 @@ import static org.springframework.util.StringUtils.hasText;
  */
 @Controller
 @RequestMapping(ApplicationFormController.APPLICATION_BASE_URL + "{applicationId}/form")
-@PreAuthorize("hasAuthority('applicant')")
+@PreAuthorize("hasAnyAuthority('applicant', 'comp_admin', 'project_finance')")
 public class ApplicationFormController {
 
     private static final Log LOG = LogFactory.getLog(ApplicationFormController.class);
@@ -210,6 +210,7 @@ public class ApplicationFormController {
     }
 
     @ProfileExecution
+    @PreAuthorize("hasAuthority('applicant')")
     @GetMapping(value = {QUESTION_URL + "{" + QUESTION_ID + "}", QUESTION_URL + "edit/{" + QUESTION_ID + "}"})
     public String showQuestion(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
                                @SuppressWarnings("unused") BindingResult bindingResult,
@@ -252,6 +253,7 @@ public class ApplicationFormController {
     }
 
     @ProfileExecution
+    @PreAuthorize("hasAuthority('applicant')")
     @GetMapping(SECTION_URL + "{sectionId}")
     public String applicationFormWithOpenSection(@Valid @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form, BindingResult bindingResult, Model model,
                                                  @PathVariable(APPLICATION_ID) final Long applicationId,
@@ -274,6 +276,7 @@ public class ApplicationFormController {
     }
 
     @ProfileExecution
+    @PreAuthorize("hasAuthority('applicant')")
     @PostMapping(value = {QUESTION_URL + "{" + QUESTION_ID + "}", QUESTION_URL + "edit/{" + QUESTION_ID + "}"})
     public String questionFormSubmit(@Valid @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
                                      BindingResult bindingResult,
@@ -384,6 +387,7 @@ public class ApplicationFormController {
         }
     }
 
+    @PreAuthorize("hasAuthority('applicant')")
     @GetMapping(value = "/add_cost/{" + QUESTION_ID + "}")
     public String addCostRow(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
                              BindingResult bindingResult,
@@ -405,6 +409,7 @@ public class ApplicationFormController {
         return String.format("finance/finance :: %s_row(viewmode='edit')", costType.getType());
     }
 
+    @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/remove_cost/{costId}")
     public @ResponseBody
     String removeCostRow(@PathVariable("costId") final Long costId) throws JsonProcessingException {
@@ -704,6 +709,7 @@ public class ApplicationFormController {
     }
 
     @ProfileExecution
+    @PreAuthorize("hasAuthority('applicant')")
     @PostMapping(SECTION_URL + "{sectionId}")
     public String applicationFormSubmit(@Valid @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
                                         BindingResult bindingResult, ValidationHandler validationHandler,
@@ -951,6 +957,7 @@ public class ApplicationFormController {
      * This method is for supporting ajax saving from the application form.
      */
     @ProfileExecution
+    @PreAuthorize("hasAuthority('applicant')")
     @PostMapping("/{competitionId}/saveFormElement")
     @ResponseBody
     public JsonNode saveFormElement(@RequestParam("formInputId") String inputIdentifier,
@@ -1147,6 +1154,7 @@ public class ApplicationFormController {
 
 
     @ProfileExecution
+    @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/{sectionType}")
     public String redirectToSection(@PathVariable("sectionType") SectionType type,
                                     @PathVariable(APPLICATION_ID) Long applicationId) {

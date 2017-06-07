@@ -64,7 +64,7 @@
                 <div class="highlight-panel highlight-panel-padded">
                     <span class="heading-large" th:text="${keyStatistics.statFive}">5</span><br/>
                     <th:block th:switch="${keyStatistics.status.name()}">
-                        <small th:case="OPEN">Applications (beyond 50%)</small>
+                        <small th:case="OPEN">Applications beyond 50%</small>
                         <small th:case="CLOSED">Invitations accepted</small>
                         <small th:case="IN_ASSESSMENT">Assessments submitted</small>
                         <small th:case="FUNDERS_PANEL">Applications notified of decision</small>
