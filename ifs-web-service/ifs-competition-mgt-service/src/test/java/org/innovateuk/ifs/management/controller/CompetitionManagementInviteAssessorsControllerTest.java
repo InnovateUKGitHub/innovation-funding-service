@@ -245,7 +245,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         AssessorSelectionForm selectionForm = (AssessorSelectionForm) result.getModelAndView().getModel().get("selectionForm");
         assertEquals(expectedSelectionForm, selectionForm);
 
-        Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), "selectionForm");
+        Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("selectionForm_comp%s", competition.getId()));
         assertTrue(resultForm.get().getSelectedAssessorIds().contains(expectedAssessorId));
 
         assertCompetitionDetails(competition, result);
@@ -388,7 +388,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .andExpect(jsonPath("success", is("true")))
                 .andReturn();
 
-        Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), "selectionForm");
+        Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("selectionForm_comp%s", competition.getId()));
         assertTrue(resultForm.get().getSelectedAssessorIds().contains(assessorId));
     }
 
@@ -405,7 +405,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .andExpect(jsonPath("success", is("true")))
                 .andReturn();
 
-        Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), "selectionForm");
+        Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("selectionForm_comp%s", competition.getId()));
         assertTrue(resultForm.get().getSelectedAssessorIds().contains(assessorId));
     }
 
@@ -426,7 +426,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .andExpect(jsonPath("success", is("true")))
                 .andReturn();
 
-        Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), "selectionForm");
+        Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("selectionForm_comp%s", competition.getId()));
         assertEquals(2, resultForm.get().getSelectedAssessorIds().size());
     }
 
@@ -447,7 +447,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .andExpect(jsonPath("success", is("true")))
                 .andReturn();
 
-        Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), "selectionForm");
+        Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("selectionForm_comp%s", competition.getId()));
         assertFalse(resultForm.get().getSelectedAssessorIds().contains(assessorId));
     }
 
@@ -467,7 +467,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .andExpect(jsonPath("success", is("true")))
                 .andReturn();
 
-        Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), "selectionForm");
+        Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("selectionForm_comp%s", competition.getId()));
         assertFalse(resultForm.get().getSelectedAssessorIds().contains(assessorId));
     }
 
@@ -917,7 +917,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     private Cookie createFormCookie(AssessorSelectionForm form) throws Exception {
         String cookieContent = JsonUtil.getSerializedObject(form);
         String encryptedData = encryptor.encrypt(URLEncoder.encode(cookieContent, CharEncoding.UTF_8));
-        return new Cookie("selectionForm", encryptedData);
+        return new Cookie(format("selectionForm_comp%s", competition.getId()), encryptedData);
     }
 
     private Optional<AssessorSelectionForm> getAssessorSelectionFormFromCookie(MockHttpServletResponse response, String cookieName) throws Exception {
