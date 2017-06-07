@@ -29,6 +29,7 @@ ${EMPIRE_LTD_NAME}    Empire Ltd
 #Competitions and Applications Variables
 ${OPEN_COMPETITION_NAME}    Predicting market trends programme
 ${OPEN_COMPETITION}    ${competition_ids['${OPEN_COMPETITION_NAME}']}
+${OPEN_COMPETITION_MAN}    ${SERVER}/management/competition/${OPEN_COMPETITION}
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}    Aerospace technology investment sector
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}    ${competition_ids['${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}']}
 ${OPEN_COMPETITION_NAME_2}    Home and industrial efficiency programme
