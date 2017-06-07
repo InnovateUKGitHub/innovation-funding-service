@@ -25,6 +25,7 @@ View the list of the applications
     [Tags]
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     When The user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
+    And The user clicks the button/link    jQuery=a:contains("Manage applications")
     Then the application list is correct before changes
 
 Filtering of the applications
@@ -111,6 +112,7 @@ Remove and notify an assessor (Notified)
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
+    And the user clicks the button/link    jQuery=a:contains("Manage applications")
     And the user clicks the button/link    jQuery=tr:nth-child(9) a:contains(View progress)
     When the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("Remove")
     And the user clicks the button/link    jQuery=.buttonlink:contains(Cancel)
@@ -133,6 +135,7 @@ Reassign and notify an assessor (Notified)
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
+    And the user clicks the button/link    jQuery=a:contains("Manage applications")
     And the user clicks the button/link    jQuery=tr:nth-child(9) a:contains(View progress)
     And the user should see the text in the page    Previously assigned (1)
     And the user clicks the button/link    jQuery=tr:contains("Paul Plum") button:contains("Reassign")
