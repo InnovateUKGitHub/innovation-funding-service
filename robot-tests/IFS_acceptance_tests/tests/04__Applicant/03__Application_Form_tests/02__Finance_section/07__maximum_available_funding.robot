@@ -13,6 +13,7 @@ ${Application_name_RTO}                Maximum funding allowed RTO
 #${OPEN_COMPETITION_NAME}              Predicting market trends programme
 ${lead_business_email}                 oscar@innovateuk.com
 ${lead_rto_email}                      oscarRTO@innovateuk.com
+
 *** Test Cases ***
 funding level available for lead business ResearchCategory: Fundamental Research
     [Documentation]    IFS-338
@@ -21,9 +22,8 @@ funding level available for lead business ResearchCategory: Fundamental Research
     When the user clicks the button/link                     link=Untitled application (start here)
     And the user clicks the button/link                      link=Begin application
     And the applicant completes the application details      Application details  Experimental development
-    Then the user clicks the button/link                     link=Your finances
-    And the user fills in the project costs
-    When the user fills the organisation details with Project growth table     ${SMALL_ORGANISATION_SIZE}
+    And the user fills the organisation details with Project growth table   ${Application_name_business}  ${SMALL_ORGANISATION_SIZE}
+    When the user fills in the project costs
     And the user clicks the button/link                      link=Your funding
     Then the user should see the text in the page             Enter your funding level (maximum 45%).
     When the user edits the research category                 Feasibility studies
@@ -40,10 +40,9 @@ lead applicant invites a Charity member
     [Tags]
     Given Invite a non-existing collaborator                           liamCharity@innovateuk.com  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}
     When the user clicks the button/link                               link=${Application_name_business}
-    And the user clicks the button/link                                link=Your finances
+    And the user fills the organisation details with Project growth table   ${Application_name_business}  ${SMALL_ORGANISATION_SIZE}
     And the user fills in the project costs
-    And the user fills the organisation details with Project growth table     ${SMALL_ORGANISATION_SIZE}
-    And the user clicks the button/link                                link=Your funding
+    When the user clicks the button/link                                link=Your funding
     Then the user should see the text in the page                      Enter your funding level (maximum 100%).
     When the user clicks the button/link                               jQuery=a:contains("Your finances")
     And the user edits the organisation size                           ${LARGE_ORGANISATION_SIZE}
@@ -68,43 +67,41 @@ Invite existing academic collaborator
     And the user clicks the button/link                          jQuery=a:contains("Confirm and accept invitation")
     And the user clicks the button/link                          link=Your finances
     And the user clicks the button/link                          link=Your project costs
-    #the user should see the element                          css=td:nth-child(2):contains("100%")
+    the user should see the element                              jQuery=td:contains("100%")
     And logout as user
 
 funding level available for RTO lead user ResearchCategory: Fundamental Research
     [Documentation]  IFS-338
     [Tags]
-    Given we create a new user                           ${OPEN_COMPETITION}  Smith  rto  ${lead_rto_email}
-    When the user clicks the button/link                 link=Untitled application (start here)
-    And the user clicks the button/link                  link=Begin application
-    And the applicant completes the application details for RTO lead appln   Application details  Experimental development
-    And the user clicks the button/link                  link=Your finances
+    Given we create a new user                                                  ${OPEN_COMPETITION}  Smith  rto  ${lead_rto_email}
+    When the user clicks the button/link                                        link=Untitled application (start here)
+    And the user clicks the button/link                                         link=Begin application
+    And the applicant completes the application details for RTO lead appln      Application details  Experimental development
+    And the user fills in the organisation information                          ${Application_name_RTO}  ${SMALL_ORGANISATION_SIZE}
     And the user fills in the project costs
-    And the user fills the organisation details without Project growth table    ${SMALL_ORGANISATION_SIZE}
-    And the user clicks the button/link                  link=Your funding
-    Then the user should see the text in the page        Enter your funding level (maximum 100%).
-    When the user edits the research category            Feasibility studies
-    And the user edits the organisation size             ${MEDIUM_ORGANISATION_SIZE}
-    Then the user should see the text in the page        Enter your funding level (maximum 100%).
-    When the user edits the research category            Industrial research
-    And the user edits the organisation size             ${LARGE_ORGANISATION_SIZE}
-    Then the user should see the text in the page        Enter your funding level (maximum 100%).
-    And the user clicks the button/link                  jQuery=a:contains("Your finances")
-    [Teardown]  the user clicks the button/link          link=Application overview
+    When the user clicks the button/link                                        link=Your funding
+    Then the user should see the text in the page                               Enter your funding level (maximum 100%).
+    When the user edits the research category                                   Feasibility studies
+    And the user edits the organisation size                                    ${MEDIUM_ORGANISATION_SIZE}
+    Then the user should see the text in the page                               Enter your funding level (maximum 100%).
+    When the user edits the research category                                   Industrial research
+    And the user edits the organisation size                                    ${LARGE_ORGANISATION_SIZE}
+    Then the user should see the text in the page                               Enter your funding level (maximum 100%).
+    And the user clicks the button/link                                         jQuery=a:contains("Your finances")
+    [Teardown]  the user clicks the button/link                                 link=Application overview
 
 lead RTO applicant invites a Charity member
     [Documentation]    IFS-338
     [Tags]
-    Given Invite a non-existing collaborator                       liamRTO@innovateuk.com  ${OPEN_COMPETITION_NAME}
-    When the user clicks the button/link                           link=${Application_name_RTO}
-    And the user clicks the button/link                            link=Your finances
+    Given Invite a non-existing collaborator                                   liamRTO@innovateuk.com  ${OPEN_COMPETITION_NAME}
+    When the user clicks the button/link                                       link=${Application_name_RTO}
+    And the user fills in the organisation information                         ${Application_name_RTO}  ${SMALL_ORGANISATION_SIZE}
     And the user fills in the project costs
-    And the user fills the organisation details without Project growth table    ${SMALL_ORGANISATION_SIZE}
-    And the user clicks the button/link                             link=Your funding
-    Then the user should see the text in the page                   Enter your funding level (maximum 100%).
-    When the user clicks the button/link                            jQuery=a:contains("Your finances")
-    And the user edits the organisation size                        ${LARGE_ORGANISATION_SIZE}
-    Then the user should see the text in the page                   Enter your funding level (maximum 100%).
+    When the user clicks the button/link                                       link=Your funding
+    Then the user should see the text in the page                              Enter your funding level (maximum 100%).
+    When the user clicks the button/link                                       jQuery=a:contains("Your finances")
+    And the user edits the organisation size                                    ${LARGE_ORGANISATION_SIZE}
+    Then the user should see the text in the page                               Enter your funding level (maximum 100%).
     [Teardown]  logout as user
 
 *** Keywords ***
@@ -146,30 +143,6 @@ the user fills in the project costs
     the user clicks the button/link             link=Your project costs
     the user selects the checkbox               agree-state-aid-page
     the user clicks the button/link             jQuery=button:contains("Mark as complete")
-
-#the user fills the organisation details with Project growth table
-#    [Arguments]   ${org_size}
-#    the user clicks the button/link                          link=Your organisation
-#    the user enters text to a text field                    css=input[name$="month"]    12
-#    and the user enters text to a text field                css=input[name$="year"]    2016
-#    the user selects the radio button                       financePosition-organisationSize  ${org_size}
-#    the user enters text to a text field                    jQuery=td:contains("Annual turnover") + td input   5600
-#    the user enters text to a text field                    jQuery=td:contains("Annual profit") + td input    3000
-#    the user enters text to a text field                    jQuery=td:contains("Annual export") + td input    4000
-#    the user enters text to a text field                    jQuery=td:contains("Research and development spend") + td input    5660
-#    the user enters text to a text field                    jQuery=label:contains("employees") + input    0
-#    the user clicks the button/link                         jQuery=button:contains("Mark as complete")
-#
-#the user fills the organisation details without Project growth table
-#    [Arguments]   ${org_size}
-#    the user clicks the button/link                         link=Your organisation
-#    ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  jQuery=button:contains("Edit")
-#    Run Keyword If    '${status}' == 'PASS'    the user clicks the button/link  jQuery=button:contains("Edit")
-#    the user selects the radio button                       financePosition-organisationSize   ${org_size}
-#    the user selects the radio button                       financePosition-organisationSize   ${org_size}
-#    the user enters text to a text field                    jQuery=label:contains("Turnover") + input    150
-#    the user enters text to a text field                    jQuery=label:contains("employees") + input    0
-#    the user clicks the button/link                         jQuery=button:contains("Mark as complete")
 
 the user edits the research category
     [Arguments]   ${research_category}
