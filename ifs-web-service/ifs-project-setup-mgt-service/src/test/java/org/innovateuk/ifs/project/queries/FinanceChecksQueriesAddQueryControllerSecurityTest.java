@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.queries;
 
 import org.innovateuk.ifs.project.BaseProjectSetupControllerSecurityTest;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.status.security.SetupSectionsPermissionRules;
 import org.innovateuk.ifs.project.queries.controller.FinanceChecksQueriesAddQueryController;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -18,7 +19,6 @@ import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 
 public class FinanceChecksQueriesAddQueryControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<FinanceChecksQueriesAddQueryController> {
@@ -30,7 +30,7 @@ public class FinanceChecksQueriesAddQueryControllerSecurityTest extends BaseProj
 
     @Override
     protected Consumer<SetupSectionsPermissionRules> getVerification() {
-        return permissionRules -> permissionRules.internalCanAccessFinanceChecksAddQuery(isA(ProjectOrganisationTarget.class), isA(UserResource.class));
+        return permissionRules -> permissionRules.internalCanAccessFinanceChecksAddQuery(isA(ProjectOrganisationCompositeId.class), isA(UserResource.class));
     }
 
     @Test

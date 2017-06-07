@@ -5,7 +5,7 @@ import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.queries.ProjectOrganisationTarget;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.project.status.StatusService;
@@ -83,7 +83,7 @@ public class SetupSectionsPermissionRules {
     }
 
     @PermissionRule(value = "ACCESS_FINANCE_CHECKS_QUERIES_SECTION_ADD_QUERY", description = "A finance team user cannot add a query until a finance contact has been allocated for the organisation")
-    public boolean internalCanAccessFinanceChecksAddQuery(ProjectOrganisationTarget target, UserResource user) {
+    public boolean internalCanAccessFinanceChecksAddQuery(ProjectOrganisationCompositeId target, UserResource user) {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(target.getProjectId());
         return simpleFindFirst(projectUsers, pu -> pu.isFinanceContact() && pu.getOrganisation() == target.getOrganisationId()).isPresent() && doSectionCheck(target.getProjectId(), user, SetupSectionInternalUser::canAccessFinanceChecksQueriesSection);
     }

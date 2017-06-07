@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.status.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
-import org.innovateuk.ifs.project.queries.ProjectOrganisationTarget;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.user.resource.RoleResource;
@@ -36,7 +36,7 @@ public class SetupSectionPermissionRulesTest extends BasePermissionRulesTest<Set
         ProjectStatusResource projectStatus = newProjectStatusResource().withBankDetailsStatus(ProjectActivityStates.COMPLETE).withProjectDetailStatus(ProjectActivityStates.COMPLETE).withFinanceChecksStatus(ProjectActivityStates.COMPLETE).build();
         when(projectServiceMock.getProjectUsersForProject(1L)).thenReturn(singletonList(projectUser));
         when(statusServiceMock.getProjectStatus(1L)).thenReturn(projectStatus);
-        assertTrue(rules.internalCanAccessFinanceChecksAddQuery(new ProjectOrganisationTarget(1L, 2L), user));
+        assertTrue(rules.internalCanAccessFinanceChecksAddQuery(new ProjectOrganisationCompositeId(1L, 2L), user));
     }
 
     @Test
@@ -47,7 +47,7 @@ public class SetupSectionPermissionRulesTest extends BasePermissionRulesTest<Set
         ProjectStatusResource projectStatus = newProjectStatusResource().withBankDetailsStatus(ProjectActivityStates.COMPLETE).withProjectDetailStatus(ProjectActivityStates.COMPLETE).withFinanceChecksStatus(ProjectActivityStates.COMPLETE).build();
         when(projectServiceMock.getProjectUsersForProject(1L)).thenReturn(singletonList(projectUser));
         when(statusServiceMock.getProjectStatus(1L)).thenReturn(projectStatus);
-        assertFalse(rules.internalCanAccessFinanceChecksAddQuery(new ProjectOrganisationTarget(1L, 2L), user));
+        assertFalse(rules.internalCanAccessFinanceChecksAddQuery(new ProjectOrganisationCompositeId(1L, 2L), user));
     }
 
     @Test
@@ -58,7 +58,7 @@ public class SetupSectionPermissionRulesTest extends BasePermissionRulesTest<Set
         ProjectStatusResource projectStatus = newProjectStatusResource().withBankDetailsStatus(ProjectActivityStates.COMPLETE).withProjectDetailStatus(ProjectActivityStates.COMPLETE).withFinanceChecksStatus(ProjectActivityStates.COMPLETE).build();
         when(projectServiceMock.getProjectUsersForProject(1L)).thenReturn(singletonList(projectUser));
         when(statusServiceMock.getProjectStatus(1L)).thenReturn(projectStatus);
-        assertFalse(rules.internalCanAccessFinanceChecksAddQuery(new ProjectOrganisationTarget(1L, 2L), user));
+        assertFalse(rules.internalCanAccessFinanceChecksAddQuery(new ProjectOrganisationCompositeId(1L, 2L), user));
     }
 
     @Test
@@ -67,7 +67,7 @@ public class SetupSectionPermissionRulesTest extends BasePermissionRulesTest<Set
         UserResource user = newUserResource().withRolesGlobal(singletonList(role)).build();
         ProjectUserResource projectUser = newProjectUserResource().withRoleName(UserRoleType.PARTNER).withOrganisation(2L).build();
         when(projectServiceMock.getProjectUsersForProject(1L)).thenReturn(singletonList(projectUser));
-        assertFalse(rules.internalCanAccessFinanceChecksAddQuery(new ProjectOrganisationTarget(1L, 2L), user));
+        assertFalse(rules.internalCanAccessFinanceChecksAddQuery(new ProjectOrganisationCompositeId(1L, 2L), user));
     }
 
     @Test
@@ -76,6 +76,6 @@ public class SetupSectionPermissionRulesTest extends BasePermissionRulesTest<Set
         UserResource user = newUserResource().withRolesGlobal(singletonList(role)).build();
         ProjectUserResource projectUser = newProjectUserResource().withRoleName(UserRoleType.FINANCE_CONTACT).withOrganisation(3L).build();
         when(projectServiceMock.getProjectUsersForProject(1L)).thenReturn(singletonList(projectUser));
-        assertFalse(rules.internalCanAccessFinanceChecksAddQuery(new ProjectOrganisationTarget(1L, 2L), user));
+        assertFalse(rules.internalCanAccessFinanceChecksAddQuery(new ProjectOrganisationCompositeId(1L, 2L), user));
     }
 }
