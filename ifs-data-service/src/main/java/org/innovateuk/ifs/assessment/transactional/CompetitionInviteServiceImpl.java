@@ -440,18 +440,15 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Override
     public ServiceResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource stagedInvite) {
-        return getUserByEmail(stagedInvite.getEmail()) // I'm not particularly tied to finding by email, vs id
+        return getUserById(stagedInvite.getUserId())
                 .andOnSuccess(user -> inviteUserToCompetition(user, stagedInvite.getCompetitionId()))
                 .andOnSuccessReturn(competitionInviteMapper::mapToResource);
     }
 
     @Override
     public ServiceResult<Void> inviteUsers(List<ExistingUserStagedInviteResource> stagedInvites) {
-        stagedInvites.forEach(stagedInvite -> {
-            getUserByEmail(stagedInvite.getEmail())
-                    .andOnSuccess(user -> inviteUserToCompetition(user, stagedInvite.getCompetitionId()));
-
-        });
+        stagedInvites.forEach(stagedInvite -> getUserById(stagedInvite.getUserId())
+                .andOnSuccess(user -> inviteUserToCompetition(user, stagedInvite.getCompetitionId())));
         return serviceSuccess();
     }
 
@@ -468,6 +465,10 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     private ServiceResult<User> getUserByEmail(String email) {
         return find(userRepository.findByEmail(email), notFoundError(User.class, email));
+    }
+
+    private ServiceResult<User> getUserById(long id) {
+        return find(userRepository.findOne(id), notFoundError(User.class, id));
     }
 
     @Override

@@ -1334,8 +1334,8 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build();
 
         ExistingUserStagedInviteResource existingAssessor = newExistingUserStagedInviteResource()
+                .withUserId(newUser.getId())
                 .withCompetitionId(competition.getId())
-                .withEmail(newUser.getEmail())
                 .build();
 
         CompetitionInvite competitionInvite = newCompetitionInvite()
@@ -1348,7 +1348,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         CompetitionInviteResource expectedInviteResource = newCompetitionInviteResource().build();
 
-        when(userRepositoryMock.findByEmail(newUser.getEmail())).thenReturn(of(newUser));
+        when(userRepositoryMock.findOne(newUser.getId())).thenReturn(newUser);
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
 
         CompetitionInvite inviteExpectation = createInviteExpectations(newUser.getName(), newUser.getEmail(), CREATED, competition, null);
@@ -1361,7 +1361,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         assertEquals(expectedInviteResource, invite);
 
         InOrder inOrder = inOrder(userRepositoryMock, competitionRepositoryMock, competitionInviteRepositoryMock, competitionInviteMapperMock);
-        inOrder.verify(userRepositoryMock).findByEmail(newUser.getEmail());
+        inOrder.verify(userRepositoryMock).findOne(newUser.getId());
         inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
         inOrder.verify(competitionInviteRepositoryMock).save(createInviteExpectations(newUser.getName(), newUser.getEmail(), CREATED, competition, null));
         inOrder.verify(competitionInviteMapperMock).mapToResource(competitionInvite);
@@ -1381,20 +1381,12 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build();
 
         List<ExistingUserStagedInviteResource> existingAssessors = newExistingUserStagedInviteResource()
+                .withUserId(existingUsers.get(0).getId(), existingUsers.get(1).getId())
                 .withCompetitionId(competition.getId())
-                .withEmail(existingUsers.get(0).getEmail(), existingUsers.get(1).getEmail())
                 .build(2);
 
-        CompetitionInvite competitionInvite = newCompetitionInvite()
-                .withCompetition(competition)
-                .withHash(Invite.generateInviteHash())
-                .withEmail(existingUsers.get(0).getEmail(), existingUsers.get(1).getEmail())
-                .withName(existingUsers.get(0).getName(), existingUsers.get(1).getName())
-                .withInnovationArea(newInnovationArea().build())
-                .build();
-
-        when(userRepositoryMock.findByEmail(existingUsers.get(0).getEmail())).thenReturn(of(existingUsers.get(0)));
-        when(userRepositoryMock.findByEmail(existingUsers.get(1).getEmail())).thenReturn(of(existingUsers.get(1)));
+        when(userRepositoryMock.findOne(existingUsers.get(0).getId())).thenReturn(existingUsers.get(0));
+        when(userRepositoryMock.findOne(existingUsers.get(1).getId())).thenReturn(existingUsers.get(1));
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
         when(competitionInviteRepositoryMock.save(isA(CompetitionInvite.class))).thenReturn(new CompetitionInvite());
 
@@ -1402,10 +1394,10 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         assertTrue(serviceResult.isSuccess());
 
         InOrder inOrder = inOrder(userRepositoryMock, competitionRepositoryMock, competitionInviteRepositoryMock);
-        inOrder.verify(userRepositoryMock).findByEmail(existingUsers.get(0).getEmail());
+        inOrder.verify(userRepositoryMock).findOne(existingAssessors.get(0).getUserId());
         inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
         inOrder.verify(competitionInviteRepositoryMock).save(createInviteExpectations(existingUsers.get(0).getName(), existingUsers.get(0).getEmail(), CREATED, competition, null));
-        inOrder.verify(userRepositoryMock).findByEmail(existingUsers.get(1).getEmail());
+        inOrder.verify(userRepositoryMock).findOne(existingAssessors.get(1).getUserId());
         inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
         inOrder.verify(competitionInviteRepositoryMock).save(createInviteExpectations(existingUsers.get(1).getName(), existingUsers.get(1).getEmail(), CREATED, competition, null));
         inOrder.verifyNoMoreInteractions();

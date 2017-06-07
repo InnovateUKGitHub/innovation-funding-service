@@ -17,7 +17,6 @@ public class ExistingUserStagedInviteListResourceBuilderTest {
         long expectedCompetitionId = 3L;
 
         List<ExistingUserStagedInviteResource> expectedInvites = newExistingUserStagedInviteResource()
-                .withEmail("test1@test.com", "test2@test.com")
                 .withCompetitionId(expectedCompetitionId)
                 .build(2);
 
@@ -33,11 +32,9 @@ public class ExistingUserStagedInviteListResourceBuilderTest {
     @Test
     public void buildMany() {
         List<ExistingUserStagedInviteResource> expectedInvites1 = newExistingUserStagedInviteResource()
-                .withEmail("test1@test.com", "test2@test.com")
                 .withCompetitionId(7L, 11L)
                 .build(2);
         List<ExistingUserStagedInviteResource> expectedInvites2 = newExistingUserStagedInviteResource()
-                .withEmail("test3@test.com", "test4@test.com")
                 .withCompetitionId(20L, 25L)
                 .build(2);
 

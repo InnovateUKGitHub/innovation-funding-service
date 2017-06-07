@@ -722,7 +722,6 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     private ExistingUserStagedInviteListResource buildExistingUserInviteList(long competitionId) {
         return new ExistingUserStagedInviteListResource(
                 newExistingUserStagedInviteResource()
-                        .withEmail("testname1@for-this.address", "testname2@for-this.address")
                         .withCompetitionId(competitionId)
                         .build(2)
         );

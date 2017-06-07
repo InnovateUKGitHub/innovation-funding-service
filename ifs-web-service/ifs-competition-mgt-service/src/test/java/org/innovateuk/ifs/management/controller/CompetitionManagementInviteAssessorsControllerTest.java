@@ -36,6 +36,7 @@ import java.util.Optional;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
+import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -158,7 +159,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         FindAssessorsFilterForm filterForm = (FindAssessorsFilterForm) result.getModelAndView().getModel().get("filterForm");
         assertEquals(of(3L), filterForm.getInnovationArea());
         AssessorSelectionForm selectionForm = (AssessorSelectionForm) result.getModelAndView().getModel().get("selectionForm");
-        assertTrue(selectionForm.getAssessorEmails().isEmpty());
+        assertTrue(selectionForm.getSelectedAssessorIds().isEmpty());
 
         assertCompetitionDetails(competition, result);
         assertAvailableAssessors(availableAssessorPageResource.getContent(), result);
@@ -195,7 +196,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         FindAssessorsFilterForm filterForm = (FindAssessorsFilterForm) result.getModelAndView().getModel().get("filterForm");
         assertEquals(empty(), filterForm.getInnovationArea());
         AssessorSelectionForm selectionForm = (AssessorSelectionForm) result.getModelAndView().getModel().get("selectionForm");
-        assertTrue(selectionForm.getAssessorEmails().isEmpty());
+        assertTrue(selectionForm.getSelectedAssessorIds().isEmpty());
 
         assertCompetitionDetails(competition, result);
         assertAvailableAssessors(availableAssessorPageResource.getContent(), result);
@@ -213,9 +214,9 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     public void find_existingCookie() throws Exception {
         int page = 0;
         Optional<Long> innovationArea = empty();
-        String expectedAssessorEmail = "dave@email.com";
+        long expectedAssessorId = 1L;
         AssessorSelectionForm expectedSelectionForm = new AssessorSelectionForm();
-        expectedSelectionForm.getAssessorEmails().add(expectedAssessorEmail);
+        expectedSelectionForm.getSelectedAssessorIds().add(expectedAssessorId);
         Cookie selectionFormCookie = createFormCookie(expectedSelectionForm);
 
         AvailableAssessorPageResource availableAssessorPageResource = newAvailableAssessorPageResource()
@@ -224,6 +225,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .build();
         List<InnovationSectorResource> expectedInnovationSectorOptions = newInnovationSectorResource().build(4);
         List<AvailableAssessorResource> availableAssessorResources = newAvailableAssessorResource()
+                .withId(1L, 2L)
                 .withEmail("dave@email.com", "john@email.com")
                 .build(2);
 
@@ -244,7 +246,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         assertEquals(expectedSelectionForm, selectionForm);
 
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), "selectionForm");
-        assertTrue(resultForm.get().getAssessorEmails().contains(expectedAssessorEmail));
+        assertTrue(resultForm.get().getSelectedAssessorIds().contains(expectedAssessorId));
 
         assertCompetitionDetails(competition, result);
         assertAvailableAssessors(availableAssessorPageResource.getContent(), result);
@@ -373,11 +375,11 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
     @Test
     public void addAssessorSelectionFromFindView() throws Exception {
-        String email = "firstname.lastname@example.com";
+        long assessorId = 1L;
         Cookie formCookie = createFormCookie(new AssessorSelectionForm());
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/find", competition.getId())
-                .param("assessor", email)
+                .param("assessor", valueOf(assessorId))
                 .param("isSelected", "true")
                 .param("page", "1")
                 .param("innovationArea", "4")
@@ -387,16 +389,16 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .andReturn();
 
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), "selectionForm");
-        assertTrue(resultForm.get().getAssessorEmails().contains(email));
+        assertTrue(resultForm.get().getSelectedAssessorIds().contains(assessorId));
     }
 
     @Test
     public void addAssessorSelectionFromFindView_defaultParams() throws Exception {
-        String email = "firstname.lastname@example.com";
+        long assessorId = 1L;
         Cookie formCookie = createFormCookie(new AssessorSelectionForm());
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/find", competition.getId())
-                .param("assessor", email)
+                .param("assessor", valueOf(assessorId))
                 .param("isSelected", "true")
                 .cookie(formCookie))
                 .andExpect(status().is2xxSuccessful())
@@ -404,7 +406,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .andReturn();
 
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), "selectionForm");
-        assertTrue(resultForm.get().getAssessorEmails().contains(email));
+        assertTrue(resultForm.get().getSelectedAssessorIds().contains(assessorId));
     }
 
     @Test
@@ -425,18 +427,18 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .andReturn();
 
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), "selectionForm");
-        assertEquals(2, resultForm.get().getAssessorEmails().size());
+        assertEquals(2, resultForm.get().getSelectedAssessorIds().size());
     }
 
     @Test
     public void removeAssessorSelectionFromFindView() throws Exception {
-        String email = "firstname.lastname@example.com";
+        long assessorId = 1L;
         AssessorSelectionForm form = new AssessorSelectionForm();
-        form.getAssessorEmails().add(email);
+        form.getSelectedAssessorIds().add(assessorId);
         Cookie formCookie = createFormCookie(form);
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/find", competition.getId())
-                .param("assessor", email)
+                .param("assessor", valueOf(assessorId))
                 .param("isSelected", "false")
                 .param("page", "1")
                 .param("innovationArea", "4")
@@ -446,20 +448,19 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .andReturn();
 
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), "selectionForm");
-        assertFalse(resultForm.get().getAssessorEmails().contains(email));
+        assertFalse(resultForm.get().getSelectedAssessorIds().contains(assessorId));
     }
 
     @Test
     public void removeAssessorSelectionFromFindView_defaultParams() throws Exception {
-        String email = "firstname.lastname@example.com";
-
+        long assessorId = 1L;
         Cookie formCookie;
         AssessorSelectionForm form = new AssessorSelectionForm();
-        form.getAssessorEmails().add(email);
+        form.getSelectedAssessorIds().add(assessorId);
         formCookie = createFormCookie(form);
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/find", competition.getId())
-                .param("assessor", email)
+                .param("assessor", valueOf(assessorId))
                 .param("isSelected", "false")
                 .cookie(formCookie))
                 .andExpect(status().is2xxSuccessful())
@@ -467,7 +468,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .andReturn();
 
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), "selectionForm");
-        assertFalse(resultForm.get().getAssessorEmails().contains(email));
+        assertFalse(resultForm.get().getSelectedAssessorIds().contains(assessorId));
     }
 
     @Test

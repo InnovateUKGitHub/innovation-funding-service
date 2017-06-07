@@ -27,17 +27,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.JsonUtil.getObjectFromJson;
@@ -95,11 +91,11 @@ public class CompetitionManagementInviteAssessorsController {
 
         AssessorSelectionForm storedSelectionForm = getAssessorSelectionFormFromCookie(request).orElse(new AssessorSelectionForm());
         selectionForm.setAllSelected(storedSelectionForm.getAllSelected());
-        selectionForm.setAssessorEmails(storedSelectionForm.getAssessorEmails());
+        selectionForm.setSelectedAssessorIds(storedSelectionForm.getSelectedAssessorIds());
         if (selectionForm.getAllSelected()) {
-            selectionForm.setAssessorEmails(getAllAssessorEmails(competitionId, filterForm.getInnovationArea()));
+            selectionForm.setSelectedAssessorIds(getAllAssessorIds(competitionId, filterForm.getInnovationArea()));
         } else {
-            selectionForm.getAssessorEmails().retainAll(getAllAssessorEmails(competitionId, filterForm.getInnovationArea()));
+            selectionForm.getSelectedAssessorIds().retainAll(getAllAssessorIds(competitionId, filterForm.getInnovationArea()));
         }
         cookieUtil.saveToCookie(response, SELECTION_FORM, getSerializedObject(selectionForm));
 
@@ -109,7 +105,7 @@ public class CompetitionManagementInviteAssessorsController {
     @PostMapping(value = "/find", params = {"assessor"})
     public @ResponseBody JsonNode selectAssessorForInviteList(
             @PathVariable("competitionId") long competitionId,
-            @RequestParam("assessor") String email,
+            @RequestParam("assessor") long assessorId,
             @RequestParam("isSelected") boolean isSelected,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam Optional<Long> innovationArea,
@@ -118,9 +114,9 @@ public class CompetitionManagementInviteAssessorsController {
         try {
             AssessorSelectionForm selectionForm = getAssessorSelectionFormFromCookie(request).orElse(new AssessorSelectionForm());
             if (isSelected) {
-                selectionForm.getAssessorEmails().add(email);
+                selectionForm.getSelectedAssessorIds().add(assessorId);
             } else {
-                selectionForm.getAssessorEmails().remove(email);
+                selectionForm.getSelectedAssessorIds().remove(assessorId);
                 selectionForm.setAllSelected(false);
             }
             cookieUtil.saveToCookie(response, SELECTION_FORM, getSerializedObject(selectionForm));
@@ -143,10 +139,10 @@ public class CompetitionManagementInviteAssessorsController {
             AssessorSelectionForm selectionForm = getAssessorSelectionFormFromCookie(request).orElse(new AssessorSelectionForm());
 
             if (addAll) {
-                selectionForm.setAssessorEmails(getAllAssessorEmails(competitionId, innovationArea));
+                selectionForm.setSelectedAssessorIds(getAllAssessorIds(competitionId, innovationArea));
                 selectionForm.setAllSelected(true);
             } else {
-                selectionForm.getAssessorEmails().clear();
+                selectionForm.getSelectedAssessorIds().clear();
                 selectionForm.setAllSelected(false);
             }
 
@@ -157,10 +153,10 @@ public class CompetitionManagementInviteAssessorsController {
         }
     }
 
-    private List<String> getAllAssessorEmails(long competitionId, Optional<Long> innovationArea) {
+    private List<Long> getAllAssessorIds(long competitionId, Optional<Long> innovationArea) {
         List<AvailableAssessorResource> pageResource =
                 competitionInviteRestService.getAvailableAssessors(competitionId, innovationArea).getSuccessObjectOrThrowException();
-        return simpleMap(pageResource, AvailableAssessorResource::getEmail);
+        return simpleMap(pageResource, AvailableAssessorResource::getId);
     }
 
     @PostMapping(value = "/find/addSelected")
@@ -174,7 +170,7 @@ public class CompetitionManagementInviteAssessorsController {
                                                    HttpServletResponse response) {
 
         AssessorSelectionForm submittedSelectionForm = getAssessorSelectionFormFromCookie(request)
-                .filter(form -> !form.getAssessorEmails().isEmpty())
+                .filter(form -> !form.getSelectedAssessorIds().isEmpty())
                 .orElse(selectionForm);
         Supplier<String> failureView = () -> redirectToFind(competitionId, page, innovationArea);
 
@@ -338,16 +334,15 @@ public class CompetitionManagementInviteAssessorsController {
     }
 
     private ExistingUserStagedInviteListResource newSelectionFormToResource(AssessorSelectionForm form, long competitionId) {
-        List<ExistingUserStagedInviteResource> invites = form.getAssessorEmails().stream()
-                .map(email -> new ExistingUserStagedInviteResource(
-                        email,
+        List<ExistingUserStagedInviteResource> invites = form.getSelectedAssessorIds().stream()
+                .map(id -> new ExistingUserStagedInviteResource(
+                        id,
                         competitionId
                 ))
                 .collect(Collectors.toList());
 
         return new ExistingUserStagedInviteListResource(invites);
     }
-
 
     private ObjectNode createJsonObjectNode(boolean success) {
         ObjectMapper mapper = new ObjectMapper();

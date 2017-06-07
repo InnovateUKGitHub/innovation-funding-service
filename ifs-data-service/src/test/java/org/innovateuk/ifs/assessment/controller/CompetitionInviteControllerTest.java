@@ -568,7 +568,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
     @Test
     public void inviteUser() throws Exception {
-        ExistingUserStagedInviteResource existingUserStagedInviteResource = new ExistingUserStagedInviteResource("firstname.lastname@example.com", 1L);
+        ExistingUserStagedInviteResource existingUserStagedInviteResource = new ExistingUserStagedInviteResource(2L, 1L);
         CompetitionInviteResource expectedCompetitionInviteResource = newCompetitionInviteResource().build();
 
         when(competitionInviteServiceMock.inviteUser(existingUserStagedInviteResource)).thenReturn(serviceSuccess(expectedCompetitionInviteResource));
@@ -585,7 +585,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     @Test
     public void inviteUsers() throws Exception {
         List<ExistingUserStagedInviteResource> existingUserStagedInvites = newExistingUserStagedInviteResource()
-                .withEmail("test1@test.com", "test2@test.com")
+                .withUserId(1L, 2L)
                 .withCompetitionId(1L)
                 .build(2);
 

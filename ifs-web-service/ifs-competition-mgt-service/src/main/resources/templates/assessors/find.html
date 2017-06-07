@@ -115,7 +115,7 @@
             <div class="column-half select-all">
                 <div class="multiple-choice">
                     <input type="checkbox"
-                           data-select-all="[name=assessorEmails]"
+                           data-select-all="[name=selectedAssessorIds]"
                            data-switches-button-status="[name=addSelected]"
                            id="select-all-check"
                            th:field="*{allSelected}"/>
@@ -126,7 +126,7 @@
                 <span class="form-hint">
                     <span data-count-selected="table input[type=checkbox]"
                           th:attr="
-                          data-count-selected-current=${#lists.size(selectionForm.assessorEmails)},
+                          data-count-selected-current=${#lists.size(selectionForm.selectedAssessorIds)},
                           data-count-selected-max=${model.pagination.totalCount}">
                     </span> assessor(s) selected
                 </span>
@@ -134,7 +134,7 @@
             <div class="column-half select-all alignright">
                 <button class="button" name="addSelected"
                         data-enable-button-when="one-checked"
-                        th:attr="data-enable-initial=${!#lists.isEmpty(selectionForm.assessorEmails)}">
+                        th:attr="data-enable-initial=${!#lists.isEmpty(selectionForm.selectedAssessorIds)}">
                     Add selected to invite list
                 </button>
             </div>
@@ -158,8 +158,8 @@
                             <input type="checkbox"
                                    data-switches-button-status="[name=addSelected]"
                                    th:id="|assessor-id-${assessor.id}|"
-                                   th:field="*{assessorEmails}"
-                                   th:value="${assessor.email}"/>
+                                   th:field="*{selectedAssessorIds}"
+                                   th:value="${assessor.id}"/>
                             <label th:for="|assessor-id-${assessor.id}|">
                                 <span class="invisible">Add</span>
                             </label>

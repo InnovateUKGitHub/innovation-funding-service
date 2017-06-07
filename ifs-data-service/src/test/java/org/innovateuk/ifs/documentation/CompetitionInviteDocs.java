@@ -55,7 +55,7 @@ public class CompetitionInviteDocs {
     };
 
     public static final FieldDescriptor[] existingUserStagedInviteResourceFields = {
-            fieldWithPath("email").description("Email of the recipient of the invite"),
+            fieldWithPath("userId").description("User id of the recipient of the invite"),
             fieldWithPath("competitionId").description("The id of the competition"),
     };
 
@@ -96,7 +96,6 @@ public class CompetitionInviteDocs {
             .withRecipients(singletonList("Paul Plum"));
 
     public static final ExistingUserStagedInviteResourceBuilder existingUserStagedInviteResourceBuilder = newExistingUserStagedInviteResource()
-            .withEmail("paul.plum@gmail.com")
             .withCompetitionId(1L);
 
     public static final NewUserStagedInviteResourceBuilder newUserStagedInviteResourceBuilder = newNewUserStagedInviteResource()

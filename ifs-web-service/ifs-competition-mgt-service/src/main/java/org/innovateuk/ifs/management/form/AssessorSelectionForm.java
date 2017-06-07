@@ -14,10 +14,10 @@ public class AssessorSelectionForm extends BaseBindingResultTarget {
 
     private boolean allSelected;
 
-    private List<String> assessorEmails;
+    private List<Long> selectedAssessorIds;
 
     public AssessorSelectionForm() {
-        this.assessorEmails = new ArrayList<>();
+        this.selectedAssessorIds = new ArrayList<>();
     }
 
     public boolean getAllSelected() {
@@ -28,12 +28,12 @@ public class AssessorSelectionForm extends BaseBindingResultTarget {
         this.allSelected = allSelected;
     }
 
-    public List<String> getAssessorEmails() {
-        return assessorEmails;
+    public List<Long> getSelectedAssessorIds() {
+        return selectedAssessorIds;
     }
 
-    public void setAssessorEmails(List<String> assessorEmails) {
-        this.assessorEmails = assessorEmails;
+    public void setSelectedAssessorIds(List<Long> selectedAssessorIds) {
+        this.selectedAssessorIds = selectedAssessorIds;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class AssessorSelectionForm extends BaseBindingResultTarget {
 
         return new EqualsBuilder()
                 .append(allSelected, that.allSelected)
-                .append(assessorEmails, that.assessorEmails)
+                .append(selectedAssessorIds, that.selectedAssessorIds)
                 .isEquals();
     }
 
@@ -54,7 +54,7 @@ public class AssessorSelectionForm extends BaseBindingResultTarget {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(allSelected)
-                .append(assessorEmails)
+                .append(selectedAssessorIds)
                 .toHashCode();
     }
 }

@@ -238,7 +238,7 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
 
     @Test
     public void inviteUser() {
-        ExistingUserStagedInviteResource existingUserStagesInviteResource = new ExistingUserStagedInviteResource("firstname.example@example.com", 1L);
+        ExistingUserStagedInviteResource existingUserStagesInviteResource = new ExistingUserStagedInviteResource(2L, 1L);
         CompetitionInviteResource expected = newCompetitionInviteResource().build();
 
         setupPostWithRestResultExpectations(format("%s/%s", restUrl, "inviteUser"), CompetitionInviteResource.class, existingUserStagesInviteResource, expected, OK);
@@ -274,7 +274,7 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
         ExistingUserStagedInviteListResource existingUserStagedInviteListResource = newExistingUserStagedInviteListResource()
                 .withInvites(
                         newExistingUserStagedInviteResource()
-                                .withEmail("test1@test.com", "test2@test.com")
+                                .withUserId(1L, 2L)
                                 .withCompetitionId(competitionId)
                                 .build(2)
                 )
