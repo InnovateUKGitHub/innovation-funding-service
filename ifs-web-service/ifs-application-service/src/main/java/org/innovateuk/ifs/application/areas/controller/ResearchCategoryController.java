@@ -1,13 +1,12 @@
 package org.innovateuk.ifs.application.areas.controller;
 
-import org.innovateuk.ifs.application.forms.validator.ApplicationDetailsEditableValidator;
-import org.innovateuk.ifs.application.forms.controller.ApplicationFormController;
 import org.innovateuk.ifs.application.areas.form.ResearchCategoryForm;
 import org.innovateuk.ifs.application.areas.populator.ApplicationResearchCategoryPopulator;
+import org.innovateuk.ifs.application.areas.viewmodel.ResearchCategoryViewModel;
+import org.innovateuk.ifs.application.forms.validator.ApplicationDetailsEditableValidator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationResearchCategoryRestService;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.areas.viewmodel.ResearchCategoryViewModel;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -24,11 +23,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.function.Supplier;
 
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
+
 /**
  * This controller handles requests by Applicants to change the research category choice for an Application.
  */
 @Controller
-@RequestMapping(ApplicationFormController.APPLICATION_BASE_URL+"{applicationId}/form/question/{questionId}/research-category")
+@RequestMapping(APPLICATION_BASE_URL+"{applicationId}/form/question/{questionId}/research-category")
 @PreAuthorize("hasAuthority('applicant')")
 public class ResearchCategoryController {
     private static String APPLICATION_SAVED_MESSAGE = "applicationSaved";

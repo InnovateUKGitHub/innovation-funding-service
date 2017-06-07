@@ -89,7 +89,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<ApplicationFormController> {
+public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<ApplicationQuestionController> {
 
     @Mock
     private CookieFlashMessageFilter cookieFlashMessageFilter;
@@ -140,8 +140,8 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     private ApplicantSectionResourceBuilder sectionBuilder;
 
     @Override
-    protected ApplicationFormController supplyControllerUnderTest() {
-        return new ApplicationFormController();
+    protected ApplicationQuestionController supplyControllerUnderTest() {
+        return new ApplicationQuestionController();
     }
 
     @Before
@@ -280,7 +280,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(applicationService.getById(application.getId())).thenReturn(application);
         mockMvc.perform(
                 post("/application/1/form/question/1")
-                        .param(ApplicationFormController.EDIT_QUESTION, "1_2")
+                        .param(ApplicationQuestionController.EDIT_QUESTION, "1_2")
         )
                 .andExpect(view().name("application-form"));
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
@@ -293,7 +293,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(applicationService.getById(application.getId())).thenReturn(application);
         mockMvc.perform(
                 post("/application/1/form/question/1")
-                        .param(ApplicationFormController.ASSIGN_QUESTION_PARAM, "1_2")
+                        .param(ApplicationQuestionController.ASSIGN_QUESTION_PARAM, "1_2")
 
         )
                 .andExpect(status().is3xxRedirection());
@@ -306,7 +306,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(applicationService.getById(application.getId())).thenReturn(application);
         mockMvc.perform(
                 post("/application/1/form/question/1")
-                        .param(ApplicationFormController.MARK_AS_COMPLETE, "1")
+                        .param(ApplicationQuestionController.MARK_AS_COMPLETE, "1")
         ).andExpect(status().is3xxRedirection());
     }
 
@@ -376,7 +376,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(financeRowRestService.add(anyLong(), eq(financeQuestion.getId()), any(GrantClaim.class))).thenReturn(restSuccess(ValidationMessages.noErrors()));
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(ApplicationFormController.NOT_REQUESTING_FUNDING, "1")
+                        .param(ApplicationQuestionController.NOT_REQUESTING_FUNDING, "1")
         ).andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
@@ -396,7 +396,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(financeRowRestService.add(anyLong(), eq(financeQuestion.getId()), any(GrantClaim.class))).thenReturn(restSuccess(ValidationMessages.noErrors()));
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(ApplicationFormController.REQUESTING_FUNDING, "1")
+                        .param(ApplicationQuestionController.REQUESTING_FUNDING, "1")
         ).andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
@@ -414,8 +414,8 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE)).thenReturn(sectionResourceBuilder.withType(SectionType.FINANCE).build(1));
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
-                        .param(ApplicationFormController.TERMS_AGREED_KEY, "1")
+                        .param(ApplicationQuestionController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+                        .param(ApplicationQuestionController.TERMS_AGREED_KEY, "1")
         ).andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
@@ -431,11 +431,11 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+                        .param(ApplicationQuestionController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
-                .andExpect(model().attributeHasFieldErrors("form", ApplicationFormController.TERMS_AGREED_KEY));
+                .andExpect(model().attributeHasFieldErrors("form", ApplicationQuestionController.TERMS_AGREED_KEY));
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
     }
 
@@ -449,11 +449,11 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(organisationService.getOrganisationForUser(anyLong())).thenReturn(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build());
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+                        .param(ApplicationQuestionController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
-                .andExpect(model().attributeHasFieldErrors("form", ApplicationFormController.STATE_AID_AGREED_KEY));
+                .andExpect(model().attributeHasFieldErrors("form", ApplicationQuestionController.STATE_AID_AGREED_KEY));
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
     }
 
@@ -466,7 +466,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(organisationService.getOrganisationForUser(anyLong())).thenReturn(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.RESEARCH.getId()).build());
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+                        .param(ApplicationQuestionController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
         ).andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/**"));
     }
@@ -476,7 +476,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(applicantRestService.getSection(any(), any(), any())).thenReturn(sectionBuilder.withSection(newSectionResource().withType(SectionType.ORGANISATION_FINANCES).build()).build());
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+                        .param(ApplicationQuestionController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1));
@@ -488,7 +488,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
-                        .param(ApplicationFormController.MARK_SECTION_AS_INCOMPLETE, String.valueOf(sectionId))
+                        .param(ApplicationQuestionController.MARK_SECTION_AS_INCOMPLETE, String.valueOf(sectionId))
 
         )
                 .andExpect(status().is3xxRedirection())
@@ -500,7 +500,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     public void testApplicationFormSubmitMarkAsComplete() throws Exception {
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
-                        .param(ApplicationFormController.MARK_AS_COMPLETE, "12")
+                        .param(ApplicationQuestionController.MARK_AS_COMPLETE, "12")
         ).andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/" + sectionId + "**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
@@ -521,8 +521,8 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.ORGANISATION_FINANCES)).thenReturn(sectionResourceBuilder.withType(SectionType.ORGANISATION_FINANCES).build(1));
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
-                        .param(ApplicationFormController.TERMS_AGREED_KEY, "1")
+                        .param(ApplicationQuestionController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+                        .param(ApplicationQuestionController.TERMS_AGREED_KEY, "1")
         ).andExpect(status().is3xxRedirection());
 
         verify(sectionService, times(1)).markAsComplete(isA(Long.class), isA(Long.class), isA(Long.class));
@@ -534,7 +534,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
-                        .param(ApplicationFormController.MARK_AS_INCOMPLETE, "3")
+                        .param(ApplicationQuestionController.MARK_AS_INCOMPLETE, "3")
         ).andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/" + sectionId + "**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
@@ -747,7 +747,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param("formInput[1]", "")
-                        .param(ApplicationFormController.MARK_AS_COMPLETE, "1")
+                        .param(ApplicationQuestionController.MARK_AS_COMPLETE, "1")
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
@@ -1199,8 +1199,8 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE)).thenReturn(sectionResourceBuilder.withType(SectionType.FINANCE).build(1));
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
-                        .param(ApplicationFormController.TERMS_AGREED_KEY, "1")
+                        .param(ApplicationQuestionController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+                        .param(ApplicationQuestionController.TERMS_AGREED_KEY, "1")
         ).andExpect(status().is3xxRedirection());
 
         verify(overheadFileSaver, times(1)).handleOverheadFileRequest(isA(HttpServletRequest.class));
