@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.overhead;
+package org.innovateuk.ifs.application.overheads;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

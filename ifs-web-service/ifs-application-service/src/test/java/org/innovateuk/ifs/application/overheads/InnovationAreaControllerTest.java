@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.overhead;
+package org.innovateuk.ifs.application.overheads;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.areas.controller.InnovationAreaController;

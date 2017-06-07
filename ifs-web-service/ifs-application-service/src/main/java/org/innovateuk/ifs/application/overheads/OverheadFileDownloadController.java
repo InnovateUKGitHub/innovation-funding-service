@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.overhead;
+package org.innovateuk.ifs.application.overheads;
 
 import org.innovateuk.ifs.finance.service.OverheadFileRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
