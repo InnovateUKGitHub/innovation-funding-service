@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.queries.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
+import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -112,9 +113,21 @@ public class FinanceChecksQueriesController {
                                   HttpServletRequest request) {
         projectService.getPartnerOrganisation(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
-        model.addAttribute("model", populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments));
+        populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments, model);
         model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId, queryId).orElse(new FinanceChecksQueriesAddResponseForm()));
         return QUERIES_VIEW;
+    }
+
+    private void populateQueriesViewModel(Long projectId, Long organisationId, Long queryId, String querySection, List<Long> attachments, Model model) {
+        FinanceChecksQueriesViewModel financeChecksQueriesViewModel = populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments);
+        validateQueryId(financeChecksQueriesViewModel, queryId);
+        model.addAttribute("model", financeChecksQueriesViewModel);
+    }
+
+    private void validateQueryId(FinanceChecksQueriesViewModel financeChecksQueriesViewModel, Long queryId) {
+        if (financeChecksQueriesViewModel.getQueries().stream().noneMatch(threadViewModel -> threadViewModel.getId().equals(queryId))) {
+            throw new ObjectNotFoundException();
+        }
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
