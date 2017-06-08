@@ -29,6 +29,7 @@ ${EMPIRE_LTD_NAME}    Empire Ltd
 #Competitions and Applications Variables
 ${OPEN_COMPETITION_NAME}    Predicting market trends programme
 ${OPEN_COMPETITION}    ${competition_ids['${OPEN_COMPETITION_NAME}']}
+${OPEN_COMPETITION_MAN}    ${SERVER}/management/competition/${OPEN_COMPETITION}
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}    Aerospace technology investment sector
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}    ${competition_ids['${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}']}
 ${OPEN_COMPETITION_NAME_2}    Home and industrial efficiency programme
@@ -75,7 +76,6 @@ ${IN_ASSESSMENT_APPLICATION_5_NUMBER}     ${application_ids['${IN_ASSESSMENT_APP
 ${IN_ASSESSMENT_APPLICATION_5_LEAD_PARTNER_EMAIL}    paula.fuller@example.com
 ${INFORM_COMPETITION_NAME}                Integrated delivery programme - low carbon vehicles
 ${NON_IFS_COMPETITION_NAME}     Transforming big data
-${STEVE_SMITH_ID}    55
 ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
 ${SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/summary
 ${APPLICATION_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}

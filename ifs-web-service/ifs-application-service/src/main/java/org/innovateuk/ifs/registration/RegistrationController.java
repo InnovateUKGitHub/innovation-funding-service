@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.registration;
 
-import org.innovateuk.ifs.application.ApplicationCreationController;
+import org.innovateuk.ifs.application.creation.controller.ApplicationCreationController;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
