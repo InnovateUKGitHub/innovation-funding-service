@@ -10,8 +10,8 @@ Resource            ../../FinanceSection_Commons.robot
 
 ${Application_name_business}           Maximum funding allowed Business
 ${Application_name_RTO}                Maximum funding allowed RTO
-# ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}       Aerospace technology investment sector
-# ${OPEN_COMPETITION_NAME}              Predicting market trends programme
+#${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}       Aerospace technology investment sector
+#${OPEN_COMPETITION_NAME}              Predicting market trends programme
 ${lead_business_email}                 oscar@innovateuk.com
 ${lead_rto_email}                      oscarRTO@innovateuk.com
 
@@ -26,10 +26,10 @@ maximum funding level available for lead business
     And the user fills the organisation details with Project growth table   ${Application_name_business}  ${SMALL_ORGANISATION_SIZE}
     When the user fills in the project costs
     And the user clicks the button/link                      link=Your funding
-    Then the user should see the text in the page            Enter your funding level (maximum 45%).
-    And the correct funding displayed for lead applicant     Feasibility studies   ${MEDIUM_ORGANISATION_SIZE}  60%.
-    And the correct funding displayed for lead applicant     Industrial research   ${LARGE_ORGANISATION_SIZE}   50%.
-    And the user clicks the button/link                      jQuery=a:contains("Your finances")
+    Then the user should see the text in the page             Enter your funding level (maximum 45%).
+    And the correct funding displayed for lead applicant      Feasibility studies   ${MEDIUM_ORGANISATION_SIZE}  60%
+    And the correct funding displayed for lead applicant      Industrial research   ${LARGE_ORGANISATION_SIZE}   50%
+    And the user clicks the button/link                       jQuery=a:contains("Your finances")
     [Teardown]  the user clicks the button/link              link=Application overview
 
 lead applicant invites a Charity member
@@ -66,7 +66,7 @@ maximum funding level available for RTO lead
     When the user clicks the button/link                                        link=Your funding
     Then the user should see the text in the page                               Enter your funding level (maximum 100%).
     And the correct funding displayed for lead applicant                        Feasibility studies  ${MEDIUM_ORGANISATION_SIZE}  100%
-    And the correct funding displayed for lead applicant                        Industrial research  ${LARGE_ORGANISATION_SIZE}  100%
+    And the correct funding displayed for lead applicant                         Industrial research  ${LARGE_ORGANISATION_SIZE}  100%
     And the user clicks the button/link                                         jQuery=a:contains("Your finances")
     [Teardown]  the user clicks the button/link                                 link=Application overview
 
@@ -88,7 +88,7 @@ the applicant completes the application details
     the user clicks the button/link              link=${Application_details}
     the user enters text to a text field         id=application_details-title  ${Application_name_business}
     the user clicks the button/link              jQuery=button:contains("Choose your innovation area")
-    the user clicks the button twice             jQuery=label[for^="innovationAreaChoice-22"]:contains("Digital manufacturing")
+    the user clicks the button twice              jQuery=label[for^="innovationAreaChoice-22"]:contains("Digital manufacturing")
     the user clicks the button/link              jQuery=button:contains(Save)
     the user fills the other application details questions   ${Research_category}
 
@@ -103,7 +103,8 @@ the user fills the other application details questions
     the user clicks the button/link       jQuery=button:contains("research category")
     the user clicks the button twice      jQuery=label[for^="researchCategoryChoice"]:contains("${Research_category}")
     the user clicks the button/link       jQuery=button:contains(Save)
-    the user clicks the button twice      jQuery=label[for="application.resubmission-no"]
+    the user clicks the button/link       jQuery=label[for="application.resubmission-no"]
+    the user clicks the button/link       jQuery=label[for="application.resubmission-no"]
     The user enters text to a text field  id=application_details-startdate_day  18
     The user enters text to a text field  id=application_details-startdate_year  2018
     The user enters text to a text field  id=application_details-startdate_month  11
@@ -156,7 +157,7 @@ the correct funding is displayed to academic user
     logout as user
 
 the correct funding displayed for lead applicant
-    [Arguments]   ${research_cat}  ${org_size}  ${funding_percentage}
-    the user edits the research category                    ${research_cat}
-    the user edits the organisation size                    ${org_size}
-    the user should see the text in the page                Enter your funding level (maximum ${funding_percentage}).
+    [Arguments]   ${research_cat}  ${org_size}  ${funding_amoount}
+    the user edits the research category                                   ${research_cat}
+    the user edits the organisation size                                    ${org_size}
+    the user should see the text in the page                               Enter your funding level (maximum ${funding_amoount}).
