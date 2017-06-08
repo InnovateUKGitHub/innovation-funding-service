@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.competition.resource.CompetitionInAssessmentKeyStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
@@ -16,10 +17,23 @@ public class ManageAssessmentsViewModel {
     private final String competitionName;
     private final boolean inAssessment;
 
-    public ManageAssessmentsViewModel(CompetitionResource competition) {
+    // TODO are these common to other views? Can we spilt them out?
+    private final int totalAssessments;
+    private final int assessmentsAwaitingResponse;
+    private final int assessmentsAccepted;
+    private final int assessmentsCompleted;
+    private final int assessmentsStarted;
+
+    public ManageAssessmentsViewModel(CompetitionResource competition, CompetitionInAssessmentKeyStatisticsResource keyStatistics) {
         this.competitionId = competition.getId();
         this.competitionName = competition.getName();
         this.inAssessment = competition.getCompetitionStatus() == CompetitionStatus.IN_ASSESSMENT;
+
+        this.totalAssessments = keyStatistics.getAssignmentCount();
+        this.assessmentsAwaitingResponse = keyStatistics.getAssignmentsWaiting();
+        this.assessmentsAccepted = keyStatistics.getAssignmentsAccepted();
+        this.assessmentsCompleted = keyStatistics.getAssessmentsSubmitted();
+        this.assessmentsStarted = keyStatistics.getAssessmentsStarted();
     }
 
     public long getCompetitionId() {
@@ -34,6 +48,26 @@ public class ManageAssessmentsViewModel {
         return inAssessment;
     }
 
+    public int getTotalAssessments() {
+        return totalAssessments;
+    }
+
+    public int getAssessmentsAwaitingResponse() {
+        return assessmentsAwaitingResponse;
+    }
+
+    public int getAssessmentsAccepted() {
+        return assessmentsAccepted;
+    }
+
+    public int getAssessmentsCompleted() {
+        return assessmentsCompleted;
+    }
+
+    public int getAssessmentsStarted() {
+        return assessmentsStarted;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -44,8 +78,13 @@ public class ManageAssessmentsViewModel {
 
         return new EqualsBuilder()
                 .append(competitionId, that.competitionId)
-                .append(competitionName, that.competitionName)
                 .append(inAssessment, that.inAssessment)
+                .append(totalAssessments, that.totalAssessments)
+                .append(assessmentsAwaitingResponse, that.assessmentsAwaitingResponse)
+                .append(assessmentsAccepted, that.assessmentsAccepted)
+                .append(assessmentsCompleted, that.assessmentsCompleted)
+                .append(assessmentsStarted, that.assessmentsStarted)
+                .append(competitionName, that.competitionName)
                 .isEquals();
     }
 
@@ -55,6 +94,11 @@ public class ManageAssessmentsViewModel {
                 .append(competitionId)
                 .append(competitionName)
                 .append(inAssessment)
+                .append(totalAssessments)
+                .append(assessmentsAwaitingResponse)
+                .append(assessmentsAccepted)
+                .append(assessmentsCompleted)
+                .append(assessmentsStarted)
                 .toHashCode();
     }
 }
