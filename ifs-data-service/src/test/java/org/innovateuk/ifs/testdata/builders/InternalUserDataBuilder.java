@@ -6,6 +6,7 @@ import org.innovateuk.ifs.user.domain.ProjectFinanceEmail;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.UserStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,12 +33,13 @@ public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserDat
     }
 
     @Override
-    public InternalUserDataBuilder createUserDirectly(String firstName, String lastName, String emailAddress, String organisationName, String phoneNumber) {
+    public InternalUserDataBuilder createUserDirectly(String firstName, String lastName, String emailAddress, String organisationName, String phoneNumber, boolean emailVerified){
         return with(data -> {
 
             User user = userRepository.save(new User(firstName, lastName, emailAddress, null, UUID.randomUUID().toString()));
             Role role = roleRepository.findOneByName(data.getRole().getName());
             user.getRoles().add(role);
+            user.setStatus(emailVerified ? UserStatus.ACTIVE : UserStatus.INACTIVE);
             userRepository.save(user);
         });
     }
