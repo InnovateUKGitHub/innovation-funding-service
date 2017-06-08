@@ -21,35 +21,35 @@
         <ul class="grid-row">
 
             <li class="column-fifth">
-                <div class="highlight-panel">
+                <div class="highlight-panel highlight-panel-padded">
                     <span class="heading-large" th:text="${model.totalAssessments}">50</span><br/>
                     <small>Total assignments</small>
                 </div>
             </li>
 
             <li class="column-fifth">
-                <div class="highlight-panel">
+                <div class="highlight-panel highlight-panel-padded">
                     <span class="heading-large" th:text="${model.assessmentsAwaitingResponse}">25</span><br/>
                     <small>Assignments awaiting response</small>
                 </div>
             </li>
 
             <li class="column-fifth">
-                <div class="highlight-panel">
+                <div class="highlight-panel highlight-panel-padded">
                     <span class="heading-large" th:text="${model.assessmentsAccepted}">10</span><br/>
                     <small>Assignments accepted</small>
                 </div>
             </li>
 
             <li class="column-fifth">
-                <div class="highlight-panel">
+                <div class="highlight-panel highlight-panel-padded">
                     <span class="heading-large" th:text="${model.assessmentsStarted}">4</span><br/>
                     <small>Assessments started</small>
                 </div>
             </li>
 
             <li class="column-fifth">
-                <div class="highlight-panel">
+                <div class="highlight-panel highlight-panel-padded">
                     <span class="heading-large" th:text="${model.assessmentsCompleted}">5</span><br/>
                     <small>Assessments completed</small>
                 </div>
@@ -59,7 +59,7 @@
 
         <h2 class="heading-medium">Actions</h2>
 
-        <ul class="grid-row">
+        <ul class="link-list">
 
             <!-- /* TODO: 'Manage assessors' functionality - IFS-319, IFS-17
 
@@ -71,13 +71,13 @@
             </li>
             */ -->
 
-            <li class="column-fifth dashboard-actions">
-                <a class="button"
-                   th:href="@{/assessment/competition/{competitionId}/applications(competitionId=${model.competitionId})}"
+            <li>
+                <a th:href="@{/assessment/competition/{competitionId}/applications(competitionId=${model.competitionId})}"
                    th:text="${model.inAssessment} ? 'Manage applications' : 'Allocate applications'">
                     Allocate/Manage applications
                 </a>
             </li>
+
 
         </ul>
 
