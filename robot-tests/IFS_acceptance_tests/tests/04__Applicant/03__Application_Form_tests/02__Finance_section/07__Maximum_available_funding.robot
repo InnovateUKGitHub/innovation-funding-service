@@ -88,8 +88,7 @@ the applicant completes the application details
     the user clicks the button/link              link=${Application_details}
     the user enters text to a text field         id=application_details-title  ${Application_name_business}
     the user clicks the button/link              jQuery=button:contains("Choose your innovation area")
-    the user clicks the button/link              jQuery=label[for^="innovationAreaChoice-22"]:contains("Digital manufacturing")
-    the user clicks the button/link              jQuery=label[for^="innovationAreaChoice-22"]:contains("Digital manufacturing")
+    the user clicks the button twice             jQuery=label[for^="innovationAreaChoice-22"]:contains("Digital manufacturing")
     the user clicks the button/link              jQuery=button:contains(Save)
     the user fills the other application details questions   ${Research_category}
 
@@ -102,11 +101,9 @@ the applicant completes the application details for RTO lead appln
 the user fills the other application details questions
     [Arguments]    ${Research_category}
     the user clicks the button/link       jQuery=button:contains("research category")
-    the user clicks the button/link       jQuery=label[for^="researchCategoryChoice"]:contains("${Research_category}")
-    the user clicks the button/link       jQuery=label[for^="researchCategoryChoice"]:contains("${Research_category}")
+    the user clicks the button twice      jQuery=label[for^="researchCategoryChoice"]:contains("${Research_category}")
     the user clicks the button/link       jQuery=button:contains(Save)
-    the user clicks the button/link       jQuery=label[for="application.resubmission-no"]
-    the user clicks the button/link       jQuery=label[for="application.resubmission-no"]
+    the user clicks the button twice      jQuery=label[for="application.resubmission-no"]
     The user enters text to a text field  id=application_details-startdate_day  18
     The user enters text to a text field  id=application_details-startdate_year  2018
     The user enters text to a text field  id=application_details-startdate_month  11
