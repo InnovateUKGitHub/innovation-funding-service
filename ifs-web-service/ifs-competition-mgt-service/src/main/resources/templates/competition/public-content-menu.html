@@ -28,7 +28,11 @@
         </th:block>
 
         <div class="message-alert">
-            This information will be publicly viewable by prospective applicants.
+            <p>This information will be publicly viewable by prospective applicants.</p>
+            <p>Competition URL:
+                <a>https://apply-for-innovation-funding.service.gov.uk/competition/6/overview</a>
+                <button class="copy-link" aria-hidden="true">Copy link</button>
+            </p>
         </div>
 
         <div class="error-summary" th:if="${#fields.hasErrors('*')}">
@@ -60,7 +64,7 @@
                     <a th:if="${model.competition.nonIfs}" th:href="@{/non-ifs-competition/setup/{competitionId}(competitionId=${model.competition.id})}" class="button">Return to non-IFS competition details</a>
                 </div>
                 <div class="column-half alignright">
-                    <button th:unless="${model.hasBeenPublished()}" class="button-secondary no-margin" th:disabled="${model.disablePublishButton()}" name="publish">Publish public content</button>
+                    <button th:unless="${model.hasBeenPublished()}" class="button-secondary no-margin" th:disabled="${model.disablePublishButton()}" name="publish">Publish content</button>
                 </div>
             </div>
         </div>
