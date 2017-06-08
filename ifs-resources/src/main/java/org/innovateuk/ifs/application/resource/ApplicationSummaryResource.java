@@ -7,20 +7,20 @@ import java.time.ZonedDateTime;
  * Represents a high-level overview of an application.
  */
 public class ApplicationSummaryResource {
-    private long id;
+    private Long id;
     private String name;
     private String lead;
     private String leadApplicant;
     private String status;
-    private int completedPercentage;
-    private int numberOfPartners;
+    private Integer completedPercentage;
+    private Integer numberOfPartners;
     private BigDecimal grantRequested;
     private BigDecimal totalProjectCost;
-    private long duration;
+    private Long duration;
     private FundingDecision fundingDecision;
     private String innovationArea;
     private ZonedDateTime manageFundingEmailDate;
-    private boolean ineligibleInformed;
+    private Boolean ineligibleInformed;
 
     public ZonedDateTime getManageFundingEmailDate() {
         return manageFundingEmailDate;
@@ -30,19 +30,19 @@ public class ApplicationSummaryResource {
         this.manageFundingEmailDate = manageFundingEmailDate;
     }
 
-    public boolean isIneligibleInformed() {
+    public Boolean isIneligibleInformed() {
         return ineligibleInformed;
     }
 
-    public void setIneligibleInformed(boolean ineligibleInformed) {
+    public void setIneligibleInformed(Boolean ineligibleInformed) {
         this.ineligibleInformed = ineligibleInformed;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -78,19 +78,19 @@ public class ApplicationSummaryResource {
         this.status = status;
     }
 
-    public int getCompletedPercentage() {
+    public Integer getCompletedPercentage() {
         return completedPercentage;
     }
 
-    public void setCompletedPercentage(int completedPercentage) {
+    public void setCompletedPercentage(Integer completedPercentage) {
         this.completedPercentage = completedPercentage;
     }
 
-    public int getNumberOfPartners() {
+    public Integer getNumberOfPartners() {
         return numberOfPartners;
     }
 
-    public void setNumberOfPartners(int numberOfPartners) {
+    public void setNumberOfPartners(Integer numberOfPartners) {
         this.numberOfPartners = numberOfPartners;
     }
 
@@ -110,15 +110,15 @@ public class ApplicationSummaryResource {
         this.totalProjectCost = totalProjectCost;
     }
 
-    public long getDuration() {
+    public Long getDuration() {
         return duration;
     }
 
-    public void setDuration(long duration) {
+    public void setDuration(Long duration) {
         this.duration = duration;
     }
 
-    public boolean isFunded() {
+    public Boolean isFunded() {
         return FundingDecision.FUNDED.equals(fundingDecision);
     }
 
@@ -138,7 +138,7 @@ public class ApplicationSummaryResource {
         this.innovationArea = innovationArea;
     }
 
-    public boolean applicationFundingDecisionIsChangeable() {
+    public Boolean applicationFundingDecisionIsChangeable() {
         if(this.manageFundingEmailDate != null && fundingDecision.equals(FundingDecision.FUNDED)) {
             return false;
         }
