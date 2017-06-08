@@ -10,8 +10,8 @@ Resource            ../../FinanceSection_Commons.robot
 
 ${Application_name_business}           Maximum funding allowed Business
 ${Application_name_RTO}                Maximum funding allowed RTO
-#${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}       Aerospace technology investment sector
-#${OPEN_COMPETITION_NAME}              Predicting market trends programme
+# ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}       Aerospace technology investment sector
+# ${OPEN_COMPETITION_NAME}              Predicting market trends programme
 ${lead_business_email}                 oscar@innovateuk.com
 ${lead_rto_email}                      oscarRTO@innovateuk.com
 
@@ -26,14 +26,10 @@ maximum funding level available for lead business
     And the user fills the organisation details with Project growth table   ${Application_name_business}  ${SMALL_ORGANISATION_SIZE}
     When the user fills in the project costs
     And the user clicks the button/link                      link=Your funding
-    Then the user should see the text in the page             Enter your funding level (maximum 45%).
-    When the user edits the research category                 Feasibility studies
-    And the user edits the organisation size                 ${MEDIUM_ORGANISATION_SIZE}
-    Then the user should see the text in the page             Enter your funding level (maximum 60%).
-    When the user edits the research category                 Industrial research
-    And the user edits the organisation size                 ${LARGE_ORGANISATION_SIZE}
-    Then the user should see the text in the page             Enter your funding level (maximum 50%).
-    And the user clicks the button/link                       jQuery=a:contains("Your finances")
+    Then the user should see the text in the page            Enter your funding level (maximum 45%).
+    And the correct funding displayed for lead applicant     Feasibility studies   ${MEDIUM_ORGANISATION_SIZE}  60%.
+    And the correct funding displayed for lead applicant     Industrial research   ${LARGE_ORGANISATION_SIZE}   50%.
+    And the user clicks the button/link                      jQuery=a:contains("Your finances")
     [Teardown]  the user clicks the button/link              link=Application overview
 
 lead applicant invites a Charity member
@@ -56,14 +52,7 @@ Invite existing academic collaborator
     And the user enters text to a text field                     css=input[id="applicants0.email"]  ${collaborator2_credentials["email"]}
     And the user clicks the button/link                          jQuery=button:contains("Add organisation and invite applicants")
     And logout as user
-    When the user reads his email and clicks the link             ${collaborator2_credentials["email"]}  Invitation to collaborate in ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  You will be joining as part of the organisation  3
-    And the user clicks the button/link                          jQuery=a:contains("Continue or sign in")
-    Then the guest user enters the log in credentials             &{collaborator2_credentials}
-    And The guest user clicks the log-in button
-    And the user clicks the button/link                          jQuery=a:contains("Confirm and accept invitation")
-    And the user clicks the button/link                          link=Your finances
-    Then the user should see the element                         jQuery=td:contains("100%")
-    And logout as user
+    Then the correct funding is displayed to academic user
 
 maximum funding level available for RTO lead
     [Documentation]  IFS-338
@@ -76,12 +65,8 @@ maximum funding level available for RTO lead
     And the user fills in the project costs
     When the user clicks the button/link                                        link=Your funding
     Then the user should see the text in the page                               Enter your funding level (maximum 100%).
-    When the user edits the research category                                   Feasibility studies
-    And the user edits the organisation size                                    ${MEDIUM_ORGANISATION_SIZE}
-    Then the user should see the text in the page                               Enter your funding level (maximum 100%).
-    When the user edits the research category                                   Industrial research
-    And the user edits the organisation size                                    ${LARGE_ORGANISATION_SIZE}
-    Then the user should see the text in the page                               Enter your funding level (maximum 100%).
+    And the correct funding displayed for lead applicant                        Feasibility studies  ${MEDIUM_ORGANISATION_SIZE}  100%
+    And the correct funding displayed for lead applicant                        Industrial research  ${LARGE_ORGANISATION_SIZE}  100%
     And the user clicks the button/link                                         jQuery=a:contains("Your finances")
     [Teardown]  the user clicks the button/link                                 link=Application overview
 
@@ -141,8 +126,7 @@ the user edits the research category
     the user clicks the button/link                          link=Application details
     the user clicks the button/link                          jQuery=button:contains("Edit")
     the user clicks the button/link                          jQuery=button:contains("research category")
-    the user clicks the button/link                          jQuery=label[for^="researchCategoryChoice"]:contains("${research_category}")
-    the user clicks the button/link                          jQuery=label[for^="researchCategoryChoice"]:contains("${research_category}")
+    the user clicks the button twice                         jQuery=label[for^="researchCategoryChoice"]:contains("${research_category}")
     the user clicks the button/link                          jQuery=button:contains(Save)
     the user clicks the button/link                          jQuery=button:contains("Mark as complete")
     the user clicks the button/link                          link=Application overview
@@ -163,3 +147,19 @@ the funding displayed is as expected
     the user clicks the button/link                               jQuery=a:contains("Your finances")
     the user edits the organisation size                          ${LARGE_ORGANISATION_SIZE}
     the user should see the text in the page                      Enter your funding level (maximum 100%).
+
+the correct funding is displayed to academic user
+    the user reads his email and clicks the link             ${collaborator2_credentials["email"]}  Invitation to collaborate in ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  You will be joining as part of the organisation  3
+    the user clicks the button/link                          jQuery=a:contains("Continue or sign in")
+    the guest user enters the log in credentials             &{collaborator2_credentials}
+    the guest user clicks the log-in button
+    the user clicks the button/link                          jQuery=a:contains("Confirm and accept invitation")
+    the user clicks the button/link                          link=Your finances
+    the user should see the element                          jQuery=td:contains("100%")
+    logout as user
+
+the correct funding displayed for lead applicant
+    [Arguments]   ${research_cat}  ${org_size}  ${funding_percentage}
+    the user edits the research category                    ${research_cat}
+    the user edits the organisation size                    ${org_size}
+    the user should see the text in the page                Enter your funding level (maximum ${funding_percentage}).
