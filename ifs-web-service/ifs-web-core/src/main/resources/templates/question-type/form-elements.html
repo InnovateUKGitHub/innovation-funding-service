@@ -86,7 +86,7 @@
            type="number"
            th:id="${id}"
            th:field="*{__${field}__}"
-           th:errorclass="field-error"
+           th:errorclass="form-control-error"
            th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
            th:min="${min}"
            th:max="${max}"
@@ -172,7 +172,7 @@
                 rows="4"
                 th:readonly="${readonly}"
                 th:required="${required}"
-                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-'+name+']}')} ? 'field-error' : ''">
+                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-'+name+']}')} ? 'form-control-error'">
                 >
 		</textarea>
 </th:block>
@@ -200,9 +200,9 @@
 
                     <th:block th:if="${model.assignButtonsViewModel.currentUserIsLead}">
                         <!--/*  we show mark as complete buttons and the question should be assigned to you or */-->
-                        <th:block th:include="question-type/form-elements :: form-mark-as-complete-buttons (${model})" />
+                        <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (${model})" />
                         <!--/* if  readonly we show the edit form button */-->
-                        <th:block th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button (${model})" />
+                        <th:block th:if="${readonly}" th:insert="question-type/form-elements :: form-edit-question-button (${model})" />
                     </th:block>
 
                 </th:block>
@@ -213,10 +213,10 @@
             <div class="form-footer__info">
 
                 <span class="textarea-footer"></span>
-                <span class="update-label">Last updated: </span>
                 <th:block th:if="${model.hasResponse}">
+                    <span class="update-label">Last updated: </span>
                     <span class="update-details">
-                        <th:block th:include="fragments/elements :: pretty-date (date=${model.response.updateDate})"/>
+                        <th:block th:insert="fragments/elements :: pretty-date (date=${model.response.updateDate})"/>
                         <th:block th:text="${model.lastUpdatedText}"></th:block>
                     </span>
                 </th:block>
@@ -390,7 +390,7 @@
 <th:block th:fragment="last-update-info (model)" th:with="response=${model.response}">
       <th:block th:if="${response?.getUpdateDate()}">
         <small>
-          Last updated: <th:block th:include="fragments/elements :: pretty-date (date=${response?.getUpdateDate()})" /><th:block th:text="${model.lastUpdatedText}"></th:block>
+          Last updated: <th:block th:insert="fragments/elements :: pretty-date (date=${response?.getUpdateDate()})" /><th:block th:text="${model.lastUpdatedText}"></th:block>
         </small>
       </th:block>
 </th:block>

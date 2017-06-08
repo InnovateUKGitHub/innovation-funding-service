@@ -183,9 +183,8 @@ the finance summary page should show a warning
 
 Log in and create a new application for the Aerospace competition
     Given Guest user log-in    &{lead_applicant_credentials}
-    When the user navigates to the page    ${SERVER}/competition/${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}/details/
-    And the user clicks the button/link    jQuery=.button:contains("Apply now")
-    And the user clicks the button/link    jQuery=.button:contains("Apply now")
+    When the user navigates to the page    ${SERVER}/competition/${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}/overview/
+    the user clicks the button/link             jQuery=a:contains("Start new application")
     #The following two lines are failing if we don't have any other application for the same competition
     Run Keyword And Ignore Error    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application.")
     Run Keyword And Ignore Error    And the user clicks the button/link    jQuery=.button:contains("Continue")

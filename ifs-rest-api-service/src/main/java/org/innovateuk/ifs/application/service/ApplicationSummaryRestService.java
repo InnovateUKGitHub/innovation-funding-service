@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.service;
 
+import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.error.ErrorHolder;
 import org.innovateuk.ifs.commons.service.BaseEitherBackedResult;
@@ -32,4 +33,6 @@ public interface ApplicationSummaryRestService {
                                                                                   Optional<FundingDecision> fundingFilter);
 
     RestResult<ApplicationSummaryPageResource> getIneligibleApplications(long competitionId, String sortField, int pageNumber, int pageSize, String filter, Optional<Boolean> informFilter);
+
+    RestResult<ApplicationTeamResource> getApplicationTeam(long applicationId);
 }

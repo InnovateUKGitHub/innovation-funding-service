@@ -54,19 +54,38 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
     }
 
     @Test
-    public void getCreatedInvite() throws Exception {
-        long inviteId = 1L;
-        AssessorInviteToSendResource resource = assessorInviteToSendResourceBuilder.build();
+    public void getAllInvitesToSend() throws Exception {
+        long competitionId = 1L;
+        AssessorInvitesToSendResource assessorInvitesToSendResource = assessorInvitesToSendResourceBuilder.build();
 
-        when(competitionInviteServiceMock.getCreatedInvite(inviteId)).thenReturn(serviceSuccess(resource));
+        when(competitionInviteServiceMock.getAllInvitesToSend(competitionId)).thenReturn(serviceSuccess(assessorInvitesToSendResource));
 
-        mockMvc.perform(get("/competitioninvite/getCreated/{inviteId}", inviteId))
+        mockMvc.perform(get("/competitioninvite/getAllInvitesToSend/{competitionId}", competitionId))
                 .andExpect(status().isOk())
                 .andDo(document("competitioninvite/{method-name}",
                         pathParameters(
-                                parameterWithName("inviteId").description("Id of the created invite being requested")
+                                parameterWithName("competitionId").description("Id of the competition to get invites for")
                         ),
-                        responseFields(assessorInviteToSendResourceFields)
+                        responseFields(assessorInvitesToSendResourceFields)
+                ));
+
+        verify(competitionInviteServiceMock, only()).getAllInvitesToSend(competitionId);
+    }
+
+    @Test
+    public void getInviteToSend() throws Exception {
+        long inviteId = 1L;
+        AssessorInvitesToSendResource resource = assessorInvitesToSendResourceBuilder.build();
+
+        when(competitionInviteServiceMock.getInviteToSend(inviteId)).thenReturn(serviceSuccess(resource));
+
+        mockMvc.perform(get("/competitioninvite/getInviteToSend/{inviteId}", inviteId))
+                .andExpect(status().isOk())
+                .andDo(document("competitioninvite/{method-name}",
+                        pathParameters(
+                                parameterWithName("inviteId").description("Id of the invite being requested")
+                        ),
+                        responseFields(assessorInvitesToSendResourceFields)
                 ));
     }
 
@@ -377,19 +396,43 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
     }
 
     @Test
-    public void sendInvite() throws Exception {
+    public void sendAllInvites() throws Exception {
+        long competitionId = 1L;
+
+        AssessorInviteSendResource assessorInviteSendResource = assessorInviteSendResourceBuilder.build();
+        when(competitionInviteServiceMock.sendAllInvites(competitionId, assessorInviteSendResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competitioninvite/sendAllInvites/{competitionId}", competitionId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(assessorInviteSendResource)))
+                .andExpect(status().isOk())
+                .andDo(document("competitioninvite/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of the competition to send assessor invites for")
+                        ),
+                        requestFields(
+                                fieldWithPath("subject").description("The subject of the invitation"),
+                                fieldWithPath("content").description("The custom content for this invitation")
+                        )
+                ));
+
+        verify(competitionInviteServiceMock, only()).sendAllInvites(competitionId, assessorInviteSendResource);
+    }
+
+    @Test
+    public void resendInvite() throws Exception {
         long inviteId = 1L;
 
         AssessorInviteSendResource assessorInviteSendResource = assessorInviteSendResourceBuilder.build();
-        when(competitionInviteServiceMock.sendInvite(inviteId, assessorInviteSendResource)).thenReturn(serviceSuccess());
+        when(competitionInviteServiceMock.resendInvite(inviteId, assessorInviteSendResource)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/competitioninvite/sendInvite/{inviteId}", inviteId)
+        mockMvc.perform(post("/competitioninvite/resendInvite/{inviteId}", inviteId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(assessorInviteSendResource)))
                 .andExpect(status().isOk())
                 .andDo(document("competitioninvite/{method-name}",
                         pathParameters(
-                                parameterWithName("inviteId").description("Id of the created invite being sent")
+                                parameterWithName("inviteId").description("Id of the invite being resent")
                         ),
                         requestFields(assessorInviteSendResourceFields)
                 ));

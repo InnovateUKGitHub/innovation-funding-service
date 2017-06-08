@@ -14,36 +14,9 @@ Suite Setup       The guest user opens the browser
 Suite Teardown    the user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
+Resource          ../../10__Project_setup/PS_Common.robot
 
 *** Test Cases ***
-Non registered users CH route: User can choose RTO organisation
-    [Documentation]    INFUND-669 INFUND-1904 INFUND-1785
-    [Tags]    HappyPath    SmokeTest
-    Given the guest user opens the browser
-    And the user navigates to the page    ${frontDoor}
-    And the user clicks the button/link    link=Home and industrial efficiency programme
-    And the user clicks the button/link    link=Start new application
-    And the user clicks the button/link    jQuery=.button:contains("Create account")
-    And the user enters text to a text field    id=organisationSearchName    Hive IT
-    And the user clicks the button/link    id=org-search
-    And the user clicks the button/link    Link=HIVE IT LIMITED
-    And the user selects the checkbox    address-same
-    And the user clicks the button/link    jQuery=button:contains("Continue")
-    When The user selects the radio button    organisationTypeId    radio-3    # RTO
-    then The user should see the text in the page    You can only lead an application as an RTO if both the following rules are met
-    And the user clicks the button/link    jQuery=button:contains("Save and continue")
-    then The user should see the text in the page    Confirm your organisation
-    [Teardown]    The user clicks the button/link    link=Back
-
-Non registered users CH route: User can select Business organisation type (complete flow)
-    [Documentation]    INFUND-669 INFUND-1904 INFUND-1920 INFUND-1785 INFUND-9280
-    [Tags]    HappyPath    SmokeTest    Email
-    [Setup]    The guest user opens the browser
-    Given Applicant goes to the registration form    radio-1    # business
-    Then the user verifies email    Phil    Smith    ${test_mailbox_one}+business@gmail.com
-    and the user directed to correct dashboaard    ${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    and the user reads his email and clicks the link    ${test_mailbox_one}+business@gmail.com    Innovate UK applicant questionnaire    diversity survey
-
 The email address does not stay in the cookie
     [Documentation]    INFUND_2510
     [Tags]
@@ -51,7 +24,7 @@ The email address does not stay in the cookie
     Then the user should not see the text in the page    ${test_mailbox_one}+rto@gmail.com
     [Teardown]    the user closes the browser
 
-Non registered users non CH route
+Non registered users non companies house route
     [Documentation]    INFUND-669 INFUND-1904 INFUND-1920
     [Tags]    HappyPath
     [Setup]    The guest user opens the browser
@@ -64,6 +37,14 @@ Non registered users non CH route
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     Then The user should see the text in the page    Your details
+
+Non registered users sign-up companies house route
+    [Documentation]    INFUND-669 INFUND-1904 INFUND-1920 INFUND-1785 INFUND-9280
+    [Tags]    HappyPath    SmokeTest    Email
+    Given Applicant goes to the registration form  radio-1
+    When the user verifies email    Phil    Smith    ${test_mailbox_one}+business@gmail.com
+    Then the user directed to correct dashboard    ${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    and the user reads his email and clicks the link    ${test_mailbox_one}+business@gmail.com    Innovate UK applicant questionnaire    diversity survey
 
 Verify the name of the new application
     [Documentation]    INFUND-669 INFUND-1163
@@ -129,14 +110,6 @@ Logged in user can create a new application
     And the user can see this new application on their dashboard
 
 *** Keywords ***
-the user directed to correct dashboaard
-    [Arguments]    ${Application_name}
-    the user should see the text in the page    Your dashboard
-    the user clicks the button/link    link=${Application_name}
-    the user clicks the button/link    jQuery=a:contains("Begin application")
-    the user should see the text in the page    Application overview
-    logout as user
-
 the new application should be visible in the dashboard page
     the user clicks the button/link    link= My dashboard
     the user should see the text in the page    ${test_title}
@@ -188,7 +161,7 @@ Applicant goes to the registration form
     And the user clicks the button/link    jQuery=.button:contains("Create account")
     When the user enters text to a text field    id=organisationSearchName    Hive IT
     And the user clicks the button/link    id=org-search
-    And the user clicks the button/link    Link=HIVE IT LIMITED
+    And the user clicks the button/link    Link=${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
     And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=button:contains("Continue")
     the user selects the radio button    organisationTypeId    ${ORG_TYPE}
@@ -199,3 +172,11 @@ The user selects to create a new application
     #We have used the run keyword and ignore error because if the user does not have an application this step is not needed
     Run Keyword And Ignore Error    And the user selects the radio button    create-application    true
     Run Keyword And Ignore Error    And the user clicks the button/link    jQuery=.button:contains("Continue")
+
+the user directed to correct dashboard
+    [Arguments]    ${Application_name}
+    the user should see the text in the page    Your dashboard
+    the user clicks the button/link    link=${Application_name}
+    the user clicks the button/link    jQuery=a:contains("Begin application")
+    the user should see the text in the page    Application overview
+    logout as user

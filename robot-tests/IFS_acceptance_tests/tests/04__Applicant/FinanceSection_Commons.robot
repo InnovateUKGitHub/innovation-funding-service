@@ -14,7 +14,7 @@ the user should see all the Your-Finances Sections
 the user navigates to Your-finances page
     [Arguments]  ${Application}
     the user navigates to the page  ${DASHBOARD_URL}
-    the user clicks the button/link  link=${Application}
+    the user clicks the button/link  jQuery=.in-progress a:contains("${Application}")
     the user clicks the button/link  link=Your finances
 
 Applicant navigates to the finances of the Robot application
@@ -146,7 +146,7 @@ the total overhead costs should reflect rate entered
 the user chooses 20% overheads option
     # overheads option : 20% Labour
     the user clicks the button/link    jQuery=button:contains("Overhead costs")
-    the user clicks the button/link    css=label[data-target="overhead-default-percentage"]
+    the user clicks the button/link    css=[data-target="overhead-default-percentage"] label
     the user clicks the button/link    jQuery=button:contains("Overhead costs")
 
 the user fills in Material
@@ -250,7 +250,7 @@ the user should see all finance subsections incomplete
 Remove previous rows
     [Arguments]  ${element}
     :FOR    ${i}    IN RANGE  10
-    # The sleep of 200 ms is actually for speed, originally the test used "should not see the element" however that made it wait for 10 seconds on every loop. 
+    # The sleep of 200 ms is actually for speed, originally the test used "should not see the element" however that made it wait for 10 seconds on every loop.
     \  sleep    200ms
     \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    the user should see the element    ${element}
     \  Log    ${status}

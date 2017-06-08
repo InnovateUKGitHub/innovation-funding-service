@@ -1,15 +1,14 @@
-package org.innovateuk.ifs.commons.security;
+package org.innovateuk.ifs.commons.security.evaluator;
 
-import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.commons.security.*;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.PermissionEvaluator;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -18,37 +17,40 @@ import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
-
+/**
+ * An implementation of PermissionEvaluator that supports the inclusion of business rules into Spring Security checking
+ * via the {@link PermissionRules} and {@link PermissionRule} annotations, and the ability to provide ways of looking up
+ * a protected class (e.g. ApplicationResource) from another type (e.g. an ID in the form of a Long) via the
+ * {@link PermissionEntityLookupStrategies} and {@link PermissionEntityLookupStrategy} annotations
+ */
 @Component
 public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     private static final Log LOG = LogFactory.getLog(CustomPermissionEvaluator.class);
 
-    private static final UserResource ANONYMOUS_USER = new UserResource();
-
     @Autowired
     private ApplicationContext applicationContext;
 
-    private PermissionedObjectClassToPermissionsToPermissionsMethods rulesMap;
+    @Autowired
+    private SecuredMethodsInStackCountInterceptor methodSecuredInStackCountInterceptor;
 
-    private PermissionedObjectClassesToListOfLookup lookupStrategyMap;
+    @Autowired
+    private CustomPermissionEvaluatorTransactionManager transactionManager;
 
-    public static boolean isAnonymous(UserResource user) {
-        return user == ANONYMOUS_USER;
-    }
+    private PermissionedObjectClassToLookupMethods lookupStrategyMap;
 
-    public static UserResource getAnonymous() {
-        return ANONYMOUS_USER;
-    }
+    private PermissionMethodHandler permissionMethodHandler;
 
     @PostConstruct
     void generateRules() {
@@ -62,8 +64,8 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             throw new IllegalStateException(error); // Fail fast
         }
 
-        PermissionedObjectClassToPermissionsMethods collectedRulesMethods = dtoClassToMethods(allRulesMethods);
-        rulesMap = dtoClassToPermissionToMethods(collectedRulesMethods);
+        PermissionedObjectClassToPermissionsMethods collectedRulesMethods = protectedClassToMethods(allRulesMethods);
+        PermissionedObjectClassToPermissionsToPermissionsMethods rulesMap = protectedClassToPermissionToMethods(collectedRulesMethods);
 
         if (LOG.isDebugEnabled()) {
             rulesMap.values().forEach(permission -> permission.values().forEach(pairs -> pairs.forEach(pair -> {
@@ -72,6 +74,8 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
                 LOG.debug("Registered PermissionRule: " + permissionAnnotation.description());
             })));
         }
+
+        permissionMethodHandler = new DefaultPermissionMethodHandler(rulesMap);
     }
 
     @PostConstruct
@@ -79,8 +83,70 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         final Collection<Object> permissionEntityLookupBeans = applicationContext.getBeansWithAnnotation(PermissionEntityLookupStrategies.class).values();
         final ListOfOwnerAndMethod allLookupStrategyMethods = findLookupStrategies(permissionEntityLookupBeans);
         final PermissionedObjectClassToLookupMethods collectedPermissionLookupMethods = returnTypeToMethods(allLookupStrategyMethods);
-        lookupStrategyMap = PermissionedObjectClassesToListOfLookup.from(collectedPermissionLookupMethods);
+        lookupStrategyMap = PermissionedObjectClassToLookupMethods.from(collectedPermissionLookupMethods);
         validate(lookupStrategyMap); // Fail Fast
+    }
+
+    @Override
+    public boolean hasPermission(final Authentication authentication, final Object targetObject, final Object permission) {
+
+        if (methodSecuredInStackCountInterceptor.isStackSecuredAtHigherLevel()) {
+            return true;
+        }
+
+        if (targetObject == null) {
+            return true;
+        }
+
+        Class<?> targetClass = targetObject.getClass();
+
+        return transactionManager.doWithinTransaction(() ->
+                permissionMethodHandler.hasPermission(authentication, targetObject, permission, targetClass));
+    }
+
+    @Override
+    public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission) {
+
+        if (methodSecuredInStackCountInterceptor.isStackSecuredAtHigherLevel()) {
+            return true;
+        }
+
+        final Class<?> clazz;
+        try {
+            clazz = Class.forName(targetType);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException("Unable to look up class " + targetType + " that was specified in a @PermissionRule method", e);
+        }
+        return hasPermission(authentication, targetId, clazz, permission);
+    }
+
+    List<String> getPermissions(Authentication authentication, Object targetDomainObject) {
+        return permissionMethodHandler.getPermissions(authentication, targetDomainObject);
+    }
+
+    private Pair<Object, Method> lookup(final Serializable targetId, final Class<?> targetType) {
+        final List<Pair<Object, Method>> allLookupsForTargetClass = lookupStrategyMap.get(targetType);
+        if (allLookupsForTargetClass == null) {
+            final String error = "No lookups at all found for target class " + targetType + " with target id: " + targetId;
+            LOG.error(error);
+            throw new IllegalArgumentException(error);
+        }
+        final List<Pair<Object, Method>> lookupsForTargetClassAndTargetIdClass = allLookupsForTargetClass.stream()
+                .filter(lookupForTargetClass -> {
+                    final Method method = lookupForTargetClass.getValue();
+                    final boolean methodAcceptsTargetId = method.getParameterTypes()[0].isAssignableFrom(targetId.getClass());
+                    return methodAcceptsTargetId;
+                }).collect(toList());
+        if (lookupsForTargetClassAndTargetIdClass.isEmpty()) {
+            final String error = "No lookup found for target class " + targetType + " with target id: " + targetId;
+            LOG.error(error);
+            throw new IllegalArgumentException(error);
+        } else if (lookupsForTargetClassAndTargetIdClass.size() > 1) {
+            final String error = "Multiple lookups found for target class " + targetType + " with target id: " + targetId;
+            LOG.error(error);
+            throw new IllegalArgumentException(error);
+        }
+        return lookupsForTargetClassAndTargetIdClass.get(0);
     }
 
     List<Pair<Object, Method>> failedPermissionMethodSignatures(ListOfOwnerAndMethod collectedRulesMethods) {
@@ -99,8 +165,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         ).collect(toList());
     }
 
-
-    private static final void validate(final PermissionedObjectClassesToListOfLookup lookupsStrategyMap) {
+    private static final void validate(final PermissionedObjectClassToLookupMethods lookupsStrategyMap) {
         for (final Entry<Class<?>, ListOfOwnerAndMethod> permissionedObjectClassTolookupsStrategies : lookupsStrategyMap.entrySet()) {
             if (!lookupsWithMethodsThatDoNotHaveASingleParameter(permissionedObjectClassTolookupsStrategies.getValue()).isEmpty()) {
                 final String error = "Lookups must have a single parameter";
@@ -188,7 +253,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         return asList(owningBean.getClass().getMethods()).stream().filter(method -> findAnnotation(method, annotation) != null).collect(toList());
     }
 
-    PermissionedObjectClassToPermissionsMethods dtoClassToMethods(List<Pair<Object, Method>> allRuleMethods) {
+    PermissionedObjectClassToPermissionsMethods protectedClassToMethods(List<Pair<Object, Method>> allRuleMethods) {
         PermissionedObjectClassToPermissionsMethods map = new PermissionedObjectClassToPermissionsMethods();
         for (Pair<Object, Method> methodAndBean : allRuleMethods) {
             map.putIfAbsent(methodAndBean.getRight().getParameterTypes()[0], new ListOfOwnerAndMethod());
@@ -206,10 +271,9 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         return map;
     }
 
-
-    PermissionedObjectClassToPermissionsToPermissionsMethods dtoClassToPermissionToMethods(PermissionedObjectClassToPermissionsMethods dtoClassToMethods) {
+    PermissionedObjectClassToPermissionsToPermissionsMethods protectedClassToPermissionToMethods(PermissionedObjectClassToPermissionsMethods protectedClassToMethods) {
         PermissionedObjectClassToPermissionsToPermissionsMethods map = new PermissionedObjectClassToPermissionsToPermissionsMethods();
-        for (Entry<Class<?>, ListOfOwnerAndMethod> entry : dtoClassToMethods.entrySet()) {
+        for (Entry<Class<?>, ListOfOwnerAndMethod> entry : protectedClassToMethods.entrySet()) {
             for (Pair<Object, Method> methodAndBean : entry.getValue()) {
                 Method method = methodAndBean.getRight();
                 String permission = findAnnotation(method, PermissionRule.class).value();
@@ -221,165 +285,24 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         return map;
     }
 
-    @Override
-    public boolean hasPermission(final Authentication authentication, final Object targetObject, final Object permission) {
-        if (targetObject == null) {
-            return true;
-        }
-        final Class<?> targetClass = targetObject.getClass();
-        final List<PermissionsToPermissionsMethods> permissionsWithPermissionsMethodsForTargetClassList
-                = rulesMap.entrySet().stream().
-                filter(e -> e.getKey().isAssignableFrom(targetClass)). // Any super class of the target class will do.
-                map(Entry::getValue).collect(toList());
-        final List<ListOfOwnerAndMethod> permissionMethodsForPermissionList
-                = permissionsWithPermissionsMethodsForTargetClassList.stream().
-                map(permissionsToPermissionsMethods -> permissionsToPermissionsMethods.get(permission)).
-                filter(Objects::nonNull). // Filter any nulls
-                collect(toList());
-        final ListOfOwnerAndMethod permissionMethodsForPermissionAggregate
-                = permissionMethodsForPermissionList.stream().
-                reduce(new ListOfOwnerAndMethod(), (f1, f2) -> ListOfOwnerAndMethod.from(combineLists(f1, f2)));
-        return permissionMethodsForPermissionAggregate.stream().
-                map(methodAndBean -> callHasPermissionMethod(methodAndBean, targetObject, authentication)).
-                reduce(false, (a, b) -> a || b);
-    }
+    private boolean hasPermission(Authentication authentication, Serializable targetId, Class<?> targetType, Object permission) {
 
-    public boolean hasPermission(Authentication authentication, Serializable targetId, Class<?> targetType, Object permission) {
-        final Pair<Object, Method> lookup = lookup(targetId, targetType);
-        final Object permissionEntity;
-        try {
-            permissionEntity = lookup.getRight().invoke(lookup.getLeft(), targetId);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new AccessDeniedException("Could not successfully call permission entity lookup method", e);
-        }
+        return transactionManager.doWithinTransaction(() -> {
 
-        if (permissionEntity == null) {
-            throw new AccessDeniedException("Could not find entity of type " + targetType + " with id " + targetId);
-        }
-
-        return hasPermission(authentication, permissionEntity, permission);
-    }
-
-    private Pair<Object, Method> lookup(final Serializable targetId, final Class<?> targetType) {
-        final List<Pair<Object, Method>> allLookupsForTargetClass = lookupStrategyMap.get(targetType);
-        if (allLookupsForTargetClass == null) {
-            final String error = "No lookups at all found for target class " + targetType + " with target id: " + targetId;
-            LOG.error(error);
-            throw new IllegalArgumentException(error);
-        }
-        final List<Pair<Object, Method>> lookupsForTargetClassAndTargetIdClass = allLookupsForTargetClass.stream()
-                .filter(lookupForTargetClass -> {
-                    final Method method = lookupForTargetClass.getValue();
-                    final boolean methodAcceptsTargetId = method.getParameterTypes()[0].isAssignableFrom(targetId.getClass());
-                    return methodAcceptsTargetId;
-                }).collect(toList());
-        if (lookupsForTargetClassAndTargetIdClass.isEmpty()) {
-            final String error = "No lookup found for target class " + targetType + " with target id: " + targetId;
-            LOG.error(error);
-            throw new IllegalArgumentException(error);
-        } else if (lookupsForTargetClassAndTargetIdClass.size() > 1) {
-            final String error = "Multiple lookups found for target class " + targetType + " with target id: " + targetId;
-            LOG.error(error);
-            throw new IllegalArgumentException(error);
-        }
-        return lookupsForTargetClassAndTargetIdClass.get(0);
-    }
-
-    @Override
-    public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission) {
-        final Class<?> clazz;
-        try {
-            clazz = Class.forName(targetType);
-        } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException("Unable to look up class " + targetType + " that was specified in a @PermissionRule method", e);
-        }
-        return hasPermission(authentication, targetId, clazz, permission);
-    }
-
-    private boolean callHasPermissionMethod(Pair<Object, Method> methodAndBean, Object dto, Authentication authentication) {
-
-        final Object finalAuthentication;
-
-        Method method = methodAndBean.getValue();
-        Class<?> secondParameter = method.getParameterTypes()[1];
-
-        if (secondParameter.equals(UserResource.class)) {
-            if (authentication instanceof UserAuthentication) {
-                finalAuthentication = ((UserAuthentication) authentication).getDetails();
-            } else if (authentication instanceof AnonymousAuthenticationToken) {
-                finalAuthentication = ANONYMOUS_USER;
-            } else {
-                throw new IllegalArgumentException("Unable to determine the authentication token for Spring Security");
+            final Pair<Object, Method> lookup = lookup(targetId, targetType);
+            final Object permissionEntity;
+            try {
+                permissionEntity = lookup.getRight().invoke(lookup.getLeft(), targetId);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new AccessDeniedException("Could not successfully call permission entity lookup method", e);
             }
-        } else if (Authentication.class.isAssignableFrom(secondParameter)) {
-            finalAuthentication = authentication;
-        } else {
-            throw new IllegalArgumentException("Second parameter of @PermissionRule-annotated method " + method.getName() + " should be " +
-                    "either an instance of " + UserResource.class.getName() + " or an org.springframework.security.core.Authentication implementation, " +
-                    "but was " + secondParameter.getName());
-        }
 
-        try {
-            return (Boolean) method.invoke(methodAndBean.getLeft(), dto, finalAuthentication);
-        } catch (Exception e) {
-            LOG.error("Error whilst processing a permissions method", e);
-            throw new RuntimeException(e);
-        }
+            if (permissionEntity == null) {
+                throw new AccessDeniedException("Could not find entity of type " + targetType + " with id " + targetId);
+            }
+
+            return hasPermission(authentication, permissionEntity, permission);
+        });
     }
-
-    public List<String> getPermissions(Authentication authentication, Object targetDomainObject) {
-        return rulesMap.getOrDefault(targetDomainObject.getClass(), emptyPermissions()).keySet().stream().filter(
-                permission -> hasPermission(authentication, targetDomainObject, permission)
-        ).sorted().collect(toList());
-    }
-
-    public List<String> getPermissions(final Authentication authentication, final Class<?> dtoClazz, final Serializable key) {
-        return rulesMap.getOrDefault(dtoClazz, emptyPermissions()).keySet().stream().filter(
-                permission -> hasPermission(authentication, key, dtoClazz, permission)
-        ).sorted().collect(toList());
-    }
-
-    private static ListOfOwnerAndMethod emptyMethods() {
-        return new ListOfOwnerAndMethod();
-    }
-
-
-    private static PermissionsToPermissionsMethods emptyPermissions() {
-        return new PermissionsToPermissionsMethods();
-    }
-
-
-    /**
-     * An Alias for a List of owning Objects and a single Method on the owning Object.
-     * Thus representing a List of callable functions.
-     */
-    public static class ListOfOwnerAndMethod extends ArrayList<Pair<Object, Method>> {
-        public static ListOfOwnerAndMethod from(List<Pair<Object, Method>> list) {
-            ListOfOwnerAndMethod listOfMethods = new ListOfOwnerAndMethod();
-            listOfMethods.addAll(list);
-            return listOfMethods;
-        }
-    }
-
-    public static class PermissionsToPermissionsMethods extends HashMap<String, ListOfOwnerAndMethod> {
-    }
-
-    public static class PermissionedObjectClassToPermissionsToPermissionsMethods extends HashMap<Class<?>, PermissionsToPermissionsMethods> {
-    }
-
-    public static class PermissionedObjectClassToPermissionsMethods extends HashMap<Class<?>, ListOfOwnerAndMethod> {
-    }
-
-    public static class PermissionedObjectClassToLookupMethods extends HashMap<Class<?>, ListOfOwnerAndMethod> {
-    }
-
-    public static class PermissionedObjectClassesToListOfLookup extends HashMap<Class<?>, ListOfOwnerAndMethod> {
-        public static PermissionedObjectClassesToListOfLookup from(Map<Class<?>, ListOfOwnerAndMethod> map) {
-            final PermissionedObjectClassesToListOfLookup dtoClassToLookupMethod = new PermissionedObjectClassesToListOfLookup();
-            dtoClassToLookupMethod.putAll(map);
-            return dtoClassToLookupMethod;
-        }
-    }
-
 }
 

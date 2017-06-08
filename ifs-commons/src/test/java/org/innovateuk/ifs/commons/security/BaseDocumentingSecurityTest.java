@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.commons.security;
 
 import au.com.bytecode.opencsv.CSVWriter;
-import org.innovateuk.ifs.commons.BaseIntegrationTest;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
 import org.apache.commons.lang3.tuple.Pair;
+import org.innovateuk.ifs.commons.BaseIntegrationTest;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.After;
 import org.junit.Before;
 import org.springframework.beans.factory.support.RootBeanDefinition;
@@ -25,13 +25,12 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
-import static java.util.EnumSet.copyOf;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.junit.Assert.fail;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
@@ -120,12 +119,11 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
      * Additionally, revert the temporary bean definition for the Service under test
      */
     @After
-    public void teardown() {
+    public void unregisterBeanAndDocument() {
+
         applicationContext.removeBeanDefinition("beanUndergoingSecurityTesting");
 
         documentServiceAndPermissionRuleInteractions();
-
-        super.teardown();
     }
 
     /**

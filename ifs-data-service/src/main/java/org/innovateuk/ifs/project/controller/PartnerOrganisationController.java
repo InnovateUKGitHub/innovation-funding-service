@@ -24,4 +24,10 @@ public class PartnerOrganisationController {
     public RestResult<List<PartnerOrganisationResource>> getFinanceCheck(@PathVariable("projectId") final Long projectId) {
         return partnerOrganisationService.getProjectPartnerOrganisations(projectId).toGetResponse();
     }
+
+    @GetMapping("/partner/{organisationId}")
+    public RestResult<PartnerOrganisationResource> getPartnerOrganisation(@PathVariable(value = "projectId") Long projectId,
+                                                                          @PathVariable(value = "organisationId") Long organisationId) {
+        return partnerOrganisationService.getPartnerOrganisation(projectId, organisationId).toGetResponse();
+    }
 }

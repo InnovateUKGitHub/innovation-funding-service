@@ -54,7 +54,7 @@ Lead Adds/Removes rows
     ...
     ...    INFUND-8590
     [Tags]    HappyPath
-    When The user clicks the button/link    jquery=a:contains("Update Empire Ltd")
+    When The user clicks the button/link    jquery=a:contains("Update ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}")
     And the user clicks the button/link    jQuery=button:contains("Add new applicant")
     And The user should not see the element    jQuery=.modal-delete-organisation button:contains('Delete organisation')
     Then The user should see the element    jQuery=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)
@@ -131,7 +131,7 @@ Partner organisation Client-side validations
     [Tags]    HappyPath
     When The user enters text to a text field    name=organisationName    Fannie May
     And The user enters text to a text field    name=applicants[0].name    Adrian Booth
-    And The user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com
+    And The user enters text to a text field    name=applicants[0].email    ${invite_email}
     Then the user cannot see a validation error in the page
 
 Valid invitation submit
@@ -167,7 +167,7 @@ Business organisation (partner accepts invitation)
     ...    INFUND-2336
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    The guest user opens the browser
-    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation    3
+    When the user reads his email and clicks the link    ${invite_email}   Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation    3
     And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
     And the user selects the radio button    organisationType    1
     And the user clicks the button/link    jQuery=.button:contains("Continue")
@@ -178,8 +178,28 @@ Business organisation (partner accepts invitation)
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user fills the create account form    Adrian    Booth
-    And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Please verify your email address    Once verified you can sign into your account
-    And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
+    And the user reads his email locally    ${invite_email}   Please verify your email address    Once verified you can sign into your account
+
+Partner requests new verification email via password reset
+    [Documentation]  IFS-52
+    [Tags]  HappyPath  Email
+    [Setup]    Run Keywords    delete the emails from the default test mailbox
+        ...    AND    the guest user opens the browser
+    Given the user navigates to the page    ${LOGIN_URL}
+    When the user clicks the forgot psw link
+    And the user enters text to a text field    id=id_email    ${invite_email}
+    And the user clicks the button/link    css=input.button
+    Then the user should see the text in the page    If your email address is recognised and valid, you’ll receive a notification
+
+Complete account verification
+    [Documentation]    INFUND-1005
+    ...    INFUND-2286
+    ...    INFUND-1779
+    ...    INFUND-2336
+    [Tags]  HappyPath  Email  SmokeTest
+    [Setup]    The guest user opens the browser
+    When the user reads his email and clicks the link    ${invite_email}    Please verify your email address    Once verified you can sign into your account
+    Then the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
 
 Partner should be able to log-in and see the new company name
     [Documentation]    INFUND-2083
@@ -187,10 +207,10 @@ Partner should be able to log-in and see the new company name
     ...    INFUND-7976
     [Tags]    Email    HappyPath    SmokeTest
     Given the user clicks the button/link    jQuery=.button:contains("Sign in")
-    When guest user log-in    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com    ${correct_password}
+    When guest user log-in    ${invite_email}    ${correct_password}
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     And the user can see the updated company name throughout the application
-    And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Innovate UK applicant questionnaire    diversity survey
+    And the user reads his email and clicks the link    ${invite_email}    Innovate UK applicant questionnaire    diversity survey
     [Teardown]    the user navigates to the page    ${DASHBOARD_URL}
 
 Parner can see the Application team
@@ -198,10 +218,10 @@ Parner can see the Application team
     Given the user clicks the button/link    link=Invite robot test application
     And the user clicks the button/link    link=view team members and add collaborators
     Then the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(1):contains("Steve Smith")
-    And the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(2):contains("steve.smith@empire.com")
+    And the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(2):contains("${lead_applicant}")
     And the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
     And The user should see the element    link=Application overview
-    And The user should not see the element    link=Update Empire Ltd
+    And The user should not see the element    link=Update ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
 
 Partner can invite others to his own organisation
     [Documentation]    INFUND-2335
@@ -236,8 +256,8 @@ Lead applicant invites a non registered user in the same organisation
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     When the user clicks the button/link    link=view team members and add collaborators
-    When the user clicks the button/link    jQuery=a:contains("Update Empire Ltd")
-    Then the user should see the text in the page    Update Empire Ltd
+    When the user clicks the button/link    jQuery=a:contains("Update ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}")
+    Then the user should see the text in the page    Update ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
     And the user clicks the button/link    jQuery=button:contains("Add new applicant")
     When The user enters text to a text field    name= applicants[0].name    Roger Axe
     And The user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+inviteorg2@gmail.com
@@ -262,9 +282,9 @@ Registered partner should not create new org but should follow the create accoun
 
 *** Keywords ***
 The lead applicant should have the correct status
-    the user should see the element    jQuery=h2:contains("Empire Ltd"):contains("(Lead)")
+    the user should see the element    jQuery=h2:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}"):contains("(Lead)")
     the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(1):contains("Steve Smith")
-    the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(2):contains("steve.smith@empire.com")
+    the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(2):contains("${lead_applicant}")
     the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
 
 the applicant cannot assign to pending invitees

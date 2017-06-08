@@ -1,12 +1,15 @@
 package org.innovateuk.ifs.testdata.builders;
 
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.OrganisationSizeResource;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.testdata.builders.data.IndustrialCostData;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -26,6 +29,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
  * Generates Indisutrial Finances for an Organisation on an Application
  */
 public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostData, IndustrialCostDataBuilder> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(IndustrialCostDataBuilder.class);
 
     public IndustrialCostDataBuilder withApplicationFinance(ApplicationFinanceResource applicationFinance) {
         return with(data -> data.setApplicationFinance(applicationFinance));
@@ -190,5 +195,11 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     private BigDecimal bd(Integer value) {
         return BigDecimal.valueOf(value);
     }
-
+    @Override
+    protected void postProcess(int index, IndustrialCostData instance) {
+        super.postProcess(index, instance);
+        OrganisationResource organisation = organisationService.findById(instance.getApplicationFinance().getOrganisation()).getSuccessObjectOrThrowException();
+        ApplicationResource application = applicationService.getApplicationById(instance.getApplicationFinance().getApplication()).getSuccessObjectOrThrowException();
+        LOG.info("Created Industrial Costs for Application '{}', Organisation '{}'", application.getName(), organisation.getName());
+    }
 }

@@ -11,6 +11,7 @@ import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.populator.OrganisationCreationSelectTypePopulator;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.service.OrganisationSearchRestService;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,6 +28,7 @@ import javax.servlet.http.Cookie;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static java.lang.String.format;
 import static org.hamcrest.Matchers.equalTo;
@@ -35,6 +37,7 @@ import static org.innovateuk.ifs.BaseControllerMockMVCTest.setupMockMvc;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.user.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.*;
@@ -74,6 +77,8 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
     private Cookie organisationFormWithPostcodeInput;
     private Cookie organisationFormWithSelectedPostcode;
     private Cookie organisationFormWithEmptyPostcodeInput;
+    private Cookie competitionIdCookie;
+    private Long competitionId;
     private Cookie inviteHash;
 
     @Before
@@ -104,6 +109,10 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
         organisationFormWithPostcodeInput = new Cookie("organisationForm", encryptor.encrypt("{\"addressForm\":{\"triedToSave\":false,\"postcodeInput\":\""+POSTCODE_LOOKUP+"\",\"selectedPostcodeIndex\":null,\"selectedPostcode\":null,\"postcodeOptions\":[],\"manualAddress\":false},\"triedToSave\":false,\"organisationType\":{\"id\":1,\"name\":\"Business\",\"parentOrganisationType\":null},\"organisationSearchName\":null,\"searchOrganisationId\":\""+COMPANY_ID+"\",\"organisationSearching\":false,\"manualEntry\":false,\"useSearchResultAddress\":false,\"organisationSearchResults\":[],\"organisationName\":\"NOMENSA LTD\"}"));
         organisationFormWithSelectedPostcode = new Cookie("organisationForm", encryptor.encrypt("{\"addressForm\":{\"triedToSave\":false,\"postcodeInput\":\""+POSTCODE_LOOKUP+"\",\"selectedPostcodeIndex\":\"0\",\"selectedPostcode\":null,\"postcodeOptions\":[],\"manualAddress\":false},\"triedToSave\":false,\"organisationType\":{\"id\":1,\"name\":\"Business\",\"parentOrganisationType\":null},\"organisationSearchName\":null,\"searchOrganisationId\":\""+COMPANY_ID+"\",\"organisationSearching\":false,\"manualEntry\":false,\"useSearchResultAddress\":false,\"organisationSearchResults\":[],\"organisationName\":\"NOMENSA LTD\"}"));
         organisationFormWithEmptyPostcodeInput = new Cookie("organisationForm", encryptor.encrypt("{\"addressForm\":{\"triedToSearch\":true,\"triedToSave\":false,\"postcodeInput\":\"\",\"selectedPostcodeIndex\":null,\"selectedPostcode\":null,\"postcodeOptions\":[],\"manualAddress\":false},\"triedToSave\":false,\"organisationType\":{\"id\":1,\"name\":\"Business\",\"parentOrganisationType\":null},\"organisationSearchName\":null,\"searchOrganisationId\":\""+COMPANY_ID+"\",\"organisationSearching\":false,\"manualEntry\":false,\"useSearchResultAddress\":false,\"organisationSearchResults\":[],\"organisationName\":\"NOMENSA LTD\"}"));
+
+        competitionId = 2L;
+        competitionIdCookie = new Cookie("competitionId", encryptor.encrypt(competitionId.toString()));
+
         inviteHash = new Cookie(AbstractAcceptInviteController.INVITE_HASH, encryptor.encrypt(INVITE_HASH));
     }
 
@@ -469,6 +478,7 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
     public void testSelectedBusinessSaveLeadBusiness() throws Exception {
         mockMvc.perform(post("/organisation/create/lead-organisation-type")
                 .param("organisationTypeId", OrganisationTypeEnum.RTO.getId().toString())
+                .cookie(competitionIdCookie)
                 .cookie(organisationForm))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/organisation/create/confirm-organisation"));
@@ -478,7 +488,8 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
     public void testSelectedInvalidLeadOrganisationType() throws Exception {
         mockMvc.perform(post("/organisation/create/lead-organisation-type")
                 .param("organisationTypeId", OrganisationTypeEnum.RESEARCH.getId().toString())
-                .cookie(organisationForm))
+                .cookie(organisationForm)
+                .cookie(competitionIdCookie))
                 .andExpect(view().name("registration/organisation/lead-organisation-type"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("organisationForm", "organisationTypeId"));
@@ -487,7 +498,8 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
     @Test
     public void testLeadOrganisationTypeNotSelected() throws Exception {
         mockMvc.perform(post("/organisation/create/lead-organisation-type")
-                .cookie(organisationForm))
+                .cookie(organisationForm)
+                .cookie(competitionIdCookie))
                 .andExpect(view().name("registration/organisation/lead-organisation-type"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("organisationForm", "organisationTypeId"));
@@ -519,5 +531,75 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
                 .andExpect(model().attributeExists("selectedOrganisation"))
                 .andExpect(model().attribute("selectedOrganisation", hasProperty("name", equalTo(COMPANY_NAME))))
                 .andExpect(view().name("registration/organisation/confirm-organisation"));
+    }
+
+    @Test
+    public void testSaveOrganisation_leadApplicantShouldBeRedirectedToConfirmOrganisationPageWhenOnlyOneTypeIsAvailable() throws Exception {
+        Cookie organisationTypeBusinessAsLeadApplicant = new Cookie("organisationType", encryptor.encrypt("{\"organisationType\":1, \"leadApplicant\":true}"));
+        List<OrganisationTypeResource> organisationTypeResourceList = newOrganisationTypeResource().withId(OrganisationTypeEnum.BUSINESS.getId()).build(1);
+
+        when(competitionService.getOrganisationTypes(competitionId)).thenReturn(organisationTypeResourceList);
+
+        mockMvc.perform(post("/organisation/create/selected-organisation/" + COMPANY_ID)
+                .cookie(competitionIdCookie)
+                .param("useSearchResultAddress", "true")
+                .param("_useSearchResultAddress", "on")
+                .param("save-organisation-details", "true")
+                .param("searchOrganisationId", COMPANY_ID)
+                .header("referer", "/organisation/create/selected-organisation/")
+                .cookie(organisationForm)
+                .cookie(organisationTypeBusinessAsLeadApplicant))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/organisation/create/confirm-organisation"));
+    }
+
+    @Test
+    public void testSaveOrganisation_leadApplicantShouldBeShownOrganisationTypePageWhenMultipleTypesAreAvailable() throws Exception {
+        Long competitionId = 2L;
+
+        Cookie organisationTypeBusinessAsLeadApplicant = new Cookie("organisationType", encryptor.encrypt("{\"organisationType\":1, \"leadApplicant\":true}"));
+        List<OrganisationTypeResource> organisationTypeResourceList = newOrganisationTypeResource().withId(OrganisationTypeEnum.BUSINESS.getId(), OrganisationTypeEnum.RTO.getId()).build(2);
+
+        when(competitionService.getOrganisationTypes(competitionId)).thenReturn(organisationTypeResourceList);
+
+        mockMvc.perform(post("/organisation/create/selected-organisation/" + COMPANY_ID)
+                .cookie(competitionIdCookie)
+                .param("useSearchResultAddress", "true")
+                .param("_useSearchResultAddress", "on")
+                .param("save-organisation-details", "true")
+                .param("searchOrganisationId", COMPANY_ID)
+                .header("referer", "/organisation/create/selected-organisation/")
+                .cookie(organisationForm)
+                .cookie(organisationTypeBusinessAsLeadApplicant))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/organisation/create/lead-organisation-type"));
+    }
+
+    @Test
+    public void testSelectOrganisationType_leadApplicantShouldRedirectToConfirmPageWhenOnlyOneOrganisationTypeIsAllowed() throws Exception {
+        Long competitionId = 2L;
+        Cookie competitionIdCookie = new Cookie("competitionId", encryptor.encrypt(competitionId.toString()));
+        List<OrganisationTypeResource> organisationTypeResourceList = newOrganisationTypeResource().withId(OrganisationTypeEnum.BUSINESS.getId()).build(1);
+
+        when(competitionService.getOrganisationTypes(competitionId)).thenReturn(organisationTypeResourceList);
+
+        mockMvc.perform(get("/organisation/create/lead-organisation-type")
+                .cookie(competitionIdCookie))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/organisation/create/confirm-organisation"));
+    }
+
+    @Test
+    public void testConfirmSelectOrganisationType_leadApplicantShouldRedirectToConfirmPageWhenOnlyOneOrganisationTypeIsAllowed() throws Exception {
+        Long competitionId = 2L;
+        Cookie competitionIdCookie = new Cookie("competitionId", encryptor.encrypt(competitionId.toString()));
+        List<OrganisationTypeResource> organisationTypeResourceList = newOrganisationTypeResource().withId(OrganisationTypeEnum.BUSINESS.getId()).build(1);
+
+        when(competitionService.getOrganisationTypes(competitionId)).thenReturn(organisationTypeResourceList);
+
+        mockMvc.perform(post("/organisation/create/lead-organisation-type")
+                .cookie(competitionIdCookie))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/organisation/create/confirm-organisation"));
     }
 }

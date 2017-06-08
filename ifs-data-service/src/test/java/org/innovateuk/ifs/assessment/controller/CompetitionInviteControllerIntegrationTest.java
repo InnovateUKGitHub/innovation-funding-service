@@ -33,9 +33,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
+import static com.google.common.collect.Sets.newHashSet;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.time.ZonedDateTime.now;
@@ -43,7 +45,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
-import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
+import static org.innovateuk.ifs.invite.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
@@ -128,30 +130,33 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
-    public void getCreatedInvite() {
+    public void getAllInvitesToSend() {
         InnovationArea innovationArea = newInnovationArea().withName("innovation area").build();
-        long createdId = competitionInviteRepository.save(newCompetitionInvite()
-                .with(id(null))
-                .withName("tom poly")
-                .withEmail("tom@poly.io")
-                .withUser((User) null)
-                .withHash("hash")
-                .withCompetition(competition)
-                .withStatus(InviteStatus.CREATED)
-                .withInnovationArea(innovationArea)
-                .build())
-                .getId();
+        competitionInviteRepository.save(
+                newCompetitionInvite()
+                        .with(id(null))
+                        .withName("James Smith", "Peter Mason")
+                        .withEmail("james@email.com", "peter@email.com")
+                        .withUser()
+                        .withHash("hash1", "hash2")
+                        .withCompetition(competition)
+                        .withStatus(CREATED)
+                        .withInnovationArea(innovationArea)
+                        .build(2)
+        );
 
         loginCompAdmin();
 
-        RestResult<AssessorInviteToSendResource> serviceResult = controller.getCreatedInvite(createdId);
+        RestResult<AssessorInvitesToSendResource> serviceResult = controller.getAllInvitesToSend(competition.getId());
         assertTrue(serviceResult.isSuccess());
 
-        AssessorInviteToSendResource inviteResource = serviceResult.getSuccessObjectOrThrowException();
+        AssessorInvitesToSendResource inviteResource = serviceResult.getSuccessObjectOrThrowException();
         assertEquals(1L, inviteResource.getCompetitionId());
         assertEquals("Connected digital additive manufacturing", inviteResource.getCompetitionName());
-        assertEquals("tom poly", inviteResource.getRecipient());
-        assertTrue(inviteResource.getContent().startsWith("Dear tom poly\n\nWe are inviting you to assess "));
+        assertEquals(2, inviteResource.getRecipients().size());
+        assertEquals("James Smith", inviteResource.getRecipients().get(0));
+        assertEquals("Peter Mason", inviteResource.getRecipients().get(1));
+        assertTrue(inviteResource.getContent().startsWith("Dear [recipient name]\n\nWe are inviting you to assess "));
     }
 
     @Test
@@ -704,17 +709,17 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
-    public void sendInvite() throws Exception {
-        long createdId = competitionInviteRepository.save(newCompetitionInvite()
+    public void sendAllInvites() throws Exception {
+        List<CompetitionInvite> invitesToSend = newCompetitionInvite()
                 .with(id(null))
-                .withName("tom poly")
-                .withEmail("tom@poly.io")
-                .withUser((User) null)
-                .withHash("hash")
-                .withCompetition(competition)
-                .withStatus(InviteStatus.CREATED)
-                .build())
-                .getId();
+                .withName("tom poly", "cari poly")
+                .withEmail("tom@poly.io", "cari@poly.io")
+                .withUser()
+                .withHash("hash1", "hash2")
+                .withCompetition(competition, competition)
+                .withStatus(CREATED, CREATED)
+                .build(2);
+        competitionInviteRepository.save(invitesToSend);
 
         AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
                 .withSubject("subject")
@@ -723,24 +728,26 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         loginCompAdmin();
 
-        RestResult<Void> serviceResult = controller.sendInvite(createdId, assessorInviteSendResource);
+        RestResult<Void> serviceResult = controller.sendAllInvites(competition.getId(), assessorInviteSendResource);
         assertTrue(serviceResult.isSuccess());
     }
 
     @Test
-    public void sendInvite_toExistingApplicant() throws Exception {
+    public void sendAllInvites_toExistingApplicant() throws Exception {
         final UserResource applicantUser = getSteveSmith();
-        long createdId = competitionInviteRepository.save(newCompetitionInvite()
-                .with(id(null))
-                .withName(applicantUser.getName())
-                .withEmail(applicantUser.getEmail())
-                .withUser((User) null)
-                .withHash("hash")
-                .withCompetition(competition)
-                .withStatus(InviteStatus.CREATED)
-                .withInnovationArea(innovationAreaRepository.findOne(INNOVATION_AREA_ID)) // 'new invite'
-                .build())
-                .getId();
+
+        competitionInviteRepository.save(
+                newCompetitionInvite()
+                        .with(id(null))
+                        .withName(applicantUser.getName())
+                        .withEmail(applicantUser.getEmail())
+                        .withUser()
+                        .withHash("hash")
+                        .withCompetition(competition)
+                        .withStatus(CREATED)
+                        .withInnovationArea(innovationAreaRepository.findOne(INNOVATION_AREA_ID)) // 'new invite'
+                        .build()
+        );
 
         AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
                 .withSubject("subject")
@@ -749,7 +756,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         loginCompAdmin();
 
-        controller.sendInvite(createdId, assessorInviteSendResource).getSuccessObjectOrThrowException();
+        controller.sendAllInvites(competition.getId(), assessorInviteSendResource).getSuccessObjectOrThrowException();
 
         User invitedUser = userRepository.findByEmail(applicantUser.getEmail()).get();
         assertTrue(invitedUser.getRoles().contains(roleRepository.findOneByName(UserRoleType.ASSESSOR.getName())));
@@ -1107,5 +1114,51 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         assertEquals(2, content.size());
         assertEquals(felixWilson.getName(), content.get(0).getName());
         assertEquals(paulPlum.getName(), content.get(1).getName());
+    }
+
+    @Test
+    public void deleteInvite() throws Exception {
+        InnovationArea innovationArea = innovationAreaRepository.findOne(INNOVATION_AREA_ID);
+
+        CompetitionInvite savedCompetition = competitionInviteRepository.save(
+                new CompetitionInvite("Test Tester", "test@test.com", "hash1", competition, innovationArea)
+        );
+
+        flushAndClearSession();
+        loginCompAdmin();
+
+        RestResult<Void> restResult = controller.deleteInvite("test@test.com", competition.getId());
+
+        assertTrue(restResult.isSuccess());
+
+        flushAndClearSession();
+
+        assertNull(competitionInviteRepository.findOne(savedCompetition.getId()));
+    }
+
+
+    @Test
+    public void deleteAllInvites() throws Exception {
+        HashSet<InviteStatus> inviteStatuses = newHashSet(CREATED);
+
+        InnovationArea innovationArea = innovationAreaRepository.findOne(INNOVATION_AREA_ID);
+
+        competitionInviteRepository.save(asList(
+                new CompetitionInvite("Test Tester 1", "test1@test.com", "hash1", competition, innovationArea),
+                new CompetitionInvite("Test Tester 2", "test2@test.com", "hash2", competition, innovationArea)
+        ));
+
+        assertEquals(2, competitionInviteRepository.countByCompetitionIdAndStatusIn(competition.getId(), inviteStatuses));
+
+        flushAndClearSession();
+        loginCompAdmin();
+
+        RestResult<Void> restResult = controller.deleteAllInvites(competition.getId());
+
+        assertTrue(restResult.isSuccess());
+
+        flushAndClearSession();
+
+        assertEquals(0, competitionInviteRepository.countByCompetitionIdAndStatusIn(competition.getId(), inviteStatuses));
     }
 }

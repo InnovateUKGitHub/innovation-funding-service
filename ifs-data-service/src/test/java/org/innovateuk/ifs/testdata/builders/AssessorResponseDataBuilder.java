@@ -9,6 +9,8 @@ import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -20,6 +22,8 @@ import static java.util.Collections.singletonList;
  * Generates Assessor Responses for Assessments
  */
 public class AssessorResponseDataBuilder extends BaseDataBuilder<Void, AssessorResponseDataBuilder> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AssessorResponseDataBuilder.class);
 
     public AssessorResponseDataBuilder withAssessorResponseData(String competitionName,
                                                                 String applicationName,
@@ -77,5 +81,11 @@ public class AssessorResponseDataBuilder extends BaseDataBuilder<Void, AssessorR
     @Override
     protected Void createInitial() {
         return null;
+    }
+
+    @Override
+    protected void postProcess(int index, Void instance) {
+        super.postProcess(index, instance);
+        LOG.info("Created Assessor Response");
     }
 }

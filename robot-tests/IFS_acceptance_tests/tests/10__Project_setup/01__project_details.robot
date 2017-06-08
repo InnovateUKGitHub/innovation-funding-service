@@ -255,7 +255,7 @@ Inviting project manager server side validations
     Then the user should see the text in the page    Please enter a valid name.
     And the user should see the text in the page    Please enter an email address.
     When the user enters text to a text field    id=name-project-manager    Steve Smith
-    And the user enters text to a text field     id=email-project-manager    steve.smith@empire.com
+    And the user enters text to a text field     id=email-project-manager    ${lead_applicant}
     And the user clicks the button/link    id=invite-project-manager
     Then the user should see the text in the page    You cannot invite yourself to the project.
 
@@ -287,7 +287,6 @@ Partner invites a project manager
     And the user clicks the button/link    id=invite-project-manager
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     [Teardown]    logout as user
-
 Invited project manager registration flow
     [Documentation]  INFUND-3550 INFUND-3554
     [Tags]  HappyPath  Email
@@ -363,7 +362,7 @@ Non lead partner invites finance contact
     Then the user should not see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
     And the user clicks the button/link    link=Project setup status
     And the user clicks the button/link    link=Project details
-    When the user clicks the button/link  link=Ludlow
+    When the user clicks the button/link  link=${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
     And the user selects the radio button  financeContact  new
     Then the user enters text to a text field  css=#name-finance-contact  LudlowFinContact
     And the user enters text to a text field   css=#email-finance-contact  ${test_mailbox_one}+ludlowfincont@gmail.com
@@ -414,7 +413,7 @@ Option to invite a finance contact
     And the user clicks the button/link    link=Project details
     And the user should see the text in the page    Finance contacts
     And the user should see the text in the page    Partner
-    And the user clicks the button/link    link=Empire Ltd
+    And the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
     When the user selects the radio button    financeContact    new
     Then the user should see the element    id=invite-finance-contact
     When the user selects the radio button    financeContact    financeContact1
@@ -470,7 +469,7 @@ Invited finance contact shows on the finance contact selection screen
     [Tags]  Email
     When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user clicks the button/link    link=Project details
-    And the user clicks the button/link    link=Empire Ltd
+    And the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
     Then the user should see the text in the page    John Smith
 
 Lead partner selects a finance contact
@@ -480,7 +479,7 @@ Lead partner selects a finance contact
     And the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Finance contacts
     And the user should see the text in the page    Partner
-    And the user clicks the button/link    link=Empire Ltd
+    And the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
     And the user should not see duplicated select options
     And the user should not see the text in the page    Pending
     And the user selects the radio button    financeContact    financeContact2
@@ -488,7 +487,7 @@ Lead partner selects a finance contact
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the matching status checkbox is updated differently   project-details-finance    1    Yes
     And the user should see the text in the page    Elmo Chenault
-    And the user should see the element    link=Empire Ltd
+    And the user should see the element    link=${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
 
 Non-lead partner cannot change start date, project manager or project address
     [Documentation]    INFUND-3157
@@ -520,12 +519,12 @@ Academic Partner nominates Finance contact
     When the user clicks the button/link    link=Project details
     Then the user should see the text in the page  Finance contacts
     And the user should see the text in the page   Partner
-    And the user clicks the button/link            link=EGGS
+    And the user clicks the button/link            link=${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
     And the user selects the radio button          financeContact    financeContact1
     And the user clicks the button/link            jQuery=.button:contains("Save finance contact")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the matching status checkbox is updated differently    project-details-finance    2    Yes
-    And the user should see the element     link=EGGS
+    And the user should see the element     link=${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
     When the user navigates to the page     ${project_in_setup_page}
     Then the user should see the element    jQuery=li.complete:nth-of-type(2)
     And the user should see the element    jQuery=li.require-action:nth-child(4)
@@ -572,7 +571,7 @@ All partners can view submitted project details
     [Tags]  HappyPath
     When log in as a different user       &{collaborator1_credentials}
     And the user navigates to the page    ${project_in_setup_details_page}
-    Then the user should see the text in the page    Ludlow
+    Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
     And all the fields are completed
     And the user should see the text in the page    ${project_details_submitted_message}
     Then the user navigates to the page    ${project_in_setup_page}
@@ -580,7 +579,7 @@ All partners can view submitted project details
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
     When log in as a different user         &{lead_applicant_credentials}
     And the user navigates to the page    ${project_in_setup_details_page}
-    Then the user should see the text in the page    Empire Ltd
+    Then the user should see the text in the page    ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
     And all the fields are completed
     And the user should see the text in the page    ${project_details_submitted_message}
     When the user navigates to the page    ${project_in_setup_page}
@@ -679,7 +678,7 @@ Mark as complete button should be enabled
     Then Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Mark as complete")
 
 the user should not see duplicated select options
-    ${NO_OPTIONs}=    Get Matching Xpath Count    //div/fieldset/label
+    ${NO_OPTIONs}=    Get Matching Xpath Count    //*[@class="multiple-choice"]
     Should Be Equal As Integers    ${NO_OPTIONs}    5    # note that an extra option shows here due to the invited project manager appearing in the list for lead partner organisation members
 
 the user can see all project details completed

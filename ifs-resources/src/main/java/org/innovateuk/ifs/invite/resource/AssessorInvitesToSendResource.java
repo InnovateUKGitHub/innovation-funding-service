@@ -3,32 +3,34 @@ package org.innovateuk.ifs.invite.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.util.List;
+
 /**
  * Resource for invites to be sent
  */
-public class AssessorInviteToSendResource {
-    private String recipient;
+public class AssessorInvitesToSendResource {
+    private List<String> recipients;
     private long competitionId;
     private String competitionName;
     private String content;
 
-    public AssessorInviteToSendResource() {
+    public AssessorInvitesToSendResource() {
 
     }
 
-    public AssessorInviteToSendResource(String recipient, long competitionId, String competitionName, String content) {
-        this.recipient = recipient;
+    public AssessorInvitesToSendResource(List<String> recipients, long competitionId, String competitionName, String content) {
+        this.recipients = recipients;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.content = content;
     }
 
-    public String getRecipient() {
-        return recipient;
+    public List<String> getRecipients() {
+        return recipients;
     }
 
-    public void setRecipient(String recipient) {
-        this.recipient = recipient;
+    public void setRecipients(List<String> recipients) {
+        this.recipients = recipients;
     }
 
     public long getCompetitionId() {
@@ -65,11 +67,11 @@ public class AssessorInviteToSendResource {
             return false;
         }
 
-        AssessorInviteToSendResource that = (AssessorInviteToSendResource) o;
+        AssessorInvitesToSendResource that = (AssessorInvitesToSendResource) o;
 
         return new EqualsBuilder()
                 .append(competitionId, that.competitionId)
-                .append(recipient, that.recipient)
+                .append(recipients, that.recipients)
                 .append(competitionName, that.competitionName)
                 .append(content, that.content)
                 .isEquals();
@@ -78,7 +80,7 @@ public class AssessorInviteToSendResource {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(recipient)
+                .append(recipients)
                 .append(competitionId)
                 .append(competitionName)
                 .append(content)

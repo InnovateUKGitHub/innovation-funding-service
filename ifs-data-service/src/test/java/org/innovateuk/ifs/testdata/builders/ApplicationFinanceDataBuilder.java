@@ -9,6 +9,8 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationFinanceData;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -23,6 +25,8 @@ import static org.innovateuk.ifs.testdata.builders.IndustrialCostDataBuilder.new
  * Generates Application Finance data for an Organisation on an Application
  */
 public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFinanceData, ApplicationFinanceDataBuilder> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ApplicationFinanceDataBuilder.class);
 
     public ApplicationFinanceDataBuilder withApplication(ApplicationResource application) {
         return with(data -> data.setApplication(application));
@@ -122,5 +126,11 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
     @Override
     protected ApplicationFinanceData createInitial() {
         return new ApplicationFinanceData();
+    }
+
+    @Override
+    protected void postProcess(int index, ApplicationFinanceData instance) {
+        super.postProcess(index, instance);
+        LOG.info("Created Finances for Application '{}', Organisation '{}'", instance.getApplication().getName(), instance.getOrganisation().getName());
     }
 }

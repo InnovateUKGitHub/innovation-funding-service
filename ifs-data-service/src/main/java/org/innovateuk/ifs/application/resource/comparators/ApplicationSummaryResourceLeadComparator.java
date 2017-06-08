@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import java.util.Comparator;
 
 /**
- * Camporator, handling nulls, and using id if lead is equal.
+ * Comparator, handling nulls, and using id if lead is equal.
  */
 public class ApplicationSummaryResourceLeadComparator extends DualFieldComparator<String, Long> implements Comparator<ApplicationSummaryResource> {
 
