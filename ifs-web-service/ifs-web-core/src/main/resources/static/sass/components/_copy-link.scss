@@ -10,3 +10,15 @@
     cursor:pointer;
   }
 }
+.copy-link-textarea {
+  position:fixed;
+  top: -100px;
+  left: -100px;
+  width: 2em;
+  height: 2em;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  boxShadow: 0;
+  background: transparent;
+}
