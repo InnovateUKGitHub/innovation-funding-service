@@ -7,6 +7,7 @@ Force Tags          Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource            ../../FinanceSection_Commons.robot
 *** Variables ***
+
 ${Application_name_business}           Maximum funding allowed Business
 ${Application_name_RTO}                Maximum funding allowed RTO
 #${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}       Aerospace technology investment sector
@@ -32,7 +33,7 @@ funding level available for lead business ResearchCategory: Fundamental Research
     When the user edits the research category                 Industrial research
     And the user edits the organisation size                 ${LARGE_ORGANISATION_SIZE}
     Then the user should see the text in the page             Enter your funding level (maximum 50%).
-    the user clicks the button/link                          jQuery=a:contains("Your finances")
+    And the user clicks the button/link                          jQuery=a:contains("Your finances")
     [Teardown]  the user clicks the button/link              link=Application overview
 
 lead applicant invites a Charity member
