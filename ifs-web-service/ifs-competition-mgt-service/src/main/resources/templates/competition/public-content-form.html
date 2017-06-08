@@ -31,16 +31,16 @@
         <!-- buttons -->
         <div class="grid-row extra-margin">
             <th:block th:if="${model.readOnly}">
-            <div class="column-half">
-                <a class="button" th:href="@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})}">Return to public content</a>
-            </div>
-            <div class="column-half alignright">
-                <a class="button-secondary no-margin" th:href="@{/competition/setup/public-content/{sectionName}/{competitionId}/edit(competitionId=${model.competition.id}, sectionName=${model.section.type.path})}">Edit</a>
-            </div>
+                <div class="column-half">
+                    <a class="button" th:href="@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})}">Return to public content</a>
+                </div>
+                <div class="column-half alignright">
+                    <a class="button-secondary no-margin" th:href="@{/competition/setup/public-content/{sectionName}/{competitionId}/edit(competitionId=${model.competition.id}, sectionName=${model.section.type.path})}">Edit</a>
+                </div>
             </th:block>
             <th:block th:unless="${model.readOnly}">
                 <div class="column-half">
-                    <button name="save-and-return" class="button" th:text="${model.published ? 'Publish and return' : 'Save and return'}"></button>
+                    <button name="save-and-return" class="button" th:text="${model.published ? 'Publish and review' : 'Save and review'}"></button>
                 </div>
             </th:block>
         </div>
