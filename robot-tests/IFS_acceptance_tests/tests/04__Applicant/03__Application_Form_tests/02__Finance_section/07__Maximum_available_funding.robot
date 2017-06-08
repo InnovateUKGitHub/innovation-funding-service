@@ -16,7 +16,7 @@ ${lead_business_email}                 oscar@innovateuk.com
 ${lead_rto_email}                      oscarRTO@innovateuk.com
 
 *** Test Cases ***
-funding level available for lead business ResearchCategory: Fundamental Research
+maximum funding level available for lead business
     [Documentation]    IFS-338
     [Tags]
     Given we create a new user                               ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}  Oscar  business  ${lead_business_email}
@@ -33,7 +33,7 @@ funding level available for lead business ResearchCategory: Fundamental Research
     When the user edits the research category                 Industrial research
     And the user edits the organisation size                 ${LARGE_ORGANISATION_SIZE}
     Then the user should see the text in the page             Enter your funding level (maximum 50%).
-    And the user clicks the button/link                          jQuery=a:contains("Your finances")
+    And the user clicks the button/link                       jQuery=a:contains("Your finances")
     [Teardown]  the user clicks the button/link              link=Application overview
 
 lead applicant invites a Charity member
@@ -42,12 +42,7 @@ lead applicant invites a Charity member
     Given Invite a non-existing collaborator                           liamCharity@innovateuk.com  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}
     When the user clicks the button/link                               link=${Application_name_business}
     And the user fills the organisation details with Project growth table   ${Application_name_business}  ${SMALL_ORGANISATION_SIZE}
-    And the user fills in the project costs
-    When the user clicks the button/link                                link=Your funding
-    Then the user should see the text in the page                      Enter your funding level (maximum 100%).
-    When the user clicks the button/link                               jQuery=a:contains("Your finances")
-    And the user edits the organisation size                           ${LARGE_ORGANISATION_SIZE}
-    Then the user should see the text in the page                      Enter your funding level (maximum 100%).
+    Then the funding displayed is as expected
 
 Invite existing academic collaborator
     [Documentation]  IFS-338
@@ -60,17 +55,17 @@ Invite existing academic collaborator
     And the user enters text to a text field                     css=input[id="applicants0.name"]  Pete
     And the user enters text to a text field                     css=input[id="applicants0.email"]  ${collaborator2_credentials["email"]}
     And the user clicks the button/link                          jQuery=button:contains("Add organisation and invite applicants")
-    logout as user
+    And logout as user
     When the user reads his email and clicks the link             ${collaborator2_credentials["email"]}  Invitation to collaborate in ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  You will be joining as part of the organisation  3
     And the user clicks the button/link                          jQuery=a:contains("Continue or sign in")
-    Then the guest user inserts user email & password             ${collaborator2_credentials["email"]}   ${collaborator2_credentials["password"]}
+    Then the guest user enters the log in credentials             &{collaborator2_credentials}
     And The guest user clicks the log-in button
     And the user clicks the button/link                          jQuery=a:contains("Confirm and accept invitation")
     And the user clicks the button/link                          link=Your finances
     Then the user should see the element                         jQuery=td:contains("100%")
     And logout as user
 
-funding level available for RTO lead user ResearchCategory: Fundamental Research
+maximum funding level available for RTO lead
     [Documentation]  IFS-338
     [Tags]
     Given we create a new user                                                  ${OPEN_COMPETITION}  Smith  rto  ${lead_rto_email}
@@ -96,12 +91,7 @@ lead RTO applicant invites a Charity member
     Given Invite a non-existing collaborator                                   liamRTO@innovateuk.com  ${OPEN_COMPETITION_NAME}
     When the user clicks the button/link                                       link=${Application_name_RTO}
     And the user fills in the organisation information                         ${Application_name_RTO}  ${SMALL_ORGANISATION_SIZE}
-    And the user fills in the project costs
-    When the user clicks the button/link                                       link=Your funding
-    Then the user should see the text in the page                              Enter your funding level (maximum 100%).
-    When the user clicks the button/link                                       jQuery=a:contains("Your finances")
-    And the user edits the organisation size                                    ${LARGE_ORGANISATION_SIZE}
-    Then the user should see the text in the page                               Enter your funding level (maximum 100%).
+    Then the funding displayed is as expected
     [Teardown]  logout as user
 
 *** Keywords ***
@@ -166,4 +156,10 @@ the user edits the organisation size
     the user clicks the button/link                         jQuery=button:contains("Mark as complete")
     the user clicks the button/link                         link=Your funding
 
-
+the funding displayed is as expected
+    the user fills in the project costs
+    the user clicks the button/link                               link=Your funding
+    the user should see the text in the page                      Enter your funding level (maximum 100%).
+    the user clicks the button/link                               jQuery=a:contains("Your finances")
+    the user edits the organisation size                          ${LARGE_ORGANISATION_SIZE}
+    the user should see the text in the page                      Enter your funding level (maximum 100%).
