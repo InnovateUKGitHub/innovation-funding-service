@@ -261,5 +261,5 @@ the user clicks the forgot psw link
     Run Keyword If    '${status}' == 'FAIL'    click element    link=Forgotten your password?
 
 Close browser and delete emails
-    the user closes the browser
+    Close any open browsers
     Delete the emails from both test mailboxes

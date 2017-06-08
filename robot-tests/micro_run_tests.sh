@@ -240,13 +240,9 @@ function deleteEmails() {
     cd ${scriptDir}
     pybot --outputdir target/set_up_steps --pythonpath IFS_acceptance_tests/libs \
     -v docker:1 \
-    -v SERVER_BASE:${webBase} \
-    -v BROWSER=chrome \
-    -v REMOTE_URL:'http://ifs.local-dev:4444/wd/hub' \
-    -v SAUCELABS_RUN:0 \
     -v local_imap:'ifs.local-dev' \
     -v local_imap_port:9876  \
-    IFS_acceptance_tests/tests/00__Set_Up_Tests/delete_emails.robot 
+    IFS_acceptance_tests/tests/00__Set_Up_Tests/delete_emails.robot 2>&1 >/dev/null
     echo "...done"
 }
 
