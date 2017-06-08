@@ -21,8 +21,8 @@ public class ManageAssessmentsViewModel {
     private final int totalAssessments;
     private final int assessmentsAwaitingResponse;
     private final int assessmentsAccepted;
-    private final int assessmentsCompleted;
     private final int assessmentsStarted;
+    private final int assessmentsCompleted;
 
     public ManageAssessmentsViewModel(CompetitionResource competition, CompetitionInAssessmentKeyStatisticsResource keyStatistics) {
         this.competitionId = competition.getId();
@@ -32,8 +32,8 @@ public class ManageAssessmentsViewModel {
         this.totalAssessments = keyStatistics.getAssignmentCount();
         this.assessmentsAwaitingResponse = keyStatistics.getAssignmentsWaiting();
         this.assessmentsAccepted = keyStatistics.getAssignmentsAccepted();
-        this.assessmentsCompleted = keyStatistics.getAssessmentsSubmitted();
         this.assessmentsStarted = keyStatistics.getAssessmentsStarted();
+        this.assessmentsCompleted = keyStatistics.getAssessmentsSubmitted();
     }
 
     public long getCompetitionId() {
