@@ -22,7 +22,7 @@ public class ExternalUserDataBuilder extends BaseUserDataBuilder<ExternalUserDat
     }
 
     @Override
-    public ExternalUserDataBuilder createUserDirectly(String firstName, String lastName, String emailAddress, String organisationName, String phoneNumber) {
+    public ExternalUserDataBuilder createUserDirectly(String firstName, String lastName, String emailAddress, String organisationName, String phoneNumber, boolean emailVerified) {
         throw new UnsupportedOperationException("Unable to currently get external users directly onto the system");
     }
 
