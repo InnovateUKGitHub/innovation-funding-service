@@ -213,7 +213,7 @@ Lead marks finances as complete
     And the user should see the element    jQuery=h3:contains("Your funding")
     When the user fills in the project costs     Assign test
     And the user navigates to Your-finances page  Assign test
-    Then the user fills in the organisation information      Assign test
+    Then the user fills in the organisation information      Assign test  ${SMALL_ORGANISATION_SIZE}
     And the user fills in the funding information  Assign test
     When the user navigates to Your-finances page  Assign test
     Then the user should see all finance subsections complete
@@ -279,7 +279,7 @@ the question should contain the correct status/name
 the collaborator is able to edit the finances
     the user fills in the project costs     Assign test
     the user navigates to Your-finances page    Assign test
-    the user fills in the organisation information      Assign test
+    the user fills in the organisation information      Assign test  ${SMALL_ORGANISATION_SIZE}
     the user fills in the funding information  Assign test
 
 the applicant changes the name of the application
