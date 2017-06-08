@@ -1,7 +1,6 @@
 *** Settings ***
 Documentation       IFS-338 Update 'Funding level' calculated maximum values and validation
 Suite Setup         the guest user opens the browser
-Test Setup          Delete the emails from both test mailboxes
 Suite Teardown      the user closes the browser
 Force Tags          Applicant
 Resource          ../../../../resources/defaultResources.robot
