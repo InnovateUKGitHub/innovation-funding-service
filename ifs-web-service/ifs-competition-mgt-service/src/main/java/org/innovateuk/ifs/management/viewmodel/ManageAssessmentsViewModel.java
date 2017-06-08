@@ -17,7 +17,6 @@ public class ManageAssessmentsViewModel {
     private final String competitionName;
     private final boolean inAssessment;
 
-    // TODO are these common to other views? Can we spilt them out?
     private final int totalAssessments;
     private final int assessmentsAwaitingResponse;
     private final int assessmentsAccepted;
