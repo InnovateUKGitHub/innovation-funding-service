@@ -1,33 +1,29 @@
-package org.innovateuk.ifs.management.controller;
+package org.innovateuk.ifs.management.model;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.competition.resource.CompetitionInAssessmentKeyStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.management.model.ManageAssessmentsModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.ManageAssessmentsViewModel;
 import org.junit.Test;
-import org.mockito.Mock;
+import org.mockito.InjectMocks;
+import org.mockito.Spy;
 
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionInAssessmentKeyStatisticsResourceBuilder.newCompetitionInAssessmentKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class CompetitionManagementAssessmentsControllerTest extends BaseControllerMockMVCTest<CompetitionManagementAssessmentsController> {
+public class ManageAssessmentsModelPopulatorTest extends BaseUnitTest {
 
-    @Mock
-    private ManageAssessmentsModelPopulator manageAssessmentsModelPopulatorMock;
-
-    @Override
-    protected CompetitionManagementAssessmentsController supplyControllerUnderTest() {
-        return new CompetitionManagementAssessmentsController();
-    }
+    @InjectMocks
+    @Spy
+    private ManageAssessmentsModelPopulator manageAssessmentsModelPopulator;
 
     @Test
-    public void manageAssessments() throws Exception {
-        final int expectedCompetitionId = 13;
+    public void populateModel() throws Exception {
+        final long expectedCompetitionId = 13;
         final String expectedCompetitionName = "Test Competition";
         final CompetitionStatus expectedCompetitionStatus = CompetitionStatus.IN_ASSESSMENT;
         final int expectedAssignmentCount = 2;
@@ -37,6 +33,7 @@ public class CompetitionManagementAssessmentsControllerTest extends BaseControll
         final int expectedAssessmentsSubmitted = 11;
 
         CompetitionResource competitionResource = newCompetitionResource()
+                .withId(expectedCompetitionId)
                 .withName(expectedCompetitionName)
                 .withCompetitionStatus(expectedCompetitionStatus)
                 .build();
@@ -48,14 +45,13 @@ public class CompetitionManagementAssessmentsControllerTest extends BaseControll
                 .withAssessmentsSubmitted(expectedAssessmentsSubmitted)
                 .build();
 
+        when(competitionRestService.getCompetitionById(expectedCompetitionId)).thenReturn(restSuccess(competitionResource));
+        when(competitionKeyStatisticsRestServiceMock.getInAssessmentKeyStatisticsByCompetition(expectedCompetitionId)).thenReturn(restSuccess(statisticsResource));
+
         ManageAssessmentsViewModel expectedModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource);
 
-        when(manageAssessmentsModelPopulatorMock.populateModel(expectedCompetitionId)).thenReturn(expectedModel);
+        ManageAssessmentsViewModel actualModel = manageAssessmentsModelPopulator.populateModel(expectedCompetitionId);
 
-        mockMvc.perform(get("/assessment/competition/{competitionId}", competitionResource.getId()))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("model", expectedModel))
-                .andExpect(view().name("competition/manage-assessments"))
-                .andReturn();
+        assertEquals(expectedModel, actualModel);
     }
 }

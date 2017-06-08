@@ -22,7 +22,6 @@ public class ManageAssessmentsModelPopulator {
 
     public ManageAssessmentsViewModel populateModel(long competitionId) {
         CompetitionResource competition = competitionsRestService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
-
         CompetitionInAssessmentKeyStatisticsResource keyStatistics = competitionKeyStatisticsRestService.getInAssessmentKeyStatisticsByCompetition(competitionId).getSuccessObjectOrThrowException();
 
         return new ManageAssessmentsViewModel(competition, keyStatistics);
