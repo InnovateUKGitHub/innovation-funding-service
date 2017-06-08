@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.security;
+package org.innovateuk.ifs.application.team.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
