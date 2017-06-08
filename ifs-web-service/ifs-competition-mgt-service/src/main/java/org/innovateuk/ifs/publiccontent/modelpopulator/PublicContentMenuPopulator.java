@@ -25,6 +25,7 @@ public class PublicContentMenuPopulator {
         viewModel.setPublishDate(publicContent.getPublishDate());
         viewModel.setSections(publicContent.getContentSections());
         viewModel.setCompetition(competitionService.getById(competitionId));
+        viewModel.setInviteOnly(publicContent.getInviteOnly());
         return viewModel;
     }
 }

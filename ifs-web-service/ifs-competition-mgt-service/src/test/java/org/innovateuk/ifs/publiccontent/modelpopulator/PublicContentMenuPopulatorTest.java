@@ -46,12 +46,15 @@ public class PublicContentMenuPopulatorTest {
                 .map(type -> newPublicContentSectionResource().withType(type).build())
                 .collect(Collectors.toList());
         ZonedDateTime date = ZonedDateTime.now();
+        Boolean publishSetting = Boolean.FALSE;
 
         PublicContentResource publicContent = newPublicContentResource()
                 .withContentSections(sections)
-                .withPublishDate(date).build();
+                .withPublishDate(date)
+                .withInviteOnly(publishSetting)
+                .build();
 
-        CompetitionResource competition = newCompetitionResource().build();
+        CompetitionResource competition = newCompetitionResource().withId(COMPETITION_ID).build();
 
         when(publicContentService.getCompetitionById(COMPETITION_ID)).thenReturn(publicContent);
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
@@ -61,5 +64,8 @@ public class PublicContentMenuPopulatorTest {
         assertThat(viewModel.getSections(), equalTo(sections));
         assertThat(viewModel.getCompetition(), equalTo(competition));
         assertThat(viewModel.getPublishDate(), equalTo(date));
+
+        assertThat(viewModel.isInviteOnly(), equalTo(publishSetting));
+        assertThat(viewModel.getCompetitionUrl(), equalTo("/competition/" + COMPETITION_ID + "/overview"));
     }
 }
