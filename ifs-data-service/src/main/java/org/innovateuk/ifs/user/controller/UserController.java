@@ -66,6 +66,11 @@ public class UserController {
         return baseUserService.findByProcessRole(UserRoleType.fromName(userRoleName)).toGetResponse();
     }
 
+    @GetMapping("/internal")
+    public RestResult<List<UserResource>> findInternalUsers(){
+        return baseUserService.findByProcessRoles(UserRoleType.internalRoles()).toGetResponse();
+    }
+
     @GetMapping("/findAll/")
     public RestResult<List<UserResource>> findAll() {
         return baseUserService.findAll().toGetResponse();

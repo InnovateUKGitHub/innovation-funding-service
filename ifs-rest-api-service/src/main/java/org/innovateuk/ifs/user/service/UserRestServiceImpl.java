@@ -10,11 +10,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Future;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.processRoleResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userSetType;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.*;
 
 
@@ -94,6 +96,11 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     public RestResult<List<UserResource>> findByUserRoleType(UserRoleType userRoleType) {
         String roleName = userRoleType.getName();
         return getWithRestResult(userRestURL + "/findByRole/"+roleName, userListType());
+    }
+
+    @Override
+    public RestResult<Set<UserResource>> getInternalUsers(){
+        return getWithRestResult(userRestURL + "/internal", userSetType());
     }
 
     @Override

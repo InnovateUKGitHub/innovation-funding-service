@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -50,6 +52,11 @@ public class BaseUserServiceImpl extends UserTransactionalService implements Bas
     @Override
     public ServiceResult<List<UserResource>> findByProcessRole(UserRoleType roleType) {
         return serviceSuccess(usersToResources(userRepository.findByRolesName(roleType.getName())));
+    }
+
+    @Override
+    public ServiceResult<List<UserResource>> findByProcessRoles(Set<UserRoleType> roleTypes) {
+        return serviceSuccess(usersToResources(userRepository.findByRolesNameIn(roleTypes.stream().map(UserRoleType::getName).collect(Collectors.toSet()))));
     }
 
     private List<UserResource> usersToResources(List<User> filtered) {

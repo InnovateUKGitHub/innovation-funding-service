@@ -36,6 +36,7 @@ public interface UserService {
     ServiceResult<UserResource> createOrganisationUser(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, Boolean allowMarketingEmails);
     ServiceResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability, boolean allowMarketingEmails);
     List<UserResource> findUserByType(UserRoleType type);
+    Set<UserResource> getInternalUsers();
 	List<ProcessRoleResource> getOrganisationProcessRoles(ApplicationResource application, Long organisation);
     Long getUserOrganisationId(Long userId, Long applicationId);
 }
