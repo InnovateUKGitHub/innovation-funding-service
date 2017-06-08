@@ -46,16 +46,16 @@ public class ApplicationSummaryResourceBuilderTest {
                 .withIneligibleInformed(ineligibleInformeds[0])
                 .build();
 
-        assertEquals(ids[0].longValue(), summaryResource.getId());
+        assertEquals(ids[0], summaryResource.getId());
         assertEquals(names[0], summaryResource.getName());
         assertEquals(leads[0], summaryResource.getLead());
         assertEquals(leadApplicants[0], summaryResource.getLeadApplicant());
         assertEquals(statuses[0], summaryResource.getStatus());
-        assertEquals(completedPercentages[0].intValue(), summaryResource.getCompletedPercentage());
-        assertEquals(numberOfPartners[0].intValue(), summaryResource.getNumberOfPartners());
+        assertEquals(completedPercentages[0], summaryResource.getCompletedPercentage());
+        assertEquals(numberOfPartners[0], summaryResource.getNumberOfPartners());
         assertEquals(grantsRequested[0], summaryResource.getGrantRequested());
         assertEquals(totalProjectCosts[0], summaryResource.getTotalProjectCost());
-        assertEquals(durations[0].longValue(), summaryResource.getDuration());
+        assertEquals(durations[0], summaryResource.getDuration());
         assertEquals(fundingDecisions[0], summaryResource.getFundingDecision());
         assertEquals(innovationAreas[0], summaryResource.getInnovationArea());
         assertEquals(ineligibleInformeds[0], summaryResource.isIneligibleInformed());
@@ -79,30 +79,30 @@ public class ApplicationSummaryResourceBuilderTest {
                 .withIneligibleInformed(ineligibleInformeds)
                 .build(2);
 
-        assertEquals(ids[0].longValue(), summaryResources.get(0).getId());
+        assertEquals(ids[0], summaryResources.get(0).getId());
         assertEquals(names[0], summaryResources.get(0).getName());
         assertEquals(leads[0], summaryResources.get(0).getLead());
         assertEquals(leadApplicants[0], summaryResources.get(0).getLeadApplicant());
         assertEquals(statuses[0], summaryResources.get(0).getStatus());
-        assertEquals(completedPercentages[0].intValue(), summaryResources.get(0).getCompletedPercentage());
-        assertEquals(numberOfPartners[0].intValue(), summaryResources.get(0).getNumberOfPartners());
+        assertEquals(completedPercentages[0], summaryResources.get(0).getCompletedPercentage());
+        assertEquals(numberOfPartners[0], summaryResources.get(0).getNumberOfPartners());
         assertEquals(grantsRequested[0], summaryResources.get(0).getGrantRequested());
         assertEquals(totalProjectCosts[0], summaryResources.get(0).getTotalProjectCost());
-        assertEquals(durations[0].longValue(), summaryResources.get(0).getDuration());
+        assertEquals(durations[0], summaryResources.get(0).getDuration());
         assertEquals(fundingDecisions[0], summaryResources.get(0).getFundingDecision());
         assertEquals(innovationAreas[0], summaryResources.get(0).getInnovationArea());
         assertEquals(ineligibleInformeds[0], summaryResources.get(0).isIneligibleInformed());
 
-        assertEquals(ids[1].longValue(), summaryResources.get(1).getId());
+        assertEquals(ids[1], summaryResources.get(1).getId());
         assertEquals(names[1], summaryResources.get(1).getName());
         assertEquals(leads[1], summaryResources.get(1).getLead());
         assertEquals(leadApplicants[1], summaryResources.get(1).getLeadApplicant());
         assertEquals(statuses[1], summaryResources.get(1).getStatus());
-        assertEquals(completedPercentages[1].intValue(), summaryResources.get(1).getCompletedPercentage());
-        assertEquals(numberOfPartners[1].intValue(), summaryResources.get(1).getNumberOfPartners());
+        assertEquals(completedPercentages[1], summaryResources.get(1).getCompletedPercentage());
+        assertEquals(numberOfPartners[1], summaryResources.get(1).getNumberOfPartners());
         assertEquals(grantsRequested[1], summaryResources.get(1).getGrantRequested());
         assertEquals(totalProjectCosts[1], summaryResources.get(1).getTotalProjectCost());
-        assertEquals(durations[1].longValue(), summaryResources.get(1).getDuration());
+        assertEquals(durations[1], summaryResources.get(1).getDuration());
         assertEquals(fundingDecisions[1], summaryResources.get(1).getFundingDecision());
         assertEquals(innovationAreas[1], summaryResources.get(1).getInnovationArea());
         assertEquals(ineligibleInformeds[1], summaryResources.get(1).isIneligibleInformed());

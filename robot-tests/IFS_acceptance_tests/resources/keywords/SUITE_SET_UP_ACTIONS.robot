@@ -40,7 +40,7 @@ create new account for submitting
     And the user enters text to a text field    name=email    ${test_mailbox_one}+submittest@gmail.com
     And the user fills the create account form    Temur    Ketsbaia
     When the user reads his email and clicks the link    ${test_mailbox_one}+submittest@gmail.com    Please verify your email address    Once verified you can sign into your account
-    And the user clicks the button/link    jQuery=.button:contains("Sign in")
+    And the user clicks the button/link        jQuery=.button:contains("Sign in")
 
 the user marks every section but one as complete
     Guest user log-in    ${submit_test_email}    ${correct_password}
@@ -192,6 +192,7 @@ The user marks the academic application finances as incomplete
 invite a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
     the guest user opens the browser
+    the user navigates to the page                           ${COMPETITION_OVERVIEW_URL}
     the user follows the flow to register their organisation
     the user verifies email                                    Stuart   Anderson    ${EMAIL_LEAD}
     the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
@@ -206,7 +207,8 @@ invite a registered user
     the guest user opens the browser
 
 we create a new user
-    [Arguments]    ${first_name}  ${last_name}  ${EMAIL_INVITED}
+    [Arguments]    ${COMPETITION_ID}  ${first_name}  ${last_name}  ${EMAIL_INVITED}
+    the user navigates to the page                             ${SERVER}/competition/${COMPETITION_ID}/overview/
     the user follows the flow to register their organisation
     the user verifies email    ${first_name}   ${last_name}    ${EMAIL_INVITED}
 
@@ -221,7 +223,6 @@ the user verifies email
     The guest user clicks the log-in button
 
 the user follows the flow to register their organisation
-    the user navigates to the page              ${COMPETITION_OVERVIEW_URL}
     the user clicks the button/link             jQuery=a:contains("Start new application")
     the user clicks the button/link             jQuery=a:contains("Create account")
     the user enters text to a text field        id=organisationSearchName    Innovate
