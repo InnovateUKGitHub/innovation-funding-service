@@ -2,7 +2,7 @@
 Variables  ../../libs/Initialisation.py
 
 *** Variables ***
-${docker}         1
+${docker}         0
 ${smoke_test}     0
 ${BROWSER}        chrome
 ${SERVER_BASE}    ifs-local-dev
