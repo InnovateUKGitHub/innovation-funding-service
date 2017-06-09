@@ -17,7 +17,7 @@ import java.util.Set;
  */
 @Controller
 @RequestMapping("/admin/users")
-@PreAuthorize("hasAnyAuthority('ifs_admin')")
+@PreAuthorize("hasAnyAuthority('ifs_administrator')")
 public class UserManagementController {
     @Autowired
     private UserService userService;
@@ -25,7 +25,7 @@ public class UserManagementController {
     @GetMapping
     public String view(Model model) {
         Set<UserResource> internalUsers = userService.getInternalUsers();
-        model.addAttribute("model", new UserListViewModel());
+        model.addAttribute("model", new UserListViewModel(internalUsers));
         return "admin/users";
     }
 }
