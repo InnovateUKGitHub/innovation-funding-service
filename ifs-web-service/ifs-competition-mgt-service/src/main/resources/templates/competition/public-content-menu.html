@@ -29,13 +29,8 @@
 
         <div class="message-alert">
             <p>This information will be publicly viewable by prospective applicants.</p>
-            <!--<p th:if="${model.publishSetting == 'invite'}">Competition URL:-->
-                <!--<a th:href="${model.publishURL}"-->
-                   <!--th:text="${model.publishURL}">https://apply-for-innovation-funding.service.gov.uk/competition/6/overview</a>-->
-                <!--<button class="copy-link">Copy link</button>-->
-            <!--</p>-->
-            <p>Competition URL:
-                <a href="https://apply-for-innovation-funding.service.gov.uk/competition/6/overview">https://apply-for-innovation-funding.service.gov.uk/competition/6/overview</a>
+            <p th:if="${model.inviteOnly}">Competition URL:
+                <a th:href="${model.competitionURL}" th:text="${model.competitionURL}"></a>
                 <button class="copy-link" aria-hidden="true">Copy link</button>
             </p>
         </div>
