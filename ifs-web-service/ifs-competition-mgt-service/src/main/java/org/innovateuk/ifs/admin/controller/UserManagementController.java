@@ -17,7 +17,7 @@ import java.util.Set;
  */
 @Controller
 @RequestMapping("/admin/users")
-@PreAuthorize("hasAnyAuthority('ifs_admin')")
+@PreAuthorize("hasAnyAuthority('ifs_administrator')")
 public class UserManagementController {
     @Autowired
     private UserService userService;
