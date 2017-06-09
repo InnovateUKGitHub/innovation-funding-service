@@ -9,12 +9,24 @@ import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewM
  */
 public abstract class AbstractFormInputPopulator<M extends AbstractFormInputViewModel> implements FormInputPopulator<M> {
 
+
     @Override
     public M populate(AbstractApplicantResource applicantResource,
                       ApplicantSectionResource applicantSection,
                       ApplicantQuestionResource applicantQuestion,
-                     ApplicantFormInputResource applicantFormInput,
-                     ApplicantFormInputResponseResource applicantResponse) {
+                      ApplicantFormInputResource applicantFormInput,
+                      ApplicantFormInputResponseResource applicantResponse) {
+
+        return populate(applicantResource, applicantSection, applicantQuestion, applicantFormInput, applicantResponse, false);
+    }
+
+    @Override
+    public M populate(AbstractApplicantResource applicantResource,
+                      ApplicantSectionResource applicantSection,
+                      ApplicantQuestionResource applicantQuestion,
+                      ApplicantFormInputResource applicantFormInput,
+                      ApplicantFormInputResponseResource applicantResponse,
+                      boolean readOnly) {
 
         M viewModel = createNew();
         viewModel.setApplicantSection(applicantSection);
@@ -24,9 +36,9 @@ public abstract class AbstractFormInputPopulator<M extends AbstractFormInputView
         viewModel.setCurrentApplicant(applicantResource.getCurrentApplicant());
         viewModel.setComplete(isComplete(applicantQuestion, applicantResource.getCurrentApplicant()));
         viewModel.setClosed(!applicantResource.getCompetition().isOpen() || !applicantResource.getApplication().isOpen());
-        viewModel.setReadonly(viewModel.isComplete() || viewModel.isClosed());
+        viewModel.setReadonly(viewModel.isComplete() || viewModel.isClosed() || readOnly);
 
-        populate(applicantResource, viewModel);
+        populate(applicantResource, viewModel, readOnly);
         return viewModel;
     }
 
@@ -42,7 +54,7 @@ public abstract class AbstractFormInputPopulator<M extends AbstractFormInputView
         return applicantQuestion.isCompleteByApplicant(currentApplicant);
     }
 
-    protected void populate(AbstractApplicantResource resource, M viewModel) {
+    protected void populate(AbstractApplicantResource resource, M viewModel, boolean readOnly) {
         //Can be overridden by subclass.
     }
 

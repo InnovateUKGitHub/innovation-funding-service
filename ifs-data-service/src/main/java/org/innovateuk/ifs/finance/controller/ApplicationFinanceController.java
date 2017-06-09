@@ -22,8 +22,6 @@ import java.util.List;
 
 import static org.innovateuk.ifs.file.controller.FileControllerUtils.*;
 import static org.innovateuk.ifs.finance.resource.ApplicationFinanceConstants.RESEARCH_PARTICIPATION_PERCENTAGE;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * This RestController exposes CRUD operations to both the

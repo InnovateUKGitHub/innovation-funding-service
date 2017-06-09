@@ -37,8 +37,11 @@ public class OrganisationDetailsModelPopulator {
     public void populateModel(final Model model, final Long applicationId, final List<ProcessRoleResource> userApplicationRoles) {
 
         final List<OrganisationResource> organisations = getApplicationOrganisations(applicationId);
-        model.addAttribute("academicOrganisations", getAcademicOrganisations(organisations));
+        final List<OrganisationResource> academicOrganisations = getAcademicOrganisations(organisations);
+        final List<Long> academicOrganisationIds = academicOrganisations.stream().map(ao -> ao.getId()).collect(Collectors.toList());
+        model.addAttribute("academicOrganisations", academicOrganisations);
         model.addAttribute("applicationOrganisations", organisations);
+        model.addAttribute("applicantOrganisationIsAcademic", organisations.stream().map(o -> academicOrganisationIds.contains(o.getId())).collect(Collectors.toList()));
 
         final List<String> activeApplicationOrganisationNames = simpleMap(organisations, OrganisationResource::getName);
 

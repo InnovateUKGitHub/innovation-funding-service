@@ -91,7 +91,7 @@ public class YourFinancesSectionPopulatorTest {
         when(financeService.getApplicationFinanceDetails(section.getCurrentUser().getId(), section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(financeResource);
         when(financeService.getApplicationFinanceTotals(section.getApplication().getId())).thenReturn(asList(financeResource));
 
-        YourFinancesSectionViewModel viewModel = yourFinancesSectionPopulator.populate(section, form, model, bindingResult);
+        YourFinancesSectionViewModel viewModel = yourFinancesSectionPopulator.populate(section, form, model, bindingResult, false);
 
         assertThat(viewModel.isSection(), equalTo(true));
         assertThat(viewModel.isNotRequestingFunding(), equalTo(true));

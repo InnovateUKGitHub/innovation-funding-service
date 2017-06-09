@@ -22,7 +22,7 @@ public class TextAreaViewModelPopulator extends AbstractFormInputPopulator<TextA
     }
 
     @Override
-    protected void populate(AbstractApplicantResource resource, TextAreaInputViewModel viewModel) {
+    protected void populate(AbstractApplicantResource resource, TextAreaInputViewModel viewModel, boolean readOnly) {
         viewModel.setAssignButtonsViewModel(assignButtonsPopulator.populate(resource, viewModel.getApplicantQuestion(), viewModel.isComplete()));
         viewModel.setReadonly(viewModel.isReadonly() || !viewModel.getAssignButtonsViewModel().isAssignedToCurrentUser());
         viewModel.setApplication(resource.getApplication());

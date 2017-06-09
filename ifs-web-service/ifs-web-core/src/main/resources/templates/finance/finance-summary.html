@@ -71,12 +71,16 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="applicationOrganisation : ${applicationOrganisations}">
+                    <tr th:each="applicationOrganisation, iteration : ${applicationOrganisations}">
                         <th:block th:if="${organisationFinances != null}">
                             <th scope="row">
                                 <div th:text="${applicationOrganisation.name}"></div>
                                 <div th:if="${applicationOrganisation.id.equals(leadOrganisation.id)}"><small>Lead organisation</small></div>
                                 <div th:unless="${applicationOrganisation.id.equals(leadOrganisation.id)}"><small>Partner</small></div>
+                                <a th:if="${readOnlyAllApplicantApplicationFinances && organisationFinances.containsKey(applicationOrganisation.id) && ((organisationFinances.get(applicationOrganisation.id).organisationSize != null) || applicantOrganisationIsAcademic.get(iteration.index))}"
+                                   th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"+applicationOrganisation.id}'>
+                                    Detailed Organisation Finances
+                                </a>
                             </th>
                             <td class="numeric bold" th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
                                 <span th:text="'£'+${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}" />

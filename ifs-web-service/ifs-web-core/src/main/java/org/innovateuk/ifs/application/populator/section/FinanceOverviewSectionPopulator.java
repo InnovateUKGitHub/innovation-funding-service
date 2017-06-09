@@ -24,13 +24,13 @@ public class FinanceOverviewSectionPopulator extends AbstractSectionPopulator<Fi
     private FormInputViewModelGenerator formInputViewModelGenerator;
 
     @Override
-    protected void populate(ApplicantSectionResource section, ApplicationForm form, FinanceOverviewSectionViewModel viewModel, Model model, BindingResult bindingResult) {
+    protected void populate(ApplicantSectionResource section, ApplicationForm form, FinanceOverviewSectionViewModel viewModel, Model model, BindingResult bindingResult, boolean readOnly) {
         viewModel.setOpenSectionViewModel((OpenSectionViewModel) openSectionModelPopulator.populateModel(form, model, bindingResult, section));
     }
 
     @Override
-    protected FinanceOverviewSectionViewModel createNew(ApplicantSectionResource section, ApplicationForm form) {
-        return new FinanceOverviewSectionViewModel(section, formInputViewModelGenerator.fromSection(section, section, form), getNavigationViewModel(section), true);
+    protected FinanceOverviewSectionViewModel createNew(ApplicantSectionResource section, ApplicationForm form, boolean readOnly) {
+        return new FinanceOverviewSectionViewModel(section, formInputViewModelGenerator.fromSection(section, section, form, readOnly), getNavigationViewModel(section), true);
     }
 
     @Override

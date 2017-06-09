@@ -20,6 +20,7 @@ import org.innovateuk.ifs.management.model.ApplicationOverviewIneligibilityModel
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -93,6 +94,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         model.addAttribute("isCompManagementDownload", true);
         model.addAttribute("ineligibility", applicationOverviewIneligibilityModelPopulator.populateModel(application));
         model.addAttribute("showApplicationTeamLink", applicationService.showApplicationTeam(application.getId(), user.getId()));
+        model.addAttribute("readOnlyAllApplicantApplicationFinances", user.hasRole(UserRoleType.SUPPORT));
 
         model.addAttribute("backUrl", buildBackUrl(origin, application.getId(), competitionId, queryParams));
         String params = UriComponentsBuilder.newInstance()

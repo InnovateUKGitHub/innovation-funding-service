@@ -92,7 +92,7 @@ public class YourProjectCostsSectionPopulatorTest {
         when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(Collections.emptyList());
         when(formInputViewModelGenerator.fromSection(section, costSection, form)).thenReturn(asList(formInputViewModel));
         when(financeHandler.getFinanceModelManager(section.getCurrentApplicant().getOrganisation().getOrganisationType())).thenReturn(financeModelManager);
-        DefaultYourProjectCostsSectionViewModel viewModel = (DefaultYourProjectCostsSectionViewModel) yourProjectCostsSectionPopulator.populate(section, form, model, bindingResult);
+        DefaultYourProjectCostsSectionViewModel viewModel = (DefaultYourProjectCostsSectionViewModel) yourProjectCostsSectionPopulator.populate(section, form, model, bindingResult, false);
 
         assertThat(viewModel.isSection(), equalTo(true));
         assertThat(viewModel.isComplete(), equalTo(false));
@@ -141,7 +141,7 @@ public class YourProjectCostsSectionPopulatorTest {
         when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(Collections.emptyList());
         when(formInputViewModelGenerator.fromSection(section, costSection, form)).thenReturn(asList(formInputViewModel));
         when(financeHandler.getFinanceModelManager(section.getCurrentApplicant().getOrganisation().getOrganisationType())).thenReturn(financeModelManager);
-        JesYourProjectCostsSectionViewModel viewModel = (JesYourProjectCostsSectionViewModel) yourProjectCostsSectionPopulator.populate(section, form, model, bindingResult);
+        JesYourProjectCostsSectionViewModel viewModel = (JesYourProjectCostsSectionViewModel) yourProjectCostsSectionPopulator.populate(section, form, model, bindingResult, true);
 
         assertThat(viewModel.isSection(), equalTo(true));
         assertThat(viewModel.isComplete(), equalTo(false));

@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.forms.populator.OrganisationDetailsViewModelPopulator;
 import org.innovateuk.ifs.application.forms.populator.QuestionModelPopulator;
 import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
@@ -24,6 +25,7 @@ import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.application.forms.viewmodel.QuestionViewModel;
 import org.innovateuk.ifs.application.viewmodel.section.AbstractSectionViewModel;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -46,6 +48,7 @@ import org.innovateuk.ifs.profiling.ProfileExecution;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.AjaxResult;
@@ -99,7 +102,7 @@ import static org.springframework.util.StringUtils.hasText;
  */
 @Controller
 @RequestMapping(ApplicationFormController.APPLICATION_BASE_URL + "{applicationId}/form")
-@PreAuthorize("hasAnyAuthority('applicant', 'comp_admin', 'project_finance')")
+@PreAuthorize("hasAnyAuthority('applicant', 'comp_admin', 'project_finance', 'support')")
 public class ApplicationFormController {
 
     private static final Log LOG = LogFactory.getLog(ApplicationFormController.class);
@@ -224,7 +227,7 @@ public class ApplicationFormController {
         QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, model, form);
 
         model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
-        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null);
+        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, null);
 
         return APPLICATION_FORM;
     }
@@ -261,16 +264,38 @@ public class ApplicationFormController {
                                                  UserResource user) {
 
         ApplicantSectionResource applicantSection = applicantRestService.getSection(user.getId(), applicationId, sectionId);
-        populateSection(model, form, bindingResult, applicantSection);
+        populateSection(model, form, bindingResult, applicantSection, false, null);
+        return APPLICATION_FORM;
+    }
+
+    @ProfileExecution
+    @PreAuthorize("hasAuthority('support')")
+    @GetMapping(SECTION_URL + "{sectionId}/{applicantOrganisationId}")
+    public String applicationFormWithOpenSectionForApplicant(@Valid @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form, BindingResult bindingResult, Model model,
+                                                             @PathVariable(APPLICATION_ID) final Long applicationId,
+                                                             @PathVariable("sectionId") final Long sectionId,
+                                                             @PathVariable("applicantOrganisationId") final Long applicantOrganisationId,
+                                                             UserResource user) {
+
+        ApplicationResource application = applicationService.getById(applicationId);
+
+        ProcessRoleResource applicantUser = processRoleService.getByApplicationId(application.getId()).stream().filter(pr -> pr.getOrganisationId() == applicantOrganisationId && Arrays.asList(UserApplicationRole.LEAD_APPLICANT.getRoleName(), UserApplicationRole.COLLABORATOR.getRoleName()).contains(pr.getRoleName())).findFirst().orElseThrow(() -> new ObjectNotFoundException());
+
+        ApplicantSectionResource applicantSection = applicantRestService.getSection(applicantUser.getUser(), applicationId, sectionId);
+        model.addAttribute("applicantOrganisationId", applicantOrganisationId);
+        model.addAttribute("readOnlyAllApplicantApplicationFinances", true);
+        populateSection(model, form, bindingResult, applicantSection, true, applicantOrganisationId);
         return APPLICATION_FORM;
     }
 
     private void populateSection(Model model,
                                  ApplicationForm form,
                                  BindingResult bindingResult,
-                                 ApplicantSectionResource applicantSection) {
-        AbstractSectionViewModel sectionViewModel = sectionPopulators.get(applicantSection.getSection().getType()).populate(applicantSection, form, model, bindingResult);
-        applicationNavigationPopulator.addAppropriateBackURLToModel(applicantSection.getApplication().getId(), model, applicantSection.getSection());
+                                 ApplicantSectionResource applicantSection,
+                                 boolean readOnly,
+                                 Long applicantOrganisationId) {
+        AbstractSectionViewModel sectionViewModel = sectionPopulators.get(applicantSection.getSection().getType()).populate(applicantSection, form, model, bindingResult, readOnly);
+        applicationNavigationPopulator.addAppropriateBackURLToModel(applicantSection.getApplication().getId(), model, applicantSection.getSection(), applicantOrganisationId);
         model.addAttribute("model", sectionViewModel);
         model.addAttribute("form", form);
     }
@@ -332,7 +357,7 @@ public class ApplicationFormController {
                 QuestionViewModel questionViewModel = questionModelPopulator.populateModel(applicantQuestion, model, form);
 
                 model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
-                applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null);
+                applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, null);
                 return APPLICATION_FORM;
             } else {
                 return getRedirectUrl(request, applicationId, Optional.empty());
@@ -739,7 +764,7 @@ public class ApplicationFormController {
 
         if (saveApplicationErrors.hasErrors() || !validFinanceTerms || overheadFileSaver.isOverheadFileRequest(request)) {
             validationHandler.addAnyErrors(saveApplicationErrors);
-            populateSection(model, form, bindingResult, applicantSection);
+            populateSection(model, form, bindingResult, applicantSection, false, null);
             return APPLICATION_FORM;
         } else {
             return getRedirectUrl(request, applicationId, Optional.of(applicantSection.getSection().getType()));

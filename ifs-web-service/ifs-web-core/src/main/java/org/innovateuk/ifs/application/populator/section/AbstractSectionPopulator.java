@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
+import java.util.Collections;
+
 /**
  * Abstract populator section view models.
  */
@@ -19,21 +21,21 @@ public abstract class AbstractSectionPopulator<M extends AbstractSectionViewMode
     @Autowired
     private ApplicationNavigationPopulator navigationPopulator;
 
-    public M populate(ApplicantSectionResource section, ApplicationForm form, Model model, BindingResult bindingResult) {
-        M viewModel = createNew(section, form);
-        populate(section, form, viewModel, model, bindingResult);
+    public M populate(ApplicantSectionResource section, ApplicationForm form, Model model, BindingResult bindingResult, boolean readOnly) {
+        M viewModel = createNew(section, form, readOnly);
+        populate(section, form, viewModel, model, bindingResult, readOnly);
         return viewModel;
     }
 
-    protected abstract void populate(ApplicantSectionResource section, ApplicationForm form, M viewModel, Model model, BindingResult bindingResult);
-    protected abstract M createNew(ApplicantSectionResource section, ApplicationForm form);
+    protected abstract void populate(ApplicantSectionResource section, ApplicationForm form, M viewModel, Model model, BindingResult bindingResult, boolean readOnly);
+    protected abstract M createNew(ApplicantSectionResource section, ApplicationForm form, boolean readOnly);
 
     public abstract SectionType getSectionType();
 
     protected NavigationViewModel getNavigationViewModel(ApplicantSectionResource applicantSection) {
         return navigationPopulator.addNavigation(applicantSection.getSection(),
                 applicantSection.getApplication().getId(),
-                SectionType.sectionsNotRequiredForOrganisationType(applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType()));
+                applicantSection.getCurrentApplicant() != null ? SectionType.sectionsNotRequiredForOrganisationType(applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType()) : Collections.emptyList());
 
     }
 }
