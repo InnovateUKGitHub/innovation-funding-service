@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * A Service that covers basic operations concerning Users
@@ -25,4 +26,7 @@ public interface BaseUserService {
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<UserResource>> findByProcessRole(UserRoleType roleType);
+
+    @PostFilter("hasPermission(filterObject, 'READ')")
+    ServiceResult<List<UserResource>> findByProcessRoles(Set<UserRoleType> roleTypes);
 }

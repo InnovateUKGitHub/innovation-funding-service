@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -29,6 +30,8 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
     List<User> findAll();
 
     List<User> findByRolesName(String name);
+
+    List<User> findByRolesNameIn(Set<String> roleName);
 
     User findOneByUid(String uid);
 

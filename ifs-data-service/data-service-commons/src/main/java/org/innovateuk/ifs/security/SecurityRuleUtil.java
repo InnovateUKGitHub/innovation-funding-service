@@ -17,17 +17,16 @@ public class SecurityRuleUtil {
         return user.hasRole( COMP_ADMIN);
     }
 
-
     public static boolean isInternal(User user) {
-        return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE) || user.hasRole(UserRoleType.SUPPORT);
+        return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE) || user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.IFS_ADMIN);
     }
 
     public static boolean isInternal(UserResource user) {
-        return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE) || user.hasRole(UserRoleType.SUPPORT);
+        return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE) || user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.IFS_ADMIN);
     }
 
     public static boolean isInternalAdmin(UserResource user) {
-        return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE);
+        return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE) || user.hasRole(UserRoleType.IFS_ADMIN);
     }
 
     public static boolean isProjectFinanceUser(UserResource user) {
