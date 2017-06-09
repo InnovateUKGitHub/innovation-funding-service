@@ -10,6 +10,10 @@ import java.util.Set;
 public class UserListViewModel {
     private Set<UserResource> users;
 
+    public UserListViewModel(Set<UserResource> users) {
+        this.users = users;
+    }
+
     public Set<UserResource> getUsers() {
         return users;
     }

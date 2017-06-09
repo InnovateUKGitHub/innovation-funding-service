@@ -25,7 +25,7 @@ public class UserManagementController {
     @GetMapping
     public String view(Model model) {
         Set<UserResource> internalUsers = userService.getInternalUsers();
-        model.addAttribute("model", new UserListViewModel());
+        model.addAttribute("model", new UserListViewModel(internalUsers));
         return "admin/users";
     }
 }
