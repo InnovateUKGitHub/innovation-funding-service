@@ -27,7 +27,7 @@
 
         <th:block th:insert="finance/your-finances-sub-sections :: your_finance_summary (${model})" />
 
-        <a th:href="@{/application/{applicationId}(applicationId=${model.application.id})}" class="button-secondary">Return to application overview</a>
+        <a th:href="${backURL}" class="button-secondary">Return to application overview</a>
     </th:block>
 
 
@@ -93,29 +93,29 @@
     <!-- ===========================Subsection buttons =========================== -->
     <th:block th:fragment="subsection_buttons (model)">
         <th:block th:unless="${readOnlyAllApplicantApplicationFinances}">
-            <div th:unless="${model.applicationIsReadOnly}" class="form-footer">
-                <div class="form-footer__actions">
-                    <button id="mark-all-as-complete"
-                            th:unless="${model.complete}"
-                            type="submit" name="mark_section_as_complete" class="buttonlink">Mark as complete
-                    </button>
-                    <button th:if="${model.complete}"
-                            type="submit" name="mark_section_as_incomplete" class="buttonlink"
-                            th:text="${'Edit ' + #strings.toLowerCase(model.section.name)}">Edit
-                    </button>
-                </div>
+        <div th:unless="${model.applicationIsReadOnly}" class="form-footer">
+            <div class="form-footer__actions">
+                <button id="mark-all-as-complete"
+                        th:unless="${model.complete}"
+                        type="submit" name="mark_section_as_complete" class="buttonlink">Mark as complete
+                </button>
+                <button th:if="${model.complete}"
+                        type="submit" name="mark_section_as_incomplete" class="buttonlink"
+                        th:text="${'Edit ' + #strings.toLowerCase(model.section.name)}">Edit
+                </button>
             </div>
-            <div>
-                <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.section.parentSection})}"
-                   class="extra-margin"
-                   th:classappend="${model.complete} ? 'button-secondary' : 'button'"
-                   th:text="${model.complete} ? 'Return to finances' : 'Save and return to finances'"></a>
-            </div>
+        </div>
+        <div>
+            <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.section.parentSection})}"
+               class="extra-margin"
+               th:classappend="${model.complete} ? 'button-secondary' : 'button'"
+               th:text="${model.complete} ? 'Return to finances' : 'Save and return to finances'"></a>
+        </div>
         </th:block>
     </th:block>
 
     <th:block th:fragment="finance_sub_section_row (model, childSection)">
-        <th:block th:if="${model.showSectionAsNotRequired(childSection)}">
+        <th:block th:if="${model.showSectionAsNotRequired(childSection) and !readOnlyAllApplicantApplicationFinances}">
             <li class="read-only">
                 <div class="task">
                     <h3 class="heading-small" th:text="${childSection.section.name}"></h3>
@@ -123,7 +123,7 @@
                 <div class="task-status"><span>No action required</span></div>
             </li>
         </th:block>
-        <th:block th:unless="${model.showSectionAsNotRequired(childSection)}">
+        <th:block th:unless="${model.showSectionAsNotRequired(childSection) and !readOnlyAllApplicantApplicationFinances}">
             <li>
                 <th:block th:if="${model.showSectionAsLink(childSection)}">
                     <div class="task">
@@ -143,10 +143,15 @@
                     <div class="task full-width">
                         <h3 class="heading-small" th:text="${childSection.section.name}"></h3>
                         <p>
-                            <th:block th:if="${model.userIsLeadApplicant}">You must select a research category in <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.application.id}, questionId=${model.applicationDetailsQuestionId})}">application details</a> before you can supply funding.</th:block>
-                            <th:block th:unless="${model.userIsLeadApplicant}">The lead applicant must select a research category in application details before you can supply funding.</th:block>
-                            <br />
-                            You must also state your organisation size in the <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.yourOrganisationSectionId})}">your organisation</a> section.
+                            <th:block th:unless="${readOnlyAllApplicantApplicationFinances}">
+                                <th:block th:if="${model.userIsLeadApplicant}">You must select a research category in <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.application.id}, questionId=${model.applicationDetailsQuestionId})}">application details</a> before you can supply funding.</th:block>
+                                <th:block th:unless="${model.userIsLeadApplicant}">The lead applicant must select a research category in application details before you can supply funding.</th:block>
+                                <br />
+                                You must also state your organisation size in the <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.yourOrganisationSectionId})}">your organisation</a> section.
+                            </th:block>
+                            <th:block th:if="${readOnlyAllApplicantApplicationFinances}">
+                                The lead applicant must select a research category in application details before they can supply funding and must also state an organisation size.
+                            </th:block>
                         </p>
                     </div>
                 </th:block>
