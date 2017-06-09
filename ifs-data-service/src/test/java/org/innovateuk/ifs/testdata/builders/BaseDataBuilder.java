@@ -183,7 +183,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     public BaseDataBuilder(List<BiConsumer<Integer, T>> newActions, ServiceLocator serviceLocator) {
 
         super(newActions);
-        
+
+        this.serviceLocator = serviceLocator;
         userService = serviceLocator.getBean(UserService.class);
         competitionService = serviceLocator.getBean(CompetitionService.class);
         competitionTypeRepository = serviceLocator.getBean(CompetitionTypeRepository.class);

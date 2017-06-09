@@ -90,7 +90,7 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               IFS-236 Queries - do not post until the Finance contact can view and respond to it within the service.
 
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
-Suite Teardown    Custom Suite Teardown
+Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
 Resource          PS_Common.robot
 Resource          ../04__Applicant/FinanceSection_Commons.robot
@@ -1769,10 +1769,6 @@ Non Lead-Partner can view only the external version of finance checks eligibilit
     And the user should see the element    css=input[id="total-cost"][value="£ 114,256"]
 
 *** Keywords ***
-Custom Suite Teardown
-    the user closes the browser
-    Delete the emails from both test mailboxes
-
 the table row has expected values
     the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(2)    3 months
     the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(3)    £ 503,248
