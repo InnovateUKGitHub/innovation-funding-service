@@ -14,7 +14,7 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...               INFUND-8397  Permission denied when submitting your finances as a collaborator
 ...
 Suite Setup       Guest user log-in  &{lead_applicant_credentials}
-Suite Teardown    the user closes the browser
+Suite Teardown    Close browser and delete emails
 Force Tags        Applicant
 Default Tags
 Resource          ../../../../resources/defaultResources.robot
