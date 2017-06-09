@@ -1,9 +1,12 @@
 package org.innovateuk.ifs.user.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Future;
 
 /**
@@ -16,6 +19,7 @@ public interface UserRestService {
     RestResult<List<UserResource>> findAll();
 
     RestResult<List<UserResource>> findByUserRoleType(UserRoleType userRoleType);
+    RestResult<Set<UserResource>> getInternalUsers();
 
     RestResult<ProcessRoleResource> findProcessRole(Long userId, Long applicationId);
     RestResult<List<ProcessRoleResource>> findProcessRole(Long applicationId);

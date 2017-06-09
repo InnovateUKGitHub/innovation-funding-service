@@ -120,6 +120,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Set<UserResource> getInternalUsers() {
+        return userRestService.getInternalUsers().getSuccessObjectOrThrowException();
+    }
+
+    @Override
     public Void verifyEmail(String hash) {
         return userRestService.verifyEmail(hash).getSuccessObjectOrThrowException();
     }
