@@ -2,7 +2,7 @@
 Documentation     INFUND-832
 ...               INFUND-409
 Suite Setup       Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    Close browser and delete emails
 Force Tags        Upload    Applicant    Email
 Resource          ../../../../resources/defaultResources.robot
 # Note that all of these tests will require you to set an absolute path for the upload folder robot-tests/upload_files

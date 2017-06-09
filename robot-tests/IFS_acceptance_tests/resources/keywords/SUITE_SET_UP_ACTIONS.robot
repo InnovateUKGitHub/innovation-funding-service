@@ -18,7 +18,6 @@ Login new application invite academic
     Given Guest user log-in    &{lead_applicant_credentials}
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    Academic robot test application
     Run Keyword If    '${status}' == 'FAIL'    Run keywords    Create new application with the same user  Academic robot test application
-    ...    AND    Delete the emails from both test mailboxes
     ...    AND    Invite and accept the invitation    ${recipient}    ${subject}    ${pattern}
     ...    AND    the user closes the browser
 
@@ -261,3 +260,6 @@ the user clicks the forgot psw link
     Run Keyword If    '${status}' == 'FAIL'    click element    jQuery=summary:contains("Need help signing in or creating an account?")
     Run Keyword If    '${status}' == 'FAIL'    click element    link=Forgotten your password?
 
+Close browser and delete emails
+    Close any open browsers
+    Delete the emails from both test mailboxes
