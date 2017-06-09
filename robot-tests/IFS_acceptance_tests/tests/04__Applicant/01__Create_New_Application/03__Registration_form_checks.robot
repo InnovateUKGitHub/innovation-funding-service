@@ -11,7 +11,7 @@ Documentation     INFUND-885: As an applicant I want to be able to submit a user
 ...
 ...               INFUND-2497: As a new user I would like to have an indication that my password is correct straight after typing...
 Suite Setup       Applicant goes to the registration form
-Suite Teardown    the user closes the browser
+Suite Teardown    Close browser and delete emails
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 Resource          ../../10__Project_setup/PS_Common.robot
@@ -64,6 +64,7 @@ Your details: client-side validation
     And The user should not see the text in the page    Please enter your password.
     And The user should not see the text in the page    In order to register an account you have to agree to the Terms and Conditions.
     And the user submits their information
+    [Teardown]    Delete the emails from both test mailboxes
 
 User can not login with the invalid email
     [Tags]

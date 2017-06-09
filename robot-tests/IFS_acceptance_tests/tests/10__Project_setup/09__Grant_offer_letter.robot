@@ -29,7 +29,7 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...
 ...               INFUND-6780 As a project manager, I have the option to remove an uploaded signed GOL before submitting it, so that an can upload a different file if required
 Suite Setup       all the other sections of the project are completed (except spend profile approval)
-Suite Teardown    the user closes the browser
+Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup    Upload
 Resource          PS_Common.robot
 
