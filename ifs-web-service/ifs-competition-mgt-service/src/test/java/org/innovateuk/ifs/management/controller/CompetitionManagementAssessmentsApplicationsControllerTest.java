@@ -87,4 +87,33 @@ public class CompetitionManagementAssessmentsApplicationsControllerTest extends 
         assertEquals("41 to 41", actualPagination.getPageNames().get(2).getTitle());
         assertEquals("?origin=MANAGE_APPLICATIONS&filterSearch=filter&page=2", actualPagination.getPageNames().get(2).getPath());
     }
+
+    @Test
+    public void displayApplicationOverview_AssessorManagementOrigin() throws Exception {
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withName("name")
+                .withCompetitionStatus(IN_ASSESSMENT)
+                .build();
+
+        List<ApplicationCountSummaryResource> summaryResources = newApplicationCountSummaryResource()
+                .withName("one", "two")
+                .withLeadOrganisation("Lead Org 1", "Lead Org 2")
+                .withAccepted(2L, 3L)
+                .withAssessors(3L, 4L)
+                .withSubmitted(1L, 2L).build(2);
+
+        ApplicationCountSummaryPageResource expectedPageResource = new ApplicationCountSummaryPageResource(41, 3, summaryResources, 1, 20);
+
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
+        when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionId(competitionResource.getId(), 0,20,"")).thenReturn(restSuccess(expectedPageResource));
+
+        String origin = "MANAGE_ASSESSMENTS";
+        String expectedBackUrl = "/assessment/competition/" + competitionResource.getId();
+
+        mockMvc.perform(get("/assessment/competition/{competitionId}/applications", competitionResource.getId())
+                .param("origin", origin))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/manage-applications"))
+                .andExpect(model().attribute("manageApplicationsOriginQuery", expectedBackUrl));
+    }
 }
