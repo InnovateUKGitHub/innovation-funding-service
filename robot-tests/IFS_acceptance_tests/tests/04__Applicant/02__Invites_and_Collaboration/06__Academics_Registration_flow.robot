@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INFUND-1231: As a collaborator registering my company as Academic, I want to be able to enter full or partial details of the Academic organisation's name so I can select my Academic organisation from a list
 Suite Setup       The guest user opens the browser
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    Close browser and delete emails
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 
@@ -9,7 +9,6 @@ Resource          ../../../resources/defaultResources.robot
 Academic organisations search
     [Documentation]    INFUND-1231
     [Tags]    HappyPath    Email    SmokeTest
-    [Setup]    Delete the emails from both test mailboxes
     Given we create a new user                            ${OPEN_COMPETITION}  Stuart  Downing  ${test_mailbox_one}+invitedacademics${unique_email_number}@gmail.com
     and the user closes the browser
     Given the lead applicant invites a registered user    ${test_mailbox_one}+academicinvite${unique_email_number}@gmail.com    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com

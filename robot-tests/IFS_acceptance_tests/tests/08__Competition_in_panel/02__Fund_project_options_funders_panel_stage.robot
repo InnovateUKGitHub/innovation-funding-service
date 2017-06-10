@@ -133,7 +133,6 @@ Once all final decisions have been made and emails are sent Comp moves to Inform
 
 *** Keywords ***
 Custom Suite Setup
-    delete the emails from both test mailboxes
     guest user log-in  &{Comp_admin1_credentials}
     ${today}  get today
     set suite variable  ${today}
