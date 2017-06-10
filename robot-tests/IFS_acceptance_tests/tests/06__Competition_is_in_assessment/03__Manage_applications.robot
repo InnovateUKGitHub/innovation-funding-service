@@ -95,6 +95,7 @@ Notify an assigned user
     [Tags]
     Given the user clicks the button/link    jQuery=tr:contains(Paul Plum) button:contains("Assign")
     And the user clicks the button/link    jQuery=a:contains("Allocate applications")
+    And the user clicks the button/link    jQuery=a:contains("Back")
     And the user clicks the button/link    jQuery=a:contains("Competition")
     And the user clicks the button/link    jQuery=button:contains("Notify assessors")
     And the element should be disabled    jQuery=button:contains("Notify assessors")
@@ -142,6 +143,7 @@ Reassign and notify an assessor (Notified)
     Then the user should see the text in the page    Assigned (1)
     And the assigned list is correct before notification
     And the user clicks the button/link    jQuery=a:contains("Allocate applications")
+    And the user clicks the button/link    jQuery=a:contains("Back")
     And the user clicks the button/link    jQuery=a:contains("Competition")
     And the user clicks the button/link    jQuery=button:contains("Notify assessors")
     And the element should be disabled    jQuery=button:contains("Notify assessors")

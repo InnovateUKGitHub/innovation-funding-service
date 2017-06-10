@@ -72,7 +72,7 @@
             */ -->
 
             <li>
-                <a th:href="@{/assessment/competition/{competitionId}/applications(competitionId=${model.competitionId})}"
+                <a th:href="@{/assessment/competition/{competitionId}/applications(competitionId=${model.competitionId})} + ${manageApplicationsOriginQuery}"
                    th:text="${model.inAssessment} ? 'Manage applications' : 'Allocate applications'">
                     Allocate/Manage applications
                 </a>

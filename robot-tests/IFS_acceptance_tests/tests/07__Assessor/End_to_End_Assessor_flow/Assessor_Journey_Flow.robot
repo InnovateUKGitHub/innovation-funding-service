@@ -96,6 +96,7 @@ CompAdmin Invites assessor to assess an application
     And the user clicks the button/link    jQuery=.pagination-label:contains(Next)
     When the user clicks the button/link    jQuery=tr:contains(Tom Fister) button:contains("Assign")
     And the user clicks the button/link    jQuery=a:contains("Allocate applications")
+    And the user clicks the button/link    jQuery=a:contains("Back")
     And the user clicks the button/link    jQuery=a:contains("Competition")
     And the user clicks the button/link    jQuery=button:contains("Notify assessors")
     And the element should be disabled    jQuery=button:contains("Notify assessors")
