@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INFUND-3262: Wrong invitees show when invite new collaborators
 Suite Setup       Guest user log-in    &{lead_applicant_credentials}
-Suite Teardown    the user closes the browser
+Suite Teardown    Close browser and delete emails
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 Resource          ../../10__Project_setup/PS_Common.robot
