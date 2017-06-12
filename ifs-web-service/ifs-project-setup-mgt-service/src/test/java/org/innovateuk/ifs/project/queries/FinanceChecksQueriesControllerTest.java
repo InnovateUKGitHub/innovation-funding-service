@@ -39,6 +39,7 @@ import java.net.URLEncoder;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -303,6 +304,19 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertTrue(responseViewModel.isLeadPartnerOrganisation());
         assertEquals(0, responseViewModel.getNewAttachmentLinks().size());
         assertEquals("comment", modelForm.getResponse());
+    }
+
+    @Test
+    public void testViewNewResponseWhenQueryIdDoesNotExist() throws Exception {
+
+        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
+        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
+        when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(Collections.emptyList()));
+
+        mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/" + queryId + "/new-response?query_section=Eligibility")
+                )
+                .andExpect(status().isNotFound())
+                .andReturn();
     }
 
     @Test

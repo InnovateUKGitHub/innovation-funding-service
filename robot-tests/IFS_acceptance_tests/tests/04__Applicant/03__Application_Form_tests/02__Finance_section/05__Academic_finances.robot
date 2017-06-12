@@ -7,7 +7,7 @@ Documentation     INFUND-917: As an academic partner i want to input my finances
 ...
 ...               INFUND-8347: Update 'Your project costs' for academics
 Suite Setup       Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation
-Suite Teardown    the user closes the browser
+Suite Teardown    Close browser and delete emails
 Force Tags        Email    Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../FinanceSection_Commons.robot
