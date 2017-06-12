@@ -90,7 +90,7 @@ public class YourProjectCostsSectionPopulatorTest {
         FinanceModelManager financeModelManager = mock(FinanceModelManager.class);
 
         when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(Collections.emptyList());
-        when(formInputViewModelGenerator.fromSection(section, costSection, form)).thenReturn(asList(formInputViewModel));
+        when(formInputViewModelGenerator.fromSection(section, costSection, form, false)).thenReturn(asList(formInputViewModel));
         when(financeHandler.getFinanceModelManager(section.getCurrentApplicant().getOrganisation().getOrganisationType())).thenReturn(financeModelManager);
         DefaultYourProjectCostsSectionViewModel viewModel = (DefaultYourProjectCostsSectionViewModel) yourProjectCostsSectionPopulator.populate(section, form, model, bindingResult, false);
 
@@ -139,7 +139,7 @@ public class YourProjectCostsSectionPopulatorTest {
         FinanceModelManager financeModelManager = mock(FinanceModelManager.class);
 
         when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(Collections.emptyList());
-        when(formInputViewModelGenerator.fromSection(section, costSection, form)).thenReturn(asList(formInputViewModel));
+        when(formInputViewModelGenerator.fromSection(section, costSection, form, false)).thenReturn(asList(formInputViewModel));
         when(financeHandler.getFinanceModelManager(section.getCurrentApplicant().getOrganisation().getOrganisationType())).thenReturn(financeModelManager);
         JesYourProjectCostsSectionViewModel viewModel = (JesYourProjectCostsSectionViewModel) yourProjectCostsSectionPopulator.populate(section, form, model, bindingResult, true);
 

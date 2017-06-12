@@ -42,12 +42,12 @@ public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourF
     private FileEntryRestService fileEntryRestService;
 
     @Override
-    protected YourFinancesSectionViewModel createNew(ApplicantSectionResource applicantSection, ApplicationForm form, boolean readOnly) {
+    protected YourFinancesSectionViewModel createNew(ApplicantSectionResource applicantSection, ApplicationForm form, Boolean readOnly) {
         return new YourFinancesSectionViewModel(applicantSection, Collections.emptyList(), getNavigationViewModel(applicantSection), true);
     }
 
     @Override
-    public void populate(ApplicantSectionResource section, ApplicationForm form, YourFinancesSectionViewModel viewModel, Model model, BindingResult bindingResult, boolean readOnly) {
+    public void populate(ApplicantSectionResource section, ApplicationForm form, YourFinancesSectionViewModel viewModel, Model model, BindingResult bindingResult, Boolean readOnly) {
         QuestionResource applicationDetailsQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(viewModel.getCompetition().getId(), FormInputType.APPLICATION_DETAILS).getSuccessObjectOrThrowException();
         ApplicantSectionResource yourOrganisation = findChildSectionByType(section, SectionType.ORGANISATION_FINANCES);
         ApplicantSectionResource yourFunding = findChildSectionByType(section, SectionType.FUNDING_FINANCES);

@@ -77,7 +77,7 @@ public class YourOrganisationSectionPopulatorTest {
         when(financialYearEnd.getFormInput()).thenReturn(newFormInputResource().withType(FormInputType.FINANCIAL_YEAR_END).build());
         when(overviewRow.getFormInput()).thenReturn(newFormInputResource().withType(FormInputType.FINANCIAL_OVERVIEW_ROW).build());
         when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(emptyList());
-        when(formInputViewModelGenerator.fromSection(section, section, form)).thenReturn(formInputViewModels);
+        when(formInputViewModelGenerator.fromSection(section, section, form, false)).thenReturn(formInputViewModels);
 
         YourOrganisationSectionViewModel viewModel = yourOrganisationSectionPopulator.populate(section, form, model, bindingResult, false);
 

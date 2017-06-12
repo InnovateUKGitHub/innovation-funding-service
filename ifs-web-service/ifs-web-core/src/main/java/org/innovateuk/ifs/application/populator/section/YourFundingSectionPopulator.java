@@ -26,13 +26,13 @@ public class YourFundingSectionPopulator extends AbstractSectionPopulator<YourFu
     private FormInputViewModelGenerator formInputViewModelGenerator;
 
     @Override
-    protected void populate(ApplicantSectionResource section, ApplicationForm form, YourFundingSectionViewModel viewModel, Model model, BindingResult bindingResult, boolean readOnly) {
+    protected void populate(ApplicantSectionResource section, ApplicationForm form, YourFundingSectionViewModel viewModel, Model model, BindingResult bindingResult, Boolean readOnly) {
         List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId());
         viewModel.setComplete(completedSectionIds.contains(section.getSection().getId()));
     }
 
     @Override
-    protected YourFundingSectionViewModel createNew(ApplicantSectionResource section, ApplicationForm form, boolean readOnly) {
+    protected YourFundingSectionViewModel createNew(ApplicantSectionResource section, ApplicationForm form, Boolean readOnly) {
         List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId());
         return new YourFundingSectionViewModel(section, formInputViewModelGenerator.fromSection(section, section, form, readOnly), getNavigationViewModel(section), completedSectionIds.contains(section.getSection().getId()));
     }

@@ -34,8 +34,6 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     private UserResource otherLeadApplicant;
     private OrganisationResource otherOrganisation;
 
-
-
     @Override
     protected ApplicationFinancePermissionRules supplyPermissionRulesUnderTest() {
         return new ApplicationFinancePermissionRules();
@@ -43,7 +41,6 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
 
     @Before
     public void setup() throws Exception {
-        ;
 
         // Create a compAdmin
         compAdmin = this.compAdminUser();
@@ -84,7 +81,6 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             otherLeadApplicant = newUserResource().build();
             when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(otherLeadApplicant.getId(), getRole(LEADAPPLICANT).getId(), otherApplicationId, otherOrganisationId)).thenReturn(newProcessRole().build());
             when(processRoleRepositoryMock.findByUserIdAndApplicationId(otherLeadApplicant.getId(), otherApplicationId)).thenReturn(newProcessRole().withRole(LEADAPPLICANT).build());
-
         }
     }
 
@@ -129,9 +125,11 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     public void testAddCosts() {
         assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, leadApplicant));
         assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, collaborator));
+        assertTrue(rules.supportCanAddACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, supportUser()));
 
         assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, otherLeadApplicant));
         assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, compAdmin));
+        assertFalse(rules.supportCanAddACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, compAdmin));
     }
 
     @Test

@@ -64,7 +64,7 @@ public class YourFundingSectionPopulatorTest {
         AbstractFormInputViewModel formInputViewModel = mock(AbstractFormInputViewModel.class);
 
         when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(emptyList());
-        when(formInputViewModelGenerator.fromSection(section, section, form)).thenReturn(asList(formInputViewModel));
+        when(formInputViewModelGenerator.fromSection(section, section, form, false)).thenReturn(asList(formInputViewModel));
 
         YourFundingSectionViewModel viewModel = yourFundingSectionPopulator.populate(section, form, model, bindingResult, false);
 

@@ -21,14 +21,14 @@ public abstract class AbstractSectionPopulator<M extends AbstractSectionViewMode
     @Autowired
     private ApplicationNavigationPopulator navigationPopulator;
 
-    public M populate(ApplicantSectionResource section, ApplicationForm form, Model model, BindingResult bindingResult, boolean readOnly) {
+    public M populate(ApplicantSectionResource section, ApplicationForm form, Model model, BindingResult bindingResult, Boolean readOnly) {
         M viewModel = createNew(section, form, readOnly);
         populate(section, form, viewModel, model, bindingResult, readOnly);
         return viewModel;
     }
 
-    protected abstract void populate(ApplicantSectionResource section, ApplicationForm form, M viewModel, Model model, BindingResult bindingResult, boolean readOnly);
-    protected abstract M createNew(ApplicantSectionResource section, ApplicationForm form, boolean readOnly);
+    protected abstract void populate(ApplicantSectionResource section, ApplicationForm form, M viewModel, Model model, BindingResult bindingResult, Boolean readOnly);
+    protected abstract M createNew(ApplicantSectionResource section, ApplicationForm form, Boolean readOnly);
 
     public abstract SectionType getSectionType();
 
