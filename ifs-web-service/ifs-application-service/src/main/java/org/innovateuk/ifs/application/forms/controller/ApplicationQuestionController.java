@@ -6,8 +6,8 @@ import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.forms.populator.QuestionModelPopulator;
+import org.innovateuk.ifs.application.forms.service.ApplicationQuestionSaver;
 import org.innovateuk.ifs.application.forms.service.ApplicationRedirectionService;
-import org.innovateuk.ifs.application.forms.service.ApplicationSaver;
 import org.innovateuk.ifs.application.forms.viewmodel.QuestionViewModel;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -17,7 +17,6 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -80,7 +79,7 @@ public class ApplicationQuestionController {
     private ApplicationRedirectionService applicationRedirectionService;
 
     @Autowired
-    private ApplicationSaver applicationSaver;
+    private ApplicationQuestionSaver applicationSaver;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -131,10 +130,8 @@ public class ApplicationQuestionController {
             return showQuestion(form, bindingResult, validationHandler, model, applicationId, questionId, user);
 
         } else {
-
             QuestionResource question = questionService.getById(questionId);
             ApplicationResource application = applicationService.getById(applicationId);
-            CompetitionResource competition = competitionService.getById(application.getCompetition());
 
             if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
                 questionService.assignQuestion(applicationId, user, request);
@@ -146,7 +143,7 @@ public class ApplicationQuestionController {
             // First check if any errors already exist in bindingResult
             if (isAllowedToUpdateQuestion(questionId, applicationId, user.getId()) || isMarkQuestionRequest(params)) {
                 /* Start save action */
-                errors.addAll(applicationSaver.saveApplicationForm(application, competition, form, null, question, user, request, response, bindingResult, true));
+                errors.addAll(applicationSaver.saveApplicationForm(application, form, question, user, request, response, bindingResult));
             }
 
             model.addAttribute("form", form);

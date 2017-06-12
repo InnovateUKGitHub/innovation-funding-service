@@ -221,7 +221,7 @@ public class ApplicationAjaxController {
         } else {
             LOG.debug("Save startdate: " + startDate.toString());
         }
-        
+
         application.setStartDate(startDate);
         applicationService.save(application);
         return errors;
