@@ -173,9 +173,10 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         ALL_APPLICATIONS("/competition/{competitionId}/applications/all"),
         SUBMITTED_APPLICATIONS("/competition/{competitionId}/applications/submitted"),
         INELIGIBLE_APPLICATIONS("/competition/{competitionId}/applications/ineligible"),
-        MANAGE_APPLICATIONS("/assessment/competition/{competitionId}"),
+        MANAGE_APPLICATIONS("/assessment/competition/{competitionId}/applications"),
         FUNDING_APPLICATIONS("/competition/{competitionId}/funding"),
-        APPLICATION_PROGRESS("/competition/{competitionId}/application/{applicationId}/assessors");
+        APPLICATION_PROGRESS("/competition/{competitionId}/application/{applicationId}/assessors"),
+        MANAGE_ASSESSMENTS("/assessment/competition/{competitionId}");
 
         private String baseOriginUrl;
 

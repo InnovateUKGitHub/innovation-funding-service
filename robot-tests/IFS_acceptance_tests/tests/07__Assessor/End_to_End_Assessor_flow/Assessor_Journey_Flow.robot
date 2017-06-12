@@ -88,11 +88,13 @@ CompAdmin Invites assessor to assess an application
     [Setup]    The user clicks the button/link    link=My dashboard
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And The user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
+    And the user clicks the button/link    jQuery=a:contains("Manage applications")
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     And the user clicks the button/link    jQuery=.pagination-label:contains(Next)
     And the user clicks the button/link    jQuery=.pagination-label:contains(Next)
     When the user clicks the button/link    jQuery=tr:contains(Tom Fister) button:contains("Assign")
     And the user clicks the button/link    jQuery=a:contains("Allocate applications")
+    And the user clicks the button/link    jQuery=a:contains("Back")
     And the user clicks the button/link    jQuery=a:contains("Competition")
     And the user clicks the button/link    jQuery=button:contains("Notify assessors")
     And the element should be disabled    jQuery=button:contains("Notify assessors")

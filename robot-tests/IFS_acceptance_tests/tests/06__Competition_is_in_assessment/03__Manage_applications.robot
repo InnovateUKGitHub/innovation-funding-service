@@ -25,6 +25,8 @@ View the list of the applications
     [Tags]
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     When The user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
+    And the user see the correct key statistics
+    And The user clicks the button/link    jQuery=a:contains("Manage applications")
     Then the application list is correct before changes
 
 Filtering of the applications
@@ -94,6 +96,7 @@ Notify an assigned user
     [Tags]
     Given the user clicks the button/link    jQuery=tr:contains(Paul Plum) button:contains("Assign")
     And the user clicks the button/link    jQuery=a:contains("Allocate applications")
+    And the user clicks the button/link    jQuery=a:contains("Back")
     And the user clicks the button/link    jQuery=a:contains("Competition")
     And the user clicks the button/link    jQuery=button:contains("Notify assessors")
     And the element should be disabled    jQuery=button:contains("Notify assessors")
@@ -111,6 +114,7 @@ Remove and notify an assessor (Notified)
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
+    And the user clicks the button/link    jQuery=a:contains("Manage applications")
     And the user clicks the button/link    jQuery=tr:nth-child(9) a:contains(View progress)
     When the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("Remove")
     And the user clicks the button/link    jQuery=.buttonlink:contains(Cancel)
@@ -133,12 +137,14 @@ Reassign and notify an assessor (Notified)
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
+    And the user clicks the button/link    jQuery=a:contains("Manage applications")
     And the user clicks the button/link    jQuery=tr:nth-child(9) a:contains(View progress)
     And the user should see the text in the page    Previously assigned (1)
     And the user clicks the button/link    jQuery=tr:contains("Paul Plum") button:contains("Reassign")
     Then the user should see the text in the page    Assigned (1)
     And the assigned list is correct before notification
     And the user clicks the button/link    jQuery=a:contains("Allocate applications")
+    And the user clicks the button/link    jQuery=a:contains("Back")
     And the user clicks the button/link    jQuery=a:contains("Competition")
     And the user clicks the button/link    jQuery=button:contains("Notify assessors")
     And the element should be disabled    jQuery=button:contains("Notify assessors")
@@ -190,3 +196,10 @@ the previously assigned list is correct
     #the user should see the element    jQuery=.assessors-previous td:nth-child(4):contains('8')
     #the user should see the element    jQuery=.assessors-previous td:nth-child(5):contains('4')
     #TODO checks disabled due toINFUND-7745
+
+the user see the correct key statistics
+    the user should see the element    jQuery=small:contains("Total assignments")
+    the user should see the element    jQuery=small:contains("Assignments awaiting response")
+    the user should see the element    jQuery=small:contains("Assignments accepted")
+    the user should see the element    jQuery=small:contains("Assessments started")
+    the user should see the element    jQuery=small:contains("Assessments completed")
