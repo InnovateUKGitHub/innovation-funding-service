@@ -25,6 +25,7 @@ View the list of the applications
     [Tags]
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     When The user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
+    And the user see the correct key statistics
     And The user clicks the button/link    jQuery=a:contains("Manage applications")
     Then the application list is correct before changes
 
@@ -195,3 +196,10 @@ the previously assigned list is correct
     #the user should see the element    jQuery=.assessors-previous td:nth-child(4):contains('8')
     #the user should see the element    jQuery=.assessors-previous td:nth-child(5):contains('4')
     #TODO checks disabled due toINFUND-7745
+
+the user see the correct key statistics
+    the user should see the element    jQuery=small:contains("Total assignments")
+    the user should see the element    jQuery=small:contains("Assignments awaiting response")
+    the user should see the element    jQuery=small:contains("Assignments accepted")
+    the user should see the element    jQuery=small:contains("Assessments started")
+    the user should see the element    jQuery=small:contains("Assessments completed")
