@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 
 /**
  * Generates applicant users via registration
@@ -18,7 +19,7 @@ public class ExternalUserDataBuilder extends BaseUserDataBuilder<ExternalUserDat
     private static final Logger LOG = LoggerFactory.getLogger(ExternalUserDataBuilder.class);
 
     public ExternalUserDataBuilder registerUser(String firstName, String lastName, String emailAddress, String organisationName, String phoneNumber) {
-        return with(data -> registerUser(firstName, lastName, emailAddress, organisationName, phoneNumber, UserRoleType.APPLICANT, data));
+        return with(data -> registerUser(firstName, lastName, emailAddress, organisationName, phoneNumber, singletonList(UserRoleType.APPLICANT), data));
     }
 
     @Override

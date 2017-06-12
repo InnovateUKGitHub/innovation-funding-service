@@ -15,6 +15,9 @@ import java.util.UUID;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * Generates internal users (Comp Admins, Project Finance, Comp Execs and Comp Technologists)
@@ -28,7 +31,7 @@ public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserDat
         return with(data -> {
 
             doAs(systemRegistrar(), () ->
-                    registerUser(firstName, lastName, data.getEmailAddress(), organisationName, phoneNumber, data.getRole(), data));
+                    registerUser(firstName, lastName, data.getEmailAddress(), organisationName, phoneNumber, data.getRoles(), data));
         });
     }
 
@@ -37,8 +40,10 @@ public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserDat
         return with(data -> {
 
             User user = userRepository.save(new User(firstName, lastName, emailAddress, null, UUID.randomUUID().toString()));
-            Role role = roleRepository.findOneByName(data.getRole().getName());
-            user.getRoles().add(role);
+            //Role role = roleRepository.findOneByName(data.getRole().getName());
+            List<String> roleNames = simpleMap(data.getRoles(), userRoleType -> userRoleType.getName());
+            List<Role> roles = roleRepository.findByNameIn(roleNames);
+            user.getRoles().addAll(roles);
             user.setStatus(emailVerified ? UserStatus.ACTIVE : UserStatus.INACTIVE);
             userRepository.save(user);
         });
@@ -65,15 +70,15 @@ public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserDat
         return new InternalUserData();
     }
 
-    public InternalUserDataBuilder withRole(UserRoleType role) {
+    public InternalUserDataBuilder withRoles(List<UserRoleType> roles) {
         return with(data -> {
-           data.setRole(role);
+           data.setRoles(roles);
         });
     }
 
-    public InternalUserDataBuilder createPreRegistrationEntry(String emailAddress) {
+/*    public InternalUserDataBuilder createPreRegistrationEntry(String emailAddress) {
         return with(data -> {
-            switch (data.getRole()) {
+            switch (data.getRoles()) {
                 case COMP_ADMIN: {
                     CompAdminEmail preregistrationEntry = new CompAdminEmail();
                     preregistrationEntry.setEmail(emailAddress);
@@ -87,6 +92,24 @@ public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserDat
                 default: {
                     // no pre-reg entry
                 }
+            }
+
+            data.setEmailAddress(emailAddress);
+        });
+    }*/
+
+    public InternalUserDataBuilder createPreRegistrationEntry(String emailAddress) {
+        return with(data -> {
+            if (data.getRoles().contains(COMP_ADMIN)) {
+                CompAdminEmail preregistrationEntry = new CompAdminEmail();
+                preregistrationEntry.setEmail(emailAddress);
+                compAdminEmailRepository.save(preregistrationEntry);
+            }
+
+            if (data.getRoles().contains(PROJECT_FINANCE)) {
+                ProjectFinanceEmail preregistrationEntry = new ProjectFinanceEmail();
+                preregistrationEntry.setEmail(emailAddress);
+                projectFinanceEmailRepository.save(preregistrationEntry);
             }
 
             data.setEmailAddress(emailAddress);
