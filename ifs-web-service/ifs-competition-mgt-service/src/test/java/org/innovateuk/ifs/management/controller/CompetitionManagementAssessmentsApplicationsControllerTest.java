@@ -114,6 +114,6 @@ public class CompetitionManagementAssessmentsApplicationsControllerTest extends 
                 .param("origin", origin))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/manage-applications"))
-                .andExpect(model().attribute("manageApplicationsOriginQuery", expectedBackUrl));
+                .andExpect(model().attribute("backUrl", expectedBackUrl));
     }
 }

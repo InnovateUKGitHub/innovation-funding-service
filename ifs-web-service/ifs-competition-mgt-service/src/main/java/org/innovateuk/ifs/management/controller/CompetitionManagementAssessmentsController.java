@@ -28,9 +28,9 @@ public class CompetitionManagementAssessmentsController {
     @GetMapping
     public String manageAssessments(@PathVariable("competitionId") long competitionId, Model model,
                                     @RequestParam MultiValueMap<String, String> queryParams) {
-        String manageApplicationsOriginQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.MANAGE_ASSESSMENTS, queryParams);
+        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.MANAGE_ASSESSMENTS, queryParams);
         model.addAttribute("model", manageAssessmentsModelPopulator.populateModel(competitionId));
-        model.addAttribute("manageApplicationsOriginQuery", manageApplicationsOriginQuery);
+        model.addAttribute("originQuery", originQuery);
 
         return "competition/manage-assessments";
     }
