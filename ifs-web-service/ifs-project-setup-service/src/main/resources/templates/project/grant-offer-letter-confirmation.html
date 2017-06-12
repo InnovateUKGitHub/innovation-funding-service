@@ -6,18 +6,16 @@
 <body th:with="context='project'" class="gol-confirm-submit">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
-
 <main id="content" tabindex="-1">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <h1 class="heading-medium">Confirm submission</h1>
-    <p>Once you submit the signed grant offer letter, we'll review it and will contact you if we need further information.</p>
+    <h1 class="heading-medium">Send to Innovate UK</h1>
+    <p>Once you send the signed grant offer letter we will review it and will contact you if we need further information.</p>
 
     <form th:action="@{/project/{id}/offer(id=${projectId})}" method="post">
         <button class="button" name="confirmSubmit">Confirm submission</button>
     </form>
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
-
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 </body>
