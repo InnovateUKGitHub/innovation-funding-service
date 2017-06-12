@@ -77,7 +77,23 @@ Support User can see read only summary for each partner
     [Setup]  log in as a different user     &{support_user_credentials}
     When the user navigates to the page    ${server}/management/competition/${OPEN_COMPETITION}/applications/all
     And the user clicks the button/link   link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
-    Then the user should see the element  jQuery=.project-cost-breakdown tr:nth-of-type(1):contains("Detailed Organisation Finances")
+    Then the user should see the element  jQuery=.project-cost-breakdown tbody tr:nth-of-type(1) th:contains("Detailed Organisation Finances")
+    And the user should see the element  jQuery=.project-cost-breakdown tbody tr:nth-of-type(12 th:contains("Detailed Organisation Finances")
+
+Support User can see read only summary for lead partner
+    [Documentation]  IFS--401
+    [Tags]
+    [Setup]  The user clicks the button/link jQuery=.project-cost-breakdown tbody tr:nth-of-type(1) th a
+    Then the finance summary table in Your Finances has correct values for lead
+
+Support User can see read only summary for collaborator
+    [Documentation]  IFS--401
+    [Tags]
+    [Setup]  log in as a different user     &{support_user_credentials}
+    When the user navigates to the page    ${server}/management/competition/${OPEN_COMPETITION}/applications/all
+    And the user clicks the button/link   link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
+    When the user clicks the button/link jQuery=.project-cost-breakdown tbody tr:nth-of-type(2) th a
+    Then the finance summary table in Your Finances has correct values for collaborator
 
 Red warning should show when the finances are incomplete
     [Documentation]    INFUND-927, INFUND-894, INFUND-446
