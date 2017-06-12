@@ -50,12 +50,12 @@ public class CompetitionManagementAssessmentsApplicationsController {
                 .getApplicationCountSummariesByCompetitionId(competitionId, page, 20, filter)
                 .getSuccessObjectOrThrowException();
 
-        String manageApplicationsOriginQuery = buildBackUrl(origin, competitionId, queryParams);
+        String backUrl = buildBackUrl(origin, competitionId, queryParams);
         String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.MANAGE_APPLICATIONS, queryParams);
 
         model.addAttribute("model", manageApplicationsPopulator.populateModel(competitionResource, applicationCounts, filter, originQuery));
         model.addAttribute("originQuery", originQuery);
-        model.addAttribute("manageApplicationsOriginQuery", manageApplicationsOriginQuery);
+        model.addAttribute("backUrl", backUrl);
 
         return "competition/manage-applications";
     }
