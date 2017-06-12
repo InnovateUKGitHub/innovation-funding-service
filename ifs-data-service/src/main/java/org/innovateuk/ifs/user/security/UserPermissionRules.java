@@ -139,6 +139,11 @@ public class UserPermissionRules {
         return profileDetails.getUser().equals(user.getId());
     }
 
+    @PermissionRule(value = "READ_USER_PROFILE", description = "A ifs admin user can read any users profile")
+    public boolean ifsAdminCanViewAnyUsersProfile(UserProfileResource profileDetails, UserResource user) {
+        return user.hasRole(UserRoleType.IFS_ADMIN);
+    }
+
     @PermissionRule(value = "READ", description = "The user, as well as Comp Admin and Exec can read the user's profile status")
     public boolean usersAndCompAdminCanViewProfileStatus(UserProfileStatusResource profileStatus, UserResource user) {
         return profileStatus.getUser().equals(user.getId()) || isCompAdmin(user);
