@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 
+/**
+ * Controller for the Manage Assessments dashboard.
+ */
 @Controller
 @RequestMapping("/assessment/competition/{competitionId}")
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
