@@ -685,8 +685,6 @@ class CsvUtils {
         private InternalUserLine(List<String> line) {
             super(line);
             this.roles = simpleMap(line.get(line.size() - 1).split("&"), s -> s.trim());
-
-
         }
     }
 
