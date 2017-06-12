@@ -26,6 +26,7 @@ View the list of the applications
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     When The user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
     And the user see the correct key statistics
+    And The key statistics counts should be correct
     And The user clicks the button/link    jQuery=a:contains("Manage applications")
     Then the application list is correct before changes
 
@@ -203,3 +204,15 @@ the user see the correct key statistics
     the user should see the element    jQuery=small:contains("Assignments accepted")
     the user should see the element    jQuery=small:contains("Assessments started")
     the user should see the element    jQuery=small:contains("Assessments completed")
+
+The key statistics counts should be correct
+    ${TOTAL_ASSIGNMENT}=    Get text    css=.column-fifth:nth-child(1) span
+    Should Be Equal As Integers    ${TOTAL_ASSIGNMENT}    14
+    ${AWAITING}=    Get text    css=.column-fifth:nth-child(2) span
+    Should Be Equal As Integers    ${AWAITING}    7
+    ${ACCEPTED}=    Get text    css=.column-fifth:nth-child(3) span
+    Should Be Equal As Integers    ${ACCEPTED}    6
+    ${STARTED}=    Get text    css=.column-fifth:nth-child(4) span
+    Should Be Equal As Integers    ${STARTED}    0
+    ${SUBMITTED}=    Get text    css=.column-fifth:nth-child(5) span
+    Should Be Equal As Integers    ${SUBMITTED}    1
