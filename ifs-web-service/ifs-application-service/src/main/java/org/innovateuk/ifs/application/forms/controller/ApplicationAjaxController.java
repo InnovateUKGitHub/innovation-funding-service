@@ -6,30 +6,17 @@ import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
-import org.innovateuk.ifs.application.forms.populator.OrganisationDetailsViewModelPopulator;
-import org.innovateuk.ifs.application.forms.populator.QuestionModelPopulator;
-import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
-import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
-import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
-import org.innovateuk.ifs.application.populator.OpenApplicationFinanceSectionModelPopulator;
-import org.innovateuk.ifs.application.populator.OpenSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.exception.AutosaveElementException;
 import org.innovateuk.ifs.exception.BigDecimalNumberFormatException;
 import org.innovateuk.ifs.exception.IntegerNumberFormatException;
-import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
-import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -61,28 +48,7 @@ public class ApplicationAjaxController {
     private static final Log LOG = LogFactory.getLog(ApplicationAjaxController.class);
 
     @Autowired
-    private FinanceRowRestService financeRowRestService;
-
-    @Autowired
-    private FinanceService financeService;
-
-    @Autowired
     private MessageSource messageSource;
-
-    @Autowired
-    private QuestionModelPopulator questionModelPopulator;
-
-    @Autowired
-    private OpenSectionModelPopulator openSectionModel;
-
-    @Autowired
-    private OrganisationDetailsViewModelPopulator organisationDetailsViewModelPopulator;
-
-    @Autowired
-    private OpenApplicationFinanceSectionModelPopulator openFinanceSectionModel;
-
-    @Autowired
-    private ApplicationNavigationPopulator applicationNavigationPopulator;
 
     @Autowired
     private OrganisationService organisationService;
@@ -91,40 +57,10 @@ public class ApplicationAjaxController {
     private FinanceHandler financeHandler;
 
     @Autowired
-    private ProcessRoleService processRoleService;
-
-    @Autowired
     private FormInputResponseRestService formInputResponseRestService;
 
     @Autowired
-    private SectionService sectionService;
-
-    @Autowired
     private ApplicationService applicationService;
-
-    @Autowired
-    private ApplicationModelPopulator applicationModelPopulator;
-
-    @Autowired
-    private QuestionService questionService;
-
-    @Autowired
-    private CompetitionService competitionService;
-
-    @Autowired
-    private FormInputRestService formInputRestService;
-
-    @Autowired
-    private CookieFlashMessageFilter cookieFlashMessageFilter;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private OverheadFileSaver overheadFileSaver;
-
-    @Autowired
-    private ApplicantRestService applicantRestService;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -285,6 +221,7 @@ public class ApplicationAjaxController {
         } else {
             LOG.debug("Save startdate: " + startDate.toString());
         }
+        
         application.setStartDate(startDate);
         applicationService.save(application);
         return errors;
