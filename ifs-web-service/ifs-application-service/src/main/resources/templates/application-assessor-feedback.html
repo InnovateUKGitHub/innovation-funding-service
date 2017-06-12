@@ -12,7 +12,7 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:include="fragments/layout :: header-sub" th:with="linkTitle='Feedback overview',linkClass='link-back',linkUrl=@{/application/{applicationId}/summary(applicationId=${model.application.id})}"  />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your dashboard',size='heading-large'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Dashboard',size='heading-large'" />
 
     <th:block th:with="applicationName=${#strings.isEmpty(model.application.name)} ? #{ifs.application.no_title} : ${model.application.name}">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.question.shortName},subTitle=${applicationName},size='heading-xlarge'" />

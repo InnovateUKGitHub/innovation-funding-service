@@ -175,7 +175,7 @@ The user selects to create a new application
 
 the user directed to correct dashboard
     [Arguments]    ${Application_name}
-    the user should see the text in the page    Your dashboard
+    the user should see the text in the page    Dashboard
     the user clicks the button/link    link=${Application_name}
     the user clicks the button/link    jQuery=a:contains("Begin application")
     the user should see the text in the page    Application overview
