@@ -11,6 +11,8 @@ import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.forms.populator.OrganisationDetailsViewModelPopulator;
 import org.innovateuk.ifs.application.forms.populator.QuestionModelPopulator;
+import org.innovateuk.ifs.application.forms.service.ApplicationRedirectionService;
+import org.innovateuk.ifs.application.forms.service.ApplicationSectionSaver;
 import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
 import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
@@ -20,14 +22,16 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
+import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.section.YourFinancesSectionViewModel;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
-import org.innovateuk.ifs.finance.resource.cost.Materials;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -39,6 +43,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -63,6 +68,7 @@ import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newA
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
@@ -89,10 +95,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<ApplicationQuestionController> {
-
-    @Mock
-    private CookieFlashMessageFilter cookieFlashMessageFilter;
+public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<ApplicationSectionController> {
 
     @Spy
     @InjectMocks
@@ -117,19 +120,43 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
 
     @Mock
+    private DefaultFinanceFormHandler defaultFinanceFormHandler;
+
+    @Mock
+    private FormInputViewModelGenerator formInputViewModelGenerator;
+    @Mock
+    private YourFinancesSectionPopulator yourFinancesSectionPopulator;
+
+
+    @Mock
+    private SectionService sectionService;
+
+    @Autowired
+    private ApplicationService applicationService;
+
+    @Mock
+    private ApplicantRestService applicantRestService;
+
+    @Mock
     private ApplicationNavigationPopulator applicationNavigationPopulator;
+
+    @Mock
+    private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Mock
     private OverheadFileSaver overheadFileSaver;
 
     @Mock
-    private DefaultFinanceFormHandler defaultFinanceFormHandler;
+    private QuestionService questionService;
+
     @Mock
-    private ApplicantRestService applicantRestService;
+    private OrganisationService organisationService;
+
     @Mock
-    private FormInputViewModelGenerator formInputViewModelGenerator;
+    private ApplicationRedirectionService applicationRedirectionService;
+
     @Mock
-    private YourFinancesSectionPopulator yourFinancesSectionPopulator;
+    private ApplicationSectionSaver applicationSaver;
 
     private ApplicationResource application;
     private Long sectionId;
@@ -140,8 +167,8 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     private ApplicantSectionResourceBuilder sectionBuilder;
 
     @Override
-    protected ApplicationQuestionController supplyControllerUnderTest() {
-        return new ApplicationQuestionController();
+    protected ApplicationSectionController supplyControllerUnderTest() {
+        return new ApplicationSectionController();
     }
 
     @Before
@@ -280,7 +307,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(applicationService.getById(application.getId())).thenReturn(application);
         mockMvc.perform(
                 post("/application/1/form/question/1")
-                        .param(ApplicationQuestionController.EDIT_QUESTION, "1_2")
+                        .param(EDIT_QUESTION, "1_2")
         )
                 .andExpect(view().name("application-form"));
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
@@ -293,7 +320,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(applicationService.getById(application.getId())).thenReturn(application);
         mockMvc.perform(
                 post("/application/1/form/question/1")
-                        .param(ApplicationQuestionController.ASSIGN_QUESTION_PARAM, "1_2")
+                        .param(ASSIGN_QUESTION_PARAM, "1_2")
 
         )
                 .andExpect(status().is3xxRedirection());
@@ -306,7 +333,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(applicationService.getById(application.getId())).thenReturn(application);
         mockMvc.perform(
                 post("/application/1/form/question/1")
-                        .param(ApplicationQuestionController.MARK_AS_COMPLETE, "1")
+                        .param(MARK_AS_COMPLETE, "1")
         ).andExpect(status().is3xxRedirection());
     }
 
@@ -327,24 +354,6 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                         .param("add_cost", String.valueOf(questionId)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/application/" + application.getId() + "/form/section/" + sectionId));
-    }
-
-    @Test
-    public void testAjaxAddCost() throws Exception {
-        FinanceRowItem costItem = new Materials();
-        when(defaultFinanceFormHandler.addCostWithoutPersisting(anyLong(), anyLong(), anyLong())).thenReturn(costItem);
-        mockMvc.perform(
-                get("/application/{applicationId}/form/add_cost/{questionId}", application.getId(), questionId)
-        );
-    }
-
-    @Test
-    public void testAjaxRemoveCost() throws Exception {
-        ValidationMessages costItemMessages = new ValidationMessages();
-        when(financeRowRestService.add(anyLong(), anyLong(), any())).thenReturn(restSuccess(costItemMessages));
-        mockMvc.perform(
-                get("/application/{applicationId}/form/remove_cost/{costId}", application.getId(), costId)
-        );
     }
 
     @Test
@@ -376,7 +385,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(financeRowRestService.add(anyLong(), eq(financeQuestion.getId()), any(GrantClaim.class))).thenReturn(restSuccess(ValidationMessages.noErrors()));
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(ApplicationQuestionController.NOT_REQUESTING_FUNDING, "1")
+                        .param(NOT_REQUESTING_FUNDING, "1")
         ).andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
@@ -396,7 +405,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(financeRowRestService.add(anyLong(), eq(financeQuestion.getId()), any(GrantClaim.class))).thenReturn(restSuccess(ValidationMessages.noErrors()));
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(ApplicationQuestionController.REQUESTING_FUNDING, "1")
+                        .param(REQUESTING_FUNDING, "1")
         ).andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
@@ -414,8 +423,8 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE)).thenReturn(sectionResourceBuilder.withType(SectionType.FINANCE).build(1));
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(ApplicationQuestionController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
-                        .param(ApplicationQuestionController.TERMS_AGREED_KEY, "1")
+                        .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+                        .param(TERMS_AGREED_KEY, "1")
         ).andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
@@ -431,11 +440,11 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(ApplicationQuestionController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+                        .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
-                .andExpect(model().attributeHasFieldErrors("form", ApplicationQuestionController.TERMS_AGREED_KEY));
+                .andExpect(model().attributeHasFieldErrors("form", TERMS_AGREED_KEY));
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
     }
 
@@ -449,11 +458,11 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(organisationService.getOrganisationForUser(anyLong())).thenReturn(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build());
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(ApplicationQuestionController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+                        .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
-                .andExpect(model().attributeHasFieldErrors("form", ApplicationQuestionController.STATE_AID_AGREED_KEY));
+                .andExpect(model().attributeHasFieldErrors("form", STATE_AID_AGREED_KEY));
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
     }
 
@@ -466,7 +475,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(organisationService.getOrganisationForUser(anyLong())).thenReturn(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.RESEARCH.getId()).build());
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(ApplicationQuestionController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+                        .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
         ).andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/**"));
     }
@@ -476,7 +485,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(applicantRestService.getSection(any(), any(), any())).thenReturn(sectionBuilder.withSection(newSectionResource().withType(SectionType.ORGANISATION_FINANCES).build()).build());
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(ApplicationQuestionController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+                        .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1));
@@ -488,7 +497,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
-                        .param(ApplicationQuestionController.MARK_SECTION_AS_INCOMPLETE, String.valueOf(sectionId))
+                        .param(MARK_SECTION_AS_INCOMPLETE, String.valueOf(sectionId))
 
         )
                 .andExpect(status().is3xxRedirection())
@@ -500,7 +509,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     public void testApplicationFormSubmitMarkAsComplete() throws Exception {
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
-                        .param(ApplicationQuestionController.MARK_AS_COMPLETE, "12")
+                        .param(MARK_AS_COMPLETE, "12")
         ).andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/" + sectionId + "**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
@@ -521,8 +530,8 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.ORGANISATION_FINANCES)).thenReturn(sectionResourceBuilder.withType(SectionType.ORGANISATION_FINANCES).build(1));
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(ApplicationQuestionController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
-                        .param(ApplicationQuestionController.TERMS_AGREED_KEY, "1")
+                        .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+                        .param(TERMS_AGREED_KEY, "1")
         ).andExpect(status().is3xxRedirection());
 
         verify(sectionService, times(1)).markAsComplete(isA(Long.class), isA(Long.class), isA(Long.class));
@@ -534,7 +543,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
-                        .param(ApplicationQuestionController.MARK_AS_INCOMPLETE, "3")
+                        .param(MARK_AS_INCOMPLETE, "3")
         ).andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/" + sectionId + "**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
@@ -747,7 +756,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param("formInput[1]", "")
-                        .param(ApplicationQuestionController.MARK_AS_COMPLETE, "1")
+                        .param(MARK_AS_COMPLETE, "1")
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
@@ -769,377 +778,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
     }
 
-    @Test
-    public void testSaveFormElement() throws Exception {
-        String value = "Form Input " + formInputId + " Response";
 
-        mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
-                        .param("formInputId", formInputId.toString())
-                        .param("fieldName", "formInput[" + formInputId + "]")
-                        .param("value", value)
-        ).andExpect(status().isOk());
-
-        Mockito.inOrder(formInputResponseRestService).verify(formInputResponseRestService, calls(1)).saveQuestionResponse(loggedInUser.getId(), application.getId(), formInputId, value, false);
-    }
-
-    @Test
-    public void testSaveFormElementApplicationTitle() throws Exception {
-        String value = "New application title #216";
-        String fieldName = "application.name";
-
-        mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
-                        .param("formInputId", "")
-                        .param("fieldName", fieldName)
-                        .param("value", value)
-        ).andExpect(status().isOk())
-                .andExpect(content().json("{\"success\":\"true\"}"));
-
-        Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(ApplicationResource.class));
-    }
-
-    @Test
-    public void testSaveFormElementEmptyApplicationTitle() throws Exception {
-        String value = "";
-        String fieldName = "application.name";
-
-        MvcResult result = mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
-                        .param("formInputId", "")
-                        .param("fieldName", fieldName)
-                        .param("value", value)
-        ).andExpect(status().isOk())
-                .andReturn();
-
-        String content = result.getResponse().getContentAsString();
-
-        String jsonExpectedContent = "{\"success\":\"true\"}";
-        assertEquals(jsonExpectedContent, content);
-    }
-
-    @Test
-    public void testSaveFormElementSpacesApplicationTitle() throws Exception {
-        String value = " ";
-        String fieldName = "application.name";
-
-        MvcResult result = mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
-                        .param("formInputId", "")
-                        .param("fieldName", fieldName)
-                        .param("value", value)
-        ).andExpect(status().isOk())
-                .andReturn();
-
-        String content = result.getResponse().getContentAsString();
-
-        String jsonExpectedContent = "{\"success\":\"true\"}";
-        assertEquals(jsonExpectedContent, content);
-    }
-
-    @Test
-    public void testSaveFormElementApplicationDuration() throws Exception {
-        String value = "12";
-        String fieldName = "application.durationInMonths";
-
-        MvcResult result = mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
-                        .param("formInputId", "")
-                        .param("fieldName", fieldName)
-                        .param("value", value)
-        ).andExpect(status().isOk())
-                .andReturn();
-
-        String content = result.getResponse().getContentAsString();
-
-        String jsonExpectedContent = "{\"success\":\"true\"}";
-        assertEquals(jsonExpectedContent, content);
-        Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(ApplicationResource.class));
-    }
-
-    @Test
-    public void testSaveFormElementApplicationInvalidDurationNonInteger() throws Exception {
-        String value = "aaaa";
-        String fieldName = "application.durationInMonths";
-
-        MvcResult result = mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
-                        .param("formInputId", "")
-                        .param("fieldName", fieldName)
-                        .param("value", value)
-        ).andExpect(status().isOk())
-                .andReturn();
-
-        String content = result.getResponse().getContentAsString();
-
-        String jsonExpectedContent = "{\"success\":\"false\"}";
-        assertEquals(jsonExpectedContent, content);
-    }
-
-    @Test
-    public void testSaveFormElementApplicationInvalidDurationLength() throws Exception {
-        String value = "37";
-        String fieldName = "application.durationInMonths";
-
-        MvcResult result = mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
-                        .param("formInputId", "")
-                        .param("fieldName", fieldName)
-                        .param("value", value)
-        ).andExpect(status().isOk())
-                .andReturn();
-
-        String content = result.getResponse().getContentAsString();
-
-        String jsonExpectedContent = "{\"success\":\"true\"}";
-        Assert.assertEquals(jsonExpectedContent, content);
-    }
-
-    @Test
-    public void testSaveFormElementCostSubcontracting() throws Exception {
-        String value = "123";
-        String questionId = "cost-subcontracting-13-subcontractingCost";
-
-        MvcResult result = mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
-                        .param("formInputId", questionId)
-                        .param("fieldName", "subcontracting_costs-cost-13")
-                        .param("value", value)
-        ).andExpect(status().isOk())
-                .andReturn();
-
-        String content = result.getResponse().getContentAsString();
-
-        String jsonExpectedContent = "{\"success\":\"true\"}";
-        assertEquals(jsonExpectedContent, content);
-    }
-
-    @Test
-    public void testSaveFormElementCostSubcontractingWithErrors() throws Exception {
-        String value = "BOB";
-        String questionId = "cost-subcontracting-13-subcontractingCost";
-
-        MvcResult result = mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
-                        .param("formInputId", questionId)
-                        .param("fieldName", "bobbins")
-                        .param("value", value)
-        ).andExpect(status().isOk())
-                .andReturn();
-
-        String content = result.getResponse().getContentAsString();
-
-        String jsonExpectedContent = "{\"success\":\"true\"}";
-        Assert.assertEquals(jsonExpectedContent, content);
-    }
-
-    @Test
-    public void testSaveFormElementFinancePosition() throws Exception {
-        String value = "222";
-        String questionId = "financePosition-organisationSize";
-        String fieldName = "financePosition.organisationSize";
-
-        MvcResult result = mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
-                        .param("formInputId", questionId)
-                        .param("fieldName", fieldName)
-                        .param("value", value)
-        ).andExpect(status().isOk())
-                .andReturn();
-
-        String content = result.getResponse().getContentAsString();
-
-        String jsonExpectedContent = "{\"success\":\"true\"}";
-        Assert.assertEquals(jsonExpectedContent, content);
-    }
-
-    @Test
-    public void testSaveFormElementApplicationValidStartDateDDMMYYYY() throws Exception {
-        String value = "25-10-2025";
-        String questionId = "application_details-startdate";
-        String fieldName = "application.startDate";
-
-        MvcResult result = mockMvc.perform(
-                post("/application/1/form/123/saveFormElement")
-                        .param("formInputId", questionId)
-                        .param("fieldName", fieldName)
-                        .param("value", value)
-        ).andExpect(status().isOk())
-                .andReturn();
-
-        String content = result.getResponse().getContentAsString();
-
-        String jsonExpectedContent = "{\"success\":\"true\"}";
-        Assert.assertEquals(jsonExpectedContent, content);
-        Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(ApplicationResource.class));
-
-    }
-
-    @Test
-    public void testSaveFormElementApplicationInvalidStartDateMMDDYYYY() throws Exception {
-        String value = "10-25-2025";
-        String questionId = "application_details-startdate";
-        String fieldName = "application.startDate";
-
-        mockMvc.perform(
-                post("/application/1/form/123/saveFormElement")
-                        .param("formInputId", questionId)
-                        .param("fieldName", fieldName)
-                        .param("value", value)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-
-        ).andExpect(status().isOk())
-                .andExpect(content().json("{\"success\":\"false\"}"));
-    }
-
-    @Test
-    public void testSaveFormElementApplicationStartDateValidDay() throws Exception {
-        String value = "25";
-        String questionId = "application_details-startdate_day";
-        String fieldName = "application.startDate.dayOfMonth";
-
-        MvcResult result = mockMvc.perform(
-                post("/application/1/form/123/saveFormElement")
-                        .param("formInputId", questionId)
-                        .param("fieldName", fieldName)
-                        .param("value", value)
-        ).andExpect(status().isOk())
-                .andReturn();
-
-        String content = result.getResponse().getContentAsString();
-
-        String jsonExpectedContent = "{\"success\":\"true\"}";
-        assertEquals(jsonExpectedContent, content);
-        Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(ApplicationResource.class));
-
-    }
-
-    //TODO: Change this to AutosaveElementException
-    @Test
-    public void testSaveFormElementApplicationAttributeInvalidDay() throws Exception {
-        String questionId = "application_details-startdate_day";
-        String fieldName = "application.startDate.dayOfMonth";
-        String value = "35";
-
-        mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
-                        .param("formInputId", questionId)
-                        .param("fieldName", fieldName)
-                        .param("value", value)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isOk())
-                .andExpect(content().json("{\"success\":\"false\"}"));
-    }
-
-    @Test
-    public void testSaveFormElementApplicationAttributeInvalidMonth() throws Exception {
-        String questionId = "application_details-startdate_month";
-        String fieldName = "application.startDate.monthValue";
-        String value = "13";
-
-        MvcResult result = mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
-                        .param("formInputId", questionId)
-                        .param("fieldName", fieldName)
-                        .param("value", value)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isOk()).andReturn();
-
-        String content = result.getResponse().getContentAsString();
-        log.info("Response : " + content);
-
-        String jsonExpectedContent = "{\"success\":\"false\"}";
-        assertEquals(jsonExpectedContent, content);
-    }
-
-    @Test
-    public void testSaveFormElementApplicationAttributeInvalidYear() throws Exception {
-
-        String questionId = "application_details-startdate_year";
-        String fieldName = "application.startDate.year";
-        String value = "2015";
-
-        when(sectionService.getById(anyLong())).thenReturn(null);
-
-        mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
-                        .param("formInputId", questionId)
-                        .param("fieldName", fieldName)
-                        .param("value", value)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isOk())
-                .andExpect(content().json("{\"success\":\"true\"}"));
-    }
-
-    @Test
-    public void testSaveFormElementApplicationResubmission() throws Exception {
-        String value = "true";
-        String questionId = "application_details-resubmission";
-        String fieldName = "application.resubmission";
-
-        MvcResult result = mockMvc.perform(
-                post("/application/1/form/123/saveFormElement")
-                        .param("formInputId", questionId)
-                        .param("fieldName", fieldName)
-                        .param("value", value)
-        ).andExpect(status().isOk())
-                .andReturn();
-
-        String content = result.getResponse().getContentAsString();
-
-        String jsonExpectedContent = "{\"success\":\"true\"}";
-        Assert.assertEquals(jsonExpectedContent, content);
-        Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(ApplicationResource.class));
-
-    }
-
-    @Test
-    public void testSaveFormElementApplicationPreviousApplicationNumber() throws Exception {
-        String value = "999";
-        String questionId = "application_details-previousapplicationnumber";
-        String fieldName = "application.previousApplicationNumber";
-
-        MvcResult result = mockMvc.perform(
-                post("/application/1/form/123/saveFormElement")
-                        .param("formInputId", questionId)
-                        .param("fieldName", fieldName)
-                        .param("value", value)
-        ).andExpect(status().isOk())
-                .andReturn();
-
-        String content = result.getResponse().getContentAsString();
-
-        String jsonExpectedContent = "{\"success\":\"true\"}";
-        Assert.assertEquals(jsonExpectedContent, content);
-        Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(ApplicationResource.class));
-
-    }
-
-    @Test
-    public void testSaveFormElementApplicationPreviousApplicationTitle() throws Exception {
-        String value = "test";
-        String questionId = "application_details-previousapplicationtitle";
-        String fieldName = "application.previousApplicationTitle";
-
-        MvcResult result = mockMvc.perform(
-                post("/application/1/form/123/saveFormElement")
-                        .param("formInputId", questionId)
-                        .param("fieldName", fieldName)
-                        .param("value", value)
-        ).andExpect(status().isOk())
-                .andReturn();
-
-        String content = result.getResponse().getContentAsString();
-
-        String jsonExpectedContent = "{\"success\":\"true\"}";
-        Assert.assertEquals(jsonExpectedContent, content);
-        Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(ApplicationResource.class));
-
-    }
 
     @Test
     public void testDeleteCost() throws Exception {
@@ -1199,8 +838,8 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE)).thenReturn(sectionResourceBuilder.withType(SectionType.FINANCE).build(1));
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(ApplicationQuestionController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
-                        .param(ApplicationQuestionController.TERMS_AGREED_KEY, "1")
+                        .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+                        .param(TERMS_AGREED_KEY, "1")
         ).andExpect(status().is3xxRedirection());
 
         verify(overheadFileSaver, times(1)).handleOverheadFileRequest(isA(HttpServletRequest.class));
@@ -1214,7 +853,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
 
         ValidationMessages validationMessages = new ValidationMessages();
-        validationMessages.addError(new org.innovateuk.ifs.commons.error.Error("save_application_error", HttpStatus.FORBIDDEN));
+        validationMessages.addError(new Error("save_application_error", HttpStatus.FORBIDDEN));
         when(overheadFileSaver.isOverheadFileRequest(any())).thenReturn(true);
         when(financeHandler.getFinanceFormHandler(any()).update(any(), any(), any(), any())).thenReturn(validationMessages);
         when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());

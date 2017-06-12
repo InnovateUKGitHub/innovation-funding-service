@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.LongNode;
@@ -7,6 +8,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
+import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.OrganisationService;
@@ -15,13 +17,21 @@ import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.exception.AutosaveElementException;
 import org.innovateuk.ifs.exception.BigDecimalNumberFormatException;
 import org.innovateuk.ifs.exception.IntegerNumberFormatException;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.util.AjaxResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
@@ -31,6 +41,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
@@ -61,6 +73,12 @@ public class ApplicationAjaxController {
 
     @Autowired
     private ApplicationService applicationService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private FinanceRowRestService financeRowRestService;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -254,5 +272,42 @@ public class ApplicationAjaxController {
         public Long getFieldId() {
             return fieldId;
         }
+    }
+
+    @PreAuthorize("hasAuthority('applicant')")
+    @GetMapping(value = "/add_cost/{" + QUESTION_ID + "}")
+    public String addCostRow(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
+                             BindingResult bindingResult,
+                             Model model,
+                             @PathVariable(APPLICATION_ID) final Long applicationId,
+                             @PathVariable(QUESTION_ID) final Long questionId,
+                             UserResource user) {
+        FinanceRowItem costItem = addCost(applicationId, questionId, user);
+        FinanceRowType costType = costItem.getCostType();
+        Long organisationId = userService.getUserOrganisationId(user.getId(), applicationId);
+
+        Set<Long> markedAsComplete = new TreeSet<>();
+        model.addAttribute("markedAsComplete", markedAsComplete);
+        Long organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
+
+        financeHandler.getFinanceModelManager(organisationType).addCost(model, costItem, applicationId, organisationId, user.getId(), questionId, costType);
+
+        form.setBindingResult(bindingResult);
+        return String.format("finance/finance :: %s_row(viewmode='edit')", costType.getType());
+    }
+
+    @PreAuthorize("hasAuthority('applicant')")
+    @GetMapping("/remove_cost/{costId}")
+    public @ResponseBody
+    String removeCostRow(@PathVariable("costId") final Long costId) throws JsonProcessingException {
+        financeRowRestService.delete(costId).getSuccessObjectOrThrowException();
+        AjaxResult ajaxResult = new AjaxResult(HttpStatus.OK, "true");
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(ajaxResult);
+    }
+
+    private FinanceRowItem addCost(Long applicationId, Long questionId, UserResource user) {
+        Long organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
+        return financeHandler.getFinanceFormHandler(organisationType).addCostWithoutPersisting(applicationId, user.getId(), questionId);
     }
 }
