@@ -5,21 +5,19 @@
     </h2>
 
     <div class="grid-row">
-        <div class="column-third" th:id="applicationTeamOrganisationRegisteredAddress + ${orgId}">
+        <div th:if="${organisation.registeredAddress != null && organisation.registeredAddress.getAddress() != null}"
+             class="column-third" th:id="applicationTeamOrganisationRegisteredAddress + ${orgId}">
             <h3 class="heading-small">Registered Address</h3>
-            <p th:if="organisation.registeredAddress">
-                <th:block th:each="addressLine : ${organisation.registeredAddress.getAddress().getNonEmptyLines()}">
-                    <span th:text="${addressLine}">An address line</span><br />
-                </th:block>
-            </p>
+            <th:block th:each="addressLine : ${organisation.registeredAddress.getAddress().getNonEmptyLines()}">
+                <span th:text="${addressLine}">An address line</span><br />
+            </th:block>
         </div>
-        <div class="column-third" th:id="applicationTeamOrganisationOperatingAddress + ${orgId}">
+        <div th:if="${organisation.operatingAddress != null && organisation.operatingAddress.getAddress() != null}"
+             class="column-third" th:id="applicationTeamOrganisationOperatingAddress + ${orgId}">
             <h3 class="heading-small">Operating Address</h3>
-            <p th:if="organisation.operatingAddress">
-                <th:block th:each="addressLine : ${organisation.operatingAddress.getAddress().getNonEmptyLines()}">
-                    <span th:text="${addressLine}">An address line</span><br />
-                </th:block>
-            </p>
+            <th:block th:each="addressLine : ${organisation.operatingAddress.getAddress().getNonEmptyLines()}">
+                <span th:text="${addressLine}">An address line</span><br />
+            </th:block>
         </div>
     </div>
 
