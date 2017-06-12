@@ -3,7 +3,7 @@ Documentation     INFUND-39: As an applicant and I am on the application overvie
 ...
 ...               INFUND-1072: As an Applicant I want to see the Application overview page redesigned so that they meet the agreed style
 Suite Setup       Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    Close browser and delete emails
 Force Tags        Email    Applicant
 Resource          ../../../resources/defaultResources.robot
 

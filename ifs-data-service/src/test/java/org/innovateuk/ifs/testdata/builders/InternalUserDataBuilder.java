@@ -6,6 +6,9 @@ import org.innovateuk.ifs.user.domain.ProjectFinanceEmail;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.UserStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,6 +21,8 @@ import static java.util.Collections.emptyList;
  */
 public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserData, InternalUserDataBuilder> {
 
+    private static final Logger LOG = LoggerFactory.getLogger(InternalUserDataBuilder.class);
+
     @Override
     public InternalUserDataBuilder registerUser(String firstName, String lastName, String emailAddress, String organisationName, String phoneNumber) {
         return with(data -> {
@@ -28,12 +33,13 @@ public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserDat
     }
 
     @Override
-    public InternalUserDataBuilder createUserDirectly(String firstName, String lastName, String emailAddress, String organisationName, String phoneNumber) {
+    public InternalUserDataBuilder createUserDirectly(String firstName, String lastName, String emailAddress, String organisationName, String phoneNumber, boolean emailVerified){
         return with(data -> {
 
             User user = userRepository.save(new User(firstName, lastName, emailAddress, null, UUID.randomUUID().toString()));
             Role role = roleRepository.findOneByName(data.getRole().getName());
             user.getRoles().add(role);
+            user.setStatus(emailVerified ? UserStatus.ACTIVE : UserStatus.INACTIVE);
             userRepository.save(user);
         });
     }
@@ -85,5 +91,11 @@ public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserDat
 
             data.setEmailAddress(emailAddress);
         });
+    }
+
+    @Override
+    protected void postProcess(int index, InternalUserData instance) {
+        super.postProcess(index, instance);
+        LOG.info("Created Internal User '{}'", instance.getEmailAddress());
     }
 }

@@ -28,6 +28,8 @@ public class PublicContentResource {
 
     private String summary;
 
+    private Boolean inviteOnly;
+
     private FundingType fundingType;
 
     private List<PublicContentSectionResource> contentSections;
@@ -130,6 +132,14 @@ public class PublicContentResource {
 
     public void setContentEvents(List<ContentEventResource> contentEvents) {
         this.contentEvents = contentEvents;
+    }
+
+    public Boolean getInviteOnly() {
+        return inviteOnly;
+    }
+
+    public void setInviteOnly(Boolean inviteOnly) {
+        this.inviteOnly = inviteOnly;
     }
 
     @Override

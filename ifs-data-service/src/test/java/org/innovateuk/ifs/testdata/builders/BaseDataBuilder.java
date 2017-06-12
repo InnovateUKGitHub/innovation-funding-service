@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.testdata.builders;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.affiliation.transactional.AffiliationService;
 import org.innovateuk.ifs.application.domain.Application;
@@ -8,7 +11,6 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.repository.QuestionRepository;
 import org.innovateuk.ifs.application.repository.SectionRepository;
 import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.transactional.*;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
@@ -24,7 +26,6 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionFunderRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.competition.transactional.MilestoneService;
@@ -33,6 +34,7 @@ import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
+import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
@@ -44,14 +46,15 @@ import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.profile.transactional.ProfileService;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
-import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
-import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.project.monitoringofficer.transactional.MonitoringOfficerService;
+import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.publiccontent.repository.ContentEventRepository;
 import org.innovateuk.ifs.publiccontent.repository.ContentGroupRepository;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
+import org.innovateuk.ifs.publiccontent.transactional.ContentGroupService;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.transactional.TokenService;
@@ -62,10 +65,13 @@ import org.innovateuk.ifs.user.repository.*;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.transactional.*;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -73,7 +79,8 @@ import java.util.function.Supplier;
 import static org.innovateuk.ifs.commons.BaseIntegrationTest.setLoggedInUser;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
+import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -83,7 +90,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
 
     public static final String COMP_ADMIN_EMAIL = "john.doe@innovateuk.test";
-    public static final String INNOVATE_UK_ORG_NAME = "Innovate UK";
+    public static final String IFS_SYSTEM_MAINTENANCE_USER_EMAIL = "ifs_system_maintenance_user@innovateuk.org";
+    public static final String PROJECT_FINANCE_EMAIL = "lee.bowman@innovateuk.test";
 
     protected ServiceLocator serviceLocator;
     protected BaseUserService baseUserService;
@@ -98,8 +106,10 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected PublicContentService publicContentService;
     protected PublicContentRepository publicContentRepository;
     protected ContentGroupRepository contentGroupRepository;
+    protected ContentGroupService contentGroupService;
     protected ContentEventRepository contentEventRepository;
     protected OrganisationService organisationService;
+    protected OrganisationTypeService organisationTypeService;
     protected UserRepository userRepository;
     protected ProfileRepository profileRepository;
     protected RegistrationService registrationService;
@@ -154,108 +164,134 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected AssessorFormInputResponseService assessorFormInputResponseService;
     protected IneligibleOutcomeMapper ineligibleOutcomeMapper;
 
-    public BaseDataBuilder(List<BiConsumer<Integer, T>> newActions, ServiceLocator serviceLocator) {
-        super(newActions);
-        this.serviceLocator = serviceLocator;
-        this.userService = serviceLocator.getBean(UserService.class);
-        this.competitionService = serviceLocator.getBean(CompetitionService.class);
-        this.competitionTypeRepository = serviceLocator.getBean(CompetitionTypeRepository.class);
-        this.categoryRepository = serviceLocator.getBean(CategoryRepository.class);
-        this.competitionSetupService = serviceLocator.getBean(CompetitionSetupService.class);
-        this.organisationService = serviceLocator.getBean(OrganisationService.class);
-        this.userRepository = serviceLocator.getBean(UserRepository.class);
-        this.registrationService = serviceLocator.getBean(RegistrationService.class);
-        this.roleRepository = serviceLocator.getBean(RoleRepository.class);
-        this.organisationRepository = serviceLocator.getBean(OrganisationRepository.class);
-        this.tokenRepository = serviceLocator.getBean(TokenRepository.class);
-        this.tokenService = serviceLocator.getBean(TokenService.class);
-        this.inviteService = serviceLocator.getBean(InviteService.class);
-        this.compAdminEmailRepository = serviceLocator.getBean(CompAdminEmailRepository.class);
-        this.milestoneService = serviceLocator.getBean(MilestoneService.class);
-        this.applicationService = serviceLocator.getBean(ApplicationService.class);
-        this.questionService = serviceLocator.getBean(QuestionService.class);
-        this.formInputService = serviceLocator.getBean(FormInputService.class);
-        this.formInputResponseRepository = serviceLocator.getBean(FormInputResponseRepository.class);
-        this.applicationRepository = serviceLocator.getBean(ApplicationRepository.class);
-        this.applicationFundingService = serviceLocator.getBean(ApplicationFundingService.class);
-        this.projectService = serviceLocator.getBean(ProjectService.class);
-        this.monitoringOfficerService = serviceLocator.getBean(MonitoringOfficerService.class);
-        this.financeRowService = serviceLocator.getBean(FinanceRowService.class);
-        this.sectionService = serviceLocator.getBean(SectionService.class);
-        this.projectFinanceEmailRepository = serviceLocator.getBean(ProjectFinanceEmailRepository.class);
-        this.usersRolesService = serviceLocator.getBean(UsersRolesService.class);
-        this.applicationInviteRepository = serviceLocator.getBean(ApplicationInviteRepository.class);
-        this.ethnicityRepository = serviceLocator.getBean(EthnicityRepository.class);
-        this.roleService = serviceLocator.getBean(RoleService.class);
-        this.competitionInviteRepository = serviceLocator.getBean(CompetitionInviteRepository.class);
-        this.competitionRepository = serviceLocator.getBean(CompetitionRepository.class);
-        this.assessorService = serviceLocator.getBean(AssessorService.class);
-        this.competitionParticipantRepository = serviceLocator.getBean(CompetitionParticipantRepository.class);
-        this.competitionInviteService = serviceLocator.getBean(CompetitionInviteService.class);
-        this.testService = serviceLocator.getBean(TestService.class);
-        this.assessmentRepository = serviceLocator.getBean(AssessmentRepository.class);
-        this.assessmentService = serviceLocator.getBean(AssessmentService.class);
-        this.assessmentWorkflowHandler = serviceLocator.getBean(AssessmentWorkflowHandler.class);
-        this.processRoleRepository = serviceLocator.getBean(ProcessRoleRepository.class);
-        this.activityStateRepository = serviceLocator.getBean(ActivityStateRepository.class);
-        this.sectionRepository = serviceLocator.getBean(SectionRepository.class);
-        this.questionRepository = serviceLocator.getBean(QuestionRepository.class);
-        this.formInputRepository = serviceLocator.getBean(FormInputRepository.class);
-        this.fileEntryRepository = serviceLocator.getBean(FileEntryRepository.class);
-        this.applicationFinanceRepository = serviceLocator.getBean(ApplicationFinanceRepository.class);
-        this.projectUserRepository = serviceLocator.getBean(ProjectUserRepository.class);
-        this.bankDetailsService = serviceLocator.getBean(BankDetailsService.class);
-        this.spendProfileService = serviceLocator.getBean(SpendProfileService.class);
-        this.financeCheckService = serviceLocator.getBean(FinanceCheckService.class);
-        this.competitionFunderRepository = serviceLocator.getBean(CompetitionFunderRepository.class);
-        this.innovationAreaRepository = serviceLocator.getBean(InnovationAreaRepository.class);
-        this.innovationSectorRepository = serviceLocator.getBean(InnovationSectorRepository.class);
-        this.researchCategoryRepository = serviceLocator.getBean(ResearchCategoryRepository.class);
-        this.rejectionReasonService = serviceLocator.getBean(RejectionReasonService.class);
-        this.profileService = serviceLocator.getBean(ProfileService.class);
-        this.affiliationService = serviceLocator.getBean(AffiliationService.class);
-        this.baseUserService = serviceLocator.getBean(BaseUserService.class);
-        this.profileRepository = serviceLocator.getBean(ProfileRepository.class);
-        this.publicContentService = serviceLocator.getBean(PublicContentService.class);
-        this.publicContentRepository = serviceLocator.getBean(PublicContentRepository.class);
-        this.contentEventRepository = serviceLocator.getBean(ContentEventRepository.class);
-        this.contentGroupRepository = serviceLocator.getBean(ContentGroupRepository.class);
-        this.assessorFormInputResponseService = serviceLocator.getBean(AssessorFormInputResponseService.class);
-        this.applicationInnovationAreaService = serviceLocator.getBean(ApplicationInnovationAreaService.class);
-        this.ineligibleOutcomeMapper = serviceLocator.getBean(IneligibleOutcomeMapper.class);
-    }
+    private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
 
-    @Override
-    public S with(Consumer<T> amendFunction) {
-        return super.with(data -> testService.doWithinTransaction(() -> amendFunction.accept(data)));
+    private static Cache<Long, List<FormInputResource>> formInputsByQuestionId = CacheBuilder.newBuilder().build();
+
+    private static Cache<String, UserResource> usersByEmailAddress = CacheBuilder.newBuilder().build();
+
+    private static Cache<String, UserResource> usersByEmailAddressInternal = CacheBuilder.newBuilder().build();
+
+    private static Cache<Long, UserResource> usersById = CacheBuilder.newBuilder().build();
+
+    private static Cache<Pair<Long, String>, ProcessRoleResource> applicantsByApplicationIdAndEmail = CacheBuilder.newBuilder().build();
+
+    private static Cache<Long, ProcessRoleResource> leadApplicantsByApplicationId = CacheBuilder.newBuilder().build();
+
+    private static Cache<String, OrganisationResource> organisationsByName = CacheBuilder.newBuilder().build();
+
+    public BaseDataBuilder(List<BiConsumer<Integer, T>> newActions, ServiceLocator serviceLocator) {
+
+        super(newActions);
+
+        this.serviceLocator = serviceLocator;
+        userService = serviceLocator.getBean(UserService.class);
+        competitionService = serviceLocator.getBean(CompetitionService.class);
+        competitionTypeRepository = serviceLocator.getBean(CompetitionTypeRepository.class);
+        categoryRepository = serviceLocator.getBean(CategoryRepository.class);
+        competitionSetupService = serviceLocator.getBean(CompetitionSetupService.class);
+        organisationService = serviceLocator.getBean(OrganisationService.class);
+        organisationTypeService = serviceLocator.getBean(OrganisationTypeService.class);
+        userRepository = serviceLocator.getBean(UserRepository.class);
+        registrationService = serviceLocator.getBean(RegistrationService.class);
+        roleRepository = serviceLocator.getBean(RoleRepository.class);
+        organisationRepository = serviceLocator.getBean(OrganisationRepository.class);
+        tokenRepository = serviceLocator.getBean(TokenRepository.class);
+        tokenService = serviceLocator.getBean(TokenService.class);
+        inviteService = serviceLocator.getBean(InviteService.class);
+        compAdminEmailRepository = serviceLocator.getBean(CompAdminEmailRepository.class);
+        milestoneService = serviceLocator.getBean(MilestoneService.class);
+        applicationService = serviceLocator.getBean(ApplicationService.class);
+        questionService = serviceLocator.getBean(QuestionService.class);
+        formInputService = serviceLocator.getBean(FormInputService.class);
+        formInputResponseRepository = serviceLocator.getBean(FormInputResponseRepository.class);
+        applicationRepository = serviceLocator.getBean(ApplicationRepository.class);
+        applicationFundingService = serviceLocator.getBean(ApplicationFundingService.class);
+        projectService = serviceLocator.getBean(ProjectService.class);
+        projectDetailsService = serviceLocator.getBean(ProjectDetailsService.class);
+        monitoringOfficerService = serviceLocator.getBean(MonitoringOfficerService.class);
+        financeRowService = serviceLocator.getBean(FinanceRowService.class);
+        sectionService = serviceLocator.getBean(SectionService.class);
+        projectFinanceEmailRepository = serviceLocator.getBean(ProjectFinanceEmailRepository.class);
+        usersRolesService = serviceLocator.getBean(UsersRolesService.class);
+        applicationInviteRepository = serviceLocator.getBean(ApplicationInviteRepository.class);
+        ethnicityRepository = serviceLocator.getBean(EthnicityRepository.class);
+        roleService = serviceLocator.getBean(RoleService.class);
+        competitionInviteRepository = serviceLocator.getBean(CompetitionInviteRepository.class);
+        competitionRepository = serviceLocator.getBean(CompetitionRepository.class);
+        assessorService = serviceLocator.getBean(AssessorService.class);
+        competitionParticipantRepository = serviceLocator.getBean(CompetitionParticipantRepository.class);
+        competitionInviteService = serviceLocator.getBean(CompetitionInviteService.class);
+        testService = serviceLocator.getBean(TestService.class);
+        assessmentRepository = serviceLocator.getBean(AssessmentRepository.class);
+        assessmentService = serviceLocator.getBean(AssessmentService.class);
+        assessmentWorkflowHandler = serviceLocator.getBean(AssessmentWorkflowHandler.class);
+        processRoleRepository = serviceLocator.getBean(ProcessRoleRepository.class);
+        activityStateRepository = serviceLocator.getBean(ActivityStateRepository.class);
+        sectionRepository = serviceLocator.getBean(SectionRepository.class);
+        questionRepository = serviceLocator.getBean(QuestionRepository.class);
+        formInputRepository = serviceLocator.getBean(FormInputRepository.class);
+        fileEntryRepository = serviceLocator.getBean(FileEntryRepository.class);
+        applicationFinanceRepository = serviceLocator.getBean(ApplicationFinanceRepository.class);
+        projectUserRepository = serviceLocator.getBean(ProjectUserRepository.class);
+        bankDetailsService = serviceLocator.getBean(BankDetailsService.class);
+        spendProfileService = serviceLocator.getBean(SpendProfileService.class);
+        financeCheckService = serviceLocator.getBean(FinanceCheckService.class);
+        competitionFunderRepository = serviceLocator.getBean(CompetitionFunderRepository.class);
+        innovationAreaRepository = serviceLocator.getBean(InnovationAreaRepository.class);
+        innovationSectorRepository = serviceLocator.getBean(InnovationSectorRepository.class);
+        researchCategoryRepository = serviceLocator.getBean(ResearchCategoryRepository.class);
+        rejectionReasonService = serviceLocator.getBean(RejectionReasonService.class);
+        profileService = serviceLocator.getBean(ProfileService.class);
+        affiliationService = serviceLocator.getBean(AffiliationService.class);
+        baseUserService = serviceLocator.getBean(BaseUserService.class);
+        profileRepository = serviceLocator.getBean(ProfileRepository.class);
+        publicContentService = serviceLocator.getBean(PublicContentService.class);
+        publicContentRepository = serviceLocator.getBean(PublicContentRepository.class);
+        contentEventRepository = serviceLocator.getBean(ContentEventRepository.class);
+        contentGroupRepository = serviceLocator.getBean(ContentGroupRepository.class);
+        contentGroupService = serviceLocator.getBean(ContentGroupService.class);
+        assessorFormInputResponseService = serviceLocator.getBean(AssessorFormInputResponseService.class);
+        applicationInnovationAreaService = serviceLocator.getBean(ApplicationInnovationAreaService.class);
+        ineligibleOutcomeMapper = serviceLocator.getBean(IneligibleOutcomeMapper.class);
     }
 
     protected UserResource compAdmin() {
-        return retrieveUserByEmail(COMP_ADMIN_EMAIL);
+        return retrieveUserByEmailInternal(COMP_ADMIN_EMAIL, UserRoleType.COMP_ADMIN);
+    }
+
+    protected UserResource systemRegistrar() {
+        return retrieveUserByEmailInternal(IFS_SYSTEM_MAINTENANCE_USER_EMAIL, UserRoleType.SYSTEM_REGISTRATION_USER);
+    }
+
+    protected UserResource projectFinanceUser() {
+        return retrieveUserByEmail(PROJECT_FINANCE_EMAIL);
     }
 
     protected UserResource retrieveUserByEmail(String emailAddress) {
-        return doAs(systemRegistrar(), () -> userService.findByEmail(emailAddress).getSuccessObjectOrThrowException());
+        return fromCache(emailAddress, usersByEmailAddress, () ->
+                doAs(systemRegistrar(), () -> userService.findByEmail(emailAddress).getSuccessObjectOrThrowException()));
     }
 
     protected UserResource retrieveUserById(Long id) {
-        return doAs(systemRegistrar(), () -> baseUserService.getUserById(id).getSuccessObjectOrThrowException());
+        return fromCache(id, usersById, () -> doAs(systemRegistrar(), () -> baseUserService.getUserById(id).getSuccessObjectOrThrowException()));
     }
 
     protected ProcessRoleResource retrieveApplicantByEmail(String emailAddress, Long applicationId) {
-        return doAs(systemRegistrar(), () -> {
+        return fromCache(Pair.of(applicationId, emailAddress), applicantsByApplicationIdAndEmail, () -> {
             UserResource user = retrieveUserByEmail(emailAddress);
-            return doAs(user, () -> {
-                return usersRolesService.getProcessRoleByUserIdAndApplicationId(user.getId(), applicationId).
-                        getSuccessObjectOrThrowException();
-            });
+            return doAs(user, () ->
+                    usersRolesService.getProcessRoleByUserIdAndApplicationId(user.getId(), applicationId).
+                            getSuccessObjectOrThrowException());
         });
     }
 
     protected ProcessRoleResource retrieveLeadApplicant(Long applicationId) {
-        return doAs(compAdmin(), () ->
+
+        return fromCache(applicationId, leadApplicantsByApplicationId, () ->
+                doAs(compAdmin(), () ->
                 simpleFindFirst(usersRolesService.getProcessRolesByApplicationId(applicationId).
-                        getSuccessObjectOrThrowException(), pr -> pr.getRoleName().equals(LEADAPPLICANT.getName())).get());
+                        getSuccessObjectOrThrowException(), pr -> pr.getRoleName().equals(LEADAPPLICANT.getName())).get()));
     }
 
     protected Organisation retrieveOrganisationByName(String organisationName) {
@@ -266,52 +302,40 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         return competitionRepository.findByName(competitionName).get(0);
     }
 
-    protected Organisation retrieveOrganisationById(Long id) {
-        return organisationRepository.findOne(id);
-    }
-
     protected QuestionResource retrieveQuestionByCompetitionAndName(String questionName, Long competitionId) {
         return simpleFindFirst(retrieveQuestionsByCompetitionId(competitionId), q -> questionName.equals(q.getName())).get();
     }
 
     protected List<QuestionResource> retrieveQuestionsByCompetitionId(Long competitionId) {
-        return doAs(compAdmin(), () -> questionService.findByCompetition(competitionId).getSuccessObjectOrThrowException());
+        return fromCache(competitionId, questionsByCompetitionId, () ->
+                questionService.findByCompetition(competitionId).getSuccessObjectOrThrowException());
     }
 
-    protected QuestionResource retrieveQuestionByCompetitionSectionAndName(String questionName, String sectionName, CompetitionResource competition) {
-        return doAs(compAdmin(), () -> {
-            List<SectionResource> sections = sectionService.getByCompetitionId(competition.getId()).getSuccessObjectOrThrowException();
-            SectionResource section = simpleFindFirst(sections, s -> sectionName.equals(s.getName())).get();
-
-            List<QuestionResource> questions = questionService.findByCompetition(competition.getId()).getSuccessObjectOrThrowException();
-            return simpleFindFirst(questions, q -> questionName.equals(q.getName()) && section.getId().equals(q.getSection())).get();
-        });
+    protected List<FormInputResource> retrieveFormInputsByQuestionId(QuestionResource question) {
+        return fromCache(question.getId(), formInputsByQuestionId, () ->
+                formInputService.findByQuestionId(question.getId()).getSuccessObjectOrThrowException());
     }
 
     protected OrganisationResource retrieveOrganisationResourceByName(String organisationName) {
-        return doAs(systemRegistrar(), () -> {
+        return fromCache(organisationName, organisationsByName, () -> doAs(systemRegistrar(), () -> {
             Organisation organisation = retrieveOrganisationByName(organisationName);
             return organisationService.findById(organisation.getId()).getSuccessObjectOrThrowException();
-        });
+        }));
     }
 
     protected ProcessRole retrieveAssessorByApplicationNameAndUser(String applicationName, UserResource user) {
-        Application application = applicationRepository.findByName(applicationName).get(0);
 
-        return processRoleRepository.findByUserAndApplicationId(userRepository.findOne(user.getId()),
-                application.getId())
-                .stream()
-                .filter(x -> x.getRole().getName().equals(ASSESSOR.getName()))
-                .findFirst()
-                .get();
-    }
+        return testService.doWithinTransaction(() -> {
 
-    protected UserResource systemRegistrar() {
-        User user = userRepository.findByEmail("ifs_system_maintenance_user@innovateuk.org").get();
-        return newUserResource().
-                withRolesGlobal(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build(1)).
-                withId(user.getId()).
-                build();
+            Application application = applicationRepository.findByName(applicationName).get(0);
+
+            return processRoleRepository.findByUserAndApplicationId(userRepository.findOne(user.getId()),
+                    application.getId())
+                    .stream()
+                    .filter(x -> x.getRole().getName().equals(ASSESSOR.getName()))
+                    .findFirst()
+                    .get();
+        });
     }
 
     protected <T> T doAs(UserResource user, Supplier<T> action) {
@@ -336,4 +360,25 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         }
     }
 
+    protected S asCompAdmin(Consumer<T> action) {
+        return with(data -> doAs(compAdmin(), () -> action.accept(data)));
+    }
+
+    protected UserResource retrieveUserByEmailInternal(String email, UserRoleType role) {
+        return fromCache(email, usersByEmailAddressInternal, () -> {
+            User user = userRepository.findByEmail(email).get();
+            return newUserResource().
+                    withRolesGlobal(newRoleResource().withType(role).build(1)).
+                    withId(user.getId()).
+                    build();
+        });
+    }
+
+    protected<K, V> V fromCache(K key, Cache<K, V> cache, Callable<V> loadingFunction) {
+        try {
+            return cache.get(key, loadingFunction);
+        } catch (ExecutionException e) {
+            throw new RuntimeException("Exception encountered whilst reading from Cache", e);
+        }
+    }
 }

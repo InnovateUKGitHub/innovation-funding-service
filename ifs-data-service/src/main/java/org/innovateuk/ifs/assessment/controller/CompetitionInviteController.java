@@ -25,9 +25,14 @@ public class CompetitionInviteController {
     @Autowired
     private CompetitionInviteService competitionInviteService;
 
-    @GetMapping("/getCreated/{inviteId}")
-    public RestResult<AssessorInviteToSendResource> getCreatedInvite(@PathVariable long inviteId) {
-        return competitionInviteService.getCreatedInvite(inviteId).toGetResponse();
+    @GetMapping("/getAllInvitesToSend/{competitionId}")
+    public RestResult<AssessorInvitesToSendResource> getAllInvitesToSend(@PathVariable long competitionId) {
+        return competitionInviteService.getAllInvitesToSend(competitionId).toGetResponse();
+    }
+
+    @GetMapping("/getInviteToSend/{inviteId}")
+    public RestResult<AssessorInvitesToSendResource> getInviteToSend(@PathVariable long inviteId) {
+        return competitionInviteService.getInviteToSend(inviteId).toGetResponse();
     }
 
     @GetMapping("/getInvite/{inviteHash}")
@@ -106,12 +111,23 @@ public class CompetitionInviteController {
     }
 
     @DeleteMapping("/deleteInvite")
-    public RestResult<Void> deleteInvite(@RequestParam String email, @RequestParam Long competitionId) {
+    public RestResult<Void> deleteInvite(@RequestParam String email, @RequestParam long competitionId) {
         return competitionInviteService.deleteInvite(email, competitionId).toDeleteResponse();
     }
 
-    @PostMapping("/sendInvite/{inviteId}")
-    public RestResult<Void> sendInvite(@PathVariable long inviteId, @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
-        return competitionInviteService.sendInvite(inviteId, assessorInviteSendResource).toPostWithBodyResponse();
+    @DeleteMapping("/deleteAllInvites")
+    public RestResult<Void> deleteAllInvites(@RequestParam long competitionId) {
+        return competitionInviteService.deleteAllInvites(competitionId).toDeleteResponse();
+    }
+
+    @PostMapping("/sendAllInvites/{competitionId}")
+    public RestResult<Void> sendAllInvites(@PathVariable long competitionId,
+                                           @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
+        return competitionInviteService.sendAllInvites(competitionId, assessorInviteSendResource).toPostResponse();
+    }
+
+    @PostMapping("/resendInvite/{inviteId}")
+    public RestResult<Void> resendInvite(@PathVariable long inviteId, @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
+        return competitionInviteService.resendInvite(inviteId, assessorInviteSendResource).toPostWithBodyResponse();
     }
 }

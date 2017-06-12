@@ -4,7 +4,7 @@ Documentation     INFUND-3715 - As an Assessor I need to declare any conflicts o
 ...               INFUND-5432 As an assessor I want to receive an alert to complete my profile when I log into my dashboard so...
 ...
 ...               INFUND-7060 As an assessor I can view my declaration of interest page so...
-Suite Setup       guest user log-in    ${test_mailbox_one}+jeremy.alufson@gmail.com    Passw0rd
+Suite Setup       guest user log-in    &{existing_assessor1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
@@ -101,7 +101,7 @@ the user correctly fills out the role, principle employer and accurate fields
     the user enters text to a text field    id=familyAffiliations0.organisation    Innovate
     the user enters text to a text field    id=familyAffiliations0.position    Director
     the user enters text to a text field    id=familyFinancialInterests    My interests
-    the user moves focus to the element    css=.selection-button-checkbox
+    the user moves focus to the element    css=[for^="accurateAccount"]
     the user selects the checkbox    accurateAccount1
     focus    jQuery=button:contains("Save and return to your declaration of interest")
     Wait For Autosave

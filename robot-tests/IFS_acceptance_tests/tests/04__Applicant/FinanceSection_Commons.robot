@@ -14,7 +14,7 @@ the user should see all the Your-Finances Sections
 the user navigates to Your-finances page
     [Arguments]  ${Application}
     the user navigates to the page  ${DASHBOARD_URL}
-    the user clicks the button/link  link=${Application}
+    the user clicks the button/link  jQuery=.in-progress a:contains("${Application}")
     the user clicks the button/link  link=Your finances
 
 Applicant navigates to the finances of the Robot application
@@ -86,7 +86,7 @@ the applicant completes the application details
 the user marks the finances as complete
     [Arguments]  ${Application}
     the user fills in the project costs     ${Application}
-    the user fills in the organisation information  ${Application}
+    the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
     the user checks Your Funding section     ${Application}
     the user should see all finance subsections complete
     the user clicks the button/link  link=Application overview
@@ -146,7 +146,7 @@ the total overhead costs should reflect rate entered
 the user chooses 20% overheads option
     # overheads option : 20% Labour
     the user clicks the button/link    jQuery=button:contains("Overhead costs")
-    the user clicks the button/link    css=label[data-target="overhead-default-percentage"]
+    the user clicks the button/link    css=[data-target="overhead-default-percentage"] label
     the user clicks the button/link    jQuery=button:contains("Overhead costs")
 
 the user fills in Material
@@ -200,13 +200,27 @@ the user removes prev costs if there are any
     ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  jQuery=table[id="other-costs-table"] tr:contains("Remove")
     Run Keyword If    '${status}' == 'PASS'    the user clicks the button/link  jQuery=table[id="other-costs-table"] tr:contains("Remove")
 
+the user fills the organisation details with Project growth table
+    [Arguments]   ${Application}  ${org_size}
+    the user navigates to Your-finances page                ${Application}
+    the user clicks the button/link                         link=Your organisation
+    the user enters text to a text field                    css=input[name$="month"]    12
+    and the user enters text to a text field                css=input[name$="year"]    2016
+    the user selects the radio button                       financePosition-organisationSize  ${org_size}
+    the user enters text to a text field                    jQuery=td:contains("Annual turnover") + td input   5600
+    the user enters text to a text field                    jQuery=td:contains("Annual profit") + td input    3000
+    the user enters text to a text field                    jQuery=td:contains("Annual export") + td input    4000
+    the user enters text to a text field                    jQuery=td:contains("Research and development spend") + td input    5660
+    the user enters text to a text field                    jQuery=label:contains("employees") + input    0
+    the user clicks the button/link                         jQuery=button:contains("Mark as complete")
+
 the user fills in the organisation information
-    [Arguments]  ${Application}
+    [Arguments]  ${Application}  ${org_size}
     the user navigates to Your-finances page  ${Application}
     the user clicks the button/link    link=Your organisation
     ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  jQuery=button:contains("Edit")
     Run Keyword If    '${status}' == 'PASS'    the user clicks the button/link  jQuery=button:contains("Edit")
-    the user selects the radio button  financePosition-organisationSize  ${SMALL_ORGANISATION_SIZE}
+    the user selects the radio button  financePosition-organisationSize  ${org_size}
     the user enters text to a text field    jQuery=label:contains("Turnover") + input    150
     the user enters text to a text field    jQuery=label:contains("employees") + input    0
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
@@ -250,10 +264,60 @@ the user should see all finance subsections incomplete
 Remove previous rows
     [Arguments]  ${element}
     :FOR    ${i}    IN RANGE  10
-    # The sleep of 200 ms is actually for speed, originally the test used "should not see the element" however that made it wait for 10 seconds on every loop. 
+    # The sleep of 200 ms is actually for speed, originally the test used "should not see the element" however that made it wait for 10 seconds on every loop.
     \  sleep    200ms
     \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    the user should see the element    ${element}
     \  Log    ${status}
     \  Exit For Loop If  '${status}'=='FAIL'
     \  run keyword if  '${status}'=='PASS'  the user clicks the button/link  ${element}
     \  ${i} =  Set Variable  ${i + 1}
+
+Invite a non-existing collaborator
+    [Arguments]   ${email}  ${competition_name}
+    the user should see the element       jQuery=h1:contains("Application overview")
+    the user fills in the inviting steps   ${email}
+    newly invited collaborator can create account and sign in   ${email}  ${competition_name}
+
+the user fills in the inviting steps
+    [Arguments]  ${email}
+    the user clicks the button/link       link=view team members and add collaborators
+    the user clicks the button/link       link=Add partner organisation
+    the user enters text to a text field  css=#organisationName  New Organisation's Name
+    the user enters text to a text field  css=input[id="applicants0.name"]  Partner's name
+    the user enters text to a text field  css=input[id="applicants0.email"]  ${email}
+    the user clicks the button/link       jQuery=button:contains("Add organisation and invite applicants")
+    logout as user
+
+Newly invited collaborator can create account and sign in
+    [Arguments]    ${email}  ${competition_name}
+    the user reads his email and clicks the link   ${email}  Invitation to collaborate in ${competition_name}  You will be joining as part of the organisation  3
+    the user clicks the button/link    jQuery=a:contains("Yes, accept invitation")
+    the user should see the element    jquery=h1:contains("Choose your organisation type")
+    the user completes the new account creation   ${email}
+
+the user completes the new account creation
+    [Arguments]    ${email}
+    the user selects the radio button           organisationType    radio-4
+    the user clicks the button/link             jQuery=button:contains("Continue")
+    the user should see the element             jQuery=span:contains("Create your account")
+    the user enters text to a text field        id=organisationSearchName    innovate
+    the user should see the element             jQuery=a:contains("Back to choose your organisation type")
+    the user clicks the button/link             jQuery=button:contains("Search")
+    wait for autosave
+    the user clicks the button/link             jQuery=a:contains("INNOVATE LTD")
+    the user should see the element             jQuery=h3:contains("Organisation type")
+    the user selects the checkbox               address-same
+    wait for autosave
+    the user clicks the button/link             jQuery=button:contains("Continue")
+    then the user should not see an error in the page
+    the user clicks the button/link             jQuery=.button:contains("Save and continue")
+    the user should be redirected to the correct page    ${SERVER}/registration/register
+    the user fills the create account form       liam  smithson
+    the user should see the text in the page     Please verify your email address
+    the user reads his email and clicks the link   ${email}  Please verify your email address  Once verified you can sign into your account.
+    the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
+    the user clicks the button/link             link=Sign in
+    then the user should see the text in the page    Sign in
+    the user enters text to a text field         jQuery=input[id="username"]  ${email}
+    the user enters text to a text field        jQuery=input[id="password"]  ${correct_password}
+    the user clicks the button/link              jQuery=button:contains("Sign in")

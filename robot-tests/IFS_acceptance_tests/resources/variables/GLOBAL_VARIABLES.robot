@@ -29,6 +29,7 @@ ${EMPIRE_LTD_NAME}    Empire Ltd
 #Competitions and Applications Variables
 ${OPEN_COMPETITION_NAME}    Predicting market trends programme
 ${OPEN_COMPETITION}    ${competition_ids['${OPEN_COMPETITION_NAME}']}
+${OPEN_COMPETITION_MAN}    ${SERVER}/management/competition/${OPEN_COMPETITION}
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}    Aerospace technology investment sector
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}    ${competition_ids['${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}']}
 ${OPEN_COMPETITION_NAME_2}    Home and industrial efficiency programme
@@ -58,7 +59,8 @@ ${FUNDERS_PANEL_APPLICATION_1_TITLE}      Sensing & Control network using the li
 ${FUNDERS_PANEL_APPLICATION_1_NUMBER}     ${application_ids['${FUNDERS_PANEL_APPLICATION_1_TITLE}']}
 ${FUNDERS_PANEL_APPLICATION_2_TITLE}      Matter - Planning for Web
 ${FUNDERS_PANEL_APPLICATION_2_NUMBER}     ${application_ids['${FUNDERS_PANEL_APPLICATION_2_TITLE}']}
-${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}    Empire Ltd
+${FUNDERS_PANEL_APPLICATION_1_PROJECT}    12
+${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}    ${EMPIRE_LTD_NAME}
 ${IN_ASSESSMENT_COMPETITION_NAME}         Sustainable living models for the future
 ${IN_ASSESSMENT_COMPETITION}              ${competition_ids['${IN_ASSESSMENT_COMPETITION_NAME}']}
 ${IN_ASSESSMENT_APPLICATION_1_TITLE}      3D-printed buildings
@@ -74,7 +76,6 @@ ${IN_ASSESSMENT_APPLICATION_5_NUMBER}     ${application_ids['${IN_ASSESSMENT_APP
 ${IN_ASSESSMENT_APPLICATION_5_LEAD_PARTNER_EMAIL}    paula.fuller@example.com
 ${INFORM_COMPETITION_NAME}                Integrated delivery programme - low carbon vehicles
 ${NON_IFS_COMPETITION_NAME}     Transforming big data
-${STEVE_SMITH_ID}    55
 ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
 ${SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/summary
 ${APPLICATION_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
@@ -105,7 +106,6 @@ ${COMP_ADMINISTRATOR_DASHBOARD}    ${SERVER}/management/dashboard
 ${UNTITLED_APPLICATION_DASHBOARD_LINK}    Untitled application (start here)
 ${UNTITLED_APPLICATION_NAME}    Untitled application
 ${OPEN_COMPETITION_LINK}    ${OPEN_COMPETITION_NAME}
-
 ${application_name}    Submit test application
 ${Competition_E2E}    Evolution of the global phosphorus cycle
 ${test_title}     test title

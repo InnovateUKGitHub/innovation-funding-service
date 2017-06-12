@@ -8,6 +8,8 @@ import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -16,12 +18,14 @@ import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
+import static org.innovateuk.ifs.invite.builder.CompetitionInviteBuilder.newCompetitionInvite;
 
 /**
  * Generates assessor invites and gives the ability to accept them
  */
 public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInviteDataBuilder> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AssessorInviteDataBuilder.class);
 
     public AssessorInviteDataBuilder withInviteToAssessCompetition(String competitionName,
                                                                    String emailAddress,
@@ -51,8 +55,10 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
                     withSentOn(sentOn.orElse(ZonedDateTime.now())).
                     build();
 
-            CompetitionInvite savedInvite = competitionInviteRepository.save(invite);
-            competitionParticipantRepository.save(new CompetitionParticipant(savedInvite));
+            testService.doWithinTransaction(() -> {
+                CompetitionInvite savedInvite = competitionInviteRepository.save(invite);
+                competitionParticipantRepository.save(new CompetitionParticipant(savedInvite));
+            });
         }));
     }
 
@@ -105,5 +111,11 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
 
     private InnovationArea retrieveInnovationAreaByName(String name) {
         return !isBlank(name) ? innovationAreaRepository.findByName(name) : null;
+    }
+
+    @Override
+    protected void postProcess(int index, Void instance) {
+        super.postProcess(index, instance);
+        LOG.info("Created Assessor Invite");
     }
 }

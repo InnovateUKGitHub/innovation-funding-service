@@ -31,7 +31,7 @@
 
     <h3 class="heading-small">Your name</h3>
     <p>
-        <span th:text="${model.name}" th:remove="tag" />
+        <th:block th:text="${model.name}" />
     </p>
     <h3 class="heading-small">Phone number</h3>
     <p th:text="${model.phoneNumber}" />

@@ -27,6 +27,7 @@ import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
@@ -80,6 +81,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private static final String FEEDBACK = "Feedback";
 
     @Override
+    @Transactional
     public ServiceResult<String> generateCompetitionCode(Long id, ZonedDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYMM");
         Competition competition = competitionRepository.findById(id);
@@ -108,6 +110,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<CompetitionResource> update(Long id, CompetitionResource competitionResource) {
         Competition competition = competitionMapper.mapToDomain(competitionResource);
 
@@ -121,6 +124,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<CompetitionResource> create() {
         Competition competition = new Competition();
         competition.setSetupComplete(false);
@@ -128,6 +132,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<CompetitionResource> createNonIfs() {
         Competition competition = new Competition();
         competition.setNonIfs(true);
@@ -135,6 +140,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> markSectionComplete(Long competitionId, CompetitionSetupSection section) {
         Competition competition = competitionRepository.findById(competitionId);
         competition.getSectionSetupStatus().put(section, Boolean.TRUE);
@@ -142,6 +148,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> markSectionInComplete(Long competitionId, CompetitionSetupSection section) {
         Competition competition = competitionRepository.findById(competitionId);
         competition.getSectionSetupStatus().put(section, Boolean.FALSE);
@@ -149,6 +156,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> returnToSetup(Long competitionId) {
         Competition competition = competitionRepository.findById(competitionId);
         competition.setSetupComplete(false);
@@ -156,12 +164,12 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> markAsSetup(Long competitionId) {
         Competition competition = competitionRepository.findById(competitionId);
         competition.setSetupComplete(true);
         return serviceSuccess();
     }
-
 
     @Override
     public ServiceResult<List<CompetitionTypeResource>> findAllTypes() {
@@ -169,6 +177,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> copyFromCompetitionTypeTemplate(Long competitionId, Long competitionTypeId) {
 
         CompetitionType competitionType = competitionTypeRepository.findOne(competitionTypeId);
@@ -181,6 +190,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> copyFromCompetitionTemplate(Long competitionId, Long templateId) {
         Competition template = competitionRepository.findById(templateId);
         Competition competition = competitionRepository.findById(competitionId);

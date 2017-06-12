@@ -16,6 +16,8 @@ public class SearchInformationForm extends AbstractPublicContentForm {
     private String eligibilitySummary;
     @NotEmpty (message="{validation.publiccontent.searchinformationform.keywords.required}")
     private String keywords;
+    @NotEmpty (message="{validation.publiccontent.searchinformationform.publishsetting.required}")
+    private String publishSetting;
 
     public String getShortDescription() {
         return shortDescription;
@@ -47,5 +49,13 @@ public class SearchInformationForm extends AbstractPublicContentForm {
 
     public void setKeywords(String keywords) {
         this.keywords = keywords;
+    }
+
+    public String getPublishSetting() {
+        return publishSetting;
+    }
+
+    public void setPublishSetting(String publishSetting) {
+        this.publishSetting = publishSetting;
     }
 }

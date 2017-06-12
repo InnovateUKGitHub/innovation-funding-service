@@ -27,7 +27,7 @@ Resource          ../FinanceSection_Commons.robot
 
 *** Test Cases ***
 Lead applicant can assign a question
-    [Documentation]    INFUND-275, INFUND-280
+    [Documentation]    INFUND-275, INFUND-280, IFS-265
     ...
     ...    This test depends on the previous test suite to run first
     [Tags]    Email    HappyPath
@@ -35,6 +35,7 @@ Lead applicant can assign a question
     #This test depends on the previous test suite to run first
     Given the applicant changes the name of the application
     And the user clicks the button/link    link= Public description
+    Then element should not contain    css=#form-input-1040 .form-footer .form-footer__info    Last updated:
     When the applicant assigns the question to the collaborator    css=#form-input-1040 .editor    test1233    Dennis Bergkamp
     Then the user should see the notification    Question assigned successfully
     And the user should see the element    css=#form-input-1040 .readonly
@@ -212,7 +213,7 @@ Lead marks finances as complete
     And the user should see the element    jQuery=h3:contains("Your funding")
     When the user fills in the project costs     Assign test
     And the user navigates to Your-finances page  Assign test
-    Then the user fills in the organisation information      Assign test
+    Then the user fills in the organisation information      Assign test  ${SMALL_ORGANISATION_SIZE}
     And the user fills in the funding information  Assign test
     When the user navigates to Your-finances page  Assign test
     Then the user should see all finance subsections complete
@@ -278,7 +279,7 @@ the question should contain the correct status/name
 the collaborator is able to edit the finances
     the user fills in the project costs     Assign test
     the user navigates to Your-finances page    Assign test
-    the user fills in the organisation information      Assign test
+    the user fills in the organisation information      Assign test  ${SMALL_ORGANISATION_SIZE}
     the user fills in the funding information  Assign test
 
 the applicant changes the name of the application
@@ -292,7 +293,5 @@ Steve smith assigns a question to the collaborator
     When the applicant assigns the question to the collaborator  css=#form-input-1040 .editor  test1233  Jessica Doe
 
 the user fills out the research category
-    # Often those labels need double click. Thus i made a separate keyword to looks more tidy
-    the user clicks the button/link    jQuery=label[for="researchCategoryChoice-33"]
     the user clicks the button/link    jQuery=label[for="researchCategoryChoice-33"]
     the user clicks the button/link    jQuery=button:contains(Save)

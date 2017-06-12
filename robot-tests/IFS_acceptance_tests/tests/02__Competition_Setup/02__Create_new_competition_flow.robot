@@ -445,7 +445,7 @@ Application: Finances
     Then the user should see the element     jQuery=h1:contains("Application finances")
     And the user should see the element      jQuery=.panel:contains("Each partner is required to complete the following finance sections, selected by the template for this competition.")
     When the user clicks the button/link     jQuery=.button:contains("Edit this question")
-    Then the user should see the element     css=label.selected[for="full-application-finance-yes"]
+    Then the user should see the element     css=input:checked ~ label[for="full-application-finance-yes"]
     And the user should see the element      css=label[for="full-application-finance-no"]
     # Please note that the above radio button is not clickable at the moment. Not part of the MVP. Is included for future functionality purpose.
     When the user selects the radio button   includeGrowthTable  include-growth-table-no

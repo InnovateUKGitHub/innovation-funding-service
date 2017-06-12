@@ -11,15 +11,24 @@ import java.util.List;
  */
 public class OverviewAssessorRowViewModel extends InviteAssessorsRowViewModel {
 
-    private BusinessType businessType;
-    private ParticipantStatusResource status;
-    private String details;
+    private final BusinessType businessType;
+    private final ParticipantStatusResource status;
+    private final String details;
+    private final Long inviteId;
 
-    public OverviewAssessorRowViewModel(Long id, String name, List<InnovationAreaResource> innovationAreas, boolean compliant, BusinessType businessType, ParticipantStatusResource status, String details) {
+    public OverviewAssessorRowViewModel(Long id,
+                                        String name,
+                                        List<InnovationAreaResource> innovationAreas,
+                                        boolean compliant,
+                                        BusinessType businessType,
+                                        ParticipantStatusResource status,
+                                        String details,
+                                        Long inviteId) {
         super(id, name, innovationAreas, compliant);
         this.businessType = businessType;
         this.status = status;
         this.details = details;
+        this.inviteId = inviteId;
     }
 
     public BusinessType getBusinessType() {
@@ -32,5 +41,9 @@ public class OverviewAssessorRowViewModel extends InviteAssessorsRowViewModel {
 
     public String getDetails() {
         return details;
+    }
+
+    public Long getInviteId() {
+        return inviteId;
     }
 }

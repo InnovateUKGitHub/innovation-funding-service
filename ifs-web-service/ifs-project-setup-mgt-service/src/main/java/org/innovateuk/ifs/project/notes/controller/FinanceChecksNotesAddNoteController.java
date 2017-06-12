@@ -40,6 +40,7 @@ import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
@@ -85,15 +86,12 @@ public class FinanceChecksNotesAddNoteController {
                               HttpServletRequest request,
                               HttpServletResponse response) {
 
-        if (projectService.getPartnerOrganisationsForProject(projectId).stream().filter(o -> o.getId() == organisationId).count() > 0) {
-            saveOriginCookie(response, projectId, organisationId, loggedInUser.getId());
-            List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
-            model.addAttribute("model", populateNoteViewModel(projectId, organisationId, attachments));
-            model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId).orElse(new FinanceChecksNotesAddNoteForm()));
-            return NEW_NOTE_VIEW;
-        } else {
-            throw new ObjectNotFoundException();
-        }
+        projectService.getPartnerOrganisation(projectId, organisationId);
+        saveOriginCookie(response, projectId, organisationId, loggedInUser.getId());
+        List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
+        model.addAttribute("model", populateNoteViewModel(projectId, organisationId, attachments));
+        model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId).orElse(new FinanceChecksNotesAddNoteForm()));
+        return NEW_NOTE_VIEW;
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
@@ -192,17 +190,14 @@ public class FinanceChecksNotesAddNoteController {
                                                          @PathVariable Long attachmentId,
                                                          UserResource loggedInUser,
                                                          HttpServletRequest request) {
-        if (projectService.getPartnerOrganisationsForProject(projectId).stream().filter(o -> o.getId() == organisationId).count() > 0) {
-            List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
-            if (attachments.contains(attachmentId)) {
-                ByteArrayResource fileContent = financeCheckService.downloadFile(attachmentId);
-                FileEntryResource fileInfo = financeCheckService.getAttachmentInfo(attachmentId);
-                return getFileResponseEntity(fileContent, fileInfo);
-            } else {
-                throw new ObjectNotFoundException();
-            }
+        projectService.getPartnerOrganisation(projectId, organisationId);
+        List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
+        if (attachments.contains(attachmentId)) {
+            ByteArrayResource fileContent = financeCheckService.downloadFile(attachmentId);
+            FileEntryResource fileInfo = financeCheckService.getAttachmentInfo(attachmentId);
+            return getFileResponseEntity(fileContent, fileInfo);
         } else {
-            throw new ObjectNotFoundException();
+            throw new ObjectNotFoundException("Cannot find note attachment " + attachmentId + " for organisation " + organisationId + " and project project " + projectId, emptyList());
         }
     }
 
@@ -240,15 +235,12 @@ public class FinanceChecksNotesAddNoteController {
                                 UserResource loggedInUser,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
-        if (projectService.getPartnerOrganisationsForProject(projectId).stream().filter(o -> o.getId() == organisationId).count() > 0) {
-            List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
-            attachments.forEach(financeCheckService::deleteFile);
-            deleteCookies(response, projectId, organisationId);
-            return redirectToNotePage(projectId, organisationId);
-        } else {
-            throw new ObjectNotFoundException();
+        projectService.getPartnerOrganisation(projectId, organisationId);
+        List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
+        attachments.forEach(financeCheckService::deleteFile);
+        deleteCookies(response, projectId, organisationId);
+        return redirectToNotePage(projectId, organisationId);
         }
-    }
 
     private FinanceChecksNotesAddNoteViewModel populateNoteViewModel(Long projectId, Long organisationId, List<Long> attachmentFileIds) {
 

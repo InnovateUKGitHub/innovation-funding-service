@@ -7,7 +7,7 @@ Documentation     INFUND-917: As an academic partner i want to input my finances
 ...
 ...               INFUND-8347: Update 'Your project costs' for academics
 Suite Setup       Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation
-Suite Teardown    the user closes the browser
+Suite Teardown    Close browser and delete emails
 Force Tags        Email    Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../FinanceSection_Commons.robot
@@ -59,7 +59,7 @@ Non pdf uploads not allowed
     [Documentation]    INFUND-2720
     [Tags]    Upload
     When the academic partner uploads a file    ${text_file}
-    Then the user should get an error page    ${wrong_filetype_validation_error}
+    Then the user should see an error    ${wrong_filetype_validation_error}
 
 Lead applicant can't upload a JeS file
     [Documentation]    INFUND-2720
@@ -196,7 +196,7 @@ the finance table should be correct
     Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(8)    £3,000
 
 Lead applicant marks the finances as complete
-    guest user log-in    steve.smith@empire.com    Passw0rd
+    guest user log-in    ${lead_applicant}    Passw0rd
     the user clicks the button/link    link=Academic robot test application
     the applicant completes the application details    Application details
     the user navigates to the academic application finances
@@ -204,7 +204,7 @@ Lead applicant marks the finances as complete
 
 
 Lead applicant marks the finances as incomplete
-    log in as a different user    steve.smith@empire.com    Passw0rd
+    log in as a different user    ${lead_applicant}    Passw0rd
     the user navigates to the academic application finances
     the user clicks the button/link    link=Your funding
     the user clicks the button/link    jQuery=button:contains("Edit")

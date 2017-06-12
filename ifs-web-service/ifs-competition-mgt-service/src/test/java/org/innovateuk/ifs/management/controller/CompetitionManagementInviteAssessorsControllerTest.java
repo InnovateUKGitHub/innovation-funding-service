@@ -408,6 +408,19 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     }
 
     @Test
+    public void removeAllInvitesFromInviteView() throws Exception {
+        when(competitionInviteRestService.deleteAllInvites(competition.getId())).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/competition/{competitionId}/assessors/invite", competition.getId())
+                .param("removeAll", ""))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/competition/%s/assessors/invite?page=0", competition.getId())))
+                .andReturn();
+
+        verify(competitionInviteRestService).deleteAllInvites(competition.getId());
+    }
+
+    @Test
     public void addNewUserToInviteView() throws Exception {
         int page = 0;
 
@@ -784,6 +797,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
             assertEquals(inviteOverviewResource.getBusinessType(), overviewAssessorRowViewModel.getBusinessType());
             assertEquals(inviteOverviewResource.getStatus(), overviewAssessorRowViewModel.getStatus());
             assertEquals(inviteOverviewResource.getDetails(), overviewAssessorRowViewModel.getDetails());
+            assertEquals(inviteOverviewResource.getInviteId(), overviewAssessorRowViewModel.getInviteId());
         });
     }
 

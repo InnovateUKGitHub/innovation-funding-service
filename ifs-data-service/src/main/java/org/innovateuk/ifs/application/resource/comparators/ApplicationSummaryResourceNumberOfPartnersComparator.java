@@ -5,7 +5,7 @@ import java.util.Comparator;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 
 /**
- * Camporator, handling nulls, and using id if number of partners is equal.
+ * Comparator, handling nulls, and using id if number of partners is equal.
  */
 public class ApplicationSummaryResourceNumberOfPartnersComparator extends DualFieldComparator<Integer, Long> implements Comparator<ApplicationSummaryResource> {
 
