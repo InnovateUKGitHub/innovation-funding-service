@@ -120,9 +120,9 @@ public class CompetitionManagementInviteAssessorsController {
                 selectionForm.setAllSelected(false);
             }
             cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
-            return createJsonObjectNode(true);
+            return createJsonObjectNode(selectionForm.getSelectedAssessorIds().size());
         } catch (Exception e) {
-            return createJsonObjectNode(false);
+            return createJsonObjectNode(-1);
         }
     }
 
@@ -147,9 +147,9 @@ public class CompetitionManagementInviteAssessorsController {
             }
 
             cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
-            return createJsonObjectNode(true);
+            return createJsonObjectNode(selectionForm.getSelectedAssessorIds().size());
         } catch (Exception e) {
-            return createJsonObjectNode(false);
+            return createJsonObjectNode(-1);
         }
     }
 
@@ -344,10 +344,10 @@ public class CompetitionManagementInviteAssessorsController {
         return new ExistingUserStagedInviteListResource(invites);
     }
 
-    private ObjectNode createJsonObjectNode(boolean success) {
+    private ObjectNode createJsonObjectNode(int selectionCount) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
-        node.put("success", success ? "true" : "false");
+        node.put("selectionCount", selectionCount);
 
         return node;
     }

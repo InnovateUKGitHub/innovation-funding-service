@@ -385,7 +385,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .param("innovationArea", "4")
                 .cookie(formCookie))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("success", is("true")))
+                .andExpect(jsonPath("selectionCount", is(1)))
                 .andReturn();
 
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("selectionForm_comp%s", competition.getId()));
@@ -402,7 +402,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .param("isSelected", "true")
                 .cookie(formCookie))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("success", is("true")))
+                .andExpect(jsonPath("selectionCount", is(1)))
                 .andReturn();
 
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("selectionForm_comp%s", competition.getId()));
@@ -423,7 +423,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .param("addAll", "true")
                 .cookie(formCookie))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("success", is("true")))
+                .andExpect(jsonPath("selectionCount", is(2)))
                 .andReturn();
 
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("selectionForm_comp%s", competition.getId()));
@@ -444,7 +444,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .param("innovationArea", "4")
                 .cookie(formCookie))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("success", is("true")))
+                .andExpect(jsonPath("selectionCount", is(0)))
                 .andReturn();
 
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("selectionForm_comp%s", competition.getId()));
@@ -464,7 +464,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .param("isSelected", "false")
                 .cookie(formCookie))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("success", is("true")))
+                .andExpect(jsonPath("selectionCount", is(0)))
                 .andReturn();
 
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("selectionForm_comp%s", competition.getId()));
