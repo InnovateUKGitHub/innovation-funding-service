@@ -27,7 +27,8 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
     public static final String USER_DASHBOARD_LINK="userDashboardLink";
     public static final String USER_LOGOUT_LINK="logoutUrl";
     public static final String USER_PROFILE_LINK="userProfileLink";
-
+    public static final String ASSESSOR_PROFILE_URL="/assessment/profile/details";
+    public static final String USER_PROFILE_URL="/profile/view";
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
@@ -95,19 +96,19 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
                 if (user.hasRoles(ASSESSOR, APPLICANT)) {
                   String role = cookieUtil.getCookieValue(request, "role");
                   if (!role.isEmpty()) {
-                      if(role.equals("ASSESSOR")) {
-                        return "/assessor/profile";
+                      if(role.equals("assessor")) {
+                        return ASSESSOR_PROFILE_URL;
                       }
-                      if(role.equals("APPLICANT")) {
-                        return "/profile/view";
+                      if(role.equals("applicant")) {
+                        return USER_PROFILE_URL;
                       }
                   }
                 }
                 if (user.hasRole(ASSESSOR)) {
-                  return "/assessor/profile";
+                  return ASSESSOR_PROFILE_URL;
                 }
                 if (user.hasRole(APPLICANT)) {
-                  return "/profile/view";
+                  return USER_PROFILE_URL;
                 }
             }
         }

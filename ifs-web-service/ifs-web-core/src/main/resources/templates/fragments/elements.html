@@ -50,8 +50,8 @@
             <li th:unless="${hideDashboardLink}">
                 <a th:href="${userDashboardLink}" th:classappend="${#httpServletRequest.requestURI == userDashboardLink} ? 'active'">Dashboard</a>
             </li>
-            <li th:unless="${#strings.isEmpty(userProfileLink)}">
-                <a th:href="${userProfileLink}" th:classappend="${#httpServletRequest.requestURI == userProfileLink} ? 'active'">Profile</a>
+            <li th:unless="${hideDashboardLink} or ${#strings.isEmpty(userProfileLink)}">
+                <a th:href="${userProfileLink}" th:classappend="${(#httpServletRequest.requestURI == userProfileLink)} ? 'active'">Profile</a>
             </li>
             <li>
                 <a th:href="${logoutUrl}">Sign out</a>
