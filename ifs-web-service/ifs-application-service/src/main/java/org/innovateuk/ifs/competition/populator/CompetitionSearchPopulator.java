@@ -5,14 +5,15 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPageResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatusText;
 import org.innovateuk.ifs.competition.viewmodel.CompetitionSearchViewModel;
 import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Populator for retrieving and filling the viewmodel for public content competition search page.
@@ -45,7 +46,8 @@ public class CompetitionSearchPopulator {
             viewModel.setPageNumber(0);
         }
 
-        viewModel.setPublicContentItems(pageResource.getContent());
+        viewModel.setPublicContentItems(pageResource.getContent().stream()
+                .map(this::mapPublicContentItemResourceToViewModel).collect(Collectors.toList()));
         viewModel.setTotalResults(pageResource.getTotalElements());
         viewModel.setNextPageLink(createPageLink(innovationAreaId, keywords, pageNumber, 1));
         viewModel.setPreviousPageLink(createPageLink(innovationAreaId, keywords, pageNumber, -1));
@@ -68,4 +70,24 @@ public class CompetitionSearchPopulator {
         return URLEncodedUtils.format(searchparams, "UTF-8");
     }
 
+    private PublicContentItemViewModel mapPublicContentItemResourceToViewModel(PublicContentItemResource publicContentItemResource) {
+        PublicContentItemViewModel publicContentItemViewModel = new PublicContentItemViewModel();
+        PublicContentStatusText publicContentStatusIndicator = getApplicablePublicContentStatusText(publicContentItemResource);
+
+        publicContentItemViewModel.setPublicContentStatusText(publicContentStatusIndicator);
+        publicContentItemViewModel.setCompetitionTitle(publicContentItemResource.getCompetitionTitle());
+        publicContentItemViewModel.setCompetitionCloseDate(publicContentItemResource.getCompetitionCloseDate());
+        publicContentItemViewModel.setCompetitionOpenDate(publicContentItemResource.getCompetitionOpenDate());
+        publicContentItemViewModel.setEligibilitySummary(publicContentItemResource.getPublicContentResource().getEligibilitySummary());
+        publicContentItemViewModel.setShortDescription(publicContentItemResource.getPublicContentResource().getShortDescription());
+        publicContentItemViewModel.setCompetitionId(publicContentItemResource.getPublicContentResource().getCompetitionId());
+
+        return publicContentItemViewModel;
+    }
+
+    private PublicContentStatusText getApplicablePublicContentStatusText(PublicContentItemResource publicContentItemResource) {
+        return Arrays.stream(PublicContentStatusText.values())
+                .filter(indicator -> indicator.getPredicate().test(publicContentItemResource))
+                .findFirst().get();
+    }
 }

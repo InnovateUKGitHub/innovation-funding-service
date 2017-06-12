@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competition.viewmodel;
 
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
+import org.innovateuk.ifs.competition.populator.PublicContentItemViewModel;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ public class CompetitionSearchViewModel {
     public final static Integer PAGE_SIZE = 10;
 
     private List<InnovationAreaResource> innovationAreas;
-    private List<PublicContentItemResource> publicContentItems;
+    private List<PublicContentItemViewModel> publicContentItems;
     private Long totalResults;
 
     private Long selectedInnovationAreaId;
@@ -23,11 +23,11 @@ public class CompetitionSearchViewModel {
     private String previousPageLink;
 
 
-    public List<PublicContentItemResource> getPublicContentItems() {
+    public List<PublicContentItemViewModel> getPublicContentItems() {
         return publicContentItems;
     }
 
-    public void setPublicContentItems(List<PublicContentItemResource> publicContentItems) {
+    public void setPublicContentItems(List<PublicContentItemViewModel> publicContentItems) {
         this.publicContentItems = publicContentItems;
     }
 
