@@ -34,8 +34,7 @@ REGISTRY_TOKEN=${SVC_ACCOUNT_TOKEN};
 function upgradeServices {
     # data-service
     oc apply -f os-files-tmp/31-data-service.yml ${SVC_ACCOUNT_CLAUSE}
-    sleep 90
-    oc rollout status dc/data-service --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE}
+    rolloutStatus "data-service"
 
     # services
     oc apply -f os-files-tmp/4-application-service.yml ${SVC_ACCOUNT_CLAUSE}
@@ -59,7 +58,7 @@ function upgradeServices {
 
 function forceReload {
     oc rollout latest dc/data-service ${SVC_ACCOUNT_CLAUSE}
-    sleep 90
+    rolloutStatus data-service
 
     oc rollout latest dc/application-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/assessment-svc ${SVC_ACCOUNT_CLAUSE}
@@ -73,14 +72,30 @@ function forceReload {
 }
 
 function watchStatus {
-    sleep 90
-    oc rollout status dc/application-svc --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE}
-    oc rollout status dc/assessment-svc --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE}
-    oc rollout status dc/competition-mgt-svc --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE}
-    oc rollout status dc/project-setup-mgt-svc --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE}
-    oc rollout status dc/project-setup-svc --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE}
-    oc rollout status dc/idp --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE}
-    oc rollout status dc/shib --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE}
+    rolloutStatus application-svc
+    rolloutStatus assessment-svc
+    rolloutStatus competition-mgt-svc
+    rolloutStatus project-setup-mgt-svc
+    rolloutStatus project-setup-svc
+    rolloutStatus idp
+    rolloutStatus shib
+}
+
+function rolloutStatus {
+    FINISHED=0
+    while [  $FINISHED -ne 1 ]; do
+        RESULT=$(oc rollout status  dc/$1 ${SVC_ACCOUNT_CLAUSE} 2>&1) || true # the || true is to eat up all non-zero exit codes
+        echo "$RESULT"
+
+        if [[ ${RESULT} != *"timed out"* ]]; then
+          FINISHED=1
+        fi
+        if [[ ${RESULT} == *"failed progressing"* ]]; then
+          echo "FAILED TO DEPLOY $1"
+          echo "Try triggering the deploy again with oc rollout latest dc/application-svc in project $PROJECT and check oc logs and oc describe heavily"
+          exit 1
+        fi
+    done
 }
 
 . $(dirname $0)/deploy-functions.sh
