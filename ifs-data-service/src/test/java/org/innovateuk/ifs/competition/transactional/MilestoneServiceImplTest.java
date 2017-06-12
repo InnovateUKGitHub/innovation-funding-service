@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
@@ -175,8 +174,8 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 
     @Test
     public void getAllPublicMilestones() {
-        List<Milestone> milestones = newMilestone().withType(MilestoneType.OPEN_DATE, MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE).build(3);
-        when(milestoneRepository.findByCompetitionIdAndTypeIn(1L, asList(MilestoneType.OPEN_DATE, MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE)))
+        List<Milestone> milestones = newMilestone().withType(MilestoneType.OPEN_DATE, MilestoneType.NOTIFICATIONS, MilestoneType.SUBMISSION_DATE).build(3);
+        when(milestoneRepository.findByCompetitionIdAndTypeIn(1L, asList(MilestoneType.OPEN_DATE, MilestoneType.NOTIFICATIONS, MilestoneType.SUBMISSION_DATE)))
                 .thenReturn(milestones);
 
         ServiceResult<List<MilestoneResource>> result = service.getAllPublicMilestonesByCompetitionId(1L);
@@ -187,9 +186,9 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
     }
 
     @Test
-    public void allPublicDatesCompletSuccess() {
-        List<Milestone> milestones = newMilestone().withType(MilestoneType.OPEN_DATE, MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE).withDate(ZonedDateTime.now()).build(3);
-        when(milestoneRepository.findByCompetitionIdAndTypeIn(1L, asList(MilestoneType.OPEN_DATE, MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE)))
+    public void allPublicDatesCompleteSuccess() {
+        List<Milestone> milestones = newMilestone().withType(MilestoneType.OPEN_DATE, MilestoneType.NOTIFICATIONS, MilestoneType.SUBMISSION_DATE).withDate(ZonedDateTime.now()).build(3);
+        when(milestoneRepository.findByCompetitionIdAndTypeIn(1L, asList(MilestoneType.OPEN_DATE, MilestoneType.NOTIFICATIONS, MilestoneType.SUBMISSION_DATE)))
                 .thenReturn(milestones);
 
         ServiceResult<Boolean> result = service.allPublicDatesComplete(1L);
