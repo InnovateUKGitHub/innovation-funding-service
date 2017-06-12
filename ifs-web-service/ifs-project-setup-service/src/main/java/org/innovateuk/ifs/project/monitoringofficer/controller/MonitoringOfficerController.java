@@ -5,7 +5,6 @@ import org.innovateuk.ifs.project.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -54,19 +52,5 @@ public class MonitoringOfficerController {
         ProjectResource project = projectService.getById(projectId);
         Optional<MonitoringOfficerResource> monitoringOfficer = monitoringOfficerService.getMonitoringOfficerForProject(projectId);
         return new MonitoringOfficerViewModel(project, monitoringOfficer);
-    }
-
-
-    public static void main(String[] args) {
-        System.out.println("Came here");
-
-        String text = "comp_admin";
-
-
-
-        List<String> roles = CollectionFunctions.simpleMap(text.split("&"), (s) -> s.trim());
-
-        System.out.println("Finished");
-
     }
 }

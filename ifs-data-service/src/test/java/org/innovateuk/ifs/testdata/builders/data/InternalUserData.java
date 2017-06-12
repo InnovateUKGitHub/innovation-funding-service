@@ -13,14 +13,6 @@ public class InternalUserData extends BaseUserData {
 
     private String emailAddress;
 
-/*    public UserRoleType getRole() {
-        return role;
-    }
-
-    public void setRole(UserRoleType role) {
-        this.role = role;
-    }*/
-
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
     }

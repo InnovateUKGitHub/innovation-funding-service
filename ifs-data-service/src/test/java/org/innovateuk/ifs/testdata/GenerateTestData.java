@@ -467,7 +467,6 @@ public class GenerateTestData extends BaseIntegrationTest {
         testService.doWithinTransaction(() ->
             internalUserLines.forEach(line -> {
 
-                //UserRoleType role = UserRoleType.fromName(line.role);
                 List<UserRoleType> roles = simpleMap(line.roles, role -> UserRoleType.fromName(role));
 
                 InternalUserDataBuilder baseBuilder = internalUserBuilder.
@@ -475,7 +474,6 @@ public class GenerateTestData extends BaseIntegrationTest {
                         createPreRegistrationEntry(line.emailAddress);
 
                 if (line.emailVerified) {
-                    //createUser(baseBuilder, line, !asList(COMP_TECHNOLOGIST, SUPPORT).contains(role));
                     createUser(baseBuilder, line, createViaRegistration(roles));
                 } else {
                     baseBuilder.build();
@@ -483,11 +481,8 @@ public class GenerateTestData extends BaseIntegrationTest {
             }));
     }
 
-    // If the role is either COMP_TECHNOLOGIST, SUPPORT then do NOT create via Registration
-    // Create via Registration if the role is NOT COMP_TECHNOLOGIST, SUPPORT
     private boolean createViaRegistration(List<UserRoleType> roles) {
         return roles.stream().noneMatch(role -> asList(COMP_TECHNOLOGIST, SUPPORT, IFS_ADMINISTRATOR).contains(role));
-
     }
 
     private void createCompetitions() {

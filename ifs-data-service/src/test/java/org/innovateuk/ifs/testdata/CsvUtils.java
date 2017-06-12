@@ -13,7 +13,6 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.user.resource.*;
-import org.innovateuk.ifs.util.CollectionFunctions;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 
 import java.io.File;
@@ -685,7 +684,6 @@ class CsvUtils {
 
         private InternalUserLine(List<String> line) {
             super(line);
-            //this.role = line.get(line.size() - 1);
             this.roles = simpleMap(line.get(line.size() - 1).split("&"), s -> s.trim());
 
 

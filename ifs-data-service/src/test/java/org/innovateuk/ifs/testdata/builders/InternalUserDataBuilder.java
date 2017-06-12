@@ -40,7 +40,6 @@ public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserDat
         return with(data -> {
 
             User user = userRepository.save(new User(firstName, lastName, emailAddress, null, UUID.randomUUID().toString()));
-            //Role role = roleRepository.findOneByName(data.getRole().getName());
             List<String> roleNames = simpleMap(data.getRoles(), userRoleType -> userRoleType.getName());
             List<Role> roles = roleRepository.findByNameIn(roleNames);
             user.getRoles().addAll(roles);
@@ -75,28 +74,6 @@ public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserDat
            data.setRoles(roles);
         });
     }
-
-/*    public InternalUserDataBuilder createPreRegistrationEntry(String emailAddress) {
-        return with(data -> {
-            switch (data.getRoles()) {
-                case COMP_ADMIN: {
-                    CompAdminEmail preregistrationEntry = new CompAdminEmail();
-                    preregistrationEntry.setEmail(emailAddress);
-                    compAdminEmailRepository.save(preregistrationEntry);
-                }
-                case PROJECT_FINANCE: {
-                    ProjectFinanceEmail preregistrationEntry = new ProjectFinanceEmail();
-                    preregistrationEntry.setEmail(emailAddress);
-                    projectFinanceEmailRepository.save(preregistrationEntry);
-                }
-                default: {
-                    // no pre-reg entry
-                }
-            }
-
-            data.setEmailAddress(emailAddress);
-        });
-    }*/
 
     public InternalUserDataBuilder createPreRegistrationEntry(String emailAddress) {
         return with(data -> {
