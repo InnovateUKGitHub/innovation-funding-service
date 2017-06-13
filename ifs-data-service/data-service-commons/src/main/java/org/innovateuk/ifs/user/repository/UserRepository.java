@@ -2,6 +2,7 @@ package org.innovateuk.ifs.user.repository;
 
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserStatus;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -9,6 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -31,7 +34,11 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
     List<User> findByRolesName(String name);
 
-    List<User> findByRolesNameIn(Set<String> roleName);
+    long countByStatusAndRolesNameIn(UserStatus status, Set<String> roleName);
+
+    List<User> findByStatusAndRolesNameIn(UserStatus status, Set<String> roleName);
+
+    Page<User> findByStatusAndRolesNameIn(UserStatus status, Set<String> roleName, Pageable pageable);
 
     User findOneByUid(String uid);
 

@@ -2,8 +2,10 @@ package org.innovateuk.ifs.user.transactional;
 
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 
@@ -28,5 +30,14 @@ public interface BaseUserService {
     ServiceResult<List<UserResource>> findByProcessRole(UserRoleType roleType);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<UserResource>> findByProcessRoles(Set<UserRoleType> roleTypes);
+    public ServiceResult<Long> countActiveByProcessRoles(Set<UserRoleType> roleTypes);
+
+    @PostFilter("hasPermission(filterObject, 'READ')")
+    public ServiceResult<Long> countInactiveByProcessRoles(Set<UserRoleType> roleTypes);
+
+    @PostFilter("hasPermission(filterObject, 'READ')")
+    ServiceResult<UserPageResource> findActiveByProcessRoles(Set<UserRoleType> roleTypes, Pageable pageable);
+
+    @PostFilter("hasPermission(filterObject, 'READ')")
+    ServiceResult<UserPageResource> findInactiveByProcessRoles(Set<UserRoleType> roleTypes, Pageable pageable);
 }

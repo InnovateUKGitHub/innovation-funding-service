@@ -36,18 +36,18 @@
 
   <div id="manageUsersTabs" class="tabs">
     <ul>
-      <li>
-        <a href="#active">Active (38)</a>
+      <li th:class="${model.tab == 'active' ? 'selected':''}">
+        <a href="#active" th:text="|Active (${model.activeCount})|">Active (38)</a>
       </li>
-      <li>
-        <a href="#inactive">Inactive (10)</a>
+      <li th:class="${model.tab == 'inactive' ? 'selected':''}">
+        <a href="#inactive" th:text="|Inactive (${model.inactiveCount})|">Inactive (10)</a>
       </li>
     </ul>
     <section id="active">
       <h2 class="heading-medium">Active</h2>
       <div>
         <p>
-          <span class="heading-xlarge no-margin">38</span>
+          <span class="heading-xlarge no-margin" th:text="${model.activeCount}">38</span>
           <span class="heading-small">active internal users</span>
         </p>
         <div class="table-overflow">
@@ -61,126 +61,23 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-              <td><a href="/">Mark Smith</a></td>
-              <td>Super admin</td>
-              <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><a href="/">Mark Smith</a></td>
-              <td>Super admin</td>
-              <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><a href="/">Mark Smith</a></td>
-              <td>Super admin</td>
-              <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-              <td><span class="form-hint">Invite pending</span></td>
-            </tr>
-            <tr>
-              <td><a href="/">Mark Smith</a></td>
-              <td>Admin</td>
-              <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><a href="/">Mark Smith</a></td>
-              <td>Super admin</td>
-              <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><a href="/">Mark Smith</a></td>
-              <td>Super admin</td>
-              <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><a href="/">Mark Smith</a></td>
-              <td>Super admin</td>
-              <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-              <td><span class="form-hint">Invite pending</span></td>
-            </tr>
-            <tr>
-              <td><a href="/">Mark Smith</a></td>
-              <td>Admin</td>
-              <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><a href="/">Mark Smith</a></td>
-              <td>Super admin</td>
-              <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><a href="/">Mark Smith</a></td>
-              <td>Super admin</td>
-              <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><a href="/">Mark Smith</a></td>
-              <td>Super admin</td>
-              <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-              <td><span class="form-hint">Invite pending</span></td>
-            </tr>
-            <tr>
-              <td><a href="/">Mark Smith</a></td>
-              <td>Admin</td>
-              <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><a href="/">Mark Smith</a></td>
-              <td>Super admin</td>
-              <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><a href="/">Mark Smith</a></td>
-              <td>Super admin</td>
-              <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><a href="/">Mark Smith</a></td>
-              <td>Super admin</td>
-              <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-              <td><span class="form-hint">Invite pending</span></td>
-            </tr>
-            <tr>
-              <td><a href="/">Mark Smith</a></td>
-              <td>Admin</td>
-              <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-              <td></td>
+            <tr th:each="user : ${model.activeUsers}">
+                <td th:text="${user.name}">Steve Smith</td>
+                <td th:text="${user.getRolesString()}">IFS Admin</td>
+                <td th:text="${user.email}">steve.smith@empire.com</td>
+                <td><span class="form-hint"></span></td>
             </tr>
             </tbody>
           </table>
         </div>
-        <ul class="pagination">
-          <li class="prev">
-            <a href="/" rel="prev" title="Navigate to previous part">
-              <span class="pagination-label">Previous</span>
-              <span class="pagination-part-title">0 to 10</span>
-            </a>
-          </li>
-          <li class="next">
-            <a href="/" rel="next" title="Navigate to next part">
-              <span class="pagination-label">Next</span>
-              <span class="pagination-part-title">11 to 20</span>
-            </a>
-          </li>
-        </ul>
+        <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.activeUsersPagination})" />
       </div>
     </section>
     <section id="inactive">
       <h2 class="heading-medium">Inactive</h2>
       <div>
         <p>
-          <span class="heading-xlarge no-margin">10</span>
+          <span class="heading-xlarge no-margin" th:text="${model.inactiveCount}">10</span>
           <span class="heading-small">inactive internal users</span>
         </p>
         <div class="table-overflow">
@@ -194,75 +91,19 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-              <td><a href="/">Mark Smith</a></td>
-              <td>Super admin</td>
-              <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><a href="/">Mark Smith</a></td>
-              <td>Super admin</td>
-              <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><a href="/">Mark Smith</a></td>
-              <td>Super admin</td>
-              <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-              <td><span class="form-hint">Invite pending</span></td>
-            </tr>
-            <tr>
-              <td><a href="/">Mark Smith</a></td>
-              <td>Admin</td>
-              <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><a href="/">Mark Smith</a></td>
-              <td>Super admin</td>
-              <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><a href="/">Mark Smith</a></td>
-              <td>Super admin</td>
-              <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><a href="/">Mark Smith</a></td>
-              <td>Super admin</td>
-              <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-              <td><span class="form-hint">Invite pending</span></td>
-            </tr>
-            <tr>
-              <td><a href="/">Mark Smith</a></td>
-              <td>Admin</td>
-              <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
-              <td></td>
+            <tr th:each="user : ${model.inactiveUsers}">
+                <td th:text="${user.name}">Steve Smith</td>
+                <td th:text="${user.getRolesString()}">IFS Admin</td>
+                <td th:text="${user.email}">steve.smith@empire.com</td>
+                <td><span class="form-hint"></span></td>
             </tr>
             </tbody>
           </table>
         </div>
-        <ul class="pagination">
-          <li class="prev">
-            <a href="/" rel="prev" title="Navigate to previous part">
-              <span class="pagination-label">Previous</span>
-              <span class="pagination-part-title">0 to 10</span>
-            </a>
-          </li>
-          <li class="next">
-            <a href="/" rel="next" title="Navigate to next part">
-              <span class="pagination-label">Next</span>
-              <span class="pagination-part-title">11 to 20</span>
-            </a>
-          </li>
-        </ul>
+        <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.inactiveUsersPagination})" />
       </div>
     </section>
   </div>
-
 
   <th:block th:insert="fragments/layout :: main-content-end" />
 </main>

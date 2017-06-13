@@ -1,29 +1,31 @@
 package org.innovateuk.ifs.user.controller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
+import org.innovateuk.ifs.user.transactional.CrmService;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
-import org.innovateuk.ifs.user.transactional.*;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Set;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.*;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 
 /**
  * This RestController exposes CRUD operations to both the
@@ -35,6 +37,8 @@ import static java.util.Optional.of;
 public class UserController {
 
     private static final Log LOG = LogFactory.getLog(UserController.class);
+
+    private static final String DEFAULT_PAGE_SIZE = "20";
 
     @Autowired
     private BaseUserService baseUserService;
@@ -66,9 +70,26 @@ public class UserController {
         return baseUserService.findByProcessRole(UserRoleType.fromName(userRoleName)).toGetResponse();
     }
 
-    @GetMapping("/internal")
-    public RestResult<List<UserResource>> findInternalUsers(){
-        return baseUserService.findByProcessRoles(UserRoleType.internalRoles()).toGetResponse();
+    @GetMapping("/internal/active/count")
+    public RestResult<Long> countActiveInternalUsers(){
+        return baseUserService.countActiveByProcessRoles(UserRoleType.internalRoles()).toGetResponse();
+    }
+
+    @GetMapping("/internal/inactive/count")
+    public RestResult<Long> countInactiveInternalUsers(){
+        return baseUserService.countInactiveByProcessRoles(UserRoleType.internalRoles()).toGetResponse();
+    }
+
+    @GetMapping("/internal/active")
+    public RestResult<UserPageResource> findActiveInternalUsers(@RequestParam(value = "page", defaultValue = "0") int pageIndex,
+                                                                @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize){
+        return baseUserService.findActiveByProcessRoles(UserRoleType.internalRoles(), new PageRequest(pageIndex, pageSize)).toGetResponse();
+    }
+
+    @GetMapping("/internal/inactive")
+    public RestResult<UserPageResource> findInactiveInternalUsers(@RequestParam(value = "page", defaultValue = "0") int pageIndex,
+                                                                  @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize){
+        return baseUserService.findInactiveByProcessRoles(UserRoleType.internalRoles(), new PageRequest(pageIndex, pageSize)).toGetResponse();
     }
 
     @GetMapping("/findAll/")

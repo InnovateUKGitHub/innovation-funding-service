@@ -8,9 +8,10 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * User Data Transfer Object
@@ -195,6 +196,12 @@ public class UserResource {
 
     public void setAllowMarketingEmails(boolean allowMarketingEmails) {
         this.allowMarketingEmails = allowMarketingEmails;
+    }
+
+    public String getRolesString(){
+        return roles.stream()
+                .map(RoleResource::getDisplayName)
+                .collect(Collectors.joining(", "));
     }
 
     @Override
