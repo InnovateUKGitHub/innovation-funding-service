@@ -43,7 +43,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
@@ -116,7 +115,8 @@ public class ApplicationQuestionControllerTest extends BaseControllerMockMVCTest
     @Mock
     private ApplicantRestService applicantRestService;
 
-    @Mock
+    @Spy
+    @InjectMocks
     private ApplicationRedirectionService applicationRedirectionService;
 
     @Spy
@@ -179,7 +179,6 @@ public class ApplicationQuestionControllerTest extends BaseControllerMockMVCTest
         FinanceViewModel financeViewModel = new FinanceViewModel();
         financeViewModel.setOrganisationGrantClaimPercentage(76);
 
-        when(applicationRedirectionService.getRedirectUrl(any(), anyLong(), any(Optional.class))).thenCallRealMethod();
         when(defaultFinanceModelManager.getFinanceViewModel(anyLong(), anyList(), anyLong(), any(Form.class), anyLong())).thenReturn(financeViewModel);
     }
 
