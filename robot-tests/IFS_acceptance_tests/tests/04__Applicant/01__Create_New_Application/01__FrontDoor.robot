@@ -30,10 +30,32 @@ Guest user can see Competitions and their information
     [Tags]
     [Setup]    the user navigates to the page    ${frontDoor}
     Given the user should see the element    link=Home and industrial efficiency programme
-    Then the user should see the element    jQuery=dt:contains("Eligibility") + dd:contains("UK based business of any size. Must involve at least one SME")
-    And the user should see the element    jQuery=dt:contains("Opens") + dd:contains("15 April 2016")
+    Then the user should see the element    jQuery=h3:contains("Eligibility")
+    And the user should see the element    jQuery=p:contains("UK based business of any size. Must involve at least one SME")
+    Then the user should see the element    jQuery=dt:contains("Opened") + dd:contains("15 April 2016")
     And the user should see the element    jQuery=dt:contains("Closes") + dd:contains("9 September 2067")
     #Guest user can filter competitions by Keywords, this is tested in file 05__Public_content.robot
+
+Guest user can see the opening and closing status of competitions
+    [Documentation]  IFS-268
+    [Tags]    MySQL
+    [Setup]    Connect to Database    @{database}
+    Then Change the open date of the Competition in the database to tomorrow   ${READY_TO_OPEN_COMPETITION_NAME}
+    Given the user navigates to the page  ${frontDoor}
+    Then the user should see the element    jQuery=h2:contains(${READY_TO_OPEN_COMPETITION_NAME}) + p + h3 + p + h3:contains("Opening soon") + dl dt:contains("Opens")
+    And Change the open date of the Competition in the database to one day before   ${READY_TO_OPEN_COMPETITION_NAME}
+    Given the user navigates to the page  ${frontDoor}
+    Then the user should see the element    jQuery=h2:contains(${READY_TO_OPEN_COMPETITION_NAME}) + p + h3 + p + h3:contains("Open now") + dl dt:contains("Opened")
+    And Change the close date of the Competition in the database to a fortnight   ${READY_TO_OPEN_COMPETITION_NAME}
+    Given the user navigates to the page  ${frontDoor}
+    Then the user should see the element    jQuery=h2:contains(${READY_TO_OPEN_COMPETITION_NAME}) + p + h3 + p + h3:contains("Open now") + dl dt:contains("Opened")
+    And Change the close date of the Competition in the database to thirteen days   ${READY_TO_OPEN_COMPETITION_NAME}
+    Given the user navigates to the page  ${frontDoor}
+    Then the user should see the element    jQuery=h2:contains(${READY_TO_OPEN_COMPETITION_NAME}) + p + h3 + p + h3:contains("Closing soon") + dl dt:contains("Opened")
+    And Change the close date of the Competition in the database to tomorrow   ${READY_TO_OPEN_COMPETITION_NAME}
+    Given the user navigates to the page  ${frontDoor}
+    Then the user should see the element    jQuery=h2:contains(${READY_TO_OPEN_COMPETITION_NAME}) + p + h3 + p + h3:contains("Closing soon") + dl dt:contains("Opened")
+    And Reset the open and close date of the Competition in the database   ${READY_TO_OPEN_COMPETITION_NAME}
 
 Guest user can filter competitions by Innovation area
     [Documentation]    INFUND-6923
