@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 
 /**
- * Component that determines the PublicContentStatusText for a PublicContentItem.
+ * Component that determines the corresponding {@link PublicContentStatusText} for a {@link PublicContentItemResource}.
  */
 @Component
 public class PublicContentStatusDeterminer {
