@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.management.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Form for the selection of assessors on the Find assessors tab
@@ -13,8 +16,8 @@ import java.util.List;
 public class AssessorSelectionForm extends BaseBindingResultTarget {
 
     private boolean allSelected;
-
     private List<Long> selectedAssessorIds;
+    private Long selectedInnovationArea;
 
     public AssessorSelectionForm() {
         this.selectedAssessorIds = new ArrayList<>();
@@ -36,6 +39,14 @@ public class AssessorSelectionForm extends BaseBindingResultTarget {
         this.selectedAssessorIds = selectedAssessorIds;
     }
 
+    public Long getSelectedInnovationArea() {
+        return selectedInnovationArea;
+    }
+
+    public void setSelectedInnovationArea(Long selectedInnovationArea) {
+        this.selectedInnovationArea = selectedInnovationArea;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -47,6 +58,7 @@ public class AssessorSelectionForm extends BaseBindingResultTarget {
         return new EqualsBuilder()
                 .append(allSelected, that.allSelected)
                 .append(selectedAssessorIds, that.selectedAssessorIds)
+                .append(selectedInnovationArea, that.selectedInnovationArea)
                 .isEquals();
     }
 
@@ -55,6 +67,7 @@ public class AssessorSelectionForm extends BaseBindingResultTarget {
         return new HashCodeBuilder(17, 37)
                 .append(allSelected)
                 .append(selectedAssessorIds)
+                .append(selectedInnovationArea)
                 .toHashCode();
     }
 }
