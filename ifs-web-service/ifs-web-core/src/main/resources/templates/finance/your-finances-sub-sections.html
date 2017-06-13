@@ -93,24 +93,24 @@
     <!-- ===========================Subsection buttons =========================== -->
     <th:block th:fragment="subsection_buttons (model)">
         <th:block th:unless="${readOnlyAllApplicantApplicationFinances != null}">
-        <div th:unless="${model.applicationIsReadOnly}" class="form-footer">
-            <div class="form-footer__actions">
-                <button id="mark-all-as-complete"
-                        th:unless="${model.complete}"
-                        type="submit" name="mark_section_as_complete" class="buttonlink">Mark as complete
-                </button>
-                <button th:if="${model.complete}"
-                        type="submit" name="mark_section_as_incomplete" class="buttonlink"
-                        th:text="${'Edit ' + #strings.toLowerCase(model.section.name)}">Edit
-                </button>
+            <div th:unless="${model.applicationIsReadOnly}" class="form-footer">
+                <div class="form-footer__actions">
+                    <button id="mark-all-as-complete"
+                            th:unless="${model.complete}"
+                            type="submit" name="mark_section_as_complete" class="buttonlink">Mark as complete
+                    </button>
+                    <button th:if="${model.complete}"
+                            type="submit" name="mark_section_as_incomplete" class="buttonlink"
+                            th:text="${'Edit ' + #strings.toLowerCase(model.section.name)}">Edit
+                    </button>
+                </div>
             </div>
-        </div>
-        <div>
-            <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.section.parentSection})}"
-               class="extra-margin"
-               th:classappend="${model.complete} ? 'button-secondary' : 'button'"
-               th:text="${model.complete} ? 'Return to finances' : 'Save and return to finances'"></a>
-        </div>
+            <div>
+                <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.section.parentSection})}"
+                   class="extra-margin"
+                   th:classappend="${model.complete} ? 'button-secondary' : 'button'"
+                   th:text="${model.complete} ? 'Return to finances' : 'Save and return to finances'"></a>
+            </div>
         </th:block>
     </th:block>
 
@@ -125,7 +125,7 @@
         </th:block>
         <th:block th:unless="${model.showSectionAsNotRequired(childSection) and readOnlyAllApplicantApplicationFinances == null}">
             <li>
-                <th:block th:if="${model.showSectionAsLink(childSection)}">
+                <th:block th:if="${model.showSectionAsLink(childSection) || readOnlyAllApplicantApplicationFinances != null}">
                     <div class="task">
                         <h3 class="heading-small">
                             <th:block th:unless="${readOnlyAllApplicantApplicationFinances != null}">
@@ -139,19 +139,14 @@
                         </h3>
                     </div>
                 </th:block>
-                <th:block th:if="${model.showSectionAsLockedFunding(childSection)}">
+                <th:block th:if="${model.showSectionAsLockedFunding(childSection) && readOnlyAllApplicantApplicationFinances == null}">
                     <div class="task full-width">
                         <h3 class="heading-small" th:text="${childSection.section.name}"></h3>
                         <p>
-                            <th:block th:unless="${readOnlyAllApplicantApplicationFinances != null}">
-                                <th:block th:if="${model.userIsLeadApplicant}">You must select a research category in <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.application.id}, questionId=${model.applicationDetailsQuestionId})}">application details</a> before you can supply funding.</th:block>
-                                <th:block th:unless="${model.userIsLeadApplicant}">The lead applicant must select a research category in application details before you can supply funding.</th:block>
-                                <br />
-                                You must also state your organisation size in the <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.yourOrganisationSectionId})}">your organisation</a> section.
-                            </th:block>
-                            <th:block th:if="${readOnlyAllApplicantApplicationFinances != null}">
-                                The lead applicant must select a research category in application details before they can supply funding and must also state an organisation size.
-                            </th:block>
+                            <th:block th:if="${model.userIsLeadApplicant}">You must select a research category in <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.application.id}, questionId=${model.applicationDetailsQuestionId})}">application details</a> before you can supply funding.</th:block>
+                            <th:block th:unless="${model.userIsLeadApplicant}">The lead applicant must select a research category in application details before you can supply funding.</th:block>
+                            <br />
+                            You must also state your organisation size in the <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.yourOrganisationSectionId})}">your organisation</a> section.
                         </p>
                     </div>
                 </th:block>
@@ -199,7 +194,7 @@
                 <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (model=${formInputViewModel})" />
             </div>
         </th:block>
-        <div th:insert="fragments/elements :: application-agree-to-terms (${model.competition.id})" th:with="fieldName='form.termsAgreed'" class="agree-to-terms-container"  th:unless="${model.allReadOnly}"></div>
+        <div th:insert="fragments/elements :: application-agree-to-terms (${model.competition.id})" th:with="fieldName='form.termsAgreed'" class="agree-to-terms-container"  th:unless="${model.allReadOnly || readOnlyAllApplicantApplicationFinances != null}"></div>
         <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})" />
     </th:block>
 

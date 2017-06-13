@@ -71,32 +71,6 @@ Your Finance includes Finance summary table for collaborator
     Then the finance summary table in Your Finances has correct values for collaborator
     And The user clicks the button/link        link=Return to application overview
 
-Support User can see read only summary for each partner
-    [Documentation]  IFS-401
-    [Tags]
-    [Setup]  log in as a different user     &{support_user_credentials}
-    When the user navigates to the page     ${server}/management/competition/${OPEN_COMPETITION}/applications/all
-    And the user clicks the button/link     link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
-    Then the user should see the element    jQuery=.project-cost-breakdown tbody tr:nth-of-type(1) th:contains("Detailed Organisation Finances")
-    And the user should see the element     jQuery=.project-cost-breakdown tbody tr:nth-of-type(2) th:contains("Detailed Organisation Finances")
-
-Support User can see read only summary for lead partner
-    [Documentation]  IFS-401
-    [Tags]
-    [Setup]  The user clicks the button/link  jQuery=.project-cost-breakdown tbody tr:nth-of-type(1) th a
-    When the user redirects to the page    Please complete your project finances.    Your finances
-    Then the finance summary table in Your Finances has correct values for lead
-
-Support User can see read only summary for collaborator
-    [Documentation]  IFS-401
-    [Tags]
-    [Setup]  log in as a different user     &{support_user_credentials}
-    When the user navigates to the page     ${server}/management/competition/${OPEN_COMPETITION}/applications/all
-    And the user clicks the button/link     link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
-    When the user clicks the button/link    jQuery=.project-cost-breakdown tbody tr:nth-of-type(2) th a
-    And the user redirects to the page    Please complete your project finances.    Your finances
-    Then the finance summary table in Your Finances has correct values for collaborator
-
 Red warning should show when the finances are incomplete
     [Documentation]    INFUND-927, INFUND-894, INFUND-446
     [Tags]    HappyPath
@@ -153,6 +127,91 @@ Alert should not show If research participation is below the maximum level
     And the user clicks the button/link    jquery=button:contains("Finances summary")
     Then the user should see the text in the page    The participation levels of this project are within the required range
 
+Support User can see read only summary link for each partner
+    [Documentation]  IFS-401
+    [Tags]
+    [Setup]  log in as a different user     &{support_user_credentials}
+    When the user navigates to the page     ${server}/management/competition/${OPEN_COMPETITION}/applications/all
+    And the user clicks the button/link     link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
+    And the user expands the Finance summaries
+    Then the user should see the element    jQuery=.project-cost-breakdown tbody tr:nth-of-type(1) th:contains("${EMPIRE_LTD_NAME}"):contains("Detailed Organisation Finances")
+    And the user should see the element     jQuery=.project-cost-breakdown tbody tr:nth-of-type(2) th:contains("Ludlow"):contains("Detailed Organisation Finances")
+    And the user should see the element     jQuery=.project-cost-breakdown tbody tr:nth-of-type(3) th:contains("EGGS"):contains("Detailed Organisation Finances")
+
+Support User can see read only summary for lead
+    [Documentation]  IFS-401
+    [Tags]
+    [Setup]  The user clicks the button/link  jQuery=.project-cost-breakdown tbody tr:nth-of-type(1) th a
+    When the user redirects to the page       Please complete your project finances.    Your finances
+    Then the finance summary table in Your Finances has correct values for lead
+
+Support User can see read only summary for collaborator
+    [Documentation]  IFS-401
+    [Tags]
+    [Setup]  log in as a different user     &{support_user_credentials}
+    When the user navigates to the page     ${server}/management/competition/${OPEN_COMPETITION}/applications/all
+    And the user clicks the button/link     link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
+    And the user expands the Finance summaries
+    When the user clicks the button/link    jQuery=.project-cost-breakdown tbody tr:contains("Ludlow") th a
+    And the user redirects to the page      Please complete your project finances.    Your finances
+    Then the finance summary table in Your Finances has correct values for collaborator
+
+Support User can see read only view of collaborator Your project costs (values set during marking as complete)
+    [Documentation]  IFS-401
+    [Tags]
+    [Setup]  The user clicks the button/link  jQuery=a:contains("Your project costs")
+    When the user redirects to the page       Provide the project costs for 'Ludlow'   Your project costs
+    And the user clicks the button/link       jQuery=button:contains("Labour")
+    Then the user should see the element      jQuery=input[id$="labourDaysYearly"][value="230"][readonly="readonly"]
+    And the user should see the element       jQuery=input[name^=labour-role][values="anotherrole"][readonly="readonly"]
+    And the user should see the element       jQuery=input[name^=labour-gross][value="120000"][readonly="readonly"]
+    And the user should see the element       jQuery=input[name^=labour-labour][value="100"][readonly="readonly"]
+    When the user clicks the button/link      jQuery=button:contains("Overhead costs")
+    Then the user should see the element      jQuery=input[name^="overheads-type"][value="DEFAULT_PERCENTAGE"][checked="checked"][disabled="disabled"]
+    When the user clicks the button/link      jQuery=button:contains("Materials")
+    Then the user should see the element      css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input[value="10"][readonly="readonly"]
+    And the user should see the element       css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input[value="100"][readonly="readonly"]
+    And the user should see the element       css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input[value="test"][readonly="readonly"]
+    When the user clicks the button/link      jQuery=button:contains("Capital usage")
+    Then the user should see the element      jQuery=textarea.form-control[name^=capital_usage-description][value="some description"]
+    And the user should see the element       jQuery=input[name^=cost-captial_usage][values="New"][checked="checked"][disabled="disabled"]
+    And the user should see the element       css=.form-finances-capital-usage-depreciation[value="10"][readonly="readonly"]
+    And the user should see the element       css=.form-finances-capital-usage-npv[value="5000"][readonly="readonly"]
+    And the user should see the element       css=.form-finances-capital-usage-residual-value[value="25"][readonly="readonly"]
+    And the user should see the element       css=.form-finances-capital-usage-utilisation[value="100"][readonly="readonly"]
+    And the user should see the element       css=#capital_usage .form-row:nth-of-type(1) [readonly]  [value="£ 4,975"]
+    When the user clicks the button/link      jQuery=button:contains("Subcontracting costs")
+    Then the user should see the element      css=.form-finances-subcontracting-company[value="SomeName"]
+    And the user should see the element       jQuery=input.form-control[name^=subcontracting-country][value="Netherlands"]
+    And the user should see the element       jQuery=textarea.form-control[name^=subcontracting-role][value="Quality Assurance"]
+    And the user should see the element       jQuery=input.form-control[name^=subcontracting-subcontractingCost][value="1000"][readonly="readonly"]
+    When the user clicks the button/link      jQuery=button:contains("Travel and subsistence")
+    Then the user should see the element      css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input[value="test"]
+    And the user should see the element       css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input[value="10"]
+    And the user should see the element       css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input[value="100"]
+    When the user clicks the button/link      jQuery=button:contains("Other costs")
+    Then the user should see the element      jQuery=textarea.form-control[name^=other_costs-description][value="some other costs"]
+    And the user should see the element       jQuery=input.form-control[name^=other_costs-otherCost][value="50"]
+
+Support User can see read only view of Your organisation
+    [Documentation]  IFS-401
+    [Tags]
+    [Setup]
+    When the user clicks the button/link    jQuery=a:contains("Your finances")
+    Then the user redirects to the page     Please complete your project finances.  Your finances
+    When the user clicks the button/link    jQuery=:contains("Your organisation")
+    Then the user redirects to the page     Organisation size determines funding  Your organisation
+    And the user should see the element     jQuery=dt:contains("Turnover") + dd:contains("150")
+    And the user should see the element     jQuery=dt:contains("employees") + dd:contains("0")
+
+Support User can see read only view of Your funding
+    [Documentation]  IFS-401
+    [Tags]
+    [Setup]
+    When the user clicks the button/link    jQuery=a:contains("Your finances")
+    Then the user redirects to the page     Please complete your project finances.  Your finances
+    When the user clicks the button/link    jQuery=:contains("Your funding")
+    Then the user redirects to the page     Organisation size determines funding  Your organisation
 
 *** Keywords ***
 the finance summary calculations should be correct
