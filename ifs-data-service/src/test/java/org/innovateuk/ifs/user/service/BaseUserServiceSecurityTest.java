@@ -113,6 +113,16 @@ public class BaseUserServiceSecurityTest extends BaseServiceSecurityTest<BaseUse
         }
 
         @Override
+        public ServiceResult<Long> countActiveByProcessRoles(Set<UserRoleType> roleTypes) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Long> countInactiveByProcessRoles(Set<UserRoleType> roleTypes) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<UserPageResource> findActiveByProcessRoles(Set<UserRoleType> roleTypes, Pageable pageable) {
             return null;
         }
