@@ -1,0 +1,79 @@
+<h1 class="heading-large">Example 1. As lead partner</h1>
+
+<section>
+  <h2 class="heading-medium no-margin-bottom">Application questions</h2>
+  <p>These are the questions which will be marked by the assessors.</p>
+</section>
+
+<ul class="task-list">
+  <li>
+    <div class="task">
+      <h3 class="heading-small"><a href="#">1. Business opportunity</a></h3>
+    </div>
+    <div class="assign-container action-required">
+      <span class="action-required">Assigned to</span>
+      <div class="assign-button-container">
+        <div class="assign-button">
+          <span class="action-required">You</span>
+        </div>
+        {{ render '@assign-list' }}
+      </div>
+    </div>
+  </li>
+
+  <li>
+    <div class="task">
+      <h3 class="heading-small"><a href="#">2. Potential market</a></h3>
+    </div>
+    <div class="assign-container action-required">
+      <span class="secondary-notification">Assigned to</span>
+      <div class="assign-button-container">
+        <div class="assign-button">
+          <span class="secondary-notification">Jessica Doe</span>
+        </div>
+        {{ render '@assign-list' }}
+      </div>
+    </div>
+  </li>
+
+  <li>
+    <div class="task">
+      <h3 class="heading-small"><a href="#">3. Project exploitation</a></h3>
+    </div>
+    <div class="task-status-complete">
+      <span>Complete</span>
+    </div>
+  </li>
+</ul>
+
+<h1 class="heading-large">Example 2. As collaborator</h1>
+
+<section>
+  <h2 class="heading-medium no-margin-bottom">Application questions</h2>
+  <p>These are the questions which will be marked by the assessors.</p>
+</section>
+
+<ul class="task-list">
+  <li>
+    <div class="task">
+      <h3 class="heading-small"><a href="#">1. Business opportunity</a></h3>
+    </div>
+    <span class="secondary-notification">Assigned to Steve Smith</span>
+  </li>
+
+  <li>
+    <div class="task">
+      <h3 class="heading-small"><a href="#">2. Potential market</a></h3>
+    </div>
+    <span class="action-required">Assigned to you</span>
+  </li>
+
+  <li>
+    <div class="task">
+      <h3 class="heading-small"><a href="#">3. Project exploitation</a></h3>
+    </div>
+    <div class="task-status-complete">
+      <span>Complete</span>
+    </div>
+  </li>
+</ul>

@@ -1,0 +1,16 @@
+<h1 class="heading-large">Modal dialogs</h1>
+<p>Controlled with javascript, an alternative standard html page should be used for non-js users</p>
+
+<a href="#fallback-pagewhen-no-js" data-js-modal="my-important-modal" class="button">Open dialog</a>
+
+<div class="modal-overlay js-close" aria-hidden="true"></div>
+<div class="my-important-modal" role="dialog" aria-hidden="true">
+    <button class="js-close close" type="button" aria-label="Close Popup">Close</button>
+    <h2 class="heading-medium no-margin">Submit project details</h2>
+    <p>Are you sure that you wish to submit your project details to Innovate UK?</p>
+    <hr>
+    <div>
+      <button class="button">Submit</button>
+      <button class="js-close buttonlink" type="button">Cancel</button>
+    </div>
+</div>

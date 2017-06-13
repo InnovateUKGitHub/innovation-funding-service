@@ -23,6 +23,19 @@ You can run gulp tasks individually with `gulp <task>` e.g.: `gulp css`
 
 You can also run gulp tasks for a specific service by running `gulp` from the service directory i.e.: `/ifs-web-service/ifs-assessment-service/src/main/resources/static`
 
+### Documentation
+
+A styleguide for the IFS front-end components is available using [Fractal](http://fractal.build/).
+
+#### Installation
+
+1. Having the Fractal CLI will help, `npm install -g @frctl/fractal`
+
+#### Build
+
+1. `cd ifs-web-service/`
+2. Run a local Fractal server `fractal start --sync`
+
 
 ## Important links:
 
