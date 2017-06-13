@@ -1,6 +1,6 @@
-package org.innovateuk.ifs.competition.populator;
+package org.innovateuk.ifs.competition.viewmodel;
 
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatusText;
+import org.innovateuk.ifs.competition.populator.PublicContentStatusText;
 
 import java.time.ZonedDateTime;
 

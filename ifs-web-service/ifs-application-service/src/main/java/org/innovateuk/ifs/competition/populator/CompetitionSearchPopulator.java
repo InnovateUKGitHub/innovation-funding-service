@@ -6,8 +6,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPageResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatusText;
 import org.innovateuk.ifs.competition.viewmodel.CompetitionSearchViewModel;
+import org.innovateuk.ifs.competition.viewmodel.PublicContentItemViewModel;
 import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,6 +26,9 @@ public class CompetitionSearchPopulator {
 
     @Autowired
     private CategoryRestService categoryRestService;
+
+    @Autowired
+    private PublicContentStatusDeterminer publicContentStatusDeterminer;
 
     public CompetitionSearchViewModel createItemSearchViewModel(Optional<Long> innovationAreaId, Optional<String> keywords, Optional<Integer> pageNumber) {
         CompetitionSearchViewModel viewModel = new CompetitionSearchViewModel();
@@ -72,7 +75,7 @@ public class CompetitionSearchPopulator {
 
     private PublicContentItemViewModel mapPublicContentItemResourceToViewModel(PublicContentItemResource publicContentItemResource) {
         PublicContentItemViewModel publicContentItemViewModel = new PublicContentItemViewModel();
-        PublicContentStatusText publicContentStatusIndicator = getApplicablePublicContentStatusText(publicContentItemResource);
+        PublicContentStatusText publicContentStatusIndicator = publicContentStatusDeterminer.getApplicablePublicContentStatusText(publicContentItemResource);
 
         publicContentItemViewModel.setPublicContentStatusText(publicContentStatusIndicator);
         publicContentItemViewModel.setCompetitionTitle(publicContentItemResource.getCompetitionTitle());
@@ -85,9 +88,5 @@ public class CompetitionSearchPopulator {
         return publicContentItemViewModel;
     }
 
-    private PublicContentStatusText getApplicablePublicContentStatusText(PublicContentItemResource publicContentItemResource) {
-        return Arrays.stream(PublicContentStatusText.values())
-                .filter(indicator -> indicator.getPredicate().test(publicContentItemResource))
-                .findFirst().get();
-    }
+
 }
