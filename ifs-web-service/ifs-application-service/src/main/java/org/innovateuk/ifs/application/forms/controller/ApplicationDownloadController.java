@@ -23,7 +23,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 
 /**
- * This controller will handle all requests that are related to the application form.
+ * This controller will handle all download requests that are related to the application form.
  */
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")

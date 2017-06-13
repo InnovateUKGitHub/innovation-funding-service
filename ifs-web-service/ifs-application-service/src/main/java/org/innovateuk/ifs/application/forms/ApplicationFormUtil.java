@@ -4,7 +4,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Map;
 
 /**
- * Todo: add comments
+ * Util class for listening all constants in the applicationForm
  */
 public class ApplicationFormUtil {
     public static final String QUESTION_URL = "/question/";

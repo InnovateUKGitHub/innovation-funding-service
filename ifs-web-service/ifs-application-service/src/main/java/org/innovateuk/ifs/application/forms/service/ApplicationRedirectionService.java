@@ -18,7 +18,7 @@ import java.util.Optional;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 
 /**
- * TODO: comments
+ * This service will handle redirection actions that are related to the application.
  */
 @Service
 public class ApplicationRedirectionService {

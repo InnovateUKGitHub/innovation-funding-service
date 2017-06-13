@@ -42,7 +42,7 @@ import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 
 /**
- * TODO: Comments
+ * This controller will handle all submit requests that are related to the application form.
  */
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")

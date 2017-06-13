@@ -50,7 +50,7 @@ import static org.innovateuk.ifs.controller.ErrorLookupHelper.lookupErrorMessage
 import static org.innovateuk.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntry;
 
 /**
- * This controller will handle all requests that are related to the application form.
+ * This controller will handle all Ajax requests that are related to the application form.
  */
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")

@@ -58,7 +58,7 @@ import static org.innovateuk.ifs.util.HttpUtils.requestParameterPresent;
 import static org.springframework.util.StringUtils.hasText;
 
 /**
- * TODO: comments
+ * This Saver will handle save all sections that are related to the application.
  */
 @Service
 public class ApplicationSectionSaver {

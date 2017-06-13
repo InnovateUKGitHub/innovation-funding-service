@@ -42,7 +42,7 @@ import java.util.Optional;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 
 /**
- * This controller will handle all requests that are related to the application form.
+ * This controller will handle all question requests that are related to the application form.
  */
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
