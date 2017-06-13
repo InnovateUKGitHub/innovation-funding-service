@@ -108,7 +108,7 @@ public class ApplicationQuestionSaver {
         ValidationMessages errors = new ValidationMessages();
 
         // Prevent saving question when it's a unmark question request (INFUND-2936)
-        if (!isMarkQuestionAsInCompleteRequest(params)) {
+        if (!isMarkQuestionAsIncompleteRequest(params)) {
             if (question != null) {
                 errors.addAll(saveQuestionResponses(request, singletonList(question), user.getId(), processRole.getId(), application.getId(), ignoreEmpty));
             }

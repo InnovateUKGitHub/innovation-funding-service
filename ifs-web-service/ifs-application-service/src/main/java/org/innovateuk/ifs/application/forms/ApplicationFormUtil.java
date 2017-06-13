@@ -4,7 +4,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Map;
 
 /**
- * Util class for listening all constants in the applicationForm
+ * Util class for listing all constants in the applicationForm
  */
 public class ApplicationFormUtil {
     public static final String QUESTION_URL = "/question/";
@@ -38,7 +38,7 @@ public class ApplicationFormUtil {
         return params.containsKey(MARK_AS_COMPLETE) || params.containsKey(MARK_AS_INCOMPLETE);
     }
 
-    public static boolean isMarkQuestionAsInCompleteRequest(@NotNull Map<String, String[]> params) {
+    public static boolean isMarkQuestionAsIncompleteRequest(@NotNull Map<String, String[]> params) {
         return params.containsKey(MARK_AS_INCOMPLETE);
     }
 

@@ -134,7 +134,7 @@ public class ApplicationSectionSaver {
         }
 
         // Prevent saving question when it's a unmark question request (INFUND-2936)
-        if (!isMarkQuestionAsInCompleteRequest(params)) {
+        if (!isMarkQuestionAsIncompleteRequest(params)) {
             List<QuestionResource> questions = simpleMap(selectedSection.getQuestions(), questionService::getById);
             errors.addAll(saveQuestionResponses(request, questions, user.getId(), processRole.getId(), application.getId(), ignoreEmpty));
         }
