@@ -46,7 +46,7 @@ The user edits the name this should be changed in the View team page
     [Documentation]    INFUND-2716: Error in where the name of an invited partner doesn't update in 'view team members and add collaborators'.
     [Tags]    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
-    When the user clicks the button/link    link=view and edit your profile details
+    When the user clicks the button/link    link=Profile
     And the user clicks the button/link    link=Edit your details
     And the user enters profile details
     Then the user should see the change in the view team members page
