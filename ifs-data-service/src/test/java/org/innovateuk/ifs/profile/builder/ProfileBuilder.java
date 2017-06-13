@@ -3,8 +3,9 @@ package org.innovateuk.ifs.profile.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.category.domain.InnovationArea;
-import org.innovateuk.ifs.user.domain.Agreement;
 import org.innovateuk.ifs.profile.domain.Profile;
+import org.innovateuk.ifs.user.domain.Agreement;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.BusinessType;
 
 import java.time.ZonedDateTime;
@@ -68,6 +69,14 @@ public class ProfileBuilder extends BaseBuilder<Profile, ProfileBuilder> {
 
     public ProfileBuilder withAgreementSignedDate(ZonedDateTime... agreementSignedDates) {
         return withArray((agreementSignedDate, profile) -> setField("agreementSignedDate", agreementSignedDate, profile), agreementSignedDates);
+    }
+
+    public ProfileBuilder withCreatedBy(User... users) {
+        return withArray((user, profile) -> setField("createdBy", user, profile), users);
+    }
+
+    public ProfileBuilder withCreatedOn(ZonedDateTime... createdOns) {
+        return withArray((createdOn, profile) -> setField("createdOn", createdOn, profile), createdOns);
     }
 
     @Override

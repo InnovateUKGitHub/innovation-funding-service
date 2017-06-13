@@ -198,6 +198,7 @@ public class UserResource {
         this.allowMarketingEmails = allowMarketingEmails;
     }
 
+    @JsonIgnore
     public String getRolesString(){
         return roles.stream()
                 .map(RoleResource::getDisplayName)

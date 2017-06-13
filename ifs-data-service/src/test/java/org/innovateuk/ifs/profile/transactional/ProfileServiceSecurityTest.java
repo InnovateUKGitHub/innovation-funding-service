@@ -98,6 +98,7 @@ public class ProfileServiceSecurityTest extends BaseServiceSecurityTest<ProfileS
 
         assertAccessDenied(() -> classUnderTest.getUserProfile(userId), () -> {
             verify(rules).usersCanViewTheirOwnProfile(isA(UserProfileResource.class), eq(getLoggedInUser()));
+            verify(rules).ifsAdminCanViewAnyUsersProfile(isA(UserProfileResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(rules);
         });
     }

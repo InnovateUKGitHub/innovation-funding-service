@@ -27,6 +27,22 @@ public class UserProfileResource extends UserProfileBaseResource {
         this.user = user;
     }
 
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public ZonedDateTime getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(ZonedDateTime createdOn) {
+        this.createdOn = createdOn;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -47,21 +63,5 @@ public class UserProfileResource extends UserProfileBaseResource {
                 .appendSuper(super.hashCode())
                 .append(this.user)
                 .toHashCode();
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public ZonedDateTime getCreatedOn() {
-        return createdOn;
-    }
-
-    public void setCreatedOn(ZonedDateTime createdOn) {
-        this.createdOn = createdOn;
     }
 }

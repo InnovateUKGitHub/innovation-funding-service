@@ -150,7 +150,7 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "READ_USER_PROFILE", description = "A ifs admin user can read any users profile")
     public boolean ifsAdminCanViewAnyUsersProfile(UserProfileResource profileDetails, UserResource user) {
-        return user.hasRole(UserRoleType.IFS_ADMIN);
+        return user.hasRole(UserRoleType.IFS_ADMINISTRATOR);
     }
 
     @PermissionRule(value = "READ", description = "The user, as well as Comp Admin and Exec can read the user's profile status")
