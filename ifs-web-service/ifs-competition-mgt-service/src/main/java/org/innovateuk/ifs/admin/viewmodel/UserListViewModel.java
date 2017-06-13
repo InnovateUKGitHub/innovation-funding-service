@@ -34,10 +34,6 @@ public class UserListViewModel {
         this.inactiveUsersPagination = inactiveUsersPagination;
     }
 
-    public PaginationViewModel getPagination() {
-        return activeUsersPagination;
-    }
-
     public long getActiveCount() {
         return activeCount;
     }
