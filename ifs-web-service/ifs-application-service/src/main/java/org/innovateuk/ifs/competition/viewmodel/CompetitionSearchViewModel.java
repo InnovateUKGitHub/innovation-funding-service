@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competition.viewmodel;
 
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
-import org.innovateuk.ifs.competition.populator.PublicContentItemViewModel;
 
 import java.util.List;
 
