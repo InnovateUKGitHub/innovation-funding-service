@@ -84,11 +84,10 @@ public class ResearchCategoryController {
 
         Supplier<String> failureView = () -> "application/research-categories";
 
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            return validationHandler.addAnyErrors(saveResearchCategoryChoice(applicationId, researchCategoryForm)).failNowOrSucceedWith(failureView,
-                    () -> {cookieFlashMessageFilter.setFlashMessage(response, APPLICATION_SAVED_MESSAGE);
-                        return "redirect:/application/"+applicationId+"/form/question/"+questionId;
-                    });
+        return validationHandler.addAnyErrors(saveResearchCategoryChoice(applicationId, researchCategoryForm))
+            .failNowOrSucceedWith(failureView, () -> {
+                cookieFlashMessageFilter.setFlashMessage(response, APPLICATION_SAVED_MESSAGE);
+                return "redirect:/application/"+applicationId+"/form/question/"+questionId;
         });
     }
 
