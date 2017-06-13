@@ -8,7 +8,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationResearchCategoryRestService;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
-import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.function.Supplier;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 
 /**
@@ -91,10 +92,13 @@ public class ResearchCategoryController {
         });
     }
 
-    private RestResult<ApplicationResource> saveResearchCategoryChoice(Long applicationId, ResearchCategoryForm researchCategoryForm) {
-        Long researchCategoryId = Long.valueOf(researchCategoryForm.getResearchCategoryChoice());
+    private ServiceResult<ApplicationResource> saveResearchCategoryChoice(Long applicationId, ResearchCategoryForm researchCategoryForm) {
+        if(null != researchCategoryForm.getResearchCategoryChoice()) {
+            Long researchCategoryId = Long.valueOf(researchCategoryForm.getResearchCategoryChoice());
+            return applicationResearchCategoryRestService.saveApplicationResearchCategoryChoice(applicationId, researchCategoryId).toServiceResult();
+        }
 
-        return applicationResearchCategoryRestService.saveApplicationResearchCategoryChoice(applicationId, researchCategoryId);
+        return ServiceResult.serviceFailure(emptyList());
     }
 
     private void checkIfAllowed(Long questionId, ApplicationResource applicationResource) throws ForbiddenActionException {

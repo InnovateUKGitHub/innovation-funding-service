@@ -50,7 +50,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).build());
         when(applicationInnovationAreaPopulator.populate(applicationResource, questionId)).thenReturn(researchCategoryViewModel);
 
-        MvcResult result = mockMvc.perform(get(APPLICATION_BASE_URL+"1/form/question/2/research-category"))
+        MvcResult result = mockMvc.perform(get(APPLICATION_BASE_URL + "1/form/question/2/research-category"))
                 .andExpect(view().name("application/research-categories"))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
@@ -74,14 +74,14 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         when(applicationResearchCategoryRestService.saveApplicationResearchCategoryChoice(applicationId, innovationAreaId)).thenReturn(restSuccess(newApplicationResource().build()));
 
 
-        MvcResult result = mockMvc.perform(post(APPLICATION_BASE_URL+"1/form/question/2/research-category")
+        MvcResult result = mockMvc.perform(post(APPLICATION_BASE_URL + "1/form/question/2/research-category")
                 .param("researchCategoryChoice", innovationAreaId.toString()))
                 .andExpect(view().name("redirect:/application/1/form/question/2"))
                 .andExpect(status().is3xxRedirection())
                 .andReturn();
 
         verify(applicationInnovationAreaPopulator).populate(any(), any());
-        verify(cookieFlashMessageFilter).setFlashMessage(any(),any());
+        verify(cookieFlashMessageFilter).setFlashMessage(any(), any());
         verify(applicationResearchCategoryRestService).saveApplicationResearchCategoryChoice(applicationId, innovationAreaId);
     }
 
@@ -102,7 +102,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         when(applicationInnovationAreaPopulator.populate(applicationResource, questionId)).thenReturn(researchCategoryViewModel);
         when(applicationResearchCategoryRestService.saveApplicationResearchCategoryChoice(applicationId, nonExistentInnovationAreaId)).thenReturn(result);
 
-        MvcResult mvcResult = mockMvc.perform(post(APPLICATION_BASE_URL+"1/form/question/2/research-category")
+        MvcResult mvcResult = mockMvc.perform(post(APPLICATION_BASE_URL + "1/form/question/2/research-category")
                 .param("researchCategoryChoice", nonExistentInnovationAreaId.toString()))
                 .andExpect(view().name("application/research-categories"))
                 .andExpect(status().is2xxSuccessful())
@@ -125,12 +125,11 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).build());
         when(applicationInnovationAreaPopulator.populate(applicationResource, questionId)).thenReturn(researchCategoryViewModel);
 
-        MvcResult mvcResult = mockMvc.perform(post(APPLICATION_BASE_URL+"1/form/question/2/research-category"))
+        mockMvc.perform(post(APPLICATION_BASE_URL + "1/form/question/2/research-category"))
                 .andExpect(view().name("application/research-categories"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(model().hasErrors())
-                .andExpect(model().attributeHasFieldErrors("form", "researchCategoryChoice"))
-                .andReturn();
+                .andExpect(model().attributeHasFieldErrors("form", "researchCategoryChoice"));
 
         verify(applicationInnovationAreaPopulator).populate(any(), any());
         verifyZeroInteractions(applicationInnovationAreaRestService);
@@ -147,7 +146,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         when(applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId, applicationResource)).thenReturn(false);
         when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).build());
 
-        MvcResult mvcResult = mockMvc.perform(post(APPLICATION_BASE_URL+"1/form/question/2/research-category"))
+        MvcResult mvcResult = mockMvc.perform(post(APPLICATION_BASE_URL + "1/form/question/2/research-category"))
                 .andExpect(view().name("forbidden"))
                 .andExpect(status().is4xxClientError())
                 .andReturn();
