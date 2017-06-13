@@ -5,6 +5,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.service.AddressRestService;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.form.AddressForm;
@@ -18,6 +19,7 @@ import org.innovateuk.ifs.registration.viewmodel.OrganisationAddressViewModel;
 import org.innovateuk.ifs.registration.viewmodel.OrganisationCreationSelectTypeViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.service.OrganisationSearchRestService;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -44,11 +46,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.OPERATING;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
+import static org.innovateuk.ifs.application.creation.controller.ApplicationCreationAuthenticatedController.COMPETITION_ID;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.registration.AbstractAcceptInviteController.INVITE_HASH;
 import static org.innovateuk.ifs.registration.AbstractAcceptInviteController.ORGANISATION_TYPE;
@@ -113,6 +117,9 @@ public class OrganisationCreationController {
 
     @Autowired
     private OrganisationCreationSelectTypePopulator organisationCreationSelectTypePopulator;
+
+    @Autowired
+    private CompetitionService competitionService;
 
     @Autowired
     private MessageSource messageSource;
@@ -482,9 +489,21 @@ public class OrganisationCreationController {
         if (!bindingResult.hasFieldErrors(ORGANISATION_NAME) && !bindingResult.hasFieldErrors(USE_SEARCH_RESULT_ADDRESS) && !addressBindingResult.hasErrors()) {
             cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
             boolean isLead = checkOrganisationIsLead(request);
+
             if (isLead) {
-                return "redirect:" + BASE_URL + "/" + LEAD_ORGANISATION_TYPE;
-            } else {
+                Long competitionId = Long.valueOf(cookieUtil.getCookieValue(request, COMPETITION_ID));
+                List<OrganisationTypeResource> allowedOrganisationTypes = competitionService.getOrganisationTypes(competitionId);
+
+                if (organisationTypeIsValidAndContainsOnlyOneType(allowedOrganisationTypes)) {
+                    // Set the organisation type and skip the organisation type page
+                    addCompetitionOrganisationTypeToFormCookies(organisationForm, allowedOrganisationTypes, request, response);
+                    return "redirect:" + BASE_URL + "/" + CONFIRM_ORGANISATION;
+                }
+                else {
+                    return "redirect:" + BASE_URL + "/" + LEAD_ORGANISATION_TYPE;
+                }
+            }
+            else {
                 return "redirect:" + BASE_URL + "/" + CONFIRM_ORGANISATION;
             }
 
@@ -496,46 +515,64 @@ public class OrganisationCreationController {
         }
     }
 
+    private void addCompetitionOrganisationTypeToFormCookies(OrganisationCreationForm organisationCreationForm, List<OrganisationTypeResource> organisationTypeResources, HttpServletRequest request, HttpServletResponse response) {
+        saveToTypeCookie(response, organisationTypeResources.get(0).getId());
+    }
+
     @GetMapping("/" + LEAD_ORGANISATION_TYPE)
     public String selectOrganisationType(Model model,
                                          HttpServletRequest request) {
+        if (organisationTypeShouldBeSelectedByDefault(request)) {
+            return "redirect:" + BASE_URL + "/" + CONFIRM_ORGANISATION;
+        }
+        else {
+            model.addAttribute(MODEL, organisationCreationSelectTypePopulator.populate());
 
-        model.addAttribute(MODEL, organisationCreationSelectTypePopulator.populate());
+            String organisationFormJson = cookieUtil.getCookieValue(request, ORGANISATION_FORM);
+            OrganisationCreationForm organisationCreationForm = JsonUtil.getObjectFromJson(organisationFormJson, OrganisationCreationForm.class);
 
-        String organisationFormJson = cookieUtil.getCookieValue(request, ORGANISATION_FORM);
-        OrganisationCreationForm organisationCreationForm = JsonUtil.getObjectFromJson(organisationFormJson, OrganisationCreationForm.class);
-
-        model.addAttribute(ORGANISATION_FORM, organisationCreationForm);
-        return TEMPLATE_PATH + "/" + LEAD_ORGANISATION_TYPE;
+            model.addAttribute(ORGANISATION_FORM, organisationCreationForm);
+            return TEMPLATE_PATH + "/" + LEAD_ORGANISATION_TYPE;
+        }
     }
 
     @PostMapping("/" + LEAD_ORGANISATION_TYPE)
     public String confirmSelectOrganisationType(Model model,
                                                 @Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                                 BindingResult bindingResult,
+                                                HttpServletRequest request,
                                                 HttpServletResponse response) {
 
-        OrganisationCreationSelectTypeViewModel selectOrgTypeViewModel = organisationCreationSelectTypePopulator.populate();
-        Long organisationTypeId = organisationForm.getOrganisationTypeId();
-        if (organisationTypeId != null &&
-                !isValidLeadOrganisationType(selectOrgTypeViewModel, organisationTypeId)) {
-            bindingResult.addError(new FieldError(ORGANISATION_FORM, ORGANISATION_TYPE_ID, "Please select an organisation type."));
-        }
-
-        if (!bindingResult.hasFieldErrors(ORGANISATION_TYPE_ID)) {
-            OrganisationTypeForm organisationTypeForm = new OrganisationTypeForm();
-            organisationTypeForm.setOrganisationType(OrganisationTypeEnum.getFromId(organisationTypeId).getId());
-            organisationTypeForm.setLeadApplicant(true);
-            String orgTypeForm = JsonUtil.getSerializedObject(organisationTypeForm);
-
-            cookieUtil.saveToCookie(response, ORGANISATION_TYPE, orgTypeForm);
-
+        if (organisationTypeShouldBeSelectedByDefault(request)) {
             return "redirect:" + BASE_URL + "/" + CONFIRM_ORGANISATION;
-        } else {
-            organisationForm.setTriedToSave(true);
-            model.addAttribute(MODEL, selectOrgTypeViewModel);
-            return TEMPLATE_PATH + "/" + LEAD_ORGANISATION_TYPE;
         }
+        else {
+            OrganisationCreationSelectTypeViewModel selectOrgTypeViewModel = organisationCreationSelectTypePopulator.populate();
+            Long organisationTypeId = organisationForm.getOrganisationTypeId();
+            if (organisationTypeId != null &&
+                    !isValidLeadOrganisationType(selectOrgTypeViewModel, organisationTypeId)) {
+                bindingResult.addError(new FieldError(ORGANISATION_FORM, ORGANISATION_TYPE_ID, "Please select an organisation type."));
+            }
+
+            if (!bindingResult.hasFieldErrors(ORGANISATION_TYPE_ID)) {
+                saveToTypeCookie(response, organisationTypeId);
+
+                return "redirect:" + BASE_URL + "/" + CONFIRM_ORGANISATION;
+            } else {
+                organisationForm.setTriedToSave(true);
+                model.addAttribute(MODEL, selectOrgTypeViewModel);
+                return TEMPLATE_PATH + "/" + LEAD_ORGANISATION_TYPE;
+            }
+        }
+    }
+
+    private void saveToTypeCookie(HttpServletResponse response, Long organisationTypeId) {
+        OrganisationTypeForm organisationTypeForm = new OrganisationTypeForm();
+        organisationTypeForm.setOrganisationType(organisationTypeId);
+        organisationTypeForm.setLeadApplicant(true);
+        String orgTypeForm = JsonUtil.getSerializedObject(organisationTypeForm);
+
+        cookieUtil.saveToCookie(response, ORGANISATION_TYPE, orgTypeForm);
     }
 
     private boolean isValidLeadOrganisationType(OrganisationCreationSelectTypeViewModel viewModel, Long organisationTypeId) {
@@ -631,5 +668,29 @@ public class OrganisationCreationController {
 
     private String escapePathVariable(final String input) {
         return getOrRethrow(() -> encodeQueryParam(input, "UTF-8"));
+    }
+
+    private boolean organisationTypeShouldBeSelectedByDefault(HttpServletRequest request) {
+        Long competitionId = Long.valueOf(cookieUtil.getCookieValue(request, COMPETITION_ID));
+        List<OrganisationTypeResource> allowedOrganisationTypes = competitionService.getOrganisationTypes(competitionId);
+
+        return organisationTypeIsValidAndContainsOnlyOneType(allowedOrganisationTypes);
+    }
+
+    private boolean organisationTypeIsValidAndContainsOnlyOneType(List<OrganisationTypeResource> organisationTypes) {
+        boolean onlyOneTypeAllowed = organisationTypes.size() == 1;
+        boolean typeListIsValid = organisationTypes.stream().allMatch(organisationTypeAllowed());
+
+        if(onlyOneTypeAllowed && typeListIsValid) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    private static Predicate<OrganisationTypeResource> organisationTypeAllowed() {
+        return resource -> resource.getId().equals(OrganisationTypeEnum.BUSINESS.getId()) ||
+                resource.getId().equals(OrganisationTypeEnum.RTO.getId());
     }
 }

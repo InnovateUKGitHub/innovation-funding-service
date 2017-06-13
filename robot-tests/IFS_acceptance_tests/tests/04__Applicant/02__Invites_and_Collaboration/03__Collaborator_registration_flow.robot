@@ -108,7 +108,6 @@ Research and technology organisations (RTOs) search (accept invitation flow with
 
 *** Keywords ***
 Custom Suite Setup
-    delete the emails from both test mailboxes
     The guest user opens the browser
 
 the radio button should have the new selection

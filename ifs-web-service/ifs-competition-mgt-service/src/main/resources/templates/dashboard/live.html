@@ -13,7 +13,7 @@
     <form role="search" method="get" id="searchform" th:action="@{'/dashboard/search'}">
         <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})" />
     </form>
-    <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'live'}, counts=${model.counts})" />
+    <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'live'}, counts=${model.counts}, supportView=${model.supportView})" />
 
     <section th:with="openComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN)}">
         <h2 class="heading-medium"
@@ -21,10 +21,11 @@
         <ul class="list-overview">
             <li class="grid-row section" th:each="competition : ${openComps}">
                 <th:block
-                    th:include="competition/dashboard :: dashboard-row"
+                    th:insert="competition/dashboard :: dashboard-row"
                     th:with="competition=${competition},
                         innovationAreas=competition.innovationAreaNames,
-                        cell4=${competition.numberOfApplications + ' applicants'}"/>
+                        cell4=${competition.numberOfApplications + ' applicants'},
+                        supportView=${model.supportView}"/>
             </li>
         </ul>
     </section>
@@ -35,10 +36,11 @@
         <ul class="list-overview">
             <li class="grid-row section" th:each="competition : ${closedComps}">
                 <th:block
-                    th:include="competition/dashboard :: dashboard-row"
+                    th:insert="competition/dashboard :: dashboard-row"
                     th:with="competition=${competition},
                         innovationAreas=competition.innovationAreaNames,
-                        cell4=${competition.numberOfApplications + ' applicants'}"/>
+                        cell4=${competition.numberOfApplications + ' applicants'},
+                        supportView=${model.supportView}"/>
             </li>
         </ul>
     </section>
@@ -49,10 +51,11 @@
         <ul class="list-overview">
             <li class="grid-row section" th:each="competition : ${inAssesmentComps}">
                 <th:block
-                    th:include="competition/dashboard :: dashboard-row"
+                    th:insert="competition/dashboard :: dashboard-row"
                     th:with="competition=${competition},
                         innovationAreas=competition.innovationAreaNames,
-                        cell4=${competition.numberOfApplications + ' applicants'}"/>
+                        cell4=${competition.numberOfApplications + ' applicants'},
+                        supportView=${model.supportView}"/>
             </li>
         </ul>
     </section>
@@ -64,10 +67,11 @@
         <ul class="list-overview">
             <li class="grid-row section" th:each="competition : ${panelComps}">
                 <th:block
-                    th:include="competition/dashboard :: dashboard-row"
+                    th:insert="competition/dashboard :: dashboard-row"
                     th:with="competition=${competition},
                         innovationAreas=competition.innovationAreaNames,
-                        cell4=${competition.numberOfApplications + ' applicants'}"/>
+                        cell4=${competition.numberOfApplications + ' applicants'},
+                        supportView=${model.supportView}"/>
             </li>
         </ul>
     </section>
@@ -79,10 +83,11 @@
         <ul class="list-overview">
             <li class="grid-row section" th:each="competition : ${informComps}">
                 <th:block
-                    th:include="competition/dashboard :: dashboard-row"
+                    th:insert="competition/dashboard :: dashboard-row"
                     th:with="competition=${competition},
                         innovationAreas=competition.innovationAreaNames,
-                        cell4=${competition.numberOfApplications + ' applicants'}"/>
+                        cell4=${competition.numberOfApplications + ' applicants'},
+                        supportView=${model.supportView}"/>
             </li>
         </ul>
     </section>

@@ -4,7 +4,6 @@ import org.hibernate.validator.constraints.Length;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.validation.constraints.WordCount;
 import org.springframework.validation.FieldError;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 

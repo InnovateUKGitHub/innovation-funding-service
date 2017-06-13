@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewMod
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.commons.security.UserAuthenticationService;
+import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
@@ -18,15 +18,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Component
 public class ApplicationPrintPopulator {
 
     @Autowired
     private ApplicationService applicationService;
+
+    @Autowired
+    private SectionService sectionService;
 
     @Autowired
     private CompetitionService competitionService;
@@ -67,17 +71,15 @@ public class ApplicationPrintPopulator {
         Optional<OrganisationResource> userOrganisation = applicationModelPopulator.getUserOrganisation(user.getId(), userApplicationRoles);
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
 
+        Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
+
         organisationDetailsModelPopulator.populateModel(model, application.getId(), userApplicationRoles);
         applicationSectionAndQuestionModelPopulator.addQuestionsDetails(model, application, null);
-        applicationModelPopulator.addUserDetails(model, application, user.getId());
+        applicationModelPopulator.addUserDetails(model, user, userApplicationRoles);
         applicationModelPopulator.addApplicationInputs(application, model);
-        applicationSectionAndQuestionModelPopulator.addMappedSectionsDetails(model, application, competition, Optional.empty(), userOrganisation);
+        applicationSectionAndQuestionModelPopulator.addMappedSectionsDetails(model, application, competition, Optional.empty(), userOrganisation, user.getId(), completedSectionsByOrganisation, Optional.empty());
         applicationFinanceOverviewModelManager.addFinanceDetails(model, competition.getId(), applicationId, userOrganisation.map(OrganisationResource::getId));
 
         return "application/print";
-    }
-
-    private Long getUserOrganisationId(Optional<OrganisationResource> userOrganisation) {
-        return userOrganisation.isPresent() ?  userOrganisation.get().getId() : null;
     }
 }

@@ -22,6 +22,7 @@ import org.innovateuk.threads.resource.QueryResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -76,6 +77,7 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> addPost(PostResource post, Long threadId) {
         return findOne(threadId).andOnSuccess(query -> {
             ProjectFinance projectFinance = projectFinanceRepository.findOne(query.contextClassPk);
@@ -96,6 +98,7 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
     }
 
     @Override
+    @Transactional
     public ServiceResult<Long> create(QueryResource query) {
         return find(projectFinanceRepository.findOne(query.contextClassPk), notFoundError(ProjectFinance.class, query.contextClassPk)).
                 andOnSuccess(projectFinance -> {

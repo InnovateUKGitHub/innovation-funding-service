@@ -16,4 +16,5 @@ public interface ApplicationService {
     OrganisationResource getLeadOrganisation(Long applicationId);
     ServiceResult<Void> removeCollaborator(Long applicationInviteId);
     ServiceResult<Void> markAsIneligible(long applicationId, IneligibleOutcomeResource reason);
+    Boolean showApplicationTeam(Long applicationId, Long userid);
 }

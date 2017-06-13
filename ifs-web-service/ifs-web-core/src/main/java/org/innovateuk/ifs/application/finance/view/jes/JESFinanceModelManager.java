@@ -66,6 +66,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
 
     @Override
     public void addOrganisationFinanceDetails(Model model, Long applicationId, List<QuestionResource> costsQuestions, Long userId, Form form, Long organisationId) {
+        initFinanceRows(applicationId, userId);
         ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(applicationId, userId);
 
         if (applicationFinanceResource != null) {

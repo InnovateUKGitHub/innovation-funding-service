@@ -47,7 +47,7 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...
 ...               INFUND-9062 Validation missing when inviting self as finance contact or PM
 Suite Setup       Custom suite setup
-Suite Teardown    the user closes the browser
+Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
 Resource          PS_Common.robot
 
@@ -255,7 +255,7 @@ Inviting project manager server side validations
     Then the user should see the text in the page    Please enter a valid name.
     And the user should see the text in the page    Please enter an email address.
     When the user enters text to a text field    id=name-project-manager    Steve Smith
-    And the user enters text to a text field     id=email-project-manager    steve.smith@empire.com
+    And the user enters text to a text field     id=email-project-manager    ${lead_applicant}
     And the user clicks the button/link    id=invite-project-manager
     Then the user should see the text in the page    You cannot invite yourself to the project.
 
@@ -288,25 +288,13 @@ Partner invites a project manager
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     [Teardown]    logout as user
 
-Invited project manager receives an email
-    [Documentation]    INFUND-3550
-    [Tags]    HappyPath    Email
-    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+invitedprojectmanager@gmail.com    Project Manager invitation    You will be managing the project
-    Then the user should see the text in the page    Empire Ltd
-
 Invited project manager registration flow
-    [Documentation]    INFUND-3554
+    [Documentation]  INFUND-3550 INFUND-3554
     [Tags]  HappyPath  Email
-    Given the user should see the text in the page    You have been invited to join a project
-    And the user should see the text in the page    Empire Ltd
-    When the user clicks the button/link    jQuery=.button:contains("Create account")
-    And the user creates the account    Bob    Jones
-    And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+invitedprojectmanager@gmail.com    Please verify your email address    Dear Bob Jones
-    Then the user should see the text in the page    Account verified
-    When the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And the guest user inserts user email & password    ${test_mailbox_one}+invitedprojectmanager@gmail.com  ${correct_password}
+    Given the user accepts invitation and signs in  ${TEST_MAILBOX_ONE}+invitedprojectmanager@gmail.com  Project Manager invitation  managing the project  Bob  Jones
+    When the guest user inserts user email & password  ${test_mailbox_one}+invitedprojectmanager@gmail.com  ${correct_password}
     And the guest user clicks the log-in button
-    Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
+    Then the user should see the element        jQuery=.progress-list:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
     Then the user should not see the element    jQuery=.my-applications .in-progress  #applications in progress section
     And the user should not see the element  jQuery=h2:contains("Application in progress")
 
@@ -330,7 +318,7 @@ Lead partner selects a project manager
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see the text in the page    Steve Smith
     And the user clicks the button/link    link=Project Manager
-    And the user sees that the radio button is selected    projectManager    ${STEVE_SMITH_ID}
+    And the user should see the element    css=#projectManager1:checked ~ label
     And the user selects the radio button    projectManager    projectManager2
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
@@ -366,8 +354,8 @@ Project details can be submitted with PM, project address and start date
     And the user should see the element    css=#project-manager-status.yes
     Mark as complete button should be enabled
 
-Non lead partner nominates finance contact
-    [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-4428
+Non lead partner invites finance contact
+    [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-4428 IFS-285
     [Tags]  HappyPath
     When Log in as a different user        &{collaborator1_credentials}
     Then the user navigates to the page    ${project_in_setup_page}
@@ -375,14 +363,22 @@ Non lead partner nominates finance contact
     Then the user should not see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
     And the user clicks the button/link    link=Project setup status
     And the user clicks the button/link    link=Project details
-    Then the user should see the text in the page    Finance contacts
-    And the user should see the text in the page    Partner
-    And the user clicks the button/link    link=Ludlow
-    And the user selects the radio button    financeContact    financeContact1
+    When the user clicks the button/link  link=${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
+    And the user selects the radio button  financeContact  new
+    Then the user enters text to a text field  css=#name-finance-contact  LudlowFinContact
+    And the user enters text to a text field   css=#email-finance-contact  ${test_mailbox_one}+ludlowfincont@gmail.com
+    When the user clicks the button/link       jQuery=button:contains("Invite to project")
+    Then the user should see the element       jQuery=label[for="financeContact3"]:contains("Pending")
     And the user clicks the button/link    jQuery=.button:contains("Save finance contact")
-    Then the user should be redirected to the correct page    ${project_in_setup_page}
-    And the matching status checkbox is updated differently    project-details-finance    3    Yes
-    And the user should see the element    link=Ludlow
+    [Teardown]  Logout as user
+
+Invited Fin Contact for non lead partner
+    [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-4428 IFS-285
+    [Tags]  HappyPath
+    Then the invitee is able to assign himself as Finance Contact  ${test_mailbox_one}+ludlowfincont@gmail.com  Finance contact invitation  providing finance details  Ludlow's  FinContact
+    Given log in as a different user     &{collaborator1_credentials}
+    Then the user navigates to the page  ${project_in_setup_page}/details
+    And the matching status checkbox is updated differently  project-details-finance  3  Yes
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element   jQuery=li.complete:nth-of-type(2)
     When the user clicks the button/link    link=status of my partners
@@ -393,20 +389,20 @@ Non lead partner nominates finance contact
 Non lead partner not eligible for funding
     [Documentation]    INFUND-7090, INFUND-7174
     [Tags]  HappyPath
-    Given the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
+    Given the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(2)
     Then the user should not see the element    jQuery=ul li.require-action:nth-child(4)
     When The user navigates to the page and gets a custom error message     ${project_in_setup_page}/bank-details    ${403_error_message}
-    When the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
+    When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=status of my partners
-    Then the user should be redirected to the correct page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/team-status
+    Then the user should be redirected to the correct page    ${project_in_setup_team_status_page}
     And the user should see the element    jQuery=#table-project-status tr:nth-child(3) td.status.na:nth-child(4)
 
 Other partners can see who needs to provide Bank Details
     [Documentation]    INFUND-7090
     [Tags]
     [Setup]    log in as a different user   &{lead_applicant_credentials}
-    Given the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/team-status
+    Given the user navigates to the page    ${project_in_setup_team_status_page}
     Then the user should see the element    jQuery=#table-project-status tr:nth-child(3) td.status.na:nth-child(4)
     And the user should see the element     jQuery=#table-project-status tr:nth-child(2) td:nth-child(4):contains("")
 
@@ -418,7 +414,7 @@ Option to invite a finance contact
     And the user clicks the button/link    link=Project details
     And the user should see the text in the page    Finance contacts
     And the user should see the text in the page    Partner
-    And the user clicks the button/link    link=Empire Ltd
+    And the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
     When the user selects the radio button    financeContact    new
     Then the user should see the element    id=invite-finance-contact
     When the user selects the radio button    financeContact    financeContact1
@@ -432,7 +428,7 @@ Inviting finance contact server side validations
     Then the user should see the text in the page    Please enter a valid name.
     And the user should see the text in the page    Please enter an email address.
     When the user enters text to a text field    id=name-finance-contact    Steve Smith
-    And the user enters text to a text field     id=email-finance-contact    steve.smith@empire.com
+    And the user enters text to a text field     id=email-finance-contact  ${lead_applicant_credentials["email"]}
     And the user clicks the button/link    id=invite-finance-contact
     Then the user should see the text in the page    You cannot invite yourself to the project.
 
@@ -461,32 +457,20 @@ Partner invites a finance contact
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     [Teardown]    logout as user
 
-Invited finance contact receives an email
-    [Documentation]    INFUND-3524
-    [Tags]  HappyPath  Email
-    When the user reads his email and clicks the link    ${test_mailbox_one}+invitedfinancecontact@gmail.com    Finance contact invitation    Dear John Smith
-    Then the user should see the text in the page    Empire Ltd
-
 Invited finance contact registration flow
-    [Documentation]    INFUND-3530
+    [Documentation]  INFUND-3524 INFUND-3530
     [Tags]  HappyPath  Email
-    Given the user should see the text in the page    You have been invited to join a project
-    And the user should see the text in the page    Empire Ltd
-    When the user clicks the button/link    jQuery=.button:contains("Create account")
-    And the user creates the account    John    Smith
-    And the user reads his email and clicks the link    ${test_mailbox_one}+invitedfinancecontact@gmail.com    Please verify your email address    Verify
-    Then the user should see the text in the page    Account verified
-    When the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And the guest user inserts user email & password    ${test_mailbox_one}+invitedfinancecontact@gmail.com  ${correct_password}
+    Given the user accepts invitation and signs in  ${test_mailbox_one}+invitedfinancecontact@gmail.com  Finance contact invitation  providing finance details  John  Smith
+    When the guest user inserts user email & password  ${test_mailbox_one}+invitedfinancecontact@gmail.com  ${correct_password}
     And the guest user clicks the log-in button
-    Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
+    Then the user should see the element  jQuery=.progress-list:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
 
 Invited finance contact shows on the finance contact selection screen
     [Documentation]    INFUND-3530
     [Tags]  Email
     When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user clicks the button/link    link=Project details
-    And the user clicks the button/link    link=Empire Ltd
+    And the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
     Then the user should see the text in the page    John Smith
 
 Lead partner selects a finance contact
@@ -496,7 +480,7 @@ Lead partner selects a finance contact
     And the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Finance contacts
     And the user should see the text in the page    Partner
-    And the user clicks the button/link    link=Empire Ltd
+    And the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
     And the user should not see duplicated select options
     And the user should not see the text in the page    Pending
     And the user selects the radio button    financeContact    financeContact2
@@ -504,7 +488,7 @@ Lead partner selects a finance contact
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the matching status checkbox is updated differently   project-details-finance    1    Yes
     And the user should see the text in the page    Elmo Chenault
-    And the user should see the element    link=Empire Ltd
+    And the user should see the element    link=${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
 
 Non-lead partner cannot change start date, project manager or project address
     [Documentation]    INFUND-3157
@@ -522,7 +506,7 @@ Internal user should see project details are incomplete
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
     Given the user navigates to the page     ${internal_project_summary}
     When the user clicks the button/link     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.waiting
-    Then the user should see the text in the page  	Not yet completed
+    Then the user should see the text in the page  Not yet completed
 
 Academic Partner nominates Finance contact
     [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-6781
@@ -536,12 +520,12 @@ Academic Partner nominates Finance contact
     When the user clicks the button/link    link=Project details
     Then the user should see the text in the page  Finance contacts
     And the user should see the text in the page   Partner
-    And the user clicks the button/link            link=EGGS
+    And the user clicks the button/link            link=${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
     And the user selects the radio button          financeContact    financeContact1
     And the user clicks the button/link            jQuery=.button:contains("Save finance contact")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the matching status checkbox is updated differently    project-details-finance    2    Yes
-    And the user should see the element     link=EGGS
+    And the user should see the element     link=${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
     When the user navigates to the page     ${project_in_setup_page}
     Then the user should see the element    jQuery=li.complete:nth-of-type(2)
     And the user should see the element    jQuery=li.require-action:nth-child(4)
@@ -588,7 +572,7 @@ All partners can view submitted project details
     [Tags]  HappyPath
     When log in as a different user       &{collaborator1_credentials}
     And the user navigates to the page    ${project_in_setup_details_page}
-    Then the user should see the text in the page    Ludlow
+    Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
     And all the fields are completed
     And the user should see the text in the page    ${project_details_submitted_message}
     Then the user navigates to the page    ${project_in_setup_page}
@@ -596,7 +580,7 @@ All partners can view submitted project details
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
     When log in as a different user         &{lead_applicant_credentials}
     And the user navigates to the page    ${project_in_setup_details_page}
-    Then the user should see the text in the page    Empire Ltd
+    Then the user should see the text in the page    ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
     And all the fields are completed
     And the user should see the text in the page    ${project_details_submitted_message}
     When the user navigates to the page    ${project_in_setup_page}
@@ -695,17 +679,8 @@ Mark as complete button should be enabled
     Then Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Mark as complete")
 
 the user should not see duplicated select options
-    ${NO_OPTIONs}=    Get Matching Xpath Count    //div/fieldset/label
+    ${NO_OPTIONs}=    Get Matching Xpath Count    //*[@class="multiple-choice"]
     Should Be Equal As Integers    ${NO_OPTIONs}    5    # note that an extra option shows here due to the invited project manager appearing in the list for lead partner organisation members
-
-the user creates the account
-    [Arguments]    ${first_name}    ${last_name}
-    the user enters text to a text field    id=firstName    ${first_name}
-    the user enters text to a text field    id=lastName    ${last_name}
-    the user enters text to a text field    id=phoneNumber    0987654321
-    the user enters text to a text field    id=password  ${correct_password}
-    the user selects the checkbox    termsAndConditions
-    the user clicks the button/link    jQuery=.button:contains("Create account")
 
 the user can see all project details completed
     the user should see the element  jQuery=#start-date:contains("1 Jan ${nextyear}")
@@ -715,9 +690,27 @@ the user can see all project details completed
 the user can see all finance contacts completed
     the user should see the element  jQuery=#project-details-finance tr:nth-child(1) td:nth-child(2):contains("Elmo Chenault")
     the user should see the element  jQuery=#project-details-finance tr:nth-child(2) td:nth-child(2):contains("Pete Tom")
-    the user should see the element  jQuery=#project-details-finance tr:nth-child(3) td:nth-child(2):contains("Jessica Doe")
+    the user should see the element  jQuery=#project-details-finance tr:nth-child(3) td:nth-child(2):contains("Ludlow")
 
 Custom suite setup
-    delete the emails from both test mailboxes
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
+
+the invitee is able to assign himself as Finance Contact
+    [Arguments]  ${email}  ${title}  ${pattern}  ${name}  ${famName}
+    the user accepts invitation and signs in      ${email}  ${title}  ${pattern}  ${name}  ${famName}
+    the guest user inserts user email & password  ${email}  ${correct_password}
+    the guest user clicks the log-in button
+    the user navigates to the page  ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/finance-contact?organisation=${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}
+    the user selects the radio button  financeContact  financeContact3
+    the user clicks the button/link    jQuery=button:contains("Save finance contact")
+
+the user accepts invitation and signs in
+    [Arguments]  ${email}  ${title}  ${pattern}  ${name}  ${famName}
+    the user reads his email and clicks the link  ${email}  ${title}  ${pattern}
+    the user should see the element               jQuery=h1:contains("Join a project")
+    the user clicks the button/link               link=Create account
+    the user fills the create account form        ${name}  ${famName}
+    the user reads his email and clicks the link  ${email}  Please verify your email address  Dear ${name} ${famName}
+    the user should see the element               jQuery=h1:contains("Account verified")
+    the user clicks the button/link               jQuery=.button:contains("Sign in")

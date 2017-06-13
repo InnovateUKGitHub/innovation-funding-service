@@ -15,9 +15,9 @@ import org.innovateuk.threads.attachment.resource.AttachmentResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
 
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -29,8 +29,9 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  * under the context of Project Finance Threads, i.e., Queries or Notes.
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ProjectFinanceAttachmentsServiceImpl implements ProjectFinanceAttachmentService {
+
     @Autowired
     private FileService fileService;
 
@@ -57,6 +58,7 @@ public class ProjectFinanceAttachmentsServiceImpl implements ProjectFinanceAttac
     }
 
     @Override
+    @Transactional
     public ServiceResult<AttachmentResource> upload(String contentType, String contentLength, String originalFilename,
                                                     Long projectId, HttpServletRequest request) {
         return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request,
@@ -71,6 +73,7 @@ public class ProjectFinanceAttachmentsServiceImpl implements ProjectFinanceAttac
 
 
     @Override
+    @Transactional
     public ServiceResult<Void> delete(Long attachmentId) {
         return ofNullable(mapper.mapIdToDomain(attachmentId))
                 .map(attachment -> {

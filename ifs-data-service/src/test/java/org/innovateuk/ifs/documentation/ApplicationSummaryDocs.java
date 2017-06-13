@@ -49,4 +49,5 @@ public class ApplicationSummaryDocs {
                     withManageFundingEmailDate(ZonedDateTime.now()).
                     withNumberOfPartners(1, 2, 3, 4, 5).
                     withIneligibleInformed(true, true, true, false, false);
+
 }

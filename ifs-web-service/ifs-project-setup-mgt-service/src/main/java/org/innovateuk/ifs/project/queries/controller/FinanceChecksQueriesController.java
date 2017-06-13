@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.queries.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
+import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -84,6 +85,7 @@ public class FinanceChecksQueriesController {
                            @PathVariable Long organisationId,
                            @RequestParam(value = "query_section", required = false) String querySection,
                            Model model) {
+        projectService.getPartnerOrganisation(projectId, organisationId);
         FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, null, querySection, null);
         model.addAttribute("model", viewModel);
         return QUERIES_VIEW;
@@ -96,6 +98,7 @@ public class FinanceChecksQueriesController {
     ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,
                                                          @PathVariable Long organisationId,
                                                          @PathVariable Long attachmentId) {
+        projectService.getPartnerOrganisation(projectId, organisationId);
         return getFileResponseEntity(financeCheckService.downloadFile(attachmentId), financeCheckService.getAttachmentInfo(attachmentId));
     }
 
@@ -108,10 +111,23 @@ public class FinanceChecksQueriesController {
                                   Model model,
                                   @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                   HttpServletRequest request) {
+        projectService.getPartnerOrganisation(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
-        model.addAttribute("model", populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments));
+        populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments, model);
         model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId, queryId).orElse(new FinanceChecksQueriesAddResponseForm()));
         return QUERIES_VIEW;
+    }
+
+    private void populateQueriesViewModel(Long projectId, Long organisationId, Long queryId, String querySection, List<Long> attachments, Model model) {
+        FinanceChecksQueriesViewModel financeChecksQueriesViewModel = populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments);
+        validateQueryId(financeChecksQueriesViewModel, queryId);
+        model.addAttribute("model", financeChecksQueriesViewModel);
+    }
+
+    private void validateQueryId(FinanceChecksQueriesViewModel financeChecksQueriesViewModel, Long queryId) {
+        if (financeChecksQueriesViewModel.getQueries().stream().noneMatch(threadViewModel -> threadViewModel.getId().equals(queryId))) {
+            throw new ObjectNotFoundException();
+        }
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
@@ -216,6 +232,7 @@ public class FinanceChecksQueriesController {
                                                                  @PathVariable Long queryId,
                                                                  @PathVariable Long attachmentId,
                                                                  HttpServletRequest request) {
+        projectService.getPartnerOrganisation(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
 
         if (attachments.contains(attachmentId)) {
@@ -254,6 +271,7 @@ public class FinanceChecksQueriesController {
                                 @RequestParam(value = "query_section", required = false) String querySection,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
+        projectService.getPartnerOrganisation(projectId, organisationId);
         loadAttachmentsFromCookie(request, projectId, organisationId, queryId).forEach(financeCheckService::deleteFile);
         deleteCookies(response, projectId, organisationId, queryId);
         return redirectToQueryPage(projectId, organisationId, querySection);

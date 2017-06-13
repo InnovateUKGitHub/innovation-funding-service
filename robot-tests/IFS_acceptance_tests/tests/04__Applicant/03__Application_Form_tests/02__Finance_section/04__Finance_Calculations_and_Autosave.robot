@@ -43,7 +43,7 @@ Overhead costs
     then the user clicks the button/link    jQuery=button:contains("Overhead costs")
     # Check for calculate overheads
     When the user clicks the button/link    jQuery=button:contains("Overhead costs")
-    then the user clicks the button/link    css=label[data-target="overhead-total"]
+    then the user clicks the button/link    css=[data-target="overhead-total"] label
     and the user should see the element    jQuery=a:contains("overhead calculation spreadsheet.xlsx")
     and the user should see the element    jQuery=a:contains("overhead calculation spreadsheet.ods")
     # Check for 20% Labour costs option
@@ -57,7 +57,7 @@ Materials
     [Tags]
     When the Applicant fills the Materials fields
     Then Totals should be correct    css=.section-total-summary > [data-mirror="#section-total-191"]    £ 2,000    css=button > [data-mirror="#section-total-191"]    £ 2,000
-    And the user clicks the button/link    css=#material-costs-table tbody tr:nth-child(1) button
+    And the user clicks the button/link    css=#material-costs-table tbody tr:nth-of-type(1) button
     And the user reloads the page
     Then Totals should be correct   css=.section-total-summary > [data-mirror="#section-total-191"]    £ 1,000    css=button > [data-mirror="#section-total-191"]    £ 1,000
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Materials")

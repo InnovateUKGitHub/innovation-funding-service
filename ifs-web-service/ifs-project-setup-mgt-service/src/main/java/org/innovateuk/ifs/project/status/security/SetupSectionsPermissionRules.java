@@ -1,8 +1,12 @@
 package org.innovateuk.ifs.project.status.security;
 
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
+import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
+import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
@@ -13,9 +17,11 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.function.BiFunction;
 
 import static org.innovateuk.ifs.project.sections.SectionAccess.ACCESSIBLE;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
  * Permission checker around the access to various sections within the Project Setup process
@@ -28,6 +34,9 @@ public class SetupSectionsPermissionRules {
 
     @Autowired
     private StatusService statusService;
+
+    @Autowired
+    private ProjectService projectService;
 
     @PermissionRule(value = "ACCESS_PROJECT_DETAILS_SECTION", description = "An internal user can access the Project Details section when submitted by Partners (Individual)")
     public boolean internalCanAccessProjectDetailsSection(Long projectId, UserResource user) {
@@ -73,11 +82,16 @@ public class SetupSectionsPermissionRules {
         return doSectionCheck(projectId, user, SetupSectionInternalUser::canAccessFinanceChecksQueriesSection);
     }
 
+    @PermissionRule(value = "ACCESS_FINANCE_CHECKS_QUERIES_SECTION_ADD_QUERY", description = "A finance team user cannot add a query until a finance contact has been allocated for the organisation")
+    public boolean internalCanAccessFinanceChecksAddQuery(ProjectOrganisationCompositeId target, UserResource user) {
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(target.getProjectId());
+        return simpleFindFirst(projectUsers, pu -> pu.isFinanceContact() && pu.getOrganisation() == target.getOrganisationId()).isPresent() && doSectionCheck(target.getProjectId(), user, SetupSectionInternalUser::canAccessFinanceChecksQueriesSection);
+    }
+
     @PermissionRule(value = "ACCESS_FINANCE_CHECKS_NOTES_SECTION", description = "A finance team can always access the Finance checks notes section")
     public boolean internalCanAccessFinanceChecksNotesSection(Long projectId, UserResource user) {
         return doSectionCheck(projectId, user, SetupSectionInternalUser::canAccessFinanceChecksNotesSection);
     }
-
 
     private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<SetupSectionInternalUser, UserResource, SectionAccess> sectionCheckFn) {
         ProjectStatusResource projectStatusResource;
@@ -91,13 +105,15 @@ public class SetupSectionsPermissionRules {
         } catch (ForbiddenActionException e) {
             LOG.error("Internal user is not allowed to access this project " + projectId);
             return false;
+        } catch (ObjectNotFoundException e) {
+            LOG.error("Status for project " + projectId + " cannot be found.");
+            return false;
         }
 
         SetupSectionInternalUser sectionAccessor = new SetupSectionInternalUser(projectStatusResource);
 
         return sectionCheckFn.apply(sectionAccessor, user) == ACCESSIBLE;
     }
-
 
     private boolean isInternal(UserResource user) {
         return user.hasRole(UserRoleType.COMP_ADMIN)

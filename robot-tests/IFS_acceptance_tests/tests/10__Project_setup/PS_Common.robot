@@ -143,6 +143,8 @@ ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}            ${collaborator1_credenti
 ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}      40
 ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}    EGGS
 ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}   ${collaborator2_credentials["email"]}
+${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}    HIVE IT LIMITED
+${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_EMAIL}   ewan+1@hiveit.co.uk
 
 ${project_in_setup_page}                ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
 ${project_in_setup_details_page}        ${project_in_setup_page}/details
@@ -177,7 +179,7 @@ partner submits his bank details
     the user navigates to the page                   ${server}/project-setup/project/${project}/bank-details
     the user enters text to a text field             id=bank-acc-number  ${account_number}
     the user enters text to a text field             id=bank-sort-code  ${sort_code}
-    the user clicks the button twice                 jQuery=div:nth-child(2) label.selection-button-radio[for="address-use-org"]
+    the user clicks the button twice                 jQuery=div:nth-child(2) label[for="address-use-org"]
     the user should see the element                  jQuery=#registeredAddress h3:contains("Confirm billing address")
     wait until keyword succeeds without screenshots  30  500ms  the user clicks the button/link  jQuery=.button:contains("Submit bank account details")
     wait until keyword succeeds without screenshots  30  500ms  the user clicks the button/link  jQuery=.button[name="submit-app-details"]

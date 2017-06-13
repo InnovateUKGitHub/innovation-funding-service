@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewMod
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.util.Collections.emptyMap;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.mockito.Mockito.*;
 
@@ -66,6 +68,9 @@ public class ApplicationPrintPopulatorTest {
     @Mock
     private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;;
 
+    @Mock
+    private SectionService sectionService;
+
     @Test
     public void testPrint() {
         Long applicationId = 1L;
@@ -78,6 +83,7 @@ public class ApplicationPrintPopulatorTest {
         List<ProcessRoleResource> userApplicationRoles = ProcessRoleResourceBuilder.newProcessRoleResource().build(1);
         Optional<OrganisationResource> userOrganisation = Optional.of(OrganisationResourceBuilder.newOrganisationResource().build());
         Map<Long, FormInputResponseResource> mappedResponses = mock(Map.class);
+        Optional<Boolean> markAsCompleteEnabled = Optional.empty();
 
         when(applicationService.getById(applicationId)).thenReturn(application);
         when(competitionService.getById(application.getCompetition())).thenReturn(competition);
@@ -85,6 +91,7 @@ public class ApplicationPrintPopulatorTest {
         when(processRoleService.findProcessRolesByApplicationId(application.getId())).thenReturn(userApplicationRoles);
         when(applicationModelPopulator.getUserOrganisation(user.getId(), userApplicationRoles)).thenReturn(userOrganisation);
         when(formInputResponseService.mapFormInputResponsesToFormInput(responses)).thenReturn(mappedResponses);
+        when(sectionService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(emptyMap());
 
         target.print(applicationId, model, user);
 
@@ -97,12 +104,9 @@ public class ApplicationPrintPopulatorTest {
         //verify populators called
         verify(organisationDetailsModelPopulator).populateModel(model, application.getId(), userApplicationRoles);
         verify(applicationSectionAndQuestionModelPopulator).addQuestionsDetails(model, application, null);
-        verify(applicationModelPopulator).addUserDetails(model, application, user.getId());
+        verify(applicationModelPopulator).addUserDetails(model, user, userApplicationRoles);
         verify(applicationModelPopulator).addApplicationInputs(application, model);
-        verify(applicationSectionAndQuestionModelPopulator).addMappedSectionsDetails(model, application, competition, Optional.empty(), userOrganisation);
+        verify(applicationSectionAndQuestionModelPopulator).addMappedSectionsDetails(model, application, competition, Optional.empty(), userOrganisation, user.getId(), emptyMap(), markAsCompleteEnabled);
         verify(applicationFinanceOverviewModelManager).addFinanceDetails(model, competition.getId(), applicationId, userOrganisation.map(OrganisationResource::getId));
-
     }
-
-
 }

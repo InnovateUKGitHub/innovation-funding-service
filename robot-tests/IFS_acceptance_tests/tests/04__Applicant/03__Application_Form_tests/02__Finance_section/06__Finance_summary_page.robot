@@ -14,12 +14,12 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...               INFUND-8397  Permission denied when submitting your finances as a collaborator
 ...
 Suite Setup       Guest user log-in  &{lead_applicant_credentials}
-Suite Teardown    the user closes the browser
+Suite Teardown    Close browser and delete emails
 Force Tags        Applicant
-
 Default Tags
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../FinanceSection_Commons.robot
+Resource          ../../../10__Project_setup/PS_Common.robot
 # For the testing of those Testing cases, the application that has been used is:
 # CLOSED_COMPETITION_APPLICATION_NAME that is A new innovative solution
 # of the Competition: Connected digital additive manufacturing
@@ -51,7 +51,7 @@ Contribution to project and funding sought should not be negative number
     [Setup]  log in as a different user    &{lead_applicant_credentials}
     When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
     And the user fills in the project costs        ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    And the user fills in the organisation information  ${OPEN_COMPETITION_APPLICATION_2_NAME}
+    And the user fills in the organisation information  ${OPEN_COMPETITION_APPLICATION_2_NAME}  ${SMALL_ORGANISATION_SIZE}
     And the user checks your funding section for the project  ${OPEN_COMPETITION_APPLICATION_2_NAME}
     Then the contribution to project and funding sought should be 0 and not a negative number
 
@@ -136,9 +136,9 @@ the finance summary calculations should be correct
     the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("£70,316")
 
 the finance Funding breakdown calculations should be correct
-    the user should see the element  jQuery=.project-cost-breakdown th:contains("Empire Ltd") + td:contains("£147,153")
-    the user should see the element  jQuery=.project-cost-breakdown th:contains("Ludlow") + td:contains("£100,452")
-    the user should see the element  jQuery=.project-cost-breakdown th:contains("EGGS") + td:contains("£495")
+    the user should see the element  jQuery=.project-cost-breakdown th:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}") + td:contains("£147,153")
+    the user should see the element  jQuery=.project-cost-breakdown th:contains("${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}") + td:contains("£100,452")
+    the user should see the element  jQuery=.project-cost-breakdown th:contains("${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}") + td:contains("£495")
     the user should see the element  jQuery=.project-cost-breakdown th:contains("Total") + td:contains("£248,100")
 
 the finance summary table in Your Finances has correct values for lead

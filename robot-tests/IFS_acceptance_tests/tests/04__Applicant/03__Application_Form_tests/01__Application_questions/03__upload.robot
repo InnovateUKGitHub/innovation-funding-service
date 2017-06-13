@@ -2,7 +2,7 @@
 Documentation     INFUND-832
 ...               INFUND-409
 Suite Setup       Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    Close browser and delete emails
 Force Tags        Upload    Applicant    Email
 Resource          ../../../../resources/defaultResources.robot
 # Note that all of these tests will require you to set an absolute path for the upload folder robot-tests/upload_files
@@ -47,7 +47,7 @@ Non pdf uploads not allowed
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
     When the user uploads the file      name=formInput[1062]    ${text_file}
-    Then the user should get an error page    ${wrong_filetype_validation_error}
+    The user should see an error    ${wrong_filetype_validation_error}
 
 
 Lead applicant can upload a pdf file
@@ -130,8 +130,7 @@ Collaborator can remove a file when the question is assigned
 
 Collaborators can upload a file when the question is assigned
     [Documentation]    INFUND_3007
-    [Tags]    SmokeTest    Pending
-    #TODO IFS-277.
+    [Tags]    SmokeTest
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=6. Innovation

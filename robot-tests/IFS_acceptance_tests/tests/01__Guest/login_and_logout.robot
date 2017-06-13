@@ -8,6 +8,8 @@ Documentation     INFUND-399 As a client, I would like to demo the system with r
 ...               INFUND-2130 As a competition administrator I want to be able to log into IFS so that I can access the system with appropriate permissions for my role
 ...
 ...               INFUND-1479 As an assessor with an existing Applicant AND Assessor account I want to be able to choose the correct profile when I log in, so that I don't access the wrong profile information
+...
+...               IFS-188 Stakeholder views – Support team
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Guest
 Resource          ../../resources/defaultResources.robot
@@ -22,16 +24,18 @@ Log-out
 Invalid Login
     [Tags]
     Given the user is not logged-in
-    When the guest user enters the log in credentials    steve.smith@empire.com    Passw0rd2
+    When the guest user enters the log in credentials    ${lead_applicant}   Passw0rd2
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the guest user should get an error message
 
 Valid login as Applicant
+    [Documentation]    IFS-32
     [Tags]    HappyPath
     Given the user is not logged-in
-    When the guest user enters the log in credentials    steve.smith@empire.com    Passw0rd
+    When the guest user enters the log in credentials    &{lead_applicant_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=Sign out
+    And the user should not see the element    link=Sign in
     And the user should be redirected to the correct page    ${DASHBOARD_URL}
     [Teardown]    Logout as user
 
@@ -84,17 +88,36 @@ Valid login as Comp Admin
     [Documentation]    INFUND-2130
     [Tags]    HappyPath
     Given the user is not logged-in
-    When the guest user enters the log in credentials    john.doe@innovateuk.test    Passw0rd
+    When the guest user enters the log in credentials  &{Comp_admin1_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=Sign out
     And the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
     [Teardown]    Logout as user
 
+Valid login as Support role
+    [Documentation]    IFS-188
+    [Tags]
+    Given the user is not logged-in
+    When the guest user enters the log in credentials   &{support_user_credentials}
+    And the user clicks the button/link    css=button[name="_eventId_proceed"]
+    Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
+    [Teardown]    Logout as user
+
+Should not see the Sign in link when on the login page
+    Given the user navigates to the page    ${LOGIN_URL}
+    Then the user should not see the element    link=Sign in
+
+Should see the Sign in link when not logged in
+    Given the user is not logged-in
+    And the user navigates to the page    ${frontDoor}
+    Then the user should see the element    link=Sign in
+
 Valid login as Project Finance role
     [Documentation]    INFUND-2609
     [Tags]
     Given the user is not logged-in
-    When the guest user enters the log in credentials    lee.bowman@innovateuk.test    Passw0rd
+    And the user navigates to the page    ${LOGIN_URL}
+    When the guest user enters the log in credentials  &{internal_finance_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
     # note that this has been updated as per the most recent requirements.
@@ -112,6 +135,7 @@ Reset password
     ...    AND    the guest user opens the browser
     Given the user navigates to the page    ${LOGIN_URL}
     When the user clicks the forgot psw link
+    Then the user should see the element    link=Sign in
     And the user enters text to a text field    id=id_email    ${test_mailbox_one}+changepsw@gmail.com
     And the user clicks the button/link    css=input.button
     Then the user should see the text in the page    If your email address is recognised and valid, you’ll receive a notification with instructions about how to reset your password. If you do not receive a notification, please check your junk folder or try again.
@@ -154,8 +178,3 @@ Clear the login fields
     When the user enters text to a text field    id=id_password    ${EMPTY}
     Mouse Out    id=id_password
     wait for autosave
-
-the user clicks the forgot psw link
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    click element    link=forgot your password?
-    Run Keyword If    '${status}' == 'FAIL'    click element    jQuery=summary:contains("Need help signing in or creating an account?")
-    Run Keyword If    '${status}' == 'FAIL'    click element    link=Forgotten your password?

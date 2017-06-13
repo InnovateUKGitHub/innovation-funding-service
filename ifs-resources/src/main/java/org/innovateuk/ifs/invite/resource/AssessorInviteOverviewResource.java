@@ -12,6 +12,7 @@ public class AssessorInviteOverviewResource extends AssessorInviteResource {
     private BusinessType businessType;
     private ParticipantStatusResource status;
     private String details;
+    private Long inviteId;
 
     public AssessorInviteOverviewResource() {
     }
@@ -57,6 +58,7 @@ public class AssessorInviteOverviewResource extends AssessorInviteResource {
                 .append(businessType, that.businessType)
                 .append(status, that.status)
                 .append(details, that.details)
+                .append(inviteId, that.inviteId)
                 .isEquals();
     }
 
@@ -67,6 +69,15 @@ public class AssessorInviteOverviewResource extends AssessorInviteResource {
                 .append(businessType)
                 .append(status)
                 .append(details)
+                .append(inviteId)
                 .toHashCode();
+    }
+
+    public Long getInviteId() {
+        return inviteId;
+    }
+
+    public void setInviteId(Long inviteId) {
+        this.inviteId = inviteId;
     }
 }

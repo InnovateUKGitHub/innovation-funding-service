@@ -8,6 +8,7 @@ import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -36,6 +37,7 @@ public class InviteOrganisationServiceImpl extends BaseTransactionalService impl
     }
 
     @Override
+    @Transactional
     public ServiceResult<InviteOrganisationResource> save(InviteOrganisationResource inviteOrganisationResource) {
         InviteOrganisation inviteOrganisation = inviteOrganisationRepository.save(mapper.mapToDomain(inviteOrganisationResource));
         return serviceSuccess(mapper.mapToResource(inviteOrganisation));

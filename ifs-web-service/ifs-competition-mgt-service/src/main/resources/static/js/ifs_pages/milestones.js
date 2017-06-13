@@ -16,7 +16,7 @@ IFS.competitionManagement.milestones = (function () {
     },
     milestonesExtraValidation: function () {
       // some extra javascript to hide the server side messages when the field is valid
-      var fieldErrors = jQuery(s.milestonesForm + ' .field-error')
+      var fieldErrors = jQuery(s.milestonesForm + ' .form-control-error')
       var emptyInputs = jQuery(s.milestonesForm + ' input').filter(function () { return !this.value })
       if (fieldErrors.length === 0 && emptyInputs.length === 0) {
         jQuery(s.milestonesForm + ' .error-summary').attr('aria-hidden', 'true')
