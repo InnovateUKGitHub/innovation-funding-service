@@ -82,7 +82,7 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
                 return "/" + user.getRoles().get(0).getUrl();
             }
         }
-        return "";
+        return "/";
     }
 
     private String getUserProfileUrl(HttpServletRequest request) {

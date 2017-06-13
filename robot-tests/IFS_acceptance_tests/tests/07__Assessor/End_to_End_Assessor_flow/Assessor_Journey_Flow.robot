@@ -85,7 +85,7 @@ CompAdmin should see Assessor's profile and Innovation Area
     And the user should see the text in the page    Emerging technology
 
 CompAdmin Invites assessor to assess an application
-    [Setup]    The user clicks the button/link    link=My dashboard
+    [Setup]    The user clicks the button/link    link=Dashboard
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And The user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)

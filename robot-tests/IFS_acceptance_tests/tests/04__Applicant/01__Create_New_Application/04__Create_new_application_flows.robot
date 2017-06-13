@@ -111,7 +111,7 @@ Logged in user can create a new application
 
 *** Keywords ***
 the new application should be visible in the dashboard page
-    the user clicks the button/link    link= My dashboard
+    the user clicks the button/link    link=Dashboard
     the user should see the text in the page    ${test_title}
     the user should see the text in the page    Application number:
 
