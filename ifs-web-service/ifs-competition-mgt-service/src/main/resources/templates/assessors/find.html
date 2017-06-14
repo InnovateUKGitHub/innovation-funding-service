@@ -110,6 +110,7 @@
           th:action="@{/competition/{competitionId}/assessors/find/addSelected(competitionId=${model.competitionId})}"
           th:object="${selectionForm}"
           data-multipage-select="">
+          <input id="total-list-size" type="hidden" th:value="${model.pagination.totalCount}" />
 
         <div class="grid-row sorting">
             <div class="column-half select-all">
@@ -117,7 +118,7 @@
                     <input type="checkbox"
                            data-select-all=""
                            id="select-all-check"
-                           th:field="*{allSelected}"/>
+                           th:checked="${#lists.size(selectionForm.selectedAssessorIds)} == ${model.pagination.totalCount}"/>
                     <label for="select-all-check">
                         Select all assessors
                     </label>

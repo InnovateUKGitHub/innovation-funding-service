@@ -6,10 +6,14 @@ IFS.competitionManagement.multipageSelect = (function () {
       multipageCheckboxEl: '[data-multipage-select] [type="checkbox"]', // <form data-multipage-select> to identify this is a multipage Select
       selectAllEl: '[data-select-all]',       // the select all element <input type="che"
       countEl: '[data-count-selected]',
-      submitEl: '[data-submit-el]'
+      submitEl: '[data-submit-el]',
+      totalListSizeEl: '#total-list-size',
+      totalListSize: 0
     },
     init: function () {
       s = this.settings
+      // caching the total list size once so we can do the changeStateSelectAllCheckbox all selected check
+      s.totalListSize = parseInt(jQuery('#total-list-size').val())
 
       jQuery('body').on('change', s.multipageCheckboxEl, function () {
         IFS.competitionManagement.multipageSelect.processMultipageCheckbox(this)
@@ -42,9 +46,11 @@ IFS.competitionManagement.multipageSelect = (function () {
         }
         if (typeof (result.selectionCount) !== 'undefined') {
           var selectedRows = parseInt(result.selectionCount)
-          console.log(selectedRows)
           IFS.competitionManagement.multipageSelect.updateCount(selectedRows)
           IFS.competitionManagement.multipageSelect.updateSubmitButton(selectedRows)
+          if (!isSelectAll) {
+            IFS.competitionManagement.multipageSelect.changeStateSelectAllCheckbox(selectedRows)
+          }
         }
       }).fail(function (jqXHR, data) {
         // ignore incomplete requests, likely due to navigating away from the page
@@ -69,6 +75,15 @@ IFS.competitionManagement.multipageSelect = (function () {
     updateCount: function (count) {
       if (jQuery(s.countEl).length) {
         jQuery(s.countEl).text(count)
+      }
+    },
+    changeStateSelectAllCheckbox: function (count) {
+      // if all checkboxes are checked we also check the selectAll
+      var selectAll = jQuery(s.selectAllEl)
+      if (s.totalListSize === count) {
+        selectAll.prop('checked', 'checked')
+      } else {
+        selectAll.removeProp('checked')
       }
     },
     changeStateCheckboxes: function (state) {
