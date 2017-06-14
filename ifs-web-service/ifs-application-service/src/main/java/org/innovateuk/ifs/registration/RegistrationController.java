@@ -289,20 +289,6 @@ public class RegistrationController {
         }
     }
 
-//    private void addEnvelopeErrorsToBindingResultErrors(List<Error> errors, BindingResult bindingResult) {
-//        errors.forEach(
-//                error -> rejectField(error, bindingResult)
-//        );
-//    }
-//
-//    private void rejectField(Error error, BindingResult bindingResult) {
-//        if (StringUtils.hasText(error.getFieldName())) {
-//            bindingResult.rejectValue(error.getFieldName(), "registration." + error.getErrorKey());
-//        } else {
-//            bindingResult.reject("registration." + error.getErrorKey());
-//        }
-//    }
-
     private ServiceResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId, Long competitionId) {
         return userService.createLeadApplicantForOrganisationWithCompetitionId(
                 registrationForm.getFirstName(),
