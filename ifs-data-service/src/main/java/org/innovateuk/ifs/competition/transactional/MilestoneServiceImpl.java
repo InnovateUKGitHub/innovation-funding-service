@@ -35,7 +35,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Service
 public class MilestoneServiceImpl extends BaseTransactionalService implements MilestoneService {
     private static final Log LOG = LogFactory.getLog(MilestoneServiceImpl.class);
-    private static final List<MilestoneType> PUBLIC_MILESTONES = asList(MilestoneType.OPEN_DATE, MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE);
+    private static final List<MilestoneType> PUBLIC_MILESTONES = asList(MilestoneType.OPEN_DATE, MilestoneType.NOTIFICATIONS, MilestoneType.SUBMISSION_DATE);
     @Autowired
     private MilestoneRepository milestoneRepository;
 
