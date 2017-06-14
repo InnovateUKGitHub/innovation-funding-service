@@ -9,7 +9,7 @@ WHERE
 
 UPDATE guidance_row SET
   subject='No',
-  priority=0
+  priority=1
 WHERE
   subject='NO' AND
   form_input_id IN (SELECT id FROM form_input WHERE
@@ -19,7 +19,7 @@ WHERE
 
 UPDATE guidance_row SET
   subject='Yes',
-  priority=1
+  priority=0
 WHERE
   subject='YES' AND
   form_input_id IN (SELECT id FROM form_input WHERE
