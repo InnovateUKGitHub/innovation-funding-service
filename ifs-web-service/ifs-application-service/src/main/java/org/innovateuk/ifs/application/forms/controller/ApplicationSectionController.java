@@ -6,7 +6,7 @@ import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.forms.service.ApplicationRedirectionService;
-import org.innovateuk.ifs.application.forms.service.ApplicationSectionSaver;
+import org.innovateuk.ifs.application.forms.saver.ApplicationSectionSaver;
 import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.section.AbstractSectionPopulator;

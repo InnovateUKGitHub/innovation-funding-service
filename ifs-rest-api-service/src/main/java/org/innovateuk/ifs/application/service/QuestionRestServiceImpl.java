@@ -15,9 +15,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-import static org.innovateuk.ifs.application.service.Futures.adapt;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.questionResourceListType;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.application.service.Futures.adapt;
 
 /**
  * QuestionRestServiceImpl is a utility for CRUD operations on {@link QuestionResource}.
