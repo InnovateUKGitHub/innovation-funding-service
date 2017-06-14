@@ -24,7 +24,7 @@ View the list of the applications
     [Documentation]    INFUND-7042
     [Tags]
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    When The user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
+    When The user clicks the button/link    jQuery=a:contains("Manage assessments")
     And the user see the correct key statistics
     And The key statistics counts should be correct
     And The user clicks the button/link    jQuery=a:contains("Manage applications")
@@ -114,7 +114,7 @@ Remove and notify an assessor (Notified)
     [Tags]
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
+    And the user clicks the button/link    jQuery=a:contains("Manage assessments")
     And the user clicks the button/link    jQuery=a:contains("Manage applications")
     And the user clicks the button/link    jQuery=tr:nth-child(9) a:contains(View progress)
     When the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("Remove")
@@ -137,7 +137,7 @@ Reassign and notify an assessor (Notified)
     [Tags]
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
+    And the user clicks the button/link    jQuery=a:contains("Manage assessments")
     And the user clicks the button/link    jQuery=a:contains("Manage applications")
     And the user clicks the button/link    jQuery=tr:nth-child(9) a:contains(View progress)
     And the user should see the text in the page    Previously assigned (1)

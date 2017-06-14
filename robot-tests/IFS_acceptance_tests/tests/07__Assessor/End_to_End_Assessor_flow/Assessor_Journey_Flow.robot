@@ -87,7 +87,7 @@ CompAdmin should see Assessor's profile and Innovation Area
 CompAdmin Invites assessor to assess an application
     [Setup]    The user clicks the button/link    link=My dashboard
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And The user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
+    And The user clicks the button/link    jQuery=a:contains("Manage assessments")
     And the user clicks the button/link    jQuery=a:contains("Manage applications")
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     And the user clicks the button/link    jQuery=.pagination-label:contains(Next)
