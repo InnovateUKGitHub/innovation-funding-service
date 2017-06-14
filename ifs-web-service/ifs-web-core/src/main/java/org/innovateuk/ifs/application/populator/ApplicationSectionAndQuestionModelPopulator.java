@@ -88,10 +88,6 @@ public class ApplicationSectionAndQuestionModelPopulator {
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(competition.getId());
         List<SectionResource> parentSections = sectionService.filterParentSections(allSections);
 
-        Map<Long, SectionResource> sections =
-                parentSections.stream().collect(Collectors.toMap(SectionResource::getId,
-                        Function.identity()));
-
         userOrganisation.ifPresent(org -> {
             Set<Long> completedSectionsForThisOrganisation = completedSectionsByOrganisation.get(userOrganisation);
             model.addAttribute("completedSections", completedSectionsForThisOrganisation);
@@ -105,7 +101,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
         List<FormInputResource> formInputResources = formInputRestService.getByCompetitionIdAndScope(
                 competition.getId(), APPLICATION).getSuccessObjectOrThrowException();
 
-        model.addAttribute("sections", sections);
+        model.addAttribute("sections", parentSections);
         Map<Long, List<QuestionResource>> sectionQuestions = parentSections.stream()
                 .collect(Collectors.toMap(
                         SectionResource::getId,

@@ -1,5 +1,5 @@
 <th:block th:fragment="application-summary">
-  <section th:each="section : ${sections.values()}" th:unless="${section.name.equals('Finances')}">
+  <section th:each="section : ${sections}" th:unless="${section.name.equals('Finances')}">
 
       <h2 th:text="${section.name}" class="heading-medium" th:unless="${section.name.equals('Project details') and !(currentApplication.isOpen() and isApplicant)}"/>
 
