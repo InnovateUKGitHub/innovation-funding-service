@@ -594,6 +594,16 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         assertFalse(rules.userCanCheckTheyHaveApplicationForCompetition(user, anotherUser));
     }
 
+    @Test
+    public void testIfsAdminCanViewAnyUsersProfile(){
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(ifsAdminUser())) {
+                assertTrue(rules.ifsAdminCanViewAnyUsersProfile(newUserProfileResource().build(), user));
+            } else {
+                assertFalse(rules.ifsAdminCanViewAnyUsersProfile(newUserProfileResource().build(), user));
+            }
+        });
+    }
 
     @Override
     protected UserPermissionRules supplyPermissionRulesUnderTest() {

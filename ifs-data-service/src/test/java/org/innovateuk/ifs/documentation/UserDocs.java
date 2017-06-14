@@ -2,6 +2,7 @@ package org.innovateuk.ifs.documentation;
 
 import org.springframework.restdocs.payload.FieldDescriptor;
 
+import static org.innovateuk.ifs.documentation.PageResourceDocs.pageResourceFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 /**
@@ -29,4 +30,6 @@ public class UserDocs {
             fieldWithPath("allowMarketingEmails").description("allow marketing emails")
     };
 
+
+    public static final FieldDescriptor[] userPageResourceFields = pageResourceFields;
 }

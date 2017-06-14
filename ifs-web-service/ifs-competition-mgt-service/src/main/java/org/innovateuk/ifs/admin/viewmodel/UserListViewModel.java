@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.admin.viewmodel;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 
@@ -60,5 +62,37 @@ public class UserListViewModel {
 
     public String getTab() {
         return tab;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserListViewModel that = (UserListViewModel) o;
+
+        return new EqualsBuilder()
+                .append(activeCount, that.activeCount)
+                .append(inactiveCount, that.inactiveCount)
+                .append(tab, that.tab)
+                .append(activeUsers, that.activeUsers)
+                .append(inactiveUsers, that.inactiveUsers)
+                .append(activeUsersPagination, that.activeUsersPagination)
+                .append(inactiveUsersPagination, that.inactiveUsersPagination)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(tab)
+                .append(activeUsers)
+                .append(inactiveUsers)
+                .append(activeCount)
+                .append(inactiveCount)
+                .append(activeUsersPagination)
+                .append(inactiveUsersPagination)
+                .toHashCode();
     }
 }

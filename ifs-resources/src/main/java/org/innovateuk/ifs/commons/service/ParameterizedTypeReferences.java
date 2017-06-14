@@ -95,10 +95,6 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<UserResource>>() {};
     }
 
-    public static ParameterizedTypeReference<UserPageResource> userPageSetType() {
-        return new ParameterizedTypeReference<UserPageResource>() {};
-    }
-
     public static ParameterizedTypeReference<List<CompetitionResource>> competitionResourceListType() {
         return new ParameterizedTypeReference<List<CompetitionResource>>() {};
     }

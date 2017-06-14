@@ -20,8 +20,8 @@ public interface UserRestService {
 
     RestResult<List<UserResource>> findByUserRoleType(UserRoleType userRoleType);
 
-    RestResult<Long> countActiveInternalUsers();
-    RestResult<Long> countInactiveInternalUsers();
+    /*RestResult<Long> countActiveInternalUsers();
+    RestResult<Long> countInactiveInternalUsers();*/
     RestResult<UserPageResource> getActiveInternalUsers(int pageNumber, int pageSize);
     RestResult<UserPageResource> getInactiveInternalUsers(int pageNumber, int pageSize);
 

@@ -80,11 +80,6 @@ public class UserPermissionRules {
         return isInternal(user);
     }
 
-    @PermissionRule(value = "READ", description = "Internal users can view everyone")
-    public boolean internalUsersCanViewEveryone(Long count, UserResource user) {
-        return isInternal(user);
-    }
-
     @PermissionRule(value = "READ", description = "The System Registration user can view everyone")
     public boolean systemRegistrationUserCanViewEveryone(UserResource userToView, UserResource user) {
         return isSystemRegistrationUser(user);

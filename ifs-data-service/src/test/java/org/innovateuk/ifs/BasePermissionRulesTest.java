@@ -86,6 +86,10 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
         return (UserResource) ReflectionTestUtils.getField(new DefaultPermissionMethodHandler(new PermissionedObjectClassToPermissionsToPermissionsMethods()), "ANONYMOUS_USER");
     }
 
+    protected UserResource ifsAdminUser(){
+        return getUserWithRole(IFS_ADMINISTRATOR);
+    }
+
     @Before
     public void setupSetsOfData() {
         allRoles = newRole().withType(UserRoleType.values()).build(UserRoleType.values().length);

@@ -4,17 +4,14 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.token.security.TokenLookupStrategies;
 import org.innovateuk.ifs.token.security.TokenPermissionRules;
-import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.security.UserPermissionRules;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Set;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -110,26 +107,6 @@ public class BaseUserServiceSecurityTest extends BaseServiceSecurityTest<BaseUse
         @Override
         public ServiceResult<List<UserResource>> findByProcessRole(UserRoleType roleType) {
             return serviceSuccess(newUserResource().build(2));
-        }
-
-        @Override
-        public ServiceResult<Long> countActiveByProcessRoles(Set<UserRoleType> roleTypes) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Long> countInactiveByProcessRoles(Set<UserRoleType> roleTypes) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<UserPageResource> findActiveByProcessRoles(Set<UserRoleType> roleTypes, Pageable pageable) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<UserPageResource> findInactiveByProcessRoles(Set<UserRoleType> roleTypes, Pageable pageable) {
-            return null;
         }
 
     }

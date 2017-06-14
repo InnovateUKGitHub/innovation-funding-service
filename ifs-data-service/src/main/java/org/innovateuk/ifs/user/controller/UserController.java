@@ -70,26 +70,26 @@ public class UserController {
         return baseUserService.findByProcessRole(UserRoleType.fromName(userRoleName)).toGetResponse();
     }
 
-    @GetMapping("/internal/active/count")
+    /*@GetMapping("/internal/active/count")
     public RestResult<Long> countActiveInternalUsers(){
-        return baseUserService.countActiveByProcessRoles(UserRoleType.internalRoles()).toGetResponse();
+        return userService.countActiveByProcessRoles(UserRoleType.internalRoles()).toGetResponse();
     }
 
     @GetMapping("/internal/inactive/count")
     public RestResult<Long> countInactiveInternalUsers(){
-        return baseUserService.countInactiveByProcessRoles(UserRoleType.internalRoles()).toGetResponse();
-    }
+        return userService.countInactiveByProcessRoles(UserRoleType.internalRoles()).toGetResponse();
+    }*/
 
     @GetMapping("/internal/active")
     public RestResult<UserPageResource> findActiveInternalUsers(@RequestParam(value = "page", defaultValue = "0") int pageIndex,
                                                                 @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize){
-        return baseUserService.findActiveByProcessRoles(UserRoleType.internalRoles(), new PageRequest(pageIndex, pageSize)).toGetResponse();
+        return userService.findActiveByProcessRoles(UserRoleType.internalRoles(), new PageRequest(pageIndex, pageSize)).toGetResponse();
     }
 
     @GetMapping("/internal/inactive")
     public RestResult<UserPageResource> findInactiveInternalUsers(@RequestParam(value = "page", defaultValue = "0") int pageIndex,
                                                                   @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize){
-        return baseUserService.findInactiveByProcessRoles(UserRoleType.internalRoles(), new PageRequest(pageIndex, pageSize)).toGetResponse();
+        return userService.findInactiveByProcessRoles(UserRoleType.internalRoles(), new PageRequest(pageIndex, pageSize)).toGetResponse();
     }
 
     @GetMapping("/findAll/")

@@ -221,7 +221,7 @@ public abstract class BaseRestService {
         return headers;
     }
 
-    protected String buildPaginationUri(String url, Integer pageNumber, Integer pageSize, String sort, MultiValueMap<String, String> params, Object... uriParameters ) {
+    public static String buildPaginationUri(String url, Integer pageNumber, Integer pageSize, String sort, MultiValueMap<String, String> params, Object... uriParameters ) {
         if(pageNumber != null) {
             params.put("page", singletonList(pageNumber.toString()));
         }

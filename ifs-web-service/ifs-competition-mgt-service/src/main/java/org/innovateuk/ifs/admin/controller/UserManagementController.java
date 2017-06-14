@@ -47,8 +47,8 @@ public class UserManagementController {
                             activeTab,
                             activeInternalUsers.getContent(),
                             inactiveInternalUsers.getContent(),
-                            userRestService.countActiveInternalUsers().getOrElse(0L),
-                            userRestService.countInactiveInternalUsers().getOrElse(0L),
+                            activeInternalUsers.getTotalElements(),
+                            inactiveInternalUsers.getTotalElements(),
                             new PaginationViewModel(activeInternalUsers, "active") ,
                             new PaginationViewModel(inactiveInternalUsers, "inactive")));
             return "admin/users";
