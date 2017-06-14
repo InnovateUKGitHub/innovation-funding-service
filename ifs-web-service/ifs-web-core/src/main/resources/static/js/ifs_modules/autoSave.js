@@ -120,19 +120,6 @@ IFS.core.autoSave = (function () {
             value: field.val()
           }
           break
-        case 'findAssessor':
-          if (field.attr('id') === 'select-all-check') {
-            jsonObj = {
-              addAll: field.prop('checked')
-            }
-          } else {
-            jsonObj = {
-              isSelected: field.prop('checked'),
-              assessor: field.val()
-            }
-          }
-
-          break
         default :
           jsonObj = false
       }
@@ -167,9 +154,6 @@ IFS.core.autoSave = (function () {
           var formInputId = field.closest('.question').prop('id').replace('form-input-', '')
           var assessmentId = form.attr('action').split('/')[2]
           url = '/assessment/' + assessmentId + '/formInput/' + formInputId
-          break
-        case 'findAssessor':
-          url = window.location.href
           break
         default:
           url = false

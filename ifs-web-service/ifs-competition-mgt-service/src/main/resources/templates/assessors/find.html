@@ -109,14 +109,13 @@
     <form method="POST"
           th:action="@{/competition/{competitionId}/assessors/find/addSelected(competitionId=${model.competitionId})}"
           th:object="${selectionForm}"
-          data-autosave="findAssessor">
+          data-multipage-select="">
 
         <div class="grid-row sorting">
             <div class="column-half select-all">
                 <div class="multiple-choice">
                     <input type="checkbox"
-                           data-select-all="[name=selectedAssessorIds]"
-                           data-switches-button-status="[name=addSelected]"
+                           data-select-all=""
                            id="select-all-check"
                            th:field="*{allSelected}"/>
                     <label for="select-all-check">
@@ -124,17 +123,11 @@
                     </label>
                 </div>
                 <span class="form-hint">
-                    <span data-count-selected="table input[type=checkbox]"
-                          th:attr="
-                          data-count-selected-current=${#lists.size(selectionForm.selectedAssessorIds)},
-                          data-count-selected-max=${model.pagination.totalCount}">
-                    </span> assessor(s) selected
+                    <span data-count-selected="" th:text="${#lists.size(selectionForm.selectedAssessorIds)}"></span> assessor(s) selected
                 </span>
             </div>
             <div class="column-half select-all alignright">
-                <button class="button" name="addSelected"
-                        data-enable-button-when="one-checked"
-                        th:attr="data-enable-initial=${!#lists.isEmpty(selectionForm.selectedAssessorIds)}">
+                <button class="button" name="addSelected" data-submit-el="" th:attr="disabled=${!#lists.isEmpty(selectionForm.selectedAssessorIds)}">
                     Add selected to invite list
                 </button>
             </div>
@@ -156,7 +149,6 @@
                     <td>
                         <div class="multiple-choice">
                             <input type="checkbox"
-                                   data-switches-button-status="[name=addSelected]"
                                    th:id="|assessor-id-${assessor.id}|"
                                    th:field="*{selectedAssessorIds}"
                                    th:value="${assessor.id}"/>

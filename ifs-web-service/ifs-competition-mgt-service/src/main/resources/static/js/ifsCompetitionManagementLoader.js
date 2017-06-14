@@ -20,12 +20,10 @@ IFS.competitionManagement = {}
 IFS.competitionManagement.loadOrder = {
   common: {
     init: function () {
-      IFS.competitionManagement.stickyMenu.init()
       IFS.competitionManagement.various.init()
     },
     finalize: function () {
-      IFS.competitionManagement.selectAll.init()
-      IFS.competitionManagement.countSelected.init()
+      IFS.competitionManagement.multipageSelect.init()
     }
   },
   'competition-management': {
@@ -40,11 +38,6 @@ IFS.competitionManagement.loadOrder = {
       IFS.competitionManagement.fundingInformation.init()
       IFS.competitionManagement.repeater.init()
       IFS.core.finance.init()
-    }
-  },
-  'invite-assessors': {
-    init: function () {
-      IFS.competitionManagement.inviteAssessorsFind.init()
     }
   }
 }
