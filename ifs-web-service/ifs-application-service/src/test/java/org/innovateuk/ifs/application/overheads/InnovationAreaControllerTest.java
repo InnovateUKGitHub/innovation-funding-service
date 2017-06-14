@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.areas.controller.InnovationAreaController;
 import org.innovateuk.ifs.application.areas.populator.ApplicationInnovationAreaPopulator;
 import org.innovateuk.ifs.application.areas.viewmodel.InnovationAreaViewModel;
-import org.innovateuk.ifs.application.forms.controller.ApplicationFormController;
 import org.innovateuk.ifs.application.forms.validator.ApplicationDetailsEditableValidator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.Error;
@@ -16,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.mockito.Matchers.any;
@@ -51,7 +51,7 @@ public class InnovationAreaControllerTest extends BaseControllerMockMVCTest<Inno
         when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).build());
         when(applicationInnovationAreaPopulator.populate(applicationResource, questionId)).thenReturn(innovationAreaViewModel);
 
-        MvcResult result = mockMvc.perform(get(ApplicationFormController.APPLICATION_BASE_URL+"1/form/question/2/innovation-area"))
+        MvcResult result = mockMvc.perform(get(APPLICATION_BASE_URL+"1/form/question/2/innovation-area"))
                 .andExpect(view().name("application/innovation-areas"))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
@@ -75,7 +75,7 @@ public class InnovationAreaControllerTest extends BaseControllerMockMVCTest<Inno
         when(applicationInnovationAreaRestService.saveApplicationInnovationAreaChoice(applicationId, innovationAreaId)).thenReturn(restSuccess(newApplicationResource().build()));
 
 
-        MvcResult result = mockMvc.perform(post(ApplicationFormController.APPLICATION_BASE_URL+"1/form/question/2/innovation-area")
+        MvcResult result = mockMvc.perform(post(APPLICATION_BASE_URL+"1/form/question/2/innovation-area")
         .param("innovationAreaChoice", innovationAreaId.toString()))
                 .andExpect(view().name("redirect:/application/1/form/question/2"))
                 .andExpect(status().is3xxRedirection())
@@ -100,7 +100,7 @@ public class InnovationAreaControllerTest extends BaseControllerMockMVCTest<Inno
         when(applicationInnovationAreaRestService.setApplicationInnovationAreaToNotApplicable(applicationId)).thenReturn(restSuccess(newApplicationResource().build()));
 
 
-        MvcResult result = mockMvc.perform(post(ApplicationFormController.APPLICATION_BASE_URL+"1/form/question/2/innovation-area")
+        MvcResult result = mockMvc.perform(post(APPLICATION_BASE_URL+"1/form/question/2/innovation-area")
                 .param("innovationAreaChoice", "NOT_APPLICABLE"))
                 .andExpect(view().name("redirect:/application/1/form/question/2"))
                 .andExpect(status().is3xxRedirection())
@@ -129,7 +129,7 @@ public class InnovationAreaControllerTest extends BaseControllerMockMVCTest<Inno
         when(applicationInnovationAreaRestService.saveApplicationInnovationAreaChoice(applicationId, nonExistentInnovationAreaId)).thenReturn(result);
 
 
-        MvcResult mvcResult = mockMvc.perform(post(ApplicationFormController.APPLICATION_BASE_URL+"1/form/question/2/innovation-area")
+        MvcResult mvcResult = mockMvc.perform(post(APPLICATION_BASE_URL+"1/form/question/2/innovation-area")
                 .param("innovationAreaChoice", nonExistentInnovationAreaId.toString()))
                 .andExpect(view().name("application/innovation-areas"))
                 .andExpect(status().is2xxSuccessful())
@@ -152,7 +152,7 @@ public class InnovationAreaControllerTest extends BaseControllerMockMVCTest<Inno
         when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).build());
         when(applicationInnovationAreaPopulator.populate(applicationResource, questionId)).thenReturn(innovationAreaViewModel);
 
-        MvcResult mvcResult = mockMvc.perform(post(ApplicationFormController.APPLICATION_BASE_URL+"1/form/question/2/innovation-area"))
+        MvcResult mvcResult = mockMvc.perform(post(APPLICATION_BASE_URL+"1/form/question/2/innovation-area"))
                 .andExpect(view().name("application/innovation-areas"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(model().hasErrors())
@@ -176,7 +176,7 @@ public class InnovationAreaControllerTest extends BaseControllerMockMVCTest<Inno
         when(applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId, applicationResource)).thenReturn(false);
         when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).build());
 
-        MvcResult mvcResult = mockMvc.perform(post(ApplicationFormController.APPLICATION_BASE_URL+"1/form/question/2/innovation-area"))
+        MvcResult mvcResult = mockMvc.perform(post(APPLICATION_BASE_URL+"1/form/question/2/innovation-area"))
                 .andExpect(view().name("forbidden"))
                 .andExpect(status().is4xxClientError())
                 .andReturn();
