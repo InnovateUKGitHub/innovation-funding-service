@@ -152,7 +152,7 @@ Support User can see read only summary for collaborator
     When the user navigates to the page     ${server}/management/competition/${OPEN_COMPETITION}/applications/all
     And the user clicks the button/link     link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
     And the user expands the Finance summaries
-    When the user clicks the button/link    jQuery=.project-cost-breakdown tbody tr:contains("Ludlow") th a
+    When the user clicks the button/link    jQuery=.project-cost-breakdown tbody tr:contains("EGGS") th a
     And the user redirects to the page      Please complete your project finances.    Your finances
     Then the finance summary table in Your Finances has correct values for collaborator
 
@@ -212,6 +212,8 @@ Support User can see read only view of Your funding
     Then the user redirects to the page     Please complete your project finances.  Your finances
     When the user clicks the button/link    jQuery=:contains("Your funding")
     Then the user redirects to the page     Organisation size determines funding  Your organisation
+    And the user should see the element     jQuery=dt:contains("Funding level") + dd:contains("30%")
+    And the user should see the element     jQuery=th:contains("Lottery funding") + td:contains("£1,234")
 
 *** Keywords ***
 the finance summary calculations should be correct

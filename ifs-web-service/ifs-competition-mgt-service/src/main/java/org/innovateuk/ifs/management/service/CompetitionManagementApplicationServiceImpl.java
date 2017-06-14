@@ -94,7 +94,9 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         model.addAttribute("isCompManagementDownload", true);
         model.addAttribute("ineligibility", applicationOverviewIneligibilityModelPopulator.populateModel(application));
         model.addAttribute("showApplicationTeamLink", applicationService.showApplicationTeam(application.getId(), user.getId()));
-        model.addAttribute("readOnlyAllApplicantApplicationFinances", user.hasRole(UserRoleType.SUPPORT));
+        if (user.hasRole(UserRoleType.SUPPORT)) {
+            model.addAttribute("readOnlyAllApplicantApplicationFinances", true);
+        }
 
         model.addAttribute("backUrl", buildBackUrl(origin, application.getId(), competitionId, queryParams));
         String params = UriComponentsBuilder.newInstance()
