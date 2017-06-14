@@ -4,14 +4,26 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Represents an application's statistics
+ * Represents an assessors's statistics for a competition
  */
-public class ApplicationCountSummaryResource extends AssessmentCountSummaryResource {
+public class AssessorCountSummaryResource extends AssessmentCountSummaryResource {
     private String name;
-    private String leadOrganisation;
-    private long assessors; // TODO IFS-319 rename to assigned (or similar) to be consistent with AssessmentCountSummaryResource
+    private String skillAreas;
+    private long assigned;
     private long accepted;
     private long submitted;
+
+    public AssessorCountSummaryResource() {
+    }
+
+    public AssessorCountSummaryResource(long id, String name, String skillAreas, long assigned, long accepted, long submitted) {
+        super(id);
+        this.name = name;
+        this.skillAreas = skillAreas;
+        this.assigned = assigned;
+        this.accepted = accepted;
+        this.submitted = submitted;
+    }
 
     public String getName() {
         return name;
@@ -21,20 +33,20 @@ public class ApplicationCountSummaryResource extends AssessmentCountSummaryResou
         this.name = name;
     }
 
-    public String getLeadOrganisation() {
-        return leadOrganisation;
+    public String getSkillAreas() {
+        return skillAreas;
     }
 
-    public void setLeadOrganisation(String leadOrganisation) {
-        this.leadOrganisation = leadOrganisation;
+    public void setSkillAreas(String skillAreas) {
+        this.skillAreas = skillAreas;
     }
 
-    public long getAssessors() {
-        return assessors;
+    public long getAssigned() {
+        return assigned;
     }
 
-    public void setAssessors(long assessors) {
-        this.assessors = assessors;
+    public void setAssigned(long assigned) {
+        this.assigned = assigned;
     }
 
     public long getAccepted() {
@@ -59,15 +71,15 @@ public class ApplicationCountSummaryResource extends AssessmentCountSummaryResou
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        ApplicationCountSummaryResource that = (ApplicationCountSummaryResource) o;
+        AssessorCountSummaryResource that = (AssessorCountSummaryResource) o;
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
-                .append(assessors, that.assessors)
+                .append(assigned, that.assigned)
                 .append(accepted, that.accepted)
                 .append(submitted, that.submitted)
                 .append(name, that.name)
-                .append(leadOrganisation, that.leadOrganisation)
+                .append(skillAreas, that.skillAreas)
                 .isEquals();
     }
 
@@ -76,8 +88,8 @@ public class ApplicationCountSummaryResource extends AssessmentCountSummaryResou
         return new HashCodeBuilder(17, 37)
                 .appendSuper(super.hashCode())
                 .append(name)
-                .append(leadOrganisation)
-                .append(assessors)
+                .append(skillAreas)
+                .append(assigned)
                 .append(accepted)
                 .append(submitted)
                 .toHashCode();

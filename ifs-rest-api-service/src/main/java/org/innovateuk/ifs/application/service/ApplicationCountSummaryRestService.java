@@ -10,5 +10,5 @@ import java.util.List;
  * Interface for the action of retrieving application statistics
  */
 public interface ApplicationCountSummaryRestService {
-    RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(Long competitionId, Integer pageIndex, Integer pageSize, String filter);
+    RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(long competitionId, Integer pageIndex, Integer pageSize, String filter);
 }

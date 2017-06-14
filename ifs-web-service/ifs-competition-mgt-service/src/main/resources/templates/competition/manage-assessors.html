@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.inAssessment} ? 'Manage assessors' : 'Allocate assessors'" />
+    </head>
+
+    <body th:with="context='comp-management'" class="competition-management">
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
+
+        <main tabindex="-1" id="content">
+            <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Back',linkClass='link-back',linkUrl=@{${manageApplicationsOriginQuery}})" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.inAssessment} ? 'Manage assessors' : 'Allocate assessors',subTitle=|${model.competitionId} : ${model.competitionName}, ${model.inAssessment ? 'in assessment' : 'competition closed'}|, size='heading-xlarge'" />
+
+            <p class="extra-margin">Assign applications to assessors. You will need to confirm assignments before assessors are notified.</p>
+            <form method="GET">
+                <div class="search-filters extra-margin">
+
+                    <fieldset>
+                        <legend class="heading-medium">Filter assessors</legend>
+                        <div class="grid-row">
+                            <div class="column-two-thirds">
+                                <label class="form-label" for="filterSearch">Search by assessors number</label>
+                                <input type="text" class="form-control extra-margin-bottom" id="filterSearch" name="filterSearch" th:value="${model.filter}"/>
+                                <a href="?">Clear all filters</a>
+                            </div>
+                            <div class="column-third">
+                                <button class="button">Filter</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </form>
+            <div class="table-overflow">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Assessor</th>
+                            <th scope="col">Skill Areas</th>
+                            <th class="aligncentre" scope="col">Total applications</th>
+                            <th class="aligncentre" scope="col">Assigned</th>
+                            <th class="aligncentre" scope="col" th:if="${model.inAssessment}">Accepted</th>
+                            <th class="aligncentre" scope="col" th:if="${model.inAssessment}">Completed</th>
+                            <th scope="col"><span class="visuallyhidden">Action</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="assessor : ${model.assessors}">
+                            <td><a th:href="@{/competition/{cid}/assessors/profile/{aid}(cid=${model.competitionId},aid=${assessor.id})} + ${originQuery}" th:text="${assessor.name}"/></td>
+                            <td th:text="${assessor.skillAreas}">skill areas</td>
+                            <td class="aligncentre" th:text="${assessor.total}">4</td>
+                            <td class="aligncentre" th:text="${assessor.assigned}">4</td>
+                            <td class="aligncentre" th:text="${assessor.accepted}" th:if="${model.inAssessment}">2</td>
+                            <td class="aligncentre" th:text="${assessor.completed}" th:if="${model.inAssessment}">1</td>
+                            <td class="alignright">
+                                <a class="button-secondary no-margin" th:text="${model.inAssessment} ? 'View progress' : 'Assign'"></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
+            <th:block th:insert="fragments/layout :: main-content-end" />
+        </main>
+
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
+    </body>
+</html>
