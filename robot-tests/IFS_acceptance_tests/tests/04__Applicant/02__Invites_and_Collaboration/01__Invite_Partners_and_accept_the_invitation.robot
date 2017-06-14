@@ -137,7 +137,6 @@ Partner organisation Client-side validations
 Valid invitation submit
     [Documentation]    INFUND-901
     [Tags]    HappyPath    SmokeTest
-    [Setup]    Delete the emails from both test mailboxes
     When The user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
     Then the user should see the element    jQuery=.table-overflow tr:contains("Steve Smith") td:nth-child(3):contains("Lead")
     And the user should see the element    jQuery=.table-overflow tr:contains("Adrian Booth") td:nth-child(3):contains("Invite pending")

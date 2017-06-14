@@ -11,7 +11,7 @@ Documentation     INFUND-6390 As an Applicant I will be invited to add project c
 ...
 ...               IFS-40 As a comp executive I am able to select an 'Innovation area' of 'All' where the 'Innovation sector' is 'Open'
 Suite Setup       Custom Suite Setup
-Suite Teardown    Custom Suite Teardown
+Suite Teardown    Close browser and delete emails
 Force Tags        Applicant    CompAdmin
 Resource          ../../../resources/defaultResources.robot
 Resource          ../FinanceSection_Commons.robot
@@ -348,11 +348,6 @@ Custom Suite Setup
     set suite variable  ${nextMonthWord}
     ${nextyear} =    get next year
     Set suite variable    ${nextyear}
-    Delete the emails from both test mailboxes
-
-Custom Suite Teardown
-    close any open browsers
-    Delete the emails from both test mailboxes
 
 the user should see the dates in full format
     the user should see the element    jQuery=td:contains("Allocate assessors") ~ td:contains("3 ${nextMonthWord} ${nextyear}")
