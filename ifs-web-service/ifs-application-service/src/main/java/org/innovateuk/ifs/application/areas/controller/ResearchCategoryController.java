@@ -1,15 +1,14 @@
 package org.innovateuk.ifs.application.areas.controller;
 
-import org.innovateuk.ifs.application.forms.validator.ApplicationDetailsEditableValidator;
-import org.innovateuk.ifs.application.forms.controller.ApplicationFormController;
 import org.innovateuk.ifs.application.areas.form.ResearchCategoryForm;
 import org.innovateuk.ifs.application.areas.populator.ApplicationResearchCategoryPopulator;
+import org.innovateuk.ifs.application.areas.viewmodel.ResearchCategoryViewModel;
+import org.innovateuk.ifs.application.forms.validator.ApplicationDetailsEditableValidator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationResearchCategoryRestService;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.areas.viewmodel.ResearchCategoryViewModel;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
-import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +23,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.function.Supplier;
 
+import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
+
 /**
  * This controller handles requests by Applicants to change the research category choice for an Application.
  */
 @Controller
-@RequestMapping(ApplicationFormController.APPLICATION_BASE_URL+"{applicationId}/form/question/{questionId}/research-category")
+@RequestMapping(APPLICATION_BASE_URL+"{applicationId}/form/question/{questionId}/research-category")
 @PreAuthorize("hasAuthority('applicant')")
 public class ResearchCategoryController {
     private static String APPLICATION_SAVED_MESSAGE = "applicationSaved";
@@ -83,18 +85,20 @@ public class ResearchCategoryController {
 
         Supplier<String> failureView = () -> "application/research-categories";
 
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            return validationHandler.addAnyErrors(saveResearchCategoryChoice(applicationId, researchCategoryForm)).failNowOrSucceedWith(failureView,
-                    () -> {cookieFlashMessageFilter.setFlashMessage(response, APPLICATION_SAVED_MESSAGE);
-                        return "redirect:/application/"+applicationId+"/form/question/"+questionId;
-                    });
+        return validationHandler.addAnyErrors(saveResearchCategoryChoice(applicationId, researchCategoryForm))
+            .failNowOrSucceedWith(failureView, () -> {
+                cookieFlashMessageFilter.setFlashMessage(response, APPLICATION_SAVED_MESSAGE);
+                return "redirect:/application/"+applicationId+"/form/question/"+questionId;
         });
     }
 
-    private RestResult<ApplicationResource> saveResearchCategoryChoice(Long applicationId, ResearchCategoryForm researchCategoryForm) {
-        Long researchCategoryId = Long.valueOf(researchCategoryForm.getResearchCategoryChoice());
+    private ServiceResult<ApplicationResource> saveResearchCategoryChoice(Long applicationId, ResearchCategoryForm researchCategoryForm) {
+        if(null != researchCategoryForm.getResearchCategoryChoice()) {
+            Long researchCategoryId = Long.valueOf(researchCategoryForm.getResearchCategoryChoice());
+            return applicationResearchCategoryRestService.saveApplicationResearchCategoryChoice(applicationId, researchCategoryId).toServiceResult();
+        }
 
-        return applicationResearchCategoryRestService.saveApplicationResearchCategoryChoice(applicationId, researchCategoryId);
+        return ServiceResult.serviceFailure(emptyList());
     }
 
     private void checkIfAllowed(Long questionId, ApplicationResource applicationResource) throws ForbiddenActionException {
