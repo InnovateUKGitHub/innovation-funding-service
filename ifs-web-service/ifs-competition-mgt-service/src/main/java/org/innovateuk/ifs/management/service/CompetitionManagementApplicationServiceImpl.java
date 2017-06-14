@@ -89,6 +89,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), application.getId(), user, model, form, form.getImpersonateOrganisationId());
         addAppendices(application.getId(), responses, model);
 
+        model.addAttribute("isSupportUser", user.hasRole(UserRoleType.SUPPORT));
         model.addAttribute("form", form);
         model.addAttribute("applicationReadyForSubmit", false);
         model.addAttribute("isCompManagementDownload", true);
