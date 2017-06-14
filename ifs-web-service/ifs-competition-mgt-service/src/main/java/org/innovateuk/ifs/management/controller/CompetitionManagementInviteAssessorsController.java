@@ -95,9 +95,12 @@ public class CompetitionManagementInviteAssessorsController {
         return "assessors/find";
     }
 
-    private void updateSelectionForm(HttpServletRequest request, HttpServletResponse response,
-                                     long competitionId, AssessorSelectionForm selectionForm,
-                                     FindAssessorsFilterForm filterForm, boolean clearFilter) {
+    private void updateSelectionForm(HttpServletRequest request,
+                                     HttpServletResponse response,
+                                     long competitionId,
+                                     AssessorSelectionForm selectionForm,
+                                     FindAssessorsFilterForm filterForm,
+                                     boolean clearFilter) {
         AssessorSelectionForm storedSelectionForm = getAssessorSelectionFormFromCookie(request, competitionId).orElse(new AssessorSelectionForm());
         selectionForm.setAllSelected(storedSelectionForm.getAllSelected());
         selectionForm.setSelectedAssessorIds(storedSelectionForm.getSelectedAssessorIds());
