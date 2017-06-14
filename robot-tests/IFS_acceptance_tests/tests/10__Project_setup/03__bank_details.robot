@@ -273,9 +273,10 @@ Project Finance can see the progress of partners bank details
     And the user should see the text in the page    ${PS_BD_APPLICATION_ACADEMIC_EMAIL}
 
 
-Project Finance can see Bank Details
-    [Documentation]    INFUND-4903, INFUND-4903
+IFS Admin can see Bank Details
+    [Documentation]    INFUND-4903, INFUND-4903, IFS-603
     [Tags]  HappyPath
+    [Setup]  log in as a different user            &{ifs_admin_user_credentials}
     Given the user navigates to the page          ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link           link=${PS_BD_Competition_Name}
     Then the user should see the element          jQuery=h2:contains("Projects in setup")
