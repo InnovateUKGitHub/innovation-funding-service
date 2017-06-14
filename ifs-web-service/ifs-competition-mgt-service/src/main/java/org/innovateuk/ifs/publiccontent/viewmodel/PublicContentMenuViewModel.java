@@ -21,7 +21,7 @@ public class PublicContentMenuViewModel {
 
     private CompetitionResource competition;
 
-    private boolean inviteOnly;
+    private Boolean inviteOnly;
 
     public ZonedDateTime getPublishDate() {
         return publishDate;
@@ -47,11 +47,11 @@ public class PublicContentMenuViewModel {
         this.competition = competition;
     }
 
-    public boolean isInviteOnly() {
+    public Boolean isInviteOnly() {
         return inviteOnly;
     }
 
-    public void setInviteOnly(boolean inviteOnly)
+    public void setInviteOnly(Boolean inviteOnly)
     {
         this.inviteOnly = inviteOnly;
     }
@@ -71,8 +71,8 @@ public class PublicContentMenuViewModel {
         return PublicContentStatus.COMPLETE.equals(contentSectionResource.getStatus());
     }
 
-    public String getCompetitionUrl() {
-            return String.format(COMPETITION_OVERVIEW_URL, competition.getId());
+    public String getCompetitionURL() {
+        return String.format(COMPETITION_OVERVIEW_URL, competition.getId());
     }
 
 }

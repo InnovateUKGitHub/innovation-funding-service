@@ -66,6 +66,6 @@ public class PublicContentMenuPopulatorTest {
         assertThat(viewModel.getPublishDate(), equalTo(date));
 
         assertThat(viewModel.isInviteOnly(), equalTo(publishSetting));
-        assertThat(viewModel.getCompetitionUrl(), equalTo("/competition/" + COMPETITION_ID + "/overview"));
+        assertThat(viewModel.getCompetitionURL(), equalTo("/competition/" + COMPETITION_ID + "/overview"));
     }
 }
