@@ -33,6 +33,8 @@ import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -60,6 +62,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
@@ -73,6 +76,7 @@ import static org.innovateuk.ifs.commons.rest.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
@@ -611,4 +615,29 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
         verify(overheadFileSaver, times(1)).handleOverheadFileRequest(isA(HttpServletRequest.class));
     }
 
+    @Test
+    public void testApplicationFormWithOpenSectionForApplicant() throws Exception {
+
+        Long currentSectionId = sectionResources.get(2).getId();
+        ApplicationResource application = newApplicationResource().build();
+        RoleResource role = newRoleResource().withType(UserRoleType.COLLABORATOR).build();
+        ProcessRoleResource processRole = newProcessRoleResource().withOrganisation(2L).withRole(role).build();
+
+        when(applicationService.getById(1L)).thenReturn(application);
+        when(processRoleService.getByApplicationId(application.getId())).thenReturn(asList(processRole));
+        when(applicantRestService.getSection(processRole.getUser(), application.getId(), currentSectionId)).thenReturn(sectionBuilder.build());
+
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+        when(sectionService.getAllByCompetitionId(anyLong())).thenReturn(sectionResources);
+        MvcResult result = mockMvc.perform(get("/application/1/form/section/" + currentSectionId + "/2").header("referer", "/application/1"))
+                .andExpect(view().name("application-form"))
+                .andReturn();
+
+        Object viewModelResult = result.getModelAndView().getModelMap().get("model");
+        assertEquals(YourFinancesSectionViewModel.class, viewModelResult.getClass());
+
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Long.class));
+        assertEquals(((Long) result.getModelAndView().getModelMap().get("applicantOrganisationId")).longValue(),2L);
+        assertEquals(((Boolean) result.getModelAndView().getModelMap().get("readOnlyAllApplicantApplicationFinances")).booleanValue(),true);
+    }
 }
