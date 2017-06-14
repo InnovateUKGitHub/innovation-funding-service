@@ -33,6 +33,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+import static java.util.Optional.of;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -79,27 +80,38 @@ public class CompetitionManagementInviteAssessorsController {
                        @SuppressWarnings("unused") BindingResult bindingResult,
                        @PathVariable("competitionId") long competitionId,
                        @RequestParam(defaultValue = "0") int page,
+                       @RequestParam(value = "clearFilter", defaultValue = "false") boolean clearFilter,
                        @RequestParam MultiValueMap<String, String> queryParams,
                        HttpServletRequest request,
                        HttpServletResponse response) {
 
         String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_FIND, queryParams);
+        updateSelectionForm(request, response, competitionId, selectionForm, filterForm, clearFilter);
         InviteAssessorsFindViewModel inviteAssessorsFindViewModel = inviteAssessorsFindModelPopulator.populateModel(competitionId, page, filterForm.getInnovationArea(), originQuery);
 
         model.addAttribute("model", inviteAssessorsFindViewModel);
         model.addAttribute("originQuery", originQuery);
 
+        return "assessors/find";
+    }
+
+    private void updateSelectionForm(HttpServletRequest request, HttpServletResponse response,
+                                     long competitionId, AssessorSelectionForm selectionForm,
+                                     FindAssessorsFilterForm filterForm, boolean clearFilter) {
         AssessorSelectionForm storedSelectionForm = getAssessorSelectionFormFromCookie(request, competitionId).orElse(new AssessorSelectionForm());
         selectionForm.setAllSelected(storedSelectionForm.getAllSelected());
         selectionForm.setSelectedAssessorIds(storedSelectionForm.getSelectedAssessorIds());
+        if (storedSelectionForm.getSelectedInnovationArea() != null && !clearFilter) {
+            filterForm.setInnovationArea(of(storedSelectionForm.getSelectedInnovationArea()));
+        }
+
         if (selectionForm.getAllSelected()) {
             selectionForm.setSelectedAssessorIds(getAllAssessorIds(competitionId, filterForm.getInnovationArea()));
         } else {
             selectionForm.getSelectedAssessorIds().retainAll(getAllAssessorIds(competitionId, filterForm.getInnovationArea()));
         }
+        filterForm.getInnovationArea().ifPresent(selectionForm::setSelectedInnovationArea);
         cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
-
-        return "assessors/find";
     }
 
     @PostMapping(value = "/find", params = {"assessor"})
@@ -353,9 +365,9 @@ public class CompetitionManagementInviteAssessorsController {
     }
 
     private Optional<AssessorSelectionForm> getAssessorSelectionFormFromCookie(HttpServletRequest request, long competitionId) {
-        String organisationFormJson = cookieUtil.getCookieValue(request, format("%s_comp%s", SELECTION_FORM, competitionId));
-        if (isNotBlank(organisationFormJson)) {
-            return Optional.ofNullable(getObjectFromJson(organisationFormJson, AssessorSelectionForm.class));
+        String assessorFormJson = cookieUtil.getCookieValue(request, format("%s_comp%s", SELECTION_FORM, competitionId));
+        if (isNotBlank(assessorFormJson)) {
+            return Optional.ofNullable(getObjectFromJson(assessorFormJson, AssessorSelectionForm.class));
         } else {
             return Optional.empty();
         }

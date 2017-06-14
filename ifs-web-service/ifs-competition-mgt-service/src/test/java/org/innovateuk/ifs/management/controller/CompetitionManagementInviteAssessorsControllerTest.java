@@ -166,10 +166,10 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         assertFindFilterOptionsAreCorrect(expectedInnovationSectorOptions, result);
 
         InOrder inOrder = inOrder(competitionRestService, competitionInviteRestService, categoryRestServiceMock);
+        inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), innovationArea);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(categoryRestServiceMock).getInnovationSectors();
         inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), page, innovationArea);
-        inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), innovationArea);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -203,10 +203,10 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         assertFindFilterOptionsAreCorrect(expectedInnovationSectorOptions, result);
 
         InOrder inOrder = inOrder(competitionRestService, competitionInviteRestService, categoryRestServiceMock);
+        inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), innovationArea);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(categoryRestServiceMock).getInnovationSectors();
         inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), page, innovationArea);
-        inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), innovationArea);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -253,10 +253,10 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         assertFindFilterOptionsAreCorrect(expectedInnovationSectorOptions, result);
 
         InOrder inOrder = inOrder(competitionRestService, competitionInviteRestService, categoryRestServiceMock);
+        inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), innovationArea);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(categoryRestServiceMock).getInnovationSectors();
         inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), page, innovationArea);
-        inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), innovationArea);
         inOrder.verifyNoMoreInteractions();
     }
 
