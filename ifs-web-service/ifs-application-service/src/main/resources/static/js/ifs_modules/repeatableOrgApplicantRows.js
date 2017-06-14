@@ -11,11 +11,13 @@ IFS.application.repeatableOrgApplicantRows = (function () {
         e.preventDefault()
 
         IFS.application.repeatableOrgApplicantRows.addRow(this, e)
+        IFS.application.repeatableOrgApplicantRows.hideAddRowButton(this)
       })
       jQuery('body').on('click', '.remove-another-row', function (e) {
         e.preventDefault()
 
         IFS.application.repeatableOrgApplicantRows.removeRow(this, e)
+        IFS.application.repeatableOrgApplicantRows.showAddRowButton(this)
       })
     },
     addRow: function (el) {
@@ -38,7 +40,7 @@ IFS.application.repeatableOrgApplicantRows = (function () {
           'name="applicants[' + uniqueRowId + '].email" value="" ' +
           'data-required-errormessage="Please enter an email address." required="required" />' +
           '</td>' +
-          '<td></td>' +
+          '<td><button class="button" name="updateOrganisation" type="submit">Invite</button></td>' +
           '<td class="alignright">' +
           '<button class="remove-another-row buttonlink" name="removeApplicant" type="button" value="0">Remove</button>' +
           '</td>' +
@@ -110,6 +112,14 @@ IFS.application.repeatableOrgApplicantRows = (function () {
           })
         })
       })
+    },
+    showAddRowButton: function () {
+      var addRowButton = jQuery("[name='addApplicant']")
+      addRowButton.show()
+    },
+    hideAddRowButton: function () {
+      var addRowButton = jQuery("[name='addApplicant']")
+      addRowButton.hide()
     }
   }
 })()

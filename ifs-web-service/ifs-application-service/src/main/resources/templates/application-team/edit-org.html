@@ -97,7 +97,8 @@
                                                 data-email-errormessage=#{validation.standard.email.format},
                                                 data-email-duplication-errormessage=#{email.already.in.invite}" />
                             </td>
-                            <td></td>
+                            <td>
+                            </td>
                             <td class="alignright">
                                 <button class="remove-another-row buttonlink"
                                         th:value="${applicantStat.index}"
@@ -116,7 +117,7 @@
                            data-applicant-table="update-org"
                            type="submit"
                            name="addApplicant">
-                        Add new applicant
+                        Add another contributor
                     </button>
                 </p>
 
@@ -138,8 +139,7 @@
                 <p th:if="${model.userLeadApplicant}">You should not remove members of your team without discussing this action with them first. Members who are removed may not receive a notification from Innovate UK.</p>
 
                 <p class="extra-margin">
-                    <button class="button" name="updateOrganisation" type="submit">Update organisation</button>
-                    <a th:href="@{/application/{applicationId}/team(applicationId=${model.applicationId})}" class="button button-clear">Cancel</a>
+                    <a th:href="@{/application/{applicationId}/team(applicationId=${model.applicationId})}" class="button-secondary">Return to application</a>
                 </p>
 
                 <input type="hidden" th:field="*{markedForRemoval}" />
