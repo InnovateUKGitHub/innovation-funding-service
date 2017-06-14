@@ -1,4 +1,5 @@
 *** Settings ***
+Library    String
 Documentation     INFUND-1188 As an assessor I want to be able to review my assessments from one place so that I can work in my favoured style when reviewing
 ...
 ...               INFUND-3723 As an Assessor looking at my competition assessment dashboard I can see details for the competition, so that I am able to reference key information as I want.
@@ -22,10 +23,9 @@ Suite Setup       Guest user log-in  &{assessor2_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
-
 *** Variables ***
-${commentText} = Generate Random String  100  [LETTERS]
 
+#${commentText} = Generate Random String  100  [LETTERS]
 
 *** Test Cases ***
 User cannot accept/reject an invite to an application that has been withdrawn
@@ -133,11 +133,16 @@ Check the comp admin see the assessor has rejected the application
     And the user should see the element    jQuery=.assessors-rejected td:nth-child(6):contains("Unable to assess the application as i'm on holiday.")
 
 *** Keywords ***
+random stuff
+    ${commentText} = Generate Random String  100  [LETTERS]
+    Set suite variable  ${commentText}
+
 the assessor fills all fields with valid inputs
     Select From List By Index    id=rejectReason    2
     The user should not see the text in the page    Please enter a reason
 #    The user enters text to a text field    id=rejectComment    Hello all, Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco ullamco
-    the user enters text to a text field     id=rejectComment  ${commentText}
+    random stuff
+    the user enters text to a text field     id=rejectComment   ${commentText}
     the user moves focus to the element    jQuery=.button:contains("Confirm")
     The user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
     The user enters text to a text field    id=rejectComment    Unable to assess the application as i'm on holiday.
