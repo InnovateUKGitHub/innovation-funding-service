@@ -5,7 +5,6 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResour
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
-import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.publiccontent.modelpopulator.AbstractPublicContentViewModelPopulator;
 import org.innovateuk.ifs.publiccontent.modelpopulator.PublicContentViewModelPopulator;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class DatesViewModelPopulator extends AbstractPublicContentViewModelPopulator<DatesViewModel> implements PublicContentViewModelPopulator<DatesViewModel> {
@@ -31,17 +29,10 @@ public class DatesViewModelPopulator extends AbstractPublicContentViewModelPopul
 
     @Override
     protected void populateSection(DatesViewModel model, PublicContentResource publicContentResource, PublicContentSectionResource section) {
-        List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(publicContentResource.getCompetitionId()).getSuccessObjectOrThrowException();
-
-        List<MilestoneResource> milestonesNeeded = milestones.stream()
-                .filter(milestoneResource -> MilestoneType.RELEASE_FEEDBACK.equals(milestoneResource.getType()) ||
-                        MilestoneType.OPEN_DATE.equals(milestoneResource.getType()) ||
-                        MilestoneType.SUBMISSION_DATE.equals(milestoneResource.getType()))
-                .collect(Collectors.toList());
+        List<MilestoneResource> milestones = milestoneRestService.getAllPublicMilestonesByCompetitionId(publicContentResource.getCompetitionId()).getSuccessObjectOrThrowException();
 
         List<DateViewModel> dates = new ArrayList<>();
-
-        milestonesNeeded.forEach(milestoneResource -> dates.add(mapMilestoneToDateViewModel(milestoneResource)));
+        milestones.forEach(milestoneResource -> dates.add(mapMilestoneToDateViewModel(milestoneResource)));
 
         if(model.isReadOnly()) {
             publicContentResource.getContentEvents().forEach(publicContentEventResource ->
@@ -69,7 +60,7 @@ public class DatesViewModelPopulator extends AbstractPublicContentViewModelPopul
             case SUBMISSION_DATE:
                 dateViewModel.setContent("Submission deadline, competition closed.");
                 break;
-            case RELEASE_FEEDBACK:
+            case NOTIFICATIONS:
                 dateViewModel.setContent("Applicants notified");
                 break;
         }
