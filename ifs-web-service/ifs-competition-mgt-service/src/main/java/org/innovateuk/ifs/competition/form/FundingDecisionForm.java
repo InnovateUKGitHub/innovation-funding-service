@@ -11,7 +11,6 @@ public class FundingDecisionForm {
     @NotEmpty
     private String fundingDecision;
 
-    @NotEmpty
     private List<Long> applicationIds;
 
     public String getFundingDecision() {

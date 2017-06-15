@@ -91,7 +91,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
 
         List<ApplicationSummaryResource> applications = newApplicationSummaryResource().with(uniqueIds()).build(pageSize);
         ApplicationSummaryPageResource applicationSummaryPageResource = new ApplicationSummaryPageResource(totalElements, totalPages, applications, pageNumber, pageSize);
-        when(applicationSummaryRestService.getWithFundingDecisionApplications(COMPETITION_ID, sortField, pageNumber, pageSize, filter, sendFilter, fundingFilter)).thenReturn(restSuccess(applicationSummaryPageResource));
+        when(applicationSummaryRestService.getWithFundingDecisionApplications(COMPETITION_ID, sortField, pageNumber, pageSize, Optional.of(filter), sendFilter, fundingFilter)).thenReturn(restSuccess(applicationSummaryPageResource));
 
         CompetitionFundedKeyStatisticsResource keyStatistics = newCompetitionFundedKeyStatisticsResource().build();
         when(competitionKeyStatisticsRestServiceMock.getFundedKeyStatisticsByCompetition(COMPETITION_ID)).thenReturn(restSuccess(keyStatistics));

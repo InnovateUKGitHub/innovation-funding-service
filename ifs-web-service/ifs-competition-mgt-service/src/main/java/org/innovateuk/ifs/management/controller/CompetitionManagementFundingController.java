@@ -5,8 +5,8 @@ import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.competition.form.ApplicationSummaryQueryForm;
+import org.innovateuk.ifs.competition.form.FundingDecisionPaginationForm;
+import org.innovateuk.ifs.competition.form.FundingDecisionFilterForm;
 import org.innovateuk.ifs.competition.form.FundingDecisionForm;
 import org.innovateuk.ifs.competition.service.ApplicationSummarySortFieldService;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
@@ -23,10 +23,9 @@ import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
@@ -62,25 +61,27 @@ public class CompetitionManagementFundingController {
     @GetMapping
     public String applications(Model model,
                                @PathVariable("competitionId") long competitionId,
-                               @ModelAttribute @Valid ApplicationSummaryQueryForm queryForm,
+                               @ModelAttribute @Valid FundingDecisionPaginationForm paginationForm,
                                @ModelAttribute(binding = false) FundingDecisionForm fundingDecisionForm,
-                               @RequestParam Map<String, String> queryParams,
+                               @ModelAttribute FundingDecisionFilterForm filterForm,
                                BindingResult bindingResult) {
+
         if (bindingResult.hasErrors()) {
             return "redirect:/competition/" + competitionId + "/funding";
         }
+
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService
                 .getCompetitionSummary(competitionId)
                 .getSuccessObjectOrThrowException();
 
         model.addAttribute("competitionSummary", competitionSummary);
-        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.FUNDING_APPLICATIONS, getFilteredParameterValues(queryParams));
+        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.FUNDING_APPLICATIONS, mapFormFilterParametersToMultiValueMap(filterForm));
         model.addAttribute("originQuery", originQuery);
 
         switch (competitionSummary.getCompetitionStatus()) {
             case FUNDERS_PANEL:
             case ASSESSOR_FEEDBACK:
-                return populateSubmittedModel(model, competitionSummary, queryForm, originQuery);
+                return populateSubmittedModel(model, competitionSummary, paginationForm, filterForm, originQuery);
             default:
                 return "redirect:/login";
         }
@@ -89,9 +90,9 @@ public class CompetitionManagementFundingController {
     @PostMapping
     public String makeDecision(Model model,
                                @PathVariable("competitionId") long competitionId,
-                               @ModelAttribute @Valid ApplicationSummaryQueryForm queryForm,
+                               @ModelAttribute @Valid FundingDecisionPaginationForm paginationForm,
                                @ModelAttribute @Valid FundingDecisionForm fundingDecisionForm,
-                               @RequestParam Map<String, String> queryParams,
+                               @ModelAttribute FundingDecisionFilterForm filterForm,
                                BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "redirect:/competition/" + competitionId + "/funding";
@@ -101,36 +102,37 @@ public class CompetitionManagementFundingController {
                 .getSuccessObjectOrThrowException();
 
         model.addAttribute("competitionSummary", competitionSummary);
-        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.FUNDING_APPLICATIONS, getFilteredParameterValues(queryParams));
+        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.FUNDING_APPLICATIONS, mapFormFilterParametersToMultiValueMap(filterForm));
         model.addAttribute("originQuery", originQuery);
 
         switch (competitionSummary.getCompetitionStatus()) {
             case FUNDERS_PANEL:
             case ASSESSOR_FEEDBACK:
-                return fundersPanelCompetition(model, competitionId, competitionSummary, fundingDecisionForm, originQuery, queryForm, bindingResult);
+                return fundersPanelCompetition(model, competitionId, competitionSummary, fundingDecisionForm, paginationForm, filterForm, originQuery, bindingResult);
             default:
                 return "redirect:/login";
         }
     }
 
-    MultiValueMap<String, String> getFilteredParameterValues(Map<String, String> queryParams)  {
-        Map<String, String> map = queryParams.entrySet().stream()
-                .filter(entry -> !FILTERED_PARAMS.contains(entry.getKey()))
-                .collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
+    MultiValueMap<String, String> mapFormFilterParametersToMultiValueMap(FundingDecisionFilterForm fundingDecisionFilterForm) {
+        MultiValueMap<String, String> filterMap = new LinkedMultiValueMap<String, String>();
+        if(fundingDecisionFilterForm.getFundingFilter().isPresent()) {
+            filterMap.put("fundingFilter", Arrays.asList(fundingDecisionFilterForm.getFundingFilter().get().getName()));
+        }
+        if(fundingDecisionFilterForm.getStringFilter().isPresent()) {
+            filterMap.put("stringFilter",Arrays.asList(fundingDecisionFilterForm.getStringFilter().get()));
+        }
 
-        MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
-
-        map.entrySet().forEach(entry -> multiValueMap.add(entry.getKey(), entry.getValue()));
-
-        return multiValueMap;
+        return filterMap;
     }
 
     private String fundersPanelCompetition(Model model,
                                            Long competitionId,
                                            CompetitionSummaryResource competitionSummary,
                                            FundingDecisionForm fundingDecisionForm,
+                                           FundingDecisionPaginationForm fundingDecisionPaginationForm,
+                                           FundingDecisionFilterForm fundingDecisionFilterForm,
                                            String originQuery,
-                                           ApplicationSummaryQueryForm queryForm,
                                            BindingResult bindingResult) {
         if (fundingDecisionForm.getFundingDecision() != null) {
             validator.validate(fundingDecisionForm, bindingResult);
@@ -142,24 +144,22 @@ public class CompetitionManagementFundingController {
             }
         }
 
-        return populateSubmittedModel(model, competitionSummary, queryForm, originQuery);
+        return populateSubmittedModel(model, competitionSummary, fundingDecisionPaginationForm, fundingDecisionFilterForm, originQuery);
     }
 
-    private String populateSubmittedModel(Model model, CompetitionSummaryResource competitionSummary, ApplicationSummaryQueryForm queryForm, String originQuery) {
-        String sort = applicationSummarySortFieldService.sortFieldForSubmittedApplications(queryForm.getSort());
+    private String populateSubmittedModel(Model model, CompetitionSummaryResource competitionSummary, FundingDecisionPaginationForm paginationForm, FundingDecisionFilterForm fundingDecisionFilterForm, String originQuery) {
         ApplicationSummaryPageResource results = applicationSummaryRestService.getSubmittedApplications(
                 competitionSummary.getCompetitionId(),
-                sort,
-                queryForm.getPage(),
+                "id",
+                paginationForm.getPage(),
                 PAGE_SIZE,
-                queryForm.getStringFilter(),
-                queryForm.getFundingFilter())
+                fundingDecisionFilterForm.getStringFilter(),
+                fundingDecisionFilterForm.getFundingFilter())
                 .getSuccessObjectOrThrowException();
 
         model.addAttribute("pagination", new PaginationViewModel(results, originQuery));
         model.addAttribute("results", results);
-        model.addAttribute("activeTab", "submitted");
-        model.addAttribute("activeSortField", sort);
+        model.addAttribute("activeSortField", "id");
 
         return "comp-mgt-funders-panel";
     }

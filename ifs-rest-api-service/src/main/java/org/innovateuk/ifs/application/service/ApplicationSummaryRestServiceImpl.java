@@ -24,36 +24,34 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 	private String applicationRestUrl = "/application";
 
 	@Override
-	public RestResult<ApplicationSummaryPageResource> getAllApplications(long competitionId, String sortField, int pageNumber, int pageSize, String filter) {
+	public RestResult<ApplicationSummaryPageResource> getAllApplications(long competitionId, String sortField, int pageNumber, int pageSize, Optional<String> filter) {
 		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId;
 		return getApplicationSummaryPage(baseUrl, pageNumber, pageSize, sortField, filter);
 	}
 
 	@Override
-	public RestResult<ApplicationSummaryPageResource> getSubmittedApplications(long competitionId, String sortField, int pageNumber, int pageSize, String filter, Optional<FundingDecision> fundingFilter) {
+	public RestResult<ApplicationSummaryPageResource> getSubmittedApplications(long competitionId, String sortField, int pageNumber, int pageSize, Optional<String> filter, Optional<FundingDecision> fundingFilter) {
 		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/submitted";
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-		if (filter != null) {
-			params.put("filter", singletonList(filter));
-		}
+
+		filter.ifPresent(f -> params.put("filter", singletonList(f)));
 		fundingFilter.ifPresent(f -> params.put("fundingFilter", singletonList(f.toString())));
+
 		String uriWithParams = buildPaginationUri(baseUrl, pageNumber, pageSize, sortField, params);
 		return getWithRestResult(uriWithParams, ApplicationSummaryPageResource.class);
 	}
 
 	@Override
-	public RestResult<ApplicationSummaryPageResource> getNonSubmittedApplications(long competitionId, String sortField, int pageNumber, int pageSize, String filter) {
+	public RestResult<ApplicationSummaryPageResource> getNonSubmittedApplications(long competitionId, String sortField, int pageNumber, int pageSize, Optional<String> filter) {
 		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/not-submitted";
 		return getApplicationSummaryPage(baseUrl, pageNumber, pageSize, sortField, filter);
 	}
 
 	@Override
-	public RestResult<ApplicationSummaryPageResource> getIneligibleApplications(long competitionId, String sortField, int pageNumber, int pageSize, String filter, Optional<Boolean> informFilter) {
+	public RestResult<ApplicationSummaryPageResource> getIneligibleApplications(long competitionId, String sortField, int pageNumber, int pageSize, Optional<String> filter, Optional<Boolean> informFilter) {
 		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/ineligible";
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-		if (filter != null) {
-			params.put("filter", singletonList(filter));
-		}
+		filter.ifPresent(f -> params.put("filter", singletonList(f)));
 		informFilter.ifPresent(f -> params.put("informFilter", singletonList(f.toString())));
 		String uriWithParams = buildPaginationUri(baseUrl, pageNumber, pageSize, sortField, params);
 		return getWithRestResult(uriWithParams, ApplicationSummaryPageResource.class);
@@ -64,23 +62,22 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 																						 String sortField,
 																						 int pageNumber,
 																						 int pageSize,
-																						 String filter,
+																						 Optional<String> filter,
 																						 Optional<Boolean> sendFilter,
 																						 Optional<FundingDecision> fundingFilter) {
 		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/with-funding-decision";
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-		if (filter != null) {
-			params.put("filter", singletonList(filter));
-		}
+
+		filter.ifPresent(f -> params.put("filter", singletonList(f)));
 		sendFilter.ifPresent(f -> params.put("sendFilter", singletonList(f.toString())));
 		fundingFilter.ifPresent(f -> params.put("fundingFilter", singletonList(f.toString())));
 		String uriWithParams = buildPaginationUri(baseUrl, pageNumber, pageSize, sortField, params);
 		return getWithRestResult(uriWithParams, ApplicationSummaryPageResource.class);
 	}
 	
-	private RestResult<ApplicationSummaryPageResource> getApplicationSummaryPage(String url, int pageNumber, int pageSize, String sortField, String filter) {
+	private RestResult<ApplicationSummaryPageResource> getApplicationSummaryPage(String url, int pageNumber, int pageSize, String sortField, Optional<String> filter) {
 
-		String urlWithParams = buildUri(url, sortField, pageNumber, pageSize,filter);
+		String urlWithParams = buildUri(url, sortField, pageNumber, pageSize, filter);
 		return getWithRestResult(urlWithParams, ApplicationSummaryPageResource.class);
 	}
 
@@ -104,11 +101,9 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 		this.applicationSummaryRestUrl = applicationSummaryRestUrl;
 	}
 
-	protected String buildUri(String url, String sortField, int pageNumber, int pageSize, String filter) {
+	protected String buildUri(String url, String sortField, int pageNumber, int pageSize, Optional<String> filter) {
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-		if (filter != null) {
-			params.put("filter", singletonList(filter));
-		}
+		filter.ifPresent(f -> params.put("filter", singletonList(f)));
 		return buildPaginationUri(url, pageNumber, pageSize, sortField, params);
 	}
 

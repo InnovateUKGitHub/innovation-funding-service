@@ -17,14 +17,14 @@
         </div>
     </div>
 
-    <form method="GET" th:object="${applicationSummaryQueryForm}">
+    <form method="GET" th:object="${fundingDecisionFilterForm}">
         <div class="search-filters extra-margin">
                 <h2 class="heading-medium">Filter applications</h2>
                 <div class="grid-row">
                     <div class="column-half">
                         <div class="form-group">
                             <label class="form-label" for="stringFilter">Search by application number</label>
-                            <input type="text" class="form-control" id="stringFilter" name="stringFilter" th:field="*{stringFilter}"/>
+                            <input type="text" class="form-control" id="stringFilter" name="stringFilter" th:value="*{stringFilterValue}"/>
                         </div>
                     </div>
                     <div class="column-half">

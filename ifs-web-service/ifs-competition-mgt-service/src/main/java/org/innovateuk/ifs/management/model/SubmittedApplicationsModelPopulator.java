@@ -8,7 +8,6 @@ import org.innovateuk.ifs.management.viewmodel.SubmittedApplicationsRowViewModel
 import org.innovateuk.ifs.management.viewmodel.SubmittedApplicationsViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +23,7 @@ public class SubmittedApplicationsModelPopulator {
     @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
 
-    public SubmittedApplicationsViewModel populateModel(long competitionId, String origin, int page, String sorting, String filter) {
+    public SubmittedApplicationsViewModel populateModel(long competitionId, String origin, int page, String sorting, Optional<String> filter) {
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService
                 .getCompetitionSummary(competitionId)
                 .getSuccessObjectOrThrowException();
@@ -39,7 +38,7 @@ public class SubmittedApplicationsModelPopulator {
                 competitionSummary.getAssessorDeadline(),
                 competitionSummary.getApplicationsSubmitted(),
                 sorting,
-                filter,
+                filter.orElse(null),
                 getApplications(summaryPageResource),
                 new PaginationViewModel(summaryPageResource, origin)
         );

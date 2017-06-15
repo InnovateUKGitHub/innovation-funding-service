@@ -12,6 +12,8 @@ import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 /**
  * Populator for the manage funding applications view model
  */
@@ -32,7 +34,7 @@ public class ManageFundingApplicationsModelPopulator {
     public ManageFundingApplicationViewModel populate(ManageFundingApplicationsQueryForm queryForm, long competitionId, String queryString) {
         ApplicationSummaryPageResource results = applicationSummaryRestService.getWithFundingDecisionApplications(competitionId,
                 queryForm.getSortField(), queryForm.getPage(),
-                DEFAULT_PAGE_SIZE, queryForm.getStringFilter(),
+                DEFAULT_PAGE_SIZE, Optional.of(queryForm.getStringFilter()),
                 queryForm.getSendFilter(), queryForm.getFundingFilter()).getSuccessObjectOrThrowException();
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         CompetitionInFlightStatsViewModel keyStatistics = competitionInFlightStatsModelPopulator.populateStatsViewModel(competitionResource);
