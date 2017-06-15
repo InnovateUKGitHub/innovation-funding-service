@@ -58,8 +58,6 @@ Verify the name of the new application
     And the user should see the text in the page     Application team
     And the user should see the text in the page     View and manage your participants
     And the user can see this new application on their dashboard    ${test_title}
-#    And the user clicks the button/link    link=${test_title}
-#    And the user should see the text in the page    ${test_title}
 
 Marketing emails information should have updated on the profile
     [Documentation]    INFUND-9243
@@ -67,60 +65,7 @@ Marketing emails information should have updated on the profile
     When the user navigates to the page    ${edit_profile_url}
     Then the user should see that the checkbox is selected    allowMarketingEmails
 
-# -----this is in place in setup actions - create new application with the same user
-
-#Logged in user can choose to continue with an existing application
-#    [Documentation]    INFUND-1040
-#    [Tags]    HappyPath
-#    Given the user navigates to the page    ${frontDoor}
-#    And the user clicks the button/link    link=Home and industrial efficiency programme
-#    And the user clicks the button/link    link=Start new application
-#    When the user selects the radio button    create-application    false
-#    And the user clicks the button/link    jQuery=.button:contains("Continue")
-#    And the user should be redirected to the correct page    ${dashboard_url}
-
-#--- this is in place in setup actions - log in and create new application if there is not one already
-
-#Non-logged in user has the option to log into an existing account
-#    [Documentation]    INFUND-1040
-#    [Tags]
-#    [Setup]    The user can log out
-#    Given the user navigates to the page    ${frontDoor}
-#    And the user clicks the button/link    link=Home and industrial efficiency programme
-#    And the user clicks the button/link    link=Start new application
-#    And the user clicks the button/link    jQUery=.button:contains("Sign in")
-#    And the guest user inserts user email & password    jessica.doe@ludlow.co.uk    Passw0rd
-#    And the guest user clicks the log-in button
-#    And the user selects to create a new application
-#    And the user should see the text in the page    Application team
-#    And the user clicks the button/link    jQuery=a:contains("Begin application")
-#    And the user should see the text in the page    Application overview
-#    And the user can see this new application on their dashboard
-
-#---This is being checked by default in keyword create new application with the same user
-
-#Logged in user can create a new application
-#    [Documentation]    INFUND-1040
-#    ...
-#    ...    INFUND-1223
-#    [Tags]    HappyPath
-#    [Setup]    Guest user log-in    &{lead_applicant_credentials}
-#    Given the user navigates to the page    ${frontDoor}
-#    And the user clicks the button/link    link=Home and industrial efficiency programme
-#    And the user clicks the button/link    link=Start new application
-#    And The user selects to create a new application
-#    Then the user clicks the button/link    jQuery=a:contains("Begin application")
-#    And the user should see the text in the page    Application overview
-#    And the project start date is blank
-##    And the user can save the page with the blank date
-#    And the user can see this new application on their dashboard
-
 *** Keywords ***
-#the new application should be visible in the dashboard page
-#    the user clicks the button/link    link= My dashboard
-#    the user should see the text in the page    ${test_title}
-#    the user should see the text in the page    Application number:
-
 the user clicks the Not on company house link
     the user clicks the button/link    jQuery=summary:contains("Enter details manually")
     the user clicks the button/link    name=manual-address
@@ -138,25 +83,14 @@ the user edits the application title
     The project start date is blank
     The user enters text to a text field    id=application_details-title    ${test_title}
     the user clicks the button/link    jQuery=button:contains("Save and return")
-#    The user can save the page with the blank date
-#    the user should see the text in the page    Application overview
-#    the user should see the text in the page    ${UNTITLED_APPLICATION_NAME}
 
 the progress indicator should show 0
     Element Should Contain    css=.progress-indicator    0
 
 The project start date is blank
-#    the user clicks the button/link    link=Application details
     the user should see the element    xpath=//*[@id="application_details-startdate_day" and @placeholder="DD"]
     the user should see the element    xpath=//*[@id="application_details-startdate_month" and @placeholder="MM"]
     the user should see the element    xpath=//*[@id="application_details-startdate_year" and @placeholder="YYYY"]
-
-#The user can save the page with the blank date
-#    Submit Form
-#    # note that the below validation is being used rather than a specific application number so that the test is
-#    # not broken by other tests that run before it and may change this application's number
-#    the user should see the text in the page    Application overview
-#    the user should see the text in the page    ${UNTITLED_APPLICATION_NAME}
 
 The user can see this new application on their dashboard
     [Arguments]     ${application_name}
@@ -168,21 +102,6 @@ Applicant goes to the registration form
     the user navigates to the page    ${frontDoor}
     the user clicks the button/link    link=Home and industrial efficiency programme
     And the user follows the flow to register their organisation
-#    When the user clicks the button/link    link=Start new application
-#    And the user clicks the button/link    jQuery=.button:contains("Create account")
-#    When the user enters text to a text field    id=organisationSearchName    Hive IT
-#    And the user clicks the button/link    id=org-search
-#    And the user clicks the button/link    Link=${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
-#    And the user selects the checkbox    address-same
-#    And the user clicks the button/link    jQuery=button:contains("Continue")
-#    the user selects the radio button    organisationTypeId    ${ORG_TYPE}
-#    And the user clicks the button/link    jQuery=button:contains("Save and continue")
-#    And the user clicks the button/link    jQuery=a:contains("Save and continue")
-
-#The user selects to create a new application
-#    #We have used the run keyword and ignore error because if the user does not have an application this step is not needed
-#    Run Keyword And Ignore Error    And the user selects the radio button    create-application    true
-#    Run Keyword And Ignore Error    And the user clicks the button/link    jQuery=.button:contains("Continue")
 
 the user directed to correct dashboard
     [Arguments]    ${Application_name}
