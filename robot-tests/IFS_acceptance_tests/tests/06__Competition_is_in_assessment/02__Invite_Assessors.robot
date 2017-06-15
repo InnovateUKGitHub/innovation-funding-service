@@ -63,11 +63,10 @@ The User can Add and Remove Assessors
     [Tags]
     Given The user clicks the button/link    link=Find
     And the user clicks the button/link    jQuery=a:contains(41 to)
-    When the user selects the checkbox    assessor-id-159
+    When the user selects the checkbox    assessor-id-160
     And the user should see the element    jQuery=.form-hint:contains("1 assessors selected")
     And the user clicks the button/link    jQuery=button:contains("Add selected to invite list")
     Then The user should see the text in the page    will.smith@gmail.com
-    And The user should see the text in the page    Will Smith
     And The user should see the element    jQuery=td:contains("Will Smith") ~ td .yes
     And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Precision medicine")
     And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Nanotechnology / nanomaterials")
@@ -231,9 +230,9 @@ the calculations of the Assessors on invite list should be correct
     Should Be Equal As Integers    ${ASSESSORS_ON_LIST}    ${ASSESSORS_COUNT}
 
 the user invites multiple assessors
-    the user selects the checkbox      assessor-id-189
-    the user selects the checkbox      assessor-id-174
-    the user selects the checkbox      assessor-id-203
+    the user selects the checkbox      assessor-id-202
+    the user selects the checkbox      assessor-id-190
+    the user selects the checkbox      assessor-id-175
 
 Custom teardown
     the user clicks the button/link    link=Invite
