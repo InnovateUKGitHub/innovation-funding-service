@@ -42,9 +42,8 @@ abstract class AbstractApplicationSaver {
         return "formInput[cost-" + formInputId + "]";
     }
 
-    protected ValidationMessages saveQuestionResponses(HttpServletRequest request,
-                                                     List<QuestionResource> questions, Long userId,
-                                                     Long processRoleId, Long applicationId, boolean ignoreEmpty) {
+    protected ValidationMessages saveQuestionResponses(HttpServletRequest request, List<QuestionResource> questions, Long userId,
+                                                       Long processRoleId, Long applicationId, boolean ignoreEmpty) {
         ValidationMessages errors = new ValidationMessages();
 
         errors.addAll(nonFileSaver.saveNonFileUploadQuestions(questions, request, userId, applicationId, ignoreEmpty));
