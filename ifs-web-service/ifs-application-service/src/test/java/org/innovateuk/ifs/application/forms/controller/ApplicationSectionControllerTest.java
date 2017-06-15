@@ -415,7 +415,6 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
     }
 
-
     @Test
     public void testAcademicFinanceProjectCostsQuestionSubmitAlsoMarksOrganisationFinanceAndYourFundingAsNotRequired() throws Exception {
 
@@ -509,7 +508,6 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
     }
-
 
     @Test
     public void testDeleteCost() throws Exception {
