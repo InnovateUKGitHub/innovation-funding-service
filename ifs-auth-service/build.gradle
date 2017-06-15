@@ -12,30 +12,35 @@ def String spCertsVolume = 'ifs-sp-service/src/main/docker/certs'
 def String idpCertsVolume = 'ifs-idp-service/src/main/docker/certs'
 
 // if there is no key/cert provided, we generate self-signed certificates
-def String spProxyKeyFile = "${buildDir}/sp_proxy_key.pem"
-def String spProxyCertificateFile = "${buildDir}/sp_proxy_certificate.pem"
-def String spProxyCacertificateFile = "${buildDir}/sp_proxy_cacertificate.pem"
+def String spProxyKeyFileName = 'sp_proxy_key.pem'
+def String spProxyKeyFile = "${buildDir}/${spProxyKeyFileName}"
+def String spProxyCertificateFileName = 'sp_proxy_certificate.pem'
+def String spProxyCertificateFile = "${buildDir}/${spProxyCertificateFileName}"
+def String spProxyCacertificateFileName = 'sp_proxy_cacertificate.pem'
+def String spProxyCacertificateFile = "${buildDir}/${spProxyCacertificateFileName}"
 
-def String idpProxyKeyFile = "${buildDir}/idp_proxy_key.pem"
-def String idpProxyCertificateFile = "${buildDir}/idp_proxy_certificate.pem"
-def String idpProxyCacertificateFile = "${buildDir}/idp_proxy_cacertificate.pem"
+def String idpProxyKeyFileName = 'idp_proxy_key.pem'
+def String idpProxyKeyFile = "${buildDir}/${idpProxyKeyFileName}"
+def String idpProxyCertificateFileName = 'idp_proxy_certificate.pem'
+def String idpProxyCertificateFile = "${buildDir}/${idpProxyCertificateFileName}"
+def String idpProxyCacertificateFileName = 'idp_proxy_cacertificate.pem'
+def String idpProxyCacertificateFile = "${buildDir}/${idpProxyCacertificateFileName}"
 
-def String idpSigningKeyFile = "${buildDir}/idp-signing.key"
-def String idpSigningCertificateFile = "${buildDir}/idp-signing.crt"
+def String idpSigningKeyFileName = 'idp-signing.key'
+def String idpSigningKeyFile = "${buildDir}/${idpSigningKeyFileName}"
+def String idpSigningCertificateFileName = 'idp-signing.crt'
+def String idpSigningCertificateFile = "${buildDir}/${idpSigningCertificateFileName}"
 
-def String idpEncryptionKeyFile = "${buildDir}/idp-encryption.key"
-def String idpEncryptionCertificateFile = "${buildDir}/idp-encryption.crt"
-
-def String opensslConfigurationFile = project.hasProperty('openssl.configuration.file') ? project['openssl.configuration.file'] : '/System/Library/OpenSSL/openssl.cnf'
+def String idpEncryptionKeyFileName = 'idp-encryption.key'
+def String idpEncryptionKeyFile = "${buildDir}/${idpEncryptionKeyFileName}"
+def String idpEncryptionCertificateFileName = 'idp-encryption.crt'
+def String idpEncryptionCertificateFile = "${buildDir}/${idpEncryptionCertificateFileName}"
 
 task prepareIDPProxySecrets {
-    onlyIf { !file(idpProxyKeyFile).exists() || !file(idpProxyCertificateFile).exists() || !file(idpProxyCacertificateFile).exists() }
-    buildDir.mkdir()
-
-    doFirst {
-        // Generating a self-signed certificate with a SAN can only be done using a configuration file
-	assert file(opensslConfigurationFile).exists()
-        new File('/tmp/openssl.cnf').write(file(opensslConfigurationFile).text + '\n[SAN]\nsubjectAltName=DNS:iuk-auth-localdev')
+    if ( !file("${idpCertsVolume}/${idpProxyKeyFileName}").exists() ||
+         !file("${idpCertsVolume}/${idpProxyCertificateFileName}").exists() ||
+         !file("${idpCertsVolume}/${idpProxyCacertificateFileName}").exists() ) {
+        buildDir.mkdir()
 
         // a valid CA certificate is required for the data service to work
         assert project.hasProperty('idp.proxy.key')
@@ -44,9 +49,7 @@ task prepareIDPProxySecrets {
         new File(idpProxyCertificateFile).write(project['idp.proxy.certificate'])
         assert project.hasProperty('idp.proxy.cacertificate')
         new File(idpProxyCacertificateFile).write(project['idp.proxy.cacertificate'])
-    }
 
-    doLast {
         copy {
             from file(idpProxyKeyFile)
             from file(idpProxyCertificateFile)
@@ -56,21 +59,22 @@ task prepareIDPProxySecrets {
     }
 }
 
-task prepareIDPSigningSecrets(type: Exec) {
-    onlyIf { !file(idpSigningKeyFile).exists() || !file(idpSigningCertificateFile).exists() }
-    buildDir.mkdir()
-
-    executable = 'openssl'
-    args = ['req', '-x509',
-            '-newkey', 'rsa:4096',
-            '-keyout', idpSigningKeyFile,
-            '-out', idpSigningCertificateFile,
-            '-days', '3650',
-            '-nodes',
-            '-subj', '/C=GB/ST=Wiltshire/L=Swindon/O=Innovate UK/OU=IFS/CN=auth.local-dev'
-    ]
-    doLast {
-	copy {
+task prepareIDPSigningSecrets {
+    if ( !file("${idpCertsVolume}/${idpSigningKeyFileName}").exists() ||
+         !file("${idpCertsVolume}/${idpSigningCertificateFileName}").exists() ) {
+        buildDir.mkdir()
+        exec {
+            executable = 'openssl'
+            args = ['req', '-x509',
+                    '-newkey', 'rsa:4096',
+                    '-keyout', idpSigningKeyFile,
+                    '-out', idpSigningCertificateFile,
+                    '-days', '3650',
+                    '-nodes',
+                    '-subj', '/C=GB/ST=Wiltshire/L=Swindon/O=Innovate UK/OU=IFS/CN=auth.local-dev'
+            ]
+        }
+        copy {
             from file(idpSigningKeyFile)
             from file(idpSigningCertificateFile)
             into idpCertsVolume
@@ -78,21 +82,23 @@ task prepareIDPSigningSecrets(type: Exec) {
     }
 }
 
-task prepareIDPEncryptionSecrets(type: Exec) {
-    onlyIf { !file(idpEncryptionKeyFile).exists() || !file(idpEncryptionCertificateFile).exists() }
-    buildDir.mkdir()
+task prepareIDPEncryptionSecrets {
+    if ( !file("${idpCertsVolume}/${idpEncryptionKeyFileName}").exists() ||
+         !file("${idpCertsVolume}/${idpEncryptionCertificateFileName}").exists() ) {
+        buildDir.mkdir()
 
-    executable = 'openssl'
-    args = ['req', '-x509',
-            '-newkey', 'rsa:4096',
-            '-keyout', idpEncryptionKeyFile,
-            '-out', idpEncryptionCertificateFile,
-            '-days', '3650',
-            '-nodes',
-            '-subj', '/C=GB/ST=Wiltshire/L=Swindon/O=Innovate UK/OU=IFS/CN=auth.local-dev'
-    ]
-    doLast {
-	copy {
+        exec {
+            executable = 'openssl'
+            args = ['req', '-x509',
+                    '-newkey', 'rsa:4096',
+                    '-keyout', idpEncryptionKeyFile,
+                    '-out', idpEncryptionCertificateFile,
+                    '-days', '3650',
+                    '-nodes',
+                    '-subj', '/C=GB/ST=Wiltshire/L=Swindon/O=Innovate UK/OU=IFS/CN=auth.local-dev'
+            ]
+        }
+        copy {
             from file(idpEncryptionKeyFile)
             from file(idpEncryptionCertificateFile)
             into idpCertsVolume
@@ -100,20 +106,23 @@ task prepareIDPEncryptionSecrets(type: Exec) {
     }
 }
 
-task prepareSPSecrets(type: Exec) {
-    onlyIf { !file(spProxyKeyFile).exists() || !file(spProxyCertificateFile).exists() || !file(spProxyCacertificateFile).exists() }
-    buildDir.mkdir()
+task prepareSPSecrets {
+    if ( !file("${spCertsVolume}/${spProxyKeyFileName}").exists() || 
+         !file("${spCertsVolume}/${spProxyCertificateFileName}").exists() || 
+         !file("${spCertsVolume}/${spProxyCacertificateFileName}").exists() ) {
+        buildDir.mkdir()
 
-    executable = 'openssl'
-    args = ['req', '-x509',
-            '-newkey', 'rsa:4096',
-            '-keyout', spProxyKeyFile,
-            '-out', spProxyCertificateFile,
-            '-days', '3650',
-            '-nodes',
-            '-subj', '/C=GB/ST=Wiltshire/L=Swindon/O=Innovate UK/OU=IFS/CN=ifs.local-dev'
-    ]
-    doLast {
+        exec {
+            executable = 'openssl'
+            args = ['req', '-x509',
+                    '-newkey', 'rsa:4096',
+                    '-keyout', spProxyKeyFile,
+                    '-out', spProxyCertificateFile,
+                    '-days', '3650',
+                    '-nodes',
+                    '-subj', '/C=GB/ST=Wiltshire/L=Swindon/O=Innovate UK/OU=IFS/CN=ifs.local-dev'
+            ]
+        }
         copy {
             from file(spProxyCertificateFile)
             into buildDir
@@ -135,16 +144,13 @@ task prepareSecrets {
     dependsOn prepareSPSecrets
 
     // on top of their respective certificates SP and IDP need each other's
-    doLast {
-        copy {
-            from file(spProxyCertificateFile)
-            into idpCertsVolume
-        }
-        copy {
-            from file(idpSigningCertificateFile)
-            from file(idpEncryptionCertificateFile)
-            into spCertsVolume
-        }
+    copy {
+        from file(spProxyCertificateFile)
+        into idpCertsVolume
+    }
+    copy {
+        from file(idpSigningCertificateFile)
+        from file(idpEncryptionCertificateFile)
+        into spCertsVolume
     }
 }
-
