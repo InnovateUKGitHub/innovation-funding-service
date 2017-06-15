@@ -1,20 +1,26 @@
 package org.innovateuk.ifs.application.forms.saver;
 
+import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-
-import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 
 /**
  * Abstract application saver for Question and Section
  */
 abstract class AbstractApplicationSaver {
+
+    @Autowired
+    private ApplicationQuestionFileSaver fileSaver;
+
+    @Autowired
+    private ApplicationQuestionNonFileSaver nonFileSaver;
 
     protected static final String MARKED_AS_COMPLETE_KEY = "application.validation.MarkAsCompleteFailed";
 
@@ -34,5 +40,16 @@ abstract class AbstractApplicationSaver {
 
     protected String getFormCostInputKey(Long formInputId) {
         return "formInput[cost-" + formInputId + "]";
+    }
+
+    protected ValidationMessages saveQuestionResponses(HttpServletRequest request,
+                                                     List<QuestionResource> questions, Long userId,
+                                                     Long processRoleId, Long applicationId, boolean ignoreEmpty) {
+        ValidationMessages errors = new ValidationMessages();
+
+        errors.addAll(nonFileSaver.saveNonFileUploadQuestions(questions, request, userId, applicationId, ignoreEmpty));
+        errors.addAll(fileSaver.saveFileUploadQuestionsIfAny(questions, request.getParameterMap(), request, applicationId, processRoleId));
+
+        return errors;
     }
 }

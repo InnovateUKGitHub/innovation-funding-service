@@ -1,27 +1,17 @@
 package org.innovateuk.ifs.application.forms.saver;
 
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
-import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
-import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.service.FinanceRowRestService;
-import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.form.service.FormInputResponseRestService;
-import org.innovateuk.ifs.form.service.FormInputRestService;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -47,14 +37,6 @@ import static org.springframework.util.StringUtils.hasText;
 @Service
 public class ApplicationSectionSaver extends AbstractApplicationSaver {
 
-    private static final Log LOG = LogFactory.getLog(ApplicationSectionSaver.class);
-
-    @Autowired
-    private FinanceRowRestService financeRowRestService;
-
-    @Autowired
-    private FinanceService financeService;
-
     @Autowired
     private OrganisationService organisationService;
 
@@ -65,16 +47,10 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
     private ProcessRoleService processRoleService;
 
     @Autowired
-    private FormInputResponseRestService formInputResponseRestService;
-
-    @Autowired
     private SectionService sectionService;
 
     @Autowired
     private QuestionService questionService;
-
-    @Autowired
-    private FormInputRestService formInputRestService;
 
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
@@ -83,10 +59,7 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
     private OverheadFileSaver overheadFileSaver;
 
     @Autowired
-    private ApplicationQuestionFileSaver fileSaver;
-
-    @Autowired
-    private ApplicationQuestionNonFileSaver nonFileSaver;
+    private ApplicationSectionFinanceSaver financeSaver;
 
     public ValidationMessages saveApplicationForm(ApplicationResource application,
                                                   CompetitionResource competition,
@@ -104,22 +77,14 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
 
         ValidationMessages errors = new ValidationMessages();
 
-        if (isMarkSectionAsCompleteRequest(params)) {
-            application.setStateAidAgreed(form.isStateAidAgreed());
-        } else if (isMarkSectionAsIncompleteRequest(params) && selectedSection.getType() == SectionType.FINANCE) {
-            application.setStateAidAgreed(Boolean.FALSE);
-        }
-
-        if (!isMarkQuestionAsIncompleteRequest(params)) {
-            List<QuestionResource> questions = simpleMap(selectedSection.getQuestions(), questionService::getById);
-            errors.addAll(saveQuestionResponses(request, questions, user.getId(), processRole.getId(), application.getId(), ignoreEmpty));
-        }
-
         if (isFundingRequest(params)) {
-            errors.addAll(handleRequestFundingRequests(params, application.getId(), user.getId(), competition.getId(), processRole.getId()));
+            errors.addAll(financeSaver.handleRequestFundingRequests(params, application.getId(), user.getId(), competition.getId(), processRole.getId()));
         }
 
         if (!isMarkSectionAsIncompleteRequest(params)) {
+            List<QuestionResource> questions = simpleMap(selectedSection.getQuestions(), questionService::getById);
+            errors.addAll(saveQuestionResponses(request, questions, user.getId(), processRole.getId(), application.getId(), ignoreEmpty));
+
             Long organisationType = organisationService.getOrganisationType(user.getId(), application.getId());
             ValidationMessages saveErrors = financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), application.getId(), competition.getId());
 
@@ -129,10 +94,11 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
                 errors.addAll(overheadFileSaver.handleOverheadFileRequest(request));
             }
 
-            handleMarkAcademicFinancesAsNotRequired(organisationType, selectedSection, application.getId(), competition.getId(), processRole.getId());
+            financeSaver.handleMarkAcademicFinancesAsNotRequired(organisationType, selectedSection, application.getId(), competition.getId(), processRole.getId());
         }
 
         if (isMarkSectionRequest(params)) {
+            financeSaver.handleStateAid(params, application, form, selectedSection);
             errors.addAll(handleMarkSectionRequest(application, sectionId, params, processRole, errors, validFinanceTerms));
         }
 
@@ -141,45 +107,7 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
         return sortValidationMessages(errors);
     }
 
-    private ValidationMessages handleRequestFundingRequests(Map<String, String[]> params, Long applicationId, Long userId, Long competitionId, Long processRoleId) {
-        if (isNotRequestingFundingRequest(params)) {
-            return setRequestingFunding(NOT_REQUESTING_FUNDING, userId, applicationId, competitionId, processRoleId);
-        } else {
-            return setRequestingFunding(REQUESTING_FUNDING, userId, applicationId, competitionId, processRoleId);
-        }
-    }
 
-    private ValidationMessages setRequestingFunding(String requestingFunding, Long userId, Long applicationId, Long competitionId, Long processRoleId) {
-        ApplicationFinanceResource finance = financeService.getApplicationFinanceDetails(userId, applicationId);
-        QuestionResource financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccessObjectOrThrowException();
-        if (finance.getGrantClaim() != null) {
-        }
-        ValidationMessages errors = financeRowRestService.add(finance.getId(), financeQuestion.getId(), finance.getGrantClaim()).getOrElse(new ValidationMessages());
-
-        if (!errors.hasErrors()) {
-            SectionResource organisationSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.ORGANISATION_FINANCES).get(0);
-            SectionResource fundingSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES).get(0);
-            if (REQUESTING_FUNDING.equals(requestingFunding)) {
-                sectionService.markAsInComplete(organisationSection.getId(), applicationId, processRoleId);
-                sectionService.markAsInComplete(fundingSection.getId(), applicationId, processRoleId);
-            } else if (NOT_REQUESTING_FUNDING.equals(requestingFunding)) {
-                sectionService.markAsNotRequired(organisationSection.getId(), applicationId, processRoleId);
-                sectionService.markAsNotRequired(fundingSection.getId(), applicationId, processRoleId);
-            }
-        }
-
-        return errors;
-    }
-
-    private void handleMarkAcademicFinancesAsNotRequired(long organisationType, SectionResource selectedSection, long applicationId, long competitionId, long processRoleId) {
-        if (SectionType.PROJECT_COST_FINANCES.equals(selectedSection.getType())
-                && OrganisationTypeEnum.RESEARCH.getId().equals(organisationType)) {
-            SectionResource organisationSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.ORGANISATION_FINANCES).get(0);
-            SectionResource fundingSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES).get(0);
-            sectionService.markAsNotRequired(organisationSection.getId(), applicationId, processRoleId);
-            sectionService.markAsNotRequired(fundingSection.getId(), applicationId, processRoleId);
-        }
-    }
 
     private ValidationMessages handleMarkSectionRequest(ApplicationResource application, Long sectionId, Map<String, String[]> params,
                                                         ProcessRoleResource processRole, ValidationMessages errorsSoFar, Boolean validFinanceTerms) {
@@ -236,21 +164,5 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
         }
 
         return emptyList();
-    }
-
-    private ValidationMessages saveQuestionResponses(HttpServletRequest request,
-                                                     List<QuestionResource> questions,
-                                                     Long userId,
-                                                     Long processRoleId,
-                                                     Long applicationId,
-                                                     boolean ignoreEmpty) {
-        final Map<String, String[]> params = request.getParameterMap();
-
-        ValidationMessages errors = new ValidationMessages();
-
-        errors.addAll(nonFileSaver.saveNonFileUploadQuestions(questions, request, userId, applicationId, ignoreEmpty));
-        errors.addAll(fileSaver.saveFileUploadQuestionsIfAny(questions, params, request, applicationId, processRoleId));
-
-        return errors;
     }
 }

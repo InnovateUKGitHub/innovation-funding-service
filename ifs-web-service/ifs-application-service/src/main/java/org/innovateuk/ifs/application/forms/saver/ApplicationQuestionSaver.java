@@ -53,12 +53,6 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Autowired
-    private ApplicationQuestionFileSaver fileSaver;
-
-    @Autowired
-    private ApplicationQuestionNonFileSaver nonFileSaver;
-
-    @Autowired
     private ApplicationQuestionApplicationDetailsSaver detailsSaver;
 
     public ValidationMessages saveApplicationForm(Long applicationId,
@@ -76,7 +70,7 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
         ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), application.getId());
 
         if (!isMarkQuestionAsIncompleteRequest(params)) {
-            errors.addAll(saveQuestionResponses(request, questionList, user.getId(), processRole.getId(), application.getId(), params, ignoreEmpty));
+            errors.addAll(saveQuestionResponses(request, questionList, user.getId(), processRole.getId(), application.getId(), ignoreEmpty));
         }
 
         detailsSaver.setApplicationDetails(application, form.getApplication());
@@ -140,17 +134,5 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
         }
 
         return markAsCompleteErrors;
-    }
-
-    private ValidationMessages saveQuestionResponses(HttpServletRequest request,
-                                                     List<QuestionResource> questions, Long userId,
-                                                     Long processRoleId, Long applicationId,
-                                                     Map<String, String[]> params, boolean ignoreEmpty) {
-        ValidationMessages errors = new ValidationMessages();
-
-        errors.addAll(nonFileSaver.saveNonFileUploadQuestions(questions, request, userId, applicationId, ignoreEmpty));
-        errors.addAll(fileSaver.saveFileUploadQuestionsIfAny(questions, params, request, applicationId, processRoleId));
-
-        return errors;
     }
 }
