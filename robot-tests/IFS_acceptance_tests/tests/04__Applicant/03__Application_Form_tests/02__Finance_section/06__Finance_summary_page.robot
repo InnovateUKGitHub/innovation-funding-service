@@ -156,7 +156,8 @@ Support User can see read only summary for collaborator
     And the user redirects to the page      Please complete your project finances.    Your finances
     Then the finance summary table in Your Finances has correct values for collaborator
 
-Support User can see read only view of collaborator Your project costs (values set during marking as complete)
+
+Support User can see read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
     [Documentation]  IFS-401
     [Tags]
     [Setup]  log in as a different user       &{support_user_credentials}
@@ -175,25 +176,29 @@ Support User can see read only view of collaborator Your project costs (values s
     And the user should see the element       jQuery=input[name^=labour-labour][value="100"][readonly="readonly"]
     And the user clicks the button/link       jQuery=button:contains("Labour")
     When the user clicks the button/link      jQuery=button:contains("Overhead costs")
-    Then the user should see the element      jQuery=input[name^="overheads-type"][value="DEFAULT_PERCENTAGE"][checked="checked"][disabled="disabled"]
+    Then the user should see the element      jQuery=input[name^="overheads-type"][value="DEFAULT_PERCENTAGE"]:checked ~ label
     When the user clicks the button/link      jQuery=button:contains("Materials")
     Then the user should see the element      css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input[value="10"][readonly="readonly"]
     And the user should see the element       css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input[value="100"][readonly="readonly"]
     And the user should see the element       css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input[value="test"][readonly="readonly"]
     And the user clicks the button/link       jQuery=button:contains("Overhead costs")
+
+Support User can see read only view of collaborator Your project costs for rest of the categories
+    [Documentation]  IFS-401
+    [Tags]
     When the user clicks the button/link      jQuery=button:contains("Capital usage")
-    Then the user should see the element      jQuery=textarea.form-control[name^=capital_usage-description][value="some description"]
-    And the user should see the element       jQuery=input[name^=cost-captial_usage][values"New"][checked="checked"][disabled="disabled"]
+    Then the user should see the text in the element   jQuery=textarea.form-control[name^=capital_usage-description]  some description
+    And the user should see the element       jQuery=input[name^=capital_usage-existing][value=New]:checked ~ label
     And the user should see the element       css=.form-finances-capital-usage-depreciation[value="10"][readonly="readonly"]
     And the user should see the element       css=.form-finances-capital-usage-npv[value="5000"][readonly="readonly"]
     And the user should see the element       css=.form-finances-capital-usage-residual-value[value="25"][readonly="readonly"]
     And the user should see the element       css=.form-finances-capital-usage-utilisation[value="100"][readonly="readonly"]
-    And the user should see the element       css=#capital_usage .form-row:nth-of-type(1) [readonly]  [value="£ 4,975"]
+    And the user should see the element       css=#capital_usage .form-row:nth-of-type(1) [readonly=readonly][value="£ 4975"]
     And the user clicks the button/link       jQuery=button:contains("Capital usage")
     When the user clicks the button/link      jQuery=button:contains("Subcontracting costs")
     Then the user should see the element      css=.form-finances-subcontracting-company[value="SomeName"]
     And the user should see the element       jQuery=input.form-control[name^=subcontracting-country][value="Netherlands"]
-    And the user should see the element       jQuery=textarea.form-control[name^=subcontracting-role][value="Quality Assurance"]
+    And the user should see the text in the element  jQuery=textarea.form-control[name^=subcontracting-role]  Quality Assurance
     And the user should see the element       jQuery=input.form-control[name^=subcontracting-subcontractingCost][value="1000"][readonly="readonly"]
     And the user clicks the button/link       jQuery=button:contains("Subcontracting costs")
     When the user clicks the button/link      jQuery=button:contains("Travel and subsistence")
@@ -202,8 +207,9 @@ Support User can see read only view of collaborator Your project costs (values s
     And the user should see the element       css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input[value="100"]
     And the user clicks the button/link       jQuery=button:contains("Travel and subsistence")
     When the user clicks the button/link      jQuery=button:contains("Other costs")
-    Then the user should see the element      jQuery=textarea.form-control[name^=other_costs-description][value="some other costs"]
+    Then the user should see the text in the element    jQuery=textarea.form-control[name^=other_costs-description]  some other costs
     And the user should see the element       jQuery=input.form-control[name^=other_costs-otherCost][value="50"]
+
 
 Support User can see read only view of Your organisation
     [Documentation]  IFS-401
@@ -211,7 +217,7 @@ Support User can see read only view of Your organisation
     [Setup]
     When the user clicks the button/link    jQuery=a:contains("Your finances")
     Then the user redirects to the page     Please complete your project finances.  Your finances
-    When the user clicks the button/link    jQuery=:contains("Your organisation")
+    When the user clicks the button/link    jQuery=a:contains("Your organisation")
     Then the user redirects to the page     Organisation size determines funding  Your organisation
     And the user should see the element     jQuery=dt:contains("Turnover") + dd:contains("150")
     And the user should see the element     jQuery=dt:contains("employees") + dd:contains("0")
@@ -222,7 +228,7 @@ Support User can see read only view of Your funding
     [Setup]
     When the user clicks the button/link    jQuery=a:contains("Your finances")
     Then the user redirects to the page     Please complete your project finances.  Your finances
-    When the user clicks the button/link    jQuery=:contains("Your funding")
+    When the user clicks the button/link    jQuery=a:contains("Your funding")
     Then the user redirects to the page     Organisation size determines funding  Your organisation
     And the user should see the element     jQuery=dt:contains("Funding level") + dd:contains("30%")
     And the user should see the element     jQuery=th:contains("Lottery funding") + td:contains("£1,234")
