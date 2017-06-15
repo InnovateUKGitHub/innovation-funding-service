@@ -29,7 +29,7 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 
 		RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
 		setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
-		classUnderTest.notifyLeadApplicantsOfFundingDecisions(new FundingNotificationResource());
+		classUnderTest.notifyApplicantsOfFundingDecisions(new FundingNotificationResource());
 	}
 
 	@Test
@@ -37,7 +37,7 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 
 		setLoggedInUser(null);
 		try {
-			classUnderTest.notifyLeadApplicantsOfFundingDecisions(new FundingNotificationResource());
+			classUnderTest.notifyApplicantsOfFundingDecisions(new FundingNotificationResource());
 			fail("Should not have been able to notify lead applicants of funding decision without first logging in");
 		} catch (AccessDeniedException e) {
 			// expected behaviour
@@ -48,7 +48,7 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 	public void testNotifyLeadApplicantDeniedIfNoGlobalRolesAtAll() {
 
 		try {
-			classUnderTest.notifyLeadApplicantsOfFundingDecisions(new FundingNotificationResource());
+			classUnderTest.notifyApplicantsOfFundingDecisions(new FundingNotificationResource());
 			fail("Should not have been able to notify lead applicants of funding decision without the global comp admin role");
 		} catch (AccessDeniedException e) {
 			// expected behaviour
@@ -66,7 +66,7 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 			setLoggedInUser(
 					newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
 			try {
-				classUnderTest.notifyLeadApplicantsOfFundingDecisions(new FundingNotificationResource());
+				classUnderTest.notifyApplicantsOfFundingDecisions(new FundingNotificationResource());
 				fail("Should not have been able to notify lead applicants of funding decision without the global Comp Admin role");
 			} catch (AccessDeniedException e) {
 				// expected behaviour
@@ -132,7 +132,7 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 	public static class TestApplicationFundingService implements ApplicationFundingService {
 
 		@Override
-		public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisions(FundingNotificationResource fundingNotificationResource) {
+		public ServiceResult<Void> notifyApplicantsOfFundingDecisions(FundingNotificationResource fundingNotificationResource) {
 			return null;
 		}
 

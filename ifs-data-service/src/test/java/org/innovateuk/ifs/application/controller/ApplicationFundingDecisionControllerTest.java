@@ -48,7 +48,7 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
         FundingNotificationResource notification = new FundingNotificationResource("Body of notification message.", decisions);
 
         when(projectServiceMock.createProjectsFromFundingDecisions(decisions)).thenReturn(serviceSuccess());
-        when(applicationFundingServiceMock.notifyLeadApplicantsOfFundingDecisions(notification)).thenReturn(serviceSuccess());
+        when(applicationFundingServiceMock.notifyApplicantsOfFundingDecisions(notification)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/applicationfunding/sendNotifications")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -71,7 +71,7 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().json(toJson(new RestErrorResponse(internalServerErrorError()))));
 
-        verify(applicationFundingServiceMock, never()).notifyLeadApplicantsOfFundingDecisions(any(FundingNotificationResource.class));
+        verify(applicationFundingServiceMock, never()).notifyApplicantsOfFundingDecisions(any(FundingNotificationResource.class));
     }
 
     @Test
@@ -81,7 +81,7 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
         FundingNotificationResource notification = new FundingNotificationResource("Body of notification message.", decisions);
 
         when(projectServiceMock.createProjectsFromFundingDecisions(decisions)).thenReturn(serviceSuccess());
-        when(applicationFundingServiceMock.notifyLeadApplicantsOfFundingDecisions(notification)).thenReturn(serviceFailure(internalServerErrorError()));
+        when(applicationFundingServiceMock.notifyApplicantsOfFundingDecisions(notification)).thenReturn(serviceFailure(internalServerErrorError()));
 
         mockMvc.perform(post("/applicationfunding/sendNotifications")
                 .contentType(MediaType.APPLICATION_JSON)
