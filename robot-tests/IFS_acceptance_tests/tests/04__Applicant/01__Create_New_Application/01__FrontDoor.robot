@@ -42,19 +42,19 @@ Guest user can see the opening and closing status of competitions
     [Setup]    Connect to Database    @{database}
     Then Change the open date of the Competition in the database to tomorrow   ${READY_TO_OPEN_COMPETITION_NAME}
     Given the user navigates to the page  ${frontDoor}
-    Then the user should see the element    jQuery=h2:contains(${READY_TO_OPEN_COMPETITION_NAME}) + p + h3 + p + h3:contains("Opening soon") + dl dt:contains("Opens")
+    Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Opening soon    Opens
     And Change the open date of the Competition in the database to one day before   ${READY_TO_OPEN_COMPETITION_NAME}
     Given the user navigates to the page  ${frontDoor}
-    Then the user should see the element    jQuery=h2:contains(${READY_TO_OPEN_COMPETITION_NAME}) + p + h3 + p + h3:contains("Open now") + dl dt:contains("Opened")
+    Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Open now    Opened
     And Change the close date of the Competition in the database to a fortnight   ${READY_TO_OPEN_COMPETITION_NAME}
     Given the user navigates to the page  ${frontDoor}
-    Then the user should see the element    jQuery=h2:contains(${READY_TO_OPEN_COMPETITION_NAME}) + p + h3 + p + h3:contains("Open now") + dl dt:contains("Opened")
+    Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Open now    Opened
     And Change the close date of the Competition in the database to thirteen days   ${READY_TO_OPEN_COMPETITION_NAME}
     Given the user navigates to the page  ${frontDoor}
-    Then the user should see the element    jQuery=h2:contains(${READY_TO_OPEN_COMPETITION_NAME}) + p + h3 + p + h3:contains("Closing soon") + dl dt:contains("Opened")
+    Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Closing soon    Opened
     And Change the close date of the Competition in the database to tomorrow   ${READY_TO_OPEN_COMPETITION_NAME}
     Given the user navigates to the page  ${frontDoor}
-    Then the user should see the element    jQuery=h2:contains(${READY_TO_OPEN_COMPETITION_NAME}) + p + h3 + p + h3:contains("Closing soon") + dl dt:contains("Opened")
+    Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Closing soon    Opened
     And Reset the open and close date of the Competition in the database   ${READY_TO_OPEN_COMPETITION_NAME}
 
 Guest user can filter competitions by Innovation area
@@ -172,3 +172,8 @@ Close survey window
 
 the user selects feedback window
     Select Window    title=Innovation Funding Service - Feedback Survey
+
+the user can see the correct date status of the competition
+    [Arguments]    ${competition_name}    ${date_status}    ${open_text}
+    the user should see the element    jQuery=h2:contains(${competition_name}) + p + h3 + p + h3:contains(${date_status}) + dl dt:contains(${open_text})
+    h2:contains(${READY_TO_OPEN_COMPETITION_NAME}) + p + h3 + p + h3:contains("Opening soon") ~ h3:contains("Opening soon") dt:contains("Opens")
