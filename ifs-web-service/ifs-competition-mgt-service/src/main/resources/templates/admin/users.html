@@ -58,9 +58,9 @@
             </thead>
             <tbody>
             <tr th:each="user : ${model.activeUsers}">
-                <td th:text="${user.name}">Steve Smith</td>
+                <td><a th:href="${'/management/admin/user/' + user.id}" th:text="${user.name}">Steve Smith</a></td>
                 <td th:text="${user.getRolesString()}">IFS Admin</td>
-                <td th:text="${user.email}">steve.smith@empire.com</td>
+                <td><a th:href="${'mailto:' + user.email}" th:text="${user.email}">steve.smith@empire.com</a></td>
                 <td><span class="form-hint"></span></td>
             </tr>
             </tbody>
@@ -88,9 +88,9 @@
             </thead>
             <tbody>
             <tr th:each="user : ${model.inactiveUsers}">
-                <td th:text="${user.name}">Steve Smith</td>
+                <td><a th:href="${'/management/admin/user/' + user.id}" th:text="${user.name}">Steve Smith</a></td>
                 <td th:text="${user.getRolesString()}">IFS Admin</td>
-                <td th:text="${user.email}">steve.smith@empire.com</td>
+                <td><a th:href="${'mailto:' + user.email}" th:text="${user.email}">steve.smith@empire.com</a></td>
                 <td><span class="form-hint"></span></td>
             </tr>
             </tbody>

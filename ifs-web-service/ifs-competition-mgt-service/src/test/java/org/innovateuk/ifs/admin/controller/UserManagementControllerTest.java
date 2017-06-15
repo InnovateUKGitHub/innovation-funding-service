@@ -42,7 +42,8 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
     @Test
     public void testViewActive() throws Exception {
         mockMvc.perform(get("/admin/users/active")
-                .param("page", "1"))
+                .param("page", "1")
+                .param("size", "5"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/users"))
                 .andExpect(model().attribute("model", new UserListViewModel("active", userPageResource.getContent(), userPageResource.getContent(), userPageResource.getTotalElements(), userPageResource.getTotalElements(), new PaginationViewModel(userPageResource, "active"), new PaginationViewModel(userPageResource, "inactive"))));
@@ -51,7 +52,8 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
     @Test
     public void testViewInactive() throws Exception {
         mockMvc.perform(get("/admin/users/inactive")
-                .param("page", "1"))
+                .param("page", "1")
+                .param("size", "5"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/users"))
                 .andExpect(model().attribute("model", new UserListViewModel("inactive", userPageResource.getContent(), userPageResource.getContent(), userPageResource.getTotalElements(), userPageResource.getTotalElements(), new PaginationViewModel(userPageResource, "active"), new PaginationViewModel(userPageResource, "inactive"))));

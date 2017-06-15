@@ -11,7 +11,7 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage users',linkClass='link-back',linkUrl=@{/}"  />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage users',linkClass='link-back',linkUrl=@{/admin/users/active}"  />
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='View internal users details',size='heading-xlarge'" />
 

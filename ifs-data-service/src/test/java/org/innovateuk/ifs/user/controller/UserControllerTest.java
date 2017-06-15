@@ -276,12 +276,12 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     @Test
     public void testFindActiveInternalUsers() throws Exception {
         when(userServiceMock.findActiveByProcessRoles(UserRoleType.internalRoles(), new PageRequest(0, 5))).thenReturn(serviceSuccess(new UserPageResource()));
-        mockMvc.perform(get(buildPaginationUri("/user/internal/active", 0, 5, "", new LinkedMultiValueMap<>()))).andExpect(status().isOk());
+        mockMvc.perform(get(buildPaginationUri("/user/internal/active", 0, 5, null, new LinkedMultiValueMap<>()))).andExpect(status().isOk());
     }
 
     @Test
     public void testFindInactiveInternalUsers() throws Exception {
         when(userServiceMock.findInactiveByProcessRoles(UserRoleType.internalRoles(), new PageRequest(0, 5))).thenReturn(serviceSuccess(new UserPageResource()));
-        mockMvc.perform(get(buildPaginationUri("/user/internal/inactive", 0, 5, "", new LinkedMultiValueMap<>()))).andExpect(status().isOk());
+        mockMvc.perform(get(buildPaginationUri("/user/internal/inactive", 0, 5, null, new LinkedMultiValueMap<>()))).andExpect(status().isOk());
     }
 }

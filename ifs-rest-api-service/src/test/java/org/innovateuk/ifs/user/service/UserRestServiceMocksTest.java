@@ -257,7 +257,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     public void testGetActiveInternalUsers(){
         UserPageResource expected = new UserPageResource();
 
-        setupGetWithRestResultExpectations(buildPaginationUri(usersUrl + "/internal/active", 0, 5, "", new LinkedMultiValueMap<>()), UserPageResource.class, expected, OK);
+        setupGetWithRestResultExpectations(buildPaginationUri(usersUrl + "/internal/active", 0, 5, null, new LinkedMultiValueMap<>()), UserPageResource.class, expected, OK);
 
         UserPageResource result = service.getActiveInternalUsers(0, 5).getSuccessObjectOrThrowException();
 
@@ -268,7 +268,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     public void testGetInactiveInternalUsers(){
         UserPageResource expected = new UserPageResource();
 
-        setupGetWithRestResultExpectations(buildPaginationUri(usersUrl + "/internal/inactive", 0, 5, "", new LinkedMultiValueMap<>()), UserPageResource.class, expected, OK);
+        setupGetWithRestResultExpectations(buildPaginationUri(usersUrl + "/internal/inactive", 0, 5, null, new LinkedMultiValueMap<>()), UserPageResource.class, expected, OK);
 
         UserPageResource result = service.getInactiveInternalUsers(0, 5).getSuccessObjectOrThrowException();
 

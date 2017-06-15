@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * This controller will handle all requests that are related to management of users by IFS Administrators.
  */
@@ -21,7 +23,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/admin")
 @PreAuthorize("hasAnyAuthority('ifs_administrator')")
 public class UserManagementController {
-    private static final int PAGE_SIZE = 5;
+
+    private static final String DEFAULT_PAGE_NUMBER = "0";
+
+    private static final String DEFAULT_PAGE_SIZE = "40";
+
     @Autowired
     private UserRestService userRestService;
 
@@ -30,18 +36,22 @@ public class UserManagementController {
 
     @GetMapping("/users/active")
     public String viewActive(Model model,
-                       @RequestParam(value = "page", defaultValue = "0") int page) {
-        return view(model, "active", page);
+                             HttpServletRequest request,
+                             @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
+                             @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size) {
+        return view(model, "active", page, size, request.getQueryString());
     }
 
     @GetMapping("/users/inactive")
     public String viewInactive(Model model,
-                             @RequestParam(value = "page", defaultValue = "0") int page) {
-        return view(model, "inactive", page);
+                               HttpServletRequest request,
+                               @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
+                               @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size) {
+        return view(model, "inactive", page, size, request.getQueryString());
     }
 
-    private String view(Model model, String activeTab, int page){
-        return userRestService.getActiveInternalUsers(page, PAGE_SIZE).andOnSuccessReturn(activeInternalUsers -> userRestService.getInactiveInternalUsers(page, PAGE_SIZE).andOnSuccessReturn(inactiveInternalUsers -> {
+    private String view(Model model, String activeTab, int page, int size, String existingQueryString){
+        return userRestService.getActiveInternalUsers(page, size).andOnSuccessReturn(activeInternalUsers -> userRestService.getInactiveInternalUsers(page, size).andOnSuccessReturn(inactiveInternalUsers -> {
             model.addAttribute("model",
                     new UserListViewModel(
                             activeTab,
@@ -49,8 +59,8 @@ public class UserManagementController {
                             inactiveInternalUsers.getContent(),
                             activeInternalUsers.getTotalElements(),
                             inactiveInternalUsers.getTotalElements(),
-                            new PaginationViewModel(activeInternalUsers, "active") ,
-                            new PaginationViewModel(inactiveInternalUsers, "inactive")));
+                            new PaginationViewModel(activeInternalUsers, "active?" + existingQueryString) ,
+                            new PaginationViewModel(inactiveInternalUsers, "inactive?" + existingQueryString)));
             return "admin/users";
         }).getSuccessObjectOrThrowException()).getSuccessObjectOrThrowException();
     }

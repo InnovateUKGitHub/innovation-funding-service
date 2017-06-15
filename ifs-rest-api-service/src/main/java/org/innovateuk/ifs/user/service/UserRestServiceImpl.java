@@ -110,14 +110,14 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     @Override
     public RestResult<UserPageResource> getActiveInternalUsers(int pageNumber, int pageSize) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        String uriWithParams = buildPaginationUri(userRestURL + "/internal/active", pageNumber, pageSize, "", params);
+        String uriWithParams = buildPaginationUri(userRestURL + "/internal/active", pageNumber, pageSize, null, params);
         return getWithRestResult(uriWithParams, UserPageResource.class);
     }
 
     @Override
     public RestResult<UserPageResource> getInactiveInternalUsers(int pageNumber, int pageSize) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        String uriWithParams = buildPaginationUri(userRestURL + "/internal/inactive", pageNumber, pageSize, "", params);
+        String uriWithParams = buildPaginationUri(userRestURL + "/internal/inactive", pageNumber, pageSize, null, params);
         return getWithRestResult(uriWithParams, UserPageResource.class);
     }
 
