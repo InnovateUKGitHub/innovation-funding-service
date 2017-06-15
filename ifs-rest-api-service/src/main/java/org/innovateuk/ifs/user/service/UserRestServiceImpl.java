@@ -97,16 +97,6 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         return getWithRestResult(userRestURL + "/findByRole/"+roleName, userListType());
     }
 
-    /*@Override
-    public RestResult<Long> countActiveInternalUsers() {
-        return getWithRestResult(userRestURL + "/internal/active/count", Long.class);
-    }
-
-    @Override
-    public RestResult<Long> countInactiveInternalUsers() {
-        return getWithRestResult(userRestURL + "/internal/inactive/count", Long.class);
-    }*/
-
     @Override
     public RestResult<UserPageResource> getActiveInternalUsers(int pageNumber, int pageSize) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();

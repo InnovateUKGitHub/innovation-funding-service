@@ -38,12 +38,6 @@ public interface UserService {
     @PreAuthorize("hasPermission(#userBeingUpdated, 'UPDATE')")
     ServiceResult<Void> updateDetails(@P("userBeingUpdated") UserResource userBeingUpdated);
 
-    /*@PostFilter("hasPermission(filterObject, 'READ')")
-    public ServiceResult<Long> countActiveByProcessRoles(Set<UserRoleType> roleTypes);
-
-    @PostFilter("hasPermission(filterObject, 'READ')")
-    public ServiceResult<Long> countInactiveByProcessRoles(Set<UserRoleType> roleTypes);*/
-
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<UserPageResource> findActiveByProcessRoles(Set<UserRoleType> roleTypes, Pageable pageable);
 

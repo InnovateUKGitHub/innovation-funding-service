@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Objects;
 
 /**
  * This controller will handle all requests that are related to management of users by IFS Administrators.
@@ -39,7 +40,7 @@ public class UserManagementController {
                              HttpServletRequest request,
                              @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
                              @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size) {
-        return view(model, "active", page, size, request.getQueryString());
+        return view(model, "active", page, size, Objects.toString(request.getQueryString(), ""));
     }
 
     @GetMapping("/users/inactive")
@@ -47,7 +48,7 @@ public class UserManagementController {
                                HttpServletRequest request,
                                @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
                                @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size) {
-        return view(model, "inactive", page, size, request.getQueryString());
+        return view(model, "inactive", page, size, Objects.toString(request.getQueryString(), ""));
     }
 
     private String view(Model model, String activeTab, int page, int size, String existingQueryString){

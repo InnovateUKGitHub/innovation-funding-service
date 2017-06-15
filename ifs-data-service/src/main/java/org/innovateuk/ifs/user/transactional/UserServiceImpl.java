@@ -43,7 +43,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  */
 @Service
 public class UserServiceImpl extends UserTransactionalService implements UserService {
-    final JsonNodeFactory factory = JsonNodeFactory.instance;
+    private final JsonNodeFactory factory = JsonNodeFactory.instance;
 
     public enum Notifications {
         VERIFY_EMAIL_ADDRESS,
@@ -205,16 +205,6 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
                              UserRoleType.PARTNER.getName().equals(r.getName()) ||
                              UserRoleType.PROJECT_MANAGER.getName().equals(r.getName()));
     }
-
-    /*@Override
-    public ServiceResult<Long> countActiveByProcessRoles(Set<UserRoleType> roleTypes) {
-        return serviceSuccess(userRepository.countByStatusAndRolesNameIn(UserStatus.ACTIVE, roleTypes.stream().map(UserRoleType::getName).collect(Collectors.toSet())));
-    }
-
-    @Override
-    public ServiceResult<Long> countInactiveByProcessRoles(Set<UserRoleType> roleTypes) {
-        return serviceSuccess(userRepository.countByStatusAndRolesNameIn(UserStatus.INACTIVE, roleTypes.stream().map(UserRoleType::getName).collect(Collectors.toSet())));
-    }*/
 
     @Override
     public ServiceResult<UserPageResource> findActiveByProcessRoles(Set<UserRoleType> roleTypes, Pageable pageable) {

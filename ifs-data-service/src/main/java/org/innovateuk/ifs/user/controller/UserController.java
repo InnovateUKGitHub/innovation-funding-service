@@ -72,16 +72,6 @@ public class UserController {
         return baseUserService.findByProcessRole(UserRoleType.fromName(userRoleName)).toGetResponse();
     }
 
-    /*@GetMapping("/internal/active/count")
-    public RestResult<Long> countActiveInternalUsers(){
-        return userService.countActiveByProcessRoles(UserRoleType.internalRoles()).toGetResponse();
-    }
-
-    @GetMapping("/internal/inactive/count")
-    public RestResult<Long> countInactiveInternalUsers(){
-        return userService.countInactiveByProcessRoles(UserRoleType.internalRoles()).toGetResponse();
-    }*/
-
     @GetMapping("/internal/active")
     public RestResult<UserPageResource> findActiveInternalUsers(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                                 @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize){
