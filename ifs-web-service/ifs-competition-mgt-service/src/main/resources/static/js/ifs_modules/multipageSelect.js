@@ -3,17 +3,17 @@ IFS.competitionManagement.multipageSelect = (function () {
   var s
   return {
     settings: {
-      multipageCheckboxEl: '[data-multipage-select] [type="checkbox"]', // <form data-multipage-select> to identify this is a multipage Select
-      selectAllEl: '[data-select-all]',       // the select all element <input type="che"
-      countEl: '[data-count-selected]',
-      submitEl: '[data-submit-el]',
-      totalListSizeEl: '#total-list-size',
+      multipageCheckboxEl: '[data-multipage-select] [type="checkbox"]',
+      selectAllEl: '[data-multipage-select] [data-select-all]',
+      countEl: '[data-multipage-select] [data-count-selected]',
+      submitEl: '[data-multipage-select] [data-submit-el]',
+      totalListSizeEl: '[data-multipage-select] [data-total-checkboxes]',
       totalListSize: 0
     },
     init: function () {
       s = this.settings
-      // caching the total list size once so we can do the changeStateSelectAllCheckbox all selected check
-      s.totalListSize = parseInt(jQuery('#total-list-size').val())
+      // caching the total list size once so we can do the changeSelectAllCheckboxState all selected check
+      s.totalListSize = parseInt(jQuery(s.totalListSizeEl).attr('[data-total-checkboxes]'))
 
       jQuery('body').on('change', s.multipageCheckboxEl, function () {
         IFS.competitionManagement.multipageSelect.processMultipageCheckbox(this)
@@ -42,24 +42,19 @@ IFS.competitionManagement.multipageSelect = (function () {
         timeout: IFS.core.autoSave.settings.ajaxTimeOut
       }).done(function (result) {
         if (isSelectAll) {
-          IFS.competitionManagement.multipageSelect.changeStateCheckboxes(checked)
+          IFS.competitionManagement.multipageSelect.changeAllCheckboxStates(checked)
         }
         if (typeof (result.selectionCount) !== 'undefined') {
           var selectedRows = parseInt(result.selectionCount)
           IFS.competitionManagement.multipageSelect.updateCount(selectedRows)
           IFS.competitionManagement.multipageSelect.updateSubmitButton(selectedRows)
           if (!isSelectAll) {
-            IFS.competitionManagement.multipageSelect.changeStateSelectAllCheckbox(selectedRows)
+            IFS.competitionManagement.multipageSelect.changeSelectAllCheckboxState(selectedRows)
           }
         }
-      }).fail(function (jqXHR, data) {
-        // ignore incomplete requests, likely due to navigating away from the page
-        if (jqXHR.readyState < 4) {
-          return true
-        } else {
-          var errorMessage = 'Something went wrong'
-          checkbox.closest('fieldset').find('legend').html('<span class="error-message">' + errorMessage + '</span>')
-        }
+      }).fail(function (data) {
+        var errorMessage = IFS.core.autoSave.getErrorMessage(data)
+        checkbox.closest('fieldset').find('legend').append('<span class="error-message">' + errorMessage + '</span>')
       })
     },
     updateSubmitButton: function (count) {
@@ -77,7 +72,7 @@ IFS.competitionManagement.multipageSelect = (function () {
         jQuery(s.countEl).text(count)
       }
     },
-    changeStateSelectAllCheckbox: function (count) {
+    changeSelectAllCheckboxState: function (count) {
       // if all checkboxes are checked we also check the selectAll
       var selectAll = jQuery(s.selectAllEl)
       if (s.totalListSize === count) {
@@ -86,9 +81,9 @@ IFS.competitionManagement.multipageSelect = (function () {
         selectAll.removeProp('checked')
       }
     },
-    changeStateCheckboxes: function (state) {
+    changeAllCheckboxStates: function (selectAllChecked) {
       var allCheckboxes = jQuery(s.multipageCheckboxEl)
-      if (state === true) {
+      if (selectAllChecked) {
         allCheckboxes.prop('checked', 'checked')
       } else {
         allCheckboxes.removeProp('checked')
