@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntries;
@@ -160,11 +161,15 @@ public class ApplicationAjaxController {
                 return new StoreFieldResult(validationMessages.getObjectId(), errors);
             }
         } else {
-            Long formInputId = Long.valueOf(inputIdentifier);
-            ValidationMessages saveErrors = formInputResponseRestService.saveQuestionResponse(userId, applicationId,
-                    formInputId, value, false).getSuccessObjectOrThrowException();
-            List<String> lookedUpErrorMessages = lookupErrorMessageResourceBundleEntries(messageSource, saveErrors);
-            return new StoreFieldResult(lookedUpErrorMessages);
+            try {
+                Long formInputId = Long.valueOf(inputIdentifier);
+                ValidationMessages saveErrors = formInputResponseRestService.saveQuestionResponse(userId, applicationId,
+                        formInputId, value, false).getSuccessObjectOrThrowException();
+                List<String> lookedUpErrorMessages = lookupErrorMessageResourceBundleEntries(messageSource, saveErrors);
+                return new StoreFieldResult(lookedUpErrorMessages);
+            } catch (NumberFormatException e) {
+                return new StoreFieldResult(asList("Invalid FormInputId"));
+            }
         }
     }
 
@@ -197,13 +202,17 @@ public class ApplicationAjaxController {
                 applicationService.save(application);
             }
         } else if (fieldName.startsWith("application.durationInMonths")) {
-            Long durationInMonth = Long.valueOf(value);
-            if (durationInMonth < 1L || durationInMonth > 36L) {
-                errors.add("Your project should last between 1 and 36 months");
-                application.setDurationInMonths(durationInMonth);
-            } else {
-                application.setDurationInMonths(durationInMonth);
-                applicationService.save(application);
+            try {
+                Long durationInMonth = Long.valueOf(value);
+                if (durationInMonth < 1L || durationInMonth > 36L) {
+                    errors.add("Your project should last between 1 and 36 months");
+                    application.setDurationInMonths(durationInMonth);
+                } else {
+                    application.setDurationInMonths(durationInMonth);
+                    applicationService.save(application);
+                }
+            } catch (NumberFormatException e) {
+                LOG.debug("Invalid value for duration: " + value);
             }
         } else if (fieldName.startsWith(APPLICATION_START_DATE)) {
             errors = this.saveApplicationStartDate(application, fieldName, value);
