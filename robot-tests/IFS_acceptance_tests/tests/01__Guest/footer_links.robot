@@ -7,15 +7,17 @@ Resource          ../../resources/defaultResources.robot
 
 *** Test Cases ***
 Guest user can click on the footer links
-    [Documentation]    INFUND-362
+    [Documentation]    IFS-362
     [Tags]
     [Setup]    the user navigates to the page    ${frontDoor}
-    Then the user tries the footer links    ${frontDoor}
-    And Guest user log-in    &{lead_applicant_credentials}
+    Given the user tries the footer links    ${frontDoor}
+    Then the user navigates to the page    ${LOGIN_URL}
+    And the guest user inserts user email & password    {lead_applicant}    ${correct_password}
+    When the guest user clicks the log-in button
     Then the user tries the footer links    ${DASHBOARD_URL}
-    Logout as user
+    And the user navigates to the page    ${LOGIN_URL}
     Then the user should see the text in the page    Sign in
-    Then the user tries the footer links    ${LOGIN_URL}
+    And the user tries the footer links    ${LOGIN_URL}
 
 *** Keywords ***
 the user tries the footer links
@@ -30,8 +32,8 @@ the user tries the footer links
     And the user tries the link    ${page}    GOV.UK accessibility    Accessibility
     And the user tries the link    ${page}    Terms and conditions    Terms and conditions
     And the user tries the link    ${page}    Contact us    Contact us
-    Given the user navigates to the page    ${page}
-    When the user clicks the button/link    link=Sign up for competition updates
+    When the user navigates to the page    ${page}
+    And the user clicks the button/link    link=Sign up for competition updates
     Then the user should see the text in the page    Sign up for email notifications
     And the user tries the link    ${page}    Latest funding opportunities    Innovation competitions
     And the user tries the link    ${page}    Find out more about cookies    Cookies
