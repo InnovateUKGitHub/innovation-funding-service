@@ -13,6 +13,8 @@ public class FundingDecisionForm {
 
     private List<Long> applicationIds;
 
+    private boolean allSelected;
+
     public String getFundingDecision() {
         return fundingDecision;
     }
@@ -27,5 +29,13 @@ public class FundingDecisionForm {
 
     public void setApplicationIds(List<Long> applicationIds) {
         this.applicationIds = applicationIds;
+    }
+
+    public boolean isAllSelected() {
+        return allSelected;
+    }
+
+    public void setAllSelected(boolean allSelected) {
+        this.allSelected = allSelected;
     }
 }
