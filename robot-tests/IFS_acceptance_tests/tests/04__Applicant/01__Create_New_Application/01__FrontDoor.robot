@@ -176,4 +176,3 @@ the user selects feedback window
 the user can see the correct date status of the competition
     [Arguments]    ${competition_name}    ${date_status}    ${open_text}
     the user should see the element    jQuery=h2:contains(${competition_name}) + p + h3 + p + h3:contains(${date_status}) + dl dt:contains(${open_text})
-    h2:contains(${READY_TO_OPEN_COMPETITION_NAME}) + p + h3 + p + h3:contains("Opening soon") ~ h3:contains("Opening soon") dt:contains("Opens")
