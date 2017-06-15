@@ -83,10 +83,32 @@ Internal user can filter notified applications
     And the user clicks the button/link        jQuery=button:contains("Filter")
     Then the user should see the element       jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
 
-External user reads his email
+External lead applicant reads his email
     [Documentation]  INFUND-7376
     [Tags]  HappyPath
     Given the external user reads his email and can see the correct status  Awaiting  ${application1Subject}  ${onholdmessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  ${test_mailbox_one}+fundsuccess@gmail.com
+    Then the user should not see the element  jQuery=div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("Unsuccessful")
+    And the user should not see the element   jQuery=div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("Successful")
+
+External collaborators read their email
+    [Documentation]  IFS-360
+    [Tags]  HappyPath
+    Given the external user reads his email and can see the correct status  Awaiting  ${application1Subject}  ${onholdmessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  ${lead_applicant}
+    Then the user should not see the element  jQuery=div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("Unsuccessful")
+    And the user should not see the element   jQuery=div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("Successful")
+    Given the external user reads his email and can see the correct status  Awaiting  ${application1Subject}  ${onholdmessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  jessica.doe@ludlow.co.uk
+    Then the user should not see the element  jQuery=div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("Unsuccessful")
+    And the user should not see the element   jQuery=div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("Successful")
+    Given the external user reads his email and can see the correct status  Awaiting  ${application1Subject}  ${onholdmessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  pete.tom@egg.com
+    Then the user should not see the element  jQuery=div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("Unsuccessful")
+    And the user should not see the element   jQuery=div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("Successful")
+    Given the external user reads his email and can see the correct status  Awaiting  ${application1Subject}  ${onholdmessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  worth.email.test+mario@gmail.com
+    Then the user should not see the element  jQuery=div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("Unsuccessful")
+    And the user should not see the element   jQuery=div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("Successful")
+    Given the external user reads his email and can see the correct status  Awaiting  ${application1Subject}  ${onholdmessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  casey.evans@egg.com
+    Then the user should not see the element  jQuery=div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("Unsuccessful")
+    And the user should not see the element   jQuery=div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("Successful")
+    Given the external user reads his email and can see the correct status  Awaiting  ${application1Subject}  ${onholdmessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  kevin.summers@ludlow.co.uk
     Then the user should not see the element  jQuery=div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("Unsuccessful")
     And the user should not see the element   jQuery=div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("Successful")
 
