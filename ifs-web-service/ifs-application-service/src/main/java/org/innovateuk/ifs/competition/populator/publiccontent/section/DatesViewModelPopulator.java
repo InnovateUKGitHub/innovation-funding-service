@@ -45,13 +45,13 @@ public class DatesViewModelPopulator extends AbstractPublicContentSectionViewMod
         List<MilestoneResource> milestones = milestoneRestService.getAllPublicMilestonesByCompetitionId(competitionId)
                 .getSuccessObjectOrThrowException();
 
-        List<DateViewModel> mileStonesMapped = mapMilestoneToDateViewModel(milestones, nonIFS);
+        List<DateViewModel> milestonesMapped = mapMilestoneToDateViewModel(milestones, nonIFS);
         if (nonIFS) {
-            mileStonesMapped.add(addRegistrationCloseDateForNonIFSComp(
+            milestonesMapped.add(addRegistrationCloseDateForNonIFSComp(
                     milestones.stream().filter(resource -> SUBMISSION_DATE.equals(resource.getType())).findFirst()));
         }
 
-        return mileStonesMapped;
+        return milestonesMapped;
     }
 
     private DateViewModel addRegistrationCloseDateForNonIFSComp(Optional<MilestoneResource> competitionCloseDateMilestone) {
@@ -81,7 +81,7 @@ public class DatesViewModelPopulator extends AbstractPublicContentSectionViewMod
                 case SUBMISSION_DATE:
                     publicContentDate.setContent("Competition closes");
                     break;
-                case RELEASE_FEEDBACK:
+                case NOTIFICATIONS:
                     publicContentDate.setContent("Applicants notified");
                     break;
             }

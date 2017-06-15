@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -98,15 +99,17 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
     }
 
     private void resetFundingLevels(Long competitionId, Long applicationId) {
+        Optional<Question> financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getOptionalSuccessObject();
 
-        Question financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccessObjectOrThrowException();
-
-        financeRowService.financeDetails(applicationId).getSuccessObjectOrThrowException().stream().forEach(applicationFinance -> {
-
-            if (applicationFinance.getGrantClaim() != null) {
-                applicationFinance.getGrantClaim().setGrantClaimPercentage(0);
-                financeRowService.addCost(applicationFinance.getId(), financeQuestion.getId(), applicationFinance.getGrantClaim());
-            }
-        });
+        financeRowService.financeDetails(applicationId)
+                .getOptionalSuccessObject()
+                .ifPresent(applicationFinanceResources -> {
+                    applicationFinanceResources.forEach(applicationFinance -> {
+                        if (applicationFinance.getGrantClaim() != null && financeQuestion.isPresent()) {
+                            applicationFinance.getGrantClaim().setGrantClaimPercentage(0);
+                            financeRowService.addCost(applicationFinance.getId(), financeQuestion.get().getId(), applicationFinance.getGrantClaim());
+                        }
+                    });
+                });
     }
 }

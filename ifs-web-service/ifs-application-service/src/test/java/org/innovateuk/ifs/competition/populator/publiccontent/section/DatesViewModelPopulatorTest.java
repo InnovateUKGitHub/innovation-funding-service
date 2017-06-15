@@ -66,7 +66,7 @@ public class DatesViewModelPopulatorTest {
     public void populateSectionWithMilestonesFound() {
         when(milestoneRestService.getAllPublicMilestonesByCompetitionId(publicContentResource.getCompetitionId()))
                 .thenReturn(restSuccess(newMilestoneResource()
-                        .withType(MilestoneType.OPEN_DATE, MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE)
+                        .withType(MilestoneType.OPEN_DATE, MilestoneType.NOTIFICATIONS, MilestoneType.SUBMISSION_DATE)
                         .build(3)));
         publicContentResource.setContentEvents(emptyList());
 
@@ -101,7 +101,7 @@ public class DatesViewModelPopulatorTest {
     public void populateSectionWithPublicContentDatesAndMilestones() {
         when(milestoneRestService.getAllPublicMilestonesByCompetitionId(publicContentResource.getCompetitionId()))
                 .thenReturn(restSuccess(newMilestoneResource()
-                        .withType(MilestoneType.OPEN_DATE, MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE)
+                        .withType(MilestoneType.OPEN_DATE, MilestoneType.NOTIFICATIONS, MilestoneType.SUBMISSION_DATE)
                         .build(3)));
         publicContentResource.setContentEvents(newContentEventResource().build(2));
 

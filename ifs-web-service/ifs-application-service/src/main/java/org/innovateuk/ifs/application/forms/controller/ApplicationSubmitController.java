@@ -14,7 +14,6 @@ import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
-import org.innovateuk.ifs.profiling.ProfileExecution;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -91,7 +90,6 @@ public class ApplicationSubmitController {
         return applicationModelPopulator.userIsLeadApplicant(application, user.getId()) && application.isSubmittable();
     }
 
-    @ProfileExecution
     @GetMapping("/{applicationId}/summary")
     public String applicationSummary(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                      UserResource user) {
@@ -123,7 +121,6 @@ public class ApplicationSubmitController {
         }
     }
 
-    @ProfileExecution
     @PostMapping("/{applicationId}/summary")
     public String applicationSummarySubmit(@PathVariable("applicationId") long applicationId,
                                            UserResource user,
@@ -149,7 +146,6 @@ public class ApplicationSubmitController {
         return "redirect:/application/" + applicationId + "/summary";
     }
 
-    @ProfileExecution
     @GetMapping("/{applicationId}/confirm-submit")
     public String applicationConfirmSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                            UserResource user) {
@@ -179,7 +175,6 @@ public class ApplicationSubmitController {
         return "application-submitted";
     }
 
-    @ProfileExecution
     @GetMapping("/{applicationId}/track")
     public String applicationTrack(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                    UserResource user) {
