@@ -128,7 +128,7 @@
                 </span>
             </div>
             <div class="column-half select-all alignright">
-                <button class="button" name="addSelected" data-submit-el="" th:attr="disabled=${!#lists.isEmpty(selectionForm.selectedAssessorIds)}">
+                <button class="button" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(selectionForm.selectedAssessorIds)}">
                     Add selected to invite list
                 </button>
             </div>
