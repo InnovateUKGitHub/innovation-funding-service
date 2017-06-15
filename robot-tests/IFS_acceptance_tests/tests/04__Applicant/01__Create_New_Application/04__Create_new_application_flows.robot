@@ -111,7 +111,7 @@ Logged in user can create a new application
 
 *** Keywords ***
 the new application should be visible in the dashboard page
-    the user clicks the button/link    link= My dashboard
+    the user clicks the button/link    link=Dashboard
     the user should see the text in the page    ${test_title}
     the user should see the text in the page    Application number:
 
@@ -175,7 +175,7 @@ The user selects to create a new application
 
 the user directed to correct dashboard
     [Arguments]    ${Application_name}
-    the user should see the text in the page    Your dashboard
+    the user should see the text in the page    Dashboard
     the user clicks the button/link    link=${Application_name}
     the user clicks the button/link    jQuery=a:contains("Begin application")
     the user should see the text in the page    Application overview

@@ -2,7 +2,7 @@
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your dashboard'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Dashboard'" />
 </head>
 
 <body th:with="context='applicant'" class="app-dashboard">
@@ -20,7 +20,7 @@
         </div>
 
         <div class="my-applications">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your dashboard',size='heading-large'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Dashboard',size='heading-large'" />
             <section th:if="${model.projectsInSetupNotEmpty}" class="projects-in-setup">
                 <div class="progress-list">
                     <h2 class="heading-medium">Set up your project</h2>
@@ -130,16 +130,8 @@
                     </ul>
                 </div>
             </section>
-            <section class="your-profile">
-                <h2 class="heading-medium">Your profile</h2>
-                <ul class="list list-bullet">
-                    <li>
-                        <a href="/profile/view">view and edit your profile details</a>
-                    </li>
-                    <li>
-                        read the <a href="/info/terms-and-conditions" target="_blank">terms and conditions</a> (this link will open in a new window)
-                    </li>
-                </ul>
+            <section class="terms-and-conditions">
+                <p>Read the <a href="/info/terms-and-conditions" target="_blank">terms and conditions</a> (this link will open in a new window)</p>
             </section>
         </div>
 

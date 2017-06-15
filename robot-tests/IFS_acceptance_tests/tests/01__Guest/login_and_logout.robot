@@ -173,7 +173,7 @@ Reset password user enters new psw
 
 *** Keywords ***
 the user is not logged-in
-    the user should not see the element    link=My dashboard
+    the user should not see the element    link=Dashboard
     the user should not see the element    link=Sign out
 
 the guest user should get an error message

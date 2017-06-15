@@ -18,7 +18,7 @@ Email persists on invalid login
     And the email address should persist    ${email_address}
 
 the user is not logged-in
-    The user should not see the element    link=My dashboard
+    The user should not see the element    link=Dashboard
     The user should not see the element    link=Logout
 
 the email address should persist

@@ -26,7 +26,7 @@ the guest logs in as an assessor
     the guest user opens the browser
     time until page contains    Sign in    Loading the login page
     Log in as user    &{assessor_credentials}
-    time until element is visible    link=My dashboard    Logging in as assessor
+    time until element is visible    link=Dashboard    Logging in as assessor
 
 the assessor can visit the competition dashboard
     click link    ${OPEN_COMPETITION_LINK}
@@ -256,7 +256,7 @@ the guest logs in as lead applicant
     the guest user opens the browser
     time until page contains    New to this service?    Loading the login page
     login as user    &{lead_applicant_credentials}
-    time until element is visible    link=My dashboard    Logging in
+    time until element is visible    link=Dashboard    Logging in
 
 the applicant views the overview page for the first application
     click link    Climate science the history of Greenland's ice
