@@ -315,14 +315,11 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         return createLambdaMatcher(notification -> {
             assertEquals(expectedNotification.getFrom(), notification.getFrom());
 
-            Collection<String> expectedTo = new TreeSet<String>(Collator.getInstance());
+            Collection<String> expectedTo = new TreeSet<>(Collator.getInstance());
             expectedTo.addAll(simpleMap(expectedNotification.getTo(), NotificationTarget::getEmailAddress));
 
-            Collection<String> actualTo = new TreeSet<String>(Collator.getInstance());
-            actualTo.addAll(simpleMap(expectedNotification.getTo(), NotificationTarget::getEmailAddress));
-            //List<String> expectedToEmailAddresses = simpleMap(notification.getTo(), NotificationTarget::getEmailAddress));
-            //List<String> actualToEmailAddresses = simpleMap(notification.getTo(), NotificationTarget::getEmailAddress);
-            //assertEquals(expectedToEmailAddresses, actualToEmailAddresses);
+            Collection<String> actualTo = new TreeSet<>(Collator.getInstance());
+            actualTo.addAll(simpleMap(notification.getTo(), NotificationTarget::getEmailAddress));
             assertEquals(asList(expectedTo.toArray()), asList(actualTo.toArray()));
 
             assertEquals(expectedNotification.getMessageKey(), notification.getMessageKey());
