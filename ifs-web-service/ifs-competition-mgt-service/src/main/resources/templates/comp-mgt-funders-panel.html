@@ -58,19 +58,24 @@
             <h3><span class="heading-xlarge no-margin" th:text="${results.totalElements}" /> applications</h3>
         </div>
     </div>
-    <form method="POST" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+    <form method="POST"
+          th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+          data-multipage-select=""
+          th:attr="data-total-checkboxes=${results.totalElements}">
         <div class="grid-row sorting">
             <div class="column-half">
                 <div class="select-all">
                     <fieldset>
                         <legend class="visuallyhidden">Select applications</legend>
                         <div class="multiple-choice">
-                            <input data-select-all="[id^=app-row-]" class="select-all" id="select-all-1" value="select-all" type="checkbox" />
+                            <!-- todo: needs to be checked when all are selected -->
+                            <!-- th:checked="${results.selectedElements} == ${results.totalElements}" -->
+                            <input class="select-all" id="select-all-1" value="select-all" type="checkbox" data-select-all="" />
                             <label for="select-all-1">
                                 Select all applications
                             </label>
                         </div>
-                        <span class="form-hint"><span data-count-selected="[id^=app-row-]">3</span> applications selected</span>
+                        <span class="form-hint"><span data-count-selected="">3</span> applications selected</span>
                     </fieldset>
                 </div>
             </div>
@@ -78,9 +83,9 @@
                 <fieldset class="mark-applications">
                     <legend class="visuallyhidden">Mark selected applications</legend>
                     <h3>Mark application as:</h3>
-                    <button type="submit" value='FUNDED' name="fundingDecision" class="button button-secondary" data-enable-button-when="one-checked">Successful</button>
-                    <button type="submit" value='UNFUNDED' name="fundingDecision" class="button button-secondary" data-enable-button-when="one-checked">Unsuccessful</button>
-                    <button type="submit" value='ON_HOLD' name="fundingDecision" class="button button-secondary" data-enable-button-when="one-checked">On hold</button>
+                    <button type="submit" value='FUNDED' name="fundingDecision" class="button button-secondary" data-submit-el="">Successful</button>
+                    <button type="submit" value='UNFUNDED' name="fundingDecision" class="button button-secondary" data-submit-el="">Unsuccessful</button>
+                    <button type="submit" value='ON_HOLD' name="fundingDecision" class="button button-secondary" data-submit-el="">On hold</button>
                 </fieldset>
             </div>
         </div>
@@ -99,7 +104,7 @@
                                 Select all applications
                             </label>
                         </div>
-                        <span class="form-hint"><span data-count-selected="[id^=app-row-]">3</span> applications selected</span>
+                        <span class="form-hint"><span data-count-selected="">3</span> applications selected</span>
                     </fieldset>
                 </div>
             </div>
@@ -107,9 +112,9 @@
                 <fieldset class="mark-applications">
                     <legend class="visuallyhidden">Mark application as:</legend>
                     <h3>Mark application as:</h3>
-                    <button type="submit" value='FUNDED' name="fundingDecision" class="button button-secondary" data-enable-button-when="one-checked">Successful</button>
-                    <button type="submit" value='UNFUNDED' name="fundingDecision" class="button button-secondary"  data-enable-button-when="one-checked">Unsuccessful</button>
-                    <button type="submit" value='ON_HOLD' name="fundingDecision" class="button button-secondary"  data-enable-button-when="one-checked">On hold</button>
+                    <button type="submit" value='FUNDED' name="fundingDecision" class="button button-secondary" data-submit-el="">Successful</button>
+                    <button type="submit" value='UNFUNDED' name="fundingDecision" class="button button-secondary"  data-submit-el="">Unsuccessful</button>
+                    <button type="submit" value='ON_HOLD' name="fundingDecision" class="button button-secondary"  data-submit-el="">On hold</button>
                 </fieldset>
             </div>
         </div>
