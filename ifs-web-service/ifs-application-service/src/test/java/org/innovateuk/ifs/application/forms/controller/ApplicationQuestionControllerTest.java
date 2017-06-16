@@ -43,6 +43,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
@@ -220,7 +221,7 @@ public class ApplicationQuestionControllerTest extends BaseControllerMockMVCTest
                         .param(EDIT_QUESTION, "1_2")
         )
                 .andExpect(view().name("application-form"));
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Long.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
     }
 
     @Test
@@ -279,7 +280,7 @@ public class ApplicationQuestionControllerTest extends BaseControllerMockMVCTest
         assertEquals("FutureLocalDate", bindingResult.getFieldError("application.startDate").getCode());
         assertEquals("NotNull", bindingResult.getFieldError("application.resubmission").getCode());
 
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Long.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
     }
 
     @Test
@@ -301,7 +302,7 @@ public class ApplicationQuestionControllerTest extends BaseControllerMockMVCTest
         assertEquals("FieldRequiredIf", bindingResult.getFieldError("application.previousApplicationNumber").getCode());
         assertEquals("FieldRequiredIf", bindingResult.getFieldError("application.previousApplicationTitle").getCode());
 
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Long.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
     }
 
     @Test
@@ -321,7 +322,7 @@ public class ApplicationQuestionControllerTest extends BaseControllerMockMVCTest
 
         BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
         assertEquals("FutureLocalDate", bindingResult.getFieldError("application.startDate").getCode());
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Long.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
     }
 
     @Test
@@ -336,7 +337,7 @@ public class ApplicationQuestionControllerTest extends BaseControllerMockMVCTest
 
         BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
         assertEquals("Min", bindingResult.getFieldError("application.durationInMonths").getCode());
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Long.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
     }
 
     @Test
@@ -351,7 +352,7 @@ public class ApplicationQuestionControllerTest extends BaseControllerMockMVCTest
 
         BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
         assertEquals("Max", bindingResult.getFieldError("application.durationInMonths").getCode());
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Long.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
     }
 
     @Test
@@ -364,7 +365,7 @@ public class ApplicationQuestionControllerTest extends BaseControllerMockMVCTest
 
         BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
         assertEquals("NotNull", bindingResult.getFieldError("application.researchCategory").getCode());
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Long.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
     }
 
     @Test
@@ -377,7 +378,7 @@ public class ApplicationQuestionControllerTest extends BaseControllerMockMVCTest
 
         BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
         assertEquals("NotNull", bindingResult.getFieldError("application.innovationArea").getCode());
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Long.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
     }
 
     @Test
@@ -398,7 +399,7 @@ public class ApplicationQuestionControllerTest extends BaseControllerMockMVCTest
 
         assertNull(bindingResult.getFieldError("application.previousApplicationNumber"));
         assertNull(bindingResult.getFieldError("application.previousApplicationTitle"));
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Long.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
     }
 
     @Test

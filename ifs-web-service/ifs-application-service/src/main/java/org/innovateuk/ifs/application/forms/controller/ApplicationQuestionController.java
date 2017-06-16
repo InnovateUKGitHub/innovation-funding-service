@@ -99,7 +99,7 @@ public class ApplicationQuestionController {
         QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, model, form);
 
         model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
-        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, null);
+        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty());
 
         return APPLICATION_FORM;
     }
@@ -157,7 +157,7 @@ public class ApplicationQuestionController {
                 QuestionViewModel questionViewModel = questionModelPopulator.populateModel(applicantQuestion, model, form);
 
                 model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
-                applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, null);
+                applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty());
                 return APPLICATION_FORM;
             } else {
                 return applicationRedirectionService.getRedirectUrl(request, applicationId, Optional.empty());

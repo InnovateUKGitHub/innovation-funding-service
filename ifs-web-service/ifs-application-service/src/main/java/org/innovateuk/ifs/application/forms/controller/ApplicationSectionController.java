@@ -111,7 +111,7 @@ public class ApplicationSectionController {
                                                  UserResource user) {
 
         ApplicantSectionResource applicantSection = applicantRestService.getSection(user.getId(), applicationId, sectionId);
-        populateSection(model, form, bindingResult, applicantSection, false, null);
+        populateSection(model, form, bindingResult, applicantSection, false, Optional.empty());
         return APPLICATION_FORM;
     }
 
@@ -130,7 +130,7 @@ public class ApplicationSectionController {
         ApplicantSectionResource applicantSection = applicantRestService.getSection(applicantUser.getUser(), applicationId, sectionId);
         model.addAttribute("applicantOrganisationId", applicantOrganisationId);
         model.addAttribute("readOnlyAllApplicantApplicationFinances", true);
-        populateSection(model, form, bindingResult, applicantSection, true, applicantOrganisationId);
+        populateSection(model, form, bindingResult, applicantSection, true, Optional.of(applicantOrganisationId));
         return APPLICATION_FORM;
     }
 
@@ -175,7 +175,7 @@ public class ApplicationSectionController {
                                  BindingResult bindingResult,
                                  ApplicantSectionResource applicantSection,
                                  boolean readOnly,
-                                 Long applicantOrganisationId) {
+                                 Optional<Long> applicantOrganisationId) {
         AbstractSectionViewModel sectionViewModel = sectionPopulators.get(applicantSection.getSection().getType()).populate(applicantSection, form, model, bindingResult, readOnly);
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicantSection.getApplication().getId(), model, applicantSection.getSection(), applicantOrganisationId);
         model.addAttribute("model", sectionViewModel);

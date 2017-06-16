@@ -207,7 +207,7 @@ public class ApplicationNavigationPopulatorTest {
 
         setupApplicationOpen(applicationId);
 
-        target.addAppropriateBackURLToModel(applicationId, model, section, 22L);
+        target.addAppropriateBackURLToModel(applicationId, model, section, Optional.of(22L));
         verify(model).addAttribute(eq("backURL"), contains("management/competition/11/application/1"));
         verify(model).addAttribute(eq("backTitle"), eq("Application overview"));
     }
@@ -220,7 +220,7 @@ public class ApplicationNavigationPopulatorTest {
         setupApplicationOpen(applicationId);
 
         SectionResource section = newSectionResource().withType(SectionType.FUNDING_FINANCES).withParentSection(33L).build();
-        target.addAppropriateBackURLToModel(applicationId, model, section, 22L);
+        target.addAppropriateBackURLToModel(applicationId, model, section, Optional.of(22L));
 
         verify(model).addAttribute(eq("backURL"), contains("/application/1/form/section/33/22"));
         verify(model).addAttribute(eq("backTitle"), contains("Your finances"));
