@@ -96,7 +96,7 @@ Valid login as Comp Admin
 
 Valid login as Support role
     [Documentation]    IFS-188
-    [Tags]
+    [Tags]     HappyPath    support
     Given the user is not logged-in
     When the guest user enters the log in credentials   &{support_user_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
@@ -105,7 +105,7 @@ Valid login as Support role
 
 Valid login as IFS Admin role
     [Documentation]    IFS-603
-    [Tags]
+    [Tags]      HappyPath    administrator
     Given the user is not logged-in
     When the guest user enters the log in credentials   &{ifs_admin_user_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]

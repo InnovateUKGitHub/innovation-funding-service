@@ -133,6 +133,8 @@ ${assessment_skills_url}    ${server}/assessment/profile/skills
 ${assessment_details_url}    ${server}/assessment/profile/details
 ${Application_question_url_2}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/117
 
+# Admin user variables
+${USER_MGMT_URL}    ${SERVER}/management/admin/users/active
 
 #General error messages
 ${403_error_message}    You do not have the necessary permissions for your request
