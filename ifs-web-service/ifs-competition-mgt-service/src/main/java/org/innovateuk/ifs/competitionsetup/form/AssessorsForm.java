@@ -21,7 +21,7 @@ public class AssessorsForm extends CompetitionSetupForm {
     private BigDecimal assessorPay;
 
     @NotEmpty(message = "{validation.assessorsform.assessmentPanel.required}")
-    private Boolean useAssessmentPanel;
+    private String useAssessmentPanel;
 
     public Integer getAssessorCount() {
         return assessorCount;
@@ -39,11 +39,11 @@ public class AssessorsForm extends CompetitionSetupForm {
         this.assessorPay = assessorPay;
     }
 
-    public Boolean isUseAssessmentPanel() {
+    public String getUseAssessmentPanel() {
         return useAssessmentPanel;
     }
 
-    public void setUseAssessmentPanel(Boolean useAssessmentPanel) {
+    public void setUseAssessmentPanel(String useAssessmentPanel) {
         this.useAssessmentPanel = useAssessmentPanel;
     }
 }

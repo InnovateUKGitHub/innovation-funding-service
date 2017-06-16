@@ -32,7 +32,8 @@ public class AssessorsFormPopulatorTest {
 				.withFunders(CompetitionFundersFixture.getTestCoFunders())
 				.withId(8L)
 				.withAssessorCount(1)
-				.withAssessorPay(BigDecimal.TEN).build();
+				.withAssessorPay(BigDecimal.TEN)
+				.withUseAssessmentPanel(Boolean.FALSE).build();
 
 		CompetitionSetupForm result = populator.populateForm(competition);
 		
@@ -40,5 +41,6 @@ public class AssessorsFormPopulatorTest {
 		AssessorsForm form = (AssessorsForm) result;
 		assertEquals(Integer.valueOf(1), form.getAssessorCount());
 		assertEquals(BigDecimal.TEN, form.getAssessorPay());
+		assertEquals("noPanel", form.getUseAssessmentPanel());
 	}
 }

@@ -59,7 +59,7 @@ public class AssessorsSectionSaver extends AbstractSectionSaver implements Compe
 
 	private void setFieldsAllowedFromChangeAfterSetupAndLive(CompetitionResource competition, AssessorsForm assessorsForm) {
 		competition.setAssessorCount(assessorsForm.getAssessorCount());
-		competition.setUseAssessmentPanel(assessorsForm.isUseAssessmentPanel());
+		competition.setUseAssessmentPanel(convertToInviteBoolean(assessorsForm.getUseAssessmentPanel()));
 	}
 
 	@Override
@@ -67,4 +67,7 @@ public class AssessorsSectionSaver extends AbstractSectionSaver implements Compe
 		return AssessorsForm.class.equals(clazz);
 	}
 
+	private boolean convertToInviteBoolean(String useAssessmentPanel) {
+		return null != useAssessmentPanel && useAssessmentPanel.equals("usePanel");
+	}
 }
