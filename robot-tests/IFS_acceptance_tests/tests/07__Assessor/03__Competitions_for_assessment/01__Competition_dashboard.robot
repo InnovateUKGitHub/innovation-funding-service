@@ -100,7 +100,7 @@ Reject an application for assessment
     ...
     ...    INFUND-6358
     [Tags]
-    [Setup]    Log in as a different user    paul.plum@gmail.com    Passw0rd
+    [Setup]    Log in as a different user    &{assessor_credentials}
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user should see the element    jQuery=.in-progress li:nth-child(1):contains("Park living"):contains("Pending")
     When The user clicks the button/link    jQuery=.in-progress li:nth-child(1) a:contains("Accept or reject")
@@ -119,9 +119,10 @@ Applications should not have a check-box when the status is Open
 
 Check the comp admin see the assessor has rejected the application
     [Tags]
-    [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
+    [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
+    And the user clicks the button/link    jQuery=a:contains("Manage assessments")
+    And the user clicks the button/link    jQuery=a:contains("Manage applications")
     And the user should see the element    jQuery=tr:nth-child(1) td:nth-child(2):contains("Park living")
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     And the user should see the text in the page    Rejected (1)

@@ -14,7 +14,7 @@ Documentation     INFUND-3780: As an Assessor I want the system to autosave my w
 ...               INFUND-6281 As an Assessor I want to see specific scoring guidance text for each application question so that I can score the question accurately
 ...
 ...               INFUND-8065 File download links are broken for assessors
-Suite Setup       guest user log-in    paul.plum@gmail.com    Passw0rd
+Suite Setup       guest user log-in    &{assessor_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
@@ -23,7 +23,7 @@ Resource          ../../../resources/defaultResources.robot
 Navigation using previous button
     [Documentation]    INFUND-4264
     [Tags]    HappyPath
-    Given the user clicks the button/link    link=Sustainable living models for the future
+    Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And The user clicks the button/link    link=Products and Services Personalised
     When the user clicks the button/link    link=4. Economic benefit
     Then the user should see the text in the page    Economic benefit
@@ -194,7 +194,7 @@ Status of the application should be In Progress
     [Documentation]    INFUND-6358
     [Tags]
     [Setup]    The user navigates to the page    ${assessor_dashboard_url}
-    When The user clicks the button/link    link=Sustainable living models for the future
+    When The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     Then The user should see the text in the page    In progress
 
 *** Keywords ***

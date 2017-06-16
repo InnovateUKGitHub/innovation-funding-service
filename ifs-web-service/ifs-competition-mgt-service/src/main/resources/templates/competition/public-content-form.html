@@ -12,7 +12,7 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate" method="post" enctype="multipart/form-data">
         <!-- Link back -->
-        <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Public content',linkClass='link-back',linkUrl=@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})}"  th:remove="tag"></div>
+        <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Public content',linkClass='link-back',linkUrl=@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})}"  />
 
         <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
             <h2 class="heading-medium error-summary-heading">There was a problem submitting the public content.</h2>
@@ -31,16 +31,16 @@
         <!-- buttons -->
         <div class="grid-row extra-margin">
             <th:block th:if="${model.readOnly}">
-            <div class="column-half">
-                <a class="button" th:href="@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})}">Return to public content</a>
-            </div>
-            <div class="column-half alignright">
-                <a class="button-secondary no-margin" th:href="@{/competition/setup/public-content/{sectionName}/{competitionId}/edit(competitionId=${model.competition.id}, sectionName=${model.section.type.path})}">Edit</a>
-            </div>
+                <div class="column-half">
+                    <a class="button" th:href="@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})}">Return to public content</a>
+                </div>
+                <div class="column-half alignright">
+                    <a class="button-secondary no-margin" th:href="@{/competition/setup/public-content/{sectionName}/{competitionId}/edit(competitionId=${model.competition.id}, sectionName=${model.section.type.path})}">Edit</a>
+                </div>
             </th:block>
             <th:block th:unless="${model.readOnly}">
                 <div class="column-half">
-                    <button name="save-and-return" class="button" th:text="${model.published ? 'Publish and return' : 'Save and return'}"></button>
+                    <button name="save-and-return" class="button" th:text="${model.published ? 'Publish and review' : 'Save and review'}"></button>
                 </div>
             </th:block>
         </div>

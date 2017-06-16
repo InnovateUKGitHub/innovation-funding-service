@@ -20,6 +20,7 @@ Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 Resource          ../FinanceSection_Commons.robot
+Resource          ../../10__Project_setup/PS_Common.robot
 
 *** Variables ***
 
@@ -64,7 +65,6 @@ Submit flow (complete application)
     ...
     ...    INFUND-4010
     [Tags]    HappyPath    Email    SmokeTest
-    [Setup]    Delete the emails from both test mailboxes
     Given log in as a different user    ${submit_test_email}    ${correct_password}
     And the user navigates to the page    ${SERVER}
     And the user clicks the button/link    link=${application_name}

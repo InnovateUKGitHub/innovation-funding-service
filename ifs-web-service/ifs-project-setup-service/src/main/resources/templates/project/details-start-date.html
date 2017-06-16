@@ -22,7 +22,7 @@
             </ol>
 
             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" method="post">
-                <div class="form-group" th:classappend="${#fields.hasErrors('projectStartDate') ? 'error' : ''}">
+                <div class="form-group" th:classappend="${#fields.hasErrors('projectStartDate')} ? 'form-group-error'">
                     <fieldset>
                         <legend>
                             <span class="heading-medium">Target start date</span>
@@ -32,7 +32,7 @@
                         </legend>
                         <p class="form-hint">Please select the date you want the project to start. Projects must start on the first day of a month.</p>
 
-                        <div th:insert="question-type/form-elements :: form-dateinput (id=${'projectStartDate'}, field=${'projectStartDate'}, dayReadonly=true)" th:remove="tag" />
+                        <th:block th:insert="question-type/form-elements :: form-dateinput (id=${'projectStartDate'}, field=${'projectStartDate'}, dayReadonly=true)" />
                     </fieldset>
                 </div>
 

@@ -116,17 +116,17 @@ public class ApplicationSummaryMapperTest {
 
         ApplicationSummaryResource result = mapper.mapToResource(source);
 
-        assertEquals(APPLICATION_ID, result.getId());
+        assertEquals(APPLICATION_ID, result.getId().longValue());
         assertEquals("appname", result.getName());
         assertEquals("Digital Manufacturing", result.getInnovationArea());
         assertEquals("In Progress", result.getStatus());
-        assertEquals(66, result.getCompletedPercentage());
+        assertEquals(66, result.getCompletedPercentage().intValue());
         assertEquals("leadorg", result.getLead());
         assertEquals("User 5", result.getLeadApplicant());
-        assertEquals(2, result.getNumberOfPartners());
+        assertEquals(2, result.getNumberOfPartners().intValue());
         assertEquals(new BigDecimal("1.23"), result.getGrantRequested());
         assertEquals(new BigDecimal("9.87"), result.getTotalProjectCost());
-        assertEquals(7L, result.getDuration());
+        assertEquals(7L, result.getDuration().longValue());
         assertTrue(result.isFunded());
         assertEquals(FundingDecision.FUNDED, result.getFundingDecision());
 

@@ -12,7 +12,7 @@
 
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications',linkClass='link-back',linkUrl=@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications',linkClass='link-back',linkUrl=@{/assessment/competition/{competitionId}/applications(competitionId=${model.competitionId})}" />
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.inAssessment} ? 'Application progress' : 'Assign to application',subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
 
             <h2 class="heading-medium" th:text="|${model.applicationId}: ${model.applicationName}|">
@@ -119,7 +119,7 @@
                             <td th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Healthcare, Regenerative medicine</td>
                             <td class="aligncentre" th:text="${assessor.totalApplicationsCount}">6</td>
                             <td class="aligncentre" th:text="${assessor.assignedCount}">4</td>
-                            <td><strong th:text="${assessor.rejectReason.displayLabel}">Too many assignments</strong><br /><span th:remove="tag" th:text="${assessor.rejectComment}">You have frequently assignme me too may applications, I can and have told you previously that will only be able to assign a reduced amount of applications during th summer. I do like reviewing the applications to your competitions but please do not assign so many to me.</span></td>
+                            <td><strong th:text="${assessor.rejectReason.displayLabel}">Too many assignments</strong><br /><th:block th:text="${assessor.rejectComment}">You have frequently assignme me too may applications, I can and have told you previously that will only be able to assign a reduced amount of applications during th summer. I do like reviewing the applications to your competitions but please do not assign so many to me.</th:block></td>
                         </tr>
                     </tbody>
                 </table>
@@ -260,7 +260,7 @@
                 </table>
             </div>
 
-            <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
+            <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
             <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 

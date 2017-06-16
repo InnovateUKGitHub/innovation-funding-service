@@ -86,7 +86,7 @@ Create assessor account: Postcode lookup and save
     Then the user should see the element    id=addressForm.selectedPostcodeIndex
     And the user clicks the button/link    css=#select-address-block button
     And the address fields should be filled
-    And The user enters text to a text field    id=password    Passw0rd123
+    And The user enters text to a text field    id=password    ${correct_password}
     And the user clicks the button/link    jQuery=button:contains("Continue")
     Then the user should see the text in the page    Your account has been created
     And the user clicks the button/link    jQuery=a:contains("Sign into your account")
@@ -96,7 +96,7 @@ Create assessor account: Accepted competitions should be displayed in dashboard
     [Documentation]    INFUND-4919
     [Tags]
     When The user enters text to a text field    id=username    ${test_mailbox_one}+thomas.fister@gmail.com
-    And The user enters text to a text field    id=password    Passw0rd123
+    And The user enters text to a text field    id=password    ${correct_password}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}

@@ -25,6 +25,14 @@ public class SearchInformationFormPopulator extends AbstractPublicContentFormPop
         form.setProjectFundingRange(publicContentResource.getProjectFundingRange());
         form.setShortDescription(publicContentResource.getShortDescription());
         form.setKeywords(publicContentResource.getKeywords().stream().collect(Collectors.joining(",")));
+        form.setPublishSetting(convertToPublishSettingString(publicContentResource.getInviteOnly()));
+    }
+
+    private String convertToPublishSettingString(Boolean inviteOnly) {
+        if(null == inviteOnly) {
+            return "";
+        }
+        return inviteOnly ? "invite" : "public";
     }
 
     @Override

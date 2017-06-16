@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.application.resource.comparators;
 
-import java.util.Comparator;
-
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 
+import java.util.Comparator;
+
 /**
- * Camparator, handling nulls, and using id if lead applicant is equal.
+ * Comparator, handling nulls, and using id if lead applicant is equal.
  */
 public class ApplicationSummaryResourceLeadApplicantComparator extends DualFieldComparator<String, Long> implements Comparator<ApplicationSummaryResource> {
 

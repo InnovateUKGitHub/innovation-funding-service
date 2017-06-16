@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static java.util.Collections.emptyList;
 
 public class NotificationBuilder extends BaseBuilder<Notification, NotificationBuilder> {
@@ -32,19 +31,23 @@ public class NotificationBuilder extends BaseBuilder<Notification, NotificationB
         return newInstance(Notification.class);
     }
 
-    public NotificationBuilder withSource(NotificationSource source) {
-        return with(notification -> setField("from", source, notification));
+    public NotificationBuilder withSource(NotificationSource ...source) {
+        return withArraySetFieldByReflection("from", source);
     }
 
-    public NotificationBuilder withTargets(List<NotificationTarget> targets) {
-        return with(notification -> setField("to", targets, notification));
+    public NotificationBuilder withTargets(List<NotificationTarget> ...targets) {
+        return withArraySetFieldByReflection("to", targets);
     }
 
-    public NotificationBuilder withMessageKey(Enum<?> messageKey) {
-        return with(notification -> setField("messageKey", messageKey, notification));
+    public NotificationBuilder withMessageKey(Enum<?> ...messageKey) {
+        return withArraySetFieldByReflection("messageKey", messageKey);
     }
 
-    public NotificationBuilder withArguments(Map<String, Object> arguments) {
-        return with(notification -> setField("arguments", arguments, notification));
+    public NotificationBuilder withGlobalArguments(Map<String, Object> ...arguments) {
+        return withArraySetFieldByReflection("globalArguments", arguments);
+    }
+
+    public NotificationBuilder withPerNotificationTargetArguments(Map<NotificationTarget, Map<String, Object>> ...arguments) {
+        return withArraySetFieldByReflection("perNotificationTargetArguments", arguments);
     }
 }

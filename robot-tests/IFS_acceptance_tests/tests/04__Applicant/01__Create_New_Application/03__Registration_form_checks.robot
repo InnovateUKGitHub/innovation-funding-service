@@ -11,21 +11,27 @@ Documentation     INFUND-885: As an applicant I want to be able to submit a user
 ...
 ...               INFUND-2497: As a new user I would like to have an indication that my password is correct straight after typing...
 Suite Setup       Applicant goes to the registration form
-Suite Teardown    the user closes the browser
+Suite Teardown    Close browser and delete emails
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
+Resource          ../../10__Project_setup/PS_Common.robot
 
 *** Test Cases ***
 Your details: Server-side validations
     [Documentation]    -INFUND-885
     [Tags]    HappyPath
+    Given the user fills in valid details
+    And the user enters text to a text field    id=password    ${blacklisted_password}
+    And the user selects the checkbox           termsAndConditions
+    And the user clicks the button/link    jQuery=button:contains("Create account")
+    And the user should see an error            Password is too weak.
     When the user enters text to a text field   id=firstName    ${EMPTY}
     And the user enters text to a text field    id=lastName    ${EMPTY}
     And the user enters text to a text field    id=phoneNumber    ${EMPTY}
     And the user enters text to a text field    id=email    ${invalid_email_no_at}
     And the user enters text to a text field    id=password    ${EMPTY}
     And browser validations have been disabled
-    and the user clicks the button/link         css=[name="create-account"]
+    And the user clicks the button/link         css=[name="create-account"]
     Then the user should see an error           Please enter a first name.
     And the user should see an error            We were unable to create your account
     And the user should see an error            Please enter a last name.
@@ -51,11 +57,7 @@ Your details: client-side validation
     [Documentation]    -INFUND-885
     [Tags]    HappyPath
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
-    When the user enters text to a text field    id=firstName    O'Brian Elliot-Murray    #First and last name containing hyphen, space and aposthrophe check
-    And the user enters text to a text field    id=lastName    O'Brian Elliot-Murray
-    And the user enters text to a text field    id=phoneNumber    01141234567
-    And the user enters text to a text field    id=email    ${valid_email}
-    And the user enters text to a text field    id=password    ${correct_password}
+    When the user fills in valid details
     Then The user should not see the text in the page    Please enter a first name.
     And The user should not see the text in the page    Please enter a last name.
     And The user should not see the text in the page    Please enter a phone number.
@@ -63,6 +65,7 @@ Your details: client-side validation
     And The user should not see the text in the page    Please enter your password.
     And The user should not see the text in the page    In order to register an account you have to agree to the Terms and Conditions.
     And the user submits their information
+    [Teardown]    Delete the emails from both test mailboxes
 
 User can not login with the invalid email
     [Tags]
@@ -77,7 +80,7 @@ Email duplication check
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
-    And the user enters text to a text field    id=email    steve.smith@empire.com
+    And the user enters text to a text field    id=email    ${lead_applicant}
     And the user enters text to a text field    id=password    ${correct_password}
     And the user submits their information
     Then the user should see an error    The email address is already registered with us. Please sign into your account
@@ -104,9 +107,17 @@ Applicant goes to the registration form
     And the user clicks the button/link    jQuery=.button:contains("Create account")
     When the user enters text to a text field    id=organisationSearchName    Hive IT
     And the user clicks the button/link    id=org-search
-    And the user clicks the button/link    Link=HIVE IT LIMITED
+    And the user clicks the button/link    Link=${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
     And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=button:contains("Continue")
-    the user selects the radio button    organisationTypeId    radio-1
+    And the user selects the radio button    organisationTypeId    radio-1
     And the user clicks the button/link    jQuery=button:contains("Save and continue")
     And the user clicks the button/link    jQuery=a:contains("Save and continue")
+
+the user fills in valid details
+    the user enters text to a text field    id=firstName    O'Brian Elliot-Murray    #First and last name containing hyphen, space and aposthrophe check
+    the user enters text to a text field    id=lastName    O'Brian Elliot-Murray
+    the user enters text to a text field    id=phoneNumber    01141234567
+    the user enters text to a text field    id=email    ${valid_email}
+    the user enters text to a text field    id=password    ${correct_password}
+

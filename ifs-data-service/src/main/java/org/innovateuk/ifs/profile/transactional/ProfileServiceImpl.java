@@ -3,19 +3,18 @@ package org.innovateuk.ifs.profile.transactional;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.profile.domain.Profile;
+import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Agreement;
-import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.mapper.AffiliationMapper;
 import org.innovateuk.ifs.user.mapper.AgreementMapper;
 import org.innovateuk.ifs.user.mapper.EthnicityMapper;
-import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.AgreementRepository;
-import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 
@@ -33,9 +32,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 public class ProfileServiceImpl extends BaseTransactionalService implements ProfileService {
 
     @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
     private ProfileRepository profileRepository;
 
     @Autowired
@@ -43,9 +39,6 @@ public class ProfileServiceImpl extends BaseTransactionalService implements Prof
 
     @Autowired
     private AgreementMapper agreementMapper;
-
-    @Autowired
-    private AffiliationMapper affiliationMapper;
 
     @Autowired
     private AddressMapper addressMapper;
@@ -74,6 +67,7 @@ public class ProfileServiceImpl extends BaseTransactionalService implements Prof
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> updateProfileSkills(long userId, ProfileSkillsEditResource profileSkills) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId))
                 .andOnSuccess(user -> updateUserProfileSkills(user, profileSkills));
@@ -115,6 +109,7 @@ public class ProfileServiceImpl extends BaseTransactionalService implements Prof
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> updateProfileAgreement(long userId) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId))
                 .andOnSuccess(user ->
@@ -142,6 +137,7 @@ public class ProfileServiceImpl extends BaseTransactionalService implements Prof
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> updateUserProfile(Long userId, UserProfileResource profileDetails) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId))
                 .andOnSuccess(user -> updateUserProfileDetails(user, profileDetails));
@@ -198,19 +194,6 @@ public class ProfileServiceImpl extends BaseTransactionalService implements Prof
                         profile != null && profile.getAgreementSignedDate() != null
                 )
         );
-    }
-
-    private ServiceResult<Void> updateUser(UserResource existingUserResource, UserResource updatedUserResource) {
-        existingUserResource.setPhoneNumber(updatedUserResource.getPhoneNumber());
-        existingUserResource.setTitle(updatedUserResource.getTitle());
-        existingUserResource.setLastName(updatedUserResource.getLastName());
-        existingUserResource.setFirstName(updatedUserResource.getFirstName());
-        existingUserResource.setGender(updatedUserResource.getGender());
-        existingUserResource.setDisability(updatedUserResource.getDisability());
-        existingUserResource.setEthnicity(updatedUserResource.getEthnicity());
-        existingUserResource.setAllowMarketingEmails(updatedUserResource.getAllowMarketingEmails());
-        User existingUser = userMapper.mapToDomain(existingUserResource);
-        return serviceSuccess(userRepository.save(existingUser)).andOnSuccessReturnVoid();
     }
 
     private ServiceResult<Void> validateAgreement(Agreement agreement, User user) {

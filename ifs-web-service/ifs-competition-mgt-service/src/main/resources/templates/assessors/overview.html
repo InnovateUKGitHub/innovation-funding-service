@@ -174,7 +174,7 @@
                             <span th:if="${assessor.status == T(org.innovateuk.ifs.invite.resource.ParticipantStatusResource).PENDING}" th:remove="tag">
                                 <span th:text="${assessor.details}">Invite sent: 22-May-2017</span>
                                 <br />
-                                <a th:href="@{/competition/assessors/invite/{inviteId}/resend(inviteId=${assessor.inviteId})}">Resend invite</a>
+                                <a th:href="@{/competition/{competitionId}/assessors/invite/{inviteId}/resend(competitionId=${model.competitionId}, inviteId=${assessor.inviteId})}">Resend invite</a>
                             </span>
                             <span th:unless="${assessor.status == T(org.innovateuk.ifs.invite.resource.ParticipantStatusResource).PENDING}" th:text="${assessor.details}">Invite declined as person is too busy</span>
                         </td>
@@ -184,9 +184,7 @@
                     </tr>
                 </tbody>
             </table>
-
-            <th:block th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
-
+            <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
             <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 

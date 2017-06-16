@@ -77,7 +77,6 @@ import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.servlet.http.Cookie;
@@ -298,8 +297,6 @@ public class BaseUnitTest {
     public List<OrganisationResource> application4Organisations;
     public List<OrganisationResource> application5Organisations;
 
-
-    private Random randomGenerator;
     public OrganisationTypeResource businessOrganisationTypeResource;
     public OrganisationTypeResource researchOrganisationTypeResource;
     public OrganisationTypeResource rtoOrganisationTypeResource;
@@ -314,21 +311,12 @@ public class BaseUnitTest {
     public static final String INVITE_HASH_EXISTING_USER = "cccccccccc630f220325b7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
     public static final String INVALID_INVITE_HASH = "aaaaaaa7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
     public static final String ACCEPTED_INVITE_HASH = "BBBBBBBBB7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
-    ;
-
 
     public static InternalResourceViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
         viewResolver.setPrefix("/resources");
         viewResolver.setSuffix(".html");
         return viewResolver;
-    }
-
-    public <T> T attributeFromMvcResultModel(MvcResult result, String key) {
-        return (T) result.getModelAndView().getModel().entrySet().stream()
-                .filter(entry -> entry.getKey().equals(key))
-                .map(entry -> entry.getValue())
-                .findFirst().orElse(null);
     }
 
     @Before
@@ -411,12 +399,6 @@ public class BaseUnitTest {
     public void loginDefaultUser() {
         when(userAuthenticationService.getAuthentication(any(HttpServletRequest.class))).thenReturn(loggedInUserAuthentication);
         when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(loggedInUser);
-    }
-
-    public void loginUser(UserResource user) {
-        UserAuthentication userAuthentication = new UserAuthentication(user);
-        when(userAuthenticationService.getAuthentication(any(HttpServletRequest.class))).thenReturn(userAuthentication);
-        when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
     }
 
     public void setupCompetition() {
@@ -569,20 +551,20 @@ public class BaseUnitTest {
     public void setupApplicationWithRoles(){
         // Build the backing applications.
 
-        List<ApplicationResource> applicationResources = asList(
+        applications = asList(
                 newApplicationResource().with(id(1L)).with(name("Rovel Additive Manufacturing Process")).withStartDate(LocalDate.now().plusMonths(3))
-                        .withApplicationState(ApplicationState.CREATED).withResearchCategory(newResearchCategoryResource().build()).build(),
+                        .withApplicationState(ApplicationState.CREATED).withResearchCategory(newResearchCategoryResource().build()).withCompetition(competitionId).build(),
                 newApplicationResource().with(id(2L)).with(name("Providing sustainable childcare")).withStartDate(LocalDate.now().plusMonths(4))
-                        .withApplicationState(ApplicationState.SUBMITTED).withResearchCategory(newResearchCategoryResource().build()).build(),
+                        .withApplicationState(ApplicationState.SUBMITTED).withResearchCategory(newResearchCategoryResource().build()).withCompetition(competitionId).build(),
                 newApplicationResource().with(id(3L)).with(name("Mobile Phone Data for Logistics Analytics")).withStartDate(LocalDate.now().plusMonths(5))
-                        .withApplicationState(ApplicationState.APPROVED).withResearchCategory(newResearchCategoryResource().build()).build(),
+                        .withApplicationState(ApplicationState.APPROVED).withResearchCategory(newResearchCategoryResource().build()).withCompetition(competitionId).build(),
                 newApplicationResource().with(id(4L)).with(name("Using natural gas to heat homes")).withStartDate(LocalDate.now().plusMonths(6))
-                        .withApplicationState(ApplicationState.REJECTED).withResearchCategory(newResearchCategoryResource().build()).build(),
+                        .withApplicationState(ApplicationState.REJECTED).withResearchCategory(newResearchCategoryResource().build()).withCompetition(competitionId).build(),
                 newApplicationResource().with(id(5L)).with(name("Rovel Additive Manufacturing Process Ltd")).withStartDate(LocalDate.now().plusMonths(3))
-                        .withApplicationState(ApplicationState.CREATED).withResearchCategory(newResearchCategoryResource().build()).build()
+                        .withApplicationState(ApplicationState.CREATED).withResearchCategory(newResearchCategoryResource().build()).withCompetition(competitionId).build()
         );
 
-        Map<Long, ApplicationResource> idsToApplicationResources = applicationResources.stream().collect(toMap(a -> a.getId(), a -> a));
+        Map<Long, ApplicationResource> idsToApplicationResources = applications.stream().collect(toMap(a -> a.getId(), a -> a));
 
         RoleResource role1 = newRoleResource().withId(1L).withName(UserApplicationRole.LEAD_APPLICANT.getRoleName()).build();
         RoleResource role2 = newRoleResource().withId(2L).withName(UserApplicationRole.COLLABORATOR.getRoleName()).build();
@@ -597,17 +579,17 @@ public class BaseUnitTest {
         organisationSet = new TreeSet<>(compareById);
         organisationSet.addAll(organisations);
 
-        ProcessRoleResource processRole1 = newProcessRoleResource().with(id(1L)).withApplication(applicationResources.get(0).getId()).withUser(applicantUser).withRole(role1).withOrganisation(organisation1.getId()).build();
-        ProcessRoleResource processRole2 = newProcessRoleResource().with(id(2L)).withApplication(applicationResources.get(0).getId()).withUser(applicantUser).withRole(role1).withOrganisation(organisation1.getId()).build();
-        ProcessRoleResource processRole3 = newProcessRoleResource().with(id(3L)).withApplication(applicationResources.get(2).getId()).withUser(applicantUser).withRole(role1).withOrganisation(organisation1.getId()).build();
-        ProcessRoleResource processRole4 = newProcessRoleResource().with(id(4L)).withApplication(applicationResources.get(3).getId()).withUser(applicantUser).withRole(role1).withOrganisation(organisation1.getId()).build();
-        ProcessRoleResource processRole5 = newProcessRoleResource().with(id(5L)).withApplication(applicationResources.get(0).getId()).withUser(applicantUser).withRole(role2).withOrganisation(organisation2.getId()).build();
-        ProcessRoleResource processRole6 = newProcessRoleResource().with(id(6L)).withApplication(applicationResources.get(1).getId()).withUser(assessorUser).withRole(assessorRole).withOrganisation(organisation1.getId()).build();
-        ProcessRoleResource processRole7 = newProcessRoleResource().with(id(7L)).withApplication(applicationResources.get(2).getId()).withUser(assessorUser).withRole(assessorRole).withOrganisation(organisation1.getId()).build();
-        ProcessRoleResource processRole8 = newProcessRoleResource().with(id(8L)).withApplication(applicationResources.get(0).getId()).withUser(assessorUser).withRole(assessorRole).withOrganisation(organisation1.getId()).build();
-        ProcessRoleResource processRole9 = newProcessRoleResource().with(id(9L)).withApplication(applicationResources.get(3).getId()).withUser(assessorUser).withRole(assessorRole).withOrganisation(organisation1.getId()).build();
-        ProcessRoleResource processRole10 = newProcessRoleResource().with(id(10L)).withApplication(applicationResources.get(1).getId()).withUser(applicantUser).withRole(role1).withOrganisation(organisation2.getId()).build();
-        ProcessRoleResource processRole11 = newProcessRoleResource().with(id(11L)).withApplication(applicationResources.get(4).getId()).withUser(applicantUser).withRole(role1).withOrganisation(organisation3.getId()).build();
+        ProcessRoleResource processRole1 = newProcessRoleResource().with(id(1L)).withApplication(applications.get(0).getId()).withUser(applicantUser).withRole(role1).withOrganisation(organisation1.getId()).build();
+        ProcessRoleResource processRole2 = newProcessRoleResource().with(id(2L)).withApplication(applications.get(0).getId()).withUser(applicantUser).withRole(role1).withOrganisation(organisation1.getId()).build();
+        ProcessRoleResource processRole3 = newProcessRoleResource().with(id(3L)).withApplication(applications.get(2).getId()).withUser(applicantUser).withRole(role1).withOrganisation(organisation1.getId()).build();
+        ProcessRoleResource processRole4 = newProcessRoleResource().with(id(4L)).withApplication(applications.get(3).getId()).withUser(applicantUser).withRole(role1).withOrganisation(organisation1.getId()).build();
+        ProcessRoleResource processRole5 = newProcessRoleResource().with(id(5L)).withApplication(applications.get(0).getId()).withUser(applicantUser).withRole(role2).withOrganisation(organisation2.getId()).build();
+        ProcessRoleResource processRole6 = newProcessRoleResource().with(id(6L)).withApplication(applications.get(1).getId()).withUser(assessorUser).withRole(assessorRole).withOrganisation(organisation1.getId()).build();
+        ProcessRoleResource processRole7 = newProcessRoleResource().with(id(7L)).withApplication(applications.get(2).getId()).withUser(assessorUser).withRole(assessorRole).withOrganisation(organisation1.getId()).build();
+        ProcessRoleResource processRole8 = newProcessRoleResource().with(id(8L)).withApplication(applications.get(0).getId()).withUser(assessorUser).withRole(assessorRole).withOrganisation(organisation1.getId()).build();
+        ProcessRoleResource processRole9 = newProcessRoleResource().with(id(9L)).withApplication(applications.get(3).getId()).withUser(assessorUser).withRole(assessorRole).withOrganisation(organisation1.getId()).build();
+        ProcessRoleResource processRole10 = newProcessRoleResource().with(id(10L)).withApplication(applications.get(1).getId()).withUser(applicantUser).withRole(role1).withOrganisation(organisation2.getId()).build();
+        ProcessRoleResource processRole11 = newProcessRoleResource().with(id(11L)).withApplication(applications.get(4).getId()).withUser(applicantUser).withRole(role1).withOrganisation(organisation3.getId()).build();
 
         assessorProcessRoleResources = asList(processRole6, processRole7, processRole8, processRole9);
         processRoles = asList(processRole1, processRole2, processRole3, processRole4, processRole5, processRole6, processRole7, processRole8, processRole9);
@@ -624,44 +606,42 @@ public class BaseUnitTest {
         application4Organisations = asList(organisation1);
         application5Organisations = asList(organisation3);
 
+        when(organisationRestService.getOrganisationsByApplicationId(applications.get(0).getId())).thenReturn(restSuccess(application1Organisations));
+        when(organisationRestService.getOrganisationsByApplicationId(applications.get(1).getId())).thenReturn(restSuccess(application2Organisations));
+        when(organisationRestService.getOrganisationsByApplicationId(applications.get(2).getId())).thenReturn(restSuccess(application3Organisations));
+        when(organisationRestService.getOrganisationsByApplicationId(applications.get(3).getId())).thenReturn(restSuccess(application4Organisations));
+        when(organisationRestService.getOrganisationsByApplicationId(applications.get(4).getId())).thenReturn(restSuccess(application5Organisations));
+
         organisation1.setProcessRoles(simpleMap(asList(processRole1, processRole2, processRole3, processRole4, processRole7, processRole8, processRole8), ProcessRoleResource::getId));
         organisation2.setProcessRoles(simpleMap(singletonList(processRole5), ProcessRoleResource::getId));
         organisation3.setProcessRoles(simpleMap(singletonList(processRole11), ProcessRoleResource::getId));
 
-        applicationResources.get(0).setCompetition(competitionResource.getId());
-        applicationResources.get(1).setCompetition(competitionResource.getId());
-        applicationResources.get(2).setCompetition(competitionResource.getId());
-        applicationResources.get(3).setCompetition(competitionResource.getId());
-        applicationResources.get(4).setCompetition(competitionResource.getId());
-
-        applications = applicationResources;
-
         when(sectionService.filterParentSections(sectionResources)).thenReturn(sectionResources);
-        when(sectionService.getCompleted(applicationResources.get(0).getId(), organisation1.getId())).thenReturn(asList(1L, 2L));
-        when(sectionService.getInCompleted(applicationResources.get(0).getId())).thenReturn(asList(3L, 4L));
-        when(processRoleService.findProcessRole(applicant.getId(), applicationResources.get(0).getId())).thenReturn(processRole1);
-        when(processRoleService.findProcessRole(applicant.getId(), applicationResources.get(1).getId())).thenReturn(processRole2);
-        when(processRoleService.findProcessRole(applicant.getId(), applicationResources.get(2).getId())).thenReturn(processRole3);
-        when(processRoleService.findProcessRole(applicant.getId(), applicationResources.get(3).getId())).thenReturn(processRole4);
-        when(processRoleService.findProcessRole(users.get(0).getId(), applicationResources.get(0).getId())).thenReturn(processRole5);
-        when(processRoleService.findProcessRole(assessor.getId(), applicationResources.get(1).getId())).thenReturn(processRole6);
-        when(processRoleService.findProcessRole(assessor.getId(), applicationResources.get(2).getId())).thenReturn(processRole7);
-        when(processRoleService.findProcessRole(assessor.getId(), applicationResources.get(0).getId())).thenReturn(processRole8);
-        when(processRoleService.findProcessRole(assessor.getId(), applicationResources.get(3).getId())).thenReturn(processRole9);
-        when(processRoleService.findProcessRole(applicant.getId(), applicationResources.get(4).getId())).thenReturn(processRole11);
+        when(sectionService.getCompleted(applications.get(0).getId(), organisation1.getId())).thenReturn(asList(1L, 2L));
+        when(sectionService.getInCompleted(applications.get(0).getId())).thenReturn(asList(3L, 4L));
+        when(processRoleService.findProcessRole(applicant.getId(), applications.get(0).getId())).thenReturn(processRole1);
+        when(processRoleService.findProcessRole(applicant.getId(), applications.get(1).getId())).thenReturn(processRole2);
+        when(processRoleService.findProcessRole(applicant.getId(), applications.get(2).getId())).thenReturn(processRole3);
+        when(processRoleService.findProcessRole(applicant.getId(), applications.get(3).getId())).thenReturn(processRole4);
+        when(processRoleService.findProcessRole(users.get(0).getId(), applications.get(0).getId())).thenReturn(processRole5);
+        when(processRoleService.findProcessRole(assessor.getId(), applications.get(1).getId())).thenReturn(processRole6);
+        when(processRoleService.findProcessRole(assessor.getId(), applications.get(2).getId())).thenReturn(processRole7);
+        when(processRoleService.findProcessRole(assessor.getId(), applications.get(0).getId())).thenReturn(processRole8);
+        when(processRoleService.findProcessRole(assessor.getId(), applications.get(3).getId())).thenReturn(processRole9);
+        when(processRoleService.findProcessRole(applicant.getId(), applications.get(4).getId())).thenReturn(processRole11);
 
-        when(processRoleService.findProcessRolesByApplicationId(applicationResources.get(0).getId())).thenReturn(application1ProcessRoles);
-        when(processRoleService.findProcessRolesByApplicationId(applicationResources.get(1).getId())).thenReturn(application2ProcessRoles);
-        when(processRoleService.findProcessRolesByApplicationId(applicationResources.get(2).getId())).thenReturn(application3ProcessRoles);
-        when(processRoleService.findProcessRolesByApplicationId(applicationResources.get(3).getId())).thenReturn(application4ProcessRoles);
-        when(processRoleService.findProcessRolesByApplicationId(applicationResources.get(4).getId())).thenReturn(application5ProcessRoles);
+        when(processRoleService.findProcessRolesByApplicationId(applications.get(0).getId())).thenReturn(application1ProcessRoles);
+        when(processRoleService.findProcessRolesByApplicationId(applications.get(1).getId())).thenReturn(application2ProcessRoles);
+        when(processRoleService.findProcessRolesByApplicationId(applications.get(2).getId())).thenReturn(application3ProcessRoles);
+        when(processRoleService.findProcessRolesByApplicationId(applications.get(3).getId())).thenReturn(application4ProcessRoles);
+        when(processRoleService.findProcessRolesByApplicationId(applications.get(4).getId())).thenReturn(application5ProcessRoles);
 
         Map<Long, Set<Long>> completedMap = new HashMap<>();
         completedMap.put(organisation1.getId(), new TreeSet<>());
         completedMap.put(organisation2.getId(), new TreeSet<>());
-        when(sectionService.getCompletedSectionsByOrganisation(applicationResources.get(0).getId())).thenReturn(completedMap);
-        when(sectionService.getCompletedSectionsByOrganisation(applicationResources.get(1).getId())).thenReturn(completedMap);
-        when(sectionService.getCompletedSectionsByOrganisation(applicationResources.get(2).getId())).thenReturn(completedMap);
+        when(sectionService.getCompletedSectionsByOrganisation(applications.get(0).getId())).thenReturn(completedMap);
+        when(sectionService.getCompletedSectionsByOrganisation(applications.get(1).getId())).thenReturn(completedMap);
+        when(sectionService.getCompletedSectionsByOrganisation(applications.get(2).getId())).thenReturn(completedMap);
 
         when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(restSuccess(applications));
         when(applicationService.getById(applications.get(0).getId())).thenReturn(applications.get(0));

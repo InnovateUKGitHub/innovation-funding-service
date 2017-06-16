@@ -72,7 +72,7 @@ public class FinanceChecksQueriesAddQueryController {
     private FinanceCheckService financeCheckService;
 
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
+    @PreAuthorize("hasPermission(new org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId(#projectId, #organisationId),  'ACCESS_FINANCE_CHECKS_QUERIES_SECTION_ADD_QUERY')")
     @GetMapping
     public String viewNew(@PathVariable final Long projectId,
                           @PathVariable final Long organisationId,
@@ -81,6 +81,7 @@ public class FinanceChecksQueriesAddQueryController {
                           UserResource loggedInUser,
                           HttpServletRequest request,
                           HttpServletResponse response) {
+        projectService.getPartnerOrganisation(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
         FinanceChecksQueriesAddQueryViewModel viewModel = populateQueriesViewModel(projectId, organisationId, querySection, attachments);
         model.addAttribute("model", viewModel);
@@ -88,7 +89,7 @@ public class FinanceChecksQueriesAddQueryController {
         return NEW_QUERY_VIEW;
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
+    @PreAuthorize("hasPermission(new org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId(#projectId, #organisationId),  'ACCESS_FINANCE_CHECKS_QUERIES_SECTION_ADD_QUERY')")
     @PostMapping
     public String saveQuery(@PathVariable final Long projectId,
                             @PathVariable final Long organisationId,
@@ -138,7 +139,7 @@ public class FinanceChecksQueriesAddQueryController {
         });
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
+    @PreAuthorize("hasPermission(new org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId(#projectId, #organisationId),  'ACCESS_FINANCE_CHECKS_QUERIES_SECTION_ADD_QUERY')")
     @PostMapping(params = "uploadAttachment")
     public String uploadAttachment(Model model,
                                    @PathVariable final Long projectId,
@@ -175,7 +176,7 @@ public class FinanceChecksQueriesAddQueryController {
         });
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
+    @PreAuthorize("hasPermission(new org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId(#projectId, #organisationId),  'ACCESS_FINANCE_CHECKS_QUERIES_SECTION_ADD_QUERY')")
     @GetMapping("/attachment/{attachmentId}")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,
@@ -183,6 +184,7 @@ public class FinanceChecksQueriesAddQueryController {
                                                          @PathVariable Long attachmentId,
                                                          UserResource loggedInUser,
                                                          HttpServletRequest request) {
+        projectService.getPartnerOrganisation(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
 
         if (attachments.contains(attachmentId)) {
@@ -192,7 +194,7 @@ public class FinanceChecksQueriesAddQueryController {
         }
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
+    @PreAuthorize("hasPermission(new org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId(#projectId, #organisationId),  'ACCESS_FINANCE_CHECKS_QUERIES_SECTION_ADD_QUERY')")
     @PostMapping(params = "removeAttachment")
     public String removeAttachment(@PathVariable Long projectId,
                                    @PathVariable Long organisationId,
@@ -216,7 +218,7 @@ public class FinanceChecksQueriesAddQueryController {
         return redirectTo(rootView(projectId, organisationId, querySection));
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
+    @PreAuthorize("hasPermission(new org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId(#projectId, #organisationId),  'ACCESS_FINANCE_CHECKS_QUERIES_SECTION_ADD_QUERY')")
     @GetMapping("/cancel")
     public String cancelNewForm(@PathVariable Long projectId,
                                 @PathVariable Long organisationId,
@@ -224,6 +226,7 @@ public class FinanceChecksQueriesAddQueryController {
                                 UserResource loggedInUser,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
+        projectService.getPartnerOrganisation(projectId, organisationId);
         loadAttachmentsFromCookie(request, projectId, organisationId).forEach(financeCheckService::deleteFile);
         deleteCookies(response, projectId, organisationId);
         return redirectTo(queriesListView(projectId, organisationId, querySection));
