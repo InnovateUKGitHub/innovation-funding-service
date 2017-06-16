@@ -14,7 +14,7 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.exception.AutosaveElementException;
+import org.innovateuk.ifs.exception.AutoSaveElementException;
 import org.innovateuk.ifs.exception.BigDecimalNumberFormatException;
 import org.innovateuk.ifs.exception.IntegerNumberFormatException;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
@@ -44,7 +44,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntries;
@@ -107,28 +106,27 @@ public class ApplicationAjaxController {
 
             fieldId = storeFieldResult.getFieldId();
 
-            return this.createJsonObjectNode(true, fieldId);
+            return createJsonObjectNode(true, fieldId);
 
         } catch (Exception e) {
-            AutosaveElementException ex = new AutosaveElementException(inputIdentifier, value, applicationId, e);
-            handleAutosaveException(errors, e, ex);
-            return this.createJsonObjectNode(false, fieldId);
+            AutoSaveElementException ex = new AutoSaveElementException(inputIdentifier, value, applicationId, e);
+            handleAutoSaveException(errors, e, ex);
+            return createJsonObjectNode(false, fieldId);
         }
     }
 
-    private void handleAutosaveException(List<String> errors, Exception e, AutosaveElementException ex) {
+    private void handleAutoSaveException(List<String> errors, Exception e, AutoSaveElementException ex) {
         List<Object> args = new ArrayList<>();
         args.add(ex.getErrorMessage());
         if (e.getClass().equals(IntegerNumberFormatException.class) || e.getClass().equals(BigDecimalNumberFormatException.class)) {
             errors.add(lookupErrorMessageResourceBundleEntry(messageSource, e.getMessage(), args));
         } else {
             LOG.error("Got an exception on autosave : " + e.getMessage());
-            LOG.debug("Autosave exception: ", e);
             errors.add(ex.getErrorMessage());
         }
     }
 
-    private StoreFieldResult storeField(Long applicationId, Long userId, Long competitionId, String fieldName, String inputIdentifier, String value) {
+    private StoreFieldResult storeField(Long applicationId, Long userId, Long competitionId, String fieldName, String inputIdentifier, String value) throws NumberFormatException {
         Long organisationType = organisationService.getOrganisationType(userId, applicationId);
 
         if (fieldName.startsWith("application.")) {
@@ -161,15 +159,11 @@ public class ApplicationAjaxController {
                 return new StoreFieldResult(validationMessages.getObjectId(), errors);
             }
         } else {
-            try {
-                Long formInputId = Long.valueOf(inputIdentifier);
-                ValidationMessages saveErrors = formInputResponseRestService.saveQuestionResponse(userId, applicationId,
-                        formInputId, value, false).getSuccessObjectOrThrowException();
-                List<String> lookedUpErrorMessages = lookupErrorMessageResourceBundleEntries(messageSource, saveErrors);
-                return new StoreFieldResult(lookedUpErrorMessages);
-            } catch (NumberFormatException e) {
-                return new StoreFieldResult(asList("Invalid FormInputId"));
-            }
+            Long formInputId = Long.valueOf(inputIdentifier);
+            ValidationMessages saveErrors = formInputResponseRestService.saveQuestionResponse(userId, applicationId,
+                    formInputId, value, false).getSuccessObjectOrThrowException();
+            List<String> lookedUpErrorMessages = lookupErrorMessageResourceBundleEntries(messageSource, saveErrors);
+            return new StoreFieldResult(lookedUpErrorMessages);
         }
     }
 
@@ -188,7 +182,7 @@ public class ApplicationAjaxController {
         return node;
     }
 
-    private List<String> saveApplicationDetails(Long applicationId, String fieldName, String value) {
+    private List<String> saveApplicationDetails(Long applicationId, String fieldName, String value) throws NumberFormatException {
         List<String> errors = new ArrayList<>();
         ApplicationResource application = applicationService.getById(applicationId);
 
@@ -202,17 +196,13 @@ public class ApplicationAjaxController {
                 applicationService.save(application);
             }
         } else if (fieldName.startsWith("application.durationInMonths")) {
-            try {
-                Long durationInMonth = Long.valueOf(value);
-                if (durationInMonth < 1L || durationInMonth > 36L) {
-                    errors.add("Your project should last between 1 and 36 months");
-                    application.setDurationInMonths(durationInMonth);
-                } else {
-                    application.setDurationInMonths(durationInMonth);
-                    applicationService.save(application);
-                }
-            } catch (NumberFormatException e) {
-                LOG.debug("Invalid value for duration: " + value);
+            Long durationInMonth = Long.valueOf(value);
+            if (durationInMonth < 1L || durationInMonth > 36L) {
+                errors.add("Your project should last between 1 and 36 months");
+                application.setDurationInMonths(durationInMonth);
+            } else {
+                application.setDurationInMonths(durationInMonth);
+                applicationService.save(application);
             }
         } else if (fieldName.startsWith(APPLICATION_START_DATE)) {
             errors = this.saveApplicationStartDate(application, fieldName, value);

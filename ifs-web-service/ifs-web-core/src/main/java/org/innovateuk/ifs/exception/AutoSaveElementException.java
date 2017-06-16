@@ -11,7 +11,7 @@ import java.util.List;
  * This object is used when a autosave is unsuccessful. We can then set the error
  * message to display to the user, or configure logging.
  */
-public class AutosaveElementException extends RuntimeException {
+public class AutoSaveElementException extends RuntimeException {
 
     private interface ExceptionMessage {
         String getMessage(Throwable t);
@@ -53,7 +53,7 @@ public class AutosaveElementException extends RuntimeException {
     private final String inputIdentifier;
     private final String value;
     private final Long applicationId;
-    public AutosaveElementException(String inputIdentifier, String value, Long applicationId, Throwable originalException) {
+    public AutoSaveElementException(String inputIdentifier, String value, Long applicationId, Throwable originalException) {
         super(originalException);
 
         errorMessage = resolveErrorMessage(originalException);
