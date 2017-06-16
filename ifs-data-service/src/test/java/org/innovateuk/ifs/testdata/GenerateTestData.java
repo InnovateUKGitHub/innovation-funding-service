@@ -35,7 +35,6 @@ import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,7 +89,7 @@ import static org.mockito.Mockito.when;
  */
 @ActiveProfiles({"integration-test,seeding-db"})
 @DirtiesContext
-@Ignore
+//@Ignore
 public class GenerateTestData extends BaseIntegrationTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(GenerateTestData.class);
@@ -790,6 +789,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                         null, emptyList(), null, null, line.nonIfsUrl)
                 .withOpenDate(line.openDate)
                 .withSubmissionDate(line.submissionDate)
+                .withFundersPanelEndDate(line.fundersPanelEndDate)
                 .withReleaseFeedbackDate(line.releaseFeedback)
                 .withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
                         line.competitionDescription, line.fundingType, line.projectSize, line.keywords);
@@ -803,6 +803,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                         line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
                         line.multiStream, line.collaborationLevel, line.leadApplicantTypes, line.researchRatio, line.resubmission, null).
                 withNewMilestones().
+                withFundersPanelEndDate(line.fundersPanelEndDate).
                 withReleaseFeedbackDate(line.releaseFeedback).
                 withFeedbackReleasedDate(line.feedbackReleased).
                 withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
