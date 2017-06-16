@@ -156,7 +156,6 @@ Support User can see read only summary for collaborator
     And the user redirects to the page      Please complete your project finances.    Your finances
     Then the finance summary table in Your Finances has correct values for collaborator
 
-
 Support User can see read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
     [Documentation]  IFS-401
     [Tags]
@@ -210,7 +209,6 @@ Support User can see read only view of collaborator Your project costs for rest 
     Then the user should see the text in the element    jQuery=textarea.form-control[name^=other_costs-description]  some other costs
     And the user should see the element       jQuery=input.form-control[name^=other_costs-otherCost][value="50"]
 
-
 Support User can see read only view of Your organisation
     [Documentation]  IFS-401
     [Tags]
@@ -229,9 +227,8 @@ Support User can see read only view of Your funding
     When the user clicks the button/link    jQuery=a:contains("Your finances")
     Then the user redirects to the page     Please complete your project finances.  Your finances
     When the user clicks the button/link    jQuery=a:contains("Your funding")
-    Then the user redirects to the page     Organisation size determines funding  Your organisation
-    And the user should see the element     jQuery=dt:contains("Funding level") + dd:contains("30%")
-    And the user should see the element     jQuery=th:contains("Lottery funding") + td:contains("£1,234")
+    Then the user should see the element    jQuery=dt:contains("Funding level") + dd:contains("45%")
+    And the user should see the element     jQuery=p:contains("No other funding")
 
 *** Keywords ***
 the finance summary calculations should be correct
