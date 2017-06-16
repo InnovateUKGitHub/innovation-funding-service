@@ -22,4 +22,4 @@ The warning disappears on refresh
     [Tags]
     When the user reloads the page
     Then the user should not see the element    id=global-cookie-message
-    And the user should not see the element    link=Find out more about cookies
+    And the user should not see the element    jquery=#global-cookie-message a:contains("Find out more about cookies")

@@ -25,6 +25,22 @@ public class ErrorToObjectErrorConverterFactory {
         };
     }
 
+    /**
+     * Manually map a field {@link Error} to a {@link FieldError}.
+     *
+     * @param mappingFunction returning the desired {@link FieldError}.
+     * @return converter function between {@link Error} and {@link FieldError}.
+     */
+    public static ErrorToObjectErrorConverter fieldErrorsToFieldErrors(Function<Error, FieldError> mappingFunction) {
+        return e -> {
+            if (e.isFieldError()) {
+                return Optional.of(mappingFunction.apply(e));
+            }
+
+            return Optional.empty();
+        };
+    }
+
     public static ErrorToObjectErrorConverter toObject(String objectName) {
         return e -> Optional.of(new ObjectError(objectName, new String[]{e.getErrorKey()}, e.getArguments().toArray(), null));
     }
@@ -82,7 +98,11 @@ public class ErrorToObjectErrorConverterFactory {
         };
     }
 
-    private static FieldError newFieldError(Error e, String fieldName, Object rejectedValue) {
-        return new FieldError("", fieldName, rejectedValue, true, new String[]{e.getErrorKey()}, e.getArguments().toArray(), null);
+    public static FieldError newFieldError(Error e, String fieldName, Object rejectedValue) {
+        return newFieldError(e, fieldName, rejectedValue, e.getErrorKey());
+    }
+
+    public static FieldError newFieldError(Error e, String fieldName, Object rejectedValue, String errorKey) {
+        return new FieldError("", fieldName, rejectedValue, true, new String[]{errorKey}, e.getArguments().toArray(), null);
     }
 }
