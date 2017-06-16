@@ -3,6 +3,7 @@ package org.innovateuk.ifs.interceptors;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +30,7 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
     public static final String USER_PROFILE_LINK="userProfileLink";
     public static final String ASSESSOR_PROFILE_URL="/assessment/profile/details";
     public static final String USER_PROFILE_URL="/profile/view";
+    public static final String SHOW_MANAGE_USERS_LINK_ATTR="showManageUsersLink";
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
@@ -45,6 +47,7 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
             addUserDashboardLink(request, modelAndView);
             addUserProfileLink(request, modelAndView);
             addLogoutLink(modelAndView, logoutUrl);
+            addShowManageUsersAttribute(request, modelAndView);
         }
     }
 
@@ -56,7 +59,11 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
     private void addUserProfileLink(HttpServletRequest request, ModelAndView modelAndView) {
         String profileUrl = getUserProfileUrl(request);
         modelAndView.getModelMap().addAttribute(USER_PROFILE_LINK, profileUrl);
+    }
 
+    private void addShowManageUsersAttribute(HttpServletRequest request, ModelAndView modelAndView) {
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+        modelAndView.getModelMap().addAttribute(SHOW_MANAGE_USERS_LINK_ATTR, user != null && user.hasRole(UserRoleType.IFS_ADMINISTRATOR));
     }
 
     public static void addLogoutLink(ModelAndView modelAndView, String logoutUrl) {
