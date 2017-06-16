@@ -1,67 +1,36 @@
 package org.innovateuk.ifs.application.forms.saver;
 
-import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.function.Consumer;
-
-import static org.innovateuk.ifs.commons.error.ErrorConverterFactory.toField;
-import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
-import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
-import static org.innovateuk.ifs.util.HttpUtils.requestParameterPresent;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 /**
- * This Saver will handle save all questions that are related to the application.
+ * Tests {@link ApplicationQuestionNonFileSaver}
  */
-@Service
-public class ApplicationQuestionNonFileSaverTest extends AbstractApplicationSaver {
+@RunWith(MockitoJUnitRunner.class)
+public class ApplicationQuestionNonFileSaverTest {
 
-    @Autowired
+    @InjectMocks
+    private ApplicationQuestionNonFileSaver nonFileSaver;
+
+    @Mock
     private FormInputResponseRestService formInputResponseRestService;
 
-    @Autowired
+    @Mock
     private FormInputRestService formInputRestService;
 
-    public ValidationMessages saveNonFileUploadQuestions(List<QuestionResource> questions,
-                                                         HttpServletRequest request,
-                                                         Long userId,
-                                                         Long applicationId,
-                                                         boolean ignoreEmpty) {
 
-        ValidationMessages allErrors = new ValidationMessages();
-        questions.forEach(question ->
-                {
-                    List<FormInputResource> formInputs = formInputRestService.getByQuestionIdAndScope(question.getId(), APPLICATION).getSuccessObjectOrThrowException();
-                    formInputs
-                            .stream()
-                            .filter(formInput -> FILEUPLOAD != formInput.getType())
-                            .forEach(saveFormInput(request, userId, applicationId, ignoreEmpty, allErrors));
-                }
-        );
-        return allErrors;
-    }
+    @Test
+    public void saveNonFileUploadQuestions() {
+//        List<QuestionResource> questions,
+//        HttpServletRequest request,
+//        Long userId,
+//        Long applicationId,
+//        boolean ignoreEmpty
 
-    private Consumer<? super FormInputResource> saveFormInput(HttpServletRequest request,
-                                                              Long userId,
-                                                              Long applicationId,
-                                                              boolean ignoreEmpty,
-                                                              ValidationMessages allErrors) {
-        return formInput -> {
-            String formInputKey = getFormInputKey(formInput.getId());
-
-            //TODO: IFS-346 - Can we use the parameter map, instead of trying to get every FormInput by key
-            requestParameterPresent(formInputKey, request).ifPresent(value -> {
-                ValidationMessages errors = formInputResponseRestService.saveQuestionResponse(
-                        userId, applicationId, formInput.getId(), value, ignoreEmpty).getSuccessObjectOrThrowException();
-                allErrors.addAll(errors, toField(formInputKey));
-            });
-        };
     }
 }
