@@ -35,4 +35,4 @@ User cannot see manage users page
     [Arguments]     ${email}    ${password}
     Given log in as a different user    ${email}    ${password}
     Then the user should not see the element    link=Manage users
-    And the user navigates to the page and gets a custom error message  ${USER_MGMT_URL} ${403_error_message}
+    And the user navigates to the page and gets a custom error message  ${USER_MGMT_URL}    ${403_error_message}
