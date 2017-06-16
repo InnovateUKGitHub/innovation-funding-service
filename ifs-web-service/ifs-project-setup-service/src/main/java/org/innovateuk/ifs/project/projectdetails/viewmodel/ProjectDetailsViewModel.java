@@ -63,7 +63,6 @@ public class ProjectDetailsViewModel {
         List<ProjectUserResource> financeRoles = simpleFilter(projectUsers, ProjectUserResource::isFinanceContact);
         this.financeContactsByOrganisationId = simpleToMap(financeRoles, ProjectUserResource::getOrganisation, Function.identity());
         this.isFinanceContactSubmitted = usersPartnerOrganisations.stream().anyMatch(organisation -> financeContactsByOrganisationId.containsKey(organisation));
-        boolean t = projectUsers.stream().map(upo -> upo.getOrganisation()).anyMatch(a -> a == app.getId());
         this.userLeadPartner = userIsLeadPartner;
     }
 

@@ -23,7 +23,6 @@ import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.profiling.ProfileExecution;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -116,7 +115,6 @@ public class ApplicationSectionController {
         return APPLICATION_FORM;
     }
 
-    @ProfileExecution
     @PreAuthorize("hasAuthority('support')")
     @GetMapping(SECTION_URL + "{sectionId}/{applicantOrganisationId}")
     public String applicationFormWithOpenSectionForApplicant(@Valid @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form, BindingResult bindingResult, Model model,

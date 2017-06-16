@@ -13,7 +13,7 @@ import java.util.List;
 public interface OrganisationSizeService {
 
     @PreAuthorize("hasAnyAuthority('applicant', 'comp_admin', 'project_finance', 'support')")
-    @SecuredBySpring(value = "READ", securedType = OrganisationSizeResource.class, description = "Only applicants can see the organisation size options.")
+    @SecuredBySpring(value = "READ", securedType = OrganisationSizeResource.class, description = "Only applicants and internal competition administrator, project finance and support users can see the organisation size options.")
     ServiceResult<List<OrganisationSizeResource>> getOrganisationSizes();
 
 }
