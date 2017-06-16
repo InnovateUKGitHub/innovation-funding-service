@@ -114,7 +114,7 @@ Guest user can see the public Dates of the competition
     When the user should see the element    jQuery=dt:contains("15 April 2016") + dd:contains("Competition opens")
     And the user should see the element    jQuery=dt:contains("12 May 2016") + dd:contains("Briefing event in Belfast")
     And the user should see the element    jQuery=dt:contains("9 September 2067") + dd:contains("Competition closes")
-    And the user should see the element    jQuery=dt:contains("20 July 2068") + dd:contains("Applicants notified")
+    And the user should see the element    jQuery=dt:contains("20 June 2068") + dd:contains("Applicants notified")
 
 Guest user can see the public How to apply of the competition
     [Documentation]    INFUND-6923

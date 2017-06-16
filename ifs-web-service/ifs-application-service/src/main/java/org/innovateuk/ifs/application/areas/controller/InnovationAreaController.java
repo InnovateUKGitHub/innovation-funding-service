@@ -1,13 +1,12 @@
 package org.innovateuk.ifs.application.areas.controller;
 
-import org.innovateuk.ifs.application.forms.validator.ApplicationDetailsEditableValidator;
-import org.innovateuk.ifs.application.forms.controller.ApplicationFormController;
 import org.innovateuk.ifs.application.areas.form.InnovationAreaForm;
 import org.innovateuk.ifs.application.areas.populator.ApplicationInnovationAreaPopulator;
+import org.innovateuk.ifs.application.areas.viewmodel.InnovationAreaViewModel;
+import org.innovateuk.ifs.application.forms.validator.ApplicationDetailsEditableValidator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationInnovationAreaRestService;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.areas.viewmodel.InnovationAreaViewModel;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -23,11 +22,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.function.Supplier;
 
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
+
 /**
  * This controller handles requests by Applicants to change the Innovation Area choice for an Application.
  */
 @Controller
-@RequestMapping(ApplicationFormController.APPLICATION_BASE_URL+"{applicationId}/form/question/{questionId}/innovation-area")
+@RequestMapping(APPLICATION_BASE_URL+"{applicationId}/form/question/{questionId}/innovation-area")
 @PreAuthorize("hasAuthority('applicant')")
 public class InnovationAreaController {
     private static String APPLICATION_SAVED_MESSAGE = "applicationSaved";

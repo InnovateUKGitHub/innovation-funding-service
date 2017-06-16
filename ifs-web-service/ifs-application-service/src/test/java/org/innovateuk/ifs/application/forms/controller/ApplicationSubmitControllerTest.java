@@ -29,6 +29,7 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -186,7 +187,7 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/application/" + app.getId() + "/summary"));
 
-        verify(questionService, times(1)).assignQuestion(eq(app.getId()), any(), any());
+        verify(questionService, times(1)).assignQuestion(eq(app.getId()), any(HttpServletRequest.class), any(ProcessRoleResource.class));
     }
 
     @Test

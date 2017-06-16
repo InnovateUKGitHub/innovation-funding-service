@@ -1,0 +1,35 @@
+FROM debian:jessie-slim
+
+ENV DEBIAN_FRONTEND=noninteractive \
+  JAVAVER=8 \
+  JAVAUPD=131 \
+  JAVABLD=11 \
+  JAVASIG=d54c1d3a095b4ff2b6607d096fa80163 \
+  ORACLE_JDK_DOMAIN=@oracle_jdk_domain@
+
+ENV JAVA_HOME=/usr/lib/jvm/java-${JAVAVER}-oracle
+ENV JRE_HOME=${JAVA_HOME}/jre
+
+# packages and stuff \
+COPY idp/* /idp/
+RUN apt-get update --fix-missing && \
+
+# Oracle JDK \
+  apt-get -y install ca-certificates gcc libc6-dev libssl-dev make java-common openssl unzip curl apt-transport-https bsdtar && \
+  curl --connect-timeout 30 -m 120 -L -s --retry 5 --cacert /etc/ssl/certs/GeoTrust_Global_CA.pem --header "Cookie: oraclelicense=accept-securebackup-cookie;" \
+    ${ORACLE_JDK_DOMAIN}/otn-pub/java/jdk/${JAVAVER}u${JAVAUPD}-b${JAVABLD}/${JAVASIG}/jdk-${JAVAVER}u${JAVAUPD}-linux-x64.tar.gz | bsdtar -C /tmp -xf - && \
+  mkdir -p /usr/lib/jvm && mv /tmp/jdk1.${JAVAVER}.0_${JAVAUPD} ${JAVA_HOME} && \
+  curl -jksSLH "Cookie: oraclelicense=accept-securebackup-cookie" -o /tmp/unlimited_jce_policy.zip "${ORACLE_JDK_DOMAIN}/otn-pub/java/jce/8/jce_policy-8.zip" && \
+  unzip -jo -d ${JAVA_HOME}/jre/lib/security /tmp/unlimited_jce_policy.zip && \
+  update-alternatives --install "/usr/bin/java" "java" "${JRE_HOME}/bin/java" 1 && \
+  update-alternatives --install "/usr/bin/javac" "javac" "${JAVA_HOME}/bin/javac" 1 && \
+  update-alternatives --set java "${JRE_HOME}/bin/java" && \
+  update-alternatives --set javac "${JAVA_HOME}/bin/javac" && \
+# default-jre-headless-dummy_1.0_all.deb prevents openjdk being installed and saves 100MB or so \
+  dpkg -i --force-depends /idp/default-jre-headless-dummy_1.0_all.deb && rm -f /idp/default-jre-headless-dummy_1.0_all.deb && \
+# tomcat for IDP and Regapi \
+  apt-get -y install tomcat8 libtcnative-1 tomcat8-common libtomcat8-java libecj-java ucf && \
+# apache. not strictly needed \
+  apt-get -y install grep lsof net-tools wget openssl rsync ldap-utils apache2 && \
+  apt-get autoclean && apt-get remove --purge --auto-remove -y gcc libc6-dev libssl-dev make unzip && apt-get --purge -y autoremove && rm -rf /var/lib/apt/lists/* && \
+  rm -rf /tmp/* /var/tmp/* /idp

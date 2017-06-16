@@ -103,6 +103,16 @@ Valid login as Support role
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
     [Teardown]    Logout as user
 
+Valid login as IFS Admin role
+    [Documentation]    IFS-603
+    [Tags]
+    Given the user is not logged-in
+    When the guest user enters the log in credentials   &{ifs_admin_user_credentials}
+    And the user clicks the button/link    css=button[name="_eventId_proceed"]
+    And the user navigates to the page    ${COMP_ADMINISTRATOR_DASHBOARD}
+    Then the user should see the element    link=Sign out
+    [Teardown]    Logout as user
+
 Should not see the Sign in link when on the login page
     Given the user navigates to the page    ${LOGIN_URL}
     Then the user should not see the element    link=Sign in

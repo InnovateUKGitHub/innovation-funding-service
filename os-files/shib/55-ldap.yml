@@ -18,11 +18,11 @@ items:
       spec:
         containers:
         - env:
-          - name: LDAPPORT
+          - name: LDAP_PORT
             value: "8389"
-          - name: LDAPSSLPORT
+          - name: LDAP_SSL_PORT
             value: "8636"
-          image: innovateuk/ifs-ldap:0.4.0
+          image: innovateuk/ldap-service:1.0-SNAPSHOT
           name: ldap
           imagePullPolicy: IfNotPresent
           ports:
