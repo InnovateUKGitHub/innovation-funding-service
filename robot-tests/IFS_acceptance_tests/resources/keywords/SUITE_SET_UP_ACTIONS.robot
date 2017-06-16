@@ -231,7 +231,10 @@ the user follows the flow to register their organisation
     the user selects the checkbox               address-same
     the user should not see the element         jQuery=h3:contains("Organisation type")
     the user clicks the button/link             jQuery=.button:contains("Continue")
+#    This is added as the flow differs if comp is setup to have either Business or RTO as lead org type but not both
+    run keyword and ignore error  the user selects the radio button    organisationTypeId   radio-1
     the user clicks the button/link             jQuery=.button:contains("Save and continue")
+    run keyword and ignore error  the user clicks the button/link             jQuery=.button:contains("Save and continue")
 
 the user enters the details and clicks the create account
     [Arguments]   ${first_name}  ${last_name}  ${REG_EMAIL}
