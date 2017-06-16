@@ -110,6 +110,7 @@ Valid login as IFS Admin role
     When the guest user enters the log in credentials   &{ifs_admin_user_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     And the user navigates to the page    ${COMP_ADMINISTRATOR_DASHBOARD}
+    Then the user should see the element    link=Manage users
     Then the user should see the element    link=Sign out
     [Teardown]    Logout as user
 
