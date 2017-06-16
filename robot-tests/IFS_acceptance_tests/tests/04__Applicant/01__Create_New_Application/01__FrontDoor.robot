@@ -12,13 +12,12 @@ Guest user navigates to Front Door
     [Documentation]    INFUND-6923 INFUND-7946
     [Tags]
     [Setup]    the user navigates to the front door
-    When the user should see the element    jQuery=h1:contains("Innovation competitions")
-    And the user should see the element    jQuery=p:contains("Browse upcoming and live competitions.")
-    And the user should see the element    jQuery=a:contains("signing up for competition updates")
-    When the user should see the element    css=#keywords
-    Then the user should see the element    css=#innovation-area
-    When the user clicks the button/link    link=Contact us
-    Then the user should see the element    jQuery=h1:contains("Contact us")
+    When the user should see the element     jQuery=a:contains("Innovate UK")
+    Then the user should see the element     jQuery=h1:contains("Innovation competitions")
+    And the user should see the element     css=#keywords
+    Then the user should see the element     css=#innovation-area
+    When the user clicks the button/link     link=Contact us
+    Then the user should see the element     jQuery=h1:contains("Contact us")
     And the user should not see an error in the page
     When the user clicks the button/link    jQuery=a:contains("feedback")
     And the user selects feedback window
