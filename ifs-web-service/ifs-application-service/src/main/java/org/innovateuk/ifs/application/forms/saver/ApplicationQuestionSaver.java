@@ -10,7 +10,6 @@ import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +57,7 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
     public ValidationMessages saveApplicationForm(Long applicationId,
                                                   ApplicationForm form,
                                                   Long questionId,
-                                                  UserResource user,
+                                                  Long userId,
                                                   HttpServletRequest request,
                                                   HttpServletResponse response, BindingResult bindingResult) {
         final ApplicationResource application = applicationService.getById(applicationId);
@@ -67,15 +66,15 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
         final ValidationMessages errors = new ValidationMessages();
         final boolean ignoreEmpty = !params.containsKey(MARK_AS_COMPLETE);
 
-        ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), application.getId());
+        ProcessRoleResource processRole = processRoleService.findProcessRole(userId, application.getId());
 
         if (!isMarkQuestionAsIncompleteRequest(params)) {
-            errors.addAll(saveQuestionResponses(request, questionList, user.getId(), processRole.getId(), application.getId(), ignoreEmpty));
+            errors.addAll(saveQuestionResponses(request, questionList, userId, processRole.getId(), application.getId(), ignoreEmpty));
         }
 
         detailsSaver.setApplicationDetails(application, form.getApplication());
 
-        if (userService.isLeadApplicant(user.getId(), application)) {
+        if (userService.isLeadApplicant(userId, application)) {
             applicationService.save(application);
         }
 

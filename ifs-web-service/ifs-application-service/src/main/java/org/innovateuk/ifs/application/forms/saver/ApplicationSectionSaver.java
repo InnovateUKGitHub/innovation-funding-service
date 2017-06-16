@@ -10,10 +10,8 @@ import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,14 +60,15 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
     private ApplicationSectionFinanceSaver financeSaver;
 
     public ValidationMessages saveApplicationForm(ApplicationResource application,
-                                                  CompetitionResource competition,
+                                                  Long competitionId,
                                                   ApplicationForm form,
                                                   Long sectionId,
-                                                  UserResource user,
+                                                  Long userId,
                                                   HttpServletRequest request,
                                                   HttpServletResponse response, Boolean validFinanceTerms) {
 
-        ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), application.getId());
+        Long applicationId = application.getId();
+        ProcessRoleResource processRole = processRoleService.findProcessRole(userId, applicationId);
         SectionResource selectedSection = sectionService.getById(sectionId);
         Map<String, String[]> params = request.getParameterMap();
         boolean ignoreEmpty = !isMarkSectionRequest(params);
@@ -77,15 +76,15 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
         ValidationMessages errors = new ValidationMessages();
 
         if (isFundingRequest(params)) {
-            errors.addAll(financeSaver.handleRequestFundingRequests(params, application.getId(), user.getId(), competition.getId(), processRole.getId()));
+            errors.addAll(financeSaver.handleRequestFundingRequests(params, applicationId, userId, competitionId, processRole.getId()));
         }
 
         if (!isMarkSectionAsIncompleteRequest(params)) {
             List<QuestionResource> questions = simpleMap(selectedSection.getQuestions(), questionService::getById);
-            errors.addAll(saveQuestionResponses(request, questions, user.getId(), processRole.getId(), application.getId(), ignoreEmpty));
+            errors.addAll(saveQuestionResponses(request, questions, userId, processRole.getId(), applicationId, ignoreEmpty));
 
-            Long organisationType = organisationService.getOrganisationType(user.getId(), application.getId());
-            ValidationMessages saveErrors = financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), application.getId(), competition.getId());
+            Long organisationType = organisationService.getOrganisationType(userId, applicationId);
+            ValidationMessages saveErrors = financeHandler.getFinanceFormHandler(organisationType).update(request, userId, applicationId, competitionId);
 
             if (overheadFileSaver.isOverheadFileRequest(request)) {
                 errors.addAll(overheadFileSaver.handleOverheadFileRequest(request));
@@ -93,7 +92,7 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
                 errors.addAll(saveErrors);
             }
 
-            financeSaver.handleMarkAcademicFinancesAsNotRequired(organisationType, selectedSection, application.getId(), competition.getId(), processRole.getId());
+            financeSaver.handleMarkAcademicFinancesAsNotRequired(organisationType, selectedSection, applicationId, competitionId, processRole.getId());
         }
 
         if (isMarkSectionRequest(params)) {

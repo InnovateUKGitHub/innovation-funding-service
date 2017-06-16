@@ -11,8 +11,6 @@ import org.innovateuk.ifs.application.forms.service.ApplicationRedirectionServic
 import org.innovateuk.ifs.application.forms.viewmodel.QuestionViewModel;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -59,13 +57,7 @@ public class ApplicationQuestionController {
     private ProcessRoleService processRoleService;
 
     @Autowired
-    private ApplicationService applicationService;
-
-    @Autowired
     private QuestionService questionService;
-
-    @Autowired
-    private CompetitionService competitionService;
 
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
@@ -124,7 +116,7 @@ public class ApplicationQuestionController {
             // First check if any errors already exist in bindingResult
             if (isAllowedToUpdateQuestion(questionId, applicationId, user.getId()) || isMarkQuestionRequest(params)) {
                 /* Start save action */
-                errors = applicationSaver.saveApplicationForm(applicationId, form, questionId, user, request, response, bindingResult);
+                errors = applicationSaver.saveApplicationForm(applicationId, form, questionId, user.getId(), request, response, bindingResult);
             }
 
             model.addAttribute("form", form);
