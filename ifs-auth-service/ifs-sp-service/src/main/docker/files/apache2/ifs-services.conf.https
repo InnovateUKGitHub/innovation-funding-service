@@ -13,9 +13,9 @@ ShibCompatValidUser On
   SSLProxyCheckPeerName off
 
   SSLEngine on
-  SSLCertificateFile /etc/apache2/certs/${PROXY_CERTIFICATE}
-  SSLCertificateChainFile /etc/apache2/certs/${PROXY_CA_CERTIFICATE}
-  SSLCertificateKeyFile /etc/apache2/certs/${PROXY_KEY}
+  SSLCertificateKeyFile /etc/apache2/certs/sp_proxy_key.pem
+  SSLCertificateFile /etc/apache2/certs/sp_proxy_certificate.pem
+  SSLCertificateChainFile /etc/apache2/certs/sp_proxy_cacertificate.pem
 
   # Enable request processing with mod_security
   SecRuleEngine On
