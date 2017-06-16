@@ -12,12 +12,14 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
+import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.management.model.ApplicationOverviewIneligibilityModelPopulator;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -29,9 +31,11 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
@@ -88,6 +92,17 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         // Having to pass getImpersonateOrganisationId here because look at the horrible code inside addOrganisationAndUserFinanceDetails with impersonation org id :(
         applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), application.getId(), user, model, form, form.getImpersonateOrganisationId());
         addAppendices(application.getId(), responses, model);
+
+        // organisationFinances populated by ApplicationFinanceOverviewModelManager, applicantOrganisationIsAcademic & applicationOrganisations populated by OrganisationDetailsModelPopulator, both above
+        List<Boolean> isAcademicOrganisation = (List<Boolean>) model.asMap().get("applicantOrganisationIsAcademic");
+        List<OrganisationResource> organisations = (List<OrganisationResource>) model.asMap().get("applicationOrganisations");
+        Map<Long, BaseFinanceResource> organisationFinances = (Map<Long, BaseFinanceResource> ) model.asMap().get("organisationFinances");
+        List<Boolean> detailedFinanceLink = IntStream.range(0, organisations.size()).mapToObj(i ->
+                user.hasRole(UserRoleType.SUPPORT) &&
+                ((organisationFinances.containsKey(organisations.get(i).getId()) && organisationFinances.get(organisations.get(i).getId()).getOrganisationSize() != null) ||
+                  isAcademicOrganisation.get(i))
+            ? Boolean.TRUE : Boolean.FALSE).collect(Collectors.toList());
+        model.addAttribute("showDetailedFinanceLink", detailedFinanceLink);
 
         model.addAttribute("isSupportUser", user.hasRole(UserRoleType.SUPPORT));
         model.addAttribute("form", form);
