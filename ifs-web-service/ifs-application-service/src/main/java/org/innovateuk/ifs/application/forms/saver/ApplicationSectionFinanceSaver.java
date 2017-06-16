@@ -67,9 +67,10 @@ public class ApplicationSectionFinanceSaver extends AbstractApplicationSaver {
     private ValidationMessages setRequestingFunding(String requestingFunding, Long userId, Long applicationId, Long competitionId, Long processRoleId) {
         ApplicationFinanceResource finance = financeService.getApplicationFinanceDetails(userId, applicationId);
         QuestionResource financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccessObjectOrThrowException();
-        if (finance.getGrantClaim() != null) {
+        ValidationMessages errors = new ValidationMessages();
+        if (finance.getGrantClaim() == null) {
+            errors.addAll(financeRowRestService.add(finance.getId(), financeQuestion.getId(), finance.getGrantClaim()));
         }
-        ValidationMessages errors = financeRowRestService.add(finance.getId(), financeQuestion.getId(), finance.getGrantClaim()).getOrElse(new ValidationMessages());
 
         if (!errors.hasErrors()) {
             SectionResource organisationSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.ORGANISATION_FINANCES).get(0);

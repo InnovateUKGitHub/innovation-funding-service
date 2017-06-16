@@ -72,8 +72,7 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
         ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), application.getId());
         SectionResource selectedSection = sectionService.getById(sectionId);
         Map<String, String[]> params = request.getParameterMap();
-
-        boolean ignoreEmpty = (!params.containsKey(MARK_AS_COMPLETE)) && (!params.containsKey(MARK_SECTION_AS_COMPLETE));
+        boolean ignoreEmpty = !isMarkSectionRequest(params);
 
         ValidationMessages errors = new ValidationMessages();
 
@@ -88,18 +87,18 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
             Long organisationType = organisationService.getOrganisationType(user.getId(), application.getId());
             ValidationMessages saveErrors = financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), application.getId(), competition.getId());
 
-            if (!overheadFileSaver.isOverheadFileRequest(request)) {
-                errors.addAll(saveErrors);
-            } else {
+            if (overheadFileSaver.isOverheadFileRequest(request)) {
                 errors.addAll(overheadFileSaver.handleOverheadFileRequest(request));
+            } else {
+                errors.addAll(saveErrors);
             }
 
             financeSaver.handleMarkAcademicFinancesAsNotRequired(organisationType, selectedSection, application.getId(), competition.getId(), processRole.getId());
         }
 
         if (isMarkSectionRequest(params)) {
-            financeSaver.handleStateAid(params, application, form, selectedSection);
             errors.addAll(handleMarkSectionRequest(application, sectionId, params, processRole, errors, validFinanceTerms));
+            financeSaver.handleStateAid(params, application, form, selectedSection);
         }
 
         cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
