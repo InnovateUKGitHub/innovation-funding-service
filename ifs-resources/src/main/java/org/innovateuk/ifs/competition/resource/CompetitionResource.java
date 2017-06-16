@@ -74,6 +74,7 @@ public class CompetitionResource {
     private boolean setupComplete = false;
 
     private boolean useResubmissionQuestion;
+    private boolean useAssessmentPanel;
 
     private boolean nonIfs = false;
     private String nonIfsUrl;
@@ -528,5 +529,13 @@ public class CompetitionResource {
 
     public void setNonIfsUrl(String nonIfsUrl) {
         this.nonIfsUrl = nonIfsUrl;
+    }
+
+    public boolean isUseAssessmentPanel() {
+        return useAssessmentPanel;
+    }
+
+    public void setUseAssessmentPanel(boolean useAssessmentPanel) {
+        this.useAssessmentPanel = useAssessmentPanel;
     }
 }

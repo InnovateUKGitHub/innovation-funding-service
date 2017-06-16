@@ -91,6 +91,7 @@ public class Competition implements ProcessActivity {
 
     private boolean multiStream;
     private Boolean resubmission;
+    private Boolean useAssessmentPanel;
 
     private String streamName;
     @Enumerated(EnumType.STRING)
@@ -642,6 +643,14 @@ public class Competition implements ProcessActivity {
 
     public void setNonIfsUrl(String nonIfsUrl) {
         this.nonIfsUrl = nonIfsUrl;
+    }
+
+    public Boolean isUseAssessmentPanel() {
+        return useAssessmentPanel;
+    }
+
+    public void setUseAssessmentPanel(Boolean useAssessmentPanel) {
+        this.useAssessmentPanel = useAssessmentPanel;
     }
 }
 

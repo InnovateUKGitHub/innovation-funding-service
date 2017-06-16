@@ -1,5 +1,5 @@
--- Add boolean assess columns to competition table
-ALTER TABLE `public_content`
-ADD COLUMN `invite_only` BIT(1) DEFAULT null;
+-- Add boolean assessment_panel column to competition table
+ALTER TABLE `competition`
+ADD COLUMN `use_assessment_panel` BIT(1) DEFAULT null;
 
-UPDATE `public_content` SET `invite_only`=b'0'
+UPDATE `competition` SET `use_assessment_panel`=b'0'

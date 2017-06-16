@@ -1019,6 +1019,36 @@
                        th:errorclass="form-control-error"
                        th:readonly="${isSetupAndLive}"/>
             </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('useAssessmentPanel')} ? 'form-group-error'">
+                <span class="form-label-bold">Enable assessment panel for this competition?</span>
+                <th:block th:if="${#fields.hasErrors('useAssessmentPanel')}">
+                    <span class="error-message" th:each="err : ${#fields.errors('useAssessmentPanel')}" th:text="${err}" />
+                </th:block>
+                <div class="multiple-choice">
+                    <input id="useAssessmentPanel-0"
+                           type="radio"
+                           th:field="${form.useAssessmentPanel}"
+                           value="public"
+                           th:errorclass="field-error"
+                           required="required"
+                           th:attr="data-required-errormessage=#{validation.assessorsform.assessmentPanel.required}" />
+                    <label for="useAssessmentPanel-0">
+                        Yes
+                    </label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="useAssessmentPanel-1"
+                           type="radio"
+                           th:field="${form.useAssessmentPanel}"
+                           th:errorclass="field-error"
+                           required="required"
+                           value="invite"
+                           th:attr="data-required-errormessage=#{validation.assessorsform.assessmentPanel.required}" />
+                    <label for="useAssessmentPanel-1">
+                        No
+                    </label>
+                </div>
+            </div>
 
             <button class="button">Done</button>
         </th:block>
