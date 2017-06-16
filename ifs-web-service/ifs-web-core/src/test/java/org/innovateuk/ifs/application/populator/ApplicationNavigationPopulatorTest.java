@@ -112,7 +112,7 @@ public class ApplicationNavigationPopulatorTest {
         setupApplicationOpen(applicationId);
 
         SectionResource section = newSectionResource().withType(SectionType.FUNDING_FINANCES).build();
-        target.addAppropriateBackURLToModel(applicationId, model, section, null);
+        target.addAppropriateBackURLToModel(applicationId, model, section, Optional.empty());
 
         verify(model).addAttribute(eq("backURL"), contains("/application/1/form/FINANCE"));
         verify(model).addAttribute(eq("backTitle"), contains("Your finances"));
