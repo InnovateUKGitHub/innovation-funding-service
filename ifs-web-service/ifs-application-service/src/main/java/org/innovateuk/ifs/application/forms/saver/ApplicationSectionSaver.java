@@ -76,7 +76,7 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
         ValidationMessages errors = new ValidationMessages();
 
         if (isFundingRequest(params)) {
-            errors.addAll(financeSaver.handleRequestFundingRequests(params, applicationId, userId, competitionId, processRole.getId()));
+            financeSaver.handleRequestFundingRequests(params, applicationId, competitionId, processRole.getId());
         }
 
         if (!isMarkSectionAsIncompleteRequest(params)) {

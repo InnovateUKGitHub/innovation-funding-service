@@ -97,7 +97,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
                     List<Section> sections = application.getCompetition().getSections();
 
                     final List<ServiceResult<Pair<Long, Boolean>>> unaggregatedSectionsAndStatus = simpleMap(sections, section ->
-                        isSectionComplete(section, applicationId, organisationId).andOnSuccessReturn(isComplete -> of(section.getId(), isComplete)));
+                            isSectionComplete(section, applicationId, organisationId).andOnSuccessReturn(isComplete -> of(section.getId(), isComplete)));
 
                     final ServiceResult<List<Pair<Long, Boolean>>> aggregatedSectionsAndStatus = aggregate(unaggregatedSectionsAndStatus);
                     final ServiceResult<List<Pair<Long, Boolean>>> aggregatedCompleteSectionsAndStatus = aggregatedSectionsAndStatus.andOnSuccessReturn(sectionsWithStatus -> simpleFilter(sectionsWithStatus, Pair::getValue));
@@ -154,7 +154,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
                                                        final Long markedAsInCompleteById) {
 
         return getQuestionsForSectionAndSubsections(sectionId).andOnSuccessReturnVoid(questions -> questions.forEach(q ->
-            questionService.markAsInComplete(new QuestionApplicationCompositeId(q, applicationId), markedAsInCompleteById)
+                questionService.markAsInComplete(new QuestionApplicationCompositeId(q, applicationId), markedAsInCompleteById)
         ));
     }
 
