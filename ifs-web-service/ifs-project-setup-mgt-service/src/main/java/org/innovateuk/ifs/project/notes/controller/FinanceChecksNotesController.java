@@ -14,7 +14,7 @@ import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesAddCommentForm;
 import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesFormConstraints;
 import org.innovateuk.ifs.project.notes.viewmodel.FinanceChecksNotesViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.util.Util;
+import org.innovateuk.ifs.project.util.InternalUserOrganisationUtil;
 import org.innovateuk.ifs.thread.viewmodel.ThreadPostViewModel;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -72,7 +72,7 @@ public class FinanceChecksNotesController {
     @Autowired
     private CookieUtil cookieUtil;
     @Autowired
-    private Util util;
+    private InternalUserOrganisationUtil internalUserOrganisationUtil;
     @Autowired
     private ProjectFinanceService projectFinanceService;
     @Autowired
@@ -307,7 +307,7 @@ public class FinanceChecksNotesController {
                 for (PostResource p : note.posts) {
                     UserResource user = userService.findById(p.author.getId());
                     //TODO - Getting the organisation name this way is just a workaround till IFS-651 is fixed.
-                    String organisationName = util.getOrganisationName(user, p);
+                    String organisationName = internalUserOrganisationUtil.getOrganisationName(user, p);
                     ThreadPostViewModel post = new ThreadPostViewModel(p.id, p.author, p.body, p.attachments, p.createdOn);
                     post.setUsername(user.getName() + " - " + organisationName + (user.hasRole(UserRoleType.PROJECT_FINANCE) ? " (Finance team)" : ""));
                     posts.add(post);

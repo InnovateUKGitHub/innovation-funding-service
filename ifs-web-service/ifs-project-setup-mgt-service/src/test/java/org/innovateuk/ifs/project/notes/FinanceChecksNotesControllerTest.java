@@ -15,7 +15,7 @@ import org.innovateuk.ifs.project.notes.viewmodel.FinanceChecksNotesViewModel;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.project.util.Util;
+import org.innovateuk.ifs.project.util.InternalUserOrganisationUtil;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -63,7 +63,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<FinanceChecksNotesController> {
 
     @Mock
-    public Util util;
+    public InternalUserOrganisationUtil internalUserOrganisationUtil;
 
     private Long projectId = 3L;
     private Long financeTeamUserId = 18L;
@@ -133,11 +133,11 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         notes = Arrays.asList(thread2, thread, thread3);
 
         //TODO - Getting the organisation name this way is just a workaround till IFS-651 is fixed.
-        when(util.getOrganisationName(financeTeamUser, firstPost)).thenReturn(innovateOrganisationResource.getName());
-        when(util.getOrganisationName(financeTeamUser, firstPost2)).thenReturn(innovateOrganisationResource.getName());
-        when(util.getOrganisationName(financeTeamUser, firstPost1)).thenReturn(innovateOrganisationResource.getName());
-        when(util.getOrganisationName(projectManagerUser, firstResponse)).thenReturn(leadOrganisationResource.getName());
-        when(util.getOrganisationName(projectManagerUser, firstResponse1)).thenReturn(leadOrganisationResource.getName());
+        when(internalUserOrganisationUtil.getOrganisationName(financeTeamUser, firstPost)).thenReturn(innovateOrganisationResource.getName());
+        when(internalUserOrganisationUtil.getOrganisationName(financeTeamUser, firstPost2)).thenReturn(innovateOrganisationResource.getName());
+        when(internalUserOrganisationUtil.getOrganisationName(financeTeamUser, firstPost1)).thenReturn(innovateOrganisationResource.getName());
+        when(internalUserOrganisationUtil.getOrganisationName(projectManagerUser, firstResponse)).thenReturn(leadOrganisationResource.getName());
+        when(internalUserOrganisationUtil.getOrganisationName(projectManagerUser, firstResponse1)).thenReturn(leadOrganisationResource.getName());
     }
 
     @Test

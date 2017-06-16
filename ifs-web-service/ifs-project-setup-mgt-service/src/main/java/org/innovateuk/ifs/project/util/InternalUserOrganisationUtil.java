@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Util {
+public class InternalUserOrganisationUtil {
 
     @Autowired
     private OrganisationService organisationService;
