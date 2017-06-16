@@ -26,6 +26,7 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -89,7 +90,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
         List<SectionResource> parentSections = sectionService.filterParentSections(allSections);
 
         Map<Long, SectionResource> sections =
-                parentSections.stream().collect(Collectors.toMap(SectionResource::getId,
+                parentSections.stream().collect(CollectionFunctions.toLinkedMap(SectionResource::getId,
                         Function.identity()));
 
         userOrganisation.ifPresent(org -> {
