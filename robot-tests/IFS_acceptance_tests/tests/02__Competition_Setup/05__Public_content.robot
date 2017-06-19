@@ -20,9 +20,12 @@ Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin  MySQL
 Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot
+Variables          ../../libs/Initialisation.py
 
 *** Variables ***
-${public_content_competition_name}    Public content competition
+${public_content_competition_name}      Public content competition
+${public_content_competition}           ${application_ids["${public_content_competition_name}"]}
+${public_content_url}                   /competition/${public_content_competition}/overview
 
 *** Test Cases ***
 User can view the public content
@@ -86,7 +89,10 @@ Competition information and search: Valid values
 User can view the competition url for invite only competitions
     [Documentation]    IFS-262
     [Tags]
-    The user should see the text in the page  Competition URL
+    The user should see the element                     jQuery=p:contains("Competition URL:")
+    When the user clicks the button/link                link=/competition/${public_content_url}/overview
+    Then the user should see the text in the page       Public content competition
+    And the user should see the text in the page        This is a Summary description
 
 Competition information and search: ReadOnly
     [Documentation]  INFUND-6915, IFS-179
