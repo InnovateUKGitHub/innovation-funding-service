@@ -7,6 +7,7 @@ import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.exception.InviteAlreadyAcceptedException;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -41,6 +42,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
 import static org.innovateuk.ifs.login.HomeController.getRedirectUrlForUser;
 import static org.innovateuk.ifs.registration.AbstractAcceptInviteController.INVITE_HASH;
 import static org.innovateuk.ifs.registration.OrganisationCreationController.ORGANISATION_ID;
@@ -83,7 +85,7 @@ public class RegistrationController {
             @RequestHeader(value = "referer", required = false) final String referer,
             final HttpServletRequest request, HttpServletResponse response) {
         cookieUtil.removeCookie(response, INVITE_HASH);
-        if(referer == null || !referer.contains(request.getServerName() + "/registration/register")){
+        if (referer == null || !referer.contains(request.getServerName() + "/registration/register")) {
             throw new ObjectNotFoundException("Attempt to access registration page directly...", Collections.emptyList());
         }
         return "registration/successful";
@@ -91,7 +93,7 @@ public class RegistrationController {
 
     @GetMapping("/verified")
     public String verificationSuccessful(final HttpServletRequest request, final HttpServletResponse response) {
-        if(!hasVerifiedCookieSet(request)){
+        if (!hasVerifiedCookieSet(request)) {
             throw new ObjectNotFoundException("Attempt to access registration page directly...", Collections.emptyList());
         } else {
             cookieFlashMessageFilter.removeFlashMessage(response);
@@ -101,30 +103,29 @@ public class RegistrationController {
 
     @GetMapping("/verify-email/{hash}")
     public String verifyEmailAddress(@PathVariable("hash") final String hash,
-                                     final HttpServletResponse response){
+                                     final HttpServletResponse response) {
         userService.verifyEmail(hash);
         cookieFlashMessageFilter.setFlashMessage(response, "verificationSuccessful");
         return "redirect:/registration/verified";
     }
 
     @GetMapping("/register")
-    public String registerForm(Model model,
+    public String registerForm(@ModelAttribute("registrationForm") RegistrationForm registrationForm,
+                               Model model,
                                UserResource user,
                                HttpServletRequest request,
                                HttpServletResponse response) {
-
-        if(user != null){
+        if (user != null) {
             return getRedirectUrlForUser(user);
         }
 
-        if (getOrganisationId(request) == null){
-            return  "redirect:/";
+        if (getOrganisationId(request) == null) {
+            return "redirect:/";
         }
 
         try {
-            addRegistrationFormToModel(model, request, response);
-        }
-        catch (InviteAlreadyAcceptedException e) {
+            addRegistrationFormToModel(registrationForm, model, request, response);
+        } catch (InviteAlreadyAcceptedException e) {
             cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
             return "redirect:/login";
         }
@@ -155,8 +156,7 @@ public class RegistrationController {
         return success;
     }
 
-    private void addRegistrationFormToModel(Model model, HttpServletRequest request, HttpServletResponse response) {
-        RegistrationForm registrationForm = new RegistrationForm();
+    private void addRegistrationFormToModel(RegistrationForm registrationForm, Model model, HttpServletRequest request, HttpServletResponse response) {
         setOrganisationIdCookie(registrationForm, request, response);
         setInviteeEmailAddress(registrationForm, request, model);
         model.addAttribute("registrationForm", registrationForm);
@@ -168,14 +168,14 @@ public class RegistrationController {
      */
     private boolean setInviteeEmailAddress(RegistrationForm registrationForm, HttpServletRequest request, Model model) {
         String inviteHash = cookieUtil.getCookieValue(request, INVITE_HASH);
-        if(StringUtils.hasText(inviteHash)){
+        if (StringUtils.hasText(inviteHash)) {
             RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(inviteHash);
-            if(invite.isSuccess() && InviteStatus.SENT.equals(invite.getSuccessObject().getStatus())){
+            if (invite.isSuccess() && InviteStatus.SENT.equals(invite.getSuccessObject().getStatus())) {
                 ApplicationInviteResource inviteResource = invite.getSuccessObject();
                 registrationForm.setEmail(inviteResource.getEmail());
                 model.addAttribute("invitee", true);
                 return true;
-            }else{
+            } else {
                 LOG.debug("Invite already accepted.");
                 throw new InviteAlreadyAcceptedException();
             }
@@ -195,53 +195,46 @@ public class RegistrationController {
                                      HttpServletRequest request,
                                      Model model) {
 
-        boolean setInviteEmailAddress;
-
         try {
-            setInviteEmailAddress = setInviteeEmailAddress(registrationForm, request, model);
+            if (setInviteeEmailAddress(registrationForm, request, model)) {
+                bindingResult = new BeanPropertyBindingResult(registrationForm, "registrationForm");
+                validator.validate(registrationForm, bindingResult);
+            }
         } catch (InviteAlreadyAcceptedException e) {
             cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
+
             return "redirect:/login";
         }
 
-        if(setInviteEmailAddress){
-            LOG.info("setInviteeEmailAddress: "+ registrationForm.getEmail());
-            // re-validate since we did set the emailaddress in the meantime. @Valid annotation is needed for unit tests.
-            bindingResult = new BeanPropertyBindingResult(registrationForm, "registrationForm");
-            validator.validate(registrationForm, bindingResult);
-        }
-
-        if(user != null){
-            return getRedirectUrlForUser(user);
-        }
-
-        String destination = "registration/register";
-
         checkForExistingEmail(registrationForm.getEmail(), bindingResult);
-        model.addAttribute("ethnicityOptions", getEthnicityOptions());
 
-        if(!bindingResult.hasErrors()) {
-            //TODO : INFUND-3691
-            ServiceResult<UserResource> createUserResult = createUser(registrationForm, getOrganisationId(request), getCompetitionId(request));
+        model.addAttribute(BindingResult.MODEL_KEY_PREFIX + "registrationForm", bindingResult);
 
-            if (createUserResult.isSuccess()) {
-                removeCompetitionIdCookie(response);
-                acceptInvite(response, request, createUserResult.getSuccessObject()); // might want to move this, to after email verifications.
-                cookieUtil.removeCookie(response, ORGANISATION_ID);
-                destination = "redirect:/registration/success";
-            } else {
-                if (!processOrganisation(request, model)) {
-                    destination = "redirect:/";
-                }
-                addEnvelopeErrorsToBindingResultErrors(createUserResult.getFailure().getErrors(), bindingResult);
-            }
-        } else {
-            if (!processOrganisation(request, model)) {
-                destination = "redirect:/";
-            }
-        }
+        ValidationHandler validationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
 
-        return destination;
+        // TODO : INFUND-3691
+        return validationHandler.failNowOrSucceedWith(
+                () -> registerForm(registrationForm, model, user, request, response),
+                () -> createUser(registrationForm, getOrganisationId(request), getCompetitionId(request)).handleSuccessOrFailure(
+                        failure -> {
+                            validationHandler.addAnyErrors(failure,
+                                    fieldErrorsToFieldErrors(
+                                            e -> newFieldError(e, e.getFieldName(), e.getFieldRejectedValue(), "registration." + e.getErrorKey())
+                                    ),
+                                    asGlobalErrors()
+                            );
+
+                            return registerForm(registrationForm, model, user, request, response);
+                        },
+                        userResource -> {
+                            removeCompetitionIdCookie(response);
+                            acceptInvite(response, request, userResource); // might want to move this, to after email verifications.
+                            cookieUtil.removeCookie(response, ORGANISATION_ID);
+
+                            return "redirect:/registration/success";
+                        }
+                )
+        );
     }
 
     @GetMapping("/resend-email-verification")
@@ -268,7 +261,7 @@ public class RegistrationController {
 
     private Long getCompetitionId(HttpServletRequest request) {
         Long competitionId = null;
-        if(StringUtils.hasText(cookieUtil.getCookieValue(request, ApplicationCreationController.COMPETITION_ID))){
+        if (StringUtils.hasText(cookieUtil.getCookieValue(request, ApplicationCreationController.COMPETITION_ID))) {
             competitionId = Long.valueOf(cookieUtil.getCookieValue(request, ApplicationCreationController.COMPETITION_ID));
         }
         return competitionId;
@@ -276,9 +269,9 @@ public class RegistrationController {
 
     private boolean acceptInvite(HttpServletResponse response, HttpServletRequest request, UserResource userResource) {
         String inviteHash = cookieUtil.getCookieValue(request, INVITE_HASH);
-        if(StringUtils.hasText(inviteHash)){
+        if (StringUtils.hasText(inviteHash)) {
             RestResult<Void> restResult = inviteRestService.acceptInvite(inviteHash, userResource.getId());
-            if(restResult.isSuccess()){
+            if (restResult.isSuccess()) {
                 cookieUtil.removeCookie(response, INVITE_HASH);
             }
             return restResult.isSuccess();
@@ -287,25 +280,12 @@ public class RegistrationController {
     }
 
     private void checkForExistingEmail(String email, BindingResult bindingResult) {
-        if(!bindingResult.hasFieldErrors(EMAIL_FIELD_NAME) && StringUtils.hasText(email)) {
+        if (!bindingResult.hasFieldErrors(EMAIL_FIELD_NAME) && StringUtils.hasText(email)) {
             Optional<UserResource> existingUserSearch = userService.findUserByEmail(email);
+
             if (existingUserSearch.isPresent()) {
-                ValidationMessages.rejectValue(bindingResult, EMAIL_FIELD_NAME, "validation.standard.email.exists");
+                bindingResult.rejectValue(EMAIL_FIELD_NAME, "validation.standard.email.exists");
             }
-        }
-    }
-
-    private void addEnvelopeErrorsToBindingResultErrors(List<Error> errors, BindingResult bindingResult) {
-        errors.forEach(
-                error -> rejectField(error, bindingResult)
-        );
-    }
-
-    private void rejectField(Error error, BindingResult bindingResult) {
-        if (StringUtils.hasText(error.getFieldName())) {
-            bindingResult.rejectValue(error.getFieldName(), "registration."+error.getErrorKey());
-        } else {
-            bindingResult.reject("registration."+error.getErrorKey());
         }
     }
 
@@ -346,7 +326,7 @@ public class RegistrationController {
 
     private void setOrganisationIdCookie(RegistrationForm registrationForm, HttpServletRequest request, HttpServletResponse response) {
         Long organisationId = getOrganisationId(request);
-        if(organisationId != null) {
+        if (organisationId != null) {
             cookieUtil.saveToCookie(response, ORGANISATION_ID, Long.toString(organisationId));
         }
     }
