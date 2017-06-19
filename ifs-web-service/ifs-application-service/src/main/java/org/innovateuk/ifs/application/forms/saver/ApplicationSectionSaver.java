@@ -96,7 +96,7 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
         }
 
         if (isMarkSectionRequest(params)) {
-            errors.addAll(handleMarkSectionRequest(application, sectionId, params, processRole, errors, validFinanceTerms));
+            errors.addAll(handleMarkSectionRequest(application, selectedSection, params, processRole, errors, validFinanceTerms));
             financeSaver.handleStateAid(params, application, form, selectedSection);
         }
 
@@ -107,7 +107,7 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
 
 
 
-    private ValidationMessages handleMarkSectionRequest(ApplicationResource application, Long sectionId, Map<String, String[]> params,
+    private ValidationMessages handleMarkSectionRequest(ApplicationResource application, SectionResource selectedSection, Map<String, String[]> params,
                                                         ProcessRoleResource processRole, ValidationMessages errorsSoFar, Boolean validFinanceTerms) {
         ValidationMessages messages = new ValidationMessages();
 
@@ -115,7 +115,6 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
             messages.addError(fieldError("formInput[cost]", "", MARKED_AS_COMPLETE_KEY));
         } else if (isMarkSectionAsIncompleteRequest(params) ||
                 (isMarkSectionAsCompleteRequest(params) && validFinanceTerms)) {
-            SectionResource selectedSection = sectionService.getById(sectionId);
             List<ValidationMessages> financeErrorsMark = markAllQuestionsInSection(application, selectedSection, processRole.getId(), params);
 
             if (collectValidationMessages(financeErrorsMark).hasErrors()) {
