@@ -50,6 +50,12 @@ public class ApplicationSectionSaverTest {
     @Mock
     private ApplicationSectionFinanceSaver financeSaver;
 
+    @Mock
+    private ApplicationQuestionFileSaver fileSaver;
+
+    @Mock
+    private ApplicationQuestionNonFileSaver nonFileSaver;
+
     @Test
     public void saveApplicationForm() {
         final ApplicationResource application;

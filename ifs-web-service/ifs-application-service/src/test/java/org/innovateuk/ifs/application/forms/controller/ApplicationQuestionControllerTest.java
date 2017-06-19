@@ -181,7 +181,7 @@ public class ApplicationQuestionControllerTest extends BaseControllerMockMVCTest
         financeViewModel.setOrganisationGrantClaimPercentage(76);
 
         when(defaultFinanceModelManager.getFinanceViewModel(anyLong(), anyList(), anyLong(), any(Form.class), anyLong())).thenReturn(financeViewModel);
-        when(applicationSaver.saveApplicationForm(anyLong(), any(ApplicationForm.class), anyLong(), anyLong(), any(HttpServletRequest.class), any(HttpServletResponse.class), any(BindingResult.class)))
+        when(applicationSaver.saveApplicationForm(anyLong(), any(ApplicationForm.class), anyLong(), anyLong(), any(HttpServletRequest.class), any(HttpServletResponse.class), anyBoolean()))
                 .thenReturn(new ValidationMessages());
     }
 
@@ -413,7 +413,7 @@ public class ApplicationQuestionControllerTest extends BaseControllerMockMVCTest
         long fileQuestionId = 31L;
         ValidationMessages validationMessages = new ValidationMessages();
         validationMessages.addError(fieldError("formInput[" + formInputId + "]", new Error(fileError, UNSUPPORTED_MEDIA_TYPE)));
-        when(applicationSaver.saveApplicationForm(anyLong(), any(ApplicationForm.class), anyLong(), anyLong(), any(HttpServletRequest.class), any(HttpServletResponse.class), any(BindingResult.class)))
+        when(applicationSaver.saveApplicationForm(anyLong(), any(ApplicationForm.class), anyLong(), anyLong(), any(HttpServletRequest.class), any(HttpServletResponse.class), anyBoolean()))
                 .thenReturn(validationMessages);
 
         MvcResult result = mockMvc.perform(

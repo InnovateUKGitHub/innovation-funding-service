@@ -14,7 +14,6 @@ import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -59,7 +58,7 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
                                                   Long questionId,
                                                   Long userId,
                                                   HttpServletRequest request,
-                                                  HttpServletResponse response, BindingResult bindingResult) {
+                                                  HttpServletResponse response, Boolean hasErrorsInBindingResult) {
         final ApplicationResource application = applicationService.getById(applicationId);
         final List<QuestionResource> questionList = singletonList(questionService.getById(questionId));
         final Map<String, String[]> params = request.getParameterMap();
@@ -78,7 +77,7 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
             applicationService.save(application);
         }
 
-        if (isMarkQuestionRequest(params) && hasNoErrors(errors, bindingResult)) {
+        if (isMarkQuestionRequest(params) && hasNoErrors(errors, hasErrorsInBindingResult)) {
             errors.addAll(handleApplicationDetailsMarkCompletedRequest(application.getId(), request, response, processRole, errors));
         }
 
@@ -98,8 +97,8 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
         return messages;
     }
 
-    private boolean hasNoErrors(ValidationMessages errorsSoFar, BindingResult bindingResult) {
-        return !errorsSoFar.hasErrors() && !bindingResult.hasErrors();
+    private boolean hasNoErrors(ValidationMessages errorsSoFar, Boolean hasErrorsInBindingResult) {
+        return !errorsSoFar.hasErrors() && !hasErrorsInBindingResult;
     }
 
 
@@ -128,7 +127,7 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
             questionService.markAsInComplete(questionId, applicationId, processRoleId);
         }
 
-        if (errorsSoFar.hasFieldErrors(questionId + "")) {
+        if (errorsSoFar.hasFieldErrors(String.valueOf(questionId))) {
             markAsCompleteErrors.add(new ValidationMessages(fieldError(questionId + "", "", MARKED_AS_COMPLETE_INVALID_DATA_KEY)));
         }
 
