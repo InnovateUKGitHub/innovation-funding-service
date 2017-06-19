@@ -20,12 +20,10 @@ Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin  MySQL
 Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot
-Variables          ../../libs/Initialisation.py
 
 *** Variables ***
+
 ${public_content_competition_name}      Public content competition
-${public_content_competition}           ${application_ids["${public_content_competition_name}"]}
-${public_content_url}                   /competition/${public_content_competition}/overview
 
 *** Test Cases ***
 User can view the public content
@@ -90,7 +88,7 @@ User can view the competition url for invite only competitions
     [Documentation]    IFS-262
     [Tags]
     The user should see the element                     jQuery=p:contains("Competition URL:")
-    When the user clicks the button/link                link=/competition/${public_content_url}/overview
+    When the user clicks the button/link                jQuery=a:contains("/competition/${competitionId}/overview")
     Then the user should see the text in the page       Public content competition
     And the user should see the text in the page        This is a Summary description
 
@@ -341,7 +339,6 @@ The user is able to make the competition public
     And the user clicks the button/link    jQuery=.button:contains("Publish and return")
     Then the user should see the element    jQuery=.button:contains("Return to setup overview")
     [Teardown]  the user logs out if they are logged in
-
 
 Guest user can filter competitions by Keywords
     [Documentation]  INFUND-6923
