@@ -8,14 +8,16 @@ EXPOSE 12345
 ENV JAVA_OPTS -Xmx300m
 ENV JMX_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=8001 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
 RUN apk --update add curl
+RUN addgroup -S datauser && adduser -S -g datauser datauser
 COPY certificate /certificate
 WORKDIR $JAVA_HOME
 RUN bin/keytool -import -trustcacerts -keystore jre/lib/security/cacerts -storepass changeit -noprompt -alias iuk-auth-localdev -file /certificate
-WORKDIR /
 VOLUME /tmp
+WORKDIR /
 
 ADD coscale-monitoring.sh /root/coscale-monitoring.sh
 ADD ifs-data-service-@version@.jar app.jar
 
+USER datauser
 
 ENTRYPOINT exec java $JAVA_OPTS $JMX_OPTS -jar app.jar
