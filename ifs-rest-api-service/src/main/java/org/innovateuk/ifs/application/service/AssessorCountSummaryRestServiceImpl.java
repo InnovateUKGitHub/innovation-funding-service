@@ -15,11 +15,11 @@ import static java.util.Collections.singletonList;
 @Service
 public class AssessorCountSummaryRestServiceImpl extends BaseRestService implements AssessorCountSummaryRestService {
 
-    private static final String applicationCountRestUrl = "/assessorCountSummary";
+    private static final String assessorCountRestUrl = "/assessorCountSummary";
 
     @Override
     public RestResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionId(long competitionId, Integer pageIndex, Integer pageSize, String filter) {
-        String uriWithParams = buildUri(applicationCountRestUrl + "/findByCompetitionId/{compId}", pageIndex, pageSize, filter, competitionId);
+        String uriWithParams = buildUri(assessorCountRestUrl + "/findByCompetitionId/{compId}", pageIndex, pageSize, filter, competitionId);
         return getWithRestResult(uriWithParams, AssessorCountSummaryPageResource.class);
     }
 

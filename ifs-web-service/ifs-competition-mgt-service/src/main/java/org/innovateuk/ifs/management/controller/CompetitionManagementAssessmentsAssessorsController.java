@@ -54,14 +54,8 @@ public class CompetitionManagementAssessmentsAssessorsController extends BaseCom
 
     @Override
     protected AssessorCountSummaryPageResource getCounts(long competitionId, int page, String filter) {
-        // TODO remove stub
-        List<AssessorCountSummaryResource> content = asList(
-                new AssessorCountSummaryResource(1, "tom baldwin", "java, uml", 8, 5, 3),
-                new AssessorCountSummaryResource(2, "cari morton", "agile, knitting, agile-knitting", 5, 3, 2)
-        );
-
-        AssessorCountSummaryPageResource countSummaryPage = new AssessorCountSummaryPageResource(30, 2, content, 2, 3);
-
-        return countSummaryPage;
+        return applicationCountSummaryRestService
+                .getAssessorCountSummariesByCompetitionId(competitionId, page, PAGE_SIZE, filter)
+                .getSuccessObjectOrThrowException();
     }
 }
