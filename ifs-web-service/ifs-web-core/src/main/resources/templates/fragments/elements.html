@@ -54,7 +54,7 @@
                 <a th:href="${userProfileLink}" th:classappend="${(#httpServletRequest.requestURI == userProfileLink)} ? 'active'">Profile</a>
             </li>
             <li th:if="${showManageUsersLink}">
-                <a th:href="@{/admin/users/active}" th:classappend="${(#httpServletRequest.requestURI == '@{/admin/users/active}')} ? 'active'">Manage users</a>
+                <a href="/management/admin/users/active" th:classappend="${(#httpServletRequest.requestURI == '/management/admin/users/active')} ? 'active'">Manage users</a>
             </li>
             <li>
                 <a th:href="${logoutUrl}">Sign out</a>
