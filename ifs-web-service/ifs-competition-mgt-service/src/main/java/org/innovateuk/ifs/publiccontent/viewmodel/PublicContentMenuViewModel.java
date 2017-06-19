@@ -4,6 +4,7 @@ package org.innovateuk.ifs.publiccontent.viewmodel;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public class PublicContentMenuViewModel {
 
-    private static String COMPETITION_OVERVIEW_URL = "/competition/%d/overview";
+    private static String COMPETITION_OVERVIEW_URL = "%s/competition/%d/overview";
 
     private ZonedDateTime publishDate;
 
@@ -22,6 +23,9 @@ public class PublicContentMenuViewModel {
     private CompetitionResource competition;
 
     private Boolean inviteOnly;
+
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
 
     public ZonedDateTime getPublishDate() {
         return publishDate;
@@ -72,7 +76,7 @@ public class PublicContentMenuViewModel {
     }
 
     public String getCompetitionURL() {
-        return String.format(COMPETITION_OVERVIEW_URL, competition.getId());
+        return String.format(COMPETITION_OVERVIEW_URL, webBaseUrl, competition.getId());
     }
 
 }
