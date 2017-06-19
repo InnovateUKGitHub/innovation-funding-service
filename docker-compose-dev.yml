@@ -99,18 +99,15 @@ services:
     networks:
       - ifs
 
-  proxysql:
-    build:
-      context: setup-files/scripts/docker/proxysql
-      dockerfile: Dockerfile-proxysql
-    links:
-      - mysql
-    ports:
-      - "3307:6032"
-    command: [--character-set-server=utf8, --collation-server=utf8_bin]
-    restart: on-failure
-    networks:
-      - ifs
+#  proxysql:
+#    build:
+#      context: setup-files/scripts/docker/proxysql
+#      dockerfile: Dockerfile-proxysql
+#    links:
+#      - mysql
+#    restart: on-failure
+#    networks:
+#      - ifs
 
   zipkin:
     hostname: zipkin
