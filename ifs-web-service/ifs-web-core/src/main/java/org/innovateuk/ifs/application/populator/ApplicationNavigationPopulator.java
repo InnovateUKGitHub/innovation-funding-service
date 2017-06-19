@@ -152,7 +152,7 @@ public class ApplicationNavigationPopulator {
             model.addAttribute("backURL", backURL);
         }
     }
-    
+
     private boolean eitherApplicationOrCompetitionAreNotOpen(ApplicationResource application) {
         return !application.isOpen() || !application.getCompetitionStatus().equals(OPEN);
     }
