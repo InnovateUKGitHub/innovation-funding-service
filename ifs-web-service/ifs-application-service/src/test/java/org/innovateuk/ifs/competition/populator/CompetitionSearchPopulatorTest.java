@@ -3,10 +3,14 @@ package org.innovateuk.ifs.competition.populator;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.mapper.PublicContentItemViewModelMapper;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPageResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
+import org.innovateuk.ifs.competition.status.PublicContentStatusDeterminer;
+import org.innovateuk.ifs.competition.status.PublicContentStatusText;
 import org.innovateuk.ifs.competition.viewmodel.CompetitionSearchViewModel;
+import org.innovateuk.ifs.competition.viewmodel.PublicContentItemViewModel;
 import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,6 +46,9 @@ public class CompetitionSearchPopulatorTest {
     @Mock
     private PublicContentStatusDeterminer publicContentStatusDeterminer;
 
+    @Mock
+    private PublicContentItemViewModelMapper publicContentItemViewModelMapper;
+
     private PublicContentItemPageResource publicContentItemPageResourceList;
     private List<InnovationAreaResource> innovationAreaResources;
     private List<PublicContentItemResource> publicContentItemResources;
@@ -72,6 +79,7 @@ public class CompetitionSearchPopulatorTest {
 
         when(publicContentStatusDeterminer.getApplicablePublicContentStatusText(isA(PublicContentItemResource.class))).thenReturn(PublicContentStatusText.OPENING_SOON);
         when(categoryRestService.getInnovationAreas()).thenReturn(restSuccess(innovationAreaResources));
+        when(publicContentItemViewModelMapper.mapToViewModel(any())).thenReturn(new PublicContentItemViewModel());
     }
 
     @Test
@@ -90,7 +98,6 @@ public class CompetitionSearchPopulatorTest {
         verify(publicContentItemRestService, times(1)).getByFilterValues(expectedInnovationAreaId,expectedKeywords, expectedPageNumber,CompetitionSearchViewModel.PAGE_SIZE);
         verify(categoryRestService, times(1)).getInnovationAreas();
 
-        //assertEquals(publicContentItemResources, viewModel.getPublicContentItems());
         assertEquals(publicContentItemPageResourceList.getTotalElements(), (long) viewModel.getTotalResults());
         assertEquals(1, (long) viewModel.getPageNumber());
     }
@@ -257,8 +264,7 @@ public class CompetitionSearchPopulatorTest {
 
         CompetitionSearchViewModel viewModel = competitionSearchPopulator.createItemSearchViewModel(expectedInnovationAreaId, expectedKeywords, expectedPageNumber);
 
-        assertEquals("innovationAreaId=10&page=3", viewModel.getNextPageLink());
-        assertEquals("innovationAreaId=10&page=1", viewModel.getPreviousPageLink());
+        verify(publicContentStatusDeterminer, times(2)).getApplicablePublicContentStatusText(any());
     }
 
 }

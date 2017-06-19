@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competition.populator;
+package org.innovateuk.ifs.competition.status;
 
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.springframework.stereotype.Component;

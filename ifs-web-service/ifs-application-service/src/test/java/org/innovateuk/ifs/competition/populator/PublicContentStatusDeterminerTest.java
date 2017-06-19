@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.competition.populator;
 
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
+import org.innovateuk.ifs.competition.status.PublicContentStatusDeterminer;
+import org.innovateuk.ifs.competition.status.PublicContentStatusText;
 import org.junit.Test;
 
 import java.time.ZonedDateTime;
