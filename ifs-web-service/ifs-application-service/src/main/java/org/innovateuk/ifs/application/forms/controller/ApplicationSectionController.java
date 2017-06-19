@@ -128,6 +128,7 @@ public class ApplicationSectionController {
 
         ApplicantSectionResource applicantSection = applicantRestService.getSection(applicantUser.getUser(), applicationId, sectionId);
         model.addAttribute("applicantOrganisationId", applicantOrganisationId);
+        model.addAttribute("readOnlyAllApplicantApplicationFinances", true);
         populateSection(model, form, bindingResult, applicantSection, true, Optional.of(applicantOrganisationId));
         return APPLICATION_FORM;
     }

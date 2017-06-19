@@ -144,7 +144,7 @@ public class ApplicationNavigationPopulator {
                 backURL += "/summary";
             } else {
                 model.addAttribute("backTitle", "Application overview");
-                if (section != null) {
+                if (applicantOrganisationId.isPresent()) {
                     backURL = ("/management/competition/" + section.getCompetition() + backURL);
                 }
             }
@@ -152,8 +152,7 @@ public class ApplicationNavigationPopulator {
             model.addAttribute("backURL", backURL);
         }
     }
-
-
+    
     private boolean eitherApplicationOrCompetitionAreNotOpen(ApplicationResource application) {
         return !application.isOpen() || !application.getCompetitionStatus().equals(OPEN);
     }

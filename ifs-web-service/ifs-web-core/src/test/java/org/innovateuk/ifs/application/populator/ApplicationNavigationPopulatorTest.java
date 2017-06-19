@@ -76,7 +76,7 @@ public class ApplicationNavigationPopulatorTest {
 
         setupApplicationOpen(applicationId);
 
-        target.addAppropriateBackURLToModel(applicationId, model, null, null);
+        target.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty());
         verify(model).addAttribute(eq("backURL"), contains("/application/1"));
         verify(model).addAttribute(eq("backTitle"), eq("Application overview"));
     }
@@ -88,7 +88,7 @@ public class ApplicationNavigationPopulatorTest {
 
         setupApplicationClosed(applicationId);
 
-        target.addAppropriateBackURLToModel(applicationId, model, null, null);
+        target.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty());
         verify(model).addAttribute(eq("backURL"), contains("/application/1/summary"));
         verify(model).addAttribute(eq("backTitle"), contains("Application summary"));
     }
@@ -99,7 +99,7 @@ public class ApplicationNavigationPopulatorTest {
         Model model = mock(Model.class);
 
         setupApplicationCompetitionClosed(applicationId);
-        target.addAppropriateBackURLToModel(applicationId, model, null,null);
+        target.addAppropriateBackURLToModel(applicationId, model, null,Optional.empty());
         verify(model).addAttribute(eq("backURL"), contains("/application/1/summary"));
         verify(model).addAttribute(eq("backTitle"), contains("Application summary"));
     }
@@ -125,7 +125,7 @@ public class ApplicationNavigationPopulatorTest {
         SectionResource section = newSectionResource().withType(SectionType.GENERAL).build();
         setupApplicationOpen(applicationId);
 
-        target.addAppropriateBackURLToModel(applicationId, model, section, null);
+        target.addAppropriateBackURLToModel(applicationId, model, section, Optional.empty());
 
         verify(model).addAttribute(eq("backURL"), contains("/application/1"));
         verify(model).addAttribute(eq("backTitle"), eq("Application overview"));
