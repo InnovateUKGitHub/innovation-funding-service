@@ -7,7 +7,7 @@
             <h2 class="heading-medium no-margin-bottom">Finances</h2>
             <p>Please complete your project finances.</p>
 
-            <details th:unless="${model.canNotRequestFunding || readOnlyAllApplicantApplicationFinances != null}" class="extra-margin-bottom" th:attr="open=${model.notRequestingFunding ? 'open' : null}">
+            <details th:unless="${model.canNotRequestFunding || model.allReadOnly}" class="extra-margin-bottom" th:attr="open=${model.notRequestingFunding ? 'open' : null}">
                 <summary><span class="summary">Not requesting funding</span></summary>
                 <div class="panel-indent">
                     <p>If your organisation is not funded by Innovate UK then you do not need to submit organisational or funding details. <span th:unless="${model.notRequestingFunding}">Please confirm below.</span></p>
@@ -92,7 +92,7 @@
 
     <!-- ===========================Subsection buttons =========================== -->
     <th:block th:fragment="subsection_buttons (model)">
-        <th:block th:unless="${readOnlyAllApplicantApplicationFinances != null}">
+        <th:block th:unless="${model.allReadOnly}">
             <div th:unless="${model.applicationIsReadOnly}" class="form-footer">
                 <div class="form-footer__actions">
                     <button id="mark-all-as-complete"
@@ -115,7 +115,7 @@
     </th:block>
 
     <th:block th:fragment="finance_sub_section_row (model, childSection)">
-        <th:block th:if="${model.showSectionAsNotRequired(childSection) and readOnlyAllApplicantApplicationFinances == null}">
+        <th:block th:if="${model.showSectionAsNotRequired(childSection) and !model.allReadOnly}">
             <li class="read-only">
                 <div class="task">
                     <h3 class="heading-small" th:text="${childSection.section.name}"></h3>
@@ -123,23 +123,23 @@
                 <div class="task-status"><span>No action required</span></div>
             </li>
         </th:block>
-        <th:block th:unless="${model.showSectionAsNotRequired(childSection) and readOnlyAllApplicantApplicationFinances == null}">
+        <th:block th:unless="${model.showSectionAsNotRequired(childSection) and !model.allReadOnly}">
             <li>
-                <th:block th:if="${model.showSectionAsLink(childSection) || readOnlyAllApplicantApplicationFinances != null}">
+                <th:block th:if="${model.showSectionAsLink(childSection) || model.allReadOnly}">
                     <div class="task">
                         <h3 class="heading-small">
-                            <th:block th:unless="${readOnlyAllApplicantApplicationFinances != null}">
+                            <th:block th:unless="${model.allReadOnly}">
                                 <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id},sectionId=${childSection.section.id})}"
                                    th:text="${childSection.section.name}"></a>
                             </th:block>
-                            <th:block th:if="${readOnlyAllApplicantApplicationFinances != null}">
+                            <th:block th:if="${model.allReadOnly}">
                                 <a th:href="@{/application/{id}/form/section/{sectionId}/{applicantOrganisationId}(id=${model.application.id},sectionId=${childSection.section.id},applicantOrganisationId=${applicantOrganisationId})}"
                                    th:text="${childSection.section.name}"></a>
                             </th:block>
                         </h3>
                     </div>
                 </th:block>
-                <th:block th:if="${model.showSectionAsLockedFunding(childSection) && readOnlyAllApplicantApplicationFinances == null}">
+                <th:block th:if="${model.showSectionAsLockedFunding(childSection)}">
                     <div class="task full-width">
                         <h3 class="heading-small" th:text="${childSection.section.name}"></h3>
                         <p>
@@ -194,7 +194,7 @@
                 <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (model=${formInputViewModel})" />
             </div>
         </th:block>
-        <div th:insert="fragments/elements :: application-agree-to-terms (${model.competition.id})" th:with="fieldName='form.termsAgreed'" class="agree-to-terms-container"  th:unless="${model.allReadOnly || readOnlyAllApplicantApplicationFinances != null}"></div>
+        <div th:insert="fragments/elements :: application-agree-to-terms (${model.competition.id})" th:with="fieldName='form.termsAgreed'" class="agree-to-terms-container"  th:unless="${model.allReadOnly}"></div>
         <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})" />
     </th:block>
 
@@ -211,7 +211,7 @@
                 </th:block>
             </th:block>
             <th:block th:if="${formInputViewModel.formInput.type.displayableQuestionType}">
-                <th:block th:insert="question-type/types :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})" ></th:block>
+                <th:block th:insert="question-type/types :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})"></th:block>
             </th:block>
         </th:block>
         <a th:href="@{/application/{applicationId}(applicationId=${model.application.id})}" class="button-secondary">Return to application overview</a>

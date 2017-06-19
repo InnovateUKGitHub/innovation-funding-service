@@ -77,7 +77,7 @@
                                 <div th:text="${applicationOrganisation.name}"></div>
                                 <div th:if="${applicationOrganisation.id.equals(leadOrganisation.id)}"><small>Lead organisation</small></div>
                                 <div th:unless="${applicationOrganisation.id.equals(leadOrganisation.id)}"><small>Partner</small></div>
-                                <a th:if="${showDetailedFinanceLink.get(iteration.index)}"
+                                <a th:if="${showDetailedFinanceLink != null && showDetailedFinanceLink.get(iteration.index)}"
                                    th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"+applicationOrganisation.id}'>
                                     Detailed Organisation Finances
                                 </a>

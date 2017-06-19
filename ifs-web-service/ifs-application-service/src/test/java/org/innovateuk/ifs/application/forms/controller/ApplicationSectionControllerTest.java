@@ -637,6 +637,5 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
 
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
         assertEquals(((Long) result.getModelAndView().getModelMap().get("applicantOrganisationId")).longValue(),2L);
-        assertEquals(((Boolean) result.getModelAndView().getModelMap().get("readOnlyAllApplicantApplicationFinances")).booleanValue(),true);
     }
 }

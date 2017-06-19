@@ -9,15 +9,18 @@ import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewM
  */
 public abstract class AbstractFormInputPopulator<M extends AbstractFormInputViewModel> implements FormInputPopulator<M> {
 
-
     @Override
     public M populate(AbstractApplicantResource applicantResource,
                       ApplicantSectionResource applicantSection,
                       ApplicantQuestionResource applicantQuestion,
                       ApplicantFormInputResource applicantFormInput,
                       ApplicantFormInputResponseResource applicantResponse) {
-
-        return populate(applicantResource, applicantSection, applicantQuestion, applicantFormInput, applicantResponse, false);
+        return populate(applicantResource,
+                        applicantSection,
+                        applicantQuestion,
+                        applicantFormInput,
+                        applicantResponse,
+                        false);
     }
 
     @Override
@@ -38,7 +41,7 @@ public abstract class AbstractFormInputPopulator<M extends AbstractFormInputView
         viewModel.setClosed(!applicantResource.getCompetition().isOpen() || !applicantResource.getApplication().isOpen());
         viewModel.setReadonly(viewModel.isComplete() || viewModel.isClosed() || readOnly);
 
-        populate(applicantResource, viewModel, readOnly);
+        populate(applicantResource, viewModel);
         return viewModel;
     }
 
@@ -49,12 +52,11 @@ public abstract class AbstractFormInputPopulator<M extends AbstractFormInputView
         }
     }
 
-
     private boolean isComplete(ApplicantQuestionResource applicantQuestion, ApplicantResource currentApplicant) {
         return applicantQuestion.isCompleteByApplicant(currentApplicant);
     }
 
-    protected void populate(AbstractApplicantResource resource, M viewModel, boolean readOnly) {
+    protected void populate(AbstractApplicantResource resource, M viewModel) {
         //Can be overridden by subclass.
     }
 

@@ -23,7 +23,7 @@ public abstract class AbstractCostPopulator<M extends AbstractCostViewModel> ext
     private FinanceHandler financeHandler;
 
     @Override
-    protected void populate(AbstractApplicantResource resource, M viewModel, boolean readOnly) {
+    protected void populate(AbstractApplicantResource resource, M viewModel) {
         ApplicationFinanceResource organisationFinances = applicationFinanceRestService.getFinanceDetails(resource.getApplication().getId(), resource.getCurrentApplicant().getOrganisation().getId()).getSuccessObjectOrThrowException();
         FinanceRowCostCategory category = organisationFinances.getFinanceOrganisationDetails(viewModel.getFinanceRowType());
         if (viewModel.getQuestion().getType().equals(QuestionType.COST)) {
@@ -31,7 +31,7 @@ public abstract class AbstractCostPopulator<M extends AbstractCostViewModel> ext
             category.addCost(costItem);
         }
         viewModel.setCostCategory(category);
-        viewModel.setViewmode(readOnly ? "readonly" : (viewModel.isComplete() ? "approved" : "edit"));
+        viewModel.setViewmode(viewModel.isComplete() ? "approved" : (viewModel.isReadonly() ? "readonly" : "edit"));
 
         populateCost(resource, viewModel, organisationFinances);
     }

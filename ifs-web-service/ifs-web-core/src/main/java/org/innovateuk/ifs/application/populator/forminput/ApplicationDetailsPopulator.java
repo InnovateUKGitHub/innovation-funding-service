@@ -26,7 +26,7 @@ public class ApplicationDetailsPopulator extends AbstractFormInputPopulator<Appl
     }
 
     @Override
-    protected void populate(AbstractApplicantResource resource, ApplicationDetailsInputViewModel viewModel, boolean readOnly) {
+    protected void populate(AbstractApplicantResource resource, ApplicationDetailsInputViewModel viewModel) {
         viewModel.setReadonly(viewModel.isReadonly() || !resource.getCurrentApplicant().isLead());
         viewModel.setApplication(resource.getApplication());
         viewModel.setCompetition(resource.getCompetition());

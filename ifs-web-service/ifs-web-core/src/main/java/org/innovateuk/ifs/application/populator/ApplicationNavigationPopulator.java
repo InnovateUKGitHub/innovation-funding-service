@@ -144,7 +144,7 @@ public class ApplicationNavigationPopulator {
                 backURL += "/summary";
             } else {
                 model.addAttribute("backTitle", "Application overview");
-                if (applicantOrganisationId != null) {
+                if (section != null) {
                     backURL = ("/management/competition/" + section.getCompetition() + backURL);
                 }
             }

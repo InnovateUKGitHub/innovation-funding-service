@@ -24,7 +24,7 @@ public class FileUploadPopulator extends AbstractFormInputPopulator<FileUploadIn
     }
 
     @Override
-    protected void populate(AbstractApplicantResource resource, FileUploadInputViewModel viewModel, boolean readOnly) {
+    protected void populate(AbstractApplicantResource resource, FileUploadInputViewModel viewModel) {
         viewModel.setViewmode(isReadOnlyViewMode(viewModel, resource) ? "readonly" : "edit");
         if (viewModel.getHasResponse()) {
             viewModel.setFilename(viewModel.getResponse().getFilename());

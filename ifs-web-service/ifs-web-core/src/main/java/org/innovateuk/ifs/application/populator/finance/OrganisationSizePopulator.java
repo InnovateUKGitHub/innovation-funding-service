@@ -35,7 +35,7 @@ public class OrganisationSizePopulator extends AbstractFormInputPopulator<Organi
     }
 
     @Override
-    protected void populate(AbstractApplicantResource resource, OrganisationSizeViewModel viewModel, boolean readOnly) {
+    protected void populate(AbstractApplicantResource resource, OrganisationSizeViewModel viewModel) {
         sectionService.getSectionsForCompetitionByType(resource.getCompetition().getId(), SectionType.FUNDING_FINANCES).stream().findAny().ifPresent(fundingSection -> {
             List<Long> completedSectionIds = sectionService.getCompleted(resource.getApplication().getId(), resource.getCurrentApplicant().getOrganisation().getId());
             viewModel.setOrganisationSizeAlert(completedSectionIds.contains(fundingSection.getId()));
