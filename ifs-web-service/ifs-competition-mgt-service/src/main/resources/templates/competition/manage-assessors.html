@@ -13,7 +13,7 @@
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.inAssessment} ? 'Manage assessors' : 'Allocate assessors',subTitle=|${model.competitionId} : ${model.competitionName}, ${model.inAssessment ? 'in assessment' : 'competition closed'}|, size='heading-xlarge'" />
 
             <p class="extra-margin">Assign applications to assessors. You will need to confirm assignments before assessors are notified.</p>
-            
+
             <div class="table-overflow">
                 <table>
                     <thead>
@@ -34,7 +34,7 @@
                             <td class="aligncentre" th:text="${assessor.total}">4</td>
                             <td class="aligncentre" th:text="${assessor.assigned}">4</td>
                             <td class="aligncentre" th:text="${assessor.accepted}" th:if="${model.inAssessment}">2</td>
-                            <td class="aligncentre" th:text="${assessor.completed}" th:if="${model.inAssessment}">1</td>
+                            <td class="aligncentre" th:text="${assessor.submitted}" th:if="${model.inAssessment}">1</td>
                             <td class="alignright">
                                 <a class="button-secondary no-margin" th:text="${model.inAssessment} ? 'View progress' : 'Assign'"></a>
                             </td>
