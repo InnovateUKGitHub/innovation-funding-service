@@ -13,7 +13,7 @@ import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.springframework.util.StringUtils.hasText;
 
 /**
- * This Saver will handle save all questions that are related to the application.
+ * This Saver will handle save all application details that are related to the application.
  */
 @Service
 public class ApplicationQuestionApplicationDetailsSaver extends AbstractApplicationSaver {
@@ -41,16 +41,21 @@ public class ApplicationQuestionApplicationDetailsSaver extends AbstractApplicat
             return;
         }
 
+        setApplicationName(application, updatedApplication);
+        setResubmissionDetails(application, updatedApplication);
+        setStartDateDetails(application, updatedApplication);
+        setDurationInMonths(application, updatedApplication);
+    }
+
+    private void setApplicationName(ApplicationResource application, ApplicationResource updatedApplication) {
         if (updatedApplication.getName() != null) {
             application.setName(updatedApplication.getName());
         }
+    }
 
-        setResubmissionDetails(application, updatedApplication);
-
+    private void setStartDateDetails(ApplicationResource application, ApplicationResource updatedApplication) {
         if (updatedApplication.getStartDate() != null) {
-            if (updatedApplication.getStartDate().isEqual(LocalDate.MIN)
-                    || updatedApplication.getStartDate().isBefore(LocalDate.now(TimeZoneUtil.UK_TIME_ZONE))) {
-                // user submitted a empty date field or date before today
+            if (dateEmptyOrInPast(updatedApplication.getStartDate())) {
                 application.setStartDate(null);
             } else {
                 application.setStartDate(updatedApplication.getStartDate());
@@ -58,12 +63,19 @@ public class ApplicationQuestionApplicationDetailsSaver extends AbstractApplicat
         } else {
             application.setStartDate(null);
         }
+    }
 
+    private void setDurationInMonths(ApplicationResource application, ApplicationResource updatedApplication) {
         if (updatedApplication.getDurationInMonths() != null) {
             application.setDurationInMonths(updatedApplication.getDurationInMonths());
         } else {
             application.setDurationInMonths(null);
         }
+    }
+
+    private boolean dateEmptyOrInPast(LocalDate date) {
+        return date.isEqual(LocalDate.MIN)
+                || date.isBefore(LocalDate.now(TimeZoneUtil.UK_TIME_ZONE));
     }
 
     private void setResubmissionDetails(ApplicationResource application, ApplicationResource updatedApplication) {
