@@ -12,13 +12,13 @@ Administrator can navigate to manage users page
     [Documentation]    INFUND-604
     [Tags]    HappyPath
     When the user clicks the button/link    link=Manage users
-    Then the user should see the element    jQuery=h1:contains("Find internal users")
+    Then the user should see the element    jQuery=h1:contains("Manage users")
     And the user should see the text in the page    Active
 
 Administrator can see read only view of internal user profile
     [Documentation]    INFUND-606
     When the user clicks the button/link    link=John Doe
-    Then the user should see the element    jQuery=h1:contains("View internal users details")
+    Then the user should see the element    jQuery=h1:contains("View internal user's details")
     And the user should see the text in the page    ${Comp_admin1_credentials["email"]}
     And the user should see the text in the page    Competition Administrator
     And the user should see the text in the page    Created by IFS System Maintenance User on 12 June 2017
