@@ -77,24 +77,24 @@ First Assessor shouldn't be able to see second assessor's assessments
     [Documentation]    INFUND-4569
     [Tags]
     [Setup]    guest user log-in  &{assessor_credentials}
-    When the user navigates to the page and gets a custom error message     ${Assessment_overview_11}   ${403_error_message}
+    Then the user navigates to the page and gets a custom error message     ${Assessment_overview_11}   ${403_error_message}
 
 First assessor shouldn't be able to access second assessor's application questions
     [Documentation]    INFUND-4568
     [Tags]
-    When the user navigates to the page and gets a custom error message     ${ASSESSOR_ASSESSMENT_QUESTIONS_11}   ${403_error_message}
+    Then the user navigates to the page and gets a custom error message     ${ASSESSOR_ASSESSMENT_QUESTIONS_11}   ${403_error_message}
     [Teardown]    the user closes the browser
 
 Second assessor shouldn't be able to see first assessor's assessments
     [Documentation]    INFUND-4569
     [Tags]
     [Setup]    guest user log-in  &{assessor2_credentials}
-    When the user navigates to the page and gets a custom error message     ${Assessment_overview_9}   ${403_error_message}
+    Then the user navigates to the page and gets a custom error message     ${Assessment_overview_9}   ${403_error_message}
 
 Second assessor shouldn't be able to access first assessor's application questions
     [Documentation]    INFUND-4569
     [Tags]
-    When the user navigates to the page and gets a custom error message  ${Application_question_url_2}    ${403_error_message}
+    Then the user navigates to the page and gets a custom error message  ${Application_question_url_2}    ${403_error_message}
     [Teardown]    the user closes the browser
 
 *** Keywords ***
