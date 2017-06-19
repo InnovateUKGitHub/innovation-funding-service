@@ -28,3 +28,4 @@ COPY ./ ./
 
 CMD ["./os_run_tests.sh", "-q"]
 #CMD ["sleep", "10000000000000"]
+
