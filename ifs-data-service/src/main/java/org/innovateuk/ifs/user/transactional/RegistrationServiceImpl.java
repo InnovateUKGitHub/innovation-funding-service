@@ -38,8 +38,12 @@ import java.util.*;
 import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.error.Error.fieldError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
@@ -127,8 +131,8 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
         return validateUser(userResource, userResource.getPassword()).
                 andOnSuccess(validUser -> {
-                        final User user = userMapper.mapToDomain(userResource);
-                        return createUserWithUid(user, userResource.getPassword(), userRegistrationResource.getAddress());
+                    final User user = userMapper.mapToDomain(userResource);
+                    return createUserWithUid(user, userResource.getPassword(), userRegistrationResource.getAddress());
                 });
     }
 
@@ -154,7 +158,16 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<UserResource> validateUser(UserResource userResource, String password) {
-        return passwordPolicyValidator.validatePassword(password, userResource).andOnSuccessReturn(() -> userResource);
+        return passwordPolicyValidator.validatePassword(password, userResource)
+                .handleSuccessOrFailure(
+                        failure -> serviceFailure(
+                                simpleMap(
+                                        failure.getErrors(),
+                                        error -> fieldError("password", error.getFieldRejectedValue(), error.getErrorKey())
+                                )
+                        ),
+                        success -> serviceSuccess(userResource)
+                );
     }
 
     @Override
@@ -167,8 +180,8 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return idpService
                 .activateUser(user.getUid())
                 .andOnSuccessReturn(() -> {
-                        user.setStatus(UserStatus.ACTIVE);
-                        return userRepository.save(user);
+                    user.setStatus(UserStatus.ACTIVE);
+                    return userRepository.save(user);
                 });
     }
 
@@ -208,8 +221,8 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
             Profile savedProfile = profileRepository.save(profile);
             user.setProfileId(savedProfile.getId());
             User savedUser = userRepository.save(user);
-            final UserResource userResource = userMapper.mapToResource(savedUser);
-            return userResource;
+
+            return userMapper.mapToResource(savedUser);
         });
     }
 
