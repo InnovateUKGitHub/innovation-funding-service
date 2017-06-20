@@ -97,11 +97,11 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         Map<Long, Boolean> isAcademicOrganisation = (Map<Long, Boolean>) model.asMap().get("applicantOrganisationIsAcademic");
         List<OrganisationResource> organisations = (List<OrganisationResource>) model.asMap().get("applicationOrganisations");
         Map<Long, BaseFinanceResource> organisationFinances = (Map<Long, BaseFinanceResource> ) model.asMap().get("organisationFinances");
-        List<Boolean> detailedFinanceLink = IntStream.range(0, organisations.size()).mapToObj(i ->
-                user.hasRole(UserRoleType.SUPPORT) &&
-                ((organisationFinances.containsKey(organisations.get(i).getId()) && organisationFinances.get(organisations.get(i).getId()).getOrganisationSize() != null) ||
-                  isAcademicOrganisation.get(organisations.get(i)))
-            ? Boolean.TRUE : Boolean.FALSE).collect(Collectors.toList());
+        Map<Long, Boolean> detailedFinanceLink = organisations.stream().collect(Collectors.toMap(o -> o.getId(),
+                o -> user.hasRole(UserRoleType.SUPPORT) &&
+                ((organisationFinances.containsKey(o.getId()) && organisationFinances.get(o.getId()).getOrganisationSize() != null) ||
+                  isAcademicOrganisation.get(o.getId()))
+            ? Boolean.TRUE : Boolean.FALSE));
         model.addAttribute("showDetailedFinanceLink", detailedFinanceLink);
 
         model.addAttribute("isSupportUser", user.hasRole(UserRoleType.SUPPORT));

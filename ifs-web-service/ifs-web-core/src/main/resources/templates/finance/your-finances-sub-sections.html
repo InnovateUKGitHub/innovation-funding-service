@@ -133,7 +133,7 @@
                                    th:text="${childSection.section.name}"></a>
                             </th:block>
                             <th:block th:if="${model.allReadOnly}">
-                                <a th:href="@{/application/{id}/form/section/{sectionId}/{applicantOrganisationId}(id=${model.application.id},sectionId=${childSection.section.id},applicantOrganisationId=${applicantOrganisationId})}"
+                                <a th:href="@{/application/{id}/form/section/{sectionId}/{applicantOrganisationId}(id=${model.application.id},sectionId=${childSection.section.id},applicantOrganisationId=${model.applicantOrganisationId})}"
                                    th:text="${childSection.section.name}"></a>
                             </th:block>
                         </h3>

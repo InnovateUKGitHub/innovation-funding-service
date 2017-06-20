@@ -20,6 +20,7 @@ import org.springframework.validation.BindingResult;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -38,7 +39,7 @@ public class YourProjectCostsSectionPopulator extends AbstractSectionPopulator<A
     private FormInputViewModelGenerator formInputViewModelGenerator;
 
     @Override
-    public void populate(ApplicantSectionResource section, ApplicationForm form, AbstractYourProjectCostsSectionViewModel viewModel, Model model, BindingResult bindingResult, Boolean readOnly) {
+    public void populateNoReturn(ApplicantSectionResource section, ApplicationForm form, AbstractYourProjectCostsSectionViewModel viewModel, Model model, BindingResult bindingResult, Boolean readOnly) {
         List<ApplicantQuestionResource> costQuestions = section.allQuestions().filter(question -> QuestionType.COST.equals(question.getQuestion().getType())).collect(Collectors.toList());
         financeHandler.getFinanceModelManager(section.getCurrentApplicant().getOrganisation().getOrganisationType()).addOrganisationFinanceDetails(model, section.getApplication().getId(), costQuestions.stream().map(ApplicantQuestionResource::getQuestion).collect(Collectors.toList()), section.getCurrentUser().getId(), form, section.getCurrentApplicant().getOrganisation().getId());
         viewModel.setCostQuestions(costQuestions);
@@ -70,13 +71,13 @@ public class YourProjectCostsSectionPopulator extends AbstractSectionPopulator<A
     }
 
     @Override
-    protected AbstractYourProjectCostsSectionViewModel createNew(ApplicantSectionResource section, ApplicationForm form, Boolean readOnly) {
+    protected AbstractYourProjectCostsSectionViewModel createNew(ApplicantSectionResource section, ApplicationForm form, Boolean readOnly, Optional<Long> applicantOrganisationId) {
         List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId());
         boolean viewModelIsReadOnly = readOnly || completedSectionIds.contains(section.getSection().getId());
         if (section.getCurrentApplicant().isResearch()) {
-            return new JesYourProjectCostsSectionViewModel(section, Collections.emptyList(), getNavigationViewModel(section), viewModelIsReadOnly);
+            return new JesYourProjectCostsSectionViewModel(section, Collections.emptyList(), getNavigationViewModel(section), viewModelIsReadOnly, applicantOrganisationId);
         } else {
-            return new DefaultYourProjectCostsSectionViewModel(section, Collections.emptyList(), getNavigationViewModel(section), viewModelIsReadOnly);
+            return new DefaultYourProjectCostsSectionViewModel(section, Collections.emptyList(), getNavigationViewModel(section), viewModelIsReadOnly, applicantOrganisationId);
         }
     }
 

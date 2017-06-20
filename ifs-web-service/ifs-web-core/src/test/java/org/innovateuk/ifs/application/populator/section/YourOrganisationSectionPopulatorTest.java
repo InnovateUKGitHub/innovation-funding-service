@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -79,7 +80,7 @@ public class YourOrganisationSectionPopulatorTest {
         when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(emptyList());
         when(formInputViewModelGenerator.fromSection(section, section, form, false)).thenReturn(formInputViewModels);
 
-        YourOrganisationSectionViewModel viewModel = yourOrganisationSectionPopulator.populate(section, form, model, bindingResult, false);
+        YourOrganisationSectionViewModel viewModel = yourOrganisationSectionPopulator.populate(section, form, model, bindingResult, false, Optional.of(2L));
 
         assertThat(viewModel.isSection(), equalTo(true));
         assertThat(viewModel.isComplete(), equalTo(false));
@@ -88,6 +89,7 @@ public class YourOrganisationSectionPopulatorTest {
         assertThat(viewModel.getFinancialEndYearFormInputViewModel(), equalTo(financialYearEnd));
         assertThat(viewModel.getFinanceOverviewRows(), equalTo(singletonList(overviewRow)));
         assertThat(viewModel.getStandardInputViewModels(), equalTo(emptyList()));
+        assertThat(viewModel.getApplicantOrganisationId(), equalTo(2L));
     }
 
 }

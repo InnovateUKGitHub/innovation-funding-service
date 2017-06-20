@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Abstract view model for project costs section.
@@ -16,8 +17,8 @@ public abstract class AbstractYourProjectCostsSectionViewModel extends AbstractS
     private ApplicantQuestionResource applicantQuestion;
     private boolean complete;
 
-    public AbstractYourProjectCostsSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly) {
-        super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly);
+    public AbstractYourProjectCostsSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly, Optional<Long> applicantOrganisationId) {
+        super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly, applicantOrganisationId);
     }
 
     public abstract String getFinanceView();

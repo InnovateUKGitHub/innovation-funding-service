@@ -175,7 +175,7 @@ public class ApplicationSectionController {
                                  ApplicantSectionResource applicantSection,
                                  boolean readOnly,
                                  Optional<Long> applicantOrganisationId) {
-        AbstractSectionViewModel sectionViewModel = sectionPopulators.get(applicantSection.getSection().getType()).populate(applicantSection, form, model, bindingResult, readOnly);
+        AbstractSectionViewModel sectionViewModel = sectionPopulators.get(applicantSection.getSection().getType()).populate(applicantSection, form, model, bindingResult, readOnly, applicantOrganisationId);
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicantSection.getApplication().getId(), model, applicantSection.getSection(), applicantOrganisationId);
         model.addAttribute("model", sectionViewModel);
         model.addAttribute("form", form);

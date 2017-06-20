@@ -17,6 +17,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
+import java.util.Optional;
+
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -66,7 +68,7 @@ public class YourFundingSectionPopulatorTest {
         when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(emptyList());
         when(formInputViewModelGenerator.fromSection(section, section, form, false)).thenReturn(asList(formInputViewModel));
 
-        YourFundingSectionViewModel viewModel = yourFundingSectionPopulator.populate(section, form, model, bindingResult, false);
+        YourFundingSectionViewModel viewModel = yourFundingSectionPopulator.populate(section, form, model, bindingResult, false, Optional.empty());
 
         assertThat(viewModel.isSection(), equalTo(true));
         assertThat(viewModel.isComplete(), equalTo(false));

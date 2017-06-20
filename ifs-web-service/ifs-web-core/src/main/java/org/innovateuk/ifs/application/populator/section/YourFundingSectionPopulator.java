@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Your funding populator section view models.
@@ -26,19 +27,20 @@ public class YourFundingSectionPopulator extends AbstractSectionPopulator<YourFu
     private FormInputViewModelGenerator formInputViewModelGenerator;
 
     @Override
-    protected void populate(ApplicantSectionResource section, ApplicationForm form, YourFundingSectionViewModel viewModel, Model model, BindingResult bindingResult, Boolean readOnly) {
+    protected void populateNoReturn(ApplicantSectionResource section, ApplicationForm form, YourFundingSectionViewModel viewModel, Model model, BindingResult bindingResult, Boolean readOnly) {
         List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId());
         viewModel.setComplete(completedSectionIds.contains(section.getSection().getId()));
     }
 
     @Override
-    protected YourFundingSectionViewModel createNew(ApplicantSectionResource section, ApplicationForm form, Boolean readOnly) {
+    protected YourFundingSectionViewModel createNew(ApplicantSectionResource section, ApplicationForm form, Boolean readOnly, Optional<Long> applicantOrganisationId) {
         List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId());
         return new YourFundingSectionViewModel(
                 section,
                 formInputViewModelGenerator.fromSection(section, section, form, readOnly),
                 getNavigationViewModel(section),
-                readOnly || completedSectionIds.contains(section.getSection().getId()));
+                readOnly || completedSectionIds.contains(section.getSection().getId()),
+                applicantOrganisationId);
     }
 
     @Override
