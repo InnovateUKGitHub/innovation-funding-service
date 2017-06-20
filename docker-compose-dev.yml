@@ -56,6 +56,16 @@ services:
       - "9005:8000"
     environment:
       - JAVA_OPTS=-Xmx150m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
+  front-door-svc:
+    hostname: front-door-svc
+    links:
+      - admin
+      - zipkin
+    ports:
+      - "8087:8080"
+      - "9007:8000"
+    environment:
+      - JAVA_OPTS=-Xmx150m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
   data-service:
     hostname: data-service
