@@ -47,7 +47,7 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...
 ...               INFUND-9062 Validation missing when inviting self as finance contact or PM
 Suite Setup       Custom suite setup
-Suite Teardown    the user closes the browser
+Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
 Resource          PS_Common.robot
 
@@ -287,6 +287,7 @@ Partner invites a project manager
     And the user clicks the button/link    id=invite-project-manager
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     [Teardown]    logout as user
+
 Invited project manager registration flow
     [Documentation]  INFUND-3550 INFUND-3554
     [Tags]  HappyPath  Email
@@ -317,7 +318,7 @@ Lead partner selects a project manager
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see the text in the page    Steve Smith
     And the user clicks the button/link    link=Project Manager
-    And the user sees that the radio button is selected    projectManager    ${STEVE_SMITH_ID}
+    And the user should see the element    css=#projectManager1:checked ~ label
     And the user selects the radio button    projectManager    projectManager2
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
@@ -692,7 +693,6 @@ the user can see all finance contacts completed
     the user should see the element  jQuery=#project-details-finance tr:nth-child(3) td:nth-child(2):contains("Ludlow")
 
 Custom suite setup
-    delete the emails from both test mailboxes
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
 

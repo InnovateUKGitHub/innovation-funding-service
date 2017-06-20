@@ -22,7 +22,6 @@ Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot
 
 *** Variables ***
-
 ${public_content_competition_name}      Public content competition
 
 *** Test Cases ***
@@ -30,7 +29,7 @@ User can view the public content
     [Documentation]    INFUND-6914
     [Tags]  HappyPath
     Given the internal user navigates to public content  ${public_content_competition_name}
-    Then the user should see the text in the page       This information will be publicly viewable by prospective applicants.
+    Then the user should not see the text in the page   This information will be publicly viewable by prospective applicants.
     And the user should not see the text in the page    Competition URL
     And the user should see the element                 link=Competition information and search
     And the user should see the element                 link=Summary
@@ -83,14 +82,6 @@ Competition information and search: Valid values
     And the user enters text to a text field        id=keywords  Search, Testing, Robot
     And the user clicks the button/link             jQuery=.button:contains("Save and return")
     Then the user should see the element            jQuery=li:nth-of-type(1) .task-status-complete
-
-User can view the competition url for invite only competitions
-    [Documentation]    IFS-262
-    [Tags]
-    The user should see the element                     jQuery=p:contains("Competition URL:")
-    When the user clicks the button/link                jQuery=a:contains("/competition/${competitionId}/overview")
-    Then the user should see the text in the page       Public content competition
-    And the user should see the text in the page        This is a Summary description
 
 Competition information and search: ReadOnly
     [Documentation]  INFUND-6915, IFS-179
@@ -298,13 +289,35 @@ Publish public content: Publish once all sections are complete
     [Documentation]    INFUND-6914
     [Tags]  HappyPath
     Given the user should not see the text in the page  Last published
-    When the user clicks the button/link    jQuery=button:contains("Publish content")
-    Then the user should see the element    jQuery=small:contains("Last published")
+    When the user clicks the button/link                jQuery=button:contains("Publish content")
+    Then the user should see the element                jQuery=small:contains("Last published")
     And the user should not see the element             jQuery=button:contains("Publish content")
     When the user clicks the button/link                link=Competition information and search
     And the user clicks the button/link                 link=Edit
     Then the user should not see the element            jQuery=button:contains("Save and return")
     And the user should see the element                 jQuery=button:contains("Publish and return")
+    Then the user clicks the button/link                jQuery=a:contains("Public content")
+
+
+User can view the competition url for invite only competitions
+    [Documentation]    IFS-262
+    [Tags]
+    Given the user should not see the text in the page  This information will be publicly viewable by prospective applicants.
+    And the user should see the element                 jQuery=button:contains("Copy link")
+    When the user clicks the button/link                jQuery=a:contains("${server}/competition/${competitionId}/overview")
+    Then the user should see the text in the page       Public content competition
+    And the user should see the text in the page        This is a Summary description
+    Then the internal user navigates to public content  ${public_content_competition_name}
+    When the user clicks the button/link                link=Competition information and search
+    And the user clicks the button/link                 link=Edit
+    Then the user selects the radio button              publishSetting  public
+    And the user clicks the button/link                 jQuery=button:contains("Publish and return")
+    Then the user should see the text in the page       This information will be publicly viewable by prospective applicants.
+    And the user should not see the element             jQuery=p:contains("Competition URL:")
+    And the user should not see the element             jQuery=button:contains("Copy link")
+    Then the user clicks the button/link                link=Competition information and search
+    And the user clicks the button/link                 link=Edit
+    Then the user selects the radio button              publishSetting  invite
 
 The user is able to edit and publish again
     [Documentation]  INFUND-6914

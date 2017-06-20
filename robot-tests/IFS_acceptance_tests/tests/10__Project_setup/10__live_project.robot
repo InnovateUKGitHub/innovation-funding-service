@@ -2,7 +2,7 @@
 Documentation     INFUND-6376 As a partner I want to be shown information in IFS when I have successfully completed Project Setup so I am clear on what steps to take now the project is live
 Resource          PS_Common.robot
 Suite Setup       the project is completed if it is not already complete
-Suite Teardown    the user closes the browser
+Suite Teardown    Close browser and delete emails
 
 *** Test Cases ***
 

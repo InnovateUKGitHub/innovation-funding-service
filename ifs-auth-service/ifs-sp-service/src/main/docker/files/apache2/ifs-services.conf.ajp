@@ -9,9 +9,9 @@ ShibCompatValidUser On
 
   SSLProxyEngine on
   SSLEngine on
-  SSLCertificateFile /etc/apache2/certs/${PROXY_CERTIFICATE}
-  SSLCertificateChainFile /etc/apache2/certs/${PROXY_CA_CERTIFICATE}
-  SSLCertificateKeyFile /etc/apache2/certs/${PROXY_KEY}
+  SSLCertificateKeyFile /etc/apache2/certs/sp_proxy_key.pem
+  SSLCertificateFile /etc/apache2/certs/sp_proxy_certificate.pem
+  SSLCertificateChainFile /etc/apache2/certs/sp_proxy_cacertificate.pem
 
   Header always set Strict-Transport-Security "max-age=15768000"
 
@@ -46,6 +46,14 @@ ShibCompatValidUser On
     <If "(! reqenv('TrustedIP') == '1') && (! %{REQUEST_URI} -strmatch '/holding/*' )&& ( -f '/var/www/html/locking/bros' || -f 'var/www/html/locking/BROS' )">
       RedirectMatch 504 ^
     </If>
+  </Location>
+
+  # status page
+  <Location /monitoring/status>
+    ProxyPass !
+    SetHandler server-status
+    Require all denied
+    Require env TrustedIP
   </Location>
 
   # Errors & holding pages

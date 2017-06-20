@@ -78,8 +78,7 @@ import static org.innovateuk.ifs.testdata.builders.PublicContentDateDataBuilder.
 import static org.innovateuk.ifs.testdata.builders.PublicContentGroupDataBuilder.newPublicContentGroupDataBuilder;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
-import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
+import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.isA;
@@ -468,18 +467,22 @@ public class GenerateTestData extends BaseIntegrationTest {
         testService.doWithinTransaction(() ->
             internalUserLines.forEach(line -> {
 
-                UserRoleType role = UserRoleType.fromName(line.role);
+                List<UserRoleType> roles = simpleMap(line.roles, role -> UserRoleType.fromName(role));
 
                 InternalUserDataBuilder baseBuilder = internalUserBuilder.
-                        withRole(role).
+                        withRoles(roles).
                         createPreRegistrationEntry(line.emailAddress);
 
                 if (line.emailVerified) {
-                    createUser(baseBuilder, line, !COMP_TECHNOLOGIST.equals(role));
+                    createUser(baseBuilder, line, createViaRegistration(roles));
                 } else {
                     baseBuilder.build();
                 }
             }));
+    }
+
+    private boolean createViaRegistration(List<UserRoleType> roles) {
+        return roles.stream().noneMatch(role -> asList(COMP_TECHNOLOGIST, SUPPORT, IFS_ADMINISTRATOR).contains(role));
     }
 
     private void createCompetitions() {
@@ -1037,7 +1040,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         Function<S, S> registerUserIfNecessary = builder ->
                 createViaRegistration ?
                         builder.registerUser(line.firstName, line.lastName, line.emailAddress, line.organisationName, line.phoneNumber) :
-                        builder.createUserDirectly(line.firstName, line.lastName, line.emailAddress, line.organisationName, line.phoneNumber);
+                        builder.createUserDirectly(line.firstName, line.lastName, line.emailAddress, line.organisationName, line.phoneNumber, line.emailVerified);
 
         Function<S, S> verifyEmailIfNecessary = builder ->
                 createViaRegistration && line.emailVerified ? builder.verifyEmail() : builder;

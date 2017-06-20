@@ -124,7 +124,7 @@ Lead partner can see correct project start date and duration
     [Documentation]    INFUND-3970
     [Tags]
     Then the user should see the text in the page    1
-    And the user should see the text in the page     June 2017
+    And the user should see the text in the page     June 2020
     And the user should see the text in the page     ${project_duration} months
 
 Calculations in the spend profile table
@@ -283,7 +283,7 @@ Non-lead partner can see correct project start date and duration
     [Documentation]    INFUND-3970
     [Tags]
     Then the user should see the text in the page    1
-    And the user should see the text in the page     June 2017
+    And the user should see the text in the page     June 2020
     And the user should see the text in the page     ${project_duration} months
 
 Industrial partner can choose cancel on the dialogue
@@ -339,7 +339,7 @@ Academic partner can see correct project start date and duration
     [Documentation]    INFUND-3970
     [Tags]
     Then the user should see the text in the page    1
-    And the user should see the text in the page     June 2017
+    And the user should see the text in the page     June 2020
     And the user should see the text in the page     ${project_duration} months
 
 Academic partner can see the alternative academic view of the spend profile

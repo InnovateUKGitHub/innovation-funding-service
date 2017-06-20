@@ -18,7 +18,6 @@ Login new application invite academic
     Given Guest user log-in    &{lead_applicant_credentials}
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    Academic robot test application
     Run Keyword If    '${status}' == 'FAIL'    Run keywords    Create new application with the same user  Academic robot test application
-    ...    AND    Delete the emails from both test mailboxes
     ...    AND    Invite and accept the invitation    ${recipient}    ${subject}    ${pattern}
     ...    AND    the user closes the browser
 
@@ -41,7 +40,7 @@ create new account for submitting
     And the user enters text to a text field    name=email    ${test_mailbox_one}+submittest@gmail.com
     And the user fills the create account form    Temur    Ketsbaia
     When the user reads his email and clicks the link    ${test_mailbox_one}+submittest@gmail.com    Please verify your email address    Once verified you can sign into your account
-    And the user clicks the button/link    jQuery=.button:contains("Sign in")
+    And the user clicks the button/link        jQuery=.button:contains("Sign in")
 
 the user marks every section but one as complete
     Guest user log-in    ${submit_test_email}    ${correct_password}
@@ -193,6 +192,7 @@ The user marks the academic application finances as incomplete
 invite a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
     the guest user opens the browser
+    the user navigates to the page                           ${COMPETITION_OVERVIEW_URL}
     the user follows the flow to register their organisation
     the user verifies email                                    Stuart   Anderson    ${EMAIL_LEAD}
     the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
@@ -207,7 +207,8 @@ invite a registered user
     the guest user opens the browser
 
 we create a new user
-    [Arguments]    ${first_name}  ${last_name}  ${EMAIL_INVITED}
+    [Arguments]    ${COMPETITION_ID}  ${first_name}  ${last_name}  ${EMAIL_INVITED}
+    the user navigates to the page                             ${SERVER}/competition/${COMPETITION_ID}/overview/
     the user follows the flow to register their organisation
     the user verifies email    ${first_name}   ${last_name}    ${EMAIL_INVITED}
 
@@ -222,7 +223,6 @@ the user verifies email
     The guest user clicks the log-in button
 
 the user follows the flow to register their organisation
-    the user navigates to the page              ${COMPETITION_OVERVIEW_URL}
     the user clicks the button/link             jQuery=a:contains("Start new application")
     the user clicks the button/link             jQuery=a:contains("Create account")
     the user enters text to a text field        id=organisationSearchName    Innovate
@@ -231,7 +231,10 @@ the user follows the flow to register their organisation
     the user selects the checkbox               address-same
     the user should not see the element         jQuery=h3:contains("Organisation type")
     the user clicks the button/link             jQuery=.button:contains("Continue")
+#    This is added as the flow differs if comp is setup to have either Business or RTO as lead org type but not both
+    run keyword and ignore error  the user selects the radio button    organisationTypeId   radio-1
     the user clicks the button/link             jQuery=.button:contains("Save and continue")
+    run keyword and ignore error  the user clicks the button/link             jQuery=.button:contains("Save and continue")
 
 the user enters the details and clicks the create account
     [Arguments]   ${first_name}  ${last_name}  ${REG_EMAIL}
@@ -260,3 +263,6 @@ the user clicks the forgot psw link
     Run Keyword If    '${status}' == 'FAIL'    click element    jQuery=summary:contains("Need help signing in or creating an account?")
     Run Keyword If    '${status}' == 'FAIL'    click element    link=Forgotten your password?
 
+Close browser and delete emails
+    Close any open browsers
+    Delete the emails from both test mailboxes
