@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -22,7 +23,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentSectionResourceBuilder.newPublicContentSectionResource;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -30,8 +31,10 @@ public class PublicContentMenuPopulatorTest {
 
     private static final Long COMPETITION_ID = 1L;
 
+    private static final String webBaseUrl = "https://environment";
+
     @InjectMocks
-    private PublicContentMenuPopulator target;
+    private PublicContentMenuPopulator target = supplyServiceUnderTest();
 
     @Mock
     private PublicContentService publicContentService;
@@ -66,6 +69,13 @@ public class PublicContentMenuPopulatorTest {
         assertThat(viewModel.getPublishDate(), equalTo(date));
 
         assertThat(viewModel.isInviteOnly(), equalTo(publishSetting));
-        assertThat(viewModel.getCompetitionURL(), equalTo("/competition/" + COMPETITION_ID + "/overview"));
+        assertThat(viewModel.getCompetitionURL(), equalTo("https://environment/competition/" + COMPETITION_ID + "/overview"));
+    }
+
+    private PublicContentMenuPopulator supplyServiceUnderTest() {
+
+        PublicContentMenuPopulator PublicContentMenuPopulator = new PublicContentMenuPopulator();
+        ReflectionTestUtils.setField(PublicContentMenuPopulator, "webBaseUrl", webBaseUrl);
+        return PublicContentMenuPopulator;
     }
 }

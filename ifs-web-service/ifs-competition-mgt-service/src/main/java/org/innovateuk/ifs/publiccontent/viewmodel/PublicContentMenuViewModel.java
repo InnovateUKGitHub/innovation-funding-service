@@ -4,7 +4,6 @@ package org.innovateuk.ifs.publiccontent.viewmodel;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -24,7 +23,6 @@ public class PublicContentMenuViewModel {
 
     private Boolean inviteOnly;
 
-    @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
     public ZonedDateTime getPublishDate() {
@@ -53,6 +51,10 @@ public class PublicContentMenuViewModel {
 
     public Boolean isInviteOnly() {
         return inviteOnly;
+    }
+
+    public void setWebBaseUrl(String webBaseUrl) {
+        this.webBaseUrl = webBaseUrl;
     }
 
     public void setInviteOnly(Boolean inviteOnly)
