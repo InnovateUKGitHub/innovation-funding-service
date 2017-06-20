@@ -25,7 +25,14 @@ if [[ ${TARGET} == "perf" ]]; then PROJECT="perf"; fi
 
 if [ -z "$bamboo_openshift_svc_account_token" ]; then  SVC_ACCOUNT_TOKEN=$(oc whoami -t); else SVC_ACCOUNT_TOKEN=${bamboo_openshift_svc_account_token}; fi
 
-SVC_ACCOUNT_CLAUSE="--namespace=${PROJECT} --token=${SVC_ACCOUNT_TOKEN} --server=https://console.prod.ifs-test-clusters.com:443 --insecure-skip-tls-verify=true"
+
+if [[ (${TARGET} == "local") ]]; then
+    SVC_ACCOUNT_CLAUSE_SERVER_PART='192.168.1.10:8443'
+else
+    SVC_ACCOUNT_CLAUSE_SERVER_PART='console.prod.ifs-test-clusters.com:443'
+fi
+
+SVC_ACCOUNT_CLAUSE="--namespace=${PROJECT} --token=${SVC_ACCOUNT_TOKEN} --server=https://${SVC_ACCOUNT_CLAUSE_SERVER_PART} --insecure-skip-tls-verify=true"
 REGISTRY_TOKEN=${SVC_ACCOUNT_TOKEN};
 
 REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
@@ -35,10 +42,10 @@ echo "Deploying the $PROJECT Openshift project"
 
 
 function deploy() {
-    if [[ ${TARGET} == "local" ]]
-    then
-        oc adm policy add-scc-to-user anyuid -n $PROJECT -z default
-    fi
+#    if [[ ${TARGET} == "local" ]]
+#    then
+#        oc adm policy add-scc-to-user anyuid -n $PROJECT -z default
+#    fi
 
     if [[ ${TARGET} == "production" || ${TARGET} == "demo" || ${TARGET} == "uat" || ${TARGET} == "sysint" || ${TARGET} == "perf" ]]
     then

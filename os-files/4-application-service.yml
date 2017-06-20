@@ -23,7 +23,7 @@ items:
           deploymentconfig: application-svc
       spec:
         containers:
-        - image: innovateuk/application-service:1.0-SNAPSHOT
+        - image: innovateuk/application-service:1.1.4-RC2-SNAPSHOT
           name: application-svc
           livenessProbe:
             httpGet:
