@@ -12,6 +12,8 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage users',size='heading-xlarge'" />
 
+    <!--/*
+     TODO: Uncomment this when search feature is implemented.  Probably after IFS-34.
     <p>You can view, edit and search for internal users here.</p>
     <p><a href="/">Add a new internal user</a></p>
 
@@ -28,7 +30,7 @@
         </div>
       </div>
     </div>
-
+    */-->
 
     <ul class="inline-nav cf">
       <li th:classappend="${model.tab == 'active'} ? 'selected'">
