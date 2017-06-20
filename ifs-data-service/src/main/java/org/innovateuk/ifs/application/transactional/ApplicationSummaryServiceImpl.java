@@ -36,7 +36,9 @@ import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;
 import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE_INFORMED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -162,6 +164,21 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
                         filterStr,
                         sendFilter.orElse(null),
                         fundingFilter.orElse(null)));
+    }
+
+    @Override
+    public ServiceResult<List<ApplicationSummaryResource>> getWithFundingDecisionApplicationSummariesByCompetitionId(
+            long competitionId,
+            Optional<String> filter,
+            Optional<Boolean> sendFilter,
+            Optional<FundingDecisionStatus> fundingFilter) {
+        String filterStr = filter.map(String::trim).orElse("");
+
+        return serviceSuccess(simpleMap(applicationRepository.findByCompetitionIdAndFundingDecisionIsNotNull(
+                competitionId,
+                filterStr,
+                sendFilter.orElse(null),
+                fundingFilter.orElse(null)), applicationSummaryMapper::mapToResource));
     }
 
     @Override

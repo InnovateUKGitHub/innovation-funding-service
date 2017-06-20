@@ -1,17 +1,17 @@
 package org.innovateuk.ifs.application.service;
 
-import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
-import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
@@ -74,9 +74,21 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 		String uriWithParams = buildPaginationUri(baseUrl, pageNumber, pageSize, sortField, params);
 		return getWithRestResult(uriWithParams, ApplicationSummaryPageResource.class);
 	}
-	
-	private RestResult<ApplicationSummaryPageResource> getApplicationSummaryPage(String url, int pageNumber, int pageSize, String sortField, Optional<String> filter) {
 
+    @Override
+    public RestResult<List<ApplicationSummaryResource>> getWithFundingDecisionApplications(Long competitionId, Optional<String> filter, Optional<Boolean> sendFilter, Optional<FundingDecision> fundingFilter) {
+		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/with-funding-decision";
+		UriComponentsBuilder builder = UriComponentsBuilder
+				.fromPath(baseUrl)
+				.queryParam("all");
+
+		filter.ifPresent(f -> builder.queryParam("filter", singletonList(f)));
+		sendFilter.ifPresent(f -> builder.queryParam("sendFilter", singletonList(f.toString())));
+		fundingFilter.ifPresent(f -> builder.queryParam("fundingFilter", singletonList(f.toString())));
+		return getWithRestResult(builder.toUriString(), ParameterizedTypeReferences.applicationSummaryResourceListType());
+    }
+
+    private RestResult<ApplicationSummaryPageResource> getApplicationSummaryPage(String url, int pageNumber, int pageSize, String sortField, Optional<String> filter) {
 		String urlWithParams = buildUri(url, sortField, pageNumber, pageSize, filter);
 		return getWithRestResult(urlWithParams, ApplicationSummaryPageResource.class);
 	}

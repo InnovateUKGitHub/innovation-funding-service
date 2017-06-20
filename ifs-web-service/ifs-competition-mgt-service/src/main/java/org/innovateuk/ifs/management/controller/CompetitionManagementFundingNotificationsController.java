@@ -1,13 +1,22 @@
 package org.innovateuk.ifs.management.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
+import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
+import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.competition.form.ManageFundingApplicationsQueryForm;
 import org.innovateuk.ifs.competition.form.NotificationEmailsForm;
 import org.innovateuk.ifs.competition.form.SelectApplicationsForEmailForm;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
+import org.innovateuk.ifs.management.form.AssessorSelectionForm;
 import org.innovateuk.ifs.management.model.ManageFundingApplicationsModelPopulator;
 import org.innovateuk.ifs.management.model.SendNotificationsModelPopulator;
+import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -17,13 +26,21 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.JsonUtil.getObjectFromJson;
+import static org.innovateuk.ifs.util.JsonUtil.getSerializedObject;
 
 
 @Controller
@@ -31,10 +48,9 @@ import static java.util.stream.Collectors.toList;
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class CompetitionManagementFundingNotificationsController {
 
-
     private static final String MANAGE_FUNDING_APPLICATIONS_VIEW = "comp-mgt-manage-funding-applications";
     private static final String FUNDING_DECISION_NOTIFICATION_VIEW = "comp-mgt-send-notifications";
-
+    private static final String SELECTION_FORM = "applicationSelectionForm";
 
     @Autowired
     private ManageFundingApplicationsModelPopulator manageFundingApplicationsModelPopulator;
@@ -44,6 +60,13 @@ public class CompetitionManagementFundingNotificationsController {
 
     @Autowired
     private ApplicationFundingDecisionService applicationFundingService;
+
+    @Autowired
+    private ApplicationSummaryRestService applicationSummaryRestService;
+
+    @Autowired
+    private CookieUtil cookieUtil;
+
 
     @GetMapping("/funding/send")
     public String sendNotifications(Model model,
@@ -117,6 +140,63 @@ public class CompetitionManagementFundingNotificationsController {
         );
     }
 
+    @PostMapping(value = "/manage-funding-applications", params = {"application"})
+    public @ResponseBody JsonNode selectApplicationForEmailList(
+            @PathVariable("competitionId") long competitionId,
+            @RequestParam("application") String applicationId,
+            @RequestParam("isSelected") boolean isSelected,
+            @RequestParam(defaultValue = "0") int page,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+        try {
+            SelectApplicationsForEmailForm selectionForm = getApplicationsSelectionFormFromCookie(request, competitionId).orElse(new SelectApplicationsForEmailForm());
+            if (isSelected) {
+                selectionForm.getIds().add(applicationId);
+            } else {
+                selectionForm.getIds().remove(applicationId);
+                selectionForm.setAllSelected(false);
+            }
+            cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
+            return createJsonObjectNode(selectionForm.getIds().size());
+        } catch (Exception e) {
+            return createJsonObjectNode(-1);
+        }
+    }
+
+    @PostMapping(value = "/manage-funding-applications", params = {"addAll"})
+    public @ResponseBody JsonNode addAllApplicationsToEmailList(Model model,
+                                           @PathVariable("competitionId") long competitionId,
+                                           @RequestParam("addAll") boolean addAll,
+                                           @RequestParam(defaultValue = "0") int page,
+                                           @RequestParam Optional<String> stringFilter,
+                                           @RequestParam Optional<Boolean> sendFilter,
+                                           @RequestParam Optional<FundingDecision> fundingFilter,
+                                           HttpServletRequest request,
+                                           HttpServletResponse response) {
+        try {
+            SelectApplicationsForEmailForm selectionForm = getApplicationsSelectionFormFromCookie(request, competitionId).orElse(new SelectApplicationsForEmailForm());
+
+            if (addAll) {
+                selectionForm.setIds(getAllApplicationIds(competitionId, stringFilter, sendFilter, fundingFilter));
+                selectionForm.setAllSelected(true);
+            } else {
+                selectionForm.getIds().clear();
+                selectionForm.setAllSelected(false);
+            }
+
+            cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
+            return createJsonObjectNode(selectionForm.getIds().size());
+        } catch (Exception e) {
+            return createJsonObjectNode(-1);
+        }
+    }
+
+    private List<String> getAllApplicationIds(long competitionId,  Optional<String> stringFilter, Optional<Boolean> sendFilter, Optional<FundingDecision> fundingFilter) {
+        List<ApplicationSummaryResource> resources =
+                applicationSummaryRestService.getWithFundingDecisionApplications(competitionId, stringFilter, sendFilter, fundingFilter).getSuccessObjectOrThrowException();
+        return simpleMap(resources, resource -> resource.getId().toString());
+    }
+
     private String getManageFundingApplicationsPage(long competitionId){
         return "/competition/" + competitionId + "/manage-funding-applications";
     }
@@ -161,5 +241,20 @@ public class CompetitionManagementFundingNotificationsController {
                 .toUriString();
     }
 
+    private ObjectNode createJsonObjectNode(int selectionCount) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode node = mapper.createObjectNode();
+        node.put("selectionCount", selectionCount);
 
+        return node;
+    }
+
+    private Optional<SelectApplicationsForEmailForm> getApplicationsSelectionFormFromCookie(HttpServletRequest request, long competitionId) {
+        String applicationFormJson = cookieUtil.getCookieValue(request, format("%s_comp%s", SELECTION_FORM, competitionId));
+        if (isNotBlank(applicationFormJson)) {
+            return Optional.ofNullable(getObjectFromJson(applicationFormJson, SelectApplicationsForEmailForm.class));
+        } else {
+            return Optional.empty();
+        }
+    }
 }

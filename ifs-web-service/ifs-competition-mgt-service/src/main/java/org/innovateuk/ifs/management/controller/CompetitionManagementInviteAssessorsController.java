@@ -149,7 +149,6 @@ public class CompetitionManagementInviteAssessorsController {
                                               @RequestParam Optional<Long> innovationArea,
                                               HttpServletRequest request,
                                               HttpServletResponse response) {
-
         try {
             AssessorSelectionForm selectionForm = getAssessorSelectionFormFromCookie(request, competitionId).orElse(new AssessorSelectionForm());
 
@@ -169,9 +168,9 @@ public class CompetitionManagementInviteAssessorsController {
     }
 
     private List<Long> getAllAssessorIds(long competitionId, Optional<Long> innovationArea) {
-        List<AvailableAssessorResource> pageResource =
+        List<AvailableAssessorResource> resources =
                 competitionInviteRestService.getAvailableAssessors(competitionId, innovationArea).getSuccessObjectOrThrowException();
-        return simpleMap(pageResource, AvailableAssessorResource::getId);
+        return simpleMap(resources, AvailableAssessorResource::getId);
     }
 
     @PostMapping(value = "/find/addSelected")

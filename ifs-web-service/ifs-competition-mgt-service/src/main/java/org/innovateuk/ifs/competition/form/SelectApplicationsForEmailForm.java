@@ -7,6 +7,7 @@ public class SelectApplicationsForEmailForm {
 
     @NotNull
     private List<String> ids;
+    private boolean allSelected;
 
     public List<String> getIds() {
         return ids;
@@ -14,5 +15,13 @@ public class SelectApplicationsForEmailForm {
 
     public void setIds(List<String> ids) {
         this.ids = ids;
+    }
+
+    public boolean isAllSelected() {
+        return allSelected;
+    }
+
+    public void setAllSelected(boolean allSelected) {
+        this.allSelected = allSelected;
     }
 }

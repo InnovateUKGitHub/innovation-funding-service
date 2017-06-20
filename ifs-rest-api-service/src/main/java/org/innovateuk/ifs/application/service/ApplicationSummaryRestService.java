@@ -1,12 +1,10 @@
 package org.innovateuk.ifs.application.service;
 
-import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
-import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.core.io.ByteArrayResource;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ApplicationSummaryRestService {
@@ -28,6 +26,11 @@ public interface ApplicationSummaryRestService {
                                                                                   Optional<String> filter,
                                                                                   Optional<Boolean> sendFilter,
                                                                                   Optional<FundingDecision> fundingFilter);
+
+    RestResult<List<ApplicationSummaryResource>> getWithFundingDecisionApplications(Long competitionId,
+                                                                                    Optional<String> filter,
+                                                                                    Optional<Boolean> sendFilter,
+                                                                                    Optional<FundingDecision> fundingFilter);
 
     RestResult<ApplicationSummaryPageResource> getIneligibleApplications(long competitionId, String sortField, int pageNumber, int pageSize, Optional<String> filter, Optional<Boolean> informFilter);
 

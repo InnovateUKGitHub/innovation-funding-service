@@ -2,11 +2,13 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ApplicationSummaryService {
@@ -44,6 +46,14 @@ public interface ApplicationSummaryService {
 																											Optional<String> filter,
 																											Optional<Boolean> sendFilter,
 																											Optional<FundingDecisionStatus> fundingFilter);
+
+	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support')")
+	@SecuredBySpring(value = "READ", description = "Internal users can see all Application Summaries with funding decisions across the whole system", securedType = ApplicationSummaryResource.class)
+	ServiceResult<List<ApplicationSummaryResource>> getWithFundingDecisionApplicationSummariesByCompetitionId(long competitionId,
+																											  Optional<String> filter,
+																											  Optional<Boolean> sendFilter,
+																											  Optional<FundingDecisionStatus> fundingFilter);
+
 	@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
 	@SecuredBySpring(value = "READ", description = "Internal users can see all Ineligable Application Summaries across the whole system", securedType = ApplicationSummaryPageResource.class)
 	ServiceResult<ApplicationSummaryPageResource> getIneligibleApplicationSummariesByCompetitionId(long competitionId,
