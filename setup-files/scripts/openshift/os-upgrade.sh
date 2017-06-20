@@ -51,7 +51,12 @@ function upgradeServices {
         oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/56-idp.yml
     fi
 
-    oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/5-shib.yml
+    if [[ ${TARGET} == "production" || ${TARGET} == "perf" ]]
+    then
+        oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/named-envs/5-${TARGET}-shib.yml
+    else
+        oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/5-shib.yml
+    fi
 
     watchStatus
 }

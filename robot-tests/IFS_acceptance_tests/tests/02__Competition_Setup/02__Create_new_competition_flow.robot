@@ -636,7 +636,7 @@ the user fills the scope assessment questions
     The user enters text to a text field    id=guidancerow-2-subject    New subject
     The user enters text to a text field    id=guidancerow-2-justification    This is a justification
     The user enters text to a text field    id=question.assessmentGuidance    Guidance for assessing scope section
-    The user clicks the button/link    id=remove-guidance-row-0
+    The user clicks the button/link    id=remove-guidance-row-1
 
 the user checks the scope assessment questions
     The user should see the text in the page    New subject

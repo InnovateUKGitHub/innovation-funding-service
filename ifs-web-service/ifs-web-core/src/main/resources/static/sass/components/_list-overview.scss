@@ -232,7 +232,7 @@ ol.list-counted {
   }
 }
 
-.standard-definition-list {
+%definition-list {
   @include core-19;
   overflow: auto;
 
@@ -330,5 +330,17 @@ dl.readonly-data {
 
   dt {
     margin-top: 1em;
+  }
+}
+
+.standard-definition-list {
+  @extend %definition-list;
+}
+
+.date-definition-list {
+  @extend %definition-list;
+  dt {
+    font-weight: normal;
+    max-width: 100px;
   }
 }

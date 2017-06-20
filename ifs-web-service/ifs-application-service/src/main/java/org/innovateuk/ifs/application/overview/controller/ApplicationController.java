@@ -29,9 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/application")
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicationController {
-    public static final String ASSIGN_QUESTION_PARAM = "assign_question";
-    public static final String MARK_AS_COMPLETE = "mark_as_complete";
-
     @Autowired
     private ApplicationOverviewModelPopulator applicationOverviewModelPopulator;
 
