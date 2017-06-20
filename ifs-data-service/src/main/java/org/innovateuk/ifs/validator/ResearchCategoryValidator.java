@@ -33,7 +33,7 @@ public class ResearchCategoryValidator extends BaseValidator {
             try {
                 value = Long.parseLong(response.getValue());
             } catch (NumberFormatException exception) {
-                rejectValue(errors, "value", "validation.assessor.category.invalidCategory");
+                rejectValue(errors, "value", "validation.assessor.category.invalidCategory", response.getFormInput().getId());
                 return;
             }
 
@@ -43,7 +43,7 @@ public class ResearchCategoryValidator extends BaseValidator {
                     .collect(toList());
 
             if (matchingCategories.isEmpty()) {
-                rejectValue(errors, "value", "validation.assessor.category.invalidCategory");
+                rejectValue(errors, "value", "validation.assessor.category.invalidCategory", response.getFormInput().getId());
             }
         }
     }
