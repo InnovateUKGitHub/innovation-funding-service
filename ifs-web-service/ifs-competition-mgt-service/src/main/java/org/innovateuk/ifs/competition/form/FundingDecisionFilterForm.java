@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 
 import java.util.Optional;
@@ -7,6 +8,7 @@ import java.util.Optional;
 /**
  * Contains the of the Funding Decision filter values.
  */
+
 public class FundingDecisionFilterForm {
     private Optional<String>stringFilter  = Optional.empty();
     private Optional<FundingDecision> fundingFilter = Optional.empty();
@@ -27,6 +29,7 @@ public class FundingDecisionFilterForm {
         this.fundingFilter = fundingFilter;
     }
 
+    @JsonIgnore
     public String getStringFilterValue() {
         if(stringFilter.isPresent()) {
             return stringFilter.get();
@@ -36,6 +39,7 @@ public class FundingDecisionFilterForm {
         }
     }
 
+    @JsonIgnore
     public FundingDecision getFundingFilterValue() {
         if(fundingFilter.isPresent()) {
             return fundingFilter.get();

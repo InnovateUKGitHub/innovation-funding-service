@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.transactional.ApplicationSummaryService;
@@ -10,6 +11,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -40,6 +42,14 @@ public class ApplicationSummaryController {
     @GetMapping("/getCompetitionSummary/{id}")
     public RestResult<CompetitionSummaryResource> getCompetitionSummary(@PathVariable("id") Long id) {
         return competitionSummaryService.getCompetitionSummaryByCompetitionId(id).toGetResponse();
+    }
+
+    @GetMapping("/findByCompetition/{competitionId}/all-submitted")
+    public RestResult<List<ApplicationSummaryResource>> getAllSubmittedApplicationSummariesByCompetitionId(
+            @PathVariable("competitionId") long competitionId,
+            @RequestParam(value = "filter", required = false) Optional<String> filter,
+            @RequestParam(value = "fundingFilter", required = false) Optional<FundingDecisionStatus> fundingFilter) {
+        return applicationSummaryService.getAllSubmittedApplicationSummariesByCompetitionId(competitionId, filter, fundingFilter).toGetResponse();
     }
 
     @GetMapping("/findByCompetition/{competitionId}/submitted")

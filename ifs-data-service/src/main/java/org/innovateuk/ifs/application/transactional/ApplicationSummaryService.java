@@ -2,11 +2,13 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ApplicationSummaryService {
@@ -27,6 +29,12 @@ public interface ApplicationSummaryService {
 																								  int pageSize,
 																								  Optional<String> filter,
 																								  Optional<FundingDecisionStatus> fundingFilter);
+
+	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support')")
+	@SecuredBySpring(value = "READ", description = "Internal users can see all submitted Application Summaries across the whole system", securedType = ApplicationSummaryPageResource.class)
+	ServiceResult<List<ApplicationSummaryResource>> getAllSubmittedApplicationSummariesByCompetitionId(Long competitionId,
+																									   Optional<String> filter,
+																									   Optional<FundingDecisionStatus> fundingFilter);
 
 	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support')")
     @SecuredBySpring(value = "READ", description = "Internal users can see all not-yet submitted Application Summaries across the whole system", securedType = ApplicationSummaryPageResource.class)

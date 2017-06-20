@@ -4,15 +4,15 @@ package org.innovateuk.ifs.competition.form;
  * TODO: Add description
  */
 public class FundingDecisionSelectionCookie {
-    private FundingDecisionForm fundingDecisionForm;
-    private FundingDecisionFilterForm fundingDecisionFilterForm;
+    private FundingDecisionSelectionForm fundingDecisionSelectionForm = new FundingDecisionSelectionForm();
+    private FundingDecisionFilterForm fundingDecisionFilterForm = new FundingDecisionFilterForm();
 
-    public FundingDecisionForm getFundingDecisionForm() {
-        return fundingDecisionForm;
+    public FundingDecisionSelectionForm getFundingDecisionSelectionForm() {
+        return fundingDecisionSelectionForm;
     }
 
-    public void setFundingDecisionForm(FundingDecisionForm fundingDecisionForm) {
-        this.fundingDecisionForm = fundingDecisionForm;
+    public void setFundingDecisionSelectionForm(FundingDecisionSelectionForm fundingDecisionSelectionForm) {
+        this.fundingDecisionSelectionForm = fundingDecisionSelectionForm;
     }
 
     public FundingDecisionFilterForm getFundingDecisionFilterForm() {

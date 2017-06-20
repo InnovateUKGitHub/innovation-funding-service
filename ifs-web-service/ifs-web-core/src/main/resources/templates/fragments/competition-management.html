@@ -105,7 +105,7 @@
              <tr th:each="result, index : ${results.content}" th:class="${competition.competitionStatus.name() == 'FUNDERS_PANEL' ? 'form-group' : ''}">
                <td>
                    <div class="multiple-choice" th:if="${result.applicationFundingDecisionIsChangeable()}">
-                       <input type="checkbox" name="applicationIds" th:id="${'app-row-'+index.count}" th:value="${result.id}" aria-labelledby="select-applications-label" />
+                       <input type="checkbox" name="applicationIds" th:id="${'app-row-'+index.count}" th:value="${result.id}" th:selected="${#lists.contains(selectedIds, result.id)}" aria-labelledby="select-applications-label" />
                        <label th:for="${'app-row-'+index.count}">
                            <span class="invisible">Select application</span>
                        </label>

@@ -1,20 +1,19 @@
 package org.innovateuk.ifs.application.service;
 
-import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
-import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
-import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.service.BaseRestService;
-
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionSummaryResourceListType;
 
 @Service
 public class ApplicationSummaryRestServiceImpl extends BaseRestService implements ApplicationSummaryRestService {
@@ -27,6 +26,19 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 	public RestResult<ApplicationSummaryPageResource> getAllApplications(long competitionId, String sortField, int pageNumber, int pageSize, Optional<String> filter) {
 		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId;
 		return getApplicationSummaryPage(baseUrl, pageNumber, pageSize, sortField, filter);
+	}
+
+	@Override
+	public RestResult<List<ApplicationSummaryResource>> getAllSubmittedApplications(long competitionId, Optional<String> filter, Optional<FundingDecision> fundingFilter) {
+		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/all-submitted";
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+
+		filter.ifPresent(f -> params.put("filter", singletonList(f)));
+		fundingFilter.ifPresent(f -> params.put("fundingFilter", singletonList(f.toString())));
+
+		String uri = UriComponentsBuilder.fromPath(baseUrl).buildAndExpand(params).encode().toUriString();
+
+		return getWithRestResult(uri, competitionSummaryResourceListType());
 	}
 
 	@Override

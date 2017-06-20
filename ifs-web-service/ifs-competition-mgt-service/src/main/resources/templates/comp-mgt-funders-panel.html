@@ -90,7 +90,7 @@
             </div>
         </div>
         <div class="table-overflow">
-            <th:block th:insert="fragments/competition-management :: applications-table(competition=${competitionSummary},results=${results})" />
+            <th:block th:insert="fragments/competition-management :: applications-table(competition=${competitionSummary},results=${results},selectedIds=${selectedIds})" />
         </div>
         <div class="grid-row sorting extra-margin">
             <div class="column-half">

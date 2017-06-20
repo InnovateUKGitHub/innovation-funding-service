@@ -230,4 +230,8 @@ public final class ParameterizedTypeReferences {
     public static ParameterizedTypeReference<List<SectionResource>> sectionResourceListType() {
         return new ParameterizedTypeReference<List<SectionResource>>() {};
     }
+
+    public static ParameterizedTypeReference<List<ApplicationSummaryResource>> competitionSummaryResourceListType() {
+        return new ParameterizedTypeReference<List<ApplicationSummaryResource>>() {};
+    }
 }
