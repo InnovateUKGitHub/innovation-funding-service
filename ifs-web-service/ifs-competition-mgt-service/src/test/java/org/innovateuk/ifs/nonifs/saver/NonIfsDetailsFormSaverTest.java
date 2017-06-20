@@ -29,9 +29,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
-import static org.innovateuk.ifs.competition.resource.MilestoneType.OPEN_DATE;
-import static org.innovateuk.ifs.competition.resource.MilestoneType.RELEASE_FEEDBACK;
-import static org.innovateuk.ifs.competition.resource.MilestoneType.SUBMISSION_DATE;
+import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -86,7 +84,7 @@ public class NonIfsDetailsFormSaverTest {
 
         Map<String, MilestoneRowForm> milestones = captor.getValue();
 
-        assertThat(milestones.get(RELEASE_FEEDBACK.name()).getDate(), equalTo(NOTIFIED));
+        assertThat(milestones.get(NOTIFICATIONS.name()).getDate(), equalTo(NOTIFIED));
         assertThat(milestones.get(OPEN_DATE.name()).getDate(), equalTo(OPEN));
         assertThat(milestones.get(SUBMISSION_DATE.name()).getDate(), equalTo(CLOSE));
     }
