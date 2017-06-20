@@ -34,11 +34,16 @@ public class YourFundingSectionPopulator extends AbstractSectionPopulator<YourFu
     @Override
     protected YourFundingSectionViewModel createNew(ApplicantSectionResource section, ApplicationForm form, Boolean readOnly) {
         List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId());
-        return new YourFundingSectionViewModel(section, formInputViewModelGenerator.fromSection(section, section, form, readOnly), getNavigationViewModel(section), readOnly || completedSectionIds.contains(section.getSection().getId()));
+        return new YourFundingSectionViewModel(
+                section,
+                formInputViewModelGenerator.fromSection(section, section, form, readOnly),
+                getNavigationViewModel(section),
+                readOnly || completedSectionIds.contains(section.getSection().getId()));
     }
 
     @Override
     public SectionType getSectionType() {
         return SectionType.FUNDING_FINANCES;
     }
+
 }

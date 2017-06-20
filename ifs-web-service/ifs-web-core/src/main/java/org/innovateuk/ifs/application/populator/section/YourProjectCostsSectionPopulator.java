@@ -72,10 +72,11 @@ public class YourProjectCostsSectionPopulator extends AbstractSectionPopulator<A
     @Override
     protected AbstractYourProjectCostsSectionViewModel createNew(ApplicantSectionResource section, ApplicationForm form, Boolean readOnly) {
         List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId());
+        boolean viewModelIsReadOnly = readOnly || completedSectionIds.contains(section.getSection().getId());
         if (section.getCurrentApplicant().isResearch()) {
-            return new JesYourProjectCostsSectionViewModel(section, Collections.emptyList(), getNavigationViewModel(section), readOnly || completedSectionIds.contains(section.getSection().getId()));
+            return new JesYourProjectCostsSectionViewModel(section, Collections.emptyList(), getNavigationViewModel(section), viewModelIsReadOnly);
         } else {
-            return new DefaultYourProjectCostsSectionViewModel(section, Collections.emptyList(), getNavigationViewModel(section), readOnly || completedSectionIds.contains(section.getSection().getId()));
+            return new DefaultYourProjectCostsSectionViewModel(section, Collections.emptyList(), getNavigationViewModel(section), viewModelIsReadOnly);
         }
     }
 

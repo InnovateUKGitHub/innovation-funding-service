@@ -216,7 +216,7 @@ Support User can see read only view of Your organisation
     When the user clicks the button/link    jQuery=a:contains("Your finances")
     Then the user redirects to the page     Please complete your project finances.  Your finances
     When the user clicks the button/link    jQuery=a:contains("Your organisation")
-    Then the user redirects to the page     Organisation size determines funding  Your organisation
+    Then the user redirects to the page     Organisation size  Your organisation
     And the user should see the element     jQuery=dt:contains("Turnover") + dd:contains("150")
     And the user should see the element     jQuery=dt:contains("employees") + dd:contains("0")
 

@@ -43,7 +43,7 @@ public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourF
 
     @Override
     protected YourFinancesSectionViewModel createNew(ApplicantSectionResource applicantSection, ApplicationForm form, Boolean readOnly) {
-        return new YourFinancesSectionViewModel(applicantSection, Collections.emptyList(), getNavigationViewModel(applicantSection), true);
+        return new YourFinancesSectionViewModel(applicantSection, Collections.emptyList(), getNavigationViewModel(applicantSection), readOnly);
     }
 
     @Override

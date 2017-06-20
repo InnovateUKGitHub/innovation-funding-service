@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Abstract populator section view models.
@@ -35,7 +36,15 @@ public abstract class AbstractSectionPopulator<M extends AbstractSectionViewMode
     protected NavigationViewModel getNavigationViewModel(ApplicantSectionResource applicantSection) {
         return navigationPopulator.addNavigation(applicantSection.getSection(),
                 applicantSection.getApplication().getId(),
-                applicantSection.getCurrentApplicant() != null ? SectionType.sectionsNotRequiredForOrganisationType(applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType()) : Collections.emptyList());
+                getSectionTypes(applicantSection));
 
+    }
+
+    private List<SectionType> getSectionTypes(ApplicantSectionResource applicantSection) {
+        if(applicantSection.getCurrentApplicant() != null) {
+            return SectionType.sectionsNotRequiredForOrganisationType(applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType());
+        } else {
+            return Collections.emptyList();
+        }
     }
 }

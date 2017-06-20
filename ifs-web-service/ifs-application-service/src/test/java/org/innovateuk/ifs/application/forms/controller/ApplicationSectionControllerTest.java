@@ -250,6 +250,7 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
     }
 
+    @Test
     public void testAddAnother() throws Exception {
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)

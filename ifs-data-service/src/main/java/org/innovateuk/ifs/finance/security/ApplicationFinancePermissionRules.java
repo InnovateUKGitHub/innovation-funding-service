@@ -55,7 +55,7 @@ public class ApplicationFinancePermissionRules {
         return isAConsortiumMemberOnApplicationOrIsLeadApplicant(applicationFinanceResource, user);
     }
 
-    @PermissionRule(value = "ADD_COST", description = "The CSS support user can add a cost to the application finances")
+    @PermissionRule(value = "ADD_COST", description = "The CSS user can add a cost to the application finances")
     public boolean supportCanAddACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
         return isSupport(user);
     }
