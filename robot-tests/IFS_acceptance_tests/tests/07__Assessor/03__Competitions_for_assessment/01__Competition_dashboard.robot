@@ -121,7 +121,8 @@ Check the comp admin see the assessor has rejected the application
     [Tags]
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
+    And the user clicks the button/link    jQuery=a:contains("Manage assessments")
+    And the user clicks the button/link    jQuery=a:contains("Manage applications")
     And the user should see the element    jQuery=tr:nth-child(1) td:nth-child(2):contains("Park living")
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     And the user should see the text in the page    Rejected (1)
