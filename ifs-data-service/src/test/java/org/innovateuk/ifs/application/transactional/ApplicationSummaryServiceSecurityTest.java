@@ -3,10 +3,12 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.junit.Test;
 
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.Optional.empty;
@@ -66,13 +68,21 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 
     public static class TestApplicationSummaryService implements ApplicationSummaryService {
 
-		@Override
-		public ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(Long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter) {
-			return null;
-		}
+        @Override
+        public ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(
+                Long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter) {
+            return null;
+        }
 
         @Override
-        public ServiceResult<ApplicationSummaryPageResource> getSubmittedApplicationSummariesByCompetitionId(Long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter, Optional<FundingDecisionStatus> fundingFilter) {
+        public ServiceResult<ApplicationSummaryPageResource> getSubmittedApplicationSummariesByCompetitionId(
+                Long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter, Optional<FundingDecisionStatus> fundingFilter) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<List<ApplicationSummaryResource>> getAllSubmittedApplicationSummariesByCompetitionId(
+                Long competitionId, Optional<String> filter, Optional<FundingDecisionStatus> fundingFilter) {
             return null;
         }
 
@@ -83,12 +93,34 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
         }
 
         @Override
-        public ServiceResult<ApplicationSummaryPageResource> getWithFundingDecisionApplicationSummariesByCompetitionId(long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter, Optional<Boolean> sendFilter, Optional<FundingDecisionStatus> fundingFilter) {
+        public ServiceResult<ApplicationSummaryPageResource> getWithFundingDecisionApplicationSummariesByCompetitionId(
+                long competitionId,
+                String sortBy,
+                int pageIndex,
+                int pageSize,
+                Optional<String> filter,
+                Optional<Boolean> sendFilter,
+                Optional<FundingDecisionStatus> fundingFilter) {
             return null;
         }
 
         @Override
-        public ServiceResult<ApplicationSummaryPageResource> getIneligibleApplicationSummariesByCompetitionId(long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter, Optional<Boolean> informFilter) {
+        public ServiceResult<List<ApplicationSummaryResource>> getWithFundingDecisionApplicationSummariesByCompetitionId(
+                long competitionId,
+                Optional<String> filter,
+                Optional<Boolean> sendFilter,
+                Optional<FundingDecisionStatus> fundingFilter) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<ApplicationSummaryPageResource> getIneligibleApplicationSummariesByCompetitionId(
+                long competitionId,
+                String sortBy,
+                int pageIndex,
+                int pageSize,
+                Optional<String> filter,
+                Optional<Boolean> informFilter) {
             return null;
         }
 
