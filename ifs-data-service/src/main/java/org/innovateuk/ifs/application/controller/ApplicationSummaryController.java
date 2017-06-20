@@ -44,6 +44,14 @@ public class ApplicationSummaryController {
         return competitionSummaryService.getCompetitionSummaryByCompetitionId(id).toGetResponse();
     }
 
+    @GetMapping("/findByCompetition/{competitionId}/all-submitted")
+    public RestResult<List<ApplicationSummaryResource>> getAllSubmittedApplicationSummariesByCompetitionId(
+            @PathVariable("competitionId") long competitionId,
+            @RequestParam(value = "filter", required = false) Optional<String> filter,
+            @RequestParam(value = "fundingFilter", required = false) Optional<FundingDecisionStatus> fundingFilter) {
+        return applicationSummaryService.getAllSubmittedApplicationSummariesByCompetitionId(competitionId, filter, fundingFilter).toGetResponse();
+    }
+
     @GetMapping("/findByCompetition/{competitionId}/submitted")
     public RestResult<ApplicationSummaryPageResource> getSubmittedApplicationSummariesByCompetitionId(
             @PathVariable("competitionId") long competitionId,

@@ -42,7 +42,7 @@
                 </div>
             <div class="grid-row">
                 <div class="column-half">
-                    <a href="?" class="button button-clear no-margin">Clear all filters</a>
+                    <a href="?clearFilters=true" class="button button-clear no-margin">Clear all filters</a>
                 </div>
                 <div class="column-half alignright">
                     <button class="button no-margin">Filter</button>
@@ -68,14 +68,12 @@
                     <fieldset>
                         <legend class="visuallyhidden">Select applications</legend>
                         <div class="multiple-choice">
-                            <!-- todo: needs to be checked when all are selected -->
-                            <!-- th:checked="${results.selectedElements} == ${results.totalElements}" -->
-                            <input class="select-all" id="select-all-1" value="select-all" type="checkbox" data-select-all="" />
+                            <input th:checked="${selectionForm.isAllSelected()}" class="select-all" id="select-all-1" value="select-all" type="checkbox" data-select-all="" />
                             <label for="select-all-1">
                                 Select all applications
                             </label>
                         </div>
-                        <span class="form-hint"><span data-count-selected="">3</span> applications selected</span>
+                        <span class="form-hint"><span th:text="${selectionForm.applicationIds.size()}" data-count-selected="">0</span> applications selected</span>
                     </fieldset>
                 </div>
             </div>
@@ -90,8 +88,64 @@
             </div>
         </div>
         <div class="table-overflow">
-            <th:block th:insert="fragments/competition-management :: applications-table(competition=${competitionSummary},results=${results})" />
-        </div>
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col" id="fund-project-label">Select applications</th>
+                    <th scope="col">Application number</th>
+                    <th scope="col">Project title</th>
+                    <th scope="col">Lead</th>
+                    <th scope="col">Number of partners</th>
+                    <th scope="col">Grant requested (£)</th>
+                    <th scope="col">Total project cost (£)</th>
+                    <th scope="col">Duration (months)</th>
+                    <th scope="col" id="fund-project-label">Funding decision</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="result, index : ${results.content}" th:class="${competitionSummary.competitionStatus.name() == 'FUNDERS_PANEL' ? 'form-group' : ''}">
+                    <td>
+                        <div class="multiple-choice" th:if="${result.applicationFundingDecisionIsChangeable()}">
+                            <input type="checkbox" name="applicationIds" th:id="${'app-row-'+index.count}" th:checked="${#lists.contains(selectionForm.applicationIds, result.id)}" th:value="${result.id}" aria-labelledby="select-applications-label" />
+                            <label th:for="${'app-row-'+index.count}">
+                                <span class="invisible">Select application</span>
+                            </label>
+                        </div>
+
+                        <th:block th:unless="${result.applicationFundingDecisionIsChangeable()}">
+                            <span class="empty-table-cell-select">-</span>
+                        </th:block>
+                    </td>
+                    <td><a th:href="${'/management/competition/' + competitionSummary.competitionId + '/application/' + result.id} + ${originQuery}"  th:text="${result.id}"/></td>
+                    <td th:text="${result.name}"></td>
+                    <td th:text="${result.lead}"></td>
+                    <td th:text="${result.numberOfPartners}"></td>
+                    <td th:text="${result.grantRequested}"></td>
+                    <td th:text="${result.totalProjectCost}"></td>
+                    <td th:text="${result.duration}"></td>
+                    <td scope="col" th:text="${result.fundingDecision?.name}"/>
+                </tr>
+                </tbody>
+            </table>
+
+            <table th:if="${activeTab == 'notSubmitted'}">
+                <thead>
+                <tr>
+                    <th scope="col">Application number</th>
+                    <th scope="col">Project title</th>
+                    <th scope="col">Lead</th>
+                    <th scope="col">Percentage complete</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="result : ${results.content}">
+                    <td><a th:href="${'/management/competition/' + competitionSummary.competitionId + '/application/' + result.id}"  th:text="${result.id}"/></td>
+                    <td th:text="${result.name}"></td>
+                    <td th:text="${result.lead}"></td>
+                    <td th:text="${result.completedPercentage}"></td>
+                </tr>
+                </tbody>
+            </table>        </div>
         <div class="grid-row sorting extra-margin">
             <div class="column-half">
                 <div class="select-all">
@@ -99,12 +153,12 @@
                         <legend class="visuallyhidden">Select all applications</legend>
 
                         <div class="multiple-choice">
-                            <input data-select-all="[id^=app-row-]" class="select-all" id="select-all-2" value="select-all" type="checkbox" />
+                            <input th:checked="${selectionForm.isAllSelected()}" data-select-all="[id^=app-row-]" class="select-all" id="select-all-2" value="select-all" type="checkbox" />
                             <label for="select-all-2">
                                 Select all applications
                             </label>
                         </div>
-                        <span class="form-hint"><span data-count-selected="">3</span> applications selected</span>
+                        <span class="form-hint"><span th:text="${selectionForm.applicationIds.size()}" data-count-selected="">0</span> applications selected</span>
                     </fieldset>
                 </div>
             </div>

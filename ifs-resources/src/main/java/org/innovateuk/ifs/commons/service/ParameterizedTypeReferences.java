@@ -234,4 +234,8 @@ public final class ParameterizedTypeReferences {
     public static ParameterizedTypeReference<List<ApplicationSummaryResource>> applicationSummaryResourceListType() {
         return new ParameterizedTypeReference<List<ApplicationSummaryResource>>() {};
     }
+
+    public static ParameterizedTypeReference<List<ApplicationSummaryResource>> competitionSummaryResourceListType() {
+        return new ParameterizedTypeReference<List<ApplicationSummaryResource>>() {};
+    }
 }

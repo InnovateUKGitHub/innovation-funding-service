@@ -31,6 +31,12 @@ public interface ApplicationSummaryService {
 																								  Optional<FundingDecisionStatus> fundingFilter);
 
 	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support')")
+	@SecuredBySpring(value = "READ", description = "Internal users can see all submitted Application Summaries across the whole system", securedType = ApplicationSummaryPageResource.class)
+	ServiceResult<List<ApplicationSummaryResource>> getAllSubmittedApplicationSummariesByCompetitionId(Long competitionId,
+																									   Optional<String> filter,
+																									   Optional<FundingDecisionStatus> fundingFilter);
+
+	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support')")
     @SecuredBySpring(value = "READ", description = "Internal users can see all not-yet submitted Application Summaries across the whole system", securedType = ApplicationSummaryPageResource.class)
 	ServiceResult<ApplicationSummaryPageResource> getNotSubmittedApplicationSummariesByCompetitionId(Long competitionId,
 																									 String sortBy,

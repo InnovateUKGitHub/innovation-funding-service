@@ -13,6 +13,8 @@ public interface ApplicationSummaryRestService {
 
     RestResult<ApplicationSummaryPageResource> getSubmittedApplications(long competitionId, String sortField, int pageNumber, int pageSize, Optional<String> filter, Optional<FundingDecision> fundingFilter);
 
+    RestResult<List<ApplicationSummaryResource>> getAllSubmittedApplications(long competitionId, Optional<String> filter, Optional<FundingDecision> fundingFilter);
+
     RestResult<ApplicationSummaryPageResource> getNonSubmittedApplications(long competitionId, String sortField, int pageNumber, int pageSize, Optional<String> filter);
 
     RestResult<CompetitionSummaryResource> getCompetitionSummary(long competitionId);

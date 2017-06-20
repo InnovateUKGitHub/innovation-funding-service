@@ -8,7 +8,6 @@ import org.innovateuk.ifs.application.mapper.ApplicationSummaryMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryPageMapper;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.resource.comparators.*;
-import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
@@ -16,7 +15,6 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.innovateuk.ifs.util.EntityLookupCallbacks;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -124,12 +122,22 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             int pageSize,
             Optional<String> filter,
             Optional<FundingDecisionStatus> fundingFilter) {
-        String filterStr = filter.map(String::trim).orElse("");
+
+        String filterString = trimFilterString(filter);
+
         return applicationSummaries(sortBy, pageIndex, pageSize,
                 pageable -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
-                        competitionId, SUBMITTED_STATES, filterStr, fundingFilter.orElse(null), pageable),
+                        competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), pageable),
                 () -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
-                        competitionId, SUBMITTED_STATES, filterStr, fundingFilter.orElse(null)));
+                        competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null)));
+    }
+
+    @Override
+    public ServiceResult<List<ApplicationSummaryResource>> getAllSubmittedApplicationSummariesByCompetitionId(Long competitionId, Optional<String> filter, Optional<FundingDecisionStatus> fundingFilter) {
+        String filterString = trimFilterString(filter);
+        return find(applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
+                competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null)), notFoundError(ApplicationSummaryResource.class))
+                .andOnSuccessReturn(result -> result.stream().map(application -> applicationSummaryMapper.mapToResource(application)).collect(toList()));
     }
 
     @Override
@@ -221,7 +229,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
                     organisationIds.forEach(organisationId -> partnerOrganisations.add(getTeamOrganisation(organisationId, application)));
 
                     result.setPartnerOrganisations(partnerOrganisations);
-                    return ServiceResult.serviceSuccess(result);
+                    return serviceSuccess(result);
                 });
     }
 
@@ -320,5 +328,9 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
     private Sort getApplicationSummarySortField(String sortBy) {
         Sort result = SORT_FIELD_TO_DB_SORT_FIELDS.get(sortBy);
         return result != null ? result : new Sort(ASC, new String[]{"id"});
+    }
+
+    private String trimFilterString(Optional<String> filterString) {
+        return filterString.map(String::trim).orElse("");
     }
 }

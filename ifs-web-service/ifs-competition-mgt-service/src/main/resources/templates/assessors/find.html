@@ -145,14 +145,14 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="assessor : ${model.assessors}">
+                <tr th:each="assessor, index : ${model.assessors}">
                     <td>
                         <div class="multiple-choice">
                             <input type="checkbox"
-                                   th:id="|assessor-id-${assessor.id}|"
+                                   th:id="|assessor-row-${index.count}|"
                                    th:field="*{selectedAssessorIds}"
                                    th:value="${assessor.id}"/>
-                            <label th:for="|assessor-id-${assessor.id}|">
+                            <label th:for="|assessor-row-${index.count}|">
                                 <span class="invisible">Add</span>
                             </label>
                         </div>
