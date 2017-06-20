@@ -304,7 +304,7 @@ User can view the competition url for invite only competitions
     [Tags]
     Given the user should not see the text in the page  This information will be publicly viewable by prospective applicants.
     And the user should see the element                 jQuery=button:contains("Copy link")
-    When the user clicks the button/link                jQuery=a:contains("/competition/${competitionId}/overview")
+    When the user clicks the button/link                jQuery=a:contains("${server}/competition/${competitionId}/overview")
     Then the user should see the text in the page       Public content competition
     And the user should see the text in the page        This is a Summary description
     Then the internal user navigates to public content  ${public_content_competition_name}
