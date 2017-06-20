@@ -44,8 +44,7 @@ Reject application (Unable to assess this application)
 Assessor should not be able to access the rejected application
     [Documentation]    INFUND-5188
     [Tags]
-    When the user navigates to the assessor page    ${SERVER}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}
-    Then The user should see permissions error message
+    Then the user navigates to the page and gets a custom error message    ${SERVER}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}    ${403_error_message}
 
 *** Keywords ***
 the user fills in rejection details
