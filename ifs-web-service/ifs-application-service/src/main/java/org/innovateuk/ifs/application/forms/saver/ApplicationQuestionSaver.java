@@ -113,7 +113,7 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
             return markQuestionAsComplete(applicationId, processRoleId, request, response, errorsSoFar);
         } else {
             Long questionId = Long.valueOf(request.getParameter(MARK_AS_INCOMPLETE));
-            questionService.markAsInComplete(questionId, applicationId, processRoleId);
+            questionService.markAsIncomplete(questionId, applicationId, processRoleId);
 
             return emptyList();
         }
@@ -124,7 +124,7 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
         List<ValidationMessages> markAsCompleteErrors = questionService.markAsComplete(questionId, applicationId, processRoleId);
 
         if (!markAsCompleteErrors.isEmpty()) {
-            questionService.markAsInComplete(questionId, applicationId, processRoleId);
+            questionService.markAsIncomplete(questionId, applicationId, processRoleId);
         }
 
         if (errorsSoFar.hasFieldErrors(String.valueOf(questionId))) {

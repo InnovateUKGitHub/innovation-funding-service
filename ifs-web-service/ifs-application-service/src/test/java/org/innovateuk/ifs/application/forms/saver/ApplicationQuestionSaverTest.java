@@ -137,7 +137,7 @@ public class ApplicationQuestionSaverTest {
 
         assertFalse(result.hasErrors());
         verify(questionService, times(1)).markAsComplete(questionId, applicationId, processRoleId);
-        verify(questionService, never()).markAsInComplete(questionId, applicationId, processRoleId);
+        verify(questionService, never()).markAsIncomplete(questionId, applicationId, processRoleId);
     }
 
     @Test
@@ -153,7 +153,7 @@ public class ApplicationQuestionSaverTest {
 
         assertTrue(result.hasErrors());
         verify(questionService, times(1)).markAsComplete(questionId, applicationId, processRoleId);
-        verify(questionService, times(1)).markAsInComplete(questionId, applicationId, processRoleId);
+        verify(questionService, times(1)).markAsIncomplete(questionId, applicationId, processRoleId);
 
     }
 

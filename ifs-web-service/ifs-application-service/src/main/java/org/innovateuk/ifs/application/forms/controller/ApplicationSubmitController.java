@@ -138,7 +138,7 @@ public class ApplicationSubmitController {
                 List<ValidationMessages> markAsCompleteErrors = questionService.markAsComplete(markQuestionCompleteId, applicationId, processRole.getId());
 
                 if (collectValidationMessages(markAsCompleteErrors).hasErrors()) {
-                    questionService.markAsInComplete(markQuestionCompleteId, applicationId, processRole.getId());
+                    questionService.markAsIncomplete(markQuestionCompleteId, applicationId, processRole.getId());
                 }
             }
         }

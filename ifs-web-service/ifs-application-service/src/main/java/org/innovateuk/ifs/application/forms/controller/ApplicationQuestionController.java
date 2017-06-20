@@ -148,7 +148,7 @@ public class ApplicationQuestionController {
     private String handleEditQuestion(ApplicationForm form, BindingResult bindingResult, ValidationHandler validationHandler, Model model, Long applicationId, Long questionId, UserResource user) {
         ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
         if (processRole != null) {
-            questionService.markAsInComplete(questionId, applicationId, processRole.getId());
+            questionService.markAsIncomplete(questionId, applicationId, processRole.getId());
         } else {
             LOG.error("Not able to find process role for user " + user.getName() + " for application id " + applicationId);
         }
