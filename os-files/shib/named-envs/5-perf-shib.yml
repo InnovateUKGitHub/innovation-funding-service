@@ -39,6 +39,20 @@ items:
             value: "9443"
           - name: HTTP_PORT
             value: "9080"
+          - name: MPM_STARTSERVERS
+            value: "4"
+          - name: MPM_MINSPARETHREADS
+            value: "75"
+          - name: MPM_MAXSPARETHREADS
+            value: "250"
+          - name: MPM_THREADLIMIT
+            value: "64"
+          - name: MPM_THREADSPERCHILD
+            value: "25"
+          - name: MPM_MAXREQUESTWORKERS
+            value: "400"
+          - name: MPM_MAXCONNECTIONSPERCHILD
+            value: "0"
           ports:
           - containerPort: 9443
           - containerPort: 9080
