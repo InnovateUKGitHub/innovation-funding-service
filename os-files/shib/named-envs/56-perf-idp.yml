@@ -23,7 +23,7 @@ items:
         containers:
         - image: innovateuk/idp-service:1.0-SNAPSHOT
           name: idp
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
           - name: IDP_PROXY_CERTIFICATE
             value: "<<SSLCERT>>"

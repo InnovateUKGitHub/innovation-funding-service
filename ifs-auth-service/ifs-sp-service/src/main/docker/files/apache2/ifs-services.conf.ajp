@@ -48,6 +48,14 @@ ShibCompatValidUser On
     </If>
   </Location>
 
+  # status page
+  <Location /monitoring/status>
+    ProxyPass !
+    SetHandler server-status
+    Require all denied
+    Require env TrustedIP
+  </Location>
+
   # Errors & holding pages
   <Location /holding>
     ProxyPass !
