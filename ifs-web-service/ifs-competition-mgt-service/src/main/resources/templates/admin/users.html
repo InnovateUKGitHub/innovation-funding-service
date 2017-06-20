@@ -39,66 +39,11 @@
       </li>
     </ul>
 
-    <th:block th:if="${model.tab == 'active'}">
-      <h2 class="heading-medium">Active</h2>
-        <p>
-          <span class="heading-xlarge no-margin" th:text="${model.activeCount}">38</span>
-          <span class="heading-small">active internal users</span>
-        </p>
-        <div class="table-overflow">
-          <table>
-            <thead>
-            <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Role profile</th>
-              <th scope="col">Email address</th>
-              <th scope="col"><span class="visuallyhidden">Invite status</span></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="user : ${model.activeUsers}">
-                <td><a th:href="${'/management/admin/user/' + user.id}" th:text="${user.name}">Steve Smith</a></td>
-                <td th:text="${user.getRolesString()}">IFS Admin</td>
-                <td><a th:href="${'mailto:' + user.email}" th:text="${user.email}">steve.smith@empire.com</a></td>
-                <td><span class="form-hint"></span></td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-        <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.activeUsersPagination})" />
-    </th:block>
+    <th:block th:if="${model.tab == 'active'}" th:insert="fragments/admin-users :: active(users=${model.activeUsers}, count=${model.activeCount}, pagination=${model.activeUsersPagination})" />
 
-    <th:block th:if="${model.tab == 'inactive'}">
-      <h2 class="heading-medium">Inactive</h2>
+    <th:block th:if="${model.tab == 'inactive'}" th:insert="fragments/admin-users :: inactive(users=${model.inactiveUsers}, count=${model.inactiveCount}, pagination=${model.inactiveUsersPagination})" />
 
-        <p>
-          <span class="heading-xlarge no-margin" th:text="${model.inactiveCount}">10</span>
-          <span class="heading-small">inactive internal users</span>
-        </p>
-        <div class="table-overflow">
-          <table>
-            <thead>
-            <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Role profile</th>
-              <th scope="col">Email address</th>
-              <th scope="col"><span class="visuallyhidden">Invite status</span></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="user : ${model.inactiveUsers}">
-                <td><a th:href="${'/management/admin/user/' + user.id}" th:text="${user.name}">Steve Smith</a></td>
-                <td th:text="${user.getRolesString()}">IFS Admin</td>
-                <td><a th:href="${'mailto:' + user.email}" th:text="${user.email}">steve.smith@empire.com</a></td>
-                <td><span class="form-hint"></span></td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-        <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.inactiveUsersPagination})" />
-  </th:block>
-
-  <th:block th:insert="fragments/layout :: main-content-end" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
 <th:block th:insert="fragments/layout :: footer" />

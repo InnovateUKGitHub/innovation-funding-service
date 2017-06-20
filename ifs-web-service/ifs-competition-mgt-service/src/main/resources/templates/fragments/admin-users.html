@@ -1,0 +1,42 @@
+<th:block th:fragment="active(users, count, pagination)" xmlns:th="http://www.w3.org/1999/html">
+    <h2 class="heading-medium">Active</h2>
+    <p>
+        <span class="heading-xlarge no-margin" th:text="${count}">38</span>
+        <span class="heading-small">active internal users</span>
+    </p>
+    <th:block th:insert="fragments/admin-users :: users-table(users=${users})" />
+    <th:block th:insert="fragments/elements :: general-pagination(pagination=${pagination})" />
+</th:block>
+
+<th:block th:fragment="inactive(users, count, pagination)" xmlns:th="http://www.w3.org/1999/html">
+    <h2 class="heading-medium">Inactive</h2>
+    <p>
+        <span class="heading-xlarge no-margin" th:text="${count}">10</span>
+        <span class="heading-small">inactive internal users</span>
+    </p>
+    <th:block th:insert="fragments/admin-users :: users-table(users=${users})" />
+    <th:block th:insert="fragments/elements :: general-pagination(pagination=${pagination})" />
+</th:block>
+
+<th:block th:fragment="users-table(users)" xmlns:th="http://www.w3.org/1999/html">
+    <div class="table-overflow">
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Role profile</th>
+                <th scope="col">Email address</th>
+                <th scope="col"><span class="visuallyhidden">Invite status</span></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${users}">
+                <td><a th:href="${'/management/admin/user/' + user.id}" th:text="${user.name}">Steve Smith</a></td>
+                <td th:text="${user.getRolesString()}">IFS Admin</td>
+                <td><a th:href="${'mailto:' + user.email}" th:text="${user.email}">steve.smith@empire.com</a></td>
+                <td><span class="form-hint"></span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</th:block>

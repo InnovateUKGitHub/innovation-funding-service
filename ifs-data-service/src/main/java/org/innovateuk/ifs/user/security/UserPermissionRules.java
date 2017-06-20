@@ -143,7 +143,7 @@ public class UserPermissionRules {
         return profileDetails.getUser().equals(user.getId());
     }
 
-    @PermissionRule(value = "READ_USER_PROFILE", description = "A ifs admin user can read any users profile")
+    @PermissionRule(value = "READ_USER_PROFILE", description = "A ifs admin user can read any user's profile")
     public boolean ifsAdminCanViewAnyUsersProfile(UserProfileResource profileDetails, UserResource user) {
         return user.hasRole(UserRoleType.IFS_ADMINISTRATOR);
     }
