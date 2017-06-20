@@ -14,7 +14,7 @@ import java.util.Map;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 
 /**
- * This Saver will handle save all sections that are related to the application.
+ * This Saver will handle save all finance sections that are related to the application.
  */
 @Service
 public class ApplicationSectionFinanceSaver extends AbstractApplicationSaver {
@@ -22,7 +22,7 @@ public class ApplicationSectionFinanceSaver extends AbstractApplicationSaver {
     @Autowired
     private SectionService sectionService;
 
-    //TODO: this function is calling the data layer 3 times, could be done in one call
+    //TODO: IFS-673 - this function is calling the data layer 3 times, could be done in one call
     public void handleMarkAcademicFinancesAsNotRequired(Long organisationType, SectionResource selectedSection, Long applicationId, Long competitionId, Long processRoleId) {
         if (SectionType.PROJECT_COST_FINANCES.equals(selectedSection.getType())
                 && OrganisationTypeEnum.RESEARCH.getId().equals(organisationType)) {

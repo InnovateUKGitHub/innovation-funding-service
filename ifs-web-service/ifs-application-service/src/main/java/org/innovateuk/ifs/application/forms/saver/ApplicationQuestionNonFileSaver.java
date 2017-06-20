@@ -18,7 +18,7 @@ import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
 import static org.innovateuk.ifs.util.HttpUtils.requestParameterPresent;
 
 /**
- * This Saver will handle save all questions that are related to the application.
+ * This Saver will handle save all the non-file questions that are related to the application.
  */
 @Service
 public class ApplicationQuestionNonFileSaver extends AbstractApplicationSaver {
