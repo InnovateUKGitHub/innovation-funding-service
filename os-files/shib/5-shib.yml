@@ -21,23 +21,23 @@ items:
           deploymentconfig: shib
       spec:
         containers:
-        - image: innovateuk/ifs-shib-sp:0.5.2
+        - image: innovateuk/sp-service:1.0-SNAPSHOT
           name: shib
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
-          - name: SSLCERT
+          - name: SP_PROXY_CERTIFICATE
             value: "<<SSLCERT>>"
-          - name: SSLCACERT
+          - name: SP_PROXY_CACERTIFICATE
             value: "<<SSLCACERT>>"
-          - name: SSLKEY
+          - name: SP_PROXY_KEY
             value: "<<SSLKEY>>"
-          - name: SPHOST
+          - name: SP_DOMAIN
             value: <<SHIB-ADDRESS>>
-          - name: IDPHOST
+          - name: IDP_DOMAIN
             value: <<SHIB-IDP-ADDRESS>>
-          - name: HTTPSPORT
+          - name: HTTPS_PORT
             value: "9443"
-          - name: HTTPPORT
+          - name: HTTP_PORT
             value: "9080"
           ports:
           - containerPort: 9443

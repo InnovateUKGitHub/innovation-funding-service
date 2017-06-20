@@ -8,10 +8,10 @@
     <th:block th:include="fragments/layout :: global-header" />
     <main tabindex="-1" id="content">
         <th:block th:include="fragments/layout :: main-content-start" />
+        <th:block th:include="fragments/layout :: header-sub" th:with="linkTitle='Innovate UK',linkClass='link-back',linkUrl=@{https://www.gov.uk/government/organisations/innovate-uk}"></th:block>
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Innovation competitions',size='heading-large'" />
 
-        <p>Browse upcoming and live competitions. Find out when new competitions are launched by <a href="http://info.innovateuk.org/emailpref">signing up for competition updates</a>.</p>
         <div class="grid-row">
             <div class="column-third">
                 <form method="GET">
@@ -54,13 +54,14 @@
                 <ul th:unless="${model.totalResults == 0}">
                    <li th:each="(publicContentItem, iteration : ${model.publicContentItems})">
                        <h2 class="heading-medium no-margin-top extra-margin-bottom">
-                           <a th:text="${publicContentItem.competitionTitle}" th:href="@{/competition/{competitionId}/overview(competitionId=${publicContentItem.publicContentResource?.competitionId})}">Competition title</a>
+                           <a th:text="${publicContentItem.competitionTitle}" th:href="@{/competition/{competitionId}/overview(competitionId=${publicContentItem.competitionId})}">Competition title</a>
                        </h2>
-                       <p class="wysiwyg-styles" ifs:utext="${publicContentItem.publicContentResource?.shortDescription}">Description of the competition</p>
-                       <dl class="standard-definition-list">
-                            <dt>Eligibility:</dt>
-                            <dd class="wysiwyg-styles" ifs:utext="${publicContentItem.publicContentResource?.eligibilitySummary}"></dd>
-                            <dt>Opens:</dt>
+                       <p class="wysiwyg-styles" ifs:utext="${publicContentItem.shortDescription}">Description of the competition</p>
+                       <h3 class="heading-small">Eligibility:</h3>
+                       <p class="wysiwyg-styles" ifs:utext="${publicContentItem.eligibilitySummary}"></p>
+                       <h3 class="heading-small" th:text="${publicContentItem.publicContentStatusText?.getHeader()}"/>
+                       <dl class="date-definition-list">
+                            <dt><th:block th:text="${publicContentItem.publicContentStatusText?.getOpenTense()}"/>:</dt>
                             <dd th:text="${#temporals.format(publicContentItem.competitionOpenDate, 'd MMMM yyyy')}" />
                             <dt>Closes:</dt>
                             <dd th:text="${#temporals.format(publicContentItem.competitionCloseDate, 'd MMMM yyyy')}" />

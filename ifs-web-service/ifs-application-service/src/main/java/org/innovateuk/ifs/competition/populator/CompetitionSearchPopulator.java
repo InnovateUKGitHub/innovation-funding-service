@@ -4,15 +4,19 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.innovateuk.ifs.category.service.CategoryRestService;
+import org.innovateuk.ifs.competition.mapper.PublicContentItemViewModelMapper;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPageResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
+import org.innovateuk.ifs.competition.status.PublicContentStatusDeterminer;
+import org.innovateuk.ifs.competition.status.PublicContentStatusText;
 import org.innovateuk.ifs.competition.viewmodel.CompetitionSearchViewModel;
+import org.innovateuk.ifs.competition.viewmodel.PublicContentItemViewModel;
 import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Populator for retrieving and filling the viewmodel for public content competition search page.
@@ -25,6 +29,12 @@ public class CompetitionSearchPopulator {
 
     @Autowired
     private CategoryRestService categoryRestService;
+
+    @Autowired
+    private PublicContentStatusDeterminer publicContentStatusDeterminer;
+
+    @Autowired
+    private PublicContentItemViewModelMapper publicContentItemViewModelMapper;
 
     public CompetitionSearchViewModel createItemSearchViewModel(Optional<Long> innovationAreaId, Optional<String> keywords, Optional<Integer> pageNumber) {
         CompetitionSearchViewModel viewModel = new CompetitionSearchViewModel();
@@ -45,7 +55,8 @@ public class CompetitionSearchPopulator {
             viewModel.setPageNumber(0);
         }
 
-        viewModel.setPublicContentItems(pageResource.getContent());
+        viewModel.setPublicContentItems(pageResource.getContent().stream()
+                .map(this::createPublicContentItemViewModel).collect(Collectors.toList()));
         viewModel.setTotalResults(pageResource.getTotalElements());
         viewModel.setNextPageLink(createPageLink(innovationAreaId, keywords, pageNumber, 1));
         viewModel.setPreviousPageLink(createPageLink(innovationAreaId, keywords, pageNumber, -1));
@@ -67,5 +78,15 @@ public class CompetitionSearchPopulator {
 
         return URLEncodedUtils.format(searchparams, "UTF-8");
     }
+
+    private PublicContentItemViewModel createPublicContentItemViewModel(PublicContentItemResource publicContentItemResource) {
+        PublicContentItemViewModel publicContentItemViewModel = publicContentItemViewModelMapper.mapToViewModel(publicContentItemResource);
+
+        PublicContentStatusText publicContentStatusText = publicContentStatusDeterminer.getApplicablePublicContentStatusText(publicContentItemResource);
+        publicContentItemViewModel.setPublicContentStatusText(publicContentStatusText);
+
+        return publicContentItemViewModel;
+    }
+
 
 }

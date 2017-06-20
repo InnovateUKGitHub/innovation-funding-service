@@ -14,7 +14,7 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...               INFUND-8397  Permission denied when submitting your finances as a collaborator
 ...
 Suite Setup       Guest user log-in  &{lead_applicant_credentials}
-Suite Teardown    the user closes the browser
+Suite Teardown    Close browser and delete emails
 Force Tags        Applicant
 Default Tags
 Resource          ../../../../resources/defaultResources.robot
@@ -51,7 +51,7 @@ Contribution to project and funding sought should not be negative number
     [Setup]  log in as a different user    &{lead_applicant_credentials}
     When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
     And the user fills in the project costs        ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    And the user fills in the organisation information  ${OPEN_COMPETITION_APPLICATION_2_NAME}
+    And the user fills in the organisation information  ${OPEN_COMPETITION_APPLICATION_2_NAME}  ${SMALL_ORGANISATION_SIZE}
     And the user checks your funding section for the project  ${OPEN_COMPETITION_APPLICATION_2_NAME}
     Then the contribution to project and funding sought should be 0 and not a negative number
 

@@ -29,7 +29,7 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...
 ...               INFUND-6780 As a project manager, I have the option to remove an uploaded signed GOL before submitting it, so that an can upload a different file if required
 Suite Setup       all the other sections of the project are completed (except spend profile approval)
-Suite Teardown    the user closes the browser
+Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup    Upload
 Resource          PS_Common.robot
 
@@ -71,10 +71,10 @@ Status updates correctly for internal user's table
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(6).status.ok       # Other Docs
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action   # GOL
 
-Project finance user selects the grant offer letter
-    [Documentation]  INFUND-6377, INFUND-6048
+IFS Admin user selects the grant offer letter
+    [Documentation]  INFUND-6377, INFUND-6048, IFS-603
     [Tags]  HappyPath
-    [Setup]  log in as a different user     &{internal_finance_credentials}
+    [Setup]  log in as a different user     &{ifs_admin_user_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
     When the user clicks the button/link    jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action a
     Then the user navigates to the page     ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
@@ -85,6 +85,7 @@ Project finance user selects the grant offer letter
 Project Finance can download GOL
     [Documentation]  INFUND-6377
     [Tags]  HappyPath    Download
+    [Setup]  log in as a different user     &{internal_finance_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     Then the user downloads the file        ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/grant-offer-letter  ${DOWNLOAD_FOLDER}/grant_offer_letter.pdf
     [Teardown]    remove the file from the operating system    grant_offer_letter.pdf

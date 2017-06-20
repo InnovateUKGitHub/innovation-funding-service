@@ -21,7 +21,7 @@ Documentation     INFUND-7365 Inflight competition dashboards: Inform dashboard
 ...
 ...               INFUND-8066 Filter on 'Manage funding notifications' dashboard
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
-Suite Teardown    the user closes the browser
+Suite Teardown    Close browser and delete emails
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 

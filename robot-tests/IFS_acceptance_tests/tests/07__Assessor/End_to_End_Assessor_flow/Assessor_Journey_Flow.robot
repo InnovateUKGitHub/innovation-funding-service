@@ -2,9 +2,7 @@
 Documentation     INFUND-8092 E2E for the Assessor Journey Flow
 ...
 ...               IFS-39 As a member of the competitions team I can resend a competition invite to an assessor so that assessor has a new invite
-Suite Setup       Delete the emails from both test mailboxes
-Suite Teardown    Run keywords    TestTeardown User closes the browser
-...  AND          Delete the emails from both test mailboxes
+Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin    Assessor    HappyPath    Email
 Resource          ../../../resources/defaultResources.robot
 
@@ -89,12 +87,14 @@ CompAdmin should see Assessor's profile and Innovation Area
 CompAdmin Invites assessor to assess an application
     [Setup]    The user clicks the button/link    link=My dashboard
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And The user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
+    And The user clicks the button/link    jQuery=a:contains("Manage assessments")
+    And the user clicks the button/link    jQuery=a:contains("Manage applications")
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     And the user clicks the button/link    jQuery=.pagination-label:contains(Next)
     And the user clicks the button/link    jQuery=.pagination-label:contains(Next)
     When the user clicks the button/link    jQuery=tr:contains(Tom Fister) button:contains("Assign")
     And the user clicks the button/link    jQuery=a:contains("Allocate applications")
+    And the user clicks the button/link    jQuery=a:contains("Back")
     And the user clicks the button/link    jQuery=a:contains("Competition")
     And the user clicks the button/link    jQuery=button:contains("Notify assessors")
     And the element should be disabled    jQuery=button:contains("Notify assessors")

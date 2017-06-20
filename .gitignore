@@ -21,6 +21,7 @@ bin/
 
 #Ignore generated docker files
 **/Dockerfile
+**/Dockerfile-base
 docker-compose.yml
 
 

@@ -240,7 +240,6 @@ the user can see the changed MO details
     Textfield Should Contain    id=lastName    Harper
 
 Custom suite setup
-    delete the emails from both test mailboxes
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
     the lead partner fills in project details if they are not already filled in
