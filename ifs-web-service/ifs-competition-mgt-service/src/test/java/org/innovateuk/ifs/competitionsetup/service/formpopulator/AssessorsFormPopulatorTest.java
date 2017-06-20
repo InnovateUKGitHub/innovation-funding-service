@@ -41,6 +41,6 @@ public class AssessorsFormPopulatorTest {
 		AssessorsForm form = (AssessorsForm) result;
 		assertEquals(Integer.valueOf(1), form.getAssessorCount());
 		assertEquals(BigDecimal.TEN, form.getAssessorPay());
-		assertEquals("noPanel", form.getUseAssessmentPanel());
+		assertEquals(Boolean.FALSE, form.getUseAssessmentPanel());
 	}
 }

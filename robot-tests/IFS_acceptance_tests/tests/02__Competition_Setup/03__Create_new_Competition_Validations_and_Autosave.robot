@@ -202,6 +202,7 @@ Assessor: Server-side validation
     And The user enters text to a text field    id=assessorPay    ${EMPTY}
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see an error    Please enter how much assessors will be paid.
+    And the user should see an error     Please select an assessment panel option.
 
 Assessor: Client-side validation
     [Documentation]    INFUND-5641

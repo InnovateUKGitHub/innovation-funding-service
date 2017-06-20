@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.competitionsetup.form;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -20,8 +18,8 @@ public class AssessorsForm extends CompetitionSetupForm {
     @Digits(integer = 8, fraction = 0, message = "{validation.assessorsform.assessorPay.max.amount.invalid}")
     private BigDecimal assessorPay;
 
-    @NotEmpty(message = "{validation.assessorsform.assessmentPanel.required}")
-    private String useAssessmentPanel;
+    @NotNull(message = "{validation.assessorsform.assessmentPanel.required}")
+    private Boolean useAssessmentPanel;
 
     public Integer getAssessorCount() {
         return assessorCount;
@@ -39,11 +37,11 @@ public class AssessorsForm extends CompetitionSetupForm {
         this.assessorPay = assessorPay;
     }
 
-    public String getUseAssessmentPanel() {
+    public Boolean getUseAssessmentPanel() {
         return useAssessmentPanel;
     }
 
-    public void setUseAssessmentPanel(String useAssessmentPanel) {
+    public void setUseAssessmentPanel(Boolean useAssessmentPanel) {
         this.useAssessmentPanel = useAssessmentPanel;
     }
 }

@@ -25,15 +25,9 @@ public class AssessorsFormPopulator implements CompetitionSetupFormPopulator {
 
 		competitionSetupForm.setAssessorCount(competitionResource.getAssessorCount());
 		competitionSetupForm.setAssessorPay(competitionResource.getAssessorPay() != null ? competitionResource.getAssessorPay() : BigDecimal.ZERO);
-		competitionSetupForm.setUseAssessmentPanel(convertToPublishSettingString(competitionResource.isUseAssessmentPanel()));
+		competitionSetupForm.setUseAssessmentPanel(competitionResource.isUseAssessmentPanel());
 
 		return competitionSetupForm;
 	}
 
-	private String convertToPublishSettingString(Boolean useAssessmentPanel) {
-		if(null == useAssessmentPanel) {
-			return "";
-		}
-		return useAssessmentPanel ? "usePanel" : "noPanel";
-	}
 }

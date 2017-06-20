@@ -35,7 +35,7 @@ public class AssessorSectionSaverTest {
 		AssessorsForm competitionSetupForm = new AssessorsForm();
 		competitionSetupForm.setAssessorCount(1);
 		competitionSetupForm.setAssessorPay(BigDecimal.TEN);
-		competitionSetupForm.setUseAssessmentPanel("noPanel");
+		competitionSetupForm.setUseAssessmentPanel(Boolean.FALSE);
 
 		CompetitionResource competition = newCompetitionResource()
 				.withId(1L).build();
