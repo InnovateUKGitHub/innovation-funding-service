@@ -38,6 +38,10 @@ public class ApplicationFormUtil {
         return params.containsKey(MARK_AS_COMPLETE) || params.containsKey(MARK_AS_INCOMPLETE);
     }
 
+    public static boolean isMarkQuestionAsCompleteRequest(@NotNull Map<String, String[]> params) {
+        return params.containsKey(MARK_AS_COMPLETE);
+    }
+
     public static boolean isMarkQuestionAsIncompleteRequest(@NotNull Map<String, String[]> params) {
         return params.containsKey(MARK_AS_INCOMPLETE);
     }
@@ -48,6 +52,10 @@ public class ApplicationFormUtil {
 
     public static boolean isRequestingFundingRequest(@NotNull Map<String, String[]> params) {
         return params.containsKey(REQUESTING_FUNDING);
+    }
+
+    public static boolean isFundingRequest(@NotNull Map<String, String[]> params) {
+        return isNotRequestingFundingRequest(params) || isRequestingFundingRequest(params);
     }
 
     public static boolean isMarkSectionRequest(@NotNull Map<String, String[]> params) {
