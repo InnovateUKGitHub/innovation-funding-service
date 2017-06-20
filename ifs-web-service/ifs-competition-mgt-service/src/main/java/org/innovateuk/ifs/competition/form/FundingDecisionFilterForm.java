@@ -6,7 +6,7 @@ import org.innovateuk.ifs.application.resource.FundingDecision;
 import java.util.Optional;
 
 /**
- * Contains the of the Funding Decision filter values.
+ * Contains the Funding Decision filter values.
  */
 
 public class FundingDecisionFilterForm {

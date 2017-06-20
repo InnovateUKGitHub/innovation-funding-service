@@ -82,15 +82,19 @@ public class CompetitionManagementFundingController {
     @GetMapping
     public String applications(Model model,
                                @PathVariable("competitionId") long competitionId,
+                               @RequestParam(name = "clearFilters", required = false) boolean clearFilters,
                                @ModelAttribute @Valid FundingDecisionPaginationForm paginationForm,
                                @ModelAttribute FundingDecisionFilterForm filterForm,
                                @ModelAttribute FundingDecisionSelectionForm selectionForm,
                                BindingResult bindingResult,
-                               HttpServletRequest request) {
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
 
         if (bindingResult.hasErrors()) {
             return "redirect:/competition/" + competitionId + "/funding";
         }
+
+
 
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService
                 .getCompetitionSummary(competitionId)
@@ -100,31 +104,36 @@ public class CompetitionManagementFundingController {
         String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.FUNDING_APPLICATIONS, mapFormFilterParametersToMultiValueMap(filterForm));
         model.addAttribute("originQuery", originQuery);
 
+        FundingDecisionSelectionCookie selectionCookieForm = new FundingDecisionSelectionCookie();
+
         try {
-            FundingDecisionSelectionCookie selectionCookieForm = getApplicationSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
-            boolean filterGetParameterIsPresent = filterForm.getFundingFilter().isPresent() || filterForm.getStringFilter().isPresent();
+            selectionCookieForm = getApplicationSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
+            selectionForm = selectionCookieForm.getFundingDecisionSelectionForm();
 
-            if (filterGetParameterIsPresent) {
-                FundingDecisionSelectionForm trimmedSelectionForm = updateApplicationSelection(selectionForm, filterForm, competitionId);
+            FundingDecisionSelectionForm trimmedSelectionForm = updateApplicationSelection(selectionForm, filterForm, competitionId);
+            selectionForm.setApplicationIds(trimmedSelectionForm.getApplicationIds());
 
-                selectionForm = trimmedSelectionForm;
+            boolean noFilterGetParameterIsPresent = !filterForm.getFundingFilter().isPresent() && !filterForm.getStringFilter().isPresent();
+            boolean filterCookieParameterIsPresent = selectionCookieForm.getFundingDecisionFilterForm().getFundingFilter().isPresent()
+                    || selectionCookieForm.getFundingDecisionFilterForm().getStringFilter().isPresent();
+            boolean selectionHasBeenMade = selectionCookieForm.getFundingDecisionSelectionForm().isAllSelected() != false ||
+                    selectionCookieForm.getFundingDecisionSelectionForm().getApplicationIds().size() > 0;
 
+            if(clearFilters) {
+                filterForm = new FundingDecisionFilterForm();
+            }
+            else if (noFilterGetParameterIsPresent && filterCookieParameterIsPresent && selectionHasBeenMade) {
                 filterForm.setFundingFilter(selectionCookieForm.getFundingDecisionFilterForm().getFundingFilter());
                 filterForm.setStringFilter(selectionCookieForm.getFundingDecisionFilterForm().getStringFilter());
-            }
-            else {
-                boolean filterCookieParameterIsPresent = selectionCookieForm.getFundingDecisionFilterForm().getFundingFilter().isPresent()
-                        || selectionCookieForm.getFundingDecisionFilterForm().getStringFilter().isPresent();
-
-                if(filterCookieParameterIsPresent) {
-                    String cookieFilterQueryUrl = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.FUNDING_APPLICATIONS, mapFormFilterParametersToMultiValueMap(selectionCookieForm.getFundingDecisionFilterForm()));
-
-                    return "redirect:" + cookieFilterQueryUrl;
-                }
             }
         } catch (Exception e) {
             log.error(e);
         }
+
+
+        selectionCookieForm.setFundingDecisionFilterForm(filterForm);
+
+        cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionCookieForm));
 
         switch (competitionSummary.getCompetitionStatus()) {
             case FUNDERS_PANEL:
@@ -155,8 +164,6 @@ public class CompetitionManagementFundingController {
         } catch (Exception e) {
             log.error(e);
         }
-
-        //TODO: Extract applicationIds from cookie to save with posted FundingDecision choice
 
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService
                 .getCompetitionSummary(competitionId)
@@ -238,15 +245,23 @@ public class CompetitionManagementFundingController {
                                                                HttpServletRequest request,
                                                                HttpServletResponse response) {
         try {
-            FundingDecisionSelectionCookie selectionForm = getApplicationSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
+            FundingDecisionSelectionCookie cookieForm = getApplicationSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
+            FundingDecisionSelectionForm selectionForm = cookieForm.getFundingDecisionSelectionForm();
             if (isSelected) {
-                selectionForm.getFundingDecisionSelectionForm().getApplicationIds().add(applicationId);
+                List<Long> applicationIds = selectionForm.getApplicationIds();
+
+                if(!applicationIds.contains(applicationId)) {
+                    selectionForm.getApplicationIds().add(applicationId);
+                }
             } else {
-                selectionForm.getFundingDecisionSelectionForm().getApplicationIds().remove(applicationId);
-                selectionForm.getFundingDecisionSelectionForm().setAllSelected(false);
+                selectionForm.getApplicationIds().remove(applicationId);
+                selectionForm.setAllSelected(false);
             }
-            cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
-            return createJsonObjectNode(selectionForm.getFundingDecisionSelectionForm().getApplicationIds().size());
+
+            cookieForm.setFundingDecisionSelectionForm(selectionForm);
+
+            cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(cookieForm));
+            return createJsonObjectNode(selectionForm.getApplicationIds().size());
         } catch (Exception e) {
             log.error(e);
             return createJsonObjectNode(-1);
@@ -254,7 +269,7 @@ public class CompetitionManagementFundingController {
     }
 
     MultiValueMap<String, String> mapFormFilterParametersToMultiValueMap(FundingDecisionFilterForm fundingDecisionFilterForm) {
-        MultiValueMap<String, String> filterMap = new LinkedMultiValueMap<String, String>();
+        MultiValueMap<String, String> filterMap = new LinkedMultiValueMap<>();
         if(fundingDecisionFilterForm.getFundingFilter().isPresent()) {
             filterMap.put("fundingFilter", Arrays.asList(fundingDecisionFilterForm.getFundingFilter().get().getName()));
         }
@@ -302,8 +317,7 @@ public class CompetitionManagementFundingController {
 
         model.addAttribute("pagination", new PaginationViewModel(results, originQuery));
         model.addAttribute("results", results);
-        model.addAttribute("selectedIds", fundingDecisionSelectionForm.getApplicationIds());
-        model.addAttribute("activeSortField", "id");
+        model.addAttribute("selectionForm", fundingDecisionSelectionForm);
 
         return "comp-mgt-funders-panel";
     }

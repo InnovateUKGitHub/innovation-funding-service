@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competition.form;
 
 /**
- * TODO: Add description
+ * Contains both application id selection and filter values in one object.
  */
 public class FundingDecisionSelectionCookie {
     private FundingDecisionSelectionForm fundingDecisionSelectionForm = new FundingDecisionSelectionForm();

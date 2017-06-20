@@ -3,7 +3,7 @@ package org.innovateuk.ifs.competition.form;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
- * TODO: Add description
+ * Contains the Funding Decision choice value.
  */
 public class FundingDecisionChoiceForm {
     @NotEmpty

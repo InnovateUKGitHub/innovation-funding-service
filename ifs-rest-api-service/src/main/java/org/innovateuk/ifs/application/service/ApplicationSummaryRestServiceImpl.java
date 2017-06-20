@@ -36,7 +36,7 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 		filter.ifPresent(f -> params.put("filter", singletonList(f)));
 		fundingFilter.ifPresent(f -> params.put("fundingFilter", singletonList(f.toString())));
 
-		String uri = UriComponentsBuilder.fromPath(baseUrl).buildAndExpand(params).encode().toUriString();
+		String uri = UriComponentsBuilder.fromPath(baseUrl).queryParams(params).build().encode().toUriString();
 
 		return getWithRestResult(uri, competitionSummaryResourceListType());
 	}
