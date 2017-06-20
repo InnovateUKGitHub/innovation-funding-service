@@ -23,7 +23,7 @@ items:
         containers:
         - image: innovateuk/sp-service:1.0-SNAPSHOT
           name: shib
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
           - name: SP_PROXY_CERTIFICATE
             value: "<<SSLCERT>>"

@@ -12,7 +12,6 @@ import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionMod
 import org.innovateuk.ifs.application.populator.OpenProjectFinanceSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.SectionType;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
@@ -47,9 +46,7 @@ import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newS
 import static org.innovateuk.ifs.application.resource.SectionType.PROJECT_COST_FINANCES;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ELIGIBILITY_HAS_ALREADY_BEEN_APPROVED;
-import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.rest.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
@@ -134,10 +131,6 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
                 .withOrganisationTypeName(OrganisationTypeEnum.RESEARCH.name())
                 .withOrganisationType(OrganisationTypeEnum.RESEARCH.getId())
                 .build();
-
-        // save actions should always succeed.
-        when(formInputResponseRestService.saveQuestionResponse(anyLong(), anyLong(), anyLong(), eq(""), anyBoolean())).thenReturn(restSuccess(new ValidationMessages(fieldError("value", "", "Please enter some text 123"))));
-        when(formInputResponseRestService.saveQuestionResponse(anyLong(), anyLong(), anyLong(), anyString(), anyBoolean())).thenReturn(restSuccess(noErrors()));
 
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         when(sectionService.getAllByCompetitionId(anyLong())).thenReturn(sectionResources);

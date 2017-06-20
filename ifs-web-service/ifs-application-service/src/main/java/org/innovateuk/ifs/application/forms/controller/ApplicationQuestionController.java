@@ -6,15 +6,11 @@ import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.forms.populator.QuestionModelPopulator;
-import org.innovateuk.ifs.application.forms.service.ApplicationQuestionSaver;
+import org.innovateuk.ifs.application.forms.saver.ApplicationQuestionSaver;
 import org.innovateuk.ifs.application.forms.service.ApplicationRedirectionService;
 import org.innovateuk.ifs.application.forms.viewmodel.QuestionViewModel;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -61,13 +57,7 @@ public class ApplicationQuestionController {
     private ProcessRoleService processRoleService;
 
     @Autowired
-    private ApplicationService applicationService;
-
-    @Autowired
     private QuestionService questionService;
-
-    @Autowired
-    private CompetitionService competitionService;
 
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
@@ -95,11 +85,7 @@ public class ApplicationQuestionController {
                                @PathVariable(QUESTION_ID) final Long questionId,
                                UserResource user) {
 
-        ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
-        QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, model, form);
-
-        model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
-        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null);
+        populateShowQuestion(user, applicationId, questionId, model, form);
 
         return APPLICATION_FORM;
     }
@@ -116,53 +102,58 @@ public class ApplicationQuestionController {
                                      HttpServletResponse response) {
 
         Map<String, String[]> params = request.getParameterMap();
+        ValidationMessages errors = new ValidationMessages();
 
         // Check if the request is to just open edit view or to save
         if (params.containsKey(EDIT_QUESTION)) {
-
-            ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
-            if (processRole != null) {
-                questionService.markAsInComplete(questionId, applicationId, processRole.getId());
-            } else {
-                LOG.error("Not able to find process role for user " + user.getName() + " for application id " + applicationId);
-            }
-
-            return showQuestion(form, bindingResult, validationHandler, model, applicationId, questionId, user);
-
+            return handleEditQuestion(form, bindingResult, validationHandler, model, applicationId, questionId, user);
         } else {
-            QuestionResource question = questionService.getById(questionId);
-            ApplicationResource application = applicationService.getById(applicationId);
-
             if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
                 questionService.assignQuestion(applicationId, user, request);
                 cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
             }
 
-            ValidationMessages errors = new ValidationMessages();
-
             // First check if any errors already exist in bindingResult
             if (isAllowedToUpdateQuestion(questionId, applicationId, user.getId()) || isMarkQuestionRequest(params)) {
                 /* Start save action */
-                errors.addAll(applicationSaver.saveApplicationForm(application, form, question, user, request, response, bindingResult));
+                errors = applicationSaver.saveApplicationForm(applicationId, form, questionId, user.getId(), request, response, bindingResult.hasErrors());
             }
 
             model.addAttribute("form", form);
 
             /* End save action */
-            if (isUploadWithValidationErrors(request, errors) || isMarkAsCompleteRequestWithValidationErrors(params, errors, bindingResult)) {
-                validationHandler.addAnyErrors(errors);
-
+            if (hasErrors(request, errors, bindingResult)) {
                 // Add any validated fields back in invalid entries are displayed on re-render
-                ApplicantQuestionResource applicantQuestion = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
-                QuestionViewModel questionViewModel = questionModelPopulator.populateModel(applicantQuestion, model, form);
-
-                model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
-                applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null);
+                validationHandler.addAnyErrors(errors);
+                populateShowQuestion(user, applicationId, questionId, model, form);
                 return APPLICATION_FORM;
             } else {
                 return applicationRedirectionService.getRedirectUrl(request, applicationId, Optional.empty());
             }
         }
+    }
+
+    private boolean hasErrors(HttpServletRequest request, ValidationMessages errors, BindingResult bindingResult) {
+        return isUploadWithValidationErrors(request, errors) || isMarkAsCompleteRequestWithValidationErrors(request.getParameterMap(), errors, bindingResult);
+    }
+
+    private void populateShowQuestion(UserResource user, Long applicationId, Long questionId, Model model, ApplicationForm form) {
+        ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
+        QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, model, form);
+
+        model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
+        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null);
+    }
+
+    private String handleEditQuestion(ApplicationForm form, BindingResult bindingResult, ValidationHandler validationHandler, Model model, Long applicationId, Long questionId, UserResource user) {
+        ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
+        if (processRole != null) {
+            questionService.markAsIncomplete(questionId, applicationId, processRole.getId());
+        } else {
+            LOG.error("Not able to find process role for user " + user.getName() + " for application id " + applicationId);
+        }
+
+        return showQuestion(form, bindingResult, validationHandler, model, applicationId, questionId, user);
     }
 
     private Boolean isMarkAsCompleteRequestWithValidationErrors(Map<String, String[]> params, ValidationMessages errors, BindingResult bindingResult) {

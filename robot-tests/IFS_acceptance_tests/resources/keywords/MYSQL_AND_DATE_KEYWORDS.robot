@@ -84,6 +84,16 @@ get tomorrow
     ${tomorrow} =     Add time To Date    ${today}    1 day
     [Return]    ${tomorrow}
 
+get fortnight
+    ${today} =    Get Time
+    ${fortnight} =     Add time To Date    ${today}    14 day
+    [Return]    ${fortnight}
+
+get thirteen days
+    ${today} =    Get Time
+    ${thirteen} =     Add time To Date    ${today}    13 day
+    [Return]    ${thirteen}
+
 get tomorrow day
     ${today}=    get time
     ${tomorrow} =    Add time To Date    ${today}    1 day    result_format=%d    exclude_millis=true
