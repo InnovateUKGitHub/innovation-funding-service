@@ -5,7 +5,7 @@ items:
   kind: DeploymentConfig
   metadata:
     creationTimestamp: null
-    name: application-svc
+    name: front-door-svc
   spec:
     replicas: 1
     selector:
