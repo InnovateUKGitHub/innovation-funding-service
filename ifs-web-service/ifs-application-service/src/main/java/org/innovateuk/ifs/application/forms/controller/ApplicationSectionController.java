@@ -6,8 +6,8 @@ import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.form.ApplicationForm;
+import org.innovateuk.ifs.application.forms.saver.ApplicationSectionSaver;
 import org.innovateuk.ifs.application.forms.service.ApplicationRedirectionService;
-import org.innovateuk.ifs.application.forms.service.ApplicationSectionSaver;
 import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.section.AbstractSectionPopulator;
@@ -17,7 +17,6 @@ import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
-import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.section.AbstractSectionViewModel;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -58,12 +57,6 @@ public class ApplicationSectionController {
     private static final Log LOG = LogFactory.getLog(ApplicationSectionController.class);
 
     @Autowired
-    private SectionService sectionService;
-
-    @Autowired
-    private ApplicationService applicationService;
-
-    @Autowired
     private ApplicantRestService applicantRestService;
 
     @Autowired
@@ -89,6 +82,9 @@ public class ApplicationSectionController {
 
     @Autowired
     private ProcessRoleService processRoleService;
+
+    @Autowired
+    private ApplicationService applicationService;
 
     private Map<SectionType, AbstractSectionPopulator> sectionPopulators;
 
@@ -152,7 +148,7 @@ public class ApplicationSectionController {
         Map<String, String[]> params = request.getParameterMap();
 
         Boolean validFinanceTerms = validFinanceTermsForMarkAsComplete(form, bindingResult, applicantSection.getSection(), params, user.getId(), applicationId);
-        ValidationMessages saveApplicationErrors = applicationSaver.saveApplicationForm(applicantSection.getApplication(), applicantSection.getCompetition(), form, sectionId, user, request, response, validFinanceTerms);
+        ValidationMessages saveApplicationErrors = applicationSaver.saveApplicationForm(applicantSection.getApplication(), applicantSection.getCompetition().getId(), form, sectionId, user.getId(), request, response, validFinanceTerms);
         logSaveApplicationErrors(bindingResult);
 
         if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
