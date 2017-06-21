@@ -32,7 +32,7 @@ Valid login as Applicant
     [Documentation]    IFS-32
     [Tags]    HappyPath
     Given the user is not logged-in
-    When The guest user inserts user email & password     &{lead_applicant_credentials}
+    When The guest user inserts user email & password     ${lead_applicant}    ${short_password}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=Sign out
     And the user should not see the element    link=Sign in
@@ -88,7 +88,7 @@ Valid login as Comp Admin
     [Documentation]    INFUND-2130
     [Tags]    HappyPath
     Given the user is not logged-in
-    When The guest user inserts user email & password  &{Comp_admin1_credentials}
+    When The guest user inserts user email & password    ${Comp_admin1_credentials["email"]}    ${Comp_admin1_credentials["password"]}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=Sign out
     And the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
@@ -98,7 +98,7 @@ Valid login as Support role
     [Documentation]    IFS-188
     [Tags]
     Given the user is not logged-in
-    When The guest user inserts user email & password   &{support_user_credentials}
+    When The guest user inserts user email & password   ${support_user_credentials["email"]}    ${support_user_credentials["password"]}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
     [Teardown]    Logout as user
@@ -107,7 +107,7 @@ Valid login as IFS Admin role
     [Documentation]    IFS-603
     [Tags]
     Given the user is not logged-in
-    When The guest user inserts user email & password   &{ifs_admin_user_credentials}
+    When The guest user inserts user email & password   ${ifs_admin_user_credentials["email"]}    ${ifs_admin_user_credentials["password"]}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     And the user navigates to the page    ${COMP_ADMINISTRATOR_DASHBOARD}
     Then the user should see the element    link=Sign out
@@ -127,7 +127,7 @@ Valid login as Project Finance role
     [Tags]
     Given the user is not logged-in
     And the user navigates to the page    ${LOGIN_URL}
-    When The guest user inserts user email & password  &{internal_finance_credentials}
+    When The guest user inserts user email & password    ${internal_finance_credentials["email"]}    ${internal_finance_credentials["password"]}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
     # note that this has been updated as per the most recent requirements.
