@@ -11,9 +11,14 @@ import java.util.List;
  */
 public interface FinanceRowRestService {
     RestResult<ValidationMessages> add(Long applicationFinanceId, Long questionId, FinanceRowItem costItem);
+
     RestResult<FinanceRowItem> addWithoutPersisting(Long applicationFinanceId, Long questionId);
+
     RestResult<List<FinanceRowItem>> getCosts(Long applicationFinanceId);
+
     RestResult<ValidationMessages> update(FinanceRowItem costItem);
+
     RestResult<FinanceRowItem> findById(Long id);
+
     RestResult<Void> delete(Long costId);
 }

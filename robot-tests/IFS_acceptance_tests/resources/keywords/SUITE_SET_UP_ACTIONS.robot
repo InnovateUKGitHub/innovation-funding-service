@@ -152,17 +152,6 @@ Invite and accept the invitation
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
     And guest user log-in    ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
 
-The user redirects to the page
-    [Arguments]    ${TEXT1}    ${TEXT2}
-    Wait Until Keyword Succeeds Without Screenshots    10    500ms    Page Should Contain    ${TEXT1}
-    Page Should Contain    ${TEXT2}
-    Page Should Not Contain    error
-    Page Should Not Contain    ${404_error_message}
-    Page Should Not Contain    ${403_error_message}
-    # Header checking (INFUND-1892)
-    Wait Until Element Is Visible Without Screenshots    id=global-header
-    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
-
 The user navigates to the summary page of the Robot test application
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
@@ -231,7 +220,10 @@ the user follows the flow to register their organisation
     the user selects the checkbox               address-same
     the user should not see the element         jQuery=h3:contains("Organisation type")
     the user clicks the button/link             jQuery=.button:contains("Continue")
+#    This is added as the flow differs if comp is setup to have either Business or RTO as lead org type but not both
+    run keyword and ignore error  the user selects the radio button    organisationTypeId   radio-1
     the user clicks the button/link             jQuery=.button:contains("Save and continue")
+    run keyword and ignore error  the user clicks the button/link             jQuery=.button:contains("Save and continue")
 
 the user enters the details and clicks the create account
     [Arguments]   ${first_name}  ${last_name}  ${REG_EMAIL}

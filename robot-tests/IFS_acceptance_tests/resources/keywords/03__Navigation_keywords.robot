@@ -17,14 +17,6 @@ The user navigates to the page
     # Wait Until Page Contains Element Without Screenshots    link=Contact Us
     # Page Should Contain Link    href=${SERVER}/info/contact
 
-The user navigates to the assessor page
-    [Arguments]    ${TARGET_URL}
-    Wait for autosave
-    Go To    ${TARGET_URL}
-    # Error checking
-    Page Should Not Contain    Error
-    Page Should Not Contain    ${500_error_message}
-
 The user navigates to the page without the usual headers
     [Arguments]    ${TARGET_URL}
     Wait for autosave
@@ -50,12 +42,6 @@ The user is on the page
     # Pending completion of INFUND-2544, INFUND-2545
     # Wait Until Page Contains Element Without Screenshots    link=Contact Us
     # Page Should Contain Link    href=${SERVER}/info/contact
-
-the user is on the page or will navigate there
-    [Arguments]    ${TARGET_URL}
-    ${current_location} =    Get Location
-    ${status}    ${value} =    Run Keyword And Ignore Error Without Screenshots    Location Should Contain    ${TARGET_URL}
-    Run keyword if    '${status}' == 'FAIL'    The user navigates to the assessor page    ${TARGET_URL}
 
 The user should be redirected to the correct page
     [Arguments]    ${URL}
