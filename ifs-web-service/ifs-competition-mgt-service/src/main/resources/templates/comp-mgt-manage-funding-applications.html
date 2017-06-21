@@ -64,7 +64,7 @@
             </div>
         </div>
     </form>
-    <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+    <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}">
         <div class="grid-row sorting">
             <div class="column-half">
                 <div class="select-all">
@@ -72,12 +72,13 @@
                         <legend class="visuallyhidden">Select applications</legend>
 
                         <div class="multiple-choice">
-                                <input data-select-all="[id^=app-row-]" class="select-all" id="select-all-1" value="select-all" type="checkbox" />
+                                <input data-select-all="[id^=app-row-]" class="select-all" id="select-all-1" value="select-all" type="checkbox"
+                                       th:checked="${#lists.size(form.ids)} == ${model.pagination.totalCount}"/>
                                 <label for="select-all-1">
                                     Select all applications
                                 </label>
                         </div>
-                        <span class="form-hint"><span data-count-selected="[id^=app-row-]">3</span> applications selected</span>
+                        <span class="form-hint"><span data-count-selected="[id^=app-row-]" th:text="${#lists.size(form.ids)}">3</span> applications selected</span>
                     </fieldset>
                 </div>
             </div>
@@ -106,7 +107,13 @@
                     <tr th:each="applicationSummary, stat : ${model.content}">
                         <td class="form-group-cell">
                             <div class="multiple-choice" th:if="${applicationSummary.applicationFundingDecisionIsChangeable()}">
-                                <input data-switches-button-status="[name=write-an-send-email]" type="checkbox" class="app-row-select row-successful" th:field="*{ids[__${stat.index}__]}" th:value="${applicationSummary.id}" aria-labelledby="select-applications-label" th:id="'app-row-' + ${applicationSummary.id}" />
+                                <input data-switches-button-status="[name=write-an-send-email]"
+                                       type="checkbox"
+                                       class="app-row-select row-successful"
+                                       th:field="*{ids[__${stat.index}__]}"
+                                       th:value="${applicationSummary.id}"
+                                       aria-labelledby="select-applications-label"
+                                       th:id="'app-row-' + ${applicationSummary.id}" />
                                 <label th:for="'app-row-' + ${applicationSummary.id}">
                                     <span class="invisible">Select application</span>
                                 </label>
@@ -144,7 +151,7 @@
                                 Select all applications
                             </label>
                         </div>
-                        <span class="form-hint"><span data-count-selected="[id^=app-row-]">3</span> applications selected</span>
+                        <span class="form-hint"><span data-count-selected="[id^=app-row-]" th:text="${#lists.size(form.ids)}">3</span> applications selected</span>
                     </fieldset>
                 </div>
             </div>
