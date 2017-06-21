@@ -6,7 +6,7 @@ Documentation     INFUND-7734 Competition Management: Assign to application dash
 ...               INFUND-8061 Filter and pagination on Allocate Applications (Closed competition) and Manage applications (In assessment) dashboards
 ...
 ...               INFUND-8062 Filter and pagination on Assign to application (Closed competition) and Application progress dashboards
-Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
+Suite Setup       Guest user log-in in new browser    &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot

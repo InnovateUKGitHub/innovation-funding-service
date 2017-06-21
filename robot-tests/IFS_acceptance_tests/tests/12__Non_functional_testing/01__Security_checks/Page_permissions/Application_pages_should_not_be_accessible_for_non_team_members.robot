@@ -10,7 +10,7 @@ ${APPLICATION_7_FORM}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_4_
 *** Test Cases ***
 Applicant who is not team member can't access overview page
     [Documentation]    INFUND-1683
-    Given guest user log-in    &{collaborator2_credentials}
+    Given Guest user log-in in new browser    &{collaborator2_credentials}
     Then the user navigates to the page and gets a custom error message    ${APPLICATION_7_OVERVIEW_PAGE}   ${403_error_message}
 
 Applicant who is not team member can't access application form page

@@ -10,7 +10,7 @@ Documentation     INFUND-8942 - Filter and sorting on 'Ineligible applications' 
 ...               INFUND-7370 - As a member of the competitions team I can mark a submitted application as ineligible so that the application is not sent to be assessed
 ...
 ...               INFUND-8941 - As a member of the competitions team I can reinstate an application that as been marked as Ineligible
-Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
+Suite Setup       Guest user log-in in new browser    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin    Applicant
 Resource          ../../resources/defaultResources.robot

@@ -9,7 +9,7 @@ Resource          ../../../resources/defaultResources.robot
 *** Test Cases ***
 Invite a new Assessor to assess a competition
     [Documentation]    INFUND-8092
-    [Setup]    Guest user log-in    &{Comp_admin1_credentials}
+    [Setup]    Guest user log-in in new browser    &{Comp_admin1_credentials}
     Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
     And the user clicks the button/link    link=Invite
@@ -35,7 +35,7 @@ Invited User gets an email to assess the competition
 Resend the invite to the assessor again
     [Documentation]    IFS-39
     [Tags]
-    [Setup]     Guest user log-in    &{Comp_admin1_credentials}
+    [Setup]     Guest user log-in in new browser    &{Comp_admin1_credentials}
     Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
     And the user clicks the button/link    link=Overview

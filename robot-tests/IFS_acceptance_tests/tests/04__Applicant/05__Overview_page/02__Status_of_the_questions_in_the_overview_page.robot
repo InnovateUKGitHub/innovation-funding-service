@@ -11,7 +11,7 @@ Resource          ../../../resources/defaultResources.robot
 Status changes when we assign a question
     [Documentation]    INFUND-39
     [Tags]    HappyPath
-    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    [Setup]    Guest user log-in in new browser    &{lead_applicant_credentials}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=Project summary

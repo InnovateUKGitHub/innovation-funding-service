@@ -22,7 +22,7 @@ Documentation     INFUND-550 As an assessor I want the ‘Assessment summary’ 
 ...               INFUND-3743 As an Assessor I want to see all the assessments that I have already submitted in this competition so that I can see what I have done already.
 ...
 ...               INFUND-3719 As an Assessor and I have accepted applications to assess within a competition, I can see progress on my dashboard so I can keep track of my work
-Suite Setup       guest user log-in    &{assessor2_credentials}
+Suite Setup       Guest user log-in in new browser    &{assessor2_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot

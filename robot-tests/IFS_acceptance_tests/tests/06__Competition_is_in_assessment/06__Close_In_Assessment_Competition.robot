@@ -2,7 +2,7 @@
 Documentation     INFUND-6459 As a member of the competitions team I can select 'Close assessment' in an In assessment competition so that the competition is moved to state 'Out of assessment'
 ...
 ...               INFUND-6602 As a member of the competitions team I can navigate to the dashboard of an 'In assessment' competition so that I can see information and further actions for the competition
-Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
+Suite Setup       Guest user log-in in new browser    &{Comp_admin1_credentials}
 Suite Teardown    Run Keywords    Connect to Database    @{database}
 ...               AND    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE type='ASSESSMENT_CLOSED' AND competition_id=4;
 ...               AND    the user closes the browser    #Changed the status of the competition to "In Assessment" for the rest of the tests

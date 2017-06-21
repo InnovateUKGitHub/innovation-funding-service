@@ -20,7 +20,7 @@ Documentation     INFUND-7365 Inflight competition dashboards: Inform dashboard
 ...               INFUND-8876 No back navigation on applicant feedback view
 ...
 ...               INFUND-8066 Filter on 'Manage funding notifications' dashboard
-Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
+Suite Setup       Guest user log-in in new browser    &{Comp_admin1_credentials}
 Suite Teardown    Close browser and delete emails
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot

@@ -17,7 +17,7 @@ Resource          ../../resources/defaultResources.robot
 *** Test Cases ***
 Log-out
     [Tags]    HappyPath
-    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    [Setup]    Guest user log-in in new browser in new browser    &{lead_applicant_credentials}
     Given the user should see the element    link=Sign out
     Logout as user
 

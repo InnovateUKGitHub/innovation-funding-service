@@ -9,7 +9,7 @@ ${TEST_TAGS}      ${EMPTY}
 ${FF_PROFILE}     ${CURDIR}/../firefox_config
 
 *** Keywords ***
-Guest user log-in
+Guest user log-in in new browser in new browser
     [Arguments]    ${email}    ${password}
     The guest user opens the browser
     The guest user inserts user email & password    ${email}    ${password}
@@ -48,10 +48,6 @@ The guest user opens the browser
     Run keyword if    '${SERVER_AUTH}' == ''    Open browser    ${PROTOCOL}${SERVER_BASE}    ${BROWSER}    remote_url=${REMOTE_URL}    desired_capabilities=${DESIRED_CAPABILITIES}
     Run keyword if    '${REMOTE_URL}' != 'http://hub:4444/wd/hub'    Set Selenium Timeout    10
     Run keyword if    '${REMOTE_URL}' == 'http://hub:4444/wd/hub'    Set Selenium Timeout    10
-
-TestTeardown User closes the browser
-    Run keyword if    '${SAUCELABS_RUN}' == 1    Get Sauce Labs Test Report
-    Close any open browsers
 
 The user closes the browser
     Run keyword if    '${SAUCELABS_RUN}' == 1    Get Sauce Labs Suite Report
