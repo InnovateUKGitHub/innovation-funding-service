@@ -17,7 +17,7 @@ Resource          ../../resources/defaultResources.robot
 *** Test Cases ***
 Log-out
     [Tags]    HappyPath
-    [Setup]    Guest user log-in in new browser in new browser    &{lead_applicant_credentials}
+    [Setup]    Guest user log-in in new browser    &{lead_applicant_credentials}
     Given the user should see the element    link=Sign out
     Logout as user
 
@@ -32,7 +32,7 @@ Valid login as Applicant
     [Documentation]    IFS-32
     [Tags]    HappyPath
     Given the user is not logged-in
-    When The guest user inserts user email & password    &{lead_applicant_credentials}
+    When The guest user inserts user email & password     &{lead_applicant_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=Sign out
     And the user should not see the element    link=Sign in

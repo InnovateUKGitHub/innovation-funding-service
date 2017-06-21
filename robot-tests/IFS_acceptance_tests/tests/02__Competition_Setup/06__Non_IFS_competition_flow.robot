@@ -15,7 +15,7 @@ Resource          CompAdmin_Commons.robot
 Create new non-IFS competition by proj Finance
     [Documentation]    INFUND-7963 INFUND-7964
     [Tags]  HappyPath
-    Given Guest user log-in in new browser in new browser    &{internal_finance_credentials}
+    Given Guest user log-in in new browser    &{internal_finance_credentials}
     When the user navigates to the Non IFS competitions tab
     And the user clicks the button/link     link=Create non-IFS competition
     Then the user should see the element  jQuery=h1:contains("Non-IFS competition details")
