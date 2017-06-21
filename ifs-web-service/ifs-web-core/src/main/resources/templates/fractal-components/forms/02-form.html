@@ -1,0 +1,69 @@
+<h1 class="heading-xlarge">Tester</h1>
+
+<form action="readonly-form" method="get">
+    <h2 class="heading-medium">Your details</h2>
+    <div class="form-group">
+        <label class="form-label" for="firstName">
+            <span class="form-label-bold">First name</span>
+        </label>
+        <input class="form-control" type="text" required="required" minlength="2" maxlength="70" data-required-errormessage="Please enter a first name." data-minlength-errormessage="Your first name should have at least 2 characters." data-maxlength-errormessage="Your first name cannot have more than 70 characters." data-invalid-errormessage="Invalid first name." id="firstName" name="firstName" value="Felix">
+    </div>
+
+    <div class="form-group">
+        <label class="form-label" for="lastName">
+            <span class="form-label-bold">Last name</span>
+        </label>
+        <input class="form-control" id="lastName" type="text" required="required" minlength="2" maxlength="70" data-required-errormessage="Please enter a last name." data-minlength-errormessage="Your last name should have at least 2 characters." data-maxlength-errormessage="Your last name cannot have more than 70 characters." data-invalid-errormessage="Invalid last name." name="lastName" value="Wilson">
+    </div>
+
+    <fieldset class="extra-margin">
+        <legend class="visuallyhidden">Address details</legend>
+        <div class="form-group extra-margin">
+            <label class="form-label" for="addressForm.addressLine1">
+                <span class="form-label-bold">Street</span>
+            </label>
+            <input class="form-control" required="required" type="text" data-required-errormessage="The address cannot be blank." id="addressForm.addressLine1" name="addressForm.addressLine1" value="10 Station Road">
+        </div>
+        <div class="form-group">
+            <label class="form-label visuallyhidden" for="addressForm.addressLine2">
+                <span class="form-label-bold">Street line 2</span>
+            </label>
+            <input class="form-control" type="text" id="addressForm.addressLine2" name="addressForm.addressLine2" value="">
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="addressForm.addressLine3">
+                <span class="form-label-bold visuallyhidden">Street line 3</span>
+            </label>
+            <input class="form-control" type="text" id="addressForm.addressLine3" name="addressForm.addressLine3" value="">
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="addressForm.town">
+                <span class="form-label-bold">Town</span>
+            </label>
+            <input class="form-control" required="required" type="text" data-required-errormessage="The town cannot be blank." id="addressForm.town" name="addressForm.town" value="Sheffield">
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="addressForm.county">
+                <span class="form-label-bold">County</span>
+            </label>
+            <input class="form-control" type="text" id="addressForm.county" name="addressForm.county" value="South Yorkshire">
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="addressForm.postcode">
+                <span class="form-label-bold">Postcode</span>
+            </label>
+            <input class="form-control" required="required" type="text" data-required-errormessage="The postcode cannot be blank." id="addressForm.postcode" name="addressForm.postcode" value="S11 2AA">
+        </div>
+    </fieldset>
+
+    <div class="form-group extra-margin">
+        <label class="form-label" for="phoneNumber">
+            <span class="form-label-bold">Phone number</span>
+            <span class="form-hint">We may use this to contact you about the application.</span>
+        </label>
+        <input class="form-control" type="tel" required="required" minlength="8" maxlength="20" data-minlength-errormessage="Input for your phone number has a minimum length of 8 characters." data-maxlength-errormessage="Input for your phone number has a maximum length of 20 characters." data-required-errormessage="Please enter a phone number." id="phoneNumber" name="phoneNumber" value="094073497201">
+    </div>
+
+    <button class="button button-large" type="submit">Save and return to your details</button>
+
+</form>
