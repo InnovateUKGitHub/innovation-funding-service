@@ -27,7 +27,7 @@ task dbResetUat(type:Exec) {
 
 task osDeployLocal(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
-    args = [openshiftEnv, "local"]
+    args = [openshiftEnv, "local", project.version]
 }
 
 task osDeployProduction(type:Exec) {
