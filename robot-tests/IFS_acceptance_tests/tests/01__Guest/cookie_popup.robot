@@ -3,7 +3,7 @@ Documentation     INFUND-703: As a user and I have provided the wrong login deta
 ...
 ...               INFUND-6260 As product owner I need to have an overview of the cookies stored, so we satisfy the cookie law and GDS guidelines
 Suite Setup       Run Keywords    The guest user opens the browser
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Resource          ../../resources/defaultResources.robot    #TODO update cookie info link to ${SERVER}/info/cookies when new shib image is delivered
 
 *** Test Cases ***

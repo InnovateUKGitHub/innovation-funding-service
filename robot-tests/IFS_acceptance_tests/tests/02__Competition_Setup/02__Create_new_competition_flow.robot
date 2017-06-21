@@ -56,7 +56,7 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               INFUND-9152 Add an 'Innovation sector' of 'Open' where 'Competition type' is 'Sector'
 Suite Setup       Custom suite setup
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot

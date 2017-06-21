@@ -19,7 +19,7 @@ Documentation     INFUND-1188 As an assessor I want to be able to review my asse
 ...
 ...               INFUND-5494 An assessor CAN follow a link to the competition brief from the competition dashboard
 Suite Setup       Guest user log-in  &{assessor2_credentials}
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 

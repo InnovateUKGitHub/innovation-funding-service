@@ -2,7 +2,7 @@
 Documentation     INFUND-1480 As an assessor I want to be able to update/edit my profile information so that it is up to date.
 Suite Setup       Run Keywords    guest user log-in    &{assessor2_credentials}
 ...               AND    User opens the edit details form
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 

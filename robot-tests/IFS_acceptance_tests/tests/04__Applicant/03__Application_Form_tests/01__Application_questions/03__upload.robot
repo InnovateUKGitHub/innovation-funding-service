@@ -151,12 +151,6 @@ Quarantined files are not returned to the user and the user is informed
     And the user should see the text in the page    This file has been found to be unsafe
 
 *** Keywords ***
-the user logs out
-    logout as user
-
-the collaborator logs in
-    log in as user    &{collaborator1_credentials}
-
 the user uploads the file to the 'technical approach' question
     [Arguments]    ${file_name}
     Choose File    name=formInput[1062]    ${UPLOAD_FOLDER}/${file_name}

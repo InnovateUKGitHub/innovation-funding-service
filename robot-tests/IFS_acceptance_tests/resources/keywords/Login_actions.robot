@@ -23,10 +23,6 @@ Log in as a different user
     the guest user inserts user email & password    ${email}    ${password}
     the guest user clicks the log-in button
 
-Log in as user
-    [Arguments]    ${email}    ${password}
-    Guest user log-in    ${email}    ${password}
-
 Invited guest user log in
     [Arguments]    ${email}    ${password}
     The guest user inserts user email & password    ${email}    ${password}
@@ -62,12 +58,10 @@ The user closes the browser
     Close any open browsers
 
 Logout as user
+    the user clicks the button/link    id=proposition-name
     the user clicks the button/link    link=Sign out
     The user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
     Run Keyword And Ignore Error Without Screenshots    confirm action
-
-The user can log out
-    logout as user
 
 Get Sauce Labs Test Report
     Run Keyword And Ignore Error Without Screenshots    Report Sauce status    'IFS | ${PREV_TEST_NAME}'    ${PREV_TEST_STATUS}    ${TEST_TAGS}    ${REMOTE_URL}
@@ -77,11 +71,6 @@ Get Sauce Labs Suite Report
 
 Close any open browsers
     Run Keyword And Ignore Error Without Screenshots    Close all browsers
-
-the guest user enters the log in credentials
-    [Arguments]    ${email}    ${password}
-    Input Text    id=username    ${email}
-    Input Password    id=password    ${password}
 
 the user cannot login with their new details
     [Arguments]    ${email}    ${password}

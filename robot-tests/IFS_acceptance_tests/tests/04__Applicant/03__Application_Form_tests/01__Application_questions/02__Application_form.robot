@@ -15,7 +15,7 @@ Documentation     INFUND-184: As an applicant and on the over view of the applic
 ...
 ...               INFUND-9154 Update 'Application details' > 'Innovation area' options to those set in 'Initial details' > 'Innovation area'
 Suite Setup       Log in and create a new application for the Aerospace competition
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 

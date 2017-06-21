@@ -5,7 +5,7 @@ Documentation     INFUND-1042 : As an applicant I want to be able to edit my use
 ...
 ...               INFUND-9245 Add marketing email option tick box to the 'Your profile' > 'Your details' page
 Suite Setup       Guest user log-in    &{lead_applicant_credentials}
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 

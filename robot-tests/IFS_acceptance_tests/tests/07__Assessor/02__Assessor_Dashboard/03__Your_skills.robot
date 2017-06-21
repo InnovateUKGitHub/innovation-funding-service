@@ -5,7 +5,7 @@ Documentation     INFUND-5182 As an assessor creating an account I need to suppl
 ...
 ...               INFUND-7059 As an assessor I can view my skills page so I can decide if my skills need updating
 Suite Setup       guest user log-in    &{existing_assessor1_credentials}
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot

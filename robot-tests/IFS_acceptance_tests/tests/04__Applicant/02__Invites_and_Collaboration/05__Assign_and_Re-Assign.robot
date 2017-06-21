@@ -16,7 +16,7 @@ Documentation     This suite depends on the Previous one!
 ...               INFUND-4806 As an applicant (lead) I want to be able to remove a registered collaborator so that I can manage members no longer required to be part of the consortium
 ...
 ...               INFUND-6823 As an Applicant I want to be invited to select the primary Research area for my project
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Test Teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot

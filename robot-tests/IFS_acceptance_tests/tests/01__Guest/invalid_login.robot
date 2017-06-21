@@ -2,7 +2,7 @@
 Documentation     -INFUND-703: As a user and I have provided the wrong login details I want to have the email address kept so I don't need to retype it
 Suite Setup       Run Keywords    The guest user opens the browser
 ...               AND    the user navigates to the page    ${LOGIN_URL}
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Guest
 Test Template     Email persists on invalid login
 Resource          Guest_commons.robot

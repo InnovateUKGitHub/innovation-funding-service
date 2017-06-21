@@ -16,7 +16,7 @@ Documentation     -INFUND-172: As a lead applicant and I am on the application s
 ...               INFUND-9058 Update 'Application submitted' and 'Application status' pages to the same view
 
 Suite Setup       new account complete all but one
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 Resource          ../FinanceSection_Commons.robot

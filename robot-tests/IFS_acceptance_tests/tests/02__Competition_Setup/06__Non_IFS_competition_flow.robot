@@ -67,7 +67,7 @@ Internal user can see the Non-IFS comp and its brief information
     Given the user navigates to the Non IFS competitions tab
     Then the user should see the element  jQuery=div:contains("Test non-IFS competition") ~ *:contains("Assembly / disassembly / joining")
     And the user should see the element   jQuery=div:contains("Test non-IFS competition") ~ *:contains("Last published")
-    [Teardown]  the user can log out
+    [Teardown]  Logout as user
 
 Guest user can apply to a Non-IFS competition at the FrontDoor
     [Documentation]    INFUND-7965

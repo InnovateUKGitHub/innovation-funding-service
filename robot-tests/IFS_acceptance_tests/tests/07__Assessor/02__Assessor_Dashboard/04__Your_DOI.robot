@@ -5,7 +5,7 @@ Documentation     INFUND-3715 - As an Assessor I need to declare any conflicts o
 ...
 ...               INFUND-7060 As an assessor I can view my declaration of interest page so...
 Suite Setup       guest user log-in    &{existing_assessor1_credentials}
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 

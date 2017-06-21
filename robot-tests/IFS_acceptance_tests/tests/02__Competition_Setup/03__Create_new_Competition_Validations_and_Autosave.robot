@@ -21,7 +21,7 @@ Documentation     INFUND-2982: Create a Competition: Step 1: Initial details
 ...
 ...               INFUND-5641 As a Competitions team member I want to be able to update the assessor setup questions so that I can amend the defaults if required for the competition
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot

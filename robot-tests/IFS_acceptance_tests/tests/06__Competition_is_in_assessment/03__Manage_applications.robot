@@ -15,7 +15,7 @@ Documentation     INFUND-7042 As a member of the competitions team I can see lis
 ...
 ...               INFUND-8061 Filter and pagination on Allocate Applications (Closed competition) and Manage applications (In assessment) dashboards
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
 Resource          ../../resources/defaultResources.robot
 

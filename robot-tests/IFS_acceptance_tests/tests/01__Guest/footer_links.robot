@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     IFS-362 As an IFS user I am able to find links to general guidance links via the footer both when signed in or not signed in.
 Suite Setup       The guest user opens the browser
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Guest
 Resource          ../../resources/defaultResources.robot
 

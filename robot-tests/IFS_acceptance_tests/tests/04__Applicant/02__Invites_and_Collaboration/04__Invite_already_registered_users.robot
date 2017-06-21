@@ -5,7 +5,7 @@ Documentation     INFUND-1458 As a existing user with an invitation to collabora
 ...
 ...               INFUND-3759: Existing Applicant should be able to accept invitations for other applications in the same organisation
 Suite Setup       The guest user opens the browser
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Email    Applicant
 Resource          ../../../resources/defaultResources.robot
 
@@ -50,7 +50,7 @@ The user edits the name this should be changed in the View team page
     And the user clicks the button/link    link=Edit your details
     And the user enters profile details
     Then the user should see the change in the view team members page
-    [Teardown]    TestTeardown User closes the browser
+    [Teardown]    The user closes the browser
 
 Invite a user with the same organisation under the same organisation
     [Documentation]    INFUND-3759

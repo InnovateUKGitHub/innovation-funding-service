@@ -5,7 +5,7 @@ Documentation     INFUND-2312: Competition status in assessment
 ...
 ...               INFUND-3740: Buttons still show as if the application were editable
 Suite Setup       Guest user log-in    &{lead_applicant_credentials}
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 

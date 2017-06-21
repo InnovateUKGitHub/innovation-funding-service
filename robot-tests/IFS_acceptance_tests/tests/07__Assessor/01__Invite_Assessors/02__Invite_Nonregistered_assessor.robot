@@ -15,7 +15,7 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...
 ...               INFUND-7603 Innovation area added to an Assessor's profile from invite
 Suite Setup       The guest user opens the browser
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
