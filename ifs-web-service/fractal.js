@@ -49,4 +49,4 @@ fractal.web.set('static.path', __dirname + '/ifs-web-core/src/main/resources/sta
 fractal.components.set('default.preview', '@preview');
 
 /* Set the static HTML build destination */
-// fractal.web.set('builder.dest', paths.distFractal)
+//fractal.web.set('builder.dest', __dirname + '/ifs-web-core/src/main/resources/templates/fractal-build');
