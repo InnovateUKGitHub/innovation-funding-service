@@ -1,24 +1,5 @@
-
-.copy-link {
-  float:right;
-  background:none;
-  border:none;
-  font-size: 19px;
-  color:$link-colour;
-  &:hover {
-    color:$link-hover-colour;
-    cursor:pointer;
+[data-copy-link] {
+  button {
+    float:right;
   }
-}
-.copy-link-textarea {
-  position:fixed;
-  top: -100px;
-  left: -100px;
-  width: 2em;
-  height: 2em;
-  padding: 0;
-  border: 0;
-  outline: 0;
-  boxShadow: 0;
-  background: transparent;
 }
