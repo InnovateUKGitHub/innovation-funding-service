@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.ASSIGN_QUESTION_PARAM;
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MARK_AS_COMPLETE;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.collectValidationMessages;
 
@@ -41,8 +43,6 @@ import static org.innovateuk.ifs.commons.rest.ValidationMessages.collectValidati
 @RequestMapping("/application")
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicationSubmitController {
-    public static final String ASSIGN_QUESTION_PARAM = "assign_question";
-    public static final String MARK_AS_COMPLETE = "mark_as_complete";
 
     @Autowired
     private QuestionService questionService;
@@ -138,7 +138,7 @@ public class ApplicationSubmitController {
                 List<ValidationMessages> markAsCompleteErrors = questionService.markAsComplete(markQuestionCompleteId, applicationId, processRole.getId());
 
                 if (collectValidationMessages(markAsCompleteErrors).hasErrors()) {
-                    questionService.markAsInComplete(markQuestionCompleteId, applicationId, processRole.getId());
+                    questionService.markAsIncomplete(markQuestionCompleteId, applicationId, processRole.getId());
                 }
             }
         }
