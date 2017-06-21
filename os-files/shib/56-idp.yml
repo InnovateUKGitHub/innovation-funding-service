@@ -21,7 +21,7 @@ items:
           deploymentconfig: idp
       spec:
         containers:
-        - image: innovateuk/idp-service:1.1.4-RC2-SNAPSHOT
+        - image: innovateuk/idp-service:1.0-SNAPSHOT
           name: idp
           imagePullPolicy: IfNotPresent
           env:

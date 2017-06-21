@@ -35,7 +35,13 @@ fi
 SVC_ACCOUNT_CLAUSE="--namespace=${PROJECT} --token=${SVC_ACCOUNT_TOKEN} --server=https://${SVC_ACCOUNT_CLAUSE_SERVER_PART} --insecure-skip-tls-verify=true"
 REGISTRY_TOKEN=${SVC_ACCOUNT_TOKEN};
 
-REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
+if [[ (${TARGET} == "local") ]]; then
+    REGISTRY='docker-registry-default.192.168.1.10.xip.io'
+else
+    REGISTRY='docker-registry-default.apps.prod.ifs-test-clusters.com'
+fi
+
+
 INTERNAL_REGISTRY=172.30.80.28:5000
 
 echo "Deploying the $PROJECT Openshift project"
@@ -103,9 +109,9 @@ fi
 if [[ (${TARGET} != "local") ]]
 then
     useContainerRegistry
-    pushApplicationImages
 fi
 
+pushApplicationImages
 deploy
 blockUntilServiceIsUp
 

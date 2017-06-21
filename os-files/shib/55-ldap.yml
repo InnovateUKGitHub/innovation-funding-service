@@ -22,7 +22,7 @@ items:
             value: "8389"
           - name: LDAP_SSL_PORT
             value: "8636"
-          image: innovateuk/ldap-service:1.1.4-RC2-SNAPSHOT
+          image: innovateuk/ldap-service:1.0-SNAPSHOT
           name: ldap
           imagePullPolicy: IfNotPresent
           ports:
