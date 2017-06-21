@@ -131,6 +131,8 @@ function pushApplicationImages() {
         ${REGISTRY}/${PROJECT}/assessment-service:${VERSION}
     docker tag innovateuk/application-service:${VERSION} \
         ${REGISTRY}/${PROJECT}/application-service:${VERSION}
+    docker tag innovateuk/front-door-service:${VERSION} \
+        ${REGISTRY}/${PROJECT}/front-door-service:${VERSION}
     docker tag innovateuk/sp-service:${VERSION} \
         ${REGISTRY}/${PROJECT}/sp-service:${VERSION}
     docker tag innovateuk/idp-service:${VERSION} \
@@ -146,6 +148,7 @@ function pushApplicationImages() {
     docker push ${REGISTRY}/${PROJECT}/competition-management-service:${VERSION}
     docker push ${REGISTRY}/${PROJECT}/assessment-service:${VERSION}
     docker push ${REGISTRY}/${PROJECT}/application-service:${VERSION}
+    docker push ${REGISTRY}/${PROJECT}/front-door-service:${VERSION}
     docker push ${REGISTRY}/${PROJECT}/sp-service:${VERSION}
     docker push ${REGISTRY}/${PROJECT}/idp-service:${VERSION}
     docker push ${REGISTRY}/${PROJECT}/ldap-service:${VERSION}
