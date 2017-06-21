@@ -33,7 +33,7 @@ Edit link navigates to the application form
     [Tags]    HappyPath
     Given the user clicks the button/link    jQuery=button:contains("Project summary")
     When the user clicks the button/link    jQuery=#form-input-1039 button:contains("Return and edit")
-    Then the user redirects to the page    Please provide a short summary of your project    Project summary
+    Then the user should see the text in the page    Project summary
     And The user enters text to a text field    css=#form-input-1039 .editor    Test text 123
     [Teardown]    The user clicks the button/link    jQuery=Button:contains(Save and return to application overview)
 
@@ -43,7 +43,7 @@ Application overview button
     Given The user navigates to the summary page of the Robot test application
     And the user clicks the button/link    jQuery=button:contains("Technical approach")
     When the user clicks the button/link    link=Application overview
-    Then the user redirects to the page    Please provide information about your project.    Application overview
+    Then the user should see the text in the page    Application overview
 
 *** Keywords ***
 all the sections should be visible
