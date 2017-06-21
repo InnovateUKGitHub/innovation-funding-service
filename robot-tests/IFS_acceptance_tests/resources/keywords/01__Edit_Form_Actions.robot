@@ -24,16 +24,6 @@ the user unselects the checkbox
     Element Should Be Visible    id=global-header
     Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
-the user should see the checkbox
-    [Arguments]    ${checkbox}
-    Wait Until Element Is Visible Without Screenshots    css=[id="${checkbox}"]:checked ~ label, [name="${checkbox}"]:checked ~ label
-    # Error checking
-    the user should not see an error in the page
-    # Header checking (INFUND-1892)
-    Element Should Be Visible    id=global-header
-    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
-
-
 the user should see that the checkbox is disabled
     [Arguments]    ${checkbox}
     Wait Until Element Is Visible Without Screenshots    css=[id="${checkbox}"][disabled="disabled"]:checked ~ label, [name="${checkbox}"][disabled="disabled"]:checked ~ label
@@ -83,29 +73,20 @@ the user moves focus to the element
     Wait Until Element Is Visible Without Screenshots    ${element}
     focus    ${element}
 
-the user should see the radio button in the page
-    [Arguments]    ${RADIO_BUTTON}
-    the user should see the element    css=[name^="${RADIO_BUTTON}"] ~ label
+the user moves the mouse away from the element
+    [Arguments]    ${element}
     # Error checking
     the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
     Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
-
+    Wait Until Element Is Visible Without Screenshots    ${element}
+    mouse out    ${element}
 
 the user sees that the radio button is selected
     [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
     Wait Until Element Is Visible Without Screenshots    css=[name="${RADIO_BUTTON}"][value="${SELECTION}"]:checked ~ label, [id="${SELECTION}"]:checked ~ label
     #[contains(@class,"selected")]
-    # Error checking
-    the user should not see an error in the page
-    # Header checking (INFUND-1892)
-    Element Should Be Visible    id=global-header
-    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
-
-the user sees that the radio button is not selected
-    [Arguments]    ${RADIO_BUTTON}
-    Wait Until Element Is Visible Without Screenshots    css=[name="${RADIO_BUTTON}"]:not(:checked) ~ label
     # Error checking
     the user should not see an error in the page
     # Header checking (INFUND-1892)
@@ -123,19 +104,6 @@ the user selects the option from the drop-down menu
     Element Should Be Visible    id=global-header
     Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
-the user submits the form
-    Submit Form
-    the user should not see an error in the page
-    # Header checking (INFUND-1892)
-    Element Should Be Visible    id=global-header
-    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
-
-Question should be editable
-    [Arguments]    ${Mark_question_as_incomplete}
-    ${status}    ${value}=    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible    ${Mark_question_as_incomplete}
-    Run Keyword If    '${status}' == 'PASS'    Click Element    ${Mark_question_as_incomplete}
-    wait for autosave
-
 The user enters text to a text field
     [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
     Wait Until Element Is Visible Without Screenshots    ${TEXT_FIELD}
@@ -146,6 +114,7 @@ The user enters text to a text field
     Wait for autosave
 
 The user enters large text to a text field
+    # Note that here we give extra time of execution compared to keyword "The user enters text to a text field"
     [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
     Wait Until Element Is Visible Without Screenshots    ${TEXT_FIELD}
     Clear Element Text    ${TEXT_FIELD}
@@ -195,17 +164,6 @@ the user should see the option in the drop-down menu
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
     Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
-
-
-the user moves the mouse away from the element
-    [Arguments]    ${element}
-    # Error checking
-    the user should not see an error in the page
-    # Header checking (INFUND-1892)
-    Element Should Be Visible    id=global-header
-    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
-    Wait Until Element Is Visible Without Screenshots    ${element}
-    mouse out    ${element}
 
 the user should see the dropdown option selected
     [Arguments]    ${option}    ${drop-down}

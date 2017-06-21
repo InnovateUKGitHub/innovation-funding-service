@@ -17,7 +17,7 @@ Applicant has options to enter funding level and details of any other funding
     And the user should see the element    css=[name*=other_funding-fundingSource]
     And the user should see the element    css=[name*=other_funding-securedDate]
     And the user should see the element    css=[name*=other_funding-fundingAmount]
-    And the user should see the radio button in the page    other_funding-otherPublicFunding-
+    And the user should see the element    css=[name^="other_funding-otherPublicFunding-"] ~ label
 
 Applicant can see maximum funding size available to them
     [Documentation]    INFUND-6794
