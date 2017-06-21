@@ -48,7 +48,7 @@ function fileFixtures() {
 }
 
 function copyNecessaryFiles() {
-    cp -r ifs-data-service/docker-build.gradle robot-tests-tmp/docker-build.gradle
+    cp -r ifs-data-layer/ifs-data-service/docker-build.gradle robot-tests-tmp/docker-build.gradle
 }
 
 function navigateToRoot(){

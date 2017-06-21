@@ -270,7 +270,7 @@ cd ..
 
 rootDir=`pwd`
 
-dataServiceCodeDir="${rootDir}/ifs-data-service"
+dataServiceCodeDir="${rootDir}/ifs-data-layer/ifs-data-service"
 webServiceCodeDir="${rootDir}/ifs-web-service"
 webBase="ifs.local-dev"
 

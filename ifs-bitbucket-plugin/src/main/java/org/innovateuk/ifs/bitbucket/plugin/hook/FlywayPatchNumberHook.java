@@ -54,8 +54,8 @@ public class FlywayPatchNumberHook implements RepositoryMergeRequestCheck {
                 flywayToFromVersionCallBack.onFrom(versions);
             }
         });
-        cs.streamDirectory(toRepo, toLastCommitId, "ifs-data-service/src/main/resources/db", true, toCallBack, pageRequest);
-        cs.streamDirectory(fromRepo, fromLastCommitId, "ifs-data-service/src/main/resources/db", true, fromCallBack, pageRequest);
+        cs.streamDirectory(toRepo, toLastCommitId, "ifs-data-layer/ifs-data-service/src/main/resources/db", true, toCallBack, pageRequest);
+        cs.streamDirectory(fromRepo, fromLastCommitId, "ifs-data-layer/ifs-data-service/src/main/resources/db", true, fromCallBack, pageRequest);
         // Callbacks handle the rejection as required.
     }
 
