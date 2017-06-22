@@ -24,7 +24,7 @@ Log-out
 Invalid Login
     [Tags]
     Given the user is not logged-in
-    When The guest user inserts user email & password    ${lead_applicant}   Passw0rd2
+    When The guest user inserts user email and password    ${lead_applicant}   Passw0rd2
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the guest user should get an error message
 
@@ -32,7 +32,7 @@ Valid login as Applicant
     [Documentation]    IFS-32
     [Tags]    HappyPath
     Given the user is not logged-in
-    When The guest user inserts user email & password     ${lead_applicant}    ${short_password}
+    When The guest user inserts user email and password     ${lead_applicant}    ${short_password}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=Sign out
     And the user should not see the element    link=Sign in
@@ -42,7 +42,7 @@ Valid login as Applicant
 Valid login as Collaborator
     [Tags]    HappyPath
     Given the user is not logged-in
-    When The guest user inserts user email & password    ${collaborator1_credentials["email"]}    ${collaborator1_credentials["password"]}
+    When The guest user inserts user email and password    &{collaborator1_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=Sign out
     And the user should be redirected to the correct page    ${DASHBOARD_URL}
@@ -52,7 +52,7 @@ Valid login as Assessor
     [Documentation]    INFUND-286
     [Tags]    HappyPath
     Given the user is not logged-in
-    When The guest user inserts user email & password    ${assessor_credentials["email"]}    ${assessor_credentials["password"]}
+    When The guest user inserts user email and password    &{assessor_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=Sign out
     And the user should be redirected to the correct page    ${assessor_dashboard_url}
@@ -62,7 +62,7 @@ Valid login with double role as Applicant
     [Documentation]    INFUND-1479
     [Tags]    HappyPath
     Given the user is not logged-in
-    When The guest user inserts user email & password    ${Multiple_user_credentials["email"]}    ${Multiple_user_credentials["password"]}
+    When The guest user inserts user email and password    &{Multiple_user_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then The user should see the text in the page    Please choose the role you are signing in as today
     And The user clicks the button/link    jquery=button:contains("Continue")
@@ -76,7 +76,7 @@ Valid login with double role as Applicant
 Valid login with Double role as Assessor
     [Documentation]    INFUND-1479
     Given the user is not logged-in
-    When The guest user inserts user email & password    ${Multiple_user_credentials["email"]}    ${Multiple_user_credentials["password"]}
+    When The guest user inserts user email and password    &{Multiple_user_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     And the user selects the radio button    selectedRole    ASSESSOR
     And The user clicks the button/link    jquery=button:contains("Continue")
@@ -88,7 +88,7 @@ Valid login as Comp Admin
     [Documentation]    INFUND-2130
     [Tags]    HappyPath
     Given the user is not logged-in
-    When The guest user inserts user email & password    ${Comp_admin1_credentials["email"]}    ${Comp_admin1_credentials["password"]}
+    When The guest user inserts user email and password    &{Comp_admin1_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=Sign out
     And the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
@@ -98,7 +98,7 @@ Valid login as Support role
     [Documentation]    IFS-188
     [Tags]
     Given the user is not logged-in
-    When The guest user inserts user email & password   ${support_user_credentials["email"]}    ${support_user_credentials["password"]}
+    When The guest user inserts user email and password   &{support_user_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
     [Teardown]    Logout as user
@@ -107,7 +107,7 @@ Valid login as IFS Admin role
     [Documentation]    IFS-603
     [Tags]
     Given the user is not logged-in
-    When The guest user inserts user email & password   ${ifs_admin_user_credentials["email"]}    ${ifs_admin_user_credentials["password"]}
+    When The guest user inserts user email and password   $&ifs_admin_user_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     And the user navigates to the page    ${COMP_ADMINISTRATOR_DASHBOARD}
     Then the user should see the element    link=Sign out
@@ -127,7 +127,7 @@ Valid login as Project Finance role
     [Tags]
     Given the user is not logged-in
     And the user navigates to the page    ${LOGIN_URL}
-    When The guest user inserts user email & password    ${internal_finance_credentials["email"]}    ${internal_finance_credentials["password"]}
+    When The guest user inserts user email and password    ${internal_finance_credentials["email"]}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
     # note that this has been updated as per the most recent requirements.
@@ -162,10 +162,10 @@ Reset password user enters new psw
     And the user clicks the button/link    jQuery=input[value*="Save password"]
     Then the user should see the text in the page    Your password is updated, you can now sign in with your new password
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And The guest user inserts user email & password    ${test_mailbox_one}+changepsw@gmail.com    Passw0rd
+    And The guest user inserts user email and password    ${test_mailbox_one}+changepsw@gmail.com    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the guest user should get an error message
-    When The guest user inserts user email & password    ${test_mailbox_one}+changepsw@gmail.com    Passw0rdnew
+    When The guest user inserts user email and password    ${test_mailbox_one}+changepsw@gmail.com    Passw0rdnew
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=Sign out
     And the user should be redirected to the correct page    ${DASHBOARD_URL}
