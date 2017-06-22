@@ -40,7 +40,7 @@ IFS.competitionManagement.loadOrder = {
       IFS.competitionManagement.fundingInformation.init()
       IFS.competitionManagement.repeater.init()
       IFS.core.finance.init()
-      IFS.core.copyLink.init()
+      IFS.competitionManagement.copyLink.init()
     }
   }
 }

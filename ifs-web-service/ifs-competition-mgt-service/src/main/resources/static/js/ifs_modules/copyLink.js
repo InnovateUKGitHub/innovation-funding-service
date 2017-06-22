@@ -1,4 +1,4 @@
-IFS.core.copyLink = (function () {
+IFS.competitionManagement.copyLink = (function () {
   'use strict'
   var s
   return {
@@ -15,7 +15,7 @@ IFS.core.copyLink = (function () {
         jQuery('body').on('click', copyLink + ' button', function (e) {
           var text = jQuery(this).prev().text()
           if (text.length) {
-            IFS.core.copyLink.copyToClipboard(text)
+            IFS.competitionManagement.copyLink.copyToClipboard(text)
           }
         })
       }
