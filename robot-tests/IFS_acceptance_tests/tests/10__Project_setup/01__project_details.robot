@@ -292,7 +292,7 @@ Invited project manager registration flow
     [Documentation]  INFUND-3550 INFUND-3554
     [Tags]  HappyPath  Email
     Given the user accepts invitation and signs in  ${TEST_MAILBOX_ONE}+invitedprojectmanager@gmail.com  Project Manager invitation  managing the project  Bob  Jones
-    When the guest user inserts user email & password  ${test_mailbox_one}+invitedprojectmanager@gmail.com  ${correct_password}
+    When The guest user inserts user email and password  ${test_mailbox_one}+invitedprojectmanager@gmail.com  ${correct_password}
     And the guest user clicks the log-in button
     Then the user should see the element        jQuery=.progress-list:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
     Then the user should not see the element    jQuery=.my-applications .in-progress  #applications in progress section
@@ -461,7 +461,7 @@ Invited finance contact registration flow
     [Documentation]  INFUND-3524 INFUND-3530
     [Tags]  HappyPath  Email
     Given the user accepts invitation and signs in  ${test_mailbox_one}+invitedfinancecontact@gmail.com  Finance contact invitation  providing finance details  John  Smith
-    When the guest user inserts user email & password  ${test_mailbox_one}+invitedfinancecontact@gmail.com  ${correct_password}
+    When The guest user inserts user email and password  ${test_mailbox_one}+invitedfinancecontact@gmail.com  ${correct_password}
     And the guest user clicks the log-in button
     Then the user should see the element  jQuery=.progress-list:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
 
@@ -699,7 +699,7 @@ Custom suite setup
 the invitee is able to assign himself as Finance Contact
     [Arguments]  ${email}  ${title}  ${pattern}  ${name}  ${famName}
     the user accepts invitation and signs in      ${email}  ${title}  ${pattern}  ${name}  ${famName}
-    the guest user inserts user email & password  ${email}  ${correct_password}
+    The guest user inserts user email and password  ${email}  ${correct_password}
     the guest user clicks the log-in button
     the user navigates to the page  ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/finance-contact?organisation=${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}
     the user selects the radio button  financeContact  financeContact3

@@ -12,7 +12,7 @@ Guest user can click on the footer links
     [Setup]    the user navigates to the page    ${frontDoor}
     Given the user tries the footer links    ${frontDoor}
     Then the user navigates to the page    ${LOGIN_URL}
-    And the guest user inserts user email & password    {lead_applicant}    ${correct_password}
+    And The guest user inserts user email and password    {lead_applicant}    ${correct_password}
     When the guest user clicks the log-in button
     Then the user tries the footer links    ${DASHBOARD_URL}
     And the user navigates to the page    ${LOGIN_URL}

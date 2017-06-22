@@ -31,11 +31,11 @@ Invited guest user log in
     the user should not see an error in the page
 
 The guest user inserts user email and password
-    [Arguments]    ${USERNAME}    ${PSW}
+    [Arguments]    ${email}    ${password}
     Wait Until Element Is Visible Without Screenshots    id=username
     Wait Until Element Is Visible Without Screenshots    id=password
-    Input Text    id=username    ${USERNAME}
-    Input Password    id=password    ${PSW}
+    Input Text    id=username    ${email}
+    Input Password    id=password    ${password}
 
 The guest user clicks the log-in button
     Wait Until Element Is Visible Without Screenshots    css=button[name="_eventId_proceed"]

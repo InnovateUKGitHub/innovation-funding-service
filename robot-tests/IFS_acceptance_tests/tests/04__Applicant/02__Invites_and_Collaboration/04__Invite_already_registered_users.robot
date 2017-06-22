@@ -25,7 +25,7 @@ The user clicks the login link
     [Documentation]    INFUND-1458
     [Tags]    HappyPath
     When the user clicks the button/link    link=Continue or sign in
-    And the guest user inserts user email & password    ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
+    And The guest user inserts user email and password    ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Confirm your organisation
 
@@ -92,7 +92,7 @@ The invited user should get a message to contact the helpdesk
     And the guest user opens the browser
     When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}   3
     When the user clicks the button/link    link=Continue or sign in
-    And the guest user inserts user email & password    ${recipient}  ${correct_password}
+    And The guest user inserts user email and password    ${recipient}  ${correct_password}
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Sorry, you are unable to accept this invitation
     And the user should see the text in the page    If you want to remain in the same organisation but join a different application, please contact the helpdesk on 0300 321 4357

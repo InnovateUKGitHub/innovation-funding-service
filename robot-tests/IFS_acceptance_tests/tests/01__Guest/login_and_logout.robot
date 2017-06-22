@@ -107,7 +107,7 @@ Valid login as IFS Admin role
     [Documentation]    IFS-603
     [Tags]
     Given the user is not logged-in
-    When The guest user inserts user email and password   $&ifs_admin_user_credentials}
+    When The guest user inserts user email and password   &{ifs_admin_user_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     And the user navigates to the page    ${COMP_ADMINISTRATOR_DASHBOARD}
     Then the user should see the element    link=Sign out
@@ -127,7 +127,7 @@ Valid login as Project Finance role
     [Tags]
     Given the user is not logged-in
     And the user navigates to the page    ${LOGIN_URL}
-    When The guest user inserts user email and password    ${internal_finance_credentials["email"]}
+    When The guest user inserts user email and password    &{internal_finance_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
     # note that this has been updated as per the most recent requirements.
