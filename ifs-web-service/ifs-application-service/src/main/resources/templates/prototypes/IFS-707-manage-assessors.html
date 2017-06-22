@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="dashboard-internal">
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Manage assessment panel'}, ${'/prototypes/IFS-707-manage-assessment-panel'} + ${(param.comp != null ? '?status=' + param.comp[0] : '')})" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'68: Technology inspired, competition closed'}, ${'Invite assessors to panel'}, ${null})" />
+
+	<th:block th:insert="prototypes/fragments/manage-assessment-panel :: prototype-assessor-intro" />
+
+	<ul class="inline-nav">
+		<li th:class="${(param.tab == null or param.tab[0] == 'find' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab == null or param.tab[0] == 'find' ? 'Item selected' : 'Item not selected' )}">
+			<a th:href="@{'?tab=find'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}">Find</a>
+		</li>
+		<li th:class="${(param.tab != null and param.tab[0] == 'invite' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab != null and param.tab[0] == 'invite' ? 'Item selected' : 'Item not selected' )}">
+			<a th:href="@{'?tab=invite'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}">Invite</a>
+		</li>
+		<li th:class="${(param.tab != null and param.tab[0] == 'overview' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab != null and param.tab[0] == 'overview' ? 'Item selected' : 'Item not selected' )}">
+			<a th:href="@{'?tab=overview'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}">Overview</a>
+		</li>
+	</ul>
+
+
+	<th:block th:insert="prototypes/fragments/manage-assessment-panel :: prototype-assessor-main-content" />
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/tablesaw-init.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/tablesaw.stackonly.jquery.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+	// <![CDATA[
+	$(document).ready(function() {
+        $('#view').on('change', function() {
+            this.form.submit();
+        });
+
+        /*$('#inviteFilter').on('change', function() {
+            this.form.submit();
+        });*/
+
+		jQuery('#includeAll').on('click',function(e){
+			//e.preventDefault();
+
+			if ( jQuery(this).is(':checked')) {
+				jQuery('#invite-group').removeClass('disabled');
+				jQuery('#invite-group').removeClass('button-secondary');
+				jQuery('.include-in-group').attr('checked', 'checked');
+
+				jQuery('.invite-individual').addClass('disabled');
+				jQuery('.invite-individual').addClass('button-secondary');
+
+			}
+
+			else if ( jQuery(this).not(':checked')) {
+				jQuery('.invite-individual').removeClass('disabled');
+				jQuery('.invite-individual').removeClass('button-secondary');
+
+				jQuery('#invite-group').addClass('disabled');
+				jQuery('#invite-group').addClass('button-secondary');
+				jQuery('.include-in-group').Attr('checked', '');
+
+
+			}
+
+		});
+
+
+		jQuery('.add-to-invite').on('click',function(e){
+			e.preventDefault();
+
+			if(jQuery(this).hasClass('added')){
+
+				jQuery(this).removeClass('added');
+				jQuery(this).text('Add');
+
+
+			}else{
+
+				jQuery(this).addClass('added');
+				jQuery(this).text('Remove');
+
+			}
+
+		});
+
+		jQuery('#prototype-assessor-row-two, #prototype-assessor-addable-rows').hide();
+
+		jQuery('#prototype-remove-one, #prototype-remove-two').on('click',function(e){
+			e.preventDefault();
+
+			jQuery(this).parent().parent().parent().hide();
+
+		});
+
+		jQuery('#prototype-assessor-add-row').on('click',function(e){
+			e.preventDefault();
+
+			jQuery('#prototype-assessor-row-two').show();
+
+		});
+
+
+		jQuery('#prototype-add-assessors').on('click',function(e){
+			e.preventDefault();
+
+			jQuery('#prototype-assessor-addable-rows').show();
+
+		});
+
+
+
+    });
+	// ]]>
+</script>
+</body>
+</html>

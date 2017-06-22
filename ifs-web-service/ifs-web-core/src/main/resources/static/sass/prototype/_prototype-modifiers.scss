@@ -312,7 +312,7 @@ table{
 .dashboard-internal{
   .highlight-panel{
     padding: em(10) em(15) em(5) em(15);
-    min-height: 80px;
+    min-height: 100px;
     line-height: 1.1em;
     box-sizing: border-box;
 
@@ -513,4 +513,25 @@ ul.underline{
   color: $text-colour;
   padding-left: 60px;
  }
+}
+
+
+.select-all {
+  padding-top: 12px;
+
+  .form-hint {
+    @include media-down(mobile) {
+      display: block;
+      text-align: center;
+    }
+    display:inline-block;
+    margin: 8px 10px 0;
+    text-align: left;
+  }
+}
+
+.column-half{
+  &.select-all{
+    padding-left: 20px;
+  }
 }
