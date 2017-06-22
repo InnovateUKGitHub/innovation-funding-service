@@ -104,7 +104,7 @@ public class CompetitionManagementFundingNotificationsController {
                                @RequestParam MultiValueMap<String, String> params,
                                @PathVariable("competitionId") Long competitionId,
                                @ModelAttribute @Valid ManageFundingApplicationsQueryForm query,
-                               @ModelAttribute(name = "form", binding = false) @Valid SelectApplicationsForEmailForm selectionForm,
+                               @ModelAttribute(name = "selectionForm", binding = false) @Valid SelectApplicationsForEmailForm selectionForm,
                                @RequestParam(value = "clearFilters", defaultValue = "false") boolean clearFilters,
                                BindingResult bindingResult,
                                ValidationHandler validationHandler,
