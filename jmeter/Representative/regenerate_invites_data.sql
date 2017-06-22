@@ -25,5 +25,4 @@ select concat_ws(',', u.email, 'Passw0rd', a.id, pr.organisation_id, application
                            'helen.rhodes@load.example.com',
                            'david.wellington@load.example.com',
                            'felicity.jefferies@load.example.com')
-            order by a.id
-            INTO OUTFILE 'invites-csv.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n';
+            order by a.id;
