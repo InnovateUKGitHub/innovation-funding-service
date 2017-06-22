@@ -132,6 +132,13 @@ the user sees the text in the text field
     Wait Until Element Is Visible Without Screenshots    ${textfield}
     Wait Until Keyword Succeeds Without Screenshots    10    200ms    textfield should contain    ${textfield}    ${text}
 
+The user enters multiple strings into a text field
+    [Arguments]    ${field}    ${string}    ${multiplicity}
+    #Keyword uses custom IfsLibrary keyword "repeat string"
+    ${concatenated_string} =    repeat string    ${string}    ${multiplicity}
+    Wait Until Element Is Visible Without Screenshots   ${field}
+    Wait Until Keyword Succeeds Without Screenshots    30s    200ms    Input Text    ${field}    ${concatenated_string}
+
 # DropDown
 the user selects the option from the drop-down menu
     [Arguments]    ${option}    ${drop-down}
@@ -175,10 +182,3 @@ the user should see the dropdown option selected
     # Header checking    (INFUND-1892)
     Element Should Be Visible    id=global-header
     Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
-
-The user enters multiple strings into a text field
-    [Arguments]    ${field}    ${string}    ${multiplicity}
-    #Keyword uses custom IfsLibrary keyword "repeat string"
-    ${concatenated_string} =    repeat string    ${string}    ${multiplicity}
-    Wait Until Element Is Visible Without Screenshots   ${field}
-    Wait Until Keyword Succeeds Without Screenshots    30s    200ms    Input Text    ${field}    ${concatenated_string}
