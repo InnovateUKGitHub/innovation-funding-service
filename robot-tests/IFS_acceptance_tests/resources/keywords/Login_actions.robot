@@ -20,10 +20,9 @@ Guest user log-in in new browser
 Log in as a different user
     [Arguments]    ${email}    ${password}
     logout as user
-    the guest user inserts user email and password    ${email}    ${password}
-    the guest user clicks the log-in button
+    Guest user login without new browser    ${email}    ${password}
 
-Invited guest user log in
+Guest user login without new browser
     [Arguments]    ${email}    ${password}
     The guest user inserts user email and password    ${email}    ${password}
     The guest user clicks the log-in button
@@ -77,6 +76,7 @@ the user cannot login with their new details
     Click Button    css=button[name="_eventId_proceed"]
     Page Should Contain    ${unsuccessful_login_message}
     Page Should Contain    Your email/password combination doesn't seem to work.
+    the user should not see the element    link=Sign out
 
 the user logs out if they are logged in
     Run Keyword And Ignore Error Without Screenshots    log out as user
