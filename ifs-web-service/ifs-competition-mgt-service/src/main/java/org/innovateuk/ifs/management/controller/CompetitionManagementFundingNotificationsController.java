@@ -14,6 +14,7 @@ import org.innovateuk.ifs.competition.form.SelectApplicationsForEmailForm;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
 import org.innovateuk.ifs.management.form.AssessorSelectionForm;
+import org.innovateuk.ifs.management.form.FindAssessorsFilterForm;
 import org.innovateuk.ifs.management.model.ManageFundingApplicationsModelPopulator;
 import org.innovateuk.ifs.management.model.SendNotificationsModelPopulator;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -36,6 +37,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
+import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -104,15 +107,50 @@ public class CompetitionManagementFundingNotificationsController {
                                @RequestParam MultiValueMap<String, String> params,
                                @PathVariable("competitionId") Long competitionId,
                                @ModelAttribute @Valid ManageFundingApplicationsQueryForm query,
+                               @ModelAttribute(name = "form", binding = false) @Valid SelectApplicationsForEmailForm selectionForm,
+                               @RequestParam(value = "clearFilters", defaultValue = "false") boolean clearFilters,
                                BindingResult bindingResult,
-                               ValidationHandler validationHandler) {
+                               ValidationHandler validationHandler,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+
+        updateSelectionForm(request, response, competitionId, selectionForm, query, clearFilters);
         return validationHandler.failNowOrSucceedWith(queryFailureView(competitionId), () -> {
                     model.addAttribute("model", manageFundingApplicationsModelPopulator.populate(query, competitionId, buildQueryString(params)));
-                    model.addAttribute("form", new SelectApplicationsForEmailForm());
                     return MANAGE_FUNDING_APPLICATIONS_VIEW;
                 }
         );
+    }
 
+    private void updateSelectionForm(HttpServletRequest request,
+                                     HttpServletResponse response,
+                                     long competitionId,
+                                     SelectApplicationsForEmailForm selectionForm,
+                                     ManageFundingApplicationsQueryForm filterForm,
+                                     boolean clearFilters) {
+        SelectApplicationsForEmailForm storedSelectionForm = getApplicationsSelectionFormFromCookie(request, competitionId).orElse(new SelectApplicationsForEmailForm());
+        selectionForm.setAllSelected(storedSelectionForm.isAllSelected());
+        selectionForm.setIds(storedSelectionForm.getIds());
+        if ((storedSelectionForm.getStringFilter() != null ||
+                storedSelectionForm.getSendFilter() != null ||
+                storedSelectionForm.getFundingFilter() != null )
+                && !clearFilters) {
+            filterForm.setStringFilter(storedSelectionForm.getStringFilter());
+            filterForm.setSendFilter(of(storedSelectionForm.getSendFilter()));
+            filterForm.setFundingFilter(of(storedSelectionForm.getFundingFilter()));
+        }
+
+        if (selectionForm.isAllSelected()) {
+            selectionForm.setIds(getAllApplicationIds(competitionId, of(filterForm.getStringFilter()), filterForm.getSendFilter(), filterForm.getFundingFilter()));
+        } else {
+            selectionForm.getIds().retainAll(getAllApplicationIds(competitionId, of(filterForm.getStringFilter()), filterForm.getSendFilter(), filterForm.getFundingFilter()));
+        }
+        filterForm.getSendFilter().ifPresent(selectionForm::setSendFilter);
+        filterForm.getFundingFilter().ifPresent(selectionForm::setFundingFilter);
+        if (!filterForm.getStringFilter().isEmpty()) {
+            selectionForm.setStringFilter(filterForm.getStringFilter());
+        }
+        cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
     }
 
     @PostMapping("/manage-funding-applications")
@@ -122,28 +160,36 @@ public class CompetitionManagementFundingNotificationsController {
                                      @ModelAttribute @Valid ManageFundingApplicationsQueryForm query,
                                      BindingResult queryFormBindingResult,
                                      ValidationHandler queryFormValidationHandler,
-                                     @ModelAttribute("form") @Valid SelectApplicationsForEmailForm ids,
+                                     @ModelAttribute("form") @Valid SelectApplicationsForEmailForm selectionForm,
                                      BindingResult idsBindingResult,
-                                     ValidationHandler idsValidationHandler) {
+                                     ValidationHandler idsValidationHandler,
+                                     HttpServletRequest request,
+                                     HttpServletResponse response) {
+
+        SelectApplicationsForEmailForm submittedSelectionForm = getApplicationsSelectionFormFromCookie(request, competitionId).orElse(selectionForm);
+
         return queryFormValidationHandler.failNowOrSucceedWith(queryFailureView(competitionId),  // Pass or fail JSR 303 on the query form
                 () -> idsValidationHandler.failNowOrSucceedWith(idsFailureView(competitionId, query, model, params), // Pass or fail JSR 303 on the ids
                         () -> {
                             // Custom validation
-                            List<Long> applicationIds = ids.getIds().stream().map(this::toLongOrNull).filter(Objects::nonNull).collect(toList());
+                            List<Long> applicationIds = submittedSelectionForm.getIds().stream().map(this::toLongOrNull).filter(Objects::nonNull).collect(toList());
                             if (applicationIds.isEmpty()) {
                                 idsBindingResult.rejectValue("ids", "validation.manage.funding.applications.no.application.selected");
                             }
                             return idsValidationHandler.failNowOrSucceedWith(idsFailureView(competitionId, query, model, params), // Pass or fail custom validation
-                                    () -> composeEmailRedirect(competitionId, applicationIds));
+                                    () -> {
+                                        cookieUtil.removeCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId));
+                                        return composeEmailRedirect(competitionId, applicationIds);
+                                    });
                         }
                 )
         );
     }
 
-    @PostMapping(value = "/manage-funding-applications", params = {"application"})
+    @PostMapping(value = "/manage-funding-applications", params = {"assessor"})
     public @ResponseBody JsonNode selectApplicationForEmailList(
             @PathVariable("competitionId") long competitionId,
-            @RequestParam("application") String applicationId,
+            @RequestParam("assessor") String applicationId,
             @RequestParam("isSelected") boolean isSelected,
             @RequestParam(defaultValue = "0") int page,
             HttpServletRequest request,
@@ -194,7 +240,8 @@ public class CompetitionManagementFundingNotificationsController {
     private List<String> getAllApplicationIds(long competitionId,  Optional<String> stringFilter, Optional<Boolean> sendFilter, Optional<FundingDecision> fundingFilter) {
         List<ApplicationSummaryResource> resources =
                 applicationSummaryRestService.getWithFundingDecisionApplications(competitionId, stringFilter, sendFilter, fundingFilter).getSuccessObjectOrThrowException();
-        return simpleMap(resources, resource -> resource.getId().toString());
+        return resources.stream().filter(resource -> resource.applicationFundingDecisionIsChangeable()).map(
+                resource -> resource.getId().toString()).collect(toList());
     }
 
     private String getManageFundingApplicationsPage(long competitionId){

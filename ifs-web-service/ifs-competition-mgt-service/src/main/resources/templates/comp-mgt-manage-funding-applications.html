@@ -8,7 +8,7 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content" th:object="${form}">
+<main tabindex="-1" id="content" >
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
     <div class="error-summary" th:if="${#fields.hasErrors('${manageFundingApplicationsQueryForm.*}')}">
@@ -56,7 +56,7 @@
             </fieldset>
             <div class="grid-row">
                 <div class="column-half">
-                    <a href="?" class="button button-clear no-margin">Clear all filters</a>
+                    <a href="?clearFilters=true" class="button button-clear no-margin">Clear all filters</a>
                 </div>
                 <div class="column-half alignright">
                     <button class="button no-margin">Filter</button>
@@ -64,7 +64,7 @@
             </div>
         </div>
     </form>
-    <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" data-multipage-select="" th:attr="data-total-checkboxes=${model.keyStatistics.statThree}"><!--/* todo: total checkboxes attribute ? */-->
+    <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"  data-multipage-select="" th:attr="data-total-checkboxes=${model.keyStatistics.statThree}"><!--/* todo: total checkboxes attribute ? */-->
         <div class="grid-row sorting">
             <div class="column-half">
                 <div class="select-all">
@@ -84,7 +84,8 @@
             </div>
             <div class="column-half">
                 <fieldset class="mark-applications">
-                    <button class="button button-notification extra-margin-top" data-submit-el="" type="submit" name="write-an-send-email">Write and send email</button>
+                    <button class="button button-notification extra-margin-top" data-submit-el="" type="submit" name="write-and-send-email"
+                            th:attr="disabled=${#lists.isEmpty(form.ids)}">Write and send email</button>
                 </fieldset>
             </div>
         </div>
@@ -145,8 +146,9 @@
                     <fieldset>
                         <legend class="visuallyhidden">Select applications</legend>
                         <div class="multiple-choice">
+                            <input data-select-all="" id="select-all-2" type="checkbox"
+                                   th:checked="${#lists.size(form.ids)} == ${model.pagination.totalCount}"/>
                             <label for="select-all-2">
-                                <input data-select-all="" class="select-all" id="select-all-2" value="select-all" type="checkbox">
                                 Select all applications
                             </label>
                         </div>
@@ -156,7 +158,8 @@
             </div>
             <div class="column-half">
                 <fieldset class="mark-applications">
-                    <button class="button button-notification extra-margin-top" data-submit-el="" type="submit" name="write-an-send-email">Write and send email</button>
+                    <button class="button button-notification extra-margin-top" data-submit-el="" type="submit" name="write-and-send-email"
+                            th:attr="disabled=${#lists.isEmpty(form.ids)}">Write and send email</button>
                 </fieldset>
             </div>
         </div>
