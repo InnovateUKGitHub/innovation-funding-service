@@ -12,9 +12,6 @@ import org.innovateuk.ifs.competition.form.ManageFundingApplicationsQueryForm;
 import org.innovateuk.ifs.competition.form.NotificationEmailsForm;
 import org.innovateuk.ifs.competition.form.SelectApplicationsForEmailForm;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
-import org.innovateuk.ifs.management.form.AssessorSelectionForm;
-import org.innovateuk.ifs.management.form.FindAssessorsFilterForm;
 import org.innovateuk.ifs.management.model.ManageFundingApplicationsModelPopulator;
 import org.innovateuk.ifs.management.model.SendNotificationsModelPopulator;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -186,10 +183,10 @@ public class CompetitionManagementFundingNotificationsController {
         );
     }
 
-    @PostMapping(value = "/manage-funding-applications", params = {"assessor"})
+    @PostMapping(value = "/manage-funding-applications", params = {"selectionId"})
     public @ResponseBody JsonNode selectApplicationForEmailList(
             @PathVariable("competitionId") long competitionId,
-            @RequestParam("assessor") String applicationId,
+            @RequestParam("selectionId") String applicationId,
             @RequestParam("isSelected") boolean isSelected,
             @RequestParam(defaultValue = "0") int page,
             HttpServletRequest request,

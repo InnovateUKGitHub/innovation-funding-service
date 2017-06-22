@@ -117,10 +117,10 @@ public class CompetitionManagementInviteAssessorsController {
         cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
     }
 
-    @PostMapping(value = "/find", params = {"assessor"})
+    @PostMapping(value = "/find", params = {"selectionId"})
     public @ResponseBody JsonNode selectAssessorForInviteList(
             @PathVariable("competitionId") long competitionId,
-            @RequestParam("assessor") long assessorId,
+            @RequestParam("selectionId") long assessorId,
             @RequestParam("isSelected") boolean isSelected,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam Optional<Long> innovationArea,
