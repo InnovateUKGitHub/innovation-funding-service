@@ -32,7 +32,7 @@ Valid login as Applicant
     [Documentation]    IFS-32
     [Tags]    HappyPath
     Given the user is not logged-in
-    When The guest user inserts user email and password     ${lead_applicant}    ${short_password}
+    When The guest user inserts user email and password     &{lead_applicant_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=Sign out
     And the user should not see the element    link=Sign in
@@ -162,7 +162,7 @@ Reset password user enters new psw
     And the user clicks the button/link    jQuery=input[value*="Save password"]
     Then the user should see the text in the page    Your password is updated, you can now sign in with your new password
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And The guest user inserts user email and password    ${test_mailbox_one}+changepsw@gmail.com    Passw0rd
+    And The guest user inserts user email and password    ${test_mailbox_one}+changepsw@gmail.com    ${short_password}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the guest user should get an error message
     When The guest user inserts user email and password    ${test_mailbox_one}+changepsw@gmail.com    Passw0rdnew
