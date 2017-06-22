@@ -17,7 +17,7 @@ ${virus_scanning_warning}    This file is awaiting virus scanning
 Appendices available only for the correct questions
     [Documentation]    INFUND-832
     [Tags]
-    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    [Setup]    Guest user log-in in new browser    &{lead_applicant_credentials}
     ## Please leave this test case on top. It checks the appearance of the Upload button for pdfs before other tests do an actual upload
     the user cannot see the option to upload a file on the question    link=1. Business opportunity
     the user cannot see the option to upload a file on the question    link=2. Potential market
@@ -33,7 +33,7 @@ Appendices available only for the correct questions
 Large pdf uploads not allowed
     [Documentation]    INFUND-832
     [Tags]    HappyPath
-    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    [Setup]    Guest user log-in in new browser    &{lead_applicant_credentials}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
@@ -151,12 +151,6 @@ Quarantined files are not returned to the user and the user is informed
     And the user should see the text in the page    This file has been found to be unsafe
 
 *** Keywords ***
-the user logs out
-    logout as user
-
-the collaborator logs in
-    log in as user    &{collaborator1_credentials}
-
 the user uploads the file to the 'technical approach' question
     [Arguments]    ${file_name}
     Choose File    name=formInput[1062]    ${UPLOAD_FOLDER}/${file_name}
