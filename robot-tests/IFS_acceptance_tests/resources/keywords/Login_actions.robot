@@ -54,7 +54,8 @@ The user closes the browser
     Close any open browsers
 
 Logout as user
-    the user clicks the button/link    id=proposition-name
+    #the user clicks the button/link    id=proposition-name
+    #TODO please add this back in once IFS-715 is complete
     the user clicks the button/link    link=Sign out
     The user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
     Run Keyword And Ignore Error Without Screenshots    confirm action
