@@ -23,7 +23,7 @@ IFS.competitionManagement.multipageSelect = (function () {
       if (isSelectAll) {
         return { 'addAll': checked }
       } else {
-        return { 'assessor': value, 'isSelected': checked }
+        return { 'selectionId': value, 'isSelected': checked }
       }
     },
     processMultipageCheckbox: function (checkbox) {

@@ -32,13 +32,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
-import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.util.JsonUtil.getObjectFromJson;
@@ -54,13 +52,7 @@ public class CompetitionManagementFundingController {
 
     private static final Log log = LogFactory.getLog(CompetitionManagementFundingController.class);
 
-    public static final Collection<String> FILTERED_PARAMS = asList(
-            "applicationIds",
-            "fundingDecision",
-            "_csrf");
-
     private static final int PAGE_SIZE = 20;
-
     private static final String SELECTION_FORM = "fundingDecisionSelectionForm";
 
     @Autowired
@@ -148,12 +140,11 @@ public class CompetitionManagementFundingController {
     public String makeDecision(Model model,
                                @PathVariable("competitionId") long competitionId,
                                @ModelAttribute @Valid FundingDecisionPaginationForm paginationForm,
-                               @ModelAttribute @Valid FundingDecisionSelectionForm fundingDecisionSelectionForm,
-                               @ModelAttribute @Valid FundingDecisionChoiceForm fundingDecisionChoiceForm,
+                               @ModelAttribute FundingDecisionSelectionForm fundingDecisionSelectionForm,
+                               @ModelAttribute FundingDecisionChoiceForm fundingDecisionChoiceForm,
                                @ModelAttribute FundingDecisionFilterForm filterForm,
                                BindingResult bindingResult,
-                               HttpServletRequest request,
-                               HttpServletResponse response) {
+                               HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             return "redirect:/competition/" + competitionId + "/funding";
         }
@@ -207,9 +198,9 @@ public class CompetitionManagementFundingController {
         }
     }
 
-    @PostMapping(params = {"assessor", "isSelected"})
+    @PostMapping(params = {"selectionId", "isSelected"})
     public @ResponseBody JsonNode addSelectedApplicationsToFundingDecisionList(@PathVariable("competitionId") long competitionId,
-                                                               @RequestParam("assessor") long applicationId,
+                                                               @RequestParam("selectionId") long applicationId,
                                                                @RequestParam("isSelected") boolean isSelected,
                                                                HttpServletRequest request,
                                                                HttpServletResponse response) {
