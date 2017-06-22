@@ -207,6 +207,40 @@ public class CompetitionManagementFundingController {
         }
     }
 
+    @PostMapping(params = {"assessor", "isSelected"})
+    public @ResponseBody JsonNode addSelectedApplicationsToFundingDecisionList(@PathVariable("competitionId") long competitionId,
+                                                               @RequestParam("assessor") long applicationId,
+                                                               @RequestParam("isSelected") boolean isSelected,
+                                                               HttpServletRequest request,
+                                                               HttpServletResponse response) {
+        try {
+            FundingDecisionSelectionCookie cookieForm = getApplicationSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
+            FundingDecisionSelectionForm selectionForm = cookieForm.getFundingDecisionSelectionForm();
+            if (isSelected) {
+                List<Long> applicationIds = selectionForm.getApplicationIds();
+
+                if(!applicationIds.contains(applicationId)) {
+                    selectionForm.getApplicationIds().add(applicationId);
+                    List<Long> filteredApplicationList = getAllApplicationIdsByFilters(competitionId, cookieForm.getFundingDecisionFilterForm());
+                    if(applicationIds.containsAll(filteredApplicationList)) {
+                        selectionForm.setAllSelected(true);
+                    }
+                }
+            } else {
+                selectionForm.getApplicationIds().remove(applicationId);
+                selectionForm.setAllSelected(false);
+            }
+
+            cookieForm.setFundingDecisionSelectionForm(selectionForm);
+
+            cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(cookieForm));
+            return createJsonObjectNode(selectionForm.getApplicationIds().size());
+        } catch (Exception e) {
+            log.error(e);
+            return createJsonObjectNode(-1);
+        }
+    }
+
     private Optional<FundingDecisionSelectionCookie> getApplicationSelectionFormFromCookie(HttpServletRequest request, long competitionId) {
         String assessorFormJson = cookieUtil.getCookieValue(request, format("%s_comp%s", SELECTION_FORM, competitionId));
         if (isNotBlank(assessorFormJson)) {
@@ -238,34 +272,12 @@ public class CompetitionManagementFundingController {
         return updatedSelectionForm;
     }
 
-    @PostMapping(params = {"assessor", "isSelected"})
-    public @ResponseBody JsonNode addSelectedApplicationsToFundingDecisionList(@PathVariable("competitionId") long competitionId,
-                                                               @RequestParam("assessor") long applicationId,
-                                                               @RequestParam("isSelected") boolean isSelected,
-                                                               HttpServletRequest request,
-                                                               HttpServletResponse response) {
-        try {
-            FundingDecisionSelectionCookie cookieForm = getApplicationSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
-            FundingDecisionSelectionForm selectionForm = cookieForm.getFundingDecisionSelectionForm();
-            if (isSelected) {
-                List<Long> applicationIds = selectionForm.getApplicationIds();
+    private ObjectNode createJsonObjectNode(int selectionCount) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode node = mapper.createObjectNode();
+        node.put("selectionCount", selectionCount);
 
-                if(!applicationIds.contains(applicationId)) {
-                    selectionForm.getApplicationIds().add(applicationId);
-                }
-            } else {
-                selectionForm.getApplicationIds().remove(applicationId);
-                selectionForm.setAllSelected(false);
-            }
-
-            cookieForm.setFundingDecisionSelectionForm(selectionForm);
-
-            cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(cookieForm));
-            return createJsonObjectNode(selectionForm.getApplicationIds().size());
-        } catch (Exception e) {
-            log.error(e);
-            return createJsonObjectNode(-1);
-        }
+        return node;
     }
 
     MultiValueMap<String, String> mapFormFilterParametersToMultiValueMap(FundingDecisionFilterForm fundingDecisionFilterForm) {
@@ -320,13 +332,5 @@ public class CompetitionManagementFundingController {
         model.addAttribute("selectionForm", fundingDecisionSelectionForm);
 
         return "comp-mgt-funders-panel";
-    }
-
-    private ObjectNode createJsonObjectNode(int selectionCount) {
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode node = mapper.createObjectNode();
-        node.put("selectionCount", selectionCount);
-
-        return node;
     }
 }

@@ -7,13 +7,13 @@ IFS.competitionManagement.multipageSelect = (function () {
       selectAllEl: '[data-multipage-select] [data-select-all]',
       countEl: '[data-multipage-select] [data-count-selected]',
       submitEl: '[data-multipage-select] [data-submit-el]',
-      totalListSizeEl: '[data-multipage-select] [data-total-checkboxes]',
+      totalListSizeEl: '[data-multipage-select][data-total-checkboxes]',
       totalListSize: 0
     },
     init: function () {
       s = this.settings
       // caching the total list size once so we can do the changeSelectAllCheckboxState all selected check
-      s.totalListSize = parseInt(jQuery(s.totalListSizeEl).attr('[data-total-checkboxes]'))
+      s.totalListSize = parseInt(jQuery(s.totalListSizeEl).attr('data-total-checkboxes'))
 
       jQuery('body').on('change', s.multipageCheckboxEl, function () {
         IFS.competitionManagement.multipageSelect.processMultipageCheckbox(this)
