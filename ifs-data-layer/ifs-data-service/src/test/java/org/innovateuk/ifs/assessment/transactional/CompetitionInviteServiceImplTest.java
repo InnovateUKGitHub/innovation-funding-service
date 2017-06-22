@@ -1050,7 +1050,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         Page<User> expectedPage = new PageImpl<>(assessors, pageable, 2L);
 
-        when(userRepositoryMock.findAssessorsByCompetitionAndInnovationArea(competitionId, innovationArea.getId(), pageable))
+        when(competitionInviteRepositoryMock.findAssessorsByCompetitionAndInnovationArea(competitionId, innovationArea.getId(), pageable))
                 .thenReturn(expectedPage);
         when(profileRepositoryMock.findOne(assessors.get(0).getProfileId())).thenReturn(profile.get(0));
         when(profileRepositoryMock.findOne(assessors.get(1).getProfileId())).thenReturn(profile.get(1));
@@ -1059,7 +1059,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId, pageable, innovationAreaId)
                 .getSuccessObjectOrThrowException();
 
-        verify(userRepositoryMock).findAssessorsByCompetitionAndInnovationArea(competitionId, innovationArea.getId(), pageable);
+        verify(competitionInviteRepositoryMock).findAssessorsByCompetitionAndInnovationArea(competitionId, innovationArea.getId(), pageable);
         verify(profileRepositoryMock).findOne(assessors.get(0).getProfileId());
         verify(profileRepositoryMock).findOne(assessors.get(1).getProfileId());
         verify(innovationAreaMapperMock, times(2)).mapToResource(innovationArea);
@@ -1082,13 +1082,13 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         Page<User> assessorPage = new PageImpl<>(emptyList(), pageable, 0);
 
-        when(userRepositoryMock.findAssessorsByCompetitionAndInnovationArea(competitionId, innovationAreaId, pageable))
+        when(competitionInviteRepositoryMock.findAssessorsByCompetitionAndInnovationArea(competitionId, innovationAreaId, pageable))
                 .thenReturn(assessorPage);
 
         AvailableAssessorPageResource result = service.getAvailableAssessors(competitionId, pageable, of(innovationAreaId))
                 .getSuccessObjectOrThrowException();
 
-        verify(userRepositoryMock).findAssessorsByCompetitionAndInnovationArea(competitionId, innovationAreaId, pageable);
+        verify(competitionInviteRepositoryMock).findAssessorsByCompetitionAndInnovationArea(competitionId, innovationAreaId, pageable);
 
         assertEquals(page, result.getNumber());
         assertEquals(pageSize, result.getSize());
@@ -1107,12 +1107,12 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         Page<User> assessorPage = new PageImpl<>(emptyList(), pageable, 0);
 
-        when(userRepositoryMock.findAssessorsByCompetition(competitionId, pageable)).thenReturn(assessorPage);
+        when(competitionInviteRepositoryMock.findAssessorsByCompetition(competitionId, pageable)).thenReturn(assessorPage);
 
         AvailableAssessorPageResource result = service.getAvailableAssessors(competitionId, pageable, empty())
                 .getSuccessObjectOrThrowException();
 
-        verify(userRepositoryMock).findAssessorsByCompetition(competitionId, pageable);
+        verify(competitionInviteRepositoryMock).findAssessorsByCompetition(competitionId, pageable);
 
         assertEquals(page, result.getNumber());
         assertEquals(pageSize, result.getSize());

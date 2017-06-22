@@ -229,13 +229,13 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         Page<User> pagedResult;
 
         if (innovationArea.isPresent()) {
-            pagedResult = userRepository.findAssessorsByCompetitionAndInnovationArea(
+            pagedResult = competitionInviteRepository.findAssessorsByCompetitionAndInnovationArea(
                     competitionId,
                     innovationArea.orElse(null),
                     pageable
             );
         } else {
-            pagedResult = userRepository.findAssessorsByCompetition(competitionId, pageable);
+            pagedResult = competitionInviteRepository.findAssessorsByCompetition(competitionId, pageable);
         }
 
         List<AvailableAssessorResource> availableAssessors = simpleMap(pagedResult.getContent(), assessor -> {
