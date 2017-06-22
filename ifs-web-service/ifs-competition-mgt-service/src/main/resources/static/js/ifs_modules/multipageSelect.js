@@ -50,11 +50,7 @@ IFS.competitionManagement.multipageSelect = (function () {
           IFS.competitionManagement.multipageSelect.updateCount(selectedRows)
           IFS.competitionManagement.multipageSelect.updateSubmitButton(selectedRows)
           if (!isSelectAll) {
-            if (allSelected !== undefined) {
-              IFS.competitionManagement.multipageSelect.changeSelectAllCheckboxStateBasedOnAjaxValue(allSelected)
-            } else {
-              IFS.competitionManagement.multipageSelect.changeSelectAllCheckboxState(selectedRows)
-            }
+            IFS.competitionManagement.multipageSelect.changeSelectAllCheckboxState(allSelected)
           }
         }
       }).fail(function (data) {
@@ -77,19 +73,10 @@ IFS.competitionManagement.multipageSelect = (function () {
         jQuery(s.countEl).text(count)
       }
     },
-    changeSelectAllCheckboxState: function (count) {
-      // if all checkboxes are checked we also check the selectAll
-      var selectAll = jQuery(s.selectAllEl)
-      if (s.totalListSize === count) {
-        selectAll.prop('checked', 'checked')
-      } else {
-        selectAll.removeProp('checked')
-      }
-    },
-    changeSelectAllCheckboxStateBasedOnAjaxValue: function (allSelected) {
+    changeSelectAllCheckboxState: function (allSelected) {
       // if all checkboxes are checked we also check the s'electAll
       var selectAll = jQuery(s.selectAllEl)
-      if (allSelected === true') {
+      if (allSelected) {
         selectAll.prop('checked', 'checked')
       } else {
         selectAll.removeProp('checked')
