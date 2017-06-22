@@ -191,10 +191,10 @@ public class CompetitionManagementFundingController {
             }
 
             cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
-            return createJsonObjectNode(selectionForm.getFundingDecisionSelectionForm().getApplicationIds().size());
+            return createJsonObjectNode(selectionForm.getFundingDecisionSelectionForm().getApplicationIds().size(), selectionForm.getFundingDecisionSelectionForm().isAllSelected());
         } catch (Exception e) {
             log.error(e);
-            return createJsonObjectNode(-1);
+            return createJsonObjectNode(-1, false);
         }
     }
 
@@ -225,10 +225,10 @@ public class CompetitionManagementFundingController {
             cookieForm.setFundingDecisionSelectionForm(selectionForm);
 
             cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(cookieForm));
-            return createJsonObjectNode(selectionForm.getApplicationIds().size());
+            return createJsonObjectNode(selectionForm.getApplicationIds().size(), selectionForm.isAllSelected());
         } catch (Exception e) {
             log.error(e);
-            return createJsonObjectNode(-1);
+            return createJsonObjectNode(-1, false);
         }
     }
 
@@ -263,10 +263,11 @@ public class CompetitionManagementFundingController {
         return updatedSelectionForm;
     }
 
-    private ObjectNode createJsonObjectNode(int selectionCount) {
+    private ObjectNode createJsonObjectNode(int selectionCount, boolean allSelected) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         node.put("selectionCount", selectionCount);
+        node.put("allSelected", allSelected);
 
         return node;
     }

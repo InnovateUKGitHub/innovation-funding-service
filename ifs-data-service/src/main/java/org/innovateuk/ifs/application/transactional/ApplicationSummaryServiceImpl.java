@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -35,9 +36,7 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBL
 import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE_INFORMED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
@@ -137,7 +136,9 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
         String filterString = trimFilterString(filter);
         return find(applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
                 competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null)), notFoundError(ApplicationSummaryResource.class))
-                .andOnSuccessReturn(result -> result.stream().map(application -> applicationSummaryMapper.mapToResource(application)).collect(toList()));
+                .andOnSuccessReturn(result -> result.stream()
+                        .filter(applicationFundingDecisionIsSubmittable())
+                        .map(application -> applicationSummaryMapper.mapToResource(application)).collect(toList()));
     }
 
     @Override
@@ -332,5 +333,10 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
     private String trimFilterString(Optional<String> filterString) {
         return filterString.map(String::trim).orElse("");
+    }
+
+    private static Predicate<Application> applicationFundingDecisionIsSubmittable() {
+        return application -> application.getFundingDecision() == null || !application.getFundingDecision().equals(FundingDecisionStatus.FUNDED) ||
+                application.getManageFundingEmailDate() == null;
     }
 }
