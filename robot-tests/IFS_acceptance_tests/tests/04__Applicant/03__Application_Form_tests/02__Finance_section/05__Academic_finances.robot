@@ -131,7 +131,7 @@ Mark all as complete
     When the user enters text to a text field    id=tsb-ref    123123
     Then textfield value should be    id=tsb-ref    123123
     When the user clicks the button/link    jQuery=button:contains("Mark as complete")
-    Then the user redirects to the page    This is a breakdown of your project costs    Your finances
+    Then the user should see the text in the page    Your finances
     And the user navigates to the finance overview of the academic
     And the user should see the element    css=.finance-summary tr:nth-of-type(2) img[src*="/images/field/tick-icon"]
 

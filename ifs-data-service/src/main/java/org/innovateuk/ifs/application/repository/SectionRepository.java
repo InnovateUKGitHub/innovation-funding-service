@@ -11,14 +11,22 @@ import java.util.List;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface SectionRepository extends PagingAndSortingRepository<Section, Long> {
-	@Override
+    @Override
     List<Section> findAll();
-	List<Section> findByCompetitionIdOrderByParentSectionIdAscPriorityAsc(Long competitionId);
+
+    List<Section> findByCompetitionIdOrderByParentSectionIdAscPriorityAsc(Long competitionId);
+
     Section findFirstByCompetitionIdAndPriorityGreaterThanAndParentSectionIsNullOrderByPriorityAsc(Long competitionId, Integer priority);
+
     Section findFirstByCompetitionIdAndParentSectionIdAndPriorityGreaterThanAndQuestionGroupTrueOrderByPriorityAsc(Long competitionId, Long parentSectionId, Integer priority);
+
     Section findFirstByCompetitionIdAndPriorityLessThanAndQuestionGroupOrderByPriorityDesc(Long competitionId, Integer priority, boolean questionGroup);
+
     Section findFirstByCompetitionIdAndPriorityLessThanAndParentSectionIsNullOrderByPriorityDesc(Long competitionId, Integer priority);
+
     Section findFirstByCompetitionIdAndParentSectionIdAndPriorityLessThanAndQuestionGroupTrueOrderByPriorityDesc(Long competitionId, Long parentSectionId, Integer priority);
+
     Section findByQuestionsId(Long questionId);
+
     List<Section> findByCompetitionIdAndDisplayInAssessmentApplicationSummaryTrueOrderByPriorityAsc(Long competitionId);
 }

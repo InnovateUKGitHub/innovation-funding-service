@@ -229,7 +229,7 @@ Lead partner can change the Start Date
     And Mouse Out    id=projectStartDate_year
     And wait for autosave
     When the user clicks the button/link    jQuery=.button:contains("Save")
-    Then The user redirects to the page    You are providing these details as the lead on behalf of the overall project    Project details
+    Then The user should see the text in the page   Project details
     And the user should see the text in the page    1 Jan ${nextyear}
     Then the matching status checkbox is updated    project-details    1    yes
     [Teardown]    the user changes the start date back again

@@ -105,7 +105,7 @@ Funding information server-side validations
     [Tags]    HappyPath
     [Setup]    The user navigates to the Validation competition
     Given the user clicks the button/link    link=Funding information
-    And the user redirects to the page    Funding information    Reporting fields
+    And the user should see the text in the page    Funding information
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see an error    Please enter a funder name.
     And the user should see an error    Please enter a budget.

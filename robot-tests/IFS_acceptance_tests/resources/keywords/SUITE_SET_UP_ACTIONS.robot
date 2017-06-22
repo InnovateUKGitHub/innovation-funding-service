@@ -152,17 +152,6 @@ Invite and accept the invitation
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
     And guest user log-in    ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
 
-The user redirects to the page
-    [Arguments]    ${TEXT1}    ${TEXT2}
-    Wait Until Keyword Succeeds Without Screenshots    10    500ms    Page Should Contain    ${TEXT1}
-    Page Should Contain    ${TEXT2}
-    Page Should Not Contain    error
-    Page Should Not Contain    ${404_error_message}
-    Page Should Not Contain    ${403_error_message}
-    # Header checking (INFUND-1892)
-    Wait Until Element Is Visible Without Screenshots    id=global-header
-    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
-
 The user navigates to the summary page of the Robot test application
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
