@@ -15,7 +15,7 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...
 Suite Setup       Guest user log-in  &{lead_applicant_credentials}
 Suite Teardown    Close browser and delete emails
-Force Tags        Applicant
+Force Tags        Applicant    Support
 Default Tags
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../FinanceSection_Commons.robot
