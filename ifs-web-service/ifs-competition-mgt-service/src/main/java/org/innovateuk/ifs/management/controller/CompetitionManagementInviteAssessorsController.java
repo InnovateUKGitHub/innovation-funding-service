@@ -127,17 +127,21 @@ public class CompetitionManagementInviteAssessorsController {
             HttpServletRequest request,
             HttpServletResponse response) {
         try {
+            List<Long> assessorIds = getAllAssessorIds(competitionId, innovationArea);
             AssessorSelectionForm selectionForm = getAssessorSelectionFormFromCookie(request, competitionId).orElse(new AssessorSelectionForm());
             if (isSelected) {
                 selectionForm.getSelectedAssessorIds().add(assessorId);
+                if(selectionForm.getSelectedAssessorIds().containsAll(assessorIds)) {
+                    selectionForm.setAllSelected(true);
+                }
             } else {
                 selectionForm.getSelectedAssessorIds().remove(assessorId);
                 selectionForm.setAllSelected(false);
             }
             cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
-            return createJsonObjectNode(selectionForm.getSelectedAssessorIds().size());
+            return createJsonObjectNode(selectionForm.getSelectedAssessorIds().size(), selectionForm.getAllSelected());
         } catch (Exception e) {
-            return createJsonObjectNode(-1);
+            return createJsonObjectNode(-1, false);
         }
     }
 
@@ -161,9 +165,9 @@ public class CompetitionManagementInviteAssessorsController {
             }
 
             cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
-            return createJsonObjectNode(selectionForm.getSelectedAssessorIds().size());
+            return createJsonObjectNode(selectionForm.getSelectedAssessorIds().size(), selectionForm.getAllSelected());
         } catch (Exception e) {
-            return createJsonObjectNode(-1);
+            return createJsonObjectNode(-1, false);
         }
     }
 
@@ -358,10 +362,11 @@ public class CompetitionManagementInviteAssessorsController {
         return new ExistingUserStagedInviteListResource(invites);
     }
 
-    private ObjectNode createJsonObjectNode(int selectionCount) {
+    private ObjectNode createJsonObjectNode(int selectionCount, boolean allSelected) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         node.put("selectionCount", selectionCount);
+        node.put("allSelected", allSelected);
 
         return node;
     }

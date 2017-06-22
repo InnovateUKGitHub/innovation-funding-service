@@ -46,10 +46,11 @@ IFS.competitionManagement.multipageSelect = (function () {
         }
         if (typeof (result.selectionCount) !== 'undefined') {
           var selectedRows = parseInt(result.selectionCount)
+          var allSelected = result.allSelected
           IFS.competitionManagement.multipageSelect.updateCount(selectedRows)
           IFS.competitionManagement.multipageSelect.updateSubmitButton(selectedRows)
           if (!isSelectAll) {
-            IFS.competitionManagement.multipageSelect.changeSelectAllCheckboxState(selectedRows)
+            IFS.competitionManagement.multipageSelect.changeSelectAllCheckboxState(allSelected)
           }
         }
       }).fail(function (data) {
@@ -72,10 +73,10 @@ IFS.competitionManagement.multipageSelect = (function () {
         jQuery(s.countEl).text(count)
       }
     },
-    changeSelectAllCheckboxState: function (count) {
-      // if all checkboxes are checked we also check the selectAll
+    changeSelectAllCheckboxState: function (allSelected) {
+      // if all checkboxes are checked we also check the s'electAll
       var selectAll = jQuery(s.selectAllEl)
-      if (s.totalListSize === count) {
+      if (allSelected) {
         selectAll.prop('checked', 'checked')
       } else {
         selectAll.removeProp('checked')
