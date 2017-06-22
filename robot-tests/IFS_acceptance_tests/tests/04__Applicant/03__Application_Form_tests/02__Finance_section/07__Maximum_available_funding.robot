@@ -4,7 +4,7 @@ Suite Setup         the guest user opens the browser
 Suite Teardown      the user closes the browser
 Force Tags          Applicant
 Resource          ../../../../resources/defaultResources.robot
-Resource            ../../FinanceSection_Commons.robot
+Resource            ../../Applicant_Commons.robot
 *** Variables ***
 
 ${Application_name_business}           Maximum funding allowed Business

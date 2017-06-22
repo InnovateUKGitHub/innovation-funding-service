@@ -19,7 +19,7 @@ Suite Setup       new account complete all but one
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
-Resource          ../FinanceSection_Commons.robot
+Resource          ../Applicant_Commons.robot
 Resource          ../../10__Project_setup/PS_Common.robot
 
 *** Variables ***

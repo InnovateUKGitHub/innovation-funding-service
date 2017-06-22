@@ -10,7 +10,7 @@ Suite Setup       Login new application invite academic    ${test_mailbox_one}+a
 Suite Teardown    Close browser and delete emails
 Force Tags        Email    Applicant
 Resource          ../../../../resources/defaultResources.robot
-Resource          ../../FinanceSection_Commons.robot
+Resource          ../../Applicant_Commons.robot
 
 
 *** Variables ***

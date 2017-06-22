@@ -14,7 +14,7 @@ Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Applicant    CompAdmin
 Resource          ../../../resources/defaultResources.robot
-Resource          ../FinanceSection_Commons.robot
+Resource          ../Applicant_Commons.robot
 Resource          ../../10__Project_setup/PS_Common.robot
 Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
 

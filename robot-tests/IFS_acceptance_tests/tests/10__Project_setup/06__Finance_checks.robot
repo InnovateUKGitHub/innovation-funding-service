@@ -93,7 +93,7 @@ Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
 Resource          PS_Common.robot
-Resource          ../04__Applicant/FinanceSection_Commons.robot
+Resource          ../04__Applicant/Applicant_Commons.robot
 
 *** Variables ***
 ${ELBOW_GREASE_PROJECT}    ${getProjectId("Elbow grease")}

@@ -321,3 +321,13 @@ the user completes the new account creation
     the user enters text to a text field         jQuery=input[id="username"]  ${email}
     the user enters text to a text field        jQuery=input[id="password"]  ${correct_password}
     the user clicks the button/link              jQuery=button:contains("Sign in")
+
+the applicant adds some content and marks this section as complete
+    Focus    css=#form-input-1057 .editor
+    Input Text    css=#form-input-1057 .editor    This is some random text
+    the user clicks the button/link    name=mark_as_complete
+    the user should see the element    name=mark_as_incomplete
+
+the applicant edits the "economic benefit" question
+    the user clicks the button/link    name=mark_as_incomplete
+    the user should see the element    name=mark_as_complete

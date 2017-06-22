@@ -5,7 +5,7 @@ Suite Setup       Custom Suite Setup
 Suite Teardown    mark application details incomplete the user closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
-Resource          ../../FinanceSection_Commons.robot
+Resource          ../../Applicant_Commons.robot
 
 *** Test Cases ***
 Applicant has options to enter funding level and details of any other funding

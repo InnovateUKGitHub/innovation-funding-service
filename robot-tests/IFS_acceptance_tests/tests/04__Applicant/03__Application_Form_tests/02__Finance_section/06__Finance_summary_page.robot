@@ -18,7 +18,7 @@ Suite Teardown    Close browser and delete emails
 Force Tags        Applicant
 Default Tags
 Resource          ../../../../resources/defaultResources.robot
-Resource          ../../FinanceSection_Commons.robot
+Resource          ../../Applicant_Commons.robot
 Resource          ../../../10__Project_setup/PS_Common.robot
 # For the testing of those Testing cases, the application that has been used is:
 # CLOSED_COMPETITION_APPLICATION_NAME that is A new innovative solution
