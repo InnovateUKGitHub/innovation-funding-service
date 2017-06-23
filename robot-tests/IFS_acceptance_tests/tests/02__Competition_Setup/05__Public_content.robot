@@ -413,7 +413,7 @@ Guest user can see the updated How-to-apply information
 
 *** Keywords ***
 Custom suite setup
-    Guest user log-in  &{Comp_admin1_credentials}
+    Guest user log-in in new browser  &{Comp_admin1_credentials}
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
     ${today} =  get today
