@@ -26,15 +26,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_OPEN;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_OPEN_OR_LATER;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -110,6 +112,17 @@ public abstract class BaseTransactionalService  {
         return find(application(applicationId)).andOnSuccess(application -> {
                     if (application.getCompetition() != null && !OPEN.equals(application.getCompetition().getCompetitionStatus())) {
                         return serviceFailure(COMPETITION_NOT_OPEN);
+                    } else {
+                        return serviceSuccess(application);
+                    }
+                }
+        );
+    }
+
+    protected final ServiceResult<Application> getOpenOrLaterApplication(long applicationId) {
+        return find(application(applicationId)).andOnSuccess(application -> {
+                    if (application.getCompetition() != null && !Arrays.asList(OPEN, CLOSED, IN_ASSESSMENT, FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP).contains(application.getCompetition().getCompetitionStatus())) {
+                        return serviceFailure(COMPETITION_NOT_OPEN_OR_LATER);
                     } else {
                         return serviceSuccess(application);
                     }

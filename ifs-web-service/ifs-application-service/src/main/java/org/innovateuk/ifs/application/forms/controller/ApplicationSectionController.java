@@ -51,7 +51,6 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
  */
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
-@PreAuthorize("hasAnyAuthority('applicant', 'support')")
 public class ApplicationSectionController {
 
     private static final Log LOG = LogFactory.getLog(ApplicationSectionController.class);
@@ -93,12 +92,14 @@ public class ApplicationSectionController {
         sectionPopulators = populators.stream().collect(toMap(AbstractSectionPopulator::getSectionType, Function.identity()));
     }
 
+    @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/{sectionType}")
     public String redirectToSection(@PathVariable("sectionType") SectionType type,
                                     @PathVariable(APPLICATION_ID) Long applicationId) {
         return applicationRedirectionService.redirectToSection(type, applicationId);
     }
 
+    @PreAuthorize("hasAuthority('applicant')")
     @GetMapping(SECTION_URL + "{sectionId}")
     public String applicationFormWithOpenSection(@Valid @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form, BindingResult bindingResult, Model model,
                                                  @PathVariable(APPLICATION_ID) final Long applicationId,
@@ -129,6 +130,7 @@ public class ApplicationSectionController {
         return APPLICATION_FORM;
     }
 
+    @PreAuthorize("hasAuthority('applicant')")
     @PostMapping(SECTION_URL + "{sectionId}")
     public String applicationFormSubmit(@Valid @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
                                         BindingResult bindingResult, ValidationHandler validationHandler,
