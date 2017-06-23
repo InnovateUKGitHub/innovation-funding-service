@@ -75,7 +75,7 @@ ${project_duration}    36
 Project Finance user generates the Spend Profile
     [Documentation]    INFUND-5194
     [Tags]    HappyPath
-    [Setup]    log in as user               &{internal_finance_credentials}
+    [Setup]  Guest user log-in              &{internal_finance_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check
     Then the user should see the element    jQuery=a.eligibility-0:contains("Approved")
     And the user should see the element     jQuery=a.eligibility-1:contains("Approved")

@@ -58,7 +58,7 @@ ${project_details_submitted_message}    The project details have been submitted 
 Internal users can see Project Details not yet completed
     [Documentation]    INFUND-5856
     [Tags]    HappyPath
-    [Setup]    log in as user                      &{Comp_admin1_credentials}
+    [Setup]  Guest user log-in                     &{Comp_admin1_credentials}
     Given the user navigates to the page           ${internal_project_summary}
     Then the user should not see the element       jQuery=#table-project-status tr:nth-child(1) td.status.ok a    #Check here that there is no Green-Check
     When the user clicks the button/link           jQuery=#table-project-status tr:nth-child(1) td:nth-child(2) a

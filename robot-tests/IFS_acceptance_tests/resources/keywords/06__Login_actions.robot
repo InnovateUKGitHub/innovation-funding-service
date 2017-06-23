@@ -10,12 +10,9 @@ ${FF_PROFILE}     ${CURDIR}/../firefox_config
 
 *** Keywords ***
 Guest user log-in
-    [Arguments]    ${email}    ${password}
+    [Arguments]  ${email}  ${password}
     The guest user opens the browser
-    The guest user inserts user email & password    ${email}    ${password}
-    The guest user clicks the log-in button
-    Wait Until Page Contains Without Screenshots    dashboard
-    the user should not see an error in the page
+    Logging in and Error Checking  ${email}  ${password}
 
 Log in as a different user
     [Arguments]    ${email}    ${password}
@@ -23,11 +20,7 @@ Log in as a different user
     the guest user inserts user email & password    ${email}    ${password}
     the guest user clicks the log-in button
 
-Log in as user
-    [Arguments]    ${email}    ${password}
-    Guest user log-in    ${email}    ${password}
-
-Invited guest user log in
+Logging in and Error Checking
     [Arguments]    ${email}    ${password}
     The guest user inserts user email & password    ${email}    ${password}
     The guest user clicks the log-in button

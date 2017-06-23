@@ -28,10 +28,11 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...               INFUND-6450 As a member of the competitions team, I can see the status of each assessor invite s0...
 ...
 ...               INFUND-5494 An assessor CAN follow a link to the competition brief from the competition dashboard
-Suite Setup       log in as user    &{existing_assessor1_credentials}
+Suite Setup       Guest user log-in  &{existing_assessor1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
+Resource          ../Assessor_Commons.robot
 
 *** Variables ***
 ${Invitation_existing_assessor1}    ${server}/assessment/invite/competition/dcc0d48a-ceae-40e8-be2a-6fd1708bd9b7

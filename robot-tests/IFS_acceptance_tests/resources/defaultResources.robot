@@ -6,7 +6,7 @@ Resource          keywords/02__Validation_error_keywords.robot
 Resource          keywords/03__Navigation_keywords.robot
 Resource          keywords/04__Upload_Download_keywords.robot
 Resource          keywords/05__Email_Keywords.robot
-Resource          keywords/Login_actions.robot
+Resource          keywords/06__Login_actions.robot
 Resource          keywords/MYSQL_AND_DATE_KEYWORDS.robot
 Resource          keywords/SUITE_SET_UP_ACTIONS.robot
 Resource          keywords/User_actions.robot
