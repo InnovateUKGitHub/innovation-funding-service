@@ -29,7 +29,7 @@
 
         <div class="message-alert" th:if="${model.hasBeenPublished()}">
             <p th:unless="${model.inviteOnly}">This information will be publicly viewable by prospective applicants.</p>
-            <p th:if="${model.inviteOnly}" data-copy-link>Competition URL:
+            <p th:if="${model.inviteOnly}">Competition URL:
                 <a th:href="${model.competitionURL}" th:text="${model.competitionURL}"></a>
             </p>
         </div>

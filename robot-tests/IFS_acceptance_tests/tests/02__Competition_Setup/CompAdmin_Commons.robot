@@ -186,7 +186,7 @@ the user fills in the Public content and publishes
     the user clicks the button/link         jQuery=.button:contains("Return to public content")
     the user should see the element         jQuery=div:contains("Supporting information") ~ .task-status-complete
     # Publish and return
-    the user clicks the button/link         jQuery=button:contains("Publish public content")
+    the user clicks the button/link         jQuery=button:contains("Publish content")
 
 Change the open date of the Competition in the database to one day before
     [Arguments]  ${competition}

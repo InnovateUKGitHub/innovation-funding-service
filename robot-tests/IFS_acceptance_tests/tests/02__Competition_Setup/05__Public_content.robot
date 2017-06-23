@@ -315,7 +315,6 @@ User can view the competition url for invite only competitions
     [Documentation]    IFS-262
     [Tags]
     Given the user should not see the text in the page  This information will be publicly viewable by prospective applicants.
-    And the user should see the element                 jQuery=button:contains("Copy link")
     When the user clicks the button/link                jQuery=a:contains("${server}/competition/${competitionId}/overview")
     Then the user should see the text in the page       Public content competition
     And the user should see the text in the page        This is a Summary description
@@ -327,7 +326,6 @@ User can view the competition url for invite only competitions
     And the user clicks the button/link                 jQuery=.button:contains("Return to public content")
     Then the user should see the text in the page       This information will be publicly viewable by prospective applicants.
     And the user should not see the element             jQuery=p:contains("Competition URL:")
-    And the user should not see the element             jQuery=button:contains("Copy link")
     Then the user clicks the button/link                link=Competition information and search
     And the user clicks the button/link                 link=Edit
     Then the user selects the radio button              publishSetting  invite
