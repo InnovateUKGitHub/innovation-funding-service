@@ -247,11 +247,11 @@ Custom suite setup
 
 
 the lead partner fills in project details if they are not already filled in
-    Guest user log-in in new browser  &{lead_applicant_credentials}
+    The user logs-in in new browser   &{lead_applicant_credentials}
     the user navigates to the page    ${project_in_setup_page}
-    the user clicks the button/link    link=Project details
-    ${project_details_not_completed}    ${value}=    run keyword and ignore error without screenshots    the user should not see the element    css=#project-address-status.yes
-    run keyword if    '${project_details_not_completed}' == 'PASS'    the users fill in project details
+    the user clicks the button/link   link=Project details
+    ${project_details_not_completed}  ${value} =  run keyword and ignore error without screenshots  the user should not see the element  css=#project-address-status.yes
+    run keyword if  '${project_details_not_completed}' == 'PASS'  the users fill in project details
 
 
 the users fill in project details

@@ -593,8 +593,8 @@ Status updates correctly for internal user's table
 *** Keywords ***
 
 the project is completed if it is not already complete
-    Guest user log-in in new browser        &{lead_applicant_credentials}
-    the user navigates to the page          ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details
+    The user logs-in in new browser  &{lead_applicant_credentials}
+    the user navigates to the page   ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details
     ${project_manager_not_set}  ${value} =  run keyword and ignore error without screenshots  The user should not see the element  jQuery=#project-manager-status.yes
     run keyword if  '${project_manager_not_set}' == 'PASS'  all previous sections of the project are completed
 

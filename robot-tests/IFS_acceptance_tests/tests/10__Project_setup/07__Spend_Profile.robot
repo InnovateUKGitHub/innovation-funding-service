@@ -799,7 +799,7 @@ all previous sections of the project are completed
     project finance reviews Finance checks
 
 partners submit their finance contacts
-    Guest user log-in in new browser                  ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}    ${short_password}
+    The user logs-in in new browser    ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
     the user navigates to the page     ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/details/finance-contact?organisation=${Katz_Id}
     the user selects the radio button  financeContact    financeContact1
     the user clicks the button/link    jQuery=.button:contains("Save")

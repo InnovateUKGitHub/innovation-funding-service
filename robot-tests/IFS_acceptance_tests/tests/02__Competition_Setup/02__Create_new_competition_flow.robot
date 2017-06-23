@@ -675,7 +675,7 @@ the user should not see the assessed question feedback
     the user should not see the text in the page    There is little or no business drive to the project.
 
 Custom suite setup
-    Guest user log-in in new browser    &{Comp_admin1_credentials}
+    The user logs-in in new browser  &{Comp_admin1_credentials}
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
 

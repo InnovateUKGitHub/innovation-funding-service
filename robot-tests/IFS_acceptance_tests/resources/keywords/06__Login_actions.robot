@@ -9,7 +9,7 @@ ${TEST_TAGS}      ${EMPTY}
 ${FF_PROFILE}     ${CURDIR}/../firefox_config
 
 *** Keywords ***
-Guest user log-in in new browser
+The user logs-in in new browser
     [Arguments]  ${email}  ${password}
     The guest user opens the browser
     Logging in and Error Checking  ${email}  ${password}

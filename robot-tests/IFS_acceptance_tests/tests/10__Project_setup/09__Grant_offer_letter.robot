@@ -458,7 +458,7 @@ all the other sections of the project are completed (except spend profile approv
 
 
 the project finance user has approved bank details
-    Guest user log-in in new browser  &{internal_finance_credentials}
+    The user logs-in in new browser  &{internal_finance_credentials}
     the project finance user approves bank details for    Gabtype
     the project finance user approves bank details for    Kazio
     the project finance user approves bank details for    Cogilith

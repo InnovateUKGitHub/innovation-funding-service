@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     IFS-188 Stakeholder views – Support team
-Suite Setup       Guest user log-in in new browser  &{support_user_credentials}
+Suite Setup       The user logs-in in new browser  &{support_user_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Support
 Resource          ../../resources/defaultResources.robot

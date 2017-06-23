@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     INFUND-1480 As an assessor I want to be able to update/edit my profile information so that it is up to date.
-Suite Setup       Run Keywords    Guest user log-in in new browser    &{assessor2_credentials}
+Suite Setup       Run Keywords  The user logs-in in new browser  &{assessor2_credentials}
 ...               AND    User opens the edit details form
 Suite Teardown    The user closes the browser
 Force Tags        Assessor

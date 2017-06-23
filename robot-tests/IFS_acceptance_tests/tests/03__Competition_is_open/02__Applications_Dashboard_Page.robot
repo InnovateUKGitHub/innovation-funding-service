@@ -10,7 +10,7 @@ Documentation     INFUND-2135 As a Competition Administrator I want to be able t
 ...               INFUND-7369 Competition management: View list of all applications
 ...
 ...               INFUND-8010 Filter, sorting and pagination on 'All applications' dashboard
-Suite Setup       Guest user log-in in new browser  &{Comp_admin1_credentials}
+Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
@@ -112,19 +112,19 @@ Application has team link and team details
 Comp admin can open the view mode of the application
     [Documentation]    INFUND-2300,INFUND-2304, INFUND-2435, INFUND-7503
     [Tags]    HappyPath
-    [Setup]    Run keywords    Guest user log-in in new browser    &{lead_applicant_credentials}
-    ...    AND    the user can see the option to upload a file on the page    ${technical_approach_url}
-    ...    AND    the user uploads the file to the 'technical approach' question    ${valid_pdf}
-    Given log in as a different user    &{Comp_admin1_credentials}
-    And the user navigates to the page    ${COMP_MANAGEMENT_APPLICATIONS_LIST}
-    #Then the user should see the element    id=sort-by
-    #And the user selects the option from the drop-down menu    id    id=sort-by
-    And the user clicks the button/link    link=All applications
-    When the user clicks the button/link    link=${OPEN_COMPETITION_APPLICATION_1_NUMBER}
-    Then the user should be redirected to the correct page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
-    And the user should see the element    link=Print application
-    And the user should see the text in the page    Climate science the history of Greenland's ice
-    And the user should see the text in the page    ${valid_pdf}
+    [Setup]  The user logs-in in new browser                             &{lead_applicant_credentials}
+    When the user can see the option to upload a file on the page        ${technical_approach_url}
+    Then the user uploads the file to the 'technical approach' question  ${valid_pdf}
+    When log in as a different user                         &{Comp_admin1_credentials}
+    And the user navigates to the page                      ${COMP_MANAGEMENT_APPLICATIONS_LIST}
+    #Then the user should see the element  id=sort-by
+    #And the user selects the option from the drop-down menu  id  id=sort-by
+    And the user clicks the button/link                     link=All applications
+    When the user clicks the button/link                    link=${OPEN_COMPETITION_APPLICATION_1_NUMBER}
+    Then the user should be redirected to the correct page  ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
+    And the user should see the element                     link=Print application
+    And the user should see the text in the page            Climate science the history of Greenland's ice
+    And the user should see the text in the page            ${valid_pdf}
     And the user can view this file without any errors
     #    And the user should see the text in the page    ${quarantine_pdf}
     #    And the user cannot see this file but gets a quarantined message
