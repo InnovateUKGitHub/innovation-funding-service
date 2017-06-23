@@ -125,7 +125,7 @@ public class ApplicationNavigationPopulator {
 
     /**
      * This method creates a URL looking at referrer in request.  Because 'back' will be different depending on
-     * whether the user arrived at this page via PS pages and summary vs App pages input form/overview. (INFUND-6892)
+     * whether the user arrived at this page via PS pages and summary vs App pages input form/overview. (INFUND-6892 & IFS-401)
      */
     public void addAppropriateBackURLToModel(Long applicationId, Model model, SectionResource section, Optional<Long> applicantOrganisationId) {
         if (section != null && SectionType.FINANCE.equals(section.getType().getParent().orElse(null))) {
@@ -139,13 +139,15 @@ public class ApplicationNavigationPopulator {
             ApplicationResource application = applicationService.getById(applicationId);
             String backURL = "/application/" + applicationId;
 
-            if (eitherApplicationOrCompetitionAreNotOpen(application)) {
-                model.addAttribute("backTitle", "Application summary");
-                backURL += "/summary";
-            } else {
+            if (applicantOrganisationId.isPresent()) {
                 model.addAttribute("backTitle", "Application overview");
-                if (applicantOrganisationId.isPresent()) {
-                    backURL = ("/management/competition/" + section.getCompetition() + backURL);
+                backURL = ("/management/competition/" + section.getCompetition() + backURL);
+            } else {
+                if (eitherApplicationOrCompetitionAreNotOpen(application)) {
+                    model.addAttribute("backTitle", "Application summary");
+                    backURL += "/summary";
+                } else {
+                    model.addAttribute("backTitle", "Application overview");
                 }
             }
 
@@ -154,6 +156,6 @@ public class ApplicationNavigationPopulator {
     }
 
     private boolean eitherApplicationOrCompetitionAreNotOpen(ApplicationResource application) {
-        return !application.isOpen() || !application.getCompetitionStatus().equals(OPEN);
+        return !application.isOpen() || !(application.getCompetitionStatus().ordinal() >= OPEN.ordinal());
     }
 }

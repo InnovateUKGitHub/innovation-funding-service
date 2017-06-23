@@ -99,9 +99,9 @@ public class ApplicationNavigationPopulatorTest {
         Model model = mock(Model.class);
 
         setupApplicationCompetitionClosed(applicationId);
-        target.addAppropriateBackURLToModel(applicationId, model, null,Optional.empty());
-        verify(model).addAttribute(eq("backURL"), contains("/application/1/summary"));
-        verify(model).addAttribute(eq("backTitle"), contains("Application summary"));
+        target.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty());
+        verify(model).addAttribute(eq("backURL"), contains("/application/1"));
+        verify(model).addAttribute(eq("backTitle"), contains("Application overview"));
     }
 
     @Test

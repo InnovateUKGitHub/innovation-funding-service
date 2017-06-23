@@ -121,10 +121,10 @@ public abstract class BaseTransactionalService  {
 
     protected final ServiceResult<Application> getOpenOrLaterApplication(long applicationId) {
         return find(application(applicationId)).andOnSuccess(application -> {
-                    if (application.getCompetition() != null && !Arrays.asList(OPEN, CLOSED, IN_ASSESSMENT, FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP).contains(application.getCompetition().getCompetitionStatus())) {
-                        return serviceFailure(COMPETITION_NOT_OPEN_OR_LATER);
-                    } else {
+                    if (application.getCompetition() != null && application.getCompetition().getCompetitionStatus().ordinal() >= OPEN.ordinal()) {
                         return serviceSuccess(application);
+                    } else {
+                        return serviceFailure(COMPETITION_NOT_OPEN_OR_LATER);
                     }
                 }
         );
