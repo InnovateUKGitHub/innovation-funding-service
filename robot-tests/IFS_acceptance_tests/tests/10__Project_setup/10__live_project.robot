@@ -232,7 +232,7 @@ Grant offer letter section is read-only for academic partner
 *** Keywords ***
 
 the project is completed if it is not already complete
-    log in as user    ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
+    Guest user log-in in new browser    ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     the user navigates to the page    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     ${project_not_live}    ${value}=    run keyword and ignore error without screenshots    the user should not see the text in the page    The project is live
     run keyword if    '${project_not_live}' == 'PASS'     complete the project
@@ -250,7 +250,7 @@ complete the project
 
 
 the project finance user has approved bank details
-    Guest user log-in  &{internal_finance_credentials}
+    Log in as a different user    &{internal_finance_credentials}
     the project finance user approves bank details for    Gabtype
     the project finance user approves bank details for    Kazio
     the project finance user approves bank details for    Cogilith
