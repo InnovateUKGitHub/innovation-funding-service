@@ -2,14 +2,15 @@ package org.innovateuk.ifs.application.overheads;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.finance.service.OverheadFileRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.finance.service.OverheadFileRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
@@ -96,7 +97,7 @@ public class OverheadFileSaver {
     }
 
     private boolean isOverheadFileUploadRequest(HttpServletRequest request) {
-        return request instanceof StandardMultipartHttpServletRequest && request.getParameter(OVERHEAD_FILE_SUBMIT) != null;
+        return request instanceof MultipartHttpServletRequest && request.getParameter(OVERHEAD_FILE_SUBMIT) != null;
     }
 
     private boolean isOverheadFileDeleteRequest(HttpServletRequest request) {
