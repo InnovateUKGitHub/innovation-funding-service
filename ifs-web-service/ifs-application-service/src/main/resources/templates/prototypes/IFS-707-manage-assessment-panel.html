@@ -60,11 +60,11 @@
 
       <div class="grid-row">
         <div class="column-quarter">
-          <button class="button width-full">Confirm changes</button>
+          <button class="button width-full" th:disabled="${param.action == null}">Confirm changes</button>
         </div>
         <div class="column-quarter">
           <div class="highlight-panel">
-            <span class="heading-large">0</span><br /><small>Changes since last confirmation</small>
+            <span class="heading-large" th:text="${param.action != null} ? '5' : '0'">0</span><br /><small>Changes since last confirmation</small>
           </div>
         </div>
       </div>

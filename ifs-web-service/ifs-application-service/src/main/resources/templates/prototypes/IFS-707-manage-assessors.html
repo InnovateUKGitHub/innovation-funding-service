@@ -14,7 +14,7 @@
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
-	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Manage assessment panel'}, ${'/prototypes/IFS-707-manage-assessment-panel'} + ${(param.comp != null ? '?status=' + param.comp[0] : '')})" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Manage assessment panel'}, ${'/prototypes/IFS-707-manage-assessment-panel?action=update'})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -51,88 +51,46 @@
 
 <script type="text/javascript">
 	// <![CDATA[
-	$(document).ready(function() {
-        $('#view').on('change', function() {
-            this.form.submit();
-        });
+  jQuery(document).ready(function(){
+    function rowsSelected(){
+      var count = jQuery('input[name="selectedAssessorIds"]:checked').length;
+      jQuery('.applications-selected').html(count);
+      return count;
+    }
 
-        /*$('#inviteFilter').on('change', function() {
-            this.form.submit();
-        });*/
-
-		jQuery('#includeAll').on('click',function(e){
-			//e.preventDefault();
-
-			if ( jQuery(this).is(':checked')) {
-				jQuery('#invite-group').removeClass('disabled');
-				jQuery('#invite-group').removeClass('button-secondary');
-				jQuery('.include-in-group').attr('checked', 'checked');
-
-				jQuery('.invite-individual').addClass('disabled');
-				jQuery('.invite-individual').addClass('button-secondary');
-
-			}
-
-			else if ( jQuery(this).not(':checked')) {
-				jQuery('.invite-individual').removeClass('disabled');
-				jQuery('.invite-individual').removeClass('button-secondary');
-
-				jQuery('#invite-group').addClass('disabled');
-				jQuery('#invite-group').addClass('button-secondary');
-				jQuery('.include-in-group').Attr('checked', '');
-
-
-			}
-
-		});
-
-
-		jQuery('.add-to-invite').on('click',function(e){
-			e.preventDefault();
-
-			if(jQuery(this).hasClass('added')){
-
-				jQuery(this).removeClass('added');
-				jQuery(this).text('Add');
-
-
-			}else{
-
-				jQuery(this).addClass('added');
-				jQuery(this).text('Remove');
-
-			}
-
-		});
-
-		jQuery('#prototype-assessor-row-two, #prototype-assessor-addable-rows').hide();
-
-		jQuery('#prototype-remove-one, #prototype-remove-two').on('click',function(e){
-			e.preventDefault();
-
-			jQuery(this).parent().parent().parent().hide();
-
-		});
-
-		jQuery('#prototype-assessor-add-row').on('click',function(e){
-			e.preventDefault();
-
-			jQuery('#prototype-assessor-row-two').show();
-
-		});
-
-
-		jQuery('#prototype-add-assessors').on('click',function(e){
-			e.preventDefault();
-
-			jQuery('#prototype-assessor-addable-rows').show();
-
-		});
-
-
-
+    jQuery('input#select-all-check').on('click',function(e){
+      if (jQuery(this).is(':checked') ) {
+        jQuery('button[name="addSelected"]').prop('disabled', false);
+        jQuery('input[name="selectedAssessorIds"]').prop('checked', true);
+        jQuery("input#select-all-check").prop('checked', true);
+        rowsSelected();
+      }else{
+        jQuery('button[name="addSelected"]').prop('disabled', true);
+        jQuery('input[name="selectedAssessorIds"]').prop('checked', false);
+        jQuery("input#select-all-check").prop('checked', false);
+        rowsSelected();
+      }
     });
+
+    jQuery('input[name="selectedAssessorIds"]').on('click',function(e){
+
+      if (jQuery(this).is(':checked') ) { // if checked ensure buttons become active
+        jQuery('button[name="addSelected"]').prop('disabled', false);
+        rowsSelected();
+      }else{
+        jQuery("input.select-all").prop('checked', false);
+
+        if( rowsSelected() < 1){
+          jQuery('button[name="addSelected"]').prop('disabled', true);
+        }
+      }
+    });
+
+
+  });
 	// ]]>
 </script>
+
+
 </body>
 </html>
