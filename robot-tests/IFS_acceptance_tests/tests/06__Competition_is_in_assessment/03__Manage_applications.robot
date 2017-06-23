@@ -14,8 +14,8 @@ Documentation     INFUND-7042 As a member of the competitions team I can see lis
 ...               INFUND-7232 As a member of the competitions team I can view previously assigned assessors so I can see who has previously been removed from assessing the application
 ...
 ...               INFUND-8061 Filter and pagination on Allocate Applications (Closed competition) and Manage applications (In assessment) dashboards
-Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
-Suite Teardown    TestTeardown User closes the browser
+Suite Setup       Guest user log-in in new browser    &{Comp_admin1_credentials}
+Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
 Resource          ../../resources/defaultResources.robot
 
@@ -24,7 +24,10 @@ View the list of the applications
     [Documentation]    INFUND-7042
     [Tags]
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    When The user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
+    When The user clicks the button/link    jQuery=a:contains("Manage assessments")
+    And the user see the correct key statistics
+    And The key statistics counts should be correct
+    And The user clicks the button/link    jQuery=a:contains("Manage applications")
     Then the application list is correct before changes
 
 Filtering of the applications
@@ -94,6 +97,7 @@ Notify an assigned user
     [Tags]
     Given the user clicks the button/link    jQuery=tr:contains(Paul Plum) button:contains("Assign")
     And the user clicks the button/link    jQuery=a:contains("Allocate applications")
+    And the user clicks the button/link    jQuery=a:contains("Back")
     And the user clicks the button/link    jQuery=a:contains("Competition")
     And the user clicks the button/link    jQuery=button:contains("Notify assessors")
     And the element should be disabled    jQuery=button:contains("Notify assessors")
@@ -110,7 +114,8 @@ Remove and notify an assessor (Notified)
     [Tags]
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
+    And the user clicks the button/link    jQuery=a:contains("Manage assessments")
+    And the user clicks the button/link    jQuery=a:contains("Manage applications")
     And the user clicks the button/link    jQuery=tr:nth-child(9) a:contains(View progress)
     When the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("Remove")
     And the user clicks the button/link    jQuery=.buttonlink:contains(Cancel)
@@ -132,13 +137,15 @@ Reassign and notify an assessor (Notified)
     [Tags]
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
+    And the user clicks the button/link    jQuery=a:contains("Manage assessments")
+    And the user clicks the button/link    jQuery=a:contains("Manage applications")
     And the user clicks the button/link    jQuery=tr:nth-child(9) a:contains(View progress)
     And the user should see the text in the page    Previously assigned (1)
     And the user clicks the button/link    jQuery=tr:contains("Paul Plum") button:contains("Reassign")
     Then the user should see the text in the page    Assigned (1)
     And the assigned list is correct before notification
     And the user clicks the button/link    jQuery=a:contains("Allocate applications")
+    And the user clicks the button/link    jQuery=a:contains("Back")
     And the user clicks the button/link    jQuery=a:contains("Competition")
     And the user clicks the button/link    jQuery=button:contains("Notify assessors")
     And the element should be disabled    jQuery=button:contains("Notify assessors")
@@ -190,3 +197,22 @@ the previously assigned list is correct
     #the user should see the element    jQuery=.assessors-previous td:nth-child(4):contains('8')
     #the user should see the element    jQuery=.assessors-previous td:nth-child(5):contains('4')
     #TODO checks disabled due toINFUND-7745
+
+the user see the correct key statistics
+    the user should see the element    jQuery=small:contains("Total assignments")
+    the user should see the element    jQuery=small:contains("Assignments awaiting response")
+    the user should see the element    jQuery=small:contains("Assignments accepted")
+    the user should see the element    jQuery=small:contains("Assessments started")
+    the user should see the element    jQuery=small:contains("Assessments completed")
+
+The key statistics counts should be correct
+    ${TOTAL_ASSIGNMENT}=    Get text    css=.column-fifth:nth-child(1) span
+    Should Be Equal As Integers    ${TOTAL_ASSIGNMENT}    14
+    ${AWAITING}=    Get text    css=.column-fifth:nth-child(2) span
+    Should Be Equal As Integers    ${AWAITING}    7
+    ${ACCEPTED}=    Get text    css=.column-fifth:nth-child(3) span
+    Should Be Equal As Integers    ${ACCEPTED}    6
+    ${STARTED}=    Get text    css=.column-fifth:nth-child(4) span
+    Should Be Equal As Integers    ${STARTED}    0
+    ${SUBMITTED}=    Get text    css=.column-fifth:nth-child(5) span
+    Should Be Equal As Integers    ${SUBMITTED}    1

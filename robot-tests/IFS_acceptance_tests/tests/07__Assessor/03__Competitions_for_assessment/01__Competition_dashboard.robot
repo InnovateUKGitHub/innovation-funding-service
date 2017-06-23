@@ -19,8 +19,8 @@ Documentation     INFUND-1188 As an assessor I want to be able to review my asse
 ...               INFUND-4797 Handle scenario where invitation to assess an application has been removed from this user before they have responded
 ...
 ...               INFUND-5494 An assessor CAN follow a link to the competition brief from the competition dashboard
-Suite Setup       Guest user log-in  &{assessor2_credentials}
-Suite Teardown    TestTeardown User closes the browser
+Suite Setup       Guest user log-in in new browser  &{assessor2_credentials}
+Suite Teardown    The user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 *** Variables ***
@@ -125,7 +125,8 @@ Check the comp admin see the assessor has rejected the application
     [Tags]
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
+    And the user clicks the button/link    jQuery=a:contains("Manage assessments")
+    And the user clicks the button/link    jQuery=a:contains("Manage applications")
     And the user should see the element    jQuery=tr:nth-child(1) td:nth-child(2):contains("Park living")
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     And the user should see the text in the page    Rejected (1)

@@ -9,7 +9,7 @@
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
+            <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Back',linkClass='link-back',linkUrl=@{${backUrl}})" />
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.inAssessment} ? 'Manage applications' : 'Allocate Applications',subTitle=|${model.competitionId} : ${model.competitionName}, ${model.inAssessment ? 'in assessment' : 'competition closed'}|, size='heading-xlarge'" />
 
             <p class="extra-margin">Assign assessors to applications. You will need to confirm assignments before assessors are notified.</p>

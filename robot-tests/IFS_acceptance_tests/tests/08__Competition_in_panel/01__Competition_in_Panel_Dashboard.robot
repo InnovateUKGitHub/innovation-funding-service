@@ -1,5 +1,5 @@
 *** Settings ***
-Suite Setup       guest user log-in  &{Comp_admin1_credentials}
+Suite Setup       Guest user log-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin    Assessor
 Resource          ../../resources/defaultResources.robot
@@ -16,7 +16,7 @@ In Panel Dashboard
     Then the user should not see the element      link=View and update competition setup
     And the user should see the element           jQuery=a:contains("Input and review funding decision")
     And the user should see the element           jQuery=a:contains("Invite assessors to assess the competition")
-    And the user should see the element           jQuery=a:contains("Assessor management: Assignments")
+    And the user should see the element           jQuery=a:contains("Manage assessments")
 
 Milestones for In Panel Competitions
     Then the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("Manage funding notifications")

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage assessments'" />
+</head>
+
+<body th:with="context='comp-management'" class="competition-management">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content">
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Competition', linkClass='link-back', linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
+
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage assessments', size='heading-xlarge'" />
+
+    <div class="no-constrain-width justify-left">
+
+        <h2 class="heading-medium">Key statistics</h2>
+
+        <ul class="grid-row">
+
+            <li class="column-fifth">
+                <div class="highlight-panel highlight-panel-padded">
+                    <span class="heading-large" th:text="${model.totalAssessments}">50</span><br/>
+                    <small>Total assignments</small>
+                </div>
+            </li>
+
+            <li class="column-fifth">
+                <div class="highlight-panel highlight-panel-padded">
+                    <span class="heading-large" th:text="${model.assessmentsAwaitingResponse}">25</span><br/>
+                    <small>Assignments awaiting response</small>
+                </div>
+            </li>
+
+            <li class="column-fifth">
+                <div class="highlight-panel highlight-panel-padded">
+                    <span class="heading-large" th:text="${model.assessmentsAccepted}">10</span><br/>
+                    <small>Assignments accepted</small>
+                </div>
+            </li>
+
+            <li class="column-fifth">
+                <div class="highlight-panel highlight-panel-padded">
+                    <span class="heading-large" th:text="${model.assessmentsStarted}">4</span><br/>
+                    <small>Assessments started</small>
+                </div>
+            </li>
+
+            <li class="column-fifth">
+                <div class="highlight-panel highlight-panel-padded">
+                    <span class="heading-large" th:text="${model.assessmentsCompleted}">5</span><br/>
+                    <small>Assessments completed</small>
+                </div>
+            </li>
+
+        </ul>
+
+        <h2 class="heading-medium">Actions</h2>
+
+        <ul class="link-list">
+
+            <!-- /* TODO: 'Manage assessors' functionality - IFS-319, IFS-17
+
+            <li class="column-fifth dashboard-actions">
+                <a class="button"
+                   th:href="">
+                    Allocate/Manage assessors
+                </a>
+            </li>
+            */ -->
+
+            <li>
+                <a th:href="@{/assessment/competition/{competitionId}/applications(competitionId=${model.competitionId})} + ${originQuery}"
+                   th:text="${model.inAssessment} ? 'Manage applications' : 'Allocate applications'">
+                    Allocate/Manage applications
+                </a>
+            </li>
+
+        </ul>
+
+    </div>
+
+    <th:block th:insert="fragments/layout :: main-content-end"/>
+</main>
+
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+
+</body>
+</html>

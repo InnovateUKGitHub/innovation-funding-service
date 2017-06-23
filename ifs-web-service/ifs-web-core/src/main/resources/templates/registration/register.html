@@ -85,8 +85,8 @@
                    maxlength="20"
                    required="required"
                    th:attr="data-minlength-errormessage=#{validation.standard.phonenumber.length.min(null,null,8)},
-                                        data-maxlength-errormessage=#{validation.standard.phonenumber.length.max},
-                                        data-required-errormessage=#{validation.standard.phonenumber.required}" />
+                            data-maxlength-errormessage=#{validation.standard.phonenumber.length.max},
+                            data-required-errormessage=#{validation.standard.phonenumber.required}" />
         </div>
         <div class="form-group" th:classappend="${#fields.hasErrors('email') and invitee == null} ? 'form-group-error'">
             <label class="form-label" for="email">
@@ -95,8 +95,9 @@
                 <th:block th:if="${invitee}">
                     <span class="form-hint">You will need this to sign into your account, the provided email is:
                         <br/>
-                    <strong th:text="${registrationForm.email}"></strong>
+                        <strong th:text="${registrationForm.email}"></strong>
                     </span>
+                    <input type="hidden" th:field="*{email}">
                 </th:block>
                 <th:block th:unless="${invitee}">
                     <span class="form-hint">You will need this to sign into your account.</span>
@@ -114,7 +115,7 @@
                        maxlength="256"
                        required="required"
                        th:attr="data-maxlength-errormessage=#{validation.standard.email.length.max(256)},
-                                            data-required-errormessage=#{validation.standard.email.required}" />
+                                data-required-errormessage=#{validation.standard.email.required}" />
             </th:block>
         </div>
 

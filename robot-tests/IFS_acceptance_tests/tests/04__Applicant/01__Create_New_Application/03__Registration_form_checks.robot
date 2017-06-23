@@ -20,13 +20,18 @@ Resource          ../../10__Project_setup/PS_Common.robot
 Your details: Server-side validations
     [Documentation]    -INFUND-885
     [Tags]    HappyPath
+    Given the user fills in valid details
+    And the user enters text to a text field    id=password    ${blacklisted_password}
+    And the user selects the checkbox           termsAndConditions
+    And the user clicks the button/link    jQuery=button:contains("Create account")
+    And the user should see an error            Password is too weak.
     When the user enters text to a text field   id=firstName    ${EMPTY}
     And the user enters text to a text field    id=lastName    ${EMPTY}
     And the user enters text to a text field    id=phoneNumber    ${EMPTY}
     And the user enters text to a text field    id=email    ${invalid_email_no_at}
     And the user enters text to a text field    id=password    ${EMPTY}
     And browser validations have been disabled
-    and the user clicks the button/link         css=[name="create-account"]
+    And the user clicks the button/link         css=[name="create-account"]
     Then the user should see an error           Please enter a first name.
     And the user should see an error            We were unable to create your account
     And the user should see an error            Please enter a last name.
@@ -52,11 +57,7 @@ Your details: client-side validation
     [Documentation]    -INFUND-885
     [Tags]    HappyPath
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
-    When the user enters text to a text field    id=firstName    O'Brian Elliot-Murray    #First and last name containing hyphen, space and aposthrophe check
-    And the user enters text to a text field    id=lastName    O'Brian Elliot-Murray
-    And the user enters text to a text field    id=phoneNumber    01141234567
-    And the user enters text to a text field    id=email    ${valid_email}
-    And the user enters text to a text field    id=password    ${correct_password}
+    When the user fills in valid details
     Then The user should not see the text in the page    Please enter a first name.
     And The user should not see the text in the page    Please enter a last name.
     And The user should not see the text in the page    Please enter a phone number.
@@ -96,7 +97,7 @@ the user cannot login with the invalid email
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
     Click Button    css=button[name="_eventId_proceed"]
     The user should see the text in the page    ${unsuccessful_login_message}
-    The user should see the text in the page    Your email/password combination doesn't seem to work
+    The user should see the text in the page    Your email/password combination doesn't seem to work.
 
 Applicant goes to the registration form
     Given the guest user opens the browser
@@ -112,3 +113,11 @@ Applicant goes to the registration form
     And the user selects the radio button    organisationTypeId    radio-1
     And the user clicks the button/link    jQuery=button:contains("Save and continue")
     And the user clicks the button/link    jQuery=a:contains("Save and continue")
+
+the user fills in valid details
+    the user enters text to a text field    id=firstName    O'Brian Elliot-Murray    #First and last name containing hyphen, space and aposthrophe check
+    the user enters text to a text field    id=lastName    O'Brian Elliot-Murray
+    the user enters text to a text field    id=phoneNumber    01141234567
+    the user enters text to a text field    id=email    ${valid_email}
+    the user enters text to a text field    id=password    ${correct_password}
+

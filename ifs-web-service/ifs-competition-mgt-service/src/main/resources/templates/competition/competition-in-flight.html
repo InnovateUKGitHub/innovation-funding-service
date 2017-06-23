@@ -79,9 +79,9 @@
                     </li>
                     <li>
                         <a class="disabled" aria-disabled="true"
-                           th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN}">Assessor management: Assignments</a>
+                           th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN}">Manage assessments</a>
                         <a th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN}"
-                           th:href="@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}">Assessor management: Assignments</a>
+                           th:href="@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}">Manage assessments</a>
                     </li>
                     <li>
                         <a class="disabled" aria-disabled="true"

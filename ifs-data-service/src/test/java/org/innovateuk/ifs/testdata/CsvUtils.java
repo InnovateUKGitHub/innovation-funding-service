@@ -680,11 +680,11 @@ class CsvUtils {
 
     static class InternalUserLine extends UserLine {
 
-        String role;
+        List<String> roles;
 
         private InternalUserLine(List<String> line) {
             super(line);
-            this.role = line.get(line.size() - 1);
+            this.roles = simpleMap(line.get(line.size() - 1).split("&"), s -> s.trim());
         }
     }
 

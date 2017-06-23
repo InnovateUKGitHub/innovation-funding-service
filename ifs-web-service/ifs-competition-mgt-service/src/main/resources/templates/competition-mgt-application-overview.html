@@ -85,7 +85,7 @@
                 </th:block>
             </th:block>
 
-            <div th:if="${currentApplication.applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).SUBMITTED}"
+            <div th:if="${currentApplication.applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).SUBMITTED && !isSupportUser}"
                  class="extra-margin collapsible collapsible-eligibility collapsible-stateless"
                  th:classappend="${#fields.hasErrors('${form.*}')} ? 'collapsible-expanded'">
                 <h2>Mark application as ineligible</h2>

@@ -273,9 +273,10 @@ Project Finance can see the progress of partners bank details
     And the user should see the text in the page    ${PS_BD_APPLICATION_ACADEMIC_EMAIL}
 
 
-Project Finance can see Bank Details
-    [Documentation]    INFUND-4903, INFUND-4903
+IFS Admin can see Bank Details
+    [Documentation]    INFUND-4903, INFUND-4903, IFS-603
     [Tags]  HappyPath
+    [Setup]  log in as a different user            &{ifs_admin_user_credentials}
     Given the user navigates to the page          ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link           link=${PS_BD_Competition_Name}
     Then the user should see the element          jQuery=h2:contains("Projects in setup")
@@ -329,7 +330,7 @@ finance contacts are submitted by all users
 
 user submits his finance contacts
     [Arguments]  ${user}  ${id}
-    the guest user inserts user email & password    ${user}    ${short_password}
+    The guest user inserts user email and password    ${user}    ${short_password}
     the guest user clicks the log-in button
     the user navigates to the page     ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/details/finance-contact?organisation=${id}
     the user selects the radio button  financeContact  financeContact1

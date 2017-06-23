@@ -12,7 +12,7 @@
 
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications',linkClass='link-back',linkUrl=@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications',linkClass='link-back',linkUrl=@{/assessment/competition/{competitionId}/applications(competitionId=${model.competitionId})}" />
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.inAssessment} ? 'Application progress' : 'Assign to application',subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
 
             <h2 class="heading-medium" th:text="|${model.applicationId}: ${model.applicationName}|">
