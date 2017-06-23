@@ -23,7 +23,7 @@ Go through the assessor journey
 
 *** Keywords ***
 the guest logs in as an assessor
-    Guest user log-in  &{assessor_credentials}
+    The user logs-in in new browser  &{assessor_credentials}
     time until element is visible    link=My dashboard    Logging in as assessor
 
 the assessor can visit the competition dashboard
