@@ -16,7 +16,7 @@ Documentation     INFUND-1987
 ...               INFUND-8012 Filter, sorting and pagination on 'Submitted applications' dashboard
 ...
 ...               INFUND-8010 Filter, sorting and pagination on 'All applications' dashboard
-Suite Setup       Guest user log-in  &{Comp_admin1_credentials}
+Suite Setup       Guest user log-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot

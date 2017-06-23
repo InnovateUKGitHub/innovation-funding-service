@@ -29,7 +29,7 @@ ${newUsersEmail}             liam@innovate.com
 Comp Admin starts a new Competition
     [Documentation]    INFUND-6393
     [Tags]    HappyPath
-    [Setup]    guest user log-in    &{Comp_admin1_credentials}
+    [Setup]    Guest user log-in in new browser    &{Comp_admin1_credentials}
     # For the testing of the story INFUND-6393, we need to create New Competition in order to apply the new Comp Setup fields
     # Then continue with the applying to this Competition, in order to see the new Fields applied
     Given the user navigates to the page    ${CA_UpcomingComp}
@@ -311,7 +311,7 @@ Invite Collaborator in Application with Growth table
     [Tags]  Email  MySQL
     [Setup]
     Given the lead applicant invites an existing user  ${compWithGrowth}  ${collaborator1_credentials["email"]}
-    When guest user log-in  &{collaborator1_credentials}
+    When Guest user log-in in new browser    &{collaborator1_credentials}
     Then the user reads his email and clicks the link  ${collaborator1_credentials["email"]}  Invitation to collaborate in ${compWithGrowth}  You will be joining as part of the organisation  3
     When the user should see the element  jQuery=h2:contains("We have found an account with the invited email address")
     Then the user clicks the button/link  link=Continue or sign in

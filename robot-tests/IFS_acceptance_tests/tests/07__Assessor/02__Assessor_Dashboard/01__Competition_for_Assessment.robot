@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     INFUND-5432 As an assessor I want to receive an alert to complete my profile when I log into my dashboard so that I can ensure that it is complete.
-Suite Setup       Guest user log-in  &{assessor_credentials}
+Suite Setup       Guest user log-in in new browser  &{assessor_credentials}
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 

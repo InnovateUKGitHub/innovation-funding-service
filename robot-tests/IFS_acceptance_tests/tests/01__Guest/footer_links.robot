@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     IFS-362 As an IFS user I am able to find links to general guidance links via the footer both when signed in or not signed in.
 Suite Setup       The guest user opens the browser
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Guest
 Resource          ../../resources/defaultResources.robot
 # Note for future maintenance: In this file there are checks to external links (out of IFS).
@@ -16,7 +16,7 @@ Guest user can click on the footer links
     [Setup]    the user navigates to the page    ${frontDoor}
     Given the user tries the footer links    ${frontDoor}
     Then the user navigates to the page    ${LOGIN_URL}
-    And the guest user inserts user email & password    {lead_applicant}    ${correct_password}
+    And The guest user inserts user email and password    {lead_applicant}    ${correct_password}
     When the guest user clicks the log-in button
     Then the user tries the footer links    ${DASHBOARD_URL}
     And the user navigates to the page    ${LOGIN_URL}
