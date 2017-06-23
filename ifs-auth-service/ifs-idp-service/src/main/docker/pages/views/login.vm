@@ -83,7 +83,7 @@
               </div>
               <div class="header-proposition">
                 <div class="content">
-                  <p id="proposition-name" class="no-margin">Innovation Funding Service</p>
+                  <a href="$resourcesDomain/competition/search" id="proposition-name">Innovation Funding Service</a>
                 </div>
               </div>
           </div>

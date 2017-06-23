@@ -25,6 +25,8 @@ public class UserProfileResourceDocs {
             fieldWithPath("ethnicity").description("ethnic group of the user"),
             fieldWithPath("address").description("address of the user"),
             fieldWithPath("email").description("email address of the user"),
+            fieldWithPath("createdBy").description("name of user who created this user"),
+            fieldWithPath("createdOn").description("date when this user was created")
     };
 
     public static final UserProfileResourceBuilder userProfileResourceBuilder = newUserProfileResource()
