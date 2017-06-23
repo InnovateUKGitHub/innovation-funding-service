@@ -5,7 +5,6 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResour
 import org.innovateuk.ifs.publiccontent.service.PublicContentService;
 import org.innovateuk.ifs.publiccontent.viewmodel.PublicContentMenuViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,11 +19,7 @@ public class PublicContentMenuPopulator {
     @Autowired
     private CompetitionService competitionService;
 
-    @Value("${ifs.web.baseURL}")
-    private String webBaseUrl;
-
-
-    public PublicContentMenuViewModel populate(Long competitionId) {
+    public PublicContentMenuViewModel populate(Long competitionId, String webBaseUrl) {
         PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
         PublicContentMenuViewModel viewModel = new PublicContentMenuViewModel();
         viewModel.setPublishDate(publicContent.getPublishDate());

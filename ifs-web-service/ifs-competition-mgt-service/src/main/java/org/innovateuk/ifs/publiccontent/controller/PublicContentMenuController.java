@@ -12,7 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.NativeWebRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.function.Supplier;
 
@@ -39,7 +41,9 @@ public class PublicContentMenuController {
     private CompetitionsRestService competitionsRestService;
 
     @GetMapping("/{competitionId}")
-    public String publicContentMenu(Model model, @PathVariable(COMPETITION_ID_KEY) long competitionId) {
+    public String publicContentMenu(Model model,
+                                    @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                    NativeWebRequest springRequest) {
         CompetitionResource competition = competitionsRestService.getCompetitionById(competitionId)
                 .getSuccessObjectOrThrowException();
 
@@ -47,7 +51,7 @@ public class PublicContentMenuController {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
-        return menuPage(competitionId, model, new PublishForm());
+        return menuPage(competitionId, model, new PublishForm(), springRequest);
     }
 
     @PostMapping("/{competitionId}")
@@ -55,7 +59,8 @@ public class PublicContentMenuController {
                           @PathVariable(COMPETITION_ID_KEY) long competitionId,
                           @Valid @ModelAttribute(FORM_ATTR_NAME) PublishForm publishForm,
                           BindingResult bindingResult,
-                          ValidationHandler validationHandler) {
+                          ValidationHandler validationHandler,
+                          NativeWebRequest springRequest) {
         CompetitionResource competition = competitionsRestService.getCompetitionById(competitionId)
                 .getSuccessObjectOrThrowException();
 
@@ -63,16 +68,22 @@ public class PublicContentMenuController {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
-        Supplier<String> failureView = () -> menuPage(competitionId, model, publishForm);
+        Supplier<String> failureView = () -> menuPage(competitionId, model, publishForm, springRequest);
         Supplier<String> successView = () -> "redirect:/competition/setup/public-content/" + competitionId;
 
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
                 () -> publicContentService.publishByCompetitionId(competitionId));
     }
 
-    private String menuPage(Long competitionId, Model model, PublishForm publishForm) {
-        model.addAttribute("model", publicContentMenuPopulator.populate(competitionId));
+    private String menuPage(Long competitionId, Model model, PublishForm publishForm, NativeWebRequest springRequest) {
+        model.addAttribute("model", publicContentMenuPopulator.populate(competitionId, getBaseUrlFromRequest(springRequest)));
         model.addAttribute(FORM_ATTR_NAME, publishForm);
         return TEMPLATE_FOLDER + "public-content-menu";
+    }
+
+    private String getBaseUrlFromRequest(NativeWebRequest springRequest) {
+
+        HttpServletRequest request = springRequest.getNativeRequest(HttpServletRequest.class);
+        return request.getScheme() + "://" + request.getServerName();
     }
 }

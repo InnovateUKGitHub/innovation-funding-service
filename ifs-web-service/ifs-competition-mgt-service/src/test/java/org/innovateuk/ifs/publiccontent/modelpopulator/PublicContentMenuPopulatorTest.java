@@ -12,7 +12,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -31,10 +30,10 @@ public class PublicContentMenuPopulatorTest {
 
     private static final Long COMPETITION_ID = 1L;
 
-    private static final String webBaseUrl = "https://environment";
+    private static final String WEB_BASE_URL = "https://environment";
 
     @InjectMocks
-    private PublicContentMenuPopulator target = supplyServiceUnderTest();
+    private PublicContentMenuPopulator target;
 
     @Mock
     private PublicContentService publicContentService;
@@ -62,7 +61,7 @@ public class PublicContentMenuPopulatorTest {
         when(publicContentService.getCompetitionById(COMPETITION_ID)).thenReturn(publicContent);
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
-        PublicContentMenuViewModel viewModel = target.populate(COMPETITION_ID);
+        PublicContentMenuViewModel viewModel = target.populate(COMPETITION_ID, WEB_BASE_URL);
 
         assertThat(viewModel.getSections(), equalTo(sections));
         assertThat(viewModel.getCompetition(), equalTo(competition));
@@ -72,10 +71,4 @@ public class PublicContentMenuPopulatorTest {
         assertThat(viewModel.getCompetitionURL(), equalTo("https://environment/competition/" + COMPETITION_ID + "/overview"));
     }
 
-    private PublicContentMenuPopulator supplyServiceUnderTest() {
-
-        PublicContentMenuPopulator PublicContentMenuPopulator = new PublicContentMenuPopulator();
-        ReflectionTestUtils.setField(PublicContentMenuPopulator, "webBaseUrl", webBaseUrl);
-        return PublicContentMenuPopulator;
-    }
 }

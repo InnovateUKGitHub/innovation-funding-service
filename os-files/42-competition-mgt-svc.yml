@@ -45,8 +45,6 @@ items:
           env:
           - name: SPRING_APPLICATION_JSON
             value: '{"logout":{"url": "https://<<SHIB-ADDRESS>>/Logout/"}}'
-          - name: IFS_WEB_BASEURL
-            value: 'https://<<SHIB-ADDRESS>>'
           ports:
           - containerPort: 8080
           resources:
