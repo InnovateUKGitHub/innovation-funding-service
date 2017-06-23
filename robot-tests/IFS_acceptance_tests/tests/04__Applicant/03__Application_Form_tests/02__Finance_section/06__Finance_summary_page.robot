@@ -13,7 +13,7 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...
 ...               INFUND-8397  Permission denied when submitting your finances as a collaborator
 ...
-Suite Setup       Guest user log-in  &{lead_applicant_credentials}
+Suite Setup       Guest user log-in in new browser  &{lead_applicant_credentials}
 Suite Teardown    Close browser and delete emails
 Force Tags        Applicant    Support
 Default Tags
@@ -101,7 +101,7 @@ Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
     [Tags]    Email
     [Setup]    Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation
-    Given guest user log-in    ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
+    Given Guest user log-in in new browser    ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     And The user navigates to the academic application finances
     And The user clicks the button/link       link=Your project costs
     When the user enters text to a text field      id=incurred-staff    1000000
