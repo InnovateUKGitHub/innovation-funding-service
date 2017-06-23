@@ -43,8 +43,8 @@ public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourF
     private FileEntryRestService fileEntryRestService;
 
     @Override
-    protected YourFinancesSectionViewModel createNew(ApplicantSectionResource applicantSection, ApplicationForm form, Boolean readOnly, Optional<Long> applicantOrganisationId) {
-        return new YourFinancesSectionViewModel(applicantSection, Collections.emptyList(), getNavigationViewModel(applicantSection), readOnly, applicantOrganisationId);
+    protected YourFinancesSectionViewModel createNew(ApplicantSectionResource applicantSection, ApplicationForm form, Boolean readOnly, Optional<Long> applicantOrganisationId, Boolean readOnlyAllApplicantApplicationFinances) {
+        return new YourFinancesSectionViewModel(applicantSection, Collections.emptyList(), getNavigationViewModel(applicantSection), readOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
     }
 
     @Override

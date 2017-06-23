@@ -92,7 +92,7 @@
 
     <!-- ===========================Subsection buttons =========================== -->
     <th:block th:fragment="subsection_buttons (model)">
-        <th:block th:unless="${readOnlyAllApplicantApplicationFinances}">
+        <th:block th:unless="${model.readOnlyAllApplicantApplicationFinances}">
             <div th:unless="${model.applicationIsReadOnly}" class="form-footer">
                 <div class="form-footer__actions">
                     <button id="mark-all-as-complete"
@@ -140,7 +140,7 @@
                     </div>
                 </th:block>
                 <th:block th:if="${model.showSectionAsLockedFunding(childSection)}">
-                    <th:block th:unless="${readOnlyAllApplicantApplicationFinances}">
+                    <th:block th:unless="${model.readOnlyAllApplicantApplicationFinances}">
                         <div class="task full-width">
                             <h3 class="heading-small" th:text="${childSection.section.name}"></h3>
                             <p>

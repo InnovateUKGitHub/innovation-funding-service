@@ -22,8 +22,8 @@ public class YourFinancesSectionViewModel extends AbstractSectionViewModel {
     private Long yourOrganisationSectionId;
     private BaseFinanceResource organisationFinance;
 
-    public YourFinancesSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly, Optional<Long> applicantOrganisationId) {
-        super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly, applicantOrganisationId);
+    public YourFinancesSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly, Optional<Long> applicantOrganisationId, boolean readOnlyAllApplicantApplicationFinances) {
+        super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
     }
 
     public boolean isNotRequestingFunding() {

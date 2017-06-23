@@ -14,8 +14,8 @@ import java.util.Optional;
  */
 public abstract class AbstractSectionViewModel extends AbstractApplicationFormViewModel<ApplicantSectionResource> {
 
-    public AbstractSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly, Optional<Long> applicantOrganisationId) {
-        super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly, applicantOrganisationId);
+    public AbstractSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly, Optional<Long> applicantOrganisationId, boolean readOnlyAllApplicantApplicationFinances) {
+        super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
     }
 
     @Override

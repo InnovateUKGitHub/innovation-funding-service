@@ -22,7 +22,10 @@ public abstract class AbstractApplicationFormViewModel<R extends AbstractApplica
     private boolean allReadOnly;
     private Long applicantOrganisationId;
 
-    public AbstractApplicationFormViewModel(R applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly, Optional<Long> applicantOrganisationId) {
+
+    private boolean readOnlyAllApplicantApplicationFinances;
+
+    public AbstractApplicationFormViewModel(R applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly, Optional<Long> applicantOrganisationId, boolean readOnlyAllApplicantApplicationFinances) {
         this.applicantResource = applicantResource;
         this.formInputViewModels = formInputViewModels;
         this.navigationViewModel = navigationViewModel;
@@ -30,6 +33,7 @@ public abstract class AbstractApplicationFormViewModel<R extends AbstractApplica
         if (applicantOrganisationId.isPresent()) {
             this.applicantOrganisationId = applicantOrganisationId.get();
         }
+        this.readOnlyAllApplicantApplicationFinances = readOnlyAllApplicantApplicationFinances;
     }
 
     public List<AbstractFormInputViewModel> getFormInputViewModels() {
@@ -82,7 +86,10 @@ public abstract class AbstractApplicationFormViewModel<R extends AbstractApplica
         return applicantOrganisationId;
     }
 
-    public void setApplicantOrganisationId(Long applicantOrganisationId) {
-        this.applicantOrganisationId = applicantOrganisationId;
-    }
+    public void setApplicantOrganisationId(Long applicantOrganisationId) { this.applicantOrganisationId = applicantOrganisationId; }
+
+    public boolean isReadOnlyAllApplicantApplicationFinances() { return readOnlyAllApplicantApplicationFinances; }
+
+    public void  setReadOnlyAllApplicantApplicationFinances(boolean readOnlyAllApplicantApplicationFinances) { this.readOnlyAllApplicantApplicationFinances = readOnlyAllApplicantApplicationFinances; }
+
 }

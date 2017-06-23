@@ -15,8 +15,8 @@ public class FinanceOverviewSectionViewModel extends AbstractSectionViewModel {
 
     private OpenSectionViewModel openSectionViewModel;
 
-    public FinanceOverviewSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly, Optional<Long> applicantOrganisationId) {
-        super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly, applicantOrganisationId);
+    public FinanceOverviewSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly, Optional<Long> applicantOrganisationId, boolean readOnlyAllApplicantApplicationFinances) {
+        super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
     }
 
     public OpenSectionViewModel getOpenSectionViewModel() {

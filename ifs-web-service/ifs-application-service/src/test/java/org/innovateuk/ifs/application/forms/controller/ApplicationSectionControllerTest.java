@@ -178,7 +178,7 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
         when(applicantRestService.getSection(anyLong(), anyLong(), anyLong())).thenReturn(sectionBuilder.build());
         when(formInputViewModelGenerator.fromQuestion(any(), any())).thenReturn(Collections.emptyList());
         when(formInputViewModelGenerator.fromSection(any(), any(), any(), any())).thenReturn(Collections.emptyList());
-        when(yourFinancesSectionPopulator.populate(any(), any(), any(), any(), any(), any())).thenReturn(new YourFinancesSectionViewModel(null, null, null, false, Optional.empty()));
+        when(yourFinancesSectionPopulator.populate(any(), any(), any(), any(), any(), any(), any())).thenReturn(new YourFinancesSectionViewModel(null, null, null, false, Optional.empty(), false));
 
         ApplicationFinanceOverviewViewModel financeOverviewViewModel = new ApplicationFinanceOverviewViewModel();
         when(applicationFinanceOverviewModelManager.getFinanceDetailsViewModel(competitionResource.getId(), application.getId())).thenReturn(financeOverviewViewModel);
@@ -553,7 +553,5 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
         assertEquals(YourFinancesSectionViewModel.class, viewModelResult.getClass());
 
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
-        assertEquals(((Long) result.getModelAndView().getModelMap().get("applicantOrganisationId")).longValue(),2L);
-        assertTrue(((boolean) result.getModelAndView().getModelMap().get("readOnlyAllApplicantApplicationFinances")));
     }
 }

@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 public class YourOrganisationSectionViewModel extends AbstractSectionViewModel {
     private boolean complete;
 
-    public YourOrganisationSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly, Optional<Long> applicantOrganisationId) {
-        super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly, applicantOrganisationId);
+    public YourOrganisationSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly, Optional<Long> applicantOrganisationId, boolean readOnlyAllApplicantApplicationFinances) {
+        super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
     }
 
     public boolean isComplete() {

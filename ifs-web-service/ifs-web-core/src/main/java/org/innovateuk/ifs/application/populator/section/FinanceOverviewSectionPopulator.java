@@ -31,8 +31,8 @@ public class FinanceOverviewSectionPopulator extends AbstractSectionPopulator<Fi
     }
 
     @Override
-    protected FinanceOverviewSectionViewModel createNew(ApplicantSectionResource section, ApplicationForm form, Boolean readOnly, Optional<Long> applicantOrganisationId) {
-        return new FinanceOverviewSectionViewModel(section, formInputViewModelGenerator.fromSection(section, section, form, readOnly), getNavigationViewModel(section), readOnly, applicantOrganisationId);
+    protected FinanceOverviewSectionViewModel createNew(ApplicantSectionResource section, ApplicationForm form, Boolean readOnly, Optional<Long> applicantOrganisationId, Boolean readOnlyAllApplicantApplicationFinances) {
+        return new FinanceOverviewSectionViewModel(section, formInputViewModelGenerator.fromSection(section, section, form, readOnly), getNavigationViewModel(section), readOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
     }
 
     @Override

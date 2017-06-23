@@ -107,7 +107,7 @@ public class ApplicationSectionController {
                                                  UserResource user) {
 
         ApplicantSectionResource applicantSection = applicantRestService.getSection(user.getId(), applicationId, sectionId);
-        populateSection(model, form, bindingResult, applicantSection, false, Optional.empty());
+        populateSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false);
         return APPLICATION_FORM;
     }
 
@@ -124,9 +124,7 @@ public class ApplicationSectionController {
         ProcessRoleResource applicantUser = processRoleService.getByApplicationId(application.getId()).stream().filter(pr -> pr.getOrganisationId() == applicantOrganisationId && Arrays.asList(UserApplicationRole.LEAD_APPLICANT.getRoleName(), UserApplicationRole.COLLABORATOR.getRoleName()).contains(pr.getRoleName())).findFirst().orElseThrow(() -> new ObjectNotFoundException());
 
         ApplicantSectionResource applicantSection = applicantRestService.getSection(applicantUser.getUser(), applicationId, sectionId);
-        model.addAttribute("applicantOrganisationId", applicantOrganisationId);
-        model.addAttribute("readOnlyAllApplicantApplicationFinances", true);
-        populateSection(model, form, bindingResult, applicantSection, true, Optional.of(applicantOrganisationId));
+        populateSection(model, form, bindingResult, applicantSection, true, Optional.of(applicantOrganisationId), true);
         return APPLICATION_FORM;
     }
 
@@ -160,7 +158,7 @@ public class ApplicationSectionController {
 
         if (saveApplicationErrors.hasErrors() || !validFinanceTerms || overheadFileSaver.isOverheadFileRequest(request)) {
             validationHandler.addAnyErrors(saveApplicationErrors);
-            populateSection(model, form, bindingResult, applicantSection, false, Optional.empty());
+            populateSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false);
             return APPLICATION_FORM;
         } else {
             return applicationRedirectionService.getRedirectUrl(request, applicationId, Optional.of(applicantSection.getSection().getType()));
@@ -172,8 +170,9 @@ public class ApplicationSectionController {
                                  BindingResult bindingResult,
                                  ApplicantSectionResource applicantSection,
                                  boolean readOnly,
-                                 Optional<Long> applicantOrganisationId) {
-        AbstractSectionViewModel sectionViewModel = sectionPopulators.get(applicantSection.getSection().getType()).populate(applicantSection, form, model, bindingResult, readOnly, applicantOrganisationId);
+                                 Optional<Long> applicantOrganisationId,
+                                 boolean readOnlyAllApplicantApplicationFinances) {
+        AbstractSectionViewModel sectionViewModel = sectionPopulators.get(applicantSection.getSection().getType()).populate(applicantSection, form, model, bindingResult, readOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicantSection.getApplication().getId(), model, applicantSection.getSection(), applicantOrganisationId);
         model.addAttribute("model", sectionViewModel);
         model.addAttribute("form", form);

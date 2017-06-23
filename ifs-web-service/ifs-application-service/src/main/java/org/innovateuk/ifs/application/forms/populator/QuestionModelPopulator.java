@@ -37,7 +37,7 @@ public class QuestionModelPopulator extends BaseModelPopulator {
         NavigationViewModel navigationViewModel = applicationNavigationPopulator.addNavigation(question.getQuestion(), question.getApplication().getId());
         removeNotifications(question);
 
-        return new QuestionViewModel(question, formInputViewModels, navigationViewModel, formInputViewModels.stream().anyMatch(AbstractFormInputViewModel::isReadonly), Optional.empty());
+        return new QuestionViewModel(question, formInputViewModels, navigationViewModel, formInputViewModels.stream().anyMatch(AbstractFormInputViewModel::isReadonly), Optional.empty(), false);
     }
 
 

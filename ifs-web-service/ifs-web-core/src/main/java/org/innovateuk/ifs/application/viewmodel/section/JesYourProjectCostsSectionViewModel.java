@@ -20,8 +20,9 @@ public class JesYourProjectCostsSectionViewModel extends AbstractYourProjectCost
                                                List<AbstractFormInputViewModel> formInputViewModels,
                                                NavigationViewModel navigationViewModel,
                                                boolean allReadOnly,
-                                               Optional<Long> applicantOrganisationId) {
-        super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly, applicantOrganisationId);
+                                               Optional<Long> applicantOrganisationId,
+                                               boolean readOnlyAllApplicantApplicationFinances) {
+        super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
     }
 
     @Override

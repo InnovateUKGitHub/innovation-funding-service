@@ -68,7 +68,7 @@ public class YourFundingSectionPopulatorTest {
         when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(emptyList());
         when(formInputViewModelGenerator.fromSection(section, section, form, false)).thenReturn(asList(formInputViewModel));
 
-        YourFundingSectionViewModel viewModel = yourFundingSectionPopulator.populate(section, form, model, bindingResult, false, Optional.empty());
+        YourFundingSectionViewModel viewModel = yourFundingSectionPopulator.populate(section, form, model, bindingResult, false, Optional.empty(), false);
 
         assertThat(viewModel.isSection(), equalTo(true));
         assertThat(viewModel.isComplete(), equalTo(false));
