@@ -6,7 +6,7 @@ Documentation     INFUND-43 As an applicant and I am on the application form on 
 ...               INFUND-6823 As an Applicant I want to be invited to select the primary 'Research area' for my project
 Suite Setup       Run keywords    log in and create new application if there is not one already
 ...               AND    Applicant goes to the application details page of the Robot application
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 

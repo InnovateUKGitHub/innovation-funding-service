@@ -20,8 +20,8 @@ Documentation     INFUND-2982: Create a Competition: Step 1: Initial details
 ...               INFUND-5639 As a Competitions team member I want to be able to view the Application process within the application question section in Competition Setup so that I can set up my competition using more convenient navigation
 ...
 ...               INFUND-5641 As a Competitions team member I want to be able to update the assessor setup questions so that I can amend the defaults if required for the competition
-Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
-Suite Teardown    TestTeardown User closes the browser
+Suite Setup       Guest user log-in in new browser    &{Comp_admin1_credentials}
+Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot
