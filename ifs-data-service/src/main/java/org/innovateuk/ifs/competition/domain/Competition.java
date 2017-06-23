@@ -6,8 +6,8 @@ import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.category.domain.*;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.invite.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.OrganisationType;
+import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
