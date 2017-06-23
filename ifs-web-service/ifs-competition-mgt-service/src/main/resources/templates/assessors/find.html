@@ -117,7 +117,8 @@
                     <input type="checkbox"
                            data-select-all=""
                            id="select-all-check"
-                           th:checked="${#lists.size(selectionForm.selectedAssessorIds)} == ${model.pagination.totalCount}"/>
+                           th:checked="${selectionForm.getAllSelected()}"
+                           th:attr="disabled=${#lists.isEmpty(model.assessors)}"/>
                     <label for="select-all-check">
                         Select all assessors
                     </label>

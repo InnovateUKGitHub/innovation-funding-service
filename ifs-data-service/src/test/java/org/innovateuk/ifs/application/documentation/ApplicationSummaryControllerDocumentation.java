@@ -15,6 +15,7 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.ApplicationSummaryDocs.APPLICATION_SUMMARY_RESOURCE_BUILDER;
+import static org.innovateuk.ifs.documentation.SectionDocs.sectionResourceFields;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -70,7 +71,37 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
                                 parameterWithName("sendFilter").description("Filter on the send state"),
                                 parameterWithName("fundingFilter").description("Filter on the funding state")
                         ),
-                        responseFields(ApplicationSummaryDocs.APPLICATION_SUMMARY_RESOURCE_FIELDS)));
+                        responseFields(ApplicationSummaryDocs.APPLICATION_SUMMARY_PAGE_RESOURCE_FIELDS)));
+    }
+
+    @Test
+    public void getAllWithFundingDecisionApplicationSummariesByCompetitionId() throws Exception {
+        final Long competitionId = 1L;
+        String filter = "filter";
+        Boolean sendFilter = true;
+        FundingDecisionStatus fundingFilter = FundingDecisionStatus.UNDECIDED;
+
+        List<ApplicationSummaryResource> applications = APPLICATION_SUMMARY_RESOURCE_BUILDER.build(5);
+
+        when(applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, Optional.of(filter), Optional.of(sendFilter), Optional.of(fundingFilter))).thenReturn(serviceSuccess(applications));
+
+        mockMvc.perform(
+                get(baseUrl + "/findByCompetition/{competitionId}/with-funding-decision", competitionId)
+                        .param("all", "")
+                        .param("filter", filter)
+                        .param("sendFilter", sendFilter.toString())
+                        .param("fundingFilter", fundingFilter.toString())
+                        .contentType(APPLICATION_JSON))
+                .andDo(document("application-summary/{method-name}",
+                        pathParameters(parameterWithName("competitionId").description("The competition id")),
+                        requestParameters(
+                                parameterWithName("all").description("To retrieve all records"),
+                                parameterWithName("filter").description("String based filter"),
+                                parameterWithName("sendFilter").description("Filter on the send state"),
+                                parameterWithName("fundingFilter").description("Filter on the funding state")
+                        ),
+                        responseFields(fieldWithPath("[]").description("List of application summaries"))
+                                .andWithPrefix("[].", ApplicationSummaryDocs.APPLICATION_SUMMARY_RESOURCE_FIELDS)));
     }
 
     @Test
@@ -106,7 +137,7 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
                                 parameterWithName("filter").description("String based filter"),
                                 parameterWithName("informFilter").description("Filter on whether the applicant has been informed")
                         ),
-                        responseFields(ApplicationSummaryDocs.APPLICATION_SUMMARY_RESOURCE_FIELDS)));
+                        responseFields(ApplicationSummaryDocs.APPLICATION_SUMMARY_PAGE_RESOURCE_FIELDS)));
     }
 
     @Test

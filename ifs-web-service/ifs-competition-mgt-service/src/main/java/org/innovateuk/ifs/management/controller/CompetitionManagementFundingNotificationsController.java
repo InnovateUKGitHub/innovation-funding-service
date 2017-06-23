@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
+import org.innovateuk.ifs.competition.form.FundingNotificationSelectionCookie;
 import org.innovateuk.ifs.competition.form.ManageFundingApplicationsQueryForm;
 import org.innovateuk.ifs.competition.form.NotificationEmailsForm;
 import org.innovateuk.ifs.competition.form.SelectApplicationsForEmailForm;
@@ -28,17 +29,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
-import static java.util.Arrays.asList;
+import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.JsonUtil.getObjectFromJson;
 import static org.innovateuk.ifs.util.JsonUtil.getSerializedObject;
 
@@ -125,29 +124,27 @@ public class CompetitionManagementFundingNotificationsController {
                                      SelectApplicationsForEmailForm selectionForm,
                                      ManageFundingApplicationsQueryForm filterForm,
                                      boolean clearFilters) {
-        SelectApplicationsForEmailForm storedSelectionForm = getApplicationsSelectionFormFromCookie(request, competitionId).orElse(new SelectApplicationsForEmailForm());
-        selectionForm.setAllSelected(storedSelectionForm.isAllSelected());
-        selectionForm.setIds(storedSelectionForm.getIds());
-        if ((storedSelectionForm.getStringFilter() != null ||
-                storedSelectionForm.getSendFilter() != null ||
-                storedSelectionForm.getFundingFilter() != null )
-                && !clearFilters) {
-            filterForm.setStringFilter(storedSelectionForm.getStringFilter());
-            filterForm.setSendFilter(of(storedSelectionForm.getSendFilter()));
-            filterForm.setFundingFilter(of(storedSelectionForm.getFundingFilter()));
+        FundingNotificationSelectionCookie storedSelectionFormCookie = getFundingNotificationFormFromCookie(request, competitionId).orElse(new FundingNotificationSelectionCookie());
+        ManageFundingApplicationsQueryForm storedFilterForm = storedSelectionFormCookie.getManageFundingApplicationsQueryForm();
+        SelectApplicationsForEmailForm storedSelectionForm = storedSelectionFormCookie.getSelectApplicationsForEmailForm();
+
+        if (storedSelectionForm != null && !storedSelectionForm.getIds().isEmpty()) {
+            selectionForm.setAllSelected(storedSelectionFormCookie.getSelectApplicationsForEmailForm().isAllSelected());
+            selectionForm.setIds(storedSelectionFormCookie.getSelectApplicationsForEmailForm().getIds());
+
+            if (storedFilterForm.anyFilterOptionsActive() && !clearFilters) {
+                filterForm.setAllFilterOptions(storedFilterForm.getStringFilter(), storedFilterForm.getSendFilter(), storedFilterForm.getFundingFilter());
+            }
         }
 
         if (selectionForm.isAllSelected()) {
-            selectionForm.setIds(getAllApplicationIds(competitionId, of(filterForm.getStringFilter()), filterForm.getSendFilter(), filterForm.getFundingFilter()));
+            selectionForm.setIds(getAllApplicationIdsByFilters(competitionId, filterForm));
         } else {
-            selectionForm.getIds().retainAll(getAllApplicationIds(competitionId, of(filterForm.getStringFilter()), filterForm.getSendFilter(), filterForm.getFundingFilter()));
+            selectionForm.getIds().retainAll(getAllApplicationIdsByFilters(competitionId, filterForm));
         }
-        filterForm.getSendFilter().ifPresent(selectionForm::setSendFilter);
-        filterForm.getFundingFilter().ifPresent(selectionForm::setFundingFilter);
-        if (!filterForm.getStringFilter().isEmpty()) {
-            selectionForm.setStringFilter(filterForm.getStringFilter());
-        }
-        cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
+        storedSelectionFormCookie.setManageFundingApplicationsQueryForm(filterForm);
+        storedSelectionFormCookie.setSelectApplicationsForEmailForm(selectionForm);
+        cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(storedSelectionFormCookie));
     }
 
     @PostMapping("/manage-funding-applications")
@@ -163,20 +160,20 @@ public class CompetitionManagementFundingNotificationsController {
                                      HttpServletRequest request,
                                      HttpServletResponse response) {
 
-        SelectApplicationsForEmailForm submittedSelectionForm = getApplicationsSelectionFormFromCookie(request, competitionId).orElse(selectionForm);
+        FundingNotificationSelectionCookie selectionCookie = getFundingNotificationFormFromCookie(request, competitionId).orElse(new FundingNotificationSelectionCookie());
 
         return queryFormValidationHandler.failNowOrSucceedWith(queryFailureView(competitionId),  // Pass or fail JSR 303 on the query form
                 () -> idsValidationHandler.failNowOrSucceedWith(idsFailureView(competitionId, query, model, params), // Pass or fail JSR 303 on the ids
                         () -> {
                             // Custom validation
-                            List<Long> applicationIds = submittedSelectionForm.getIds().stream().map(this::toLongOrNull).filter(Objects::nonNull).collect(toList());
-                            if (applicationIds.isEmpty()) {
+                            //List<Long> applicationIds = submittedSelectionForm.getIds().stream().map(this::toLongOrNull).filter(Objects::nonNull).collect(toList());
+                            if (selectionCookie.getSelectApplicationsForEmailForm().getIds().isEmpty()) {
                                 idsBindingResult.rejectValue("ids", "validation.manage.funding.applications.no.application.selected");
                             }
                             return idsValidationHandler.failNowOrSucceedWith(idsFailureView(competitionId, query, model, params), // Pass or fail custom validation
                                     () -> {
                                         cookieUtil.removeCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId));
-                                        return composeEmailRedirect(competitionId, applicationIds);
+                                        return composeEmailRedirect(competitionId, selectionCookie.getSelectApplicationsForEmailForm().getIds());
                                     });
                         }
                 )
@@ -186,23 +183,32 @@ public class CompetitionManagementFundingNotificationsController {
     @PostMapping(value = "/manage-funding-applications", params = {"selectionId"})
     public @ResponseBody JsonNode selectApplicationForEmailList(
             @PathVariable("competitionId") long competitionId,
-            @RequestParam("selectionId") String applicationId,
+            @RequestParam("selectionId") long applicationId,
             @RequestParam("isSelected") boolean isSelected,
             @RequestParam(defaultValue = "0") int page,
             HttpServletRequest request,
             HttpServletResponse response) {
         try {
-            SelectApplicationsForEmailForm selectionForm = getApplicationsSelectionFormFromCookie(request, competitionId).orElse(new SelectApplicationsForEmailForm());
+            FundingNotificationSelectionCookie selectionCookie = getFundingNotificationFormFromCookie(request, competitionId).orElse(new FundingNotificationSelectionCookie());
+
             if (isSelected) {
-                selectionForm.getIds().add(applicationId);
+                List<Long> applicationIds = selectionCookie.getSelectApplicationsForEmailForm().getIds();
+
+                if (!applicationIds.contains(applicationId)) {
+                    selectionCookie.getSelectApplicationsForEmailForm().getIds().add(applicationId);
+                    List<Long> filteredApplicationList = getAllApplicationIdsByFilters(competitionId, selectionCookie.getManageFundingApplicationsQueryForm());
+                    if (applicationIds.containsAll(filteredApplicationList)) {
+                        selectionCookie.getSelectApplicationsForEmailForm().setAllSelected(true);
+                    }
+                }
             } else {
-                selectionForm.getIds().remove(applicationId);
-                selectionForm.setAllSelected(false);
+                selectionCookie.getSelectApplicationsForEmailForm().getIds().remove(applicationId);
+                selectionCookie.getSelectApplicationsForEmailForm().setAllSelected(false);
             }
-            cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
-            return createJsonObjectNode(selectionForm.getIds().size());
+            cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionCookie));
+            return createJsonObjectNode(selectionCookie.getSelectApplicationsForEmailForm().getIds().size(), selectionCookie.getSelectApplicationsForEmailForm().isAllSelected());
         } catch (Exception e) {
-            return createJsonObjectNode(-1);
+            return createJsonObjectNode(-1, false);
         }
     }
 
@@ -217,28 +223,29 @@ public class CompetitionManagementFundingNotificationsController {
                                            HttpServletRequest request,
                                            HttpServletResponse response) {
         try {
-            SelectApplicationsForEmailForm selectionForm = getApplicationsSelectionFormFromCookie(request, competitionId).orElse(new SelectApplicationsForEmailForm());
+            FundingNotificationSelectionCookie selectionCookie = getFundingNotificationFormFromCookie(request, competitionId).orElse(new FundingNotificationSelectionCookie());
 
             if (addAll) {
-                selectionForm.setIds(getAllApplicationIds(competitionId, stringFilter, sendFilter, fundingFilter));
-                selectionForm.setAllSelected(true);
+                selectionCookie.getSelectApplicationsForEmailForm().setIds(getAllApplicationIdsByFilters(competitionId, selectionCookie.getManageFundingApplicationsQueryForm()));
+                selectionCookie.getSelectApplicationsForEmailForm().setAllSelected(true);
             } else {
-                selectionForm.getIds().clear();
-                selectionForm.setAllSelected(false);
+                selectionCookie.getSelectApplicationsForEmailForm().getIds().clear();
+                selectionCookie.getSelectApplicationsForEmailForm().setAllSelected(false);
             }
 
-            cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
-            return createJsonObjectNode(selectionForm.getIds().size());
+            cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionCookie));
+            return createJsonObjectNode(selectionCookie.getSelectApplicationsForEmailForm().getIds().size(), selectionCookie.getSelectApplicationsForEmailForm().isAllSelected());
         } catch (Exception e) {
-            return createJsonObjectNode(-1);
+            return createJsonObjectNode(-1, false);
         }
     }
 
-    private List<String> getAllApplicationIds(long competitionId,  Optional<String> stringFilter, Optional<Boolean> sendFilter, Optional<FundingDecision> fundingFilter) {
-        List<ApplicationSummaryResource> resources =
-                applicationSummaryRestService.getWithFundingDecisionApplications(competitionId, stringFilter, sendFilter, fundingFilter).getSuccessObjectOrThrowException();
+    private List<Long> getAllApplicationIdsByFilters(long competitionId, ManageFundingApplicationsQueryForm filterForm) {
+        List<ApplicationSummaryResource> resources = applicationSummaryRestService.getWithFundingDecisionApplications(
+                competitionId, filterForm.getStringFilter().isEmpty() ? empty() : of(filterForm.getStringFilter()),
+                filterForm.getSendFilter(), filterForm.getFundingFilter()).getSuccessObjectOrThrowException();
         return resources.stream().filter(resource -> resource.applicationFundingDecisionIsChangeable()).map(
-                resource -> resource.getId().toString()).collect(toList());
+                resource -> resource.getId()).collect(toList());
     }
 
     private String getManageFundingApplicationsPage(long competitionId){
@@ -265,18 +272,6 @@ public class CompetitionManagementFundingNotificationsController {
         };
     }
 
-    private Long toLongOrNull(String value) {
-        if (value != null)
-        {
-            try {
-              return Long.parseLong(value);
-            } catch (NumberFormatException e){
-                return null;
-            }
-        }
-        return null;
-    }
-
     private String buildQueryString(MultiValueMap<String, String> params){
         return UriComponentsBuilder.newInstance()
                 .queryParams(params)
@@ -285,18 +280,19 @@ public class CompetitionManagementFundingNotificationsController {
                 .toUriString();
     }
 
-    private ObjectNode createJsonObjectNode(int selectionCount) {
+    private ObjectNode createJsonObjectNode(int selectionCount, boolean allSelected) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         node.put("selectionCount", selectionCount);
+        node.put("allSelected", allSelected);
 
         return node;
     }
 
-    private Optional<SelectApplicationsForEmailForm> getApplicationsSelectionFormFromCookie(HttpServletRequest request, long competitionId) {
+    private Optional<FundingNotificationSelectionCookie> getFundingNotificationFormFromCookie(HttpServletRequest request, long competitionId) {
         String applicationFormJson = cookieUtil.getCookieValue(request, format("%s_comp%s", SELECTION_FORM, competitionId));
         if (isNotBlank(applicationFormJson)) {
-            return Optional.ofNullable(getObjectFromJson(applicationFormJson, SelectApplicationsForEmailForm.class));
+            return Optional.ofNullable(getObjectFromJson(applicationFormJson, FundingNotificationSelectionCookie.class));
         } else {
             return Optional.empty();
         }

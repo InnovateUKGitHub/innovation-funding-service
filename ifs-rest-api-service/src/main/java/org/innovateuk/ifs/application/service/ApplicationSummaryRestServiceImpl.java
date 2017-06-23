@@ -12,6 +12,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.applicationSummaryResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionSummaryResourceListType;
@@ -90,14 +91,14 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 
     @Override
     public RestResult<List<ApplicationSummaryResource>> getWithFundingDecisionApplications(Long competitionId, Optional<String> filter, Optional<Boolean> sendFilter, Optional<FundingDecision> fundingFilter) {
-		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/with-funding-decision";
+		String baseUrl = format("%s/%s/%s/%s", applicationSummaryRestUrl, "findByCompetition", competitionId, "with-funding-decision");
 		UriComponentsBuilder builder = UriComponentsBuilder
 				.fromPath(baseUrl)
 				.queryParam("all");
 
-		filter.ifPresent(f -> builder.queryParam("filter", singletonList(f)));
-		sendFilter.ifPresent(f -> builder.queryParam("sendFilter", singletonList(f.toString())));
-		fundingFilter.ifPresent(f -> builder.queryParam("fundingFilter", singletonList(f.toString())));
+		filter.ifPresent(f -> builder.queryParam("filter", f));
+		sendFilter.ifPresent(f -> builder.queryParam("sendFilter", f.toString()));
+		fundingFilter.ifPresent(f -> builder.queryParam("fundingFilter", f.toString()));
 		return getWithRestResult(builder.toUriString(), applicationSummaryResourceListType());
     }
 

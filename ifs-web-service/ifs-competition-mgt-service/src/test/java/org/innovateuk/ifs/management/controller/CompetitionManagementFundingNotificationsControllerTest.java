@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.controller;
 
+import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.Matcher;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.LambdaMatcher;
@@ -9,8 +10,12 @@ import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.competition.form.FundingNotificationSelectionCookie;
+import org.innovateuk.ifs.competition.form.ManageFundingApplicationsQueryForm;
+import org.innovateuk.ifs.competition.form.SelectApplicationsForEmailForm;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.management.form.AssessorSelectionForm;
 import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
 import org.innovateuk.ifs.management.model.CompetitionInFlightStatsModelPopulator;
 import org.innovateuk.ifs.management.model.ManageFundingApplicationsModelPopulator;
@@ -19,6 +24,8 @@ import org.innovateuk.ifs.management.viewmodel.CompetitionInFlightStatsViewModel
 import org.innovateuk.ifs.management.viewmodel.ManageFundingApplicationViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.management.viewmodel.SendNotificationsViewModel;
+import org.innovateuk.ifs.util.JsonUtil;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -26,11 +33,22 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.web.servlet.MvcResult;
 
+import javax.servlet.http.Cookie;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.String.format;
+import static java.lang.String.valueOf;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.hamcrest.CoreMatchers.is;
 import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
 import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
 import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
@@ -40,7 +58,12 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionFundedKeyStatisticsResourceBuilder.newCompetitionFundedKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
+import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
+import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
+import static org.innovateuk.ifs.util.JsonUtil.getObjectFromJson;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -73,6 +96,14 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     public static final Long APPLICATION_ID_ONE = 1L;
     public static final Long APPLICATION_ID_TWO = 2L;
 
+
+    @Override
+    @Before
+    public void setUp() {
+        super.setUp();
+        this.setupCookieUtil();
+    }
+
     @Test
     public void testApplications() throws Exception {
         int pageNumber = 0;
@@ -101,6 +132,8 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         CompetitionInFlightStatsViewModel keyStatisticsModel = competitionInFlightStatsModelPopulator.populateStatsViewModel(competitionResource);
         ManageFundingApplicationViewModel model = new ManageFundingApplicationViewModel(applicationSummaryPageResource, keyStatisticsModel, new PaginationViewModel(applicationSummaryPageResource, queryParams), sortField, COMPETITION_ID, competitionResource.getName());
 
+        when(applicationSummaryRestService.getWithFundingDecisionApplications(
+                COMPETITION_ID, empty(), sendFilter, fundingFilter)).thenReturn(restSuccess(applications));
 
         // Method under test
         mockMvc.perform(get("/competition/{competitionId}/manage-funding-applications", COMPETITION_ID))
@@ -140,6 +173,36 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
             return true;
         });
     }
+
+    @Test
+    public void addApplicationSelectionToCookie() throws Exception {
+        long applicationId = 1L;
+        Optional<Boolean> sendFilter = Optional.empty();
+        Optional<FundingDecision> fundingFilter = Optional.empty();
+        FundingNotificationSelectionCookie selectionCookie = new FundingNotificationSelectionCookie();
+        selectionCookie.setSelectApplicationsForEmailForm(new SelectApplicationsForEmailForm());
+        selectionCookie.setManageFundingApplicationsQueryForm(new ManageFundingApplicationsQueryForm());
+        Cookie formCookie = createFormCookie(selectionCookie);
+
+        List<ApplicationSummaryResource> applications = newApplicationSummaryResource().with(uniqueIds()).build(4);
+
+        when(applicationSummaryRestService.getWithFundingDecisionApplications(
+                COMPETITION_ID, empty(), sendFilter, fundingFilter)).thenReturn(restSuccess(applications));
+
+
+        MvcResult result = mockMvc.perform(post("/competition/{competitionId}/manage-funding-applications", COMPETITION_ID)
+                .param("selectionId", valueOf(applicationId))
+                .param("isSelected", "true")
+                .cookie(formCookie))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("selectionCount", is(1)))
+                .andExpect(jsonPath("allSelected", is(false)))
+                .andReturn();
+
+        Optional<FundingNotificationSelectionCookie> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("applicationSelectionForm_comp%s", COMPETITION_ID));
+        assertTrue(resultForm.get().getSelectApplicationsForEmailForm().getIds().contains(applicationId));
+    }
+
 
     @Test
     public void getSendNotificationsPageTest() throws Exception {
@@ -200,7 +263,6 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         verify(applicationFundingServiceMock, never()).sendFundingNotifications(any(FundingNotificationResource.class));
     }
 
-
     @Test
     public void sendNotificationsWithInvalidFundingDecisions() throws Exception {
 
@@ -219,5 +281,22 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     @Override
     protected CompetitionManagementFundingNotificationsController supplyControllerUnderTest() {
         return new CompetitionManagementFundingNotificationsController();
+    }
+
+    private Cookie createFormCookie(FundingNotificationSelectionCookie form) throws Exception {
+        String cookieContent = JsonUtil.getSerializedObject(form);
+        String encryptedData = encryptor.encrypt(URLEncoder.encode(cookieContent, CharEncoding.UTF_8));
+        return new Cookie(format("applicationSelectionForm_comp%s", COMPETITION_ID), encryptedData);
+    }
+
+    private Optional<FundingNotificationSelectionCookie> getAssessorSelectionFormFromCookie(MockHttpServletResponse response, String cookieName) throws Exception {
+        String notificationFormJson = getDecryptedCookieValue(response.getCookies(), cookieName);
+        String decodedFormJson  = URLDecoder.decode(notificationFormJson, CharEncoding.UTF_8);
+
+        if (isNotBlank(decodedFormJson)) {
+            return Optional.ofNullable(getObjectFromJson(decodedFormJson, FundingNotificationSelectionCookie.class));
+        } else {
+            return Optional.empty();
+        }
     }
 }

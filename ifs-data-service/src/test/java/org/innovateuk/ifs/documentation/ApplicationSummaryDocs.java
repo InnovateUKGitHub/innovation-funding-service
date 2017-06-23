@@ -13,7 +13,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 
 public class ApplicationSummaryDocs {
 
-    public static final FieldDescriptor[] APPLICATION_SUMMARY_RESOURCE_FIELDS = {
+    public static final FieldDescriptor[] APPLICATION_SUMMARY_PAGE_RESOURCE_FIELDS = {
             fieldWithPath("totalElements").description("Total size of the unpaged results set"),
             fieldWithPath("totalPages").description("Total number of pages"),
             fieldWithPath("number").description("Page number - zero indexed"),
@@ -33,6 +33,24 @@ public class ApplicationSummaryDocs {
             fieldWithPath("content[].innovationArea").description("The innovation area of the application"),
             fieldWithPath("content[].manageFundingEmailDate").description("The date of the last  manage funding email sent"),
             fieldWithPath("content[].ineligibleInformed").description("Whether the applicant has been informed the application is ineligible")
+    };
+
+    public static final FieldDescriptor[] APPLICATION_SUMMARY_RESOURCE_FIELDS = {
+            fieldWithPath("id").description("Application id"),
+            fieldWithPath("name").description("Application name"),
+            fieldWithPath("lead").description("Lead organisation"),
+            fieldWithPath("leadApplicant").description("lead applicant"),
+            fieldWithPath("status").description("Application status"),
+            fieldWithPath("completedPercentage").description("Application completed percentage"),
+            fieldWithPath("numberOfPartners").description("Number of partners on the application"),
+            fieldWithPath("grantRequested").description("The grant requested on the application"),
+            fieldWithPath("totalProjectCost").description("The total project cost of the application"),
+            fieldWithPath("duration").description("Application duration in months"),
+            fieldWithPath("fundingDecision").description("The funding decision for the application"),
+            fieldWithPath("funded").description("Whether the application will be funded"),
+            fieldWithPath("innovationArea").description("The innovation area of the application"),
+            fieldWithPath("manageFundingEmailDate").description("The date of the last  manage funding email sent"),
+            fieldWithPath("ineligibleInformed").description("Whether the applicant has been informed the application is ineligible")
     };
 
     public static final ApplicationSummaryResourceBuilder APPLICATION_SUMMARY_RESOURCE_BUILDER =

@@ -376,16 +376,25 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     @Test
     public void addAssessorSelectionFromFindView() throws Exception {
         long assessorId = 1L;
+        Optional<Long> innovationArea = of(4L);
         Cookie formCookie = createFormCookie(new AssessorSelectionForm());
 
+        List<AvailableAssessorResource> availableAssessorResources = newAvailableAssessorResource()
+                .withId(1L, 2L)
+                .withEmail("dave@email.com", "john@email.com")
+                .build(2);
+
+        when(competitionInviteRestService.getAvailableAssessors(competition.getId(), innovationArea)).thenReturn(restSuccess(availableAssessorResources));
+
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/find", competition.getId())
-                .param("assessor", valueOf(assessorId))
+                .param("selectionId", valueOf(assessorId))
                 .param("isSelected", "true")
                 .param("page", "1")
                 .param("innovationArea", "4")
                 .cookie(formCookie))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("selectionCount", is(1)))
+                .andExpect(jsonPath("allSelected", is(false)))
                 .andReturn();
 
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("selectionForm_comp%s", competition.getId()));
@@ -398,7 +407,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         Cookie formCookie = createFormCookie(new AssessorSelectionForm());
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/find", competition.getId())
-                .param("assessor", valueOf(assessorId))
+                .param("selectionId", valueOf(assessorId))
                 .param("isSelected", "true")
                 .cookie(formCookie))
                 .andExpect(status().is2xxSuccessful())
@@ -438,7 +447,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         Cookie formCookie = createFormCookie(form);
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/find", competition.getId())
-                .param("assessor", valueOf(assessorId))
+                .param("selectionId", valueOf(assessorId))
                 .param("isSelected", "false")
                 .param("page", "1")
                 .param("innovationArea", "4")
@@ -460,7 +469,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         formCookie = createFormCookie(form);
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/find", competition.getId())
-                .param("assessor", valueOf(assessorId))
+                .param("selectionId", valueOf(assessorId))
                 .param("isSelected", "false")
                 .cookie(formCookie))
                 .andExpect(status().is2xxSuccessful())
@@ -921,8 +930,8 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     }
 
     private Optional<AssessorSelectionForm> getAssessorSelectionFormFromCookie(MockHttpServletResponse response, String cookieName) throws Exception {
-        String organisationFormJson = getDecryptedCookieValue(response.getCookies(), cookieName);
-        String decodedFormJson  = URLDecoder.decode(organisationFormJson, CharEncoding.UTF_8);
+        String selectionFormJson = getDecryptedCookieValue(response.getCookies(), cookieName);
+        String decodedFormJson  = URLDecoder.decode(selectionFormJson, CharEncoding.UTF_8);
 
         if (isNotBlank(decodedFormJson)) {
             return Optional.ofNullable(getObjectFromJson(decodedFormJson, AssessorSelectionForm.class));

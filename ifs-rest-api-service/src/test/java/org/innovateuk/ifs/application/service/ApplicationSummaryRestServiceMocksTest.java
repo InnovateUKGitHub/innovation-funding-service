@@ -2,14 +2,19 @@ package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.List;
 import java.util.Optional;
 
+import static java.lang.String.format;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
 import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -187,5 +192,21 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
 
         assertTrue(result.isSuccess());
         Assert.assertEquals(responseBody, result.getSuccessObject());
+    }
+
+    @Test
+    public void testgetAllWithFundingDecisionApplications() {
+        List<ApplicationSummaryResource> appSummaries = newApplicationSummaryResource().build(2);
+
+        setupGetWithRestResultExpectations(
+                format("%s/%s/%s/%s?all&filter=filter&sendFilter=false&fundingFilter=FUNDED", APPLICATION_SUMMARY_REST_URL, "findByCompetition", 123L, "with-funding-decision"),
+                ParameterizedTypeReferences.applicationSummaryResourceListType(),
+                appSummaries
+        );
+
+        RestResult<List<ApplicationSummaryResource>> result = service.getWithFundingDecisionApplications(123L, of("filter"), Optional.of(false), Optional.of(FUNDED));
+
+        assertTrue(result.isSuccess());
+        Assert.assertEquals(appSummaries, result.getSuccessObject());
     }
 }

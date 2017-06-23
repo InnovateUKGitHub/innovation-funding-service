@@ -52,4 +52,17 @@ public class ManageFundingApplicationsQueryForm {
     public void setPage(int page) {
         this.page = page;
     }
+
+    public void setAllFilterOptions(String stringFilter, Optional<Boolean> sendFilter, Optional<FundingDecision> fundingFilter) {
+        this.stringFilter = stringFilter;
+        this.fundingFilter = fundingFilter;
+        this.sendFilter = sendFilter;
+
+    }
+
+    public boolean anyFilterOptionsActive() {
+        return (!this.stringFilter.isEmpty() ||
+                !this.sendFilter.isPresent() ||
+                !this.fundingFilter.isPresent());
+    }
 }

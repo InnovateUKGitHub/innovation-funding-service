@@ -512,6 +512,29 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         assertEquals(resource, result.getSuccessObject());
     }
 
+    @SuppressWarnings("unchecked")
+    @Test
+    public void findAllByCompetitionWithFundingDecisionApplications() throws Exception {
+
+        Application app1 = mock(Application.class);
+        Application app2 = mock(Application.class);
+        List<Application> applications = asList(app1, app2);
+
+        ApplicationSummaryResource sum1 = sumLead("b");
+        ApplicationSummaryResource sum2 = sumLead("a");
+        when(applicationSummaryMapper.mapToResource(app1)).thenReturn(sum1);
+        when(applicationSummaryMapper.mapToResource(app2)).thenReturn(sum2);
+
+        when(applicationRepositoryMock.findByCompetitionIdAndFundingDecisionIsNotNull(eq(COMP_ID), eq("filter"), eq(false), eq(ON_HOLD))).thenReturn(applications);
+
+        ServiceResult<List<ApplicationSummaryResource>> result = applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(COMP_ID, of("filter"), of(false), of(ON_HOLD));
+
+        assertTrue(result.isSuccess());
+        assertEquals(2, result.getSuccessObject().size());
+        assertEquals(sum1, result.getSuccessObject().get(0));
+        assertEquals(sum2, result.getSuccessObject().get(1));
+    }
+
     @Test
     public void getApplicationTeamSuccess() {
         Role leadRole = newRole().withType(UserRoleType.LEADAPPLICANT).build();

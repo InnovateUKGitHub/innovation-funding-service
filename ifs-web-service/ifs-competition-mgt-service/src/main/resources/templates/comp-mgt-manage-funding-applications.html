@@ -73,7 +73,8 @@
 
                         <div class="multiple-choice">
                                 <input data-select-all="" id="select-all-1" type="checkbox"
-                                       th:checked="${#lists.size(selectionForm.ids)} == ${model.pagination.totalCount}"/>
+                                       th:checked="${selectionForm.isAllSelected()}"
+                                       th:attr="disabled=${#lists.isEmpty(model.content)}"/>
                                 <label for="select-all-1">
                                     Select all applications
                                 </label>
@@ -110,7 +111,7 @@
                             <div class="multiple-choice" th:if="${applicationSummary.applicationFundingDecisionIsChangeable()}">
                                 <input type="checkbox"
                                        class="app-row-select row-successful"
-                                       th:field="*{selectionForm.ids[__${stat.index}__]}"
+                                       th:field="*{selectionForm.ids}"
                                        th:value="${applicationSummary.id}"
                                        aria-labelledby="select-applications-label"
                                        th:id="'app-row-' + ${applicationSummary.id}" />
@@ -135,6 +136,9 @@
                         <td th:text="${applicationSummary.manageFundingEmailDate} ? 'Sent' : '-'">-</td>
                         <td class="alignright" th:text="${applicationSummary.manageFundingEmailDate} ? ${#temporals.format(applicationSummary.manageFundingEmailDate, 'dd MMMM yyyy')} : '-'">9 January 2017</td>
                     </tr>
+                    <tr th:if="${#lists.isEmpty(model.content)}">
+                        <td colspan="5">No applications found.</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -145,9 +149,11 @@
                 <div class="select-all">
                     <fieldset>
                         <legend class="visuallyhidden">Select applications</legend>
+
                         <div class="multiple-choice">
                             <input data-select-all="" id="select-all-2" type="checkbox"
-                                   th:checked="${#lists.size(selectionForm.ids)} == ${model.pagination.totalCount}"/>
+                                   th:checked="${selectionForm.isAllSelected()}"
+                                   th:attr="disabled=${#lists.isEmpty(model.content)}"/>
                             <label for="select-all-2">
                                 Select all applications
                             </label>
