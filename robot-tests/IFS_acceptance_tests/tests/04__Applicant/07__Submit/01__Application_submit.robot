@@ -91,7 +91,7 @@ Submitted application is read only
     and the user clicks the button/link     link=Return to dashboard
     and the user clicks the button/link     link=${application_name}
     When the user clicks the button/link    link=View application
-    And the user is on the page    summary
+    And The user should be redirected to the correct page
     Then the user can check that the sections are read only
 
 Status of the submitted application

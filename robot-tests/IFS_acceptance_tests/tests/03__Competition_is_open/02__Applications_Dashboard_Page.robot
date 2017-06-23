@@ -15,6 +15,7 @@ Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          ../10__Project_setup/PS_Common.robot
+Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Variables ***
 ${valid_pdf}      testing.pdf

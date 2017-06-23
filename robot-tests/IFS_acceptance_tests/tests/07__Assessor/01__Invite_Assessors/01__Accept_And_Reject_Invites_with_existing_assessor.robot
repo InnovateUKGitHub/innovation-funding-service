@@ -191,7 +191,7 @@ Registered user should not allowed to accept other assessor invite
     Given the user navigates to the page    ${Invitation_nonexisting_assessor2}
     And the user selects the radio button  acceptInvitation  true
     And The user clicks the button/link    jQuery=button:contains("Confirm")
-    Then The user should see permissions error message
+    Then Page Should Contain              ${403_error_message}
 
 The user should not be able to accept or reject the same applications
     [Documentation]    INFUND-5165

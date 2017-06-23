@@ -14,6 +14,7 @@ Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin    Applicant
 Resource          ../../resources/defaultResources.robot
+Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Test Cases ***
 A non submitted application cannot be marked as ineligible
