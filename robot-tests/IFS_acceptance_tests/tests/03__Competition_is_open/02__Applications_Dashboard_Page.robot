@@ -10,7 +10,7 @@ Documentation     INFUND-2135 As a Competition Administrator I want to be able t
 ...               INFUND-7369 Competition management: View list of all applications
 ...
 ...               INFUND-8010 Filter, sorting and pagination on 'All applications' dashboard
-Suite Setup       Log in as user    &{Comp_admin1_credentials}
+Suite Setup       Guest user log-in in new browser    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
@@ -111,7 +111,7 @@ Application has team link and team details
 Comp admin can open the view mode of the application
     [Documentation]    INFUND-2300,INFUND-2304, INFUND-2435, INFUND-7503
     [Tags]    HappyPath
-    [Setup]    Run keywords    Guest user log-in    &{lead_applicant_credentials}
+    [Setup]    Run keywords    Guest user log-in in new browser    &{lead_applicant_credentials}
     ...    AND    the user can see the option to upload a file on the page    ${technical_approach_url}
     ...    AND    the user uploads the file to the 'technical approach' question    ${valid_pdf}
     Given log in as a different user    &{Comp_admin1_credentials}

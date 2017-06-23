@@ -3,19 +3,19 @@ Resource          ../defaultResources.robot
 
 *** Keywords ***
 log in and create new application if there is not one already
-    Given Guest user log-in    &{lead_applicant_credentials}
+    Given Guest user log-in in new browser    &{lead_applicant_credentials}
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    Robot test application
     Run Keyword If    '${status}' == 'FAIL'    Create new application with the same user  Robot test application
 
 log in and create new application for collaboration if there is not one already
-    Given Guest user log-in    &{lead_applicant_credentials}
+    Given Guest user log-in in new browser    &{lead_applicant_credentials}
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    Invite robot test application
     Run Keyword If    '${status}' == 'FAIL'    Create new application with the same user  Invite robot test application
 
 Login new application invite academic
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     [Tags]    Email
-    Given Guest user log-in    &{lead_applicant_credentials}
+    Given Guest user log-in in new browser    &{lead_applicant_credentials}
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    Academic robot test application
     Run Keyword If    '${status}' == 'FAIL'    Run keywords    Create new application with the same user  Academic robot test application
     ...    AND    Invite and accept the invitation    ${recipient}    ${subject}    ${pattern}
@@ -43,7 +43,7 @@ create new account for submitting
     And the user clicks the button/link        jQuery=.button:contains("Sign in")
 
 the user marks every section but one as complete
-    Guest user log-in    ${submit_test_email}    ${correct_password}
+    Guest user log-in in new browser    ${submit_test_email}    ${correct_password}
     the user navigates to the page    ${server}
     the user clicks the button/link    link=${application_name}
     the user clicks the button/link    link=Project summary
@@ -109,7 +109,7 @@ create new submit application
     When the user navigates to the page                 ${COMPETITION_OVERVIEW_URL}
     the user clicks the button/link                     jQuery=a:contains("Start new application")
     And the user clicks the button/link                 jQuery=p ~ a:contains("Sign in")
-    And the guest user inserts user email & password    ${test_mailbox_one}+submittest@gmail.com    Passw0rd123
+    And The guest user inserts user email and password  ${test_mailbox_one}+submittest@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
     And the user clicks the button/link                 jQuery=Label:contains("Yes, I want to create a new application.")
     And the user clicks the button/link                 jQuery=.button:contains("Continue")
@@ -150,18 +150,7 @@ Invite and accept the invitation
     And the user fills the create account form    Arsene    Wenger
     And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    We now need you to verify your email address
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And guest user log-in    ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
-
-The user redirects to the page
-    [Arguments]    ${TEXT1}    ${TEXT2}
-    Wait Until Keyword Succeeds Without Screenshots    10    500ms    Page Should Contain    ${TEXT1}
-    Page Should Contain    ${TEXT2}
-    Page Should Not Contain    error
-    Page Should Not Contain    ${404_error_message}
-    Page Should Not Contain    ${403_error_message}
-    # Header checking (INFUND-1892)
-    Wait Until Element Is Visible Without Screenshots    id=global-header
-    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
+    And Guest user log-in in new browser    ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
 
 The user navigates to the summary page of the Robot test application
     Given the user navigates to the page    ${DASHBOARD_URL}
@@ -219,7 +208,7 @@ the user verifies email
     the user reads his email and clicks the link               ${EMAIL_INVITED}  Please verify your email address  Once verified you can sign into your account
     The user should be redirected to the correct page          ${REGISTRATION_VERIFIED}
     The user clicks the button/link                            jQuery=.button:contains("Sign in")
-    The guest user inserts user email & password               ${EMAIL_INVITED}  ${correct_password}
+    The guest user inserts user email and password             ${EMAIL_INVITED}  ${correct_password}
     The guest user clicks the log-in button
 
 the user follows the flow to register their organisation

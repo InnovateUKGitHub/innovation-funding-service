@@ -51,6 +51,10 @@ public class ProcessRoleResourceBuilder extends BaseBuilder<ProcessRoleResource,
         return withArray((name, processRoleResource) -> processRoleResource.setUserName(name), userName);
     }
 
+    public ProcessRoleResourceBuilder withId(Long... ids) {
+        return withArray((id, processRoleResource) -> processRoleResource.setId(id), ids);
+    }
+
     public ProcessRoleResourceBuilder withRole(RoleResource... roles) {
         return withArray((role, processRoleResource) -> {
             setField("role", role.getId(), processRoleResource);
