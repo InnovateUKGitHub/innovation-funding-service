@@ -7,6 +7,16 @@ public class FundingNotificationSelectionCookie {
     private SelectApplicationsForEmailForm selectApplicationsForEmailForm;
     private ManageFundingApplicationsQueryForm manageFundingApplicationsQueryForm;
 
+    public FundingNotificationSelectionCookie() {
+        this.selectApplicationsForEmailForm = new SelectApplicationsForEmailForm();
+        this.manageFundingApplicationsQueryForm = new ManageFundingApplicationsQueryForm();
+    }
+
+    public FundingNotificationSelectionCookie(SelectApplicationsForEmailForm selectApplicationsForEmailForm) {
+        this.selectApplicationsForEmailForm = selectApplicationsForEmailForm;
+        this.manageFundingApplicationsQueryForm = new ManageFundingApplicationsQueryForm();
+    }
+
     public SelectApplicationsForEmailForm getSelectApplicationsForEmailForm() {
         return selectApplicationsForEmailForm;
     }

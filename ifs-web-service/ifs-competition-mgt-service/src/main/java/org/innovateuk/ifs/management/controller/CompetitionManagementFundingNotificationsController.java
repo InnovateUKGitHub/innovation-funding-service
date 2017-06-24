@@ -160,7 +160,8 @@ public class CompetitionManagementFundingNotificationsController {
                                      HttpServletRequest request,
                                      HttpServletResponse response) {
 
-        FundingNotificationSelectionCookie selectionCookie = getFundingNotificationFormFromCookie(request, competitionId).orElse(new FundingNotificationSelectionCookie());
+        FundingNotificationSelectionCookie selectionCookie = getFundingNotificationFormFromCookie(request, competitionId)
+                .orElse(new FundingNotificationSelectionCookie(selectionForm));
 
         return queryFormValidationHandler.failNowOrSucceedWith(queryFailureView(competitionId),  // Pass or fail JSR 303 on the query form
                 () -> idsValidationHandler.failNowOrSucceedWith(idsFailureView(competitionId, query, model, params), // Pass or fail JSR 303 on the ids

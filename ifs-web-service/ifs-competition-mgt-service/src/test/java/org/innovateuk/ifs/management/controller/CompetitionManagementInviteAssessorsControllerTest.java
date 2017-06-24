@@ -406,12 +406,20 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         long assessorId = 1L;
         Cookie formCookie = createFormCookie(new AssessorSelectionForm());
 
+        List<AvailableAssessorResource> availableAssessorResources = newAvailableAssessorResource()
+                .withId(1L, 2L)
+                .withEmail("dave@email.com", "john@email.com")
+                .build(2);
+
+        when(competitionInviteRestService.getAvailableAssessors(competition.getId(), empty())).thenReturn(restSuccess(availableAssessorResources));
+
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/find", competition.getId())
                 .param("selectionId", valueOf(assessorId))
                 .param("isSelected", "true")
                 .cookie(formCookie))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("selectionCount", is(1)))
+                .andExpect(jsonPath("allSelected", is(false)))
                 .andReturn();
 
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("selectionForm_comp%s", competition.getId()));
@@ -433,6 +441,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .cookie(formCookie))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("selectionCount", is(2)))
+                .andExpect(jsonPath("allSelected", is(true)))
                 .andReturn();
 
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("selectionForm_comp%s", competition.getId()));
@@ -446,6 +455,12 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         form.getSelectedAssessorIds().add(assessorId);
         Cookie formCookie = createFormCookie(form);
 
+        List<AvailableAssessorResource> availableAssessorPageResource = newAvailableAssessorResource()
+                .withEmail("dave@email.com", "john@email.com")
+                .build(2);
+
+        when(competitionInviteRestService.getAvailableAssessors(competition.getId(), of(4L))).thenReturn(restSuccess(availableAssessorPageResource));
+
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/find", competition.getId())
                 .param("selectionId", valueOf(assessorId))
                 .param("isSelected", "false")
@@ -454,6 +469,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .cookie(formCookie))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("selectionCount", is(0)))
+                .andExpect(jsonPath("allSelected", is(false)))
                 .andReturn();
 
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("selectionForm_comp%s", competition.getId()));
@@ -468,12 +484,19 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         form.getSelectedAssessorIds().add(assessorId);
         formCookie = createFormCookie(form);
 
+        List<AvailableAssessorResource> availableAssessorPageResource = newAvailableAssessorResource()
+                .withEmail("dave@email.com", "john@email.com")
+                .build(2);
+
+        when(competitionInviteRestService.getAvailableAssessors(competition.getId(), empty())).thenReturn(restSuccess(availableAssessorPageResource));
+
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/find", competition.getId())
                 .param("selectionId", valueOf(assessorId))
                 .param("isSelected", "false")
                 .cookie(formCookie))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("selectionCount", is(0)))
+                .andExpect(jsonPath("allSelected", is(false)))
                 .andReturn();
 
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("selectionForm_comp%s", competition.getId()));
