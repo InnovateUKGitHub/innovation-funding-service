@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.management.controller;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.Matcher;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
@@ -15,7 +17,6 @@ import org.innovateuk.ifs.competition.form.ManageFundingApplicationsQueryForm;
 import org.innovateuk.ifs.competition.form.SelectApplicationsForEmailForm;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.management.form.AssessorSelectionForm;
 import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
 import org.innovateuk.ifs.management.model.CompetitionInFlightStatsModelPopulator;
 import org.innovateuk.ifs.management.model.ManageFundingApplicationsModelPopulator;
@@ -37,17 +38,23 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
 
 import javax.servlet.http.Cookie;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.LongStream;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import static com.google.common.primitives.Longs.asList;
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
 import static java.util.Optional.empty;
-import static java.util.Optional.of;
+import static java.util.stream.Collectors.toList;
 import static junit.framework.TestCase.assertFalse;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.hamcrest.CoreMatchers.is;
@@ -60,9 +67,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionFundedKeyStatisticsResourceBuilder.newCompetitionFundedKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
-import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
-import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.JsonUtil.getObjectFromJson;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -74,7 +78,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionManagementFundingNotificationsControllerTest extends BaseControllerMockMVCTest<CompetitionManagementFundingNotificationsController> {
-
 
     @InjectMocks
     @Spy
@@ -152,7 +155,6 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
                 contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("ids[0]", "18")
                 .param("ids[1]", "21"))
-                .andExpect(status().is3xxRedirection())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/competition/1/funding/send?application_ids=18,21"));
     }
@@ -338,6 +340,34 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
                 .andReturn();
 
         verify(applicationFundingServiceMock, never()).sendFundingNotifications(any(FundingNotificationResource.class));
+    }
+
+    @Test
+    public void compressJsonEncodedForm() throws Exception {
+        FundingNotificationSelectionCookie form = new FundingNotificationSelectionCookie();
+        List<Long> ids = LongStream.rangeClosed(1, 710).boxed().collect(toList());
+        form.getSelectApplicationsForEmailForm().setIds(ids);
+
+        String cookieContent = JsonUtil.getSerializedObject(form);
+
+        // compress
+        ByteArrayOutputStream rstBao = new ByteArrayOutputStream();
+        GZIPOutputStream zos = new GZIPOutputStream(rstBao);
+        zos.write(cookieContent.getBytes());
+        IOUtils.closeQuietly(zos);
+        String base64result = Base64.encodeBase64String(rstBao.toByteArray());
+
+        //String encryptedData = encryptor.encrypt(URLEncoder.encode(base64result, CharEncoding.UTF_8));
+        System.out.println(base64result.length());
+
+        // decompress
+        ////String decrypted = encryptor.decrypt(encryptedData);
+        byte[] bytes = Base64.decodeBase64(base64result);
+        GZIPInputStream zi = new GZIPInputStream(new ByteArrayInputStream(bytes));
+        String result = IOUtils.toString(zi, Charset.defaultCharset());
+        IOUtils.closeQuietly(zi);
+        String decodedJson  = URLDecoder.decode(result, CharEncoding.UTF_8);
+        System.out.println(decodedJson);
     }
 
     @Override

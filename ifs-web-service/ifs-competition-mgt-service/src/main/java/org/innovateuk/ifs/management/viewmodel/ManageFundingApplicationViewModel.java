@@ -4,8 +4,9 @@ package org.innovateuk.ifs.management.viewmodel;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 
-import java.util.Collections;
 import java.util.List;
+
+import static java.util.Collections.emptyList;
 
 /**
  * View model for manage funding applications page
@@ -49,8 +50,16 @@ public class ManageFundingApplicationViewModel {
         return competitionName;
     }
 
-    public List<ApplicationSummaryResource> getContent(){
-        return results != null ? results.getContent() : Collections.emptyList();
+    public List<ApplicationSummaryResource> getContent() {
+        return results != null ? results.getContent() : emptyList();
+    }
+
+    public boolean isAnythingChangeable() {
+        if (results != null) {
+            return results.getContent().stream().anyMatch(ApplicationSummaryResource::applicationFundingDecisionIsChangeable);
+        } else {
+            return false;
+        }
     }
 
     public CompetitionInFlightStatsViewModel getKeyStatistics() {

@@ -45,7 +45,6 @@ public class ManageFundingApplicationsQueryForm {
     }
 
     public int getPage() {
-
         return page;
     }
 
@@ -62,7 +61,7 @@ public class ManageFundingApplicationsQueryForm {
 
     public boolean anyFilterOptionsActive() {
         return (!this.stringFilter.isEmpty() ||
-                !this.sendFilter.isPresent() ||
-                !this.fundingFilter.isPresent());
+                this.sendFilter.isPresent() ||
+                this.fundingFilter.isPresent());
     }
 }

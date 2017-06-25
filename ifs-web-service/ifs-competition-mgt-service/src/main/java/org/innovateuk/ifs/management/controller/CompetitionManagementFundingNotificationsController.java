@@ -128,13 +128,12 @@ public class CompetitionManagementFundingNotificationsController {
         ManageFundingApplicationsQueryForm storedFilterForm = storedSelectionFormCookie.getManageFundingApplicationsQueryForm();
         SelectApplicationsForEmailForm storedSelectionForm = storedSelectionFormCookie.getSelectApplicationsForEmailForm();
 
-        if (storedSelectionForm != null && !storedSelectionForm.getIds().isEmpty()) {
+        if (!storedSelectionForm.getIds().isEmpty()) {
             selectionForm.setAllSelected(storedSelectionFormCookie.getSelectApplicationsForEmailForm().isAllSelected());
             selectionForm.setIds(storedSelectionFormCookie.getSelectApplicationsForEmailForm().getIds());
-
-            if (storedFilterForm.anyFilterOptionsActive() && !clearFilters) {
-                filterForm.setAllFilterOptions(storedFilterForm.getStringFilter(), storedFilterForm.getSendFilter(), storedFilterForm.getFundingFilter());
-            }
+        }
+        if (storedFilterForm.anyFilterOptionsActive() && !clearFilters) {
+            filterForm.setAllFilterOptions(storedFilterForm.getStringFilter(), storedFilterForm.getSendFilter(), storedFilterForm.getFundingFilter());
         }
 
         if (selectionForm.isAllSelected()) {
