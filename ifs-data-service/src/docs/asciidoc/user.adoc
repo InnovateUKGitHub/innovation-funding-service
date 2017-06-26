@@ -68,3 +68,27 @@ include::{snippets}/user/verify-email/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/user/verify-email/curl-request.adoc[]
+
+== Find active internal users
+=== Success case
+=== Request
+include::{snippets}/user/test-find-active-internal-users/http-request.adoc[]
+
+==== Response
+include::{snippets}/user/test-find-active-internal-users/http-response.adoc[]
+include::{snippets}/user/test-find-active-internal-users/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/user/test-find-active-internal-users/curl-request.adoc[]
+
+== Find inactive internal users
+=== Success case
+=== Request
+include::{snippets}/user/test-find-inactive-internal-users/http-request.adoc[]
+
+==== Response
+include::{snippets}/user/test-find-inactive-internal-users/http-response.adoc[]
+include::{snippets}/user/test-find-inactive-internal-users/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/user/test-find-inactive-internal-users/curl-request.adoc[]

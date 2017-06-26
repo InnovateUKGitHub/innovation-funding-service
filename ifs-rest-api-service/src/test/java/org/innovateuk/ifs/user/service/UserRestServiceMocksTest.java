@@ -2,27 +2,23 @@ package org.innovateuk.ifs.user.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.Disability;
+import org.innovateuk.ifs.user.resource.Gender;
+import org.innovateuk.ifs.user.resource.UserPageResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.LinkedMultiValueMap;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.affiliationResourceListType;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userListType;
-import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
-import static org.innovateuk.ifs.user.builder.ProfileAgreementResourceBuilder.newProfileAgreementResource;
-import static org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder.newProfileSkillsEditResource;
-import static org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
-import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
-import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.user.resource.Title.Miss;
-import static org.innovateuk.ifs.user.resource.Title.Mr;
-import static org.innovateuk.ifs.user.resource.Title.Mrs;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userListType;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Title.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
@@ -255,5 +251,27 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
 
         Boolean response = service.userHasApplicationForCompetition(userId, competitionId).getSuccessObjectOrThrowException();
         assertEquals(expected, response);
+    }
+
+    @Test
+    public void testGetActiveInternalUsers(){
+        UserPageResource expected = new UserPageResource();
+
+        setupGetWithRestResultExpectations(buildPaginationUri(usersUrl + "/internal/active", 0, 5, null, new LinkedMultiValueMap<>()), UserPageResource.class, expected, OK);
+
+        UserPageResource result = service.getActiveInternalUsers(0, 5).getSuccessObjectOrThrowException();
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testGetInactiveInternalUsers(){
+        UserPageResource expected = new UserPageResource();
+
+        setupGetWithRestResultExpectations(buildPaginationUri(usersUrl + "/internal/inactive", 0, 5, null, new LinkedMultiValueMap<>()), UserPageResource.class, expected, OK);
+
+        UserPageResource result = service.getInactiveInternalUsers(0, 5).getSuccessObjectOrThrowException();
+
+        assertEquals(expected, result);
     }
 }

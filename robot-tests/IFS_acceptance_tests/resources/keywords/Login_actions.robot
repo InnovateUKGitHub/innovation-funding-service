@@ -14,7 +14,7 @@ Guest user log-in in new browser
     The guest user opens the browser
     The guest user inserts user email and password    ${email}    ${password}
     The guest user clicks the log-in button
-    Wait Until Page Contains Without Screenshots    dashboard
+    Wait Until Page Contains Without Screenshots    Dashboard
     the user should not see an error in the page
 
 Log in as a different user
