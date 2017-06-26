@@ -331,7 +331,7 @@ Guest user not find the invite only competition by Keywords
 The user is able to make the competition public
     [Documentation]  IFS-261, IFS-179
     [Tags]  HappyPath
-    [Setup]  Guest user log-in  &{Comp_admin1_credentials}
+    [Setup]  The user logs-in in new browser  &{Comp_admin1_credentials}
     Given the internal user navigates to public content  ${public_content_competition_name}
     Then the user should see the element                 link=Competition information and search
     When the user clicks the button/link                 link=Competition information and search
