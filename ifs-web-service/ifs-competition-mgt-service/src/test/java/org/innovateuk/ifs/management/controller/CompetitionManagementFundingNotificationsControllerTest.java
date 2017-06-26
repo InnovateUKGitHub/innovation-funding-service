@@ -345,7 +345,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     @Test
     public void compressJsonEncodedForm() throws Exception {
         FundingNotificationSelectionCookie form = new FundingNotificationSelectionCookie();
-        List<Long> ids = LongStream.rangeClosed(1, 710).boxed().collect(toList());
+        List<Long> ids = LongStream.rangeClosed(1, 300).boxed().collect(toList());
         form.getSelectApplicationsForEmailForm().setIds(ids);
 
         String cookieContent = JsonUtil.getSerializedObject(form);
@@ -357,17 +357,18 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         IOUtils.closeQuietly(zos);
         String base64result = Base64.encodeBase64String(rstBao.toByteArray());
 
-        //String encryptedData = encryptor.encrypt(URLEncoder.encode(base64result, CharEncoding.UTF_8));
+        String encryptedData = encryptor.encrypt(URLEncoder.encode(cookieContent, CharEncoding.UTF_8));
         System.out.println(base64result.length());
+        System.out.println(encryptedData.length());
 
         // decompress
         ////String decrypted = encryptor.decrypt(encryptedData);
-        byte[] bytes = Base64.decodeBase64(base64result);
-        GZIPInputStream zi = new GZIPInputStream(new ByteArrayInputStream(bytes));
-        String result = IOUtils.toString(zi, Charset.defaultCharset());
-        IOUtils.closeQuietly(zi);
-        String decodedJson  = URLDecoder.decode(result, CharEncoding.UTF_8);
-        System.out.println(decodedJson);
+//        byte[] bytes = Base64.decodeBase64(base64result);
+//        GZIPInputStream zi = new GZIPInputStream(new ByteArrayInputStream(bytes));
+//        String result = IOUtils.toString(zi, Charset.defaultCharset());
+//        IOUtils.closeQuietly(zi);
+//        String decodedJson  = URLDecoder.decode(result, CharEncoding.UTF_8);
+//        System.out.println(decodedJson);
     }
 
     @Override

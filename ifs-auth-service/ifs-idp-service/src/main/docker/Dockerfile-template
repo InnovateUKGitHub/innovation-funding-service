@@ -1,4 +1,4 @@
-FROM debian:jessie-slim
+FROM ifshibdev/idp-base
 
 ENV DEBIAN_FRONTEND=noninteractive \
   HTTPPORT=9080 \
@@ -29,41 +29,31 @@ ENV DEBIAN_FRONTEND=noninteractive \
   LDAPVALIDATEPERIOD="PT20S" \
   REGAPIKEY=@auth_idp_regapikey@ \
   GOOGLEANALYTICS_TRACKINGID="#" \
-  IDP_PROXY_KEY="idp_proxy_key.pem" \
-  IDP_PROXY_CERTIFICATE="idp_proxy_certificate.pem" \
-  IDP_PROXY_CACERTIFICATE="idp_proxy_cacertificate.pem" \
-  SP_PROXY_CERTIFICATE="sp_proxy_certificate.pem" \
-  IDP_SIGNING_KEY="idp-signing.key" \
-  IDP_SIGNING_CERTIFICATE="idp-signing.crt" \
-  IDP_ENCRYPTION_KEY="idp-encryption.key" \
-  IDP_ENCRYPTION_CERTIFICATE="idp-encryption.crt"
+  IDP_PROXY_KEY="@auth_idp_proxy_key@" \
+  IDP_PROXY_CERTIFICATE="@auth_idp_proxy_certificate@" \
+  IDP_PROXY_CACERTIFICATE="@auth_idp_proxy_cacertificate@" \
+  SP_PROXY_CERTIFICATE="@auth_sp_proxy_certificate@" \
+  IDP_SIGNING_KEY="@auth_idp_signing_key@" \
+  IDP_SIGNING_CERTIFICATE="@auth_idp_signing_certificate@" \
+  IDP_ENCRYPTION_KEY="@auth_idp_encryption_key@" \
+  IDP_ENCRYPTION_CERTIFICATE="@auth_idp_encryption_certificate@"
 
 ENV JAVA_HOME=/usr/lib/jvm/java-${JAVAVER}-oracle
 ENV JRE_HOME=${JAVA_HOME}/jre
-#
+
+# packages and stuff \
+COPY idp/* /idp/
 # Apache layer
 COPY apache /apache/
-RUN apt-get update --fix-missing && \
-
-# install apache \
-  apt-get -y install grep lsof net-tools curl wget openssl rsync ldap-utils apache2 apt-transport-https bsdtar&& \
-  apt-get autoclean && apt-get --purge -y autoremove && \
-
-# put certificates in place \
-  mkdir /etc/apache2/certs && chown root:www-data /etc/apache2/certs && chmod 775 /etc/apache2/certs && \
-
+RUN  mkdir /etc/apache2/certs && chown root:www-data /etc/apache2/certs && chmod 775 /etc/apache2/certs && \
 # configure apache \
   mv /apache/ssl.conf /etc/apache2/mods-available/ssl.conf && \
-  mv /apache/ob_defaults.conf /etc/apache2/conf-available/ && \
-  ln -s /etc/apache2/conf-available/ob_defaults.conf /etc/apache2/conf-enabled/ob_defaults.conf && \
+  mv /apache/z-defaults.conf /etc/apache2/conf-available/ && a2enconf z-defaults.conf && \
   rm -f /etc/apache2/sites-enabled/000-default.conf && \
   a2enmod socache_shmcb slotmem_shm ssl proxy_balancer status lbmethod_byrequests proxy_ajp proxy headers rewrite proxy_http reqtimeout && \
   a2dismod -f deflate && \
   touch /etc/apache2/certs/* && \
   mv /apache/locking /var/www/html/ && chown -R root:www-data /var/www/html/locking && chmod -R 644 /var/www/html/locking && \
-  ln -sf /dev/stdout /var/log/apache2/proxy_access.log && \
-  ln -sf /dev/stderr /var/log/apache2/proxy_error.log && \
-  ln -sf /dev/stderr /var/log/apache2/error.log && \
   chgrp -R 0 /etc/apache2 \
     /var/cache/apache2 \
     /var/log/apache2 \
@@ -74,61 +64,31 @@ RUN apt-get update --fix-missing && \
     /var/lib/apache2  && \
   rm -rf /apache /tmp/* /var/tmp/*
 
-# Java layer
-RUN apt-get -y install ca-certificates gcc libc6-dev libssl-dev make --no-install-recommends openssl unzip && \
-  curl --connect-timeout 30 -m 120 -L -s --retry 5 --cacert /etc/ssl/certs/GeoTrust_Global_CA.pem --header "Cookie: oraclelicense=accept-securebackup-cookie;" \
-    http://download.oracle.com/otn-pub/java/jdk/${JAVAVER}u${JAVAUPD}-b${JAVABLD}/${JAVASIG}/server-jre-${JAVAVER}u${JAVAUPD}-linux-x64.tar.gz | bsdtar -C /tmp -xf - && \
-  mkdir -p /usr/lib/jvm && mv /tmp/jdk1.${JAVAVER}.0_${JAVAUPD} ${JAVA_HOME} && \
-  curl -jksSLH "Cookie: oraclelicense=accept-securebackup-cookie" -o /tmp/unlimited_jce_policy.zip "http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip" && \
-  unzip -jo -d ${JAVA_HOME}/jre/lib/security /tmp/unlimited_jce_policy.zip && \
-  apt-get autoclean && apt-get remove --purge --auto-remove -y gcc libc6-dev libssl-dev make unzip && \
-  update-alternatives --install "/usr/bin/java" "java" "${JRE_HOME}/bin/java" 1 && \
-  update-alternatives --install "/usr/bin/javac" "javac" "${JAVA_HOME}/bin/javac" 1 && \
-  update-alternatives --set java "${JRE_HOME}/bin/java" && \
-  update-alternatives --set javac "${JAVA_HOME}/bin/javac" && \
-  rm -rf /tmp/* /var/tmp/*
 
-
-# idp layer, which includes tomcat8 and idp
-# default-jre-headless-dummy_1.0_all.deb prevents openjdk being installed and saves 100Mb or so.
-COPY default-jre-headless-dummy_1.0_all.deb /tmp/
-RUN dpkg -i --force-depends /tmp/default-jre-headless-dummy_1.0_all.deb && rm -f /tmp/default-jre-headless-dummy_1.0_all.deb && \
-  apt-get -y install tomcat8 libtcnative-1 tomcat8-common libtomcat8-java libecj-java java-common ucf && \
-  apt-get autoclean && apt-get --purge -y autoremove && rm -rf /var/lib/apt/lists/* && \
-  curl --connect-timeout 30 -m 120 -s -L --retry 5 http://shibboleth.net/downloads/identity-provider/$IDPVER/shibboleth-identity-provider-$IDPVER.tar.gz | bsdtar -C /root -xf -
-
-COPY idp/* /idp/
-COPY certs /idp/
 RUN mv /idp/idpproxy.conf /etc/apache2/sites-available/ && \
   ln -s /etc/apache2/sites-available/idpproxy.conf /etc/apache2/sites-enabled/idpproxy.conf && \
+# directory for certificates, added in entrypoint \
   mkdir /etc/tomcat8/certs && chown root:tomcat8 /etc/tomcat8/certs && chmod 0710 /etc/tomcat8/certs && \
   mv /idp/server.xml /etc/tomcat8/ && chmod 644 /etc/tomcat8/server.xml && \
   mv /idp/tomcat8 /etc/default/tomcat8 && \
   mv /idp/ifs-registration-service-@version@.war /var/lib/tomcat8/webapps/shibboleth-api.war && chmod 644 /var/lib/tomcat8/webapps/shibboleth-api.war && \
-  openssl req -subj "/CN=auth.local-dev" -new -newkey rsa:2048 -days 7300 -nodes -x509 -sha256 -keyout /etc/tomcat8/certs/server.key -out /etc/tomcat8/certs/server.crt && \
-  openssl req -subj "/CN=auth.local-dev" -new -newkey rsa:2048 -days 7300 -nodes -x509 -sha256 -keyout /etc/apache2/certs/proxy.key -out /etc/apache2/certs/proxy.pem && \
-  cat /etc/apache2/certs/proxy.key >> /etc/apache2/certs/proxy.pem && rm -f /etc/apache2/certs/proxy.key && \
-  sed -i 's/PRIVATE KEY/RSA PRIVATE KEY/g' /etc/apache2/certs/proxy.pem && \
   chown -R root:tomcat8 /etc/tomcat8 && \
   (cd /etc/tomcat8; chmod -R o-rwx,g-w Catalina *.properties *.xml policy.d) && \
-  chmod 640 /etc/tomcat8/certs/* && \
+  curl --connect-timeout 30 -m 120 -s -L --retry 5 http://shibboleth.net/downloads/identity-provider/$IDPVER/shibboleth-identity-provider-$IDPVER.tar.gz | bsdtar -C /root -xf - && \
   cat /idp/build.xml|tr "3.2.1" "$IDPVER" > /root/shibboleth-identity-provider-$IDPVER/bin/build.xml && rm -f /idp/build.xml && \
   (cd /root/shibboleth-identity-provider-$IDPVER/bin; ./install.sh) && rm -rf /root/shibboleth-identity-provider-$IDPVER && \
   chown -R .tomcat8 /opt/shibboleth-idp/conf /opt/shibboleth-idp/credentials && chmod -R g+r /opt/shibboleth-idp/conf && \
+  sed -i -e 's#%{idp.signing.key}#/opt/shibboleth-idp/credentials/idp-signing.key#g' \
+         -e 's#%{idp.signing.cert}#/opt/shibboleth-idp/credentials/idp-signing.crt#g' \
+         -e 's#%{idp.encryption.key}#/opt/shibboleth-idp/credentials/idp-encryption.key#g' \
+         -e 's#%{idp.encryption.cert}#/opt/shibboleth-idp/credentials/idp-encryption.crt#g' /opt/shibboleth-idp/conf/credentials.xml && \
   mkdir /etc/shibboleth && chmod 755 /etc/shibboleth && \
   mv /idp/metadata.xml /etc/shibboleth/ && \
-  cp "/idp/$IDP_SIGNING_CERTIFICATE" /etc/shibboleth/ && \
-  cp "/idp/$IDP_ENCRYPTION_CERTIFICATE" /etc/shibboleth/ && \
-  cp "/idp/$SP_PROXY_CERTIFICATE" /etc/shibboleth/ && \
   cd /opt/shibboleth-idp/conf/ && \
   mv /idp/*.properties . && \
   mv /idp/*.xml . && \
-  cd /opt/shibboleth-idp/credentials/ && \
-  mv /idp/idp-signing.* . && \
-  mv /idp/idp-encryption.* . && \
-  mv /idp/sealer.* . && \
-  cp /opt/shibboleth-idp/credentials/* /var/lib/tomcat8/lib/ && \
-  cp /opt/shibboleth-idp/war/idp.war /var/lib/tomcat8/webapps/ && \
+  mv /idp/sealer.* /opt/shibboleth-idp/credentials/ && \
+  mv /opt/shibboleth-idp/war/idp.war /var/lib/tomcat8/webapps/ && \
   mkdir /var/log/shibboleth && rm -rf /opt/shibboleth-idp/logs && ln -s /var/log/shibboleth /opt/shibboleth-idp/logs && \
   chgrp -R 0 /etc/shibboleth \
     /etc/apache2 \
@@ -160,7 +120,3 @@ ENTRYPOINT [ "run-idp.sh" ]
 COPY pages /ifs-custom-pages/
 RUN cp -a /ifs-custom-pages/* /opt/shibboleth-idp/ && \
     rm -rf /ifs-custom-pages
-
-COPY certs /apache/
-RUN mv "/apache/$IDP_PROXY_KEY" "/apache/$IDP_PROXY_CERTIFICATE" /etc/apache2/certs/ && \
-    mv "/apache/$IDP_PROXY_CACERTIFICATE" /etc/apache2/certs/

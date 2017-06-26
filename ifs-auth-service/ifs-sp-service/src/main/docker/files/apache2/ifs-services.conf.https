@@ -13,9 +13,9 @@ ShibCompatValidUser On
   SSLProxyCheckPeerName off
 
   SSLEngine on
-  SSLCertificateFile /etc/apache2/certs/${PROXY_CERTIFICATE}
-  SSLCertificateChainFile /etc/apache2/certs/${PROXY_CA_CERTIFICATE}
-  SSLCertificateKeyFile /etc/apache2/certs/${PROXY_KEY}
+  SSLCertificateKeyFile /etc/apache2/certs/sp_proxy_key.pem
+  SSLCertificateFile /etc/apache2/certs/sp_proxy_certificate.pem
+  SSLCertificateChainFile /etc/apache2/certs/sp_proxy_cacertificate.pem
 
   # Enable request processing with mod_security
   SecRuleEngine On
@@ -56,6 +56,14 @@ ShibCompatValidUser On
       <If "(! %{REQUEST_URI} -strmatch '/holding/*' )&& ( -f '/var/www/html/locking/bros' || -f 'var/www/html/locking/BROS' )">
           RedirectMatch 504 ^
       </If>
+  </Location>
+
+  # status page
+  <Location /monitoring/status>
+    ProxyPass !
+    SetHandler server-status
+    Require all denied
+    Require env TrustedIP
   </Location>
 
   # Errors & holding pages
@@ -269,6 +277,8 @@ ShibCompatValidUser On
   ProxyPassReverse /project-setup-management/ https://project-setup-mgt-svc:8443/project-setup-management/
   ProxyPass        /project-setup/ https://project-setup-svc:8443/project-setup/ timeout=30 connectiontimeout=30 retry=2
   ProxyPassReverse /project-setup/ https://project-setup-svc:8443/project-setup/
+  ProxyPass        /competition/ ajp://front-door-svc:8009/competition/ timeout=30 connectiontimeout=30 retry=2
+  ProxyPassReverse /competition/ ajp://front-door-svc:8009/competition/
   ProxyPass        / https://application-svc:8443/ timeout=30 connectiontimeout=30 retry=2
   ProxyPassReverse / https://application-svc:8443/
 
