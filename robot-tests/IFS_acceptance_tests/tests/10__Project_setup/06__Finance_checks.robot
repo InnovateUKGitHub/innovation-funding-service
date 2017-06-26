@@ -487,10 +487,10 @@ Respond to older query
     When the user clicks the button/link    jQuery=.button:contains("Post response")
     When the user should not see the element    css=.editor
 
-Queries raised column updates to 'view'
-    [Documentation]    INFUND-4843
+IFS Admin can see queries raised column updates to 'view'
+    [Documentation]    INFUND-4843, IFS-603
     [Tags]
-    Given log in as a different user    &{internal_finance_credentials}
+    Given log in as a different user    &{ifs_admin_user_credentials}
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     And the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(6) a:contains("Awaiting response")
 
@@ -857,9 +857,10 @@ Project finance can see finance breakdown for different categories
     #Check total
     And the user should see the text in the element  css=.form-group tfoot tr:nth-of-type(1) td:nth-of-type(1) strong   	£ 503,248
 
-Project finance user can review Lead partner's finance changes page before the revisions made
-    [Documentation]    INFUND-4837
+IFS Admin user can review Lead partner's finance changes page before the revisions made
+    [Documentation]    INFUND-4837, IFS-603
     [Tags]
+    [Setup]  log in as a different user     &{ifs_admin_user_credentials}
     Given the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link        css=a.eligibility-0
     And the user clicks the button/link         link=Review all changes to project finances
@@ -871,8 +872,8 @@ Project finance user can review Lead partner's finance changes page before the r
     And the user should see the text in the element    css=.project-changes tfoot tr:nth-of-type(1) th:nth-of-type(2)   0
     And the user clicks the button/link     jQuery=.button-secondary:contains("Return to eligibility")
 
-Project finance user can review partner's finances before the revisions made
-    [Documentation]    INFUND-4837
+IFS Admin user can review partner's finances before the revisions made
+    [Documentation]    INFUND-4837, IFS-603
     [Tags]
     Given the user clicks the button/link       link=Finance checks
     When the user clicks the button/link        css=a.eligibility-2
@@ -911,7 +912,7 @@ Partner can review only the external version of Finance Checks eligibility table
 Viability checks are populated in the table
     [Documentation]    INFUND-4822, INFUND-7095, INFUND-8778
     [Tags]
-    Given log in as a different user    &{internal_finance_credentials}
+    Given log in as a different user    &{ifs_admin_user_credentials}
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then the user should see the text in the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2)    Review
     And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(3)    Not set
@@ -920,9 +921,11 @@ Viability checks are populated in the table
     And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(3) td:nth-child(2)    Review
     And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(3) td:nth-child(3)    Not set
 
-Project finance user can see the viability check page for the lead partner
+IFS Admin user can see the viability check page for the lead partner
     [Documentation]    INFUND-4831, INFUND-4830, INFUND-4825
     [Tags]
+    [Setup]  log in as a different user    &{internal_finance_credentials}
+    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")    # clicking the review button for the lead partner
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_COMPANY_NUMBER}
@@ -1787,7 +1790,7 @@ finance contacts are selected and bank details are approved
 
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
-    guest user log-in  &{lead_applicant_credentials}
+    Guest user log-in in new browser  &{lead_applicant_credentials}
     ${update_comp}    ${value}=    Run Keyword And Ignore Error Without Screenshots    the user should not see the element    jQuery=h2:contains("Set up your project") ~ ul a:contains("Sensing & Control network using the lighting infrastructure")
     run keyword if    '${update_comp}' == 'PASS'    the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     Set Suite Variable    ${FUNDERS_PANEL_APPLICATION_1_PROJECT}    ${getProjectId("${FUNDERS_PANEL_APPLICATION_1_TITLE}")}

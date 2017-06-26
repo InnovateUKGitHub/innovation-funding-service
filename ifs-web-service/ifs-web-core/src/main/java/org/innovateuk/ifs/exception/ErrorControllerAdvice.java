@@ -31,8 +31,8 @@ public class ErrorControllerAdvice extends CommonErrorControllerAdvice {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)     // 400
-    @ExceptionHandler(value = {AutosaveElementException.class})
-    public @ResponseBody ObjectNode jsonAutosaveResponseHandler(AutosaveElementException e) throws AutosaveElementException {
+    @ExceptionHandler(value = {AutoSaveElementException.class})
+    public @ResponseBody ObjectNode jsonAutosaveResponseHandler(AutoSaveElementException e) throws AutoSaveElementException {
         LOG.debug("ErrorController jsonAutosaveResponseHandler", e);
         return e.createJsonResponse();
     }

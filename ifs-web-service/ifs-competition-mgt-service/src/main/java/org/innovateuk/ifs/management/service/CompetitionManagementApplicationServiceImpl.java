@@ -20,6 +20,7 @@ import org.innovateuk.ifs.management.model.ApplicationOverviewIneligibilityModel
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -88,6 +89,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), application.getId(), user, model, form, form.getImpersonateOrganisationId());
         addAppendices(application.getId(), responses, model);
 
+        model.addAttribute("isSupportUser", user.hasRole(UserRoleType.SUPPORT));
         model.addAttribute("form", form);
         model.addAttribute("applicationReadyForSubmit", false);
         model.addAttribute("isCompManagementDownload", true);
@@ -173,9 +175,10 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         ALL_APPLICATIONS("/competition/{competitionId}/applications/all"),
         SUBMITTED_APPLICATIONS("/competition/{competitionId}/applications/submitted"),
         INELIGIBLE_APPLICATIONS("/competition/{competitionId}/applications/ineligible"),
-        MANAGE_APPLICATIONS("/assessment/competition/{competitionId}"),
+        MANAGE_APPLICATIONS("/assessment/competition/{competitionId}/applications"),
         FUNDING_APPLICATIONS("/competition/{competitionId}/funding"),
-        APPLICATION_PROGRESS("/competition/{competitionId}/application/{applicationId}/assessors");
+        APPLICATION_PROGRESS("/competition/{competitionId}/application/{applicationId}/assessors"),
+        MANAGE_ASSESSMENTS("/assessment/competition/{competitionId}");
 
         private String baseOriginUrl;
 

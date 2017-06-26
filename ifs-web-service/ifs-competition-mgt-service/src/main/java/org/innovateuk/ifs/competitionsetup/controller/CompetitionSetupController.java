@@ -17,7 +17,6 @@ import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm.Unrestricted;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.profiling.ProfileExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -148,7 +147,6 @@ public class CompetitionSetupController {
     /**
      * This method is for supporting ajax saving from the competition setup subsections forms.
      */
-    @ProfileExecution
     @PostMapping("/{competitionId}/section/{sectionPath}/sub/{subsectionPath}/saveFormElement")
     @ResponseBody
     public JsonNode saveFormElement(@RequestParam("fieldName") String fieldName,
@@ -178,7 +176,6 @@ public class CompetitionSetupController {
     /**
      * This method is for supporting ajax saving from the competition setup sections forms.
      */
-    @ProfileExecution
     @PostMapping("/{competitionId}/section/{sectionPath}/saveFormElement")
     @ResponseBody
     public JsonNode saveFormElement(@RequestParam("fieldName") String fieldName,

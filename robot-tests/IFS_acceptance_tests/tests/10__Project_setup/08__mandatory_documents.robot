@@ -558,7 +558,7 @@ CompAdmin approves other documents
 Partners can see the documents approved
     [Documentation]    INFUND-5559, INFUND-5424, INFUND-7345
     [Tags]    HappyPath
-    Given log in as user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}  #Project Manager
+    Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}  #Project Manager
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
     Then the user should see the element    jQuery=.success-alert h2:contains("These documents have been approved by Innovate UK")
     Given log in as a different user      &{lead_applicant_credentials}
@@ -595,7 +595,7 @@ Status updates correctly for internal user's table
 *** Keywords ***
 
 the project is completed if it is not already complete
-    log in as user    &{lead_applicant_credentials}
+    Guest user log-in in new browser    &{lead_applicant_credentials}
     the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details
     ${project_manager_not_set}    ${value}=    run keyword and ignore error without screenshots    The user should not see the element    jQuery=#project-manager-status.yes
     run keyword if    '${project_manager_not_set}' == 'PASS'     all previous sections of the project are completed

@@ -96,11 +96,12 @@
 
 table th > div {
   position: relative;
+  padding-right: 20px;
 }
 
 table img.table-tick {
   position: absolute;
-  right: -1.25em;
+  right: 0;
   top: 50%;
   margin-top: -8px;
 }

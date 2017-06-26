@@ -20,8 +20,8 @@ Documentation     INFUND-2982: Create a Competition: Step 1: Initial details
 ...               INFUND-5639 As a Competitions team member I want to be able to view the Application process within the application question section in Competition Setup so that I can set up my competition using more convenient navigation
 ...
 ...               INFUND-5641 As a Competitions team member I want to be able to update the assessor setup questions so that I can amend the defaults if required for the competition
-Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
-Suite Teardown    TestTeardown User closes the browser
+Suite Setup       Guest user log-in in new browser    &{Comp_admin1_credentials}
+Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot
@@ -105,7 +105,7 @@ Funding information server-side validations
     [Tags]    HappyPath
     [Setup]    The user navigates to the Validation competition
     Given the user clicks the button/link    link=Funding information
-    And the user redirects to the page    Funding information    Reporting fields
+    And the user should see the text in the page    Funding information
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see an error    Please enter a funder name.
     And the user should see an error    Please enter a budget.

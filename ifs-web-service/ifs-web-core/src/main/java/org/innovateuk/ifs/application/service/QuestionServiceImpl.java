@@ -10,6 +10,8 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +35,9 @@ public class QuestionServiceImpl implements QuestionService {
     @Autowired
     private QuestionStatusRestService questionStatusRestService;
 
+    @Autowired
+    private ProcessRoleService processRoleService;
+
     @Override
     public ServiceResult<Void> assign(Long questionId, Long applicationId, Long assigneeId, Long assignedById) {
         return questionRestService.assign(questionId, applicationId, assigneeId, assignedById).toServiceResult();
@@ -46,7 +51,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public void markAsInComplete(Long questionId, Long applicationId, Long markedAsInCompleteById) {
+    public void markAsIncomplete(Long questionId, Long applicationId, Long markedAsInCompleteById) {
         LOG.debug(String.format("mark section as incomplete %s / %s /%s ", questionId, applicationId, markedAsInCompleteById));
         questionRestService.markAsInComplete(questionId, applicationId, markedAsInCompleteById);
     }
@@ -61,11 +66,11 @@ public class QuestionServiceImpl implements QuestionService {
         return mapToQuestionIds(questionStatusRestService.findByApplicationAndOrganisation(applicationId, userOrganisationId).getSuccessObjectOrThrowException());
     }
 
-    private Map<Long, QuestionStatusResource> mapToQuestionIds(final List<QuestionStatusResource> questionStatusResources){
+    private Map<Long, QuestionStatusResource> mapToQuestionIds(final List<QuestionStatusResource> questionStatusResources) {
 
         final Map<Long, QuestionStatusResource> questionAssignees = new HashMap<>();
 
-        for(QuestionStatusResource questionStatusResource : questionStatusResources){
+        for (QuestionStatusResource questionStatusResource : questionStatusResources) {
             questionAssignees.put(questionStatusResource.getQuestion(), questionStatusResource);
         }
 
@@ -75,7 +80,7 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public List<QuestionStatusResource> getNotificationsForUser(Collection<QuestionStatusResource> questionStatuses, Long userId) {
         return questionStatuses.stream().
-                filter(qs ->  userId.equals(qs.getAssigneeUserId()) && (qs.getNotified() != null && qs.getNotified().equals(Boolean.FALSE)))
+                filter(qs -> userId.equals(qs.getAssigneeUserId()) && (qs.getNotified() != null && qs.getNotified().equals(Boolean.FALSE)))
                 .collect(Collectors.toList());
     }
 
@@ -125,16 +130,16 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public QuestionStatusResource getByQuestionIdAndApplicationIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId){
+    public QuestionStatusResource getByQuestionIdAndApplicationIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId) {
         List<QuestionStatusResource> questionStatuses = questionStatusRestService.findByQuestionAndApplicationAndOrganisation(questionId, applicationId, organisationId).getSuccessObjectOrThrowException();
-        if(questionStatuses == null || questionStatuses.isEmpty()){
+        if (questionStatuses == null || questionStatuses.isEmpty()) {
             return null;
         }
         return questionStatuses.get(0);
     }
 
     @Override
-    public Map<Long, QuestionStatusResource> getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(List<Long> questionIds, Long applicationId, Long organisationId){
+    public Map<Long, QuestionStatusResource> getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(List<Long> questionIds, Long applicationId, Long organisationId) {
         return mapToQuestionIds(questionStatusRestService.getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId).getSuccessObjectOrThrowException());
     }
 
@@ -142,10 +147,10 @@ public class QuestionServiceImpl implements QuestionService {
         return questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId).getSuccessObjectOrThrowException();
     }
 
-	@Override
-	public List<QuestionResource> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type) {
-		return questionRestService.getQuestionsBySectionIdAndType(sectionId, type).getSuccessObjectOrThrowException();
-	}
+    @Override
+    public List<QuestionResource> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type) {
+        return questionRestService.getQuestionsBySectionIdAndType(sectionId, type).getSuccessObjectOrThrowException();
+    }
 
     @Override
     public QuestionResource save(QuestionResource questionResource) {
@@ -161,7 +166,7 @@ public class QuestionServiceImpl implements QuestionService {
     public void assignQuestion(Long applicationId, HttpServletRequest request, ProcessRoleResource assignedBy) {
 
         Map<String, String[]> params = request.getParameterMap();
-        if(params.containsKey(ASSIGN_QUESTION_PARAM)){
+        if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
             Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
             Long assigneeId = extractAssigneeProcessRoleIdFromAssignSubmit(request);
 
@@ -169,10 +174,16 @@ public class QuestionServiceImpl implements QuestionService {
         }
     }
 
+    @Override
+    public void assignQuestion(Long applicationId, UserResource user, HttpServletRequest request) {
+        ProcessRoleResource assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
+        assignQuestion(applicationId, request, assignedBy);
+    }
+
     protected Long extractAssigneeProcessRoleIdFromAssignSubmit(HttpServletRequest request) {
         Long assigneeId = null;
         Map<String, String[]> params = request.getParameterMap();
-        if(params.containsKey(ASSIGN_QUESTION_PARAM)){
+        if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
             String assign = request.getParameter(ASSIGN_QUESTION_PARAM);
             assigneeId = Long.valueOf(assign.split("_")[1]);
         }
@@ -184,7 +195,7 @@ public class QuestionServiceImpl implements QuestionService {
     public Long extractQuestionProcessRoleIdFromAssignSubmit(HttpServletRequest request) {
         Long questionId = null;
         Map<String, String[]> params = request.getParameterMap();
-        if(params.containsKey(ASSIGN_QUESTION_PARAM)){
+        if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
             String assign = request.getParameter(ASSIGN_QUESTION_PARAM);
             questionId = Long.valueOf(assign.split("_")[0]);
         }

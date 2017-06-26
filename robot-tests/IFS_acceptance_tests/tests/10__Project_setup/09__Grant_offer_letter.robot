@@ -71,10 +71,10 @@ Status updates correctly for internal user's table
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(6).status.ok       # Other Docs
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action   # GOL
 
-Project finance user selects the grant offer letter
-    [Documentation]  INFUND-6377, INFUND-6048
+IFS Admin user selects the grant offer letter
+    [Documentation]  INFUND-6377, INFUND-6048, IFS-603
     [Tags]  HappyPath
-    [Setup]  log in as a different user     &{internal_finance_credentials}
+    [Setup]  log in as a different user     &{ifs_admin_user_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
     When the user clicks the button/link    jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action a
     Then the user navigates to the page     ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
@@ -85,6 +85,7 @@ Project finance user selects the grant offer letter
 Project Finance can download GOL
     [Documentation]  INFUND-6377
     [Tags]  HappyPath    Download
+    [Setup]  log in as a different user     &{internal_finance_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     Then the user downloads the file        ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/grant-offer-letter  ${DOWNLOAD_FOLDER}/grant_offer_letter.pdf
     [Teardown]    remove the file from the operating system    grant_offer_letter.pdf
@@ -457,7 +458,7 @@ all the other sections of the project are completed (except spend profile approv
 
 
 the project finance user has approved bank details
-    Guest user log-in  &{internal_finance_credentials}
+    Guest user log-in in new browser  &{internal_finance_credentials}
     the project finance user approves bank details for    Gabtype
     the project finance user approves bank details for    Kazio
     the project finance user approves bank details for    Cogilith

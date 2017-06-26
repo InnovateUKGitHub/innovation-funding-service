@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.profiling.ProfileExecution;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -30,9 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/application")
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicationController {
-    public static final String ASSIGN_QUESTION_PARAM = "assign_question";
-    public static final String MARK_AS_COMPLETE = "mark_as_complete";
-
     @Autowired
     private ApplicationOverviewModelPopulator applicationOverviewModelPopulator;
 
@@ -51,7 +47,6 @@ public class ApplicationController {
     @Autowired
     private AssessorQuestionFeedbackPopulator assessorQuestionFeedbackPopulator;
 
-    @ProfileExecution
     @GetMapping("/{applicationId}")
     public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                      UserResource user) {
@@ -69,7 +64,6 @@ public class ApplicationController {
         return "application-details";
     }
 
-    @ProfileExecution
     @PostMapping(value = "/{applicationId}")
     public String applicationDetails(@PathVariable("applicationId") long applicationId,
                                      UserResource user,
@@ -106,7 +100,6 @@ public class ApplicationController {
      * @param request       request parameters
      * @return
      */
-    @ProfileExecution
     @PostMapping("/{applicationId}/section/{sectionId}")
     public String assignQuestion(@PathVariable("applicationId") long applicationId,
                                  @PathVariable("sectionId") long sectionId,

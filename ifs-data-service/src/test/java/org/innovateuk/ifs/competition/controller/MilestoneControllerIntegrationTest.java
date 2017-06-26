@@ -89,7 +89,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
 
     @Test
     public void testGetMilestoneByTypeAndCompetitionIdWithNullDate() throws Exception {
-        RestResult<MilestoneResource> milestoneResult = controller.getMilestoneByTypeAndCompetitionId(MilestoneType.NOTIFICATIONS, COMPETITION_ID_VALID);
+        RestResult<MilestoneResource> milestoneResult = controller.getMilestoneByTypeAndCompetitionId(MilestoneType.LINE_DRAW, COMPETITION_ID_VALID);
         assertTrue(milestoneResult.isSuccess());
         MilestoneResource milestone = milestoneResult.getSuccessObject();
         assertNull(milestone.getDate());
@@ -165,6 +165,10 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
 
         //Notifications date
         milestone = milestones.get(5);
+        milestone.setDate(ZonedDateTime.of(2036, 03, 15, 9, 0, 0, 0, ZoneId.systemDefault()));
+
+        //Line draw
+        milestone = milestones.get(9);
         milestone.setDate(ZonedDateTime.of(2036, 03, 15, 9, 0, 0, 0, ZoneId.systemDefault()));
 
         RestResult<Void> milestoneResult = controller.saveMilestones(milestones);

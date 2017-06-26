@@ -12,13 +12,12 @@ Guest user navigates to Front Door
     [Documentation]    INFUND-6923 INFUND-7946
     [Tags]
     [Setup]    the user navigates to the front door
-    When the user should see the element    jQuery=h1:contains("Innovation competitions")
-    And the user should see the element    jQuery=p:contains("Browse upcoming and live competitions.")
-    And the user should see the element    jQuery=a:contains("signing up for competition updates")
-    When the user should see the element    css=#keywords
-    Then the user should see the element    css=#innovation-area
-    When the user clicks the button/link    link=Contact us
-    Then the user should see the element    jQuery=h1:contains("Contact us")
+    When the user should see the element     jQuery=a:contains("Innovate UK")
+    Then the user should see the element     jQuery=h1:contains("Innovation competitions")
+    And the user should see the element     css=#keywords
+    Then the user should see the element     css=#innovation-area
+    When the user clicks the button/link     link=Contact us
+    Then the user should see the element     jQuery=h1:contains("Contact us")
     And the user should not see an error in the page
     When the user clicks the button/link    jQuery=a:contains("feedback")
     And the user selects feedback window
@@ -30,10 +29,32 @@ Guest user can see Competitions and their information
     [Tags]
     [Setup]    the user navigates to the page    ${frontDoor}
     Given the user should see the element    link=Home and industrial efficiency programme
-    Then the user should see the element    jQuery=dt:contains("Eligibility") + dd:contains("UK based business of any size. Must involve at least one SME")
-    And the user should see the element    jQuery=dt:contains("Opens") + dd:contains("15 April 2016")
+    Then the user should see the element    jQuery=h3:contains("Eligibility")
+    And the user should see the element    jQuery=p:contains("UK based business of any size. Must involve at least one SME")
+    Then the user should see the element    jQuery=dt:contains("Opened") + dd:contains("15 April 2016")
     And the user should see the element    jQuery=dt:contains("Closes") + dd:contains("9 September 2067")
     #Guest user can filter competitions by Keywords, this is tested in file 05__Public_content.robot
+
+Guest user can see the opening and closing status of competitions
+    [Documentation]  IFS-268
+    [Tags]    MySQL
+    [Setup]    Connect to Database    @{database}
+    Then Change the open date of the Competition in the database to tomorrow   ${READY_TO_OPEN_COMPETITION_NAME}
+    Given the user navigates to the page  ${frontDoor}
+    Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Opening soon    Opens
+    And Change the open date of the Competition in the database to one day before   ${READY_TO_OPEN_COMPETITION_NAME}
+    Given the user navigates to the page  ${frontDoor}
+    Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Open now    Opened
+    And Change the close date of the Competition in the database to a fortnight   ${READY_TO_OPEN_COMPETITION_NAME}
+    Given the user navigates to the page  ${frontDoor}
+    Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Open now    Opened
+    And Change the close date of the Competition in the database to thirteen days   ${READY_TO_OPEN_COMPETITION_NAME}
+    Given the user navigates to the page  ${frontDoor}
+    Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Closing soon    Opened
+    And Change the close date of the Competition in the database to tomorrow   ${READY_TO_OPEN_COMPETITION_NAME}
+    Given the user navigates to the page  ${frontDoor}
+    Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Closing soon    Opened
+    And Reset the open and close date of the Competition in the database   ${READY_TO_OPEN_COMPETITION_NAME}
 
 Guest user can filter competitions by Innovation area
     [Documentation]    INFUND-6923
@@ -114,7 +135,7 @@ Guest user can see the public Dates of the competition
     When the user should see the element    jQuery=dt:contains("15 April 2016") + dd:contains("Competition opens")
     And the user should see the element    jQuery=dt:contains("12 May 2016") + dd:contains("Briefing event in Belfast")
     And the user should see the element    jQuery=dt:contains("9 September 2067") + dd:contains("Competition closes")
-    And the user should see the element    jQuery=dt:contains("20 July 2068") + dd:contains("Applicants notified")
+    And the user should see the element    jQuery=dt:contains("20 June 2068") + dd:contains("Applicants notified")
 
 Guest user can see the public How to apply of the competition
     [Documentation]    INFUND-6923
@@ -150,3 +171,7 @@ Close survey window
 
 the user selects feedback window
     Select Window    title=Innovation Funding Service - Feedback Survey
+
+the user can see the correct date status of the competition
+    [Arguments]    ${competition_name}    ${date_status}    ${open_text}
+    the user should see the element    jQuery=h2:contains(${competition_name}) ~ h3:contains(${date_status}) ~ dl dt:contains(${open_text})

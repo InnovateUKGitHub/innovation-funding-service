@@ -12,13 +12,13 @@ ${invalid_password}    allinlowercaseandnonumbers
 *** Keywords ***
 Email persists on invalid login
     [Arguments]    ${email_address}    ${password}
-    Given the guest user inserts user email & password    ${email_address}    ${password}
+    Given The guest user inserts user email and password    ${email_address}    ${password}
     When the user tries to log in
     Then the user is not logged-in
     And the email address should persist    ${email_address}
 
 the user is not logged-in
-    The user should not see the element    link=My dashboard
+    The user should not see the element    link=Dashboard
     The user should not see the element    link=Logout
 
 the email address should persist

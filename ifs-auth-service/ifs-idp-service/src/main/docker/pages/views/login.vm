@@ -83,7 +83,7 @@
               </div>
               <div class="header-proposition">
                 <div class="content">
-                  <p id="proposition-name" class="no-margin">Innovation Funding Service</p>
+                  <a href="$resourcesDomain/competition/search" id="proposition-name">Innovation Funding Service</a>
                 </div>
               </div>
           </div>
@@ -222,6 +222,20 @@
           <div class="footer-meta">
 
               <div class="footer-meta-inner">
+                <h2 class="visuallyhidden">Support links</h2>
+                <ul>
+                  <li><a href="https://www.gov.uk/government/organisations/innovate-uk" target="_blank">Innovate UK</a></li>
+                  <li><a href="https://www.gov.uk/guidance/innovation-apply-for-a-funding-award" target="_blank">Innovation funding advice</a></li>
+                  <li><a href="https://connect.innovateuk.org/events" target="_blank">Events</a></li>
+                  <li><a href="https://www.gov.uk/guidance/innovation-get-support-and-advice" target="_blank">Connect to innovation experts</a></li>
+                  <li><a href="https://innovateuk.blog.gov.uk/" target="_blank">Innovate UK blog</a></li>
+                  <li><a href="https://www.gov.uk/help/accessibility" target="_blank">GOV.UK accessibility</a></li>
+                  <li><a href="$resourcesDomain/info/terms-and-conditions">Terms and conditions</a></li>
+                  <li><a href="$resourcesDomain/info/contact">Contact us</a></li>
+                  <li><a href="http://info.innovateuk.org/emailpref" target="_blank">Sign up for competition updates</a></li>
+                  <li><a href="$resourcesDomain/competition/search">Latest funding opportunities</a></li>
+                  <li><div class="extra-margin">GOV.UK uses cookies to make the site simpler. <a href="$resourcesDomain/info/cookies">Find out more about cookies</a>.</div></li>
+                </ul>
                 <div class="open-government-licence">
                   <p class="logo"><a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence</a></p>
                     <p>All content is available under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated</p>

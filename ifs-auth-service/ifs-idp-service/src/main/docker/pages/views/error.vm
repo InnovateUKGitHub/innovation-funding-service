@@ -15,7 +15,7 @@
 #set ($resourcesDomain = $rpContext.getRelyingPartyId())
 ##
 #if ($flowRequestContext)
-	## This handles flow events, the most common case.
+    ## This handles flow events, the most common case.
     #set ($eventId = $flowRequestContext.getCurrentEvent().getId())
     #set ($eventKey = $springMacroRequestContext.getMessage("$eventId", "error"))
     #set ($titleSuffix = $springMacroRequestContext.getMessage("${eventKey}.title", "$defaultTitleSuffix"))
@@ -27,84 +27,32 @@
     #elseif ($eventKey == "unexpected" || $eventKey == "runtime-error" || $eventKey == "error")
         $response.setStatus(500)
     #else
-        $response.setStatus(400)
+    $response.setStatus(400)
     #end
 #elseif ($exception)
-	## This handles exceptions that reach the Spring-MVC exception handler.
+    ## This handles exceptions that reach the Spring-MVC exception handler.
     #set ($eventId = $exception.getClass().getSimpleName())
     #set ($eventKey = $springMacroRequestContext.getMessage("$eventId", "error"))
     #set ($titleSuffix = $springMacroRequestContext.getMessage("${eventKey}.title", "$defaultTitleSuffix"))
     #set ($message = $springMacroRequestContext.getMessage("${eventKey}.message", "$defaultTitleSuffix: $eventId"))
 #else
-	## This is a catch-all that theoretically shouldn't happen?
+    ## This is a catch-all that theoretically shouldn't happen?
     #set ($titleSuffix = $defaultTitleSuffix)
     #set ($message = $springMacroRequestContext.getMessage("idp.message", "An unidentified error occurred."))
 #end
 ##
 <!DOCTYPE html>
 <html>
-  	<head>
-    	<meta charset="utf-8">
+    <head>
+    <meta charset="utf-8">
         <title>Innovation Funding Service - Sign in</title>
-
-        <link rel="stylesheet" type="text/css" href="$resourcesDomain/css/fonts.css" >
-        <link rel="stylesheet" type="text/css" href="$resourcesDomain/css/screen.css" >
-  	</head>
-  	
-  	<body>
-
-        <header role="banner" id="global-header">
-
-            <div class="header-wrapper">
-                <div class="header-global">
-                    <div>
-                        <div class="header-logo">
-                            <a href="https://www.gov.uk" title="Go to the GOV.UK homepage" id="logo" class="content">
-                                <img src="$resourcesDomain/images/gov.uk_logotype_crown.png" width="35" height="31" alt="GOV.UK">
-                                GOV.UK
-                            </a>
-                        </div>
-                        <p class="innovate-title">Innovation Funding Service</p>  
-                    </div>
-                </div>
-            </div>
-
-        </header>
-
-
-        <main tabindex="-1" id="content">
-            
-            <div class="phase-banner">
-                <p>
-                    <strong class="phase-tag">BETA</strong>
-                    <span>This is a new service – your <a target="_blank" href="https://www.surveymonkey.co.uk/r/innovationfundingservicefeedback">feedback</a> will help us to improve it.</span>
-                </p>
-            </div>
-
-            <h1 class="heading-large">$title - $titleSuffix</h1>
-        	
-            #evaluate($message)
-            
-        </main>
-
-        <footer class="group js-footer" id="footer" role="contentinfo">
-            <div class="footer-wrapper">
-              <div class="footer-meta">
-
-                  <div class="footer-meta-inner">
-                    <div class="open-government-licence">
-                      <p class="logo"><a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence</a></p>
-                        <p>All content is available under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated</p>
-                    </div>               
-                  </div>
-
-                  <div class="copyright">
-                    <a href="http://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/copyright-and-re-use/crown-copyright/">© Crown copyright</a>
-                  </div>
-
-              </div>
-            </div>
-        </footer>
-
+        <meta http-equiv="refresh" content="1; url=https://ifs-local-dev">
+        <script type="text/javascript">
+            window.location.href = "https://ifs-local-dev"
+        </script>
+        <title>Innovation Funding Service - Page Redirection</title>
+    </head>
+    <body>
+    If you are not redirected automatically, follow this <a href='https://ifs-local-dev'>link</a>.
     </body>
 </html>
