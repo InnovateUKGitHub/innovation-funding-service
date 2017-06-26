@@ -26,4 +26,9 @@ public class FundingDecisionSelectionForm {
     public void setAllSelected(boolean allSelected) {
         this.allSelected = allSelected;
     }
+
+    public boolean anySelectionIsMade() {
+        return this.isAllSelected() != false ||
+                this.getApplicationIds().size() > 0;
+    }
 }

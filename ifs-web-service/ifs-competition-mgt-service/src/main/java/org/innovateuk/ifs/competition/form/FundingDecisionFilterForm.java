@@ -29,6 +29,10 @@ public class FundingDecisionFilterForm {
         this.fundingFilter = fundingFilter;
     }
 
+    public boolean anyFilterIsActive() {
+        return this.fundingFilter.isPresent() || this.stringFilter.isPresent();
+    }
+
     @JsonIgnore
     public String getStringFilterValue() {
         if(stringFilter.isPresent()) {
