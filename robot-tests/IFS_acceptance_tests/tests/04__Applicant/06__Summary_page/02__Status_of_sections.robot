@@ -4,6 +4,7 @@ Suite Setup       log in and create new application if there is not one already
 Suite Teardown    the user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
+Resource          ../Applicant_Commons.robot
 
 *** Variables ***
 
