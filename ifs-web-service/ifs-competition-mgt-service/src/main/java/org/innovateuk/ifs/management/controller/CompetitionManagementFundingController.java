@@ -102,9 +102,6 @@ public class CompetitionManagementFundingController {
             selectionCookieForm = getApplicationSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
             selectionForm = selectionCookieForm.getFundingDecisionSelectionForm();
 
-            FundingDecisionSelectionForm trimmedSelectionForm = updateApplicationSelection(selectionForm, filterForm, competitionId);
-            selectionForm.setApplicationIds(trimmedSelectionForm.getApplicationIds());
-
             boolean noFilterGetParameterIsPresent = !filterForm.getFundingFilter().isPresent() && !filterForm.getStringFilter().isPresent();
             boolean filterCookieParameterIsPresent = selectionCookieForm.getFundingDecisionFilterForm().getFundingFilter().isPresent()
                     || selectionCookieForm.getFundingDecisionFilterForm().getStringFilter().isPresent();
@@ -118,6 +115,9 @@ public class CompetitionManagementFundingController {
                 filterForm.setFundingFilter(selectionCookieForm.getFundingDecisionFilterForm().getFundingFilter());
                 filterForm.setStringFilter(selectionCookieForm.getFundingDecisionFilterForm().getStringFilter());
             }
+
+            FundingDecisionSelectionForm trimmedSelectionForm = updateApplicationSelection(selectionForm, filterForm, competitionId);
+            selectionForm.setApplicationIds(trimmedSelectionForm.getApplicationIds());
         } catch (Exception e) {
             log.error(e);
         }
@@ -139,9 +139,9 @@ public class CompetitionManagementFundingController {
     @PostMapping
     public String makeDecision(Model model,
                                @PathVariable("competitionId") long competitionId,
-                               @ModelAttribute @Valid FundingDecisionPaginationForm paginationForm,
+                               @ModelAttribute FundingDecisionPaginationForm paginationForm,
                                @ModelAttribute FundingDecisionSelectionForm fundingDecisionSelectionForm,
-                               @ModelAttribute FundingDecisionChoiceForm fundingDecisionChoiceForm,
+                               @ModelAttribute @Valid FundingDecisionChoiceForm fundingDecisionChoiceForm,
                                @ModelAttribute FundingDecisionFilterForm filterForm,
                                BindingResult bindingResult,
                                HttpServletRequest request) {
@@ -278,7 +278,7 @@ public class CompetitionManagementFundingController {
             filterMap.put("fundingFilter", Arrays.asList(fundingDecisionFilterForm.getFundingFilter().get().getName()));
         }
         if(fundingDecisionFilterForm.getStringFilter().isPresent()) {
-            filterMap.put("stringFilter",Arrays.asList(fundingDecisionFilterForm.getStringFilter().get()));
+            filterMap.put("stringFilter", Arrays.asList(fundingDecisionFilterForm.getStringFilter().get()));
         }
 
         return filterMap;

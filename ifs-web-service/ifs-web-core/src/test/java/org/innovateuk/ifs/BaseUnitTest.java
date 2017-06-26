@@ -234,7 +234,7 @@ public class BaseUnitTest {
     @Mock
     protected StatusRestService statusRestService;
     @Mock
-    private CookieUtil cookieUtil;
+    protected CookieUtil cookieUtil;
     @Mock
     protected UserRestService userRestServiceMock;
     @Mock
@@ -255,9 +255,10 @@ public class BaseUnitTest {
     protected OrganisationDetailsRestService organisationDetailsRestService;
     @Mock
     protected ApplicationResearchCategoryRestService applicationResearchCategoryRestService;
-
     @Mock
     public GrantOfferLetterService grantOfferLetterService;
+    @Mock
+    public ApplicationFundingDecisionService applicationFundingDecisionService;
 
     @Spy
     @InjectMocks
