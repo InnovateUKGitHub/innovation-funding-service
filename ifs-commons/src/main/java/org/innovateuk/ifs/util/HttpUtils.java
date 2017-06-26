@@ -82,8 +82,18 @@ public final class HttpUtils {
                     Map<String, String> components = entry.getValue();
                     String key = entry.getKey();
                     String month = components.get(key + MM_YYYY_MONTH_APPEND);
+                    if (month != null) {
+                        month = "00".substring(Math.min(month.length(), 2)) + month;
+                    } else {
+                        month = "";
+                    }
                     String year = components.get(key + MM_YYYY_YEAR_APPEND);
-                    String value = (month != null ? month : "") + "-" + (year != null ? year : "");
+                    if (year != null) {
+                        year = "0000".substring(Math.min(year.length(), 4)) + year;
+                    } else {
+                        year = "";
+                    }
+                    String value = month + "-" + year;
                     return value;
                 });
 
