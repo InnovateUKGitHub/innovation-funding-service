@@ -6,7 +6,7 @@ subprojects {
 
     ext.ifsWebSystemUserId="8394d970-b250-4b15-9621-3534325691b4"
 
-    // ifs-web-core is not a docker project.
+    // data-service-commons is not a docker project.
     if (it.name != 'data-service-commons') {
 
         task prepareDockerFile(type: Copy) {

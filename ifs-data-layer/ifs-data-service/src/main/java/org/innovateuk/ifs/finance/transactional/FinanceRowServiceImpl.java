@@ -13,7 +13,7 @@ import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.file.transactional.FileEntryService;
+import org.innovateuk.ifs.file.transactional.ApplicationFinanceFileEntryService;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
@@ -97,7 +97,7 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
     private FileService fileService;
 
     @Autowired
-    private FileEntryService fileEntryService;
+    private ApplicationFinanceFileEntryService fileEntryService;
 
     @Autowired
     private FileEntryMapper fileEntryMapper;

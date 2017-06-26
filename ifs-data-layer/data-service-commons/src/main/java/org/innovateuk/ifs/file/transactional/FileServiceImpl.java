@@ -13,7 +13,7 @@ import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.resource.FileEntryResourceAssembler;
-import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
@@ -39,7 +39,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  * validate, store and retrieve files.
  */
 @Service
-public class FileServiceImpl extends BaseTransactionalService implements FileService {
+public class FileServiceImpl extends RootTransactionalService implements FileService {
 
     private final Tika tika = new Tika();
     private static final Log LOG = LogFactory.getLog(FileServiceImpl.class);

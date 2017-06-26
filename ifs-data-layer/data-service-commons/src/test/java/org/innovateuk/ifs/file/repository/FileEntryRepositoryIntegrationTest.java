@@ -2,6 +2,7 @@ package org.innovateuk.ifs.file.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.file.domain.FileEntry;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,6 +12,7 @@ import static org.springframework.http.MediaType.parseMediaType;
 /**
  * Repository Integration tests for Form Inputs.
  */
+@Ignore
 public class FileEntryRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<FileEntryRepository> {
 
     @Autowired

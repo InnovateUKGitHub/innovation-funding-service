@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.file.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.RootUnitTestMocksTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.builder.FileEntryBuilder;
@@ -39,7 +39,7 @@ import static org.mockito.Mockito.*;
 /**
  *
  */
-public class FileServiceImplTest extends BaseUnitTestMocksTest {
+public class FileServiceImplTest extends RootUnitTestMocksTest {
 
     @InjectMocks
     private FileService service = new FileServiceImpl();

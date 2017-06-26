@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.file.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.file.domain.FileEntry;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 public class FileEntryBuilder extends BaseBuilder<FileEntry, FileEntryBuilder> {
@@ -16,7 +16,7 @@ public class FileEntryBuilder extends BaseBuilder<FileEntry, FileEntryBuilder> {
     }
 
     public static FileEntryBuilder newFileEntry() {
-        return new FileEntryBuilder(emptyList()).with(uniqueIds()).withMediaType("text/plain");
+        return new FileEntryBuilder(emptyList()).with(BaseBuilderAmendFunctions.uniqueIds()).withMediaType("text/plain");
     }
 
     @Override

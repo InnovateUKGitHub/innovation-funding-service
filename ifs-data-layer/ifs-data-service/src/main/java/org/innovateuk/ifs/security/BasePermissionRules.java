@@ -1,15 +1,20 @@
 package org.innovateuk.ifs.security;
 
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
+import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
+import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
+import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 
 /**
  * Base class to contain useful shorthand methods for the Permission rule subclasses
@@ -43,6 +48,19 @@ public abstract class BasePermissionRules extends RootPermissionRules {
         ProjectUser partnerProjectUser = projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, userId, organisationId, PROJECT_PARTNER);
         return partnerProjectUser != null;
     }
+
+    protected boolean isLeadPartner(long projectId, long userId) {
+
+        Project project = projectRepository.findOne(projectId);
+        Role leadApplicantRole = roleRepository.findOneByName(LEADAPPLICANT.getName());
+        ProcessRole leadApplicantProcessRole = processRoleRepository.findOneByApplicationIdAndRoleId(project.getApplication().getId(), leadApplicantRole.getId());
+        Organisation leadOrganisation = organisationRepository.findOne(leadApplicantProcessRole.getOrganisationId());
+
+        ProjectUser partnerProjectUser = projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, userId, leadOrganisation.getId(), PROJECT_PARTNER);
+        return partnerProjectUser != null;
+    }
+
+
 
     protected boolean isProjectManager(long projectId, long userId) {
         List<ProjectUser> projectManagerUsers = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_MANAGER);

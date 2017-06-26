@@ -3,7 +3,7 @@ package org.innovateuk.ifs.file.service;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.transactional.FileEntryService;
+import org.innovateuk.ifs.file.transactional.ApplicationFinanceFileEntryService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.security.ApplicationFinanceLookupStrategy;
 import org.innovateuk.ifs.finance.security.ApplicationFinancePermissionRules;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 /**
  * Testing how the secured methods in FileEntryService interact with Spring Security
  */
-public class FileEntryServiceSecurityTest extends BaseServiceSecurityTest<FileEntryService> {
+public class ApplicationFinanceFileEntryServiceSecurityTest extends BaseServiceSecurityTest<ApplicationFinanceFileEntryService> {
 
     private ApplicationFinancePermissionRules applicationFinanceRules;
     private ApplicationFinanceLookupStrategy applicationFinanceLookupStrategy;
@@ -45,31 +45,17 @@ public class FileEntryServiceSecurityTest extends BaseServiceSecurityTest<FileEn
     }
 
     @Override
-    protected Class<? extends FileEntryService> getClassUnderTest() {
+    protected Class<? extends ApplicationFinanceFileEntryService> getClassUnderTest() {
         return TestFileEntryService.class;
     }
 
-    public static class TestFileEntryService implements FileEntryService {
-
-        @Override
-        public ServiceResult<FileEntryResource> findOne(Long id) {
-            return null;
-        }
+    public static class TestFileEntryService implements ApplicationFinanceFileEntryService {
 
         @Override
         public ServiceResult<FileEntryResource> getFileEntryByApplicationFinanceId(@P("applicationFinanceResourceId") Long applicationFinanceId) {
             return null;
         }
 
-        @Override
-        public ServiceResult<FileEntryResource> saveFile(@P("file") FileEntryResource file) {
-            return ServiceResult.serviceSuccess(file);
-        }
-
-        @Override
-        public ServiceResult<Void> removeFile(@P("fileId") Long fileId) {
-            return ServiceResult.serviceSuccess();
-        }
 
     }
 }
