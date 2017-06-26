@@ -29,20 +29,20 @@ User can view the public content
     [Documentation]    INFUND-6914
     [Tags]  HappyPath
     Given the internal user navigates to public content  ${public_content_competition_name}
-    Then the user should see the element     link=Competition information and search
-    And the user should see the element      link=Summary
-    And the user should see the element      link=Eligibility
-    And the user should see the element      link=Scope
-    And the user should see the element      link=Dates
-    And the user should see the element      link=How to apply
-    And the user should see the element      link=Supporting information
-    And the user should see the element      jQuery=button:contains("Publish public content"):disabled
+    Then the user should see the element                 link=Competition information and search
+    And the user should see the element                  link=Summary
+    And the user should see the element                  link=Eligibility
+    And the user should see the element                  link=Scope
+    And the user should see the element                  link=Dates
+    And the user should see the element                  link=How to apply
+    And the user should see the element                  link=Supporting information
+    And the user should see the element                  jQuery=button:contains("Publish public content"):disabled
 
 Project Finance can also access the Public content sections
     [Documentation]  INFUND-7602
     [Tags]
     # This checks that also other int users have access to this area
-    Given log in as a different user      &{internal_finance_credentials}
+    Given log in as a different user                    &{internal_finance_credentials}
     When the internal user navigates to public content  ${public_content_competition_name}
     Then the user should not see an error in the page
     When the user visits the sub sections then he should not see any errors
@@ -50,22 +50,22 @@ Project Finance can also access the Public content sections
 External users do not have access to the Public content sections
     [Documentation]  INFUND-7602
     [Tags]
-    Given log in as a different user     &{collaborator1_credentials}
+    Given log in as a different user                       &{collaborator1_credentials}
     When run keyword and ignore error without screenshots  the user navigates to the page  ${public_content_overview}
     Then the user should see permissions error message
 
 Competition information and search: server side validation
     [Documentation]    INFUND-6915, IFS-179
     [Tags]  HappyPath
-    [Setup]  log in as a different user    &{Comp_admin1_credentials}
-    Given the internal user navigates to public content  ${public_content_competition_name}
-    Then the user clicks the button/link   link=Competition information and search
-    When the user clicks the button/link            jQuery=.button:contains("Save and review")
-    Then the user should see a summary error        Please enter a short description.
-    Then the user should see a summary error        Please enter a project funding range.
-    Then the user should see a summary error        Please enter an eligibility summary.
-    Then the user should see a summary error        Please enter a valid set of keywords.
-    Then the user should see a summary error        Please select a publish setting.
+    [Setup]  log in as a different user                    &{Comp_admin1_credentials}
+    Given the internal user navigates to public content    ${public_content_competition_name}
+    Then the user clicks the button/link                   link=Competition information and search
+    When the user clicks the button/link                   jQuery=.button:contains("Save and review")
+    Then the user should see a summary error               Please enter a short description.
+    Then the user should see a summary error               Please enter a project funding range.
+    Then the user should see a summary error               Please enter an eligibility summary.
+    Then the user should see a summary error               Please enter a valid set of keywords.
+    Then the user should see a summary error               Please select a publish setting.
 
 Competition information and search: Valid values
     [Documentation]    INFUND-6915, INFUND-8363, IFS-179
@@ -85,16 +85,16 @@ Competition information and search: Valid values
 Competition information and search: ReadOnly
     [Documentation]  INFUND-6915, IFS-179
     [Tags]
-    When the user clicks the button/link  link=Competition information and search
-    Then the user should see the element  jQuery=dt:contains("Short description") + dd:contains("Short public description")
-    And the user should see the element   jQuery=dt:contains("Project funding range") + dd:contains("Up to £1million")
-    And the user should see the element   jQuery=dt:contains("Eligibility summary") + dd:contains("Summary of eligiblity")
-    And the user should see the element   jQuery=dt:contains("Keywords") + dd:contains("Search,Testing,Robot")
-    And the user should see the element   jQuery=dt:contains("Publish setting") + dd:contains("Invite only")
-    When the user clicks the button/link  link=Edit
-    Then the user should see the element  css=#short-description[value="Short public description"]
-    And the user clicks the button/link   jQuery=.button:contains("Save and review")
-    Then the user clicks the button/link  jQuery=.button:contains("Return to public content")
+    When the user clicks the button/link    link=Competition information and search
+    Then the user should see the element    jQuery=dt:contains("Short description") + dd:contains("Short public description")
+    And the user should see the element     jQuery=dt:contains("Project funding range") + dd:contains("Up to £1million")
+    And the user should see the element     jQuery=dt:contains("Eligibility summary") + dd:contains("Summary of eligiblity")
+    And the user should see the element     jQuery=dt:contains("Keywords") + dd:contains("Search,Testing,Robot")
+    And the user should see the element     jQuery=dt:contains("Publish setting") + dd:contains("Invite only")
+    When the user clicks the button/link    link=Edit
+    Then the user should see the element    css=#short-description[value="Short public description"]
+    And the user clicks the button/link     jQuery=.button:contains("Save and review")
+    Then the user clicks the button/link    jQuery=.button:contains("Return to public content")
 
 Summary: server side validation and autosave
     [Documentation]    INFUND-6916, INFUND-7486
@@ -198,8 +198,8 @@ Eligibility: Contains the correct values when viewed, Edit sections
 Scope: Server side validation
     [Documentation]  INFUND-7488
     [Tags]  HappyPath
-    When the user clicks the button/link  link=Scope
-    And the user clicks the button/link   jQuery=button:contains("Save and review")
+    When the user clicks the button/link      link=Scope
+    And the user clicks the button/link       jQuery=button:contains("Save and review")
     Then the user should see a summary error  Please enter content.
     And the user should see a summary error   Please enter a heading.
 
@@ -220,7 +220,7 @@ Dates: Add, remove dates and submit
     And the user should see the text in the page                 Submission deadline, competition closed.
     And the user should see the text in the page                 Applicants notified
     And the user can add and remove multiple event groups
-    And the user should see the element  jQuery=li:nth-child(5) .task-status-complete
+    And the user should see the element                          jQuery=li:nth-child(5) .task-status-complete
 
 How to apply: server side validation and autosave
     [Documentation]    INFUND-7490
@@ -299,8 +299,8 @@ Publish public content: Publish once all sections are complete
     [Documentation]    INFUND-6914
     [Tags]  HappyPath
     Given the user should not see the text in the page  Last published
-    When the user clicks the button/link    jQuery=button:contains("Publish public content")
-    Then the user should see the element    jQuery=small:contains("Last published")
+    When the user clicks the button/link                jQuery=button:contains("Publish public content")
+    Then the user should see the element                jQuery=small:contains("Last published")
     And the user should not see the element             jQuery=button:contains("Publish public content")
     When the user clicks the button/link                link=Competition information and search
     And the user clicks the button/link                 link=Edit
@@ -318,13 +318,12 @@ The user is able to edit and publish again
     And the user should not see the element     jQuery=button:contains("Publish and review")
     When the user clicks the button/link        link=Return to setup overview
     Then the user should see the element        JQuery=.notification:contains("${today}")
-    [Teardown]  the user logs out if they are logged in
 
 Guest user not find the invite only competition by Keywords
     [Documentation]  IFS-261
     [Tags]  HappyPath
-    [Setup]  The guest user opens the browser
-    Given the user navigates to the page  ${frontDoor}
+    [Setup]  the user logs out if they are logged in
+    Given the user navigates to the page       ${frontDoor}
     When the user enters text to a text field  id=keywords  Robot
     And the user clicks the button/link        jQuery=button:contains("Update results")
     Then the user should not see the element   jQuery=a:contains("${public_content_competition_name}")
@@ -347,8 +346,7 @@ The user is able to make the competition public
 Guest user can filter competitions by Keywords
     [Documentation]  INFUND-6923
     [Tags]  HappyPath
-    [Setup]  The guest user opens the browser
-    Given the user navigates to the page  ${frontDoor}
+    Given the user navigates to the page       ${frontDoor}
     When the user enters text to a text field  id=keywords  Robot
     And the user clicks the button/link        jQuery=button:contains("Update results")
     Then the user should see the element       jQuery=a:contains("${public_content_competition_name}")
@@ -356,13 +354,13 @@ Guest user can filter competitions by Keywords
 Guest user can see the updated Summary information
     [Documentation]  INFUND-7486
     [Tags]
-    Given the user clicks the button/link  link=Public content competition
-    And the user clicks the button/link    link=Summary
-    Then the user should see the element   jQuery=.column-third:contains("Description") ~ .column-two-thirds:contains("This is a Summary description")
-    And the user should see the element    jQuery=.column-third:contains("Funding type") ~ .column-two-thirds:contains("Grant")
-    And the user should see the element    jQuery=.column-third:contains("Project size") ~ .column-two-thirds:contains("10 millions")
-    And the user should see the element    jQuery=.column-third:contains("A nice new Heading") ~ .column-two-thirds:contains("Ut enim ad minim veniam,")
-    Then guest user downloads the file     ${server}/competition/${competitionId}/download/43  ${DOWNLOAD_FOLDER}/summary.pdf
+    Given the user clicks the button/link                  link=Public content competition
+    And the user clicks the button/link                    link=Summary
+    Then the user should see the element                   jQuery=.column-third:contains("Description") ~ .column-two-thirds:contains("This is a Summary description")
+    And the user should see the element                    jQuery=.column-third:contains("Funding type") ~ .column-two-thirds:contains("Grant")
+    And the user should see the element                    jQuery=.column-third:contains("Project size") ~ .column-two-thirds:contains("10 millions")
+    And the user should see the element                    jQuery=.column-third:contains("A nice new Heading") ~ .column-two-thirds:contains("Ut enim ad minim veniam,")
+    Then guest user downloads the file                     ${server}/competition/${competitionId}/download/43  ${DOWNLOAD_FOLDER}/summary.pdf
     [Teardown]  Remove the file from the operating system  summary.pdf
 
 Guest user can see the updated Eligibility information
@@ -376,31 +374,31 @@ Guest user can see the updated Eligibility information
 Guest user downloads Eligibility files
     [Documentation]  INFUND-7487
     [Tags]
-    When guest user downloads the file  ${server}/competition/${competitionId}/download/44  ${DOWNLOAD_FOLDER}/eli.pdf
+    When guest user downloads the file              ${server}/competition/${competitionId}/download/44  ${DOWNLOAD_FOLDER}/eli.pdf
     Then Remove the file from the operating system  eli.pdf
-    When guest user downloads the file  ${server}/competition/${competitionId}/download/45  ${DOWNLOAD_FOLDER}/eligi.pdf
+    When guest user downloads the file              ${server}/competition/${competitionId}/download/45  ${DOWNLOAD_FOLDER}/eligi.pdf
     Then Remove the file from the operating system  eligi.pdf
-    When guest user downloads the file   ${server}/competition/${competitionId}/download/46  ${DOWNLOAD_FOLDER}/eligibility.pdf
+    When guest user downloads the file              ${server}/competition/${competitionId}/download/46  ${DOWNLOAD_FOLDER}/eligibility.pdf
     Then Remove the file from the operating system  eligibility.pdf
 
 The guest user can see updated scope information
     [Documentation]    INFUND-7488
     [Tags]
-    Given the user clicks the button/link    link=Scope
-    Then the user should see the element      jQuery=.column-third:contains("Heading 1") ~ .column-two-thirds:contains("Content 1")
-    And the user should see the element      jQuery=.column-third:contains("Heading 2") ~ .column-two-thirds:contains("Content 2")
-    And guest user downloads the file   ${server}/competition/${competitionId}/download/48    ${DOWNLOAD_FOLDER}/scope.pdf
+    Given the user clicks the button/link                  link=Scope
+    Then the user should see the element                   jQuery=.column-third:contains("Heading 1") ~ .column-two-thirds:contains("Content 1")
+    And the user should see the element                    jQuery=.column-third:contains("Heading 2") ~ .column-two-thirds:contains("Content 2")
+    And guest user downloads the file                      ${server}/competition/${competitionId}/download/48    ${DOWNLOAD_FOLDER}/scope.pdf
     [Teardown]  Remove the file from the operating system  scope.pdf
 
 The guest user can see updated date information
    [Documentation]    INFUND-7489
    [Tags]
    Given the user clicks the button/link    link=Dates
-   And the user should see the element    jQuery=dt:contains("${nextyear}") + dd:contains("Competition opens")
-   And the user should see the element    jQuery=dt:contains("${nextyear}") + dd:contains("Competition closes")
-   And the user should see the element    jQuery=dt:contains("${nextyear}") + dd:contains("Applicants notified")
-   And the user should see the element    jQuery=dt:contains("${nextyear}") + dd:contains("Content 1")
-   And the user should see the element    jQuery=dt:contains("${nextyear}") + dd:contains("Content 2")
+   And the user should see the element      jQuery=dt:contains("${nextyear}") + dd:contains("Competition opens")
+   And the user should see the element      jQuery=dt:contains("${nextyear}") + dd:contains("Competition closes")
+   And the user should see the element      jQuery=dt:contains("${nextyear}") + dd:contains("Applicants notified")
+   And the user should see the element      jQuery=dt:contains("${nextyear}") + dd:contains("Content 1")
+   And the user should see the element      jQuery=dt:contains("${nextyear}") + dd:contains("Content 2")
 
 Guest user can see the updated How-to-apply information
     [Documentation]  INFUND-7490
