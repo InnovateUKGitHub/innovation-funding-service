@@ -24,7 +24,7 @@
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='This is your final chance to make changes to the application.',size='heading-medium'" />
     <p>You will not be able to access the application after this point. Are you sure you want to submit?</p>
     <form method="post" th:action="@{/application/{id}/submit(id=${currentApplication.getId()})}">
-	        <input type="submit" tabindex="0" class="button large" value="Yes, I want to submit my application" />
+	        <input type="submit" tabindex="0" class="button" value="Yes, I want to submit my application" />
 	        <a role="button" tabindex="1" class="button buttonlink large" th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">Cancel</a>
   	</form>
 
