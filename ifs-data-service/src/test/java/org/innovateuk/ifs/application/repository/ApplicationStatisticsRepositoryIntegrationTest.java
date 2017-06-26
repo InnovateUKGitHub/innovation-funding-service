@@ -52,7 +52,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     }
 
     @Test
-    public void findByCompetitionFilterd() throws Exception {
+    public void findByCompetitionFiltered() throws Exception {
         Long competitionId = 1L;
 
         Pageable pageable = new PageRequest(0, 20);

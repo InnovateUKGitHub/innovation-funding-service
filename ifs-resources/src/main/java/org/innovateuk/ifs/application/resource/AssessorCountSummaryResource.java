@@ -13,6 +13,8 @@ public class AssessorCountSummaryResource extends AssessmentCountSummaryResource
     private long accepted;
     private long submitted;
 
+    // TODO we need to add the total here instead of just taking the sum of these double counts
+
     public AssessorCountSummaryResource() {
     }
 

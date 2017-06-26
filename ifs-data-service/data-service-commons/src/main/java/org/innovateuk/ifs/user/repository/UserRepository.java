@@ -48,7 +48,7 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
     /**
      * We have to explicitly join {@link User} and Profile due to the relational mapping
      * on {@link User} being removed. This join was not possible without using a
-     * cartesian product before Hibernate 5.1 (nearly 12 years to implement).
+     * cartesian product before Hibernate 5.1.
      * <p>
      * Unfortunately, due to this explicit join, we cannot leverage Spring JPAs {@link Specification}
      * as we have to use the {@link Query} annotation to create this query.

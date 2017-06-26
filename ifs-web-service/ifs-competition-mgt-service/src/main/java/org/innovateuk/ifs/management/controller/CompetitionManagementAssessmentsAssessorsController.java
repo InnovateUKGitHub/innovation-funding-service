@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
-import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
 import org.innovateuk.ifs.application.service.AssessorCountSummaryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.model.ManageAssessorsModelPopulator;
@@ -15,9 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
-
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 
 @Controller

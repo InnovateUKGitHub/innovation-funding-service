@@ -5,6 +5,7 @@ import org.hibernate.annotations.Where;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 
@@ -27,21 +28,31 @@ public class AssessorStatistics {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(updatable = false)
     private Long id;
 
-    private String name;
+    private String firstName;
+    private String lastName;
 
-    private Long competition;
+//    private Long competition;
 
-    @OneToOne(mappedBy = "target", optional=false)
-    private ApplicationProcess applicationProcess;
+    @ManyToOne()
+    @JoinColumn(name="id", referencedColumnName = "user_id", updatable=false, insertable = false)
+    private CompetitionParticipant competitionParticipant;
+//
+//    @OneToOne(mappedBy = "user", optional=false)
+//    private ApplicationProcess applicationProcess;
 
-    @OneToMany(mappedBy = "applicationId")
+    @OneToMany(mappedBy = "user")
     private List<ProcessRole> processRoles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "target", fetch = FetchType.LAZY)
-    @Where(clause = "process_type = 'Assessment'")
-    // TODO 7668 Issue with retrieval may be caused by this class noting being an Application
+//    @OneToMany(fetch = FetchType.EAGER, mappedBy = "participant")
+    //joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name="participant_id")
+    @ManyToMany
+    @JoinTable(name="process_role",
+            joinColumns = @JoinColumn(table="process_role", updatable=false, referencedColumnName = "id", name="id", insertable = false, nullable = false), // user.id  referencedColumnName = "id",
+            inverseJoinColumns = @JoinColumn(table="process", updatable = false, name="id", referencedColumnName = "participant_id", insertable = false, nullable = false)) // process
+//    @Where(clause = "process_type = 'Assessment'")
     private List<Assessment> assessments;
 
     public Long getId() {
@@ -49,28 +60,28 @@ public class AssessorStatistics {
     }
 
     public String getName() {
-        return name;
+        return firstName + " " + lastName;
     }
 
     public Long getCompetition() {
-        return competition;
+        return competitionParticipant.getProcess().getId();
     }
 
-    public ApplicationState getApplicationState() {
-        return applicationProcess.getActivityState();
-    }
+//    public ApplicationState getApplicationState() {
+//        return applicationProcess.getActivityState();
+//    }
 
-    private Optional<ProcessRole> getLeadProcessRole() {
-        return this.processRoles.stream().filter(p -> UserRoleType.LEADAPPLICANT.getName().equals(p.getRole().getName())).findAny();
-    }
+//    private Optional<ProcessRole> getLeadProcessRole() {
+//        return this.processRoles.stream().filter(p -> UserRoleType.LEADAPPLICANT.getName().equals(p.getRole().getName())).findAny();
+//    }
+//
+//    public Long getLeadOrganisationId() {
+//        return getLeadProcessRole().map(ProcessRole::getOrganisationId).orElse(null);
+//    }
 
-    public Long getLeadOrganisationId() {
-        return getLeadProcessRole().map(ProcessRole::getOrganisationId).orElse(null);
-    }
-
-    public List<ProcessRole> getProcessRoles() {
-        return processRoles;
-    }
+//    public List<ProcessRole> getProcessRoles() {
+//        return processRoles;
+//    }
 
     public List<Assessment> getAssessments() {
         return assessments;
