@@ -29,10 +29,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.servlet.http.Cookie;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static java.lang.String.format;
 import static java.util.Optional.empty;
@@ -50,13 +47,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CompetitionManagementFundingControllerTest extends BaseControllerMockMVCTest<CompetitionManagementFundingController> {
+public class CompetitionManagementFundingDecisionControllerTest extends BaseControllerMockMVCTest<CompetitionManagementFundingDecisionController> {
 
     public static final Long COMPETITION_ID = 123L;
     public static final String FILTER_STRING = "an appliction id";
 
     @InjectMocks
-    private CompetitionManagementFundingController controller;
+    private CompetitionManagementFundingDecisionController controller;
 
     @Mock
     private ApplicationSummarySortFieldService applicationSummarySortFieldService;
@@ -66,8 +63,8 @@ public class CompetitionManagementFundingControllerTest extends BaseControllerMo
     private final FundingDecisionSelectionCookie cookieWithFilterAndSelectionParameters = createCookieWithFilterAndSelectionParameters();
 
     @Override
-    protected CompetitionManagementFundingController supplyControllerUnderTest() {
-        return new CompetitionManagementFundingController();
+    protected CompetitionManagementFundingDecisionController supplyControllerUnderTest() {
+        return new CompetitionManagementFundingDecisionController();
     }
 
     @Before
@@ -377,6 +374,141 @@ public class CompetitionManagementFundingControllerTest extends BaseControllerMo
 
         assertEquals("?origin=FUNDING_APPLICATIONS&page=0",paginationViewModel.getPageNames().get(0).getPath());
     }
+
+    @Test
+    public void testAddAllApplicationsToSelection_ifCookieCannotBeParsedShouldReturnFailureResponse() throws Exception {
+        when(cookieUtil.getCookieValue(any(),any())).thenThrow(Exception.class);
+
+        mockMvc.perform(post("/competition/{competitionId}/funding", COMPETITION_ID)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("addAll","true")
+        )
+                .andExpect(status().isOk())
+                .andExpect(content().string("{\"selectionCount\":-1,\"allSelected\":false}")).andReturn();
+
+    }
+
+    @Test
+    public void testAddSelectedApplicationsToSelection_requestWithAddAllAsTrueWillAddAllFilteredApplicationIdsToCookie() throws Exception {
+        List<ApplicationSummaryResource> applicationSummaryResources = newApplicationSummaryResource().withId(1L,2L).build(2);
+
+        when(cookieUtil.getCookieValue(any(),any())).thenReturn(getSerializedObject(new FundingDecisionSelectionCookie()));
+        when(applicationSummaryRestService.getAllSubmittedApplications(COMPETITION_ID, Optional.empty(), Optional.empty())).thenReturn(restSuccess(applicationSummaryResources));
+
+
+        mockMvc.perform(post("/competition/{competitionId}/funding", COMPETITION_ID)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("addAll","true")
+        )
+                .andExpect(status().isOk())
+                .andExpect(content().string("{\"selectionCount\":2,\"allSelected\":true}")).andReturn();
+
+        FundingDecisionSelectionCookie expectedCookie = new FundingDecisionSelectionCookie();
+        expectedCookie.getFundingDecisionSelectionForm().setApplicationIds(Arrays.asList(1L, 2L));
+        expectedCookie.getFundingDecisionSelectionForm().setAllSelected(true);
+
+        verify(cookieUtil).saveToCookie(any(), any(), eq(getSerializedObject(expectedCookie)));
+    }
+
+    @Test
+    public void testAddSelectedApplicationsToSelection_requestWithAddAllAsFalseWillRemoveAllApplicationIdsFromCookie() throws Exception {
+        when(cookieUtil.getCookieValue(any(),any())).thenReturn(getSerializedObject(cookieWithFilterAndSelectionParameters));
+
+        mockMvc.perform(post("/competition/{competitionId}/funding", COMPETITION_ID)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("addAll","false")
+        )
+                .andExpect(status().isOk())
+                .andExpect(content().string("{\"selectionCount\":0,\"allSelected\":false}")).andReturn();
+
+        FundingDecisionSelectionCookie expectedCookie = cookieWithFilterAndSelectionParameters;
+        expectedCookie.getFundingDecisionSelectionForm().setApplicationIds(Collections.EMPTY_LIST);
+        expectedCookie.getFundingDecisionSelectionForm().setAllSelected(false);
+
+        verify(cookieUtil).saveToCookie(any(), any(), eq(getSerializedObject(expectedCookie)));
+    }
+
+    @Test
+    public void testAddSelectedApplicationsToSelection_ifCookieCannotBeParsedShouldReturnFailureResponse() throws Exception {
+        when(cookieUtil.getCookieValue(any(),any())).thenThrow(Exception.class);
+
+        mockMvc.perform(post("/competition/{competitionId}/funding", COMPETITION_ID)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("selectionId","1")
+                .param("isSelected", "true")
+        )
+                        .andExpect(status().isOk())
+                .andExpect(content().string("{\"selectionCount\":-1,\"allSelected\":false}")).andReturn();
+    }
+
+    @Test
+    public void testAddSelectedApplicationsToSelection_requestWithAddSelectionIdWillAddItToCookieAndProvideCorrectResponse() throws Exception {
+        List<ApplicationSummaryResource> applicationSummaryResources = newApplicationSummaryResource().withId(1L,2L).build(2);
+
+        when(cookieUtil.getCookieValue(any(),any())).thenReturn(getSerializedObject(new FundingDecisionSelectionCookie()));
+        when(applicationSummaryRestService.getAllSubmittedApplications(COMPETITION_ID, Optional.empty(), Optional.empty())).thenReturn(restSuccess(applicationSummaryResources));
+
+
+        mockMvc.perform(post("/competition/{competitionId}/funding", COMPETITION_ID)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("selectionId","1")
+                .param("isSelected", "true")
+        )
+                .andExpect(status().isOk())
+                .andExpect(content().string("{\"selectionCount\":1,\"allSelected\":false}")).andReturn();
+
+        FundingDecisionSelectionCookie expectedCookie = new FundingDecisionSelectionCookie();
+        expectedCookie.getFundingDecisionSelectionForm().setApplicationIds(Arrays.asList(1L));
+        expectedCookie.getFundingDecisionSelectionForm().setAllSelected(false);
+
+        verify(cookieUtil).saveToCookie(any(), any(), eq(getSerializedObject(expectedCookie)));
+    }
+
+    @Test
+    public void testAddSelectedApplicationsToSelection_requestWithAllSelectionIdsWillAddItToCookie() throws Exception {
+        List<ApplicationSummaryResource> applicationSummaryResources = newApplicationSummaryResource().withId(1L,2L).build(2);
+
+        FundingDecisionSelectionCookie fundingDecisionSelectionCookie = new FundingDecisionSelectionCookie();
+        fundingDecisionSelectionCookie.getFundingDecisionSelectionForm().setApplicationIds(Arrays.asList(1L));
+
+        when(cookieUtil.getCookieValue(any(),any())).thenReturn(getSerializedObject(fundingDecisionSelectionCookie));
+        when(applicationSummaryRestService.getAllSubmittedApplications(COMPETITION_ID, Optional.empty(), Optional.empty())).thenReturn(restSuccess(applicationSummaryResources));
+
+
+        mockMvc.perform(post("/competition/{competitionId}/funding", COMPETITION_ID)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("selectionId","2")
+                .param("isSelected", "true")
+        )
+                .andExpect(status().isOk())
+                .andExpect(content().string("{\"selectionCount\":2,\"allSelected\":true}")).andReturn();
+
+        FundingDecisionSelectionCookie expectedCookie = new FundingDecisionSelectionCookie();
+        expectedCookie.getFundingDecisionSelectionForm().setApplicationIds(Arrays.asList(1L, 2L));
+        expectedCookie.getFundingDecisionSelectionForm().setAllSelected(true);
+
+        verify(cookieUtil).saveToCookie(any(), any(), eq(getSerializedObject(expectedCookie)));
+    }
+
+    @Test
+    public void testAddSelectedApplicationsToSelection_requestWithRemoveSelectionIdWillRemoveItFromCookie() throws Exception {
+        when(cookieUtil.getCookieValue(any(),any())).thenReturn(getSerializedObject(cookieWithFilterAndSelectionParameters));
+
+        mockMvc.perform(post("/competition/{competitionId}/funding", COMPETITION_ID)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("selectionId","2")
+                .param("isSelected", "false")
+        )
+                .andExpect(status().isOk())
+                .andExpect(content().string("{\"selectionCount\":1,\"allSelected\":false}")).andReturn();
+
+        FundingDecisionSelectionCookie expectedCookie = cookieWithFilterAndSelectionParameters;
+        expectedCookie.getFundingDecisionSelectionForm().setApplicationIds(Arrays.asList(1L));
+        expectedCookie.getFundingDecisionSelectionForm().setAllSelected(false);
+
+        verify(cookieUtil).saveToCookie(any(), any(), eq(getSerializedObject(expectedCookie)));
+    }
+
 
     private Cookie createFormCookie(FundingDecisionSelectionCookie form) throws Exception {
         String cookieContent = JsonUtil.getSerializedObject(form);
