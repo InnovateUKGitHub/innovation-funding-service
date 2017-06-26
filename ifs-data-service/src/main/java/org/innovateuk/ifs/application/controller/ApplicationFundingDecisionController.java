@@ -26,7 +26,7 @@ public class ApplicationFundingDecisionController {
     @PostMapping(value="/sendNotifications")
     public RestResult<Void> sendFundingDecisions(@RequestBody FundingNotificationResource fundingNotificationResource) {
         return projectService.createProjectsFromFundingDecisions(fundingNotificationResource.getFundingDecisions())
-                .andOnSuccess(() -> applicationFundingService.notifyLeadApplicantsOfFundingDecisions(fundingNotificationResource))
+                .andOnSuccess(() -> applicationFundingService.notifyApplicantsOfFundingDecisions(fundingNotificationResource))
             .toPostResponse();
     }
     

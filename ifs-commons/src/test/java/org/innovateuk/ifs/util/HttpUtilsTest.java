@@ -60,6 +60,38 @@ public class HttpUtilsTest {
     }
 
     @Test
+    public void requestParameterPresent_MMYYYY_monthIsShort() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addParameter("testParameter" + HttpUtils.MM_YYYY_MONTH_APPEND, "1");
+        request.addParameter("testParameter" + HttpUtils.MM_YYYY_YEAR_APPEND, "2011");
+        assertEquals(Optional.of("01-2011"), HttpUtils.requestParameterPresent("testParameter", request));
+    }
+
+    @Test
+    public void requestParameterPresent_MMYYYY_monthIsLong() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addParameter("testParameter" + HttpUtils.MM_YYYY_MONTH_APPEND, "111");
+        request.addParameter("testParameter" + HttpUtils.MM_YYYY_YEAR_APPEND, "2011");
+        assertEquals(Optional.of("111-2011"), HttpUtils.requestParameterPresent("testParameter", request));
+    }
+
+    @Test
+    public void requestParameterPresent_MMYYYY_yearIsShort() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addParameter("testParameter" + HttpUtils.MM_YYYY_MONTH_APPEND, "11");
+        request.addParameter("testParameter" + HttpUtils.MM_YYYY_YEAR_APPEND, "201");
+        assertEquals(Optional.of("11-0201"), HttpUtils.requestParameterPresent("testParameter", request));
+    }
+
+    @Test
+    public void requestParameterPresent_MMYYYY_yearIsLong() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addParameter("testParameter" + HttpUtils.MM_YYYY_MONTH_APPEND, "11");
+        request.addParameter("testParameter" + HttpUtils.MM_YYYY_YEAR_APPEND, "20111");
+        assertEquals(Optional.of("11-20111"), HttpUtils.requestParameterPresent("testParameter", request));
+    }
+
+    @Test
     public void getQueryStringParameters() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setQueryString("first=a&second=b&second=c");
