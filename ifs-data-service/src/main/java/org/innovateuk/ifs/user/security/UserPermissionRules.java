@@ -75,6 +75,10 @@ public class UserPermissionRules {
         return isInternal(user);
     }
 
+    @PermissionRule(value = "READ", description = "Internal users can view everyone")
+    public boolean internalUsersCanViewEveryone(UserPageResource userToView, UserResource user) {
+        return isInternal(user);
+    }
 
     @PermissionRule(value = "READ", description = "The System Registration user can view everyone")
     public boolean systemRegistrationUserCanViewEveryone(UserResource userToView, UserResource user) {
@@ -137,6 +141,11 @@ public class UserPermissionRules {
     @PermissionRule(value = "READ_USER_PROFILE", description = "A user can read their own profile")
     public boolean usersCanViewTheirOwnProfile(UserProfileResource profileDetails, UserResource user) {
         return profileDetails.getUser().equals(user.getId());
+    }
+
+    @PermissionRule(value = "READ_USER_PROFILE", description = "A ifs admin user can read any user's profile")
+    public boolean ifsAdminCanViewAnyUsersProfile(UserProfileResource profileDetails, UserResource user) {
+        return user.hasRole(UserRoleType.IFS_ADMINISTRATOR);
     }
 
     @PermissionRule(value = "READ", description = "The user, as well as Comp Admin and Exec can read the user's profile status")

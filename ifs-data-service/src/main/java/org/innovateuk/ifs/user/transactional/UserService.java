@@ -1,15 +1,15 @@
 package org.innovateuk.ifs.user.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.commons.security.NotSecured;
+import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -38,4 +38,9 @@ public interface UserService {
     @PreAuthorize("hasPermission(#userBeingUpdated, 'UPDATE')")
     ServiceResult<Void> updateDetails(@P("userBeingUpdated") UserResource userBeingUpdated);
 
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<UserPageResource> findActiveByProcessRoles(Set<UserRoleType> roleTypes, Pageable pageable);
+
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<UserPageResource> findInactiveByProcessRoles(Set<UserRoleType> roleTypes, Pageable pageable);
 }
