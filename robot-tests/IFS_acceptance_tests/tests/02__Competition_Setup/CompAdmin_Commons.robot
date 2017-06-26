@@ -225,4 +225,4 @@ the internal user navigates to public content
     the user clicks the button/link    link=Public content
 
 the compadmin logs in
-    Guest user log-in    &{Comp_admin1_credentials}
+    Guest user log-in in new browser    &{Comp_admin1_credentials}
