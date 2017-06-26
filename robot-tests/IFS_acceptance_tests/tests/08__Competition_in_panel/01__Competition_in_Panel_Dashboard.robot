@@ -1,5 +1,5 @@
 *** Settings ***
-Suite Setup       guest user log-in  &{Comp_admin1_credentials}
+Suite Setup       Guest user log-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin    Assessor
 Resource          ../../resources/defaultResources.robot

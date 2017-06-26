@@ -7,7 +7,7 @@ Documentation     INFUND-3303: As an Assessor I want the ability to reject the a
 ...               INFUND-1188 As an assessor I want to be able to review my assessments from one place so that I can work in my favoured style when reviewing
 ...
 ...               INFUND-5379 The Applications for assessment dashboard shouldn't show the rejected applications
-Suite Setup       guest user log-in    &{assessor_credentials}
+Suite Setup       Guest user log-in in new browser    &{assessor_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
@@ -44,8 +44,7 @@ Reject application (Unable to assess this application)
 Assessor should not be able to access the rejected application
     [Documentation]    INFUND-5188
     [Tags]
-    When the user navigates to the assessor page    ${SERVER}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}
-    Then The user should see permissions error message
+    Then the user navigates to the page and gets a custom error message    ${SERVER}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}    ${403_error_message}
 
 *** Keywords ***
 the user fills in rejection details

@@ -5,6 +5,13 @@ LABEL maintainer "infrastructure@orangebus.co.uk"
 ENV HTTP_PORT=9080 \
     HTTPS_PORT=9443 \
     WEBAPPS_PROTO=ajp \
+    MPM_STARTSERVERS=2 \
+    MPM_MINSPARETHREADS=25 \
+    MPM_MAXSPARETHREADS=75 \
+    MPM_THREADLIMIT=64 \
+    MPM_THREADSPERCHILD=25 \
+    MPM_MAXREQUESTWORKERS=150 \
+    MPM_MAXCONNECTIONSPERCHILD=0 \
     SP_DOMAIN=ifs.local-dev \
     IDP_DOMAIN=idp \
     IDP_PORT=8443 \
@@ -31,6 +38,7 @@ RUN apt-get update --fix-missing && \
 # configure apache \
   rm -f /etc/apache2/sites-enabled/000-default.conf && \
   a2enmod shib2 socache_shmcb slotmem_shm ssl proxy_balancer status lbmethod_byrequests proxy_ajp proxy headers rewrite proxy_http reqtimeout && \
+  mv /usr/local/files/apache2/mpm_event.conf /etc/apache2/mods-available/ && \
   sed -i -e 's/Listen 80/Listen ${HTTP_PORT}/' -e 's/Listen 443/Listen ${HTTPS_PORT}/' /etc/apache2/ports.conf && \
   mv /usr/local/files/apache2/z-defaults.conf /etc/apache2/conf-available/ && a2enconf z-defaults.conf && \
 

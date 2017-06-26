@@ -28,8 +28,8 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...               INFUND-6450 As a member of the competitions team, I can see the status of each assessor invite s0...
 ...
 ...               INFUND-5494 An assessor CAN follow a link to the competition brief from the competition dashboard
-Suite Setup       log in as user    &{existing_assessor1_credentials}
-Suite Teardown    TestTeardown User closes the browser
+Suite Setup       Guest user log-in in new browser    &{existing_assessor1_credentials}
+Suite Teardown    The user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
@@ -183,7 +183,7 @@ Number of days remaining until assessment submission
 Calculation of the Competitions for assessment should be correct
     [Documentation]    INFUND-3716
     [Tags]    MySQL    HappyPath
-    Then the total calculation in dashboard should be correct    Competitions for assessment    //div/div/ul/li
+    Then the total calculation in dashboard should be correct    Competitions for assessment   //*[@class="my-applications"]/div/ul/li
 
 Registered user should not allowed to accept other assessor invite
     [Documentation]    INFUND-4895

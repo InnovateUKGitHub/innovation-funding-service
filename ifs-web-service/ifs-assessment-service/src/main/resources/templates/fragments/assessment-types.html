@@ -24,7 +24,8 @@
 <div th:fragment="textarea (field)">
     <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[__${field.id}__]}')} ? 'form-group-error'">
         <label class="form-label form-label-bold" th:for="'form-textarea-'+${field.id}" th:id="'form-label-'+${field.id}">Feedback
-            <span class="form-hint">Please justify your score by writing 2 or 3 sentences which will be returned to the applicant as feedback.</span>
+            <span th:if="${field.guidanceTitle == 'Guidance for assessing scope'}" class="form-hint">Please justify your answer by writing 2 or 3 sentences which will be returned to the applicant as feedback.</span>
+            <span th:unless="${field.guidanceTitle == 'Guidance for assessing scope'}" class="form-hint">Please justify your score by writing 2 or 3 sentences which will be returned to the applicant as feedback.</span>
             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${field.id})" />
         </label>
 
