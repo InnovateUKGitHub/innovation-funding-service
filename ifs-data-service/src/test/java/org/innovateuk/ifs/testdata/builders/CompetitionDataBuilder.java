@@ -11,7 +11,6 @@ import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -197,7 +196,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             applicationFundingService.saveFundingDecisionData(data.getCompetition().getId(), pairsToMap(applicationIdAndDecisions)).
                     getSuccessObjectOrThrowException();
             FundingNotificationResource fundingNotificationResource = new FundingNotificationResource("Body", pairsToMap(applicationIdAndDecisions));
-            applicationFundingService.notifyLeadApplicantsOfFundingDecisions(fundingNotificationResource).
+            applicationFundingService.notifyApplicantsOfFundingDecisions(fundingNotificationResource).
                     getSuccessObjectOrThrowException();
 
             doAs(projectFinanceUser(),
