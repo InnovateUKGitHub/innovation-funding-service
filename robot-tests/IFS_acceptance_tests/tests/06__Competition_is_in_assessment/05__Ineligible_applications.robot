@@ -41,7 +41,7 @@ Client side validation - mark an application as ineligible
     [Documentation]    IFS-159
     [Tags]
     Given the user clicks the button/link    jQuery=h2 button:contains("Mark application as ineligible")
-    And the user enters text to a text field   id=ineligibleReason    a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a
+    And the user enters text to a text field   id=ineligibleReason  a${SPACE}  402
     And the user moves focus to the element    jQuery=.button:contains("Cancel")
     Then the user should see an error    Maximum word count exceeded. Please reduce your word count to 400.
     [Teardown]    the user clicks the button/link    jQuery=h2 button:contains("Mark application as ineligible")

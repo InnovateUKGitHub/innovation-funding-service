@@ -191,16 +191,16 @@ Summary:Word count check(Your feedback)
     ...    INFUND-5179
     [Tags]    HappyPath
     [Setup]    browser validations have been disabled
-    When the user enters multiple strings into a text field    id=feedback    t    5001
-    And the user clicks the button/link    jQuery=.button:contains(Save assessment)
-    Then the user should see an error    This field cannot contain more than 5,000 characters.
-    When the user enters multiple strings into a text field    id=feedback    w${SPACE}    102
-    And the user clicks the button/link    jQuery=.button:contains(Save assessment)
-    Then the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
-    And the word count should be correct    Words remaining: -2
-    When the user enters text to a text field    id=feedback    Testing the feedback word count.
-    Then The user should not see the text in the page    Maximum word count exceeded. Please reduce your word count to 100.
-    And the word count should be correct    Words remaining: 95
+    When the user enters multiple strings into a text field      id=feedback    t    5001
+    And the user clicks the button/link                          jQuery=.button:contains(Save assessment)
+    Then the user should see an error                            This field cannot contain more than 5,000 characters.
+    When the user enters multiple strings into a text field      id=feedback  w${SPACE}  102
+    And the user clicks the button/link                          jQuery=.button:contains(Save assessment)
+    Then the user should see an error                            Maximum word count exceeded. Please reduce your word count to 100.
+    And the word count should be correct                         Words remaining: -2
+    When the user enters text to a text field                    id=feedback    Testing the feedback word count.
+    Then The user should not see the text in the page            Maximum word count exceeded. Please reduce your word count to 100.
+    And the word count should be correct                         Words remaining: 95
 
 Summary:Word count check(Comments for InnovateUK)
     [Documentation]    INFUND-1485
@@ -210,13 +210,13 @@ Summary:Word count check(Comments for InnovateUK)
     ...    INFUND-5178
     ...
     ...    INFUND-5179
-    When the user enters multiple strings into a text field    id=comment    a${SPACE}    102
-    And the user clicks the button/link    jQuery=.button:contains(Save assessment)
-    Then the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
-    And the word count should be correct    Words remaining: -2
-    When the user enters text to a text field    id=comment    Testing the comments word count.
-    Then The user should not see the text in the page    Maximum word count exceeded. Please reduce your word count to 100.
-    And the word count should be correct    Words remaining: 95
+    When the user enters multiple strings into a text field     id=comment    a${SPACE}    102
+    And the user clicks the button/link                         jQuery=.button:contains(Save assessment)
+    Then the user should see an error                           Maximum word count exceeded. Please reduce your word count to 100.
+    And the word count should be correct                        Words remaining: -2
+    When the user enters text to a text field                   id=comment    Testing the comments word count.
+    Then The user should not see the text in the page           Maximum word count exceeded. Please reduce your word count to 100.
+    And the word count should be correct                        Words remaining: 95
 
 User Saves the Assessment as Recommended
     [Documentation]    INFUND-4996
@@ -229,14 +229,14 @@ User Saves the Assessment as Recommended
     ...
     ...    INFUND-3724
     [Tags]    HappyPath
-    Given the user enters text to a text field    id=feedback    ${EMPTY}
-    And the user selects the radio button    fundingConfirmation    true
-    When The user clicks the button/link    jQuery=.button:contains(Save assessment)
-    Then The user should not see the text in the page    Please enter your feedback
-    And The user should see the text in the page    Assessed
-    And the user should see the element    css=li:nth-child(6) .positive
-    And the user should see the element    css=li:nth-child(6) input[type="checkbox"] ~ label
-    And the application should have the correct status    css=.progress-list li:nth-child(6)    Assessed
+    Given the user enters text to a text field               id=feedback    ${EMPTY}
+    And the user selects the radio button                    fundingConfirmation    true
+    When The user clicks the button/link                     jQuery=.button:contains(Save assessment)
+    Then The user should not see the text in the page        Please enter your feedback
+    And The user should see the text in the page             Assessed
+    And the user should see the element                      css=li:nth-child(6) .positive
+    And the user should see the element                      css=li:nth-child(6) input[type="checkbox"] ~ label
+    And the application should have the correct status       css=.progress-list li:nth-child(6)    Assessed
 
 User Saves the Assessment as Not Recommended
     [Documentation]    INFUND-5712
