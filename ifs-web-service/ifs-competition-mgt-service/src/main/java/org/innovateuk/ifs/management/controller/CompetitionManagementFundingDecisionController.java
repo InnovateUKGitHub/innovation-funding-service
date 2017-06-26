@@ -48,9 +48,9 @@ import static org.innovateuk.ifs.util.JsonUtil.getSerializedObject;
 @Controller
 @RequestMapping("/competition/{competitionId}/funding")
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-public class CompetitionManagementFundingController {
+public class CompetitionManagementFundingDecisionController {
 
-    private static final Log log = LogFactory.getLog(CompetitionManagementFundingController.class);
+    private static final Log log = LogFactory.getLog(CompetitionManagementFundingDecisionController.class);
 
     private static final int PAGE_SIZE = 20;
     private static final String SELECTION_FORM = "fundingDecisionSelectionForm";
@@ -86,38 +86,26 @@ public class CompetitionManagementFundingController {
             return "redirect:/competition/" + competitionId + "/funding";
         }
 
-
-
-        CompetitionSummaryResource competitionSummary = applicationSummaryRestService
-                .getCompetitionSummary(competitionId)
-                .getSuccessObjectOrThrowException();
-
-        model.addAttribute("competitionSummary", competitionSummary);
-        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.FUNDING_APPLICATIONS, mapFormFilterParametersToMultiValueMap(filterForm));
-        model.addAttribute("originQuery", originQuery);
-
         FundingDecisionSelectionCookie selectionCookieForm = new FundingDecisionSelectionCookie();
 
         try {
             selectionCookieForm = getApplicationSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
-            selectionForm = selectionCookieForm.getFundingDecisionSelectionForm();
 
-            FundingDecisionSelectionForm trimmedSelectionForm = updateApplicationSelection(selectionForm, filterForm, competitionId);
-            selectionForm.setApplicationIds(trimmedSelectionForm.getApplicationIds());
-
-            boolean noFilterGetParameterIsPresent = !filterForm.getFundingFilter().isPresent() && !filterForm.getStringFilter().isPresent();
-            boolean filterCookieParameterIsPresent = selectionCookieForm.getFundingDecisionFilterForm().getFundingFilter().isPresent()
-                    || selectionCookieForm.getFundingDecisionFilterForm().getStringFilter().isPresent();
-            boolean selectionHasBeenMade = selectionCookieForm.getFundingDecisionSelectionForm().isAllSelected() != false ||
-                    selectionCookieForm.getFundingDecisionSelectionForm().getApplicationIds().size() > 0;
+            FundingDecisionFilterForm filterCookieForm = selectionCookieForm.getFundingDecisionFilterForm();
 
             if(clearFilters) {
                 filterForm = new FundingDecisionFilterForm();
             }
-            else if (noFilterGetParameterIsPresent && filterCookieParameterIsPresent && selectionHasBeenMade) {
+            else if (!filterForm.anyFilterIsActive() && filterCookieForm.anyFilterIsActive() && selectionForm.anySelectionIsMade()) {
                 filterForm.setFundingFilter(selectionCookieForm.getFundingDecisionFilterForm().getFundingFilter());
                 filterForm.setStringFilter(selectionCookieForm.getFundingDecisionFilterForm().getStringFilter());
             }
+
+            FundingDecisionSelectionForm trimmedSelectionForm = trimSelectionByFilteredResult(selectionForm, filterForm, competitionId);
+
+            selectionForm = selectionCookieForm.getFundingDecisionSelectionForm();
+            selectionForm.setApplicationIds(trimmedSelectionForm.getApplicationIds());
+            
         } catch (Exception e) {
             log.error(e);
         }
@@ -125,23 +113,18 @@ public class CompetitionManagementFundingController {
 
         selectionCookieForm.setFundingDecisionFilterForm(filterForm);
 
-        cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionCookieForm));
+        saveFormToCookie(response, competitionId, selectionCookieForm);
 
-        switch (competitionSummary.getCompetitionStatus()) {
-            case FUNDERS_PANEL:
-            case ASSESSOR_FEEDBACK:
-                return populateSubmittedModel(model, competitionId, paginationForm, filterForm, selectionForm, originQuery);
-            default:
-                return "redirect:/login";
-        }
+        return populateSubmittedModel(model, competitionId, paginationForm, filterForm, selectionForm);
+
     }
 
     @PostMapping
     public String makeDecision(Model model,
                                @PathVariable("competitionId") long competitionId,
-                               @ModelAttribute @Valid FundingDecisionPaginationForm paginationForm,
+                               @ModelAttribute FundingDecisionPaginationForm paginationForm,
                                @ModelAttribute FundingDecisionSelectionForm fundingDecisionSelectionForm,
-                               @ModelAttribute FundingDecisionChoiceForm fundingDecisionChoiceForm,
+                               @ModelAttribute @Valid FundingDecisionChoiceForm fundingDecisionChoiceForm,
                                @ModelAttribute FundingDecisionFilterForm filterForm,
                                BindingResult bindingResult,
                                HttpServletRequest request) {
@@ -156,21 +139,7 @@ public class CompetitionManagementFundingController {
             log.error(e);
         }
 
-        CompetitionSummaryResource competitionSummary = applicationSummaryRestService
-                .getCompetitionSummary(competitionId)
-                .getSuccessObjectOrThrowException();
-
-        model.addAttribute("competitionSummary", competitionSummary);
-        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.FUNDING_APPLICATIONS, mapFormFilterParametersToMultiValueMap(filterForm));
-        model.addAttribute("originQuery", originQuery);
-
-        switch (competitionSummary.getCompetitionStatus()) {
-            case FUNDERS_PANEL:
-            case ASSESSOR_FEEDBACK:
-                return fundersPanelCompetition(model, competitionId, fundingDecisionSelectionForm, paginationForm,fundingDecisionChoiceForm, filterForm, originQuery, bindingResult);
-            default:
-                return "redirect:/login";
-        }
+        return fundersPanelCompetition(model, competitionId, fundingDecisionSelectionForm, paginationForm, fundingDecisionChoiceForm, filterForm, bindingResult);
     }
 
     @PostMapping(params = {"addAll"})
@@ -179,23 +148,36 @@ public class CompetitionManagementFundingController {
                                                      @RequestParam("addAll") boolean addAll,
                                                      HttpServletRequest request,
                                                      HttpServletResponse response) {
+        FundingDecisionSelectionCookie selectionCookie;
+
         try {
-            FundingDecisionSelectionCookie selectionForm = getApplicationSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
-
-            if (addAll) {
-                selectionForm.getFundingDecisionSelectionForm().setApplicationIds(getAllApplicationIdsByFilters(competitionId, selectionForm.getFundingDecisionFilterForm()));
-                selectionForm.getFundingDecisionSelectionForm().setAllSelected(true);
-            } else {
-                selectionForm.getFundingDecisionSelectionForm().setApplicationIds(Arrays.asList());
-                selectionForm.getFundingDecisionSelectionForm().setAllSelected(false);
-            }
-
-            cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
-            return createJsonObjectNode(selectionForm.getFundingDecisionSelectionForm().getApplicationIds().size(), selectionForm.getFundingDecisionSelectionForm().isAllSelected());
+            selectionCookie = getApplicationSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
         } catch (Exception e) {
             log.error(e);
-            return createJsonObjectNode(-1, false);
+            return createFailureResponse();
         }
+
+        if (addAll) {
+            addAllApplicationsIdsBasedOnFilter(competitionId, selectionCookie);
+        } else {
+            removeAllApplicationsIds(selectionCookie);
+        }
+
+        saveFormToCookie(response, competitionId, selectionCookie);
+
+        return createSuccessfulResponseWithSelectionStatus(selectionCookie.getFundingDecisionSelectionForm().getApplicationIds().size(), selectionCookie.getFundingDecisionSelectionForm().isAllSelected());
+    }
+
+    private void addAllApplicationsIdsBasedOnFilter(long competitionId, FundingDecisionSelectionCookie selectionCookie) {
+        List<Long> allApplicationIdsBasedOnFilter = getAllApplicationIdsByFilters(competitionId, selectionCookie.getFundingDecisionFilterForm());
+
+        selectionCookie.getFundingDecisionSelectionForm().setApplicationIds(allApplicationIdsBasedOnFilter);
+        selectionCookie.getFundingDecisionSelectionForm().setAllSelected(true);
+    }
+
+    private void removeAllApplicationsIds(FundingDecisionSelectionCookie selectionCookie) {
+        selectionCookie.getFundingDecisionSelectionForm().setApplicationIds(Arrays.asList());
+        selectionCookie.getFundingDecisionSelectionForm().setAllSelected(false);
     }
 
     @PostMapping(params = {"selectionId", "isSelected"})
@@ -224,11 +206,12 @@ public class CompetitionManagementFundingController {
 
             cookieForm.setFundingDecisionSelectionForm(selectionForm);
 
-            cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(cookieForm));
-            return createJsonObjectNode(selectionForm.getApplicationIds().size(), selectionForm.isAllSelected());
+            saveFormToCookie(response, competitionId, cookieForm);
+
+            return createSuccessfulResponseWithSelectionStatus(selectionForm.getApplicationIds().size(), selectionForm.isAllSelected());
         } catch (Exception e) {
             log.error(e);
-            return createJsonObjectNode(-1, false);
+            return createFailureResponse();
         }
     }
 
@@ -247,7 +230,7 @@ public class CompetitionManagementFundingController {
         return restResult.getSuccessObjectOrThrowException().stream().map(p -> p.getId()).collect(Collectors.toList());
     }
 
-    private FundingDecisionSelectionForm updateApplicationSelection(FundingDecisionSelectionForm selectionForm, FundingDecisionFilterForm filterForm, Long competitionId) {
+    private FundingDecisionSelectionForm trimSelectionByFilteredResult(FundingDecisionSelectionForm selectionForm, FundingDecisionFilterForm filterForm, Long competitionId) {
         List<Long> filteredApplicationIds = getAllApplicationIdsByFilters(competitionId, filterForm);
 
         FundingDecisionSelectionForm updatedSelectionForm = new FundingDecisionSelectionForm();
@@ -261,6 +244,14 @@ public class CompetitionManagementFundingController {
         }
 
         return updatedSelectionForm;
+    }
+
+    private ObjectNode createFailureResponse() {
+        return createJsonObjectNode(-1, false);
+    }
+
+    private ObjectNode createSuccessfulResponseWithSelectionStatus(int selectionCount, boolean allSelected) {
+        return createJsonObjectNode(selectionCount, allSelected);
     }
 
     private ObjectNode createJsonObjectNode(int selectionCount, boolean allSelected) {
@@ -278,7 +269,7 @@ public class CompetitionManagementFundingController {
             filterMap.put("fundingFilter", Arrays.asList(fundingDecisionFilterForm.getFundingFilter().get().getName()));
         }
         if(fundingDecisionFilterForm.getStringFilter().isPresent()) {
-            filterMap.put("stringFilter",Arrays.asList(fundingDecisionFilterForm.getStringFilter().get()));
+            filterMap.put("stringFilter", Arrays.asList(fundingDecisionFilterForm.getStringFilter().get()));
         }
 
         return filterMap;
@@ -290,7 +281,6 @@ public class CompetitionManagementFundingController {
                                            FundingDecisionPaginationForm fundingDecisionPaginationForm,
                                            FundingDecisionChoiceForm fundingDecisionChoiceForm,
                                            FundingDecisionFilterForm fundingDecisionFilterForm,
-                                           String originQuery,
                                            BindingResult bindingResult) {
         if (fundingDecisionChoiceForm.getFundingDecision() != null) {
             validator.validate(fundingDecisionSelectionForm, bindingResult);
@@ -302,7 +292,7 @@ public class CompetitionManagementFundingController {
             }
         }
 
-        return populateSubmittedModel(model, competitionId, fundingDecisionPaginationForm, fundingDecisionFilterForm, fundingDecisionSelectionForm, originQuery);
+        return populateSubmittedModel(model, competitionId, fundingDecisionPaginationForm, fundingDecisionFilterForm, fundingDecisionSelectionForm);
     }
 
     private ApplicationSummaryPageResource getApplicationsByFilters(Long competitionId, FundingDecisionPaginationForm paginationForm, FundingDecisionFilterForm fundingDecisionFilterForm) {
@@ -316,13 +306,32 @@ public class CompetitionManagementFundingController {
                 .getSuccessObjectOrThrowException();
     }
 
-    private String populateSubmittedModel(Model model, Long competitionId, FundingDecisionPaginationForm paginationForm, FundingDecisionFilterForm fundingDecisionFilterForm, FundingDecisionSelectionForm fundingDecisionSelectionForm, String originQuery) {
+    private String populateSubmittedModel(Model model, Long competitionId, FundingDecisionPaginationForm paginationForm, FundingDecisionFilterForm fundingDecisionFilterForm, FundingDecisionSelectionForm fundingDecisionSelectionForm) {
         ApplicationSummaryPageResource results = getApplicationsByFilters(competitionId, paginationForm, fundingDecisionFilterForm);
+        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.FUNDING_APPLICATIONS, mapFormFilterParametersToMultiValueMap(fundingDecisionFilterForm));
+
+        CompetitionSummaryResource competitionSummary = applicationSummaryRestService
+                .getCompetitionSummary(competitionId)
+                .getSuccessObjectOrThrowException();
+
 
         model.addAttribute("pagination", new PaginationViewModel(results, originQuery));
         model.addAttribute("results", results);
         model.addAttribute("selectionForm", fundingDecisionSelectionForm);
+        model.addAttribute("competitionSummary", competitionSummary);
+        model.addAttribute("originQuery", originQuery);
 
-        return "comp-mgt-funders-panel";
+
+        switch (competitionSummary.getCompetitionStatus()) {
+            case FUNDERS_PANEL:
+            case ASSESSOR_FEEDBACK:
+                return "comp-mgt-funders-panel";
+            default:
+                return "redirect:/login";
+        }
+    }
+
+    private void saveFormToCookie(HttpServletResponse response, long competitionId, FundingDecisionSelectionCookie selectionForm) {
+        cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
     }
 }
