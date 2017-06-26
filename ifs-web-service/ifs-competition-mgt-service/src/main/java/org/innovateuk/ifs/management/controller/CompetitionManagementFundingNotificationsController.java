@@ -50,6 +50,7 @@ public class CompetitionManagementFundingNotificationsController {
     private static final String MANAGE_FUNDING_APPLICATIONS_VIEW = "comp-mgt-manage-funding-applications";
     private static final String FUNDING_DECISION_NOTIFICATION_VIEW = "comp-mgt-send-notifications";
     private static final String SELECTION_FORM = "applicationSelectionForm";
+    private static final int SELECTION_LIMIT = 500;
 
     @Autowired
     private ManageFundingApplicationsModelPopulator manageFundingApplicationsModelPopulator;
@@ -143,7 +144,7 @@ public class CompetitionManagementFundingNotificationsController {
         }
         storedSelectionFormCookie.setManageFundingApplicationsQueryForm(filterForm);
         storedSelectionFormCookie.setSelectApplicationsForEmailForm(selectionForm);
-        cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(storedSelectionFormCookie));
+        cookieUtil.saveToCompressedCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(storedSelectionFormCookie));
     }
 
     @PostMapping("/manage-funding-applications")
@@ -166,7 +167,6 @@ public class CompetitionManagementFundingNotificationsController {
                 () -> idsValidationHandler.failNowOrSucceedWith(idsFailureView(competitionId, query, model, params), // Pass or fail JSR 303 on the ids
                         () -> {
                             // Custom validation
-                            //List<Long> applicationIds = submittedSelectionForm.getIds().stream().map(this::toLongOrNull).filter(Objects::nonNull).collect(toList());
                             if (selectionCookie.getSelectApplicationsForEmailForm().getIds().isEmpty()) {
                                 idsBindingResult.rejectValue("ids", "validation.manage.funding.applications.no.application.selected");
                             }
@@ -205,7 +205,7 @@ public class CompetitionManagementFundingNotificationsController {
                 selectionCookie.getSelectApplicationsForEmailForm().getIds().remove(applicationId);
                 selectionCookie.getSelectApplicationsForEmailForm().setAllSelected(false);
             }
-            cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionCookie));
+            cookieUtil.saveToCompressedCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionCookie));
             return createJsonObjectNode(selectionCookie.getSelectApplicationsForEmailForm().getIds().size(), selectionCookie.getSelectApplicationsForEmailForm().isAllSelected());
         } catch (Exception e) {
             return createJsonObjectNode(-1, false);
@@ -217,27 +217,33 @@ public class CompetitionManagementFundingNotificationsController {
                                            @PathVariable("competitionId") long competitionId,
                                            @RequestParam("addAll") boolean addAll,
                                            @RequestParam(defaultValue = "0") int page,
-                                           @RequestParam Optional<String> stringFilter,
-                                           @RequestParam Optional<Boolean> sendFilter,
-                                           @RequestParam Optional<FundingDecision> fundingFilter,
                                            HttpServletRequest request,
                                            HttpServletResponse response) {
         try {
             FundingNotificationSelectionCookie selectionCookie = getFundingNotificationFormFromCookie(request, competitionId).orElse(new FundingNotificationSelectionCookie());
 
             if (addAll) {
-                selectionCookie.getSelectApplicationsForEmailForm().setIds(getAllApplicationIdsByFilters(competitionId, selectionCookie.getManageFundingApplicationsQueryForm()));
-                selectionCookie.getSelectApplicationsForEmailForm().setAllSelected(true);
+                handleSelectAll(selectionCookie, competitionId);
             } else {
                 selectionCookie.getSelectApplicationsForEmailForm().getIds().clear();
                 selectionCookie.getSelectApplicationsForEmailForm().setAllSelected(false);
             }
 
-            cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionCookie));
+            cookieUtil.saveToCompressedCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionCookie));
             return createJsonObjectNode(selectionCookie.getSelectApplicationsForEmailForm().getIds().size(), selectionCookie.getSelectApplicationsForEmailForm().isAllSelected());
         } catch (Exception e) {
             return createJsonObjectNode(-1, false);
         }
+    }
+
+    private void handleSelectAll(FundingNotificationSelectionCookie selectionCookie, long competitionId) {
+        List<Long> allApplicationIds = getAllApplicationIdsByFilters(competitionId, selectionCookie.getManageFundingApplicationsQueryForm());
+        if (allApplicationIds.size() > SELECTION_LIMIT) {
+            selectionCookie.getSelectApplicationsForEmailForm().setIds(allApplicationIds.subList(0, SELECTION_LIMIT));
+        } else {
+            selectionCookie.getSelectApplicationsForEmailForm().setIds(allApplicationIds);
+        }
+        selectionCookie.getSelectApplicationsForEmailForm().setAllSelected(true);
     }
 
     private List<Long> getAllApplicationIdsByFilters(long competitionId, ManageFundingApplicationsQueryForm filterForm) {
@@ -290,7 +296,7 @@ public class CompetitionManagementFundingNotificationsController {
     }
 
     private Optional<FundingNotificationSelectionCookie> getFundingNotificationFormFromCookie(HttpServletRequest request, long competitionId) {
-        String applicationFormJson = cookieUtil.getCookieValue(request, format("%s_comp%s", SELECTION_FORM, competitionId));
+        String applicationFormJson = cookieUtil.getCompressedCookieValue(request, format("%s_comp%s", SELECTION_FORM, competitionId));
         if (isNotBlank(applicationFormJson)) {
             return Optional.ofNullable(getObjectFromJson(applicationFormJson, FundingNotificationSelectionCookie.class));
         } else {

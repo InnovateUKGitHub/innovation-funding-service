@@ -29,7 +29,6 @@ import org.springframework.validation.BindingResult;
 
 import javax.servlet.http.Cookie;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,6 +65,8 @@ import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
+import static org.innovateuk.ifs.util.CompressionUtil.getCompressedString;
+import static org.innovateuk.ifs.util.CompressionUtil.getDecompressedString;
 import static org.innovateuk.ifs.util.JsonUtil.getObjectFromJson;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -948,13 +949,12 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
     private Cookie createFormCookie(AssessorSelectionForm form) throws Exception {
         String cookieContent = JsonUtil.getSerializedObject(form);
-        String encryptedData = encryptor.encrypt(URLEncoder.encode(cookieContent, CharEncoding.UTF_8));
-        return new Cookie(format("selectionForm_comp%s", competition.getId()), encryptedData);
+        return new Cookie(format("selectionForm_comp%s", competition.getId()), getCompressedString(cookieContent));
     }
 
     private Optional<AssessorSelectionForm> getAssessorSelectionFormFromCookie(MockHttpServletResponse response, String cookieName) throws Exception {
-        String selectionFormJson = getDecryptedCookieValue(response.getCookies(), cookieName);
-        String decodedFormJson  = URLDecoder.decode(selectionFormJson, CharEncoding.UTF_8);
+        String value = getDecompressedString(response.getCookie(cookieName).getValue());
+        String decodedFormJson  = URLDecoder.decode(value, CharEncoding.UTF_8);
 
         if (isNotBlank(decodedFormJson)) {
             return Optional.ofNullable(getObjectFromJson(decodedFormJson, AssessorSelectionForm.class));

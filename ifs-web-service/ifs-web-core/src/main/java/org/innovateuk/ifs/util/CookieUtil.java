@@ -25,6 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.util.CompressionUtil.getCompressedString;
+import static org.innovateuk.ifs.util.CompressionUtil.getDecompressedString;
+
 @Service
 @Configurable
 public class CookieUtil {
@@ -68,6 +71,17 @@ public class CookieUtil {
         }
     }
 
+    public void saveToCompressedCookie(HttpServletResponse response, String fieldName, String fieldValue) {
+        if (StringUtils.hasText(fieldName)) {
+            String content = getCompressedString(fieldValue);
+            Cookie cookie = new Cookie(fieldName, content);
+            cookie.setHttpOnly(true);
+            cookie.setPath("/");
+            cookie.setMaxAge(COOKIE_LIFETIME);
+            response.addCookie(cookie);
+        }
+    }
+
     public void removeCookie(HttpServletResponse response, String fieldName) {
         if (StringUtils.hasText(fieldName)) {
             Cookie cookie = new Cookie(fieldName, "");
@@ -91,6 +105,14 @@ public class CookieUtil {
             } catch (UnsupportedEncodingException | ArrayIndexOutOfBoundsException ignore) {
                 LOG.error("Failing cookie (" + cookieName + "):" + ignore.getMessage());
             }
+        }
+        return "";
+    }
+
+    public String getCompressedCookieValue(HttpServletRequest request, String cookieName) {
+        Optional<Cookie> cookie = getCookie(request, cookieName);
+        if (cookie.isPresent()) {
+            return getDecompressedString(cookie.get().getValue());
         }
         return "";
     }

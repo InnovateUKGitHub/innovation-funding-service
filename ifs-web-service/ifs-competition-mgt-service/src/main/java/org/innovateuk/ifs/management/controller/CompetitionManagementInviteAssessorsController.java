@@ -52,6 +52,7 @@ public class CompetitionManagementInviteAssessorsController {
     private static final String FILTER_FORM_ATTR_NAME = "filterForm";
     private static final String FORM_ATTR_NAME = "form";
     private static final String SELECTION_FORM = "selectionForm";
+    private static final int SELECTION_LIMIT = 500;
 
     @Autowired
     private CompetitionInviteRestService competitionInviteRestService;
@@ -114,7 +115,7 @@ public class CompetitionManagementInviteAssessorsController {
             selectionForm.getSelectedAssessorIds().retainAll(getAllAssessorIds(competitionId, filterForm.getInnovationArea()));
         }
         filterForm.getInnovationArea().ifPresent(selectionForm::setSelectedInnovationArea);
-        cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
+        cookieUtil.saveToCompressedCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
     }
 
     @PostMapping(value = "/find", params = {"selectionId"})
@@ -138,7 +139,7 @@ public class CompetitionManagementInviteAssessorsController {
                 selectionForm.getSelectedAssessorIds().remove(assessorId);
                 selectionForm.setAllSelected(false);
             }
-            cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
+            cookieUtil.saveToCompressedCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
             return createJsonObjectNode(selectionForm.getSelectedAssessorIds().size(), selectionForm.getAllSelected());
         } catch (Exception e) {
             return createJsonObjectNode(-1, false);
@@ -157,18 +158,27 @@ public class CompetitionManagementInviteAssessorsController {
             AssessorSelectionForm selectionForm = getAssessorSelectionFormFromCookie(request, competitionId).orElse(new AssessorSelectionForm());
 
             if (addAll) {
-                selectionForm.setSelectedAssessorIds(getAllAssessorIds(competitionId, innovationArea));
-                selectionForm.setAllSelected(true);
+                handleSelectAll(selectionForm, competitionId, innovationArea);
             } else {
                 selectionForm.getSelectedAssessorIds().clear();
                 selectionForm.setAllSelected(false);
             }
 
-            cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
+            cookieUtil.saveToCompressedCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
             return createJsonObjectNode(selectionForm.getSelectedAssessorIds().size(), selectionForm.getAllSelected());
         } catch (Exception e) {
             return createJsonObjectNode(-1, false);
         }
+    }
+
+    private void handleSelectAll(AssessorSelectionForm selectionForm, long competitionId, Optional<Long> innovationArea) {
+        List<Long> allAssessorIds = getAllAssessorIds(competitionId, innovationArea);
+        if (allAssessorIds.size() > SELECTION_LIMIT) {
+            selectionForm.setSelectedAssessorIds(allAssessorIds.subList(0, SELECTION_LIMIT));
+        } else {
+            selectionForm.setSelectedAssessorIds(allAssessorIds);
+        }
+        selectionForm.setAllSelected(true);
     }
 
     private List<Long> getAllAssessorIds(long competitionId, Optional<Long> innovationArea) {
@@ -372,7 +382,7 @@ public class CompetitionManagementInviteAssessorsController {
     }
 
     private Optional<AssessorSelectionForm> getAssessorSelectionFormFromCookie(HttpServletRequest request, long competitionId) {
-        String assessorFormJson = cookieUtil.getCookieValue(request, format("%s_comp%s", SELECTION_FORM, competitionId));
+        String assessorFormJson = cookieUtil.getCompressedCookieValue(request, format("%s_comp%s", SELECTION_FORM, competitionId));
         if (isNotBlank(assessorFormJson)) {
             return Optional.ofNullable(getObjectFromJson(assessorFormJson, AssessorSelectionForm.class));
         } else {

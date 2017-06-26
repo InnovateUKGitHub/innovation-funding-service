@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.management.controller;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.Matcher;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
@@ -38,21 +36,14 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
 
 import javax.servlet.http.Cookie;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.LongStream;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
 import static com.google.common.primitives.Longs.asList;
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
+import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.stream.Collectors.toList;
 import static junit.framework.TestCase.assertFalse;
@@ -67,6 +58,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionFundedKeyStatisticsResourceBuilder.newCompetitionFundedKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
+import static org.innovateuk.ifs.util.CompressionUtil.getCompressedString;
+import static org.innovateuk.ifs.util.CompressionUtil.getDecompressedString;
 import static org.innovateuk.ifs.util.JsonUtil.getObjectFromJson;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -150,7 +143,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
 
     @Test
     public void testSelectApplications() throws Exception {
-        long competitionId = 1l;
+        long competitionId = 1L;
         mockMvc.perform(post("/competition/{competitionId}/manage-funding-applications", competitionId).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("ids[0]", "18")
@@ -254,7 +247,6 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         when(applicationSummaryRestService.getWithFundingDecisionApplications(
                 COMPETITION_ID, empty(), sendFilter, fundingFilter)).thenReturn(restSuccess(applications));
 
-
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/manage-funding-applications", COMPETITION_ID)
                 .param("addAll", "true")
                 .cookie(formCookie))
@@ -267,12 +259,38 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         assertTrue(resultForm.get().getSelectApplicationsForEmailForm().getIds().containsAll(asList(applications.get(0).getId(), applications.get(1).getId())));
     }
 
+    @Test
+    public void addAllApplicationSelectionsToCookie_maximum() throws Exception {
+        Optional<Boolean> sendFilter = Optional.empty();
+        Optional<FundingDecision> fundingFilter = Optional.empty();
+        FundingNotificationSelectionCookie selectionCookie = new FundingNotificationSelectionCookie();
+        selectionCookie.setSelectApplicationsForEmailForm(new SelectApplicationsForEmailForm());
+        selectionCookie.setManageFundingApplicationsQueryForm(new ManageFundingApplicationsQueryForm());
+        Cookie formCookie = createFormCookie(selectionCookie);
+
+        List<ApplicationSummaryResource> applications = newApplicationSummaryResource().with(uniqueIds()).build(501);
+
+        when(applicationSummaryRestService.getWithFundingDecisionApplications(
+                COMPETITION_ID, empty(), sendFilter, fundingFilter)).thenReturn(restSuccess(applications));
+
+        MvcResult result = mockMvc.perform(post("/competition/{competitionId}/manage-funding-applications", COMPETITION_ID)
+                .param("addAll", "true")
+                .cookie(formCookie))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("selectionCount", is(500)))
+                .andExpect(jsonPath("allSelected", is(true)))
+                .andReturn();
+
+        Optional<FundingNotificationSelectionCookie> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("applicationSelectionForm_comp%s", COMPETITION_ID));
+        List<Long> expectedAppIds = applications.subList(0, 500).stream().map(app -> app.getId()).collect(toList());
+        assertTrue(resultForm.get().getSelectApplicationsForEmailForm().getIds().containsAll(expectedAppIds));
+    }
 
     @Test
     public void getSendNotificationsPageTest() throws Exception {
 
-        List<Long> applicationsIds = Arrays.asList(APPLICATION_ID_ONE);
-        List<ApplicationSummaryResource> resourceList = Arrays.asList(new ApplicationSummaryResource());
+        List<Long> applicationsIds = singletonList(APPLICATION_ID_ONE);
+        List<ApplicationSummaryResource> resourceList = singletonList(new ApplicationSummaryResource());
 
         SendNotificationsViewModel viewModel = new SendNotificationsViewModel(resourceList, 0L, 0L, 0L, COMPETITION_ID, "compName");
         when(sendNotificationsModelPopulator.populate(COMPETITION_ID, applicationsIds)).thenReturn(viewModel);
@@ -342,35 +360,6 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         verify(applicationFundingServiceMock, never()).sendFundingNotifications(any(FundingNotificationResource.class));
     }
 
-    @Test
-    public void compressJsonEncodedForm() throws Exception {
-        FundingNotificationSelectionCookie form = new FundingNotificationSelectionCookie();
-        List<Long> ids = LongStream.rangeClosed(1, 300).boxed().collect(toList());
-        form.getSelectApplicationsForEmailForm().setIds(ids);
-
-        String cookieContent = JsonUtil.getSerializedObject(form);
-
-        // compress
-        ByteArrayOutputStream rstBao = new ByteArrayOutputStream();
-        GZIPOutputStream zos = new GZIPOutputStream(rstBao);
-        zos.write(cookieContent.getBytes());
-        IOUtils.closeQuietly(zos);
-        String base64result = Base64.encodeBase64String(rstBao.toByteArray());
-
-        String encryptedData = encryptor.encrypt(URLEncoder.encode(cookieContent, CharEncoding.UTF_8));
-        System.out.println(base64result.length());
-        System.out.println(encryptedData.length());
-
-        // decompress
-        ////String decrypted = encryptor.decrypt(encryptedData);
-//        byte[] bytes = Base64.decodeBase64(base64result);
-//        GZIPInputStream zi = new GZIPInputStream(new ByteArrayInputStream(bytes));
-//        String result = IOUtils.toString(zi, Charset.defaultCharset());
-//        IOUtils.closeQuietly(zi);
-//        String decodedJson  = URLDecoder.decode(result, CharEncoding.UTF_8);
-//        System.out.println(decodedJson);
-    }
-
     @Override
     protected CompetitionManagementFundingNotificationsController supplyControllerUnderTest() {
         return new CompetitionManagementFundingNotificationsController();
@@ -378,13 +367,12 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
 
     private Cookie createFormCookie(FundingNotificationSelectionCookie form) throws Exception {
         String cookieContent = JsonUtil.getSerializedObject(form);
-        String encryptedData = encryptor.encrypt(URLEncoder.encode(cookieContent, CharEncoding.UTF_8));
-        return new Cookie(format("applicationSelectionForm_comp%s", COMPETITION_ID), encryptedData);
+        return new Cookie(format("applicationSelectionForm_comp%s", COMPETITION_ID), getCompressedString(cookieContent));
     }
 
     private Optional<FundingNotificationSelectionCookie> getAssessorSelectionFormFromCookie(MockHttpServletResponse response, String cookieName) throws Exception {
-        String notificationFormJson = getDecryptedCookieValue(response.getCookies(), cookieName);
-        String decodedFormJson  = URLDecoder.decode(notificationFormJson, CharEncoding.UTF_8);
+        String value = getDecompressedString(response.getCookie(cookieName).getValue());
+        String decodedFormJson  = URLDecoder.decode(value, CharEncoding.UTF_8);
 
         if (isNotBlank(decodedFormJson)) {
             return Optional.ofNullable(getObjectFromJson(decodedFormJson, FundingNotificationSelectionCookie.class));
