@@ -4,8 +4,8 @@ Documentation     INFUND-1042 : As an applicant I want to be able to edit my use
 ...               INFUND-6387 As an Applicant creating an account I will be invited to answer questions for diversity monitoring purposes so that InnovateUK complies with BEIS ministerial requirement
 ...
 ...               INFUND-9245 Add marketing email option tick box to the 'Your profile' > 'Your details' page
-Suite Setup       Guest user log-in    &{lead_applicant_credentials}
-Suite Teardown    TestTeardown User closes the browser
+Suite Setup       Guest user log-in in new browser    &{lead_applicant_credentials}
+Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 
@@ -134,7 +134,7 @@ the user can change their details back again
 
 other contributors should see the applicant's updated name for the assignation options
     Logout as user
-    Guest user log-in    &{collaborator1_credentials}
+    Guest user log-in in new browser    &{collaborator1_credentials}
     go to    ${APPLICATION_OVERVIEW_URL}
     The user should see the text in the page    Chris Brown
     log in as a different user    &{lead_applicant_credentials}

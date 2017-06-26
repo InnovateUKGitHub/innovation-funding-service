@@ -9,10 +9,10 @@ ${TEST_TAGS}      ${EMPTY}
 ${FF_PROFILE}     ${CURDIR}/../firefox_config
 
 *** Keywords ***
-Guest user log-in
+Guest user log-in in new browser
     [Arguments]    ${email}    ${password}
     The guest user opens the browser
-    The guest user inserts user email & password    ${email}    ${password}
+    The guest user inserts user email and password    ${email}    ${password}
     The guest user clicks the log-in button
     Wait Until Page Contains Without Screenshots    Dashboard
     the user should not see an error in the page
@@ -20,26 +20,22 @@ Guest user log-in
 Log in as a different user
     [Arguments]    ${email}    ${password}
     logout as user
-    the guest user inserts user email & password    ${email}    ${password}
+    the guest user inserts user email and password    ${email}    ${password}
     the guest user clicks the log-in button
-
-Log in as user
-    [Arguments]    ${email}    ${password}
-    Guest user log-in    ${email}    ${password}
 
 Invited guest user log in
     [Arguments]    ${email}    ${password}
-    The guest user inserts user email & password    ${email}    ${password}
+    The guest user inserts user email and password    ${email}    ${password}
     The guest user clicks the log-in button
     Wait Until Page Contains Without Screenshots    dashboard
     the user should not see an error in the page
 
-The guest user inserts user email & password
-    [Arguments]    ${USERNAME}    ${PSW}
+The guest user inserts user email and password
+    [Arguments]    ${email}    ${password}
     Wait Until Element Is Visible Without Screenshots    id=username
     Wait Until Element Is Visible Without Screenshots    id=password
-    Input Text    id=username    ${USERNAME}
-    Input Password    id=password    ${PSW}
+    Input Text    id=username    ${email}
+    Input Password    id=password    ${password}
 
 The guest user clicks the log-in button
     Wait Until Element Is Visible Without Screenshots    css=button[name="_eventId_proceed"]
@@ -53,21 +49,16 @@ The guest user opens the browser
     Run keyword if    '${REMOTE_URL}' != 'http://hub:4444/wd/hub'    Set Selenium Timeout    10
     Run keyword if    '${REMOTE_URL}' == 'http://hub:4444/wd/hub'    Set Selenium Timeout    10
 
-TestTeardown User closes the browser
-    Run keyword if    '${SAUCELABS_RUN}' == 1    Get Sauce Labs Test Report
-    Close any open browsers
-
 The user closes the browser
     Run keyword if    '${SAUCELABS_RUN}' == 1    Get Sauce Labs Suite Report
     Close any open browsers
 
 Logout as user
+    #the user clicks the button/link    id=proposition-name
+    #TODO please add this back in once IFS-715 is complete
     the user clicks the button/link    link=Sign out
     The user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
     Run Keyword And Ignore Error Without Screenshots    confirm action
-
-The user can log out
-    logout as user
 
 Get Sauce Labs Test Report
     Run Keyword And Ignore Error Without Screenshots    Report Sauce status    'IFS | ${PREV_TEST_NAME}'    ${PREV_TEST_STATUS}    ${TEST_TAGS}    ${REMOTE_URL}
@@ -77,11 +68,6 @@ Get Sauce Labs Suite Report
 
 Close any open browsers
     Run Keyword And Ignore Error Without Screenshots    Close all browsers
-
-the guest user enters the log in credentials
-    [Arguments]    ${email}    ${password}
-    Input Text    id=username    ${email}
-    Input Password    id=password    ${password}
 
 the user cannot login with their new details
     [Arguments]    ${email}    ${password}

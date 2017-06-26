@@ -5,7 +5,7 @@ Documentation     INFUND-1458 As a existing user with an invitation to collabora
 ...
 ...               INFUND-3759: Existing Applicant should be able to accept invitations for other applications in the same organisation
 Suite Setup       The guest user opens the browser
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Email    Applicant
 Resource          ../../../resources/defaultResources.robot
 
@@ -25,7 +25,7 @@ The user clicks the login link
     [Documentation]    INFUND-1458
     [Tags]    HappyPath
     When the user clicks the button/link    link=Continue or sign in
-    And the guest user inserts user email & password    ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
+    And The guest user inserts user email and password    ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Confirm your organisation
 
@@ -50,11 +50,11 @@ The user edits the name this should be changed in the View team page
     And the user clicks the button/link    link=Edit your details
     And the user enters profile details
     Then the user should see the change in the view team members page
-    [Teardown]    TestTeardown User closes the browser
+    [Teardown]    The user closes the browser
 
 Invite a user with the same organisation under the same organisation
     [Documentation]    INFUND-3759
-    [Setup]    Guest user log-in    ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
+    [Setup]    Guest user log-in in new browser    ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     When Existing user creates a new application and invites a user from the same organisation
     Then the invited user should get a message to contact the helpdesk    ${test_mailbox_one}+invite2@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation
 
@@ -92,7 +92,7 @@ The invited user should get a message to contact the helpdesk
     And the guest user opens the browser
     When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}   3
     When the user clicks the button/link    link=Continue or sign in
-    And the guest user inserts user email & password    ${recipient}  ${correct_password}
+    And The guest user inserts user email and password    ${recipient}  ${correct_password}
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Sorry, you are unable to accept this invitation
     And the user should see the text in the page    If you want to remain in the same organisation but join a different application, please contact the helpdesk on 0300 321 4357
