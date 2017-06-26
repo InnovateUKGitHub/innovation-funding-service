@@ -52,10 +52,11 @@ echo "Deploying the $PROJECT Openshift project"
 
 
 function deploy() {
-#    if [[ ${TARGET} == "local" ]]
-#    then
-#        oc adm policy add-scc-to-user anyuid -n $PROJECT -z default
-#    fi
+
+    if [[ ${TARGET} == "local" ]]
+    then
+        $(dirname $0)/os-allow-shibboleth-to-be-run-as-root.sh
+    fi
 
     if [[ ${TARGET} == "production" || ${TARGET} == "demo" || ${TARGET} == "uat" || ${TARGET} == "sysint" || ${TARGET} == "perf" ]]
     then
