@@ -6,7 +6,6 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.forms.populator.AssessorQuestionFeedbackPopulator;
 import org.innovateuk.ifs.application.forms.populator.FeedbackNavigationPopulator;
-import org.innovateuk.ifs.application.overview.controller.ApplicationController;
 import org.innovateuk.ifs.application.overview.populator.ApplicationOverviewModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
@@ -39,6 +38,8 @@ import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.ASSIGN_QUESTION_PARAM;
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MARK_AS_COMPLETE;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.assessment.builder.ApplicationAssessmentFeedbackResourceBuilder.newApplicationAssessmentFeedbackResource;
@@ -183,7 +184,7 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
         when(processRoleService.findProcessRole(user.getId(), app.getId())).thenReturn(processRole);
 
         mockMvc.perform(post("/application/" + app.getId() + "/summary")
-                .param(ApplicationController.ASSIGN_QUESTION_PARAM, question.getId() + "_" + processRole.getId()))
+                .param(ASSIGN_QUESTION_PARAM, question.getId() + "_" + processRole.getId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/application/" + app.getId() + "/summary"));
 
@@ -200,7 +201,7 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
         when(processRoleService.findProcessRole(user.getId(), app.getId())).thenReturn(processRole);
 
         mockMvc.perform(post("/application/" + app.getId() + "/summary")
-                .param(ApplicationController.MARK_AS_COMPLETE, question.getId().toString())
+                .param(MARK_AS_COMPLETE, question.getId().toString())
                 .param("formInput[" + question.getId().toString() + "]", "Test value"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/application/" + app.getId() + "/summary"));

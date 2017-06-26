@@ -212,7 +212,7 @@ finance contacts are submitted by all users
 
 user submits his finance contacts
     [Arguments]  ${user}  ${id}
-    the guest user inserts user email & password    ${user}    ${short_password}
+    The guest user inserts user email and password    ${user}    ${short_password}
     the guest user clicks the log-in button
     the user navigates to the page     ${server}/project-setup/project/${PS_EF_APPLICATION_PROJECT}/details/finance-contact?organisation=${id}
     the user selects the radio button  financeContact  financeContact1

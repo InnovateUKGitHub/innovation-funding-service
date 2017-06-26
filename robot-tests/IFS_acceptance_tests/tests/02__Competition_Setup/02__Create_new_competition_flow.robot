@@ -56,7 +56,7 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               INFUND-9152 Add an 'Innovation sector' of 'Open' where 'Competition type' is 'Sector'
 Suite Setup       Custom suite setup
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot
@@ -636,7 +636,7 @@ the user fills the scope assessment questions
     The user enters text to a text field    id=guidancerow-2-subject    New subject
     The user enters text to a text field    id=guidancerow-2-justification    This is a justification
     The user enters text to a text field    id=question.assessmentGuidance    Guidance for assessing scope section
-    The user clicks the button/link    id=remove-guidance-row-0
+    The user clicks the button/link    id=remove-guidance-row-1
 
 the user checks the scope assessment questions
     The user should see the text in the page    New subject
@@ -675,7 +675,7 @@ the user should not see the assessed question feedback
     the user should not see the text in the page    There is little or no business drive to the project.
 
 Custom suite setup
-    Guest user log-in    &{Comp_admin1_credentials}
+    Guest user log-in in new browser    &{Comp_admin1_credentials}
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
 

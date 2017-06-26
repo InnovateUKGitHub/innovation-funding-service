@@ -20,7 +20,7 @@ Academic finances should be editable when lead marks them as complete
     [Documentation]    INFUND-2314
     [Tags]    HappyPath
     [Setup]    Lead applicant marks the finances as complete
-    Given guest user log-in    ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
+    Given Guest user log-in in new browser    ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
     When the user navigates to the academic application finances
     And the user clicks the button/link    link=Your project costs
     Then the user should not see the element    css=#incurred-staff[readonly]
@@ -29,7 +29,7 @@ Academic finances should be editable when lead marks them as complete
 Academic finance validations
     [Documentation]    INFUND-2399
     [Tags]
-    [Setup]    Guest user log-in    ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
+    [Setup]    Guest user log-in in new browser    ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
     When the user navigates to the academic application finances
     And the user clicks the button/link    link=Your project costs
     And the applicant enters invalid inputs
@@ -131,7 +131,7 @@ Mark all as complete
     When the user enters text to a text field    id=tsb-ref    123123
     Then textfield value should be    id=tsb-ref    123123
     When the user clicks the button/link    jQuery=button:contains("Mark as complete")
-    Then the user redirects to the page    This is a breakdown of your project costs    Your finances
+    Then the user should see the text in the page    Your finances
     And the user navigates to the finance overview of the academic
     And the user should see the element    css=.finance-summary tr:nth-of-type(2) img[src*="/images/field/tick-icon"]
 
@@ -196,7 +196,7 @@ the finance table should be correct
     Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(8)    £3,000
 
 Lead applicant marks the finances as complete
-    guest user log-in    ${lead_applicant}    Passw0rd
+    Guest user log-in in new browser    ${lead_applicant}    Passw0rd
     the user clicks the button/link    link=Academic robot test application
     the applicant completes the application details    Application details
     the user navigates to the academic application finances

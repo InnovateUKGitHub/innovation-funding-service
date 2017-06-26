@@ -3,7 +3,7 @@ Documentation     INFUND-703: As a user and I have provided the wrong login deta
 ...
 ...               INFUND-6260 As product owner I need to have an overview of the cookies stored, so we satisfy the cookie law and GDS guidelines
 Suite Setup       Run Keywords    The guest user opens the browser
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Resource          ../../resources/defaultResources.robot    #TODO update cookie info link to ${SERVER}/info/cookies when new shib image is delivered
 
 *** Test Cases ***
@@ -22,4 +22,4 @@ The warning disappears on refresh
     [Tags]
     When the user reloads the page
     Then the user should not see the element    id=global-cookie-message
-    And the user should not see the element    link=Find out more about cookies
+    And the user should not see the element    jquery=#global-cookie-message a:contains("Find out more about cookies")

@@ -330,7 +330,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         Role applicantRole = newRole().build();
 
         when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
-        when(roleRepositoryMock.findOneByName(APPLICANT.getName())).thenReturn(applicantRole);
+    when(roleRepositoryMock.findOneByName(APPLICANT.getName())).thenReturn(applicantRole);
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
         when(compAdminEmailRepositoryMock.findOneByEmail(userToCreate.getEmail())).thenReturn(null);
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
@@ -338,7 +338,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         ServiceResult<UserResource> result = service.createOrganisationUser(123L, userToCreate);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(CommonErrors.badRequestError("bad password")));
+        assertTrue(result.getFailure().is(Error.fieldError("password", null, "bad password")));
     }
 
     @Test

@@ -1,5 +1,5 @@
 function convertFileToBlock() {
-   cat $1 | tail -n +2 | sed '$ d' | tr -d '\r' | tr '\n' ' ' |  rev | cut -c 2- | rev
+    cat "$1" | tr -d '\r' | tr '\n' '^' | sed "s/\^/<<>>/g" | rev | cut -c 5- | rev
 }
 
 function injectDBVariables() {
@@ -31,14 +31,12 @@ function injectLDAPVariables() {
 
 function tailorAppInstance() {
     if [ -z "$SSLCERTFILE" ]; then echo "Set SSLCERTFILE, SSLCACERTFILE, and SSLKEYFILE environment variables"; exit -1; fi
-    sed -i.bak $"s#<<SSLCERT>>#$(convertFileToBlock $SSLCERTFILE)#g" os-files-tmp/shib/*.yml
-    sed -i.bak $"s#<<SSLCERT>>#$(convertFileToBlock $SSLCERTFILE)#g" os-files-tmp/shib/named-envs/*.yml
-    sed -i.bak $"s#<<SSLCACERT>>#$(convertFileToBlock $SSLCACERTFILE)#g" os-files-tmp/shib/*.yml
-    sed -i.bak $"s#<<SSLCACERT>>#$(convertFileToBlock $SSLCACERTFILE)#g" os-files-tmp/shib/named-envs/*.yml
-    sed -i.bak $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" os-files-tmp/shib/*.yml
-    sed -i.bak $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" os-files-tmp/shib/named-envs/*.yml
-
-
+    sed -i.bak -e $"s#<<SSLCERT>>#$(convertFileToBlock $SSLCERTFILE)#g" -e 's/<<>>/\\n/g' os-files-tmp/shib/*.yml
+    sed -i.bak -e $"s#<<SSLCERT>>#$(convertFileToBlock $SSLCERTFILE)#g" -e 's/<<>>/\\n/g' os-files-tmp/shib/named-envs/*.yml
+    sed -i.bak -e $"s#<<SSLCACERT>>#$(convertFileToBlock $SSLCACERTFILE)#g" -e 's/<<>>/\\n/g' os-files-tmp/shib/*.yml
+    sed -i.bak -e $"s#<<SSLCACERT>>#$(convertFileToBlock $SSLCACERTFILE)#g" -e 's/<<>>/\\n/g' os-files-tmp/shib/named-envs/*.yml
+    sed -i.bak -e $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" -e 's/<<>>/\\n/g' os-files-tmp/shib/*.yml
+    sed -i.bak -e $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" -e 's/<<>>/\\n/g' os-files-tmp/shib/named-envs/*.yml
 
     if [[ ${TARGET} == "production" ]]
     then
@@ -109,8 +107,8 @@ function useContainerRegistry() {
 
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/db-reset/*.yml
-    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/innovateuk/#g" os-files-tmp/shib/*.yml
-    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/innovateuk/#g" os-files-tmp/shib/named-envs/*.yml
+    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/shib/*.yml
+    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/shib/named-envs/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/robot-tests/*.yml
 
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/*.yml
@@ -133,6 +131,14 @@ function pushApplicationImages() {
         ${REGISTRY}/${PROJECT}/assessment-service:${VERSION}
     docker tag innovateuk/application-service:${VERSION} \
         ${REGISTRY}/${PROJECT}/application-service:${VERSION}
+    docker tag innovateuk/front-door-service:${VERSION} \
+        ${REGISTRY}/${PROJECT}/front-door-service:${VERSION}
+    docker tag innovateuk/sp-service:${VERSION} \
+        ${REGISTRY}/${PROJECT}/sp-service:${VERSION}
+    docker tag innovateuk/idp-service:${VERSION} \
+        ${REGISTRY}/${PROJECT}/idp-service:${VERSION}
+    docker tag innovateuk/ldap-service:${VERSION} \
+        ${REGISTRY}/${PROJECT}/ldap-service:${VERSION}
 
     docker login -p ${REGISTRY_TOKEN} -e unused -u unused ${REGISTRY}
 
@@ -142,6 +148,10 @@ function pushApplicationImages() {
     docker push ${REGISTRY}/${PROJECT}/competition-management-service:${VERSION}
     docker push ${REGISTRY}/${PROJECT}/assessment-service:${VERSION}
     docker push ${REGISTRY}/${PROJECT}/application-service:${VERSION}
+    docker push ${REGISTRY}/${PROJECT}/front-door-service:${VERSION}
+    docker push ${REGISTRY}/${PROJECT}/sp-service:${VERSION}
+    docker push ${REGISTRY}/${PROJECT}/idp-service:${VERSION}
+    docker push ${REGISTRY}/${PROJECT}/ldap-service:${VERSION}
 }
 
 function pushDBResetImages() {

@@ -68,6 +68,7 @@ public class FormInput {
     private FormInputScope scope;
 
     @OneToMany(mappedBy = "formInput")
+    @OrderBy("priority")
     private List<GuidanceRow> guidanceRows;
 
     private boolean active = true;

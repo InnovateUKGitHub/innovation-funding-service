@@ -21,16 +21,18 @@ items:
           deploymentconfig: idp
       spec:
         containers:
-        - image: innovateuk/ifs-shib-idp:0.5.5
+        - image: innovateuk/idp-service:1.0-SNAPSHOT
           name: idp
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
-          - name: SSLCERT
+          - name: IDP_PROXY_CERTIFICATE
             value: "<<SSLCERT>>"
-          - name: SSLCACERT
+          - name: IDP_PROXY_CACERTIFICATE
             value: "<<SSLCACERT>>"
-          - name: SSLKEY
+          - name: IDP_PROXY_KEY
             value: "<<SSLKEY>>"
+          - name: SP_PROXY_CERTIFICATE
+            value: "<<SSLCERT>>"
           - name: SPHOST
             value: <<SHIB-ADDRESS>>
           - name: IDPHOST

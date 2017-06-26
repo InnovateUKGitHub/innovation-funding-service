@@ -82,7 +82,7 @@ function createProject() {
     done
 }
 
-. $(dirname $0)/deploy-functions.sh
+ . $(dirname $0)/deploy-functions.sh
 
 # Entry point
 cleanUp

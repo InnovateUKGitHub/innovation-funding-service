@@ -127,7 +127,7 @@
         <ds:KeyName>ifs.local-dev</ds:KeyName>
         <ds:X509Data>
           <ds:X509SubjectName>CN=ifs.local-dev,O=Innovate UK,L=Swindon,ST=Wiltshire,C=GB</ds:X509SubjectName>
-          <ds:X509Certificate>${PROXY_CERTIFICATE}</ds:X509Certificate>
+          <ds:X509Certificate>${SP_PROXY_CERTIFICATE}</ds:X509Certificate>
         </ds:X509Data>
       </ds:KeyInfo>
       <EncryptionMethod Algorithm="http://www.w3.org/2009/xmlenc11#aes128-gcm"/>
