@@ -17,7 +17,7 @@ ${virus_scanning_warning}    This file is awaiting virus scanning
 Appendices available only for the correct questions
     [Documentation]    INFUND-832
     [Tags]
-    [Setup]    Guest user log-in in new browser    &{lead_applicant_credentials}
+    [Setup]    Log in as a different user    &{lead_applicant_credentials}
     ## Please leave this test case on top. It checks the appearance of the Upload button for pdfs before other tests do an actual upload
     the user cannot see the option to upload a file on the question    link=1. Business opportunity
     the user cannot see the option to upload a file on the question    link=2. Potential market
@@ -33,7 +33,7 @@ Appendices available only for the correct questions
 Large pdf uploads not allowed
     [Documentation]    INFUND-832
     [Tags]    HappyPath
-    [Setup]    Guest user log-in in new browser    &{lead_applicant_credentials}
+    [Setup]    log in as a different user    &{lead_applicant_credentials}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach

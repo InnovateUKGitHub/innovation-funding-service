@@ -16,7 +16,7 @@ The invited user should not follow the registration flow again
     [Documentation]    INFUND-1458
     [Tags]    HappyPath
     Given we create a new user                           ${OPEN_COMPETITION}  Stuart   Anderson   ${test_mailbox_one}+invitedregistered@gmail.com
-    and the user closes the browser
+    And logout as user
     Given the lead applicant invites a registered user          ${test_mailbox_one}+invite2@gmail.com    ${test_mailbox_one}+invitedregistered@gmail.com
     When the user reads his email and clicks the link    ${test_mailbox_one}+invitedregistered@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation    3
     Then the user should see the text in the page    We have found an account with the invited email address
@@ -50,11 +50,10 @@ The user edits the name this should be changed in the View team page
     And the user clicks the button/link    link=Edit your details
     And the user enters profile details
     Then the user should see the change in the view team members page
-    [Teardown]    The user closes the browser
 
 Invite a user with the same organisation under the same organisation
     [Documentation]    INFUND-3759
-    [Setup]    Guest user log-in in new browser    ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
+    [Setup]    Log in as a different user    ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     When Existing user creates a new application and invites a user from the same organisation
     Then the invited user should get a message to contact the helpdesk    ${test_mailbox_one}+invite2@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation
 
@@ -85,11 +84,10 @@ Existing user creates a new application and invites a user from the same organis
     the user clicks the button/link    link=Application details
     the user enters text to a text field    id=application_details-title    Invite a user with the same org@
     the user clicks the button/link    jQuery=button:contains("Save and return")
-    the user closes the browser
 
 The invited user should get a message to contact the helpdesk
     [Arguments]    ${recipient}    ${subject}    ${pattern}
-    And the guest user opens the browser
+    Logout as user
     When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}   3
     When the user clicks the button/link    link=Continue or sign in
     And The guest user inserts user email and password    ${recipient}  ${correct_password}
