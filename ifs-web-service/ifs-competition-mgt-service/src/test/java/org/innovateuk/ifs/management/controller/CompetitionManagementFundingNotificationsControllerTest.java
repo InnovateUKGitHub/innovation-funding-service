@@ -8,7 +8,6 @@ import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
-import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.competition.form.FundingNotificationSelectionCookie;
 import org.innovateuk.ifs.competition.form.ManageFundingApplicationsQueryForm;
@@ -45,7 +44,6 @@ import static java.lang.String.format;
 import static java.lang.String.valueOf;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
-import static java.util.stream.Collectors.toList;
 import static junit.framework.TestCase.assertFalse;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.hamcrest.CoreMatchers.is;
@@ -86,9 +84,6 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
 
     @Mock
     private SendNotificationsModelPopulator sendNotificationsModelPopulator;
-
-    @Mock
-    private ApplicationFundingDecisionService applicationFundingServiceMock;
 
     public static final Long COMPETITION_ID = 22L;
     public static final Long APPLICATION_ID_ONE = 1L;
@@ -196,7 +191,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
                 .andExpect(jsonPath("allSelected", is(false)))
                 .andReturn();
 
-        Optional<FundingNotificationSelectionCookie> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("applicationSelectionForm_comp%s", COMPETITION_ID));
+        Optional<FundingNotificationSelectionCookie> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("applicationSelectionForm_comp_%s", COMPETITION_ID));
         assertTrue(resultForm.get().getSelectApplicationsForEmailForm().getIds().contains(applicationId));
     }
 
@@ -229,7 +224,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
                 .andExpect(jsonPath("allSelected", is(false)))
                 .andReturn();
 
-        Optional<FundingNotificationSelectionCookie> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("applicationSelectionForm_comp%s", COMPETITION_ID));
+        Optional<FundingNotificationSelectionCookie> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("applicationSelectionForm_comp_%s", COMPETITION_ID));
         assertFalse(resultForm.get().getSelectApplicationsForEmailForm().getIds().contains(applicationId));
     }
 
@@ -255,7 +250,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
                 .andExpect(jsonPath("allSelected", is(true)))
                 .andReturn();
 
-        Optional<FundingNotificationSelectionCookie> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("applicationSelectionForm_comp%s", COMPETITION_ID));
+        Optional<FundingNotificationSelectionCookie> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("applicationSelectionForm_comp_%s", COMPETITION_ID));
         assertTrue(resultForm.get().getSelectApplicationsForEmailForm().getIds().containsAll(asList(applications.get(0).getId(), applications.get(1).getId())));
     }
 
@@ -275,7 +270,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     @Test
     public void sendNotificationsTest() throws Exception {
 
-        when(applicationFundingServiceMock.sendFundingNotifications(any(FundingNotificationResource.class))).thenReturn(serviceSuccess());
+        when(applicationFundingDecisionService.sendFundingNotifications(any(FundingNotificationResource.class))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -285,13 +280,13 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/competition/" + COMPETITION_ID + "/manage-funding-applications"));
 
-        verify(applicationFundingServiceMock).sendFundingNotifications(any(FundingNotificationResource.class));
+        verify(applicationFundingDecisionService).sendFundingNotifications(any(FundingNotificationResource.class));
     }
 
     @Test
     public void sendNotificationsTestMultipleApplications() throws Exception {
 
-        when(applicationFundingServiceMock.sendFundingNotifications(any(FundingNotificationResource.class))).thenReturn(serviceSuccess());
+        when(applicationFundingDecisionService.sendFundingNotifications(any(FundingNotificationResource.class))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -301,12 +296,12 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/competition/" + COMPETITION_ID + "/manage-funding-applications"));
 
-        verify(applicationFundingServiceMock).sendFundingNotifications(any(FundingNotificationResource.class));
+        verify(applicationFundingDecisionService).sendFundingNotifications(any(FundingNotificationResource.class));
     }
 
     @Test
     public void sendNotificationsTestWithInvalidMessage() throws Exception {
-        when(applicationFundingServiceMock.sendFundingNotifications(any(FundingNotificationResource.class))).thenReturn(serviceSuccess());
+        when(applicationFundingDecisionService.sendFundingNotifications(any(FundingNotificationResource.class))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -315,13 +310,13 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
                 .andExpect(model().attributeHasFieldErrors("form", "message"))
                 .andReturn();
 
-        verify(applicationFundingServiceMock, never()).sendFundingNotifications(any(FundingNotificationResource.class));
+        verify(applicationFundingDecisionService, never()).sendFundingNotifications(any(FundingNotificationResource.class));
     }
 
     @Test
     public void sendNotificationsWithInvalidFundingDecisions() throws Exception {
 
-        when(applicationFundingServiceMock.sendFundingNotifications(any(FundingNotificationResource.class))).thenReturn(serviceSuccess());
+        when(applicationFundingDecisionService.sendFundingNotifications(any(FundingNotificationResource.class))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -330,7 +325,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
                 .andExpect(model().attributeHasFieldErrors("form", "fundingDecisions"))
                 .andReturn();
 
-        verify(applicationFundingServiceMock, never()).sendFundingNotifications(any(FundingNotificationResource.class));
+        verify(applicationFundingDecisionService, never()).sendFundingNotifications(any(FundingNotificationResource.class));
     }
 
     @Override
@@ -340,7 +335,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
 
     private Cookie createFormCookie(FundingNotificationSelectionCookie form) throws Exception {
         String cookieContent = JsonUtil.getSerializedObject(form);
-        return new Cookie(format("applicationSelectionForm_comp%s", COMPETITION_ID), getCompressedString(cookieContent));
+        return new Cookie(format("applicationSelectionForm_comp_%s", COMPETITION_ID), getCompressedString(cookieContent));
     }
 
     private Optional<FundingNotificationSelectionCookie> getAssessorSelectionFormFromCookie(MockHttpServletResponse response, String cookieName) throws Exception {

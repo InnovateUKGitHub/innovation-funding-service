@@ -102,11 +102,11 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
         AssessorSelectionForm storedSelectionForm = getAssessorSelectionFormFromCookie(request, competitionId).orElse(new AssessorSelectionForm());
         selectionForm.setAllSelected(storedSelectionForm.getAllSelected());
         selectionForm.setSelectedAssessorIds(storedSelectionForm.getSelectedAssessorIds());
-        if (storedSelectionForm.getSelectedInnovationArea() != null && !clearFilter) {
+        if (storedSelectionForm.getSelectedInnovationArea() != null && !filterForm.getInnovationArea().isPresent() && !clearFilter) {
             filterForm.setInnovationArea(of(storedSelectionForm.getSelectedInnovationArea()));
         }
 
-        if (selectionForm.getAllSelected() && !clearFilter) {
+        if (selectionForm.getAllSelected() && !filterForm.getInnovationArea().isPresent()) {
             selectionForm.setSelectedAssessorIds(getAllAssessorIds(competitionId, filterForm.getInnovationArea()));
         } else {
             selectionForm.getSelectedAssessorIds().retainAll(getAllAssessorIds(competitionId, filterForm.getInnovationArea()));
