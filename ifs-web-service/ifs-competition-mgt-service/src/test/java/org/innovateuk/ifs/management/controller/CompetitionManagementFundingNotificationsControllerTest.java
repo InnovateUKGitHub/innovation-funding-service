@@ -44,6 +44,7 @@ import static java.lang.String.format;
 import static java.lang.String.valueOf;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static junit.framework.TestCase.assertFalse;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.hamcrest.CoreMatchers.is;
@@ -110,18 +111,20 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         long changesSinceLastNotify = 10;
         String queryParams = "";
         // Mock setup
+        Cookie formCookie = createFormCookie(new FundingNotificationSelectionCookie());
+
         CompetitionResource competitionResource = newCompetitionResource().withId(COMPETITION_ID).withCompetitionStatus(ASSESSOR_FEEDBACK).withName("A competition").build();
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
 
         List<ApplicationSummaryResource> applications = newApplicationSummaryResource().with(uniqueIds()).build(pageSize);
         ApplicationSummaryPageResource applicationSummaryPageResource = new ApplicationSummaryPageResource(totalElements, totalPages, applications, pageNumber, pageSize);
-        when(applicationSummaryRestService.getWithFundingDecisionApplications(COMPETITION_ID, sortField, pageNumber, pageSize, Optional.of(filter), sendFilter, fundingFilter)).thenReturn(restSuccess(applicationSummaryPageResource));
+        when(applicationSummaryRestService.getWithFundingDecisionApplications(COMPETITION_ID, sortField, pageNumber, pageSize, of(filter), sendFilter, fundingFilter)).thenReturn(restSuccess(applicationSummaryPageResource));
 
         CompetitionFundedKeyStatisticsResource keyStatistics = newCompetitionFundedKeyStatisticsResource().build();
         when(competitionKeyStatisticsRestServiceMock.getFundedKeyStatisticsByCompetition(COMPETITION_ID)).thenReturn(restSuccess(keyStatistics));
         when(assessmentRestService.countByStateAndCompetition(AssessmentStates.CREATED, COMPETITION_ID)).thenReturn(restSuccess(changesSinceLastNotify));
 
-        when(applicationSummaryRestService.getAllSubmittedApplications(COMPETITION_ID, empty(), empty())).thenReturn(restSuccess(newApplicationSummaryResource().build(2)));
+        when(applicationSummaryRestService.getAllSubmittedApplications(COMPETITION_ID, of(""), empty())).thenReturn(restSuccess(newApplicationSummaryResource().build(2)));
 
         // Expected values to match against
         CompetitionInFlightStatsViewModel keyStatisticsModel = competitionInFlightStatsModelPopulator.populateStatsViewModel(competitionResource);
@@ -131,7 +134,8 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
                 COMPETITION_ID, empty(), sendFilter, fundingFilter)).thenReturn(restSuccess(applications));
 
         // Method under test
-        mockMvc.perform(get("/competition/{competitionId}/manage-funding-applications", COMPETITION_ID))
+        mockMvc.perform(get("/competition/{competitionId}/manage-funding-applications", COMPETITION_ID)
+                .cookie(formCookie))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-manage-funding-applications"))
                 .andExpect(model().attribute("model", manageFundingApplicationViewModelMatcher(model)));
