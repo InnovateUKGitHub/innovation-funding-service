@@ -33,27 +33,27 @@ public class InviteUserServiceImpl implements InviteUserService {
     private InviteRoleRepository inviteRoleRepository;
 
     @Override
-    public ServiceResult<Void> saveUserInvite(UserResource inviteUser, UserRoleType userRoleType) {
+    public ServiceResult<Void> saveUserInvite(UserResource invitedUser, UserRoleType userRoleType) {
 
-        return validateInvite(inviteUser, userRoleType)
+        return validateInvite(invitedUser, userRoleType)
                 .andOnSuccess(() -> getRole(userRoleType))
-                .andOnSuccess((Role role) -> validateUserNotAlreadyInvited(inviteUser, role)
-                        .andOnSuccess(() -> saveInvite(inviteUser, role))
+                .andOnSuccess((Role role) -> validateUserNotAlreadyInvited(invitedUser, role)
+                        .andOnSuccess(() -> saveInvite(invitedUser, role))
                 );
     }
 
-    private ServiceResult<Void> validateInvite(UserResource inviteUser, UserRoleType userRoleType) {
+    private ServiceResult<Void> validateInvite(UserResource invitedUser, UserRoleType userRoleType) {
 
-        if (StringUtils.isEmpty(inviteUser.getEmail()) || StringUtils.isEmpty(inviteUser.getFirstName())
-                || StringUtils.isEmpty(inviteUser.getLastName()) || userRoleType == null){
+        if (StringUtils.isEmpty(invitedUser.getEmail()) || StringUtils.isEmpty(invitedUser.getFirstName())
+                || StringUtils.isEmpty(invitedUser.getLastName()) || userRoleType == null){
             return serviceFailure(USER_ROLE_INVITE_INVALID);
         }
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> validateUserNotAlreadyInvited(UserResource inviteUser, Role role) {
+    private ServiceResult<Void> validateUserNotAlreadyInvited(UserResource invitedUser, Role role) {
 
-        List<RoleInvite> existingInvites = inviteRoleRepository.findByRoleIdAndEmail(role.getId(), inviteUser.getEmail());
+        List<RoleInvite> existingInvites = inviteRoleRepository.findByRoleIdAndEmail(role.getId(), invitedUser.getEmail());
         return existingInvites.isEmpty() ? serviceSuccess() : serviceFailure(USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED);
     }
 
@@ -61,9 +61,9 @@ public class InviteUserServiceImpl implements InviteUserService {
         return find(roleRepository.findOneByName(userRoleType.getName()), notFoundError(Role.class, userRoleType.getName()));
     }
 
-    private ServiceResult<Void> saveInvite(UserResource inviteUser, Role role) {
-        RoleInvite roleInvite = new RoleInvite(inviteUser.getFirstName() + " " + inviteUser.getLastName(),
-                inviteUser.getEmail(),
+    private ServiceResult<Void> saveInvite(UserResource invitedUser, Role role) {
+        RoleInvite roleInvite = new RoleInvite(invitedUser.getFirstName() + " " + invitedUser.getLastName(),
+                invitedUser.getEmail(),
                 generateInviteHash(),
                 role,
                 InviteStatus.CREATED);
