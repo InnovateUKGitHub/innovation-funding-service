@@ -15,8 +15,17 @@ public class InviteAssessorsFindViewModel extends InviteAssessorsViewModel<Avail
     public List<InnovationSectorResource> getInnovationSectorOptions() {
         return innovationSectorOptions;
     }
+    private boolean selectAllDisabled;
 
     public void setInnovationSectorOptions(List<InnovationSectorResource> innovationSectorOptions) {
         this.innovationSectorOptions = innovationSectorOptions;
+    }
+
+    public boolean isSelectAllDisabled() {
+        return selectAllDisabled;
+    }
+
+    public void setSelectAllDisabled(boolean selectAllDisabled) {
+        this.selectAllDisabled = selectAllDisabled;
     }
 }

@@ -384,7 +384,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
                 .param("addAll","true")
         )
                 .andExpect(status().isOk())
-                .andExpect(content().string("{\"selectionCount\":-1,\"allSelected\":false}")).andReturn();
+                .andExpect(content().string("{\"selectionCount\":-1,\"allSelected\":false,\"limitExceeded\":false}")).andReturn();
 
     }
 
@@ -401,7 +401,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
                 .param("addAll","true")
         )
                 .andExpect(status().isOk())
-                .andExpect(content().string("{\"selectionCount\":2,\"allSelected\":true}")).andReturn();
+                .andExpect(content().string("{\"selectionCount\":2,\"allSelected\":true,\"limitExceeded\":false}")).andReturn();
 
         FundingDecisionSelectionCookie expectedCookie = new FundingDecisionSelectionCookie();
         expectedCookie.getFundingDecisionSelectionForm().setApplicationIds(Arrays.asList(1L, 2L));
@@ -419,7 +419,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
                 .param("addAll","false")
         )
                 .andExpect(status().isOk())
-                .andExpect(content().string("{\"selectionCount\":0,\"allSelected\":false}")).andReturn();
+                .andExpect(content().string("{\"selectionCount\":0,\"allSelected\":false,\"limitExceeded\":false}")).andReturn();
 
         FundingDecisionSelectionCookie expectedCookie = cookieWithFilterAndSelectionParameters;
         expectedCookie.getFundingDecisionSelectionForm().setApplicationIds(Collections.EMPTY_LIST);
@@ -438,7 +438,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
                 .param("isSelected", "true")
         )
                         .andExpect(status().isOk())
-                .andExpect(content().string("{\"selectionCount\":-1,\"allSelected\":false}")).andReturn();
+                .andExpect(content().string("{\"selectionCount\":-1,\"allSelected\":false,\"limitExceeded\":false}")).andReturn();
     }
 
     @Test
@@ -455,7 +455,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
                 .param("isSelected", "true")
         )
                 .andExpect(status().isOk())
-                .andExpect(content().string("{\"selectionCount\":1,\"allSelected\":false}")).andReturn();
+                .andExpect(content().string("{\"selectionCount\":1,\"allSelected\":false,\"limitExceeded\":false}")).andReturn();
 
         FundingDecisionSelectionCookie expectedCookie = new FundingDecisionSelectionCookie();
         expectedCookie.getFundingDecisionSelectionForm().setApplicationIds(Arrays.asList(1L));
@@ -481,7 +481,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
                 .param("isSelected", "true")
         )
                 .andExpect(status().isOk())
-                .andExpect(content().string("{\"selectionCount\":2,\"allSelected\":true}")).andReturn();
+                .andExpect(content().string("{\"selectionCount\":2,\"allSelected\":true,\"limitExceeded\":false}")).andReturn();
 
         FundingDecisionSelectionCookie expectedCookie = new FundingDecisionSelectionCookie();
         expectedCookie.getFundingDecisionSelectionForm().setApplicationIds(Arrays.asList(1L, 2L));
@@ -500,7 +500,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
                 .param("isSelected", "false")
         )
                 .andExpect(status().isOk())
-                .andExpect(content().string("{\"selectionCount\":1,\"allSelected\":false}")).andReturn();
+                .andExpect(content().string("{\"selectionCount\":1,\"allSelected\":false,\"limitExceeded\":false}")).andReturn();
 
         FundingDecisionSelectionCookie expectedCookie = cookieWithFilterAndSelectionParameters;
         expectedCookie.getFundingDecisionSelectionForm().setApplicationIds(Arrays.asList(1L));

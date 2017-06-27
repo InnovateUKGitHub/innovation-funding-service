@@ -275,8 +275,8 @@ public class CompetitionManagementFundingDecisionController {
         ObjectNode node = mapper.createObjectNode();
 
         node.put("selectionCount", selectionCount);
-        node.put("limitExceeded", limitExceeded);
         node.put("allSelected", allSelected);
+        node.put("limitExceeded", limitExceeded);
 
         return node;
     }
@@ -353,7 +353,11 @@ public class CompetitionManagementFundingDecisionController {
     }
 
     private List<Long> limitList(List<Long> allIds) {
-        return allIds.subList(0, SELECTION_LIMIT);
+        if (allIds.size() > SELECTION_LIMIT) {
+            return allIds.subList(0, SELECTION_LIMIT);
+        } else {
+            return allIds;
+        }
     }
 
     private boolean limitIsExceeded(long amountOfIds) {
