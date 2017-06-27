@@ -25,51 +25,44 @@ $is-ie: false !default;
 @import 'layout/gdsUpgrade';
 @import 'layout/layout';
 @import 'layout/grid';
+@import 'layout/small';
 
 /*
 #Nomensa/Worth Elements
 
-##1. List elements
+## List elements
 */
 
 @import 'components/boxed-list';
-@import 'components/navigation-list';
-@import 'components/collapsible-sections';
 @import 'components/list-overview';
 @import 'components/progress-list';
 @import 'components/task-list';
+@import 'components/link-list';
+
+/*
+## Modals
+*/
+@import 'components/modal';
+
+//Modifiers
+@import 'layout/a11y';
+@import 'components/modifiers';
+@import 'components/forms';
+
+//Custom components
+@import 'components/collapsible-sections';
 @import 'components/highlight-panel';
 @import 'components/submitted-panel';
-@import 'components/pie-charts';
 @import 'components/progress-indicator';
 @import 'components/event-alert';
 @import 'components/message-alerts';
-@import 'components/forms';
-@import 'layout/small';
 @import 'components/pagination';
 @import 'components/assign-team';
 @import 'components/statusses';
 @import 'components/search-filters';
 @import 'components/timeline-status';
-@import 'components/link-list';
 @import "components/tabs";
 @import "components/password-toggle";
-
-/*
-##11. Modals
-*/
-@import 'components/modal';
-
-/*
-##12. Competition deadlines
-*/
-@import 'components/competition-deadline';
-
-//Modifiers
-@import 'layout/a11y';
-@import 'components/modifiers';
-
-//to be documented
 @import 'components/wysiwyg';
 @import 'components/user-feedback';
 @import 'components/invites';
