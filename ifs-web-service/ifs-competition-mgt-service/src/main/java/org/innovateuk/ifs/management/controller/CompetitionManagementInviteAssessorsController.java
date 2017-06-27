@@ -51,7 +51,7 @@ public class CompetitionManagementInviteAssessorsController {
 
     private static final String FILTER_FORM_ATTR_NAME = "filterForm";
     private static final String FORM_ATTR_NAME = "form";
-    private static final String SELECTION_FORM = "selectionForm";
+    private static final String SELECTION_FORM = "assessorSelectionForm";
     private static final int SELECTION_LIMIT = 500;
 
     @Autowired
@@ -109,13 +109,14 @@ public class CompetitionManagementInviteAssessorsController {
             filterForm.setInnovationArea(of(storedSelectionForm.getSelectedInnovationArea()));
         }
 
-        if (selectionForm.getAllSelected()) {
+        if (selectionForm.getAllSelected() && !clearFilter) {
             selectionForm.setSelectedAssessorIds(getAllAssessorIds(competitionId, filterForm.getInnovationArea()));
         } else {
             selectionForm.getSelectedAssessorIds().retainAll(getAllAssessorIds(competitionId, filterForm.getInnovationArea()));
+            selectionForm.setAllSelected(false);
         }
         filterForm.getInnovationArea().ifPresent(selectionForm::setSelectedInnovationArea);
-        cookieUtil.saveToCompressedCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
+        cookieUtil.saveToCompressedCookie(response, format("%s_comp_%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
     }
 
     @PostMapping(value = "/find", params = {"selectionId"})
@@ -139,7 +140,7 @@ public class CompetitionManagementInviteAssessorsController {
                 selectionForm.getSelectedAssessorIds().remove(assessorId);
                 selectionForm.setAllSelected(false);
             }
-            cookieUtil.saveToCompressedCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
+            cookieUtil.saveToCompressedCookie(response, format("%s_comp_%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
             return createJsonObjectNode(selectionForm.getSelectedAssessorIds().size(), selectionForm.getAllSelected());
         } catch (Exception e) {
             return createJsonObjectNode(-1, false);
@@ -164,7 +165,7 @@ public class CompetitionManagementInviteAssessorsController {
                 selectionForm.setAllSelected(false);
             }
 
-            cookieUtil.saveToCompressedCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
+            cookieUtil.saveToCompressedCookie(response, format("%s_comp_%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
             return createJsonObjectNode(selectionForm.getSelectedAssessorIds().size(), selectionForm.getAllSelected());
         } catch (Exception e) {
             return createJsonObjectNode(-1, false);
@@ -208,7 +209,7 @@ public class CompetitionManagementInviteAssessorsController {
 
             return validationHandler.addAnyErrors(restResult)
                                     .failNowOrSucceedWith(failureView, () -> {
-                cookieUtil.removeCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId));
+                cookieUtil.removeCookie(response, format("%s_comp_%s", SELECTION_FORM, competitionId));
                 return redirectToInvite(competitionId, 0);
             });
         });
@@ -382,7 +383,7 @@ public class CompetitionManagementInviteAssessorsController {
     }
 
     private Optional<AssessorSelectionForm> getAssessorSelectionFormFromCookie(HttpServletRequest request, long competitionId) {
-        String assessorFormJson = cookieUtil.getCompressedCookieValue(request, format("%s_comp%s", SELECTION_FORM, competitionId));
+        String assessorFormJson = cookieUtil.getCompressedCookieValue(request, format("%s_comp_%s", SELECTION_FORM, competitionId));
         if (isNotBlank(assessorFormJson)) {
             return Optional.ofNullable(getObjectFromJson(assessorFormJson, AssessorSelectionForm.class));
         } else {

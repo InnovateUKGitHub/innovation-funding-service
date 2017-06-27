@@ -122,29 +122,30 @@ public class CompetitionManagementFundingNotificationsController {
     private void updateSelectionForm(HttpServletRequest request,
                                      HttpServletResponse response,
                                      long competitionId,
-                                     SelectApplicationsForEmailForm selectionForm,
+                                     SelectApplicationsForEmailForm appSelectionForm,
                                      ManageFundingApplicationsQueryForm filterForm,
                                      boolean clearFilters) {
         FundingNotificationSelectionCookie storedSelectionFormCookie = getFundingNotificationFormFromCookie(request, competitionId).orElse(new FundingNotificationSelectionCookie());
         ManageFundingApplicationsQueryForm storedFilterForm = storedSelectionFormCookie.getManageFundingApplicationsQueryForm();
-        SelectApplicationsForEmailForm storedSelectionForm = storedSelectionFormCookie.getSelectApplicationsForEmailForm();
+        SelectApplicationsForEmailForm storedAppSelectionForm = storedSelectionFormCookie.getSelectApplicationsForEmailForm();
 
-        if (!storedSelectionForm.getIds().isEmpty()) {
-            selectionForm.setAllSelected(storedSelectionFormCookie.getSelectApplicationsForEmailForm().isAllSelected());
-            selectionForm.setIds(storedSelectionFormCookie.getSelectApplicationsForEmailForm().getIds());
+        if (!storedAppSelectionForm.getIds().isEmpty()) {
+            appSelectionForm.setAllSelected(storedAppSelectionForm.isAllSelected());
+            appSelectionForm.setIds(storedAppSelectionForm.getIds());
         }
         if (storedFilterForm.anyFilterOptionsActive() && !clearFilters) {
             filterForm.setAllFilterOptions(storedFilterForm.getStringFilter(), storedFilterForm.getSendFilter(), storedFilterForm.getFundingFilter());
         }
 
-        if (selectionForm.isAllSelected()) {
-            selectionForm.setIds(getAllApplicationIdsByFilters(competitionId, filterForm));
+        if (appSelectionForm.isAllSelected() && !clearFilters) {
+            appSelectionForm.setIds(getAllApplicationIdsByFilters(competitionId, filterForm));
         } else {
-            selectionForm.getIds().retainAll(getAllApplicationIdsByFilters(competitionId, filterForm));
+            appSelectionForm.getIds().retainAll(getAllApplicationIdsByFilters(competitionId, filterForm));
+            appSelectionForm.setAllSelected(false);
         }
         storedSelectionFormCookie.setManageFundingApplicationsQueryForm(filterForm);
-        storedSelectionFormCookie.setSelectApplicationsForEmailForm(selectionForm);
-        cookieUtil.saveToCompressedCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(storedSelectionFormCookie));
+        storedSelectionFormCookie.setSelectApplicationsForEmailForm(appSelectionForm);
+        cookieUtil.saveToCompressedCookie(response, format("%s_comp_%s", SELECTION_FORM, competitionId), getSerializedObject(storedSelectionFormCookie));
     }
 
     @PostMapping("/manage-funding-applications")
@@ -172,7 +173,7 @@ public class CompetitionManagementFundingNotificationsController {
                             }
                             return idsValidationHandler.failNowOrSucceedWith(idsFailureView(competitionId, query, model, params), // Pass or fail custom validation
                                     () -> {
-                                        cookieUtil.removeCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId));
+                                        cookieUtil.removeCookie(response, format("%s_comp_%s", SELECTION_FORM, competitionId));
                                         return composeEmailRedirect(competitionId, selectionCookie.getSelectApplicationsForEmailForm().getIds());
                                     });
                         }
@@ -192,23 +193,27 @@ public class CompetitionManagementFundingNotificationsController {
             FundingNotificationSelectionCookie selectionCookie = getFundingNotificationFormFromCookie(request, competitionId).orElse(new FundingNotificationSelectionCookie());
 
             if (isSelected) {
-                List<Long> applicationIds = selectionCookie.getSelectApplicationsForEmailForm().getIds();
-
-                if (!applicationIds.contains(applicationId)) {
-                    selectionCookie.getSelectApplicationsForEmailForm().getIds().add(applicationId);
-                    List<Long> filteredApplicationList = getAllApplicationIdsByFilters(competitionId, selectionCookie.getManageFundingApplicationsQueryForm());
-                    if (applicationIds.containsAll(filteredApplicationList)) {
-                        selectionCookie.getSelectApplicationsForEmailForm().setAllSelected(true);
-                    }
-                }
+                handleSelected(selectionCookie, competitionId, applicationId);
             } else {
                 selectionCookie.getSelectApplicationsForEmailForm().getIds().remove(applicationId);
                 selectionCookie.getSelectApplicationsForEmailForm().setAllSelected(false);
             }
-            cookieUtil.saveToCompressedCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionCookie));
+            cookieUtil.saveToCompressedCookie(response, format("%s_comp_%s", SELECTION_FORM, competitionId), getSerializedObject(selectionCookie));
             return createJsonObjectNode(selectionCookie.getSelectApplicationsForEmailForm().getIds().size(), selectionCookie.getSelectApplicationsForEmailForm().isAllSelected());
         } catch (Exception e) {
             return createJsonObjectNode(-1, false);
+        }
+    }
+
+    private void handleSelected(FundingNotificationSelectionCookie selectionCookie, long competitionId, long applicationId) {
+        List<Long> applicationIds = selectionCookie.getSelectApplicationsForEmailForm().getIds();
+
+        if (!applicationIds.contains(applicationId)) {
+            selectionCookie.getSelectApplicationsForEmailForm().getIds().add(applicationId);
+            List<Long> filteredApplicationList = getAllApplicationIdsByFilters(competitionId, selectionCookie.getManageFundingApplicationsQueryForm());
+            if (applicationIds.containsAll(filteredApplicationList)) {
+                selectionCookie.getSelectApplicationsForEmailForm().setAllSelected(true);
+            }
         }
     }
 
@@ -229,7 +234,7 @@ public class CompetitionManagementFundingNotificationsController {
                 selectionCookie.getSelectApplicationsForEmailForm().setAllSelected(false);
             }
 
-            cookieUtil.saveToCompressedCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionCookie));
+            cookieUtil.saveToCompressedCookie(response, format("%s_comp_%s", SELECTION_FORM, competitionId), getSerializedObject(selectionCookie));
             return createJsonObjectNode(selectionCookie.getSelectApplicationsForEmailForm().getIds().size(), selectionCookie.getSelectApplicationsForEmailForm().isAllSelected());
         } catch (Exception e) {
             return createJsonObjectNode(-1, false);
@@ -296,7 +301,7 @@ public class CompetitionManagementFundingNotificationsController {
     }
 
     private Optional<FundingNotificationSelectionCookie> getFundingNotificationFormFromCookie(HttpServletRequest request, long competitionId) {
-        String applicationFormJson = cookieUtil.getCompressedCookieValue(request, format("%s_comp%s", SELECTION_FORM, competitionId));
+        String applicationFormJson = cookieUtil.getCompressedCookieValue(request, format("%s_comp_%s", SELECTION_FORM, competitionId));
         if (isNotBlank(applicationFormJson)) {
             return Optional.ofNullable(getObjectFromJson(applicationFormJson, FundingNotificationSelectionCookie.class));
         } else {
