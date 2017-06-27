@@ -59,7 +59,7 @@ createTestSchema.dependsOn prepareComposeFile
 
 task syncShib(type:Exec) {
     workingDir '../'
-    commandLine 'docker-compose', 'exec', '-T', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh', 'mysql'
+    commandLine 'docker-compose', 'exec', '--user', 'root', '-T', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh', 'mysql'
 }
 
 task loadShib(type:Exec) {

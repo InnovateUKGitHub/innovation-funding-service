@@ -24,10 +24,6 @@ RUN apt-get update --fix-missing && \
   apt-get -y install slapd ldap-utils && \
   apt-get autoclean && apt-get --purge -y autoremove && rm -rf /var/lib/apt/lists/* && \
 
-# run openldap as its own user \
-  chown -R openldap:0 /etc/ldap /var/lib/ldap /var/run/slapd && \
-  chmod -R g+rw /etc/ldap /var/lib/ldap /var/run/slapd && \
-
   /usr/sbin/slapd -h "ldapi:///" -g openldap -u openldap -F /etc/ldap/slapd.d && \
   sleep 3 && \
 # configure password policy \
@@ -42,7 +38,11 @@ RUN apt-get update --fix-missing && \
   echo "$LDAP_ENCRYPTION_CERTIFICATE" > /etc/ldap/ldap-encryption.crt && \
   ldapmodify -Y EXTERNAL -H ldapi:/// -f mod_ssl.ldif && \
   sed -i 's#/etc/ssl/certs/ca-certificates.crt#/etc/ldap/ldap-encryption.crt##' /etc/ldap/ldap.conf && \
-  echo "TLS_REQCERT allow" >> /etc/ldap/ldap.conf
+  echo "TLS_REQCERT allow" >> /etc/ldap/ldap.conf && \
+
+# run openldap as its own user \
+  chown -R openldap:0 /etc/ldap /var/lib/ldap /var/run/slapd && \
+  chmod -R g+rw /etc/ldap /var/lib/ldap /var/run/slapd
 
 # install dev tools and test ldap entries \
 RUN apt-get update --fix-missing && \
@@ -51,4 +51,5 @@ RUN apt-get update --fix-missing && \
   /usr/sbin/slapadd -c -l testentries.ldif && \
   rm -f ppolicy*.ldif
 
+USER openldap
 ENTRYPOINT [ "run-openldap.sh" ]

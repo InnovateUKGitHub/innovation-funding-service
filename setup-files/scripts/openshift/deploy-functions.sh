@@ -22,7 +22,7 @@ function injectFlywayVariables() {
 
 function injectLDAPVariables() {
     if [ -z "$LDAP_HOST" ]; then echo "Set LDAP_HOST environment variable"; exit -1; fi
-    LDAP_PORT=${LDAP_PORT:-389}
+    LDAP_PORT=${LDAP_PORT:-8389}
     sed -i.bak "s#<<LDAP-HOST>>#$LDAP_HOST#g" os-files-tmp/db-reset/*.yml
     sed -i.bak "s#<<LDAP-PORT>>#$LDAP_PORT#g" os-files-tmp/db-reset/*.yml
     sed -i.bak "s#<<LDAP-PASS>>#$LDAP_PASS#g" os-files-tmp/db-reset/*.yml
