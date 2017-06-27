@@ -36,7 +36,8 @@ ENV DEBIAN_FRONTEND=noninteractive \
   IDP_SIGNING_KEY="@auth_idp_signing_key@" \
   IDP_SIGNING_CERTIFICATE="@auth_idp_signing_certificate@" \
   IDP_ENCRYPTION_KEY="@auth_idp_encryption_key@" \
-  IDP_ENCRYPTION_CERTIFICATE="@auth_idp_encryption_certificate@"
+  IDP_ENCRYPTION_CERTIFICATE="@auth_idp_encryption_certificate@" \
+  MEMCACHE_ENDPOINT=
 
 ENV JAVA_HOME=/usr/lib/jvm/java-${JAVAVER}-oracle
 ENV JRE_HOME=${JAVA_HOME}/jre
