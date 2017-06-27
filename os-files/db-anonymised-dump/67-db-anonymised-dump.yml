@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: db-config
+  data:
+    DB_NAME: "<<DB-NAME>>"
+    DB_USER: "<<DB-USER>>"
+    DB_PASS: "<<DB-PASS>>"
+    DB_HOST: "<<DB-HOST>>"
+    DB_PORT: "<<DB-PORT>>"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    name: db-anonymised-data
+  spec:
+    containers:
+    - name: db-anonymised-data
+      image: innovateuk/db-anonymised-data:1.0-SNAPSHOT
+      imagePullPolicy: Always
+      command: [ "/bin/bash", "-exec" ]
+      args:
+      - /etc/make-mysqldump.sh
+      env:
+      - name: DB_HOST
+        valueFrom:
+          configMapKeyRef:
+            name: db-config
+            key: DB_HOST
+      - name: DB_PORT
+        valueFrom:
+          configMapKeyRef:
+            name: db-config
+            key: DB_PORT
+      - name: DB_NAME
+        valueFrom:
+          configMapKeyRef:
+            name: db-config
+            key: DB_NAME
+      - name: DB_USER
+        valueFrom:
+          configMapKeyRef:
+            name: db-config
+            key: DB_USER
+      - name: DB_PASS
+        valueFrom:
+          configMapKeyRef:
+            name: db-config
+            key: DB_PASS
+    restartPolicy: Never

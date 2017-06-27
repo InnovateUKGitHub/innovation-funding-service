@@ -25,6 +25,36 @@ task dbResetUat(type:Exec) {
     args = [openshiftEnv, "uat", project.version]
 }
 
+task dbAnonymisedDumpLocal(type:Exec) {
+    executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
+    args = [openshiftEnv, "local", project.version]
+}
+
+//task dbAnonymisedDumpSysint(type:Exec) {
+//    executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
+//    args = [openshiftEnv, "sysint", project.version]
+//}
+//
+//task dbAnonymisedDumpPerf(type:Exec) {
+//    executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
+//    args = [openshiftEnv, "perf", project.version]
+//}
+//
+//task dbAnonymisedDumpUat(type:Exec) {
+//    executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
+//    args = [openshiftEnv, "uat", project.version]
+//}
+//
+//task dbAnonymisedDumpRemote(type:Exec) {
+//    executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
+//    args = [openshiftEnv, "remote", project.version]
+//}
+
+task dbAnonymisedDumpProduction(type:Exec) {
+    executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
+    args = [openshiftEnv, "production", project.version]
+}
+
 task osDeployLocal(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "local", project.version]

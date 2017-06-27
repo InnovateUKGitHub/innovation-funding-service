@@ -166,6 +166,15 @@ function pushDBResetImages() {
     docker push ${REGISTRY}/${PROJECT}/dbreset:${VERSION}
 }
 
+function pushAnonymisedDatabaseDumpImages() {
+    docker tag innovateuk/db-anonymised-data:${VERSION} \
+        ${REGISTRY}/${PROJECT}/db-anonymised-data:${VERSION}
+
+    docker login -p ${REGISTRY_TOKEN} -e unused -u unused ${REGISTRY}
+
+    docker push ${REGISTRY}/${PROJECT}/db-anonymised-data:${VERSION}
+}
+
 function cloneConfig() {
     cp -r os-files os-files-tmp
 }
