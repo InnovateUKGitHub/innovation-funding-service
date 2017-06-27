@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     INFUND-3262: Wrong invitees show when invite new collaborators
-Suite Setup       Guest user log-in    &{lead_applicant_credentials}
+Suite Setup       Guest user log-in in new browser    &{lead_applicant_credentials}
 Suite Teardown    Close browser and delete emails
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot

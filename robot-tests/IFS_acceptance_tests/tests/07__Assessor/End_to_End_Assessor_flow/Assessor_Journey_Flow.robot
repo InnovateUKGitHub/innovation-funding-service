@@ -2,14 +2,14 @@
 Documentation     INFUND-8092 E2E for the Assessor Journey Flow
 ...
 ...               IFS-39 As a member of the competitions team I can resend a competition invite to an assessor so that assessor has a new invite
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor    HappyPath    Email
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Invite a new Assessor to assess a competition
     [Documentation]    INFUND-8092
-    [Setup]    Guest user log-in    &{Comp_admin1_credentials}
+    [Setup]    Guest user log-in in new browser    &{Comp_admin1_credentials}
     Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
     And the user clicks the button/link    link=Invite
@@ -35,7 +35,7 @@ Invited User gets an email to assess the competition
 Resend the invite to the assessor again
     [Documentation]    IFS-39
     [Tags]
-    [Setup]     Guest user log-in    &{Comp_admin1_credentials}
+    [Setup]     Guest user log-in in new browser    &{Comp_admin1_credentials}
     Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
     And the user clicks the button/link    link=Overview
@@ -85,7 +85,7 @@ CompAdmin should see Assessor's profile and Innovation Area
     And the user should see the text in the page    Emerging technology
 
 CompAdmin Invites assessor to assess an application
-    [Setup]    The user clicks the button/link    link=My dashboard
+    [Setup]    The user clicks the button/link    link=Dashboard
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And The user clicks the button/link    jQuery=a:contains("Manage assessments")
     And the user clicks the button/link    jQuery=a:contains("Manage applications")

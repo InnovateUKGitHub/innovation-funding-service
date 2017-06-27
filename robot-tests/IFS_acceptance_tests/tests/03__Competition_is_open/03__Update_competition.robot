@@ -102,7 +102,7 @@ Eligibility is editable (Ready to Open)
 Funding Information is editable (Open)
     [Documentation]    INFUND-7083
     [Tags]    HappyPath
-    [Setup]    The user clicks the button/link    jQuery=a:contains(My dashboard)
+    [Setup]    The user clicks the button/link    jQuery=a:contains(Dashboard)
     Given the user clicks the button/link    link=${OPEN_COMPETITION_NAME_2}
     And the user clicks the button/link    jQuery=a:contains(and update competition setup)
     When the user clicks the button/link    link=Funding information
@@ -280,7 +280,7 @@ the user is able to change the value of the fields
     the user should see the element    jQuery=dl dt:contains("Resubmission") + dd:contains("Yes")
 
 Custom suite setup
-    Guest user log-in    &{Comp_admin1_credentials}
+    Guest user log-in in new browser    &{Comp_admin1_credentials}
     ${today}=    get time
     ${tomorrow} =    Add time To Date    ${today}    1 day
     Set suite variable    ${tomorrow}

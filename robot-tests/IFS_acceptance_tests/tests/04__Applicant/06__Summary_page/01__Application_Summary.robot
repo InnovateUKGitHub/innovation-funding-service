@@ -3,7 +3,7 @@ Documentation     -INFUND-46: As a lead applicant and I am on the application fo
 ...               -INFUND-3954 :Applicant shouldn't be able to mark as complete with empty questions
 ...               -INFUND-1075: As an Applicant I want to see the Application Summary page redesigned so that they meet the agreed style
 Suite Setup       log in and create new application if there is not one already
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 
