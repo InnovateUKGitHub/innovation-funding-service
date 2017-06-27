@@ -132,11 +132,11 @@ public class CompetitionManagementFundingNotificationsController {
             appSelectionForm.setAllSelected(storedAppSelectionForm.isAllSelected());
             appSelectionForm.setIds(storedAppSelectionForm.getIds());
         }
-        if (storedFilterForm.anyFilterOptionsActive() && !clearFilters) {
+        if (storedFilterForm.anyFilterOptionsActive() && !filterForm.anyFilterOptionsActive() && !clearFilters) {
             filterForm.setAllFilterOptions(storedFilterForm.getStringFilter(), storedFilterForm.getSendFilter(), storedFilterForm.getFundingFilter());
         }
 
-        if (appSelectionForm.isAllSelected() && !clearFilters) {
+        if (appSelectionForm.isAllSelected() && !filterForm.anyFilterOptionsActive()) {
             appSelectionForm.setIds(getAllApplicationIdsByFilters(competitionId, filterForm));
         } else {
             appSelectionForm.getIds().retainAll(getAllApplicationIdsByFilters(competitionId, filterForm));

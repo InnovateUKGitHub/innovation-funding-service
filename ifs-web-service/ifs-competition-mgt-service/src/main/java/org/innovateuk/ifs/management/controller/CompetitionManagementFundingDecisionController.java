@@ -100,7 +100,7 @@ public class CompetitionManagementFundingDecisionController {
                 filterForm.setStringFilter(selectionCookieForm.getFundingDecisionFilterForm().getStringFilter());
             }
 
-            FundingDecisionSelectionForm trimmedSelectionForm = trimSelectionByFilteredResult(selectionForm, filterForm, competitionId, clearFilters);
+            FundingDecisionSelectionForm trimmedSelectionForm = trimSelectionByFilteredResult(selectionForm, filterForm, competitionId);
 
             selectionForm = selectionCookieForm.getFundingDecisionSelectionForm();
             selectionForm.setApplicationIds(trimmedSelectionForm.getApplicationIds());
@@ -109,13 +109,11 @@ public class CompetitionManagementFundingDecisionController {
             log.error(e);
         }
 
-
         selectionCookieForm.setFundingDecisionFilterForm(filterForm);
 
         saveFormToCookie(response, competitionId, selectionCookieForm);
 
         return populateSubmittedModel(model, competitionId, paginationForm, filterForm, selectionForm);
-
     }
 
     @PostMapping
@@ -231,13 +229,12 @@ public class CompetitionManagementFundingDecisionController {
 
     private FundingDecisionSelectionForm trimSelectionByFilteredResult(FundingDecisionSelectionForm selectionForm,
                                                                        FundingDecisionFilterForm filterForm,
-                                                                       Long competitionId,
-                                                                       boolean clearFilters) {
+                                                                       Long competitionId) {
         List<Long> filteredApplicationIds = getAllApplicationIdsByFilters(competitionId, filterForm);
 
         FundingDecisionSelectionForm updatedSelectionForm = new FundingDecisionSelectionForm();
 
-        if (selectionForm.isAllSelected() && !clearFilters) {
+        if (selectionForm.isAllSelected() && !filterForm.anyFilterIsActive()) {
             updatedSelectionForm.setApplicationIds(filteredApplicationIds);
         } else {
             selectionForm.getApplicationIds().retainAll(filteredApplicationIds);
