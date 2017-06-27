@@ -54,6 +54,7 @@ public class CompetitionManagementFundingDecisionController {
 
     private static final int PAGE_SIZE = 20;
     private static final String SELECTION_FORM = "fundingDecisionSelectionForm";
+    private static final int SELECTION_LIMIT = 500;
 
     @Autowired
     private ApplicationSummarySortFieldService applicationSummarySortFieldService;
@@ -90,7 +91,7 @@ public class CompetitionManagementFundingDecisionController {
 
         try {
             selectionCookieForm = getApplicationSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
-
+            selectionForm = selectionCookieForm.getFundingDecisionSelectionForm();
             FundingDecisionFilterForm filterCookieForm = selectionCookieForm.getFundingDecisionFilterForm();
 
             if(clearFilters) {
@@ -102,10 +103,8 @@ public class CompetitionManagementFundingDecisionController {
             }
 
             FundingDecisionSelectionForm trimmedSelectionForm = trimSelectionByFilteredResult(selectionForm, filterForm, competitionId);
-
-            selectionForm = selectionCookieForm.getFundingDecisionSelectionForm();
             selectionForm.setApplicationIds(trimmedSelectionForm.getApplicationIds());
-            
+
         } catch (Exception e) {
             log.error(e);
         }
@@ -158,20 +157,23 @@ public class CompetitionManagementFundingDecisionController {
         }
 
         if (addAll) {
-            addAllApplicationsIdsBasedOnFilter(competitionId, selectionCookie);
+            List<Long> allApplicationIdsBasedOnFilter = getAllApplicationIdsByFilters(competitionId, selectionCookie.getFundingDecisionFilterForm());
+
+            addAllApplicationsIdsBasedOnFilter(competitionId, selectionCookie, allApplicationIdsBasedOnFilter);
         } else {
             removeAllApplicationsIds(selectionCookie);
         }
 
         saveFormToCookie(response, competitionId, selectionCookie);
 
-        return createSuccessfulResponseWithSelectionStatus(selectionCookie.getFundingDecisionSelectionForm().getApplicationIds().size(), selectionCookie.getFundingDecisionSelectionForm().isAllSelected());
+        return createSuccessfulResponseWithSelectionStatus(selectionCookie.getFundingDecisionSelectionForm().getApplicationIds().size(), selectionCookie.getFundingDecisionSelectionForm().isAllSelected(), false);
     }
 
-    private void addAllApplicationsIdsBasedOnFilter(long competitionId, FundingDecisionSelectionCookie selectionCookie) {
-        List<Long> allApplicationIdsBasedOnFilter = getAllApplicationIdsByFilters(competitionId, selectionCookie.getFundingDecisionFilterForm());
+    private void addAllApplicationsIdsBasedOnFilter(long competitionId, FundingDecisionSelectionCookie selectionCookie, List<Long> allIds) {
 
-        selectionCookie.getFundingDecisionSelectionForm().setApplicationIds(allApplicationIdsBasedOnFilter);
+        List<Long> limitedList = limitList(allIds);
+
+        selectionCookie.getFundingDecisionSelectionForm().setApplicationIds(limitedList);
         selectionCookie.getFundingDecisionSelectionForm().setAllSelected(true);
     }
 
@@ -186,17 +188,29 @@ public class CompetitionManagementFundingDecisionController {
                                                                @RequestParam("isSelected") boolean isSelected,
                                                                HttpServletRequest request,
                                                                HttpServletResponse response) {
+
+        boolean limitExceeded = false;
+
         try {
             FundingDecisionSelectionCookie cookieForm = getApplicationSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
             FundingDecisionSelectionForm selectionForm = cookieForm.getFundingDecisionSelectionForm();
             if (isSelected) {
                 List<Long> applicationIds = selectionForm.getApplicationIds();
 
+                int predictedSize = selectionForm.getApplicationIds().size() + 1;
+
                 if(!applicationIds.contains(applicationId)) {
-                    selectionForm.getApplicationIds().add(applicationId);
-                    List<Long> filteredApplicationList = getAllApplicationIdsByFilters(competitionId, cookieForm.getFundingDecisionFilterForm());
-                    if(applicationIds.containsAll(filteredApplicationList)) {
-                        selectionForm.setAllSelected(true);
+
+                    if(limitIsExceeded(predictedSize)){
+                        limitExceeded = true;
+                    }
+                    else {
+                        selectionForm.getApplicationIds().add(applicationId);
+                        List<Long> filteredApplicationList = getAllApplicationIdsByFilters(competitionId, cookieForm.getFundingDecisionFilterForm());
+
+                        if (selectionForm.containsAll(filteredApplicationList)) {
+                            selectionForm.setAllSelected(true);
+                        }
                     }
                 }
             } else {
@@ -208,7 +222,7 @@ public class CompetitionManagementFundingDecisionController {
 
             saveFormToCookie(response, competitionId, cookieForm);
 
-            return createSuccessfulResponseWithSelectionStatus(selectionForm.getApplicationIds().size(), selectionForm.isAllSelected());
+            return createSuccessfulResponseWithSelectionStatus(selectionForm.getApplicationIds().size(), selectionForm.isAllSelected(), limitExceeded);
         } catch (Exception e) {
             log.error(e);
             return createFailureResponse();
@@ -216,7 +230,7 @@ public class CompetitionManagementFundingDecisionController {
     }
 
     private Optional<FundingDecisionSelectionCookie> getApplicationSelectionFormFromCookie(HttpServletRequest request, long competitionId) {
-        String assessorFormJson = cookieUtil.getCookieValue(request, format("%s_comp%s", SELECTION_FORM, competitionId));
+        String assessorFormJson = cookieUtil.getCompressedCookieValue(request, format("%s_comp%s", SELECTION_FORM, competitionId));
         if (isNotBlank(assessorFormJson)) {
             return Optional.ofNullable(getObjectFromJson(assessorFormJson, FundingDecisionSelectionCookie.class));
         } else {
@@ -247,17 +261,19 @@ public class CompetitionManagementFundingDecisionController {
     }
 
     private ObjectNode createFailureResponse() {
-        return createJsonObjectNode(-1, false);
+        return createJsonObjectNode(-1, false, false);
     }
 
-    private ObjectNode createSuccessfulResponseWithSelectionStatus(int selectionCount, boolean allSelected) {
-        return createJsonObjectNode(selectionCount, allSelected);
+    private ObjectNode createSuccessfulResponseWithSelectionStatus(int selectionCount, boolean allSelected, boolean limitExceeded) {
+        return createJsonObjectNode(selectionCount, allSelected, limitExceeded);
     }
 
-    private ObjectNode createJsonObjectNode(int selectionCount, boolean allSelected) {
+    private ObjectNode createJsonObjectNode(int selectionCount, boolean allSelected, boolean limitExceeded) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
+
         node.put("selectionCount", selectionCount);
+        node.put("limitExceeded", limitExceeded);
         node.put("allSelected", allSelected);
 
         return node;
@@ -314,13 +330,12 @@ public class CompetitionManagementFundingDecisionController {
                 .getCompetitionSummary(competitionId)
                 .getSuccessObjectOrThrowException();
 
-
         model.addAttribute("pagination", new PaginationViewModel(results, originQuery));
         model.addAttribute("results", results);
         model.addAttribute("selectionForm", fundingDecisionSelectionForm);
         model.addAttribute("competitionSummary", competitionSummary);
         model.addAttribute("originQuery", originQuery);
-
+        model.addAttribute("selectAllDisabled", limitIsExceeded(results.getTotalElements()));
 
         switch (competitionSummary.getCompetitionStatus()) {
             case FUNDERS_PANEL:
@@ -332,6 +347,14 @@ public class CompetitionManagementFundingDecisionController {
     }
 
     private void saveFormToCookie(HttpServletResponse response, long competitionId, FundingDecisionSelectionCookie selectionForm) {
-        cookieUtil.saveToCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
+        cookieUtil.saveToCompressedCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
+    }
+
+    private List<Long> limitList(List<Long> allIds) {
+        return allIds.subList(0, SELECTION_LIMIT);
+    }
+
+    private boolean limitIsExceeded(long amountOfIds) {
+        return amountOfIds > SELECTION_LIMIT;
     }
 }

@@ -31,4 +31,8 @@ public class FundingDecisionSelectionForm {
         return this.isAllSelected() != false ||
                 this.getApplicationIds().size() > 0;
     }
+
+    public boolean containsAll(List<Long> applicationIds) {
+        return this.getApplicationIds().containsAll(applicationIds);
+    }
 }

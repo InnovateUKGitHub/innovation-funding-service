@@ -50,9 +50,16 @@
             </div>
         </div>
     </form>
+
     <div th:if="${fundingNotDecidedForAllApplications}" class="event-alert">
         <p><span>A funding decision is required for all applications to the competition.</span></p>
     </div>
+
+    <div class="warning-alert extra-margin-bottom" th:if="${selectAllDisabled}">
+        <p th:text="#{competition.management.limit.warning}"></p>
+    </div>
+    <div id="selection-limit-exceeded-block"></div>
+
     <div class="grid-row sorting">
         <div class="column-half">
             <h3><span class="heading-xlarge no-margin" th:text="${results.totalElements}" /> applications</h3>
@@ -68,7 +75,7 @@
                     <fieldset>
                         <legend class="visuallyhidden">Select applications</legend>
                         <div class="multiple-choice">
-                            <input th:checked="${selectionForm.isAllSelected()}" class="select-all" id="select-all-1" value="select-all" type="checkbox" data-select-all="" />
+                            <input th:disabled="${selectAllDisabled}" th:checked="${selectionForm.isAllSelected()}" class="select-all" id="select-all-1" value="select-all" type="checkbox" data-select-all="" />
                             <label for="select-all-1">
                                 Select all applications
                             </label>
@@ -153,7 +160,7 @@
                         <legend class="visuallyhidden">Select all applications</legend>
 
                         <div class="multiple-choice">
-                            <input th:checked="${selectionForm.isAllSelected()}" data-select-all="[id^=app-row-]" class="select-all" id="select-all-2" value="select-all" type="checkbox" />
+                            <input th:disabled="${selectAllDisabled}" th:checked="${selectionForm.isAllSelected()}" data-select-all="[id^=app-row-]" class="select-all" id="select-all-2" value="select-all" type="checkbox" />
                             <label for="select-all-2">
                                 Select all applications
                             </label>
