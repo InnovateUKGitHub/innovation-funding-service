@@ -124,6 +124,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
         FundingNotificationSelectionCookie storedSelectionFormCookie = getFundingNotificationFormFromCookie(request, competitionId).orElse(new FundingNotificationSelectionCookie());
         ManageFundingApplicationsQueryForm storedFilterForm = storedSelectionFormCookie.getManageFundingApplicationsQueryForm();
         SelectApplicationsForEmailForm storedAppSelectionForm = storedSelectionFormCookie.getSelectApplicationsForEmailForm();
+        clearFilters = !filterForm.anyFilterOptionsActive();
 
         if (!storedAppSelectionForm.getIds().isEmpty()) {
             appSelectionForm.setAllSelected(storedAppSelectionForm.isAllSelected());
