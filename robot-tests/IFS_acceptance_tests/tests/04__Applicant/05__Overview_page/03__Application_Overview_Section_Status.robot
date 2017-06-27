@@ -7,7 +7,7 @@ Suite Teardown    the user closes the browser
 Force Tags        Applicant
 Default Tags
 Resource          ../../../resources/defaultResources.robot
-Resource          ../FinanceSection_Commons.robot
+Resource          ../Applicant_Commons.robot
 
 #This test suite is using the Application:  Robot test application
 
