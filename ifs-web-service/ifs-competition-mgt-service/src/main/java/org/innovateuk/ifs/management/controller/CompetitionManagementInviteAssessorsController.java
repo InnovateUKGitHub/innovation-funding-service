@@ -52,7 +52,6 @@ public class CompetitionManagementInviteAssessorsController {
     private static final String FILTER_FORM_ATTR_NAME = "filterForm";
     private static final String FORM_ATTR_NAME = "form";
     private static final String SELECTION_FORM = "assessorSelectionForm";
-    private static final int SELECTION_LIMIT = 500;
 
     @Autowired
     private CompetitionInviteRestService competitionInviteRestService;
@@ -159,7 +158,8 @@ public class CompetitionManagementInviteAssessorsController {
             AssessorSelectionForm selectionForm = getAssessorSelectionFormFromCookie(request, competitionId).orElse(new AssessorSelectionForm());
 
             if (addAll) {
-                handleSelectAll(selectionForm, competitionId, innovationArea);
+                selectionForm.setSelectedAssessorIds(getAllAssessorIds(competitionId, innovationArea));
+                selectionForm.setAllSelected(true);
             } else {
                 selectionForm.getSelectedAssessorIds().clear();
                 selectionForm.setAllSelected(false);
@@ -170,16 +170,6 @@ public class CompetitionManagementInviteAssessorsController {
         } catch (Exception e) {
             return createJsonObjectNode(-1, false);
         }
-    }
-
-    private void handleSelectAll(AssessorSelectionForm selectionForm, long competitionId, Optional<Long> innovationArea) {
-        List<Long> allAssessorIds = getAllAssessorIds(competitionId, innovationArea);
-        if (allAssessorIds.size() > SELECTION_LIMIT) {
-            selectionForm.setSelectedAssessorIds(allAssessorIds.subList(0, SELECTION_LIMIT));
-        } else {
-            selectionForm.setSelectedAssessorIds(allAssessorIds);
-        }
-        selectionForm.setAllSelected(true);
     }
 
     private List<Long> getAllAssessorIds(long competitionId, Optional<Long> innovationArea) {

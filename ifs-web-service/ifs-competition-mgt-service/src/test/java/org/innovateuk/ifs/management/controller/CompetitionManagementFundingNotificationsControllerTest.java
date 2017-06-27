@@ -260,33 +260,6 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     }
 
     @Test
-    public void addAllApplicationSelectionsToCookie_maximum() throws Exception {
-        Optional<Boolean> sendFilter = Optional.empty();
-        Optional<FundingDecision> fundingFilter = Optional.empty();
-        FundingNotificationSelectionCookie selectionCookie = new FundingNotificationSelectionCookie();
-        selectionCookie.setSelectApplicationsForEmailForm(new SelectApplicationsForEmailForm());
-        selectionCookie.setManageFundingApplicationsQueryForm(new ManageFundingApplicationsQueryForm());
-        Cookie formCookie = createFormCookie(selectionCookie);
-
-        List<ApplicationSummaryResource> applications = newApplicationSummaryResource().with(uniqueIds()).build(501);
-
-        when(applicationSummaryRestService.getWithFundingDecisionApplications(
-                COMPETITION_ID, empty(), sendFilter, fundingFilter)).thenReturn(restSuccess(applications));
-
-        MvcResult result = mockMvc.perform(post("/competition/{competitionId}/manage-funding-applications", COMPETITION_ID)
-                .param("addAll", "true")
-                .cookie(formCookie))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("selectionCount", is(500)))
-                .andExpect(jsonPath("allSelected", is(true)))
-                .andReturn();
-
-        Optional<FundingNotificationSelectionCookie> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("applicationSelectionForm_comp%s", COMPETITION_ID));
-        List<Long> expectedAppIds = applications.subList(0, 500).stream().map(app -> app.getId()).collect(toList());
-        assertTrue(resultForm.get().getSelectApplicationsForEmailForm().getIds().containsAll(expectedAppIds));
-    }
-
-    @Test
     public void getSendNotificationsPageTest() throws Exception {
 
         List<Long> applicationsIds = singletonList(APPLICATION_ID_ONE);

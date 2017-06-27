@@ -50,7 +50,6 @@ public class CompetitionManagementFundingNotificationsController {
     private static final String MANAGE_FUNDING_APPLICATIONS_VIEW = "comp-mgt-manage-funding-applications";
     private static final String FUNDING_DECISION_NOTIFICATION_VIEW = "comp-mgt-send-notifications";
     private static final String SELECTION_FORM = "applicationSelectionForm";
-    private static final int SELECTION_LIMIT = 500;
 
     @Autowired
     private ManageFundingApplicationsModelPopulator manageFundingApplicationsModelPopulator;
@@ -226,12 +225,14 @@ public class CompetitionManagementFundingNotificationsController {
                                            HttpServletResponse response) {
         try {
             FundingNotificationSelectionCookie selectionCookie = getFundingNotificationFormFromCookie(request, competitionId).orElse(new FundingNotificationSelectionCookie());
+            SelectApplicationsForEmailForm applicationsForEmailForm = selectionCookie.getSelectApplicationsForEmailForm();
 
             if (addAll) {
-                handleSelectAll(selectionCookie, competitionId);
+                applicationsForEmailForm.setIds(getAllApplicationIdsByFilters(competitionId, selectionCookie.getManageFundingApplicationsQueryForm()));
+                applicationsForEmailForm.setAllSelected(true);
             } else {
-                selectionCookie.getSelectApplicationsForEmailForm().getIds().clear();
-                selectionCookie.getSelectApplicationsForEmailForm().setAllSelected(false);
+                applicationsForEmailForm.getIds().clear();
+                applicationsForEmailForm.setAllSelected(false);
             }
 
             cookieUtil.saveToCompressedCookie(response, format("%s_comp_%s", SELECTION_FORM, competitionId), getSerializedObject(selectionCookie));
@@ -239,16 +240,6 @@ public class CompetitionManagementFundingNotificationsController {
         } catch (Exception e) {
             return createJsonObjectNode(-1, false);
         }
-    }
-
-    private void handleSelectAll(FundingNotificationSelectionCookie selectionCookie, long competitionId) {
-        List<Long> allApplicationIds = getAllApplicationIdsByFilters(competitionId, selectionCookie.getManageFundingApplicationsQueryForm());
-        if (allApplicationIds.size() > SELECTION_LIMIT) {
-            selectionCookie.getSelectApplicationsForEmailForm().setIds(allApplicationIds.subList(0, SELECTION_LIMIT));
-        } else {
-            selectionCookie.getSelectApplicationsForEmailForm().setIds(allApplicationIds);
-        }
-        selectionCookie.getSelectApplicationsForEmailForm().setAllSelected(true);
     }
 
     private List<Long> getAllApplicationIdsByFilters(long competitionId, ManageFundingApplicationsQueryForm filterForm) {
