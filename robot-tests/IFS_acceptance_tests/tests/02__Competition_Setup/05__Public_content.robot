@@ -53,8 +53,7 @@ External users do not have access to the Public content sections
     [Documentation]  INFUND-7602
     [Tags]
     Given log in as a different user     &{collaborator1_credentials}
-    When run keyword and ignore error without screenshots  the user navigates to the page  ${public_content_overview}
-    Then the user should see permissions error message
+    Then The user navigates to the page and gets a custom error message  ${public_content_overview}  ${403_error_message}
 
 Competition information and search: server side validation
     [Documentation]    INFUND-6915, IFS-179
@@ -355,7 +354,7 @@ Guest user not find the invite only competition by Keywords
 The user is able to make the competition public
     [Documentation]  IFS-261, IFS-179
     [Tags]  HappyPath
-    [Setup]  the compadmin logs in
+    [Setup]  The user logs-in in new browser  &{Comp_admin1_credentials}
     Given the internal user navigates to public content  ${public_content_competition_name}
     Then the user should see the element                 link=Competition information and search
     When the user clicks the button/link                 link=Competition information and search
@@ -436,7 +435,7 @@ Guest user can see the updated How-to-apply information
 
 *** Keywords ***
 Custom suite setup
-    the compadmin logs in
+    The user logs-in in new browser  &{Comp_admin1_credentials}
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
     ${today} =  get today

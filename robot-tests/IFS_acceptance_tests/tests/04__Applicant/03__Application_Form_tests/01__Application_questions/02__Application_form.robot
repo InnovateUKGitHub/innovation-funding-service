@@ -182,7 +182,7 @@ the finance summary page should show a warning
     the user should see the element    jQuery=h3:contains("Your funding") + p:contains("You must select a research category in application details ")
 
 Log in and create a new application for the Aerospace competition
-    Given Guest user log-in in new browser    &{lead_applicant_credentials}
+    Given the user logs-in in new browser  &{lead_applicant_credentials}
     When the user navigates to the page    ${SERVER}/competition/${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}/overview/
     the user clicks the button/link             jQuery=a:contains("Start new application")
     #The following two lines are failing if we don't have any other application for the same competition
