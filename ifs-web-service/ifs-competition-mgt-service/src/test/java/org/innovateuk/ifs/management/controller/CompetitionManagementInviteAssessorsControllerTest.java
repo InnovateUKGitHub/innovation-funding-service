@@ -396,6 +396,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("selectionCount", is(1)))
                 .andExpect(jsonPath("allSelected", is(false)))
+                .andExpect(jsonPath("limitExceeded", is(false)))
                 .andReturn();
 
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("assessorSelectionForm_comp_%s", competition.getId()));
@@ -421,6 +422,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("selectionCount", is(1)))
                 .andExpect(jsonPath("allSelected", is(false)))
+                .andExpect(jsonPath("limitExceeded", is(false)))
                 .andReturn();
 
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("assessorSelectionForm_comp_%s", competition.getId()));
@@ -443,6 +445,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("selectionCount", is(2)))
                 .andExpect(jsonPath("allSelected", is(true)))
+                .andExpect(jsonPath("limitExceeded", is(false)))
                 .andReturn();
 
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("assessorSelectionForm_comp_%s", competition.getId()));
@@ -471,6 +474,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("selectionCount", is(0)))
                 .andExpect(jsonPath("allSelected", is(false)))
+                .andExpect(jsonPath("limitExceeded", is(false)))
                 .andReturn();
 
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("assessorSelectionForm_comp_%s", competition.getId()));
@@ -498,6 +502,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("selectionCount", is(0)))
                 .andExpect(jsonPath("allSelected", is(false)))
+                .andExpect(jsonPath("limitExceeded", is(false)))
                 .andReturn();
 
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("assessorSelectionForm_comp_%s", competition.getId()));

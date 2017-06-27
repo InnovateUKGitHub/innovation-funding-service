@@ -31,6 +31,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
@@ -102,6 +103,8 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
         AssessorSelectionForm storedSelectionForm = getAssessorSelectionFormFromCookie(request, competitionId).orElse(new AssessorSelectionForm());
         selectionForm.setAllSelected(storedSelectionForm.getAllSelected());
         selectionForm.setSelectedAssessorIds(storedSelectionForm.getSelectedAssessorIds());
+        clearFilter = !filterForm.getInnovationArea().isPresent();
+
         if (storedSelectionForm.getSelectedInnovationArea() != null && !filterForm.getInnovationArea().isPresent() && !clearFilter) {
             filterForm.setInnovationArea(of(storedSelectionForm.getSelectedInnovationArea()));
         }
