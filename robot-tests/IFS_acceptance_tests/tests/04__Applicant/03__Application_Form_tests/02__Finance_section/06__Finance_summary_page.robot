@@ -13,12 +13,12 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...
 ...               INFUND-8397  Permission denied when submitting your finances as a collaborator
 ...
-Suite Setup       Guest user log-in in new browser  &{lead_applicant_credentials}
+Suite Setup       The user logs-in in new browser  &{lead_applicant_credentials}
 Suite Teardown    Close browser and delete emails
 Force Tags        Applicant    Support
 Default Tags
 Resource          ../../../../resources/defaultResources.robot
-Resource          ../../FinanceSection_Commons.robot
+Resource          ../../Applicant_Commons.robot
 Resource          ../../../10__Project_setup/PS_Common.robot
 # For the testing of those Testing cases, the application that has been used is:
 # CLOSED_COMPETITION_APPLICATION_NAME that is A new innovative solution
@@ -100,19 +100,19 @@ Collaborator marks finances as complete
 Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
     [Tags]    Email
-    [Setup]    Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation
-    Given Guest user log-in in new browser    ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
+    [Setup]  Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${OPEN_COMPETITION_NAME}  You will be joining as part of the organisation
+    Given The user logs-in in new browser          ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     And The user navigates to the academic application finances
-    And The user clicks the button/link       link=Your project costs
-    When the user enters text to a text field      id=incurred-staff    1000000
-    And log in as a different user  &{lead_applicant_credentials}
+    And The user clicks the button/link            link=Your project costs
+    When the user enters text to a text field      id=incurred-staff  1000000
+    And log in as a different user                 &{lead_applicant_credentials}
     And the user navigates to the finance overview of the academic
-    Then the user should see the text in the page    The participation levels of this project are not within the required range
-    And the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Academic robot test application
-    And the user clicks the button/link    link=Review and submit
-    And the user clicks the button/link    jQuery=button:contains("Finances summary")
-    Then the user should see the text in the page    The participation levels of this project are not within the required range
+    Then the user should see the text in the page  The participation levels of this project are not within the required range
+    And the user navigates to the page             ${DASHBOARD_URL}
+    And the user clicks the button/link            link=Academic robot test application
+    And the user clicks the button/link            link=Review and submit
+    And the user clicks the button/link            jQuery=button:contains("Finances summary")
+    Then the user should see the text in the page  The participation levels of this project are not within the required range
 
 Alert should not show If research participation is below the maximum level
     [Documentation]    INFUND-1436

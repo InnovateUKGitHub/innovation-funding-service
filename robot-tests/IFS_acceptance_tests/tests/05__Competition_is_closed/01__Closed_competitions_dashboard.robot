@@ -10,7 +10,7 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...               INFUND-7561 Inflight competition dashboards- View milestones
 ...
 ...               INFUND-7560 Inflight competition dashboards- Viewing key statistics for 'Ready to Open', 'Open', 'Closed' and 'In assessment' competition states
-Suite Setup       Guest user log-in in new browser    &{Comp_admin1_credentials}
+Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
