@@ -96,13 +96,12 @@ public class CompetitionManagementFundingDecisionController {
 
             if(clearFilters) {
                 filterForm = new FundingDecisionFilterForm();
-            }
-            else if (!filterForm.anyFilterIsActive() && filterCookieForm.anyFilterIsActive() && selectionForm.anySelectionIsMade()) {
+            } else if (!filterForm.anyFilterIsActive() && filterCookieForm.anyFilterIsActive() && selectionForm.anySelectionIsMade()) {
                 filterForm.setFundingFilter(selectionCookieForm.getFundingDecisionFilterForm().getFundingFilter());
                 filterForm.setStringFilter(selectionCookieForm.getFundingDecisionFilterForm().getStringFilter());
             }
 
-            FundingDecisionSelectionForm trimmedSelectionForm = trimSelectionByFilteredResult(selectionForm, filterForm, competitionId);
+            FundingDecisionSelectionForm trimmedSelectionForm = trimSelectionByFilteredResult(selectionForm, filterForm, competitionId, clearFilters);
             selectionForm.setApplicationIds(trimmedSelectionForm.getApplicationIds());
 
         } catch (Exception e) {
@@ -244,17 +243,20 @@ public class CompetitionManagementFundingDecisionController {
         return restResult.getSuccessObjectOrThrowException().stream().map(p -> p.getId()).collect(Collectors.toList());
     }
 
-    private FundingDecisionSelectionForm trimSelectionByFilteredResult(FundingDecisionSelectionForm selectionForm, FundingDecisionFilterForm filterForm, Long competitionId) {
+    private FundingDecisionSelectionForm trimSelectionByFilteredResult(FundingDecisionSelectionForm selectionForm,
+                                                                       FundingDecisionFilterForm filterForm,
+                                                                       Long competitionId,
+                                                                       boolean clearFilters) {
         List<Long> filteredApplicationIds = getAllApplicationIdsByFilters(competitionId, filterForm);
 
         FundingDecisionSelectionForm updatedSelectionForm = new FundingDecisionSelectionForm();
 
-        if(selectionForm.isAllSelected()) {
+        if (selectionForm.isAllSelected() && !clearFilters) {
             updatedSelectionForm.setApplicationIds(filteredApplicationIds);
-        }
-        else {
+        } else {
             selectionForm.getApplicationIds().retainAll(filteredApplicationIds);
             updatedSelectionForm.setApplicationIds(selectionForm.getApplicationIds());
+            updatedSelectionForm.setAllSelected(false);
         }
 
         return updatedSelectionForm;

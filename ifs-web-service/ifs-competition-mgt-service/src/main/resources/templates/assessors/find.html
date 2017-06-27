@@ -107,7 +107,7 @@
 
     <form method="POST"
           th:action="@{/competition/{competitionId}/assessors/find/addSelected(competitionId=${model.competitionId})}"
-          th:object="${selectionForm}"
+          th:object="${assessorSelectionForm}"
           data-multipage-select=""
           th:attr="data-total-checkboxes=${model.pagination.totalCount}">
 
@@ -117,18 +117,18 @@
                     <input type="checkbox"
                            data-select-all=""
                            id="select-all-check"
-                           th:checked="${selectionForm.getAllSelected()}"
+                           th:checked="${assessorSelectionForm.getAllSelected()}"
                            th:attr="disabled=${#lists.isEmpty(model.assessors)}"/>
                     <label for="select-all-check">
                         Select all assessors
                     </label>
                 </div>
                 <span class="form-hint">
-                    <span data-count-selected="" th:text="${#lists.size(selectionForm.selectedAssessorIds)}"></span> assessors selected
+                    <span data-count-selected="" th:text="${#lists.size(assessorSelectionForm.selectedAssessorIds)}"></span> assessors selected
                 </span>
             </div>
             <div class="column-half select-all alignright">
-                <button class="button" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(selectionForm.selectedAssessorIds)}">
+                <button class="button" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(assessorSelectionForm.selectedAssessorIds)}">
                     Add selected to invite list
                 </button>
             </div>
