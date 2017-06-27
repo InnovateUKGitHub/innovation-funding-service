@@ -19,15 +19,17 @@ public class ManageFundingApplicationViewModel {
     private String competitionName;
     private CompetitionInFlightStatsViewModel keyStatistics;
     private PaginationViewModel pagination;
+    private boolean selectAllDisabled;
 
 
-    public ManageFundingApplicationViewModel(ApplicationSummaryPageResource results, CompetitionInFlightStatsViewModel keyStatistics, PaginationViewModel pagination, String sortField, long competitionId, String competitionName) {
+    public ManageFundingApplicationViewModel(ApplicationSummaryPageResource results, CompetitionInFlightStatsViewModel keyStatistics, PaginationViewModel pagination, String sortField, long competitionId, String competitionName, boolean selectAllDisabled) {
         this.results = results;
         this.sortField = sortField;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.keyStatistics = keyStatistics;
         this.pagination = pagination;
+        this.selectAllDisabled = selectAllDisabled;
     }
 
     public PaginationViewModel getPagination() {
@@ -64,5 +66,13 @@ public class ManageFundingApplicationViewModel {
 
     public CompetitionInFlightStatsViewModel getKeyStatistics() {
         return keyStatistics;
+    }
+
+    public boolean isSelectAllDisabled() {
+        return selectAllDisabled;
+    }
+
+    public void setSelectAllDisabled(boolean selectAllDisabled) {
+        this.selectAllDisabled = selectAllDisabled;
     }
 }

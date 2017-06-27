@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.management.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
@@ -48,13 +46,12 @@ import static org.innovateuk.ifs.util.JsonUtil.getSerializedObject;
 @Controller
 @RequestMapping("/competition/{competitionId}/funding")
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-public class CompetitionManagementFundingDecisionController {
+public class CompetitionManagementFundingDecisionController extends CompetitionManagementCookieController {
 
     private static final Log log = LogFactory.getLog(CompetitionManagementFundingDecisionController.class);
 
     private static final int PAGE_SIZE = 20;
     private static final String SELECTION_FORM = "fundingDecisionSelectionForm";
-    private static final int SELECTION_LIMIT = 500;
 
     @Autowired
     private ApplicationSummarySortFieldService applicationSummarySortFieldService;
@@ -262,25 +259,6 @@ public class CompetitionManagementFundingDecisionController {
         return updatedSelectionForm;
     }
 
-    private ObjectNode createFailureResponse() {
-        return createJsonObjectNode(-1, false, false);
-    }
-
-    private ObjectNode createSuccessfulResponseWithSelectionStatus(int selectionCount, boolean allSelected, boolean limitExceeded) {
-        return createJsonObjectNode(selectionCount, allSelected, limitExceeded);
-    }
-
-    private ObjectNode createJsonObjectNode(int selectionCount, boolean allSelected, boolean limitExceeded) {
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode node = mapper.createObjectNode();
-
-        node.put("selectionCount", selectionCount);
-        node.put("allSelected", allSelected);
-        node.put("limitExceeded", limitExceeded);
-
-        return node;
-    }
-
     MultiValueMap<String, String> mapFormFilterParametersToMultiValueMap(FundingDecisionFilterForm fundingDecisionFilterForm) {
         MultiValueMap<String, String> filterMap = new LinkedMultiValueMap<>();
         if(fundingDecisionFilterForm.getFundingFilter().isPresent()) {
@@ -350,17 +328,5 @@ public class CompetitionManagementFundingDecisionController {
 
     private void saveFormToCookie(HttpServletResponse response, long competitionId, FundingDecisionSelectionCookie selectionForm) {
         cookieUtil.saveToCompressedCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
-    }
-
-    private List<Long> limitList(List<Long> allIds) {
-        if (allIds.size() > SELECTION_LIMIT) {
-            return allIds.subList(0, SELECTION_LIMIT);
-        } else {
-            return allIds;
-        }
-    }
-
-    private boolean limitIsExceeded(long amountOfIds) {
-        return amountOfIds > SELECTION_LIMIT;
     }
 }

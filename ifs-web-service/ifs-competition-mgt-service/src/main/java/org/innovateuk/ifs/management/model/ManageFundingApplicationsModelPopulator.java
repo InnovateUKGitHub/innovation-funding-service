@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.form.ManageFundingApplicationsQueryForm;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.management.controller.CompetitionManagementCookieController;
 import org.innovateuk.ifs.management.viewmodel.CompetitionInFlightStatsViewModel;
 import org.innovateuk.ifs.management.viewmodel.ManageFundingApplicationViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
@@ -38,6 +39,9 @@ public class ManageFundingApplicationsModelPopulator {
                 queryForm.getSendFilter(), queryForm.getFundingFilter()).getSuccessObjectOrThrowException();
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         CompetitionInFlightStatsViewModel keyStatistics = competitionInFlightStatsModelPopulator.populateStatsViewModel(competitionResource);
+
+        boolean selectAllDisabled= results.getTotalElements() > CompetitionManagementCookieController.SELECTION_LIMIT;
+
         PaginationViewModel paginationViewModel = new PaginationViewModel(results, queryString);
         return new ManageFundingApplicationViewModel(
                 results,
@@ -45,6 +49,7 @@ public class ManageFundingApplicationsModelPopulator {
                 paginationViewModel,
                 queryForm.getSortField(),
                 competitionId,
-                competitionResource.getName());
+                competitionResource.getName(),
+                selectAllDisabled);
     }
 }

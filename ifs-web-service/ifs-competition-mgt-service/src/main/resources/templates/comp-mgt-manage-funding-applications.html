@@ -64,6 +64,12 @@
             </div>
         </div>
     </form>
+
+    <div class="warning-alert extra-margin-bottom" th:if="${model.selectAllDisabled}">
+        <p th:text="#{competition.management.limit.warning}"></p>
+    </div>
+    <div id="selection-limit-exceeded-block"></div>
+
     <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"  data-multipage-select="" th:attr="data-total-checkboxes=${model.keyStatistics.statThree}"><!--/* todo: total checkboxes attribute ? */-->
         <div class="grid-row sorting">
             <div class="column-half">
@@ -74,7 +80,8 @@
                         <div class="multiple-choice">
                                 <input data-select-all="" id="select-all-1" type="checkbox"
                                        th:checked="${selectionForm.isAllSelected()}"
-                                       th:attr="disabled=${!model.anythingChangeable}"/>
+                                       th:attr="disabled=${!model.anythingChangeable}"
+                                       th:disabled="${model.selectAllDisabled}"/>
                                 <label for="select-all-1">
                                     Select all applications
                                 </label>
@@ -153,7 +160,8 @@
                         <div class="multiple-choice">
                             <input data-select-all="" id="select-all-2" type="checkbox"
                                    th:checked="${selectionForm.isAllSelected()}"
-                                   th:attr="disabled=${!model.anythingChangeable}"/>
+                                   th:attr="disabled=${!model.anythingChangeable}"
+                                   th:disabled="${model.selectAllDisabled}"/>
                             <label for="select-all-2">
                                 Select all applications
                             </label>

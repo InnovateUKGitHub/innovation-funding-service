@@ -1,10 +1,7 @@
 package org.innovateuk.ifs.management.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
-import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
@@ -45,7 +42,7 @@ import static org.innovateuk.ifs.util.JsonUtil.getSerializedObject;
 @Controller
 @RequestMapping("/competition/{competitionId}")
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-public class CompetitionManagementFundingNotificationsController {
+public class CompetitionManagementFundingNotificationsController extends CompetitionManagementCookieController {
 
     private static final String MANAGE_FUNDING_APPLICATIONS_VIEW = "comp-mgt-manage-funding-applications";
     private static final String FUNDING_DECISION_NOTIFICATION_VIEW = "comp-mgt-send-notifications";
@@ -188,19 +185,29 @@ public class CompetitionManagementFundingNotificationsController {
             @RequestParam(defaultValue = "0") int page,
             HttpServletRequest request,
             HttpServletResponse response) {
+
+        boolean limitIsExceeded = false;
+
         try {
             FundingNotificationSelectionCookie selectionCookie = getFundingNotificationFormFromCookie(request, competitionId).orElse(new FundingNotificationSelectionCookie());
 
             if (isSelected) {
-                handleSelected(selectionCookie, competitionId, applicationId);
+                int predictedSize = selectionCookie.getSelectApplicationsForEmailForm().getIds().size() + 1;
+                if(limitIsExceeded(predictedSize)) {
+                    limitIsExceeded = true;
+                }
+                else {
+
+                    handleSelected(selectionCookie, competitionId, applicationId);
+                }
             } else {
                 selectionCookie.getSelectApplicationsForEmailForm().getIds().remove(applicationId);
                 selectionCookie.getSelectApplicationsForEmailForm().setAllSelected(false);
             }
             cookieUtil.saveToCompressedCookie(response, format("%s_comp_%s", SELECTION_FORM, competitionId), getSerializedObject(selectionCookie));
-            return createJsonObjectNode(selectionCookie.getSelectApplicationsForEmailForm().getIds().size(), selectionCookie.getSelectApplicationsForEmailForm().isAllSelected());
+            return createJsonObjectNode(selectionCookie.getSelectApplicationsForEmailForm().getIds().size(), selectionCookie.getSelectApplicationsForEmailForm().isAllSelected(), limitIsExceeded);
         } catch (Exception e) {
-            return createJsonObjectNode(-1, false);
+            return createJsonObjectNode(-1, false, false);
         }
     }
 
@@ -236,9 +243,9 @@ public class CompetitionManagementFundingNotificationsController {
             }
 
             cookieUtil.saveToCompressedCookie(response, format("%s_comp_%s", SELECTION_FORM, competitionId), getSerializedObject(selectionCookie));
-            return createJsonObjectNode(selectionCookie.getSelectApplicationsForEmailForm().getIds().size(), selectionCookie.getSelectApplicationsForEmailForm().isAllSelected());
+            return createJsonObjectNode(selectionCookie.getSelectApplicationsForEmailForm().getIds().size(), selectionCookie.getSelectApplicationsForEmailForm().isAllSelected(), false);
         } catch (Exception e) {
-            return createJsonObjectNode(-1, false);
+            return createJsonObjectNode(-1, false, false);
         }
     }
 
@@ -280,15 +287,6 @@ public class CompetitionManagementFundingNotificationsController {
                 .build()
                 .encode()
                 .toUriString();
-    }
-
-    private ObjectNode createJsonObjectNode(int selectionCount, boolean allSelected) {
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode node = mapper.createObjectNode();
-        node.put("selectionCount", selectionCount);
-        node.put("allSelected", allSelected);
-
-        return node;
     }
 
     private Optional<FundingNotificationSelectionCookie> getFundingNotificationFormFromCookie(HttpServletRequest request, long competitionId) {

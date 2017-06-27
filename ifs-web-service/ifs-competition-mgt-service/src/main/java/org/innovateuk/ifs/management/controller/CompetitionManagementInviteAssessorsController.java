@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.management.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -47,13 +45,11 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 @Controller
 @RequestMapping("/competition/{competitionId}/assessors")
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
-public class CompetitionManagementInviteAssessorsController {
+public class CompetitionManagementInviteAssessorsController extends CompetitionManagementCookieController {
 
     private static final String FILTER_FORM_ATTR_NAME = "filterForm";
     private static final String FORM_ATTR_NAME = "form";
     private static final String SELECTION_FORM = "assessorSelectionForm";
-
-    public static final int SELECTION_LIMIT = 5;
 
     @Autowired
     private CompetitionInviteRestService competitionInviteRestService;
@@ -372,25 +368,6 @@ public class CompetitionManagementInviteAssessorsController {
         return new ExistingUserStagedInviteListResource(invites);
     }
 
-    private ObjectNode createFailureResponse() {
-        return createJsonObjectNode(-1, false, false);
-    }
-
-    private ObjectNode createSuccessfulResponseWithSelectionStatus(int selectionCount, boolean allSelected, boolean limitExceeded) {
-        return createJsonObjectNode(selectionCount, allSelected, limitExceeded);
-    }
-
-    private ObjectNode createJsonObjectNode(int selectionCount, boolean allSelected, boolean limitExceeded) {
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode node = mapper.createObjectNode();
-
-        node.put("selectionCount", selectionCount);
-        node.put("allSelected", allSelected);
-        node.put("limitExceeded", limitExceeded);
-
-        return node;
-    }
-
     private Optional<AssessorSelectionForm> getAssessorSelectionFormFromCookie(HttpServletRequest request, long competitionId) {
         String assessorFormJson = cookieUtil.getCompressedCookieValue(request, format("%s_comp_%s", SELECTION_FORM, competitionId));
         if (isNotBlank(assessorFormJson)) {
@@ -398,13 +375,5 @@ public class CompetitionManagementInviteAssessorsController {
         } else {
             return Optional.empty();
         }
-    }
-
-    private List<Long> limitList(List<Long> allIds) {
-        return allIds.subList(0, SELECTION_LIMIT);
-    }
-
-    private boolean limitIsExceeded(long amountOfIds) {
-        return amountOfIds > SELECTION_LIMIT;
     }
 }
