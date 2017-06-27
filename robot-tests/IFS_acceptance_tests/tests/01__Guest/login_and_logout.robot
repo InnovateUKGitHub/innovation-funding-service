@@ -17,8 +17,8 @@ Resource          ../../resources/defaultResources.robot
 *** Test Cases ***
 Log-out
     [Tags]    HappyPath
-    [Setup]    Guest user log-in in new browser    &{lead_applicant_credentials}
-    Given the user should see the element          link=Sign out
+    [Setup]  the user logs-in in new browser  &{lead_applicant_credentials}
+    Given the user should see the element     link=Sign out
     Logout as user
 
 Invalid Login
@@ -88,7 +88,7 @@ Valid login as Comp Admin
 
 Valid login as Support role
     [Documentation]    IFS-188
-    [Tags]
+    [Tags]     HappyPath    support
     Given the user is not logged-in
     When Guest user login without new browser                 &{support_user_credentials}
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
@@ -96,11 +96,12 @@ Valid login as Support role
 
 Valid login as IFS Admin role
     [Documentation]    IFS-603
-    [Tags]
+    [Tags]      HappyPath    administrator
     Given the user is not logged-in
     When Guest user login without new browser    &{ifs_admin_user_credentials}
     And the user navigates to the page           ${COMP_ADMINISTRATOR_DASHBOARD}
-    Then the user should see the element         link=Sign out
+    Then the user should see the element    link=Manage users
+    Then the user should see the element    link=Sign out
     [Teardown]    Logout as user
 
 Should not see the Sign in link when on the login page
@@ -161,7 +162,7 @@ Reset password user enters new psw
 
 *** Keywords ***
 the user is not logged-in
-    the user should not see the element    link=My dashboard
+    the user should not see the element    link=Dashboard
     the user should not see the element    link=Sign out
 
 the user should be logged-in as an Assessor

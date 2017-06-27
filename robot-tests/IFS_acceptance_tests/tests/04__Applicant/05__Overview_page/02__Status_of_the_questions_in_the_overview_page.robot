@@ -16,7 +16,7 @@ Status changes when we assign a question
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=Project summary
     When the Applicant edits the Project summary
-    And the applicant assigns the Project Summary    Arsene Wenger
+    And the applicant assigns the Project Summary  Arsene Wenger
     Then the assign status should be correct for the Project Summary
     And the blue flag should not be visible
 

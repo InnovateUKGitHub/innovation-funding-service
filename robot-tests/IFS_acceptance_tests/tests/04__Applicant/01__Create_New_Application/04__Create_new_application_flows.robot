@@ -64,6 +64,11 @@ Marketing emails information should have updated on the profile
     Then the user should see that the checkbox is selected    allowMarketingEmails
 
 *** Keywords ***
+the new application should be visible in the dashboard page
+    the user clicks the button/link    link=Dashboard
+    the user should see the text in the page    ${test_title}
+    the user should see the text in the page    Application number:
+
 the user clicks the Not on company house link
     the user clicks the button/link         name=manual-address
     The user enters text to a text field    id=addressForm.selectedPostcode.addressLine1    street
@@ -101,7 +106,7 @@ Applicant goes to the registration form
 
 the user directed to correct dashboard
     [Arguments]    ${Application_name}
-    the user should see the text in the page    Your dashboard
+    the user should see the text in the page    Dashboard
     the user clicks the button/link    link=${Application_name}
     the user clicks the button/link    jQuery=a:contains("Begin application")
     the user should see the text in the page    Application overview

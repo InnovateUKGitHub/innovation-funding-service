@@ -7,7 +7,7 @@ Documentation     INFUND-3303: As an Assessor I want the ability to reject the a
 ...               INFUND-1188 As an assessor I want to be able to review my assessments from one place so that I can work in my favoured style when reviewing
 ...
 ...               INFUND-5379 The Applications for assessment dashboard shouldn't show the rejected applications
-Suite Setup       Guest user log-in in new browser    &{assessor_credentials}
+Suite Setup       The user logs-in in new browser  &{assessor_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot

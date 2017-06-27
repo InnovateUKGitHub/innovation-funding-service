@@ -14,7 +14,7 @@ Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Applicant    CompAdmin
 Resource          ../../../resources/defaultResources.robot
-Resource          ../FinanceSection_Commons.robot
+Resource          ../Applicant_Commons.robot
 Resource          ../../10__Project_setup/PS_Common.robot
 Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
 
@@ -29,15 +29,15 @@ ${newUsersEmail}             liam@innovate.com
 Comp Admin starts a new Competition
     [Documentation]    INFUND-6393
     [Tags]    HappyPath
-    [Setup]    Guest user log-in in new browser    &{Comp_admin1_credentials}
+    [Setup]  the user logs-in in new browser  &{Comp_admin1_credentials}
     # For the testing of the story INFUND-6393, we need to create New Competition in order to apply the new Comp Setup fields
     # Then continue with the applying to this Competition, in order to see the new Fields applied
-    Given the user navigates to the page    ${CA_UpcomingComp}
-    When the user clicks the button/link    jQuery=.button:contains("Create competition")
+    Given the user navigates to the page           ${CA_UpcomingComp}
+    When the user clicks the button/link           jQuery=.button:contains("Create competition")
     Then the user fills in the CS Initial details  ${compWithoutGrowth}  ${month}  ${nextyear}
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility
-    And the user fills in the CS Milestones  ${month}  ${nextMonth}  ${nextyear}
+    And the user fills in the CS Milestones        ${month}  ${nextMonth}  ${nextyear}
 
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     [Documentation]    INFUND-7820

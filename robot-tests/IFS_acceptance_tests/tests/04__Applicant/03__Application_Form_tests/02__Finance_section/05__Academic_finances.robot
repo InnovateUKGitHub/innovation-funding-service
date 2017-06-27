@@ -10,7 +10,7 @@ Suite Setup       Login new application invite academic    ${test_mailbox_one}+a
 Suite Teardown    Close browser and delete emails
 Force Tags        Email    Applicant
 Resource          ../../../../resources/defaultResources.robot
-Resource          ../../FinanceSection_Commons.robot
+Resource          ../../Applicant_Commons.robot
 
 
 *** Variables ***
@@ -200,11 +200,11 @@ Lead applicant marks the finances as complete
     the user clicks the button/link    link=Academic robot test application
     the applicant completes the application details    Application details
     the user navigates to the academic application finances
-    the user marks the finances as complete    Academic robot test application
+    the user marks the finances as complete          Academic robot test application
 
 
 Lead applicant marks the finances as incomplete
-    log in as a different user    ${lead_applicant}    Passw0rd
+    log in as a different user         &{lead_applicant_credentials}
     the user navigates to the academic application finances
     the user clicks the button/link    link=Your funding
     the user clicks the button/link    jQuery=button:contains("Edit")

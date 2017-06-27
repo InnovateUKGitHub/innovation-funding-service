@@ -3,19 +3,19 @@ Resource          ../defaultResources.robot
 
 *** Keywords ***
 log in and create new application if there is not one already
-    Given Guest user log-in in new browser    &{lead_applicant_credentials}
+    Given the user logs-in in new browser  &{lead_applicant_credentials}
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    Robot test application
     Run Keyword If    '${status}' == 'FAIL'    Create new application with the same user  Robot test application
 
 log in and create new application for collaboration if there is not one already
-    Given Guest user log-in in new browser    &{lead_applicant_credentials}
+    Given the user logs-in in new browser  &{lead_applicant_credentials}
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    Invite robot test application
     Run Keyword If    '${status}' == 'FAIL'    Create new application with the same user  Invite robot test application
 
 Login new application invite academic
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     [Tags]    Email
-    Given Guest user log-in in new browser    &{lead_applicant_credentials}
+    Given the user logs-in in new browser  &{lead_applicant_credentials}
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    Academic robot test application
     Run Keyword If    '${status}' == 'FAIL'    Run keywords    Create new application with the same user  Academic robot test application
     ...    AND    Invite and accept the invitation    ${recipient}    ${subject}    ${pattern}
@@ -147,7 +147,7 @@ Invite and accept the invitation
     And the user fills the create account form    Arsene    Wenger
     And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    We now need you to verify your email address
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And Guest user login without new browser    ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
+    And the user logs-in in new browser    ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
 
 The user navigates to the summary page of the Robot test application
     Given the user navigates to the page    ${DASHBOARD_URL}

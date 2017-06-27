@@ -202,7 +202,7 @@ Partner should be able to log-in and see the new company name
     ...    INFUND-7976
     [Tags]    Email    HappyPath    SmokeTest
     Given the user clicks the button/link                     jQuery=.button:contains("Sign in")
-    When guest user login without new browser                 ${invite_email}    ${correct_password}
+    When the user logs-in in new browser                      ${invite_email}    ${correct_password}
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     And the user can see the updated company name throughout the application
     And the user reads his email and clicks the link          ${invite_email}    Innovate UK applicant questionnaire    diversity survey

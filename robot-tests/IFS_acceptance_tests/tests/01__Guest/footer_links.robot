@@ -4,6 +4,10 @@ Suite Setup       The guest user opens the browser
 Suite Teardown    The user closes the browser
 Force Tags        Guest
 Resource          ../../resources/defaultResources.robot
+# Note for future maintenance: In this file there are checks to external links (out of IFS).
+# The tests are fine as they are now, but in case those links break in the future, then we can remove those tests.
+# We do not need to maintain checks towards external pages.
+# However, internal links eg Terms & Conditions, do need to be maintained!!
 
 *** Test Cases ***
 Guest user can click on the footer links

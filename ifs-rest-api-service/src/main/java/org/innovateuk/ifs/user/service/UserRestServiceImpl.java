@@ -7,14 +7,15 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.user.resource.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.concurrent.Future;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.processRoleResourceListType;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.*;
 
 
@@ -94,6 +95,20 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     public RestResult<List<UserResource>> findByUserRoleType(UserRoleType userRoleType) {
         String roleName = userRoleType.getName();
         return getWithRestResult(userRestURL + "/findByRole/"+roleName, userListType());
+    }
+
+    @Override
+    public RestResult<UserPageResource> getActiveInternalUsers(int pageNumber, int pageSize) {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        String uriWithParams = buildPaginationUri(userRestURL + "/internal/active", pageNumber, pageSize, null, params);
+        return getWithRestResult(uriWithParams, UserPageResource.class);
+    }
+
+    @Override
+    public RestResult<UserPageResource> getInactiveInternalUsers(int pageNumber, int pageSize) {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        String uriWithParams = buildPaginationUri(userRestURL + "/internal/inactive", pageNumber, pageSize, null, params);
+        return getWithRestResult(uriWithParams, UserPageResource.class);
     }
 
     @Override
