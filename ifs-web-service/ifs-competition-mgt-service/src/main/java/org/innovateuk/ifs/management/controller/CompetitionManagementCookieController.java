@@ -9,7 +9,7 @@ import java.util.List;
  * Base controller for the multipage select controllers.
  */
 public abstract class CompetitionManagementCookieController {
-    public static final int SELECTION_LIMIT = 1;
+    public static final int SELECTION_LIMIT = 500;
 
     protected List<Long> limitList(List<Long> allIds) {
         if (allIds.size() > SELECTION_LIMIT) {
