@@ -1,16 +1,22 @@
 package org.innovateuk.ifs.user.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.UserPageResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.util.LinkedMultiValueMap;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.UserDocs.userResourceFields;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
 import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
+import static org.innovateuk.ifs.documentation.UserDocs.userPageResourceFields;
+import static org.innovateuk.ifs.documentation.UserDocs.userResourceFields;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -19,6 +25,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserController> {
 
@@ -101,5 +108,35 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
                         requestFields(userResourceFields),
                         responseFields(userResourceFields)
                 ));
+    }
+
+    @Test
+    public void testFindActiveInternalUsers() throws Exception {
+        UserPageResource userPageResource = buildUserPageResource();
+        when(userServiceMock.findActiveByProcessRoles(UserRoleType.internalRoles(), new PageRequest(0, 5))).thenReturn(serviceSuccess(userPageResource));
+        mockMvc.perform(get(buildPaginationUri("/user/internal/active", 0, 5, null, new LinkedMultiValueMap<>()))).andExpect(status().isOk())
+                .andDo(document("user/{method-name}",
+                        responseFields(userPageResourceFields)
+                ));;
+    }
+
+    @Test
+    public void testFindInactiveInternalUsers() throws Exception {
+        UserPageResource userPageResource = buildUserPageResource();
+        when(userServiceMock.findInactiveByProcessRoles(UserRoleType.internalRoles(), new PageRequest(0, 5))).thenReturn(serviceSuccess(userPageResource));
+        mockMvc.perform(get(buildPaginationUri("/user/internal/inactive", 0, 5, null, new LinkedMultiValueMap<>()))).andExpect(status().isOk())
+                .andDo(document("user/{method-name}",
+                        responseFields(userPageResourceFields)
+                ));;
+    }
+
+    private UserPageResource buildUserPageResource(){
+        UserPageResource pageResource = new UserPageResource();
+        pageResource.setNumber(5);
+        pageResource.setSize(5);
+        pageResource.setTotalElements(10);
+        pageResource.setTotalPages(2);
+        pageResource.setContent(newUserResource().withEmail("example@innovateuk.test").build(5));
+        return pageResource;
     }
 }

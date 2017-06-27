@@ -29,7 +29,7 @@ User cannot accept/reject an invite to an application that has been withdrawn
     [Tags]
     When the user navigates to the page    ${server}/assessment/${WITHDRAWN_ASSESSMENT}/assignment
     Then the user should see the text in the page    Invitation withdrawn
-    [Teardown]    the user clicks the button/link    jQuery=#proposition-links a:contains(My dashboard)
+    [Teardown]    the user clicks the button/link    jQuery=#proposition-links a:contains(Dashboard)
 
 Competition link should navigate to the applications
     [Documentation]    INFUND-3716

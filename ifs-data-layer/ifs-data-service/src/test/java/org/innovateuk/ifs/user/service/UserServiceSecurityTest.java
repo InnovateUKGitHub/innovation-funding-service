@@ -6,10 +6,14 @@ import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.security.TokenLookupStrategies;
 import org.innovateuk.ifs.token.security.TokenPermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserPageResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.security.UserPermissionRules;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.method.P;
 
 import java.util.Set;
@@ -110,6 +114,22 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         });
     }
 
+    @Test
+    public void testFindActiveByProcessRoles(){
+        assertAccessDenied(() -> classUnderTest.findActiveByProcessRoles(UserRoleType.internalRoles(), new PageRequest(0, 5)), () -> {
+            verify(userRules).internalUsersCanViewEveryone(isA(UserPageResource.class), eq(getLoggedInUser()));
+            verifyNoMoreInteractions(userRules);
+        });
+    }
+
+    @Test
+    public void testFindInactiveByProcessRoles(){
+        assertAccessDenied(() -> classUnderTest.findInactiveByProcessRoles(UserRoleType.internalRoles(), new PageRequest(0, 5)), () -> {
+            verify(userRules).internalUsersCanViewEveryone(isA(UserPageResource.class), eq(getLoggedInUser()));
+            verifyNoMoreInteractions(userRules);
+        });
+    }
+
     @Override
     protected Class<? extends UserService> getClassUnderTest() {
         return TestUserService.class;
@@ -152,6 +172,16 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         @Override
         public ServiceResult<Void> updateDetails(@P("userBeingUpdated") UserResource userBeingUpdated) {
             return null;
+        }
+
+        @Override
+        public ServiceResult<UserPageResource> findActiveByProcessRoles(Set<UserRoleType> roleTypes, Pageable pageable) {
+            return serviceSuccess(new UserPageResource());
+        }
+
+        @Override
+        public ServiceResult<UserPageResource> findInactiveByProcessRoles(Set<UserRoleType> roleTypes, Pageable pageable) {
+            return serviceSuccess(new UserPageResource());
         }
 
     }
