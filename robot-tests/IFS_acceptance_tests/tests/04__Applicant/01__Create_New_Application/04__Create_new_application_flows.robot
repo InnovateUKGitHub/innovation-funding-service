@@ -50,7 +50,7 @@ Verify the name of the new application
     [Documentation]    INFUND-669 INFUND-1163
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    the guest user opens the browser
-    When Log in as user                             ${test_mailbox_one}+business@gmail.com    ${correct_password}
+    When Guest user log-in in new browser    ${test_mailbox_one}+business@gmail.com    ${correct_password}
     And the user edits the application title
     Then the user should see the text in the page    ${test_title}
     And the progress indicator should show 0
@@ -66,6 +66,11 @@ Marketing emails information should have updated on the profile
     Then the user should see that the checkbox is selected    allowMarketingEmails
 
 *** Keywords ***
+the new application should be visible in the dashboard page
+    the user clicks the button/link    link=Dashboard
+    the user should see the text in the page    ${test_title}
+    the user should see the text in the page    Application number:
+
 the user clicks the Not on company house link
     the user clicks the button/link    jQuery=summary:contains("Enter details manually")
     the user clicks the button/link    name=manual-address
@@ -105,7 +110,7 @@ Applicant goes to the registration form
 
 the user directed to correct dashboard
     [Arguments]    ${Application_name}
-    the user should see the text in the page    Your dashboard
+    the user should see the text in the page    Dashboard
     the user clicks the button/link    link=${Application_name}
     the user clicks the button/link    jQuery=a:contains("Begin application")
     the user should see the text in the page    Application overview

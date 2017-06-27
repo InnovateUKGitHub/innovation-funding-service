@@ -3,6 +3,7 @@ package org.innovateuk.ifs.interceptors;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +26,11 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
 public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
 
     public static final String USER_DASHBOARD_LINK="userDashboardLink";
+    public static final String USER_LOGOUT_LINK="logoutUrl";
+    public static final String USER_PROFILE_LINK="userProfileLink";
+    public static final String ASSESSOR_PROFILE_URL="/assessment/profile/details";
+    public static final String USER_PROFILE_URL="/profile/view";
+    public static final String SHOW_MANAGE_USERS_LINK_ATTR="showManageUsersLink";
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
@@ -39,25 +45,35 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
         if(modelAndView!=null && !(modelAndView.getView() instanceof RedirectView || modelAndView.getViewName().startsWith("redirect:") )) {
             addUserDashboardLink(request, modelAndView);
+            addUserProfileLink(request, modelAndView);
             addLogoutLink(modelAndView, logoutUrl);
+            addShowManageUsersAttribute(request, modelAndView);
         }
     }
 
     private void addUserDashboardLink(HttpServletRequest request, ModelAndView modelAndView) {
-        String dashboardUrl = getDashboardUrl(request);
-        if(!dashboardUrl.isEmpty()) {
-            modelAndView.getModelMap().addAttribute(USER_DASHBOARD_LINK, dashboardUrl);
-        }
+        String dashboardUrl = getUserDashboardUrl(request);
+        modelAndView.getModelMap().addAttribute(USER_DASHBOARD_LINK, dashboardUrl);
+    }
+
+    private void addUserProfileLink(HttpServletRequest request, ModelAndView modelAndView) {
+        String profileUrl = getUserProfileUrl(request);
+        modelAndView.getModelMap().addAttribute(USER_PROFILE_LINK, profileUrl);
+    }
+
+    private void addShowManageUsersAttribute(HttpServletRequest request, ModelAndView modelAndView) {
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+        modelAndView.getModelMap().addAttribute(SHOW_MANAGE_USERS_LINK_ATTR, user != null && user.hasRole(UserRoleType.IFS_ADMINISTRATOR));
     }
 
     public static void addLogoutLink(ModelAndView modelAndView, String logoutUrl) {
-        modelAndView.addObject("logoutUrl", logoutUrl);
+        modelAndView.addObject(USER_LOGOUT_LINK, logoutUrl);
     }
 
     /**
      * Get the dashboard url, from the Role object.
      */
-    private String  getDashboardUrl(HttpServletRequest request) {
+    private String getUserDashboardUrl(HttpServletRequest request) {
         UserAuthentication authentication = (UserAuthentication) userAuthenticationService.getAuthentication(request);
         if(authentication!=null) {
             Optional<SimpleGrantedAuthority> simpleGrantedAuthority = (Optional<SimpleGrantedAuthority>)authentication.getAuthorities().stream().findFirst();
@@ -76,5 +92,33 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
         return "/";
     }
 
+    private String getUserProfileUrl(HttpServletRequest request) {
+        UserAuthentication authentication = (UserAuthentication) userAuthenticationService.getAuthentication(request);
+        if(authentication!=null) {
+            Optional<SimpleGrantedAuthority> simpleGrantedAuthority = (Optional<SimpleGrantedAuthority>)authentication.getAuthorities().stream().findFirst();
+            if(simpleGrantedAuthority.isPresent()) {
+                UserResource user = authentication.getDetails();
 
+                //multiple roles
+                if (user.hasRoles(ASSESSOR, APPLICANT)) {
+                  String role = cookieUtil.getCookieValue(request, "role");
+                  if (!role.isEmpty()) {
+                      if(role.equals("assessor")) {
+                        return ASSESSOR_PROFILE_URL;
+                      }
+                      if(role.equals("applicant")) {
+                        return USER_PROFILE_URL;
+                      }
+                  }
+                }
+                if (user.hasRole(ASSESSOR)) {
+                  return ASSESSOR_PROFILE_URL;
+                }
+                if (user.hasRole(APPLICANT)) {
+                  return USER_PROFILE_URL;
+                }
+            }
+        }
+        return "";
+    }
 }

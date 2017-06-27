@@ -27,6 +27,7 @@ docker-compose.yml
 
 # ignore properties
 **/*-build.gradle
+!**/automated-build.gradle
 **/application-*.properties
 !**/application-local.properties
 !**/application-integration-test.properties
