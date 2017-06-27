@@ -80,8 +80,7 @@
                         <div class="multiple-choice">
                                 <input data-select-all="" id="select-all-1" type="checkbox"
                                        th:checked="${selectionForm.isAllSelected()}"
-                                       th:attr="disabled=${!model.anythingChangeable}"
-                                       th:disabled="${model.selectAllDisabled}"/>
+                                       th:disabled="${model.selectAllDisabled || !model.anythingChangeable}"/>
                                 <label for="select-all-1">
                                     Select all applications
                                 </label>
@@ -160,8 +159,7 @@
                         <div class="multiple-choice">
                             <input data-select-all="" id="select-all-2" type="checkbox"
                                    th:checked="${selectionForm.isAllSelected()}"
-                                   th:attr="disabled=${!model.anythingChangeable}"
-                                   th:disabled="${model.selectAllDisabled}"/>
+                                   th:disabled="${model.selectAllDisabled || !model.anythingChangeable}"/>
                             <label for="select-all-2">
                                 Select all applications
                             </label>
