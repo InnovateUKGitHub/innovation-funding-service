@@ -156,12 +156,12 @@
                                 <small>Partner</small>
                             </div>
                             <a th:if="${!form.isAdminMode() and !currentCompetition.isOpen() and applicationOrganisation.id.equals(userOrganisation.id)}"
-                               th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"}'>
-                                Detailed Organisation Finances
+                               th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"}' th:style="'font-weight: normal;'">
+                                View finances
                             </a>
                             <a th:if="${showDetailedFinanceLink != null && showDetailedFinanceLink.get(applicationOrganisation.id)}"
-                               th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"+applicationOrganisation.id}'>
-                                Detailed Organisation Finances
+                               th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"+applicationOrganisation.id}' th:style="'font-weight: normal;'">
+                                View finances
                             </a>
                             <th:block th:if="${currentApplication.isOpen()}">
                                 <th:block th:if="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}">

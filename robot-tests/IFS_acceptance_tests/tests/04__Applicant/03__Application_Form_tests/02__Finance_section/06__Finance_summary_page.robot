@@ -134,9 +134,9 @@ Support User can see read only summary link for each partner
     When the user navigates to the page     ${server}/management/competition/${OPEN_COMPETITION}/applications/all
     And the user clicks the button/link     link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
     And the user expands the Finance summaries
-    Then the user should see the element    jQuery=.project-cost-breakdown tbody tr:nth-of-type(1) th:contains("${EMPIRE_LTD_NAME}"):contains("Detailed Organisation Finances")
-    And the user should see the element     jQuery=.project-cost-breakdown tbody tr:nth-of-type(2) th:contains("Ludlow"):contains("Detailed Organisation Finances")
-    And the user should see the element     jQuery=.project-cost-breakdown tbody tr:nth-of-type(3) th:contains("EGGS"):contains("Detailed Organisation Finances")
+    Then the user should see the element    jQuery=.project-cost-breakdown tbody tr:nth-of-type(1) th:contains("${EMPIRE_LTD_NAME}"):contains("View finances")
+    And the user should see the element     jQuery=.project-cost-breakdown tbody tr:nth-of-type(2) th:contains("Ludlow"):contains("View finances")
+    And the user should see the element     jQuery=.project-cost-breakdown tbody tr:nth-of-type(3) th:contains("EGGS"):contains("View finances")
 
 Support User can see read only summary for lead
     [Documentation]  IFS-401

@@ -195,7 +195,7 @@ Lead partner is able to see finances without an error
     [Documentation]  INFUND-7634
     [Tags]
     Given the user clicks the button/link  jQuery=button:contains("Finances summary")
-    When the user clicks the button/link   link=Detailed Organisation Finances
+    When the user clicks the button/link   link=View finances
     And the user should see the element    jQuery=h2:contains("Finance summary")
     Then the user clicks the button/link   link=Application summary
 
