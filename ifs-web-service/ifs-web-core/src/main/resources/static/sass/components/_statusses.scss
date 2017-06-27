@@ -60,82 +60,6 @@
   color: $red;
 }
 
-/*
-###Collapsible showing form status
-Status is displayed in the collapsible header area.
-
-```
-<div class='collapsible'>
-    <h2 class='open' class='section-status-finance complete'>
-        Application details 1
-        <span style='' data-subsection-id='1' class='section-status complete place-in-header'><span data-binding-output='subsection-total-1'>Complete</span></span>
-    </h2>
-    <div>
-        <ul>
-            <li class='section'>
-                <a tabindex='0' href='#'>Application details</a>
-            </li>
-            <li class='section'>
-                <a tabindex='0' href='#'>Project Summary</a>
-            </li>
-            <li class='section'>
-                <a tabindex='0' href='#'>Public Description</a>
-            </li>
-        </ul>
-    </div>
-    <h2 class='section-status-finance incomplete'>Another Section 2
-        <span style='' data-subsection-id='2' class='section-status incomplete place-in-header'><span data-binding-output='subsection-total-2'>Incomplete</span></span></h2>
-    <div>
-        <ul>
-            <li class='section'>
-                <a tabindex='0' href='#'>Another subsection</a>
-            </li>
-            <li class='section'>
-                <a tabindex='0' href='#'>Another subsection</a>
-            </li>
-        </ul>
-    </div>
-    <h2 class='section-status-finance assigned'>Another Section 3
-        <span style='' data-subsection-id='3' class='section-status assigned place-in-header'><span data-binding-output='subsection-total-3'>Assigned to me</span></span></h2>
-    </h2>
-    <div>
-        <ul>
-            <li class='section'>
-                <a tabindex='0' href='#'>Another subsection</a>
-            </li>
-            <li class='section'>
-                <a tabindex='0' href='#'>Another subsection</a>
-            </li>
-        </ul>
-    </div>
-</div>
-```
-
-###Rows inside collapsible container
-
-```
-<div class='collapsible'>
-    <ul>
-        <li class='section marked-as-complete'>
-            <div class='grid-row'>
-                <div class='column-two-thirds'>
-                    <h4 class='heading-medium'><a href='#'>Application details</a></h4>
-                </div>
-            </div>
-        </li>
-        <li class='section assigned-to-me'>
-            <div class='grid-row'>
-                <div class='column-two-thirds'>
-                    <h4 class='heading-medium'><a href='#'>Project summary</a></h4>
-                </div>
-            </div>
-        </li>
-    </ul>
-</div>
-```
-
-*/
-
 .collapsible,
 .list-overview {
   li {
@@ -188,52 +112,6 @@ Status is displayed in the collapsible header area.
       }
     }
 }
-
-/* SG
-# IFS/Wrapped textareas : Complete
-```
-<div class='textarea-wrapped marked-as-complete word-count'>
-    <div class='textarea-header'>
-         <img class='marked-as-complete' alt='' src='/images/field/field-done.png'>
-         <div class='assignee'>This question is <strong>marked as complete</strong></div>
-    </div>
-        <textarea readonly='readonly' name='formInput[12]' id='form-textarea-12' data-max_words='400'></textarea>
-    <div class='textarea-footer'>
-          <p>
-            <small>Last updated: Yesterday by you</small>
-                <span class='count-label'>
-                    <span aria-live='polite' class='count-down positive'>Words remaining: 400 </span>
-                </span>
-          </p>
-    </div>
-</div>
-```
-*/
-
-/* SG
-# IFS/Wrapped textareas : Assigned to me
-```
-<div class='textarea-wrapped assigned-to-me  word-count'>
-     <div class='textarea-header'>
-        <img class='assigned-to-me' alt='' src='/images/field/field-assigned.png'>
-        <div class='assignee assigned-to-me'>
-            This question has been reassigned to
-              <span>you</span> by
-              <span>Jessica Doe</span>
-        </div>
-    </div>
-        <textarea data-max_words='400'></textarea>
-    <div class='textarea-footer'>
-          <p>
-            <small>Last updated: Yesterday by you</small>
-                <span class='count-label'>
-                        <span aria-live='polite' class='count-down positive'>Words remaining: 400</span>
-                </span>
-          </p>
-    </div>
-</div>
-```
-*/
 
 .textarea-wrapped {
   .textarea-header {

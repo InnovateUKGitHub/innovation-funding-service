@@ -1,17 +1,4 @@
-/* SG
 
-# IFS/Text
-
-```
-<p>I am <strong>such a strong character</strong></p>
-
-<p>Be mean or be <span class="greentext">Green</span></p>
-
-Hello world <small>(just testing smalltext)</small>
-
-<div class="blue-block">test</div>
-```
-*/
 .greentext {
   color:$green;
 }
@@ -113,18 +100,6 @@ th[scope="row"]{
   }
 }
 
-/* SG
-
-# IFS/Right aligned buttons
-```
-<div class="alignright">
-	<button class="button">Button 1</button>
-	<button class="button">Button 2</button>
-</div>
-```
-*/
-
-
 .alignright-button {
 	text-align:right;
   @extend %contain-floats;
@@ -216,14 +191,6 @@ hr.underline {
 	display: block;
 }
 
-
-/*
-
-###subtitle for header
-```
-<p class="subtitle">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, deleniti.</p>
-```
-*/
 .subtitle {
 	color: $grey-1;
 	font-size: 24px;
@@ -266,17 +233,6 @@ col.border {
   }
 }
 
-/*
-
-###Secondary Buttons
-
-```
-<a href="#" class="button-secondary" tabindex="0">Anchor like a button</a>
-<button class="button-secondary">Real button</button>
-
-```
-
-*/
 .button-secondary{
 	@include button($panel-colour);
 	@include box-sizing (border-box);

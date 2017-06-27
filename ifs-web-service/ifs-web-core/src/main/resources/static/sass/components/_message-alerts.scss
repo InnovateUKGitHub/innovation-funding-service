@@ -1,26 +1,3 @@
-/* SG
-
-# IFS/Message Alert Dialog
-Large message panel
-
-```
-<div class="message-alert">
-    <h1 class="heading-medium">
-        New request for assessment
-    </h1>
-
-    <p>
-      You have been requested to act as an assessor on a new competition: <strong>Solving urban problems with data</strong>
-    </p>
-
-    <ul class="message-summary-list">
-      <li><strong><a href="#">Respond to assessment request</a></strong></li>
-    </ul>
- </div>
-
- ```
-*/
-
 %alert-panel {
   padding: 20px 20px 20px 60px;
   border-style: solid;

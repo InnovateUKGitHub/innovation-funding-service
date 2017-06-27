@@ -1,35 +1,3 @@
-/* SG
-
-# IFS/Assign-container
-
-The assign container is normally a `<select>`, which gets progressivly transformed by javascript to a list of buttons
-```
-<div class="assign-container assign-alert">
-    <span class="action-required">
-        Assigned to you.
-    </span>
-    <div class="assign-button-container">
-        <div class="assign-button">
-            <span class="action-required">
-                Assign this question to someone else
-            </span>
-        </div>
-        <div class="assign-team">
-            <select class="prog-menu" name="assign_question">
-                <option value="pete">Pete Tom</option>
-                <option value="adrian">Adrian Booth</option>
-                <option value="steve" disabled="disabled" selected="selected">Steve Smith</option><!-- currently selected user -->
-                <option value="jessica">Jessica Doe</option>
-                <option disabled="disabled">michael (pending)</option><!-- pending user -->
-            </select>
-            <button type="submit">Reassign</button>
-        </div>
-    </div>
-</div>
-
-```
-*/
-
 .assign-container {
   @include inline-block;
   position:relative;

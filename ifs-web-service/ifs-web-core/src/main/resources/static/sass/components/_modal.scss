@@ -1,24 +1,3 @@
-/* SG
-
-# IFS/Modal dialogs
-Controlled with javascript, an alternative standard html page should be used for non-js users
-```
-<a href="#fallback-pagewhen-no-js" data-js-modal="my-important-modal" class="button">Open dialog</a>
-
-<div class="modal-overlay js-close" aria-hidden="true"></div>
-<div class="my-important-modal" role="dialog" aria-hidden="true">
-	<button class="js-close close" type="button" aria-label="Close Popup">X</button>
-	<p>Content goes here</p>
-	<hr/>
-	<div>
-		<button class="button">Submit</button>
-		<button class="js-close buttonlink" type="button">Cancel</button>
-	</div>
-</div>
-```
-
-*/
-
 [role="dialog"]{
 	border-top: 10px solid $link-colour;
 	width:80%;

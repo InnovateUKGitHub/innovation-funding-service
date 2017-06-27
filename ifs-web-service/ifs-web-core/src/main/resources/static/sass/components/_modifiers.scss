@@ -128,15 +128,6 @@ table {
   color: $grey-1;
 }
 
-/* SG
-# IFS/warning button
-
-```
-<button class="button-warning button">No</button>
-```
-
-*/
-
 .button-warning{
 	@include button(#c00000);
 }
