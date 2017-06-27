@@ -1,12 +1,11 @@
 package org.innovateuk.ifs.user.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 public class RoleResource {
     private Long id;
@@ -49,6 +48,11 @@ public class RoleResource {
 
     public void setUsers(List<Long> users) {
         this.users = users;
+    }
+
+    @JsonIgnore
+    public String getDisplayName(){
+        return UserRoleType.fromName(name).getDisplayName();
     }
 
     @Override

@@ -96,7 +96,7 @@ Valid login as Comp Admin
 
 Valid login as Support role
     [Documentation]    IFS-188
-    [Tags]
+    [Tags]     HappyPath    support
     Given the user is not logged-in
     When The guest user inserts user email and password   &{support_user_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
@@ -105,11 +105,12 @@ Valid login as Support role
 
 Valid login as IFS Admin role
     [Documentation]    IFS-603
-    [Tags]
+    [Tags]      HappyPath    administrator
     Given the user is not logged-in
     When The guest user inserts user email and password   &{ifs_admin_user_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     And the user navigates to the page    ${COMP_ADMINISTRATOR_DASHBOARD}
+    Then the user should see the element    link=Manage users
     Then the user should see the element    link=Sign out
     [Teardown]    Logout as user
 
@@ -173,7 +174,7 @@ Reset password user enters new psw
 
 *** Keywords ***
 the user is not logged-in
-    the user should not see the element    link=My dashboard
+    the user should not see the element    link=Dashboard
     the user should not see the element    link=Sign out
 
 the guest user should get an error message

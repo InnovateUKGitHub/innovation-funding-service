@@ -26,9 +26,9 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.text.Collator;
 import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
@@ -45,6 +45,8 @@ import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.resource.UserRoleType.APPLICANT;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -142,7 +144,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         when(applicationServiceMock.setApplicationFundingEmailDateTime(any(Long.class), any(ZonedDateTime.class))).thenReturn(serviceSuccess(new ApplicationResource()));
         when(competitionServiceMock.manageInformState(competition.getId())).thenReturn(serviceSuccess());
 
-        ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisions(fundingNotificationResource);
+        ServiceResult<Void> result = service.notifyApplicantsOfFundingDecisions(fundingNotificationResource);
         assertTrue(result.isSuccess());
 
         verify(notificationServiceMock).sendNotification(createNotificationExpectationsWithGlobalArgs(expectedFundingNotification), eq(EMAIL));
@@ -155,31 +157,36 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     }
 
     @Test
-    public void testNotifyLeadApplicantsOfFundingDecisionsAndJustLeadApplicants() {
+    public void testNotifyAllApplicantsOfFundingDecisions() {
 
         Competition competition = newCompetition().build();
 
         Application application1 = newApplication().withCompetition(competition).build();
         Application application2 = newApplication().withCompetition(competition).build();
 
-        // add some collaborators into the mix - they should not receive Notifications
+        // add some collaborators into the mix - they should receive Notifications, and applicants who should not
         User application1LeadApplicant = newUser().build();
         User application1Collaborator = newUser().build();
+        User application1Applicant = newUser().build();
         User application2LeadApplicant = newUser().build();
         User application2Collaborator = newUser().build();
+        User application2Applicant = newUser().build();
 
         Role leadApplicantRole = newRole().with(id(456L)).build();
         Role collaboratorRole = newRole().with(id(789L)).build();
+        Role applicantRole = newRole().with(id(321L)).build();
 
         List<ProcessRole> allProcessRoles = newProcessRole().
-                withUser(application1LeadApplicant, application1Collaborator, application2LeadApplicant, application2Collaborator).
-                withApplication(application1, application1, application2, application2).
-                withRole(leadApplicantRole, collaboratorRole, leadApplicantRole, collaboratorRole).
-                build(4);
+                withUser(application1LeadApplicant, application1Collaborator, application1Applicant, application2LeadApplicant, application2Collaborator, application2Applicant).
+                withApplication(application1, application1, application1, application2, application2, application2).
+                withRole(leadApplicantRole, collaboratorRole, applicantRole, leadApplicantRole, collaboratorRole, applicantRole).
+                build(6);
 
         UserNotificationTarget application1LeadApplicantTarget = new UserNotificationTarget(application1LeadApplicant);
         UserNotificationTarget application2LeadApplicantTarget = new UserNotificationTarget(application2LeadApplicant);
-        List<NotificationTarget> expectedLeadApplicants = asList(application1LeadApplicantTarget, application2LeadApplicantTarget);
+        UserNotificationTarget application1CollaboratorTarget = new UserNotificationTarget(application1Collaborator);
+        UserNotificationTarget application2CollaboratorTarget = new UserNotificationTarget(application2Collaborator);
+        List<NotificationTarget> expectedApplicants = asList(application1LeadApplicantTarget, application2LeadApplicantTarget, application1CollaboratorTarget, application2CollaboratorTarget);
 
         Map<Long, FundingDecision> decisions = MapFunctions.asMap(
                 application1.getId(), FundingDecision.FUNDED,
@@ -187,7 +194,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         FundingNotificationResource fundingNotificationResource = new FundingNotificationResource("The message body.", decisions);
 
         Notification expectedFundingNotification =
-                new Notification(systemNotificationSourceMock, expectedLeadApplicants, APPLICATION_FUNDING, emptyMap());
+                new Notification(systemNotificationSourceMock, expectedApplicants, APPLICATION_FUNDING, emptyMap());
         
         List<Long> applicationIds = asList(application1.getId(), application2.getId());
         List<Application> applications = asList(application1, application2);
@@ -198,6 +205,8 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         );
 
         when(roleRepositoryMock.findOneByName(LEADAPPLICANT.getName())).thenReturn(leadApplicantRole);
+        when(roleRepositoryMock.findOneByName(COLLABORATOR.getName())).thenReturn(collaboratorRole);
+        when(roleRepositoryMock.findOneByName(APPLICANT.getName())).thenReturn(applicantRole);
 
         allProcessRoles.forEach(processRole ->
                 when(processRoleRepositoryMock.findByApplicationIdAndRoleId(processRole.getApplicationId(), processRole.getRole().getId())).thenReturn(singletonList(processRole))
@@ -207,7 +216,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         when(applicationServiceMock.setApplicationFundingEmailDateTime(any(Long.class), any(ZonedDateTime.class))).thenReturn(serviceSuccess(new ApplicationResource()));
         when(competitionServiceMock.manageInformState(competition.getId())).thenReturn(serviceSuccess());
 
-        ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisions(fundingNotificationResource);
+        ServiceResult<Void> result = service.notifyApplicantsOfFundingDecisions(fundingNotificationResource);
         assertTrue(result.isSuccess());
 
         verify(notificationServiceMock).sendNotification(createSimpleNotificationExpectations(expectedFundingNotification), eq(EMAIL));
@@ -306,9 +315,12 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         return createLambdaMatcher(notification -> {
             assertEquals(expectedNotification.getFrom(), notification.getFrom());
 
-            List<String> expectedToEmailAddresses = simpleMap(expectedNotification.getTo(), NotificationTarget::getEmailAddress);
-            List<String> actualToEmailAddresses = simpleMap(notification.getTo(), NotificationTarget::getEmailAddress);
-            assertEquals(expectedToEmailAddresses, actualToEmailAddresses);
+            Collection<String> expectedTo = new TreeSet<>(Collator.getInstance());
+            expectedTo.addAll(simpleMap(expectedNotification.getTo(), NotificationTarget::getEmailAddress));
+
+            Collection<String> actualTo = new TreeSet<>(Collator.getInstance());
+            actualTo.addAll(simpleMap(notification.getTo(), NotificationTarget::getEmailAddress));
+            assertEquals(asList(expectedTo.toArray()), asList(actualTo.toArray()));
 
             assertEquals(expectedNotification.getMessageKey(), notification.getMessageKey());
         });
