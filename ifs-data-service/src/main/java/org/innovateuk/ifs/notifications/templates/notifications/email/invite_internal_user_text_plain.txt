@@ -1,0 +1,20 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${notificationTarget.name},
+
+An Innovation Funding Service account was created for you.
+
+Your details:
+
+Name
+${notificationTarget.name}
+Role
+${role}
+
+Please confirm your account and create your password by going to ${inviteUrl}
+
+Yours sincerely,
+
+IFS Team
+Innovate UK
+</@layout.defaultPlainText>
