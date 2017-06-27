@@ -121,6 +121,8 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         when(competitionKeyStatisticsRestServiceMock.getFundedKeyStatisticsByCompetition(COMPETITION_ID)).thenReturn(restSuccess(keyStatistics));
         when(assessmentRestService.countByStateAndCompetition(AssessmentStates.CREATED, COMPETITION_ID)).thenReturn(restSuccess(changesSinceLastNotify));
 
+        when(applicationSummaryRestService.getAllSubmittedApplications(COMPETITION_ID, empty(), empty())).thenReturn(restSuccess(newApplicationSummaryResource().build(2)));
+
         // Expected values to match against
         CompetitionInFlightStatsViewModel keyStatisticsModel = competitionInFlightStatsModelPopulator.populateStatsViewModel(competitionResource);
         ManageFundingApplicationViewModel model = new ManageFundingApplicationViewModel(applicationSummaryPageResource, keyStatisticsModel, new PaginationViewModel(applicationSummaryPageResource, queryParams), sortField, COMPETITION_ID, competitionResource.getName(), false);
@@ -139,6 +141,9 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     @Test
     public void testSelectApplications() throws Exception {
         long competitionId = 1L;
+        when(applicationSummaryRestService.getAllSubmittedApplications(
+                competitionId, empty(), empty())).thenReturn(restSuccess(newApplicationSummaryResource().build(2)));
+
         mockMvc.perform(post("/competition/{competitionId}/manage-funding-applications", competitionId).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("ids[0]", "18")
