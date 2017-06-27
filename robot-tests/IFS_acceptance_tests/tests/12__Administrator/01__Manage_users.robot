@@ -2,9 +2,9 @@
 Documentation     IFS-604: IFS Admin user navigation to Manage users section
 ...               IFS-605: Manage internal users: List of all internal users and roles
 ...               IFS-606: Manage internal users: Read only view of internal user profile
-Suite Setup       Guest user log-in in new browser    &{ifs_admin_user_credentials}
+Suite Setup       The user logs-in in new browser  &{ifs_admin_user_credentials}
 Suite Teardown    the user closes the browser
-Force Tags        administrator
+Force Tags        Administrator
 Resource          ../../resources/defaultResources.robot
 
 *** Test Cases ***
@@ -17,11 +17,11 @@ Administrator can navigate to manage users page
 
 Administrator can see read only view of internal user profile
     [Documentation]    INFUND-606
-    When the user clicks the button/link    link=John Doe
-    Then the user should see the element    jQuery=h1:contains("View internal user's details")
-    And the user should see the text in the page    ${Comp_admin1_credentials["email"]}
-    And the user should see the text in the page    Competition Administrator
-    And the user should see the text in the page    Created by IFS System Maintenance User on 21 June 2017
+    When the user clicks the button/link          link=John Doe
+    Then the user should see the element          jQuery=h1:contains("View internal user's details")
+    And the user should see the text in the page  ${Comp_admin1_credentials["email"]}
+    And the user should see the text in the page  Competition Administrator
+    And the user should see the text in the page  Created by IFS System Maintenance User on 21 June 2017
 
 Project finance user cannot navigate to manage users page
     [Documentation]    INFUND-604
