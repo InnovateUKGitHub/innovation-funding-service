@@ -91,6 +91,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
             selectionForm = selectionCookieForm.getFundingDecisionSelectionForm();
             FundingDecisionFilterForm filterCookieForm = selectionCookieForm.getFundingDecisionFilterForm();
 
+
             if(clearFilters) {
                 filterForm = new FundingDecisionFilterForm();
             } else if (!filterForm.anyFilterIsActive() && filterCookieForm.anyFilterIsActive() && selectionForm.anySelectionIsMade()) {
@@ -242,7 +243,6 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                                                                        FundingDecisionFilterForm filterForm,
                                                                        Long competitionId) {
         List<Long> filteredApplicationIds = getAllApplicationIdsByFilters(competitionId, filterForm);
-
         FundingDecisionSelectionForm updatedSelectionForm = new FundingDecisionSelectionForm();
 
         if (selectionForm.isAllSelected() && !filterForm.anyFilterIsActive()) {
@@ -307,12 +307,14 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                 .getCompetitionSummary(competitionId)
                 .getSuccessObjectOrThrowException();
 
+        List<Long> submittableApplicationIds = getAllApplicationIdsByFilters(competitionId, fundingDecisionFilterForm);
+
         model.addAttribute("pagination", new PaginationViewModel(results, originQuery));
         model.addAttribute("results", results);
         model.addAttribute("selectionForm", fundingDecisionSelectionForm);
         model.addAttribute("competitionSummary", competitionSummary);
         model.addAttribute("originQuery", originQuery);
-        model.addAttribute("selectAllDisabled", limitIsExceeded(results.getTotalElements()));
+        model.addAttribute("selectAllDisabled", limitIsExceeded(submittableApplicationIds.size()));
 
         switch (competitionSummary.getCompetitionStatus()) {
             case FUNDERS_PANEL:

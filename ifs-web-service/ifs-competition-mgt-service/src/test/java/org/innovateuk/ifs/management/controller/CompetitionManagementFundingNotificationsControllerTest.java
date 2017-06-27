@@ -123,7 +123,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
 
         // Expected values to match against
         CompetitionInFlightStatsViewModel keyStatisticsModel = competitionInFlightStatsModelPopulator.populateStatsViewModel(competitionResource);
-        ManageFundingApplicationViewModel model = new ManageFundingApplicationViewModel(applicationSummaryPageResource, keyStatisticsModel, new PaginationViewModel(applicationSummaryPageResource, queryParams), sortField, COMPETITION_ID, competitionResource.getName());
+        ManageFundingApplicationViewModel model = new ManageFundingApplicationViewModel(applicationSummaryPageResource, keyStatisticsModel, new PaginationViewModel(applicationSummaryPageResource, queryParams), sortField, COMPETITION_ID, competitionResource.getName(), false);
 
         when(applicationSummaryRestService.getWithFundingDecisionApplications(
                 COMPETITION_ID, empty(), sendFilter, fundingFilter)).thenReturn(restSuccess(applications));
