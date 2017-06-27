@@ -12,7 +12,6 @@ import org.innovateuk.ifs.competition.form.SelectApplicationsForEmailForm;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.management.model.ManageFundingApplicationsModelPopulator;
 import org.innovateuk.ifs.management.model.SendNotificationsModelPopulator;
-import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -26,27 +25,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static java.lang.String.format;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.innovateuk.ifs.util.JsonUtil.getObjectFromJson;
-import static org.innovateuk.ifs.util.JsonUtil.getSerializedObject;
 
 
 @Controller
 @RequestMapping("/competition/{competitionId}")
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-public class CompetitionManagementFundingNotificationsController extends CompetitionManagementCookieController {
+public class CompetitionManagementFundingNotificationsController extends CompetitionManagementCookieController<FundingNotificationSelectionCookie> {
 
     private static final String MANAGE_FUNDING_APPLICATIONS_VIEW = "comp-mgt-manage-funding-applications";
     private static final String FUNDING_DECISION_NOTIFICATION_VIEW = "comp-mgt-send-notifications";
-    private static final String SELECTION_FORM = "applicationSelectionForm";
 
     @Autowired
     private ManageFundingApplicationsModelPopulator manageFundingApplicationsModelPopulator;
@@ -60,9 +53,13 @@ public class CompetitionManagementFundingNotificationsController extends Competi
     @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
 
-    @Autowired
-    private CookieUtil cookieUtil;
+    protected String getCookieName() {
+        return "applicationSelectionForm";
+    }
 
+    protected Class<FundingNotificationSelectionCookie> getFormType() {
+        return FundingNotificationSelectionCookie.class;
+    }
 
     @GetMapping("/funding/send")
     public String sendNotifications(Model model,
@@ -121,7 +118,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
                                      SelectApplicationsForEmailForm appSelectionForm,
                                      ManageFundingApplicationsQueryForm filterForm,
                                      boolean clearFilters) {
-        FundingNotificationSelectionCookie storedSelectionFormCookie = getFundingNotificationFormFromCookie(request, competitionId).orElse(new FundingNotificationSelectionCookie());
+        FundingNotificationSelectionCookie storedSelectionFormCookie = getSelectionFormFromCookie(request, competitionId).orElse(new FundingNotificationSelectionCookie());
         ManageFundingApplicationsQueryForm storedFilterForm = storedSelectionFormCookie.getManageFundingApplicationsQueryForm();
         SelectApplicationsForEmailForm storedAppSelectionForm = storedSelectionFormCookie.getSelectApplicationsForEmailForm();
         clearFilters = !filterForm.anyFilterOptionsActive();
@@ -142,7 +139,9 @@ public class CompetitionManagementFundingNotificationsController extends Competi
         }
         storedSelectionFormCookie.setManageFundingApplicationsQueryForm(filterForm);
         storedSelectionFormCookie.setSelectApplicationsForEmailForm(appSelectionForm);
-        cookieUtil.saveToCompressedCookie(response, format("%s_comp_%s", SELECTION_FORM, competitionId), getSerializedObject(storedSelectionFormCookie));
+
+        saveFormToCookie(response, competitionId, storedSelectionFormCookie);
+
     }
 
     @PostMapping("/manage-funding-applications")
@@ -158,7 +157,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
                                      HttpServletRequest request,
                                      HttpServletResponse response) {
 
-        FundingNotificationSelectionCookie selectionCookie = getFundingNotificationFormFromCookie(request, competitionId)
+        FundingNotificationSelectionCookie selectionCookie = getSelectionFormFromCookie(request, competitionId)
                 .orElse(new FundingNotificationSelectionCookie(selectionForm));
 
         return queryFormValidationHandler.failNowOrSucceedWith(queryFailureView(competitionId),  // Pass or fail JSR 303 on the query form
@@ -170,7 +169,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
                             }
                             return idsValidationHandler.failNowOrSucceedWith(idsFailureView(competitionId, query, model, params), // Pass or fail custom validation
                                     () -> {
-                                        cookieUtil.removeCookie(response, format("%s_comp_%s", SELECTION_FORM, competitionId));
+                                        removeCookie(response, competitionId);
                                         return composeEmailRedirect(competitionId, selectionCookie.getSelectApplicationsForEmailForm().getIds());
                                     });
                         }
@@ -183,14 +182,13 @@ public class CompetitionManagementFundingNotificationsController extends Competi
             @PathVariable("competitionId") long competitionId,
             @RequestParam("selectionId") long applicationId,
             @RequestParam("isSelected") boolean isSelected,
-            @RequestParam(defaultValue = "0") int page,
             HttpServletRequest request,
             HttpServletResponse response) {
 
         boolean limitIsExceeded = false;
 
         try {
-            FundingNotificationSelectionCookie selectionCookie = getFundingNotificationFormFromCookie(request, competitionId).orElse(new FundingNotificationSelectionCookie());
+            FundingNotificationSelectionCookie selectionCookie = getSelectionFormFromCookie(request, competitionId).orElse(new FundingNotificationSelectionCookie());
 
             if (isSelected) {
                 int predictedSize = selectionCookie.getSelectApplicationsForEmailForm().getIds().size() + 1;
@@ -205,10 +203,11 @@ public class CompetitionManagementFundingNotificationsController extends Competi
                 selectionCookie.getSelectApplicationsForEmailForm().getIds().remove(applicationId);
                 selectionCookie.getSelectApplicationsForEmailForm().setAllSelected(false);
             }
-            cookieUtil.saveToCompressedCookie(response, format("%s_comp_%s", SELECTION_FORM, competitionId), getSerializedObject(selectionCookie));
-            return createJsonObjectNode(selectionCookie.getSelectApplicationsForEmailForm().getIds().size(), selectionCookie.getSelectApplicationsForEmailForm().isAllSelected(), limitIsExceeded);
+            saveFormToCookie(response, competitionId, selectionCookie);
+
+            return createSuccessfulResponseWithSelectionStatus(selectionCookie.getSelectApplicationsForEmailForm().getIds().size(), selectionCookie.getSelectApplicationsForEmailForm().isAllSelected(), limitIsExceeded);
         } catch (Exception e) {
-            return createJsonObjectNode(-1, false, false);
+            return createFailureResponse();
         }
     }
 
@@ -228,11 +227,10 @@ public class CompetitionManagementFundingNotificationsController extends Competi
     public @ResponseBody JsonNode addAllApplicationsToEmailList(Model model,
                                            @PathVariable("competitionId") long competitionId,
                                            @RequestParam("addAll") boolean addAll,
-                                           @RequestParam(defaultValue = "0") int page,
                                            HttpServletRequest request,
                                            HttpServletResponse response) {
         try {
-            FundingNotificationSelectionCookie selectionCookie = getFundingNotificationFormFromCookie(request, competitionId).orElse(new FundingNotificationSelectionCookie());
+            FundingNotificationSelectionCookie selectionCookie = getSelectionFormFromCookie(request, competitionId).orElse(new FundingNotificationSelectionCookie());
             SelectApplicationsForEmailForm applicationsForEmailForm = selectionCookie.getSelectApplicationsForEmailForm();
 
             if (addAll) {
@@ -243,10 +241,10 @@ public class CompetitionManagementFundingNotificationsController extends Competi
                 applicationsForEmailForm.setAllSelected(false);
             }
 
-            cookieUtil.saveToCompressedCookie(response, format("%s_comp_%s", SELECTION_FORM, competitionId), getSerializedObject(selectionCookie));
-            return createJsonObjectNode(selectionCookie.getSelectApplicationsForEmailForm().getIds().size(), selectionCookie.getSelectApplicationsForEmailForm().isAllSelected(), false);
+            saveFormToCookie(response, competitionId, selectionCookie);
+            return createSuccessfulResponseWithSelectionStatus(selectionCookie.getSelectApplicationsForEmailForm().getIds().size(), selectionCookie.getSelectApplicationsForEmailForm().isAllSelected(), false);
         } catch (Exception e) {
-            return createJsonObjectNode(-1, false, false);
+            return createFailureResponse();
         }
     }
 
@@ -288,14 +286,5 @@ public class CompetitionManagementFundingNotificationsController extends Competi
                 .build()
                 .encode()
                 .toUriString();
-    }
-
-    private Optional<FundingNotificationSelectionCookie> getFundingNotificationFormFromCookie(HttpServletRequest request, long competitionId) {
-        String applicationFormJson = cookieUtil.getCompressedCookieValue(request, format("%s_comp_%s", SELECTION_FORM, competitionId));
-        if (isNotBlank(applicationFormJson)) {
-            return Optional.ofNullable(getObjectFromJson(applicationFormJson, FundingNotificationSelectionCookie.class));
-        } else {
-            return Optional.empty();
-        }
     }
 }

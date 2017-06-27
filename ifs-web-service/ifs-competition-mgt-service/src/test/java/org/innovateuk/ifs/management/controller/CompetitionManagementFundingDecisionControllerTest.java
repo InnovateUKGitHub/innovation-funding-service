@@ -142,7 +142,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         FundingDecisionSelectionCookie expectedCookie = new FundingDecisionSelectionCookie();
         expectedCookie.setFundingDecisionFilterForm(new FundingDecisionFilterForm());
 
-        verify(cookieUtil).saveToCompressedCookie(any(),eq("fundingDecisionSelectionForm_comp123"), eq(getSerializedObject(expectedCookie)));
+        verify(cookieUtil).saveToCompressedCookie(any(),eq("fundingDecisionSelectionForm_comp_123"), eq(getSerializedObject(expectedCookie)));
     }
 
     @Test
@@ -170,7 +170,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
 
         expectedCookie.setFundingDecisionFilterForm(expectedFilterFrom);
 
-        verify(cookieUtil).saveToCompressedCookie(any(),eq("fundingDecisionSelectionForm_comp123"), eq(getSerializedObject(expectedCookie)));
+        verify(cookieUtil).saveToCompressedCookie(any(),eq("fundingDecisionSelectionForm_comp_123"), eq(getSerializedObject(expectedCookie)));
     }
 
     @Test
@@ -196,7 +196,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
                 .andExpect(model().attribute("results", summary));
 
-        verify(cookieUtil).saveToCompressedCookie(any(),eq("fundingDecisionSelectionForm_comp123"), eq(getSerializedObject(cookieWithFilterAndSelectionParameters)));
+        verify(cookieUtil).saveToCompressedCookie(any(),eq("fundingDecisionSelectionForm_comp_123"), eq(getSerializedObject(cookieWithFilterAndSelectionParameters)));
     }
 
     @Test
@@ -225,7 +225,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         FundingDecisionSelectionCookie expectedFundingDecisionSelectionCookie = cookieWithFilterAndSelectionParameters;
         expectedFundingDecisionSelectionCookie.setFundingDecisionFilterForm(new FundingDecisionFilterForm());
 
-        verify(cookieUtil).saveToCompressedCookie(any(),eq("fundingDecisionSelectionForm_comp123"), eq(getSerializedObject(expectedFundingDecisionSelectionCookie)));
+        verify(cookieUtil).saveToCompressedCookie(any(),eq("fundingDecisionSelectionForm_comp_123"), eq(getSerializedObject(expectedFundingDecisionSelectionCookie)));
     }
 
 
