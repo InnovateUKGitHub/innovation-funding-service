@@ -7,9 +7,9 @@ import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationMedium;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.resource.TokenType;
-import org.innovateuk.ifs.user.builder.UserBuilder;
-import org.innovateuk.ifs.user.builder.UserResourceBuilder;
+import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.UserStatus;
@@ -18,18 +18,22 @@ import org.innovateuk.ifs.user.transactional.UserServiceImpl;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -45,8 +49,8 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Test
     public void testChangePassword() {
 
-        User user = UserBuilder.newUser().build();
-        UserResource userResource = UserResourceBuilder.newUserResource().withUID("myuid").build();
+        User user = newUser().build();
+        UserResource userResource = newUserResource().withUID("myuid").build();
 
         Token token = new Token(TokenType.RESET_PASSWORD, null, 123L, null, null, null);
         when(tokenServiceMock.getPasswordResetToken("myhash")).thenReturn(ServiceResult.serviceSuccess(token));
@@ -63,8 +67,8 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Test
     public void testChangePasswordButPasswordValidationFails() {
 
-        User user = UserBuilder.newUser().build();
-        UserResource userResource = UserResourceBuilder.newUserResource().withUID("myuid").build();
+        User user = newUser().build();
+        UserResource userResource = newUserResource().withUID("myuid").build();
 
         Token token = new Token(TokenType.RESET_PASSWORD, null, 123L, null, null, null);
         when(tokenServiceMock.getPasswordResetToken("myhash")).thenReturn(ServiceResult.serviceSuccess(token));
@@ -80,8 +84,8 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testFindInactiveByEmail() {
-        final User user = UserBuilder.newUser().build();
-        final UserResource userResource = UserResourceBuilder.newUserResource()
+        final User user = newUser().build();
+        final UserResource userResource = newUserResource()
                 .withEmail("a@b.c")
                 .withLastName("A")
                 .withLastName("Bee")
@@ -99,7 +103,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testSendPasswordResetNotification() {
-        final UserResource user = UserResourceBuilder.newUserResource()
+        final UserResource user = newUserResource()
                 .withStatus(UserStatus.ACTIVE)
                 .withEmail("a@b.c")
                 .withFirstName("A")
@@ -120,7 +124,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testSendPasswordResetNotificationInactiveApplicantNoVerifyToken() {
-        final UserResource user = UserResourceBuilder.newUserResource()
+        final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
                         Collections.singletonList(
@@ -143,7 +147,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testSendPasswordResetNotificationInactiveApplicantHasVerifyToken() {
-        final UserResource user = UserResourceBuilder.newUserResource()
+        final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
                         Arrays.asList(
@@ -168,7 +172,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testSendPasswordResetNotificationInactiveAssessor() {
-        final UserResource user = UserResourceBuilder.newUserResource()
+        final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
                         Collections.singletonList(
@@ -188,7 +192,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testSendPasswordResetNotificationInactiveProjectFinance() {
-        final UserResource user = UserResourceBuilder.newUserResource()
+        final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
                         Collections.singletonList(
@@ -208,7 +212,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testSendPasswordResetNotificationInactiveCompAdmin() {
-        final UserResource user = UserResourceBuilder.newUserResource()
+        final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
                         Collections.singletonList(
@@ -228,7 +232,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testSendPasswordResetNotificationInactiveCompExec() {
-        final UserResource user = UserResourceBuilder.newUserResource()
+        final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
                         Collections.singletonList(
@@ -248,7 +252,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testSendPasswordResetNotificationInactiveCompTechnologist() {
-        final UserResource user = UserResourceBuilder.newUserResource()
+        final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
                         Collections.singletonList(
@@ -268,7 +272,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testSendPasswordResetNotificationInactiveLeadApplicantNoVerifyToken() {
-        final UserResource user = UserResourceBuilder.newUserResource()
+        final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE).withRolesGlobal(
                         Collections.singletonList(
                                 newRoleResource()
@@ -290,7 +294,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testSendPasswordResetNotificationInactivePartnerNoVerifyToken() {
-        final UserResource user = UserResourceBuilder.newUserResource()
+        final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE).withRolesGlobal(
                         Collections.singletonList(
                                 newRoleResource()
@@ -312,7 +316,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testSendPasswordResetNotificationInactiveProjectManagerNoVerifyToken() {
-        final UserResource user = UserResourceBuilder.newUserResource()
+        final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE).withRolesGlobal(
                         Collections.singletonList(
                                 newRoleResource()
@@ -334,7 +338,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testSendPasswordResetNotificationInactiveCollaboratorNoVerifyToken() {
-        final UserResource user = UserResourceBuilder.newUserResource()
+        final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
                         Collections.singletonList(
@@ -357,7 +361,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testSendPasswordResetNotificationInactiveFinanceContactNoVerifyToken() {
-        final UserResource user = UserResourceBuilder.newUserResource()
+        final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
                         Collections.singletonList(
@@ -376,6 +380,44 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(UserResource.class, user.getEmail(),UserStatus.ACTIVE)));
+    }
+
+    @Test
+    public void testFindActiveByProcessRoles(){
+        Set<Role> internalRoles = new HashSet<>();
+        internalRoles.add(newRole().withType(UserRoleType.PROJECT_FINANCE).build());
+        Pageable pageable = new PageRequest(0, 5);
+        List<User> activeUsers = newUser().withStatus(UserStatus.ACTIVE).withRoles(internalRoles).build(6);
+        Page<User> expectedPage = new PageImpl<>(activeUsers, pageable, 6L);
+
+        when(userRepositoryMock.findDistinctByStatusAndRolesNameIn(UserStatus.ACTIVE, UserRoleType.internalRoles().stream().map(UserRoleType::getName).collect(Collectors.toSet()), pageable)).thenReturn(expectedPage);
+        when(userMapperMock.mapToResource(any(User.class))).thenReturn(newUserResource().build());
+
+        ServiceResult<UserPageResource> result = service.findActiveByProcessRoles(UserRoleType.internalRoles(), pageable);
+
+        assertTrue(result.isSuccess());
+        assertEquals(5, result.getSuccessObject().getSize());
+        assertEquals(2, result.getSuccessObject().getTotalPages());
+        assertEquals(6, result.getSuccessObject().getContent().size());
+    }
+
+    @Test
+    public void testFindInactiveByProcessRoles(){
+        Set<Role> internalRoles = new HashSet<>();
+        internalRoles.add(newRole().withType(UserRoleType.COMP_ADMIN).build());
+        Pageable pageable = new PageRequest(0, 5);
+        List<User> inactiveUsers = newUser().withStatus(UserStatus.INACTIVE).withRoles(internalRoles).build(4);
+        Page<User> expectedPage = new PageImpl<>(inactiveUsers, pageable, 4L);
+
+        when(userRepositoryMock.findDistinctByStatusAndRolesNameIn(UserStatus.INACTIVE, UserRoleType.internalRoles().stream().map(UserRoleType::getName).collect(Collectors.toSet()), pageable)).thenReturn(expectedPage);
+        when(userMapperMock.mapToResource(any(User.class))).thenReturn(newUserResource().build());
+
+        ServiceResult<UserPageResource> result = service.findInactiveByProcessRoles(UserRoleType.internalRoles(), pageable);
+
+        assertTrue(result.isSuccess());
+        assertEquals(5, result.getSuccessObject().getSize());
+        assertEquals(1, result.getSuccessObject().getTotalPages());
+        assertEquals(4, result.getSuccessObject().getContent().size());
     }
 
     @Override

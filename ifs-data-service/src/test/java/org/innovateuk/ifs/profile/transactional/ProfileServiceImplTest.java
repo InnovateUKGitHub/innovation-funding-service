@@ -693,11 +693,15 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
 
     @Test
     public void getUserProfile() {
+        User createdByUser = newUser().withFirstName("abc").withLastName("def").build();
+
         Profile existingProfile = newProfile()
                 .withAddress(newAddress().withId(1L).build())
                 .withAgreement(newAgreement().build())
                 .withBusinessType(ACADEMIC)
                 .withSkillsAreas("Skills")
+                .withCreatedBy(createdByUser)
+                .withCreatedOn(ZonedDateTime.now())
                 .build();
         User existingUser = newUser()
                 .withProfileId(existingProfile.getId())
@@ -719,6 +723,8 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
                 .withEmail(existingUser.getEmail())
                 .withAddress(addressResource)
                 .withEthnicity(ethnicityResource)
+                .withCreatedBy(createdByUser.getName())
+                .withCreatedOn(ZonedDateTime.now())
                 .build();
 
         UserProfileResource response = service.getUserProfile(existingUser.getId()).getSuccessObject();

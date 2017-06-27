@@ -4,16 +4,10 @@ Documentation     INFUND-5182 As an assessor creating an account I need to suppl
 ...               INFUND-5432 As an assessor I want to receive an alert to complete my profile when I log into my dashboard so that I can ensure that it is complete.
 ...
 ...               INFUND-7059 As an assessor I can view my skills page so I can decide if my skills need updating
-Suite Setup       Guest user log-in in new browser    &{existing_assessor1_credentials}
+Suite Setup       The user logs-in in new browser  &{existing_assessor1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        Assessor
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
-Resource          ../../../resources/variables/PASSWORD_VARIABLES.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Client-side validations

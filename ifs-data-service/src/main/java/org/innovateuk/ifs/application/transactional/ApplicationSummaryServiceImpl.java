@@ -13,7 +13,6 @@ import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,9 +99,6 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
     @Autowired
     private OrganisationAddressMapper organisationAddressMapper;
-
-    @Autowired
-    private UserMapper userMapper;
 
     @Override
     public ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(

@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -19,17 +20,33 @@ import java.util.Optional;
  */
 public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
+    Optional<User> findByEmail(@Param("email") String email);
+
+    Optional<User> findByEmailAndStatus(@Param("email") String email, @Param("status") final UserStatus status);
+
+    Optional<User> findByIdAndRolesName(Long id, String name);
+
+    @Override
+    List<User> findAll();
+
+    List<User> findByRolesName(String name);
+
+    Page<User> findDistinctByStatusAndRolesNameIn(UserStatus status, Set<String> roleName, Pageable pageable);
+
+    User findOneByUid(String uid);
+
     String USERS_WITH_COMPETITION_INVITE = "SELECT invite.user.id " +
             "FROM CompetitionInvite invite " +
             "WHERE invite.competition.id = :competitionId " +
             "AND invite.user IS NOT NULL";
 
-    String ASSESSORS_WITH_COMPETITION = "SELECT user " +
+    @Query("SELECT user " +
             "FROM User user " +
             "JOIN user.roles roles " +
             "WHERE user.id NOT IN (" + USERS_WITH_COMPETITION_INVITE + ") " +
             "AND roles.name = 'assessor' "+
-            "GROUP BY user.id ";
+            "GROUP BY user.id")
+    Page<User> findAssessorsByCompetition(@Param("competitionId") long competitionId, Pageable pageable);
 
     /**
      * We have to explicitly join {@link User} and Profile due to the relational mapping
@@ -44,7 +61,7 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
      * <p>
      * Try to keep any other required filtering parameters in this query.
      */
-    String ASSESSORS_WITH_COMPETITION_AND_INNOVATION_AREA = "SELECT user " +
+    @Query("SELECT user " +
             "FROM User user " +
             "JOIN Profile profile ON profile.id = user.profileId " +
             "JOIN profile.innovationAreas innovationAreas " +
@@ -52,33 +69,8 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
             "WHERE (innovationAreas.category.id = :innovationArea OR :innovationArea IS NULL) " +
             "AND user.id NOT IN (" + USERS_WITH_COMPETITION_INVITE + ") " +
             "AND roles.name = 'assessor' "+
-            "GROUP BY user.id ";
-
-    Optional<User> findByEmail(@Param("email") String email);
-
-    Optional<User> findByEmailAndStatus(@Param("email") String email, @Param("status") final UserStatus status);
-
-    Optional<User> findByIdAndRolesName(Long id, String name);
-
-    @Override
-    List<User> findAll();
-
-    List<User> findByRolesName(String name);
-
-    User findOneByUid(String uid);
-
-    @Query(ASSESSORS_WITH_COMPETITION)
-    Page<User> findAssessorsByCompetition(@Param("competitionId") long competitionId, Pageable pageable);
-
-    @Query(ASSESSORS_WITH_COMPETITION)
-    List<User> findAssessorsByCompetition(@Param("competitionId") long competitionId);
-
-    @Query(ASSESSORS_WITH_COMPETITION_AND_INNOVATION_AREA)
+            "GROUP BY user.id")
     Page<User> findAssessorsByCompetitionAndInnovationArea(@Param("competitionId") long competitionId,
                                                            @Param("innovationArea") Long innovationArea,
                                                            Pageable pageable);
-
-    @Query(ASSESSORS_WITH_COMPETITION_AND_INNOVATION_AREA)
-    List<User> findAssessorsByCompetitionAndInnovationArea(@Param("competitionId") long competitionId,
-                                                           @Param("innovationArea") Long innovationArea);
 }
