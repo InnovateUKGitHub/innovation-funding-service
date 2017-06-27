@@ -53,6 +53,8 @@ public class CompetitionManagementInviteAssessorsController {
     private static final String FORM_ATTR_NAME = "form";
     private static final String SELECTION_FORM = "assessorSelectionForm";
 
+    public static final int SELECTION_LIMIT = 5;
+
     @Autowired
     private CompetitionInviteRestService competitionInviteRestService;
 
@@ -127,22 +129,29 @@ public class CompetitionManagementInviteAssessorsController {
             @RequestParam Optional<Long> innovationArea,
             HttpServletRequest request,
             HttpServletResponse response) {
+
+        boolean limitExceeded = false;
         try {
             List<Long> assessorIds = getAllAssessorIds(competitionId, innovationArea);
             AssessorSelectionForm selectionForm = getAssessorSelectionFormFromCookie(request, competitionId).orElse(new AssessorSelectionForm());
             if (isSelected) {
-                selectionForm.getSelectedAssessorIds().add(assessorId);
-                if(selectionForm.getSelectedAssessorIds().containsAll(assessorIds)) {
-                    selectionForm.setAllSelected(true);
+                int predictedSize = selectionForm.getSelectedAssessorIds().size() + 1;
+                if(limitIsExceeded(predictedSize)){
+                    limitExceeded = true;
+                } else {
+                    selectionForm.getSelectedAssessorIds().add(assessorId);
+                    if (selectionForm.getSelectedAssessorIds().containsAll(assessorIds)) {
+                        selectionForm.setAllSelected(true);
+                    }
                 }
             } else {
                 selectionForm.getSelectedAssessorIds().remove(assessorId);
                 selectionForm.setAllSelected(false);
             }
             cookieUtil.saveToCompressedCookie(response, format("%s_comp_%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
-            return createJsonObjectNode(selectionForm.getSelectedAssessorIds().size(), selectionForm.getAllSelected());
+            return createJsonObjectNode(selectionForm.getSelectedAssessorIds().size(), selectionForm.getAllSelected(), limitExceeded);
         } catch (Exception e) {
-            return createJsonObjectNode(-1, false);
+            return createFailureResponse();
         }
     }
 
@@ -166,9 +175,9 @@ public class CompetitionManagementInviteAssessorsController {
             }
 
             cookieUtil.saveToCompressedCookie(response, format("%s_comp_%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
-            return createJsonObjectNode(selectionForm.getSelectedAssessorIds().size(), selectionForm.getAllSelected());
+            return createSuccessfulResponseWithSelectionStatus(selectionForm.getSelectedAssessorIds().size(), selectionForm.getAllSelected(), false);
         } catch (Exception e) {
-            return createJsonObjectNode(-1, false);
+            return createFailureResponse();
         }
     }
 
@@ -363,11 +372,21 @@ public class CompetitionManagementInviteAssessorsController {
         return new ExistingUserStagedInviteListResource(invites);
     }
 
-    private ObjectNode createJsonObjectNode(int selectionCount, boolean allSelected) {
+    private ObjectNode createFailureResponse() {
+        return createJsonObjectNode(-1, false, false);
+    }
+
+    private ObjectNode createSuccessfulResponseWithSelectionStatus(int selectionCount, boolean allSelected, boolean limitExceeded) {
+        return createJsonObjectNode(selectionCount, allSelected, limitExceeded);
+    }
+
+    private ObjectNode createJsonObjectNode(int selectionCount, boolean allSelected, boolean limitExceeded) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
+
         node.put("selectionCount", selectionCount);
         node.put("allSelected", allSelected);
+        node.put("limitExceeded", limitExceeded);
 
         return node;
     }
@@ -379,5 +398,13 @@ public class CompetitionManagementInviteAssessorsController {
         } else {
             return Optional.empty();
         }
+    }
+
+    private List<Long> limitList(List<Long> allIds) {
+        return allIds.subList(0, SELECTION_LIMIT);
+    }
+
+    private boolean limitIsExceeded(long amountOfIds) {
+        return amountOfIds > SELECTION_LIMIT;
     }
 }

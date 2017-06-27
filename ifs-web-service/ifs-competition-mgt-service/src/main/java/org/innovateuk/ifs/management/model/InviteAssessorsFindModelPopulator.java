@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionsRestService;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorPageResource;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
+import org.innovateuk.ifs.management.controller.CompetitionManagementInviteAssessorsController;
 import org.innovateuk.ifs.management.viewmodel.AvailableAssessorRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.InviteAssessorsFindViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
@@ -53,6 +54,7 @@ public class InviteAssessorsFindModelPopulator extends InviteAssessorsModelPopul
         model.setInnovationSectorOptions(innovationSectors);
         model.setAssessors(assessors);
         model.setPagination(new PaginationViewModel(pageResource, originQuery));
+        model.setSelectAllDisabled(CompetitionManagementInviteAssessorsController.SELECTION_LIMIT < pageResource.getTotalElements());
 
         return model;
     }

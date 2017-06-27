@@ -8,6 +8,7 @@ IFS.competitionManagement.multipageSelect = (function () {
       countEl: '[data-multipage-select] [data-count-selected]',
       submitEl: '[data-multipage-select] [data-submit-el]',
       totalListSizeEl: '[data-multipage-select][data-total-checkboxes]',
+      selectionLimitExceededElement: '#selection-limit-exceeded-block',
       totalListSize: 0
     },
     init: function () {
@@ -47,11 +48,13 @@ IFS.competitionManagement.multipageSelect = (function () {
         if (typeof (result.selectionCount) !== 'undefined') {
           var selectedRows = parseInt(result.selectionCount)
           var allSelected = result.allSelected
+          var limitExceeded = result.limitExceeded
           IFS.competitionManagement.multipageSelect.updateCount(selectedRows)
           IFS.competitionManagement.multipageSelect.updateSubmitButton(selectedRows)
           if (!isSelectAll) {
             IFS.competitionManagement.multipageSelect.changeSelectAllCheckboxState(allSelected)
           }
+          IFS.competitionManagement.multipageSelect.updateLimitExceededMessage(limitExceeded, checkbox)
         }
       }).fail(function (data) {
         var errorMessage = IFS.core.autoSave.getErrorMessage(data)
@@ -88,6 +91,17 @@ IFS.competitionManagement.multipageSelect = (function () {
         allCheckboxes.prop('checked', 'checked')
       } else {
         allCheckboxes.removeProp('checked')
+      }
+    },
+    updateLimitExceededMessage: function (limitExceeded, checkbox) {
+      var errorElement = jQuery(s.selectionLimitExceededElement)
+      if (limitExceeded) {
+        errorElement.html('<div class="warning-alert extra-margin-bottom">' +
+                              '<p>Cannot select additional items, item limit exceeded.</p>' +
+                               '</div>')
+        checkbox.removeProp('checked')
+      } else {
+        errorElement.html('')
       }
     }
   }
