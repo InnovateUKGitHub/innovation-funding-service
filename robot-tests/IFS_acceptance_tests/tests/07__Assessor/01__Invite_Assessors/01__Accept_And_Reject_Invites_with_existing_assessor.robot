@@ -93,18 +93,18 @@ Existing assessor: Reject invitation from Dashboard
     ...
     ...    INFUND-6455
     [Tags]    HappyPath
-    Given the user clicks the button/link    link=Photonics for health
-    And the user should see the text in the page    Invitation to assess '${READY_TO_OPEN_COMPETITION_NAME}'
-    And the user should see the text in the page    You are invited to assess the competition '${READY_TO_OPEN_COMPETITION_NAME}'
-    And the user should not see the element    id=rejectComment
-    And the user selects the radio button  acceptInvitation  false
-    And The user enters text to a text field    id=rejectComment  a${SPACE}  102
-    And The user clicks the button/link    jQuery=button:contains("Confirm")
-    Then the user should see an error    The reason cannot be blank.
-    And the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
+    Given the user clicks the button/link                    link=Photonics for health
+    And the user should see the text in the page             Invitation to assess '${READY_TO_OPEN_COMPETITION_NAME}'
+    And the user should see the text in the page             You are invited to assess the competition '${READY_TO_OPEN_COMPETITION_NAME}'
+    And the user should not see the element                  id=rejectComment
+    And the user selects the radio button                    acceptInvitation  false
+    And The user enters multiple strings into a text field   id=rejectComment  a${SPACE}  102
+    And The user clicks the button/link                      jQuery=button:contains("Confirm")
+    Then the user should see an error                        The reason cannot be blank.
+    And the user should see an error                         Maximum word count exceeded. Please reduce your word count to 100.
     And the assessor fills all fields with valid inputs
-    And The user clicks the button/link    jQuery=button:contains("Confirm")
-    And the user should see the text in the page    Thank you for letting us know you are unable to assess applications within this competition.
+    And The user clicks the button/link                      jQuery=button:contains("Confirm")
+    And the user should see the text in the page             Thank you for letting us know you are unable to assess applications within this competition.
 
 Existing Assessor tries to accept closed competition
     [Documentation]    INFUND-943
@@ -206,9 +206,9 @@ The Admin's invites overview should be updated for accepted invites
     [Tags]
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And The user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
-    And The user clicks the button/link    link=Overview
-    And the user should see the element    jQuery=tr:nth-child(1) td:contains(Invite accepted)
+    And The user clicks the button/link      jQuery=a:contains("Invite assessors to assess the competition")
+    And The user clicks the button/link      link=Overview
+    And the user should see the element      jQuery=tr:nth-child(1) td:contains(Invite accepted)
 
 *** Keywords ***
 the assessor fills all fields with valid inputs
