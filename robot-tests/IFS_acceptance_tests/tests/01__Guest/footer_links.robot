@@ -13,14 +13,14 @@ Resource          ../../resources/defaultResources.robot
 Guest user can click on the footer links
     [Documentation]    IFS-362
     [Tags]
-    [Setup]    the user navigates to the page    ${frontDoor}
-    Given the user tries the footer links    ${frontDoor}
-    Then the user navigates to the page    ${LOGIN_URL}
-    When Logging in and Error Checking     &{lead_applicant_credentials}
-    Then the user tries the footer links    ${DASHBOARD_URL}
-    And the user navigates to the page    ${LOGIN_URL}
-    Then the user should see the text in the page    Sign in
-    And the user tries the footer links    ${LOGIN_URL}
+    [Setup]    the user navigates to the page        ${frontDoor}
+    Given the user tries the footer links            ${frontDoor}
+    Then the user navigates to the page              ${LOGIN_URL}
+    Then the user tries the footer links             ${DASHBOARD_URL}
+    And the user navigates to the page               ${LOGIN_URL}
+    When Logging in and Error Checking               &{lead_applicant_credentials}
+    Then the user should see the text in the page    Sign out
+    And the user tries the footer links              ${LOGIN_URL}
 
 *** Keywords ***
 the user tries the footer links
