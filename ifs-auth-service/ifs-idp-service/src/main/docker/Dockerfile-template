@@ -104,5 +104,5 @@ COPY pages/ /opt/shibboleth-idp/
 RUN chown -R www-data:0 /opt/shibboleth-idp /usr/local/bin && \
   chmod -R u=rwX,g=rwX,o= /opt/shibboleth-idp /usr/local/bin
 
-USER www-data
+#USER www-data
 ENTRYPOINT [ "run-idp.sh" ]

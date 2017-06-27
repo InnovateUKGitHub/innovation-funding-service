@@ -73,5 +73,5 @@ RUN apt-get update --fix-missing && \
 
   rm -Rf /usr/local/files/
 
-USER www-data
+#USER www-data
 ENTRYPOINT [ "run-shibboleth-sp.sh" ]
