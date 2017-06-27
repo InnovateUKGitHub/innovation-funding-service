@@ -97,7 +97,7 @@ IFS.competitionManagement.multipageSelect = (function () {
       var errorElement = jQuery(s.selectionLimitExceededElement)
       if (limitExceeded) {
         errorElement.html('<div class="warning-alert extra-margin-bottom">' +
-                              '<p>Cannot select additional items, item limit exceeded.</p>' +
+                              '<p>Cannot select additional items, selection limit of 500 exceeded.</p>' +
                                '</div>')
         checkbox.removeProp('checked')
       } else {

@@ -14,7 +14,6 @@ import org.innovateuk.ifs.competition.form.*;
 import org.innovateuk.ifs.competition.service.ApplicationSummarySortFieldService;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
-import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,11 +33,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static java.lang.String.format;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
-import static org.innovateuk.ifs.util.JsonUtil.getObjectFromJson;
-import static org.innovateuk.ifs.util.JsonUtil.getSerializedObject;
 
 /**
  * Handles the Competition Management Funding decision views and submission of funding decision.
@@ -46,12 +41,10 @@ import static org.innovateuk.ifs.util.JsonUtil.getSerializedObject;
 @Controller
 @RequestMapping("/competition/{competitionId}/funding")
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-public class CompetitionManagementFundingDecisionController extends CompetitionManagementCookieController {
+public class CompetitionManagementFundingDecisionController extends CompetitionManagementCookieController<FundingDecisionSelectionCookie> {
 
     private static final Log log = LogFactory.getLog(CompetitionManagementFundingDecisionController.class);
-
     private static final int PAGE_SIZE = 20;
-    private static final String SELECTION_FORM = "fundingDecisionSelectionForm";
 
     @Autowired
     private ApplicationSummarySortFieldService applicationSummarySortFieldService;
@@ -66,8 +59,13 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
     @Qualifier("mvcValidator")
     private Validator validator;
 
-    @Autowired
-    private CookieUtil cookieUtil;
+    protected String getCookieName() {
+        return "fundingDecisionSelectionForm";
+    }
+
+    protected Class<FundingDecisionSelectionCookie> getFormType() {
+        return FundingDecisionSelectionCookie.class;
+    }
 
     @GetMapping
     public String applications(Model model,
@@ -87,7 +85,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         FundingDecisionSelectionCookie selectionCookieForm = new FundingDecisionSelectionCookie();
 
         try {
-            selectionCookieForm = getApplicationSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
+            selectionCookieForm = getSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
             selectionForm = selectionCookieForm.getFundingDecisionSelectionForm();
             FundingDecisionFilterForm filterCookieForm = selectionCookieForm.getFundingDecisionFilterForm();
 
@@ -101,14 +99,12 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
 
             FundingDecisionSelectionForm trimmedSelectionForm = trimSelectionByFilteredResult(selectionForm, filterForm, competitionId);
             selectionForm.setApplicationIds(trimmedSelectionForm.getApplicationIds());
+            selectionCookieForm.setFundingDecisionFilterForm(filterForm);
 
+            saveFormToCookie(response, competitionId, selectionCookieForm);
         } catch (Exception e) {
             log.error(e);
         }
-
-        selectionCookieForm.setFundingDecisionFilterForm(filterForm);
-
-        saveFormToCookie(response, competitionId, selectionCookieForm);
 
         return populateSubmittedModel(model, competitionId, paginationForm, filterForm, selectionForm);
     }
@@ -127,7 +123,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         }
 
         try {
-            FundingDecisionSelectionCookie selectionForm = getApplicationSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
+            FundingDecisionSelectionCookie selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
             fundingDecisionSelectionForm = selectionForm.getFundingDecisionSelectionForm();
         } catch (Exception e) {
             log.error(e);
@@ -137,15 +133,14 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
     }
 
     @PostMapping(params = {"addAll"})
-    public @ResponseBody
-    JsonNode addAllApplicationsToFundingDecisionSelectionList(@PathVariable("competitionId") long competitionId,
+    public @ResponseBody JsonNode addAllApplicationsToFundingDecisionSelectionList(@PathVariable("competitionId") long competitionId,
                                                      @RequestParam("addAll") boolean addAll,
                                                      HttpServletRequest request,
                                                      HttpServletResponse response) {
         FundingDecisionSelectionCookie selectionCookie;
 
         try {
-            selectionCookie = getApplicationSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
+            selectionCookie = getSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
         } catch (Exception e) {
             log.error(e);
             return createFailureResponse();
@@ -187,7 +182,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         boolean limitExceeded = false;
 
         try {
-            FundingDecisionSelectionCookie cookieForm = getApplicationSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
+            FundingDecisionSelectionCookie cookieForm = getSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
             FundingDecisionSelectionForm selectionForm = cookieForm.getFundingDecisionSelectionForm();
             if (isSelected) {
                 List<Long> applicationIds = selectionForm.getApplicationIds();
@@ -221,15 +216,6 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         } catch (Exception e) {
             log.error(e);
             return createFailureResponse();
-        }
-    }
-
-    private Optional<FundingDecisionSelectionCookie> getApplicationSelectionFormFromCookie(HttpServletRequest request, long competitionId) {
-        String assessorFormJson = cookieUtil.getCompressedCookieValue(request, format("%s_comp%s", SELECTION_FORM, competitionId));
-        if (isNotBlank(assessorFormJson)) {
-            return Optional.ofNullable(getObjectFromJson(assessorFormJson, FundingDecisionSelectionCookie.class));
-        } else {
-            return Optional.empty();
         }
     }
 
@@ -323,9 +309,5 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
             default:
                 return "redirect:/login";
         }
-    }
-
-    private void saveFormToCookie(HttpServletResponse response, long competitionId, FundingDecisionSelectionCookie selectionForm) {
-        cookieUtil.saveToCompressedCookie(response, format("%s_comp%s", SELECTION_FORM, competitionId), getSerializedObject(selectionForm));
     }
 }

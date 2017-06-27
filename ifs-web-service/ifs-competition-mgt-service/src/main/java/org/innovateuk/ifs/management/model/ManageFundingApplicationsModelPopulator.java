@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.form.ManageFundingApplicationsQueryForm;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.management.controller.CompetitionManagementCookieController;
 import org.innovateuk.ifs.management.viewmodel.CompetitionInFlightStatsViewModel;
 import org.innovateuk.ifs.management.viewmodel.ManageFundingApplicationViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
