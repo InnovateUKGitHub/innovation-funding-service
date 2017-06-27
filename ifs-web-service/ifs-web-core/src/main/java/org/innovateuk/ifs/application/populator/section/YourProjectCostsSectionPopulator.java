@@ -39,7 +39,7 @@ public class YourProjectCostsSectionPopulator extends AbstractSectionPopulator<A
     private FormInputViewModelGenerator formInputViewModelGenerator;
 
     @Override
-    public void populateNoReturn(ApplicantSectionResource section, ApplicationForm form, AbstractYourProjectCostsSectionViewModel viewModel, Model model, BindingResult bindingResult, Boolean readOnly) {
+    public void populateNoReturn(ApplicantSectionResource section, ApplicationForm form, AbstractYourProjectCostsSectionViewModel viewModel, Model model, BindingResult bindingResult, Boolean readOnly, Optional<Long> applicantOrganisationId) {
         List<ApplicantQuestionResource> costQuestions = section.allQuestions().filter(question -> QuestionType.COST.equals(question.getQuestion().getType())).collect(Collectors.toList());
         financeHandler.getFinanceModelManager(section.getCurrentApplicant().getOrganisation().getOrganisationType()).addOrganisationFinanceDetails(model, section.getApplication().getId(), costQuestions.stream().map(ApplicantQuestionResource::getQuestion).collect(Collectors.toList()), section.getCurrentUser().getId(), form, section.getCurrentApplicant().getOrganisation().getId());
         viewModel.setCostQuestions(costQuestions);

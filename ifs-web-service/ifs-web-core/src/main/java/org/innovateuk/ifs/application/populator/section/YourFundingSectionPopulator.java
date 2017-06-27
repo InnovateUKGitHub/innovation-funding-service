@@ -27,7 +27,7 @@ public class YourFundingSectionPopulator extends AbstractSectionPopulator<YourFu
     private FormInputViewModelGenerator formInputViewModelGenerator;
 
     @Override
-    protected void populateNoReturn(ApplicantSectionResource section, ApplicationForm form, YourFundingSectionViewModel viewModel, Model model, BindingResult bindingResult, Boolean readOnly) {
+    protected void populateNoReturn(ApplicantSectionResource section, ApplicationForm form, YourFundingSectionViewModel viewModel, Model model, BindingResult bindingResult, Boolean readOnly, Optional<Long> applicantOrganisationId) {
         List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId());
         viewModel.setComplete(completedSectionIds.contains(section.getSection().getId()));
     }

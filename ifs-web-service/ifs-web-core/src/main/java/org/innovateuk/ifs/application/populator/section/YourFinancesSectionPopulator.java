@@ -48,7 +48,7 @@ public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourF
     }
 
     @Override
-    public void populateNoReturn(ApplicantSectionResource section, ApplicationForm form, YourFinancesSectionViewModel viewModel, Model model, BindingResult bindingResult, Boolean readOnly) {
+    public void populateNoReturn(ApplicantSectionResource section, ApplicationForm form, YourFinancesSectionViewModel viewModel, Model model, BindingResult bindingResult, Boolean readOnly, Optional<Long> applicantOrganisationId) {
         QuestionResource applicationDetailsQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(viewModel.getCompetition().getId(), FormInputType.APPLICATION_DETAILS).getSuccessObjectOrThrowException();
         ApplicantSectionResource yourOrganisation = findChildSectionByType(section, SectionType.ORGANISATION_FINANCES);
         ApplicantSectionResource yourFunding = findChildSectionByType(section, SectionType.FUNDING_FINANCES);
@@ -56,7 +56,7 @@ public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourF
 
         boolean yourOrganisationComplete = completedSectionIds.contains(yourOrganisation.getSection().getId());
         boolean yourFundingComplete = completedSectionIds.contains(yourFunding.getSection().getId());
-        boolean applicationDetailsComplete = applicationDetailsIsComplete(viewModel, applicationDetailsQuestion);
+        boolean applicationDetailsComplete = applicationDetailsIsComplete(viewModel, applicationDetailsQuestion, applicantOrganisationId);
 
         initializeApplicantFinances(section);
         OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(financeService, fileEntryRestService, section.getApplication().getId());
@@ -77,8 +77,8 @@ public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourF
         }
     }
 
-    private boolean applicationDetailsIsComplete(YourFinancesSectionViewModel viewModel, QuestionResource applicationDetailsQuestion) {
-        Map<Long, QuestionStatusResource> questionStatuses = questionService.getQuestionStatusesForApplicationAndOrganisation(viewModel.getApplication().getId(), viewModel.getApplicantResource().getCurrentApplicant().getOrganisation().getId());
+    private boolean applicationDetailsIsComplete(YourFinancesSectionViewModel viewModel, QuestionResource applicationDetailsQuestion, Optional<Long> applicantOrganisationId) {
+        Map<Long, QuestionStatusResource> questionStatuses = questionService.getQuestionStatusesForApplicationAndOrganisation(viewModel.getApplication().getId(), applicantOrganisationId.isPresent() ? applicantOrganisationId.get() : viewModel.getApplicantResource().getCurrentApplicant().getOrganisation().getId());
         QuestionStatusResource applicationDetailsStatus = questionStatuses.get(applicationDetailsQuestion.getId());
         return applicationDetailsStatus != null && applicationDetailsStatus.getMarkedAsComplete();
     }

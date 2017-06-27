@@ -25,11 +25,11 @@ public abstract class AbstractSectionPopulator<M extends AbstractSectionViewMode
 
     public M populate(ApplicantSectionResource section, ApplicationForm form, Model model, BindingResult bindingResult, Boolean readOnly, Optional<Long> applicantOrganisationId, Boolean readOnlyAllApplicantApplicationFinances) {
         M viewModel = createNew(section, form, readOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
-        populateNoReturn(section, form, viewModel, model, bindingResult, readOnly);
+        populateNoReturn(section, form, viewModel, model, bindingResult, readOnly, applicantOrganisationId);
         return viewModel;
     }
 
-    protected abstract void populateNoReturn(ApplicantSectionResource section, ApplicationForm form, M viewModel, Model model, BindingResult bindingResult, Boolean readOnly);
+    protected abstract void populateNoReturn(ApplicantSectionResource section, ApplicationForm form, M viewModel, Model model, BindingResult bindingResult, Boolean readOnly, Optional<Long> applicantOrganisationId);
     protected abstract M createNew(ApplicantSectionResource section, ApplicationForm form, Boolean readOnly, Optional<Long> applicantOrganisationId, Boolean readOnlyAllApplicantApplicationFinances);
 
     public abstract SectionType getSectionType();
