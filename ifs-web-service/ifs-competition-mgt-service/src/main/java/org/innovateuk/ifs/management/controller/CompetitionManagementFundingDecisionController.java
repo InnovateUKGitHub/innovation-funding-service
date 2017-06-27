@@ -101,7 +101,7 @@ public class CompetitionManagementFundingDecisionController {
                 filterForm.setStringFilter(selectionCookieForm.getFundingDecisionFilterForm().getStringFilter());
             }
 
-            FundingDecisionSelectionForm trimmedSelectionForm = trimSelectionByFilteredResult(selectionForm, filterForm, competitionId, clearFilters);
+            FundingDecisionSelectionForm trimmedSelectionForm = trimSelectionByFilteredResult(selectionForm, filterForm, competitionId);
             selectionForm.setApplicationIds(trimmedSelectionForm.getApplicationIds());
 
         } catch (Exception e) {
