@@ -20,7 +20,8 @@ ENV HTTP_PORT=9080 \
     SP_PROXY_CERTIFICATE="@auth_sp_proxy_certificate@" \
     SP_PROXY_CACERTIFICATE="@auth_sp_proxy_cacertificate@" \
     IDP_SIGNING_CERTIFICATE="@auth_idp_signing_certificate@" \
-    IDP_ENCRYPTION_CERTIFICATE="@auth_idp_encryption_certificate@"
+    IDP_ENCRYPTION_CERTIFICATE="@auth_idp_encryption_certificate@" \
+    MEMCACHE_ENDPOINT=
 
 WORKDIR /usr/local/bin
 
