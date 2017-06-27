@@ -30,32 +30,32 @@ Accept invitation as academic
     [Documentation]    INFUND-1166, INFUND-917, INFUND-2450, INFUND-2256
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
-    When the user enters text to a text field    id=organisationSearchName    Liv
-    And the user clicks the button/link    jQuery=.button:contains("Search")
-    Then the user should see the text in the page    University of Liverpool
-    When the user clicks the button/link    link= University of Liverpool
-    And the user should see the text in the page    Research
-    When the user clicks the button/link    jQuery=button:contains("Enter address manually")
+    When the user enters text to a text field   id=organisationSearchName  Liv
+    And the user clicks the button/link         jQuery=.button:contains("Search")
+    Then the user should see the text in the page  University of Liverpool
+    When the user clicks the button/link        link= University of Liverpool
+    And the user should see the text in the page  Research
+    When the user clicks the button/link        jQuery=button:contains("Enter address manually")
     And the user enters text to a text field    id=addressForm.selectedPostcode.addressLine1    The East Wing
     And the user enters text to a text field    id=addressForm.selectedPostcode.addressLine2    Popple Manor
     And the user enters text to a text field    id=addressForm.selectedPostcode.addressLine3    1, Popple Boulevard
     And the user enters text to a text field    id=addressForm.selectedPostcode.town    Poppleton
     And the user enters text to a text field    id=addressForm.selectedPostcode.county    Poppleshire
     And the user enters text to a text field    id=addressForm.selectedPostcode.postcode    POPPS123
-    And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
-    And the user fills the create account form    Steven    Gerrard
+    And the user clicks the button/link         jQuery=.button:contains("Save organisation and continue")
+    And the user clicks the button/link         jQuery=.button:contains("Save and continue")
+    And the user fills the create account form  Steven  Gerrard
     And If the user goes to the previous page he should redirect to the login page
     And the user reads his email and clicks the link  ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com  Please verify your email address  You have recently set up an account
-    And the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And Guest user log-in in new browser    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com  ${correct_password}
-    When the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    And the user clicks the button/link     link=Your finances
-    Then the user should see the element    link=Your project costs
-    And the user should not see the element  link=Your organisation
-    And the user should not see the element  jQuery=h3:contains("Your funding")
-    When the user clicks the button/link    link=Your project costs
-    Then the user should not see the text in the page    Labour
+    And the user clicks the button/link         jQuery=.button:contains("Sign in")
+    And the user logs-in in new browser         ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com  ${correct_password}
+    When the user clicks the button/link        link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    And the user clicks the button/link         link=Your finances
+    Then the user should see the element        link=Your project costs
+    And the user should not see the element     link=Your organisation
+    And the user should not see the element     jQuery=h3:contains("Your funding")
+    When the user clicks the button/link        link=Your project costs
+    Then the user should not see the text in the page  Labour
     And the user should not see an error in the page
 
 *** Keywords ***

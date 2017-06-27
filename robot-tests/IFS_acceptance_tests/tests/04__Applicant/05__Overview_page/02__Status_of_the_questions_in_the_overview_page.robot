@@ -11,12 +11,12 @@ Resource          ../../../resources/defaultResources.robot
 Status changes when we assign a question
     [Documentation]    INFUND-39
     [Tags]    HappyPath
-    [Setup]    Guest user log-in in new browser    &{lead_applicant_credentials}
-    Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Academic robot test application
-    And the user clicks the button/link    link=Project summary
+    [Setup]  The user logs-in in new browser  &{lead_applicant_credentials}
+    Given the user navigates to the page      ${DASHBOARD_URL}
+    And the user clicks the button/link       link=Academic robot test application
+    And the user clicks the button/link       link=Project summary
     When the Applicant edits the Project summary
-    And the applicant assigns the Project Summary    Arsene Wenger
+    And the applicant assigns the Project Summary  Arsene Wenger
     Then the assign status should be correct for the Project Summary
     And the blue flag should not be visible
 
