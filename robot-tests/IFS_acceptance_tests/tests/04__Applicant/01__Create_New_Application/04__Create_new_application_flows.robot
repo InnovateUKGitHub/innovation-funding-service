@@ -48,7 +48,7 @@ Verify the name of the new application
     [Documentation]    INFUND-669 INFUND-1163
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    the user navigates to the page                       ${SERVER}
-    When Guest user login without new browser                       ${test_mailbox_one}+business@gmail.com    ${correct_password}
+    When Logging in and Error Checking                       ${test_mailbox_one}+business@gmail.com    ${correct_password}
     And the user edits the application title
     Then the user should see the text in the page                   ${test_title}
     And the progress indicator should show 0

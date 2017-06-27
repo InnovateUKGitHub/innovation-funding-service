@@ -16,7 +16,7 @@ Guest user can click on the footer links
     [Setup]    the user navigates to the page    ${frontDoor}
     Given the user tries the footer links    ${frontDoor}
     Then the user navigates to the page    ${LOGIN_URL}
-    When Guest user login without new browser     &{lead_applicant_credentials}
+    When Logging in and Error Checking     &{lead_applicant_credentials}
     Then the user tries the footer links    ${DASHBOARD_URL}
     And the user navigates to the page    ${LOGIN_URL}
     Then the user should see the text in the page    Sign in

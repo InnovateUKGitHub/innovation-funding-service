@@ -30,7 +30,7 @@ Valid login as Applicant
     [Documentation]    IFS-32
     [Tags]    HappyPath
     Given the user is not logged-in
-    When guest user login without new browser                &{lead_applicant_credentials}
+    When Logging in and Error Checking                &{lead_applicant_credentials}
     Then the user should see the element                     link=Sign out
     And the user should not see the element                  link=Sign in
     And the user should be redirected to the correct page    ${DASHBOARD_URL}
@@ -39,7 +39,7 @@ Valid login as Applicant
 Valid login as Collaborator
     [Tags]    HappyPath
     Given the user is not logged-in
-    When Guest user login without new browser                &{collaborator1_credentials}
+    When Logging in and Error Checking                &{collaborator1_credentials}
     Then the user should see the element                     link=Sign out
     And the user should be redirected to the correct page    ${DASHBOARD_URL}
     [Teardown]    Logout as user
@@ -48,7 +48,7 @@ Valid login as Assessor
     [Documentation]    INFUND-286
     [Tags]    HappyPath
     Given the user is not logged-in
-    When Guest user login without new browser                &{assessor_credentials}
+    When Logging in and Error Checking                &{assessor_credentials}
     Then the user should see the element                     link=Sign out
     And the user should be redirected to the correct page    ${assessor_dashboard_url}
     [Teardown]    Logout as user
@@ -57,7 +57,7 @@ Valid login with double role as Applicant
     [Documentation]    INFUND-1479
     [Tags]    HappyPath
     Given the user is not logged-in
-    When Guest user login without new browser                 &{Multiple_user_credentials}
+    When Logging in and Error Checking                 &{Multiple_user_credentials}
     Then The user should see the text in the page             Please choose the role you are signing in as today
     And The user clicks the button/link                       jquery=button:contains("Continue")
     Then The user should see an error                         Please select a role.
@@ -70,7 +70,7 @@ Valid login with double role as Applicant
 Valid login with Double role as Assessor
     [Documentation]    INFUND-1479
     Given the user is not logged-in
-    When Guest user login without new browser                 &{Multiple_user_credentials}
+    When Logging in and Error Checking                 &{Multiple_user_credentials}
     And the user selects the radio button                     selectedRole    ASSESSOR
     And The user clicks the button/link                       jQuery=button:contains("Continue")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
@@ -81,7 +81,7 @@ Valid login as Comp Admin
     [Documentation]    INFUND-2130
     [Tags]    HappyPath
     Given the user is not logged-in
-    When Guest user login without new browser                &{Comp_admin1_credentials}
+    When Logging in and Error Checking                &{Comp_admin1_credentials}
     Then the user should see the element                     link=Sign out
     And the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
     [Teardown]    Logout as user
@@ -90,7 +90,7 @@ Valid login as Support role
     [Documentation]    IFS-188
     [Tags]     HappyPath    support
     Given the user is not logged-in
-    When Guest user login without new browser                 &{support_user_credentials}
+    When Logging in and Error Checking                 &{support_user_credentials}
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
     [Teardown]    Logout as user
 
@@ -98,7 +98,7 @@ Valid login as IFS Admin role
     [Documentation]    IFS-603
     [Tags]      HappyPath    administrator
     Given the user is not logged-in
-    When Guest user login without new browser    &{ifs_admin_user_credentials}
+    When Logging in and Error Checking    &{ifs_admin_user_credentials}
     And the user navigates to the page           ${COMP_ADMINISTRATOR_DASHBOARD}
     Then the user should see the element    link=Manage users
     Then the user should see the element    link=Sign out
@@ -118,7 +118,7 @@ Valid login as Project Finance role
     [Tags]
     Given the user is not logged-in
     And the user navigates to the page                        ${LOGIN_URL}
-    When Guest user login without new browser                 &{internal_finance_credentials}
+    When Logging in and Error Checking                 &{internal_finance_credentials}
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
     # note that this has been updated as per the most recent requirements.
     # project finance users now use the same dashboard as other internal users
@@ -154,7 +154,7 @@ Reset password user enters new psw
     And The guest user inserts user email and password       ${test_mailbox_one}+changepsw@gmail.com    ${short_password}
     And the user clicks the button/link                      css=button[name="_eventId_proceed"]
     Then the guest user should get an error message
-    When Guest user login without new browser                ${test_mailbox_one}+changepsw@gmail.com    Passw0rdnew
+    When Logging in and Error Checking                ${test_mailbox_one}+changepsw@gmail.com    Passw0rdnew
     And the user clicks the button/link                      css=button[name="_eventId_proceed"]
     Then the user should see the element                     link=Sign out
     And the user should be redirected to the correct page    ${DASHBOARD_URL}
