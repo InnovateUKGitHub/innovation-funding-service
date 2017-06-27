@@ -28,10 +28,11 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...               INFUND-6450 As a member of the competitions team, I can see the status of each assessor invite s0...
 ...
 ...               INFUND-5494 An assessor CAN follow a link to the competition brief from the competition dashboard
-Suite Setup       Guest user log-in in new browser    &{existing_assessor1_credentials}
+Suite Setup       The user logs-in in new browser  &{existing_assessor1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
+Resource          ../Assessor_Commons.robot
 
 *** Variables ***
 ${Invitation_existing_assessor1}    ${server}/assessment/invite/competition/dcc0d48a-ceae-40e8-be2a-6fd1708bd9b7
@@ -191,7 +192,7 @@ Registered user should not allowed to accept other assessor invite
     Given the user navigates to the page    ${Invitation_nonexisting_assessor2}
     And the user selects the radio button  acceptInvitation  true
     And The user clicks the button/link    jQuery=button:contains("Confirm")
-    Then The user should see permissions error message
+    Then Page Should Contain              ${403_error_message}
 
 The user should not be able to accept or reject the same applications
     [Documentation]    INFUND-5165

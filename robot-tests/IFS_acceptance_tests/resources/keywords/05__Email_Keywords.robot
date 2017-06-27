@@ -2,9 +2,9 @@
 Resource          ../defaultResources.robot
 
 *** Keywords ***
+########################## READING EMAILS ##################################
 the user reads his email
     [Arguments]    ${recipient}    ${subject}    ${pattern}
-    ########################## READING EMAILS ##################################
     run keyword if    ${docker}==1    the user reads his email locally    ${recipient}    ${subject}    ${pattern}
     run keyword if    ${docker}!=1    the user reads his email remotely    ${recipient}    ${subject}    ${pattern}
 
@@ -66,8 +66,8 @@ check pattern in email
     Should Not Be Empty    ${MATCHES}
     delete email    ${email_to_test}
     close mailbox
-    ####################### CLICKING EMAILED LINKS ############################
 
+####################### CLICKING EMAILED LINKS ############################
 the user reads his email and clicks the link
     [Arguments]    ${recipient}    ${subject}    ${pattern}        ${link_number}=1
     run keyword if    ${docker}==1    the user reads his email and clicks the link locally    ${recipient}    ${subject}    ${pattern}    ${link_number}
@@ -120,8 +120,8 @@ the user reads the email and clicks the link
     go to    ${LINK}
     delete email    ${email_to_test}
     close mailbox
-    ######################## DELETING EMAILS #####################################
 
+######################## DELETING EMAILS #####################################
 Delete the emails from both test mailboxes
     run keyword if    ${docker}==1    delete the emails from the local test mailbox    # Note that all emails come through to the same local mailbox, so we only need to delete from one mailbox here
     run keyword if    ${docker}!=1    delete the emails from both remote test mailboxes
@@ -139,7 +139,3 @@ delete the emails from the default remote test mailbox
 
 delete the emails from the local test mailbox
     Run Keyword and Ignore Error Without Screenshots   Remove All Emails    server=${local_imap}   port=${local_imap_port}   user=smtp    password=smtp   is_secure=False   timeout=1
-
-Delete the emails from both default test mailboxes
-    run keyword if    ${docker}==1    delete the emails from the local test mailbox    # Note that all emails come through to the same local mailbox, so we only need to delete from one mailbox here
-    run keyword if    ${docker}!=1    delete the emails from both remote test mailboxes
