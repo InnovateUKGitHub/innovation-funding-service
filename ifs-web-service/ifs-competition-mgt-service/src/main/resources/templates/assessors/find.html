@@ -124,8 +124,7 @@
                            data-select-all=""
                            id="select-all-check"
                            th:checked="${assessorSelectionForm.getAllSelected()}"
-                           th:attr="disabled=${#lists.isEmpty(model.assessors)}"
-                           th:disabled="${model.selectAllDisabled}"/>
+                           th:disabled="${model.selectAllDisabled || model.pagination.totalCount == 0}"/>
                     <label for="select-all-check">
                         Select all assessors
                     </label>

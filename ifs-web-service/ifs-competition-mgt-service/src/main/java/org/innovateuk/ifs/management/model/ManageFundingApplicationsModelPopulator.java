@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+import static org.innovateuk.ifs.management.controller.CompetitionManagementCookieController.SELECTION_LIMIT;
+
 /**
  * Populator for the manage funding applications view model
  */
@@ -40,7 +42,7 @@ public class ManageFundingApplicationsModelPopulator {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         CompetitionInFlightStatsViewModel keyStatistics = competitionInFlightStatsModelPopulator.populateStatsViewModel(competitionResource);
 
-        boolean selectAllDisabled= results.getTotalElements() > CompetitionManagementCookieController.SELECTION_LIMIT;
+        boolean selectAllDisabled = results.getTotalElements() > SELECTION_LIMIT;
 
         PaginationViewModel paginationViewModel = new PaginationViewModel(results, queryString);
         return new ManageFundingApplicationViewModel(
