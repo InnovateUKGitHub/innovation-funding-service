@@ -30,7 +30,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
-import static java.util.Optional.of;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -101,29 +100,35 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
                                      FindAssessorsFilterForm filterForm,
                                      boolean clearFilter) {
         AssessorSelectionForm storedSelectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new AssessorSelectionForm());
-        selectionForm.setAllSelected(storedSelectionForm.getAllSelected());
-        selectionForm.setSelectedAssessorIds(storedSelectionForm.getSelectedAssessorIds());
-        clearFilter = !filterForm.getInnovationArea().isPresent();
 
         if (storedSelectionForm.getSelectedInnovationArea() != null && !filterForm.getInnovationArea().isPresent() && !clearFilter) {
-            filterForm.setInnovationArea(of(storedSelectionForm.getSelectedInnovationArea()));
+            //filterForm.setInnovationArea(of(storedSelectionForm.getSelectedInnovationArea()));
         }
 
-        List<Long> filteredResults = getAllAssessorIds(competitionId, filterForm.getInnovationArea());
-        if (selectionForm.getAllSelected() && !filterForm.getInnovationArea().isPresent() && !clearFilter) {
-            selectionForm.setSelectedAssessorIds(filteredResults);
-            selectionForm.setAllSelected(true);
-        } else {
-            selectionForm.getSelectedAssessorIds().retainAll(filteredResults);
-            if (selectionForm.getSelectedAssessorIds().containsAll(filteredResults)) {
-                selectionForm.setAllSelected(true);
-            } else {
-                selectionForm.setAllSelected(false);
-            }
-        }
+        AssessorSelectionForm trimmedAssessorForm = trimSelectionByFilteredResult(storedSelectionForm, filterForm.getInnovationArea(), competitionId);
+        selectionForm.setSelectedAssessorIds(trimmedAssessorForm.getSelectedAssessorIds());
+        selectionForm.setAllSelected(trimmedAssessorForm.getAllSelected());
+        //selectionForm.setSelectedInnovationArea(filterForm.getInnovationArea().orElse(null));
 
-        filterForm.getInnovationArea().ifPresent(selectionForm::setSelectedInnovationArea);
         saveFormToCookie(response, competitionId, selectionForm);
+    }
+
+    private AssessorSelectionForm trimSelectionByFilteredResult(AssessorSelectionForm selectionForm,
+                                                                       Optional<Long> innovationArea,
+                                                                       Long competitionId) {
+        List<Long> filteredResults = getAllAssessorIds(competitionId, innovationArea);
+        AssessorSelectionForm updatedSelectionForm = new AssessorSelectionForm();
+
+        selectionForm.getSelectedAssessorIds().retainAll(filteredResults);
+        updatedSelectionForm.setSelectedAssessorIds(selectionForm.getSelectedAssessorIds());
+
+        if (updatedSelectionForm.getSelectedAssessorIds().equals(filteredResults)  && !updatedSelectionForm.getSelectedAssessorIds().isEmpty()) {
+            updatedSelectionForm.setAllSelected(true);
+        } else {
+            updatedSelectionForm.setAllSelected(false);
+        }
+
+        return updatedSelectionForm;
     }
 
     @PostMapping(value = "/find", params = {"selectionId"})
