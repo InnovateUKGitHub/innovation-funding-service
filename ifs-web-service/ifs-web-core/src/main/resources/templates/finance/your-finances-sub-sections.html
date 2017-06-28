@@ -115,7 +115,7 @@
     </th:block>
 
     <th:block th:fragment="finance_sub_section_row (model, childSection)">
-        <th:block th:if="${model.showSectionAsNotRequired(childSection) and !model.allReadOnly}">
+        <th:block th:if="${model.showSectionAsNotRequired(childSection)}">
             <li class="read-only">
                 <div class="task">
                     <h3 class="heading-small" th:text="${childSection.section.name}"></h3>
@@ -123,9 +123,9 @@
                 <div class="task-status"><span>No action required</span></div>
             </li>
         </th:block>
-        <th:block th:unless="${model.showSectionAsNotRequired(childSection) and !model.allReadOnly}">
+        <th:block th:unless="${model.showSectionAsNotRequired(childSection)}">
             <li>
-                <th:block th:if="${model.showSectionAsLink(childSection) || model.allReadOnly}">
+                <th:block th:if="${model.showSectionAsLink(childSection)}">
                     <div class="task">
                         <h3 class="heading-small">
                             <th:block th:unless="${model.allReadOnly}">
