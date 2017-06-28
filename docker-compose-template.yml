@@ -95,6 +95,14 @@ services:
       timeout: 8s
     networks:
       - ifs
+  front-door-svc:
+    image: innovateuk/front-door-service:@version@
+    healthcheck:
+      test: ["CMD", "curl", "-f",  "http://localhost:8080/monitoring/health"]
+      interval: 15s
+      timeout: 8s
+    networks:
+      - ifs
 
   data-service:
     image: innovateuk/data-service:@version@

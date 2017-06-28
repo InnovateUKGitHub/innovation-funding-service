@@ -25,7 +25,7 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...
 ...               INFUND-8590 Lead applicant can Delete a partner Organisation
 Suite Setup       log in and create new application for collaboration if there is not one already
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 
@@ -206,7 +206,7 @@ Partner should be able to log-in and see the new company name
     ...    INFUND-7976
     [Tags]    Email    HappyPath    SmokeTest
     Given the user clicks the button/link    jQuery=.button:contains("Sign in")
-    When guest user log-in    ${invite_email}    ${correct_password}
+    When the user logs-in in new browser     ${invite_email}    ${correct_password}
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     And the user can see the updated company name throughout the application
     And the user reads his email and clicks the link    ${invite_email}    Innovate UK applicant questionnaire    diversity survey
@@ -322,6 +322,6 @@ the applicant's inputs should be visible
     Should Be Equal As Strings    ${input_value}    Collaborator 3
 
 Login and create a new application
-    Guest user log-in                                    &{lead_applicant_credentials}
-    create new application with the same user            Invitation page test
+    the user logs-in in new browser            &{lead_applicant_credentials}
+    create new application with the same user  Invitation page test
 

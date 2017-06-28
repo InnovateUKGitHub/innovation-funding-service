@@ -2,32 +2,29 @@
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create account'" />
-    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body>
 
-<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage Users',linkClass='link-back',linkUrl='/prototypes/27-add-internal-user-overview.html'" />
-
-    <!-- PROTOTYPE HTML -->
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage Users',linkClass='link-back',linkUrl=@{/admin/users/active}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Add a new internal user',size='heading-large'" />
 
     <p>Enter the new internal user's details below to add them to your invite list.</p>
     <h2 class="visuallyhidden">User information</h2>
-    <form action="/prototypes/27-add-internal-user-overview.html" novalidate="novalidate">
-        <div class="form-group">
-            <label class="form-label" for="firstName">
+    <form th:object="${form}" method="post" novalidate="novalidate"  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+        <div class="form-group" th:classappend="${#fields.hasErrors('*{firstName}')} ? 'form-group-error'">
+            <label class="form-label" th:for="${#ids.next('firstName')}">
                 <span>First name</span>
             </label>
             <input class="form-control"
                    type="text"
-                   name="firstName"
+                   th:errorclass="form-control-error"
+                   th:field="*{firstName}"
                    required="required"
                    minlength="2"
                    maxlength="70"
@@ -35,14 +32,14 @@
                                     data-maxlength-errormessage=#{validation.standard.firstname.length.max},
                                     data-required-errormessage=#{validation.standard.firstname.required}" />
         </div>
-        <div class="form-group">
-            <label class="form-label" for="lastName">
+        <div class="form-group" th:classappend="${#fields.hasErrors('*{lastName}')} ? 'form-group-error'">
+            <label class="form-label" th:for="${#ids.next('lastName')}">
                 <span>Last name</span>
             </label>
             <input class="form-control"
-                   id="lastName"
                    type="text"
-                   name="lastName"
+                   th:errorclass="form-control-error"
+                   th:field="*{lastName}"
                    required="required"
                    minlength="2"
                    maxlength="70"
@@ -50,13 +47,14 @@
                                     data-maxlength-errormessage=#{validation.standard.lastname.length.max},
                                     data-required-errormessage=#{validation.standard.lastname.required}" />
         </div>
-        <div class="form-group">
-            <label class="form-label" for="email">
+        <div class="form-group" th:classappend="${#fields.hasErrors('*{emailAddress}')} ? 'form-group-error'">
+            <label class="form-label" th:for="${#ids.next('emailAddress')}">
                 <span>Email</span>
             </label>
             <input class="form-control"
                    type="email"
-                   name="email"
+                   th:errorclass="form-control-error"
+                   th:field="*{emailAddress}"
                    maxlength="256"
                    required="required"
                    th:attr="data-maxlength-errormessage=#{validation.standard.email.length.max(256)},
@@ -67,6 +65,7 @@
                 <span class="form-label-bold">Job role</span>
                 <p class="form-hint">Which of the following job roles will the user identify as?</p>
             </label>
+            <!--/* TODO need object with all available roles */-->
             <select name="role" class="form-control" id="role" required="required" data-required-errormessage="Please select a role">
                 <option value="a">IFS Administrator</option>
                 <option value="b">Competition Administrator</option>
@@ -76,7 +75,7 @@
         </div>
         <div class="form-group extra-margin">
             <button class="button">Save and return</button>
-            <a href="/prototypes/27-add-internal-user-overview.html">Cancel</a>
+            <a th:href="@{/admin/users/active}">Cancel</a>
         </div>
     </form>
     <!--  PROTOTYPE HTML -->

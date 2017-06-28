@@ -35,6 +35,7 @@ import static org.innovateuk.ifs.application.transactional.ApplicationFundingSer
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_DETERMINE_NOTIFICATION_TARGETS;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.pairsToMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -85,12 +86,12 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 
     @Override
     @Transactional
-    public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisions(FundingNotificationResource fundingNotificationResource) {
+    public ServiceResult<Void> notifyApplicantsOfFundingDecisions(FundingNotificationResource fundingNotificationResource) {
 
         List<Application> applications = getFundingApplications(fundingNotificationResource.getFundingDecisions());
         setApplicationState(fundingNotificationResource.getFundingDecisions(), applications);
 
-        List<ServiceResult<Pair<Long, NotificationTarget>>> fundingNotificationTargets = getLeadApplicantNotificationTargets(fundingNotificationResource.calculateApplicationIds());
+        List<ServiceResult<Pair<Long, NotificationTarget>>> fundingNotificationTargets = getApplicantNotificationTargets(fundingNotificationResource.calculateApplicationIds());
         ServiceResult<List<Pair<Long, NotificationTarget>>> aggregatedFundingTargets = aggregate(fundingNotificationTargets);
 
         return aggregatedFundingTargets.handleSuccessOrFailure(
@@ -201,11 +202,17 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
         return new Notification(systemNotificationSource, notificationTargets, notificationType, globalArguments, notificationTargetSpecificArguments);
     }
 
-    private List<ServiceResult<Pair<Long, NotificationTarget>>> getLeadApplicantNotificationTargets(List<Long> applicationIds) {
-        return simpleMap(applicationIds, applicationId -> {
-            ServiceResult<ProcessRole> leadApplicantResult = getProcessRoles(applicationId, LEADAPPLICANT).andOnSuccess(EntityLookupCallbacks::getOnlyElementOrFail);
-            return leadApplicantResult.andOnSuccessReturn(leadApplicant -> Pair.of(applicationId, new UserNotificationTarget(leadApplicant.getUser())));
+    private List<ServiceResult<Pair<Long, NotificationTarget>>> getApplicantNotificationTargets(List<Long> applicationIds) {
+
+        List<ServiceResult<Pair<Long, NotificationTarget>>> applicationNotificationTargets = new ArrayList<>();
+        applicationIds.forEach(applicationId -> {
+            ServiceResult<List<ProcessRole>> processRoles = getProcessRoles(applicationId, COLLABORATOR);
+            if(processRoles.isSuccess()) {
+                processRoles.getSuccessObject().forEach(pr -> applicationNotificationTargets.add(ServiceResult.serviceSuccess(Pair.of(applicationId, new UserNotificationTarget(pr.getUser())))));
+            }
+            applicationNotificationTargets.add(getProcessRoles(applicationId, LEADAPPLICANT).andOnSuccess(EntityLookupCallbacks::getOnlyElementOrFail).andOnSuccessReturn(pr -> Pair.of(applicationId, new UserNotificationTarget(pr.getUser()))));
         });
+        return applicationNotificationTargets;
     }
 
     private ApplicationState stateFromDecision(FundingDecision applicationFundingDecision) {

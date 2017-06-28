@@ -280,7 +280,7 @@ the user is able to change the value of the fields
     the user should see the element    jQuery=dl dt:contains("Resubmission") + dd:contains("Yes")
 
 Custom suite setup
-    Guest user log-in    &{Comp_admin1_credentials}
+    the user logs-in in new browser  &{Comp_admin1_credentials}
     ${today}=    get time
     ${tomorrow} =    Add time To Date    ${today}    1 day
     Set suite variable    ${tomorrow}

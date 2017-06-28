@@ -89,7 +89,7 @@ Comp Admin user can see the internal project summary page
 *** Keywords ***
 
 the project is completed if it is not already complete
-    log in as user    &{lead_applicant_credentials}
+    The user logs-in in new browser  &{lead_applicant_credentials}
     the user navigates to the page    ${project_in_setup_page}/details
     ${project_manager_not_set}    ${value}=    run keyword and ignore error without screenshots    The user should not see the element    jQuery=#project-manager-status.yes
     run keyword if    '${project_manager_not_set}' == 'PASS'     all previous sections of the project are completed

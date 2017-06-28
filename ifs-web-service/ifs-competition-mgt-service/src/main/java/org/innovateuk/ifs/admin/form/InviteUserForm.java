@@ -4,7 +4,7 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.AdminRoleType;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -35,7 +35,7 @@ public class InviteUserForm extends BaseBindingResultTarget {
     @Size(max = 256, message = "{validation.standard.email.length.max}")
     private String emailAddress;
 
-    private UserRoleType role;
+    private AdminRoleType role;
 
     // for spring form binding
     public InviteUserForm() {
@@ -65,11 +65,11 @@ public class InviteUserForm extends BaseBindingResultTarget {
         this.emailAddress = emailAddress;
     }
 
-    public UserRoleType getRole() {
+    public AdminRoleType getRole() {
         return role;
     }
 
-    public void setRole(UserRoleType role) {
+    public void setRole(AdminRoleType role) {
         this.role = role;
     }
 }

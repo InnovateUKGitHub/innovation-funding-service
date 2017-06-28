@@ -14,7 +14,7 @@ Documentation     INFUND-3780: As an Assessor I want the system to autosave my w
 ...               INFUND-6281 As an Assessor I want to see specific scoring guidance text for each application question so that I can score the question accurately
 ...
 ...               INFUND-8065 File download links are broken for assessors
-Suite Setup       guest user log-in    &{assessor_credentials}
+Suite Setup       The user logs-in in new browser  &{assessor_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
