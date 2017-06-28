@@ -29,7 +29,6 @@ public class CompetitionTest {
     private List<Question> questions;
     private List<Section> sections;
     private String name;
-    private String description;
     private ZonedDateTime startDate;
     private ZonedDateTime endDate;
     private Integer maxResearchRatio;
@@ -46,7 +45,6 @@ public class CompetitionTest {
         id = 0L;
 
         name = "testCompetitionName";
-        description = "testCompetitionDescription";
         startDate = ZonedDateTime.now().minusDays(5);
         endDate = startDate.plusDays(15);
 
@@ -63,7 +61,7 @@ public class CompetitionTest {
         sections.add(new Section());
         sections.add(new Section());
 
-        competition = new Competition(id, applications, questions, sections, name, description, startDate, endDate);
+        competition = new Competition(id, applications, questions, sections, name, startDate, endDate);
         competition.setMaxResearchRatio(maxResearchRatio);
         competition.setAcademicGrantPercentage(academicGrantPercentage);
 
@@ -108,7 +106,6 @@ public class CompetitionTest {
     public void competitionShouldReturnCorrectAttributeValues() throws Exception {
         assertEquals(competition.getId(), id);
         assertEquals(competition.getName(), name);
-        assertEquals(competition.getDescription(), description);
         assertEquals(competition.getSections(), sections);
         assertEquals(competition.getMaxResearchRatio(), maxResearchRatio);
         assertEquals(competition.getAcademicGrantPercentage(), academicGrantPercentage);
