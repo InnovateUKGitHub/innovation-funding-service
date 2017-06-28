@@ -83,26 +83,25 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
             return "redirect:/competition/" + competitionId + "/funding";
         }
 
-        try {
-            FundingDecisionSelectionCookie selectionCookieForm = getSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
-            selectionForm = selectionCookieForm.getFundingDecisionSelectionForm();
-            FundingDecisionFilterForm filterCookieForm = selectionCookieForm.getFundingDecisionFilterForm();
+        FundingDecisionSelectionCookie selectionCookieForm = getSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
 
-            if(clearFilters) {
-                filterForm = new FundingDecisionFilterForm();
-            } else if (!filterForm.anyFilterIsActive() && filterCookieForm.anyFilterIsActive() && selectionForm.anySelectionIsMade()) {
-                filterForm.setFundingFilter(selectionCookieForm.getFundingDecisionFilterForm().getFundingFilter());
-                filterForm.setStringFilter(selectionCookieForm.getFundingDecisionFilterForm().getStringFilter());
-            }
+        selectionForm = selectionCookieForm.getFundingDecisionSelectionForm();
+        FundingDecisionFilterForm filterCookieForm = selectionCookieForm.getFundingDecisionFilterForm();
 
-            FundingDecisionSelectionForm trimmedSelectionForm = trimSelectionByFilteredResult(selectionForm, filterForm, competitionId);
-            selectionForm.setApplicationIds(trimmedSelectionForm.getApplicationIds());
-            selectionCookieForm.setFundingDecisionFilterForm(filterForm);
 
-            saveFormToCookie(response, competitionId, selectionCookieForm);
-        } catch (Exception e) {
-            log.error(e);
+        if(clearFilters) {
+            filterForm = new FundingDecisionFilterForm();
+        } else if (!filterForm.anyFilterIsActive() && filterCookieForm.anyFilterIsActive() && selectionForm.anySelectionIsMade()) {
+            filterForm.setFundingFilter(selectionCookieForm.getFundingDecisionFilterForm().getFundingFilter());
+            filterForm.setStringFilter(selectionCookieForm.getFundingDecisionFilterForm().getStringFilter());
         }
+
+        FundingDecisionSelectionForm trimmedSelectionForm = trimSelectionByFilteredResult(selectionForm, filterForm, competitionId);
+        selectionForm.setApplicationIds(trimmedSelectionForm.getApplicationIds());
+        selectionForm.setAllSelected(trimmedSelectionForm.isAllSelected());
+        selectionCookieForm.setFundingDecisionFilterForm(filterForm);
+
+        saveFormToCookie(response, competitionId, selectionCookieForm);
 
         return populateSubmittedModel(model, competitionId, paginationForm, filterForm, selectionForm);
     }
@@ -222,16 +221,13 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         List<Long> filteredApplicationIds = getAllApplicationIdsByFilters(competitionId, filterForm);
         FundingDecisionSelectionForm updatedSelectionForm = new FundingDecisionSelectionForm();
 
-        if (selectionForm.isAllSelected() && !filterForm.anyFilterIsActive()) {
-            updatedSelectionForm.setApplicationIds(filteredApplicationIds);
+        selectionForm.getApplicationIds().retainAll(filteredApplicationIds);
+        updatedSelectionForm.setApplicationIds(selectionForm.getApplicationIds());
+
+        if (updatedSelectionForm.getApplicationIds().equals(filteredApplicationIds)  && !updatedSelectionForm.getApplicationIds().isEmpty()) {
+            updatedSelectionForm.setAllSelected(true);
         } else {
-            selectionForm.getApplicationIds().retainAll(filteredApplicationIds);
-            updatedSelectionForm.setApplicationIds(selectionForm.getApplicationIds());
-            if (selectionForm.getApplicationIds().containsAll(filteredApplicationIds)) {
-                updatedSelectionForm.setAllSelected(true);
-            } else {
-                updatedSelectionForm.setAllSelected(false);
-            }
+            updatedSelectionForm.setAllSelected(false);
         }
 
         return updatedSelectionForm;

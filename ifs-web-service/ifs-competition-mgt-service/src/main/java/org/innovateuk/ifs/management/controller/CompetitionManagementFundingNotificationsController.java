@@ -5,10 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.competition.form.FundingNotificationSelectionCookie;
-import org.innovateuk.ifs.competition.form.ManageFundingApplicationsQueryForm;
-import org.innovateuk.ifs.competition.form.NotificationEmailsForm;
-import org.innovateuk.ifs.competition.form.SelectApplicationsForEmailForm;
+import org.innovateuk.ifs.competition.form.*;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.management.model.ManageFundingApplicationsModelPopulator;
 import org.innovateuk.ifs.management.model.SendNotificationsModelPopulator;
@@ -97,23 +94,27 @@ public class CompetitionManagementFundingNotificationsController extends Competi
                                @RequestParam MultiValueMap<String, String> params,
                                @PathVariable("competitionId") Long competitionId,
                                @ModelAttribute @Valid ManageFundingApplicationsQueryForm filterForm,
-                               @ModelAttribute(name = "selectionForm", binding = false) @Valid SelectApplicationsForEmailForm selectionForm,
+                               @ModelAttribute(name = "selectionForm") @Valid SelectApplicationsForEmailForm selectionForm,
                                @RequestParam(value = "clearFilters", defaultValue = "false") boolean clearFilters,
                                BindingResult bindingResult,
                                ValidationHandler validationHandler,
                                HttpServletRequest request,
                                HttpServletResponse response) {
 
-        updateSelectionForm(request, response, competitionId, selectionForm, filterForm, clearFilters);
-        List<Long> submittableApplications = getAllApplicationIdsByFilters(competitionId, filterForm);
+        FundingNotificationSelectionCookie updatedSelectionCookie = updateSelectionForm(request, response, competitionId, selectionForm, filterForm, clearFilters);
+        final ManageFundingApplicationsQueryForm updatedFilterForm = updatedSelectionCookie.getManageFundingApplicationsQueryForm();
+        selectionForm.setIds(updatedSelectionCookie.getSelectApplicationsForEmailForm().getIds());
+        selectionForm.setAllSelected(updatedSelectionCookie.getSelectApplicationsForEmailForm().isAllSelected());
 
+        List<Long> submittableApplications = getAllApplicationIdsByFilters(competitionId, updatedSelectionCookie.getManageFundingApplicationsQueryForm());
         return validationHandler.failNowOrSucceedWith(queryFailureView(competitionId), () -> {
-                    model.addAttribute("model", manageFundingApplicationsModelPopulator.populate(filterForm, competitionId, buildQueryString(params), submittableApplications.size()));
-                    return MANAGE_FUNDING_APPLICATIONS_VIEW; }
+                model.addAttribute("model", manageFundingApplicationsModelPopulator.populate(updatedFilterForm, competitionId, buildQueryString(params), submittableApplications.size()));
+                return MANAGE_FUNDING_APPLICATIONS_VIEW;
+            }
         );
     }
 
-    private void updateSelectionForm(HttpServletRequest request,
+    private FundingNotificationSelectionCookie updateSelectionForm(HttpServletRequest request,
                                      HttpServletResponse response,
                                      long competitionId,
                                      SelectApplicationsForEmailForm appSelectionForm,
@@ -132,23 +133,33 @@ public class CompetitionManagementFundingNotificationsController extends Competi
             filterForm.setAllFilterOptions(storedFilterForm.getStringFilter(), storedFilterForm.getSendFilter(), storedFilterForm.getFundingFilter());
         }
 
-        List<Long> filteredIds = getAllApplicationIdsByFilters(competitionId, filterForm);
-        if (appSelectionForm.isAllSelected() && !filterForm.anyFilterOptionsActive() && !clearFilters) {
-            appSelectionForm.setIds(filteredIds);
-            appSelectionForm.setAllSelected(true);
-        } else {
-            appSelectionForm.getIds().retainAll(filteredIds);
-            if (appSelectionForm.getIds().containsAll(filteredIds)) {
-                appSelectionForm.setAllSelected(true);
-            } else {
-                appSelectionForm.setAllSelected(false);
-            }
-        }
+        SelectApplicationsForEmailForm trimmedSelectionForm = trimSelectionByFilteredResult(appSelectionForm, filterForm, competitionId);
+
         storedSelectionFormCookie.setManageFundingApplicationsQueryForm(filterForm);
-        storedSelectionFormCookie.setSelectApplicationsForEmailForm(appSelectionForm);
+        storedSelectionFormCookie.setSelectApplicationsForEmailForm(trimmedSelectionForm);
 
         saveFormToCookie(response, competitionId, storedSelectionFormCookie);
 
+        return storedSelectionFormCookie;
+    }
+
+    private SelectApplicationsForEmailForm trimSelectionByFilteredResult(SelectApplicationsForEmailForm selectionForm,
+                                                                         ManageFundingApplicationsQueryForm filterForm,
+                                                                         Long competitionId) {
+        List<Long> filteredApplicationIds = getAllApplicationIdsByFilters(competitionId, filterForm);
+        SelectApplicationsForEmailForm updatedSelectionForm = new SelectApplicationsForEmailForm();
+
+
+        selectionForm.getIds().retainAll(filteredApplicationIds);
+        updatedSelectionForm.setIds(selectionForm.getIds());
+
+        if (updatedSelectionForm.getIds().equals(filteredApplicationIds) && !updatedSelectionForm.getIds().isEmpty()) {
+            updatedSelectionForm.setAllSelected(true);
+        } else {
+            updatedSelectionForm.setAllSelected(false);
+        }
+
+        return updatedSelectionForm;
     }
 
     @PostMapping("/manage-funding-applications")
