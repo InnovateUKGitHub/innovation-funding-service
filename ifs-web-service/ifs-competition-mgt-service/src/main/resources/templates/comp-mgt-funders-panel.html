@@ -152,34 +152,8 @@
                     <td th:text="${result.completedPercentage}"></td>
                 </tr>
                 </tbody>
-            </table>        </div>
-        <div class="grid-row sorting extra-margin">
-            <div class="column-half">
-                <div class="select-all">
-                    <fieldset>
-                        <legend class="visuallyhidden">Select all applications</legend>
-
-                        <div class="multiple-choice">
-                            <input th:disabled="${selectAllDisabled}" th:checked="${selectionForm.isAllSelected()}" data-select-all="[id^=app-row-]" class="select-all" id="select-all-2" value="select-all" type="checkbox" />
-                            <label for="select-all-2">
-                                Select all applications
-                            </label>
-                        </div>
-                        <span class="form-hint"><span th:text="${selectionForm.applicationIds.size()}" data-count-selected="">0</span> applications selected</span>
-                    </fieldset>
-                </div>
-            </div>
-            <div class="column-half">
-                <fieldset class="mark-applications">
-                    <legend class="visuallyhidden">Mark application as:</legend>
-                    <h3>Mark application as:</h3>
-                    <button type="submit" value='FUNDED' name="fundingDecision" class="button button-secondary" data-submit-el="">Successful</button>
-                    <button type="submit" value='UNFUNDED' name="fundingDecision" class="button button-secondary"  data-submit-el="">Unsuccessful</button>
-                    <button type="submit" value='ON_HOLD' name="fundingDecision" class="button button-secondary"  data-submit-el="">On hold</button>
-                </fieldset>
-            </div>
+            </table>
         </div>
-
     </form>
     <th:block th:insert="fragments/elements :: general-pagination(pagination=${pagination})" />
 

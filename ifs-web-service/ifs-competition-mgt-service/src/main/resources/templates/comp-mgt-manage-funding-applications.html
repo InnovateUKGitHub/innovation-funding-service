@@ -149,32 +149,6 @@
                 </table>
             </div>
         </div>
-
-        <div class="grid-row sorting">
-            <div class="column-half">
-                <div class="select-all">
-                    <fieldset>
-                        <legend class="visuallyhidden">Select applications</legend>
-
-                        <div class="multiple-choice">
-                            <input data-select-all="" id="select-all-2" type="checkbox"
-                                   th:checked="${selectionForm.isAllSelected()}"
-                                   th:disabled="${model.selectAllDisabled || !model.anythingChangeable}"/>
-                            <label for="select-all-2">
-                                Select all applications
-                            </label>
-                        </div>
-                        <span class="form-hint"><span data-count-selected="" th:text="${#lists.size(selectionForm.ids)}">3</span> applications selected</span>
-                    </fieldset>
-                </div>
-            </div>
-            <div class="column-half">
-                <fieldset class="mark-applications">
-                    <button class="button button-notification extra-margin-top" data-submit-el="" type="submit" name="write-and-send-email"
-                            th:attr="disabled=${#lists.isEmpty(selectionForm.ids)}">Write and send email</button>
-                </fieldset>
-            </div>
-        </div>
     </form>
     <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
     <th:block th:insert="fragments/layout :: main-content-end" />
