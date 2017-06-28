@@ -8,7 +8,8 @@ IFS.competitionManagement.multipageSelect = (function () {
       countEl: '[data-multipage-select] [data-count-selected]',
       submitEl: '[data-multipage-select] [data-submit-el]',
       totalListSizeEl: '[data-multipage-select][data-total-checkboxes]',
-      selectionLimitExceededElement: '#selection-limit-exceeded-block',
+      selectionLimitExceededElement: '[data-selection-limit-exceeded-block]',
+      limitExceededMessage: '<div class="warning-alert extra-margin-bottom"><p>Cannot select additional items, selection limit of 500 exceeded.</p></div>',
       totalListSize: 0
     },
     init: function () {
@@ -72,8 +73,9 @@ IFS.competitionManagement.multipageSelect = (function () {
       }
     },
     updateCount: function (count) {
-      if (jQuery(s.countEl).length) {
-        jQuery(s.countEl).text(count)
+      var countEl = jQuery(s.countEl)
+      if (countEl.length) {
+        countEl.text(count)
       }
     },
     changeSelectAllCheckboxState: function (allSelected) {
@@ -95,13 +97,13 @@ IFS.competitionManagement.multipageSelect = (function () {
     },
     updateLimitExceededMessage: function (limitExceeded, checkbox) {
       var errorElement = jQuery(s.selectionLimitExceededElement)
-      if (limitExceeded) {
-        errorElement.html('<div class="warning-alert extra-margin-bottom">' +
-                              '<p>Cannot select additional items, selection limit of 500 exceeded.</p>' +
-                               '</div>')
-        checkbox.removeProp('checked')
-      } else {
-        errorElement.html('')
+      if (errorElement.length) {
+        if (limitExceeded) {
+          errorElement.html(s.limitExceededMessage)
+          checkbox.removeProp('checked')
+        } else {
+          errorElement.empty()
+        }
       }
     }
   }
