@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.repository.InviteRoleRepository;
+import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.resource.AdminRoleType;
@@ -26,7 +27,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  * Transactional and secured service implementation providing operations around invites for users.
  */
 @Service
-public class InviteUserServiceImpl implements InviteUserService {
+public class InviteUserServiceImpl extends BaseTransactionalService implements InviteUserService {
 
     @Autowired
     private RoleRepository roleRepository;

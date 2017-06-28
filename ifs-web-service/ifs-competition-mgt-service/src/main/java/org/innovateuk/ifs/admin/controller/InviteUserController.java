@@ -3,8 +3,9 @@ package org.innovateuk.ifs.admin.controller;
 import org.innovateuk.ifs.admin.form.InviteUserForm;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-//import org.innovateuk.ifs.invite.resource.InviteUserResource;
+import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.invite.service.InviteUserService;
+import org.innovateuk.ifs.user.resource.AdminRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,8 +34,8 @@ public class InviteUserController {
 
     private static final String FORM_ATTR_NAME = "form";
 
-/*    @Autowired
-    private InviteUserService inviteUserService;*/
+    @Autowired
+    private InviteUserService inviteUserService;
 
     @GetMapping("/invite-user")
     public String inviteNewUser(Model model,
@@ -59,25 +60,28 @@ public class InviteUserController {
                                @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                UserResource loggedInUser) {
 
+        //TODO - Temp code till its set in the form
+        form.setRole(AdminRoleType.IFS_ADMINISTRATOR);
+        InviteUserResource inviteUserResource = constructInviteUserResource(form);
+        ServiceResult<Void> saveResult = inviteUserService.saveUserInvite(inviteUserResource);
+        return "admin/users/active";
 
-        //Supplier<String> failureView = () -> "admin/invite-new-user";
 
-/*        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+/*        Supplier<String> failureView = () -> "admin/invite-new-user";
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
             InviteUserResource inviteUserResource = constructInviteUserResource(form);
 
             ServiceResult<Void> saveResult = inviteUserService.saveUserInvite(inviteUserResource);
 
             return validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
-                    failNowOrSucceedWith(failureView, () -> "admin/users");
+                    failNowOrSucceedWith(failureView, () -> "admin/users/active");
 
         });*/
-
-        return "admin/users/active";
-
     }
 
-/*    private InviteUserResource constructInviteUserResource(InviteUserForm form) {
+    private InviteUserResource constructInviteUserResource(InviteUserForm form) {
 
         UserResource invitedUser = new UserResource();
         invitedUser.setFirstName(form.getFirstName());
@@ -87,5 +91,5 @@ public class InviteUserController {
         InviteUserResource inviteUserResource = new InviteUserResource(invitedUser, form.getRole());
 
         return inviteUserResource;
-    }*/
+    }
 }
