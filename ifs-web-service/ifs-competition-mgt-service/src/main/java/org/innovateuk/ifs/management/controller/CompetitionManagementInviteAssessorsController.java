@@ -109,15 +109,21 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
             filterForm.setInnovationArea(of(storedSelectionForm.getSelectedInnovationArea()));
         }
 
-        if (selectionForm.getAllSelected() && !filterForm.getInnovationArea().isPresent()) {
-            selectionForm.setSelectedAssessorIds(getAllAssessorIds(competitionId, filterForm.getInnovationArea()));
+        List<Long> filteredResults = getAllAssessorIds(competitionId, filterForm.getInnovationArea());
+        if (selectionForm.getAllSelected() && !filterForm.getInnovationArea().isPresent() && !clearFilter) {
+            selectionForm.setSelectedAssessorIds(filteredResults);
+            selectionForm.setAllSelected(true);
         } else {
-            selectionForm.getSelectedAssessorIds().retainAll(getAllAssessorIds(competitionId, filterForm.getInnovationArea()));
-            selectionForm.setAllSelected(false);
+            selectionForm.getSelectedAssessorIds().retainAll(filteredResults);
+            if (selectionForm.getSelectedAssessorIds().containsAll(filteredResults)) {
+                selectionForm.setAllSelected(true);
+            } else {
+                selectionForm.setAllSelected(false);
+            }
         }
-        filterForm.getInnovationArea().ifPresent(selectionForm::setSelectedInnovationArea);
 
-        saveFormToCookie(response, competitionId, selectionForm);;
+        filterForm.getInnovationArea().ifPresent(selectionForm::setSelectedInnovationArea);
+        saveFormToCookie(response, competitionId, selectionForm);
     }
 
     @PostMapping(value = "/find", params = {"selectionId"})

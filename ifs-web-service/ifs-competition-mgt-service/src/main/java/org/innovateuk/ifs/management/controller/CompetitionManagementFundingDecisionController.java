@@ -28,11 +28,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 
 /**
@@ -168,7 +168,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
     }
 
     private void removeAllApplicationsIds(FundingDecisionSelectionCookie selectionCookie) {
-        selectionCookie.getFundingDecisionSelectionForm().setApplicationIds(Arrays.asList());
+        selectionCookie.getFundingDecisionSelectionForm().getApplicationIds().clear();
         selectionCookie.getFundingDecisionSelectionForm().setAllSelected(false);
     }
 
@@ -236,19 +236,23 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         } else {
             selectionForm.getApplicationIds().retainAll(filteredApplicationIds);
             updatedSelectionForm.setApplicationIds(selectionForm.getApplicationIds());
-            updatedSelectionForm.setAllSelected(false);
+            if (selectionForm.getApplicationIds().containsAll(filteredApplicationIds)) {
+                updatedSelectionForm.setAllSelected(true);
+            } else {
+                updatedSelectionForm.setAllSelected(false);
+            }
         }
 
         return updatedSelectionForm;
     }
 
-    MultiValueMap<String, String> mapFormFilterParametersToMultiValueMap(FundingDecisionFilterForm fundingDecisionFilterForm) {
+    private MultiValueMap<String, String> mapFormFilterParametersToMultiValueMap(FundingDecisionFilterForm fundingDecisionFilterForm) {
         MultiValueMap<String, String> filterMap = new LinkedMultiValueMap<>();
         if(fundingDecisionFilterForm.getFundingFilter().isPresent()) {
-            filterMap.put("fundingFilter", Arrays.asList(fundingDecisionFilterForm.getFundingFilter().get().getName()));
+            filterMap.put("fundingFilter", singletonList(fundingDecisionFilterForm.getFundingFilter().get().getName()));
         }
         if(fundingDecisionFilterForm.getStringFilter().isPresent()) {
-            filterMap.put("stringFilter", Arrays.asList(fundingDecisionFilterForm.getStringFilter().get()));
+            filterMap.put("stringFilter", singletonList(fundingDecisionFilterForm.getStringFilter().get()));
         }
 
         return filterMap;
