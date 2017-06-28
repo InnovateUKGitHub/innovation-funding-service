@@ -4,7 +4,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 
 task createTestSchema(type:Exec) {
-    workingDir '../'
+    workingDir '../../'
     commandLine 'docker-compose', '-f', 'docker-compose.yml', '-f', 'docker-compose-dev.yml', 'exec', '-T', 'mysql' ,'mysql' ,'-uroot' ,'-ppassword' ,'-e', 'create database if not exists ifs_test'
     doLast {
         exec {
@@ -17,7 +17,7 @@ task createTestSchema(type:Exec) {
 }
 
 task createSchema(type:Exec) {
-    workingDir '../'
+    workingDir '../../'
     commandLine 'docker-compose', '-f', 'docker-compose.yml', '-f', 'docker-compose-dev.yml', 'exec', '-T', 'mysql' ,'mysql' ,'-uroot' ,'-ppassword' ,'-e', 'create database if not exists ifs'
     doLast {
         exec {
@@ -30,7 +30,9 @@ task createSchema(type:Exec) {
 }
 
 task startMySql(type:Exec) {
-    workingDir '../'
+    workingDir '../../'
+    println "*************"
+    println workingDir
     commandLine 'docker-compose', '-f', 'docker-compose.yml', '-f', 'docker-compose-dev.yml', 'up', '-d', 'mysql'
     doLast {
         exec {
@@ -44,8 +46,8 @@ task startMySql(type:Exec) {
 
 task prepareComposeFile (type: Copy) {
     outputs.upToDateWhen { false }
-    from '../'
-    into '../'
+    from '../../'
+    into '../../'
     include 'docker-compose-template.yml'
     rename 'docker-compose-template.yml', 'docker-compose.yml'
     filter(ReplaceTokens, tokens: [version: project.properties['version']])
