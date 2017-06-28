@@ -10,7 +10,7 @@ Documentation     INFUND-3830: As a Competitions team member I want to view all 
 ...               INFUND-3004 As a Competition Executive I want the competition to automatically open based on the date that has been provided in the competition open field in the setup phase.
 ...
 ...               INFUND-2610 As an internal user I want to be able to view and access all projects that have been successful within a competition so that I can track the project setup process
-Suite Setup       Guest user log-in in new browser    &{Comp_admin1_credentials}
+Suite Setup       the user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
@@ -19,9 +19,7 @@ Resource          CompAdmin_Commons.robot
 
 *** Test Cases ***
 Sections of Live Competitions
-    [Documentation]    INFUND-3830
-    ...
-    ...    INFUND-3003
+    [Documentation]    INFUND-3830 INFUND-3003
     Given the user should see the text in the page    All competitions
     Then the user should see the text in the page    Open
     And the user should see the text in the page    Closed

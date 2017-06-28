@@ -22,7 +22,7 @@ Guest user can't access application form
 
 Applicant who is not team member can't access overview page
     [Documentation]    INFUND-1683
-    Given Guest user log-in in new browser    &{collaborator2_credentials}
+    Given The user logs-in in new browser  &{collaborator2_credentials}
     Then the user navigates to the page and gets a custom error message    ${APPLICATION_7_OVERVIEW_PAGE}   ${403_error_message}
 
 Applicant who is not team member can't access application form page
@@ -32,7 +32,7 @@ Applicant who is not team member can't access application form page
 
 Assessor can't access the overview page
     [Documentation]    INFUND-1683
-    [Setup]    Guest user log-in in new browser    &{assessor_credentials}
+    [Setup]  The user logs-in in new browser  &{assessor_credentials}
     When the user navigates to the page and gets a custom error message    ${APPLICATION_7_OVERVIEW_PAGE}   ${403_error_message}
 
 Assessor can't access the application form
