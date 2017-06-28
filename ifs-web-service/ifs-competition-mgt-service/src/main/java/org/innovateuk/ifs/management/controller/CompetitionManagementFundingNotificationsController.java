@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -97,7 +96,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
     public String applications(Model model,
                                @RequestParam MultiValueMap<String, String> params,
                                @PathVariable("competitionId") Long competitionId,
-                               @ModelAttribute @Valid ManageFundingApplicationsQueryForm query,
+                               @ModelAttribute @Valid ManageFundingApplicationsQueryForm filterForm,
                                @ModelAttribute(name = "selectionForm", binding = false) @Valid SelectApplicationsForEmailForm selectionForm,
                                @RequestParam(value = "clearFilters", defaultValue = "false") boolean clearFilters,
                                BindingResult bindingResult,
@@ -105,16 +104,13 @@ public class CompetitionManagementFundingNotificationsController extends Competi
                                HttpServletRequest request,
                                HttpServletResponse response) {
 
-        updateSelectionForm(request, response, competitionId, selectionForm, query, clearFilters);
+        updateSelectionForm(request, response, competitionId, selectionForm, filterForm, clearFilters);
 
-        FundingNotificationSelectionCookie cookieForm = getSelectionFormFromCookie(request, competitionId).get();
-        ManageFundingApplicationsQueryForm filterForm = cookieForm.getManageFundingApplicationsQueryForm();
 
-        List<ApplicationSummaryResource> submittableApplications =getSubmittableApplications(competitionId, filterForm);
+        List<Long> submittableApplications = getAllApplicationIdsByFilters(competitionId, filterForm);
         return validationHandler.failNowOrSucceedWith(queryFailureView(competitionId), () -> {
-                    model.addAttribute("model", manageFundingApplicationsModelPopulator.populate(query, competitionId, buildQueryString(params), submittableApplications.size()));
-                    return MANAGE_FUNDING_APPLICATIONS_VIEW;
-                }
+                    model.addAttribute("model", manageFundingApplicationsModelPopulator.populate(filterForm, competitionId, buildQueryString(params), submittableApplications.size()));
+                    return MANAGE_FUNDING_APPLICATIONS_VIEW; }
         );
     }
 
@@ -164,8 +160,6 @@ public class CompetitionManagementFundingNotificationsController extends Competi
 
         FundingNotificationSelectionCookie selectionCookie = getSelectionFormFromCookie(request, competitionId)
                 .orElse(new FundingNotificationSelectionCookie(selectionForm));
-
-        ManageFundingApplicationsQueryForm filterForm = selectionCookie.getManageFundingApplicationsQueryForm();
 
         return queryFormValidationHandler.failNowOrSucceedWith(queryFailureView(competitionId),  // Pass or fail JSR 303 on the query form
                 () -> idsValidationHandler.failNowOrSucceedWith(idsFailureView(competitionId, query, model, params, request), // Pass or fail JSR 303 on the ids
@@ -259,6 +253,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
         List<ApplicationSummaryResource> resources = applicationSummaryRestService.getWithFundingDecisionApplications(
                 competitionId, filterForm.getStringFilter().isEmpty() ? empty() : of(filterForm.getStringFilter()),
                 filterForm.getSendFilter(), filterForm.getFundingFilter()).getSuccessObjectOrThrowException();
+
         return resources.stream().filter(resource -> resource.applicationFundingDecisionIsChangeable()).map(
                 resource -> resource.getId()).collect(toList());
     }
@@ -281,18 +276,14 @@ public class CompetitionManagementFundingNotificationsController extends Competi
     }
 
     private Supplier<String> idsFailureView(long competitionId, ManageFundingApplicationsQueryForm query, Model model, MultiValueMap<String, String> params, HttpServletRequest request) {
-        Optional<FundingNotificationSelectionCookie> cookieForm = getSelectionFormFromCookie(request, competitionId);
-
-        long totalSubmittableApplications = 0;
+        FundingNotificationSelectionCookie storedSelectionFormCookie = getSelectionFormFromCookie(request, competitionId).orElse(new FundingNotificationSelectionCookie());
+        List<Long> ids = getAllApplicationIdsByFilters(competitionId, storedSelectionFormCookie.getManageFundingApplicationsQueryForm());
+        final long totalSubmittableApplications = ids.size();
 
         return () -> {
             model.addAttribute("model", manageFundingApplicationsModelPopulator.populate(query, competitionId, buildQueryString(params), totalSubmittableApplications));
             return "comp-mgt-manage-funding-applications";
         };
-    }
-
-    private List<ApplicationSummaryResource> getSubmittableApplications(Long competitionId, ManageFundingApplicationsQueryForm filterForm) {
-        return applicationSummaryRestService.getAllSubmittedApplications(competitionId, Optional.of(filterForm.getStringFilter()), filterForm.getFundingFilter()).getSuccessObjectOrThrowException();
     }
 
     private String buildQueryString(MultiValueMap<String, String> params){
