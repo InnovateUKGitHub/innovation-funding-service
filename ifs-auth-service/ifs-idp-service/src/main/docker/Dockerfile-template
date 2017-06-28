@@ -60,7 +60,7 @@ RUN  mkdir /etc/apache2/certs && \
   mv /apache/locking /var/www/html/ && \
 
 # run apache as its own user \
-  mkdir -p /var/run/apache2 && \
+  mkdir -p /var/run/apache2 /run/lock/apache2 && \
   chown -R www-data:0 /etc/apache2 /var/cache/apache2 /run/lock /var/run/apache2 /var/www/html && \
   chmod -R u=rwX,g=rwX,o= /etc/apache2 /var/cache/apache2 /run/lock /var/run/apache2 /var/www/html/ && \
 
