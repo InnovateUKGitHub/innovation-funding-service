@@ -1,3 +1,4 @@
+
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
@@ -5,7 +6,6 @@ import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
@@ -31,7 +31,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     }
 
     @Test
-    public void testFindByCompetitionWithoutSortField() {
+    public void findByCompetitionWithoutSortField() {
     	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123?page=6&size=20", ApplicationSummaryPageResource.class, responseBody);
 
@@ -42,7 +42,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     }
     
     @Test
-    public void testFindByCompetitionWithSortField() {
+    public void findByCompetitionWithSortField() {
     	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123?page=6&size=20&sort=id", ApplicationSummaryPageResource.class, responseBody);
 
@@ -53,7 +53,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     }
 
     @Test
-    public void testFindByCompetitionWithFilter() {
+    public void findByCompetitionWithFilter() {
         ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123?filter=10&page=6&size=20", ApplicationSummaryPageResource.class, responseBody);
 
@@ -63,7 +63,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         assertEquals(responseBody, result.getSuccessObject());
     }
     @Test
-    public void testFindByCompetitionWithFilterAndSort() {
+    public void findByCompetitionWithFilterAndSort() {
         ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123?filter=10&page=6&size=20&sort=id", ApplicationSummaryPageResource.class, responseBody);
 
@@ -74,7 +74,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     }
     
     @Test
-    public void testFindSubmittedApplicationsByCompetitionWithoutSortField() {
+    public void findSubmittedApplicationsByCompetitionWithoutSortField() {
     	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/submitted?page=6&size=20", ApplicationSummaryPageResource.class, responseBody);
 
@@ -85,7 +85,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     }
     
     @Test
-    public void testFindSubmittedApplicationsByCompetitionWithSortField() {
+    public void findSubmittedApplicationsByCompetitionWithSortField() {
     	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/submitted?page=6&size=20&sort=id", ApplicationSummaryPageResource.class, responseBody);
 
@@ -96,7 +96,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     }
 
     @Test
-    public void testFindSubmittedApplicationsByCompetitionWithFilter() {
+    public void findSubmittedApplicationsByCompetitionWithFilter() {
         ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/submitted?filter=10&fundingFilter=FUNDED&page=6&size=20", ApplicationSummaryPageResource.class, responseBody);
 
@@ -107,7 +107,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     }
 
     @Test
-    public void testFindSubmittedApplicationsByCompetitionWithFilterAndSortField() {
+    public void findSubmittedApplicationsByCompetitionWithFilterAndSortField() {
         ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/submitted?filter=10&page=6&size=20&sort=id", ApplicationSummaryPageResource.class, responseBody);
 
@@ -118,7 +118,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     }
 
     @Test
-    public void testFindIneligibleApplicationsByCompetitionWithoutSortField() {
+    public void findIneligibleApplicationsByCompetitionWithoutSortField() {
     	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/ineligible?page=6&size=20", ApplicationSummaryPageResource.class, responseBody);
 
@@ -129,7 +129,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     }
 
     @Test
-    public void testFindIneligibleApplicationsByCompetitionWithSortField() {
+    public void findIneligibleApplicationsByCompetitionWithSortField() {
     	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/ineligible?page=6&size=20&sort=id", ApplicationSummaryPageResource.class, responseBody);
 
@@ -140,7 +140,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     }
 
     @Test
-    public void testFindIneligibleApplicationsByCompetitionWithFilter() {
+    public void findIneligibleApplicationsByCompetitionWithFilter() {
         ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/ineligible?filter=10&informFilter=true&page=6&size=20", ApplicationSummaryPageResource.class, responseBody);
 
@@ -151,7 +151,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     }
 
     @Test
-    public void testFindIneligibleApplicationsByCompetitionWithFilterAndSortField() {
+    public void findIneligibleApplicationsByCompetitionWithFilterAndSortField() {
         ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/ineligible?filter=10&informFilter=false&page=6&size=20&sort=id", ApplicationSummaryPageResource.class, responseBody);
 
@@ -162,7 +162,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     }
 
     @Test
-    public void testFindNotSubmittedApplicationsByCompetitionWithoutSortField() {
+    public void findNotSubmittedApplicationsByCompetitionWithoutSortField() {
     	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/not-submitted?page=6&size=20", ApplicationSummaryPageResource.class, responseBody);
 
@@ -173,7 +173,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     }
     
     @Test
-    public void testFindNotSubmittedApplicationsByCompetitionWithSortField() {
+    public void findNotSubmittedApplicationsByCompetitionWithSortField() {
     	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/not-submitted?page=6&size=20&sort=id", ApplicationSummaryPageResource.class, responseBody);
 
@@ -184,18 +184,18 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     }
 
     @Test
-    public void testgetWithFundingDecisionApplications() {
+    public void getWithFundingDecisionApplications() {
         ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/with-funding-decision?filter=filter&sendFilter=false&fundingFilter=FUNDED&page=6&size=20&sort=id", ApplicationSummaryPageResource.class, responseBody);
 
         RestResult<ApplicationSummaryPageResource> result = service.getWithFundingDecisionApplications(123L, "id", 6, 20, of("filter"), Optional.of(false), Optional.of(FUNDED));
 
         assertTrue(result.isSuccess());
-        Assert.assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccessObject());
     }
 
     @Test
-    public void testgetAllWithFundingDecisionApplications() {
+    public void getAllWithFundingDecisionApplications() {
         List<ApplicationSummaryResource> appSummaries = newApplicationSummaryResource().build(2);
 
         setupGetWithRestResultExpectations(
@@ -207,6 +207,6 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<List<ApplicationSummaryResource>> result = service.getWithFundingDecisionApplications(123L, of("filter"), Optional.of(false), Optional.of(FUNDED));
 
         assertTrue(result.isSuccess());
-        Assert.assertEquals(appSummaries, result.getSuccessObject());
+        assertEquals(appSummaries, result.getSuccessObject());
     }
 }

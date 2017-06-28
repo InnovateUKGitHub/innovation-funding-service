@@ -102,7 +102,11 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
     @Override
     public ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(
-            Long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter) {
+            long competitionId,
+            String sortBy,
+            int pageIndex,
+            int pageSize,
+            Optional<String> filter) {
         String filterStr = filter.map(String::trim).orElse("");
         return applicationSummaries(sortBy, pageIndex, pageSize,
                 pageable -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, INELIGIBLE_STATES, filterStr, pageable),
@@ -111,7 +115,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
     @Override
     public ServiceResult<ApplicationSummaryPageResource> getSubmittedApplicationSummariesByCompetitionId(
-            Long competitionId,
+            long competitionId,
             String sortBy,
             int pageIndex,
             int pageSize,
@@ -128,7 +132,10 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
     }
 
     @Override
-    public ServiceResult<List<ApplicationSummaryResource>> getAllSubmittedApplicationSummariesByCompetitionId(Long competitionId, Optional<String> filter, Optional<FundingDecisionStatus> fundingFilter) {
+    public ServiceResult<List<ApplicationSummaryResource>> getAllSubmittedApplicationSummariesByCompetitionId(
+            long competitionId,
+            Optional<String> filter,
+            Optional<FundingDecisionStatus> fundingFilter) {
         String filterString = trimFilterString(filter);
         return find(applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
                 competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null)), notFoundError(ApplicationSummaryResource.class))
@@ -139,7 +146,10 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
     @Override
     public ServiceResult<ApplicationSummaryPageResource> getNotSubmittedApplicationSummariesByCompetitionId(
-            Long competitionId, String sortBy, int pageIndex, int pageSize) {
+            long competitionId,
+            String sortBy,
+            int pageIndex,
+            int pageSize) {
 
         return applicationSummaries(sortBy, pageIndex, pageSize,
                 pageable -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(

@@ -368,13 +368,7 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
     }
 
     private ExistingUserStagedInviteListResource newSelectionFormToResource(AssessorSelectionForm form, long competitionId) {
-        List<ExistingUserStagedInviteResource> invites = form.getSelectedAssessorIds().stream()
-                .map(id -> new ExistingUserStagedInviteResource(
-                        id,
-                        competitionId
-                ))
-                .collect(Collectors.toList());
-
-        return new ExistingUserStagedInviteListResource(invites);
+        return new ExistingUserStagedInviteListResource(simpleMap(
+                form.getSelectedAssessorIds(), id -> new ExistingUserStagedInviteResource(id, competitionId)));
     }
 }

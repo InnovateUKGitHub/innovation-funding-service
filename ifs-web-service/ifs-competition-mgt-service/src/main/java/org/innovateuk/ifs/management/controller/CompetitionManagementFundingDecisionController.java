@@ -132,9 +132,9 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
 
     @PostMapping(params = {"addAll"})
     public @ResponseBody JsonNode addAllApplicationsToFundingDecisionSelectionList(@PathVariable("competitionId") long competitionId,
-                                                     @RequestParam("addAll") boolean addAll,
-                                                     HttpServletRequest request,
-                                                     HttpServletResponse response) {
+                                                                                   @RequestParam("addAll") boolean addAll,
+                                                                                   HttpServletRequest request,
+                                                                                   HttpServletResponse response) {
         FundingDecisionSelectionCookie selectionCookie;
 
         try {
@@ -146,19 +146,16 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
 
         if (addAll) {
             List<Long> allApplicationIdsBasedOnFilter = getAllApplicationIdsByFilters(competitionId, selectionCookie.getFundingDecisionFilterForm());
-
-            addAllApplicationsIdsBasedOnFilter(competitionId, selectionCookie, allApplicationIdsBasedOnFilter);
+            addAllApplicationsIdsBasedOnFilter(selectionCookie, allApplicationIdsBasedOnFilter);
         } else {
             removeAllApplicationsIds(selectionCookie);
         }
 
         saveFormToCookie(response, competitionId, selectionCookie);
-
         return createSuccessfulResponseWithSelectionStatus(selectionCookie.getFundingDecisionSelectionForm().getApplicationIds().size(), selectionCookie.getFundingDecisionSelectionForm().isAllSelected(), false);
     }
 
-    private void addAllApplicationsIdsBasedOnFilter(long competitionId, FundingDecisionSelectionCookie selectionCookie, List<Long> allIds) {
-
+    private void addAllApplicationsIdsBasedOnFilter(FundingDecisionSelectionCookie selectionCookie, List<Long> allIds) {
         List<Long> limitedList = limitList(allIds);
 
         selectionCookie.getFundingDecisionSelectionForm().setApplicationIds(limitedList);
@@ -172,11 +169,10 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
 
     @PostMapping(params = {"selectionId", "isSelected"})
     public @ResponseBody JsonNode addSelectedApplicationsToFundingDecisionList(@PathVariable("competitionId") long competitionId,
-                                                               @RequestParam("selectionId") long applicationId,
-                                                               @RequestParam("isSelected") boolean isSelected,
-                                                               HttpServletRequest request,
-                                                               HttpServletResponse response) {
-
+                                                                               @RequestParam("selectionId") long applicationId,
+                                                                               @RequestParam("isSelected") boolean isSelected,
+                                                                               HttpServletRequest request,
+                                                                               HttpServletResponse response) {
         boolean limitExceeded = false;
 
         try {
@@ -184,15 +180,13 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
             FundingDecisionSelectionForm selectionForm = cookieForm.getFundingDecisionSelectionForm();
             if (isSelected) {
                 List<Long> applicationIds = selectionForm.getApplicationIds();
-
                 int predictedSize = selectionForm.getApplicationIds().size() + 1;
 
                 if(!applicationIds.contains(applicationId)) {
 
                     if(limitIsExceeded(predictedSize)){
                         limitExceeded = true;
-                    }
-                    else {
+                    } else {
                         selectionForm.getApplicationIds().add(applicationId);
                         List<Long> filteredApplicationList = getAllApplicationIdsByFilters(competitionId, cookieForm.getFundingDecisionFilterForm());
 
@@ -207,9 +201,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
             }
 
             cookieForm.setFundingDecisionSelectionForm(selectionForm);
-
             saveFormToCookie(response, competitionId, cookieForm);
-
             return createSuccessfulResponseWithSelectionStatus(selectionForm.getApplicationIds().size(), selectionForm.isAllSelected(), limitExceeded);
         } catch (Exception e) {
             log.error(e);
@@ -217,7 +209,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         }
     }
 
-    private List<Long> getAllApplicationIdsByFilters(Long competitionId, FundingDecisionFilterForm filterForm) {
+    private List<Long> getAllApplicationIdsByFilters(long competitionId, FundingDecisionFilterForm filterForm) {
         RestResult<List<ApplicationSummaryResource>> restResult = applicationSummaryRestService.getAllSubmittedApplications(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter());
         List<Long> list = restResult.getOrElse(emptyList()).stream().map(p -> p.getId()).collect(toList());
 
@@ -226,7 +218,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
 
     private FundingDecisionSelectionForm trimSelectionByFilteredResult(FundingDecisionSelectionForm selectionForm,
                                                                        FundingDecisionFilterForm filterForm,
-                                                                       Long competitionId) {
+                                                                       long competitionId) {
         List<Long> filteredApplicationIds = getAllApplicationIdsByFilters(competitionId, filterForm);
         FundingDecisionSelectionForm updatedSelectionForm = new FundingDecisionSelectionForm();
 
@@ -258,7 +250,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
     }
 
     private String fundersPanelCompetition(Model model,
-                                           Long competitionId,
+                                           long competitionId,
                                            FundingDecisionSelectionForm fundingDecisionSelectionForm,
                                            FundingDecisionPaginationForm fundingDecisionPaginationForm,
                                            FundingDecisionChoiceForm fundingDecisionChoiceForm,
@@ -277,7 +269,9 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         return populateSubmittedModel(model, competitionId, fundingDecisionPaginationForm, fundingDecisionFilterForm, fundingDecisionSelectionForm);
     }
 
-    private ApplicationSummaryPageResource getApplicationsByFilters(Long competitionId, FundingDecisionPaginationForm paginationForm, FundingDecisionFilterForm fundingDecisionFilterForm) {
+    private ApplicationSummaryPageResource getApplicationsByFilters(long competitionId,
+                                                                    FundingDecisionPaginationForm paginationForm,
+                                                                    FundingDecisionFilterForm fundingDecisionFilterForm) {
         return applicationSummaryRestService.getSubmittedApplications(
                 competitionId,
                 "id",
@@ -288,7 +282,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                 .getSuccessObjectOrThrowException();
     }
 
-    private String populateSubmittedModel(Model model, Long competitionId, FundingDecisionPaginationForm paginationForm, FundingDecisionFilterForm fundingDecisionFilterForm, FundingDecisionSelectionForm fundingDecisionSelectionForm) {
+    private String populateSubmittedModel(Model model, long competitionId, FundingDecisionPaginationForm paginationForm, FundingDecisionFilterForm fundingDecisionFilterForm, FundingDecisionSelectionForm fundingDecisionSelectionForm) {
         ApplicationSummaryPageResource results = getApplicationsByFilters(competitionId, paginationForm, fundingDecisionFilterForm);
         String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.FUNDING_APPLICATIONS, mapFormFilterParametersToMultiValueMap(fundingDecisionFilterForm));
 

@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.competition.form;
 
-/*
+/**
     Cookie class to store both application id selection and filter values in one object.
  */
 public class FundingNotificationSelectionCookie {

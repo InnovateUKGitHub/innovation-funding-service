@@ -6,15 +6,14 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Form used to keep track of application selections as part of Funding Notification cookie
+ */
 public class SelectApplicationsForEmailForm {
 
     @NotNull
-    private List<Long> ids;
+    private List<Long> ids = new ArrayList<>();
     private boolean allSelected;
-
-    public SelectApplicationsForEmailForm() {
-        this.ids = new ArrayList<>();
-    }
 
     public List<Long> getIds() {
         return ids;

@@ -105,9 +105,8 @@ public class CompetitionManagementFundingNotificationsController extends Competi
                                HttpServletResponse response) {
 
         updateSelectionForm(request, response, competitionId, selectionForm, filterForm, clearFilters);
-
-
         List<Long> submittableApplications = getAllApplicationIdsByFilters(competitionId, filterForm);
+
         return validationHandler.failNowOrSucceedWith(queryFailureView(competitionId), () -> {
                     model.addAttribute("model", manageFundingApplicationsModelPopulator.populate(filterForm, competitionId, buildQueryString(params), submittableApplications.size()));
                     return MANAGE_FUNDING_APPLICATIONS_VIEW; }
