@@ -17,8 +17,11 @@ IFS.competitionManagement.multipageSelect = (function () {
       // caching the total list size once so we can do the changeSelectAllCheckboxState all selected check
       s.totalListSize = parseInt(jQuery(s.totalListSizeEl).attr('data-total-checkboxes'))
 
+      // synchronous ajax calls to the server
+      var multipageAjaxCall = jQuery.when({})
+
       jQuery('body').on('change', s.multipageCheckboxEl, function () {
-        IFS.competitionManagement.multipageSelect.processMultipageCheckbox(this)
+        multipageAjaxCall = multipageAjaxCall.then(IFS.competitionManagement.multipageSelect.processMultipageCheckbox(this))
       })
     },
     getData: function (checked, value, isSelectAll) {
@@ -29,38 +32,45 @@ IFS.competitionManagement.multipageSelect = (function () {
       }
     },
     processMultipageCheckbox: function (checkbox) {
-      checkbox = jQuery(checkbox)
-      var isSelectAll = checkbox.is(s.selectAllEl)
-      var checked = checkbox.is(':checked')
-      var value = checkbox.val()
-      var data = IFS.competitionManagement.multipageSelect.getData(checked, value, isSelectAll)
-      var url = window.location.href
+      return function () {
+        var defer = jQuery.Deferred()
+        checkbox = jQuery(checkbox)
+        var isSelectAll = checkbox.is(s.selectAllEl)
+        var checked = checkbox.is(':checked')
+        var value = checkbox.val()
+        var data = IFS.competitionManagement.multipageSelect.getData(checked, value, isSelectAll)
+        var url = window.location.href
 
-      jQuery.ajaxProtected({
-        type: 'POST',
-        url: url,
-        data: data,
-        dataType: 'json',
-        timeout: IFS.core.autoSave.settings.ajaxTimeOut
-      }).done(function (result) {
-        if (isSelectAll) {
-          IFS.competitionManagement.multipageSelect.changeAllCheckboxStates(checked)
-        }
-        if (typeof (result.selectionCount) !== 'undefined') {
-          var selectedRows = parseInt(result.selectionCount)
-          var allSelected = result.allSelected
-          var limitExceeded = result.limitExceeded
-          IFS.competitionManagement.multipageSelect.updateCount(selectedRows)
-          IFS.competitionManagement.multipageSelect.updateSubmitButton(selectedRows)
-          if (!isSelectAll) {
-            IFS.competitionManagement.multipageSelect.changeSelectAllCheckboxState(allSelected)
+        jQuery.ajaxProtected({
+          type: 'POST',
+          url: url,
+          data: data,
+          dataType: 'json',
+          timeout: IFS.core.autoSave.settings.ajaxTimeOut
+        }).done(function (result) {
+          if (isSelectAll) {
+            IFS.competitionManagement.multipageSelect.changeAllCheckboxStates(checked)
           }
-          IFS.competitionManagement.multipageSelect.updateLimitExceededMessage(limitExceeded, checkbox)
-        }
-      }).fail(function (data) {
-        var errorMessage = IFS.core.autoSave.getErrorMessage(data)
-        checkbox.closest('fieldset').find('legend').append('<span class="error-message">' + errorMessage + '</span>')
-      })
+          if (typeof (result.selectionCount) !== 'undefined') {
+            var selectedRows = parseInt(result.selectionCount)
+            var allSelected = result.allSelected
+            var limitExceeded = result.limitExceeded
+            IFS.competitionManagement.multipageSelect.updateCount(selectedRows)
+            IFS.competitionManagement.multipageSelect.updateSubmitButton(selectedRows)
+            if (!isSelectAll) {
+              IFS.competitionManagement.multipageSelect.changeSelectAllCheckboxState(allSelected)
+            }
+            IFS.competitionManagement.multipageSelect.updateLimitExceededMessage(limitExceeded, checkbox)
+          }
+        }).fail(function (data) {
+          var errorMessage = IFS.core.autoSave.getErrorMessage(data)
+          checkbox.closest('fieldset').find('legend').append('<span class="error-message">' + errorMessage + '</span>')
+        }).always(function () {
+          defer.resolve()
+        })
+
+        return defer.promise()
+      }
     },
     updateSubmitButton: function (count) {
       var button = jQuery(s.submitEl)
