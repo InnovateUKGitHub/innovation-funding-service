@@ -131,7 +131,6 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
             @PathVariable("competitionId") long competitionId,
             @RequestParam("selectionId") long assessorId,
             @RequestParam("isSelected") boolean isSelected,
-            @RequestParam(defaultValue = "0") int page,
             @RequestParam Optional<Long> innovationArea,
             HttpServletRequest request,
             HttpServletResponse response) {
@@ -214,10 +213,10 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
                     newSelectionFormToResource(submittedSelectionForm, competitionId));
 
             return validationHandler.addAnyErrors(restResult)
-                                    .failNowOrSucceedWith(failureView, () -> {
-                                        removeCookie(response, competitionId);
-                return redirectToInvite(competitionId, 0);
-            });
+                    .failNowOrSucceedWith(failureView, () -> {
+                        removeCookie(response, competitionId);
+                        return redirectToInvite(competitionId, 0);
+                    });
         });
     }
 

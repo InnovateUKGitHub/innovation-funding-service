@@ -17,7 +17,7 @@ import static org.apache.commons.io.IOUtils.closeQuietly;
 
 public class CompressionUtil {
 
-    private static final Log LOG = LogFactory.getLog(MessageUtil.class);
+    private static final Log LOG = LogFactory.getLog(CompressionUtil.class);
 
     public static String getCompressedString(String rawString) {
         String compressedString = "";

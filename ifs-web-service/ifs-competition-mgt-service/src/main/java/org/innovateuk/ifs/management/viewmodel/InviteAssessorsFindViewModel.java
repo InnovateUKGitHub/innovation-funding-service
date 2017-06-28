@@ -11,11 +11,11 @@ import java.util.List;
 public class InviteAssessorsFindViewModel extends InviteAssessorsViewModel<AvailableAssessorRowViewModel> {
 
     private List<InnovationSectorResource> innovationSectorOptions = new ArrayList<>();
+    private boolean selectAllDisabled;
 
     public List<InnovationSectorResource> getInnovationSectorOptions() {
         return innovationSectorOptions;
     }
-    private boolean selectAllDisabled;
 
     public void setInnovationSectorOptions(List<InnovationSectorResource> innovationSectorOptions) {
         this.innovationSectorOptions = innovationSectorOptions;

@@ -30,9 +30,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 
 /**
@@ -82,13 +82,10 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
             return "redirect:/competition/" + competitionId + "/funding";
         }
 
-        FundingDecisionSelectionCookie selectionCookieForm = new FundingDecisionSelectionCookie();
-
         try {
-            selectionCookieForm = getSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
+            FundingDecisionSelectionCookie selectionCookieForm = getSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
             selectionForm = selectionCookieForm.getFundingDecisionSelectionForm();
             FundingDecisionFilterForm filterCookieForm = selectionCookieForm.getFundingDecisionFilterForm();
-
 
             if(clearFilters) {
                 filterForm = new FundingDecisionFilterForm();
@@ -222,7 +219,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
     private List<Long> getAllApplicationIdsByFilters(Long competitionId, FundingDecisionFilterForm filterForm) {
         RestResult<List<ApplicationSummaryResource>> restResult = applicationSummaryRestService.getAllSubmittedApplications(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter());
 
-        return restResult.getSuccessObjectOrThrowException().stream().map(p -> p.getId()).collect(Collectors.toList());
+        return restResult.getSuccessObjectOrThrowException().stream().map(p -> p.getId()).collect(toList());
     }
 
     private FundingDecisionSelectionForm trimSelectionByFilteredResult(FundingDecisionSelectionForm selectionForm,
