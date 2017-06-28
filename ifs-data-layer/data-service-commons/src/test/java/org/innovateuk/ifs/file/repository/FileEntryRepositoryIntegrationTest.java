@@ -6,9 +6,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityManager;
@@ -21,6 +19,7 @@ import static org.springframework.http.MediaType.parseMediaType;
  */
 @RunWith(SpringRunner.class)
 @DataJpaTest
+@EntityScan(basePackages = "org.innovateuk.ifs.file.domain")
 public class FileEntryRepositoryIntegrationTest  {
 
     @Autowired
@@ -81,18 +80,8 @@ public class FileEntryRepositoryIntegrationTest  {
         em.clear();
     }
 
-
-
     @Configuration
-    @EntityScan(basePackages = "org.innovateuk.ifs.file.domain")
-//    @Profile("fileEntryRepositoryIntegrationTest")
     static class ContextConfiguration {
-
-        @Bean
-        public PropertySourcesPlaceholderConfigurer propertiesResolver() {
-            return new PropertySourcesPlaceholderConfigurer();
-        }
-
     }
 
 }
