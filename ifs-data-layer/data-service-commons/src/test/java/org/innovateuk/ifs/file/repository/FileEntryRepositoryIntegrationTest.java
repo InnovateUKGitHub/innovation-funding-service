@@ -1,10 +1,17 @@
 package org.innovateuk.ifs.file.repository;
 
-import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.file.domain.FileEntry;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import javax.persistence.EntityManager;
 
 import static org.junit.Assert.*;
 import static org.springframework.http.MediaType.parseMediaType;
@@ -12,17 +19,16 @@ import static org.springframework.http.MediaType.parseMediaType;
 /**
  * Repository Integration tests for Form Inputs.
  */
-@Ignore
-public class FileEntryRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<FileEntryRepository> {
+@RunWith(SpringRunner.class)
+@DataJpaTest
+public class FileEntryRepositoryIntegrationTest  {
 
     @Autowired
     private FileEntryRepository repository;
 
-    @Override
     @Autowired
-    protected void setRepository(FileEntryRepository repository) {
-        this.repository = repository;
-    }
+    private EntityManager em;
+
 
     @Test
     public void test_crud() {
@@ -69,4 +75,24 @@ public class FileEntryRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
         assertNull(repository.findOne(fileEntry.getId()));
     }
+
+    private  void flushAndClearSession() {
+        em.flush();
+        em.clear();
+    }
+
+
+
+    @Configuration
+    @EntityScan(basePackages = "org.innovateuk.ifs.file.domain")
+//    @Profile("fileEntryRepositoryIntegrationTest")
+    static class ContextConfiguration {
+
+        @Bean
+        public PropertySourcesPlaceholderConfigurer propertiesResolver() {
+            return new PropertySourcesPlaceholderConfigurer();
+        }
+
+    }
+
 }
