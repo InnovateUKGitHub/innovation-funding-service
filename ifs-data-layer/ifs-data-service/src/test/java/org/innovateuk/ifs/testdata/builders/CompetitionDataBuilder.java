@@ -73,7 +73,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder withBasicData(String name, String competitionTypeName, List<String> innovationAreaNames,
+    public CompetitionDataBuilder withBasicData(String name, String description, String competitionTypeName, List<String> innovationAreaNames,
                                                 String innovationSectorName, String researchCategoryName, String leadTechnologist,
                                                 String compExecutive, String budgetCode, String pafCode, String code, String activityCode, Integer assessorCount, BigDecimal assessorPay,
                                                 Boolean multiStream, String collaborationLevelCode, List<OrganisationTypeEnum> leadApplicantTypes, Integer researchRatio, Boolean resubmission, String nonIfsUrl) {
@@ -99,6 +99,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 List<Long> leadApplicantTypeIds = simpleMap(leadApplicantTypes, OrganisationTypeEnum::getId);
 
                 competition.setName(name);
+                competition.setDescription(description);
                 competition.setInnovationAreas(innovationAreas.isEmpty() ? emptySet() : newHashSet(innovationAreas));
                 competition.setInnovationSector(innovationSector);
                 competition.setResearchCategories(researchCategory == null ? emptySet() : singleton(researchCategory));

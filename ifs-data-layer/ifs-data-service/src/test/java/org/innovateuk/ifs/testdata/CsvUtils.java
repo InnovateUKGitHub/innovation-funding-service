@@ -403,6 +403,7 @@ class CsvUtils {
     static class CompetitionLine {
 
         String name;
+        String description;
         String type;
         List<String> innovationAreas;
         String innovationSector;
@@ -453,6 +454,7 @@ class CsvUtils {
 
             int i = 0;
             name = nullable(line.get(i++));
+            description = nullable(line.get(i++));
             type = nullable(line.get(i++));
             innovationAreas = nullableSplitOnNewLines(line.get(i++));
             innovationSector = nullable(line.get(i++));
