@@ -34,6 +34,12 @@ sed -i "s#\${IDP_SIGNING_CERTIFICATE}#$idp_signing_certificate#g" /etc/shibbolet
 idp_encryption_certificate=$(sed '/^-----/d' /etc/shibboleth/idp-encryption.crt | sed '{:q;N;s/\n/\\n/g;t q}')
 sed -i "s#\${IDP_ENCRYPTION_CERTIFICATE}#$idp_encryption_certificate#g" /etc/shibboleth/metadata.xml
 
+# are we sharing sessions between containers?
+[ ${MEMCACHE_ENDPOINT} ] && \
+sed -i -e '/<!-- ${MEMCACHE_ENDPOINT}/d' -e '/${MEMCACHE_ENDPOINT} -->/d' \
+       -e "s/\${MEMCACHE_ENDPOINT}/$MEMCACHE_ENDPOINT/g" /opt/shibboleth-idp/conf/global.xml && \
+sed -i -e 's/#idp.replayCache.StorageService = shibboleth.StorageService/idp.replayCache.StorageService = shibboleth.MemcachedStorageService/g' \
+       -e 's/#idp.artifact.StorageService = shibboleth.StorageService/idp.artifact.StorageService = shibboleth.MemcachedStorageService/g' /opt/shibboleth-idp/conf/idp.properties
 
 # Env vars have defaults in the Dockerfile so we can use them for health checks.
 

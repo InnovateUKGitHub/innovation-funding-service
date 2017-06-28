@@ -48,7 +48,7 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-9062 Validation missing when inviting self as finance contact or PM
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
-Force Tags        Project Setup
+Force Tags        Project Setup  Applicant
 Resource          PS_Common.robot
 
 *** Variables ***
