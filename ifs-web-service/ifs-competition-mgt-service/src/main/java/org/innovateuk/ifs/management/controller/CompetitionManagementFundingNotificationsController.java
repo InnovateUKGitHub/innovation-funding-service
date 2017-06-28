@@ -133,11 +133,17 @@ public class CompetitionManagementFundingNotificationsController extends Competi
             filterForm.setAllFilterOptions(storedFilterForm.getStringFilter(), storedFilterForm.getSendFilter(), storedFilterForm.getFundingFilter());
         }
 
-        if (appSelectionForm.isAllSelected() && !filterForm.anyFilterOptionsActive()) {
-            appSelectionForm.setIds(getAllApplicationIdsByFilters(competitionId, filterForm));
+        List<Long> filteredIds = getAllApplicationIdsByFilters(competitionId, filterForm);
+        if (appSelectionForm.isAllSelected() && !filterForm.anyFilterOptionsActive() && !clearFilters) {
+            appSelectionForm.setIds(filteredIds);
+            appSelectionForm.setAllSelected(true);
         } else {
-            appSelectionForm.getIds().retainAll(getAllApplicationIdsByFilters(competitionId, filterForm));
-            appSelectionForm.setAllSelected(false);
+            appSelectionForm.getIds().retainAll(filteredIds);
+            if (appSelectionForm.getIds().containsAll(filteredIds)) {
+                appSelectionForm.setAllSelected(true);
+            } else {
+                appSelectionForm.setAllSelected(false);
+            }
         }
         storedSelectionFormCookie.setManageFundingApplicationsQueryForm(filterForm);
         storedSelectionFormCookie.setSelectApplicationsForEmailForm(appSelectionForm);
@@ -197,7 +203,6 @@ public class CompetitionManagementFundingNotificationsController extends Competi
                     limitIsExceeded = true;
                 }
                 else {
-
                     handleSelected(selectionCookie, competitionId, applicationId);
                 }
             } else {
@@ -254,8 +259,8 @@ public class CompetitionManagementFundingNotificationsController extends Competi
                 competitionId, filterForm.getStringFilter().isEmpty() ? empty() : of(filterForm.getStringFilter()),
                 filterForm.getSendFilter(), filterForm.getFundingFilter()).getSuccessObjectOrThrowException();
 
-        return resources.stream().filter(resource -> resource.applicationFundingDecisionIsChangeable()).map(
-                resource -> resource.getId()).collect(toList());
+        return resources.stream().filter(ApplicationSummaryResource::applicationFundingDecisionIsChangeable).map(
+                ApplicationSummaryResource::getId).collect(toList());
     }
 
     private String getManageFundingApplicationsPage(long competitionId){
