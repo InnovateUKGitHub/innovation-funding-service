@@ -1166,7 +1166,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         Optional<Long> innovationAreaId = of(innovationArea.getId());
 
 
-        when(userRepositoryMock.findAssessorsByCompetitionAndInnovationArea(competitionId, innovationArea.getId()))
+        when(competitionInviteRepositoryMock.findAssessorsByCompetitionAndInnovationArea(competitionId, innovationArea.getId()))
                 .thenReturn(assessorUsers);
         when(profileRepositoryMock.findOne(assessorUsers.get(0).getProfileId())).thenReturn(profiles.get(0));
         when(profileRepositoryMock.findOne(assessorUsers.get(1).getProfileId())).thenReturn(profiles.get(1));
@@ -1175,7 +1175,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         List<AvailableAssessorResource> actualAssessors = service.getAvailableAssessors(competitionId, innovationAreaId)
                 .getSuccessObjectOrThrowException();
 
-        verify(userRepositoryMock).findAssessorsByCompetitionAndInnovationArea(competitionId, innovationArea.getId());
+        verify(competitionInviteRepositoryMock).findAssessorsByCompetitionAndInnovationArea(competitionId, innovationArea.getId());
         verify(profileRepositoryMock).findOne(assessorUsers.get(0).getProfileId());
         verify(profileRepositoryMock).findOne(assessorUsers.get(1).getProfileId());
         verify(innovationAreaMapperMock, times(2)).mapToResource(innovationArea);
