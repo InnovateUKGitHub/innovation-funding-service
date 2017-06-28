@@ -1,5 +1,4 @@
 *** Settings ***
-Library    String
 Documentation     INFUND-1188 As an assessor I want to be able to review my assessments from one place so that I can work in my favoured style when reviewing
 ...
 ...               INFUND-3723 As an Assessor looking at my competition assessment dashboard I can see details for the competition, so that I am able to reference key information as I want.
@@ -23,9 +22,6 @@ Suite Setup       Guest user log-in in new browser  &{assessor2_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
-*** Variables ***
-
-#${commentText} = Generate Random String  100  [LETTERS]
 
 *** Test Cases ***
 User cannot accept/reject an invite to an application that has been withdrawn
@@ -135,12 +131,11 @@ Check the comp admin see the assessor has rejected the application
 
 *** Keywords ***
 the assessor fills all fields with valid inputs
-    Select From List By Index    id=rejectReason    2
-    The user should not see the text in the page    Please enter a reason
-    the user enters multiple strings into a text field    id=rejectComment    a${SPACE}  102
-    the user moves focus to the element    jQuery=.button:contains("Confirm")
-    The user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
-    The user enters text to a text field    id=rejectComment    Unable to assess the application as i'm on holiday.
+    Select From List By Index                                   id=rejectReason    2
+    The user should not see the text in the page                Please enter a reason
+    the user enters multiple strings into a text field          id=rejectComment  a${SPACE}  102
+    The user should see an error                                Maximum word count exceeded. Please reduce your word count to 100.
+    The user enters text to a text field                        id=rejectComment    Unable to assess the application as i'm on holiday.
 
 the application for assessment should be removed
     The user should not see the element    link=Park living
