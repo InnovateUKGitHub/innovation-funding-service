@@ -1,9 +1,6 @@
 package org.innovateuk.ifs.user.resource;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -46,10 +43,6 @@ public enum AdminRoleType {
 
     public static List<String> roleNames(AdminRoleType... roles){
         return asList(roles).stream().map(r -> r.getName()).collect(toList());
-    }
-
-    public static Set<AdminRoleType> internalRoles(){
-        return new HashSet<>(Arrays.asList(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN));
     }
 }
 
