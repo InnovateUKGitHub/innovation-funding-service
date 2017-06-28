@@ -196,7 +196,7 @@ the finance table should be correct
     Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(8)    £3,000
 
 Lead applicant marks the finances as complete
-    Log in as a different user                       ${lead_applicant}    Passw0rd
+    Log in as a different user                       &{lead_applicant_credentials}
     the user clicks the button/link                  link=Academic robot test application
     the applicant completes the application details  Application details
     the user navigates to the academic application finances
