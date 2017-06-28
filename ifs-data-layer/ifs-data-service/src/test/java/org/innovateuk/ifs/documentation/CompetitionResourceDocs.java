@@ -14,6 +14,7 @@ public class CompetitionResourceDocs {
     public static final FieldDescriptor[] competitionResourceFields = {
             fieldWithPath("id").description("Id of the competitionResource"),
             fieldWithPath("name").description("name of the competition"),
+            fieldWithPath("description").description("description of the competition"),
             fieldWithPath("startDate").description("date the competition opens for submissions"),
             fieldWithPath("endDate").description("date the submissions phase of the competition closes"),
             fieldWithPath("assessorAcceptsDate").description("date by which assessors should accept or reject invitations to assess applications"),
@@ -60,6 +61,7 @@ public class CompetitionResourceDocs {
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()
             .withId(1L)
             .withName("competition name")
+            .withDescription("competition description")
             .withStartDate(ZonedDateTime.now())
             .withEndDate(ZonedDateTime.now().plusDays(30))
             .withAssessorAcceptsDate(ZonedDateTime.now().plusDays(35))

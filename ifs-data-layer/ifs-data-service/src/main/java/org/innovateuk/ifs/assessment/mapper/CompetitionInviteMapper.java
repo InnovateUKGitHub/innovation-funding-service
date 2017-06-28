@@ -21,6 +21,7 @@ public abstract class CompetitionInviteMapper extends BaseMapper<CompetitionInvi
     @Mappings({
             @Mapping(source = "target.id", target = "competitionId"),
             @Mapping(source = "target.name", target = "competitionName"),
+            @Mapping(source = "target.description", target = "competitionDescription"),
             @Mapping(source = "target.assessorAcceptsDate", target = "acceptsDate"),
             @Mapping(source = "target.assessorDeadlineDate", target = "deadlineDate"),
             @Mapping(source = "target.assessorPay", target = "assessorPay"),

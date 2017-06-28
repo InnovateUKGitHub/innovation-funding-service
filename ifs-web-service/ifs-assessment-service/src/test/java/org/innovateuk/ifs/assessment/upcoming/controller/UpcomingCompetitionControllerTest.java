@@ -44,6 +44,7 @@ public class UpcomingCompetitionControllerTest extends BaseControllerMockMVCTest
         CompetitionResource competitionResource = newCompetitionResource()
                 .withId(1L)
                 .withName("name")
+                .withDescription("description")
                 .withAssessorAcceptsDate(dateTime)
                 .withAssessorDeadlineDate(dateTime)
                 .build();

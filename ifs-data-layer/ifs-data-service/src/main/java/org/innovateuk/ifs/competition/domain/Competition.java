@@ -46,6 +46,9 @@ public class Competition implements ProcessActivity {
 
     private String name;
 
+    @Column(length = 5000)
+    private String description;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "competitionTypeId", referencedColumnName = "id")
     private CompetitionType competitionType;
@@ -120,20 +123,22 @@ public class Competition implements ProcessActivity {
         setupComplete = false;
     }
 
-    public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, ZonedDateTime startDate, ZonedDateTime endDate) {
+    public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, String description, ZonedDateTime startDate, ZonedDateTime endDate) {
         this.id = id;
         this.applications = applications;
         this.questions = questions;
         this.sections = sections;
         this.name = name;
+        this.description = description;
         this.setStartDate(startDate);
         this.setEndDate(endDate);
         this.setupComplete = true;
     }
 
-    public Competition(long id, String name, ZonedDateTime startDate, ZonedDateTime endDate) {
+    public Competition(long id, String name, String description, ZonedDateTime startDate, ZonedDateTime endDate) {
         this.id = id;
         this.name = name;
+        this.description = description;
         this.setStartDate(startDate);
         this.setEndDate(endDate);
         this.setupComplete = true;
@@ -164,6 +169,11 @@ public class Competition implements ProcessActivity {
     public List<Section> getSections() {
         return sections;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
 
     public void addApplication(Application... apps) {
         if (applications == null) {
@@ -228,6 +238,10 @@ public class Competition implements ProcessActivity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public ZonedDateTime getEndDate() {

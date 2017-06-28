@@ -10,6 +10,7 @@ public class AssessorCompetitionDashboardViewModel {
 
     private long competitionId;
     private String competitionTitle;
+    private String competition;
     private String leadTechnologist;
     private ZonedDateTime acceptDeadline;
     private ZonedDateTime submitDeadline;
@@ -17,9 +18,10 @@ public class AssessorCompetitionDashboardViewModel {
     private List<AssessorCompetitionDashboardApplicationViewModel> outstanding;
     private boolean submitVisible;
 
-    public AssessorCompetitionDashboardViewModel(long competitionId, String competitionTitle, String leadTechnologist, ZonedDateTime acceptDeadline, ZonedDateTime submitDeadline, List<AssessorCompetitionDashboardApplicationViewModel> submitted, List<AssessorCompetitionDashboardApplicationViewModel> outstanding, boolean submitVisible) {
+    public AssessorCompetitionDashboardViewModel(long competitionId, String competitionTitle, String competition, String leadTechnologist, ZonedDateTime acceptDeadline, ZonedDateTime submitDeadline, List<AssessorCompetitionDashboardApplicationViewModel> submitted, List<AssessorCompetitionDashboardApplicationViewModel> outstanding, boolean submitVisible) {
         this.competitionId = competitionId;
         this.competitionTitle = competitionTitle;
+        this.competition = competition;
         this.leadTechnologist = leadTechnologist;
         this.acceptDeadline = acceptDeadline;
         this.submitDeadline = submitDeadline;
@@ -34,6 +36,14 @@ public class AssessorCompetitionDashboardViewModel {
 
     public String getCompetitionTitle() {
         return competitionTitle;
+    }
+
+    public String getCompetition() {
+        return competition;
+    }
+
+    public void setCompetition(String competition) {
+        this.competition = competition;
     }
 
     public String getLeadTechnologist() {

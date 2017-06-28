@@ -14,6 +14,7 @@ public class UpcomingCompetitionViewModel {
 
     private long competitionId;
     private String competitionName;
+    private String competitionDescription;
     private ZonedDateTime assessmentPeriodDateFrom;
     private ZonedDateTime assessmentPeriodDateTo;
     private ZonedDateTime assessorBriefingDate;
@@ -22,6 +23,7 @@ public class UpcomingCompetitionViewModel {
     public UpcomingCompetitionViewModel(CompetitionResource competitionResource) {
         this.competitionId = competitionResource.getId();
         this.competitionName = competitionResource.getName();
+        this.competitionDescription = competitionResource.getDescription();
         this.assessmentPeriodDateFrom = competitionResource.getAssessorAcceptsDate();
         this.assessmentPeriodDateTo = competitionResource.getAssessorDeadlineDate();
         this.assessorPay = competitionResource.getAssessorPay();
@@ -38,6 +40,14 @@ public class UpcomingCompetitionViewModel {
 
     public void setCompetitionName(String competitionName) {
         this.competitionName = competitionName;
+    }
+
+    public String getCompetitionDescription() {
+        return competitionDescription;
+    }
+
+    public void setCompetitionDescription(String competitionDescription) {
+        this.competitionDescription = competitionDescription;
     }
 
     public ZonedDateTime getAssessmentPeriodDateFrom() {
@@ -87,6 +97,7 @@ public class UpcomingCompetitionViewModel {
         return new EqualsBuilder()
                 .append(competitionId, that.competitionId)
                 .append(competitionName, that.competitionName)
+                .append(competitionDescription, that.competitionDescription)
                 .append(assessmentPeriodDateFrom, that.assessmentPeriodDateFrom)
                 .append(assessmentPeriodDateTo, that.assessmentPeriodDateTo)
                 .append(assessorBriefingDate, that.assessorBriefingDate)
@@ -99,6 +110,7 @@ public class UpcomingCompetitionViewModel {
         return new HashCodeBuilder(17, 37)
                 .append(competitionId)
                 .append(competitionName)
+                .append(competitionDescription)
                 .append(assessmentPeriodDateFrom)
                 .append(assessmentPeriodDateTo)
                 .append(assessorBriefingDate)

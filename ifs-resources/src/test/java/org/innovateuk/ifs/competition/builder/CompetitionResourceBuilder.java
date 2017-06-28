@@ -60,6 +60,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("name", names);
     }
 
+    public CompetitionResourceBuilder withDescription(String... descriptions) {
+        return withArraySetFieldByReflection("description", descriptions);
+    }
+
     public CompetitionResourceBuilder withAssessorAcceptsDate(ZonedDateTime... assessorAcceptsDates) {
         return withArraySetFieldByReflection("assessorAcceptsDate", assessorAcceptsDates);
     }

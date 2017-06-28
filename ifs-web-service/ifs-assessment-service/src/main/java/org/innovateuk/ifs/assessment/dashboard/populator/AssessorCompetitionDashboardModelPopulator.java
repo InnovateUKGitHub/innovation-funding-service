@@ -67,6 +67,7 @@ public class AssessorCompetitionDashboardModelPopulator {
         return new AssessorCompetitionDashboardViewModel(
                 competition.getId(),
                 competition.getName(),
+                competition.getDescription(),
                 competition.getLeadTechnologistName(),
                 acceptDeadline,
                 submitDeadline,
