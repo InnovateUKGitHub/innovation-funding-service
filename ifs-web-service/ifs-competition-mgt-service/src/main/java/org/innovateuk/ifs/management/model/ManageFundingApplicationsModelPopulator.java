@@ -32,17 +32,20 @@ public class ManageFundingApplicationsModelPopulator {
     @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
 
-    public ManageFundingApplicationViewModel populate(ManageFundingApplicationsQueryForm queryForm, long competitionId, String queryString, long totalSubmittableApplications) {
-        ApplicationSummaryPageResource results = applicationSummaryRestService.getWithFundingDecisionApplications(competitionId,
-                queryForm.getSortField(), queryForm.getPage(),
+    public ManageFundingApplicationViewModel populate(ManageFundingApplicationsQueryForm queryForm,
+                                                      long competitionId,
+                                                      String queryString,
+                                                      long totalSubmittableApplications) {
+        ApplicationSummaryPageResource results = applicationSummaryRestService.getWithFundingDecisionApplications(
+                competitionId, queryForm.getSortField(), queryForm.getPage(),
                 DEFAULT_PAGE_SIZE, Optional.of(queryForm.getStringFilter()),
                 queryForm.getSendFilter(), queryForm.getFundingFilter()).getSuccessObjectOrThrowException();
+
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         CompetitionInFlightStatsViewModel keyStatistics = competitionInFlightStatsModelPopulator.populateStatsViewModel(competitionResource);
-
         boolean selectAllDisabled = totalSubmittableApplications > CompetitionManagementCookieController.SELECTION_LIMIT;
-
         PaginationViewModel paginationViewModel = new PaginationViewModel(results, queryString);
+
         return new ManageFundingApplicationViewModel(
                 results,
                 keyStatistics,

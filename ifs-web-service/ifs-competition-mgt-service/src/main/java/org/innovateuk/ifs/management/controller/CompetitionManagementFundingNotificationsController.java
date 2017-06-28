@@ -69,7 +69,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
 
     @PostMapping("/funding/send")
     public String sendNotificationsSubmit(Model model,
-                                    @PathVariable("competitionId") Long competitionId,
+                                    @PathVariable("competitionId") long competitionId,
                                     @ModelAttribute("form") @Valid NotificationEmailsForm form,
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler) {
@@ -83,7 +83,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
                 () -> applicationFundingService.sendFundingNotifications(fundingNotificationResource));
     }
 
-    private String getFundingDecisionPage(Model model, NotificationEmailsForm form, Long competitionId, List<Long> applicationIds) {
+    private String getFundingDecisionPage(Model model, NotificationEmailsForm form, long competitionId, List<Long> applicationIds) {
         model.addAttribute("model", sendNotificationsModelPopulator.populate(competitionId, applicationIds));
         model.addAttribute("form", form);
         return FUNDING_DECISION_NOTIFICATION_VIEW;

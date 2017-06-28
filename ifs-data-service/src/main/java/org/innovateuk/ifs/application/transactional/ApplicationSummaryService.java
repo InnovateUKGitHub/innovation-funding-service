@@ -15,7 +15,7 @@ public interface ApplicationSummaryService {
 
 	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support')")
 	@SecuredBySpring(value = "READ", description = "Internal users can see all Application Summaries across the whole system", securedType = ApplicationSummaryPageResource.class)
-	ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(Long competitionId,
+	ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(long competitionId,
 																						 String sortBy,
 																						 int pageIndex,
 																						 int pageSize,
@@ -23,7 +23,7 @@ public interface ApplicationSummaryService {
 
 	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support')")
 	@SecuredBySpring(value = "READ", description = "Internal users can see all submitted Application Summaries across the whole system", securedType = ApplicationSummaryPageResource.class)
-	ServiceResult<ApplicationSummaryPageResource> getSubmittedApplicationSummariesByCompetitionId(Long competitionId,
+	ServiceResult<ApplicationSummaryPageResource> getSubmittedApplicationSummariesByCompetitionId(long competitionId,
 																								  String sortBy,
 																								  int pageIndex,
 																								  int pageSize,
@@ -32,13 +32,13 @@ public interface ApplicationSummaryService {
 
 	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support')")
 	@SecuredBySpring(value = "READ", description = "Internal users can see all submitted Application Summaries across the whole system", securedType = ApplicationSummaryPageResource.class)
-	ServiceResult<List<ApplicationSummaryResource>> getAllSubmittedApplicationSummariesByCompetitionId(Long competitionId,
+	ServiceResult<List<ApplicationSummaryResource>> getAllSubmittedApplicationSummariesByCompetitionId(long competitionId,
 																									   Optional<String> filter,
 																									   Optional<FundingDecisionStatus> fundingFilter);
 
 	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support')")
     @SecuredBySpring(value = "READ", description = "Internal users can see all not-yet submitted Application Summaries across the whole system", securedType = ApplicationSummaryPageResource.class)
-	ServiceResult<ApplicationSummaryPageResource> getNotSubmittedApplicationSummariesByCompetitionId(Long competitionId,
+	ServiceResult<ApplicationSummaryPageResource> getNotSubmittedApplicationSummariesByCompetitionId(long competitionId,
 																									 String sortBy,
 																									 int pageIndex,
 																									 int pageSize);

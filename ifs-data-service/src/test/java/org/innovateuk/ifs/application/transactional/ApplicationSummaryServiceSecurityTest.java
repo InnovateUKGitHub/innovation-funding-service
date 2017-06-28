@@ -70,25 +70,25 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 
         @Override
         public ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(
-                Long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter) {
+                long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter) {
             return null;
         }
 
         @Override
         public ServiceResult<ApplicationSummaryPageResource> getSubmittedApplicationSummariesByCompetitionId(
-                Long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter, Optional<FundingDecisionStatus> fundingFilter) {
+                long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter, Optional<FundingDecisionStatus> fundingFilter) {
             return null;
         }
 
         @Override
         public ServiceResult<List<ApplicationSummaryResource>> getAllSubmittedApplicationSummariesByCompetitionId(
-                Long competitionId, Optional<String> filter, Optional<FundingDecisionStatus> fundingFilter) {
+                long competitionId, Optional<String> filter, Optional<FundingDecisionStatus> fundingFilter) {
             return null;
         }
 
         @Override
         public ServiceResult<ApplicationSummaryPageResource> getNotSubmittedApplicationSummariesByCompetitionId(
-                Long competitionId, String sortBy, int pageIndex, int pageSize) {
+                long competitionId, String sortBy, int pageIndex, int pageSize) {
             return null;
         }
 

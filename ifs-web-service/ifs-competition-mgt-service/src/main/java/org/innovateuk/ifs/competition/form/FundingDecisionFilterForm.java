@@ -35,21 +35,11 @@ public class FundingDecisionFilterForm {
 
     @JsonIgnore
     public String getStringFilterValue() {
-        if(stringFilter.isPresent()) {
-            return stringFilter.get();
-        }
-        else {
-            return null;
-        }
+        return stringFilter.orElse(null);
     }
 
     @JsonIgnore
     public FundingDecision getFundingFilterValue() {
-        if(fundingFilter.isPresent()) {
-            return fundingFilter.get();
-        }
-        else {
-            return null;
-        }
+        return fundingFilter.orElse(null);
     }
 }

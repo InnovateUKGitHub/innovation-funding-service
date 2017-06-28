@@ -136,7 +136,6 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
             @PathVariable("competitionId") long competitionId,
             @RequestParam("selectionId") long assessorId,
             @RequestParam("isSelected") boolean isSelected,
-            @RequestParam(defaultValue = "0") int page,
             @RequestParam Optional<Long> innovationArea,
             HttpServletRequest request,
             HttpServletResponse response) {
@@ -219,10 +218,10 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
                     newSelectionFormToResource(submittedSelectionForm, competitionId));
 
             return validationHandler.addAnyErrors(restResult)
-                                    .failNowOrSucceedWith(failureView, () -> {
-                                        removeCookie(response, competitionId);
-                return redirectToInvite(competitionId, 0);
-            });
+                    .failNowOrSucceedWith(failureView, () -> {
+                        removeCookie(response, competitionId);
+                        return redirectToInvite(competitionId, 0);
+                    });
         });
     }
 
@@ -374,13 +373,7 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
     }
 
     private ExistingUserStagedInviteListResource newSelectionFormToResource(AssessorSelectionForm form, long competitionId) {
-        List<ExistingUserStagedInviteResource> invites = form.getSelectedAssessorIds().stream()
-                .map(id -> new ExistingUserStagedInviteResource(
-                        id,
-                        competitionId
-                ))
-                .collect(Collectors.toList());
-
-        return new ExistingUserStagedInviteListResource(invites);
+        return new ExistingUserStagedInviteListResource(simpleMap(
+                form.getSelectedAssessorIds(), id -> new ExistingUserStagedInviteResource(id, competitionId)));
     }
 }
