@@ -9,6 +9,7 @@ VERSION=$3
 
 . $(dirname $0)/common-functions.sh
 . $(dirname $0)/deploy-functions.sh
+. $(dirname $0)/local-deploy-functions.sh
 
 PROJECT=$(getProjectName $PROJECT $TARGET)
 SVC_ACCOUNT_TOKEN=$(getSvcAccountToken)
@@ -22,11 +23,6 @@ REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 echo "Deploying the $PROJECT Openshift project"
 
 function deploy() {
-
-    if [[ ${TARGET} == "local" ]]
-    then
-        $(dirname $0)/os-allow-shibboleth-to-be-run-as-root.sh
-    fi
 
     if [[ ${TARGET} == "production" || ${TARGET} == "demo" || ${TARGET} == "uat" || ${TARGET} == "sysint" || ${TARGET} == "perf" ]]
     then

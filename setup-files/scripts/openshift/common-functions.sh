@@ -2,10 +2,12 @@
 
 function isNamedEnvironment() {
 
+    TARGET=$1
+
     if [[ ${TARGET} != "production" && ${TARGET} != "demo" && ${TARGET} != "uat" && ${TARGET} != "sysint" && ${TARGET} != "perf" ]]; then
-        exit 0
-    else
         exit 1
+    else
+        exit 0
     fi
 }
 
@@ -14,7 +16,7 @@ function getProjectName() {
     PROJECT=$1
     TARGET=$2
 
-    if isNamedEnvironment; then
+    if $(isNamedEnvironment $TARGET); then
         echo "$TARGET"
     else
         echo "$PROJECT"
@@ -58,7 +60,7 @@ function getRouteDomain() {
 function getRegistry() {
 
     if [[ (${TARGET} == "local") ]]; then
-        echo "$($(dirname $0)/os-get-registry-url.sh)"
+        echo "$(getLocalRegistryUrl)"
     else
         echo "docker-registry-default.apps.prod.ifs-test-clusters.com"
     fi
@@ -67,7 +69,7 @@ function getRegistry() {
 function getInternalRegistry() {
 
     if [[ (${TARGET} == "local") ]]; then
-        echo "$($(dirname $0)/os-get-registry-url.sh)"
+        echo "$(getLocalRegistryUrl)"
     else
         echo "172.30.80.28:5000"
     fi

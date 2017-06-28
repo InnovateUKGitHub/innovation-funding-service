@@ -100,6 +100,11 @@ function tailorAppInstance() {
     then
         sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/4*.yml
     fi
+
+    if [[ ${TARGET} == "local" ]]
+    then
+        replacePersistentFileClaim
+    fi
 }
 
 function useContainerRegistry() {
