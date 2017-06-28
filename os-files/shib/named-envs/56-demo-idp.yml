@@ -41,6 +41,8 @@ items:
             value: "9443"
           - name: HTTPPORT
             value: "9080"
+          - name: MEMCACHE_ENDPOINT
+            value: "cluster5-memcached00.l8op6o.cfg.euw2.cache.amazonaws.com:11211"
           - name: LDAPURL
             value: "ldap://oldap.demo.org.iuk.local:389"
           - name: LDAPUSESTARTTLS
