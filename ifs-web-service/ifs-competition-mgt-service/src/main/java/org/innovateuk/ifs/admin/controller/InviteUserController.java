@@ -28,7 +28,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
  */
 @Controller
 @RequestMapping("/admin")
-@PreAuthorize("hasAnyAuthority('ifs_administrator')")
+@PreAuthorize("hasAuthority('ifs_administrator')")
 public class InviteUserController {
 
     private static final String FORM_ATTR_NAME = "form";
@@ -73,7 +73,7 @@ public class InviteUserController {
 
         });*/
 
-        return "admin/users";
+        return "admin/users/active";
 
     }
 

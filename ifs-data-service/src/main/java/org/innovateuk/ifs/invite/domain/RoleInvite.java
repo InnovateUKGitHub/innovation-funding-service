@@ -11,6 +11,9 @@ import javax.persistence.ManyToOne;
 
 @Entity
 @DiscriminatorValue("ROLE")
+/**
+ * A user invite with a specific role.
+ */
 public class RoleInvite extends Invite<Role, RoleInvite> {
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -18,7 +21,6 @@ public class RoleInvite extends Invite<Role, RoleInvite> {
     private Role role;
 
     public RoleInvite() {
-        // no-arg constructor
     }
 
     public RoleInvite(final String name, final String email, final String hash, final Role role, final InviteStatus status) {
