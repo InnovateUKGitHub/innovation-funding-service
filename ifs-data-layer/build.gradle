@@ -1,0 +1,79 @@
+project(':ifs-data-layer').bootRepackage {
+    onlyIf{ Task task -> false}
+}
+
+subprojects {
+
+    ext.ifsWebSystemUserId="8394d970-b250-4b15-9621-3534325691b4"
+
+    // data-service-commons is not a docker project.
+    if (it.name != 'data-service-commons') {
+
+        task prepareDockerFile(type: Copy) {
+
+            ext.appName = 'default-service-name'
+            outputs.upToDateWhen { false }
+            from '../docker/'
+            into 'src/main/docker/'
+            include 'Dockerfile-template'
+            rename 'Dockerfile-template', 'Dockerfile'
+            filter {
+                it.replaceAll('@version@', project.properties['version']).replaceAll('@app_name@', appName)
+            }
+        }
+
+        task buildDocker(type: Docker, dependsOn: build) {
+            push = false
+            applicationName = 'default-service-name'
+            dockerfile = file('src/main/docker/Dockerfile')
+            doFirst {
+                copy {
+                    from jar
+                    into stageDir
+                }
+                copy{
+                    from file('src/main/docker/certificate')
+                    into stageDir
+                }
+                copy {
+                    from file("${rootProject.projectDir}/setup-files/scripts/docker/coscale-monitoring.sh")
+                    into stageDir
+                }
+            }
+        }
+
+        buildDocker.dependsOn prepareDockerFile
+
+        // Workaround for https://github.com/spring-projects/spring-boot/issues/8308
+        // Can reinstate excludeDevtools in the bootRepackage task in next release
+        springBoot {
+            excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
+        }
+
+        bootRepackage {
+            mainClass = 'org.innovateuk.ifs.Application'
+            //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
+        }
+    }
+
+    //noinspection GroovyMissingReturnStatement
+    processResources {
+        filesMatching("*.properties") {
+            expand project.properties
+        }
+    }
+
+    processTestResources {
+        filesMatching("*.properties") {
+            expand project.properties
+        }
+    }
+
+}
+
+ext {
+    snippetsDir = file('build/generated-snippets')
+    javaLanguageLevel = 1.8
+    generatedMapperSourcesDir = 'build/classes/main/org/innovateuk/ifs/mappers'
+}
+
