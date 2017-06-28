@@ -29,7 +29,7 @@ ${newUsersEmail}             liam@innovate.com
 Comp Admin starts a new Competition
     [Documentation]    INFUND-6393
     [Tags]    HappyPath
-    [Setup]  the user logs-in in new browser  &{Comp_admin1_credentials}
+    [Setup]  the user logs-in in new browser       &{Comp_admin1_credentials}
     # For the testing of the story INFUND-6393, we need to create New Competition in order to apply the new Comp Setup fields
     # Then continue with the applying to this Competition, in order to see the new Fields applied
     Given the user navigates to the page           ${CA_UpcomingComp}
@@ -42,97 +42,97 @@ Comp Admin starts a new Competition
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     [Documentation]    INFUND-7820
     [Tags]
-    Given the user should see the element    jQuery=div:contains("Milestones") ~ .task-status-complete
-    When the user clicks the button/link    link=Milestones
-    Then the user should see the element    jQuery=button:contains("Edit")
+    Given the user should see the element  jQuery=div:contains("Milestones") ~ .task-status-complete
+    When the user clicks the button/link   link=Milestones
+    Then the user should see the element   jQuery=button:contains("Edit")
     And the user should see the dates in full format
-    Then the user clicks the button/link    link=Competition setup
+    Then the user clicks the button/link   link=Competition setup
 
 Application Finances should not include project growth
     [Documentation]    INFUND-6393
     [Tags]
-    The user decides about the growth table    no    No
+    The user decides about the growth table  no    No
 
 Comp admin completes ths competition setup
     [Documentation]    INFUND-6393
     [Tags]    HappyPath
-    Given the user should see the element    jQuery=h1:contains("Competition setup")
+    Given the user should see the element  jQuery=h1:contains("Competition setup")
     Then the user marks the Application as done
     And the user fills in the CS Assessors
-    When the user clicks the button/link    link=Public content
+    When the user clicks the button/link  link=Public content
     Then the user fills in the Public content and publishes
-    And the user clicks the button/link    link=Return to setup overview
-    And the user should see the element    jQuery=div:contains("Public content") ~ .task-status-complete
-    When the user clicks the button/link    jQuery=a:contains("Save")
+    And the user clicks the button/link   link=Return to setup overview
+    And the user should see the element   jQuery=div:contains("Public content") ~ .task-status-complete
+    When the user clicks the button/link  jQuery=a:contains("Save")
     And the user navigates to the page    ${CA_UpcomingComp}
-    Then the user should see the element    jQuery=h2:contains("Ready to open") ~ ul a:contains("${compWithoutGrowth}")
+    Then the user should see the element  jQuery=h2:contains("Ready to open") ~ ul a:contains("${compWithoutGrowth}")
 
 Competition is Open to Applications
     [Documentation]    INFUND-6393
-    [Tags]    HappyPath    MySQL
-    The competitions date changes so it is now Open    ${compWithoutGrowth}
+    [Tags]    HappyPath  MySQL
+    The competitions date changes so it is now Open  ${compWithoutGrowth}
 
 Create new Application for this Competition
-    [Tags]    HappyPath    MySQL
-    Lead Applicant applies to the new created competition    ${compWithoutGrowth}
+    [Tags]    HappyPath  MySQL
+    Lead Applicant applies to the new created competition  ${compWithoutGrowth}
 
 Applicant visits his Finances
     [Documentation]    INFUND-6393
     [Tags]
-    Given the user should see the element            jQuery=h1:contains("Application overview")
-    When the user clicks the button/link             link=Your finances
-    Then the user should see the element             jQuery=li:contains("Your project costs") > .action-required
-    And the user should see the element              jQuery=li:contains("Your organisation") > .action-required
+    Given the user should see the element          jQuery=h1:contains("Application overview")
+    When the user clicks the button/link           link=Your finances
+    Then the user should see the element           jQuery=li:contains("Your project costs") > .action-required
+    And the user should see the element            jQuery=li:contains("Your organisation") > .action-required
     And the the user should see that the funding depends on the research area
     And the user should see his finances empty
-    [Teardown]    the user clicks the button/link    jQuery=a:contains("Return to application overview")
+    [Teardown]    the user clicks the button/link  jQuery=a:contains("Return to application overview")
 
 Applicant fills in the Application Details
-    [Documentation]    INFUND-6895 INFUND-9151
+    [Documentation]    INFUND-6895  INFUND-9151
     [Tags]    HappyPath
     The user fills in the Application details  ${applicationWithoutGrowth}
 
 Turnover and Staff count fields
     [Documentation]    INFUND-6393
     [Tags]
-    Given the user clicks the button/link           link=Your finances
-    Then the user clicks the button/link            link=Your organisation
-    And the user should see the text in the page    Turnover (£)
-    And the user should see the text in the page    Full time employees
-    And the user should see the text in the page    Number of full time employees at your organisation.
+    Given the user clicks the button/link         link=Your finances
+    Then the user clicks the button/link          link=Your organisation
+    And the user should see the text in the page  Turnover (£)
+    And the user should see the text in the page  Full time employees
+    And the user should see the text in the page  Number of full time employees at your organisation.
 
 Once the project growth table is selected
     [Documentation]    INFUND-6393 IFS-40
     [Tags]
-    [Setup]    log in as a different user    &{Comp_admin1_credentials}
-    Given the user navigates to the page    ${CA_UpcomingComp}
-    When the user clicks the button/link    jQuery=.button:contains("Create competition")
+    [Setup]    log in as a different user                &{Comp_admin1_credentials}
+    Given the user navigates to the page                 ${CA_UpcomingComp}
+    When the user clicks the button/link                 jQuery=.button:contains("Create competition")
     # For the testing of story IFS-40, turning this competition into Sector with All innovation areas
     Then the user fills in the Open-All Initial details  ${compWithGrowth}  ${month}  ${nextyear}
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility
-    And the user fills in the CS Milestones  ${month}  ${nextMonth}  ${nextyear}
-    When the user decides about the growth table    yes    Yes
+    And the user fills in the CS Milestones              ${month}  ${nextMonth}  ${nextyear}
+    When the user decides about the growth table         yes    Yes
     Then the user marks the Application as done
     And the user fills in the CS Assessors
-    When the user clicks the button/link    link=Public content
+    When the user clicks the button/link                 link=Public content
     Then the user fills in the Public content and publishes
-    And the user clicks the button/link    link=Return to setup overview
-    And the user should see the element    jQuery=div:contains("Public content") ~ .task-status-complete
-    When the user clicks the button/link    jQuery=a:contains("Save")
-    And the user navigates to the page    ${CA_UpcomingComp}
-    Then the user should see the element    jQuery=h2:contains("Ready to open") ~ ul a:contains("${compWithGrowth}")
-    [Teardown]    The competitions date changes so it is now Open    ${compWithGrowth}
+    And the user clicks the button/link                  link=Return to setup overview
+    And the user should see the element                  jQuery=div:contains("Public content") ~ .task-status-complete
+    When the user clicks the button/link                 jQuery=a:contains("Save")
+    And the user navigates to the page                   ${CA_UpcomingComp}
+    Then the user should see the element                 jQuery=h2:contains("Ready to open") ~ ul a:contains("${compWithGrowth}")
+    [Teardown]    The competitions date changes so it is now Open  ${compWithGrowth}
 
 As next step the Applicant cannot see the turnover field
     [Documentation]    INFUND-6393, INFUND-6395
     [Tags]    MySQL
-    Given Lead Applicant applies to the new created competition    ${compWithGrowth}
-    When the user clicks the button/link    link=Your finances
-    And the user clicks the button/link    link=Your organisation
-    Then the user should not see the text in the page    Turnover (£)
-    And the user should see the text in the page    Full time employees
-    And the user should see the text in the page    How many full-time employees did you have on the project at the close of your last financial year?
+    Given Lead Applicant applies to the new created competition  ${compWithGrowth}
+    When the user clicks the button/link                         link=Your finances
+    And the user clicks the button/link                          link=Your organisation
+    Then the user should not see the text in the page            Turnover (£)
+    And the user should see the text in the page                 Full time employees
+    And the user should see the text in the page                 How many full-time employees did you have on the project at the close of your last financial year?
 
 Organisation server side validation when no
     [Documentation]    INFUND-6393

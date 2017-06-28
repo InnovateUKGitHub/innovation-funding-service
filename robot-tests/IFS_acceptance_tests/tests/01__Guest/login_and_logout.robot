@@ -119,50 +119,50 @@ Valid login as Project Finance role
     [Documentation]    INFUND-2609
     [Tags]
     Given the user is not logged-in
-    And the user navigates to the page                        ${LOGIN_URL}
-    When Logging in and Error Checking                        &{internal_finance_credentials}
-    Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
+    And the user navigates to the page                      ${LOGIN_URL}
+    When Logging in and Error Checking                      &{internal_finance_credentials}
+    Then the user should be redirected to the correct page  ${COMP_ADMINISTRATOR_DASHBOARD}
     # note that this has been updated as per the most recent requirements.
     # project finance users now use the same dashboard as other internal users
 
 Page not found
     [Documentation]    INFUND-8712
-    When the user navigates to the page and gets a custom error message    ${SERVER}/ibble/dibble    ${404_error_message}
+    When the user navigates to the page and gets a custom error message  ${SERVER}/ibble/dibble    ${404_error_message}
     [Teardown]    Logout as user
 
 Reset password
     [Documentation]    INFUND-1889
     [Tags]    Email    HappyPath
-    Given the user navigates to the page                                         ${LOGIN_URL}
+    Given the user navigates to the page                                       ${LOGIN_URL}
     When the user clicks the forgot psw link
-    Then the user should see the element                                         link=Sign in
-    And the user enters text to a text field                                     id=id_email    ${test_mailbox_one}+changepsw@gmail.com
-    And the user clicks the button/link                                          css=input.button
-    Then the user should see the text in the page                                If your email address is recognised and valid, you’ll receive a notification with instructions about how to reset your password. If you do not receive a notification, please check your junk folder or try again.
-    And the user reads his email from the default mailbox and clicks the link    ${test_mailbox_one}+changepsw@gmail.com    Reset your password    If you didn't request this
-    And the user should see the text in the page                                 Password reset
+    Then the user should see the element                                       link=Sign in
+    And the user enters text to a text field                                   id=id_email    ${test_mailbox_one}+changepsw@gmail.com
+    And the user clicks the button/link                                        css=input.button
+    Then the user should see the text in the page                              If your email address is recognised and valid, you’ll receive a notification with instructions about how to reset your password. If you do not receive a notification, please check your junk folder or try again.
+    And the user reads his email from the default mailbox and clicks the link  ${test_mailbox_one}+changepsw@gmail.com    Reset your password    If you didn't request this
+    And the user should see the text in the page                               Password reset
 
 Reset password user enters new psw
     [Documentation]    INFUND-1889
     [Tags]    Email    HappyPath
     [Setup]    Clear the login fields
-    When the user enters text to a text field                id=id_password    Passw0rdnew
-    And the user moves focus to the element                  jQuery=input[value*="Save password"]
-    And the user clicks the button/link                      jQuery=input[value*="Save password"]
-    Then the user should see the text in the page            Your password is updated, you can now sign in with your new password
-    And the user clicks the button/link                      jQuery=.button:contains("Sign in")
-    And the user cannot login with their new details         ${test_mailbox_one}+changepsw@gmail.com    ${short_password}
-    When Logging in and Error Checking                       ${test_mailbox_one}+changepsw@gmail.com    Passw0rdnew
-    Then the user should see the element                     link=Sign out
-    And the user should be redirected to the correct page    ${DASHBOARD_URL}
+    When the user enters text to a text field              id=id_password    Passw0rdnew
+    And the user moves focus to the element                jQuery=input[value*="Save password"]
+    And the user clicks the button/link                    jQuery=input[value*="Save password"]
+    Then the user should see the text in the page          Your password is updated, you can now sign in with your new password
+    And the user clicks the button/link                    jQuery=.button:contains("Sign in")
+    And the user cannot login with their new details       ${test_mailbox_one}+changepsw@gmail.com    ${short_password}
+    When Logging in and Error Checking                     ${test_mailbox_one}+changepsw@gmail.com    Passw0rdnew
+    Then the user should see the element                   link=Sign out
+    And the user should be redirected to the correct page  ${DASHBOARD_URL}
 
 *** Keywords ***
 the user is not logged-in
-    the user should not see the element    link=Dashboard
-    the user should not see the element    link=Sign out
+    the user should not see the element  link=Dashboard
+    the user should not see the element  link=Sign out
 
 Clear the login fields
     the user reloads the page
-    When the user enters text to a text field    id=id_password    ${EMPTY}
-    Mouse Out    id=id_password
+    When the user enters text to a text field  id=id_password    ${EMPTY}
+    Mouse Out                                  id=id_password
     wait for autosave
