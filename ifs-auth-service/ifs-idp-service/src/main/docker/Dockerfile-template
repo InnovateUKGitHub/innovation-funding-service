@@ -51,8 +51,7 @@ RUN  mkdir /etc/apache2/certs && chown root:www-data /etc/apache2/certs && chmod
   mv /apache/ssl.conf /etc/apache2/mods-available/ssl.conf && \
   mv /apache/z-defaults.conf /etc/apache2/conf-available/ && a2enconf z-defaults.conf && \
   rm -f /etc/apache2/sites-enabled/000-default.conf && \
-  a2enmod socache_shmcb slotmem_shm ssl proxy_balancer status lbmethod_byrequests proxy_ajp proxy headers rewrite proxy_http reqtimeout && \
-  a2dismod -f deflate && \
+  a2enmod socache_shmcb ssl status proxy_ajp proxy headers rewrite proxy_http reqtimeout && \
   touch /etc/apache2/certs/* && \
   mv /apache/locking /var/www/html/ && chown -R root:www-data /var/www/html/locking && chmod -R 644 /var/www/html/locking && \
   chgrp -R 0 /etc/apache2 \
