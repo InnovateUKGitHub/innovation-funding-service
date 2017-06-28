@@ -134,15 +134,15 @@ Support User can see read only summary link for each partner
     When the user navigates to the page     ${server}/management/competition/${OPEN_COMPETITION}/applications/all
     And the user clicks the button/link     link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
     And the user expands the Finance summaries
-    Then the user should see the element    jQuery=.project-cost-breakdown tbody tr:nth-of-type(1) th:contains("${EMPIRE_LTD_NAME}"):contains("View finances")
-    And the user should see the element     jQuery=.project-cost-breakdown tbody tr:nth-of-type(2) th:contains("Ludlow"):contains("View finances")
-    And the user should see the element     jQuery=.project-cost-breakdown tbody tr:nth-of-type(3) th:contains("EGGS"):contains("View finances")
+    Then the user should see the element    jQuery=.finance-summary tbody tr:nth-of-type(1) th:contains("${EMPIRE_LTD_NAME}"):contains("View finances")
+    And the user should see the element     jQuery=.finance-summary tbody tr:nth-of-type(2) th:contains("Ludlow"):contains("View finances")
+    And the user should see the element     jQuery=.finance-summary tbody tr:nth-of-type(3) th:contains("EGGS"):contains("View finances")
 
 Support User can see read only summary for lead
     [Documentation]  IFS-401
     [Tags]
-    [Setup]  The user clicks the button/link  jQuery=.project-cost-breakdown tbody tr:nth-of-type(1) th a
-    When the user redirects to the page       Please complete your project finances.    Your finances
+    [Setup]  The user clicks the button/link  jQuery=.finance-summary tbody tr:nth-of-type(1) th a
+    When the user should see the text in the page       Please complete your project finances.
     Then the finance summary table in Your Finances has correct values for lead
 
 Support User can see read only summary for collaborator
@@ -152,8 +152,8 @@ Support User can see read only summary for collaborator
     When the user navigates to the page     ${server}/management/competition/${OPEN_COMPETITION}/applications/all
     And the user clicks the button/link     link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
     And the user expands the Finance summaries
-    When the user clicks the button/link    jQuery=.project-cost-breakdown tbody tr:contains("EGGS") th a
-    And the user redirects to the page      Please complete your project finances.    Your finances
+    When the user clicks the button/link    jQuery=.finance-summary tbody tr:contains("EGGS") th a
+    And the user should see the text in the page      Please complete your project finances.
     Then the finance summary table in Your Finances has correct values for collaborator
 
 Support User can see read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
@@ -163,60 +163,60 @@ Support User can see read only view of collaborator Your project costs for Labou
     When the user navigates to the page       ${server}/management/competition/${OPEN_COMPETITION}/applications/all
     And the user clicks the button/link       link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
     And the user expands the Finance summaries
-    When the user clicks the button/link      jQuery=.project-cost-breakdown tbody tr:contains("Ludlow") th a
-    Then the user redirects to the page       Please complete your project finances.  Your finances
+    When the user clicks the button/link      jQuery=.finance-summary tbody tr:contains("Ludlow") th a
+    Then the user should see the text in the page       Please complete your project finances.
     And the user should see the element       jQuery=a:contains("Your project costs")
     When the user clicks the button/link      jQuery=a:contains("Your project costs")
-    And the user redirects to the page        Provide the project costs for 'Ludlow'   Your project costs
+    And the user should see the text in the page        Provide the project costs for 'Ludlow'
     And the user clicks the button/link       jQuery=button:contains("Labour")
-    Then the user should see the element      jQuery=input[id$="labourDaysYearly"][value="230"][readonly="readonly"]
-    And the user should see the element       jQuery=input[name^=labour-role][value="anotherrole"][readonly="readonly"]
-    And the user should see the element       jQuery=input[name^=labour-gross][value="120000"][readonly="readonly"]
-    And the user should see the element       jQuery=input[name^=labour-labour][value="100"][readonly="readonly"]
+    Then the user should see the element      jQuery=dt:contains("Working days per year") ~ dd:contains("230")
+    And the user should see the element       jQuery=.labour-costs-table td:contains("anotherrole")
+    And the user should see the element       jQuery=.labour-costs-table td:contains("anotherrole") ~ td:contains("120000")
+    And the user should see the element       jQuery=.labour-costs-table td:contains("anotherrole") ~ td:contains("100")
     And the user clicks the button/link       jQuery=button:contains("Labour")
     When the user clicks the button/link      jQuery=button:contains("Overhead costs")
-    Then the user should see the element      jQuery=input[name^="overheads-type"][value="DEFAULT_PERCENTAGE"]:checked ~ label
+    Then the user should see the element      jQuery=th:contains("20% of labour costs")
     When the user clicks the button/link      jQuery=button:contains("Materials")
-    Then the user should see the element      css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input[value="10"][readonly="readonly"]
-    And the user should see the element       css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input[value="100"][readonly="readonly"]
-    And the user should see the element       css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input[value="test"][readonly="readonly"]
+    Then the user should see the element      jQuery=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2):contains("10")
+    And the user should see the element       jQuery=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3):contains("100")
+    And the user should see the element       jQuery=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1):contains("test")
     And the user clicks the button/link       jQuery=button:contains("Overhead costs")
 
 Support User can see read only view of collaborator Your project costs for rest of the categories
     [Documentation]  IFS-401
     [Tags]
     When the user clicks the button/link      jQuery=button:contains("Capital usage")
-    Then the user should see the text in the element   jQuery=textarea.form-control[name^=capital_usage-description]  some description
-    And the user should see the element       jQuery=input[name^=capital_usage-existing][value=New]:checked ~ label
-    And the user should see the element       css=.form-finances-capital-usage-depreciation[value="10"][readonly="readonly"]
-    And the user should see the element       css=.form-finances-capital-usage-npv[value="5000"][readonly="readonly"]
-    And the user should see the element       css=.form-finances-capital-usage-residual-value[value="25"][readonly="readonly"]
-    And the user should see the element       css=.form-finances-capital-usage-utilisation[value="100"][readonly="readonly"]
-    And the user should see the element       css=#capital_usage .form-row:nth-of-type(1) [readonly=readonly][value="£ 4975"]
+    Then the user should see the element      jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(1):contains("some description")
+    And the user should see the element       jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(2):contains("New")
+    And the user should see the element       jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(3):contains("10")
+    And the user should see the element       jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(4):contains("5000")
+    And the user should see the element       jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(5):contains("25")
+    And the user should see the element       jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(6):contains("100")
+    And the user should see the element       jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(7):contains("£ 4975")
     And the user clicks the button/link       jQuery=button:contains("Capital usage")
     When the user clicks the button/link      jQuery=button:contains("Subcontracting costs")
-    Then the user should see the element      css=.form-finances-subcontracting-company[value="SomeName"]
-    And the user should see the element       jQuery=input.form-control[name^=subcontracting-country][value="Netherlands"]
-    And the user should see the text in the element  jQuery=textarea.form-control[name^=subcontracting-role]  Quality Assurance
-    And the user should see the element       jQuery=input.form-control[name^=subcontracting-subcontractingCost][value="1000"][readonly="readonly"]
+    Then the user should see the element      jQuery=#subcontracting-table tbody tr:nth-of-type(1) td:nth-of-type(1):contains("SomeName")
+    And the user should see the element       jQuery=#subcontracting-table tbody tr:nth-of-type(1) td:nth-of-type(2):contains("Netherlands")
+    And the user should see the element       jQuery=#subcontracting-table tbody tr:nth-of-type(1) td:nth-of-type(3):contains("Quality Assurance")
+    And the user should see the element       jQuery=#subcontracting-table tbody tr:nth-of-type(1) td:nth-of-type(4):contains("£ 1,000")
     And the user clicks the button/link       jQuery=button:contains("Subcontracting costs")
     When the user clicks the button/link      jQuery=button:contains("Travel and subsistence")
-    Then the user should see the element      css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input[value="test"]
-    And the user should see the element       css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input[value="10"]
-    And the user should see the element       css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input[value="100"]
+    Then the user should see the element      jQuery=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1):contains("test")
+    And the user should see the element       jQuery=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2):contains("10")
+    And the user should see the element       jQuery=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3):contains("100")
     And the user clicks the button/link       jQuery=button:contains("Travel and subsistence")
     When the user clicks the button/link      jQuery=button:contains("Other costs")
-    Then the user should see the text in the element    jQuery=textarea.form-control[name^=other_costs-description]  some other costs
-    And the user should see the element       jQuery=input.form-control[name^=other_costs-otherCost][value="50"]
+    Then the user should see the element      jQuery=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1):contains("some other costs")
+    And the user should see the element       jQuery=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2):contains("50")
 
 Support User can see read only view of Your organisation
     [Documentation]  IFS-401
     [Tags]
     [Setup]
     When the user clicks the button/link    jQuery=a:contains("Your finances")
-    Then the user redirects to the page     Please complete your project finances.  Your finances
+    Then the user should see the text in the page     Please complete your project finances.
     When the user clicks the button/link    jQuery=a:contains("Your organisation")
-    Then the user redirects to the page     Organisation size  Your organisation
+    Then the user should see the text in the page     Organisation size
     And the user should see the element     jQuery=dt:contains("Turnover") + dd:contains("150")
     And the user should see the element     jQuery=dt:contains("employees") + dd:contains("0")
 
@@ -225,7 +225,7 @@ Support User can see read only view of Your funding
     [Tags]
     [Setup]
     When the user clicks the button/link    jQuery=a:contains("Your finances")
-    Then the user redirects to the page     Please complete your project finances.  Your finances
+    Then the user should see the text in the page     Please complete your project finances.
     When the user clicks the button/link    jQuery=a:contains("Your funding")
     Then the user should see the element    jQuery=dt:contains("Funding level") + dd:contains("45%")
     And the user should see the element     jQuery=p:contains("No other funding")
