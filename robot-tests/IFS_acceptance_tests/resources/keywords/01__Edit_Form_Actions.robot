@@ -137,8 +137,8 @@ The user enters multiple strings into a text field
     #Keyword uses custom IfsLibrary keyword "repeat string"
     ${concatenated_string} =    repeat string    ${string}    ${multiplicity}
     Wait Until Element Is Visible Without Screenshots   ${field}
-    Wait Until Keyword Succeeds Without Screenshots    30s    200ms    Input Text    ${field}    ${concatenated_string}
-    Mouse Out    ${TEXT_FIELD}
+    Wait Until Keyword Succeeds Without Screenshots     30s    200ms    Input Text    ${field}    ${concatenated_string}
+    Mouse Out                                           ${field}
     Run Keyword And Ignore Error Without Screenshots    focus    link=Sign out
     Wait for autosave
 
