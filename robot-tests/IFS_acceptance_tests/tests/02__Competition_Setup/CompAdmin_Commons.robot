@@ -224,5 +224,17 @@ the internal user navigates to public content
     the user clicks the button/link    link=${comp}
     the user clicks the button/link    link=Public content
 
-the compadmin logs in
-    Guest user log-in in new browser    &{Comp_admin1_credentials}
+The application list is sorted by
+    [Arguments]    ${sorting_factor}
+    Select From List    name=sort    ${sorting_factor}
+
+The applications should be sorted by column
+    [Arguments]    ${column_number}
+    ${row_count}=    get matching xpath count    //*[td]
+    @{sorted_column_contents}=    Create List
+    : FOR    ${row}    IN RANGE    2    ${row_count}
+    \    ${cell_contents}=    get table cell    css=table    ${row}    ${column_number}
+    \    append to list    ${sorted_column_contents}    ${cell_contents}
+    ${test_sorting_list}=    Copy List    ${sorted_column_contents}
+    Sort List    ${test_sorting_list}
+    Lists Should Be Equal    ${sorted_column_contents}    ${test_sorting_list}

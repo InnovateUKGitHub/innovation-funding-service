@@ -28,7 +28,7 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...               INFUND-6403 Filter and Pagination on 'Find' tab of Invite dashboard
 ...
 ...               INFUND-6453 Filter and pagination on 'Overview' tab of Invite assessors dashboard
-Suite Setup       Guest user log-in in new browser    &{Comp_admin1_credentials}
+Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
 Resource          ../../resources/defaultResources.robot

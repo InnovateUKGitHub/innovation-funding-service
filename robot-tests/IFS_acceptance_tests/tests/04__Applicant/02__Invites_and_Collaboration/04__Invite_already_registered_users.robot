@@ -46,7 +46,7 @@ The user edits the name this should be changed in the View team page
     [Documentation]    INFUND-2716: Error in where the name of an invited partner doesn't update in 'view team members and add collaborators'.
     [Tags]    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
-    When the user clicks the button/link    link=view and edit your profile details
+    When the user clicks the button/link    link=Profile
     And the user clicks the button/link    link=Edit your details
     And the user enters profile details
     Then the user should see the change in the view team members page
@@ -54,9 +54,9 @@ The user edits the name this should be changed in the View team page
 
 Invite a user with the same organisation under the same organisation
     [Documentation]    INFUND-3759
-    [Setup]    Guest user log-in in new browser    ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
+    [Setup]  the user logs-in in new browser  ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     When Existing user creates a new application and invites a user from the same organisation
-    Then the invited user should get a message to contact the helpdesk    ${test_mailbox_one}+invite2@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation
+    Then the invited user should get a message to contact the helpdesk  ${test_mailbox_one}+invite2@gmail.com  Invitation to collaborate in ${OPEN_COMPETITION_NAME}  You will be joining as part of the organisation
 
 *** Keywords ***
 the user enters profile details
@@ -66,7 +66,7 @@ the user enters profile details
     The user clicks the button/link    css=[name="create-account"]
 
 the user should see the change in the view team members page
-    The user clicks the button/link    link=My dashboard
+    The user clicks the button/link    link=Dashboard
     The user clicks the button/link    css=#content section:nth-of-type(1) li:nth-child(2) h3 a
     The user clicks the button/link    link=view team members and add collaborators
     The user should see the element    jQuery=.table-overflow:eq(1) td:nth-child(1):contains("Dennis Bergkamp")

@@ -4,7 +4,7 @@ Documentation     INFUND-1042 : As an applicant I want to be able to edit my use
 ...               INFUND-6387 As an Applicant creating an account I will be invited to answer questions for diversity monitoring purposes so that InnovateUK complies with BEIS ministerial requirement
 ...
 ...               INFUND-9245 Add marketing email option tick box to the 'Your profile' > 'Your details' page
-Suite Setup       Guest user log-in in new browser    &{lead_applicant_credentials}
+Suite Setup       the user logs-in in new browser  &{lead_applicant_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
@@ -14,19 +14,19 @@ View and edit profile link is visible in the Dashboard page
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
     [Tags]    HappyPath
     When the user navigates to the page    ${DASHBOARD_URL}
-    Then the user should see the element    link=view and edit your profile details
+    Then the user should see the element    link=Profile
 
 View and edit profile link redirects to the Your profile page
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
     [Tags]    HappyPath
-    When the user clicks the button/link    link=view and edit your profile details
+    When the user clicks the button/link    link=Profile
     Then the user should see the element    link=Edit your details
 
 Edit the profile and verify if the changes are saved
     [Documentation]    INFUND-1042, INFUND-6387, INFUND-9245
     [Tags]    HappyPath    SmokeTest
     Given the user navigates to the page    ${DASHBOARD_URL}
-    When the user clicks the button/link    link=view and edit your profile details
+    When the user clicks the button/link    link=Profile
     And the user clicks the button/link    link=Edit your details
     And the user enters profile details
     Then the user should see the text in the page    Chris
@@ -40,7 +40,7 @@ Verify that the applicant's name has been changed on other parts of the site
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
     [Tags]
     Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=view and edit your profile details
+    And the user clicks the button/link    link=Profile
     And the user clicks the button/link    link=Edit your details
     When the user enters profile details
     And the user navigates to the page    ${APPLICATION_TEAM_URL}
@@ -134,7 +134,7 @@ the user can change their details back again
 
 other contributors should see the applicant's updated name for the assignation options
     Logout as user
-    Guest user log-in in new browser    &{collaborator1_credentials}
+    the user logs-in in new browser  &{collaborator1_credentials}
     go to    ${APPLICATION_OVERVIEW_URL}
     The user should see the text in the page    Chris Brown
     log in as a different user    &{lead_applicant_credentials}

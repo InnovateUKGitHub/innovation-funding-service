@@ -14,14 +14,18 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
@@ -31,6 +35,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -38,7 +43,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  */
 @Service
 public class UserServiceImpl extends UserTransactionalService implements UserService {
-    final JsonNodeFactory factory = JsonNodeFactory.instance;
+    private final JsonNodeFactory factory = JsonNodeFactory.instance;
 
     public enum Notifications {
         VERIFY_EMAIL_ADDRESS,
@@ -199,5 +204,19 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
                              UserRoleType.LEADAPPLICANT.getName().equals(r.getName()) ||
                              UserRoleType.PARTNER.getName().equals(r.getName()) ||
                              UserRoleType.PROJECT_MANAGER.getName().equals(r.getName()));
+    }
+
+    @Override
+    public ServiceResult<UserPageResource> findActiveByProcessRoles(Set<UserRoleType> roleTypes, Pageable pageable) {
+        Page<User> pagedResult = userRepository.findDistinctByStatusAndRolesNameIn(UserStatus.ACTIVE, roleTypes.stream().map(UserRoleType::getName).collect(Collectors.toSet()), pageable);
+        List<UserResource> userResources = simpleMap(pagedResult.getContent(), user -> userMapper.mapToResource(user));
+        return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), userResources, pagedResult.getNumber(), pagedResult.getSize()));
+    }
+
+    @Override
+    public ServiceResult<UserPageResource> findInactiveByProcessRoles(Set<UserRoleType> roleTypes, Pageable pageable) {
+        Page<User> pagedResult = userRepository.findDistinctByStatusAndRolesNameIn(UserStatus.INACTIVE, roleTypes.stream().map(UserRoleType::getName).collect(Collectors.toSet()), pageable);
+        List<UserResource> userResources = simpleMap(pagedResult.getContent(), user -> userMapper.mapToResource(user));
+        return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), userResources, pagedResult.getNumber(), pagedResult.getSize()));
     }
 }

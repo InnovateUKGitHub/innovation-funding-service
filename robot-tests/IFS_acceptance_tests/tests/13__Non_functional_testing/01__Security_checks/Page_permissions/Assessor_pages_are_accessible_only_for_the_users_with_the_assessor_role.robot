@@ -22,7 +22,7 @@ ${Invitation_nonregistered_assessor3}    ${server}/assessment/invite/competition
 Applicant can't access the assessment overview page
     [Documentation]    INFUND-1683
     [Tags]
-    [Setup]    Guest user log-in in new browser    &{collaborator2_credentials}
+    [Setup]  The user logs-in in new browser  &{collaborator2_credentials}
     Then the user navigates to the page and gets a custom error message    ${ASSESSOR_REVIEW_SUMMARY}    ${403_error_message}
 
 Applicant can't access the assessor's dashboard page

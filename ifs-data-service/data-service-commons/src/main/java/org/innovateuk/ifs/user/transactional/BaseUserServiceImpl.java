@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.user.transactional;
 
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.transactional.UserTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
@@ -22,7 +21,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  */
 @Service
 public class BaseUserServiceImpl extends UserTransactionalService implements BaseUserService {
-    final JsonNodeFactory factory = JsonNodeFactory.instance;
 
     enum Notifications {
         VERIFY_EMAIL_ADDRESS,

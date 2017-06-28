@@ -1,5 +1,5 @@
 *** Variables ***
-&{lead_applicant_credentials}             email=${lead_applicant}    password=Passw0rd
+&{lead_applicant_credentials}             email=steve.smith@empire.com    password=Passw0rd
 &{collaborator1_credentials}              email=jessica.doe@ludlow.co.uk    password=Passw0rd
 &{collaborator2_credentials}              email=pete.tom@egg.com    password=Passw0rd
 &{worth_test_credentials}                 email=${test_mailbox_one}+submit@gmail.com    password=Passw0rd
@@ -21,3 +21,6 @@
 &{support_user_credentials}               email=support@innovateuk.test    password=Passw0rd
 &{ifs_admin_user_credentials}             email=arden.pimenta@innovateuk.test    password=Passw0rd
 &{Assessor_e2e}                           email=${test_mailbox_one}+AJE2E@gmail.com    password=Passw0rd123
+&{lead_applicant_alternative_user_credentials}    email=${test_mailbox_one}+mario@gmail.com    password=Passw0rd
+&{collaborator1_alternative_user_credentials}     email=kevin.summers@ludlow.co.uk    password=Passw0rd
+&{collaborator2_alternative_user_credentials}     email=casey.evans@egg.com    password=Passw0rd

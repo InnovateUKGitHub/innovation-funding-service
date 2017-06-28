@@ -10,7 +10,7 @@ Suite Setup       Login new application invite academic    ${test_mailbox_one}+a
 Suite Teardown    Close browser and delete emails
 Force Tags        Email    Applicant
 Resource          ../../../../resources/defaultResources.robot
-Resource          ../../FinanceSection_Commons.robot
+Resource          ../../Applicant_Commons.robot
 
 
 *** Variables ***
@@ -20,7 +20,7 @@ Academic finances should be editable when lead marks them as complete
     [Documentation]    INFUND-2314
     [Tags]    HappyPath
     [Setup]    Lead applicant marks the finances as complete
-    Given Guest user log-in in new browser    ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
+    Given the user logs-in in new browser  ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     When the user navigates to the academic application finances
     And the user clicks the button/link    link=Your project costs
     Then the user should not see the element    css=#incurred-staff[readonly]
@@ -29,7 +29,7 @@ Academic finances should be editable when lead marks them as complete
 Academic finance validations
     [Documentation]    INFUND-2399
     [Tags]
-    [Setup]    Guest user log-in in new browser    ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
+    [Setup]  the user logs-in in new browser  ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     When the user navigates to the academic application finances
     And the user clicks the button/link    link=Your project costs
     And the applicant enters invalid inputs
@@ -196,15 +196,15 @@ the finance table should be correct
     Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(8)    £3,000
 
 Lead applicant marks the finances as complete
-    Guest user log-in in new browser    ${lead_applicant}    Passw0rd
-    the user clicks the button/link    link=Academic robot test application
-    the applicant completes the application details    Application details
+    the user logs-in in new browser  &{lead_applicant_credentials}
+    the user clicks the button/link  link=Academic robot test application
+    the applicant completes the application details  Application details
     the user navigates to the academic application finances
-    the user marks the finances as complete    Academic robot test application
+    the user marks the finances as complete          Academic robot test application
 
 
 Lead applicant marks the finances as incomplete
-    log in as a different user    ${lead_applicant}    Passw0rd
+    log in as a different user         &{lead_applicant_credentials}
     the user navigates to the academic application finances
     the user clicks the button/link    link=Your funding
     the user clicks the button/link    jQuery=button:contains("Edit")
