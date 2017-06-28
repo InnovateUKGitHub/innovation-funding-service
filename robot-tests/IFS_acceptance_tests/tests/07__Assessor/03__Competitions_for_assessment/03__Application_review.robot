@@ -205,9 +205,7 @@ the user clicks next and goes to the page
 
 I enter feedback of words
     [Arguments]    ${no_of_words}
-   # the user enters text to a text field    css=.editor    ${feedback_message}
     the user enters multiple strings into a text field      css=.editor  a${SPACE}  ${no_of_words}
-   # the user moves focus to the element    css=.app-submit-btn
 
 I should see word count underneath feedback form
     [Arguments]    ${wordCount}

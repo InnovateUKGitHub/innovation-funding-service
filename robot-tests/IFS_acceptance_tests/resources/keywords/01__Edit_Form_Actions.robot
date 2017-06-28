@@ -158,7 +158,7 @@ the user selects the index from the drop-down menu
     [Arguments]    ${option}    ${drop-down}
     Wait Until Element Is Visible Without Screenshots    ${drop-down}
     Select From List By Index    ${drop-down}    ${option}
-    mouse out    ${drop-down}git
+    mouse out    ${drop-down}
     # Error checking
     the user should not see an error in the page
     # Header checking (INFUND-1892)
