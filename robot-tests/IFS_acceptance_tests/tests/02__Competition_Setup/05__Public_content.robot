@@ -29,20 +29,20 @@ User can view the public content
     [Documentation]    INFUND-6914
     [Tags]  HappyPath
     Given the internal user navigates to public content  ${public_content_competition_name}
-    Then the user should see the element     link=Competition information and search
-    And the user should see the element      link=Summary
-    And the user should see the element      link=Eligibility
-    And the user should see the element      link=Scope
-    And the user should see the element      link=Dates
-    And the user should see the element      link=How to apply
-    And the user should see the element      link=Supporting information
-    And the user should see the element      jQuery=button:contains("Publish public content"):disabled
+    Then the user should see the element                 link=Competition information and search
+    And the user should see the element                  link=Summary
+    And the user should see the element                  link=Eligibility
+    And the user should see the element                  link=Scope
+    And the user should see the element                  link=Dates
+    And the user should see the element                  link=How to apply
+    And the user should see the element                  link=Supporting information
+    And the user should see the element                  jQuery=button:contains("Publish public content"):disabled
 
 Project Finance can also access the Public content sections
     [Documentation]  INFUND-7602
     [Tags]
     # This checks that also other int users have access to this area
-    Given log in as a different user      &{internal_finance_credentials}
+    Given log in as a different user                    &{internal_finance_credentials}
     When the internal user navigates to public content  ${public_content_competition_name}
     Then the user should not see an error in the page
     When the user visits the sub sections then he should not see any errors
@@ -50,39 +50,39 @@ Project Finance can also access the Public content sections
 External users do not have access to the Public content sections
     [Documentation]  INFUND-7602
     [Tags]
-    Given log in as a different user     &{collaborator1_credentials}
+    Given log in as a different user                                     &{collaborator1_credentials}
     Then The user navigates to the page and gets a custom error message  ${public_content_overview}  ${403_error_message}
 
 Competition information and search: server side validation
-    [Documentation]    INFUND-6915, IFS-179
+    [Documentation]    INFUND-6915  IFS-179
     [Tags]  HappyPath
-    [Setup]  log in as a different user    &{Comp_admin1_credentials}
+    [Setup]  log in as a different user                  &{Comp_admin1_credentials}
     Given the internal user navigates to public content  ${public_content_competition_name}
-    Then the user clicks the button/link   link=Competition information and search
-    When the user clicks the button/link            jQuery=.button:contains("Save and review")
-    Then the user should see a summary error        Please enter a short description.
-    Then the user should see a summary error        Please enter a project funding range.
-    Then the user should see a summary error        Please enter an eligibility summary.
-    Then the user should see a summary error        Please enter a valid set of keywords.
-    Then the user should see a summary error        Please select a publish setting.
+    Then the user clicks the button/link                 link=Competition information and search
+    When the user clicks the button/link                 jQuery=.button:contains("Save and review")
+    Then the user should see a summary error             Please enter a short description.
+    Then the user should see a summary error             Please enter a project funding range.
+    Then the user should see a summary error             Please enter an eligibility summary.
+    Then the user should see a summary error             Please enter a valid set of keywords.
+    Then the user should see a summary error             Please select a publish setting.
 
 Competition information and search: Valid values
-    [Documentation]    INFUND-6915, INFUND-8363, IFS-179
+    [Documentation]    INFUND-6915  INFUND-8363  IFS-179
     [Tags]  HappyPath
-    When the user enters text to a text field       id=short-description  Short public description
-    And the user enters text to a text field        id=funding-range  Up to £1million
-    And the user selects the radio button           publishSetting  invite
-    And the user enters text to a text field        css=[labelledby="eligibility-summary"]  Summary of eligiblity
-    When the user enters text to a text field       id=keywords  hellohellohellohellohellohellohellohellohellohellou
-    And the user clicks the button/link             jQuery=button:contains("Save and review")
-    Then the user should see the element            jQuery=.error-summary-list:contains("Each keyword must be less than 50 characters long.")
-    And the user enters text to a text field        id=keywords  Search, Testing, Robot
-    Then the user clicks the button/link            jQuery=.button:contains("Save and review")
-    And the user clicks the button/link             jQuery=.button:contains("Return to public content")
-    Then the user should see the element            jQuery=li:nth-of-type(1) .task-status-complete
+    When the user enters text to a text field  id=short-description  Short public description
+    And the user enters text to a text field   id=funding-range  Up to £1million
+    And the user selects the radio button      publishSetting  invite
+    And the user enters text to a text field   css=[labelledby="eligibility-summary"]  Summary of eligiblity
+    When the user enters text to a text field  id=keywords  hellohellohellohellohellohellohellohellohellohellou
+    And the user clicks the button/link        jQuery=button:contains("Save and review")
+    Then the user should see the element       jQuery=.error-summary-list:contains("Each keyword must be less than 50 characters long.")
+    And the user enters text to a text field   id=keywords  Search, Testing, Robot
+    Then the user clicks the button/link       jQuery=.button:contains("Save and review")
+    And the user clicks the button/link        jQuery=.button:contains("Return to public content")
+    Then the user should see the element       jQuery=li:nth-of-type(1) .task-status-complete
 
 Competition information and search: ReadOnly
-    [Documentation]  INFUND-6915, IFS-179
+    [Documentation]  INFUND-6915  IFS-179
     [Tags]
     When the user clicks the button/link  link=Competition information and search
     Then the user should see the element  jQuery=dt:contains("Short description") + dd:contains("Short public description")
@@ -96,19 +96,19 @@ Competition information and search: ReadOnly
     Then the user clicks the button/link  jQuery=.button:contains("Return to public content")
 
 Summary: server side validation and autosave
-    [Documentation]    INFUND-6916, INFUND-7486
+    [Documentation]    INFUND-6916  INFUND-7486
     [Tags]
-    Given the user clicks the button/link           link=Summary
-    And the user should see the text in the page    Text entered into this section will appear in the summary tab
-    When the user clicks the button/link            jQuery=.button:contains("Save and review")
-    Then the user should see a summary error        Please enter a funding type.
-    And the user should see a summary error         Please enter a project size.
-    And the user should see a summary error         Please enter a competition description.
+    Given the user clicks the button/link         link=Summary
+    And the user should see the text in the page  Text entered into this section will appear in the summary tab
+    When the user clicks the button/link          jQuery=.button:contains("Save and review")
+    Then the user should see a summary error      Please enter a funding type.
+    And the user should see a summary error       Please enter a project size.
+    And the user should see a summary error       Please enter a competition description.
     When the user enters valid data in the summary details
-    And the user should see the element             jQuery=.buttonlink:contains("+ add new section")
+    And the user should see the element           jQuery=.buttonlink:contains("+ add new section")
 
 Summary: User enters valid values and saves
-    [Documentation]    INFUND-6916, INFUND-7486
+    [Documentation]    INFUND-6916  INFUND-7486
     [Tags]  HappyPath
     Given the internal user navigates to public content     ${public_content_competition_name}
     And the user clicks the button/link                     link=Summary
@@ -173,32 +173,32 @@ Eligibility: User enters valid values and saves
 Eligibility: Contains the correct values when viewed, Edit sections
     [Documentation]    INFUND-6916, INFUND-7487
     [Tags]  HappyPath
-    When the user clicks the button/link                        link=Eligibility
-    Then the user should see the element                        jQuery=h2:contains("Nationality Eligibility Heading")
-    And the user should see the element                         jQuery=a:contains("${valid_pdf}")
-    And the user should see the element                         jQuery=.button:contains("Return to public content")
-    When the user clicks the button/link                        jQuery=.button-secondary:contains("Edit")
-    And the user enters text to a text field                    jQuery=.contentGroup:first-of-type .editor   You can give your views on new or changing government policies by responding to consultations. Government departments rule of 267567£$*90 take these responses into consideration before making decisions, Local authorities can decide to meet needs that do not meet the eligibility criteria, Where they decide to do this, the same steps must be taken as would be if the person did have eligible needs (for example, the preparation of a care and support plan).
-    And The user enters text to a text field                    jQuery=.contentGroup:nth-of-type(2) .editor   One of the important new changes we are introducing through these reforms is establishing the national eligibility criteria for adult care and support This is to be achieved through regulations to be made under a power in clause 13 of the Care Bill. These will set a minimum threshold.
-    Then the user clicks the button/link                        jQuery=button:contains("+ add new section")
-    And The user enters text to a text field                    jQuery=.contentGroup:nth-of-type(3) input[id^="heading"]    Draft Care and Support - Eligibility Criteria
-    And the user enters text to a text field                    jQuery=.contentGroup:nth-of-type(3) .editor   In these Regulations— Citation, commencement “basic personal care activities” means essential personal care tasks that a person carries out as part of normal daily, An adult’s needs meet the eligibility criteria if those needs are due to a physical or mental impairment or illness and the effect of such needs is that the adult.
-    And the user clicks the button/link                         jQuery=.contentGroup:first-of-type button:contains("Remove")
-    And the user clicks the button/link                         jQuery=.contentGroup:nth-of-type(2) button:contains("Remove")
-    Then the user uploads the file                              jQuery=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
-    And the user uploads the file                               jQuery=.contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
-    And the user uploads the file                               jQuery=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
-    Then the user clicks the button/link                        jQuery=.contentGroup:nth-of-type(3) button:contains("Remove")
-    And the user uploads the file                               jQuery=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
-    When the user clicks the button/link                        jQuery=button:contains("Save and review")
-    And the user clicks the button/link                         jQuery=.button:contains("Return to public content")
-    Then the user should see the element                        jQuery=li:nth-child(3) .task-status-complete
+    When the user clicks the button/link      link=Eligibility
+    Then the user should see the element      jQuery=h2:contains("Nationality Eligibility Heading")
+    And the user should see the element       jQuery=a:contains("${valid_pdf}")
+    And the user should see the element       jQuery=.button:contains("Return to public content")
+    When the user clicks the button/link      jQuery=.button-secondary:contains("Edit")
+    And the user enters text to a text field  jQuery=.contentGroup:first-of-type .editor   You can give your views on new or changing government policies by responding to consultations. Government departments rule of 267567£$*90 take these responses into consideration before making decisions, Local authorities can decide to meet needs that do not meet the eligibility criteria, Where they decide to do this, the same steps must be taken as would be if the person did have eligible needs (for example, the preparation of a care and support plan).
+    And The user enters text to a text field  jQuery=.contentGroup:nth-of-type(2) .editor   One of the important new changes we are introducing through these reforms is establishing the national eligibility criteria for adult care and support This is to be achieved through regulations to be made under a power in clause 13 of the Care Bill. These will set a minimum threshold.
+    Then the user clicks the button/link      jQuery=button:contains("+ add new section")
+    And The user enters text to a text field  jQuery=.contentGroup:nth-of-type(3) input[id^="heading"]    Draft Care and Support - Eligibility Criteria
+    And the user enters text to a text field  jQuery=.contentGroup:nth-of-type(3) .editor   In these Regulations— Citation, commencement “basic personal care activities” means essential personal care tasks that a person carries out as part of normal daily, An adult’s needs meet the eligibility criteria if those needs are due to a physical or mental impairment or illness and the effect of such needs is that the adult.
+    And the user clicks the button/link       jQuery=.contentGroup:first-of-type button:contains("Remove")
+    And the user clicks the button/link       jQuery=.contentGroup:nth-of-type(2) button:contains("Remove")
+    Then the user uploads the file            jQuery=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    And the user uploads the file             jQuery=.contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
+    And the user uploads the file             jQuery=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    Then the user clicks the button/link      jQuery=.contentGroup:nth-of-type(3) button:contains("Remove")
+    And the user uploads the file             jQuery=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    When the user clicks the button/link      jQuery=button:contains("Save and review")
+    And the user clicks the button/link       jQuery=.button:contains("Return to public content")
+    Then the user should see the element      jQuery=li:nth-child(3) .task-status-complete
 
 Scope: Server side validation
     [Documentation]  INFUND-7488
     [Tags]  HappyPath
-    When the user clicks the button/link  link=Scope
-    And the user clicks the button/link   jQuery=button:contains("Save and review")
+    When the user clicks the button/link      link=Scope
+    And the user clicks the button/link       jQuery=button:contains("Save and review")
     Then the user should see a summary error  Please enter content.
     And the user should see a summary error   Please enter a heading.
 
@@ -206,32 +206,32 @@ Scope: Add, remove sections and submit
     [Documentation]    INFUND-6918, INFUND-7602
     [Tags]  HappyPath
     Given the user can add and remove multiple content groups
-    When the user clicks the button/link                        jQuery=button:contains("Save and review")
-    And the user clicks the button/link                         jQuery=.button:contains("Return to public content")
-    Then the user should see the element                        jQuery=li:nth-child(4) .task-status-complete
+    When the user clicks the button/link  jQuery=button:contains("Save and review")
+    And the user clicks the button/link   jQuery=.button:contains("Return to public content")
+    Then the user should see the element  jQuery=li:nth-child(4) .task-status-complete
 
 Dates: Add, remove dates and submit
     [Documentation]    INFUND-6919
     [Tags]  HappyPath
-    When the user clicks the button/link                         link=Dates
-    Then the user should see the text in the page                ${nextMonthWord} ${nextyear}
-    And the user should see the text in the page                 Competition opens
-    And the user should see the text in the page                 Submission deadline, competition closed.
-    And the user should see the text in the page                 Applicants notified
+    When the user clicks the button/link           link=Dates
+    Then the user should see the text in the page  ${nextMonthWord} ${nextyear}
+    And the user should see the text in the page   Competition opens
+    And the user should see the text in the page   Submission deadline, competition closed.
+    And the user should see the text in the page   Applicants notified
     And the user can add and remove multiple event groups
-    And the user should see the element  jQuery=li:nth-child(5) .task-status-complete
+    And the user should see the element            jQuery=li:nth-child(5) .task-status-complete
 
 How to apply: server side validation and autosave
     [Documentation]    INFUND-7490
     [Tags]
-    When the user clicks the button/link            link=How to apply
-    Then the user should see the element            jQuery=h1:contains("How to apply")
-    And the user should see the text in the page    Text entered into this section will appear within the how to apply tab.
-    When the user clicks the button/link            jQuery=button:contains("Save and review")
-    Then the user should see a summary error        Please enter content.
-    And the user should see a summary error         Please enter a heading.
+    When the user clicks the button/link          link=How to apply
+    Then the user should see the element          jQuery=h1:contains("How to apply")
+    And the user should see the text in the page  Text entered into this section will appear within the how to apply tab.
+    When the user clicks the button/link          jQuery=button:contains("Save and review")
+    Then the user should see a summary error      Please enter content.
+    And the user should see a summary error       Please enter a heading.
     When the user enters valid data in How-to-apply details
-    Then the user should see the element            jQuery=.buttonlink:contains("+ add new section")
+    Then the user should see the element          jQuery=.buttonlink:contains("+ add new section")
 
 How to apply: User enters valid values and saves
     [Documentation]    INFUND-7490
@@ -253,53 +253,53 @@ How to apply: User enters valid values and saves
     And the user should see the element                     jQuery=li:nth-child(6) .task-status-complete
 
 How to apply: Contains the correct values when viewed, Edit sections
-    [Documentation]    INFUND-6920 INFUND-7602, INFUND-7490
+    [Documentation]    INFUND-6920  INFUND-7602  INFUND-7490
     [Tags]  HappyPath
-    When the user clicks the button/link            link=How to apply
-    Then the user should see the element            jQuery=h2:contains("The application process")
-    And the user should see the element             jQuery=a:contains("${valid_pdf}")
-    And the user should see the element             jQuery=.button:contains("Return to public content")
-    When the user clicks the button/link            jQuery=.button-secondary:contains("Edit")
-    And the user enters text to a text field        jQuery=.contentGroup:nth-of-type(1) .editor   External independent experts assess the quality your application. We will then select the projects that we fund, to build a portfolio of projects as described in the competition guidance. Government departments & Some departments, like the Ministry of Defence, cover the whole UK. Others don’t – the Department for Work and Pensions doesn't cover Northern Ireland. This is because some aspects of government are devolved to Scotland, Wales and Northern Ireland. Other public bodiesThese have varying degrees of independence but are directly accountable to ministers. There are 4 types of non-departmental public bodies (NDPBs).Executive NDPBs do work for the government in specific areas
-    And the user moves focus to the element         css=#contentGroup-row-1 >div.form-group.textarea-wrapped >div.editor
-    And The user enters text to a text field        jQuery=.contentGroup:nth-of-type(2) .editor  Application questions are available for reference and to assist with preparation. If you need more information, contact the competition helpline on 0700 123 98765.
-    Then the user clicks the button/link            jQuery=button:contains("+ add new section")
-    And The user enters text to a text field        jQuery=.contentGroup:nth-of-type(3) input[id^="heading"]    Application Rules -- Competition Procedures
-    And the user enters text to a text field        jQuery=.contentGroup:nth-of-type(3) .editor   Sets out the rules for Competition framework provision funded by the CodeTechnology: ADReedoor8793£$%^^&&*^%%!@. This document forms part of the ADReedoor8793£$%^^&&*^%%!@ - Funding Rules 2016 to 2017. This document sets out the additional funding rules for Competition frameworks. You must read it together with other relevant funding rule documents. These include: Follow the Instructions.
-    Then the user clicks the button/link            jQuery=button:contains("+ add new section")
-    And The user enters text to a text field        jQuery=.contentGroup:nth-of-type(4) input[id^="heading"]    Competition Officers Contact
-    And the user enters text to a text field        jQuery=.contentGroup:nth-of-type(4) .editor  You can access an up-to-date list of areas where Competition is managed locally and how to contact them on GOV.UK. Follow the guidelines attached.
-    And the user uploads the file                   jQuery=.contentGroup:nth-of-type(4) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
-    And the user clicks the button/link             jQuery=.contentGroup:first-of-type button:contains("Remove")
-    And the user clicks the button/link             jQuery=.contentGroup:nth-of-type(2) button:contains("Remove")
-    Then the user clicks the button/link            jQuery=button:contains("+ add new section")
-    And The user enters text to a text field        jQuery=.contentGroup:nth-of-type(5) input[id^="heading"]    Confidentiality and Conflicts
-    And the user enters text to a text field        jQuery=.contentGroup:nth-of-type(5) .editor     We are confident that awarding an increase to your funding allocation is a good use of public funds, Providers with a Financial Memorandum or Conditions of Funding (Grant) or Conditions of Funding. For more information email us back on support@innovateTest.worth.com and find the attached memorandum.
-    Then the user uploads the file                  jQuery=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
-    And the user uploads the file                   jQuery=.contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
-    And the user uploads the file                   jQuery=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
-    Then the user clicks the button/link            jQuery=.contentGroup:nth-of-type(3) button:contains("Remove")
-    And the user uploads the file                   jQuery=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
-    And the user uploads the file                   jQuery=.contentGroup:nth-of-type(5) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
-    When the user clicks the button/link            jQuery=button:contains("Save and review")
-    And the user clicks the button/link             jQuery=.button:contains("Return to public content")
-    Then the user should see the element            jQuery=li:nth-child(6) .task-status-complete
+    When the user clicks the button/link      link=How to apply
+    Then the user should see the element      jQuery=h2:contains("The application process")
+    And the user should see the element       jQuery=a:contains("${valid_pdf}")
+    And the user should see the element       jQuery=.button:contains("Return to public content")
+    When the user clicks the button/link      jQuery=.button-secondary:contains("Edit")
+    And the user enters text to a text field  jQuery=.contentGroup:nth-of-type(1) .editor   External independent experts assess the quality your application. We will then select the projects that we fund, to build a portfolio of projects as described in the competition guidance. Government departments & Some departments, like the Ministry of Defence, cover the whole UK. Others don’t – the Department for Work and Pensions doesn't cover Northern Ireland. This is because some aspects of government are devolved to Scotland, Wales and Northern Ireland. Other public bodiesThese have varying degrees of independence but are directly accountable to ministers. There are 4 types of non-departmental public bodies (NDPBs).Executive NDPBs do work for the government in specific areas
+    And the user moves focus to the element   css=#contentGroup-row-1 >div.form-group.textarea-wrapped >div.editor
+    And The user enters text to a text field  jQuery=.contentGroup:nth-of-type(2) .editor  Application questions are available for reference and to assist with preparation. If you need more information, contact the competition helpline on 0700 123 98765.
+    Then the user clicks the button/link      jQuery=button:contains("+ add new section")
+    And The user enters text to a text field  jQuery=.contentGroup:nth-of-type(3) input[id^="heading"]    Application Rules -- Competition Procedures
+    And the user enters text to a text field  jQuery=.contentGroup:nth-of-type(3) .editor   Sets out the rules for Competition framework provision funded by the CodeTechnology: ADReedoor8793£$%^^&&*^%%!@. This document forms part of the ADReedoor8793£$%^^&&*^%%!@ - Funding Rules 2016 to 2017. This document sets out the additional funding rules for Competition frameworks. You must read it together with other relevant funding rule documents. These include: Follow the Instructions.
+    Then the user clicks the button/link      jQuery=button:contains("+ add new section")
+    And The user enters text to a text field  jQuery=.contentGroup:nth-of-type(4) input[id^="heading"]    Competition Officers Contact
+    And the user enters text to a text field  jQuery=.contentGroup:nth-of-type(4) .editor  You can access an up-to-date list of areas where Competition is managed locally and how to contact them on GOV.UK. Follow the guidelines attached.
+    And the user uploads the file             jQuery=.contentGroup:nth-of-type(4) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    And the user clicks the button/link       jQuery=.contentGroup:first-of-type button:contains("Remove")
+    And the user clicks the button/link       jQuery=.contentGroup:nth-of-type(2) button:contains("Remove")
+    Then the user clicks the button/link      jQuery=button:contains("+ add new section")
+    And The user enters text to a text field  jQuery=.contentGroup:nth-of-type(5) input[id^="heading"]    Confidentiality and Conflicts
+    And the user enters text to a text field  jQuery=.contentGroup:nth-of-type(5) .editor     We are confident that awarding an increase to your funding allocation is a good use of public funds, Providers with a Financial Memorandum or Conditions of Funding (Grant) or Conditions of Funding. For more information email us back on support@innovateTest.worth.com and find the attached memorandum.
+    Then the user uploads the file            jQuery=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    And the user uploads the file             jQuery=.contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
+    And the user uploads the file             jQuery=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    Then the user clicks the button/link      jQuery=.contentGroup:nth-of-type(3) button:contains("Remove")
+    And the user uploads the file             jQuery=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    And the user uploads the file             jQuery=.contentGroup:nth-of-type(5) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    When the user clicks the button/link      jQuery=button:contains("Save and review")
+    And the user clicks the button/link       jQuery=.button:contains("Return to public content")
+    Then the user should see the element      jQuery=li:nth-child(6) .task-status-complete
 
 Supporting information: Add, remove sections and submit
     [Documentation]    INFUND-6921 INFUND-7602
     [Tags]  HappyPath
-    When the user clicks the button/link                         link=Supporting information
+    When the user clicks the button/link  link=Supporting information
     Then the user can add and remove multiple content groups
-    When the user clicks the button/link                         jQuery=button:contains("Save and review")
-    And the user clicks the button/link                          jQuery=.button:contains("Return to public content")
-    Then the user should see the element                         jQuery=li:nth-child(7) .task-status-complete
+    When the user clicks the button/link  jQuery=button:contains("Save and review")
+    And the user clicks the button/link   jQuery=.button:contains("Return to public content")
+    Then the user should see the element  jQuery=li:nth-child(7) .task-status-complete
 
 Publish public content: Publish once all sections are complete
     [Documentation]    INFUND-6914
     [Tags]  HappyPath
     Given the user should not see the text in the page  Last published
-    When the user clicks the button/link    jQuery=button:contains("Publish public content")
-    Then the user should see the element    jQuery=small:contains("Last published")
+    When the user clicks the button/link                jQuery=button:contains("Publish public content")
+    Then the user should see the element                jQuery=small:contains("Last published")
     And the user should not see the element             jQuery=button:contains("Publish public content")
     When the user clicks the button/link                link=Competition information and search
     And the user clicks the button/link                 link=Edit
@@ -317,13 +317,12 @@ The user is able to edit and publish again
     And the user should not see the element     jQuery=button:contains("Publish and review")
     When the user clicks the button/link        link=Return to setup overview
     Then the user should see the element        JQuery=.notification:contains("${today}")
-    [Teardown]  the user logs out if they are logged in
 
 Guest user not find the invite only competition by Keywords
     [Documentation]  IFS-261
     [Tags]  HappyPath
-    [Setup]  The guest user opens the browser
-    Given the user navigates to the page  ${frontDoor}
+    [Setup]  the user logs out if they are logged in
+    Given the user navigates to the page       ${frontDoor}
     When the user enters text to a text field  id=keywords  Robot
     And the user clicks the button/link        jQuery=button:contains("Update results")
     Then the user should not see the element   jQuery=a:contains("${public_content_competition_name}")
@@ -331,7 +330,7 @@ Guest user not find the invite only competition by Keywords
 The user is able to make the competition public
     [Documentation]  IFS-261, IFS-179
     [Tags]  HappyPath
-    [Setup]  The user logs-in in new browser  &{Comp_admin1_credentials}
+    [Setup]  The user logs-in in new browser             &{Comp_admin1_credentials}
     Given the internal user navigates to public content  ${public_content_competition_name}
     Then the user should see the element                 link=Competition information and search
     When the user clicks the button/link                 link=Competition information and search
@@ -346,8 +345,7 @@ The user is able to make the competition public
 Guest user can filter competitions by Keywords
     [Documentation]  INFUND-6923
     [Tags]  HappyPath
-    [Setup]  The guest user opens the browser
-    Given the user navigates to the page  ${frontDoor}
+    Given the user navigates to the page       ${frontDoor}
     When the user enters text to a text field  id=keywords  Robot
     And the user clicks the button/link        jQuery=button:contains("Update results")
     Then the user should see the element       jQuery=a:contains("${public_content_competition_name}")
@@ -355,46 +353,46 @@ Guest user can filter competitions by Keywords
 Guest user can see the updated Summary information
     [Documentation]  INFUND-7486
     [Tags]
-    Given the user clicks the button/link  link=Public content competition
-    And the user clicks the button/link    link=Summary
-    Then the user should see the element   jQuery=.column-third:contains("Description") ~ .column-two-thirds:contains("This is a Summary description")
-    And the user should see the element    jQuery=.column-third:contains("Funding type") ~ .column-two-thirds:contains("Grant")
-    And the user should see the element    jQuery=.column-third:contains("Project size") ~ .column-two-thirds:contains("10 millions")
-    And the user should see the element    jQuery=.column-third:contains("A nice new Heading") ~ .column-two-thirds:contains("Ut enim ad minim veniam,")
-    Then guest user downloads the file     ${server}/competition/${competitionId}/download/43  ${DOWNLOAD_FOLDER}/summary.pdf
+    Given the user clicks the button/link                  link=Public content competition
+    And the user clicks the button/link                    link=Summary
+    Then the user should see the element                   jQuery=.column-third:contains("Description") ~ .column-two-thirds:contains("This is a Summary description")
+    And the user should see the element                    jQuery=.column-third:contains("Funding type") ~ .column-two-thirds:contains("Grant")
+    And the user should see the element                    jQuery=.column-third:contains("Project size") ~ .column-two-thirds:contains("10 millions")
+    And the user should see the element                    jQuery=.column-third:contains("A nice new Heading") ~ .column-two-thirds:contains("Ut enim ad minim veniam,")
+    Then guest user downloads the file                     ${server}/competition/${competitionId}/download/43  ${DOWNLOAD_FOLDER}/summary.pdf
     [Teardown]  Remove the file from the operating system  summary.pdf
 
 Guest user can see the updated Eligibility information
     [Documentation]  INFUND-7487
     [Tags]
-    Given the user clicks the button/link   link=Eligibility
-    Then the user should see the element    jQuery=.column-third:contains("Nationality Eligibility Heading") ~ .column-two-thirds:contains("changing government policies")
-    Then the user should see the element    jQuery=.column-third:contains("Minimum Eligibility Threshold") ~ .column-two-thirds:contains("new changes we are introducing")
-    Then the user should see the element    jQuery=.column-third:contains("Draft Care and Support - Eligibility Criteria") ~ .column-two-thirds:contains("basic personal care activities")
+    Given the user clicks the button/link  link=Eligibility
+    Then the user should see the element   jQuery=.column-third:contains("Nationality Eligibility Heading") ~ .column-two-thirds:contains("changing government policies")
+    Then the user should see the element   jQuery=.column-third:contains("Minimum Eligibility Threshold") ~ .column-two-thirds:contains("new changes we are introducing")
+    Then the user should see the element   jQuery=.column-third:contains("Draft Care and Support - Eligibility Criteria") ~ .column-two-thirds:contains("basic personal care activities")
 
 Guest user downloads Eligibility files
     [Documentation]  INFUND-7487
     [Tags]
-    When guest user downloads the file  ${server}/competition/${competitionId}/download/44  ${DOWNLOAD_FOLDER}/eli.pdf
+    When guest user downloads the file              ${server}/competition/${competitionId}/download/44  ${DOWNLOAD_FOLDER}/eli.pdf
     Then Remove the file from the operating system  eli.pdf
-    When guest user downloads the file  ${server}/competition/${competitionId}/download/45  ${DOWNLOAD_FOLDER}/eligi.pdf
+    When guest user downloads the file              ${server}/competition/${competitionId}/download/45  ${DOWNLOAD_FOLDER}/eligi.pdf
     Then Remove the file from the operating system  eligi.pdf
-    When guest user downloads the file   ${server}/competition/${competitionId}/download/46  ${DOWNLOAD_FOLDER}/eligibility.pdf
+    When guest user downloads the file              ${server}/competition/${competitionId}/download/46  ${DOWNLOAD_FOLDER}/eligibility.pdf
     Then Remove the file from the operating system  eligibility.pdf
 
 The guest user can see updated scope information
     [Documentation]    INFUND-7488
     [Tags]
-    Given the user clicks the button/link    link=Scope
-    Then the user should see the element      jQuery=.column-third:contains("Heading 1") ~ .column-two-thirds:contains("Content 1")
-    And the user should see the element      jQuery=.column-third:contains("Heading 2") ~ .column-two-thirds:contains("Content 2")
-    And guest user downloads the file   ${server}/competition/${competitionId}/download/48    ${DOWNLOAD_FOLDER}/scope.pdf
+    Given the user clicks the button/link                  link=Scope
+    Then the user should see the element                   jQuery=.column-third:contains("Heading 1") ~ .column-two-thirds:contains("Content 1")
+    And the user should see the element                    jQuery=.column-third:contains("Heading 2") ~ .column-two-thirds:contains("Content 2")
+    And guest user downloads the file                      ${server}/competition/${competitionId}/download/48    ${DOWNLOAD_FOLDER}/scope.pdf
     [Teardown]  Remove the file from the operating system  scope.pdf
 
 The guest user can see updated date information
    [Documentation]    INFUND-7489
    [Tags]
-   Given the user clicks the button/link    link=Dates
+   Given the user clicks the button/link  link=Dates
    And the user should see the element    jQuery=dt:contains("${nextyear}") + dd:contains("Competition opens")
    And the user should see the element    jQuery=dt:contains("${nextyear}") + dd:contains("Competition closes")
    And the user should see the element    jQuery=dt:contains("${nextyear}") + dd:contains("Applicants notified")
@@ -404,12 +402,12 @@ The guest user can see updated date information
 Guest user can see the updated How-to-apply information
     [Documentation]  INFUND-7490
     [Tags]
-    Given the user clicks the button/link       link=How to apply
-    Then the user should see the element        jQuery=.column-third:contains("The application process") ~ .column-two-thirds:contains("independent experts assess the quality your application")
-    And the user should see the element         jQuery=.column-third:contains("Application questions") ~ .column-two-thirds:contains("contact the competition helpline on 0700 123 98765")
-    And the user should see the element         jQuery=.column-third:contains("Application Rules -- Competition Procedures") ~ .column-two-thirds:contains("additional funding rules for Competition frameworks")
-    And the user should see the element         jQuery=.column-third:contains("Competition Officers Contact") ~ .column-two-thirds:contains("can access an up-to-date list of areas")
-    And the user should see the element         jQuery=.column-third:contains("Confidentiality and Conflicts") ~ .column-two-thirds:contains("confident that awarding an increase to your funding")
+    Given the user clicks the button/link  link=How to apply
+    Then the user should see the element   jQuery=.column-third:contains("The application process") ~ .column-two-thirds:contains("independent experts assess the quality your application")
+    And the user should see the element    jQuery=.column-third:contains("Application questions") ~ .column-two-thirds:contains("contact the competition helpline on 0700 123 98765")
+    And the user should see the element    jQuery=.column-third:contains("Application Rules -- Competition Procedures") ~ .column-two-thirds:contains("additional funding rules for Competition frameworks")
+    And the user should see the element    jQuery=.column-third:contains("Competition Officers Contact") ~ .column-two-thirds:contains("can access an up-to-date list of areas")
+    And the user should see the element    jQuery=.column-third:contains("Confidentiality and Conflicts") ~ .column-two-thirds:contains("confident that awarding an increase to your funding")
 
 *** Keywords ***
 Custom suite setup
@@ -455,78 +453,78 @@ the user enters valid data in How-to-apply details
     The user enters text to a text field    jQuery=.editor:eq(0)        To make an application on our online system, you must have a validated applicant profile. We take up to five working days to validate a profile, so you must take this into account when you’re thinking about when to apply. You will keep your own contact details up to date by editing your applicant profile (please see the guidance sheet on our user accounts and applicant profiles page for more information)
 
 the user can add and remove multiple content groups
-    When the user enters text to a text field   id=heading-0    Heading 1
-    And the user enters text to a text field    jQuery=.editor:eq(0)     Content 1
-    And the user uploads the file               id=contentGroups-0.attachment  ${valid_pdf}
-    Then the user should see the element        jQuery=.uploaded-file:contains("testing.pdf")
-    And the user clicks the button/link         jQuery=button:contains("Remove")
-    And the user clicks the button/link         jQuery=button:contains("+ add new section")
-    And the user enters text to a text field    id=heading-1    Heading 2
-    And the user enters text to a text field    jQuery=.editor:eq(1)     Content 2
-    And the user uploads the file               id=contentGroups-1.attachment  ${valid_pdf}
-    And the user clicks the button/link         jQuery=button:contains("+ add new section")
-    And the user enters text to a text field    id=heading-2    Heading 3
-    And the user enters text to a text field    jQuery=.editor:eq(2)     Content 3
-    When the user uploads the file              id=contentGroups-2.attachment  ${text_file}
-    Then the user should see the element        jQuery=.error-summary-list:contains("Please upload a file in .pdf format only.")
-    And the user uploads the file               id=contentGroups-2.attachment  ${too_large_pdf}
-    Then the user should see the element        jQuery=h1:contains("Attempt to upload a large file")
+    When the user enters text to a text field  id=heading-0    Heading 1
+    And the user enters text to a text field   jQuery=.editor:eq(0)     Content 1
+    And the user uploads the file              id=contentGroups-0.attachment  ${valid_pdf}
+    Then the user should see the element       jQuery=.uploaded-file:contains("testing.pdf")
+    And the user clicks the button/link        jQuery=button:contains("Remove")
+    And the user clicks the button/link        jQuery=button:contains("+ add new section")
+    And the user enters text to a text field   id=heading-1    Heading 2
+    And the user enters text to a text field   jQuery=.editor:eq(1)     Content 2
+    And the user uploads the file              id=contentGroups-1.attachment  ${valid_pdf}
+    And the user clicks the button/link        jQuery=button:contains("+ add new section")
+    And the user enters text to a text field   id=heading-2    Heading 3
+    And the user enters text to a text field   jQuery=.editor:eq(2)     Content 3
+    When the user uploads the file             id=contentGroups-2.attachment  ${text_file}
+    Then the user should see the element       jQuery=.error-summary-list:contains("Please upload a file in .pdf format only.")
+    And the user uploads the file              id=contentGroups-2.attachment  ${too_large_pdf}
+    Then the user should see the element       jQuery=h1:contains("Attempt to upload a large file")
     And the user goes back to the previous page
     And the user reloads the page
     # TODO this reload is required for now due to INFUND-8358
     And the user should not see an error in the page
-    And the user clicks the button/link         jQuery=button:contains("Remove section"):eq(1)
-    Then the user should not see the element    id=heading-2
-    And the user should not see the element     jQuery=.editor:eq(2)
+    And the user clicks the button/link       jQuery=button:contains("Remove section"):eq(1)
+    Then the user should not see the element  id=heading-2
+    And the user should not see the element   jQuery=.editor:eq(2)
 
 the user can add and remove multiple content groups for summary
-    When the user clicks the button/link        jQuery=button:contains("+ add new section")
-    And the user clicks the button/link         jQuery=button:contains("Save and review")
-    Then the user should see a summary error    Please enter a heading.
-    And the user should see a summary error     Please enter content.
-    When the user enters text to a text field   id=heading-0    Heading 1
-    And the user enters text to a text field    jQuery=.editor:eq(1)     Content 1
-    And the user clicks the button/link         jQuery=button:contains("+ add new section")
-    And the user enters text to a text field    id=heading-1    Heading 2
-    And the user enters text to a text field    jQuery=.editor:eq(2)     Content 2
-    And the user clicks the button/link         jQuery=button:contains("+ add new section")
-    And the user enters text to a text field    id=heading-2    Heading 3
-    And the user enters text to a text field    jQuery=.editor:eq(3)     Content 3
-    And the user clicks the button/link         jQuery=button:contains("Remove section"):eq(2)
-    Then the user should not see the element    id=heading-2
-    And the user should not see the element     jQuery=.editor:eq(3)
+    When the user clicks the button/link       jQuery=button:contains("+ add new section")
+    And the user clicks the button/link        jQuery=button:contains("Save and review")
+    Then the user should see a summary error   Please enter a heading.
+    And the user should see a summary error    Please enter content.
+    When the user enters text to a text field  id=heading-0    Heading 1
+    And the user enters text to a text field   jQuery=.editor:eq(1)     Content 1
+    And the user clicks the button/link        jQuery=button:contains("+ add new section")
+    And the user enters text to a text field   id=heading-1    Heading 2
+    And the user enters text to a text field   jQuery=.editor:eq(2)     Content 2
+    And the user clicks the button/link        jQuery=button:contains("+ add new section")
+    And the user enters text to a text field   id=heading-2    Heading 3
+    And the user enters text to a text field   jQuery=.editor:eq(3)     Content 3
+    And the user clicks the button/link        jQuery=button:contains("Remove section"):eq(2)
+    Then the user should not see the element   id=heading-2
+    And the user should not see the element    jQuery=.editor:eq(3)
 
 the user can add and remove multiple event groups
-    When the user clicks the button/link        jQuery=button:contains("+ add new event")
-    And the user clicks the button/link         jQuery=button:contains("Save and review")
-    Then the user should see a summary error    Please enter a valid date.
-    And the user should see a summary error     Please enter valid content.
-    And the user enters text to a text field    id=dates-0-day      60
-    And the user enters text to a text field    id=dates-0-month    -6
-    And the user clicks the button/link         jQuery=button:contains("Save and review")
-    Then the user should see a summary error    must be between 1 and 31
-    And the user should see a summary error     must be between 1 and 12
-    When the user enters text to a text field   id=dates-0-day      12
-    And the user enters text to a text field    id=dates-0-month    12
-    And the user enters text to a text field    id=dates-0-year     ${nextyear}
-    And the user enters text to a text field    jQuery=.editor:eq(0)     Content 1
-    And the user clicks the button/link         jQuery=button:contains("+ add new event")
-    And the user enters text to a text field    id=dates-1-day      20
-    And the user enters text to a text field    id=dates-1-month    12
-    And the user enters text to a text field    id=dates-1-year     ${nextyear}
-    And the user enters text to a text field    jQuery=.editor:eq(1)     Content 2
-    And the user clicks the button/link         jQuery=button:contains("+ add new event")
-    And the user enters text to a text field    id=dates-2-day      30
-    And the user enters text to a text field    id=dates-2-month    12
-    And the user enters text to a text field    id=dates-2-year     ${nextyear}
-    And the user enters text to a text field    jQuery=.editor:eq(2)     Content 3
-    And the user clicks the button/link         jQuery=button:contains("Remove event"):eq(2)
-    Then the user should not see the element    id=dates-2-day
-    And the user should not see the element     id=dates-2-month
-    And the user should not see the element     id=dates-2-year
-    And the user should not see the element     jQuery=.editor:eq(2)
-    And the user clicks the button/link         jQuery=button:contains("Save and review")
-    And the user clicks the button/link         jQuery=.button:contains("Return to public content")
+    When the user clicks the button/link       jQuery=button:contains("+ add new event")
+    And the user clicks the button/link        jQuery=button:contains("Save and review")
+    Then the user should see a summary error   Please enter a valid date.
+    And the user should see a summary error    Please enter valid content.
+    And the user enters text to a text field   id=dates-0-day      60
+    And the user enters text to a text field   id=dates-0-month    -6
+    And the user clicks the button/link        jQuery=button:contains("Save and review")
+    Then the user should see a summary error   must be between 1 and 31
+    And the user should see a summary error    must be between 1 and 12
+    When the user enters text to a text field  id=dates-0-day      12
+    And the user enters text to a text field   id=dates-0-month    12
+    And the user enters text to a text field   id=dates-0-year     ${nextyear}
+    And the user enters text to a text field   jQuery=.editor:eq(0)     Content 1
+    And the user clicks the button/link        jQuery=button:contains("+ add new event")
+    And the user enters text to a text field   id=dates-1-day      20
+    And the user enters text to a text field   id=dates-1-month    12
+    And the user enters text to a text field   id=dates-1-year     ${nextyear}
+    And the user enters text to a text field   jQuery=.editor:eq(1)     Content 2
+    And the user clicks the button/link        jQuery=button:contains("+ add new event")
+    And the user enters text to a text field   id=dates-2-day      30
+    And the user enters text to a text field   id=dates-2-month    12
+    And the user enters text to a text field   id=dates-2-year     ${nextyear}
+    And the user enters text to a text field   jQuery=.editor:eq(2)     Content 3
+    And the user clicks the button/link        jQuery=button:contains("Remove event"):eq(2)
+    Then the user should not see the element   id=dates-2-day
+    And the user should not see the element    id=dates-2-month
+    And the user should not see the element    id=dates-2-year
+    And the user should not see the element    jQuery=.editor:eq(2)
+    And the user clicks the button/link        jQuery=button:contains("Save and review")
+    And the user clicks the button/link        jQuery=.button:contains("Return to public content")
 
 the user visits the sub sections then he should not see any errors
     the user visits  Competition information and search
