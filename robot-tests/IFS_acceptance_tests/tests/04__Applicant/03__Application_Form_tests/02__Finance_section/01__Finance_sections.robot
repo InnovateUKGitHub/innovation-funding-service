@@ -14,10 +14,10 @@ Documentation     INFUND-45: As an applicant and I am on the application form on
 ...
 ...               INFUND-8355: Project finance team - overheads
 Suite Setup       Custom Suite Setup
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
-Resource          ../../FinanceSection_Commons.robot
+Resource          ../../Applicant_Commons.robot
 
 *** Variables ***
 ${applicationName}  ${OPEN_COMPETITION_APPLICATION_5_NAME}

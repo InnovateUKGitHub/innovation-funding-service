@@ -18,7 +18,7 @@
     <!-- PROTOTYPE HTML -->
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Add a new internal user',size='heading-large'" />
 
-    <p>Enter the new internal user's details below to add them to your invite list.</p>
+    <p>Enter the new user's details below to add them to your invite list.</p>
     <h2 class="visuallyhidden">User information</h2>
     <form action="/prototypes/27-add-internal-user-overview.html" novalidate="novalidate">
     <div class="form-group">
@@ -64,8 +64,8 @@
     </div>
     <div class="form-group">
         <label class="form-label" for="role">
-            <span class="form-label-bold">Job role</span>
-            <p class="form-hint">Which of the following job roles will the user identify as?</p>
+            <span class="form-label-bold">IFS role</span>
+            <p class="form-hint">Please choose the appropriate IFS role for the user.</p>
         </label>
         <select name="role" class="form-control" id="role" required="required" data-required-errormessage="Please select a role">
             <option value="a">IFS Administrator</option>

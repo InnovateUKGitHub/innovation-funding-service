@@ -10,21 +10,21 @@ Documentation     INFUND-399 As a client, I would like to demo the system with r
 ...               INFUND-1479 As an assessor with an existing Applicant AND Assessor account I want to be able to choose the correct profile when I log in, so that I don't access the wrong profile information
 ...
 ...               IFS-188 Stakeholder views – Support team
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Guest
 Resource          ../../resources/defaultResources.robot
 
 *** Test Cases ***
 Log-out
     [Tags]    HappyPath
-    [Setup]    Guest user log-in    &{lead_applicant_credentials}
-    Given the user should see the element    link=Sign out
+    [Setup]  the user logs-in in new browser  &{lead_applicant_credentials}
+    Given the user should see the element     link=Sign out
     Logout as user
 
 Invalid Login
     [Tags]
     Given the user is not logged-in
-    When the guest user enters the log in credentials    ${lead_applicant}   Passw0rd2
+    When The guest user inserts user email and password    ${lead_applicant}   Passw0rd2
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the guest user should get an error message
 
@@ -32,7 +32,7 @@ Valid login as Applicant
     [Documentation]    IFS-32
     [Tags]    HappyPath
     Given the user is not logged-in
-    When the guest user enters the log in credentials    &{lead_applicant_credentials}
+    When The guest user inserts user email and password     &{lead_applicant_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=Sign out
     And the user should not see the element    link=Sign in
@@ -42,7 +42,7 @@ Valid login as Applicant
 Valid login as Collaborator
     [Tags]    HappyPath
     Given the user is not logged-in
-    When the guest user enters the log in credentials    ${collaborator1_credentials["email"]}    ${collaborator1_credentials["password"]}
+    When The guest user inserts user email and password    &{collaborator1_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=Sign out
     And the user should be redirected to the correct page    ${DASHBOARD_URL}
@@ -52,7 +52,7 @@ Valid login as Assessor
     [Documentation]    INFUND-286
     [Tags]    HappyPath
     Given the user is not logged-in
-    When the guest user enters the log in credentials    ${assessor_credentials["email"]}    ${assessor_credentials["password"]}
+    When The guest user inserts user email and password    &{assessor_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=Sign out
     And the user should be redirected to the correct page    ${assessor_dashboard_url}
@@ -62,7 +62,7 @@ Valid login with double role as Applicant
     [Documentation]    INFUND-1479
     [Tags]    HappyPath
     Given the user is not logged-in
-    When the guest user enters the log in credentials    ${Multiple_user_credentials["email"]}    ${Multiple_user_credentials["password"]}
+    When The guest user inserts user email and password    &{Multiple_user_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then The user should see the text in the page    Please choose the role you are signing in as today
     And The user clicks the button/link    jquery=button:contains("Continue")
@@ -76,7 +76,7 @@ Valid login with double role as Applicant
 Valid login with Double role as Assessor
     [Documentation]    INFUND-1479
     Given the user is not logged-in
-    When the guest user enters the log in credentials    ${Multiple_user_credentials["email"]}    ${Multiple_user_credentials["password"]}
+    When The guest user inserts user email and password    &{Multiple_user_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     And the user selects the radio button    selectedRole    ASSESSOR
     And The user clicks the button/link    jquery=button:contains("Continue")
@@ -88,7 +88,7 @@ Valid login as Comp Admin
     [Documentation]    INFUND-2130
     [Tags]    HappyPath
     Given the user is not logged-in
-    When the guest user enters the log in credentials  &{Comp_admin1_credentials}
+    When The guest user inserts user email and password    &{Comp_admin1_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=Sign out
     And the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
@@ -98,7 +98,7 @@ Valid login as Support role
     [Documentation]    IFS-188
     [Tags]     HappyPath    support
     Given the user is not logged-in
-    When the guest user enters the log in credentials   &{support_user_credentials}
+    When The guest user inserts user email and password   &{support_user_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
     [Teardown]    Logout as user
@@ -107,7 +107,7 @@ Valid login as IFS Admin role
     [Documentation]    IFS-603
     [Tags]      HappyPath    administrator
     Given the user is not logged-in
-    When the guest user enters the log in credentials   &{ifs_admin_user_credentials}
+    When The guest user inserts user email and password   &{ifs_admin_user_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     And the user navigates to the page    ${COMP_ADMINISTRATOR_DASHBOARD}
     Then the user should see the element    link=Manage users
@@ -128,7 +128,7 @@ Valid login as Project Finance role
     [Tags]
     Given the user is not logged-in
     And the user navigates to the page    ${LOGIN_URL}
-    When the guest user enters the log in credentials  &{internal_finance_credentials}
+    When The guest user inserts user email and password    &{internal_finance_credentials}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
     # note that this has been updated as per the most recent requirements.
@@ -163,10 +163,10 @@ Reset password user enters new psw
     And the user clicks the button/link    jQuery=input[value*="Save password"]
     Then the user should see the text in the page    Your password is updated, you can now sign in with your new password
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And the guest user enters the log in credentials    ${test_mailbox_one}+changepsw@gmail.com    Passw0rd
+    And The guest user inserts user email and password    ${test_mailbox_one}+changepsw@gmail.com    ${short_password}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the guest user should get an error message
-    When the guest user enters the log in credentials    ${test_mailbox_one}+changepsw@gmail.com    Passw0rdnew
+    When The guest user inserts user email and password    ${test_mailbox_one}+changepsw@gmail.com    Passw0rdnew
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=Sign out
     And the user should be redirected to the correct page    ${DASHBOARD_URL}

@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation     INFUND-184: As an applicant and on the over view of the application, I am able to see the character count and status of the questions, so I am able to see if my questions are valid    #Suite Setup    Run Keywords    Guest user log-in    &{lead_applicant_credentials}
+Documentation     INFUND-184: As an applicant and on the over view of the application, I am able to see the character count and status of the questions, so I am able to see if my questions are valid
 ...
 ...               INFUND-186: As an applicant and in the application form, I should be able to change the state of a question to mark as complete, so I don't have to revisit the question.
 ...
@@ -15,7 +15,7 @@ Documentation     INFUND-184: As an applicant and on the over view of the applic
 ...
 ...               INFUND-9154 Update 'Application details' > 'Innovation area' options to those set in 'Initial details' > 'Innovation area'
 Suite Setup       Log in and create a new application for the Aerospace competition
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 
@@ -182,7 +182,7 @@ the finance summary page should show a warning
     the user should see the element    jQuery=h3:contains("Your funding") + p:contains("You must select a research category in application details ")
 
 Log in and create a new application for the Aerospace competition
-    Given Guest user log-in    &{lead_applicant_credentials}
+    Given the user logs-in in new browser  &{lead_applicant_credentials}
     When the user navigates to the page    ${SERVER}/competition/${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}/overview/
     the user clicks the button/link             jQuery=a:contains("Start new application")
     #The following two lines are failing if we don't have any other application for the same competition

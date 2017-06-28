@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INFUND-1231: As a collaborator registering my company as Academic, I want to be able to enter full or partial details of the Academic organisation's name so I can select my Academic organisation from a list    #Invite flow without email. This test is using the old application
 Suite Setup       Custom Suite Setup
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 
@@ -97,14 +97,14 @@ Research and technology organisations (RTOs) search (accept invitation flow)
 Research and technology organisations (RTOs) search (accept invitation flow with email step)
     [Documentation]    INFUND-1230
     [Tags]    Email    HappyPath
-    Given the user reads his email from the default mailbox and clicks the link    ${test_mailbox_one}+invite1@gmail.com    Please verify your email address    Once verified you can sign into your account
+    Given the user reads his email from the default mailbox and clicks the link  ${test_mailbox_one}+invite1@gmail.com  Please verify your email address  you can sign into your account
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And guest user log-in    ${test_mailbox_one}+invite1@gmail.com    ${correct_password}
+    And the user logs-in in new browser     ${test_mailbox_one}+invite1@gmail.com  ${correct_password}
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Climate science the history of Greenland's ice
-    And the user clicks the button/link    link=Your finances
-    And the user should see the element    jQuery=h1:contains("Your finances")
+    And the user clicks the button/link     link=Climate science the history of Greenland's ice
+    And the user clicks the button/link     link=Your finances
+    And the user should see the element     jQuery=h1:contains("Your finances")
 
 *** Keywords ***
 Custom Suite Setup
