@@ -123,7 +123,7 @@
                             <span class="empty-table-cell-select">-</span>
                         </th:block>
                     </td>
-                    <td><a th:href="${'/management/competition/' + competitionSummary.competitionId + '/application/' + result.id} + ${originQuery}"  th:text="${result.id}"/></td>
+                    <td><a th:href="@{/competition/{cid}/application/{rid}(cid=${competitionSummary.competitionId}, rid=${result.id})} + ${originQuery}"  th:text="${result.id}"/></td>
                     <td th:text="${result.name}"></td>
                     <td th:text="${result.lead}"></td>
                     <td th:text="${result.numberOfPartners}"></td>
@@ -146,7 +146,7 @@
                 </thead>
                 <tbody>
                 <tr th:each="result : ${results.content}">
-                    <td><a th:href="${'/management/competition/' + competitionSummary.competitionId + '/application/' + result.id}"  th:text="${result.id}"/></td>
+                    <td><a th:href="@{/competition/{cid}/application/{rid}(cid=${competitionSummary.competitionId}, rid=${result.id})} + ${originQuery}"  th:text="${result.id}"/></td>
                     <td th:text="${result.name}"></td>
                     <td th:text="${result.lead}"></td>
                     <td th:text="${result.completedPercentage}"></td>

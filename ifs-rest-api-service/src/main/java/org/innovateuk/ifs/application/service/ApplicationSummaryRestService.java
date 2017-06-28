@@ -9,13 +9,27 @@ import java.util.Optional;
 
 public interface ApplicationSummaryRestService {
 
-    RestResult<ApplicationSummaryPageResource> getAllApplications(long competitionId, String sortField, int pageNumber, int pageSize, Optional<String> filter);
+    RestResult<ApplicationSummaryPageResource> getAllApplications(long competitionId,
+                                                                  String sortField,
+                                                                  int pageNumber,
+                                                                  int pageSize,
+                                                                  Optional<String> filter);
 
-    RestResult<ApplicationSummaryPageResource> getSubmittedApplications(long competitionId, String sortField, int pageNumber, int pageSize, Optional<String> filter, Optional<FundingDecision> fundingFilter);
+    RestResult<ApplicationSummaryPageResource> getSubmittedApplications(long competitionId,
+                                                                        String sortField,
+                                                                        int pageNumber,
+                                                                        int pageSize,
+                                                                        Optional<String> filter,
+                                                                        Optional<FundingDecision> fundingFilter);
 
-    RestResult<List<ApplicationSummaryResource>> getAllSubmittedApplications(long competitionId, Optional<String> filter, Optional<FundingDecision> fundingFilter);
+    RestResult<List<ApplicationSummaryResource>> getAllSubmittedApplications(long competitionId,
+                                                                             Optional<String> filter,
+                                                                             Optional<FundingDecision> fundingFilter);
 
-    RestResult<ApplicationSummaryPageResource> getNonSubmittedApplications(long competitionId, String sortField, int pageNumber, int pageSize, Optional<String> filter);
+    RestResult<ApplicationSummaryPageResource> getNonSubmittedApplications(long competitionId, String sortField,
+                                                                           int pageNumber,
+                                                                           int pageSize,
+                                                                           Optional<String> filter);
 
     RestResult<CompetitionSummaryResource> getCompetitionSummary(long competitionId);
 
@@ -34,7 +48,12 @@ public interface ApplicationSummaryRestService {
                                                                                     Optional<Boolean> sendFilter,
                                                                                     Optional<FundingDecision> fundingFilter);
 
-    RestResult<ApplicationSummaryPageResource> getIneligibleApplications(long competitionId, String sortField, int pageNumber, int pageSize, Optional<String> filter, Optional<Boolean> informFilter);
+    RestResult<ApplicationSummaryPageResource> getIneligibleApplications(long competitionId,
+                                                                         String sortField,
+                                                                         int pageNumber,
+                                                                         int pageSize,
+                                                                         Optional<String> filter,
+                                                                         Optional<Boolean> informFilter);
 
     RestResult<ApplicationTeamResource> getApplicationTeam(long applicationId);
 }
