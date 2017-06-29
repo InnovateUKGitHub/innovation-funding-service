@@ -1,68 +1,76 @@
 [role="dialog"]{
-	border-top: 10px solid $link-colour;
-	width:80%;
-	margin-left:-40%;
-	left:50%;
-	position: fixed;
-	background-color: #FFF;
-	top:50%;
-	padding: 40px 30px 30px 30px;
-	font-size: 19px;
-	@include box-sizing(border-box);
-	z-index: 20;
-	@include transition-property(top,margin);
-	@include transition-duration(300ms);
+  @include box-sizing(border-box);
+  @include transition-property(top,margin);
+  @include transition-duration(300ms);
+  border-top: 10px solid $link-colour;
+  width:80%;
+  margin-left:-40%;
+  left:50%;
+  position: fixed;
+  background-color: #FFF;
+  top:50%;
+  padding: 40px 30px 30px 30px;
+  font-size: 19px;
+  z-index: 20;
 
+  .close,
+  .ui-dialog-titlebar-close {
+    background:none;
+    border:1px solid #000;
+    position: absolute;
+    right:30px;
+    top:15px;
+    cursor:pointer;
+    line-height:1;
+    padding:0;
+    font-size:19px;
+    font-weight: normal;
+    color: $link-colour;
+  }
 
-	.close,
-    .ui-dialog-titlebar-close {
-		background:none;
-		border:1px solid #000;
-		position: absolute;
-		right:30px;
-		top:15px;
-		cursor:pointer;
-		line-height:1;
-		padding:0;
-		font-size:19px;
-		font-weight: normal;
-		color: $link-colour;
-	}
-	.close.close {
-		border: none;
-		font-weight: normal;
-	}
-	.button {
-		font-size: 19px;
-	}
-	.buttonlink {
-		padding: 8px;
-		margin-left: 22px;
-		font-size: 19px;
-	}
-	&.warning-modal {
-		border-top: 10px solid $red;
-		.modal-content {
-			padding-left: 60px;
-			background-repeat: no-repeat;
-			background-position: 20px 0;
-			background-size: 20px 20px;
-			background-image: url('../images/icons/icon-messages/alert-icon.png');
-		}
-	}
+  .close {
+    &.close {
+      border: none;
+      font-weight: normal;
+    }
+  }
+
+  .button {
+    font-size: 19px;
+  }
+
+  .buttonlink {
+    padding: 8px;
+    margin-left: 22px;
+    font-size: 19px;
+  }
+
+  &.warning-modal {
+    border-top: 10px solid $red;
+
+    .modal-content {
+      padding-left: 60px;
+      background-repeat: no-repeat;
+      background-position: 20px 0;
+      background-size: 20px 20px;
+      background-image: url('../images/icons/icon-messages/alert-icon.png');
+    }
+  }
 }
+
 .modal-overlay,
 .ui-widget-overlay {
-	&.js-close {
-		cursor:pointer;
-	}
-	position:fixed;
-	width:100%;
-	height: 100%;
-	left:0;
-	top:0;
-	//in fallback order
-	background: url("../images/000000-0.5.png");
-	background: rgba(0,0,0,0.5);
-	z-index: 9;
+  position:fixed;
+  width:100%;
+  height: 100%;
+  left:0;
+  top:0;
+  //in fallback order
+  background: url("../images/000000-0.5.png");
+  background: rgba(0,0,0,0.5);
+  z-index: 9;
+
+  &.js-close {
+    cursor:pointer;
+  }
 }

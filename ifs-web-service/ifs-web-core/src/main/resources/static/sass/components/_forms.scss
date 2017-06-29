@@ -1,19 +1,11 @@
-textarea[readonly],
-textarea[disabled],
-input[readonly],
-input[disabled],
-select[readonly],
-select[disabled],
-div.readonly,
-.textarea-wrapped div.readonly{
+%read-only {
   color: $black;
   background: $grey-4;
   border-color: $border-colour;
   cursor: default;
 }
 
-input[readonly]:not(.readonly-boxed),
-input[disabled]:not(.readonly-boxed) {
+%read-only-boxed {
   border: none;
   background: none;
 
@@ -27,30 +19,66 @@ input[disabled]:not(.readonly-boxed) {
   }
 }
 
-.form-group {
+textarea,
+input,
+select,
+div {
+  &[readonly],
+  &[disabled],
+  &.readonly {
+    @extend %read-only;
+  }
+}
 
+.textarea-wrapped {
+  div {
+    &.readonly{
+      @extend %read-only;
+    }
+  }
+}
+
+input {
+  &[readonly] {
+    &:not(.readonly-boxed) {
+      @extend %read-only-boxed;
+    }
+  }
+
+  &[disabled] {
+    &:not(.readonly-boxed) {
+      @extend %read-only-boxed;
+    }
+  }
+}
+
+.form-group {
   .form-finances-subcontracting-cost {
     text-align: right;
   }
 
-  &.inline label {
-    display:inline-block;
-    margin-right: 1em;
+  &.inline {
+    label {
+      display:inline-block;
+      margin-right: 1em;
+    }
   }
 }
 
-td.form-group,
-tr.form-group {
-  float:none;
-  width:auto;
-  padding-left:0;
+td,
+tr {
+  &.form-group {
+    float:none;
+    width:auto;
+    padding-left:0;
 
-  input {
-    vertical-align: top;
-  }
+    input {
+      vertical-align: top;
+    }
 
-  &.form-group-error {
-    border-left:none;
+    &.form-group-error {
+      border-left:none;
+    }
   }
 }
 
@@ -59,96 +87,113 @@ tr.form-group {
   border: 4px solid $error-colour;
 }
 
-table td input[type="number"] {
-  text-align: right;
+table {
+  td {
+    input {
+      &[type="number"] {
+        text-align: right;
+      }
+    }
+
+    &.bold {
+      font-weight: 700;
+    }
+
+    &.numeric {
+      text-align: right;
+
+      input {
+        text-align: right;
+      }
+    }
+
+    .control {
+      padding-left: 20px;
+    }
+
+    .buttonlink {
+      margin: 0;
+    }
+  }
+
+  .cell-border-right {
+    border-right:1px solid $border-colour;
+  }
 }
 
-.width-extra-small{
+.width-extra-small {
   width: 65px;
 }
 
-.width-small{
+.width-small {
   width: 80px;
 }
 
-.width-small-medium{
+.width-small-medium {
   width: 100px;
 }
 
-.width-medium{
+.width-medium {
   width: 150px;
 }
 
-.width-large{
+.width-large {
   width: 200px;
 }
 
-.width-full{
+.width-full {
   width: 100%;
 
-  .app-form &{
+  .app-form & {
     min-width: 100px;
   }
 
 }
 
-select.form-control.width-x-large,
 .width-x-large{
   width:60%;
 }
 
-input.form-control + button.button,
-select.form-control + button.button {
-  line-height:1.15;
-
-  @include media (mobile) {
-    margin-top:15px;
-  }
-}
-
-input.form-control.form-control-error + button.button,
-select.form-control.form-control-error + button.button {
-  line-height:1.35;
-}
-
-table .cell-border-right {
-  border-right:1px solid $border-colour;
-}
-
-table td{
-
-  &.bold {
-    font-weight: 700;
-  }
-
-  &.numeric {
-    text-align: right;
-
-    input {
-      text-align: right;
+select {
+  &.form-control {
+    &.width-x-large {
+      width:60%;
     }
   }
+}
 
-  .control {
-    padding-left: 20px;
+input,
+select {
+  &.form-control {
+    + button {
+      &.button {
+        @include media (mobile) {
+          margin-top:15px;
+        }
+
+        line-height:1.15;
+      }
+    }
+
+    &.form-control-error {
+      + button {
+        &.button {
+          line-height:1.35;
+        }
+      }
+    }
   }
-
-  .buttonlink {
-    margin: 0;
-  }
-
 }
 
 .date-group {
+  @include media (tablet) {
+    margin-right: 5%;
+  }
 
   > div {
     float: left;
     margin-right: 3.5%;
     width: auto;
-
-    @include media (tablet) {
-      margin-right: 5%;
-    }
   }
 
   select {
@@ -157,51 +202,56 @@ table td{
   }
 }
 
-tr.form-group-row.form-group-error {
-  border:none;
-  background-position: 4px 50%;
+tr {
+  &.form-group-row {
+    &.form-group-error {
+      border:none;
+      background-position: 4px 50%;
 
-  .error-message {
-    @extend .visually-hidden
-  }
+      .error-message {
+        @extend .visually-hidden
+      }
 
-  > *:first-child{
-    @extend .warning-alert;
-    background-position: 10px 50%;
-    padding-left: 40px;
-    margin: auto;
-    color:#000;
-    white-space: nowrap;
-    border-left: 5px solid $red;
-    border-bottom: 1px solid $border-colour;
-  }
+      > * {
+        &:first-child {
+          @extend .warning-alert;
+          background-position: 10px 50%;
+          padding-left: 40px;
+          margin: auto;
+          color:#000;
+          white-space: nowrap;
+          border-left: 5px solid $red;
+          border-bottom: 1px solid $border-colour;
+        }
+      }
 
-  td,
-  th {
-    background: $highlight-colour;
+      td,
+      th {
+        background: $highlight-colour;
+      }
+    }
   }
 }
 
-.form-date{
+.form-date {
   overflow: hidden;
   margin-bottom: 30px;
 }
 
-.question{
-
+.question {
   @extend %contain-floats;
   margin-bottom: 30px;
 
-  .heading-medium{
+  .heading-medium {
     margin: 0.8em 0 0.4em 0;
     display: inline-block;
   }
 
-  .form-hint{
+  .form-hint {
     margin-bottom: 0.8em;
   }
 
-  details{
+  details {
     margin-top: 0.4em;
     margin-bottom: 0.8em;
   }
@@ -216,29 +266,30 @@ tr.form-group-row.form-group-error {
     border-bottom: none;
     background: $grey-4 0 0 no-repeat;
     min-height:60px;
+
+    + textarea,
+    + [contenteditable="true"],
+    + .readonly {
+      border-top:none;
+    }
   }
 
   .assignee {
     padding:20px 15px 5px;
-  }
 
-  .assignee span + span {
-    font-weight:bold;
+    span + span {
+      font-weight:bold;
+    }
   }
 
   img + .assignee {
     padding:20px 15px 0 55px;
   }
 
-  .textarea-header + textarea,
-  .textarea-header + [contenteditable="true"],
-  .textarea-header + .readonly {
-    border-top:none;
-  }
-
   textarea,
   [contenteditable="true"],
   .readonly {
+    @include box-sizing(border-box);
     border:  2px solid;
     min-height: 250px;
     margin: 0;
@@ -246,7 +297,6 @@ tr.form-group-row.form-group-error {
     resize: vertical;
     vertical-align: top;
     width:100%;
-    @include box-sizing(border-box);
     overflow:auto; //needed for resize [contenteditable] div
   }
 
@@ -261,14 +311,15 @@ tr.form-group-row.form-group-error {
   }
 }
 
-td.autosave-info {
-  color: $grey-1;
-  font-size:14px;
-  min-width:70px;
+td {
+  &.autosave-info {
+    color: $grey-1;
+    font-size:14px;
+    min-width:70px;
+  }
 }
 
 .textarea-footer {
-
   .count-label,
   .autosave-info {
     padding:2px 0;
@@ -279,20 +330,25 @@ td.autosave-info {
 }
 
 .count-label {
-
   .negative {
     color: $orange;
     font-weight: 700;
   }
 
-  .word-count-reached .count-down{
-    color: $orange;
-    font-weight: 700;
+  .word-count-reached {
+    .count-down{
+      color: $orange;
+      font-weight: 700;
+    }
   }
 }
 
-.feedback .textarea-wrapped textarea{
-  border: 1px solid $border-colour;
+.feedback {
+  .textarea-wrapped {
+    textarea{
+      border: 1px solid $border-colour;
+    }
+  }
 }
 
 // ------- file upload -------- //
@@ -308,70 +364,89 @@ td.autosave-info {
     background: none;
     padding-left: 16px;
   }
+
+  .inputfile {
+    + label{
+      margin-top: 20px;
+    }
+  }
+
+  .uploaded-file{
+    display: block;
+    margin: 10px 0;
+  }
 }
 
-.no-js .upload-section .inputfile + label{
-  visibility: hidden;
-  display: none;
+.no-js {
+  .upload-section {
+    .inputfile {
+      margin:16px 0;
+      font-size:17px;
+
+      + label {
+        visibility: hidden;
+        display: none;
+      }
+    }
+  }
 }
 
-.no-js .upload-section .inputfile {
-  margin:16px 0;
-  font-size:17px;
+.js-enabled {
+  [data-for-file-upload] {
+    display:none;
+  }
+
+  .upload-section {
+    .inputfile{
+      width: 0.1px;
+      height: 0.1px;
+      opacity: 0;
+      overflow: hidden;
+      position: absolute;
+      z-index: -1;
+    }
+  }
 }
 
-.js-enabled [data-for-file-upload] {
-  display:none;
-}
-
-.js-enabled .upload-section .inputfile{
-  width: 0.1px;
-  height: 0.1px;
-  opacity: 0;
-  overflow: hidden;
-  position: absolute;
-  z-index: -1;
-}
-
-.upload-section .inputfile + label{
-  margin-top: 20px;
-}
-
-.upload-section	.uploaded-file{
-  display: block;
-  margin: 10px 0;
-}
-
-.form-group.download{
-  padding: 5px 0 0 50px;
-  background: url(../images/icons/icon-download.png) no-repeat;
+.form-group {
+  &.download {
+    padding: 5px 0 0 50px;
+    background: url(../images/icons/icon-download.png) no-repeat;
+  }
 }
 
 // ------- progressive group select -------- //
 
 .js-progressive-group-select {
-  display: block;
-  margin: 0 0 1em 0;
-
   @include media (tablet) {
     display: inline-block;
     margin: 0 1em 0 0;
   }
+
+  display: block;
+  margin: 0 0 1em 0;
 }
 
-.js-progressive-group-select,
-.js-enabled [data-progressive-group-select] {
+.js-progressive-group-select {
   @include media (tablet) {
     max-width: 40%;
   }
 }
 
-.agree-to-terms-container{
+.js-enabled {
+  [data-progressive-group-select] {
+    @include media (tablet) {
+      max-width: 40%;
+    }
+  }
+}
+
+.agree-to-terms-container {
   @extend %contain-floats;
   padding-left: 1em;
 }
 
-.form-footer{
+.form-footer {
   @extend %contain-floats;
   clear: both;
   color: $secondary-text-colour;
@@ -379,12 +454,12 @@ td.autosave-info {
   padding: 0.8em;
   margin: 0;
 
-  &__actions{
+  &__actions {
     min-height: 1em;
     float: left;
   }
 
-  &__info{
+  &__info {
     @include core-16;
     min-height: 1em;
     float: right;

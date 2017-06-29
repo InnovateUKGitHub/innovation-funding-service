@@ -1,63 +1,64 @@
 .column-three-quarters{
-	@include grid-column( 9/12 );
+  @include grid-column( 9/12 );
 }
 
 .column-one-quarter{
-	@include grid-column( 3/12 );
+  @include grid-column( 3/12 );
 }
 
 .column-one{
-	@include grid-column( 12/12 );
+  @include grid-column( 12/12 );
 }
 
 .no-pad{
-	padding: 0;
+  padding: 0;
 
-	.heading-large,
-	.heading-xlarge{
-		margin-bottom: 10px;
-	}
+  .heading-large,
+  .heading-xlarge{
+    margin-bottom: 10px;
+  }
 
-	.subtitle{
-		margin: 20px 0 30px 0;
-	}
+  .subtitle{
+    margin: 20px 0 30px 0;
+  }
 }
 
 .no-margin{
-	margin: 0;
+  margin: 0;
 }
 
 .no-margin-left{
-	margin-left: 0;
+  margin-left: 0;
 }
 
 .no-margin-right{
-	margin-right: 0;
+  margin-right: 0;
 }
 
 .no-margin-top{
-	margin-top: 0;
+  margin-top: 0;
 }
 
 .no-margin-bottom{
-	margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .extra-margin{
-	margin-top: 30px;
+  margin-top: 30px;
 }
+
 .extra-margin-bottom{
   margin-bottom: 30px;
 }
 
 .width-150{
-	width: 150px;
+  width: 150px;
 }
 
 .dl-pad{
-	dd{
-		padding-bottom: 20px;
-	}
+  dd{
+    padding-bottom: 20px;
+  }
 }
 
 table {
@@ -129,7 +130,7 @@ table {
 }
 
 .button-warning{
-	@include button(#c00000);
+  @include button(#c00000);
 }
 
 .button-block{

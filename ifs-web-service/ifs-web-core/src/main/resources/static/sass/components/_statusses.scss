@@ -102,6 +102,7 @@
 
   .section-incomplete {
     @extend %icon-incomplete;
+
     &.section-status {
       color: $red;
     }
@@ -119,6 +120,7 @@
   }
 }
 
+
 .textarea-wrapped {
   .textarea-header {
     position: relative;
@@ -133,27 +135,40 @@
     }
   }
 
-  &.marked-as-complete textarea[readonly],
-  &.marked-as-complete .readonly,
-  &.marked-as-complete .textarea-header {
+  %marked-as-complete {
     border-width: 2px;
     border-color: $panel-colour;
     background-color: $grey-4;
   }
 
-  &.assigned-to-me .editor,
-  &.assigned-to-me textarea,
-  &.assigned-to-me .textarea-header {
-    border: 2px solid $text-colour;
+  &.marked-as-complete {
+    textarea {
+      &[readonly] {
+        @extend %marked-as-complete;
+      }
+    }
+
+    .readonly,
+    .textarea-header {
+      @extend %marked-as-complete;
+    }
   }
 
-  &.assigned-to-me .textarea-header + .editor,
-  &.assigned-to-me .textarea-header + textarea {
-    border-top: none;
-  }
+  &.assigned-to-me {
+    .editor,
+    textarea,
+    .textarea-header {
+      border: 2px solid $text-colour;
+    }
 
-  &.assigned-to-me .textarea-header {
-    border-bottom: none;
+    .textarea-header {
+      border-bottom: none;
+
+      + .editor,
+      + textarea {
+        border-top: none;
+      }
+    }
   }
 }
 
@@ -202,8 +217,10 @@ span {
         background-size: 18px;
         padding-left: 0.625em;
 
-        a:link {
-          color: $button-colour;
+        a {
+          &:link {
+            color: $button-colour;
+          }
         }
       }
 

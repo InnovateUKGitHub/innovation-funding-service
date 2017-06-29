@@ -1,4 +1,16 @@
 %alert-panel {
+  @include media-down(mobile) {
+    padding: 20px 10px 20px 30px;
+    background-position: 8px 50%;
+    background-size: 16px 16px;
+
+    p {
+      a {
+        margin-left: 0;
+      }
+    }
+  }
+
   padding: 20px 20px 20px 60px;
   border-style: solid;
   border-width: 0 0 0 5px;
@@ -9,20 +21,13 @@
   background-size: 20px 20px;
   clear: both;
 
-  p, .heading-small, .heading-medium, ul, ol {
+  p,
+  .heading-small,
+  .heading-medium,
+  ul,
+  ol {
     margin: 0;
   }
-
- 	@include media-down(mobile) {
-    padding: 20px 10px 20px 30px;
-    background-position: 8px 50%;
-    background-size: 16px 16px;
-
-    p a {
-      margin-left: 0;
-    }
- 	}
-
 }
 
 .success-alert {

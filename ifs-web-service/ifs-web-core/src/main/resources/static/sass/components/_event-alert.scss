@@ -1,71 +1,76 @@
 @import "compass/css3/animation";
-@include keyframes(slideup) {
-    0% {
-        @include transform(translate(0,0));
-    }
-    100% {
-        @include transform(translate(0,-120px));
 
-    }
+@include keyframes(slideup) {
+  0% {
+    @include transform(translate(0,0));
+  }
+
+  100% {
+    @include transform(translate(0,-120px));
+
+  }
 }
 
 .event-alert {
-    position:fixed;
-    @include ie-lte(10) {
-      position:relative; //because ie9 and lower don't have css animations we have the content at the top of the page all the time.
+  @include ie-lte(10) {
+    position:relative; //because ie9 and lower don't have css animations we have the content at the top of the page all the time.
+  }
+
+  position:fixed;
+  background-color: $grey-3;
+  display: block;
+  font-size: 19px;
+  left: 0;
+  text-align: center;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  max-height: 120px;
+  overflow: hidden;
+  animation: slideup .66s ease-in-out 3s forwards;
+  -webkit-animation: slideup .66s ease-in-out 3s forwards;
+
+  p {
+    border-top: 10px solid $govuk-blue;
+    margin: 0;
+    padding: 0 10px;
+
+    span {
+      background: {
+        image: url(/images/icons/icon-information.png);
+        repeat: no-repeat;
+        position: 0 50%;
+      }
+      display: inline-block;
+      padding: 15px 0 15px 35px;
     }
+  }
 
-    background-color: $grey-3;
-    display: block;
-    font-size: 19px;
-    left: 0;
-    text-align: center;
-    top: 0;
-    width: 100%;
-    z-index: 100;
+  &.no-animation {
+    @include animation(none);
+    position: relative;
+    z-index: 99;
+  }
 
-    max-height: 120px;
-    overflow: hidden;
-    animation: slideup .66s ease-in-out 3s forwards;
-    -webkit-animation: slideup .66s ease-in-out 3s forwards;
-
+  &.event-warning {
     p {
-        border-top: 10px solid $govuk-blue;
-        margin: 0;
-        padding: 0 10px;
+      border-top: 10px solid $beta-colour;
 
-        span {
-            background: {
-                image: url(/images/icons/icon-information.png);
-                repeat: no-repeat;
-                position: 0 50%;
-            }
-            display: inline-block;
-            padding: 15px 0 15px 35px;
-        }
+      span {
+        background-image: url(/images/icons/icon-important.png);
+        padding: 15px 0 15px 45px;
+      }
     }
-    &.no-animation {
-      position: relative;
-      @include animation(none);
-      z-index: 99;
+  }
+
+  &.event-error {
+    p {
+      border-top: 10px solid $error-colour;
+
+      span {
+        background-image: url(/images/icons/icon-important.png);
+        padding: 15px 0 15px 45px;
+      }
     }
-
-    &.event-warning p {
-          border-top: 10px solid $beta-colour;
-
-          span {
-              background-image: url(/images/icons/icon-important.png);
-              padding: 15px 0 15px 45px;
-          }
-
-    }
-
-    &.event-error p {
-          border-top: 10px solid $error-colour;
-
-          span {
-              background-image: url(/images/icons/icon-important.png);
-              padding: 15px 0 15px 45px;
-          }
-    }
+  }
 }

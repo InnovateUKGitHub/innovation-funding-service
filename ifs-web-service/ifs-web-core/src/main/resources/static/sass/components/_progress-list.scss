@@ -16,6 +16,10 @@
   }
 
   > ul > li {
+    @include media-down(mobile) {
+      padding: 15px;
+    }
+
     margin-top: 10px;
     padding: 15px 0 15px 30px;
     background-color: $white;
@@ -25,13 +29,19 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-end;
-    @include media-down(mobile) {
-      padding: 15px;
-    }
    }
 
   .task{
     @include core-16;
+    @include media-down(tablet) {
+      margin-bottom: 15px;
+    }
+
+    @include media-down(mobile) {
+      float: none;
+      width: 90%;
+    }
+
     float: left;
     padding-right: 19px;
     vertical-align: top;
@@ -43,26 +53,17 @@
       margin-bottom: 0.3em;
     }
 
-    @include media-down(tablet) {
-      margin-bottom: 15px;
-    }
-
-    @include media-down(mobile) {
-      float: none;
-      width: 90%;
-    }
-
     .label-holder {
-      float: left;
-      height: 45px;
-      margin-top: 10px;
       @include media-down(mobile) {
         margin-top: 5px;
       }
+
+      float: left;
+      height: 45px;
+      margin-top: 10px;
     }
 
     &.task-half-width {
-      //width: 50%;
       @include media-down(mobile) {
         width: 90%;
       }
@@ -82,6 +83,10 @@
   }
 
   .status {
+    @include media-down(mobile) {
+      width: 50%;
+    }
+
     float: right;
     vertical-align: middle;
     text-align: center;
@@ -89,10 +94,6 @@
     justify-content: flex-end;
     align-items: center;
     margin: 0;
-
-    @include media-down(mobile) {
-      width: 50%;
-    }
   }
 
   .status-msg {
@@ -134,13 +135,13 @@
 
   > span {
     @include core-16;
-    display: block;
-    margin-top: 15px;
-    text-align: center;
-
     @include media-down(mobile) {
       margin-top: 0;
     }
+
+    display: block;
+    margin-top: 15px;
+    text-align: center;
   }
 
   .negative-text {
@@ -236,12 +237,12 @@
   }
 
   .status{
-    width: 19%;
-    flex: 1 0 150px;
-
     @include media-down(mobile) {
       flex: 1 0 auto;
     }
+
+    width: 19%;
+    flex: 1 0 150px;
   }
 
   .status-msg{
