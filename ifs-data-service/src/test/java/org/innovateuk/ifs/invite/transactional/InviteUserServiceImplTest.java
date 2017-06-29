@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.invite.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
@@ -8,12 +9,14 @@ import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.project.transactional.EmailService;
 import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.AdminRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.ZonedDateTime;
@@ -74,7 +77,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         expectedRoleInvite.setHash("1234");
         when(inviteRoleRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
 
-        ServiceResult<Void> result = service.saveUserInvite(userResource, UserRoleType.IFS_ADMINISTRATOR);
+        ServiceResult<Void> result = service.saveUserInvite(userResource, AdminRoleType.IFS_ADMINISTRATOR);
 
         verify(inviteRoleRepositoryMock, times(2)).save(roleInviteArgumentCaptor.capture());
         verify(emailService).sendEmail(any(), paramsArgumentCaptor.capture(), any());
@@ -101,4 +104,46 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
         assertTrue(result.isSuccess());
     }
+
+    @Test
+    public void inviteInternalUserSendEmailFails() throws Exception {
+        UserResource userResource = newUserResource().withFirstName("a").withLastName("Bee").withEmail("a@b.com").withRolesGlobal().build();
+        Role role = newRole().withName("Role1").build();
+        RoleInvite expectedRoleInvite = newRoleInvite().withEmail("a@b.com").withName("a Bee").withRole(role).withStatus(InviteStatus.CREATED).withHash("").build();
+        when(roleRepositoryMock.findOneByName(UserRoleType.IFS_ADMINISTRATOR.getName())).thenReturn(role);
+        when(inviteRoleRepositoryMock.findByRoleIdAndEmail(role.getId(), "a@b.com")).thenReturn(emptyList());
+        // hash is random, so capture RoleInvite value to verify other fields
+        when(inviteRoleRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
+
+        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("a Bee", "a@b.com");
+        when(emailService.sendEmail(eq(singletonList(notificationTarget)), any(), eq(InviteUserServiceImpl.Notifications.INVITE_INTERNAL_USER))).thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR));
+
+        when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
+
+        expectedRoleInvite.setHash("1234");
+        when(inviteRoleRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
+
+        ServiceResult<Void> result = service.saveUserInvite(userResource, AdminRoleType.IFS_ADMINISTRATOR);
+
+        verify(inviteRoleRepositoryMock, times(1)).save(roleInviteArgumentCaptor.capture());
+        verify(emailService).sendEmail(any(), paramsArgumentCaptor.capture(), any());
+
+        List<RoleInvite> captured = roleInviteArgumentCaptor.getAllValues();
+        assertEquals("a@b.com", captured.get(0).getEmail());
+        assertEquals("a Bee", captured.get(0).getName());
+        assertEquals(role, captured.get(0).getTarget());
+        assertEquals(InviteStatus.CREATED, captured.get(0).getStatus());
+
+        Map<String, Object> capturedParams = paramsArgumentCaptor.getValue();
+        assertTrue(capturedParams.containsKey("role"));
+        assertTrue(capturedParams.get("role").equals("Role1"));
+        assertTrue(capturedParams.containsKey("inviteUrl"));
+        assertTrue(((String)capturedParams.get("inviteUrl")).startsWith(webBaseUrl + InviteUserServiceImpl.WEB_CONTEXT + "/accept-invite/"));
+
+        assertTrue(result.isFailure());
+        assertEquals(1, result.getErrors().size());
+        assertEquals(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR.name(), result.getErrors().get(0).getErrorKey());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getErrors().get(0).getStatusCode());
+    }
+
 }

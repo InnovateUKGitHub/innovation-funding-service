@@ -136,7 +136,7 @@ public class InviteUserServiceImpl implements InviteUserService {
     }
 
     private ServiceResult<Boolean> handleInviteError(RoleInvite i, ServiceFailure failure) {
-        LOG.error(String.format("Invite failed %s , %s (error count: %s)", i.getId(), i.getEmail(), failure.getErrors().size()));
+        LOG.error(String.format("Invite failed %s, %s, %s (error count: %s)", i.getId(), i.getEmail(), i.getTarget().getName(), failure.getErrors().size()));
         List<Error> errors = failure.getErrors();
         return serviceFailure(errors);
     }
