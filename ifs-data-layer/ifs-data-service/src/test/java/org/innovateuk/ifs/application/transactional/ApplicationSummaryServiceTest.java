@@ -9,10 +9,7 @@ import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryPageMapper;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
-import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
@@ -31,6 +28,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,6 +43,7 @@ import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddre
 import static org.innovateuk.ifs.address.builder.AddressTypeBuilder.newAddressType;
 import static org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.application.domain.FundingDecisionStatus.FUNDED;
 import static org.innovateuk.ifs.application.domain.FundingDecisionStatus.ON_HOLD;
 import static org.innovateuk.ifs.application.domain.FundingDecisionStatus.UNFUNDED;
 import static org.innovateuk.ifs.application.resource.ApplicationState.*;
@@ -516,23 +515,19 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void findAllByCompetitionWithFundingDecisionApplications() throws Exception {
 
-        Application app1 = mock(Application.class);
-        Application app2 = mock(Application.class);
-        List<Application> applications = asList(app1, app2);
+        List<Application> applications = newApplication()
+                .withManageFundingEmailDate(ZonedDateTime.now())
+                .withFundingDecision(FUNDED)
+                .build(2);
 
-        ApplicationSummaryResource sum1 = sumLead("b");
-        ApplicationSummaryResource sum2 = sumLead("a");
-        when(applicationSummaryMapper.mapToResource(app1)).thenReturn(sum1);
-        when(applicationSummaryMapper.mapToResource(app2)).thenReturn(sum2);
+        when(applicationRepositoryMock.findByCompetitionIdAndFundingDecisionIsNotNull(eq(COMP_ID), eq("filter"), eq(false), eq(FUNDED))).thenReturn(applications);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndFundingDecisionIsNotNull(eq(COMP_ID), eq("filter"), eq(false), eq(ON_HOLD))).thenReturn(applications);
-
-        ServiceResult<List<ApplicationSummaryResource>> result = applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(COMP_ID, of("filter"), of(false), of(ON_HOLD));
+        ServiceResult<List<Long>> result = applicationSummaryService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(COMP_ID, of("filter"), of(false), of(FUNDED));
 
         assertTrue(result.isSuccess());
         assertEquals(2, result.getSuccessObject().size());
-        assertEquals(sum1, result.getSuccessObject().get(0));
-        assertEquals(sum2, result.getSuccessObject().get(1));
+        assertEquals(applications.get(0).getId(), result.getSuccessObject().get(0));
+        assertEquals(applications.get(1).getId(), result.getSuccessObject().get(1));
     }
 
     @Test

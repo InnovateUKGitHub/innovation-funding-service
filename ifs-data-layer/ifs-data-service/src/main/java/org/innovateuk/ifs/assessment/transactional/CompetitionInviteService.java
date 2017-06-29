@@ -65,9 +65,9 @@ public interface CompetitionInviteService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_ASSESSORS_BY_COMPETITION",
-            description = "Competition Admins and Project Finance can retrieve available assessors by competition",
+            description = "Competition Admins and Project Finance can retrieve available assessor ids by competition",
             additionalComments = "The service additionally checks if the assessor does not have an invite for the competition which is either Pending or Accepted")
-    ServiceResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId, Optional<Long> innovationArea);
+    ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId, Optional<Long> innovationArea);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_INVITES_BY_COMPETITION",

@@ -27,7 +27,7 @@ public interface CompetitionInviteRestService {
 
     RestResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, int page, Optional<Long> innovationArea);
 
-    RestResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId, Optional<Long> innovationArea);
+    RestResult<List<Long>> getAvailableAssessorIds(long competitionId, Optional<Long> innovationArea);
 
     RestResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, int page);
 

@@ -147,7 +147,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
         when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(expectedInnovationSectorOptions));
         when(competitionInviteRestService.getAvailableAssessors(competition.getId(), page, innovationArea)).thenReturn(restSuccess(availableAssessorPageResource));
-        when(competitionInviteRestService.getAvailableAssessors(competition.getId(), innovationArea)).thenReturn(restSuccess(emptyList()));
+        when(competitionInviteRestService.getAvailableAssessorIds(competition.getId(), innovationArea)).thenReturn(restSuccess(emptyList()));
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/find", competition.getId())
                 .param("page", "2")
@@ -167,7 +167,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         assertFindFilterOptionsAreCorrect(expectedInnovationSectorOptions, result);
 
         InOrder inOrder = inOrder(competitionRestService, competitionInviteRestService, categoryRestServiceMock);
-        inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), innovationArea);
+        inOrder.verify(competitionInviteRestService).getAvailableAssessorIds(competition.getId(), innovationArea);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(categoryRestServiceMock).getInnovationSectors();
         inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), page, innovationArea);
@@ -186,7 +186,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
         when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(expectedInnovationSectorOptions));
         when(competitionInviteRestService.getAvailableAssessors(competition.getId(), page, innovationArea)).thenReturn(restSuccess(availableAssessorPageResource));
-        when(competitionInviteRestService.getAvailableAssessors(competition.getId(), innovationArea)).thenReturn(restSuccess(emptyList()));
+        when(competitionInviteRestService.getAvailableAssessorIds(competition.getId(), innovationArea)).thenReturn(restSuccess(emptyList()));
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/find", competition.getId()))
                 .andExpect(status().isOk())
@@ -204,7 +204,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         assertFindFilterOptionsAreCorrect(expectedInnovationSectorOptions, result);
 
         InOrder inOrder = inOrder(competitionRestService, competitionInviteRestService, categoryRestServiceMock);
-        inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), innovationArea);
+        inOrder.verify(competitionInviteRestService).getAvailableAssessorIds(competition.getId(), innovationArea);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(categoryRestServiceMock).getInnovationSectors();
         inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), page, innovationArea);
@@ -225,14 +225,10 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .withContent(setUpAvailableAssessorResources())
                 .build();
         List<InnovationSectorResource> expectedInnovationSectorOptions = newInnovationSectorResource().build(4);
-        List<AvailableAssessorResource> availableAssessorResources = newAvailableAssessorResource()
-                .withId(1L, 2L)
-                .withEmail("dave@email.com", "john@email.com")
-                .build(2);
 
         when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(expectedInnovationSectorOptions));
         when(competitionInviteRestService.getAvailableAssessors(competition.getId(), page, innovationArea)).thenReturn(restSuccess(availableAssessorPageResource));
-        when(competitionInviteRestService.getAvailableAssessors(competition.getId(), innovationArea)).thenReturn(restSuccess(availableAssessorResources));
+        when(competitionInviteRestService.getAvailableAssessorIds(competition.getId(), innovationArea)).thenReturn(restSuccess(asList(1L, 2L)));
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/find", competition.getId())
                 .cookie(selectionFormCookie))
@@ -254,7 +250,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         assertFindFilterOptionsAreCorrect(expectedInnovationSectorOptions, result);
 
         InOrder inOrder = inOrder(competitionRestService, competitionInviteRestService, categoryRestServiceMock);
-        inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), innovationArea);
+        inOrder.verify(competitionInviteRestService).getAvailableAssessorIds(competition.getId(), innovationArea);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(categoryRestServiceMock).getInnovationSectors();
         inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), page, innovationArea);
@@ -380,12 +376,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         Optional<Long> innovationArea = of(4L);
         Cookie formCookie = createFormCookie(new AssessorSelectionForm());
 
-        List<AvailableAssessorResource> availableAssessorResources = newAvailableAssessorResource()
-                .withId(1L, 2L)
-                .withEmail("dave@email.com", "john@email.com")
-                .build(2);
-
-        when(competitionInviteRestService.getAvailableAssessors(competition.getId(), innovationArea)).thenReturn(restSuccess(availableAssessorResources));
+        when(competitionInviteRestService.getAvailableAssessorIds(competition.getId(), innovationArea)).thenReturn(restSuccess(asList(1L, 2L)));
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/find", competition.getId())
                 .param("selectionId", valueOf(assessorId))
@@ -408,12 +399,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         long assessorId = 1L;
         Cookie formCookie = createFormCookie(new AssessorSelectionForm());
 
-        List<AvailableAssessorResource> availableAssessorResources = newAvailableAssessorResource()
-                .withId(1L, 2L)
-                .withEmail("dave@email.com", "john@email.com")
-                .build(2);
-
-        when(competitionInviteRestService.getAvailableAssessors(competition.getId(), empty())).thenReturn(restSuccess(availableAssessorResources));
+        when(competitionInviteRestService.getAvailableAssessorIds(competition.getId(), empty())).thenReturn(restSuccess(asList(1L, 2L)));
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/find", competition.getId())
                 .param("selectionId", valueOf(assessorId))
@@ -433,11 +419,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     public void addAllAssessorsFromFindView_defaultParams() throws Exception {
         Cookie formCookie = createFormCookie(new AssessorSelectionForm());
 
-        List<AvailableAssessorResource> availableAssessorPageResource = newAvailableAssessorResource()
-                .withEmail("dave@email.com", "john@email.com")
-                .build(2);
-
-        when(competitionInviteRestService.getAvailableAssessors(competition.getId(), Optional.empty())).thenReturn(restSuccess(availableAssessorPageResource));
+        when(competitionInviteRestService.getAvailableAssessorIds(competition.getId(), Optional.empty())).thenReturn(restSuccess(asList(1L, 2L)));
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/find", competition.getId())
                 .param("addAll", "true")
@@ -459,11 +441,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         form.getSelectedAssessorIds().add(assessorId);
         Cookie formCookie = createFormCookie(form);
 
-        List<AvailableAssessorResource> availableAssessorPageResource = newAvailableAssessorResource()
-                .withEmail("dave@email.com", "john@email.com")
-                .build(2);
-
-        when(competitionInviteRestService.getAvailableAssessors(competition.getId(), of(4L))).thenReturn(restSuccess(availableAssessorPageResource));
+        when(competitionInviteRestService.getAvailableAssessorIds(competition.getId(), of(4L))).thenReturn(restSuccess(asList(1L, 2L)));
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/find", competition.getId())
                 .param("selectionId", valueOf(assessorId))
@@ -489,11 +467,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         form.getSelectedAssessorIds().add(assessorId);
         formCookie = createFormCookie(form);
 
-        List<AvailableAssessorResource> availableAssessorPageResource = newAvailableAssessorResource()
-                .withEmail("dave@email.com", "john@email.com")
-                .build(2);
-
-        when(competitionInviteRestService.getAvailableAssessors(competition.getId(), empty())).thenReturn(restSuccess(availableAssessorPageResource));
+        when(competitionInviteRestService.getAvailableAssessorIds(competition.getId(), empty())).thenReturn(restSuccess(asList(1L, 2L)));
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/find", competition.getId())
                 .param("selectionId", valueOf(assessorId))

@@ -74,11 +74,11 @@ public class CompetitionInviteController {
     }
 
     @GetMapping(value = "/getAvailableAssessors/{competitionId}", params = "all")
-    public RestResult<List<AvailableAssessorResource>> getAvailableAssessors(
+    public RestResult<List<Long>> getAvailableAssessorIds(
             @PathVariable long competitionId,
             @RequestParam Optional<Long> innovationArea
     ) {
-        return competitionInviteService.getAvailableAssessors(competitionId, innovationArea).toGetResponse();
+        return competitionInviteService.getAvailableAssessorIds(competitionId, innovationArea).toGetResponse();
     }
 
     @GetMapping("/getCreatedInvites/{competitionId}")

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.controller;
 
 import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.Matcher;
+import org.innovateuk.ifs.Application;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.LambdaMatcher;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
@@ -57,6 +58,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionFundedKeyStatisticsResourceBuilder.newCompetitionFundedKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.CompressionUtil.getCompressedString;
 import static org.innovateuk.ifs.util.CompressionUtil.getDecompressedString;
 import static org.innovateuk.ifs.util.JsonUtil.getObjectFromJson;
@@ -128,8 +130,8 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         CompetitionInFlightStatsViewModel keyStatisticsModel = competitionInFlightStatsModelPopulator.populateStatsViewModel(competitionResource);
         ManageFundingApplicationViewModel model = new ManageFundingApplicationViewModel(applicationSummaryPageResource, keyStatisticsModel, new PaginationViewModel(applicationSummaryPageResource, queryParams), sortField, COMPETITION_ID, competitionResource.getName(), false);
 
-        when(applicationSummaryRestService.getWithFundingDecisionApplications(
-                COMPETITION_ID, empty(), sendFilter, fundingFilter)).thenReturn(restSuccess(applications));
+        when(applicationSummaryRestService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(
+                COMPETITION_ID, empty(), sendFilter, fundingFilter)).thenReturn(restSuccess(simpleMap(applications, ApplicationSummaryResource::getId)));
 
         // Method under test
         mockMvc.perform(get("/competition/{competitionId}/manage-funding-applications", COMPETITION_ID)
@@ -143,11 +145,10 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     @Test
     public void testSelectApplications() throws Exception {
         long competitionId = 1L;
+        List<Long> applicationIds = asList(1L, 2L, 3L, 4L);
 
-        List<ApplicationSummaryResource> applications = newApplicationSummaryResource().with(uniqueIds()).build(4);
-
-        when(applicationSummaryRestService.getWithFundingDecisionApplications(
-                competitionId, empty(), empty(), empty())).thenReturn(restSuccess(applications));
+        when(applicationSummaryRestService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(
+                competitionId, empty(), empty(), empty())).thenReturn(restSuccess(applicationIds));
 
         mockMvc.perform(post("/competition/{competitionId}/manage-funding-applications", competitionId).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -185,11 +186,10 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         selectionCookie.setSelectApplicationsForEmailForm(new SelectApplicationsForEmailForm());
         selectionCookie.setManageFundingApplicationsQueryForm(new ManageFundingApplicationsQueryForm());
         Cookie formCookie = createFormCookie(selectionCookie);
+        List<Long> applicationIds = asList(1L, 2L, 3L, 4L);
 
-        List<ApplicationSummaryResource> applications = newApplicationSummaryResource().with(uniqueIds()).build(4);
-
-        when(applicationSummaryRestService.getWithFundingDecisionApplications(
-                COMPETITION_ID, empty(), sendFilter, fundingFilter)).thenReturn(restSuccess(applications));
+        when(applicationSummaryRestService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(
+                COMPETITION_ID, empty(), sendFilter, fundingFilter)).thenReturn(restSuccess(applicationIds));
 
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/manage-funding-applications", COMPETITION_ID)
@@ -216,13 +216,10 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         selectionCookie.setSelectApplicationsForEmailForm(selectApplicationsForEmailForm);
         selectionCookie.setManageFundingApplicationsQueryForm(new ManageFundingApplicationsQueryForm());
         Cookie formCookie = createFormCookie(selectionCookie);
+        List<Long> applicationIds = asList(1L, 2L);
 
-        List<ApplicationSummaryResource> applications = newApplicationSummaryResource()
-                .withId(1L, 2L)
-                .build(2);
-
-        when(applicationSummaryRestService.getWithFundingDecisionApplications(
-                COMPETITION_ID, empty(), sendFilter, fundingFilter)).thenReturn(restSuccess(applications));
+        when(applicationSummaryRestService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(
+                COMPETITION_ID, empty(), sendFilter, fundingFilter)).thenReturn(restSuccess(applicationIds));
 
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/manage-funding-applications", COMPETITION_ID)
@@ -246,11 +243,10 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         selectionCookie.setSelectApplicationsForEmailForm(new SelectApplicationsForEmailForm());
         selectionCookie.setManageFundingApplicationsQueryForm(new ManageFundingApplicationsQueryForm());
         Cookie formCookie = createFormCookie(selectionCookie);
+        List<Long> applicationIds = asList(1L, 2L);
 
-        List<ApplicationSummaryResource> applications = newApplicationSummaryResource().with(uniqueIds()).build(2);
-
-        when(applicationSummaryRestService.getWithFundingDecisionApplications(
-                COMPETITION_ID, empty(), sendFilter, fundingFilter)).thenReturn(restSuccess(applications));
+        when(applicationSummaryRestService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(
+                COMPETITION_ID, empty(), sendFilter, fundingFilter)).thenReturn(restSuccess(applicationIds));
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/manage-funding-applications", COMPETITION_ID)
                 .param("addAll", "true")
@@ -261,7 +257,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
                 .andReturn();
 
         Optional<FundingNotificationSelectionCookie> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("applicationSelectionForm_comp_%s", COMPETITION_ID));
-        assertTrue(resultForm.get().getSelectApplicationsForEmailForm().getIds().containsAll(asList(applications.get(0).getId(), applications.get(1).getId())));
+        assertTrue(resultForm.get().getSelectApplicationsForEmailForm().getIds().containsAll(asList(applicationIds.get(0), applicationIds.get(1))));
     }
 
     @Test

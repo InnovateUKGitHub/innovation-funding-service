@@ -11,6 +11,7 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Optional;
 
+import static com.google.common.primitives.Longs.asList;
 import static java.lang.String.format;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -195,18 +196,18 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     }
 
     @Test
-    public void getAllWithFundingDecisionApplications() {
-        List<ApplicationSummaryResource> appSummaries = newApplicationSummaryResource().build(2);
+    public void getAllWithChangeableFundingDecisionApplicationIds() {
+        List<Long> appIds = asList(1L, 2L);
 
         setupGetWithRestResultExpectations(
                 format("%s/%s/%s/%s?all&filter=filter&sendFilter=false&fundingFilter=FUNDED", APPLICATION_SUMMARY_REST_URL, "findByCompetition", 123L, "with-funding-decision"),
-                ParameterizedTypeReferences.applicationSummaryResourceListType(),
-                appSummaries
+                ParameterizedTypeReferences.longsListType(),
+                appIds
         );
 
-        RestResult<List<ApplicationSummaryResource>> result = service.getWithFundingDecisionApplications(123L, of("filter"), Optional.of(false), Optional.of(FUNDED));
+        RestResult<List<Long>> result = service.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(123L, of("filter"), Optional.of(false), Optional.of(FUNDED));
 
         assertTrue(result.isSuccess());
-        assertEquals(appSummaries, result.getSuccessObject());
+        assertEquals(appIds, result.getSuccessObject());
     }
 }

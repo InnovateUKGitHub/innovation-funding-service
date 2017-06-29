@@ -32,7 +32,7 @@ public interface ApplicationSummaryService {
 
 	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support')")
 	@SecuredBySpring(value = "READ", description = "Internal users can see all submitted Application Summaries across the whole system", securedType = ApplicationSummaryPageResource.class)
-	ServiceResult<List<ApplicationSummaryResource>> getAllSubmittedApplicationSummariesByCompetitionId(long competitionId,
+	ServiceResult<List<Long>> getAllSubmittedApplicationIdsByCompetitionId(long competitionId,
 																									   Optional<String> filter,
 																									   Optional<FundingDecisionStatus> fundingFilter);
 
@@ -54,11 +54,11 @@ public interface ApplicationSummaryService {
 																											Optional<FundingDecisionStatus> fundingFilter);
 
 	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support')")
-	@SecuredBySpring(value = "READ", description = "Internal users can see all Application Summaries with funding decisions across the whole system", securedType = ApplicationSummaryResource.class)
-	ServiceResult<List<ApplicationSummaryResource>> getWithFundingDecisionApplicationSummariesByCompetitionId(long competitionId,
-																											  Optional<String> filter,
-																											  Optional<Boolean> sendFilter,
-																											  Optional<FundingDecisionStatus> fundingFilter);
+	@SecuredBySpring(value = "READ", description = "Internal users can see all Application Ids with funding decisions across the whole system", securedType = ApplicationSummaryResource.class)
+	ServiceResult<List<Long>> getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(long competitionId,
+																						Optional<String> filter,
+																						Optional<Boolean> sendFilter,
+																						Optional<FundingDecisionStatus> fundingFilter);
 
 	@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
 	@SecuredBySpring(value = "READ", description = "Internal users can see all Ineligable Application Summaries across the whole system", securedType = ApplicationSummaryPageResource.class)

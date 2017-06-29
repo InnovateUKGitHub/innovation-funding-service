@@ -22,9 +22,9 @@ public interface ApplicationSummaryRestService {
                                                                         Optional<String> filter,
                                                                         Optional<FundingDecision> fundingFilter);
 
-    RestResult<List<ApplicationSummaryResource>> getAllSubmittedApplications(long competitionId,
-                                                                             Optional<String> filter,
-                                                                             Optional<FundingDecision> fundingFilter);
+    RestResult<List<Long>> getAllSubmittedApplicationIds(long competitionId,
+                                                         Optional<String> filter,
+                                                         Optional<FundingDecision> fundingFilter);
 
     RestResult<ApplicationSummaryPageResource> getNonSubmittedApplications(long competitionId, String sortField,
                                                                            int pageNumber,
@@ -43,10 +43,10 @@ public interface ApplicationSummaryRestService {
                                                                                   Optional<Boolean> sendFilter,
                                                                                   Optional<FundingDecision> fundingFilter);
 
-    RestResult<List<ApplicationSummaryResource>> getWithFundingDecisionApplications(Long competitionId,
-                                                                                    Optional<String> filter,
-                                                                                    Optional<Boolean> sendFilter,
-                                                                                    Optional<FundingDecision> fundingFilter);
+    RestResult<List<Long>> getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(Long competitionId,
+                                                                                           Optional<String> filter,
+                                                                                           Optional<Boolean> sendFilter,
+                                                                                           Optional<FundingDecision> fundingFilter);
 
     RestResult<ApplicationSummaryPageResource> getIneligibleApplications(long competitionId,
                                                                          String sortField,

@@ -941,14 +941,10 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         Optional<Long> innovationArea = Optional.of(5L);
 
-        List<AvailableAssessorResource> availableAssessorResources = controller.getAvailableAssessors(competition.getId(), innovationArea)
+        List<Long> availableAssessorIds = controller.getAvailableAssessorIds(competition.getId(), innovationArea)
                 .getSuccessObjectOrThrowException();
 
-        assertEquals(4, availableAssessorResources.size());
-        assertEquals("Victoria Beckham", availableAssessorResources.get(0).getName());
-        assertEquals("James Blake", availableAssessorResources.get(1).getName());
-        assertEquals("Jessica Alba", availableAssessorResources.get(2).getName());
-        assertEquals("Andrew Marr", availableAssessorResources.get(3).getName());
+        assertEquals(4, availableAssessorIds.size());
     }
 
     private void addTestAssessors() {

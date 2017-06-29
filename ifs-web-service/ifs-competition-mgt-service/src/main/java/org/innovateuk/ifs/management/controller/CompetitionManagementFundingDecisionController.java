@@ -209,10 +209,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
     }
 
     private List<Long> getAllApplicationIdsByFilters(long competitionId, FundingDecisionFilterForm filterForm) {
-        RestResult<List<ApplicationSummaryResource>> restResult = applicationSummaryRestService.getAllSubmittedApplications(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter());
-        List<Long> list = restResult.getOrElse(emptyList()).stream().map(p -> p.getId()).collect(toList());
-
-        return list;
+        return applicationSummaryRestService.getAllSubmittedApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter()).getOrElse(emptyList());
     }
 
     private FundingDecisionSelectionForm trimSelectionByFilteredResult(FundingDecisionSelectionForm selectionForm,
