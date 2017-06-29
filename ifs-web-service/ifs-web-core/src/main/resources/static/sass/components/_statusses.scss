@@ -66,22 +66,26 @@
     position: relative;
   }
 
-  img.section-status {
-    position: absolute;
-    right: 0;
-    top: 0;
+  img {
+    &.section-status {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
   }
 
-  div.section-status {
-    float: right;
-    font-weight: 300;
-    font-size: 16px;
-    color: $grey-1;
-    padding-left: 20px;
-    padding-right: 0;
-    text-align: left;
-    color: $button-colour;
-    font-weight: bold;
+  div {
+    &.section-status {
+      float: right;
+      font-weight: 300;
+      font-size: 16px;
+      color: $grey-1;
+      padding-left: 20px;
+      padding-right: 0;
+      text-align: left;
+      color: $button-colour;
+      font-weight: bold;
+    }
   }
 
   .section-complete,
@@ -91,26 +95,28 @@
     background-size: 14px;
   }
 
-    .section-complete {
-      margin-left: 11px;
-      @extend %icon-tick;
-    }
+  .section-complete {
+    @extend %icon-tick;
+    margin-left: 11px;
+  }
 
-    .section-incomplete {
-      @extend %icon-incomplete;
+  .section-incomplete {
+    @extend %icon-incomplete;
+    &.section-status {
+      color: $red;
+    }
+  }
+
+  @include media-down(mobile) {
+    div {
       &.section-status {
-        color: $red;
-      }
-    }
-
-    @include media-down(mobile) {
-      div.section-status {
         float: none;
         padding-left: 25px;
         padding-right: 0;
         background-position: left 50%;
       }
     }
+  }
 }
 
 .textarea-wrapped {
@@ -118,11 +124,13 @@
     position: relative;
   }
 
-  img.marked-as-complete,
-  img.assigned-to-me {
-    position: absolute;
-    left: 1px;
-    top: 1px;
+  img {
+    .marked-as-complete,
+    .assigned-to-me {
+      position: absolute;
+      left: 1px;
+      top: 1px;
+    }
   }
 
   &.marked-as-complete textarea[readonly],
@@ -155,113 +163,133 @@ caption {
   text-align: left;
 }
 
-td.status,
-th.status,
-span.status {
-  &.na {
-    background: $grey-3;
-  }
+td,
+th,
+span {
+  &.status {
+    &.na {
+      background: $grey-3;
+    }
 
-  &.ok {
-    @extend %icon-tick;
-    color: $button-colour;
-    padding-left: 25px;
-  }
+    &.ok {
+      @extend %icon-tick;
+      color: $button-colour;
+      padding-left: 25px;
+    }
 
-  &.rejected {
-    @extend %icon-cross;
-  }
-  &.waiting {
-    color: $secondary-text-colour;
-  }
+    &.rejected {
+      @extend %icon-cross;
+    }
 
-  a {
-    display: block;
-    padding-top: 50px;
+    &.waiting {
+      color: $secondary-text-colour;
+    }
+
+    a {
+      display: block;
+      padding-top: 50px;
+    }
   }
 }
 
 .icon-table {
-  td.status {
-    vertical-align: bottom;
-    background-position: center center;
-    &.ok {
-      background-size: 18px;
-      padding-left: 0.625em;
-      a:link {
-        color: $button-colour;
-      }
-    }
-
-    &.rejected {
-      a:link {
-        color: $red;
-      }
-    }
-
-    &.action {
-      @extend %action-required;
+  td {
+    &.status {
+      vertical-align: bottom;
       background-position: center center;
+
+      &.ok {
+        background-size: 18px;
+        padding-left: 0.625em;
+
+        a:link {
+          color: $button-colour;
+        }
+      }
+
+      &.rejected {
+        a {
+          &:link {
+            color: $red;
+          }
+        }
+      }
+
+      &.action {
+        @extend %action-required;
+        background-position: center center;
+      }
+
+      &.waiting {
+        @extend %icon-timer;
+        background-size: 33px 30px;
+
+        a {
+          color: $secondary-text-colour;
+        }
+      }
     }
+  }
+}
+
+td,
+th {
+  &.status {
+    text-align: center;
+    padding-left: 0.625em;
+    padding-right: 0.625em;
+    background-position: 10px 19px;
+    width: 70px;
+  }
+}
+
+span {
+  &.status {
+    padding-left: 28px;
+    background-position: left center;
 
     &.waiting {
-      @extend %icon-timer;
-      background-size: 33px 30px;
-      a {
-        color: $secondary-text-colour;
-      }
+      background-size: 25px;
     }
   }
-
 }
 
 
-td.status,
-th.status {
-  text-align: center;
-  padding-left: 0.625em;
-  padding-right: 0.625em;
-  background-position: 10px 19px;
-  width: 70px;
-}
+ul {
+  .status {
+    li {
+      position: relative;
 
-span.status {
-  padding-left: 28px;
-  background-position: left center;
+      &[data-valid] {
+        list-style:none;
 
-  &.waiting {
-    background-size: 25px;
-  }
-}
+        &:before{
+          position: absolute;
+          left:-20px;
+          top:5px;
+          background-size: 14px;
+          display: block;
+          width:14px;
+          height: 14px;
+          content:""
+        }
+      }
 
+      &[data-valid="true"]{
+        color: $button-colour;
 
-ul.status {
-  li {
-    position: relative;
-  }
-  li[data-valid] {
-    list-style:none;
-  }
-  li[data-valid]:before{
-    position: absolute;
-    left:-20px;
-    top:5px;
-    background-size: 14px;
-    display: block;
-    width:14px;
-    height: 14px;
-    content:""
-  }
-  li[data-valid="true"]{
-    color: $button-colour;
-  }
-  li[data-valid="true"]:before{
-    @extend %icon-tick;
-  }
-  li[data-valid="false"]{
-    color: $error-colour;
-  }
-  li[data-valid="false"]:before{
-    @extend %icon-cross;
+        &:before{
+          @extend %icon-tick;
+        }
+      }
+
+      &[data-valid="false"]{
+        color: $error-colour;
+
+        &:before{
+          @extend %icon-cross;
+        }
+      }
+    }
   }
 }

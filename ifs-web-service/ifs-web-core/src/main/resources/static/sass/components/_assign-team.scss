@@ -74,23 +74,6 @@
     }
   }
 
-  //button {
-  //  @extend .buttonlink;
-  //
-  //  &[aria-expanded]::after {
-  //    content: '\0020\0020\25bc';
-  //    font-size:12px;
-  //  }
-  //
-  //  &[aria-expanded="true"]::after {
-  //    content: '\0020\0020\25b2';
-  //  }
-  //
-  //  &[aria-hidden="true"] {
-  //    display: none;
-  //  }
-  //}
-
   ul {
     margin-bottom:0;
   }

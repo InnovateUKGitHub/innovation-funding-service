@@ -2,20 +2,26 @@
 .button {
   margin:0 15px 15px 0;
 }
+
 .form-hint{
   display: block;
   margin-bottom:5px;
 }
+
 //conflict between gds styles and our own,
 //GDS uses aria-hidden just for hiding from screenreaders, we also use it as dipslay:none;
 //therefore this (ie) fallback for the arrow in the summary/details isn't showing while it should (infund-9115)
-summary > .arrow[aria-hidden="true"]{
-  display:inline;
+summary > .arrow {
+  &[aria-hidden="true"]{
+    display:inline;
+  }
 }
 
-[tabindex]:focus {
-  outline-offset: 0;
-  outline: 3px solid $yellow;
+[tabindex] {
+  &:focus {
+    outline-offset: 0;
+    outline: 3px solid $yellow;
+  }
 }
 
 
@@ -24,78 +30,110 @@ summary > .arrow[aria-hidden="true"]{
 //The GDS styles only works with label directly following the input, this style copys the same styles but with a new selector
 //it is duplication but @extend doesn't work with nested selectors :(
 .multiple-choice {
-  [type=radio] + input[type="hidden"] + label::before {
-    content: "";
-    border: 2px solid;
-    background: transparent;
-    width: 34px;
-    height: 34px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    @include border-radius(50%);
+  [type="radio"] + input {
+    &[type="hidden"] + label {
+      &::before {
+        @include border-radius(50%);
+        content: "";
+        border: 2px solid;
+        background: transparent;
+        width: 34px;
+        height: 34px;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      &::after {
+        @include border-radius(50%);
+        @include opacity(0);
+        content: "";
+        border: 10px solid;
+        width: 0;
+        height: 0;
+        position: absolute;
+        top: 9px;
+        left: 9px;
+      }
+    }
   }
 
-  [type=radio] + input[type="hidden"] + label::after {
-    content: "";
-    border: 10px solid;
-    width: 0;
-    height: 0;
-    position: absolute;
-    top: 9px;
-    left: 9px;
-    @include border-radius(50%);
-    @include opacity(0);
-  }
+  [type="checkbox"] + input {
+    &[type="hidden"] + label {
+      &::before {
+        content: "";
+        border: 2px solid;
+        background: transparent;
+        width: 34px;
+        height: 34px;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
 
-  [type=checkbox] + input[type="hidden"] + label::before {
-    content: "";
-    border: 2px solid;
-    background: transparent;
-    width: 34px;
-    height: 34px;
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-
-  [type=checkbox] + input[type="hidden"] + label::after {
-    content: "";
-    border: solid;
-    border-width: 0 0 5px 5px;
-    background: transparent;
-    width: 17px;
-    height: 7px;
-    position: absolute;
-    top: 10px;
-    left: 8px;
-    -moz-transform: rotate(-45deg); // Firefox 15 compatibility
-    -o-transform: rotate(-45deg); // Opera 12.0 compatibility
-    -webkit-transform: rotate(-45deg); // Safari 8 compatibility
-    -ms-transform: rotate(-45deg); // IE9 compatibility
-    transform: rotate(-45deg);
-    @include opacity(0);
+      &::after {
+        @include opacity(0);
+        content: "";
+        border: solid;
+        border-width: 0 0 5px 5px;
+        background: transparent;
+        width: 17px;
+        height: 7px;
+        position: absolute;
+        top: 10px;
+        left: 8px;
+        -moz-transform: rotate(-45deg); // Firefox 15 compatibility
+        -o-transform: rotate(-45deg); // Opera 12.0 compatibility
+        -webkit-transform: rotate(-45deg); // Safari 8 compatibility
+        -ms-transform: rotate(-45deg); // IE9 compatibility
+        transform: rotate(-45deg);
+      }
+    }
   }
 
   // Focused state
-  [type=radio]:focus + input[type="hidden"] + label::before {
-    @include box-shadow(0 0 0 4px $focus-colour);
+  [type="radio"] {
+    &:focus + input {
+      &[type="hidden"] + label {
+        &::before {
+          @include box-shadow(0 0 0 4px $focus-colour);
+        }
+      }
+    }
   }
 
-  [type=checkbox]:focus + input[type="hidden"] + label::before {
-    @include box-shadow(0 0 0 3px $focus-colour);
-  }
-  // Selected state
-  input:checked + input[type="hidden"] + label::after {
-    @include opacity(1);
-  }
-  // Disabled state
-  input:disabled + input[type="hidden"] + label {
-    @include opacity(0.5);
+  [type="checkbox"] {
+    &:focus + input {
+      &[type="hidden"] + label {
+        &::before {
+          @include box-shadow(0 0 0 3px $focus-colour);
+        }
+      }
+    }
   }
 
+
+  input {
+    // Selected state
+    &:checked + input {
+      &[type="hidden"] + label {
+        &::after {
+          @include opacity(1);
+        }
+      }
+    }
+
+    // Disabled state
+    &:disabled + input {
+      &[type="hidden"] + label {
+        @include opacity(0.5);
+      }
+    }
+  }
 }
 
-select.form-control {
-  background:#fff;
+select {
+  &.form-control {
+    background:#fff;
+  }
 }

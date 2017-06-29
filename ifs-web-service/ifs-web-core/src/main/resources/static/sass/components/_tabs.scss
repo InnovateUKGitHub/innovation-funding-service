@@ -1,176 +1,182 @@
 /*--- Tabs ---*/
-
 .tabs {
-	> ul {
-		display: none;
-		position: relative;
-		overflow: hidden;
-		margin: 2em 0;
-		&:after {
-			position: absolute;
-			bottom: 0;
-			left: 0;
-			width: 100%;
-			border-bottom: 1px solid $border-colour;
-			content: "";
-		}
-		li {
-			position: relative;
-			box-sizing: border-box;
-			display: inline-block;
-			margin: 0 0.15789em 0 0;
-			z-index: 1;
-			a {
-				display: block;
-				height: 1em;
-				padding: 0.7em;
-				outline: medium none;
-				transition: background 0.25s ease-in-out 0s;
-				white-space: nowrap;
-				&:hover {
-					background-color: $border-colour;
-				}
-				&[aria-selected='true'] {
-					height: 1.2em;
-					background-color: $white;
-					border: 1px solid $border-colour;
-					border-bottom: 1px solid $white;
-					transition: none 0s ease 0s;
-					z-index: 2;
-					color: $text-colour;
-					cursor: default;
-					text-decoration: none;
-				}
-			}
-		}
-		@include media-down(mobile){
-			display: none!important;
-		}
-	}
-	section {
-		> h2,
-		> h3 {
-			display: none;
-			@include media-down(mobile){
-				display: block;
-				margin-top: 0.5em;
-			}
-		}
-		@include media-down(mobile) {
-			> h2,
-			> h3 {
-				position: relative;
-				border-top: 1px solid $border-colour;
-				clear:both;
-			}
-			> h2:last-child,
-			> h3:last-child {
-				border-top: 1px solid $border-colour;
-			}
-			> h2 button,
-			> h3 button {
-				border:0;
-				cursor: pointer;
-				position: relative;
-				font-weight: 700;
-				text-align:left;
-				padding: 10px 40px 10px 0px; //padding right for the icons
-				background:#fff;
-				font-size:15px;
+  > ul {
+    @include media-down(mobile){
+      display: none!important;
+    }
 
-				&::-moz-focus-inner{
-					padding: 0;
-					border: 0;
-				}
-				&[aria-expanded="true"]{
-					margin-bottom:0;
-				}
-			}
+    display: none;
+    position: relative;
+    overflow: hidden;
+    margin: 2em 0;
 
-			> h2 button[aria-expanded],
-			> h3 button[aria-expanded]  {
-				display: block;
-				width: 100%;
-				&:after {
-					content: '\25bc\0020';
-					position:absolute; //absolute position for ie8
-					right:15px;
-					top:15px;
-					line-height: 1;
-				}
-			}
-			> h2 button[aria-expanded="true"],
-			> h3 button[aria-expanded="true"]{
-				margin-bottom: 0;
-				&:after {
-					content: '\25b2\0020';
-				}
-			}
+    &:after {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      border-bottom: 1px solid $border-colour;
+      content: "";
+    }
 
-			> h2[aria-expanded],
-			> h3[aria-expanded] {
-				display: block;
-				//width: 100%;
-				&:after {
-					content: '\25bc\0020';
-					position: absolute; //absolute position for ie8
-					right: 15px;
-					top: 15px;
-					line-height: 1;
-				}
-			}
-			> h2[aria-expanded="true"],
-			> h3[aria-expanded="true"] {
-				margin-bottom: 0;
-				&:after {
-					content: '\25b2\0020';
-				}
-			}
-			> h2 + [aria-hidden],
-			> h3 + [aria-hidden] {
-				display: none;
-			}
+    li {
+      position: relative;
+      box-sizing: border-box;
+      display: inline-block;
+      margin: 0 0.15789em 0 0;
+      z-index: 1;
 
-			> h2 + [aria-hidden="false"],
-			> h3 + [aria-hidden="false"] {
-				display: block;
-				//@extend %contain-floats;
-				padding: 0 0 15px;
-			}
-		}
-	}
+      a {
+        display: block;
+        height: 1em;
+        padding: 0.7em;
+        outline: medium none;
+        transition: background 0.25s ease-in-out 0s;
+        white-space: nowrap;
+
+        &:hover {
+          background-color: $border-colour;
+        }
+
+        &[aria-selected='true'] {
+          height: 1.2em;
+          background-color: $white;
+          border: 1px solid $border-colour;
+          border-bottom: 1px solid $white;
+          transition: none 0s ease 0s;
+          z-index: 2;
+          color: $text-colour;
+          cursor: default;
+          text-decoration: none;
+        }
+      }
+    }
+  }
+
+  section {
+    > h2,
+    > h3 {
+      display: none;
+    }
+
+    @include media-down(mobile) {
+      > h2,
+      > h3 {
+        display: block;
+        margin-top: 0.5em;
+        position: relative;
+        border-top: 1px solid $border-colour;
+        clear:both;
+
+        &:last-child {
+          border-top: 1px solid $border-colour;
+        }
+
+        &[aria-expanded] {
+          display: block;
+
+          &:after {
+            content: '\25bc\0020';
+            position: absolute; //absolute position for ie8
+            right: 15px;
+            top: 15px;
+            line-height: 1;
+          }
+        }
+
+        &[aria-expanded="true"] {
+          margin-bottom: 0;
+
+          &:after {
+            content: '\25b2\0020';
+          }
+        }
+
+        + [aria-hidden] {
+          display: none;
+        }
+
+        + [aria-hidden="false"] {
+          display: block;
+          padding: 0 0 15px;
+        }
+
+        button {
+          border:0;
+          cursor: pointer;
+          position: relative;
+          font-weight: 700;
+          text-align:left;
+          padding: 10px 40px 10px 0px; //padding right for the icons
+          background:#fff;
+          font-size:15px;
+
+          &::-moz-focus-inner {
+            padding: 0;
+            border: 0;
+          }
+
+          &[aria-expanded="true"] {
+            margin-bottom: 0;
+
+            &:after {
+              content: '\25b2\0020';
+            }
+          }
+
+          &[aria-expanded] {
+            display: block;
+            width: 100%;
+
+            &:after {
+              content: '\25bc\0020';
+              position:absolute; //absolute position for ie8
+              right:15px;
+              top:15px;
+              line-height: 1;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 //Inline nav - non active tabs
-ul.inline-nav,
-ol.inline-nav {
-	padding: 0 10px;
-	margin-bottom: 30px;
-	overflow: hidden;
-	position: relative;
+ul,
+ol {
+  &.inline-nav {
+    padding: 0 10px;
+    margin-bottom: 30px;
+    overflow: hidden;
+    position: relative;
 
-	li {
-		float: left;
-	}
-	li a {
-		padding: 10px 16px;
-		display: block;
-		position: relative;
-	}
-	li.selected a {
-		border: 1px solid $border-colour;
-		border-bottom: 1px solid $white;
-		z-index:1;
-	}
+    li {
+      float: left;
 
-	&:after {
-		content: "";
-		position: absolute;
-		bottom:0px;
-		background-color: $border-colour;
-		width:100%;
-		height: 1px;
-		left:0;
-	}
+      &.selected {
+        a {
+          border: 1px solid $border-colour;
+          border-bottom: 1px solid $white;
+          z-index:1;
+        }
+      }
 
+      a {
+        padding: 10px 16px;
+        display: block;
+        position: relative;
+      }
+    }
+
+    &:after {
+      content: "";
+      position: absolute;
+      bottom:0px;
+      background-color: $border-colour;
+      width:100%;
+      height: 1px;
+      left:0;
+    }
+  }
 }
