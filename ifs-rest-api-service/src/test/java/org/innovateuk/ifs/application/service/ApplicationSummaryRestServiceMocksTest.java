@@ -17,6 +17,7 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
 import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
+import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -206,6 +207,22 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         );
 
         RestResult<List<Long>> result = service.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(123L, of("filter"), Optional.of(false), Optional.of(FUNDED));
+
+        assertTrue(result.isSuccess());
+        assertEquals(appIds, result.getSuccessObject());
+    }
+
+    @Test
+    public void getAllSubmittedApplicationIds() {
+        List<Long> appIds = asList(1L, 2L);
+
+        setupGetWithRestResultExpectations(
+                format("%s/%s/%s/%s?filter=filter&fundingFilter=UNFUNDED", APPLICATION_SUMMARY_REST_URL, "findByCompetition", 123L, "all-submitted"),
+                ParameterizedTypeReferences.longsListType(),
+                appIds
+        );
+
+        RestResult<List<Long>> result = service.getAllSubmittedApplicationIds(123L, of("filter"), Optional.of(UNFUNDED));
 
         assertTrue(result.isSuccess());
         assertEquals(appIds, result.getSuccessObject());

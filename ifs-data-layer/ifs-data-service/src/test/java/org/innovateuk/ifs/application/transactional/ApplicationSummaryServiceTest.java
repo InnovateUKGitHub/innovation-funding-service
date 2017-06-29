@@ -7,6 +7,7 @@ import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryPageMapper;
 import org.innovateuk.ifs.application.resource.*;
@@ -37,6 +38,8 @@ import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.PageableMatcher.srt;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
@@ -47,6 +50,8 @@ import static org.innovateuk.ifs.application.domain.FundingDecisionStatus.FUNDED
 import static org.innovateuk.ifs.application.domain.FundingDecisionStatus.ON_HOLD;
 import static org.innovateuk.ifs.application.domain.FundingDecisionStatus.UNFUNDED;
 import static org.innovateuk.ifs.application.resource.ApplicationState.*;
+import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATES;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
@@ -56,6 +61,7 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.argThat;
@@ -513,7 +519,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void findAllByCompetitionWithFundingDecisionApplications() throws Exception {
+    public void findWithFundingDecisionIsChangeableApplicationIdsByCompetitionId() throws Exception {
 
         List<Application> applications = newApplication()
                 .withManageFundingEmailDate(ZonedDateTime.now())
@@ -530,6 +536,23 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         assertEquals(applications.get(1).getId(), result.getSuccessObject().get(1));
     }
 
+    @SuppressWarnings("unchecked")
+    @Test
+    public void getAllSubmittedApplicationIdsByCompetitionId()throws Exception {
+        List<Application> applications = newApplication()
+                .withFundingDecision(UNFUNDED)
+                .build(2);
+
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
+                eq(COMP_ID), eq(SUBMITTED_STATES),  eq("filter"), eq(UNFUNDED))).thenReturn(applications);
+
+        ServiceResult<List<Long>> result = applicationSummaryService.getAllSubmittedApplicationIdsByCompetitionId(COMP_ID, of("filter"), of(UNFUNDED));
+        assertTrue(result.isSuccess());
+        assertEquals(2, result.getSuccessObject().size());
+        assertEquals(applications.get(0).getId(), result.getSuccessObject().get(0));
+        assertEquals(applications.get(1).getId(), result.getSuccessObject().get(1));
+    }
+
     @Test
     public void getApplicationTeamSuccess() {
         Role leadRole = newRole().withType(UserRoleType.LEADAPPLICANT).build();
@@ -538,7 +561,6 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         User leadOrgNonLeadUser2 = newUser().withFirstName("Cee").withLastName("Dee").build();
         User partnerOrgLeadUser1 = newUser().withFirstName("Zee").withLastName("Der").withRoles(singletonList(leadRole).stream().collect(Collectors.toSet())).build();
         User partnerOrgLeadUser2 = newUser().withFirstName("Ay").withLastName("Der").withRoles(singletonList(leadRole).stream().collect(Collectors.toSet())).build();
-
 
         ProcessRole lead = newProcessRole().withRole(UserRoleType.LEADAPPLICANT).withOrganisationId(234L).withUser(leadOrgLeadUser).build();
         ProcessRole collaborator1 = newProcessRole().withRole(UserRoleType.COLLABORATOR).withOrganisationId(345L).withUser(partnerOrgLeadUser1).build();
@@ -600,7 +622,6 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void getApplicationTeamFailsNoApplication() {
-
         when(applicationRepositoryMock.findOne(123L)).thenReturn(null);
 
         ServiceResult<ApplicationTeamResource> result = applicationSummaryService.getApplicationTeamByApplicationId(123L);

@@ -76,12 +76,11 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
     }
 
     @Test
-    public void getAllWithFundingDecisionApplicationSummariesByCompetitionId() throws Exception {
+    public void getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId() throws Exception {
         final Long competitionId = 1L;
         String filter = "filter";
         Boolean sendFilter = false;
         FundingDecisionStatus fundingFilter = FundingDecisionStatus.FUNDED;
-
         List<Long> applicationIds = asList(1L, 2L, 3L);
 
         when(applicationSummaryService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(competitionId, Optional.of(filter), Optional.of(sendFilter), Optional.of(fundingFilter))).thenReturn(serviceSuccess(applicationIds));
@@ -105,6 +104,31 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
     }
 
     @Test
+    public void getAllSubmittedApplicationIdsByCompetitionId() throws Exception {
+        final Long competitionId = 1L;
+        String filter = "filter";
+        FundingDecisionStatus fundingFilter = FundingDecisionStatus.FUNDED;
+        List<Long> applicationIds = asList(1L, 2L, 3L);
+
+        when(applicationSummaryService.getAllSubmittedApplicationIdsByCompetitionId(competitionId, Optional.of(filter), Optional.of(fundingFilter))).thenReturn(serviceSuccess(applicationIds));
+
+        mockMvc.perform(
+                get(baseUrl + "/findByCompetition/{competitionId}/all-submitted", competitionId)
+                        .param("all", "")
+                        .param("filter", filter)
+                        .param("fundingFilter", fundingFilter.toString())
+                        .contentType(APPLICATION_JSON))
+                .andDo(document("application-summary/{method-name}",
+                        pathParameters(parameterWithName("competitionId").description("The competition id")),
+                        requestParameters(
+                                parameterWithName("all").description("To retrieve all records"),
+                                parameterWithName("filter").description("String based filter"),
+                                parameterWithName("fundingFilter").description("Filter on the funding state")
+                        ),
+                        responseFields(fieldWithPath("[]").description("List of submitted application ids"))));
+    }
+
+    @Test
     public void getIneligibleApplicationsSummariesByCompetitionId() throws Exception {
         long competitionId = 1L;
         String sort = "id";
@@ -115,9 +139,7 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
         int totalPages = pageIndex + 2;
 
         List<ApplicationSummaryResource> applications = APPLICATION_SUMMARY_RESOURCE_BUILDER.build(5);
-
         ApplicationSummaryPageResource pageResource = new ApplicationSummaryPageResource(totalPages * size, totalPages, applications, pageIndex, size);
-
         when(applicationSummaryService.getIneligibleApplicationSummariesByCompetitionId(competitionId, sort, pageIndex, size, Optional.of(filter), Optional.of(informFilter))).thenReturn(serviceSuccess(pageResource));
 
         mockMvc.perform(

@@ -216,7 +216,6 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
         verify(applicationSummaryService).getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, sort, page, PAGE_SIZE, empty(), empty(), empty());
     }
 
-
     @Test
     public void searchWithFundingDecisionByCompetitionIdWithFiltering() throws Exception {
         long competitionId = 3L;
@@ -260,6 +259,26 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(content().json(objectMapper.writeValueAsString(applicationIds)));
 
         verify(applicationSummaryService).getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(competitionId, of(strFilter), of(sendFilter), of(fundingFilter));
+    }
+
+    @Test
+    public void searchAllSubmittedApplicationIdsByCompetitionId() throws Exception {
+        long competitionId = 3L;
+        String strFilter = "filter";
+        FundingDecisionStatus fundingFilter = FUNDED;
+
+        List<Long> applicationIds = asList(1L, 2L);
+
+        when(applicationSummaryService.getAllSubmittedApplicationIdsByCompetitionId(competitionId, of(strFilter), of(fundingFilter))).thenReturn(serviceSuccess(applicationIds));
+
+        mockMvc.perform(get("/applicationSummary/findByCompetition/{compId}/all-submitted",competitionId)
+                .param("all", "")
+                .param("filter", strFilter)
+                .param("fundingFilter", fundingFilter.toString()))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(applicationIds)));
+
+        verify(applicationSummaryService).getAllSubmittedApplicationIdsByCompetitionId(competitionId, of(strFilter), of(fundingFilter));
     }
 
     @Test
