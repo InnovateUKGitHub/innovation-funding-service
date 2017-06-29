@@ -61,13 +61,13 @@ public class InviteUserController {
                                UserResource loggedInUser) {
 
         //TODO - Temp code till its set in the form
-        form.setRole(AdminRoleType.IFS_ADMINISTRATOR);
+/*        form.setRole(AdminRoleType.IFS_ADMINISTRATOR);
         InviteUserResource inviteUserResource = constructInviteUserResource(form);
         ServiceResult<Void> saveResult = inviteUserService.saveUserInvite(inviteUserResource);
-        return "admin/users/active";
+        return "admin/users/active";*/
 
 
-/*        Supplier<String> failureView = () -> "admin/invite-new-user";
+        Supplier<String> failureView = () -> "admin/invite-new-user";
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -78,7 +78,7 @@ public class InviteUserController {
             return validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> "admin/users/active");
 
-        });*/
+        });
     }
 
     private InviteUserResource constructInviteUserResource(InviteUserForm form) {
