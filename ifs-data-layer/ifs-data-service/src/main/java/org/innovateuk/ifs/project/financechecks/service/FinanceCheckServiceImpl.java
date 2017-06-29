@@ -25,8 +25,8 @@ import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesServi
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
-import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
+import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.innovateuk.ifs.project.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.user.domain.User;
@@ -39,9 +39,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -452,7 +450,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         ViabilityResource viabilityResource = new ViabilityResource(convertViabilityState(viabilityProcess.getActivityState()), projectFinance.getViabilityStatus());
 
         if (viabilityProcess.getLastModified() != null) {
-            viabilityResource.setViabilityApprovalDate(ZonedDateTime.ofInstant(viabilityProcess.getLastModified().toInstant(), ZoneId.systemDefault()).toLocalDate());
+            viabilityResource.setViabilityApprovalDate(viabilityProcess.getLastModified().toLocalDate());
         }
 
         setViabilityApprovalUser(viabilityResource, viabilityProcess.getInternalParticipant());
@@ -499,7 +497,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         EligibilityResource eligibilityResource = new EligibilityResource(convertEligibilityState(eligibilityProcess.getActivityState()), projectFinance.getEligibilityStatus());
 
         if (eligibilityProcess.getLastModified() != null) {
-            eligibilityResource.setEligibilityApprovalDate(ZonedDateTime.ofInstant(eligibilityProcess.getLastModified().toInstant(), ZoneId.systemDefault()).toLocalDate());
+            eligibilityResource.setEligibilityApprovalDate(eligibilityProcess.getLastModified().toLocalDate());
         }
 
         setEligibilityApprovalUser(eligibilityResource, eligibilityProcess.getInternalParticipant());
