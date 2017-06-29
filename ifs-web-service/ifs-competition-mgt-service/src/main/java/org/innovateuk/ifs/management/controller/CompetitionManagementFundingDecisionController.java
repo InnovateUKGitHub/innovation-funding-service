@@ -4,12 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.form.*;
 import org.innovateuk.ifs.competition.service.ApplicationSummarySortFieldService;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
@@ -33,7 +31,6 @@ import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 
 /**
@@ -283,7 +280,8 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                 .getSuccessObjectOrThrowException();
 
         List<Long> submittableApplicationIds = getAllApplicationIdsByFilters(competitionId, fundingDecisionFilterForm);
-        boolean selectAllDisabled = limitIsExceeded(submittableApplicationIds.size()) || submittableApplicationIds.isEmpty();
+        boolean selectionLimitWarning = limitIsExceeded(submittableApplicationIds.size());
+        boolean selectAllDisabled =  submittableApplicationIds.isEmpty();
 
         model.addAttribute("pagination", new PaginationViewModel(results, originQuery));
         model.addAttribute("results", results);
@@ -291,6 +289,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         model.addAttribute("competitionSummary", competitionSummary);
         model.addAttribute("originQuery", originQuery);
         model.addAttribute("selectAllDisabled", selectAllDisabled);
+        model.addAttribute("selectionLimitWarning", selectionLimitWarning);
 
         switch (competitionSummary.getCompetitionStatus()) {
             case FUNDERS_PANEL:

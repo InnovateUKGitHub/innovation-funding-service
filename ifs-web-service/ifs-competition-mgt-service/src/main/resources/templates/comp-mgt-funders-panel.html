@@ -56,7 +56,7 @@
         <p><span>A funding decision is required for all applications to the competition.</span></p>
     </div>
 
-    <div class="warning-alert extra-margin-bottom" th:if="${selectAllDisabled}">
+    <div class="warning-alert extra-margin-bottom" th:if="${selectionLimitWarning}">
         <p th:text="#{competition.management.limit.warning}"></p>
     </div>
     <div data-selection-limit-exceeded-block=""></div>
@@ -76,7 +76,7 @@
                     <fieldset>
                         <legend class="visuallyhidden">Select applications</legend>
                         <div class="multiple-choice">
-                            <input th:disabled="${selectAllDisabled}" th:checked="${selectionForm.isAllSelected()}" class="select-all" id="select-all-1" value="select-all" type="checkbox" data-select-all="" />
+                            <input th:disabled="${selectAllDisabled || selectionLimitWarning}" th:checked="${selectionForm.isAllSelected()}" class="select-all" id="select-all-1" value="select-all" type="checkbox" data-select-all="" />
                             <label for="select-all-1">
                                 Select all applications
                             </label>
