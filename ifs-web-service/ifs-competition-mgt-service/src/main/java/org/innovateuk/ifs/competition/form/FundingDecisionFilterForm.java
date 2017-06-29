@@ -33,6 +33,11 @@ public class FundingDecisionFilterForm {
         return this.fundingFilter.isPresent() || this.stringFilter.isPresent();
     }
 
+    public void updateAllFilters(FundingDecisionFilterForm updatedFilterForm) {
+        this.stringFilter = updatedFilterForm.stringFilter;
+        this.fundingFilter = updatedFilterForm.getFundingFilter();
+    }
+
     @JsonIgnore
     public String getStringFilterValue() {
         return stringFilter.orElse(null);

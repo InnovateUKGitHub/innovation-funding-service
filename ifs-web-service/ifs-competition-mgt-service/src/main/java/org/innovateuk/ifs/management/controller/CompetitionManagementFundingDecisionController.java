@@ -92,8 +92,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                 && filterCookieForm.anyFilterIsActive()
                 && !filterChanged
                 && selectionForm.anySelectionIsMade()) {
-            filterForm.setFundingFilter(selectionCookieForm.getFundingDecisionFilterForm().getFundingFilter());
-            filterForm.setStringFilter(selectionCookieForm.getFundingDecisionFilterForm().getStringFilter());
+            filterForm.updateAllFilters(selectionCookieForm.getFundingDecisionFilterForm());
         }
 
         FundingDecisionSelectionForm trimmedSelectionForm = trimSelectionByFilteredResult(selectionForm, filterForm, competitionId);
@@ -287,13 +286,14 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                 .getSuccessObjectOrThrowException();
 
         List<Long> submittableApplicationIds = getAllApplicationIdsByFilters(competitionId, fundingDecisionFilterForm);
+        boolean selectAllDisabled = limitIsExceeded(submittableApplicationIds.size()) || submittableApplicationIds.isEmpty();
 
         model.addAttribute("pagination", new PaginationViewModel(results, originQuery));
         model.addAttribute("results", results);
         model.addAttribute("selectionForm", fundingDecisionSelectionForm);
         model.addAttribute("competitionSummary", competitionSummary);
         model.addAttribute("originQuery", originQuery);
-        model.addAttribute("selectAllDisabled", limitIsExceeded(submittableApplicationIds.size()));
+        model.addAttribute("selectAllDisabled", selectAllDisabled);
 
         switch (competitionSummary.getCompetitionStatus()) {
             case FUNDERS_PANEL:

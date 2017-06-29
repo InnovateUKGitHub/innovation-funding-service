@@ -89,9 +89,9 @@
                 <fieldset class="mark-applications">
                     <legend class="visuallyhidden">Mark selected applications</legend>
                     <h3>Mark application as:</h3>
-                    <button type="submit" value='FUNDED' name="fundingDecision" class="button button-secondary" data-submit-el="">Successful</button>
-                    <button type="submit" value='UNFUNDED' name="fundingDecision" class="button button-secondary" data-submit-el="">Unsuccessful</button>
-                    <button type="submit" value='ON_HOLD' name="fundingDecision" class="button button-secondary" data-submit-el="">On hold</button>
+                    <button th:disabled="${selectionForm.applicationIds.isEmpty()}" type="submit" value='FUNDED' name="fundingDecision" class="button button-secondary" data-submit-el="">Successful</button>
+                    <button th:disabled="${selectionForm.applicationIds.isEmpty()}" type="submit" value='UNFUNDED' name="fundingDecision" class="button button-secondary" data-submit-el="">Unsuccessful</button>
+                    <button th:disabled="${selectionForm.applicationIds.isEmpty()}" type="submit" value='ON_HOLD' name="fundingDecision" class="button button-secondary" data-submit-el="">On hold</button>
                 </fieldset>
             </div>
         </div>
