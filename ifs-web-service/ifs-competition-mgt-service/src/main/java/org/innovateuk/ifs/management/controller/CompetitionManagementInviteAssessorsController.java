@@ -30,6 +30,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+import static java.util.Optional.of;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -78,13 +79,13 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
                        @SuppressWarnings("unused") BindingResult bindingResult,
                        @PathVariable("competitionId") long competitionId,
                        @RequestParam(defaultValue = "0") int page,
-                       @RequestParam(value = "clearFilter", defaultValue = "false") boolean clearFilter,
+                       @RequestParam(value = "filterChanged", required = false) boolean filterChanged,
                        @RequestParam MultiValueMap<String, String> queryParams,
                        HttpServletRequest request,
                        HttpServletResponse response) {
 
         String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_FIND, queryParams);
-        updateSelectionForm(request, response, competitionId, selectionForm, filterForm, clearFilter);
+        updateSelectionForm(request, response, competitionId, selectionForm, filterForm, filterChanged);
         InviteAssessorsFindViewModel inviteAssessorsFindViewModel = inviteAssessorsFindModelPopulator.populateModel(competitionId, page, filterForm.getInnovationArea(), originQuery);
 
         model.addAttribute("model", inviteAssessorsFindViewModel);
@@ -98,17 +99,20 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
                                      long competitionId,
                                      AssessorSelectionForm selectionForm,
                                      FindAssessorsFilterForm filterForm,
-                                     boolean clearFilter) {
+                                     boolean filterChanged) {
         AssessorSelectionForm storedSelectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new AssessorSelectionForm());
 
-        if (storedSelectionForm.getSelectedInnovationArea() != null && !filterForm.getInnovationArea().isPresent() && !clearFilter) {
-            //filterForm.setInnovationArea(of(storedSelectionForm.getSelectedInnovationArea()));
+        if (storedSelectionForm.anyFilterIsActive()
+                && !filterForm.anyFilterIsActive()
+                && !filterChanged
+                && storedSelectionForm.anySelectionIsMade()) {
+            filterForm.setInnovationArea(of(storedSelectionForm.getSelectedInnovationArea()));
         }
 
         AssessorSelectionForm trimmedAssessorForm = trimSelectionByFilteredResult(storedSelectionForm, filterForm.getInnovationArea(), competitionId);
         selectionForm.setSelectedAssessorIds(trimmedAssessorForm.getSelectedAssessorIds());
         selectionForm.setAllSelected(trimmedAssessorForm.getAllSelected());
-        //selectionForm.setSelectedInnovationArea(filterForm.getInnovationArea().orElse(null));
+        selectionForm.setSelectedInnovationArea(filterForm.getInnovationArea().orElse(null));
 
         saveFormToCookie(response, competitionId, selectionForm);
     }

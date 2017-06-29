@@ -4,7 +4,7 @@ package org.innovateuk.ifs.management.model;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.competition.form.ManageFundingApplicationsQueryForm;
+import org.innovateuk.ifs.competition.form.FundingNotificationFilterForm;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.controller.CompetitionManagementCookieController;
 import org.innovateuk.ifs.management.viewmodel.CompetitionInFlightStatsViewModel;
@@ -32,7 +32,7 @@ public class ManageFundingApplicationsModelPopulator {
     @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
 
-    public ManageFundingApplicationViewModel populate(ManageFundingApplicationsQueryForm queryForm,
+    public ManageFundingApplicationViewModel populate(FundingNotificationFilterForm queryForm,
                                                       long competitionId,
                                                       String queryString,
                                                       long totalSubmittableApplications) {

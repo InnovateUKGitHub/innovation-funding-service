@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.competition.form;
 
-import org.innovateuk.ifs.application.resource.FundingDecision;
-
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +7,7 @@ import java.util.List;
 /**
  * Form used to keep track of application selections as part of Funding Notification cookie
  */
-public class SelectApplicationsForEmailForm {
+public class FundingNotificationSelectionForm {
 
     @NotNull
     private List<Long> ids = new ArrayList<>();
@@ -29,5 +27,10 @@ public class SelectApplicationsForEmailForm {
 
     public void setAllSelected(boolean allSelected) {
         this.allSelected = allSelected;
+    }
+
+    public boolean anySelectionIsMade() {
+        return this.allSelected != false ||
+                this.ids.size() > 0;
     }
 }

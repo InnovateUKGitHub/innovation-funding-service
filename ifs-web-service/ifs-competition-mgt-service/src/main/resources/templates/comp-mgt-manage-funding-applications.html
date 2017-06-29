@@ -11,16 +11,16 @@
 <main tabindex="-1" id="content" >
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
-    <div class="error-summary" th:if="${#fields.hasErrors('${manageFundingApplicationsQueryForm.*}')}">
+    <div class="error-summary" th:if="${#fields.hasErrors('${fundingNotificationFilterForm.*}')}">
         <h2 class="heading-medium error-summary-heading">There is a problem on this page</h2>
         <ul class="error-summary-list">
-            <li th:classappend="list-header" th:text="${err}" th:each="err : ${#fields.errors('${manageFundingApplicationsQueryForm.*}')}"></li>
+            <li th:classappend="list-header" th:text="${err}" th:each="err : ${#fields.errors('${fundingNotificationFilterForm.*}')}"></li>
         </ul>
     </div>
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage funding applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
 
     <div th:replace="competition/key-statistics :: key-statistics(keyStatistics=${model.keyStatistics})" />
-    <form method="GET" th:object="${manageFundingApplicationsQueryForm}">
+    <form method="GET" th:object="${fundingNotificationFilterForm}">
         <div class="search-filters extra-margin">
             <fieldset>
                 <legend class="heading-medium">Filter applications</legend>
@@ -56,13 +56,14 @@
             </fieldset>
             <div class="grid-row">
                 <div class="column-half">
-                    <a href="?clearFilters=true" class="button button-clear no-margin">Clear all filters</a>
+                    <a href="?filterChanged=1" class="button button-clear no-margin">Clear all filters</a>
                 </div>
                 <div class="column-half alignright">
                     <button class="button no-margin">Filter</button>
                 </div>
             </div>
         </div>
+        <input type="hidden" name="filterChanged" value="1"/>
     </form>
 
     <div class="warning-alert extra-margin-bottom" th:if="${model.selectAllDisabled}">

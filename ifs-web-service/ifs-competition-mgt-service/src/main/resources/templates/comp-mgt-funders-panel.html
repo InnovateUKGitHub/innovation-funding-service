@@ -42,13 +42,14 @@
                 </div>
             <div class="grid-row">
                 <div class="column-half">
-                    <a href="?clearFilters=true" class="button button-clear no-margin">Clear all filters</a>
+                    <a href="?filterChanged=1" class="button button-clear no-margin">Clear all filters</a>
                 </div>
                 <div class="column-half alignright">
                     <button class="button no-margin">Filter</button>
                 </div>
             </div>
         </div>
+        <input type="hidden" name="filterChanged" value="1"/>
     </form>
 
     <div th:if="${fundingNotDecidedForAllApplications}" class="event-alert">

@@ -4,32 +4,32 @@ package org.innovateuk.ifs.competition.form;
     Cookie class to store both application id selection and filter values in one object.
  */
 public class FundingNotificationSelectionCookie {
-    private SelectApplicationsForEmailForm selectApplicationsForEmailForm;
-    private ManageFundingApplicationsQueryForm manageFundingApplicationsQueryForm;
+    private FundingNotificationSelectionForm fundingNotificationSelectionForm;
+    private FundingNotificationFilterForm fundingNotificationFilterForm;
 
     public FundingNotificationSelectionCookie() {
-        this.selectApplicationsForEmailForm = new SelectApplicationsForEmailForm();
-        this.manageFundingApplicationsQueryForm = new ManageFundingApplicationsQueryForm();
+        this.fundingNotificationSelectionForm = new FundingNotificationSelectionForm();
+        this.fundingNotificationFilterForm = new FundingNotificationFilterForm();
     }
 
-    public FundingNotificationSelectionCookie(SelectApplicationsForEmailForm selectApplicationsForEmailForm) {
-        this.selectApplicationsForEmailForm = selectApplicationsForEmailForm;
-        this.manageFundingApplicationsQueryForm = new ManageFundingApplicationsQueryForm();
+    public FundingNotificationSelectionCookie(FundingNotificationSelectionForm fundingNotificationSelectionForm) {
+        this.fundingNotificationSelectionForm = fundingNotificationSelectionForm;
+        this.fundingNotificationFilterForm = new FundingNotificationFilterForm();
     }
 
-    public SelectApplicationsForEmailForm getSelectApplicationsForEmailForm() {
-        return selectApplicationsForEmailForm;
+    public FundingNotificationSelectionForm getFundingNotificationSelectionForm() {
+        return fundingNotificationSelectionForm;
     }
 
-    public void setSelectApplicationsForEmailForm(SelectApplicationsForEmailForm selectApplicationsForEmailForm) {
-        this.selectApplicationsForEmailForm = selectApplicationsForEmailForm;
+    public void setFundingNotificationSelectionForm(FundingNotificationSelectionForm fundingNotificationSelectionForm) {
+        this.fundingNotificationSelectionForm = fundingNotificationSelectionForm;
     }
 
-    public ManageFundingApplicationsQueryForm getManageFundingApplicationsQueryForm() {
-        return manageFundingApplicationsQueryForm;
+    public FundingNotificationFilterForm getFundingNotificationFilterForm() {
+        return fundingNotificationFilterForm;
     }
 
-    public void setManageFundingApplicationsQueryForm(ManageFundingApplicationsQueryForm manageFundingApplicationsQueryForm) {
-        this.manageFundingApplicationsQueryForm = manageFundingApplicationsQueryForm;
+    public void setFundingNotificationFilterForm(FundingNotificationFilterForm fundingNotificationFilterForm) {
+        this.fundingNotificationFilterForm = fundingNotificationFilterForm;
     }
 }

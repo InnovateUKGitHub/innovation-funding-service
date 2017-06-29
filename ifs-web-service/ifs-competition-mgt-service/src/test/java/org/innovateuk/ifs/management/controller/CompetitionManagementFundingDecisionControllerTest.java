@@ -216,7 +216,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         when(applicationSummaryRestService.getAllSubmittedApplications(COMPETITION_ID, empty(), empty())).thenReturn(restSuccess(applicationSummaryResources));
 
         mockMvc.perform(get("/competition/{competitionId}/funding", COMPETITION_ID)
-                .param("clearFilters", "true"))
+                .param("filterChanged", "true"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-funders-panel"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
