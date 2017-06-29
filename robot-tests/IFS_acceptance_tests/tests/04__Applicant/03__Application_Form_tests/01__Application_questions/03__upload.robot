@@ -171,4 +171,3 @@ the user can see the option to upload a file on the question
 
 The applicant opens the uploaded file
     When The user opens the link in new window        ${valid_pdf}
-    Run Keyword And Ignore Error Without Screenshots  Confirm Action
