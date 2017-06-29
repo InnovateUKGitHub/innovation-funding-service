@@ -91,7 +91,7 @@ Autosave in the form questions
 Word count works
     [Documentation]    INFUND-198
     [Tags]    HappyPath
-    When The user enters text to a text field    css=.editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.
+    When the user enters multiple strings into a text field         css=.editor  a${SPACE}  31
     Then the word count should be correct for the Project summary
 
 Guidance of the questions
