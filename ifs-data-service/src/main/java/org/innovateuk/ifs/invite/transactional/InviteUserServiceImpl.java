@@ -13,6 +13,7 @@ import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.project.transactional.EmailService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
+import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.resource.AdminRoleType;
@@ -39,7 +40,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  * Transactional and secured service implementation providing operations around invites for users.
  */
 @Service
-public class InviteUserServiceImpl implements InviteUserService {
+public class InviteUserServiceImpl extends BaseTransactionalService implements InviteUserService {
 
     @Autowired
     private RoleRepository roleRepository;

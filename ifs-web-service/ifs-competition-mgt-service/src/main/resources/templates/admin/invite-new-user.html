@@ -60,17 +60,13 @@
                    th:attr="data-maxlength-errormessage=#{validation.standard.email.length.max(256)},
                                     data-required-errormessage=#{validation.standard.email.required}" />
         </div>
-        <div class="form-group">
-            <label class="form-label" for="role">
+        <div class="form-group" th:classappend="${#fields.hasErrors('*{role}')} ? 'form-group-error'">
+            <label class="form-label" th:for="${#ids.next('role')}">
                 <span class="form-label-bold">Job role</span>
                 <p class="form-hint">Which of the following job roles will the user identify as?</p>
             </label>
-            <!--/* TODO need object with all available roles */-->
-            <select name="role" class="form-control" id="role" required="required" data-required-errormessage="Please select a role">
-                <option value="a">IFS Administrator</option>
-                <option value="b">Competition Administrator</option>
-                <option value="c">Project Finance</option>
-                <option value="d">Customer Support</option>
+            <select name="role" class="form-control" id="role" th:field="*{role}" required="required" data-required-errormessage="Please select a role">
+                <option th:each="adminRole : ${T(org.innovateuk.ifs.user.resource.AdminRoleType).values()}" th:value="${adminRole}" th:text="${adminRole.displayName}"></option>
             </select>
         </div>
         <div class="form-group extra-margin">
