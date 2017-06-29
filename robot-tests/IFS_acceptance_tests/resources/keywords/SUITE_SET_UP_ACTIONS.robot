@@ -19,7 +19,6 @@ Login new application invite academic
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    Academic robot test application
     Run Keyword If    '${status}' == 'FAIL'    Run keywords    Create new application with the same user  Academic robot test application
     ...    AND    Invite and accept the invitation    ${recipient}    ${subject}    ${pattern}
-    ...    AND    the user closes the browser
 
 new account complete all but one
     Run keyword if    ${smoke_test}!=1    create new account for submitting
@@ -43,8 +42,7 @@ create new account for submitting
     And the user clicks the button/link        jQuery=.button:contains("Sign in")
 
 the user marks every section but one as complete
-    the user logs-in in new browser    ${submit_test_email}  ${correct_password}
-    the user navigates to the page     ${server}
+    the user navigates to the page    ${server}
     the user clicks the button/link    link=${application_name}
     the user clicks the button/link    link=Project summary
     the user marks the section as complete    1039
@@ -129,8 +127,7 @@ Invite and accept the invitation
     And the user enters text to a text field    name=applicants[0].name    Arsene Wenger
     And the user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+academictest@gmail.com
     And the user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
-    And the user closes the browser
-    And the guest user opens the browser
+    And logout as user
     When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}    3
     And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
     When the user selects the radio button    organisationType    2
@@ -150,7 +147,7 @@ Invite and accept the invitation
     And the user fills the create account form    Arsene    Wenger
     And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    We now need you to verify your email address
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And the user logs-in in new browser    ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
+    And Logging in and Error Checking      ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
 
 The user navigates to the summary page of the Robot test application
     Given the user navigates to the page    ${DASHBOARD_URL}
@@ -180,7 +177,6 @@ The user marks the academic application finances as incomplete
 
 invite a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
-    the guest user opens the browser
     the user navigates to the page                           ${COMPETITION_OVERVIEW_URL}
     the user follows the flow to register their organisation
     the user verifies email                                    Stuart   Anderson    ${EMAIL_LEAD}
