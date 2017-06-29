@@ -144,7 +144,6 @@ Pending users visible in the assign list but not clickable
     And the user clicks the button/link           link=Project summary
     Then the applicant cannot assign to pending invitees
     And the user should see the text in the page  Adrian Booth (pending)
-    [Teardown]    Logout as user
 
 Business organisation (partner accepts invitation)
     [Documentation]    INFUND-1005
@@ -152,6 +151,7 @@ Business organisation (partner accepts invitation)
     ...    INFUND-1779
     ...    INFUND-2336
     [Tags]    HappyPath    Email    SmokeTest
+    [Setup]    Logout as user
     When the user reads his email and clicks the link  ${invite_email}   Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation    3
     And the user clicks the button/link                jQuery=.button:contains("Yes, accept invitation")
     And the user selects the radio button              organisationType    1

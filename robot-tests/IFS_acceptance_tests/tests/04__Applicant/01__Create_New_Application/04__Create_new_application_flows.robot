@@ -17,12 +17,6 @@ Resource          ../../../resources/defaultResources.robot
 Resource          ../../10__Project_setup/PS_Common.robot
 
 *** Test Cases ***
-The email address does not stay in the cookie
-    [Documentation]    INFUND_2510
-    [Tags]
-    Given Applicant goes to the registration form
-    Then the user should not see the text in the page  ${test_mailbox_one}+rto@gmail.com
-
 Non registered users non companies house route
     [Documentation]    INFUND-669 INFUND-1904 INFUND-1920
     [Tags]    HappyPath
@@ -35,6 +29,12 @@ Non registered users non companies house route
     And the user clicks the button/link            jQuery=.button:contains("Save and continue")
     And the user clicks the button/link            jQuery=.button:contains("Save and continue")
     Then The user should see the text in the page  Your details
+
+The email address does not stay in the cookie
+    [Documentation]    INFUND_2510
+    [Tags]
+    Given Applicant goes to the registration form
+    Then the user should not see the text in the page  ${test_mailbox_one}+rto@gmail.com
 
 Non registered users sign-up companies house route
     [Documentation]    INFUND-669 INFUND-1904 INFUND-1920 INFUND-1785 INFUND-9280
@@ -70,6 +70,7 @@ the new application should be visible in the dashboard page
     the user should see the text in the page  Application number:
 
 the user clicks the Not on company house link
+    the user clicks the button/link    jQuery=summary:contains("Enter details manually")
     the user clicks the button/link       name=manual-address
     The user enters text to a text field  id=addressForm.selectedPostcode.addressLine1    street
     The user enters text to a text field  id=addressForm.selectedPostcode.town    town
