@@ -172,7 +172,6 @@ the text box should be editable
 
 the question should not be marked as complete on the application overview page
     The user clicks the button/link    link=Application overview
-    Run Keyword And Ignore Error Without Screenshots    confirm action
     the user should see the element    jQuery=li:nth-child(2)
     the user should not see the element    jQuery=li:nth-child(2) span:contains("Complete")
 
