@@ -16,6 +16,7 @@ import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.applicationSummaryResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionSummaryResourceListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.longsListType;
 
 @Service
 public class ApplicationSummaryRestServiceImpl extends BaseRestService implements ApplicationSummaryRestService {
@@ -31,7 +32,7 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 	}
 
 	@Override
-	public RestResult<List<ApplicationSummaryResource>> getAllSubmittedApplications(long competitionId, Optional<String> filter, Optional<FundingDecision> fundingFilter) {
+	public RestResult<List<Long>> getAllSubmittedApplicationIds(long competitionId, Optional<String> filter, Optional<FundingDecision> fundingFilter) {
 		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/all-submitted";
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
@@ -40,7 +41,7 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 
 		String uri = UriComponentsBuilder.fromPath(baseUrl).queryParams(params).build().encode().toUriString();
 
-		return getWithRestResult(uri, competitionSummaryResourceListType());
+		return getWithRestResult(uri, longsListType());
 	}
 
 	@Override
@@ -90,7 +91,7 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 	}
 
     @Override
-    public RestResult<List<ApplicationSummaryResource>> getWithFundingDecisionApplications(Long competitionId, Optional<String> filter, Optional<Boolean> sendFilter, Optional<FundingDecision> fundingFilter) {
+    public RestResult<List<Long>> getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(Long competitionId, Optional<String> filter, Optional<Boolean> sendFilter, Optional<FundingDecision> fundingFilter) {
 		String baseUrl = format("%s/%s/%s/%s", applicationSummaryRestUrl, "findByCompetition", competitionId, "with-funding-decision");
 		UriComponentsBuilder builder = UriComponentsBuilder
 				.fromPath(baseUrl)
@@ -99,7 +100,7 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 		filter.ifPresent(f -> builder.queryParam("filter", f));
 		sendFilter.ifPresent(f -> builder.queryParam("sendFilter", f.toString()));
 		fundingFilter.ifPresent(f -> builder.queryParam("fundingFilter", f.toString()));
-		return getWithRestResult(builder.toUriString(), applicationSummaryResourceListType());
+		return getWithRestResult(builder.toUriString(), longsListType());
     }
 
     private RestResult<ApplicationSummaryPageResource> getApplicationSummaryPage(String url, int pageNumber, int pageSize, String sortField, Optional<String> filter) {

@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.List;
 import java.util.Optional;
 
+import static com.google.common.primitives.Longs.asList;
 import static java.lang.Boolean.TRUE;
 import static java.util.Collections.nCopies;
 import static java.util.Optional.empty;
@@ -398,20 +399,20 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
     @Test
     public void getAvailableAssessors_all() throws Exception {
-        List<AvailableAssessorResource> expectedAvailableAssessorResources = newAvailableAssessorResource().build(2);
+        List<Long> expectedAvailableAssessorIds = asList(1L, 2L);
 
         Optional<Long> innovationArea = of(4L);
 
-        when(competitionInviteServiceMock.getAvailableAssessors(COMPETITION_ID, innovationArea))
-                .thenReturn(serviceSuccess(expectedAvailableAssessorResources));
+        when(competitionInviteServiceMock.getAvailableAssessorIds(COMPETITION_ID, innovationArea))
+                .thenReturn(serviceSuccess(expectedAvailableAssessorIds));
 
         mockMvc.perform(get("/competitioninvite/getAvailableAssessors/{competitionId}", COMPETITION_ID)
                 .param("all", "")
                 .param("innovationArea", "4"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(expectedAvailableAssessorResources)));
+                .andExpect(content().json(toJson(expectedAvailableAssessorIds)));
 
-        verify(competitionInviteServiceMock, only()).getAvailableAssessors(COMPETITION_ID, innovationArea);
+        verify(competitionInviteServiceMock, only()).getAvailableAssessorIds(COMPETITION_ID, innovationArea);
     }
 
     @Test

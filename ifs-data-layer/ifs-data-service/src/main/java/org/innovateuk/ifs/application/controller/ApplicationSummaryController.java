@@ -45,11 +45,11 @@ public class ApplicationSummaryController {
     }
 
     @GetMapping("/findByCompetition/{competitionId}/all-submitted")
-    public RestResult<List<ApplicationSummaryResource>> getAllSubmittedApplicationSummariesByCompetitionId(
+    public RestResult<List<Long>> getAllSubmittedApplicationIdsByCompetitionId(
             @PathVariable("competitionId") long competitionId,
             @RequestParam(value = "filter", required = false) Optional<String> filter,
             @RequestParam(value = "fundingFilter", required = false) Optional<FundingDecisionStatus> fundingFilter) {
-        return applicationSummaryService.getAllSubmittedApplicationSummariesByCompetitionId(competitionId, filter, fundingFilter).toGetResponse();
+        return applicationSummaryService.getAllSubmittedApplicationIdsByCompetitionId(competitionId, filter, fundingFilter).toGetResponse();
     }
 
     @GetMapping("/findByCompetition/{competitionId}/submitted")
@@ -85,12 +85,12 @@ public class ApplicationSummaryController {
     }
 
     @GetMapping(value = "/findByCompetition/{competitionId}/with-funding-decision", params = "all")
-    public RestResult<List<ApplicationSummaryResource>> getWithFundingDecisionApplicationSummariesByCompetitionId(
+    public RestResult<List<Long>> getWithFundingDecisionApplicationSummariesByCompetitionId(
             @PathVariable("competitionId") long competitionId,
             @RequestParam(value = "filter", required = false) Optional<String> filter,
             @RequestParam(value = "sendFilter", required = false) Optional<Boolean> sendFilter,
             @RequestParam(value = "fundingFilter", required = false) Optional<FundingDecisionStatus> fundingFilter) {
-        return applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, filter, sendFilter, fundingFilter).toGetResponse();
+        return applicationSummaryService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(competitionId, filter, sendFilter, fundingFilter).toGetResponse();
     }
 
     @GetMapping("/findByCompetition/{competitionId}/ineligible")

@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static com.google.common.primitives.Longs.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.ApplicationSummaryDocs.APPLICATION_SUMMARY_RESOURCE_BUILDER;
 import static org.innovateuk.ifs.documentation.SectionDocs.sectionResourceFields;
@@ -78,12 +79,12 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
     public void getAllWithFundingDecisionApplicationSummariesByCompetitionId() throws Exception {
         final Long competitionId = 1L;
         String filter = "filter";
-        Boolean sendFilter = true;
-        FundingDecisionStatus fundingFilter = FundingDecisionStatus.UNDECIDED;
+        Boolean sendFilter = false;
+        FundingDecisionStatus fundingFilter = FundingDecisionStatus.FUNDED;
 
-        List<ApplicationSummaryResource> applications = APPLICATION_SUMMARY_RESOURCE_BUILDER.build(5);
+        List<Long> applicationIds = asList(1L, 2L, 3L);
 
-        when(applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, Optional.of(filter), Optional.of(sendFilter), Optional.of(fundingFilter))).thenReturn(serviceSuccess(applications));
+        when(applicationSummaryService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(competitionId, Optional.of(filter), Optional.of(sendFilter), Optional.of(fundingFilter))).thenReturn(serviceSuccess(applicationIds));
 
         mockMvc.perform(
                 get(baseUrl + "/findByCompetition/{competitionId}/with-funding-decision", competitionId)
@@ -100,8 +101,7 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
                                 parameterWithName("sendFilter").description("Filter on the send state"),
                                 parameterWithName("fundingFilter").description("Filter on the funding state")
                         ),
-                        responseFields(fieldWithPath("[]").description("List of application summaries"))
-                                .andWithPrefix("[].", ApplicationSummaryDocs.APPLICATION_SUMMARY_RESOURCE_FIELDS)));
+                        responseFields(fieldWithPath("[]").description("List of funding decision changeable application ids"))));
     }
 
     @Test

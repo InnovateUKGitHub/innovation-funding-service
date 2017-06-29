@@ -1133,8 +1133,9 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withName("Emerging Tech and Industries")
                 .build();
 
+        List<Long> expectedAssessorIds = asList(4L, 8L);
         List<AvailableAssessorResource> expectedAssessors = newAvailableAssessorResource()
-                .withId(4L, 8L)
+                .withId(expectedAssessorIds.get(0), expectedAssessorIds.get(1))
                 .withName("Jeremy Alufson", "Felix Wilson")
                 .withCompliant(TRUE)
                 .withEmail("worth.email.test+assessor1@gmail.com", "felix.wilson@gmail.com")
@@ -1150,7 +1151,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build(2);
 
         List<User> assessorUsers = newUser()
-                .withId(4L, 8L)
+                .withId(expectedAssessorIds.get(0), expectedAssessorIds.get(1))
                 .withFirstName("Jeremy", "Felix")
                 .withLastName("Alufson", "Wilson")
                 .withEmailAddress("worth.email.test+assessor1@gmail.com", "felix.wilson@gmail.com")
@@ -1168,19 +1169,13 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         when(competitionInviteRepositoryMock.findAssessorsByCompetitionAndInnovationArea(competitionId, innovationArea.getId()))
                 .thenReturn(assessorUsers);
-        when(profileRepositoryMock.findOne(assessorUsers.get(0).getProfileId())).thenReturn(profiles.get(0));
-        when(profileRepositoryMock.findOne(assessorUsers.get(1).getProfileId())).thenReturn(profiles.get(1));
-        when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(innovationAreaResources.get(0));
 
-        List<AvailableAssessorResource> actualAssessors = service.getAvailableAssessors(competitionId, innovationAreaId)
+        List<Long> actualAssessorIds = service.getAvailableAssessorIds(competitionId, innovationAreaId)
                 .getSuccessObjectOrThrowException();
 
         verify(competitionInviteRepositoryMock).findAssessorsByCompetitionAndInnovationArea(competitionId, innovationArea.getId());
-        verify(profileRepositoryMock).findOne(assessorUsers.get(0).getProfileId());
-        verify(profileRepositoryMock).findOne(assessorUsers.get(1).getProfileId());
-        verify(innovationAreaMapperMock, times(2)).mapToResource(innovationArea);
 
-        assertEquals(expectedAssessors, actualAssessors);
+        assertEquals(expectedAssessorIds, actualAssessorIds);
     }
 
     @Test

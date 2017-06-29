@@ -68,7 +68,7 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId, Optional<Long> innovationArea) {
+    public RestResult<List<Long>> getAvailableAssessorIds(long competitionId, Optional<Long> innovationArea) {
         String baseUrl = format("%s/%s/%s", competitionInviteRestUrl, "getAvailableAssessors", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder
@@ -76,7 +76,7 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
                 .queryParam("all");
         innovationArea.ifPresent(innovationAreaId -> builder.queryParam("innovationArea", innovationAreaId));
 
-        return getWithRestResult(builder.toUriString(), ParameterizedTypeReferences.availableAssessorResourceListType());
+        return getWithRestResult(builder.toUriString(), ParameterizedTypeReferences.longsListType());
     }
 
     @Override

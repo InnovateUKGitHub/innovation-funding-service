@@ -132,7 +132,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
     }
 
     @Override
-    public ServiceResult<List<ApplicationSummaryResource>> getAllSubmittedApplicationSummariesByCompetitionId(
+    public ServiceResult<List<Long>> getAllSubmittedApplicationIdsByCompetitionId(
             long competitionId,
             Optional<String> filter,
             Optional<FundingDecisionStatus> fundingFilter) {
@@ -141,7 +141,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
                 competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null)), notFoundError(ApplicationSummaryResource.class))
                 .andOnSuccessReturn(result -> result.stream()
                         .filter(applicationFundingDecisionIsSubmittable())
-                        .map(application -> applicationSummaryMapper.mapToResource(application)).collect(toList()));
+                        .map(Application::getId).collect(toList()));
     }
 
     @Override
@@ -182,18 +182,22 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
     }
 
     @Override
-    public ServiceResult<List<ApplicationSummaryResource>> getWithFundingDecisionApplicationSummariesByCompetitionId(
+    public ServiceResult<List<Long>> getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(
             long competitionId,
             Optional<String> filter,
             Optional<Boolean> sendFilter,
             Optional<FundingDecisionStatus> fundingFilter) {
         String filterStr = filter.map(String::trim).orElse("");
 
-        return serviceSuccess(simpleMap(applicationRepository.findByCompetitionIdAndFundingDecisionIsNotNull(
+        return serviceSuccess(applicationRepository.findByCompetitionIdAndFundingDecisionIsNotNull(
                 competitionId,
                 filterStr,
                 sendFilter.orElse(null),
-                fundingFilter.orElse(null)), applicationSummaryMapper::mapToResource));
+                fundingFilter.orElse(null))
+                .stream()
+                .filter(Application::applicationFundingDecisionIsChangeable)
+                .map(Application::getId)
+                .collect(toList()));
     }
 
     @Override

@@ -236,7 +236,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     @Override
-    public ServiceResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId, Optional<Long> innovationArea) {
+    public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId, Optional<Long> innovationArea) {
         final List<User> result;
         if (innovationArea.isPresent()) {
             result = competitionInviteRepository.findAssessorsByCompetitionAndInnovationArea(
@@ -247,7 +247,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
             result = competitionInviteRepository.findAssessorsByCompetition(competitionId);
         }
 
-        return serviceSuccess(simpleMap(result, this::mapToAvailableAssessorResource));
+        return serviceSuccess(simpleMap(result, User::getId));
     }
 
     private AvailableAssessorResource mapToAvailableAssessorResource(User assessor) {

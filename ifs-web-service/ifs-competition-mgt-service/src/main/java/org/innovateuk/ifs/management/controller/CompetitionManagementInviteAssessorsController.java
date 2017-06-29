@@ -197,9 +197,7 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
     }
 
     private List<Long> getAllAssessorIds(long competitionId, Optional<Long> innovationArea) {
-        List<AvailableAssessorResource> resources =
-                competitionInviteRestService.getAvailableAssessors(competitionId, innovationArea).getSuccessObjectOrThrowException();
-        return simpleMap(resources, AvailableAssessorResource::getId);
+        return competitionInviteRestService.getAvailableAssessorIds(competitionId, innovationArea).getSuccessObjectOrThrowException();
     }
 
     @PostMapping(value = "/find/addSelected")

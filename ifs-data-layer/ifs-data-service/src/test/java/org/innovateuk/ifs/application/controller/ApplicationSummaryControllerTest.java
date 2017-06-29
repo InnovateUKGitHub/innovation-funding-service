@@ -11,6 +11,7 @@ import org.mockito.Mock;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
@@ -240,15 +241,15 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void searchAllWithFundingDecisionByCompetitionIdWithFiltering() throws Exception {
+    public void searchAllWithChangeAbleFundingDecisionByCompetitionIdWithFiltering() throws Exception {
         long competitionId = 3L;
         String strFilter = "filter";
         FundingDecisionStatus fundingFilter = FUNDED;
         boolean sendFilter = true;
 
-        List<ApplicationSummaryResource> resources = newApplicationSummaryResource().build(2);
+        List<Long> applicationIds = asList(1L, 2L);
 
-        when(applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, of(strFilter), of(sendFilter), of(fundingFilter))).thenReturn(serviceSuccess(resources));
+        when(applicationSummaryService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(competitionId, of(strFilter), of(sendFilter), of(fundingFilter))).thenReturn(serviceSuccess(applicationIds));
 
         mockMvc.perform(get("/applicationSummary/findByCompetition/{compId}/with-funding-decision",competitionId)
                 .param("all", "")
@@ -256,9 +257,9 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
                 .param("sendFilter", Boolean.toString(sendFilter))
                 .param("fundingFilter", fundingFilter.toString()))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(resources)));
+                .andExpect(content().json(objectMapper.writeValueAsString(applicationIds)));
 
-        verify(applicationSummaryService).getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, of(strFilter), of(sendFilter), of(fundingFilter));
+        verify(applicationSummaryService).getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(competitionId, of(strFilter), of(sendFilter), of(fundingFilter));
     }
 
     @Test

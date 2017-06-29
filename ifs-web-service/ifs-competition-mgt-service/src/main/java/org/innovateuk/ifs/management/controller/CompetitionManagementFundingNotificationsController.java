@@ -270,12 +270,10 @@ public class CompetitionManagementFundingNotificationsController extends Competi
     }
 
     private List<Long> getAllApplicationIdsByFilters(long competitionId, FundingNotificationFilterForm filterForm) {
-        List<ApplicationSummaryResource> resources = applicationSummaryRestService.getWithFundingDecisionApplications(
+        return applicationSummaryRestService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(
                 competitionId, filterForm.getStringFilter().isEmpty() ? empty() : of(filterForm.getStringFilter()),
                 filterForm.getSendFilter(), filterForm.getFundingFilter()).getSuccessObjectOrThrowException();
 
-        return resources.stream().filter(ApplicationSummaryResource::applicationFundingDecisionIsChangeable).map(
-                ApplicationSummaryResource::getId).collect(toList());
     }
 
     private String getManageFundingApplicationsPage(long competitionId){

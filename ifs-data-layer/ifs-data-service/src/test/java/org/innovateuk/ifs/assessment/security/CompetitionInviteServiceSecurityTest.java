@@ -243,7 +243,7 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
         }
 
         @Override
-        public ServiceResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId, Optional<Long> innovationArea) {
+        public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId, Optional<Long> innovationArea) {
             return null;
         }
 

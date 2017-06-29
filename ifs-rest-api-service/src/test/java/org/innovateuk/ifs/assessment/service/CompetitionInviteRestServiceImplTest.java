@@ -163,15 +163,15 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
         long competitionId = 1L;
         Optional<Long> innovationArea = of(2L);
 
-        List<AvailableAssessorResource> assessorItems = newAvailableAssessorResource().build(2);
+        List<Long> assessorItems = asList(1L, 2L);
 
         setupGetWithRestResultExpectations(
                 format("%s/%s/%s?all&innovationArea=2", restUrl, "getAvailableAssessors", competitionId),
-                ParameterizedTypeReferences.availableAssessorResourceListType(),
+                ParameterizedTypeReferences.longsListType(),
                 assessorItems
         );
 
-        List<AvailableAssessorResource> actual = service.getAvailableAssessors(competitionId, innovationArea).getSuccessObject();
+        List<Long> actual = service.getAvailableAssessorIds(competitionId, innovationArea).getSuccessObject();
         assertEquals(assessorItems, actual);
     }
 
