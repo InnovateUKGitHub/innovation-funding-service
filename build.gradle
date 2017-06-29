@@ -91,7 +91,7 @@ buildscript {
     ext['thymeleaf.version'] = '3.0.3.RELEASE'
 
     ext {
-        springBootVersion = '1.5.2.RELEASE'
+        springBootVersion = '1.5.4.RELEASE'
         thymeleafVersion = ext['thymeleaf.version']
     }
 
