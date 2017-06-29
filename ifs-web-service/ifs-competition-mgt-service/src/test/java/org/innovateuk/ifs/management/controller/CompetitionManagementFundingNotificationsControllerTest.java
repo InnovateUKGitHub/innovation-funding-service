@@ -11,8 +11,8 @@ import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.competition.form.FundingNotificationSelectionCookie;
-import org.innovateuk.ifs.competition.form.ManageFundingApplicationsQueryForm;
-import org.innovateuk.ifs.competition.form.SelectApplicationsForEmailForm;
+import org.innovateuk.ifs.competition.form.FundingNotificationFilterForm;
+import org.innovateuk.ifs.competition.form.FundingNotificationSelectionForm;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
@@ -183,8 +183,8 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         Optional<Boolean> sendFilter = Optional.empty();
         Optional<FundingDecision> fundingFilter = Optional.empty();
         FundingNotificationSelectionCookie selectionCookie = new FundingNotificationSelectionCookie();
-        selectionCookie.setSelectApplicationsForEmailForm(new SelectApplicationsForEmailForm());
-        selectionCookie.setManageFundingApplicationsQueryForm(new ManageFundingApplicationsQueryForm());
+        selectionCookie.setFundingNotificationSelectionForm(new FundingNotificationSelectionForm());
+        selectionCookie.setFundingNotificationFilterForm(new FundingNotificationFilterForm());
         Cookie formCookie = createFormCookie(selectionCookie);
         List<Long> applicationIds = asList(1L, 2L, 3L, 4L);
 
@@ -202,7 +202,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
                 .andReturn();
 
         Optional<FundingNotificationSelectionCookie> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("applicationSelectionForm_comp_%s", COMPETITION_ID));
-        assertTrue(resultForm.get().getSelectApplicationsForEmailForm().getIds().contains(applicationId));
+        assertTrue(resultForm.get().getFundingNotificationSelectionForm().getIds().contains(applicationId));
     }
 
     @Test
@@ -211,10 +211,10 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         Optional<Boolean> sendFilter = Optional.empty();
         Optional<FundingDecision> fundingFilter = Optional.empty();
         FundingNotificationSelectionCookie selectionCookie = new FundingNotificationSelectionCookie();
-        SelectApplicationsForEmailForm selectApplicationsForEmailForm = new SelectApplicationsForEmailForm();
-        selectApplicationsForEmailForm.getIds().add(applicationId);
-        selectionCookie.setSelectApplicationsForEmailForm(selectApplicationsForEmailForm);
-        selectionCookie.setManageFundingApplicationsQueryForm(new ManageFundingApplicationsQueryForm());
+        FundingNotificationSelectionForm fundingNotificationSelectionForm = new FundingNotificationSelectionForm();
+        fundingNotificationSelectionForm.getIds().add(applicationId);
+        selectionCookie.setFundingNotificationSelectionForm(fundingNotificationSelectionForm);
+        selectionCookie.setFundingNotificationFilterForm(new FundingNotificationFilterForm());
         Cookie formCookie = createFormCookie(selectionCookie);
         List<Long> applicationIds = asList(1L, 2L);
 
@@ -232,7 +232,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
                 .andReturn();
 
         Optional<FundingNotificationSelectionCookie> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("applicationSelectionForm_comp_%s", COMPETITION_ID));
-        assertFalse(resultForm.get().getSelectApplicationsForEmailForm().getIds().contains(applicationId));
+        assertFalse(resultForm.get().getFundingNotificationSelectionForm().getIds().contains(applicationId));
     }
 
     @Test
@@ -240,8 +240,8 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         Optional<Boolean> sendFilter = Optional.empty();
         Optional<FundingDecision> fundingFilter = Optional.empty();
         FundingNotificationSelectionCookie selectionCookie = new FundingNotificationSelectionCookie();
-        selectionCookie.setSelectApplicationsForEmailForm(new SelectApplicationsForEmailForm());
-        selectionCookie.setManageFundingApplicationsQueryForm(new ManageFundingApplicationsQueryForm());
+        selectionCookie.setFundingNotificationSelectionForm(new FundingNotificationSelectionForm());
+        selectionCookie.setFundingNotificationFilterForm(new FundingNotificationFilterForm());
         Cookie formCookie = createFormCookie(selectionCookie);
         List<Long> applicationIds = asList(1L, 2L);
 
@@ -257,7 +257,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
                 .andReturn();
 
         Optional<FundingNotificationSelectionCookie> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), format("applicationSelectionForm_comp_%s", COMPETITION_ID));
-        assertTrue(resultForm.get().getSelectApplicationsForEmailForm().getIds().containsAll(asList(applicationIds.get(0), applicationIds.get(1))));
+        assertTrue(resultForm.get().getFundingNotificationSelectionForm().getIds().containsAll(asList(applicationIds.get(0), applicationIds.get(1))));
     }
 
     @Test

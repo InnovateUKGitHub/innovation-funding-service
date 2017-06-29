@@ -1,14 +1,11 @@
 package org.innovateuk.ifs.management.form;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Form for the selection of assessors on the Find assessors tab
@@ -45,6 +42,15 @@ public class AssessorSelectionForm extends BaseBindingResultTarget {
 
     public void setSelectedInnovationArea(Long selectedInnovationArea) {
         this.selectedInnovationArea = selectedInnovationArea;
+    }
+
+    public boolean anyFilterIsActive() {
+        return selectedInnovationArea != null;
+    }
+
+    public boolean anySelectionIsMade() {
+        return this.allSelected != false ||
+                this.selectedAssessorIds.size() > 0;
     }
 
     @Override

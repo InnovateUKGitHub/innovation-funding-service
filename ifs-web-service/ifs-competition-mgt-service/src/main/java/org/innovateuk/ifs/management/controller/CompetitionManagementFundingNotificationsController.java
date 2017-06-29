@@ -93,62 +93,67 @@ public class CompetitionManagementFundingNotificationsController extends Competi
     public String applications(Model model,
                                @RequestParam MultiValueMap<String, String> params,
                                @PathVariable("competitionId") Long competitionId,
-                               @ModelAttribute @Valid ManageFundingApplicationsQueryForm filterForm,
-                               @ModelAttribute(name = "selectionForm") @Valid SelectApplicationsForEmailForm selectionForm,
-                               @RequestParam(value = "clearFilters", defaultValue = "false") boolean clearFilters,
+                               @ModelAttribute @Valid FundingNotificationFilterForm filterForm,
+                               @ModelAttribute(name = "selectionForm") @Valid FundingNotificationSelectionForm selectionForm,
+                               @RequestParam(value = "filterChanged", required = false) boolean filterChanged,
                                BindingResult bindingResult,
                                ValidationHandler validationHandler,
                                HttpServletRequest request,
                                HttpServletResponse response) {
 
-        FundingNotificationSelectionCookie updatedSelectionCookie = updateSelectionForm(request, response, competitionId, selectionForm, filterForm, clearFilters);
-        final ManageFundingApplicationsQueryForm updatedFilterForm = updatedSelectionCookie.getManageFundingApplicationsQueryForm();
-        selectionForm.setIds(updatedSelectionCookie.getSelectApplicationsForEmailForm().getIds());
-        selectionForm.setAllSelected(updatedSelectionCookie.getSelectApplicationsForEmailForm().isAllSelected());
+        updateSelectionForm(request,
+                response,
+                competitionId,
+                selectionForm,
+                filterForm,
+                filterChanged);
 
-        List<Long> submittableApplications = getAllApplicationIdsByFilters(competitionId, updatedSelectionCookie.getManageFundingApplicationsQueryForm());
+        List<Long> submittableApplications = getAllApplicationIdsByFilters(competitionId, filterForm);
         return validationHandler.failNowOrSucceedWith(queryFailureView(competitionId), () -> {
-                model.addAttribute("model", manageFundingApplicationsModelPopulator.populate(updatedFilterForm, competitionId, buildQueryString(params), submittableApplications.size()));
+                model.addAttribute("model", manageFundingApplicationsModelPopulator.populate(filterForm, competitionId, buildQueryString(params), submittableApplications.size()));
                 return MANAGE_FUNDING_APPLICATIONS_VIEW;
             }
         );
     }
 
-    private FundingNotificationSelectionCookie updateSelectionForm(HttpServletRequest request,
+    private void updateSelectionForm(HttpServletRequest request,
                                      HttpServletResponse response,
                                      long competitionId,
-                                     SelectApplicationsForEmailForm appSelectionForm,
-                                     ManageFundingApplicationsQueryForm filterForm,
-                                     boolean clearFilters) {
+                                     FundingNotificationSelectionForm modelSelectionForm,
+                                     FundingNotificationFilterForm modelFilterForm,
+                                     boolean filterChanged) {
         FundingNotificationSelectionCookie storedSelectionFormCookie = getSelectionFormFromCookie(request, competitionId).orElse(new FundingNotificationSelectionCookie());
-        ManageFundingApplicationsQueryForm storedFilterForm = storedSelectionFormCookie.getManageFundingApplicationsQueryForm();
-        SelectApplicationsForEmailForm storedAppSelectionForm = storedSelectionFormCookie.getSelectApplicationsForEmailForm();
-        clearFilters = !filterForm.anyFilterOptionsActive();
 
-        if (!storedAppSelectionForm.getIds().isEmpty()) {
-            appSelectionForm.setAllSelected(storedAppSelectionForm.isAllSelected());
-            appSelectionForm.setIds(storedAppSelectionForm.getIds());
-        }
-        if (storedFilterForm.anyFilterOptionsActive() && !filterForm.anyFilterOptionsActive() && !clearFilters) {
-            filterForm.setAllFilterOptions(storedFilterForm.getStringFilter(), storedFilterForm.getSendFilter(), storedFilterForm.getFundingFilter());
-        }
+        FundingNotificationSelectionForm trimmedSelectionForm = trimSelectionByFilteredResult(storedSelectionFormCookie.getFundingNotificationSelectionForm(), modelFilterForm, competitionId);
+        FundingNotificationFilterForm updatedFilterForm = updateFilterWithCookieFilterValues(storedSelectionFormCookie.getFundingNotificationFilterForm(), modelFilterForm, filterChanged, trimmedSelectionForm.anySelectionIsMade());
 
-        SelectApplicationsForEmailForm trimmedSelectionForm = trimSelectionByFilteredResult(appSelectionForm, filterForm, competitionId);
+        modelSelectionForm.setIds(trimmedSelectionForm.getIds());
+        modelSelectionForm.setAllSelected(trimmedSelectionForm.isAllSelected());
+        modelFilterForm.setAllFilterOptions(updatedFilterForm.getStringFilter(),  updatedFilterForm.getSendFilter(), updatedFilterForm.getFundingFilter());
 
-        storedSelectionFormCookie.setManageFundingApplicationsQueryForm(filterForm);
-        storedSelectionFormCookie.setSelectApplicationsForEmailForm(trimmedSelectionForm);
+        FundingNotificationSelectionCookie updatedSelectionFormCookie = new FundingNotificationSelectionCookie();
+        updatedSelectionFormCookie.setFundingNotificationFilterForm(modelFilterForm);
+        updatedSelectionFormCookie.setFundingNotificationSelectionForm(modelSelectionForm);
 
-        saveFormToCookie(response, competitionId, storedSelectionFormCookie);
-
-        return storedSelectionFormCookie;
+        saveFormToCookie(response, competitionId, updatedSelectionFormCookie);
     }
 
-    private SelectApplicationsForEmailForm trimSelectionByFilteredResult(SelectApplicationsForEmailForm selectionForm,
-                                                                         ManageFundingApplicationsQueryForm filterForm,
-                                                                         Long competitionId) {
-        List<Long> filteredApplicationIds = getAllApplicationIdsByFilters(competitionId, filterForm);
-        SelectApplicationsForEmailForm updatedSelectionForm = new SelectApplicationsForEmailForm();
+    private FundingNotificationFilterForm updateFilterWithCookieFilterValues(FundingNotificationFilterForm storedFilterForm, FundingNotificationFilterForm modelFilterForm, boolean filterChanged, boolean anySelectionMade) {
+        if (storedFilterForm.anyFilterIsActive()
+                && !modelFilterForm.anyFilterIsActive()
+                && !filterChanged
+                && anySelectionMade) {
+            modelFilterForm.setAllFilterOptions(storedFilterForm.getStringFilter(), storedFilterForm.getSendFilter(), storedFilterForm.getFundingFilter());
+        }
 
+        return modelFilterForm;
+    }
+
+    private FundingNotificationSelectionForm trimSelectionByFilteredResult(FundingNotificationSelectionForm selectionForm,
+                                                                           FundingNotificationFilterForm filterForm,
+                                                                           Long competitionId) {
+        List<Long> filteredApplicationIds = getAllApplicationIdsByFilters(competitionId, filterForm);
+        FundingNotificationSelectionForm updatedSelectionForm = new FundingNotificationSelectionForm();
 
         selectionForm.getIds().retainAll(filteredApplicationIds);
         updatedSelectionForm.setIds(selectionForm.getIds());
@@ -166,9 +171,9 @@ public class CompetitionManagementFundingNotificationsController extends Competi
     public String selectApplications(Model model,
                                      @RequestParam MultiValueMap<String, String> params,
                                      @PathVariable("competitionId") Long competitionId,
-                                     @ModelAttribute @Valid ManageFundingApplicationsQueryForm query,
+                                     @ModelAttribute @Valid FundingNotificationFilterForm query,
                                      ValidationHandler queryFormValidationHandler,
-                                     @ModelAttribute("form") @Valid SelectApplicationsForEmailForm selectionForm,
+                                     @ModelAttribute("form") @Valid FundingNotificationSelectionForm selectionForm,
                                      BindingResult idsBindingResult,
                                      ValidationHandler idsValidationHandler,
                                      HttpServletRequest request,
@@ -181,13 +186,13 @@ public class CompetitionManagementFundingNotificationsController extends Competi
                 () -> idsValidationHandler.failNowOrSucceedWith(idsFailureView(competitionId, query, model, params, request), // Pass or fail JSR 303 on the ids
                         () -> {
                             // Custom validation
-                            if (selectionCookie.getSelectApplicationsForEmailForm().getIds().isEmpty()) {
+                            if (selectionCookie.getFundingNotificationSelectionForm().getIds().isEmpty()) {
                                 idsBindingResult.rejectValue("ids", "validation.manage.funding.applications.no.application.selected");
                             }
                             return idsValidationHandler.failNowOrSucceedWith(idsFailureView(competitionId, query, model, params, request), // Pass or fail custom validation
                                     () -> {
                                         removeCookie(response, competitionId);
-                                        return composeEmailRedirect(competitionId, selectionCookie.getSelectApplicationsForEmailForm().getIds());
+                                        return composeEmailRedirect(competitionId, selectionCookie.getFundingNotificationSelectionForm().getIds());
                                     });
                         }
                 )
@@ -208,7 +213,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
             FundingNotificationSelectionCookie selectionCookie = getSelectionFormFromCookie(request, competitionId).orElse(new FundingNotificationSelectionCookie());
 
             if (isSelected) {
-                int predictedSize = selectionCookie.getSelectApplicationsForEmailForm().getIds().size() + 1;
+                int predictedSize = selectionCookie.getFundingNotificationSelectionForm().getIds().size() + 1;
                 if(limitIsExceeded(predictedSize)) {
                     limitIsExceeded = true;
                 }
@@ -216,25 +221,25 @@ public class CompetitionManagementFundingNotificationsController extends Competi
                     handleSelected(selectionCookie, competitionId, applicationId);
                 }
             } else {
-                selectionCookie.getSelectApplicationsForEmailForm().getIds().remove(applicationId);
-                selectionCookie.getSelectApplicationsForEmailForm().setAllSelected(false);
+                selectionCookie.getFundingNotificationSelectionForm().getIds().remove(applicationId);
+                selectionCookie.getFundingNotificationSelectionForm().setAllSelected(false);
             }
             saveFormToCookie(response, competitionId, selectionCookie);
 
-            return createSuccessfulResponseWithSelectionStatus(selectionCookie.getSelectApplicationsForEmailForm().getIds().size(), selectionCookie.getSelectApplicationsForEmailForm().isAllSelected(), limitIsExceeded);
+            return createSuccessfulResponseWithSelectionStatus(selectionCookie.getFundingNotificationSelectionForm().getIds().size(), selectionCookie.getFundingNotificationSelectionForm().isAllSelected(), limitIsExceeded);
         } catch (Exception e) {
             return createFailureResponse();
         }
     }
 
     private void handleSelected(FundingNotificationSelectionCookie selectionCookie, long competitionId, long applicationId) {
-        List<Long> applicationIds = selectionCookie.getSelectApplicationsForEmailForm().getIds();
+        List<Long> applicationIds = selectionCookie.getFundingNotificationSelectionForm().getIds();
 
         if (!applicationIds.contains(applicationId)) {
-            selectionCookie.getSelectApplicationsForEmailForm().getIds().add(applicationId);
-            List<Long> filteredApplicationList = getAllApplicationIdsByFilters(competitionId, selectionCookie.getManageFundingApplicationsQueryForm());
+            selectionCookie.getFundingNotificationSelectionForm().getIds().add(applicationId);
+            List<Long> filteredApplicationList = getAllApplicationIdsByFilters(competitionId, selectionCookie.getFundingNotificationFilterForm());
             if (applicationIds.containsAll(filteredApplicationList)) {
-                selectionCookie.getSelectApplicationsForEmailForm().setAllSelected(true);
+                selectionCookie.getFundingNotificationSelectionForm().setAllSelected(true);
             }
         }
     }
@@ -247,10 +252,10 @@ public class CompetitionManagementFundingNotificationsController extends Competi
                                            HttpServletResponse response) {
         try {
             FundingNotificationSelectionCookie selectionCookie = getSelectionFormFromCookie(request, competitionId).orElse(new FundingNotificationSelectionCookie());
-            SelectApplicationsForEmailForm applicationsForEmailForm = selectionCookie.getSelectApplicationsForEmailForm();
+            FundingNotificationSelectionForm applicationsForEmailForm = selectionCookie.getFundingNotificationSelectionForm();
 
             if (addAll) {
-                applicationsForEmailForm.setIds(getAllApplicationIdsByFilters(competitionId, selectionCookie.getManageFundingApplicationsQueryForm()));
+                applicationsForEmailForm.setIds(getAllApplicationIdsByFilters(competitionId, selectionCookie.getFundingNotificationFilterForm()));
                 applicationsForEmailForm.setAllSelected(true);
             } else {
                 applicationsForEmailForm.getIds().clear();
@@ -258,13 +263,13 @@ public class CompetitionManagementFundingNotificationsController extends Competi
             }
 
             saveFormToCookie(response, competitionId, selectionCookie);
-            return createSuccessfulResponseWithSelectionStatus(selectionCookie.getSelectApplicationsForEmailForm().getIds().size(), selectionCookie.getSelectApplicationsForEmailForm().isAllSelected(), false);
+            return createSuccessfulResponseWithSelectionStatus(selectionCookie.getFundingNotificationSelectionForm().getIds().size(), selectionCookie.getFundingNotificationSelectionForm().isAllSelected(), false);
         } catch (Exception e) {
             return createFailureResponse();
         }
     }
 
-    private List<Long> getAllApplicationIdsByFilters(long competitionId, ManageFundingApplicationsQueryForm filterForm) {
+    private List<Long> getAllApplicationIdsByFilters(long competitionId, FundingNotificationFilterForm filterForm) {
         return applicationSummaryRestService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(
                 competitionId, filterForm.getStringFilter().isEmpty() ? empty() : of(filterForm.getStringFilter()),
                 filterForm.getSendFilter(), filterForm.getFundingFilter()).getSuccessObjectOrThrowException();
@@ -288,9 +293,9 @@ public class CompetitionManagementFundingNotificationsController extends Competi
         return () -> "redirect:/competition/" + competitionId + "/funding";
     }
 
-    private Supplier<String> idsFailureView(long competitionId, ManageFundingApplicationsQueryForm query, Model model, MultiValueMap<String, String> params, HttpServletRequest request) {
+    private Supplier<String> idsFailureView(long competitionId, FundingNotificationFilterForm query, Model model, MultiValueMap<String, String> params, HttpServletRequest request) {
         FundingNotificationSelectionCookie storedSelectionFormCookie = getSelectionFormFromCookie(request, competitionId).orElse(new FundingNotificationSelectionCookie());
-        List<Long> ids = getAllApplicationIdsByFilters(competitionId, storedSelectionFormCookie.getManageFundingApplicationsQueryForm());
+        List<Long> ids = getAllApplicationIdsByFilters(competitionId, storedSelectionFormCookie.getFundingNotificationFilterForm());
         final long totalSubmittableApplications = ids.size();
 
         return () -> {

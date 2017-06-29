@@ -71,7 +71,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
     @GetMapping
     public String applications(Model model,
                                @PathVariable("competitionId") long competitionId,
-                               @RequestParam(name = "clearFilters", required = false) boolean clearFilters,
+                               @RequestParam(name = "filterChanged", required = false) boolean filterChanged,
                                @ModelAttribute @Valid FundingDecisionPaginationForm paginationForm,
                                @ModelAttribute FundingDecisionFilterForm filterForm,
                                @ModelAttribute FundingDecisionSelectionForm selectionForm,
@@ -88,10 +88,10 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         selectionForm = selectionCookieForm.getFundingDecisionSelectionForm();
         FundingDecisionFilterForm filterCookieForm = selectionCookieForm.getFundingDecisionFilterForm();
 
-
-        if(clearFilters) {
-            filterForm = new FundingDecisionFilterForm();
-        } else if (!filterForm.anyFilterIsActive() && filterCookieForm.anyFilterIsActive() && selectionForm.anySelectionIsMade()) {
+        if (!filterForm.anyFilterIsActive()
+                && filterCookieForm.anyFilterIsActive()
+                && !filterChanged
+                && selectionForm.anySelectionIsMade()) {
             filterForm.setFundingFilter(selectionCookieForm.getFundingDecisionFilterForm().getFundingFilter());
             filterForm.setStringFilter(selectionCookieForm.getFundingDecisionFilterForm().getStringFilter());
         }
