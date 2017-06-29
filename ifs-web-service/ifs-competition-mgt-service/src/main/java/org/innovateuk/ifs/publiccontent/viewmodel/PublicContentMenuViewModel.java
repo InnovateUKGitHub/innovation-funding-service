@@ -13,11 +13,17 @@ import java.util.List;
  */
 public class PublicContentMenuViewModel {
 
+    private static String COMPETITION_OVERVIEW_URL = "%s/competition/%d/overview";
+
     private ZonedDateTime publishDate;
 
     private List<PublicContentSectionResource> sections;
 
     private CompetitionResource competition;
+
+    private Boolean inviteOnly;
+
+    private String webBaseUrl;
 
     public ZonedDateTime getPublishDate() {
         return publishDate;
@@ -43,6 +49,19 @@ public class PublicContentMenuViewModel {
         this.competition = competition;
     }
 
+    public Boolean isInviteOnly() {
+        return inviteOnly;
+    }
+
+    public void setWebBaseUrl(String webBaseUrl) {
+        this.webBaseUrl = webBaseUrl;
+    }
+
+    public void setInviteOnly(Boolean inviteOnly)
+    {
+        this.inviteOnly = inviteOnly;
+    }
+
     public boolean hasBeenPublished() {
         return publishDate != null;
     }
@@ -57,4 +76,9 @@ public class PublicContentMenuViewModel {
     public boolean isSectionComplete(PublicContentSectionResource contentSectionResource) {
         return PublicContentStatus.COMPLETE.equals(contentSectionResource.getStatus());
     }
+
+    public String getCompetitionURL() {
+        return String.format(COMPETITION_OVERVIEW_URL, webBaseUrl, competition.getId());
+    }
+
 }
