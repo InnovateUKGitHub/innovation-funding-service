@@ -209,7 +209,7 @@ The Admin's invites overview should be updated for accepted invites
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And The user clicks the button/link      jQuery=a:contains("Invite assessors to assess the competition")
     And The user clicks the button/link      link=Overview
-    And the user should see the element      jQuery=tr:nth-child(1) td:contains(Invite accepted)
+    And the user should see the element      jQuery=tr:nth-child(1) td:contains("Invite accepted")
 
 *** Keywords ***
 the assessor fills all fields with valid inputs
