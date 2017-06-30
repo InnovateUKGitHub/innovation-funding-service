@@ -2,12 +2,10 @@ package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
+import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.invite.transactional.InviteUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Invite User controller to handle RESTful services related to invites for users
@@ -24,6 +22,11 @@ public class InviteUserController {
     public RestResult<Void> saveUserInvite(@RequestBody InviteUserResource inviteUserResource) {
 
         return inviteUserService.saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getAdminRoleType()).toPostResponse();
+    }
+
+    @PostMapping("/getInvite/{inviteHash}")
+    public RestResult<RoleInviteResource> getInvite(@PathVariable("inviteHash") String inviteHash){
+        return inviteUserService.getInvite(inviteHash).toGetResponse();
     }
 }
 

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create account'"/>
+</head>
+<body class="competition-management">
+
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start"/>
+
+    <form action="/prototypes/643-created.html" novalidate="novalidate">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Create account',size='heading-large'"/>
+        <h2 class="heading-medium">Your details</h2>
+
+        <h3 class="heading-small">Name</h3>
+        <p>Robert Plant</p>
+        <h3 class="heading-small">Role</h3>
+        <p>Customer support</p>
+        <h3 class="heading-small">Email</h3>
+        <p>
+            <span class="form-hint">You will need this to sign into your account.</span>
+            robertplant@innovateuk.org
+        </p>
+
+        <div class="form-group">
+            <label class="form-label" for="password">
+                <span class="form-label-bold">Create password</span>
+            </label>
+            <div class="form-hint" id="password-hint">
+                <p>Your password is case-sensitive and needs to:</p>
+                <ul class="list list-bullet status">
+                    <li data-minlength-validationstatus="">be at least 8 characters long</li>
+                    <li data-containsuppercase-validationstatus="">contain at least 1 capital letter</li>
+                    <li data-containsnumber-validationstatus="">contain at least 1 number</li>
+                </ul>
+                <p class="no-margin-bottom">Your password can include spaces to make a phrase.</p>
+            </div>
+            <div class="password-toggle">
+                <input data-containsnumber-showmessage="visuallyhidden"
+                       data-containsuppercase-showmessage="visuallyhidden"
+                       data-minlength-showmessage="visuallyhidden"
+                       data-required-showmessage="visuallyhidden"
+                       aria-describedby="password-hint"
+                       class="form-control"
+                       type="password"
+                       required="required"
+                       minlength="8"
+                       id="password"
+                       name="password"
+                       value=""
+                       th:attr="data-required-errormessage=#{validation.standard.password.required},
+                                data-minlength-errormessage=#{validation.standard.password.length.min(null,null,'8')}"/>
+                <button type="button" role="switch" aria-checked="false" aria-label="Show password">Show</button>
+            </div>
+        </div>
+        <button class="button extra-margin">Create account</button>
+    </form>
+
+    <th:block th:insert="fragments/layout :: main-content-end"/>
+</main>
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+
+</body>
+</html>

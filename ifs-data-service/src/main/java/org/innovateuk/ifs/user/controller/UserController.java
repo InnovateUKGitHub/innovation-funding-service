@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.domain.User;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 
@@ -82,6 +84,11 @@ public class UserController {
     public RestResult<UserPageResource> findInactiveInternalUsers(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                                   @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize){
         return userService.findInactiveByProcessRoles(UserRoleType.internalRoles(), new PageRequest(pageIndex, pageSize)).toGetResponse();
+    }
+
+    @PostMapping("/internal/create/{inviteHash}")
+    public RestResult<Void> createInternalUser(@PathVariable("inviteHash") String inviteHash, @Valid @RequestBody InternalUserRegistrationResource internalUserRegistrationResource){
+        return registrationService.createInternalUser(inviteHash, internalUserRegistrationResource).toPostResponse();
     }
 
     @GetMapping("/findAll/")

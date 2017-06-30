@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.user.transactional;
 
-import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.security.access.method.P;
@@ -34,4 +34,7 @@ public interface RegistrationService {
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'ACTIVATE')")
     ServiceResult<Void> activateAssessorAndSendDiversitySurvey(long userId);
+
+    @PreAuthorize("hasPermission(#user, 'CREATE')")
+    ServiceResult<Void> createInternalUser(@P("inviteHash") String inviteHash, @P("userRegistrationResource") InternalUserRegistrationResource userRegistrationResource);
 }

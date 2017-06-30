@@ -8,7 +8,9 @@ import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
+import org.innovateuk.ifs.invite.mapper.RoleInviteMapper;
 import org.innovateuk.ifs.invite.repository.InviteRoleRepository;
+import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.project.transactional.EmailService;
@@ -54,6 +56,9 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
 
+    @Autowired
+    RoleInviteMapper roleInviteMapper;
+
     private static final Log LOG = LogFactory.getLog(InviteUserServiceImpl.class);
 
     @Value("${ifs.web.baseURL}")
@@ -74,6 +79,12 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
                         .andOnSuccess(() -> saveInvite(invitedUser, role))
                         .andOnSuccess((i) -> inviteInternalUser(i))
                 );
+    }
+
+    @Override
+    public ServiceResult<RoleInviteResource> getInvite(String inviteHash) {
+        RoleInvite roleInvite = inviteRoleRepository.getByHash(inviteHash);
+        return serviceSuccess(roleInviteMapper.mapToResource(roleInvite));
     }
 
     private ServiceResult<Void> validateInvite(UserResource invitedUser, AdminRoleType adminRoleType) {
