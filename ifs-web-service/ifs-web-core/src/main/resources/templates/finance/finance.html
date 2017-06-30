@@ -73,7 +73,6 @@
         <th:block th:if="${model.readonly}">
             <!--/* view  */-->
             <dl class="readonly-data">
-                Organisation Size
                 <dt th:text="${formInput.description}">Organisation size</dt>
 
                 <th:block th:unless="${model.organisationFinanceSize == null}" th:each="size : ${model.organisationSizes}">

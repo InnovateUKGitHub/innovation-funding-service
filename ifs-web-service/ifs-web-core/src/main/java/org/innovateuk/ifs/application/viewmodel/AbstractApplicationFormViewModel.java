@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewM
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Generic ViewModel for common fields in SectionViewModels
@@ -19,12 +20,20 @@ public abstract class AbstractApplicationFormViewModel<R extends AbstractApplica
     protected NavigationViewModel navigationViewModel;
     private List<AbstractFormInputViewModel> formInputViewModels;
     private boolean allReadOnly;
+    private Long applicantOrganisationId;
 
-    public AbstractApplicationFormViewModel(R applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly) {
+
+    private boolean readOnlyAllApplicantApplicationFinances;
+
+    public AbstractApplicationFormViewModel(R applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly, Optional<Long> applicantOrganisationId, boolean readOnlyAllApplicantApplicationFinances) {
         this.applicantResource = applicantResource;
         this.formInputViewModels = formInputViewModels;
         this.navigationViewModel = navigationViewModel;
         this.allReadOnly = allReadOnly;
+        if (applicantOrganisationId.isPresent()) {
+            this.applicantOrganisationId = applicantOrganisationId.get();
+        }
+        this.readOnlyAllApplicantApplicationFinances = readOnlyAllApplicantApplicationFinances;
     }
 
     public List<AbstractFormInputViewModel> getFormInputViewModels() {
@@ -72,4 +81,15 @@ public abstract class AbstractApplicationFormViewModel<R extends AbstractApplica
     }
 
     public ApplicantResource getCurrentApplicant() { return applicantResource.getCurrentApplicant(); }
+
+    public Long getApplicantOrganisationId() {
+        return applicantOrganisationId;
+    }
+
+    public void setApplicantOrganisationId(Long applicantOrganisationId) { this.applicantOrganisationId = applicantOrganisationId; }
+
+    public boolean isReadOnlyAllApplicantApplicationFinances() { return readOnlyAllApplicantApplicationFinances; }
+
+    public void  setReadOnlyAllApplicantApplicationFinances(boolean readOnlyAllApplicantApplicationFinances) { this.readOnlyAllApplicantApplicationFinances = readOnlyAllApplicantApplicationFinances; }
+
 }

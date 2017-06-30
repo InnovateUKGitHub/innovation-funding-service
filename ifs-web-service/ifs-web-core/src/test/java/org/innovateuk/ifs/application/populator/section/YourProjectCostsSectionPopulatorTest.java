@@ -27,6 +27,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -90,9 +91,9 @@ public class YourProjectCostsSectionPopulatorTest {
         FinanceModelManager financeModelManager = mock(FinanceModelManager.class);
 
         when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(Collections.emptyList());
-        when(formInputViewModelGenerator.fromSection(section, costSection, form)).thenReturn(asList(formInputViewModel));
+        when(formInputViewModelGenerator.fromSection(section, costSection, form, false)).thenReturn(asList(formInputViewModel));
         when(financeHandler.getFinanceModelManager(section.getCurrentApplicant().getOrganisation().getOrganisationType())).thenReturn(financeModelManager);
-        DefaultYourProjectCostsSectionViewModel viewModel = (DefaultYourProjectCostsSectionViewModel) yourProjectCostsSectionPopulator.populate(section, form, model, bindingResult);
+        DefaultYourProjectCostsSectionViewModel viewModel = (DefaultYourProjectCostsSectionViewModel) yourProjectCostsSectionPopulator.populate(section, form, model, bindingResult, false, Optional.empty(), false);
 
         assertThat(viewModel.isSection(), equalTo(true));
         assertThat(viewModel.isComplete(), equalTo(false));
@@ -139,9 +140,9 @@ public class YourProjectCostsSectionPopulatorTest {
         FinanceModelManager financeModelManager = mock(FinanceModelManager.class);
 
         when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(Collections.emptyList());
-        when(formInputViewModelGenerator.fromSection(section, costSection, form)).thenReturn(asList(formInputViewModel));
+        when(formInputViewModelGenerator.fromSection(section, costSection, form, false)).thenReturn(asList(formInputViewModel));
         when(financeHandler.getFinanceModelManager(section.getCurrentApplicant().getOrganisation().getOrganisationType())).thenReturn(financeModelManager);
-        JesYourProjectCostsSectionViewModel viewModel = (JesYourProjectCostsSectionViewModel) yourProjectCostsSectionPopulator.populate(section, form, model, bindingResult);
+        JesYourProjectCostsSectionViewModel viewModel = (JesYourProjectCostsSectionViewModel) yourProjectCostsSectionPopulator.populate(section, form, model, bindingResult, true, Optional.empty(), true);
 
         assertThat(viewModel.isSection(), equalTo(true));
         assertThat(viewModel.isComplete(), equalTo(false));
