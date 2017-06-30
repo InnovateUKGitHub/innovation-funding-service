@@ -217,6 +217,6 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     @Override
     public RestResult<Void> createInternalUser(String inviteHash, InternalUserRegistrationResource internalUserRegistrationResource) {
         String url = userRestURL + "/internal/create/" + inviteHash;
-        return postWithRestResult(url, internalUserRegistrationResource, Void.class);
+        return postWithRestResultAnonymous(url, internalUserRegistrationResource, Void.class);
     }
 }

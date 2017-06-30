@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.user.transactional;
 
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
@@ -35,6 +36,7 @@ public interface RegistrationService {
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'ACTIVATE')")
     ServiceResult<Void> activateAssessorAndSendDiversitySurvey(long userId);
 
-    @PreAuthorize("hasPermission(#user, 'CREATE')")
-    ServiceResult<Void> createInternalUser(@P("inviteHash") String inviteHash, @P("userRegistrationResource") InternalUserRegistrationResource userRegistrationResource);
+    @PreAuthorize("hasAuthority('system_registrar')")
+    @SecuredBySpring(value = "CREATE", securedType = InternalUserRegistrationResource.class, description = "A System Registration User can create new internal Users on behalf of non-logged in users with invite hash")
+    ServiceResult<Void> createInternalUser(String inviteHash, InternalUserRegistrationResource userRegistrationResource);
 }

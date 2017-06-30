@@ -351,12 +351,11 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<Void> createUserWithUid(User user, String password) {
-
         ServiceResult<String> uidFromIdpResult = idpService.createUserRecordWithUid(user.getEmail(), password);
 
         return uidFromIdpResult.andOnSuccess(uidFromIdp -> {
             user.setUid(uidFromIdp);
-            user.setStatus(UserStatus.INACTIVE);
+            user.setStatus(UserStatus.ACTIVE);
             userRepository.save(user);
             return serviceSuccess();
         });

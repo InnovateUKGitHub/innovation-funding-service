@@ -15,14 +15,52 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Create account',size='heading-large'"/>
         <h2 class="heading-medium">Your details</h2>
 
-        <h3 class="heading-small">Name</h3>
-        <p th:text="${model.name}">Robert Plant</p>
+        <!--<h3 class="heading-small">Name</h3>
+        <p th:text="${model.name}">Robert Plant</p>-->
+
+        <div class="form-group" th:classappend="${#fields.hasErrors('*{firstName}')} ? 'form-group-error'">
+            <label class="form-label" th:for="${#ids.next('firstName')}">
+                <span>First name</span>
+                <th:block th:if="${#fields.hasErrors('firstName')}">
+                    <span class="error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
+                </th:block>
+            </label>
+            <input class="form-control"
+                   type="text"
+                   th:errorclass="form-control-error"
+                   th:field="*{firstName}"
+                   required="required"
+                   minlength="2"
+                   maxlength="70"
+                   th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)},
+                                    data-maxlength-errormessage=#{validation.standard.firstname.length.max},
+                                    data-required-errormessage=#{validation.standard.firstname.required}" />
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('*{lastName}')} ? 'form-group-error'">
+            <label class="form-label" th:for="${#ids.next('lastName')}">
+                <span>Last name</span>
+                <th:block th:if="${#fields.hasErrors('lastName')}">
+                    <span class="error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
+                </th:block>
+            </label>
+            <input class="form-control"
+                   type="text"
+                   th:errorclass="form-control-error"
+                   th:field="*{lastName}"
+                   required="required"
+                   minlength="2"
+                   maxlength="70"
+                   th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)},
+                                    data-maxlength-errormessage=#{validation.standard.lastname.length.max},
+                                    data-required-errormessage=#{validation.standard.lastname.required}" />
+        </div>
+
         <h3 class="heading-small">Role</h3>
-        <p th:text="{model.roleName}">Customer support</p>
+        <p th:text="${model.roleName}">Customer support</p>
         <h3 class="heading-small">Email</h3>
         <p>
             <span class="form-hint">You will need this to sign into your account.</span>
-            <th:block th:text="{model.roleName}">robertplant@innovateuk.org</th:block>
+            <th:block th:text="${model.email}">robertplant@innovateuk.org</th:block>
         </p>
 
         <div class="form-group">
