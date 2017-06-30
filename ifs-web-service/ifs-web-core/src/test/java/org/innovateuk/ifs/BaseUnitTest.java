@@ -402,8 +402,12 @@ public class BaseUnitTest {
     }
 
     public void setupCompetition() {
-        competitionResource = newCompetitionResource().with(id(competitionId)).with(name("Competition x")).with(description("Description afds")).
-                withStartDate(ZonedDateTime.now().minusDays(2)).withEndDate(ZonedDateTime.now().plusDays(5)).withCompetitionStatus(CompetitionStatus.OPEN)
+        competitionResource = newCompetitionResource()
+                .with(id(competitionId))
+                .with(name("Competition x"))
+                .withStartDate(ZonedDateTime.now().minusDays(2))
+                .withEndDate(ZonedDateTime.now().plusDays(5))
+                .withCompetitionStatus(CompetitionStatus.OPEN)
                 .build();
 
         QuestionResourceBuilder questionResourceBuilder = newQuestionResource().withCompetition(competitionResource.getId());

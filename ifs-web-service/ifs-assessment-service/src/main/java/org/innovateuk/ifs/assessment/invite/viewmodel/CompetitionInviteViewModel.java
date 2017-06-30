@@ -15,7 +15,6 @@ public class CompetitionInviteViewModel {
     private String competitionInviteHash;
     private Long competitionId;
     private String competitionName;
-    private String competitionDescription;
     private ZonedDateTime acceptsDate;
     private ZonedDateTime deadlineDate;
     private ZonedDateTime briefingDate;
@@ -26,7 +25,6 @@ public class CompetitionInviteViewModel {
         this.competitionInviteHash = competitionInviteHash;
         this.competitionId = invite.getCompetitionId();
         this.competitionName = invite.getCompetitionName();
-        this.competitionDescription = invite.getCompetitionDescription();
         this.acceptsDate = invite.getAcceptsDate();
         this.deadlineDate = invite.getDeadlineDate();
         this.briefingDate = invite.getBriefingDate();
@@ -44,10 +42,6 @@ public class CompetitionInviteViewModel {
 
     public String getCompetitionName() {
         return competitionName;
-    }
-
-    public String getCompetitionDescription() {
-        return competitionDescription;
     }
 
     public ZonedDateTime getAcceptsDate() {
@@ -83,7 +77,6 @@ public class CompetitionInviteViewModel {
                 .append(competitionInviteHash, that.competitionInviteHash)
                 .append(competitionId, that.competitionId)
                 .append(competitionName, that.competitionName)
-                .append(competitionDescription, that.competitionDescription)
                 .append(acceptsDate, that.acceptsDate)
                 .append(deadlineDate, that.deadlineDate)
                 .append(briefingDate, that.briefingDate)
@@ -97,7 +90,6 @@ public class CompetitionInviteViewModel {
                 .append(competitionInviteHash)
                 .append(competitionId)
                 .append(competitionName)
-                .append(competitionDescription)
                 .append(acceptsDate)
                 .append(deadlineDate)
                 .append(briefingDate)
