@@ -10,12 +10,8 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${competitionSummary.competitionId})}" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding decision',subTitle=|${competitionSummary.competitionId} : ${competitionSummary.competitionName}|,size='heading-xlarge'" />
 
-    <div class="grid-row">
-        <div class="column-two-thirds">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding decision',subTitle=|${competitionSummary.competitionId} : ${competitionSummary.competitionName}|,size='heading-xlarge'" />
-        </div>
-    </div>
 
     <form method="GET" th:object="${fundingDecisionFilterForm}">
         <div class="search-filters extra-margin">
@@ -89,9 +85,9 @@
                 <fieldset class="mark-applications">
                     <legend class="visuallyhidden">Mark selected applications</legend>
                     <h3>Mark application as:</h3>
-                    <button th:disabled="${selectionForm.applicationIds.isEmpty()}" type="submit" value='FUNDED' name="fundingDecision" class="button button-secondary" data-submit-el="">Successful</button>
-                    <button th:disabled="${selectionForm.applicationIds.isEmpty()}" type="submit" value='UNFUNDED' name="fundingDecision" class="button button-secondary" data-submit-el="">Unsuccessful</button>
-                    <button th:disabled="${selectionForm.applicationIds.isEmpty()}" type="submit" value='ON_HOLD' name="fundingDecision" class="button button-secondary" data-submit-el="">On hold</button>
+                    <button th:disabled="${selectionForm.applicationIds.isEmpty()}" type="submit" value='FUNDED' name="fundingDecision" class="button-secondary" data-submit-el="">Successful</button>
+                    <button th:disabled="${selectionForm.applicationIds.isEmpty()}" type="submit" value='UNFUNDED' name="fundingDecision" class="button-secondary" data-submit-el="">Unsuccessful</button>
+                    <button th:disabled="${selectionForm.applicationIds.isEmpty()}" type="submit" value='ON_HOLD' name="fundingDecision" class="button-secondary" data-submit-el="">On hold</button>
                 </fieldset>
             </div>
         </div>
