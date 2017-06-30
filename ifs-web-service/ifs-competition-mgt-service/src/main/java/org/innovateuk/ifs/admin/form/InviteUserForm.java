@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.admin.form;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
@@ -71,5 +73,31 @@ public class InviteUserForm extends BaseBindingResultTarget {
 
     public void setRole(AdminRoleType role) {
         this.role = role;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        InviteUserForm form = (InviteUserForm) o;
+
+        return new EqualsBuilder()
+                .append(firstName, form.firstName)
+                .append(lastName, form.lastName)
+                .append(emailAddress, form.emailAddress)
+                .append(role, form.role)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(firstName)
+                .append(lastName)
+                .append(emailAddress)
+                .append(role)
+                .toHashCode();
     }
 }
