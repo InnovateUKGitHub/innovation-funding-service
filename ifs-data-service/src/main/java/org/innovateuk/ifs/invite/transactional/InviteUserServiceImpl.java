@@ -84,6 +84,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
                 .andOnSuccess(() -> getRole(adminRoleType))
                 .andOnSuccess((Role role) -> validateUserNotAlreadyInvited(invitedUser, role)
                         .andOnSuccess(() -> saveInvite(invitedUser, role))
+                        .andOnSuccess((i) -> inviteInternalUser(i))
                 );
     }
 
@@ -96,22 +97,26 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
         return serviceSuccess();
     }
 
+    private ServiceResult<Role> getRole(AdminRoleType adminRoleType) {
+        return find(roleRepository.findOneByName(adminRoleType.getName()), notFoundError(Role.class, adminRoleType.getName()));
+    }
+
     private ServiceResult<Void> validateUserNotAlreadyInvited(UserResource invitedUser, Role role) {
 
         List<RoleInvite> existingInvites = inviteRoleRepository.findByRoleIdAndEmail(role.getId(), invitedUser.getEmail());
         return existingInvites.isEmpty() ? serviceSuccess() : serviceFailure(USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED);
     }
 
-    private ServiceResult<Void> saveInvite(UserResource invitedUser, Role role) {
+    private ServiceResult<RoleInvite> saveInvite(UserResource invitedUser, Role role) {
         RoleInvite roleInvite = new RoleInvite(invitedUser.getFirstName() + " " + invitedUser.getLastName(),
                 invitedUser.getEmail(),
                 generateInviteHash(),
                 role,
                 InviteStatus.CREATED);
 
-        inviteRoleRepository.save(roleInvite);
+        RoleInvite invite = inviteRoleRepository.save(roleInvite);
 
-        return serviceSuccess();
+        return serviceSuccess(invite);
     }
 
     private ServiceResult<Void> inviteInternalUser(RoleInvite roleInvite) {
@@ -165,10 +170,6 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
     private ServiceResult<RoleInvite> getByHash(String hash) {
         return find(inviteRoleRepository.getByHash(hash), notFoundError(RoleInvite.class, hash));
-    }
-
-    private ServiceResult<Role> getRole(AdminRoleType adminRoleType) {
-        return find(roleRepository.findOneByName(adminRoleType.getName()), notFoundError(Role.class, adminRoleType.getName()));
     }
 
     private ServiceResult<Boolean> handleInviteError(RoleInvite i, ServiceFailure failure) {
