@@ -92,7 +92,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         assertEquals("a Bee", captured.get(1).getName());
         assertEquals(role, captured.get(1).getTarget());
         assertEquals(loggedInUserSupplierMock.get(), captured.get(1).getSentBy());
-        assertTrue(ZonedDateTime.now().isAfter(captured.get(1).getSentOn()));
+        assertFalse(ZonedDateTime.now().isBefore(captured.get(1).getSentOn()));
         assertEquals(InviteStatus.SENT, captured.get(1).getStatus());
         assertFalse(captured.get(1).getHash().isEmpty());
 
