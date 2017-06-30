@@ -196,6 +196,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
                 () -> classUnderTest.addCost(applicationFinanceId, questionId, new AcademicCost()),
                 () -> {
                     verify(applicationFinanceRules).consortiumCanAddACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                    verify(applicationFinanceRules).supportCanAddACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(isA(ApplicationFinanceResource.class), isA(UserResource.class));
                 });
     }
 
@@ -210,6 +211,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
                 () -> classUnderTest.addCost(applicationFinanceId),
                 () -> {
                     verify(applicationFinanceRules).consortiumCanAddACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                    verify(applicationFinanceRules).supportCanAddACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(isA(ApplicationFinanceResource.class), isA(UserResource.class));
                 });
     }
 
