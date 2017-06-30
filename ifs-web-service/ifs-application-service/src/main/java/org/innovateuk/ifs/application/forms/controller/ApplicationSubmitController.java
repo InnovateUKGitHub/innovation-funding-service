@@ -41,7 +41,6 @@ import static org.innovateuk.ifs.commons.rest.ValidationMessages.collectValidati
 
 @Controller
 @RequestMapping("/application")
-@PreAuthorize("hasAuthority('applicant')")
 public class ApplicationSubmitController {
 
     @Autowired
@@ -90,6 +89,7 @@ public class ApplicationSubmitController {
         return applicationModelPopulator.userIsLeadApplicant(application, user.getId()) && application.isSubmittable();
     }
 
+    @PreAuthorize("hasAnyAuthority('applicant', 'support')")
     @GetMapping("/{applicationId}/summary")
     public String applicationSummary(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                      UserResource user) {
@@ -121,6 +121,7 @@ public class ApplicationSubmitController {
         }
     }
 
+    @PreAuthorize("hasAuthority('applicant')")
     @PostMapping("/{applicationId}/summary")
     public String applicationSummarySubmit(@PathVariable("applicationId") long applicationId,
                                            UserResource user,
@@ -146,6 +147,7 @@ public class ApplicationSubmitController {
         return "redirect:/application/" + applicationId + "/summary";
     }
 
+    @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/{applicationId}/confirm-submit")
     public String applicationConfirmSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                            UserResource user) {
@@ -156,6 +158,7 @@ public class ApplicationSubmitController {
         return "application-confirm-submit";
     }
 
+    @PreAuthorize("hasAuthority('applicant')")
     @PostMapping("/{applicationId}/submit")
     public String applicationSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                     UserResource user,
@@ -175,6 +178,7 @@ public class ApplicationSubmitController {
         return "application-submitted";
     }
 
+    @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/{applicationId}/track")
     public String applicationTrack(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                    UserResource user) {

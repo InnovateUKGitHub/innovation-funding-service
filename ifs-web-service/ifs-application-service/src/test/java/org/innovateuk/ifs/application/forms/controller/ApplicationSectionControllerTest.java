@@ -30,6 +30,8 @@ import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,11 +52,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.application.service.Futures.settable;
@@ -65,7 +69,8 @@ import static org.innovateuk.ifs.commons.rest.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
-import static org.junit.Assert.assertEquals;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyLong;
@@ -172,8 +177,8 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
         sectionBuilder = newApplicantSectionResource().withApplication(application).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(newSectionResource().withType(SectionType.FINANCE).build()).withCurrentUser(loggedInUser);
         when(applicantRestService.getSection(anyLong(), anyLong(), anyLong())).thenReturn(sectionBuilder.build());
         when(formInputViewModelGenerator.fromQuestion(any(), any())).thenReturn(Collections.emptyList());
-        when(formInputViewModelGenerator.fromSection(any(), any(), any())).thenReturn(Collections.emptyList());
-        when(yourFinancesSectionPopulator.populate(any(), any(), any(), any())).thenReturn(new YourFinancesSectionViewModel(null, null, null, false));
+        when(formInputViewModelGenerator.fromSection(any(), any(), any(), any())).thenReturn(Collections.emptyList());
+        when(yourFinancesSectionPopulator.populate(any(), any(), any(), any(), any(), any(), any())).thenReturn(new YourFinancesSectionViewModel(null, null, null, false, Optional.empty(), false));
 
         ApplicationFinanceOverviewViewModel financeOverviewViewModel = new ApplicationFinanceOverviewViewModel();
         when(applicationFinanceOverviewModelManager.getFinanceDetailsViewModel(competitionResource.getId(), application.getId())).thenReturn(financeOverviewViewModel);
@@ -204,7 +209,7 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
         Object viewModelResult = result.getModelAndView().getModelMap().get("model");
         assertEquals(YourFinancesSectionViewModel.class, viewModelResult.getClass());
 
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
     }
 
     @Test
@@ -216,7 +221,7 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
         mockMvc.perform(get("/application/1/form/section/" + currentSectionId).header("referer", "/application/1/summary"))
                 .andExpect(view().name("application-form"));
 
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
     }
 
     @Test
@@ -229,7 +234,7 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
         Object viewModelResult = result.getModelAndView().getModelMap().get("model");
         assertEquals(YourFinancesSectionViewModel.class, viewModelResult.getClass());
 
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
     }
 
     @Test
@@ -309,7 +314,7 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
                 .andExpect(model().attributeHasFieldErrors("form", TERMS_AGREED_KEY));
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
     }
 
     @Test
@@ -327,7 +332,7 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
                 .andExpect(model().attributeHasFieldErrors("form", STATE_AID_AGREED_KEY));
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
     }
 
     @Test
@@ -353,7 +358,7 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1));
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
     }
 
     @Test
@@ -378,7 +383,6 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/" + sectionId + "**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
     }
-
 
     @Test
     public void testAcademicFinanceProjectCostsQuestionSubmitAlsoMarksOrganisationFinanceAndYourFundingAsNotRequired() throws Exception {
@@ -435,7 +439,7 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
                 .andExpect(model().hasErrors());
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
     }
 
     @Test
@@ -451,7 +455,6 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
     }
-
 
     @Test
     public void testDeleteCost() throws Exception {
@@ -526,5 +529,29 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
                 fileUpload("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(OverheadFileSaver.OVERHEAD_FILE_SUBMIT, "")
         ).andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    public void testApplicationFormWithOpenSectionForApplicant() throws Exception {
+
+        Long currentSectionId = sectionResources.get(2).getId();
+        ApplicationResource application = newApplicationResource().build();
+        RoleResource role = newRoleResource().withType(UserRoleType.COLLABORATOR).build();
+        ProcessRoleResource processRole = newProcessRoleResource().withOrganisation(2L).withRole(role).build();
+
+        when(applicationService.getById(1L)).thenReturn(application);
+        when(processRoleService.getByApplicationId(application.getId())).thenReturn(asList(processRole));
+        when(applicantRestService.getSection(processRole.getUser(), application.getId(), currentSectionId)).thenReturn(sectionBuilder.build());
+
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+        when(sectionService.getAllByCompetitionId(anyLong())).thenReturn(sectionResources);
+        MvcResult result = mockMvc.perform(get("/application/1/form/section/" + currentSectionId + "/2").header("referer", "/application/1"))
+                .andExpect(view().name("application-form"))
+                .andReturn();
+
+        Object viewModelResult = result.getModelAndView().getModelMap().get("model");
+        assertEquals(YourFinancesSectionViewModel.class, viewModelResult.getClass());
+
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
     }
 }

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -15,8 +16,8 @@ import java.util.stream.Collectors;
 public class YourOrganisationSectionViewModel extends AbstractSectionViewModel {
     private boolean complete;
 
-    public YourOrganisationSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly) {
-        super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly);
+    public YourOrganisationSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly, Optional<Long> applicantOrganisationId, boolean readOnlyAllApplicantApplicationFinances) {
+        super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
     }
 
     public boolean isComplete() {
