@@ -143,7 +143,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
             List<Long> allApplicationIdsBasedOnFilter = getAllApplicationIdsByFilters(competitionId, selectionCookie.getFundingDecisionFilterForm());
             addAllApplicationsIdsBasedOnFilter(selectionCookie, allApplicationIdsBasedOnFilter);
         } else {
-            removeAllApplicationsIds(selectionCookie);
+            removeAllApplicationsIds(selectionCookie.getFundingDecisionSelectionForm());
         }
 
         saveFormToCookie(response, competitionId, selectionCookie);
@@ -157,9 +157,9 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         selectionCookie.getFundingDecisionSelectionForm().setAllSelected(true);
     }
 
-    private void removeAllApplicationsIds(FundingDecisionSelectionCookie selectionCookie) {
-        selectionCookie.getFundingDecisionSelectionForm().getApplicationIds().clear();
-        selectionCookie.getFundingDecisionSelectionForm().setAllSelected(false);
+    private void removeAllApplicationsIds(FundingDecisionSelectionForm selectionForm) {
+        selectionForm.getApplicationIds().clear();
+        selectionForm.setAllSelected(false);
     }
 
     @PostMapping(params = {"selectionId", "isSelected"})
@@ -251,6 +251,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                 Optional<FundingDecision> fundingDecision = applicationFundingDecisionService.getFundingDecisionForString(fundingDecisionChoiceForm.getFundingDecision());
                 if (fundingDecision.isPresent()) {
                     applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, fundingDecision.get(), fundingDecisionSelectionForm.getApplicationIds());
+                    removeAllApplicationsIds(fundingDecisionSelectionForm);
                 }
             }
         }
