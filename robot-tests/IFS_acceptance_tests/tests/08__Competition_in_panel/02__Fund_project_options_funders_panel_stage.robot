@@ -51,7 +51,7 @@ Proj Finance user can send Fund Decision notification
     Given the user navigates to the page     ${funders_panel_competition_url}
     When the user clicks the button/link     jQuery=a:contains("Manage funding notifications")
     Then the user should see the element     jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
-    And the user should see the element      jQuery=button.disabled:contains("Write and send email")
+    And the user should see the element      jQuery=button[disabled]:contains("Write and send email")
     When the user selects the checkbox       app-row-${application_ids["${FUNDERS_PANEL_APPLICATION_1_TITLE}"]}
     Then the user clicks the button/link     jQuery=button:contains("Write and send email")
     And the user should see the element      css=#subject[value^="Notification regarding your application"]
@@ -166,7 +166,7 @@ the server side validation should be triggered
 
 the user cancels the process needs to re-select the reciepients
     the user clicks the button/link  jQuery=a:contains("Cancel")
-    the user should see the element  jQuery=button.disabled:contains("Write and send email")
+    the user should see the element  jQuery=button[disabled]:contains("Write and send email")
     the user selects the checkbox    app-row-${application_ids["${FUNDERS_PANEL_APPLICATION_1_TITLE}"]}
     the user clicks the button/link  jQuery=button:contains("Write and send email")
 
