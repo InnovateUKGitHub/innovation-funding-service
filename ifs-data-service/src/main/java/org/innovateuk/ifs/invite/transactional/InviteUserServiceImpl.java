@@ -3,6 +3,7 @@ package org.innovateuk.ifs.invite.transactional;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -15,12 +16,15 @@ import org.innovateuk.ifs.project.transactional.EmailService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.mapper.RoleMapper;
 import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.resource.AdminRoleType;
+import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.Collections;
@@ -54,6 +58,9 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
 
+    @Autowired
+    private RoleMapper roleMapper;
+
     private static final Log LOG = LogFactory.getLog(InviteUserServiceImpl.class);
 
     @Value("${ifs.web.baseURL}")
@@ -66,6 +73,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> saveUserInvite(UserResource invitedUser, AdminRoleType adminRoleType) {
 
         return validateInvite(invitedUser, adminRoleType)
@@ -85,14 +93,14 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
         return serviceSuccess();
     }
 
+    private ServiceResult<Role> getRole(AdminRoleType adminRoleType) {
+        return find(roleRepository.findOneByName(adminRoleType.getName()), notFoundError(Role.class, adminRoleType.getName()));
+    }
+
     private ServiceResult<Void> validateUserNotAlreadyInvited(UserResource invitedUser, Role role) {
 
         List<RoleInvite> existingInvites = inviteRoleRepository.findByRoleIdAndEmail(role.getId(), invitedUser.getEmail());
         return existingInvites.isEmpty() ? serviceSuccess() : serviceFailure(USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED);
-    }
-
-    private ServiceResult<Role> getRole(AdminRoleType adminRoleType) {
-        return find(roleRepository.findOneByName(adminRoleType.getName()), notFoundError(Role.class, adminRoleType.getName()));
     }
 
     private ServiceResult<RoleInvite> saveInvite(UserResource invitedUser, Role role) {
@@ -109,16 +117,22 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
     private ServiceResult<Void> inviteInternalUser(RoleInvite roleInvite) {
 
-        ServiceResult<Void> inviteContactEmailSendResult = emailService.sendEmail(
-                Collections.singletonList(createInviteInternalUserNotificationTarget(roleInvite)),
-                createGlobalArgsForInternalUserInvite(roleInvite),
-                Notifications.INVITE_INTERNAL_USER);
+        try {
+            Map<String, Object> globalArgs = createGlobalArgsForInternalUserInvite(roleInvite);
+            ServiceResult<Void> inviteContactEmailSendResult = emailService.sendEmail(
+                    Collections.singletonList(createInviteInternalUserNotificationTarget(roleInvite)),
+                    globalArgs,
+                    Notifications.INVITE_INTERNAL_USER);
 
-        inviteContactEmailSendResult.handleSuccessOrFailure(
-                failure -> handleInviteError(roleInvite, failure),
-                success -> handleInviteSuccess(roleInvite)
-        );
-        return inviteContactEmailSendResult;
+            inviteContactEmailSendResult.handleSuccessOrFailure(
+                    failure -> handleInviteError(roleInvite, failure),
+                    success -> handleInviteSuccess(roleInvite)
+            );
+            return inviteContactEmailSendResult;
+        } catch (IllegalArgumentException e) {
+            LOG.error(String.format("Role %s lookup failed for user %s", roleInvite.getEmail(), roleInvite.getTarget().getName()));
+            return ServiceResult.serviceFailure(new Error(CommonFailureKeys.ADMIN_INVALID_USER_ROLE));
+        }
     }
 
     private NotificationTarget createInviteInternalUserNotificationTarget(RoleInvite roleInvite) {
@@ -127,7 +141,8 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
     private Map<String, Object> createGlobalArgsForInternalUserInvite(RoleInvite roleInvite) {
         Map<String, Object> globalArguments = new HashMap<>();
-        globalArguments.put("role", roleInvite.getTarget().getName());
+        RoleResource roleResource = roleMapper.mapIdToResource(roleInvite.getTarget().getId());
+        globalArguments.put("role", roleResource.getDisplayName());
         globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl + WEB_CONTEXT, roleInvite));
         return globalArguments;
     }
