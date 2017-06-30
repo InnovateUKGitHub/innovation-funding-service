@@ -47,6 +47,10 @@ items:
             value: "ldap://oldap.org.iuk.local:389"
           - name: LDAPUSESTARTTLS
             value: "false"
+          - name: LDAPUSESSL
+            value: "false"
+          - name: LDAPPORT
+            value: "389"
           - name: LDAPBASEDN
             value: "dc=int,dc=g2g3digital,dc=net"
           - name: LDAPBINDDN
