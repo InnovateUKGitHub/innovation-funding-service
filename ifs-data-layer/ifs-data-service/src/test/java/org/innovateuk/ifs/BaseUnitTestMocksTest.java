@@ -60,6 +60,7 @@ import org.innovateuk.ifs.invite.repository.*;
 import org.innovateuk.ifs.invite.transactional.EthnicityService;
 import org.innovateuk.ifs.invite.transactional.InviteOrganisationService;
 import org.innovateuk.ifs.invite.transactional.InviteProjectService;
+import org.innovateuk.ifs.invite.transactional.InviteUserService;
 import org.innovateuk.ifs.invite.transactional.RejectionReasonService;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.service.NotificationService;
@@ -213,6 +214,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected RoleRepository roleRepositoryMock;
 
     @Mock
+    protected InviteRoleRepository inviteRoleRepositoryMock;
+
+    @Mock
     protected RoleService roleServiceMock;
 
     @Mock
@@ -332,6 +336,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     @Mock
     protected InviteProjectService inviteProjectServiceMock;
 
+    @Mock
+    protected InviteUserService inviteUserServiceMock;
+    
     @Mock
     protected AddressLookupService addressLookupServiceMock;
 
