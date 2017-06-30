@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.invite.resource;
 
-import org.innovateuk.ifs.user.resource.RoleResource;
-
 /**
  * Created by rav on 30/06/2017.
  */
@@ -9,7 +7,9 @@ public class RoleInviteResource extends InviteResource {
     private Long id;
     private String name;
     private String email;
-    private RoleResource roleResource;
+    private Long roleId;
+    private String roleName;
+    private String hash;
 
     public Long getId() {
         return id;
@@ -35,11 +35,27 @@ public class RoleInviteResource extends InviteResource {
         this.email = email;
     }
 
-    public RoleResource getRoleResource() {
-        return roleResource;
+    public Long getRoleId() {
+        return roleId;
     }
 
-    public void setRoleResource(RoleResource roleResource) {
-        this.roleResource = roleResource;
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 }

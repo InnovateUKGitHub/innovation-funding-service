@@ -25,7 +25,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.a
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
 /**
- * This controller will handle all CRUD requests related to users managed by IFS Administrators.
+ * Controller for handling requests related to invitation of new users by the IFS Administrator
  */
 @Controller
 @RequestMapping("/admin")
@@ -60,13 +60,6 @@ public class InviteUserController {
                                @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                UserResource loggedInUser) {
 
-        //TODO - Temp code till its set in the form
-/*        form.setRole(AdminRoleType.IFS_ADMINISTRATOR);
-        InviteUserResource inviteUserResource = constructInviteUserResource(form);
-        ServiceResult<Void> saveResult = inviteUserService.saveUserInvite(inviteUserResource);
-        return "admin/users/active";*/
-
-
         Supplier<String> failureView = () -> "admin/invite-new-user";
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
@@ -76,7 +69,7 @@ public class InviteUserController {
             ServiceResult<Void> saveResult = inviteUserService.saveUserInvite(inviteUserResource);
 
             return validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
-                    failNowOrSucceedWith(failureView, () -> "admin/users/active");
+                    failNowOrSucceedWith(failureView, () -> "redirect:/admin/users/active");
 
         });
     }

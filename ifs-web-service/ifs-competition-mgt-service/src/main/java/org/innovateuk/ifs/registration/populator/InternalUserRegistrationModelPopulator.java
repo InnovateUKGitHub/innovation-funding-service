@@ -17,7 +17,7 @@ public class InternalUserRegistrationModelPopulator {
     public InternalUserRegistrationViewModel populateModel(String inviteHash) {
         return inviteRestService.getInvite(inviteHash).andOnSuccessReturn(
                 roleInviteResource -> new InternalUserRegistrationViewModel(roleInviteResource.getName(),
-                        roleInviteResource.getRoleResource().getDisplayName(), roleInviteResource.getEmail())
+                        roleInviteResource.getRoleName(), roleInviteResource.getEmail())
         ).getSuccessObjectOrThrowException();
     }
 }

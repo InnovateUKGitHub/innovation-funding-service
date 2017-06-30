@@ -24,7 +24,7 @@ public class InviteUserController {
         return inviteUserService.saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getAdminRoleType()).toPostResponse();
     }
 
-    @PostMapping("/getInvite/{inviteHash}")
+    @GetMapping("/getInvite/{inviteHash}")
     public RestResult<RoleInviteResource> getInvite(@PathVariable("inviteHash") String inviteHash){
         return inviteUserService.getInvite(inviteHash).toGetResponse();
     }

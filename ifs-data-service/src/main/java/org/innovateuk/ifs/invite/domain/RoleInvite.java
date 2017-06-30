@@ -28,10 +28,6 @@ public class RoleInvite extends Invite<Role, RoleInvite> {
         this.role = role;
     }
 
-    public void setRole(final Role role) {
-        this.role = role;
-    }
-
     @Override
     public Role getTarget() {
         return role;
@@ -41,5 +37,4 @@ public class RoleInvite extends Invite<Role, RoleInvite> {
     public void setTarget(final Role role) {
         this.role = role;
     }
-
 }

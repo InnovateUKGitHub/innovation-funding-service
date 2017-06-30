@@ -11,18 +11,18 @@
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start"/>
 
-    <form action="/prototypes/643-created.html" novalidate="novalidate">
+    <form th:object="${form}" method="post" novalidate="novalidate"  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Create account',size='heading-large'"/>
         <h2 class="heading-medium">Your details</h2>
 
         <h3 class="heading-small">Name</h3>
-        <p>Robert Plant</p>
+        <p th:text="${model.name}">Robert Plant</p>
         <h3 class="heading-small">Role</h3>
-        <p>Customer support</p>
+        <p th:text="{model.roleName}">Customer support</p>
         <h3 class="heading-small">Email</h3>
         <p>
             <span class="form-hint">You will need this to sign into your account.</span>
-            robertplant@innovateuk.org
+            <th:block th:text="{model.roleName}">robertplant@innovateuk.org</th:block>
         </p>
 
         <div class="form-group">
@@ -53,7 +53,7 @@
                        value=""
                        th:attr="data-required-errormessage=#{validation.standard.password.required},
                                 data-minlength-errormessage=#{validation.standard.password.length.min(null,null,'8')}"/>
-                <button type="button" role="switch" aria-checked="false" aria-label="Show password">Show</button>
+                <button th:field="*{password}" type="button" role="switch" aria-checked="false" aria-label="Show password">Show</button>
             </div>
         </div>
         <button class="button extra-margin">Create account</button>
