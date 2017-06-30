@@ -19,4 +19,9 @@ public interface InviteUserService {
     @SecuredBySpring(value = "GET_EXISTNG_INVITE_FOR_HASH",
             description = "The System Registration user can get invite using hash to process registration")
     ServiceResult<RoleInviteResource> getInvite(String inviteHash);
+
+    @PreAuthorize("hasAuthority('system_registrar')")
+    @SecuredBySpring(value = "GET_EXISTNG_INVITE_FOR_HASH",
+            description = "The System Registration user can get status of invite using hash to process registration")
+    ServiceResult<Boolean> checkExistingUser(String inviteHash);
 }

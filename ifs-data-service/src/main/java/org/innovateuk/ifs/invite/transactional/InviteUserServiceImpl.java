@@ -3,6 +3,7 @@ package org.innovateuk.ifs.invite.transactional;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -17,8 +18,10 @@ import org.innovateuk.ifs.project.transactional.EmailService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.mapper.RoleMapper;
 import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.resource.AdminRoleType;
+import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,6 +56,25 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
     @Autowired
     RoleInviteMapper roleInviteMapper;
+
+    private EmailService emailService;
+
+    @Autowired
+    private LoggedInUserSupplier loggedInUserSupplier;
+
+    @Autowired
+    private RoleMapper roleMapper;
+
+    private static final Log LOG = LogFactory.getLog(InviteUserServiceImpl.class);
+
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
+
+    public static final String WEB_CONTEXT = "/internal-user";
+
+    enum Notifications {
+        INVITE_INTERNAL_USER
+    }
 
     @Override
     @Transactional
@@ -92,13 +114,71 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
         return serviceSuccess();
     }
 
+    private ServiceResult<Void> inviteInternalUser(RoleInvite roleInvite) {
+
+        try {
+            Map<String, Object> globalArgs = createGlobalArgsForInternalUserInvite(roleInvite);
+            ServiceResult<Void> inviteContactEmailSendResult = emailService.sendEmail(
+                    Collections.singletonList(createInviteInternalUserNotificationTarget(roleInvite)),
+                    globalArgs,
+                    Notifications.INVITE_INTERNAL_USER);
+
+            inviteContactEmailSendResult.handleSuccessOrFailure(
+                    failure -> handleInviteError(roleInvite, failure),
+                    success -> handleInviteSuccess(roleInvite)
+            );
+            return inviteContactEmailSendResult;
+        } catch (IllegalArgumentException e) {
+            LOG.error(String.format("Role %s lookup failed for user %s", roleInvite.getEmail(), roleInvite.getTarget().getName()));
+            return ServiceResult.serviceFailure(new Error(CommonFailureKeys.ADMIN_INVALID_USER_ROLE));
+        }
+    }
+
+    private NotificationTarget createInviteInternalUserNotificationTarget(RoleInvite roleInvite) {
+        return new ExternalUserNotificationTarget(roleInvite.getName(), roleInvite.getEmail());
+    }
+
+    private Map<String, Object> createGlobalArgsForInternalUserInvite(RoleInvite roleInvite) {
+        Map<String, Object> globalArguments = new HashMap<>();
+        RoleResource roleResource = roleMapper.mapIdToResource(roleInvite.getTarget().getId());
+        globalArguments.put("role", roleResource.getDisplayName());
+        globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl + WEB_CONTEXT, roleInvite));
+        return globalArguments;
+    }
+
+    private String getInviteUrl(String baseUrl, RoleInvite inviteResource) {
+        return String.format("%s/accept-invite/%s", baseUrl, inviteResource.getHash());
+    }
+
     @Override
     public ServiceResult<RoleInviteResource> getInvite(String inviteHash) {
         RoleInvite roleInvite = inviteRoleRepository.getByHash(inviteHash);
         return serviceSuccess(roleInviteMapper.mapToResource(roleInvite));
     }
 
+    @Override
+    public ServiceResult<Boolean> checkExistingUser(String inviteHash) {
+        return getByHash(inviteHash)
+                .andOnSuccessReturn(i -> userRepository.findByEmail(i.getEmail()))
+                .andOnSuccess(u -> serviceSuccess(u.isPresent()));
+    }
+
+    private ServiceResult<RoleInvite> getByHash(String hash) {
+        return find(inviteRoleRepository.getByHash(hash), notFoundError(RoleInvite.class, hash));
+    }
+
     private ServiceResult<Role> getRole(AdminRoleType adminRoleType) {
         return find(roleRepository.findOneByName(adminRoleType.getName()), notFoundError(Role.class, adminRoleType.getName()));
+    }
+
+    private ServiceResult<Boolean> handleInviteError(RoleInvite i, ServiceFailure failure) {
+        LOG.error(String.format("Invite failed %s, %s, %s (error count: %s)", i.getId(), i.getEmail(), i.getTarget().getName(), failure.getErrors().size()));
+        List<Error> errors = failure.getErrors();
+        return serviceFailure(errors);
+    }
+
+    private boolean handleInviteSuccess(RoleInvite roleInvite) {
+        inviteRoleRepository.save(roleInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now()));
+        return true;
     }
 }

@@ -236,7 +236,12 @@ public enum CommonFailureKeys implements ErrorTemplate {
     /**
      * SIL CRM
      */
-    CONTACT_NOT_UPDATED(INTERNAL_SERVER_ERROR);
+    CONTACT_NOT_UPDATED(INTERNAL_SERVER_ERROR),
+
+    /**
+     * IFS Admin
+     */
+    ADMIN_INVALID_USER_ROLE(BAD_REQUEST);
 
 
     private ErrorTemplate errorTemplate;

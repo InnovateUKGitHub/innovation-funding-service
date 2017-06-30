@@ -35,7 +35,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -143,13 +142,9 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
 
     @Override
     public ServiceResult<Boolean> checkUserExistingByInviteHash(@P("hash") String hash) {
-        return getByHash(hash).andOnSuccessReturn(invite -> {
-            if (invite.getUser() != null) {
-                return TRUE;
-            }
-
-            return userRepository.findByEmail(invite.getEmail()).isPresent();
-        });
+        return getByHash(hash)
+                .andOnSuccessReturn(i -> userRepository.findByEmail(i.getEmail()))
+                .andOnSuccess(u -> serviceSuccess(u.isPresent()));
     }
 
     @Override

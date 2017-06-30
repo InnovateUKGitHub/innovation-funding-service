@@ -32,6 +32,29 @@ Project finance user cannot navigate to manage users page
 
 # TODO: Add ATs for IFS-605 with pagination when IFS-637 is implemented
 
+Admin user invites internal user
+    [Documentation]  IFS-27, IFS-642
+    [Tags]  Email  HappyPath
+    [Setup]  The user logs-in in new browser  &{ifs_admin_user_credentials}
+    When the user clicks the button/link  link=Manage users
+    And the user clicks the button/link  link=Add a new internal user
+    Then the user should see the element  jQuery=h1:contains("Add a new internal user")
+    And the user should see the element  jQuery=p:contains("Enter the new internal user's details below to add them to your invite list.")
+    And the user should see the element  jQuery=form input#firstName
+    And the user should see the element  jQuery=form input#lastName
+    And the user should see the element  jQuery=form input#emailAddress
+    And the user should see the element  jQuery=form select#role
+    Then the user enters text to a text field  id=firstName  Aaron
+    And the user enters text to a text field  id=lastName  Aaronson
+    And the user enters text to a text field  id=emailAddress  test@innovateuk.gov.uk
+    And the user selects the option from the drop-down menu  IFS_ADMINISTRATOR  id=role
+    And the user clicks the button/link  jQuery=button:contains("Send invite")
+    Then the user reads his email and clicks the link   test@innovateuk.gov.uk   Invitation to Innovation Funding Service    An Innovation Funding Service account was created for you
+
+
+
+
+
 *** Keywords ***
 User cannot see manage users page
     [Arguments]  ${email}  ${password}

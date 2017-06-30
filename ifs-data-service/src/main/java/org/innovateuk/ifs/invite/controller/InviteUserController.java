@@ -28,5 +28,10 @@ public class InviteUserController {
     public RestResult<RoleInviteResource> getInvite(@PathVariable("inviteHash") String inviteHash){
         return inviteUserService.getInvite(inviteHash).toGetResponse();
     }
+
+    @GetMapping("/checkExistingUser/{inviteHash}")
+    public RestResult<Boolean> checkExistingUser(@PathVariable("inviteHash") String inviteHash) {
+        return inviteUserService.checkExistingUser(inviteHash).toGetResponse();
+    }
 }
 
