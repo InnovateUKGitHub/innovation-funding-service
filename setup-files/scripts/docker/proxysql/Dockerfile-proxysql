@@ -15,6 +15,14 @@ RUN apt-get update && \
 
 COPY proxysql.cnf entrypoint.sh make-mysqldump.sh /etc/
 
-RUN chmod +x /etc/entrypoint.sh /etc/make-mysqldump.sh
+RUN useradd -m dumpuser
+#RUN chown -R dumpuser:dumpuser /etc
+#RUN chown -R dumpuser:dumpuser /var/lib/proxysql
+
+RUN chmod -R 777 /etc
+RUN chmod -R 777 /var/lib/proxysql
+RUN chmod 0644 /etc/mysql/my.cnf
+
+USER dumpuser
 
 ENTRYPOINT ["/etc/entrypoint.sh"]

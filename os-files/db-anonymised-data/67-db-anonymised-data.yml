@@ -20,9 +20,9 @@ items:
     - name: db-anonymised-data
       image: innovateuk/db-anonymised-data:1.0-SNAPSHOT
       imagePullPolicy: Always
-      command: [ "/bin/bash", "-exec" ]
-      args:
-      - /etc/make-mysqldump.sh
+#      command: [ "/bin/bash", "-exec" ]
+#      args:
+#      - /etc/make-mysqldump.sh
       env:
       - name: DB_HOST
         valueFrom:

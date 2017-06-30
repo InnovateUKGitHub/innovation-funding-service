@@ -29,7 +29,12 @@ function dbTakeMysqlDump() {
       sleep 10
     done
 
-    oc rsync ${SVC_ACCOUNT_CLAUSE} $(oc get pods ${SVC_ACCOUNT_CLAUSE} | grep -m 1 db-anonymised-data | awk '{ print $1 }'):/tmp/dump /tmp/dump
+    echo "Allowing proxysql time to start up"
+    sleep 10
+
+    podname=$(oc get pods ${SVC_ACCOUNT_CLAUSE} | grep -m 1 db-anonymised-data | awk '{ print $1 }')
+    oc rsh $podname /etc/make-mysqldump.sh
+    oc rsync $podname:/tmp/dump /tmp
 }
 
 # Entry point
@@ -45,11 +50,7 @@ export DB_HOST=ifs-database
 export DB_PORT=3306
 
 injectDBVariables
-
-if [[ (${TARGET} != "local") ]]
-then
-    useContainerRegistry
-fi
+useContainerRegistry
 
 pushAnonymisedDatabaseDumpImages
 dbTakeMysqlDump
