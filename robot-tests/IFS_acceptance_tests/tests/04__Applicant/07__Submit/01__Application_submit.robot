@@ -16,10 +16,10 @@ Documentation     -INFUND-172: As a lead applicant and I am on the application s
 ...               INFUND-9058 Update 'Application submitted' and 'Application status' pages to the same view
 
 Suite Setup       new account complete all but one
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
-Resource          ../FinanceSection_Commons.robot
+Resource          ../Applicant_Commons.robot
 Resource          ../../10__Project_setup/PS_Common.robot
 
 *** Variables ***
@@ -65,17 +65,17 @@ Submit flow (complete application)
     ...
     ...    INFUND-4010
     [Tags]    HappyPath    Email    SmokeTest
-    Given log in as a different user    ${submit_test_email}    ${correct_password}
-    And the user navigates to the page    ${SERVER}
-    And the user clicks the button/link    link=${application_name}
-    When the user clicks the button/link    link=Review and submit
-    And the user should be redirected to the correct page    summary
+    Given log in as a different user                        ${submit_test_email}    ${correct_password}
+    And the user navigates to the page                      ${SERVER}
+    And the user clicks the button/link                     link=${application_name}
+    When the user clicks the button/link                    link=Review and submit
+    Then the user should be redirected to the correct page   summary
     And the applicant clicks the submit button and the clicks cancel in the submit modal
     And the applicant clicks the submit and then clicks the "close button" in the modal
     And the applicant clicks Yes in the submit modal
-    Then the user should be redirected to the correct page    submit
-    And the user should see the text in the page    Application submitted
-    And The user should see the element         link=Finished
+    Then the user should be redirected to the correct page   submit
+    And the user should see the text in the page            Application submitted
+    And The user should see the element                     link=Finished
     # TODO add check here once INFUND-9195 done
 
 The applicant should get a confirmation email
@@ -91,7 +91,7 @@ Submitted application is read only
     and the user clicks the button/link     link=Return to dashboard
     and the user clicks the button/link     link=${application_name}
     When the user clicks the button/link    link=View application
-    And the user is on the page    summary
+    And The user should be redirected to the correct page    summary
     Then the user can check that the sections are read only
 
 Status of the submitted application

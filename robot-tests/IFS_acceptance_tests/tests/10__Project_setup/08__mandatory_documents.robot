@@ -552,13 +552,11 @@ CompAdmin approves other documents
     When the user clicks the button/link    jQuery=button:contains("Accept documents")
     And the user clicks the button/link    jQuery=.modal-accept-docs .button:contains("Accept Documents")
     Then the user should see the text in the page    The documents provided have been approved.
-    [Teardown]  the user clicks the button/link      link=Projects in setup
-
 
 Partners can see the documents approved
     [Documentation]    INFUND-5559, INFUND-5424, INFUND-7345
     [Tags]    HappyPath
-    Given log in as user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}  #Project Manager
+    Given log in as a different user      ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}  #Project Manager
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
     Then the user should see the element    jQuery=.success-alert h2:contains("These documents have been approved by Innovate UK")
     Given log in as a different user      &{lead_applicant_credentials}
@@ -595,10 +593,10 @@ Status updates correctly for internal user's table
 *** Keywords ***
 
 the project is completed if it is not already complete
-    log in as user    &{lead_applicant_credentials}
-    the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details
-    ${project_manager_not_set}    ${value}=    run keyword and ignore error without screenshots    The user should not see the element    jQuery=#project-manager-status.yes
-    run keyword if    '${project_manager_not_set}' == 'PASS'     all previous sections of the project are completed
+    The user logs-in in new browser  &{lead_applicant_credentials}
+    the user navigates to the page   ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details
+    ${project_manager_not_set}  ${value} =  run keyword and ignore error without screenshots  The user should not see the element  jQuery=#project-manager-status.yes
+    run keyword if  '${project_manager_not_set}' == 'PASS'  all previous sections of the project are completed
 
 all previous sections of the project are completed
     lead partner selects project manager and address
@@ -613,7 +611,7 @@ lead partner selects project manager and address
     the user clicks the button/link      jQuery=.button:contains("Save")
     the user clicks the button/link      link=Project address
     the user selects the radio button    addressType    REGISTERED
-    the user clicks the button/link    jQuery=.button:contains("Save project address")
+    the user clicks the button/link      jQuery=.button:contains("Save project address")
     the user clicks the button/link      jQuery=.button:contains("Mark as complete")
     the user clicks the button/link      jQuery=button:contains("Submit")
 

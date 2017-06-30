@@ -5,20 +5,27 @@ LABEL maintainer "infrastructure@orangebus.co.uk"
 ENV HTTP_PORT=9080 \
     HTTPS_PORT=9443 \
     WEBAPPS_PROTO=ajp \
+    MPM_STARTSERVERS=2 \
+    MPM_MINSPARETHREADS=25 \
+    MPM_MAXSPARETHREADS=75 \
+    MPM_THREADLIMIT=64 \
+    MPM_THREADSPERCHILD=25 \
+    MPM_MAXREQUESTWORKERS=150 \
+    MPM_MAXCONNECTIONSPERCHILD=0 \
     SP_DOMAIN=ifs.local-dev \
     IDP_DOMAIN=idp \
     IDP_PORT=8443 \
     TRUSTED_IP="@auth_service_trusted_ip@" \
-    PROXY_CERTIFICATE="sp_proxy_certificate.pem" \
-    PROXY_KEY="sp_proxy_key.pem" \
-    PROXY_CA_CERTIFICATE="sp_proxy_cacertificate.pem" \
-    IDP_SIGNING_CERTIFICATE="idp-signing.crt" \
-    IDP_ENCRYPTION_CERTIFICATE="idp-encryption.crt"
+    SP_PROXY_KEY="@auth_sp_proxy_key@" \
+    SP_PROXY_CERTIFICATE="@auth_sp_proxy_certificate@" \
+    SP_PROXY_CACERTIFICATE="@auth_sp_proxy_cacertificate@" \
+    IDP_SIGNING_CERTIFICATE="@auth_idp_signing_certificate@" \
+    IDP_ENCRYPTION_CERTIFICATE="@auth_idp_encryption_certificate@" \
+    MEMCACHE_ENDPOINT=
 
 WORKDIR /usr/local/bin
 
 COPY files /usr/local/files/
-COPY certs /usr/local/files/apache2/
 
 RUN apt-get update --fix-missing && \
 
@@ -26,14 +33,13 @@ RUN apt-get update --fix-missing && \
   apt-get -y install curl apache2 libapache2-modsecurity libapache2-mod-shib2 && \
   apt-get autoclean && apt-get --purge -y autoremove && rm -rf /var/lib/apt/lists/* && \
 
-# put certificates in place \
+# directory for certificates, added in entrypoint \
   mkdir /etc/apache2/certs && \
-  mv "/usr/local/files/apache2/$PROXY_KEY" "/usr/local/files/apache2/$PROXY_CERTIFICATE" /etc/apache2/certs/ && \
-  mv "/usr/local/files/apache2/$PROXY_CA_CERTIFICATE" /etc/apache2/certs/ && \
 
 # configure apache \
   rm -f /etc/apache2/sites-enabled/000-default.conf && \
-  a2enmod shib2 socache_shmcb slotmem_shm ssl proxy_balancer status lbmethod_byrequests proxy_ajp proxy headers rewrite proxy_http reqtimeout && \
+  a2enmod shib2 socache_shmcb ssl status proxy_ajp proxy headers rewrite proxy_http reqtimeout && \
+  mv /usr/local/files/apache2/mpm_event.conf /etc/apache2/mods-available/ && \
   sed -i -e 's/Listen 80/Listen ${HTTP_PORT}/' -e 's/Listen 443/Listen ${HTTPS_PORT}/' /etc/apache2/ports.conf && \
   mv /usr/local/files/apache2/z-defaults.conf /etc/apache2/conf-available/ && a2enconf z-defaults.conf && \
 
@@ -53,17 +59,14 @@ RUN apt-get update --fix-missing && \
   chown -R www-data:0 /etc/apache2 /var/cache/apache2 /run/lock/apache2 /var/run/apache2 /var/www/html/ && \
   chmod -R u=rwX,g=rwX,o= /etc/apache2 /var/cache/apache2 /run/lock/apache2 /var/www/html/ && \
 
-# configure shibboleth module
+# configure shibboleth module \
   mv /usr/local/files/sp/* /etc/shibboleth/ && \
   mkdir /var/www/html/Logout &&  mv /usr/local/files/apache2/index.html /var/www/html/Logout/ && \
   mkdir /var/run/shibboleth && \
   sed -i "/^log4j\.appender/d" /etc/shibboleth/shibd.logger && cat /etc/shibboleth/appenders.shibd.logger >> /etc/shibboleth/shibd.logger &&  rm /etc/shibboleth/appenders.shibd.logger && \
-  # see also substitutions in entrypoint script
-  cp /etc/apache2/certs/* /etc/shibboleth/ && \
-  mv "/usr/local/files/apache2/$IDP_SIGNING_CERTIFICATE" /etc/shibboleth/ && \
-  mv "/usr/local/files/apache2/$IDP_ENCRYPTION_CERTIFICATE" /etc/shibboleth/ && \
+# see also certificates and substitutions in entrypoint script \
 
-# run shibboleth sp as its own user (same as apache)
+# run shibboleth sp as its own user (same as apache) \
   mkdir -p /var/run/shibboleth && \
   chown -R www-data:0 /etc/shibboleth /var/www/html/Logout /var/run/shibboleth && \
   chmod -R u=rwX,g=rwX,o= /etc/shibboleth /var/www/html/Logout /var/run/shibboleth && \

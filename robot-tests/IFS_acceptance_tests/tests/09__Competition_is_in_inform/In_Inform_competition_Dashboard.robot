@@ -20,7 +20,7 @@ Documentation     INFUND-7365 Inflight competition dashboards: Inform dashboard
 ...               INFUND-8876 No back navigation on applicant feedback view
 ...
 ...               INFUND-8066 Filter on 'Manage funding notifications' dashboard
-Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
+Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    Close browser and delete emails
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
@@ -127,7 +127,7 @@ Selecting the dashboard link takes user back to the dashboard
     [Documentation]    INFUND-8876
     [Tags]
     Given the user clicks the button/link    jQuery=.link-back:contains("Dashboard")
-    Then the user should see the element    jQuery=h1:contains("Your dashboard")
+    Then the user should see the element    jQuery=h1:contains("Dashboard")
 
 *** Keywords ***
 the application question scores are correct

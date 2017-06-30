@@ -1,0 +1,93 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: shib
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: shib
+    strategy:
+      type: Rolling
+      rollingParams:
+        timeoutSeconds: 600
+        maxSurge: 2
+        maxUnavailable: 0
+    template:
+      metadata:
+        labels:
+          deploymentconfig: shib
+      spec:
+        containers:
+        - image: innovateuk/sp-service:1.0-SNAPSHOT
+          name: shib
+          imagePullPolicy: Always
+          env:
+          - name: SP_PROXY_CERTIFICATE
+            value: "<<SSLCERT>>"
+          - name: SP_PROXY_CACERTIFICATE
+            value: "<<SSLCACERT>>"
+          - name: SP_PROXY_KEY
+            value: "<<SSLKEY>>"
+          - name: SP_DOMAIN
+            value: <<SHIB-ADDRESS>>
+          - name: IDP_DOMAIN
+            value: <<SHIB-IDP-ADDRESS>>
+          - name: HTTPS_PORT
+            value: "9443"
+          - name: HTTP_PORT
+            value: "9080"
+          - name: MPM_STARTSERVERS
+            value: "4"
+          - name: MPM_MINSPARETHREADS
+            value: "75"
+          - name: MPM_MAXSPARETHREADS
+            value: "250"
+          - name: MPM_THREADLIMIT
+            value: "64"
+          - name: MPM_THREADSPERCHILD
+            value: "25"
+          - name: MPM_MAXREQUESTWORKERS
+            value: "400"
+          - name: MPM_MAXCONNECTIONSPERCHILD
+            value: "0"
+          - name: MEMCACHE_ENDPOINT
+            value: "cluster5-memcached01.l8op6o.cfg.euw2.cache.amazonaws.com:11211"
+          ports:
+          - containerPort: 9443
+          - containerPort: 9080
+          resources:
+            limits:
+              memory: 1536Mi
+          test: false
+    triggers:
+    - type: ConfigChange
+  status: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: shib
+  spec:
+    ports:
+    - name: 443-tcp
+      port: 443
+      targetPort: 9443
+    selector:
+      deploymentconfig: shib
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Route
+  metadata:
+    name: shib
+  spec:
+    host: <<SHIB-ADDRESS>>
+    port:
+      targetPort: 443-tcp
+    tls:
+      termination: passthrough
+    to:
+      kind: Service
+      name: shib

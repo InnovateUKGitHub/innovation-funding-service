@@ -28,10 +28,11 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...               INFUND-6450 As a member of the competitions team, I can see the status of each assessor invite s0...
 ...
 ...               INFUND-5494 An assessor CAN follow a link to the competition brief from the competition dashboard
-Suite Setup       log in as user    &{existing_assessor1_credentials}
-Suite Teardown    TestTeardown User closes the browser
+Suite Setup       The user logs-in in new browser  &{existing_assessor1_credentials}
+Suite Teardown    The user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
+Resource          ../Assessor_Commons.robot
 
 *** Variables ***
 ${Invitation_existing_assessor1}    ${server}/assessment/invite/competition/dcc0d48a-ceae-40e8-be2a-6fd1708bd9b7
@@ -93,18 +94,18 @@ Existing assessor: Reject invitation from Dashboard
     ...
     ...    INFUND-6455
     [Tags]    HappyPath
-    Given the user clicks the button/link    link=Photonics for health
-    And the user should see the text in the page    Invitation to assess '${READY_TO_OPEN_COMPETITION_NAME}'
-    And the user should see the text in the page    You are invited to assess the competition '${READY_TO_OPEN_COMPETITION_NAME}'
-    And the user should not see the element    id=rejectComment
-    And the user selects the radio button  acceptInvitation  false
-    And The user enters text to a text field    id=rejectComment    a a a a a a a a \\ a a a a \\ a a a a a a \\ a a a a a \\ a a a a \\ a a a a \\ a a a a a a a a a a a \\ a a \\ a a a a a a a a a a \\ a a a a a a a a a a a a a a a a a a a \\ a a a a a a a \\ a a a \\ a a \\ aa \\ a a a a a a a a a a a a a a \\ a
-    And The user clicks the button/link    jQuery=button:contains("Confirm")
-    Then the user should see an error    The reason cannot be blank.
-    And the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
+    Given the user clicks the button/link                    link=Photonics for health
+    And the user should see the text in the page             Invitation to assess '${READY_TO_OPEN_COMPETITION_NAME}'
+    And the user should see the text in the page             You are invited to assess the competition '${READY_TO_OPEN_COMPETITION_NAME}'
+    And the user should not see the element                  id=rejectComment
+    And the user selects the radio button                    acceptInvitation  false
+    And The user enters multiple strings into a text field   id=rejectComment  a${SPACE}  102
+    And The user clicks the button/link                      jQuery=button:contains("Confirm")
+    Then the user should see an error                        The reason cannot be blank.
+    And the user should see an error                         Maximum word count exceeded. Please reduce your word count to 100.
     And the assessor fills all fields with valid inputs
-    And The user clicks the button/link    jQuery=button:contains("Confirm")
-    And the user should see the text in the page    Thank you for letting us know you are unable to assess applications within this competition.
+    And The user clicks the button/link                      jQuery=button:contains("Confirm")
+    And the user should see the text in the page             Thank you for letting us know you are unable to assess applications within this competition.
 
 Existing Assessor tries to accept closed competition
     [Documentation]    INFUND-943
@@ -183,7 +184,7 @@ Number of days remaining until assessment submission
 Calculation of the Competitions for assessment should be correct
     [Documentation]    INFUND-3716
     [Tags]    MySQL    HappyPath
-    Then the total calculation in dashboard should be correct    Competitions for assessment    //div/div/ul/li
+    Then the total calculation in dashboard should be correct    Competitions for assessment   //*[@class="my-applications"]/div/ul/li
 
 Registered user should not allowed to accept other assessor invite
     [Documentation]    INFUND-4895
@@ -191,7 +192,7 @@ Registered user should not allowed to accept other assessor invite
     Given the user navigates to the page    ${Invitation_nonexisting_assessor2}
     And the user selects the radio button  acceptInvitation  true
     And The user clicks the button/link    jQuery=button:contains("Confirm")
-    Then The user should see permissions error message
+    Then Page Should Contain              ${403_error_message}
 
 The user should not be able to accept or reject the same applications
     [Documentation]    INFUND-5165
@@ -206,9 +207,9 @@ The Admin's invites overview should be updated for accepted invites
     [Tags]
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And The user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
-    And The user clicks the button/link    link=Overview
-    And the user should see the element    jQuery=tr:nth-child(1) td:contains(Invite accepted)
+    And The user clicks the button/link      jQuery=a:contains("Invite assessors to assess the competition")
+    And The user clicks the button/link      link=Overview
+    And the user should see the element      jQuery=tr:nth-child(1) td:contains("Invite accepted")
 
 *** Keywords ***
 the assessor fills all fields with valid inputs

@@ -6,7 +6,7 @@ Suite Setup       log in and create new application if there is not one already 
 Suite Teardown    mark application details incomplete the user closes the browser
 Force Tags        Applicant  Pending
 Resource          ../../../../resources/defaultResources.robot
-Resource          ../../FinanceSection_Commons.robot
+Resource          ../../Applicant_Commons.robot
 
 *** Test Cases ***
 Mark as complete Your funding with only one input should not be possible
@@ -283,8 +283,6 @@ the user reloads the page with validation errors
     wait for autosave
     the user reloads the page
     wait for autosave
-    Run Keyword And Ignore Error Without Screenshots    confirm action
-
 
 the user enters invalid inputs in the other funding fields
     [Arguments]    ${SOURCE}    ${DATE}    ${FUNDING}

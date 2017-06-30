@@ -22,7 +22,7 @@ if(!project.hasProperty('osTestArgs')) {
 build.enabled = false
 jar.enabled=false
 
-subprojects {
+configure(subprojects - project(":ifs-auth-service")) {
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'jacoco'
@@ -48,7 +48,7 @@ subprojects {
 
 
     dependencies {
-        if(project.hasProperty("cloud") && project.cloud == "development") {
+        if (project.hasProperty("cloud") && project.cloud == "development") {
             compile 'de.codecentric:spring-boot-admin-starter-client:1.3.5'
             compile "org.springframework.boot:spring-boot-actuator-docs"
             compile "org.springframework.boot:spring-boot-devtools"
@@ -91,7 +91,7 @@ buildscript {
     ext['thymeleaf.version'] = '3.0.3.RELEASE'
 
     ext {
-        springBootVersion = '1.5.2.RELEASE'
+        springBootVersion = '1.5.4.RELEASE'
         thymeleafVersion = ext['thymeleaf.version']
     }
 
@@ -206,5 +206,5 @@ task happyRobotTests(type:Exec) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.0'
+    gradleVersion = '3.5'
 }
