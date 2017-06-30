@@ -93,7 +93,6 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
     @Mock
     private UserMapper userMapper;
 
-    @SuppressWarnings("unchecked")
     @Test
     public void findByCompetitionNoSortWillSortById() throws Exception {
 
@@ -109,7 +108,6 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         assertEquals(resource, result.getSuccessObject());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void findByCompetitionNoFilterWillFilterByEmptyString() throws Exception {
 
@@ -124,7 +122,6 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         assertEquals(resource, result.getSuccessObject());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void findByCompetitionSortById() throws Exception {
 
@@ -140,7 +137,6 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         assertEquals(resource, result.getSuccessObject());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void findByCompetitionSortByName() throws Exception {
 
@@ -406,7 +402,6 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         assertEquals(sum2, result.getSuccessObject().getContent().get(2));
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void findByCompetitionSubmittedApplications() throws Exception {
 
@@ -437,7 +432,6 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         assertEquals(resource, result.getSuccessObject());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void findByCompetitionIneligibleApplications() throws Exception {
 
@@ -468,7 +462,6 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         assertEquals(resource, result.getSuccessObject());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void findByCompetitionIneligibleApplications_informFiltered() throws Exception {
 
@@ -499,7 +492,6 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         assertEquals(resource, result.getSuccessObject());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void findByCompetitionWithFundingDecisionApplications() throws Exception {
 
@@ -517,7 +509,6 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         assertEquals(resource, result.getSuccessObject());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void findWithFundingDecisionIsChangeableApplicationIdsByCompetitionId() throws Exception {
 
@@ -536,7 +527,6 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         assertEquals(applications.get(1).getId(), result.getSuccessObject().get(1));
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void getAllSubmittedApplicationIdsByCompetitionId()throws Exception {
         List<Application> applications = newApplication()
