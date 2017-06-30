@@ -2,8 +2,8 @@
 Documentation     INFUND-5629 As a Competitions team member I want to be able to edit Application Questions individually in Competition Setup so that I can manage the question and associated applicant and assessor guidance in one place
 ...
 ...               INFUND-6468 Competition setup autosave should be validating types, allowing invalid data and doing a complete validate on mark as complete
-Suite Setup       Run Keywords    Guest user log-in    &{Comp_admin1_credentials}
-...               AND    User creates a new competition for Application tests
+Suite Setup       Run Keywords  The user logs-in in new browser  &{Comp_admin1_credentials}
+...               AND           User creates a new competition for Application tests
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot

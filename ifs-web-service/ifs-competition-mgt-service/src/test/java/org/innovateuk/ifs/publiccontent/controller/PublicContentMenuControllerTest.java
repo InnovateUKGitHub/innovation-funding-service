@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.publiccontent.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.publiccontent.modelpopulator.PublicContentMenuPopulator;
@@ -36,6 +35,8 @@ public class PublicContentMenuControllerTest extends BaseControllerMockMVCTest<P
             .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
             .build();
 
+    private static final String WEB_BASE_URL = "https://environment";
+
     @Mock
     private PublicContentMenuPopulator publicContentMenuPopulator;
 
@@ -50,7 +51,7 @@ public class PublicContentMenuControllerTest extends BaseControllerMockMVCTest<P
     @Test
     public void testGetPublicContentMenu() throws Exception {
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(defaultCompetition));
-        when(publicContentMenuPopulator.populate(COMPETITION_ID)).thenReturn(new PublicContentMenuViewModel());
+        when(publicContentMenuPopulator.populate(COMPETITION_ID, WEB_BASE_URL)).thenReturn(new PublicContentMenuViewModel());
 
         mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID))
                 .andExpect(status().is2xxSuccessful())
@@ -73,7 +74,7 @@ public class PublicContentMenuControllerTest extends BaseControllerMockMVCTest<P
     public void testPublishPublicContentFailure() throws Exception {
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(defaultCompetition));
         when(publicContentService.publishByCompetitionId(COMPETITION_ID)).thenReturn(serviceFailure(PUBLIC_CONTENT_NOT_COMPLETE_TO_PUBLISH));
-        when(publicContentMenuPopulator.populate(COMPETITION_ID)).thenReturn(new PublicContentMenuViewModel());
+        when(publicContentMenuPopulator.populate(COMPETITION_ID, WEB_BASE_URL)).thenReturn(new PublicContentMenuViewModel());
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID))
                 .andExpect(status().is2xxSuccessful())
