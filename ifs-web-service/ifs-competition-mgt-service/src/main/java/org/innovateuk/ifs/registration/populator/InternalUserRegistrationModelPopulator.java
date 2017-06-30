@@ -6,18 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * TODO
+ * Internal user registration model view populator.  For retrieval and display of details about invite with registration form.
  */
 @Component
 public class InternalUserRegistrationModelPopulator {
 
     @Autowired
-    private InviteUserRestService inviteRestService;
+    private InviteUserRestService inviteUserRestService;
 
     public InternalUserRegistrationViewModel populateModel(String inviteHash) {
-        return inviteRestService.getInvite(inviteHash).andOnSuccessReturn(
+        return inviteUserRestService.getInvite(inviteHash).andOnSuccessReturn(
                 roleInviteResource -> new InternalUserRegistrationViewModel(roleInviteResource.getName(),
-                        roleInviteResource.getRoleName(), roleInviteResource.getEmail())
+                        roleInviteResource.getRoleDisplayName(), roleInviteResource.getEmail())
         ).getSuccessObjectOrThrowException();
     }
 }
