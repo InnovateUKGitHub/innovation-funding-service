@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.transactional.ApplicationSummaryService;
@@ -10,6 +11,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -42,6 +44,14 @@ public class ApplicationSummaryController {
         return competitionSummaryService.getCompetitionSummaryByCompetitionId(id).toGetResponse();
     }
 
+    @GetMapping("/findByCompetition/{competitionId}/all-submitted")
+    public RestResult<List<Long>> getAllSubmittedApplicationIdsByCompetitionId(
+            @PathVariable("competitionId") long competitionId,
+            @RequestParam(value = "filter", required = false) Optional<String> filter,
+            @RequestParam(value = "fundingFilter", required = false) Optional<FundingDecisionStatus> fundingFilter) {
+        return applicationSummaryService.getAllSubmittedApplicationIdsByCompetitionId(competitionId, filter, fundingFilter).toGetResponse();
+    }
+
     @GetMapping("/findByCompetition/{competitionId}/submitted")
     public RestResult<ApplicationSummaryPageResource> getSubmittedApplicationSummariesByCompetitionId(
             @PathVariable("competitionId") long competitionId,
@@ -72,6 +82,15 @@ public class ApplicationSummaryController {
             @RequestParam(value = "sendFilter", required = false) Optional<Boolean> sendFilter,
             @RequestParam(value = "fundingFilter", required = false) Optional<FundingDecisionStatus> fundingFilter) {
         return applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize, filter, sendFilter, fundingFilter).toGetResponse();
+    }
+
+    @GetMapping(value = "/findByCompetition/{competitionId}/with-funding-decision", params = "all")
+    public RestResult<List<Long>> getWithFundingDecisionApplicationSummariesByCompetitionId(
+            @PathVariable("competitionId") long competitionId,
+            @RequestParam(value = "filter", required = false) Optional<String> filter,
+            @RequestParam(value = "sendFilter", required = false) Optional<Boolean> sendFilter,
+            @RequestParam(value = "fundingFilter", required = false) Optional<FundingDecisionStatus> fundingFilter) {
+        return applicationSummaryService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(competitionId, filter, sendFilter, fundingFilter).toGetResponse();
     }
 
     @GetMapping("/findByCompetition/{competitionId}/ineligible")

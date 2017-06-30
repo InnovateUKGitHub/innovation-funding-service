@@ -6,6 +6,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import javax.validation.Valid;
 import java.util.List;
 
+/**
+ * Resource for group of new users to be sent invites.
+ */
 public class NewUserStagedInviteListResource {
 
     @Valid

@@ -13,7 +13,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 
 public class ApplicationSummaryDocs {
 
-    public static final FieldDescriptor[] APPLICATION_SUMMARY_RESOURCE_FIELDS = {
+    public static final FieldDescriptor[] APPLICATION_SUMMARY_PAGE_RESOURCE_FIELDS = {
             fieldWithPath("totalElements").description("Total size of the unpaged results set"),
             fieldWithPath("totalPages").description("Total number of pages"),
             fieldWithPath("number").description("Page number - zero indexed"),
