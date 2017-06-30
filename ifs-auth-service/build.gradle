@@ -10,6 +10,7 @@ buildscript {
 
 def String spCertsVolume = 'ifs-sp-service/src/main/docker/certs'
 def String idpCertsVolume = 'ifs-idp-service/src/main/docker/certs'
+def String ldapCertsVolume = 'ifs-ldap-service/src/main/docker/certs'
 
 // if there is no key/cert provided, we generate self-signed certificates
 def String spProxyKeyFileName = 'sp_proxy_key.pem'
@@ -35,6 +36,12 @@ def String idpEncryptionKeyFileName = 'idp-encryption.key'
 def String idpEncryptionKeyFile = "${buildDir}/${idpEncryptionKeyFileName}"
 def String idpEncryptionCertificateFileName = 'idp-encryption.crt'
 def String idpEncryptionCertificateFile = "${buildDir}/${idpEncryptionCertificateFileName}"
+
+def String ldapEncryptionKeyFileName = 'ldap-encryption.key'
+def String ldapEncryptionKeyFile = "${buildDir}/${ldapEncryptionKeyFileName}"
+
+def String ldapEncryptionCertificateFileName = 'ldap-encryption.crt'
+def String ldapEncryptionCertificateFile = "${buildDir}/${ldapEncryptionCertificateFileName}"
 
 task prepareIDPProxySecrets {
     if ( !file("${idpCertsVolume}/${idpProxyKeyFileName}").exists() ||
@@ -137,15 +144,41 @@ task prepareSPSecrets {
     }
 }
 
+task prepareLDAPEncryptionSecrets {
+    if ( !file("${ldapCertsVolume}/${ldapEncryptionKeyFileName}").exists() ||
+         !file("${ldapCertsVolume}/${ldapEncryptionCertificateFileName}").exists() ) {
+        buildDir.mkdir()
+        exec {
+             executable = 'openssl'
+             args = ['req', '-x509',
+                     '-newkey', 'rsa:4096',
+             '-keyout', ldapEncryptionKeyFile,
+             '-out', ldapEncryptionCertificateFile,
+             '-days', '3650',
+             '-nodes',
+             '-subj', '/C=GB/ST=Wiltshire/L=Swindon/O=Innovate UK/OU=IFS/CN=ldap'
+         ]
+        }
+        copy {
+          from file(ldapEncryptionKeyFile)
+          from file(ldapEncryptionCertificateFile)
+          into ldapCertsVolume
+        }
+    }
+}
+
 task prepareSecrets {
     dependsOn prepareIDPProxySecrets
     dependsOn prepareIDPSigningSecrets
     dependsOn prepareIDPEncryptionSecrets
+    dependsOn prepareLDAPEncryptionSecrets
     dependsOn prepareSPSecrets
 
     // on top of their respective certificates SP and IDP need each other's
+    // and the IDP needs ldap's
     copy {
         from file(spProxyCertificateFile)
+        from file(ldapEncryptionCertificateFile)
         into idpCertsVolume
     }
     copy {
