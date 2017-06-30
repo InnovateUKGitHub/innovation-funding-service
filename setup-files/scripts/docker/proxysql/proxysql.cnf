@@ -38,8 +38,8 @@ mysql_variables=
 mysql_servers=
 (
 	{
-		address = "innovationfundingservice_mysql_1" # no default, required . If port is 0 , address is interpred as a Unix Socket Domain
-		port = 3306           # no default, required . If port is 0 , address is interpred as a Unix Socket Domain
+		address = "<<DB_HOST>>" # no default, required . If port is 0 , address is interpred as a Unix Socket Domain
+		port = <<DB_PORT>>           # no default, required . If port is 0 , address is interpred as a Unix Socket Domain
 		hostgroup = 0	        # no default, required
 		status = "ONLINE"     # default: ONLINE
 		weight = 1            # default: 1
@@ -53,11 +53,11 @@ mysql_servers=
 mysql_users=
 (
 	{
-		username = "root" # no default , required
-		password = "password" # default: ''
+		username = "<<DB_USER>>" # no default , required
+		password = "<<DB_PASS>>" # default: ''
 		default_hostgroup = 0 # default: 0
 		active = 1            # default: 1
-		default_schema="ifs"
+		default_schema="<<DB_NAME>>"
 	}
 )
 

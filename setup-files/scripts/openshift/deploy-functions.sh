@@ -9,12 +9,20 @@ function injectDBVariables() {
     if [ -z "$DB_PASS" ]; then echo "Set DB_PASS environment variable"; exit -1; fi
     if [ -z "$DB_NAME" ]; then echo "Set DB_NAME environment variable"; exit -1; fi
     if [ -z "$DB_HOST" ]; then echo "Set DB_HOST environment variable"; exit -1; fi
+
     DB_PORT=${DB_PORT:-3306}
+
     sed -i.bak "s#<<DB-USER>>#$DB_USER#g" os-files-tmp/db-reset/*.yml
     sed -i.bak "s#<<DB-PASS>>#$DB_PASS#g" os-files-tmp/db-reset/*.yml
     sed -i.bak "s#<<DB-NAME>>#$DB_NAME#g" os-files-tmp/db-reset/*.yml
     sed -i.bak "s#<<DB-HOST>>#$DB_HOST#g" os-files-tmp/db-reset/*.yml
     sed -i.bak "s#<<DB-PORT>>#$DB_PORT#g" os-files-tmp/db-reset/*.yml
+
+    sed -i.bak "s#<<DB-USER>>#$DB_USER#g" os-files-tmp/db-anonymised-data/*.yml
+    sed -i.bak "s#<<DB-PASS>>#$DB_PASS#g" os-files-tmp/db-anonymised-data/*.yml
+    sed -i.bak "s#<<DB-NAME>>#$DB_NAME#g" os-files-tmp/db-anonymised-data/*.yml
+    sed -i.bak "s#<<DB-HOST>>#$DB_HOST#g" os-files-tmp/db-anonymised-data/*.yml
+    sed -i.bak "s#<<DB-PORT>>#$DB_PORT#g" os-files-tmp/db-anonymised-data/*.yml
 }
 
 function injectFlywayVariables() {

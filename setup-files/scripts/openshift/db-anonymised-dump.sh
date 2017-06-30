@@ -33,8 +33,9 @@ function dbTakeMysqlDump() {
     sleep 10
 
     podname=$(oc get pods ${SVC_ACCOUNT_CLAUSE} | grep -m 1 db-anonymised-data | awk '{ print $1 }')
-    oc rsh $podname /etc/make-mysqldump.sh
-    oc rsync $podname:/tmp/dump /tmp
+    oc rsh $podname id -g
+    oc rsh $podname /dump/make-mysqldump.sh
+    oc rsync $podname:/dump/dump /tmp
 }
 
 # Entry point

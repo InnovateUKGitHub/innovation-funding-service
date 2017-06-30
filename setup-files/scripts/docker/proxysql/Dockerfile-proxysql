@@ -13,16 +13,15 @@ RUN apt-get update && \
     rm -f /opt/proxysql_1.3.0f-debian8_amd64.deb && \
     rm -rf /var/lib/apt/lists/*
 
-COPY proxysql.cnf entrypoint.sh make-mysqldump.sh /etc/
 
-RUN useradd -m dumpuser
-#RUN chown -R dumpuser:dumpuser /etc
-#RUN chown -R dumpuser:dumpuser /var/lib/proxysql
+RUN mkdir /dump
 
-RUN chmod -R 777 /etc
-RUN chmod -R 777 /var/lib/proxysql
-RUN chmod 0644 /etc/mysql/my.cnf
+COPY entrypoint.sh make-mysqldump.sh /dump/
 
-USER dumpuser
+COPY proxysql.cnf /etc/
 
-ENTRYPOINT ["/etc/entrypoint.sh"]
+RUN chgrp -R 0 /etc && chmod -R g+rwX /etc
+RUN chgrp -R 0 /dump && chmod -R g+rwx /dump
+RUN chgrp -R 0 /var/lib/proxysql && chmod -R g+rwX /var/lib/proxysql
+
+ENTRYPOINT ["/dump/entrypoint.sh"]
