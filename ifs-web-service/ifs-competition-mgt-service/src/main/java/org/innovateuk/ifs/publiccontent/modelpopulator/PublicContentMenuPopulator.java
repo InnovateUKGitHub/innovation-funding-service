@@ -19,12 +19,14 @@ public class PublicContentMenuPopulator {
     @Autowired
     private CompetitionService competitionService;
 
-    public PublicContentMenuViewModel populate(Long competitionId) {
+    public PublicContentMenuViewModel populate(Long competitionId, String webBaseUrl) {
         PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
         PublicContentMenuViewModel viewModel = new PublicContentMenuViewModel();
         viewModel.setPublishDate(publicContent.getPublishDate());
         viewModel.setSections(publicContent.getContentSections());
         viewModel.setCompetition(competitionService.getById(competitionId));
+        viewModel.setInviteOnly(publicContent.getInviteOnly());
+        viewModel.setWebBaseUrl(webBaseUrl);
         return viewModel;
     }
 }

@@ -82,7 +82,6 @@ all text entered should be in Numbering bullets and stay the same after page ref
     Focus    css=.app-submit-btn
     wait for autosave
     the user reloads the page
-    Run Keyword And Ignore Error Without Screenshots    Confirm Action
     the user should see the element    css=#form-input-1045 .editor ol
 
 all text entered should be in Bullet format and stay the same after page refresh

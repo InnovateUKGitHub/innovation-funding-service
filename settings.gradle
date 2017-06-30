@@ -1,7 +1,8 @@
 include 'ifs-commons'
 include 'ifs-resources'
-include 'ifs-data-service'
-include 'ifs-data-service:data-service-commons'
+include 'ifs-data-layer'
+include 'ifs-data-layer:ifs-data-service'
+include 'ifs-data-layer:data-service-commons'
 include 'ifs-rest-api-service'
 include 'ifs-web-service'
 include 'ifs-web-service:ifs-web-core'
@@ -15,3 +16,5 @@ include 'ifs-auth-service:ifs-ldap-service'
 include 'ifs-auth-service:ifs-sp-service'
 include 'ifs-auth-service:ifs-idp-service'
 include 'ifs-auth-service:ifs-registration-service'
+
+

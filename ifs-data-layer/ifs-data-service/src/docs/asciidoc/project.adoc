@@ -1,0 +1,711 @@
+=== Get project by id
+==== Request
+include::{snippets}/project/get-project-by-id/http-request.adoc[]
+include::{snippets}/project/get-project-by-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/get-project-by-id/http-response.adoc[]
+include::{snippets}/project/get-project-by-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/get-project-by-id/curl-request.adoc[]
+
+=== Get project status by id
+==== Request
+include::{snippets}/project/get-status/http-request.adoc[]
+include::{snippets}/project/get-status/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/get-status/http-response.adoc[]
+include::{snippets}/project/get-status/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/get-status/curl-request.adoc[]
+
+
+=== Find all projects
+==== Request
+include::{snippets}/project/project-find-all/http-request.adoc[]
+
+==== Response
+include::{snippets}/project/project-find-all/http-response.adoc[]
+include::{snippets}/project/project-find-all/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/project-find-all/curl-request.adoc[]
+
+
+=== Update project start date
+==== Success
+===== Request
+include::{snippets}/project/update-start-date/http-request.adoc[]
+
+===== Response
+include::{snippets}/project/update-start-date/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/update-start-date/curl-request.adoc[]
+
+==== Failure cases
+===== Project start date is in the past
+include::{snippets}/project/update-start-date-but-date-in-past/http-response.adoc[]
+
+===== Project start date not on the first day of the month
+include::{snippets}/project/update-start-date-but-date-not-first-of-month/http-response.adoc[]
+
+
+=== Set Project Manager
+==== Success case
+
+===== Request
+include::{snippets}/project/set-project-manager/http-request.adoc[]
+include::{snippets}/project/set-project-manager/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/set-project-manager/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/set-project-manager/curl-request.adoc[]
+
+==== Failure cases
+===== Invalid Project Manager specified
+include::{snippets}/project/set-project-manager-but-invalid-project-manager/http-request.adoc[]
+
+
+=== Update Finance Contact for Organisation
+==== Success
+===== Request
+include::{snippets}/project/update-finance-contact/http-request.adoc[]
+include::{snippets}/project/update-finance-contact/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/update-finance-contact/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/update-finance-contact/curl-request.adoc[]
+
+==== Failure cases
+===== User is not on the Project
+include::{snippets}/project/update-finance-contact-but-user-is-not-on-project-for-organisation/http-response.adoc[]
+
+===== User is not a Partner on the Project
+include::{snippets}/project/update-finance-contact-but-user-is-not-partner-on-project-for-organisation/http-response.adoc[]
+
+=== Get Project Users
+==== Request
+include::{snippets}/project/get-project-users/http-request.adoc[]
+include::{snippets}/project/get-project-users/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/get-project-users/http-response.adoc[]
+include::{snippets}/project/get-project-users/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/get-project-users/curl-request.adoc[]
+
+=== Save Monitoring Officer
+==== Success
+===== Request
+include::{snippets}/project/save-monitoring-officer/http-request.adoc[]
+include::{snippets}/project/save-monitoring-officer/path-parameters.adoc[]
+include::{snippets}/project/save-monitoring-officer/request-fields.adoc[]
+
+===== Response
+include::{snippets}/project/save-monitoring-officer/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/save-monitoring-officer/curl-request.adoc[]
+
+==== Failure cases
+===== Save Monitoring Officer when project id in url does not match the project id in Monitoring Officer resource
+include::{snippets}/project/save-mo-with-diff-project-id-in-url-and-mo-resource/http-response.adoc[]
+
+==== Save Monitoring Officer when project details are not yet submitted
+include::{snippets}/project/save-mo-when-project-details-not-yet-submitted/http-response.adoc[]
+
+==== Save Monitoring Officer when unable to send notifications
+include::{snippets}/project/save-mo-when-unable-to-send-notifications/http-response.adoc[]
+
+=== Is Submit Allowed
+==== Success
+===== Request
+include::{snippets}/project/is-submit-allowed/http-request.adoc[]
+include::{snippets}/project/is-submit-allowed/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/is-submit-allowed/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/is-submit-allowed/curl-request.adoc[]
+
+==== false when details not provided
+===== Success
+====== Request
+include::{snippets}/project/is-submit-allowed-returns-false-when-details-not-provided/http-request.adoc[]
+include::{snippets}/project/is-submit-allowed-returns-false-when-details-not-provided/path-parameters.adoc[]
+
+====== Response
+include::{snippets}/project/is-submit-allowed-returns-false-when-details-not-provided/http-response.adoc[]
+
+====== Curl Example
+include::{snippets}/project/is-submit-allowed-returns-false-when-details-not-provided/curl-request.adoc[]
+
+=== Upload Collaboration Agreement Document during Project Setup
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/add-collaboration-agreement/http-request.adoc[]
+include::{snippets}/project/add-collaboration-agreement/request-parameters.adoc[]
+include::{snippets}/project/add-collaboration-agreement/request-fields.adoc[]
+
+==== Response
+include::{snippets}/project/add-collaboration-agreement/http-response.adoc[]
+include::{snippets}/project/add-collaboration-agreement/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/add-collaboration-agreement/curl-request.adoc[]
+
+
+=== Get Collaboration Agreement file details for a Project
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/get-collaboration-agreement-file-details/http-request.adoc[]
+include::{snippets}/project/get-collaboration-agreement-file-details/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/get-collaboration-agreement-file-details/http-response.adoc[]
+include::{snippets}/project/get-collaboration-agreement-file-details/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/get-collaboration-agreement-file-details/curl-request.adoc[]
+
+
+
+=== Get Collaboration Agreement file contents for a Project
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/get-collaboration-agreement-file-content/http-request.adoc[]
+
+==== Response
+include::{snippets}/project/get-collaboration-agreement-file-content/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/get-collaboration-agreement-file-content/curl-request.adoc[]
+
+
+
+=== Update Collaboration Agreement document during Project Setup
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/update-collaboration-agreement/http-request.adoc[]
+include::{snippets}/project/update-collaboration-agreement/request-parameters.adoc[]
+include::{snippets}/project/update-collaboration-agreement/request-fields.adoc[]
+
+==== Response
+include::{snippets}/project/update-collaboration-agreement/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/update-collaboration-agreement/curl-request.adoc[]
+
+
+=== Delete Collaboration Agreement document during Project Setup
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/delete-collaboration-agreement/http-request.adoc[]
+include::{snippets}/project/delete-collaboration-agreement/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/delete-collaboration-agreement/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/delete-collaboration-agreement/curl-request.adoc[]
+
+
+=== Upload Exploitation Plan Document during Project Setup
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/add-exploitation-plan/http-request.adoc[]
+include::{snippets}/project/add-exploitation-plan/request-parameters.adoc[]
+include::{snippets}/project/add-exploitation-plan/request-fields.adoc[]
+
+==== Response
+include::{snippets}/project/add-exploitation-plan/http-response.adoc[]
+include::{snippets}/project/add-exploitation-plan/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/add-exploitation-plan/curl-request.adoc[]
+
+
+=== Get Exploitation Plan file details for a Project
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/get-exploitation-plan-file-details/http-request.adoc[]
+include::{snippets}/project/get-exploitation-plan-file-details/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/get-exploitation-plan-file-details/http-response.adoc[]
+include::{snippets}/project/get-exploitation-plan-file-details/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/get-exploitation-plan-file-details/curl-request.adoc[]
+
+
+
+=== Get Exploitation Plan file contents for a Project
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/get-exploitation-plan-file-content/http-request.adoc[]
+
+==== Response
+include::{snippets}/project/get-exploitation-plan-file-content/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/get-exploitation-plan-file-content/curl-request.adoc[]
+
+
+
+=== Update Exploitation Plan document during Project Setup
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/update-exploitation-plan/http-request.adoc[]
+include::{snippets}/project/update-exploitation-plan/request-parameters.adoc[]
+include::{snippets}/project/update-exploitation-plan/request-fields.adoc[]
+
+==== Response
+include::{snippets}/project/update-exploitation-plan/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/update-exploitation-plan/curl-request.adoc[]
+
+
+=== Delete Exploitation Plan document during Project Setup
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/delete-exploitation-plan/http-request.adoc[]
+include::{snippets}/project/delete-exploitation-plan/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/delete-exploitation-plan/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/delete-exploitation-plan/curl-request.adoc[]
+
+
+=== Generate Spend Profile during Project Setup
+
+==== Request
+include::{snippets}/project/generate-spend-profile/http-request.adoc[]
+include::{snippets}/project/generate-spend-profile/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/generate-spend-profile/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/generate-spend-profile/curl-request.adoc[]
+
+=== Get approval status for Spend Profile by Project
+
+==== Request
+include::{snippets}/project/get-spend-profile-status-by-project-id/http-request.adoc[]
+include::{snippets}/project/get-spend-profile-status-by-project-id/path-parameters.adoc[]
+
+==== Curl Example
+include::{snippets}/project/get-spend-profile-status-by-project-id/curl-request.adoc[]
+
+==== Response
+include::{snippets}/project/generate-spend-profile/http-response.adoc[]
+
+=== Approve or reject Spend Profile during Project Setup
+
+==== Request
+include::{snippets}/project/approve-or-reject-spend-profile/http-request.adoc[]
+include::{snippets}/project/approve-or-reject-spend-profile/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/generate-spend-profile/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/approve-or-reject-spend-profile/curl-request.adoc[]
+
+=== Is Partner Documents Submit Allowed
+==== Success
+===== Request
+include::{snippets}/project/is-other-documents-submit-allowed/http-request.adoc[]
+include::{snippets}/project/is-other-documents-submit-allowed/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/is-other-documents-submit-allowed/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/is-other-documents-submit-allowed/curl-request.adoc[]
+
+=== Is Partner Documents Submit Not Allowed When Not All Uploaded
+==== Failure
+===== Request
+include::{snippets}/project/is-other-documents-submit-not-allowed-when-documents-not-fully-uploaded/http-request.adoc[]
+include::{snippets}/project/is-other-documents-submit-not-allowed-when-documents-not-fully-uploaded/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/is-other-documents-submit-not-allowed-when-documents-not-fully-uploaded/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/is-other-documents-submit-not-allowed-when-documents-not-fully-uploaded/curl-request.adoc[]
+
+=== Save Documents Submitted DateTime
+
+==== Request
+include::{snippets}/project/set-partner-documents-submitted-date/http-request.adoc[]
+include::{snippets}/project/set-partner-documents-submitted-date/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/set-partner-documents-submitted-date/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/set-partner-documents-submitted-date/curl-request.adoc[]
+
+=== Get Spend Profile
+==== Success
+===== Request
+include::{snippets}/project/get-spend-profile/http-request.adoc[]
+include::{snippets}/project/get-spend-profile/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-spend-profile/http-response.adoc[]
+include::{snippets}/project/get-spend-profile/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-spend-profile/curl-request.adoc[]
+
+==== Failure cases
+===== Get Spend Profile when Spend Profile data is not present in the DB
+include::{snippets}/project/get-spend-profile-when-spend-profile-data-not-in-db/http-response.adoc[]
+
+
+=== Get Spend Profile Table
+==== Success
+===== Request
+include::{snippets}/project/get-spend-profile-table/http-request.adoc[]
+include::{snippets}/project/get-spend-profile-table/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-spend-profile-table/http-response.adoc[]
+include::{snippets}/project/get-spend-profile-table/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-spend-profile-table/curl-request.adoc[]
+
+==== Failure cases
+===== Get Spend Profile Table when Spend Profile data is not present in the DB
+include::{snippets}/project/get-spend-profile-table-when-spend-profile-data-not-in-db/http-response.adoc[]
+
+=== Save Spend Profile
+==== Success
+===== Request
+include::{snippets}/project/save-spend-profile/http-request.adoc[]
+include::{snippets}/project/save-spend-profile/path-parameters.adoc[]
+include::{snippets}/project/save-spend-profile/request-fields.adoc[]
+
+===== Response
+include::{snippets}/project/save-spend-profile/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/save-spend-profile/curl-request.adoc[]
+
+=== Mark Spend Profile as Complete
+==== Success
+===== Request
+include::{snippets}/project/mark-spend-profile-complete/http-request.adoc[]
+include::{snippets}/project/mark-spend-profile-complete/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/mark-spend-profile-complete/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/mark-spend-profile-complete/curl-request.adoc[]
+
+
+=== Mark Spend Profile as Incomplete
+==== Success
+===== Request
+include::{snippets}/project/mark-spend-profile-incomplete/http-request.adoc[]
+include::{snippets}/project/mark-spend-profile-incomplete/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/mark-spend-profile-incomplete/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/mark-spend-profile-incomplete/curl-request.adoc[]
+
+=== Get Viability
+==== Success
+===== Request
+include::{snippets}/project/get-viability/http-request.adoc[]
+include::{snippets}/project/get-viability/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-viability/http-response.adoc[]
+include::{snippets}/project/get-viability/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-viability/curl-request.adoc[]
+
+
+=== Save Viability
+==== Success
+===== Request
+include::{snippets}/project/save-viability/http-request.adoc[]
+include::{snippets}/project/save-viability/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/save-viability/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/save-viability/curl-request.adoc[]
+
+=== Get Eligibility
+==== Success
+===== Request
+include::{snippets}/project/partner-organisation/eligibility/get-eligibility/http-request.adoc[]
+include::{snippets}/project/partner-organisation/eligibility/get-eligibility/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/partner-organisation/eligibility/get-eligibility/http-response.adoc[]
+include::{snippets}/project/partner-organisation/eligibility/get-eligibility/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/partner-organisation/eligibility/get-eligibility/curl-request.adoc[]
+
+=== Save Eligibility
+==== Success
+===== Request
+include::{snippets}/project/partner-organisation/eligibility/save-eligibility/http-request.adoc[]
+include::{snippets}/project/partner-organisation/eligibility/save-eligibility/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/partner-organisation/eligibility/save-eligibility/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/partner-organisation/eligibility/save-eligibility/curl-request.adoc[]
+
+=== Is Credit Report confirmed?
+==== Success
+===== Request
+include::{snippets}/project/get-credit-report/http-request.adoc[]
+include::{snippets}/project/get-credit-report/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-credit-report/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-credit-report/curl-request.adoc[]
+
+
+=== Save Credit Report confirmed
+==== Success
+===== Request
+include::{snippets}/project/set-credit-report/http-request.adoc[]
+include::{snippets}/project/set-credit-report/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/set-credit-report/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/set-credit-report/curl-request.adoc[]
+
+
+=== Get Project Team Status
+==== Success
+===== Request
+include::{snippets}/project/get-team-status/http-request.adoc[]
+include::{snippets}/project/get-team-status/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-team-status/http-response.adoc[]
+include::{snippets}/project/get-team-status/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-team-status/curl-request.adoc[]
+
+=== Get current status for all projects in competition
+==== Success
+===== Request
+include::{snippets}/project/get-competition-status/http-request.adoc[]
+include::{snippets}/project/get-competition-status/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-competition-status/http-response.adoc[]
+include::{snippets}/project/get-competition-status/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-competition-status/curl-request.adoc[]
+
+=== Get Project Team Status (with optional filter by user id)
+==== Success
+===== Request
+include::{snippets}/project/get-team-status-with-filter-by-user-id/http-request.adoc[]
+include::{snippets}/project/get-team-status-with-filter-by-user-id/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-team-status-with-filter-by-user-id/http-response.adoc[]
+include::{snippets}/project/get-team-status-with-filter-by-user-id/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-team-status-with-filter-by-user-id/curl-request.adoc[]
+include::{snippets}/project/get-team-status-with-filter-by-user-id/curl-request.adoc[]
+
+=== Get Finance Check Summary
+==== Success
+===== Request
+include::{snippets}/project/get-finance-check-summary/http-request.adoc[]
+include::{snippets}/project/get-finance-check-summary/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-finance-check-summary/http-response.adoc[]
+include::{snippets}/project/get-finance-check-summary/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-finance-check-summary/curl-request.adoc[]
+
+
+=== Get Finance Check Overview
+==== Success
+===== Request
+include::{snippets}/project/get-finance-check-overview/http-request.adoc[]
+include::{snippets}/project/get-finance-check-overview/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-finance-check-overview/http-response.adoc[]
+include::{snippets}/project/get-finance-check-overview/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-finance-check-overview/curl-request.adoc[]
+
+
+=== Get Project Finances
+==== Success
+===== Request
+include::{snippets}/project/get-project-finances/http-request.adoc[]
+include::{snippets}/project/get-project-finances/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-project-finances/http-response.adoc[]
+include::{snippets}/project/get-project-finances/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-project-finances/curl-request.adoc[]
+
+
+
+=== Get Spend Profile CSV
+==== Success
+===== Request
+include::{snippets}/project/get-spend-profile-csv/http-request.adoc[]
+include::{snippets}/project/get-spend-profile-csv/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-spend-profile-csv/http-response.adoc[]
+include::{snippets}/project/get-spend-profile-csv/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-spend-profile-csv/curl-request.adoc[]
+
+==== Failures
+===== Spend Profile data does not yet exist
+include::{snippets}/project/get-spend-profile-csv-when-spend-profile-data-not-in-db/http-response.adoc[]
+
+===== Exception thrown when generating the Spend Profile CSV
+include::{snippets}/project/get-spend-profile-csv-when-io-exception/http-response.adoc[]
+
+
+=== Send Grant Offer Letter notification
+==== Success
+===== Request
+include::{snippets}/project/send-grant-offer-letter/http-request.adoc[]
+include::{snippets}/project/send-grant-offer-letter/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/send-grant-offer-letter/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/send-grant-offer-letter/curl-request.adoc[]
+
+
+=== Is Grant Offer Letter notification already sent
+==== Success
+===== Request
+include::{snippets}/project/is-grant-offer-letter-already-sent/http-request.adoc[]
+include::{snippets}/project/is-grant-offer-letter-already-sent/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/is-grant-offer-letter-already-sent/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/is-grant-offer-letter-already-sent/curl-request.adoc[]
+
+
+=== Is Grant Offer Letter notification allowed
+==== Success
+===== Request
+include::{snippets}/project/is-send-grant-offer-letter-allowed/http-request.adoc[]
+include::{snippets}/project/is-send-grant-offer-letter-allowed/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/is-send-grant-offer-letter-allowed/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/is-send-grant-offer-letter-allowed/curl-request.adoc[]
+
+=== Get Grant Offer Letter Workflow State
+==== Success
+===== Request
+include::{snippets}/project/grant-offer-letter/state/get-grant-offer-letter-workflow-state/http-request.adoc[]
+include::{snippets}/project/grant-offer-letter/state/get-grant-offer-letter-workflow-state/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/grant-offer-letter/state/get-grant-offer-letter-workflow-state/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/grant-offer-letter/state/get-grant-offer-letter-workflow-state/curl-request.adoc[]
+
+=== Get Finance Check Eligibility
+==== Success
+===== Request
+include::{snippets}/project/get-finance-check-eligibility-details/http-request.adoc[]
+include::{snippets}/project/get-finance-check-eligibility-details/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-finance-check-eligibility-details/http-response.adoc[]
+include::{snippets}/project/get-finance-check-eligibility-details/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-finance-check-eligibility-details/curl-request.adoc[]
+
+=== Get Finance Check Eligibility
+include::{snippets}/project/get-finance-check-eligibility-details/curl-request.adoc[]
+
+=== Get Partner Organisation
+==== Success
+===== Request
+include::{snippets}/project/get-partner-organisation/http-request.adoc[]
+include::{snippets}/project/get-partner-organisation/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-partner-organisation/http-response.adoc[]
+include::{snippets}/project/get-partner-organisation/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-partner-organisation/curl-request.adoc[]
+
+=== Get Finance Check Eligibility
+include::{snippets}/project/get-partner-organisation/curl-request.adoc[]
+
+
