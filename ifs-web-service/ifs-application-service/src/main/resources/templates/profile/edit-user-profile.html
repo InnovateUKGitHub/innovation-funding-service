@@ -11,7 +11,7 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Your Profile',linkClass='link-back',linkUrl=@{/profile/view}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Profile',linkClass='link-back',linkUrl=@{/profile/view}" />
 
     <div class="error-summary" th:if="${#fields.hasErrors('${userDetailsForm.*}')}">
         <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>

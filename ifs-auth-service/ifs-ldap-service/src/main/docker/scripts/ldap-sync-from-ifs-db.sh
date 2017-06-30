@@ -31,7 +31,7 @@ port=3306
 ldappass=$LDAP_PASSWORD
 
 # Get the ldap domain from the local system
-domain=$(ldapsearch -H ldapi:// -LLL -Q -Y EXTERNAL -b "cn=config" "(olcRootDN=*)" olcSuffix|awk '/olcSuffix/ {print $2}')
+domain=$(ldapsearch -H ldapi:/// -LLL -Q -Y EXTERNAL -b "cn=config" "(olcRootDN=*)" olcSuffix|awk '/olcSuffix/ {print $2}')
 
 [ ! -z "$1" ] && host=$1
 [ ! -z "$2" ] && db=$2
@@ -46,10 +46,10 @@ echo user:$user
 echo port:$port
 
 wipeLdapUsers() {
-  ldapsearch -H ldap://localhost:$LDAP_PORT/ -b "$domain" -s sub '(objectClass=person)' -x \
+  ldapsearch -H ldapi:/// -b "$domain" -s sub '(objectClass=person)' -x \
    | grep 'dn: ' \
    | cut -c4- \
-   | xargs ldapdelete -H ldap://localhost:$LDAP_PORT/ -D "cn=admin,$domain" -w "$ldappass"
+   | xargs ldapdelete -H ldapi:/// -D "cn=admin,$domain" -w "$ldappass"
 }
 
 executeMySQLCommand() {
@@ -80,4 +80,4 @@ wipeLdapUsers
 for u in $(mysql $db -P $port -u $user --password=$pass -h $host -N -s -e "select email from user where status = 'ACTIVE' and system_user = 0;")
 do
   addUserToShibboleth "$u"
-done | ldapadd -H ldap://localhost:$LDAP_PORT/ -D "cn=admin,$domain" -w "$ldappass"
+done | ldapadd -H ldapi:/// -D "cn=admin,$domain" -w "$ldappass"

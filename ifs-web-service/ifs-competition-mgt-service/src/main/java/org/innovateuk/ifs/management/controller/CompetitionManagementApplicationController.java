@@ -154,7 +154,6 @@ public class CompetitionManagementApplicationController {
         return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
     }
 
-
     /**
      * Printable version of the application
      */

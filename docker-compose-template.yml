@@ -41,13 +41,13 @@ services:
   ldap:
     image: innovateuk/ldap-service:@version@
     healthcheck:
-      test: ["CMD", "ldapsearch", "-h", "localhost", "-p", "389", "-b", "dc=nodomain", "-x", "-LLL", "-s", "base"]
+      test: ["CMD", "ldapsearch", "-H", "ldaps://localhost:8389", "-b", "dc=nodomain", "-x", "-LLL", "-s", "base"]
       interval: 15s
       timeout: 8s
     ports:
-      - "389:389"
+      - "8389:8389"
     environment:
-      - "LDAP_PORT=389"
+      - "LDAP_PORT=8389"
     networks:
       - ifs
 
@@ -91,6 +91,14 @@ services:
     image: innovateuk/project-setup-service:@version@
     healthcheck:
       test: ["CMD", "curl", "-f",  "http://localhost:8080/project-setup/monitoring/health"]
+      interval: 15s
+      timeout: 8s
+    networks:
+      - ifs
+  front-door-svc:
+    image: innovateuk/front-door-service:@version@
+    healthcheck:
+      test: ["CMD", "curl", "-f",  "http://localhost:8080/monitoring/health"]
       interval: 15s
       timeout: 8s
     networks:

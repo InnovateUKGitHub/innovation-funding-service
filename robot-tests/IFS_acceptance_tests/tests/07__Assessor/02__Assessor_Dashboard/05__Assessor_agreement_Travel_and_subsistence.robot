@@ -8,8 +8,8 @@ Documentation     INFUND-1481 As an assessor I need to review and accept the Inn
 ...               INFUND-5432 As an assessor I want to receive an alert to complete my profile when I log into my dashboard so that I can ensure that it is complete.
 ...
 ...               INFUND-7061 As an assessor I can view the travel and subsistence rates so that I know how much I can claim
-Suite Setup       guest user log-in    &{existing_assessor1_credentials}
-Suite Teardown    TestTeardown User closes the browser
+Suite Setup       The user logs-in in new browser  &{existing_assessor1_credentials}
+Suite Teardown    The user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
