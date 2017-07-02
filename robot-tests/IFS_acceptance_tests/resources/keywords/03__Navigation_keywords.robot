@@ -6,7 +6,7 @@ The user navigates to the page
     [Arguments]    ${TARGET_URL}
     Wait for autosave
     Wait Until Keyword Succeeds Without Screenshots    30    200ms    Go To    ${TARGET_URL}
-    Run Keyword And Ignore Error Without Screenshots    Confirm Action
+    #Run Keyword And Ignore Error Without Screenshots    Confirm Action
     # Error checking
     the user should not see an error in the page
     # Header checking (INFUND-1892)
@@ -49,7 +49,6 @@ The user goes back to the previous page
 the user reloads the page
     Wait for autosave
     Reload Page
-    Run Keyword And Ignore Error Without Screenshots    confirm action
     # Error checking
     the user should not see an error in the page
     # Header checking (INFUND-1892)

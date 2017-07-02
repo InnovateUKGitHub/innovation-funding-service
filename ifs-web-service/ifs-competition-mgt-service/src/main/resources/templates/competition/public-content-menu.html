@@ -27,8 +27,11 @@
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Public content',subTitle=${competitionTitle},size='heading-xlarge'" />
         </th:block>
 
-        <div class="message-alert">
-            This information will be publicly viewable by prospective applicants.
+        <div class="message-alert" th:if="${model.hasBeenPublished()}">
+            <p th:unless="${model.inviteOnly}">This information will be publicly viewable by prospective applicants.</p>
+            <p th:if="${model.inviteOnly}">Competition URL:
+                <a th:href="${model.competitionURL}" th:text="${model.competitionURL}"></a>
+            </p>
         </div>
 
         <ul class="task-list extra-margin">
@@ -52,7 +55,7 @@
                     <a th:if="${model.competition.nonIfs}" th:href="@{/non-ifs-competition/setup/{competitionId}(competitionId=${model.competition.id})}" class="button">Return to non-IFS competition details</a>
                 </div>
                 <div class="column-half alignright">
-                    <button th:unless="${model.hasBeenPublished()}" class="button-secondary no-margin" th:disabled="${model.disablePublishButton()}" name="publish">Publish public content</button>
+                    <button th:unless="${model.hasBeenPublished()}" class="button-secondary no-margin" th:disabled="${model.disablePublishButton()}" name="publish">Publish content</button>
                 </div>
             </div>
         </div>

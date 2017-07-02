@@ -131,12 +131,11 @@ Check the comp admin see the assessor has rejected the application
 
 *** Keywords ***
 the assessor fills all fields with valid inputs
-    Select From List By Index    id=rejectReason    2
-    The user should not see the text in the page    Please enter a reason
-    The user enters text to a text field    id=rejectComment    Hello all, Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco ullamco
-    the user moves focus to the element    jQuery=.button:contains("Confirm")
-    The user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
-    The user enters text to a text field    id=rejectComment    Unable to assess the application as i'm on holiday.
+    Select From List By Index                                   id=rejectReason    2
+    The user should not see the text in the page                Please enter a reason
+    the user enters multiple strings into a text field          id=rejectComment  a${SPACE}  102
+    The user should see an error                                Maximum word count exceeded. Please reduce your word count to 100.
+    The user enters text to a text field                        id=rejectComment    Unable to assess the application as i'm on holiday.
 
 the application for assessment should be removed
     The user should not see the element    link=Park living
