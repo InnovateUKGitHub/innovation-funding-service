@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.domain;
 
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.category.domain.ApplicationInnovationAreaLink;
 import org.innovateuk.ifs.category.domain.ApplicationResearchCategoryLink;
 import org.innovateuk.ifs.category.domain.InnovationArea;
@@ -348,5 +349,14 @@ public class Application implements ProcessActivity {
 
     public ApplicationProcess getApplicationProcess() {
         return applicationProcess;
+    }
+
+    public boolean applicationFundingDecisionIsChangeable() {
+        if(this.manageFundingEmailDate != null &&
+                (fundingDecision != null && fundingDecision.equals(FundingDecision.FUNDED))) {
+            return false;
+        }
+
+        return true;
     }
 }

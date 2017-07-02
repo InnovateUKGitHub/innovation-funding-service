@@ -191,7 +191,7 @@ Lead selects Research category
     [Setup]  log in as a different user       ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     # this test is tagged as Email since it relies on an earlier invitation being accepted via email
     Given the user navigates to Your-finances page     Assign test
-    Then the user should see the element      jQuery=p:contains("You must select a research category in application details")
+    Then the user should see the element      jQuery=p:contains("You must select a research category in"):contains("application details")
     When the user navigates to the page       ${DASHBOARD_URL}
     Then the user clicks the button/link      link=Assign test
     When the user clicks the button/link      link=Application details

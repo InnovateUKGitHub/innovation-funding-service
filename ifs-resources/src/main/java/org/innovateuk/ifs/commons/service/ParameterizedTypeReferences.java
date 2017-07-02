@@ -14,10 +14,7 @@ import org.innovateuk.ifs.finance.resource.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
-import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
-import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.resource.InviteProjectResource;
-import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
+import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -80,6 +77,10 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<AssessorFormInputResponseResource>> assessorFormInputResponseResourceListType() {
         return new ParameterizedTypeReference<List<AssessorFormInputResponseResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<AvailableAssessorResource>> availableAssessorResourceListType() {
+        return new ParameterizedTypeReference<List<AvailableAssessorResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<OrganisationSearchResult>> organisationSearchResultListType() {
@@ -228,5 +229,13 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<SectionResource>> sectionResourceListType() {
         return new ParameterizedTypeReference<List<SectionResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<ApplicationSummaryResource>> applicationSummaryResourceListType() {
+        return new ParameterizedTypeReference<List<ApplicationSummaryResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<ApplicationSummaryResource>> competitionSummaryResourceListType() {
+        return new ParameterizedTypeReference<List<ApplicationSummaryResource>>() {};
     }
 }

@@ -142,7 +142,7 @@ public class ApplicationQuestionController {
         QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, model, form);
 
         model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
-        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null);
+        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty());
     }
 
     private String handleEditQuestion(ApplicationForm form, BindingResult bindingResult, ValidationHandler validationHandler, Model model, Long applicationId, Long questionId, UserResource user) {
