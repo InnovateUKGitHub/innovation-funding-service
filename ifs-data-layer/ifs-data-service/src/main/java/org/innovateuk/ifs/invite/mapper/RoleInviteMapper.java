@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 /**
- * Created by rav on 30/06/2017.
+ * Mapper for converting between RoleInvite domain and resource objects
  */
 
 @Mapper(

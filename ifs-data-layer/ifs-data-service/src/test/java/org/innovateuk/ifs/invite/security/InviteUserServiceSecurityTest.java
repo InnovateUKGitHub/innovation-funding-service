@@ -2,6 +2,7 @@ package org.innovateuk.ifs.invite.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.invite.transactional.InviteUserService;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.AdminRoleType;
@@ -43,6 +44,16 @@ public class InviteUserServiceSecurityTest extends BaseServiceSecurityTest<Invit
 
         @Override
         public ServiceResult<Void> saveUserInvite(UserResource invitedUser, AdminRoleType adminRoleType) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<RoleInviteResource> getInvite(String inviteHash) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Boolean> checkExistingUser(String inviteHash) {
             return null;
         }
     }
