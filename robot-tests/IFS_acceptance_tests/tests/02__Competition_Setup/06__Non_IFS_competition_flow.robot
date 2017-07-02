@@ -57,7 +57,7 @@ Non-IFS public content
     Given the user should see the element  jQuery=h1:contains("Public content")
     When the user fills in the Public content and publishes
     Then the user should see the element       jQuery=small:contains("Last published")
-    And the user should not see the element    jQuery=button:contains("Publish public content")
+    And the user should not see the element    jQuery=button:contains("Publish content")
     Then the user clicks the button/link  link=Return to non-IFS competition details
     And the user clicks the button/link   jQuery=button:contains("Save and continue")
 

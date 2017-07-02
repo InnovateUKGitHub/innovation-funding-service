@@ -33,8 +33,8 @@ docker-compose.yml
 !**/application-integration-test.properties
 !**/application-seeding-db.properties
 !**/application-hibernate-generate-ddl.properties
+!/ifs-data-layer/ifs-data-service/automated-build.gradle
 !**/docker-build.gradle
-!**/war-build.gradle
 **/docker-build.gradle.tmp
 
 # Created with help from https://www.gitignore.io
@@ -142,3 +142,4 @@ ifs-web-service/ifs-project-setup-service/tomcat/
 # ifs-auth-service secrets
 ifs-auth-service/ifs-sp-service/src/main/docker/certs/
 ifs-auth-service/ifs-idp-service/src/main/docker/certs/
+ifs-auth-service/ifs-ldap-service/src/main/docker/certs/

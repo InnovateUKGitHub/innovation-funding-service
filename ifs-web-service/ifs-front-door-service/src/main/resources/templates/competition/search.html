@@ -56,9 +56,9 @@
                        <h2 class="heading-medium no-margin-top extra-margin-bottom">
                            <a th:text="${publicContentItem.competitionTitle}" th:href="@{/competition/{competitionId}/overview(competitionId=${publicContentItem.competitionId})}">Competition title</a>
                        </h2>
-                       <p class="wysiwyg-styles" ifs:utext="${publicContentItem.shortDescription}">Description of the competition</p>
+                       <div class="wysiwyg-styles" ifs:utext="${publicContentItem.shortDescription}">Description of the competition</div>
                        <h3 class="heading-small">Eligibility:</h3>
-                       <p class="wysiwyg-styles" ifs:utext="${publicContentItem.eligibilitySummary}"></p>
+                       <div class="wysiwyg-styles" ifs:utext="${publicContentItem.eligibilitySummary}"></div>
                        <h3 class="heading-small" th:text="${publicContentItem.publicContentStatusText?.getHeader()}"/>
                        <dl class="date-definition-list">
                             <dt><th:block th:text="${publicContentItem.publicContentStatusText?.getOpenTense()}"/>:</dt>
