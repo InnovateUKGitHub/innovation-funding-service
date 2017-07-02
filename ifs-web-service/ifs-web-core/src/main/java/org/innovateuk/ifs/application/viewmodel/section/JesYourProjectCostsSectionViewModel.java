@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewM
 import org.innovateuk.ifs.form.resource.FormInputResource;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Your project costs view model for jes finances.
@@ -17,8 +18,11 @@ public class JesYourProjectCostsSectionViewModel extends AbstractYourProjectCost
 
     public JesYourProjectCostsSectionViewModel(ApplicantSectionResource applicantResource,
                                                List<AbstractFormInputViewModel> formInputViewModels,
-                                               NavigationViewModel navigationViewModel, boolean allReadOnly) {
-        super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly);
+                                               NavigationViewModel navigationViewModel,
+                                               boolean allReadOnly,
+                                               Optional<Long> applicantOrganisationId,
+                                               boolean readOnlyAllApplicantApplicationFinances) {
+        super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
     }
 
     @Override

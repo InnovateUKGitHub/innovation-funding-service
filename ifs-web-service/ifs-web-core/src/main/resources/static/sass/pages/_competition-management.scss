@@ -140,15 +140,26 @@
   border-bottom: 1px solid $border-colour;
 }
 
-
 .select-all {
-  padding:10px 0;
+  padding-top: 12px;
 
   .form-hint {
+    @include media-down(mobile) {
+      display: block;
+      text-align: center;
+    }
     display:inline-block;
     margin: 8px 10px 0;
+    text-align: left;
   }
 }
+
+.column-half{
+  &.select-all{
+    padding-left: 20px;
+  }
+}
+
 .mark-applications {
   padding:10px 0;
   text-align:right;

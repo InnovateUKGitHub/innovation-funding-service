@@ -15,6 +15,8 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -83,5 +85,16 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
         assertTrue(rules.userCanUpdateQuestionStatus(questionStatusResource, leadApplicant));
         assertTrue(rules.userCanUpdateQuestionStatus(questionStatusResource, allowedAndConnectedUser));
         assertFalse(rules.userCanUpdateQuestionStatus(questionStatusResource, connectedUserAndNotAllowedUser));
+    }
+
+    @Test
+    public void testSupportUserCanReadQuestionStatus() {
+        QuestionStatusResource questionStatusResource = QuestionStatusResourceBuilder.newQuestionStatusResource().build();
+
+        UserResource supportUser = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.SUPPORT).build())).build();
+        UserResource nonSupportUser = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build();
+
+        assertTrue(rules.supportCanReadQuestionStatus(questionStatusResource, supportUser));
+        assertFalse(rules.supportCanReadQuestionStatus(questionStatusResource, nonSupportUser));
     }
 }

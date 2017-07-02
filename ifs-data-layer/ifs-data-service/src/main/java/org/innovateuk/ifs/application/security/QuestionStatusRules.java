@@ -35,18 +35,23 @@ public class QuestionStatusRules {
     @Autowired
     private QuestionStatusMapper questionStatusMapper;
 
-    @PermissionRule(value = "READ", description = "users can only read statuses of applications thy are connected to")
+    @PermissionRule(value = "READ", description = "Users can only read statuses of applications they are connected to")
     public boolean userCanReadQuestionStatus(QuestionStatusResource questionStatusResource, UserResource user){
         return userIsConnected(questionStatusResource.getApplication(), user);
     }
 
-    @PermissionRule(value = "UPDATE", description = "users can only update statuses of questions they are assigned to")
+    @PermissionRule(value = "READ", description = "Support users can read statuses of all questions")
+    public boolean supportCanReadQuestionStatus(QuestionStatusResource questionStatusResource, UserResource user){
+        return user.hasRole(UserRoleType.SUPPORT);
+    }
+
+    @PermissionRule(value = "UPDATE", description = "Users can only update statuses of questions they are assigned to")
     public boolean userCanUpdateQuestionStatus(QuestionStatusResource questionStatusResource, UserResource user){
         QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(questionStatusResource.getQuestion(), questionStatusResource.getApplication());
         return userCanUpdateQuestionStatusComposite(ids, user);
     }
 
-    @PermissionRule(value = "UPDATE", description = "users can only update statuses of questions they are assigned to")
+    @PermissionRule(value = "UPDATE", description = "Users can only update statuses of questions they are assigned to")
     public boolean userCanUpdateQuestionStatusComposite(QuestionApplicationCompositeId ids, UserResource user) {
         return userIsLeadApplicant(ids.applicationId, user) || (userIsAllowed(ids, user) && userIsConnected(ids.applicationId, user));
     }
