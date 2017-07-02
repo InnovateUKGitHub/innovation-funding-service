@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -77,9 +78,9 @@ public class YourOrganisationSectionPopulatorTest {
         when(financialYearEnd.getFormInput()).thenReturn(newFormInputResource().withType(FormInputType.FINANCIAL_YEAR_END).build());
         when(overviewRow.getFormInput()).thenReturn(newFormInputResource().withType(FormInputType.FINANCIAL_OVERVIEW_ROW).build());
         when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(emptyList());
-        when(formInputViewModelGenerator.fromSection(section, section, form)).thenReturn(formInputViewModels);
+        when(formInputViewModelGenerator.fromSection(section, section, form, false)).thenReturn(formInputViewModels);
 
-        YourOrganisationSectionViewModel viewModel = yourOrganisationSectionPopulator.populate(section, form, model, bindingResult);
+        YourOrganisationSectionViewModel viewModel = yourOrganisationSectionPopulator.populate(section, form, model, bindingResult, false, Optional.of(2L), true);
 
         assertThat(viewModel.isSection(), equalTo(true));
         assertThat(viewModel.isComplete(), equalTo(false));
@@ -88,6 +89,8 @@ public class YourOrganisationSectionPopulatorTest {
         assertThat(viewModel.getFinancialEndYearFormInputViewModel(), equalTo(financialYearEnd));
         assertThat(viewModel.getFinanceOverviewRows(), equalTo(singletonList(overviewRow)));
         assertThat(viewModel.getStandardInputViewModels(), equalTo(emptyList()));
+        assertThat(viewModel.getApplicantOrganisationId(), equalTo(2L));
+        assertThat(viewModel.isReadOnlyAllApplicantApplicationFinances(), equalTo(true));
     }
 
 }
