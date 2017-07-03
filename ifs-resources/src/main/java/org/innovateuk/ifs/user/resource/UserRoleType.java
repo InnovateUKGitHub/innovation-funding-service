@@ -60,6 +60,6 @@ public enum UserRoleType {
     }
 
     public static Set<UserRoleType> internalRoles(){
-        return new HashSet<>(Arrays.asList(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN));
+        return new HashSet<>(Arrays.asList(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT));
     }
 }
