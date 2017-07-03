@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionsRestService;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorPageResource;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
+import org.innovateuk.ifs.management.controller.CompetitionManagementInviteAssessorsController;
 import org.innovateuk.ifs.management.viewmodel.AvailableAssessorRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.InviteAssessorsFindViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.management.controller.CompetitionManagementCookieController.SELECTION_LIMIT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -53,6 +55,7 @@ public class InviteAssessorsFindModelPopulator extends InviteAssessorsModelPopul
         model.setInnovationSectorOptions(innovationSectors);
         model.setAssessors(assessors);
         model.setPagination(new PaginationViewModel(pageResource, originQuery));
+        model.setSelectAllDisabled(pageResource.getTotalElements() > SELECTION_LIMIT);
 
         return model;
     }

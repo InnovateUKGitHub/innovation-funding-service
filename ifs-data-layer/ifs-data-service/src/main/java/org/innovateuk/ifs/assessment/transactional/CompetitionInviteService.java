@@ -64,6 +64,12 @@ public interface CompetitionInviteService {
     ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable, Optional<Long> innovationArea);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "READ_ASSESSORS_BY_COMPETITION",
+            description = "Competition Admins and Project Finance can retrieve available assessor ids by competition",
+            additionalComments = "The service additionally checks if the assessor does not have an invite for the competition which is either Pending or Accepted")
+    ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId, Optional<Long> innovationArea);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_INVITES_BY_COMPETITION",
             description = "Competition Admins and Project Finance users can retrieve created invites by competition")
     ServiceResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, Pageable pageable);
@@ -96,6 +102,11 @@ public interface CompetitionInviteService {
     @SecuredBySpring(value = "INVITE_EXISTING_USER",
             description = "The Competition Admins and Project Finance users can create a competition invite for an existing user")
     ServiceResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource existingUserStagedInviteResource);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "INVITE_EXISTING_USERS",
+            description = "The Competition Admin user and Project Finance users can create competition invites for existing users")
+    ServiceResult<Void> inviteUsers(List<ExistingUserStagedInviteResource> existingUserStagedInvites);
 
     @SecuredBySpring(value = "SEND_ALL_INVITES",
             description = "The Competition Admins and Project Finance users can send all competition invites")

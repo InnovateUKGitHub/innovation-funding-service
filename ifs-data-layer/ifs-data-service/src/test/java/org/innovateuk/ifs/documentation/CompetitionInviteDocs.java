@@ -12,6 +12,7 @@ import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBui
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInvitesToSendResourceBuilder.newAssessorInvitesToSendResource;
+import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteListResourceBuilder.newExistingUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceBuilder.newNewUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
@@ -53,7 +54,7 @@ public class CompetitionInviteDocs {
     };
 
     public static final FieldDescriptor[] existingUserStagedInviteResourceFields = {
-            fieldWithPath("email").description("Email of the recipient of the invite"),
+            fieldWithPath("userId").description("User id of the recipient of the invite"),
             fieldWithPath("competitionId").description("The id of the competition"),
     };
 
@@ -94,7 +95,6 @@ public class CompetitionInviteDocs {
             .withRecipients(singletonList("Paul Plum"));
 
     public static final ExistingUserStagedInviteResourceBuilder existingUserStagedInviteResourceBuilder = newExistingUserStagedInviteResource()
-            .withEmail("paul.plum@gmail.com")
             .withCompetitionId(1L);
 
     public static final NewUserStagedInviteResourceBuilder newUserStagedInviteResourceBuilder = newNewUserStagedInviteResource()
@@ -105,4 +105,7 @@ public class CompetitionInviteDocs {
 
     public static final NewUserStagedInviteListResourceBuilder newUserStagedInviteListResourceBuilder = newNewUserStagedInviteListResource()
             .withInvites(newUserStagedInviteResourceBuilder.build(2));
+
+    public static final ExistingUserStagedInviteListResourceBuilder existingUserStagedInviteListResourceBuilder = newExistingUserStagedInviteListResource()
+            .withInvites(existingUserStagedInviteResourceBuilder.build(2));
 }

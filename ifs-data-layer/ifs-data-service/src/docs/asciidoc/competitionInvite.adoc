@@ -130,6 +130,17 @@ include::{snippets}/competitioninvite/invite-user/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/competitioninvite/invite-user/curl-request.adoc[]
 
+=== Add existing users to the assessor invite list for a competition
+==== Request
+include::{snippets}/competitioninvite/invite-users/http-request.adoc[]
+include::{snippets}/competitioninvite/invite-users/request-fields.adoc[]
+
+==== Response
+include::{snippets}/competitioninvite/invite-users/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/invite-users/curl-request.adoc[]
+
 === Add a new user to the assessor invite list for a competition
 ==== Request
 include::{snippets}/competitioninvite/invite-new-user/http-request.adoc[]

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -24,7 +25,7 @@ public class AllApplicationsPageModelPopulator {
     @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
 
-    public AllApplicationsViewModel populateModel(long competitionId, String origin, int page, String sorting, String filter, UserResource user) {
+    public AllApplicationsViewModel populateModel(long competitionId, String origin, int page, String sorting, Optional<String> filter, UserResource user) {
         CompetitionSummaryResource competitionSummaryResource = applicationSummaryRestService
                 .getCompetitionSummary(competitionId)
                 .getSuccessObjectOrThrowException();
@@ -41,7 +42,7 @@ public class AllApplicationsPageModelPopulator {
                 competitionSummaryResource.getApplicationsInProgress(),
                 competitionSummaryResource.getApplicationsSubmitted(),
                 sorting,
-                filter,
+                filter.orElse(""),
                 getApplications(applicationSummaryPageResource),
                 new PaginationViewModel(applicationSummaryPageResource, origin),
                 user.hasRole(UserRoleType.SUPPORT) ? "Dashboard" : "Applications",
