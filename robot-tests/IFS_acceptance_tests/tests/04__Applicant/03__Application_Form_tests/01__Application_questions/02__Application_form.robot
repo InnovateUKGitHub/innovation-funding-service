@@ -91,7 +91,7 @@ Autosave in the form questions
 Word count works
     [Documentation]    INFUND-198
     [Tags]    HappyPath
-    When The user enters text to a text field    css=.editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.
+    When the user enters multiple strings into a text field         css=.editor  a${SPACE}  31
     Then the word count should be correct for the Project summary
 
 Guidance of the questions
@@ -172,14 +172,13 @@ the text box should be editable
 
 the question should not be marked as complete on the application overview page
     The user clicks the button/link    link=Application overview
-    Run Keyword And Ignore Error Without Screenshots    confirm action
     the user should see the element    jQuery=li:nth-child(2)
     the user should not see the element    jQuery=li:nth-child(2) span:contains("Complete")
 
 the finance summary page should show a warning
     The user clicks the button/link    link=Application overview
     The user clicks the button/link    link=Your finances
-    the user should see the element    jQuery=h3:contains("Your funding") + p:contains("You must select a research category in application details ")
+    the user should see the element    jQuery=h3:contains("Your funding") + p:contains("You must select a research category in"):contains("application details")
 
 Log in and create a new application for the Aerospace competition
     Given the user logs-in in new browser  &{lead_applicant_credentials}

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewM
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 
@@ -21,8 +22,8 @@ public class YourFinancesSectionViewModel extends AbstractSectionViewModel {
     private Long yourOrganisationSectionId;
     private BaseFinanceResource organisationFinance;
 
-    public YourFinancesSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly) {
-        super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly);
+    public YourFinancesSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly, Optional<Long> applicantOrganisationId, boolean readOnlyAllApplicantApplicationFinances) {
+        super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
     }
 
     public boolean isNotRequestingFunding() {

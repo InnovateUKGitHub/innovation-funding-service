@@ -54,6 +54,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
+import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
@@ -650,6 +651,16 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
+    public void inviteExistingUsers() throws Exception {
+        ExistingUserStagedInviteListResource newUserInvites = buildExistingUserInviteList(competition.getId());
+
+        loginCompAdmin();
+        RestResult<Void> serviceResult = controller.inviteUsers(newUserInvites);
+
+        assertTrue(serviceResult.isSuccess());
+    }
+
+    @Test
     public void inviteNewUsers_competitionNotFound() throws Exception {
         long competitionId = 10000L;
         assertNull(competitionRepository.findOne(competitionId));
@@ -704,6 +715,14 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                         .withEmail("testname1@for-this.address", "testname2@for-this.address")
                         .withCompetitionId(competitionId)
                         .withInnovationAreaId(innovationAreaId)
+                        .build(2)
+        );
+    }
+
+    private ExistingUserStagedInviteListResource buildExistingUserInviteList(long competitionId) {
+        return new ExistingUserStagedInviteListResource(
+                newExistingUserStagedInviteResource()
+                        .withCompetitionId(competitionId)
                         .build(2)
         );
     }
@@ -913,6 +932,19 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         assertEquals("Professor Plum", items.get(3).getName());
         assertEquals("Robert Salt", items.get(4).getName());
         assertEquals("Robert Stark", items.get(5).getName());
+    }
+
+    @Test
+    public void getAvailableAssessors_all() throws Exception {
+        loginCompAdmin();
+        addTestAssessors();
+
+        Optional<Long> innovationArea = Optional.of(5L);
+
+        List<Long> availableAssessorIds = controller.getAvailableAssessorIds(competition.getId(), innovationArea)
+                .getSuccessObjectOrThrowException();
+
+        assertEquals(4, availableAssessorIds.size());
     }
 
     private void addTestAssessors() {

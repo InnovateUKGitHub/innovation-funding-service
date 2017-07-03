@@ -350,6 +350,26 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
     }
 
     @Test
+    public void inviteUsers() throws Exception {
+        ExistingUserStagedInviteListResource existingUserStagedInviteListResource = existingUserStagedInviteListResourceBuilder.build();
+        List<ExistingUserStagedInviteResource> existingUserStagedInviteResources = existingUserStagedInviteListResource.getInvites();
+
+        when(competitionInviteServiceMock.inviteUsers(existingUserStagedInviteResources)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competitioninvite/inviteUsers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(existingUserStagedInviteListResource)))
+                .andExpect(status().isOk())
+                .andDo(document("competitioninvite/{method-name}",
+                        requestFields(
+                                fieldWithPath("invites[]").description("List of existing users to be invited to assess the competition")
+                        ).andWithPrefix("invites[].", existingUserStagedInviteResourceFields)
+                ));
+
+        verify(competitionInviteServiceMock, only()).inviteUsers(existingUserStagedInviteResources);
+    }
+
+    @Test
     public void inviteNewUsers() throws Exception {
         long competitionId = 1L;
 

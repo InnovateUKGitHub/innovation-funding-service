@@ -1,5 +1,5 @@
 title: "A simple secondary button component"
-status: wip
+status: ready
 context:
   text: "Secondary actions"
   citation: "Fractal Docs"

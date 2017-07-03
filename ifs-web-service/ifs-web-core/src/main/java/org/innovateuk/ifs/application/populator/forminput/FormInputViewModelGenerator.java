@@ -41,10 +41,10 @@ public class FormInputViewModelGenerator {
        return (FormInputPopulator<M>) populators.get(formInputType);
     }
 
-    public List<AbstractFormInputViewModel> fromSection(ApplicantSectionResource applicantResource, ApplicantSectionResource childSection, ApplicationForm form) {
+    public List<AbstractFormInputViewModel> fromSection(ApplicantSectionResource applicantResource, ApplicantSectionResource childSection, ApplicationForm form, Boolean readOnly) {
         List<AbstractFormInputViewModel> viewModels =  childSection.getApplicantQuestions().stream()
                 .map(applicantQuestion -> applicantQuestion.getApplicantFormInputs().stream()
-                    .map(applicantFormInputResource -> getPopulator(applicantFormInputResource.getFormInput().getType()).populate(applicantResource, childSection, applicantQuestion, applicantFormInputResource, applicantFormInputResource.responseForApplicant(applicantResource.getCurrentApplicant(), applicantQuestion)))
+                    .map(applicantFormInputResource -> getPopulator(applicantFormInputResource.getFormInput().getType()).populate(applicantResource, childSection, applicantQuestion, applicantFormInputResource, applicantFormInputResource.responseForApplicant(applicantResource.getCurrentApplicant(), applicantQuestion), readOnly))
                 .collect(Collectors.toList()))
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
