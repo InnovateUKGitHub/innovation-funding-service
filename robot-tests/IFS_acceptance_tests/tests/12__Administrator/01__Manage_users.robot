@@ -40,7 +40,7 @@ Administrator can navigate to 'Add a new internal user' link
 Validations for invite new user
         [Documentation]  IFS-27
         [Tags]
-        When the user clicks the button/link    jQuery=.button:contains("Save and return")
+        When the user clicks the button/link    jQuery=.button:contains("Send invite")
         Then the user should see an error    Please enter a first name.
         And the user should see an error    Your first name should have at least 2 characters.
         And the user should see an error    Please enter a last name.
@@ -82,7 +82,7 @@ Administrator can successfully invite a new user
         And the user enters text to a text field    id=lastName    Pimenta
         And the user enters text to a text field    id=emailAddress    astle.pimenta@innovateuk.test
         And the user selects the option from the drop-down menu    IFS Support User    id=role
-        And the user clicks the button/link    jQuery=.button:contains("Save and return")
+        And the user clicks the button/link    jQuery=.button:contains("Send invite")
         Then the user should see the element  jQuery=h1:contains("Manage users")    #The Admin is redirected to the Manage Users page on Success
         And the user should see the element   jQuery=.selected:contains("Active")
 
@@ -92,7 +92,7 @@ Inviting the same user for the same role again should give an error
         And the user enters text to a text field    id=lastName    Pimenta
         And the user enters text to a text field    id=emailAddress    astle.pimenta@innovateuk.test
         And the user selects the option from the drop-down menu    IFS Support User    id=role
-        And the user clicks the button/link    jQuery=.button:contains("Save and return")
+        And the user clicks the button/link    jQuery=.button:contains("Send invite")
         Then the user should see the text in the page    This user has a pending invite. Please check.
 
 Project finance user cannot navigate to manage users page
@@ -113,7 +113,7 @@ User cannot see manage users page
 the user should not see the validation error
     [Arguments]    ${ERROR_TEXT}
     Run Keyword And Ignore Error Without Screenshots    mouse out    css=input
-    Focus    jQuery=.button:contains("Save and return")
+    Focus    jQuery=.button:contains("Send invite")
     Wait for autosave
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Wait Until Element Does Not Contain Without Screenshots    css=.error-message    ${ERROR_TEXT}
     Run Keyword If    '${status}' == 'FAIL'    Page Should not Contain    ${ERROR_TEXT}
