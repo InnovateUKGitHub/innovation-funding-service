@@ -14,10 +14,10 @@ Documentation     INFUND-45: As an applicant and I am on the application form on
 ...
 ...               INFUND-8355: Project finance team - overheads
 Suite Setup       Custom Suite Setup
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
-Resource          ../../FinanceSection_Commons.robot
+Resource          ../../Applicant_Commons.robot
 
 *** Variables ***
 ${applicationName}  ${OPEN_COMPETITION_APPLICATION_5_NAME}
@@ -205,7 +205,6 @@ the working days per year should be 232 by default
 
 the user navigates to another page
     the user clicks the button/link    link=Please refer to our guide to project costs for further information.
-    Run Keyword And Ignore Error Without Screenshots    Confirm Action
 
 the user should see the funding guidance
     [Documentation]    INFUND-7093

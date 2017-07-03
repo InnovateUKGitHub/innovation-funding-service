@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Users'" />
+</head>
+<body class="competition-management">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage users',linkClass='link-back',linkUrl=@{/}"  />
+
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Find internal users',size='heading-xlarge'" />
+
+    <p>You can view and search for specific assessors here, if you wish to add new assessors or edit assessors details then use the below link.</p>
+    <p><a href="/">Add a new internal user</a></p>
+
+    <div class="search-filters extra-margin">
+        <fieldset>
+            <legend class="heading-medium">Search users</legend>
+            <div class="grid-row">
+                <div class="column-two-thirds">
+                    <label class="form-label" for="search">Search for a name, job role, permission or email address</label>
+                    <input type="text" class="form-control extra-margin-bottom" id="search" name="search" />
+                    <a href="/">Clear search</a>
+                </div>
+                <div class="column-third">
+                    <button class="button">Search</button>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <div id="manageUsersTabs" class="tabs">
+        <ul>
+            <li>
+                <a href="#active">Active (38)</a>
+            </li>
+            <li>
+                <a href="#inactive">Inactive (10)</a>
+            </li>
+        </ul>
+        <section id="active">
+            <h2 class="heading-medium">Active</h2>
+            <div>
+                <p>
+                    <span class="heading-xlarge no-margin">38</span>
+                    <span class="heading-small">active internal users</span>
+                </p>
+                <div class="table-overflow">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Role profile</th>
+                            <th scope="col">Email address</th>
+                            <th scope="col"><span class="visuallyhidden">Invite status</span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><a href="/">Mark Smith</a></td>
+                            <td>Super admin</td>
+                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><a href="/">Mark Smith</a></td>
+                            <td>Super admin</td>
+                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><a href="/">Mark Smith</a></td>
+                            <td>Super admin</td>
+                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td><span class="form-hint">Invite pending</span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="/">Mark Smith</a></td>
+                            <td>Admin</td>
+                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><a href="/">Mark Smith</a></td>
+                            <td>Super admin</td>
+                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><a href="/">Mark Smith</a></td>
+                            <td>Super admin</td>
+                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><a href="/">Mark Smith</a></td>
+                            <td>Super admin</td>
+                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td><span class="form-hint">Invite pending</span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="/">Mark Smith</a></td>
+                            <td>Admin</td>
+                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><a href="/">Mark Smith</a></td>
+                            <td>Super admin</td>
+                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><a href="/">Mark Smith</a></td>
+                            <td>Super admin</td>
+                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><a href="/">Mark Smith</a></td>
+                            <td>Super admin</td>
+                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td><span class="form-hint">Invite pending</span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="/">Mark Smith</a></td>
+                            <td>Admin</td>
+                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><a href="/">Mark Smith</a></td>
+                            <td>Super admin</td>
+                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><a href="/">Mark Smith</a></td>
+                            <td>Super admin</td>
+                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><a href="/">Mark Smith</a></td>
+                            <td>Super admin</td>
+                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td><span class="form-hint">Invite pending</span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="/">Mark Smith</a></td>
+                            <td>Admin</td>
+                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <ul class="pagination">
+                    <li class="prev">
+                        <a href="/" rel="prev" title="Navigate to previous part">
+                            <span class="pagination-label">Previous</span>
+                            <span class="pagination-part-title">0 to 10</span>
+                        </a>
+                    </li>
+                    <li class="next">
+                        <a href="/" rel="next" title="Navigate to next part">
+                            <span class="pagination-label">Next</span>
+                            <span class="pagination-part-title">11 to 20</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <section id="inactive">
+            <h2 class="heading-medium">Inactive</h2>
+            <div>
+                <p>
+                    <span class="heading-xlarge no-margin">10</span>
+                    <span class="heading-small">inactive internal users</span>
+                </p>
+                <div class="table-overflow">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Role profile</th>
+                            <th scope="col">Email address</th>
+                            <th scope="col"><span class="visuallyhidden">Invite status</span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><a href="/">Mark Smith</a></td>
+                            <td>Super admin</td>
+                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><a href="/">Mark Smith</a></td>
+                            <td>Super admin</td>
+                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><a href="/">Mark Smith</a></td>
+                            <td>Super admin</td>
+                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td><span class="form-hint">Invite pending</span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="/">Mark Smith</a></td>
+                            <td>Admin</td>
+                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><a href="/">Mark Smith</a></td>
+                            <td>Super admin</td>
+                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><a href="/">Mark Smith</a></td>
+                            <td>Super admin</td>
+                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><a href="/">Mark Smith</a></td>
+                            <td>Super admin</td>
+                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td><span class="form-hint">Invite pending</span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="/">Mark Smith</a></td>
+                            <td>Admin</td>
+                            <td><a href="/">mark.smith@innovateuk.org.uk</a></td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <ul class="pagination">
+                    <li class="prev">
+                        <a href="/" rel="prev" title="Navigate to previous part">
+                            <span class="pagination-label">Previous</span>
+                            <span class="pagination-part-title">0 to 10</span>
+                        </a>
+                    </li>
+                    <li class="next">
+                        <a href="/" rel="next" title="Navigate to next part">
+                            <span class="pagination-label">Next</span>
+                            <span class="pagination-part-title">11 to 20</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+
+</body>
+</html>

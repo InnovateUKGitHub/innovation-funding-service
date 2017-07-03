@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation     INFUND-184: As an applicant and on the over view of the application, I am able to see the character count and status of the questions, so I am able to see if my questions are valid    #Suite Setup    Run Keywords    Guest user log-in    &{lead_applicant_credentials}
+Documentation     INFUND-184: As an applicant and on the over view of the application, I am able to see the character count and status of the questions, so I am able to see if my questions are valid
 ...
 ...               INFUND-186: As an applicant and in the application form, I should be able to change the state of a question to mark as complete, so I don't have to revisit the question.
 ...
@@ -15,7 +15,7 @@ Documentation     INFUND-184: As an applicant and on the over view of the applic
 ...
 ...               INFUND-9154 Update 'Application details' > 'Innovation area' options to those set in 'Initial details' > 'Innovation area'
 Suite Setup       Log in and create a new application for the Aerospace competition
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 
@@ -91,7 +91,7 @@ Autosave in the form questions
 Word count works
     [Documentation]    INFUND-198
     [Tags]    HappyPath
-    When The user enters text to a text field    css=.editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.
+    When the user enters multiple strings into a text field         css=.editor  a${SPACE}  31
     Then the word count should be correct for the Project summary
 
 Guidance of the questions
@@ -172,17 +172,16 @@ the text box should be editable
 
 the question should not be marked as complete on the application overview page
     The user clicks the button/link    link=Application overview
-    Run Keyword And Ignore Error Without Screenshots    confirm action
     the user should see the element    jQuery=li:nth-child(2)
     the user should not see the element    jQuery=li:nth-child(2) span:contains("Complete")
 
 the finance summary page should show a warning
     The user clicks the button/link    link=Application overview
     The user clicks the button/link    link=Your finances
-    the user should see the element    jQuery=h3:contains("Your funding") + p:contains("You must select a research category in application details ")
+    the user should see the element    jQuery=h3:contains("Your funding") + p:contains("You must select a research category in"):contains("application details")
 
 Log in and create a new application for the Aerospace competition
-    Given Guest user log-in    &{lead_applicant_credentials}
+    Given the user logs-in in new browser  &{lead_applicant_credentials}
     When the user navigates to the page    ${SERVER}/competition/${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}/overview/
     the user clicks the button/link             jQuery=a:contains("Start new application")
     #The following two lines are failing if we don't have any other application for the same competition

@@ -21,7 +21,7 @@ public interface QuestionService {
 
     List<ValidationMessages> markAsComplete(Long questionId, Long applicationId, Long markedAsCompleteById);
 
-    void markAsInComplete(Long questionId, Long applicationId, Long markedAsInCompleteById);
+    void markAsIncomplete(Long questionId, Long applicationId, Long markedAsInCompleteById);
 
     List<QuestionResource> findByCompetition(Long competitionId);
 

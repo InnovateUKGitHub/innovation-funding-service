@@ -63,6 +63,7 @@ cp $CONF $CONF.default
 cat << EOF > $CONF
 idp.authn.LDAP.ldapURL                          = $LDAPURL
 idp.authn.LDAP.useStartTLS                      = $LDAPUSESTARTTLS
+idp.authn.LDAP.useSSL                           = $LDAPUSESSL
 idp.authn.LDAP.baseDN                           = $LDAPBASEDN
 idp.authn.LDAP.bindDN                           = $LDAPBINDDN
 idp.authn.LDAP.bindDNCredential                 = $LDAPBINDDNCRED
@@ -83,7 +84,7 @@ EOF
 
 [ $IDPVER = "3.3.1" ] && {
   cat << EOF >> $CONF
-idp.authn.LDAP.trustCertificates                = %{idp.home}/credentials/ldap-server.crt
+idp.authn.LDAP.trustCertificates                = %{idp.home}/credentials/ldap-encryption.crt
 idp.authn.LDAP.trustStore                       = %{idp.home}/credentials/ldap-server.truststore
 idp.authn.LDAP.returnAttributes                 = mail,uid
 idp.authn.LDAP.dnFormat                         = uid=%s,%{idp.authn.LDAP.baseDN}

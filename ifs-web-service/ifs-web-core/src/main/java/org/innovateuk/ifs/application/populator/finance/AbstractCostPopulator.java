@@ -31,7 +31,7 @@ public abstract class AbstractCostPopulator<M extends AbstractCostViewModel> ext
             category.addCost(costItem);
         }
         viewModel.setCostCategory(category);
-        viewModel.setViewmode(viewModel.isComplete() ? "approved" : "edit");
+        viewModel.setViewmode(viewModel.isComplete() ? "approved" : (viewModel.isReadonly() ? "readonly" : "edit"));
 
         populateCost(resource, viewModel, organisationFinances);
     }

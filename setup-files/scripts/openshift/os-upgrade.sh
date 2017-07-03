@@ -38,6 +38,7 @@ function upgradeServices {
 
     # services
     oc apply -f os-files-tmp/4-application-service.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f os-files-tmp/5-front-door-service.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f os-files-tmp/41-assessment-svc.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f os-files-tmp/42-competition-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f os-files-tmp/43-project-setup-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
@@ -47,11 +48,11 @@ function upgradeServices {
     if [[ ${TARGET} == "production" || ${TARGET} == "demo" || ${TARGET} == "uat" || ${TARGET} == "sysint" || ${TARGET} == "perf" ]]
     then
         oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/named-envs/56-${TARGET}-idp.yml
+        oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/named-envs/5-${TARGET}-shib.yml
     else
         oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/56-idp.yml
+        oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/5-shib.yml
     fi
-
-    oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/5-shib.yml
 
     watchStatus
 }
@@ -61,6 +62,7 @@ function forceReload {
     rolloutStatus data-service
 
     oc rollout latest dc/application-svc ${SVC_ACCOUNT_CLAUSE}
+    oc rollout latest dc/front-door-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/assessment-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/competition-mgt-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/project-setup-mgt-svc ${SVC_ACCOUNT_CLAUSE}
@@ -73,6 +75,7 @@ function forceReload {
 
 function watchStatus {
     rolloutStatus application-svc
+    rolloutStatus front-door-svc
     rolloutStatus assessment-svc
     rolloutStatus competition-mgt-svc
     rolloutStatus project-setup-mgt-svc

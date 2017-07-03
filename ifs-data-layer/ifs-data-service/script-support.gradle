@@ -1,0 +1,68 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+//support tasks for executing scripts
+
+
+task createTestSchema(type:Exec) {
+    workingDir '../../'
+    commandLine 'docker-compose', '-f', 'docker-compose.yml', '-f', 'docker-compose-dev.yml', 'exec', '-T', 'mysql' ,'mysql' ,'-uroot' ,'-ppassword' ,'-e', 'create database if not exists ifs_test'
+    doLast {
+        exec {
+            //wait for sql container to start.
+            //TODO need better method of waiting for startup.
+            workingDir '.'
+            commandLine 'sleep', '10'
+        }
+    }
+}
+
+task createSchema(type:Exec) {
+    workingDir '../../'
+    commandLine 'docker-compose', '-f', 'docker-compose.yml', '-f', 'docker-compose-dev.yml', 'exec', '-T', 'mysql' ,'mysql' ,'-uroot' ,'-ppassword' ,'-e', 'create database if not exists ifs'
+    doLast {
+        exec {
+            //wait for sql container to start.
+            //TODO need better method of waiting for startup.
+            workingDir '.'
+            commandLine 'sleep', '10'
+        }
+    }
+}
+
+task startMySql(type:Exec) {
+    workingDir '../../'
+    println "*************"
+    println workingDir
+    commandLine 'docker-compose', '-f', 'docker-compose.yml', '-f', 'docker-compose-dev.yml', 'up', '-d', 'mysql'
+    doLast {
+        exec {
+            //wait for sql container to start.
+            //TODO need better method of waiting for startup.
+            workingDir '.'
+            commandLine 'sleep', '10'
+        }
+    }
+}
+
+task prepareComposeFile (type: Copy) {
+    outputs.upToDateWhen { false }
+    from '../../'
+    into '../../'
+    include 'docker-compose-template.yml'
+    rename 'docker-compose-template.yml', 'docker-compose.yml'
+    filter(ReplaceTokens, tokens: [version: project.properties['version']])
+}
+
+startMySql.dependsOn prepareComposeFile
+createSchema.dependsOn prepareComposeFile
+createTestSchema.dependsOn prepareComposeFile
+
+task syncShib(type:Exec) {
+    workingDir '../'
+    commandLine 'docker-compose', 'exec', '-T', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh', 'mysql'
+}
+
+task loadShib(type:Exec) {
+    workingDir '../setup-files/scripts/docker'
+    commandLine './_load_shib.sh'
+}

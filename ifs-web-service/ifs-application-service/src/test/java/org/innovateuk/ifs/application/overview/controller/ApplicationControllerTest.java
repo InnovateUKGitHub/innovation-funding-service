@@ -45,6 +45,7 @@ import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuild
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.ASSIGN_QUESTION_PARAM;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFeedbackAggregateResourceBuilder.newAssessmentFeedbackAggregateResource;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
@@ -150,7 +151,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
         LOG.debug("Show dashboard for application: " + app.getId());
-        mockMvc.perform(post("/application/" + app.getId()).param(ApplicationController.ASSIGN_QUESTION_PARAM, "1_2"))
+        mockMvc.perform(post("/application/" + app.getId()).param(ASSIGN_QUESTION_PARAM, "1_2"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/application/" + app.getId()));
     }
