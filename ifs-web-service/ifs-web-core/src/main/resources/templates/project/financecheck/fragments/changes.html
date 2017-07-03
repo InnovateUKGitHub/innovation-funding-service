@@ -556,4 +556,132 @@
     </th:block>
 </th:block>
 
+<th:block th:fragment="other_funding">
+    <th:block th:if="${typeOfChange == 'Change'}">
+        <tr th:class="${changePair.submitted.fundingAmount != changePair.changed.fundingAmount ||
+        changePair.submitted.fundingSource != changePair.changed.fundingSource ||
+        changePair.submitted.securedDate != changePair.changed.securedDate} ? 'item-changed' : ''">
+            <td rowspan="3" th:text="${typeOfChange}"></td>
+            <td rowspan="3" th:text="${rowTypeName}"></td>
+
+            <th scope="row">Funding Source</th>
+            <td th:text="${changePair.submitted.fundingSource}"></td>
+            <td th:text="${changePair.changed.fundingSource}" colspan="2" th:class="${changePair.submitted.fundingSource != changePair.changed.fundingSource} ? 'item-changed' : ''"></td>
+        </tr>
+
+        <tr th:class="${changePair.submitted.securedDate != changePair.changed.securedDate} ? 'item-changed' : ''">
+            <th scope="row">Secured Date</th>
+            <td th:text="${changePair.submitted.securedDate}"></td>
+            <td th:text="${changePair.changed.securedDate}" colspan="2" th:class="${changePair.submitted.securedDate!= changePair.changed.securedDate} ? 'item-changed' : ''"></td>
+        </tr>
+
+        <tr th:class="${changePair.submitted.fundingAmount != changePair.changed.fundingAmount} ? 'item-changed' : ''">
+            <th scope="row">Amount</th>
+            <td th:text="${changePair.submitted.fundingAmount}"></td>
+            <td th:text="${changePair.changed.fundingAmount}" colspan="2" th:class="${changePair.submitted.fundingAmount!= changePair.changed.fundingAmount} ? 'item-changed' : ''"></td>
+        </tr>
+
+        <tr class="change-row" th:with="difference=${changePair.changed.fundingAmount.subtract(changePair.submitted.fundingAmount)}">
+            <td th:text="${#numbers.formatDecimal(difference, 0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
+        </tr>
+    </th:block>
+
+    <th:block th:if="${typeOfChange == 'New'}">
+        <tr>
+            <td rowspan="3" th:text="${typeOfChange}"></td>
+            <td rowspan="3" th:text="${rowTypeName}"></td>
+
+            <th scope="row">Funding Source</th>
+            <td></td>
+            <td colspan="2" th:text="${changePair.changed.fundingSource}"></td>
+        </tr>
+
+        <tr>
+            <th scope="row">Secured Date</th>
+            <td></td>
+            <td th:text="${changePair.changed.securedDate}" colspan="2"></td>
+        </tr>
+
+        <tr>
+            <th scope="row">Amount</th>
+            <td></td>
+            <td th:text="${changePair.changed.fundingAmount}" colspan="2"></td>
+        </tr>
+        <tr class="change-row">
+            <td th:text="${#numbers.formatDecimal(changePair.changed.fundingAmount,0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
+        </tr>
+    </th:block>
+
+    <th:block th:if="${typeOfChange == 'Remove'}">
+        <tr>
+            <td rowspan="3" th:text="${typeOfChange}"></td>
+            <td rowspan="3" th:text="${rowTypeName}"></td>
+
+            <th scope="row">Funding Source</th>
+            <td th:text="${changePair.submitted.fundingSource}"></td>
+            <td colspan="2"></td>
+        </tr>
+
+        <tr>
+            <th scope="row">Secured Date</th>
+            <td th:text="${changePair.submitted.securedDate}"></td>
+            <td colspan="2"></td>
+        </tr>
+
+        <tr>
+            <th scope="row">Amount</th>
+            <td th:text="${changePair.submitted.fundingAmount}"></td>
+            <td colspan="2"></td>
+        </tr>
+        <tr class="change-row">
+            <td th:text="|-${#numbers.formatDecimal(changePair.submitted.fundingAmount,0, 'COMMA', 0, 'POINT')}|" colspan="6" class="numeric"></td>
+        </tr>
+    </th:block>
+</th:block>
+
+<th:block th:fragment="finance">
+    <th:block th:if="${typeOfChange == 'Change'}">
+        <tr th:class="${changePair.submitted.grantClaimPercentage != changePair.changed.grantClaimPercentage} ? 'item-changed' : ''">
+            <td rowspan="1" th:text="${typeOfChange}"></td>
+            <td rowspan="1" th:text="${rowTypeName}"></td>
+
+            <th scope="row">Grant Claim Percentage</th>
+            <td th:text="${changePair.submitted.grantClaimPercentage}"></td>
+            <td th:text="${changePair.changed.grantClaimPercentage}" colspan="2" th:class="${changePair.submitted.grantClaimPercentage!= changePair.changed.grantClaimPercentage} ? 'item-changed' : ''"></td>
+        </tr>
+
+        <tr class="change-row" th:with="difference=${changePair.changed.grantClaimPercentage - changePair.submitted.grantClaimPercentage}">
+            <td th:text="${#numbers.formatDecimal(difference, 0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
+        </tr>
+    </th:block>
+
+    <th:block th:if="${typeOfChange == 'New'}">
+        <tr>
+            <td rowspan="1" th:text="${typeOfChange}"></td>
+            <td rowspan="1" th:text="${rowTypeName}"></td>
+
+            <th scope="row">Grant Claim Percentage<</th>
+            <td></td>
+            <td th:text="${changePair.changed.grantClaimPercentage}" colspan="2"></td>
+        </tr>
+        <tr class="change-row">
+            <td th:text="${#numbers.formatDecimal(changePair.changed.grantClaimPercentage,0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
+        </tr>
+    </th:block>
+
+    <th:block th:if="${typeOfChange == 'Remove'}">
+        <tr>
+            <td rowspan="1" th:text="${typeOfChange}"></td>
+            <td rowspan="1" th:text="${rowTypeName}"></td>
+
+            <th scope="row">Grant Claim Percentage<</th>
+            <td th:text="${changePair.submitted.grantClaimPercentage}"></td>
+            <td colspan="2"></td>
+        </tr>
+        <tr class="change-row">
+            <td th:text="|-${#numbers.formatDecimal(changePair.submitted.grantClaimPercentage,0, 'COMMA', 0, 'POINT')}|" colspan="6" class="numeric"></td>
+        </tr>
+    </th:block>
+</th:block>
+
 </html>
