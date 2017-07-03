@@ -182,7 +182,7 @@ External users can view finance checks status on dashboard
 Project finance user can view finance overview for the consortium
     [Documentation]    INFUND-4846
     [Tags]
-    log in as a different user          &{internal_finance_credentials}
+    log in as a different user              &{internal_finance_credentials}
     When the user navigates to the page     ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link    link=Project finance overview
     Then the user should see the element    jQuery=h1:contains("Finance overview")
@@ -1547,7 +1547,6 @@ the user should see the finance values amended by internal user
     the user should see the element  jQuery=#project-finance-changes-submitted tr:contains("Amount") td:contains("1954")
     the user should see the element  jQuery=#project-finance-changes-submitted tr:contains("Net cost") td:contains("276.00") + td:contains("5050.00")
     the user should see the element  jQuery=#project-finance-changes-submitted tr:contains("Overall") th:contains("-94,488")
-
 
 check finance checks status on dashboard
     [Arguments]  ${selector}  ${status}
