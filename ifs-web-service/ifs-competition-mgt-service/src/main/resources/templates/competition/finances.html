@@ -76,6 +76,29 @@
                 </div>
             </fieldset>
         </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('fundingRules')} ? 'form-group-error'">
+            <fieldset class="inline">
+                <legend>
+                    <span class="form-label-bold">Funding rules for this competition</span>
+                    <th:block th:if="${#fields.hasErrors('fundingRules')}">
+                        <span class="error-message"  th:each="err : ${#fields.errors('fundingRules')}" th:text="${err}"></span>
+                    </th:block>
+                </legend>
+                <div class="textarea-wrapped ">
+                        <textarea data-max_words="500"
+                                  data-editor="html"
+                                  id="fundingRules"
+                                  th:classappend="${#fields.hasErrors('fundingRules')} ? 'form-control-error'"
+                                  th:name="fundingRules"
+                                  required="required"
+                                  ifs:utext="${competitionSetupForm.fundingRules}">
+                        </textarea>
+                    <div class="textarea-footer">
+                        <span class="autosave-info"></span>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
 
 
         <button type="submit" class="button">Save and close</button>
@@ -88,6 +111,8 @@
             <dd class="column-two-thirds" th:text="${competitionSetupForm.fullApplicationFinance ? 'Full application finances' :  'Light finances'}" />
             <dt class="column-third">Include project growth table</dt>
             <dd class="column-two-thirds" th:text="${competitionSetupForm.includeGrowthTable ? 'Yes' :  'No'}" />
+            <dt class="column-full">Funding rules for this competition</dt>
+            <dd class="column-full" ifs:utext="${competitionSetupForm.fundingRules}" />
         </dl>
         <div class="extra-margin">
             <a class="button" th:unless="${preventEdit}" th:href="@{/competition/setup/{competitionId}/section/application/question/finance/edit(competitionId=${competition.id})}">Edit this question</a>
