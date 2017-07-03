@@ -403,15 +403,15 @@ elif [[ ${testScrub} ]]
 then
     coloredEcho "=> Using testScrub mode: this will do all the dirty work but omit the tests" blue
 
-    buildAndDeploy
-    resetDB
+  #  buildAndDeploy
+   # resetDB
     addTestFiles
     deleteEmails
 else
     coloredEcho "=> Using quickTest: FALSE" blue
 
-    buildAndDeploy
-    resetDB
+#    buildAndDeploy
+ #   resetDB
     addTestFiles
     deleteEmails
     runTests
