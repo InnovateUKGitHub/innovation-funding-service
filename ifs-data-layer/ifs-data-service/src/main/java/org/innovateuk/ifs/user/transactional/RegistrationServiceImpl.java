@@ -41,7 +41,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -326,7 +326,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return getByHash(inviteHash).andOnSuccess(roleInvite ->
                 getInternalRoleResources(roleInvite.getTarget()).andOnSuccess(roleResource -> {
                     internalUserRegistrationResource.setEmail(roleInvite.getEmail());
-                    internalUserRegistrationResource.setRoles(Collections.singletonList(roleResource));
+                    internalUserRegistrationResource.setRoles(roleResource);
                     return createUser(internalUserRegistrationResource).andOnSuccessReturnVoid();
                 }));
     }
@@ -342,9 +342,25 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 });
     }
 
-    private ServiceResult<RoleResource> getInternalRoleResources(Role role) {
+    private ServiceResult<List<RoleResource>> getInternalRoleResources(Role role) {
         UserRoleType roleType = UserRoleType.fromName(role.getName());
-        return roleService.findByUserRoleType(roleType).andOnSuccessReturn(roleResource -> roleResource);
+
+        if(UserRoleType.IFS_ADMINISTRATOR.equals(roleType)){
+            return getIFSAdminRoles(roleType); // IFS Admin has multiple roles
+        } else {
+            return roleService.findByUserRoleType(roleType).andOnSuccess(roleResource -> serviceSuccess(singletonList(roleResource)));
+        }
+    }
+
+    private ServiceResult<List<RoleResource>> getIFSAdminRoles(UserRoleType roleType) {
+        List<RoleResource> roleResources = new ArrayList<>();
+        return roleService.findByUserRoleType(roleType).andOnSuccess(adminResource -> {
+            roleResources.add(adminResource);
+            return roleService.findByUserRoleType(PROJECT_FINANCE).andOnSuccessReturn(finResource -> {
+                roleResources.add(finResource);
+                return serviceSuccess(roleResources);
+            }).getSuccessObject();
+        });
     }
 
     private ServiceResult<RoleInvite> getByHash(String hash) {
