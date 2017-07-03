@@ -686,7 +686,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                         .build(2));
 
         when(assessorFormInputResponseRestService.updateFormInputResponses(responses))
-                .thenReturn(restFailure(fieldError("responses[1].value", "Feedback", "validation.field.max.word.count", "", 100)));
+                .thenReturn(restFailure(fieldError("value", "Feedback", "validation.field.max.word.count", formInputIdFeedback, 100)));
 
         // For re-display of question view following the invalid data entry
         List<FormInputResource> applicationFormInputs = setupApplicationFormInputs(questionResource.getId(), TEXTAREA);
@@ -716,6 +716,8 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         assertTrue(bindingResult.hasFieldErrors(formInputFeedbackField));
         assertEquals("validation.field.max.word.count", bindingResult.getFieldError(formInputFeedbackField).getCode());
         assertEquals("100", bindingResult.getFieldError(formInputFeedbackField).getArguments()[1]);
+        assertEquals(formInputIdFeedback.toString(), bindingResult.getFieldError(formInputFeedbackField).getArguments()[0]);
+
     }
 
     private CompetitionResource setupCompetitionResource() {
