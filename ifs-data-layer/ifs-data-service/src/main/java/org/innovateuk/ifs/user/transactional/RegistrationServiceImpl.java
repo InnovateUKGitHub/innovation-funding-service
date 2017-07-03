@@ -373,6 +373,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return uidFromIdpResult.andOnSuccess(uidFromIdp -> {
             user.setUid(uidFromIdp);
             user.setStatus(UserStatus.ACTIVE);
+            Profile profile = new Profile();
+            Profile savedProfile = profileRepository.save(profile);
+            user.setProfileId(savedProfile.getId());
             User createdUser = userRepository.save(user);
             return serviceSuccess(createdUser);
         });
