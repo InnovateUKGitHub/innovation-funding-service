@@ -337,7 +337,8 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return validateUser(userResource, userResource.getPassword()).
                 andOnSuccess(validUser -> {
                     final User user = userMapper.mapToDomain(userResource);
-                    return createUserWithUid(user, userResource.getPassword());
+                    return createUserWithUid(user, userResource.getPassword()).
+                            andOnSuccess(this::activateUser).andOnSuccessReturnVoid();
                 });
     }
 
@@ -350,14 +351,14 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return find(inviteRoleRepository.getByHash(hash), notFoundError(RoleInvite.class, hash));
     }
 
-    private ServiceResult<Void> createUserWithUid(User user, String password) {
+    private ServiceResult<User> createUserWithUid(User user, String password) {
         ServiceResult<String> uidFromIdpResult = idpService.createUserRecordWithUid(user.getEmail(), password);
 
         return uidFromIdpResult.andOnSuccess(uidFromIdp -> {
             user.setUid(uidFromIdp);
             user.setStatus(UserStatus.ACTIVE);
-            userRepository.save(user);
-            return serviceSuccess();
+            User createdUser = userRepository.save(user);
+            return serviceSuccess(createdUser);
         });
     }
 }

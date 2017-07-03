@@ -71,7 +71,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
-    public static final String WEB_CONTEXT = "/internal-user";
+    public static final String WEB_CONTEXT = "/management/registration";
 
     enum Notifications {
         INVITE_INTERNAL_USER
@@ -153,7 +153,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     }
 
     private String getInviteUrl(String baseUrl, RoleInvite inviteResource) {
-        return String.format("%s/accept-invite/%s", baseUrl, inviteResource.getHash());
+        return String.format("%s/%s/%s", baseUrl, inviteResource.getHash(), "register");
     }
 
     @Override
