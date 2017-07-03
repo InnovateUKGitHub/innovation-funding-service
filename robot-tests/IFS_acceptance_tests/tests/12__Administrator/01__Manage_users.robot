@@ -45,7 +45,7 @@ Validations for invite new user
         And the user should see an error    Your first name should have at least 2 characters.
         And the user should see an error    Please enter a last name.
         And the user should see an error    Your last name should have at least 2 characters.
-        And the user should see an error    Please enter your email address.
+        And the user should see an error    Please enter an email address.
 
 Client side validations for invite new user
         [Documentation]  IFS-27
@@ -57,7 +57,7 @@ Client side validations for invite new user
         Then the user should not see the validation error    Please enter a last name.
         And the user should see an error    Your last name should have at least 2 characters.
         When the user enters text to a text field    id=emailAddress    astle
-        Then the user should not see the validation error    Please enter your email address.
+        Then the user should not see the validation error    Please enter an email address.
         And the user should see an error    Please enter a valid email address.
         When the user enters text to a text field    id=firstName    Astle
         Then the user should not see the validation error    Please enter a first name.
@@ -66,7 +66,7 @@ Client side validations for invite new user
         Then the user should not see the validation error    Please enter a last name.
         And the user should not see the validation error    Your last name should have at least 2 characters.
         When the user enters text to a text field    id=emailAddress    astle.pimenta@innovateuk.test
-        Then the user should not see the validation error    Please enter your email address.
+        Then the user should not see the validation error    Please enter an email address.
         And the user should not see the validation error    Please enter a valid email address.
 
 Clicking the 'Manage users' link take the Administration back to the 'Manage Users' page

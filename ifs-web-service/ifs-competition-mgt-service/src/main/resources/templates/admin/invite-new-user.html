@@ -75,7 +75,7 @@
                    maxlength="256"
                    required="required"
                    th:attr="data-maxlength-errormessage=#{validation.standard.email.length.max(256)},
-                                    data-required-errormessage=#{validation.standard.email.required}" />
+                                    data-required-errormessage=#{validation.invite.email.required}" />
         </div>
         <div class="form-group" th:classappend="${#fields.hasErrors('*{role}')} ? 'form-group-error'">
             <label class="form-label" th:for="${#ids.next('role')}">
