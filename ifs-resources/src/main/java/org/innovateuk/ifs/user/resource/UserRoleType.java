@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -56,7 +55,7 @@ public enum UserRoleType {
     }
 
     public static List<String> roleNames(UserRoleType... roles){
-        return asList(roles).stream().map(r -> r.getName()).collect(toList());
+        return Arrays.stream(roles).map(UserRoleType::getName).collect(toList());
     }
 
     public static Set<UserRoleType> internalRoles(){

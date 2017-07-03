@@ -604,8 +604,10 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(roleServiceMock.findByUserRoleType(UserRoleType.PROJECT_FINANCE)).thenReturn(serviceSuccess(roleResources.get(0)));
         when(passwordPolicyValidatorMock.validatePassword(anyString(), any(UserResource.class))).thenReturn(serviceSuccess());
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "Passw0rd123")).thenReturn(serviceSuccess("new-uid"));
+        when(profileRepositoryMock.save(any(Profile.class))).thenReturn(newProfile().build());
         when(userMapperMock.mapToDomain(any(UserResource.class))).thenReturn(userToCreate);
-
+        when(idpServiceMock.activateUser("new-uid")).thenReturn(serviceSuccess("new-uid"));
+        when(userRepositoryMock.save(any(User.class))).thenReturn(userToCreate);
         ServiceResult<Void> result = service.createInternalUser("SomeInviteHash", internalUserRegistrationResource);
         assertTrue(result.isSuccess());
     }
