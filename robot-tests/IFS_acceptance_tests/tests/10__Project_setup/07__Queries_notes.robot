@@ -18,7 +18,6 @@ Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
 Resource          PS_Common.robot
-Resource          ../04__Applicant/Applicant_Commons.robot
 
 *** Variables ***
 ${opens_in_new_window}    (opens in a new window)
@@ -26,7 +25,7 @@ ${opens_in_new_window}    (opens in a new window)
 *** Test Cases ***
 Queries section is linked from eligibility and this selects eligibility on the query dropdown
     [Documentation]    INFUND-4840
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  finance contacts are selected and bank details are approved
     Given log in as a different user      &{internal_finance_credentials}
     When the user navigates to the page          ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/eligibility
@@ -34,12 +33,12 @@ Queries section is linked from eligibility and this selects eligibility on the q
     Then the user should see the text in the page    Raise finance queries to the organisation in this section
     When the user clicks the button/link    jQuery=.button:contains("Post a new query")
     Then the user should see the dropdown option selected    Eligibility    section
-    [Teardown]    the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
 Queries section is linked from viability and this selects viability on the query dropdown
     [Documentation]    INFUND-4840
     [Tags]
-    Given the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2)    # Clicking the viability link for lead partner
+    [Setup]  the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    Given the user clicks the button/link    jQuery=table.table-progress th:contains("Lead") + td a
     When the user clicks the button/link    jQuery=.button:contains("Queries")
     Then the user should see the text in the page    Raise finance queries to the organisation in this section
     When the user clicks the button/link    jQuery=.button:contains("Post a new query")
@@ -56,8 +55,8 @@ Queries section contains finance contact name, email and telephone
     [Documentation]    INFUND-4840
     [Tags]
     When the user should see the text in the page    Sarah Peacock
-    And the user should see the text in the page    74373688727
-    And the user should see the text in the page    ${successful_applicant_credentials["email"]}
+    And the user should see the text in the page     74373688727
+    And the user should see the element  jQuery=#content p:nth-of-type(1):contains(${successful_applicant_credentials["email"]})
 
 Viability and eligibility sections both available
     [Documentation]    INFUND-4840
@@ -164,8 +163,9 @@ New query can be cancelled
 
 Query can be re-entered
     [Documentation]    INFUND-4840
-    [Tags]
-    When the user clicks the button/link    jQuery=.button:contains("Post a new query")
+    [Tags]  HappyPath
+    When the user navigates to the page  ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/query?query_section=ELIGIBILITY
+    And the user clicks the button/link    jQuery=.button:contains("Post a new query")
     And the user enters text to a text field    id=queryTitle    an eligibility query's title
     And the user enters text to a text field    css=.editor    this is some query text
     And the user uploads the file    name=attachment    ${valid_pdf}
@@ -173,7 +173,7 @@ Query can be re-entered
 
 New query can be posted
     [Documentation]    INFUND-4840 INFUND-9546
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Post Query")
     Then the user should not see the element  jQuery=.button:contains("Post Query")
     And the user should see the text in the page    Lee Bowman - Innovate UK (Finance team)
@@ -324,7 +324,7 @@ Response to query server side validations
     [Documentation]    INFUND-4843
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Post response")
-    Then the user should see the text in the page    This field cannot be left blank.
+    Then The user should see a field error  This field cannot be left blank.
 
 Response to query client side validations
     [Documentation]    INFUND-4843
@@ -615,14 +615,14 @@ Note comments server side validations
     [Documentation]    INFUND-7756
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Save comment")
-    Then the user should see the element    jQuery=label[for="comment"] .error-message:contains(This field cannot be left blank.)
+    Then the user should see the element    jQuery=label[for="comment"] .error-message:contains("This field cannot be left blank.")
 
 Note comments client side validations
     [Documentation]    INFUND-7756
     [Tags]
     When the user enters text to a text field    css=.editor    this is some comment text
     And the user moves focus to the element    jQuery=.button:contains("Save comment")
-    Then the user should not see the element    jQuery=label[for="comment"] .error-message:contains(This field cannot be left blank.)
+    Then the user should not see the element    jQuery=label[for="comment"] .error-message:contains("This field cannot be left blank.")
 
 Word count validations for note comments
     [Documentation]    INFUND-7756
