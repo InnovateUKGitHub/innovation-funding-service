@@ -55,8 +55,9 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     private InviteRoleRepository inviteRoleRepository;
 
     @Autowired
-    RoleInviteMapper roleInviteMapper;
+    private RoleInviteMapper roleInviteMapper;
 
+    @Autowired
     private EmailService emailService;
 
     @Autowired
