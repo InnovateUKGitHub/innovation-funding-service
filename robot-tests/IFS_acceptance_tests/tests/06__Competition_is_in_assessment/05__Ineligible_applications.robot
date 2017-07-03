@@ -10,10 +10,11 @@ Documentation     INFUND-8942 - Filter and sorting on 'Ineligible applications' 
 ...               INFUND-7370 - As a member of the competitions team I can mark a submitted application as ineligible so that the application is not sent to be assessed
 ...
 ...               INFUND-8941 - As a member of the competitions team I can reinstate an application that as been marked as Ineligible
-Suite Setup       Guest user log-in in new browser    &{Comp_admin1_credentials}
+Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin    Applicant
 Resource          ../../resources/defaultResources.robot
+Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Test Cases ***
 A non submitted application cannot be marked as ineligible
@@ -40,19 +41,18 @@ Cancel marking the application as ineligible
 Client side validation - mark an application as ineligible
     [Documentation]    IFS-159
     [Tags]
-    Given the user clicks the button/link    jQuery=h2 button:contains("Mark application as ineligible")
-    And the user enters text to a text field   id=ineligibleReason    a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a
-    And the user moves focus to the element    jQuery=.button:contains("Cancel")
-    Then the user should see an error    Maximum word count exceeded. Please reduce your word count to 400.
-    [Teardown]    the user clicks the button/link    jQuery=h2 button:contains("Mark application as ineligible")
+    Given the user clicks the button/link                     jQuery=h2 button:contains("Mark application as ineligible")
+    And the user enters multiple strings into a text field    id=ineligibleReason  a${SPACE}  402
+    Then the user should see an error                         Maximum word count exceeded. Please reduce your word count to 400.
+    [Teardown]    the user clicks the button/link             jQuery=h2 button:contains("Mark application as ineligible")
 
 Mark an application as ineligible
     [Documentation]    INFUND-7370
     [Tags]    HappyPath
-    Given the user clicks the button/link    jQuery=h2 button:contains("Mark application as ineligible")
-    And the user enters text to a text field   id=ineligibleReason    Hello there
-    When the user clicks the button/link    jQuery=.button:contains("Mark application as ineligible")
-    Then the user should see the element    jQuery=td:contains("28")
+    Given the user clicks the button/link           jQuery=h2 button:contains("Mark application as ineligible")
+    And the user enters text to a text field        id=ineligibleReason    Hello there
+    When the user clicks the button/link            jQuery=.button:contains("Mark application as ineligible")
+    Then the user should see the element            jQuery=td:contains("28")
 
 Filter ineligible applications
     [Documentation]    INFUND-8942

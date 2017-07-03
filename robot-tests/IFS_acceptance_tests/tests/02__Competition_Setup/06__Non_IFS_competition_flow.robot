@@ -15,13 +15,13 @@ Resource          CompAdmin_Commons.robot
 Create new non-IFS competition by proj Finance
     [Documentation]    INFUND-7963 INFUND-7964
     [Tags]  HappyPath
-    Given Guest user log-in in new browser    &{internal_finance_credentials}
+    Given The user logs-in in new browser   &{internal_finance_credentials}
     When the user navigates to the Non IFS competitions tab
     And the user clicks the button/link     link=Create non-IFS competition
-    Then the user should see the element  jQuery=h1:contains("Non-IFS competition details")
+    Then the user should see the element    jQuery=h1:contains("Non-IFS competition details")
     When the user clicks the button/link    link=Back to all competitions
     And the user navigates to the Non IFS competitions tab
-    Then the user should see the element  link=No competition title defined
+    Then the user should see the element    link=No competition title defined
 
 Validation errors on non-IFS competition details
     [Documentation]    INFUND-7964
@@ -57,7 +57,7 @@ Non-IFS public content
     Given the user should see the element  jQuery=h1:contains("Public content")
     When the user fills in the Public content and publishes
     Then the user should see the element       jQuery=small:contains("Last published")
-    And the user should not see the element    jQuery=button:contains("Publish public content")
+    And the user should not see the element    jQuery=button:contains("Publish content")
     Then the user clicks the button/link  link=Return to non-IFS competition details
     And the user clicks the button/link   jQuery=button:contains("Save and continue")
 

@@ -609,7 +609,7 @@ the pre-field date should be correct
     Should Be Equal As Strings    ${DAY}    1
 
 the resubmission should not have a default selection
-    the user sees that the radio button is not selected    resubmission
+    the user should see the element  css=[name="resubmission"]:not(:checked) ~ label
 
 The user enters valid data in the initial details
     Given the user enters text to a text field                css=#title  Competition title
@@ -675,7 +675,7 @@ the user should not see the assessed question feedback
     the user should not see the text in the page    There is little or no business drive to the project.
 
 Custom suite setup
-    Guest user log-in in new browser    &{Comp_admin1_credentials}
+    The user logs-in in new browser  &{Comp_admin1_credentials}
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
 

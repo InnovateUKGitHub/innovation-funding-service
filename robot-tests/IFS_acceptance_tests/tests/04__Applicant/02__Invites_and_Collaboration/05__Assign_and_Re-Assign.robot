@@ -20,7 +20,7 @@ Suite Teardown    The user closes the browser
 Test Teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
-Resource          ../FinanceSection_Commons.robot
+Resource          ../Applicant_Commons.robot
 
 *** Variables ***
 # This suite uses application: Assign test
@@ -31,7 +31,7 @@ Lead applicant can assign a question
     ...
     ...    This test depends on the previous test suite to run first
     [Tags]    Email    HappyPath
-    [Setup]    Guest user log-in in new browser    ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
+    [Setup]  the user logs-in in new browser  ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     #This test depends on the previous test suite to run first
     Given the applicant changes the name of the application
     And the user clicks the button/link    link= Public description
@@ -191,7 +191,7 @@ Lead selects Research category
     [Setup]  log in as a different user       ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     # this test is tagged as Email since it relies on an earlier invitation being accepted via email
     Given the user navigates to Your-finances page     Assign test
-    Then the user should see the element      jQuery=p:contains("You must select a research category in application details")
+    Then the user should see the element      jQuery=p:contains("You must select a research category in"):contains("application details")
     When the user navigates to the page       ${DASHBOARD_URL}
     Then the user clicks the button/link      link=Assign test
     When the user clicks the button/link      link=Application details

@@ -124,30 +124,38 @@ public class ApplicationNavigationPopulator {
     }
 
     /**
-     * This method creates a URL looking at referer in request.  Because 'back' will be different depending on
-     * whether the user arrived at this page via PS pages and summary vs App pages input form/overview. (INFUND-6892)
+     * This method creates a URL looking at referrer in request.  Because 'back' will be different depending on
+     * whether the user arrived at this page via PS pages and summary vs App pages input form/overview. (INFUND-6892 & IFS-401)
      */
-    public void addAppropriateBackURLToModel(Long applicationId, Model model, SectionResource section) {
+    public void addAppropriateBackURLToModel(Long applicationId, Model model, SectionResource section, Optional<Long> applicantOrganisationId) {
         if (section != null && SectionType.FINANCE.equals(section.getType().getParent().orElse(null))) {
             model.addAttribute("backTitle", "Your finances");
-            model.addAttribute("backURL", "/application/" + applicationId + "/form/" + SectionType.FINANCE.name());
+            if (applicantOrganisationId.isPresent()) {
+                model.addAttribute("backURL", "/application/" + applicationId + "/form/section/" + section.getParentSection() + "/" + applicantOrganisationId.get());
+            } else {
+                model.addAttribute("backURL", "/application/" + applicationId + "/form/" + SectionType.FINANCE.name());
+            }
         } else {
             ApplicationResource application = applicationService.getById(applicationId);
             String backURL = "/application/" + applicationId;
 
-            if (eitherApplicationOrCompetitionAreNotOpen(application)) {
-                model.addAttribute("backTitle", "Application summary");
-                backURL += "/summary";
-            } else {
+            if (applicantOrganisationId.isPresent()) {
                 model.addAttribute("backTitle", "Application overview");
+                backURL = ("/management/competition/" + section.getCompetition() + backURL);
+            } else {
+                if (eitherApplicationOrCompetitionAreNotOpen(application)) {
+                    model.addAttribute("backTitle", "Application summary");
+                    backURL += "/summary";
+                } else {
+                    model.addAttribute("backTitle", "Application overview");
+                }
             }
 
             model.addAttribute("backURL", backURL);
         }
     }
 
-
     private boolean eitherApplicationOrCompetitionAreNotOpen(ApplicationResource application) {
-        return !application.isOpen() || !application.getCompetitionStatus().equals(OPEN);
+        return !application.isOpen() || !(application.getCompetitionStatus().ordinal() >= OPEN.ordinal());
     }
 }
