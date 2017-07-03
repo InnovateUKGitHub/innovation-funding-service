@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.management.viewmodel;
 
-import javafx.scene.control.Pagination;
-
 import java.util.List;
 import java.util.Optional;
 

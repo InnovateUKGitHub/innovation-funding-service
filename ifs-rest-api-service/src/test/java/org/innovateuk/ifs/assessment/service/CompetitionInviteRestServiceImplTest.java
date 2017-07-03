@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
 
@@ -22,6 +23,8 @@ import static org.innovateuk.ifs.invite.builder.AssessorInvitesToSendResourceBui
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBuilder.newAvailableAssessorPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
+import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteListResourceBuilder.newExistingUserStagedInviteListResource;
+import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceBuilder.newNewUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
@@ -156,6 +159,23 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     }
 
     @Test
+    public void getAvailableAssessors_all() throws Exception {
+        long competitionId = 1L;
+        Optional<Long> innovationArea = of(2L);
+
+        List<Long> assessorItems = asList(1L, 2L);
+
+        setupGetWithRestResultExpectations(
+                format("%s/%s/%s?all&innovationArea=2", restUrl, "getAvailableAssessors", competitionId),
+                ParameterizedTypeReferences.longsListType(),
+                assessorItems
+        );
+
+        List<Long> actual = service.getAvailableAssessorIds(competitionId, innovationArea).getSuccessObject();
+        assertEquals(assessorItems, actual);
+    }
+
+    @Test
     public void getCreatedInvites() throws Exception {
         long competitionId = 1L;
         int page = 1;
@@ -218,7 +238,7 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
 
     @Test
     public void inviteUser() {
-        ExistingUserStagedInviteResource existingUserStagesInviteResource = new ExistingUserStagedInviteResource("firstname.example@example.com", 1L);
+        ExistingUserStagedInviteResource existingUserStagesInviteResource = new ExistingUserStagedInviteResource(2L, 1L);
         CompetitionInviteResource expected = newCompetitionInviteResource().build();
 
         setupPostWithRestResultExpectations(format("%s/%s", restUrl, "inviteUser"), CompetitionInviteResource.class, existingUserStagesInviteResource, expected, OK);
@@ -244,6 +264,25 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
         setupPostWithRestResultExpectations(format("%s/%s/%s", restUrl, "inviteNewUsers", competitionId), newUserStagedInviteListResource, OK);
 
         RestResult<Void> restResult = service.inviteNewUsers(newUserStagedInviteListResource, competitionId);
+        assertTrue(restResult.isSuccess());
+    }
+
+    @Test
+    public void inviteUsers() throws Exception {
+        long competitionId = 1L;
+
+        ExistingUserStagedInviteListResource existingUserStagedInviteListResource = newExistingUserStagedInviteListResource()
+                .withInvites(
+                        newExistingUserStagedInviteResource()
+                                .withUserId(1L, 2L)
+                                .withCompetitionId(competitionId)
+                                .build(2)
+                )
+                .build();
+
+        setupPostWithRestResultExpectations(format("%s/%s", restUrl, "inviteUsers"), existingUserStagedInviteListResource, OK);
+
+        RestResult<Void> restResult = service.inviteUsers(existingUserStagedInviteListResource);
         assertTrue(restResult.isSuccess());
     }
 

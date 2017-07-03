@@ -1,0 +1,186 @@
+=== Get all invites to send
+==== Request
+include::{snippets}/competitioninvite/get-all-invites-to-send/http-request.adoc[]
+include::{snippets}/competitioninvite/get-all-invites-to-send/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competitioninvite/get-all-invites-to-send/http-response.adoc[]
+include::{snippets}/competitioninvite/get-all-invites-to-send/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/get-all-invites-to-send/curl-request.adoc[]
+
+=== Get invite by hash
+==== Request
+include::{snippets}/competitioninvite/get-invite/http-request.adoc[]
+include::{snippets}/competitioninvite/get-invite/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competitioninvite/get-invite/http-response.adoc[]
+include::{snippets}/competitioninvite/get-invite/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/get-invite/curl-request.adoc[]
+
+=== Open invite by hash
+==== Request
+include::{snippets}/competitioninvite/open-invite/http-request.adoc[]
+include::{snippets}/competitioninvite/open-invite/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competitioninvite/open-invite/http-response.adoc[]
+include::{snippets}/competitioninvite/open-invite/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/open-invite/curl-request.adoc[]
+
+=== Accept invite by hash
+==== Request
+include::{snippets}/competitioninvite/accept-invite/http-request.adoc[]
+include::{snippets}/competitioninvite/accept-invite/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competitioninvite/accept-invite/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/accept-invite/curl-request.adoc[]
+
+=== Reject invite by hash and competition rejection
+==== Request
+include::{snippets}/competitioninvite/reject-invite/http-request.adoc[]
+include::{snippets}/competitioninvite/reject-invite/path-parameters.adoc[]
+include::{snippets}/competitioninvite/reject-invite/request-fields.adoc[]
+
+==== Response
+include::{snippets}/competitioninvite/reject-invite/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/reject-invite/curl-request.adoc[]
+
+=== Check if existing user by hash
+==== Request
+include::{snippets}/competitioninvite/check-existing-user/http-request.adoc[]
+include::{snippets}/competitioninvite/check-existing-user/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competitioninvite/check-existing-user/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/check-existing-user/curl-request.adoc[]
+
+=== Get all available assessors by competition
+==== Request
+include::{snippets}/competitioninvite/get-available-assessors/http-request.adoc[]
+include::{snippets}/competitioninvite/get-available-assessors/path-parameters.adoc[]
+include::{snippets}/competitioninvite/get-available-assessors/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/competitioninvite/get-available-assessors/http-response.adoc[]
+include::{snippets}/competitioninvite/get-available-assessors/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/get-available-assessors/curl-request.adoc[]
+
+=== Get the assessor invite list for a competition
+==== Request
+include::{snippets}/competitioninvite/get-created-invites/http-request.adoc[]
+include::{snippets}/competitioninvite/get-created-invites/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competitioninvite/get-created-invites/http-response.adoc[]
+include::{snippets}/competitioninvite/get-created-invites/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/get-created-invites/curl-request.adoc[]
+
+=== Get the overview of all invitations by competition
+==== Request
+include::{snippets}/competitioninvite/get-invitation-overview/http-request.adoc[]
+include::{snippets}/competitioninvite/get-invitation-overview/path-parameters.adoc[]
+include::{snippets}/competitioninvite/get-invitation-overview/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/competitioninvite/get-invitation-overview/http-response.adoc[]
+include::{snippets}/competitioninvite/get-invitation-overview/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/get-invitation-overview/curl-request.adoc[]
+
+=== Get the invite statistics by competition
+==== Request
+include::{snippets}/competitioninvite/get-invite-statistics/http-request.adoc[]
+include::{snippets}/competitioninvite/get-invite-statistics/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competitioninvite/get-invite-statistics/http-response.adoc[]
+include::{snippets}/competitioninvite/get-invite-statistics/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/get-invite-statistics/curl-request.adoc[]
+
+=== Add a user to the assessor invite list for a competition
+==== Request
+include::{snippets}/competitioninvite/invite-user/http-request.adoc[]
+include::{snippets}/competitioninvite/invite-user/request-fields.adoc[]
+
+==== Response
+include::{snippets}/competitioninvite/invite-user/http-response.adoc[]
+include::{snippets}/competitioninvite/invite-user/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/invite-user/curl-request.adoc[]
+
+=== Add existing users to the assessor invite list for a competition
+==== Request
+include::{snippets}/competitioninvite/invite-users/http-request.adoc[]
+include::{snippets}/competitioninvite/invite-users/request-fields.adoc[]
+
+==== Response
+include::{snippets}/competitioninvite/invite-users/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/invite-users/curl-request.adoc[]
+
+=== Add a new user to the assessor invite list for a competition
+==== Request
+include::{snippets}/competitioninvite/invite-new-user/http-request.adoc[]
+include::{snippets}/competitioninvite/invite-new-user/request-fields.adoc[]
+
+==== Response
+include::{snippets}/competitioninvite/invite-new-user/http-response.adoc[]
+include::{snippets}/competitioninvite/invite-new-user/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/invite-new-user/curl-request.adoc[]
+
+=== Add new users to the assessor invite list for a competition
+==== Request
+include::{snippets}/competitioninvite/invite-new-users/http-request.adoc[]
+include::{snippets}/competitioninvite/invite-new-users/path-parameters.adoc[]
+include::{snippets}/competitioninvite/invite-new-users/request-fields.adoc[]
+
+==== Response
+include::{snippets}/competitioninvite/invite-new-users/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/invite-new-users/curl-request.adoc[]
+
+=== Delete a user from the assessor invite list for a competition
+==== Request
+include::{snippets}/competitioninvite/delete-invite/http-request.adoc[]
+include::{snippets}/competitioninvite/delete-invite/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/competitioninvite/delete-invite/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/delete-invite/curl-request.adoc[]
+
+=== Send all invites
+==== Request
+include::{snippets}/competitioninvite/send-all-invites/http-request.adoc[]
+include::{snippets}/competitioninvite/send-all-invites/path-parameters.adoc[]
+include::{snippets}/competitioninvite/send-all-invites/request-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/send-all-invites/curl-request.adoc[]

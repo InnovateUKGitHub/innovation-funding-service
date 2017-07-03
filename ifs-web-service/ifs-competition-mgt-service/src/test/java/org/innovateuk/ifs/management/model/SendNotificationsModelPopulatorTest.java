@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Optional.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.innovateuk.ifs.application.resource.FundingDecision.*;
@@ -62,7 +63,7 @@ public class SendNotificationsModelPopulatorTest {
         ApplicationSummaryPageResource applicationResults = new ApplicationSummaryPageResource();
         applicationResults.setContent(Arrays.asList(application1, application2, application3));
 
-        when(applicationSummaryRestServiceMock.getAllApplications(COMPETITION_ID, null, 0, Integer.MAX_VALUE, null)).thenReturn(restSuccess(applicationResults));
+        when(applicationSummaryRestServiceMock.getAllApplications(COMPETITION_ID, null, 0, Integer.MAX_VALUE, empty())).thenReturn(restSuccess(applicationResults));
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
         List<Long> requestedIds = Arrays.asList(application1.getId(), application3.getId());

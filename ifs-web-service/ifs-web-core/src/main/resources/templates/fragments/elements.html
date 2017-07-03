@@ -43,18 +43,24 @@
 </th:block>
 
 <!-- ===========================Element: Header links =========================== -->
-<th:block th:fragment="header-links">
-    <a href="/"  id="proposition-name">Innovation Funding Service</a>
+<th:block th:fragment="header-links" th:with="loggedIn=${#authentication} ? ${#authorization.expression('isAuthenticated()')} : false">
+    <a href="/competition/search"  id="proposition-name">Innovation Funding Service</a>
     <ul id="proposition-links">
-        <th:block th:if="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}">
-            <li th:unless="${hideDashboardLink} == 'true'">
-                <a th:href="${userDashboardLink}" th:class="${#httpServletRequest.requestURI == userDashboardLink ? 'active' : ''}">My dashboard</a>
+        <th:block th:if="${loggedIn}">
+            <li th:unless="${hideDashboardLink}">
+                <a th:href="${userDashboardLink}" th:classappend="${#httpServletRequest.requestURI == userDashboardLink} ? 'active'">Dashboard</a>
+            </li>
+            <li th:unless="${hideDashboardLink} or ${#strings.isEmpty(userProfileLink)}">
+                <a th:href="${userProfileLink}" th:classappend="${(#httpServletRequest.requestURI == userProfileLink)} ? 'active'">Profile</a>
+            </li>
+            <li th:if="${showManageUsersLink}">
+                <a href="/management/admin/users/active" th:classappend="${(#httpServletRequest.requestURI == '/management/admin/users/active')} ? 'active'">Manage users</a>
             </li>
             <li>
                 <a th:href="${logoutUrl}">Sign out</a>
             </li>
         </th:block>
-        <th:block th:unless="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}">
+        <th:block th:unless="${loggedIn}">
             <li>
                 <a href="/">Sign in</a>
             </li>
@@ -198,7 +204,7 @@
             <input id="agree-state-aid-page" th:field="${form.stateAidAgreed}" type="checkbox" value="yes" data-switches-button-status="#mark-all-as-complete" />
             <label for="agree-state-aid-page">
                 By ticking this box you are accepting that the project costs for your organisation are eligible as defined in the
-                <a href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance">project costs guidance</a>
+                <a target="_blank" href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance">project costs guidance (opens in a new window)</a>
             </label>
         </div>
     </div>

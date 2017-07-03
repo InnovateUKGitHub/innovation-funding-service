@@ -4,11 +4,14 @@ import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.management.form.IneligibleApplicationsForm;
-import org.innovateuk.ifs.management.viewmodel.*;
+import org.innovateuk.ifs.management.viewmodel.IneligibleApplicationsRowViewModel;
+import org.innovateuk.ifs.management.viewmodel.IneligibleApplicationsViewModel;
+import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -35,7 +38,7 @@ public class IneligibleApplicationsModelPopulator {
                         sorting,
                         page,
                         20,
-                        filterForm.getFilterSearch(),
+                        Optional.of(filterForm.getFilterSearch()),
                         filterForm.getFilterInform())
                 .getSuccessObjectOrThrowException();
 

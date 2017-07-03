@@ -51,7 +51,7 @@ Proj Finance user can send Fund Decision notification
     Given the user navigates to the page     ${funders_panel_competition_url}
     When the user clicks the button/link     jQuery=a:contains("Manage funding notifications")
     Then the user should see the element     jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
-    And the user should see the element      jQuery=button.disabled:contains("Write and send email")
+    And the user should see the element      jQuery=button[disabled]:contains("Write and send email")
     When the user selects the checkbox       app-row-${application_ids["${FUNDERS_PANEL_APPLICATION_1_TITLE}"]}
     Then the user clicks the button/link     jQuery=button:contains("Write and send email")
     And the user should see the element      css=#subject[value^="Notification regarding your application"]
@@ -83,12 +83,20 @@ Internal user can filter notified applications
     And the user clicks the button/link        jQuery=button:contains("Filter")
     Then the user should see the element       jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
 
-External user reads his email
+External lead applicant reads his email
     [Documentation]  INFUND-7376
     [Tags]  HappyPath
-    Given the external user reads his email and can see the correct status  Awaiting  ${application1Subject}  ${onholdmessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  ${test_mailbox_one}+fundsuccess@gmail.com
-    Then the user should not see the element  jQuery=div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("Unsuccessful")
-    And the user should not see the element   jQuery=div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("Successful")
+    verify the user has received the on hold email  ${test_mailbox_one}+fundsuccess@gmail.com
+
+External collaborators read their email
+    [Documentation]  IFS-360
+    [Tags]  HappyPath
+    verify the user has received the on hold email    ${lead_applicant}
+    verify the user has received the on hold email    ${collaborator1_credentials["email"]}
+    verify the user has received the on hold email    ${collaborator2_credentials["email"]}
+    verify the user has received the on hold email    ${lead_applicant_alternative_user_credentials["email"]}
+    verify the user has received the on hold email    ${collaborator1_alternative_user_credentials["email"]}
+    verify the user has received the on hold email    ${collaborator2_alternative_user_credentials["email"]}
 
 Unsuccessful Funding Decision
     [Documentation]  INFUND-7376 INFUND-7377
@@ -133,7 +141,7 @@ Once all final decisions have been made and emails are sent Comp moves to Inform
 
 *** Keywords ***
 Custom Suite Setup
-    guest user log-in  &{Comp_admin1_credentials}
+    The user logs-in in new browser  &{Comp_admin1_credentials}
     ${today}  get today
     set suite variable  ${today}
 
@@ -158,7 +166,7 @@ the server side validation should be triggered
 
 the user cancels the process needs to re-select the reciepients
     the user clicks the button/link  jQuery=a:contains("Cancel")
-    the user should see the element  jQuery=button.disabled:contains("Write and send email")
+    the user should see the element  jQuery=button[disabled]:contains("Write and send email")
     the user selects the checkbox    app-row-${application_ids["${FUNDERS_PANEL_APPLICATION_1_TITLE}"]}
     the user clicks the button/link  jQuery=button:contains("Write and send email")
 
@@ -190,3 +198,9 @@ the external user reads his email and can see the correct status
     the user reads his email         ${mail}  ${subject}  ${message}
     the user navigates to the page   ${server}/applicant/dashboard
     the user should see the element  jQuery=div:contains("${application}") + div:contains("${decision}")
+
+verify the user has received the on hold email
+    [Arguments]  ${email_user}
+    Given the external user reads his email and can see the correct status  Awaiting  ${application1Subject}  ${onholdmessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  ${email_user}
+    Then the user should not see the element  jQuery=div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("Unsuccessful")
+    And the user should not see the element   jQuery=div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("Successful")

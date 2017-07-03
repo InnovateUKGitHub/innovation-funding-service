@@ -8,9 +8,11 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.user.resource.UserRoleType.IFS_ADMINISTRATOR;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * User Data Transfer Object
@@ -195,6 +197,23 @@ public class UserResource {
 
     public void setAllowMarketingEmails(boolean allowMarketingEmails) {
         this.allowMarketingEmails = allowMarketingEmails;
+    }
+
+    /**
+     * Currently only used for IFS-605 to display role for internal users
+     * @return Single role display string. (may show comma separated roles if multiple exist.  Except for IFS_Administrator
+     * See IFS-656.
+     */
+    @JsonIgnore
+    public String getRolesString(){
+        //TODO: Replace and simplify this once IFS-656 is implemented
+        if(roles.size() > 0 && roles.stream().anyMatch(role -> role.getName().equals(IFS_ADMINISTRATOR.getName()))){
+            return IFS_ADMINISTRATOR.getDisplayName();
+        } else {    // Most are not yet hierarchical so in most cases this will also return single role at present.
+            return roles.stream()
+                    .map(RoleResource::getDisplayName)
+                    .collect(Collectors.joining(", "));
+        }
     }
 
     @Override

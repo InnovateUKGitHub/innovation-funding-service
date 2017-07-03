@@ -3,7 +3,7 @@ Documentation     INFUND-887 : As an applicant I want the option to look up my b
 ...
 ...               INFUND-890 : As an applicant I want to use UK postcode lookup function to look up and enter my business address details as they won't necessarily be the same as the address held by Companies House, so ...
 Suite Setup       Applicant goes to the create organisation page
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 Resource          ../../10__Project_setup/PS_Common.robot
