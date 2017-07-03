@@ -42,9 +42,9 @@ items:
           - name: HTTPPORT
             value: "9080"
           - name: LDAPURL
-            value: "ldap://ldap:389"
+            value: "ldaps://ldap:389"
           - name: LDAPRURL
-            value: "ldap://ldap:389"
+            value: "ldaps://ldap:389"
           - name: LDAPPORT
             value: "389"
           ports:
