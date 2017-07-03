@@ -41,8 +41,6 @@ public interface AssessorStatisticsRepository extends PagingAndSortingRepository
 
     @Query(APPLICATION_FILTER)
     Page<AssessorStatistics> findByCompetitionParticipantCompetitionIdAndApplicationProcessActivityStateStateIn(@Param("compId") long competitionId,
-//                                                                                                                @Param("states") Collection<State> applicationStates,
-//                                                                                                                @Param("filter") String filter,
                                                                                                                 Pageable pageable);
 
     Set<AssessmentStates> ASSESSOR_STATES = EnumSet.complementOf(EnumSet.of(REJECTED, WITHDRAWN)); // want the backing states
@@ -62,9 +60,10 @@ public interface AssessorStatisticsRepository extends PagingAndSortingRepository
             "  user.id, " +
             "  concat(user.firstName, ' ', user.lastName), " +
             "  profile.skillsAreas, " +
-            "  coalesce( sum(case when activityState.state NOT IN " + REJECTED_STATES_STRING     + " THEN 1 ELSE 0 END), 0), " + // assigned
-            "  coalesce( sum(case when activityState.state NOT IN " + NOT_ACCEPTED_STATES_STRING + " THEN 1 ELSE 0 END), 0), " + // accepted
-            "  coalesce( sum(case when activityState.state     IN " + SUBMITTED_STATES_STRING    + " THEN 1 ELSE 0 END), 0) " +  // submitted
+            "  sum(case when activityState.state NOT IN " + REJECTED_STATES_STRING     + " THEN 1 ELSE 0 END), " + // total assigned
+            "  sum(case when competitionParticipant.competition.id = :compId AND activityState.state NOT IN " + REJECTED_STATES_STRING     + " THEN 1 ELSE 0 END), " + // assigned
+            "  sum(case when competitionParticipant.competition.id = :compId AND activityState.state NOT IN " + NOT_ACCEPTED_STATES_STRING + " THEN 1 ELSE 0 END), " + // accepted
+            "  sum(case when competitionParticipant.competition.id = :compId AND activityState.state     IN " + SUBMITTED_STATES_STRING    + " THEN 1 ELSE 0 END)  " +  // submitted
             ") " +
             "FROM User user " +
             "JOIN CompetitionParticipant competitionParticipant ON competitionParticipant.user = user " +
@@ -75,9 +74,9 @@ public interface AssessorStatisticsRepository extends PagingAndSortingRepository
             "LEFT JOIN ActivityState activityState ON assessment.activityState = activityState.id " +
             "WHERE " +
             "  (str(user.id) LIKE CONCAT('%', :filter, '%') OR 1=1) AND " +
-            "  competitionParticipant.competition.id = :compId AND " +
             "  competitionParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED " +
-            "GROUP BY user, profile ")
+            "GROUP BY user, profile " +
+            "HAVING sum(case when competitionParticipant.competition.id = :compId THEN 1 ELSE 0 END) > 0")
     Page<AssessorCountSummaryResource> getAssessorCountSummaryByCompetition(@Param("compId") long competitionId,
 //                                                                            @Param("submittedStates") Collection<State> submittedStates, // do we need to filter ineligible?
                                                                             @Param("filter") String filter,

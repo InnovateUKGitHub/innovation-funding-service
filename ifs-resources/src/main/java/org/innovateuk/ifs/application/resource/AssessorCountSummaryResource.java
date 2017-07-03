@@ -9,19 +9,19 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public class AssessorCountSummaryResource extends AssessmentCountSummaryResource {
     private String name;
     private String skillAreas;
+    private long totalAssigned;
     private long assigned;
     private long accepted;
     private long submitted;
 
-    // TODO we need to add the total here instead of just taking the sum of these double counts
-
     public AssessorCountSummaryResource() {
     }
 
-    public AssessorCountSummaryResource(long id, String name, String skillAreas, long assigned, long accepted, long submitted) {
+    public AssessorCountSummaryResource(long id, String name, String skillAreas, long totalAssigned, long assigned, long accepted, long submitted) {
         super(id);
         this.name = name;
         this.skillAreas = skillAreas;
+        this.totalAssigned = totalAssigned;
         this.assigned = assigned;
         this.accepted = accepted;
         this.submitted = submitted;
@@ -41,6 +41,14 @@ public class AssessorCountSummaryResource extends AssessmentCountSummaryResource
 
     public void setSkillAreas(String skillAreas) {
         this.skillAreas = skillAreas;
+    }
+
+    public long getTotalAssigned() {
+        return totalAssigned;
+    }
+
+    public void setTotalAssigned(long totalAssigned) {
+        this.totalAssigned = totalAssigned;
     }
 
     public long getAssigned() {
@@ -77,6 +85,7 @@ public class AssessorCountSummaryResource extends AssessmentCountSummaryResource
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
+                .append(totalAssigned, that.totalAssigned)
                 .append(assigned, that.assigned)
                 .append(accepted, that.accepted)
                 .append(submitted, that.submitted)
@@ -91,6 +100,7 @@ public class AssessorCountSummaryResource extends AssessmentCountSummaryResource
                 .appendSuper(super.hashCode())
                 .append(name)
                 .append(skillAreas)
+                .append(totalAssigned)
                 .append(assigned)
                 .append(accepted)
                 .append(submitted)

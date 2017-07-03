@@ -18,10 +18,10 @@ public class ManageAssessorsRowViewModel {
         this.id = assessorCountSummaryResource.getId();
         this.name = assessorCountSummaryResource.getName();
         this.skillAreas = assessorCountSummaryResource.getSkillAreas();
+        this.total = assessorCountSummaryResource.getTotalAssigned();
         this.assigned = assessorCountSummaryResource.getAssigned();
         this.accepted = assessorCountSummaryResource.getAccepted();
         this.submitted = assessorCountSummaryResource.getSubmitted();
-        this.total = assigned + accepted + submitted;
     }
 
     public long getId() {
