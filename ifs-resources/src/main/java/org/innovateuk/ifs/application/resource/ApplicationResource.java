@@ -17,7 +17,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Set;
 
+import static com.google.common.collect.Sets.immutableEnumSet;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
@@ -32,9 +34,16 @@ public class ApplicationResource {
     private static final List<CompetitionStatus> PUBLISHED_ASSESSOR_FEEDBACK_COMPETITION_STATES = singletonList(PROJECT_SETUP);
 
     private static final List<CompetitionStatus> EDITABLE_ASSESSOR_FEEDBACK_COMPETITION_STATES = asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK);
-    private static final List<CompetitionStatus> SUBMITTABLE_COMPETITION_STATES = asList(OPEN);
-    private static final List<ApplicationState> SUBMITTED_APPLICATION_STATES =
-            asList(ApplicationState.SUBMITTED, ApplicationState.APPROVED, ApplicationState.REJECTED);
+    private static final List<CompetitionStatus> SUBMITTABLE_COMPETITION_STATES = singletonList(OPEN);
+
+    private static final Set<ApplicationState> SUBMITTED_APPLICATION_STATES = immutableEnumSet(
+            ApplicationState.SUBMITTED,
+            ApplicationState.APPROVED,
+            ApplicationState.REJECTED,
+            ApplicationState.INELIGIBLE,
+            ApplicationState.INELIGIBLE_INFORMED
+    );
+
     private Long id;
 
     @NotBlank(message ="{validation.project.name.must.not.be.empty}")

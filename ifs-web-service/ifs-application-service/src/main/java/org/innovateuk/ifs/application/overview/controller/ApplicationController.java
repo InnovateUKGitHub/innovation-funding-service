@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static java.lang.String.format;
+
 /**
  * This controller will handle all requests that are related to the application overview.
  * Application overview is the page that contains the most basic information about the current application and
@@ -48,9 +50,15 @@ public class ApplicationController {
     private AssessorQuestionFeedbackPopulator assessorQuestionFeedbackPopulator;
 
     @GetMapping("/{applicationId}")
-    public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
+    public String applicationDetails(ApplicationForm form,
+                                     Model model,
+                                     @PathVariable("applicationId") long applicationId,
                                      UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
+
+        if (application.hasBeenSubmitted()) {
+            return format("redirect:/application/%s/summary", application.getId());
+        }
 
         if (form == null) {
             form = new ApplicationForm();
