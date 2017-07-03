@@ -61,5 +61,16 @@ public class InviteUserControllerTest  extends BaseControllerMockMVCTest<InviteU
         verify(inviteUserServiceMock).getInvite("SomeHashString");
 
     }
+
+    @Test
+    public void checkExistingUser() throws Exception {
+
+        when(inviteUserServiceMock.checkExistingUser("SomeHashString")).thenReturn(serviceSuccess(true));
+
+        mockMvc.perform(get("/inviteUser/checkExistingUser/SomeHashString")).andExpect(status().isOk());
+
+        verify(inviteUserServiceMock).checkExistingUser("SomeHashString");
+
+    }
 }
 
