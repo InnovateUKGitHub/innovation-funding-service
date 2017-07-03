@@ -25,75 +25,79 @@ Administrator can see the read only view of internal user profile
     And the user should see the element   jQuery=.form-footer__info:contains("Created by IFS System Maintenance User")
 
 Administrator can see the 'Add a new internal user' link
-        [Documentation]  IFS-27
-        [Tags]
-        When the user clicks the button/link  link=Manage users
-        Then the user should see the element   link=Add a new internal user
+    [Documentation]  IFS-27
+    [Tags]
+    When the user clicks the button/link  link=Manage users
+    Then the user should see the element   link=Add a new internal user
 
 Administrator can navigate to 'Add a new internal user' link
-        [Documentation]  IFS-27
-        [Tags]
-        When the user clicks the button/link  link=Add a new internal user
-        Then the user should see the text in the page    Add a new internal user
-        and the user should see the text in the page    Enter the new internal user's details below to add them to your invite list.
+    [Documentation]  IFS-27
+    [Tags]
+    When the user clicks the button/link  link=Add a new internal user
+    Then the user should see the text in the page    Add a new internal user
+    and the user should see the text in the page    Enter the new internal user's details below to add them to your invite list.
 
 Validations for invite new user
-        [Documentation]  IFS-27
-        [Tags]
-        When the user clicks the button/link    jQuery=.button:contains("Send invite")
-        Then the user should see an error    Please enter a first name.
-        And the user should see an error    Your first name should have at least 2 characters.
-        And the user should see an error    Please enter a last name.
-        And the user should see an error    Your last name should have at least 2 characters.
-        And the user should see an error    Please enter an email address.
+    [Documentation]  IFS-27
+    [Tags]
+    When the user clicks the button/link    jQuery=.button:contains("Send invite")
+    Then the user should see an error    Please enter a first name.
+    And the user should see an error    Your first name should have at least 2 characters.
+    And the user should see an error    Please enter a last name.
+    And the user should see an error    Your last name should have at least 2 characters.
+    And the user should see an error    Please enter an email address.
 
 Client side validations for invite new user
-        [Documentation]  IFS-27
-        [Tags]
-        When the user enters text to a text field    id=firstName    A
-        Then the user should not see the validation error    Please enter a first name.
-        And the user should see an error    Your first name should have at least 2 characters.
-        When the user enters text to a text field    id=lastName    D
-        Then the user should not see the validation error    Please enter a last name.
-        And the user should see an error    Your last name should have at least 2 characters.
-        When the user enters text to a text field    id=emailAddress    astle
-        Then the user should not see the validation error    Please enter an email address.
-        And the user should see an error    Please enter a valid email address.
-        When the user enters text to a text field    id=firstName    Astle
-        Then the user should not see the validation error    Please enter a first name.
-        And the user should not see the validation error    Your first name should have at least 2 characters.
-        When the user enters text to a text field    id=lastName    Pimenta
-        Then the user should not see the validation error    Please enter a last name.
-        And the user should not see the validation error    Your last name should have at least 2 characters.
-        When the user enters text to a text field    id=emailAddress    astle.pimenta@innovateuk.test
-        Then the user should not see the validation error    Please enter an email address.
-        And the user should not see the validation error    Please enter a valid email address.
+    [Documentation]  IFS-27
+    [Tags]
+    When the user enters text to a text field    id=firstName    A
+    Then the user should not see the validation error    Please enter a first name.
+    And the user should see an error    Your first name should have at least 2 characters.
+    When the user enters text to a text field    id=lastName    D
+    Then the user should not see the validation error    Please enter a last name.
+    And the user should see an error    Your last name should have at least 2 characters.
+    When the user enters text to a text field    id=emailAddress    astle
+    Then the user should not see the validation error    Please enter an email address.
+    And the user should see an error    Please enter a valid email address.
+    When the user enters text to a text field    id=firstName    Astle
+    Then the user should not see the validation error    Please enter a first name.
+    And the user should not see the validation error    Your first name should have at least 2 characters.
+    When the user enters text to a text field    id=lastName    Pimenta
+    Then the user should not see the validation error    Please enter a last name.
+    And the user should not see the validation error    Your last name should have at least 2 characters.
+    When the user enters text to a text field    id=emailAddress    astle.pimenta@innovateuk.test
+    Then the user should not see the validation error    Please enter an email address.
+    And the user should not see the validation error    Please enter a valid email address.
 
 Clicking the 'Manage users' link take the Administration back to the 'Manage Users' page
-        [Documentation]  IFS-27
-        [Tags]
-        When the user clicks the button/link  link=Manage users
-        Then the user should see the element  jQuery=h1:contains("Manage users")
-        And the user should see the element   jQuery=.selected:contains("Active")
+    [Documentation]  IFS-27
+    [Tags]
+    When the user clicks the button/link  link=Manage users
+    Then the user should see the element  jQuery=h1:contains("Manage users")
+    And the user should see the element   jQuery=.selected:contains("Active")
 
 Administrator can successfully invite a new user
-        When the user clicks the button/link  link=Add a new internal user
-        And the user enters text to a text field    id=firstName    Astle
-        And the user enters text to a text field    id=lastName    Pimenta
-        And the user enters text to a text field    id=emailAddress    astle.pimenta@innovateuk.test
-        And the user selects the option from the drop-down menu    IFS Support User    id=role
-        And the user clicks the button/link    jQuery=.button:contains("Send invite")
-        Then the user should see the element  jQuery=h1:contains("Manage users")    #The Admin is redirected to the Manage Users page on Success
-        And the user should see the element   jQuery=.selected:contains("Active")
+    [Documentation]  IFS-27
+    [Tags]
+    When the user clicks the button/link  link=Add a new internal user
+    And the user enters text to a text field    id=firstName    Astle
+    And the user enters text to a text field    id=lastName    Pimenta
+    And the user enters text to a text field    id=emailAddress    astle.pimenta@innovateuk.test
+    And the user selects the option from the drop-down menu    IFS Support User    id=role
+    And the user clicks the button/link    jQuery=.button:contains("Send invite")
+    Then the user should see the element  jQuery=h1:contains("Manage users")    #The Admin is redirected to the Manage Users page on Success
+    And the user should see the element   jQuery=.selected:contains("Active")
 
 Inviting the same user for the same role again should give an error
-        When the user clicks the button/link  link=Add a new internal user
-        And the user enters text to a text field    id=firstName    Astle
-        And the user enters text to a text field    id=lastName    Pimenta
-        And the user enters text to a text field    id=emailAddress    astle.pimenta@innovateuk.test
-        And the user selects the option from the drop-down menu    IFS Support User    id=role
-        And the user clicks the button/link    jQuery=.button:contains("Send invite")
-        Then the user should see the text in the page    This user has a pending invite. Please check.
+    [Documentation]  IFS-27
+    [Tags]
+    When the user clicks the button/link  link=Add a new internal user
+    And the user enters text to a text field    id=firstName    Astle
+    And the user enters text to a text field    id=lastName    Pimenta
+    And the user enters text to a text field    id=emailAddress    astle.pimenta@innovateuk.test
+    And the user selects the option from the drop-down menu    IFS Support User    id=role
+    And the user clicks the button/link    jQuery=.button:contains("Send invite")
+    Then the user should see the text in the page    This user has a pending invite. Please check.
 
 Project finance user cannot navigate to manage users page
     [Documentation]  INFUND-604
