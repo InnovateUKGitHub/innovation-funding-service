@@ -33,7 +33,7 @@ public class InviteUserForm extends BaseBindingResultTarget {
     private String lastName;
 
     @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
-    @NotEmpty(message = "{validation.standard.email.required}")
+    @NotEmpty(message = "{validation.invite.email.required}")
     @Size(max = 256, message = "{validation.standard.email.length.max}")
     private String emailAddress;
 

@@ -30,6 +30,63 @@ Project finance user cannot navigate to manage users page
     User cannot see manage users page   &{Comp_admin1_credentials}
     User cannot see manage users page   &{internal_finance_credentials}
 
+Administrator can invite a new Internal User
+    [Documentation]  IFS-27
+    [Tags]  HappyPath
+    [Setup]  Log in as a different user   &{ifs_admin_user_credentials}
+    Given the user navigates to the page  ${server}/management/admin/users/active
+    And the user clicks the button/link   link=Add a new internal user
+    Then the user should see the element  jQuery=h1:contains("Add a new internal user")
+
+Server side validation for invite new internal user
+    [Documentation]  IFS-27
+    [Tags]
+    Given the user clicks the button/link               jQuery=button:contains("Send invite")
+    Then The user should see a field and summary error  Please enter a first name.
+    And The user should see a field and summary error   Your first name should have at least 2 characters.
+    And The user should see a field and summary error   Please enter a last name.
+    And The user should see a field and summary error   Please enter an email address.
+    [Teardown]  the user clicks the button/link         link=Cancel
+
+Client side validations for invite new internal user
+    [Documentation]  IFS-27
+    [Tags]
+    Given the user navigates to the page       ${server}/management/admin/invite-user
+    When the user enters text to a text field  id=firstName  A
+    Then the user should not see the element   jQuery=.error-message:contains("Please enter a first name.")
+    And the user should see the element        jQuery=.error-message:contains("Your first name should have at least 2 characters.")
+    When the user enters text to a text field  id=lastName  D
+    Then the user should not see the element   jQuery=.error-message:contains("Please enter a last name.")
+    And the user should see the element        jQuery=.error-message:contains("Your last name should have at least 2 characters.")
+    When the user enters text to a text field  id=emailAddress  astle
+    Then the user should not see the element   jQuery=.error-message:contains("Please enter an email address.")
+    And the user should see the element        jQuery=.error-message:contains("Please enter a valid email address.")
+
+Administrator can successfully invite a new user
+    [Documentation]  IFS-27
+    [Tags]  Happypath
+    Given the user navigates to the page       ${server}/management/admin/invite-user
+    When the user enters text to a text field  id=firstName  Astle
+    And the user enters text to a text field   id=lastName  Pimenta
+    And the user enters text to a text field   id=emailAddress  astle.pimenta@innovateuk.test
+    And the user selects the option from the drop-down menu  IFS Support User  id=role
+    And the user clicks the button/link        jQuery=.button:contains("Send invite")
+    Then the user cannot see a validation error in the page
+    Then the user should see the element       jQuery=h1:contains("Manage users")
+    #The Admin is redirected to the Manage Users page on Success
+    And the user should see the element        jQuery=.selected:contains("Active")
+
+Inviting the same user for the same role again should give an error
+    [Documentation]  IFS-27
+    [Tags]
+    When the user clicks the button/link           link=Add a new internal user
+    And the user enters text to a text field       id=firstName  Astle
+    And the user enters text to a text field       id=lastName  Pimenta
+    And the user enters text to a text field       id=emailAddress  astle.pimenta@innovateuk.test
+    And the user selects the option from the drop-down menu  IFS Support User  id=role
+    And the user clicks the button/link            jQuery=.button:contains("Send invite")
+    Then the user should see the text in the page  This user has a pending invite. Please check.
+
 # TODO: Add ATs for IFS-605 with pagination when IFS-637 is implemented
 
 Admin user invites internal user
@@ -50,9 +107,6 @@ Admin user invites internal user
     And the user selects the option from the drop-down menu  IFS_ADMINISTRATOR  id=role
     And the user clicks the button/link  jQuery=button:contains("Send invite")
     Then the user reads his email and clicks the link   test@innovateuk.gov.uk   Invitation to Innovation Funding Service    An Innovation Funding Service account was created for you
-
-
-
 
 
 *** Keywords ***

@@ -338,7 +338,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected InviteUserService inviteUserServiceMock;
-    
+
     @Mock
     protected AddressLookupService addressLookupServiceMock;
 
