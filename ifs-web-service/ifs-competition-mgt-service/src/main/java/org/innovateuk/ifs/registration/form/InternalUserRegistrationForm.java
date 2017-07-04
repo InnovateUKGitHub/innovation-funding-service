@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.registration.form;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
@@ -33,6 +35,15 @@ public class InternalUserRegistrationForm extends BaseBindingResultTarget {
     })
     private String password;
 
+    public InternalUserRegistrationForm() {
+    }
+
+    public InternalUserRegistrationForm(String firstName, String lastName, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -55,5 +66,29 @@ public class InternalUserRegistrationForm extends BaseBindingResultTarget {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        InternalUserRegistrationForm that = (InternalUserRegistrationForm) o;
+
+        return new EqualsBuilder()
+                .append(firstName, that.firstName)
+                .append(lastName, that.lastName)
+                .append(password, that.password)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(firstName)
+                .append(lastName)
+                .append(password)
+                .toHashCode();
     }
 }

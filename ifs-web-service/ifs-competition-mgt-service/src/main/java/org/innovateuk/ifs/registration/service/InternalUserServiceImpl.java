@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by rav on 30/06/2017.
+ * Web layer service here converts registration form into resource to be sent across via REST for creation of new user.
  */
 @Service
 public class InternalUserServiceImpl implements InternalUserService {
     @Autowired
-    private UserRestService inviteUserRestService;
+    private UserRestService userRestService;
 
     @Override
     public ServiceResult<Void> createInternalUser(String inviteHash, InternalUserRegistrationForm registrationForm) {
@@ -21,6 +21,6 @@ public class InternalUserServiceImpl implements InternalUserService {
         internalUserRegistrationResource.setPassword(registrationForm.getPassword());
         internalUserRegistrationResource.setFirstName(registrationForm.getFirstName());
         internalUserRegistrationResource.setLastName(registrationForm.getLastName());
-        return inviteUserRestService.createInternalUser(inviteHash, internalUserRegistrationResource).toServiceResult();
+        return userRestService.createInternalUser(inviteHash, internalUserRegistrationResource).toServiceResult();
     }
 }
