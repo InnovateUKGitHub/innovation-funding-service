@@ -1,12 +1,12 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker';
-apply from: targetBuild+"-build.gradle";
+apply from: targetBuild + "-build.gradle";
 
 
 project(':ifs-web-service').bootRepackage {
-    onlyIf{ Task task -> false}
+    onlyIf { Task task -> false }
 }
 
-jar.enabled=false
+jar.enabled = false
 
 subprojects {
 
@@ -52,7 +52,7 @@ subprojects {
 
         bootRepackage {
             mainClass = 'org.innovateuk.ifs.Application'
-        //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
+            //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
         }
     }
 }
@@ -96,3 +96,84 @@ task endpointDocumentation(type: Task) {
 }
 
 build.finalizedBy endpointDocumentation
+
+
+task buildFractal(type: Docker) {
+    push = false
+    applicationName = "fractal"
+    tagVersion = "latest"
+    dockerfile = file('fractal/Dockerfile')
+    doFirst {
+        copy {
+            from file("ifs-web-core/src/main/resources/templates/fractal-components")
+            into file("${stageDir}/fractal-components")
+        }
+//        copy {
+//            from file("ifs-web-core/src/main/resources/docs")
+//            into file("${stageDir}/docs")
+//        }
+        copy {
+            from file("ifs-web-core/src/main/resources/static")
+            into file("${stageDir}/static")
+        }
+        copy {
+            from file("fractal.js")
+            into stageDir
+        }
+        copy {
+            from file("gulpfile.js")
+            into stageDir
+        }
+        copy {
+            from file("package.json")
+            into stageDir
+        }
+        copy {
+            from file("yarn.lock")
+            into stageDir
+        }
+    }
+    doLast {
+
+    }
+}
+
+
+task deployFractal(type: Exec) {
+    workingDir '.'
+    commandLine 'docker', 'run', '-d', '--name', 'fractal', '-p', '3000:3000', 'innovateuk/fractal'
+}
+
+
+def killContainer(String name) {
+    println "KillContainer()"
+    println name
+    exec {
+        executable "docker"
+        args "rm", "-f", name
+    }
+}
+
+
+task removeFractal() {
+
+    doLast {
+
+        new ByteArrayOutputStream().withStream { os ->
+            def result = exec {
+                executable = 'docker'
+                args "ps", "-qf", "name=fractal"
+                standardOutput = os
+            }
+            def fractal =  os.toString()
+            if (fractal) {
+                killContainer(fractal.replaceAll("\n",""))
+            }
+        }
+
+    }
+
+}
+
+deployFractal.dependsOn removeFractal
+deployFractal.dependsOn buildFractal
