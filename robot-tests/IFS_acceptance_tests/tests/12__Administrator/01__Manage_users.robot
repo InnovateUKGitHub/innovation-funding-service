@@ -109,9 +109,6 @@ Admin user invites internal user
     Then the user reads his email and clicks the link   test@innovateuk.gov.uk   Invitation to Innovation Funding Service    An Innovation Funding Service account was created for you
 
 
-
-
-
 *** Keywords ***
 User cannot see manage users page
     [Arguments]  ${email}  ${password}
