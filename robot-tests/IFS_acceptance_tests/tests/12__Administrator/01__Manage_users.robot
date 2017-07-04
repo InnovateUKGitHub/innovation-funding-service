@@ -73,7 +73,6 @@ Administrator can successfully invite a new user
     And the user clicks the button/link        jQuery=.button:contains("Send invite")
     Then the user cannot see a validation error in the page
     Then the user should see the element       jQuery=h1:contains("Manage users")
-    #The Admin is redirected to the Manage Users page on Success
     And the user should see the element        jQuery=.selected:contains("Active")
 
 Inviting the same user for the same role again should give an error
@@ -106,7 +105,7 @@ Admin user invites internal user
     And the user enters text to a text field  id=emailAddress  test@innovateuk.gov.uk
     And the user selects the option from the drop-down menu  IFS_ADMINISTRATOR  id=role
     And the user clicks the button/link  jQuery=button:contains("Send invite")
-    Then the user reads his email and clicks the link   test@innovateuk.gov.uk   Invitation to Innovation Funding Service    An Innovation Funding Service account was created for you
+    Then the user reads his email and clicks the link   test@innovateuk.gov.uk   Invitation to Innovation Funding Service    Your Innovation Funding Service account has been created. Please check your details
 
 
 *** Keywords ***
