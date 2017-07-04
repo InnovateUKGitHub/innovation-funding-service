@@ -24,7 +24,6 @@ public class CompetitionResource {
     private List<CompetitionFunderResource> funders = new ArrayList<>();
 
     private String name;
-    private String description;
     private ZonedDateTime startDate;
     private ZonedDateTime endDate;
     private ZonedDateTime assessorAcceptsDate;
@@ -83,18 +82,9 @@ public class CompetitionResource {
         // no-arg constructor
     }
 
-    public CompetitionResource(Long id, List<Long> applications, List<Long> questions, List<Long> sections, String name, String description, ZonedDateTime startDate, ZonedDateTime endDate) {
+    public CompetitionResource(long id, String name, ZonedDateTime startDate, ZonedDateTime endDate) {
         this.id = id;
         this.name = name;
-        this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
-
-    public CompetitionResource(long id, String name, String description, ZonedDateTime startDate, ZonedDateTime endDate) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -132,14 +122,6 @@ public class CompetitionResource {
 
     public void setCompetitionStatus(CompetitionStatus competitionStatus) {
         this.competitionStatus = competitionStatus;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public Long getId() {

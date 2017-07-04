@@ -2,10 +2,12 @@ package org.innovateuk.ifs.assessment.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.List;
 import java.util.Optional;
 
 import static java.lang.String.format;
@@ -66,6 +68,18 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     }
 
     @Override
+    public RestResult<List<Long>> getAvailableAssessorIds(long competitionId, Optional<Long> innovationArea) {
+        String baseUrl = format("%s/%s/%s", competitionInviteRestUrl, "getAvailableAssessors", competitionId);
+
+        UriComponentsBuilder builder = UriComponentsBuilder
+                .fromPath(baseUrl)
+                .queryParam("all");
+        innovationArea.ifPresent(innovationAreaId -> builder.queryParam("innovationArea", innovationAreaId));
+
+        return getWithRestResult(builder.toUriString(), ParameterizedTypeReferences.longsListType());
+    }
+
+    @Override
     public RestResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, int page) {
         String baseUrl = format("%s/%s/%s", competitionInviteRestUrl, "getCreatedInvites", competitionId);
 
@@ -101,6 +115,11 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     @Override
     public RestResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource existingUserStagedInvite) {
         return postWithRestResult(format("%s/%s", competitionInviteRestUrl, "inviteUser"), existingUserStagedInvite, CompetitionInviteResource.class);
+    }
+
+    @Override
+    public RestResult<Void> inviteUsers(ExistingUserStagedInviteListResource existingUserStagedInvites) {
+        return postWithRestResult(format("%s/%s", competitionInviteRestUrl, "inviteUsers"), existingUserStagedInvites, Void.class);
     }
 
     @Override

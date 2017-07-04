@@ -12,7 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static java.util.Optional.empty;
 
 @Component
 public class SendNotificationsModelPopulator {
@@ -29,7 +32,7 @@ public class SendNotificationsModelPopulator {
     public SendNotificationsViewModel populate(long competitionId, List<Long> applicationIds){
 
         ApplicationSummaryPageResource pagedApplications = applicationSummaryRestService
-                .getAllApplications(competitionId, null, 0, Integer.MAX_VALUE, null)
+                .getAllApplications(competitionId, null, 0, Integer.MAX_VALUE, empty())
                 .getSuccessObjectOrThrowException();
 
         List<ApplicationSummaryResource> filteredApplications = pagedApplications.getContent().stream()

@@ -20,12 +20,10 @@ IFS.competitionManagement = {}
 IFS.competitionManagement.loadOrder = {
   common: {
     init: function () {
-      IFS.competitionManagement.stickyMenu.init()
       IFS.competitionManagement.various.init()
     },
     finalize: function () {
-      IFS.competitionManagement.selectAll.init()
-      IFS.competitionManagement.countSelected.init()
+      IFS.competitionManagement.multipageSelect.init()
     }
   },
   'competition-management': {

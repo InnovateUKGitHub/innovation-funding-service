@@ -49,6 +49,8 @@ public class SecurityRuleUtil {
         return user.hasRole( ASSESSOR);
     }
 
+    public static boolean isSupport(UserResource user) { return user.hasRole(SUPPORT); }
+
     public static boolean checkProcessRole(final UserResource user,
                                            final Long applicationId,
                                            final Long organisationId,

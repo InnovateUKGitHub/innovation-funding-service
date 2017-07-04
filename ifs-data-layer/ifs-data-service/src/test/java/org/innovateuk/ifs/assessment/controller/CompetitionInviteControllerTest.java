@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.List;
 import java.util.Optional;
 
+import static com.google.common.primitives.Longs.asList;
 import static java.lang.Boolean.TRUE;
 import static java.util.Collections.nCopies;
 import static java.util.Optional.empty;
@@ -38,6 +39,8 @@ import static org.innovateuk.ifs.invite.builder.AssessorInvitesToSendResourceBui
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBuilder.newAvailableAssessorPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
+import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteListResourceBuilder.newExistingUserStagedInviteListResource;
+import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceBuilder.newNewUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
@@ -395,6 +398,24 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     }
 
     @Test
+    public void getAvailableAssessors_all() throws Exception {
+        List<Long> expectedAvailableAssessorIds = asList(1L, 2L);
+
+        Optional<Long> innovationArea = of(4L);
+
+        when(competitionInviteServiceMock.getAvailableAssessorIds(COMPETITION_ID, innovationArea))
+                .thenReturn(serviceSuccess(expectedAvailableAssessorIds));
+
+        mockMvc.perform(get("/competitioninvite/getAvailableAssessors/{competitionId}", COMPETITION_ID)
+                .param("all", "")
+                .param("innovationArea", "4"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expectedAvailableAssessorIds)));
+
+        verify(competitionInviteServiceMock, only()).getAvailableAssessorIds(COMPETITION_ID, innovationArea);
+    }
+
+    @Test
     public void getAvailableAssessors_defaultParameters() throws Exception {
         int page = 0;
         int pageSize = 20;
@@ -548,7 +569,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
     @Test
     public void inviteUser() throws Exception {
-        ExistingUserStagedInviteResource existingUserStagedInviteResource = new ExistingUserStagedInviteResource("firstname.lastname@example.com", 1L);
+        ExistingUserStagedInviteResource existingUserStagedInviteResource = new ExistingUserStagedInviteResource(2L, 1L);
         CompetitionInviteResource expectedCompetitionInviteResource = newCompetitionInviteResource().build();
 
         when(competitionInviteServiceMock.inviteUser(existingUserStagedInviteResource)).thenReturn(serviceSuccess(expectedCompetitionInviteResource));
@@ -560,6 +581,27 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .andExpect(content().json(toJson(expectedCompetitionInviteResource)));
 
         verify(competitionInviteServiceMock, only()).inviteUser(existingUserStagedInviteResource);
+    }
+
+    @Test
+    public void inviteUsers() throws Exception {
+        List<ExistingUserStagedInviteResource> existingUserStagedInvites = newExistingUserStagedInviteResource()
+                .withUserId(1L, 2L)
+                .withCompetitionId(1L)
+                .build(2);
+
+        ExistingUserStagedInviteListResource existingUserStagedInviteList = newExistingUserStagedInviteListResource()
+                .withInvites(existingUserStagedInvites)
+                .build();
+
+        when(competitionInviteServiceMock.inviteUsers(existingUserStagedInvites)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competitioninvite/inviteUsers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(existingUserStagedInviteList)))
+                .andExpect(status().isOk());
+
+        verify(competitionInviteServiceMock, only()).inviteUsers(existingUserStagedInvites);
     }
 
     @Test

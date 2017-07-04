@@ -17,6 +17,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -37,8 +38,12 @@ public class OrganisationDetailsModelPopulator {
     public void populateModel(final Model model, final Long applicationId, final List<ProcessRoleResource> userApplicationRoles) {
 
         final List<OrganisationResource> organisations = getApplicationOrganisations(applicationId);
-        model.addAttribute("academicOrganisations", getAcademicOrganisations(organisations));
+        final List<OrganisationResource> academicOrganisations = getAcademicOrganisations(organisations);
+        final List<Long> academicOrganisationIds = academicOrganisations.stream().map(ao -> ao.getId()).collect(Collectors.toList());
+        model.addAttribute("academicOrganisations", academicOrganisations);
         model.addAttribute("applicationOrganisations", organisations);
+        Map<Long, Boolean> applicantOrganisationsAreAcademic = organisations.stream().collect(Collectors.toMap(o -> o.getId(), o -> academicOrganisationIds.contains(o.getId())));
+        model.addAttribute("applicantOrganisationIsAcademic", applicantOrganisationsAreAcademic);
 
         final List<String> activeApplicationOrganisationNames = simpleMap(organisations, OrganisationResource::getName);
 

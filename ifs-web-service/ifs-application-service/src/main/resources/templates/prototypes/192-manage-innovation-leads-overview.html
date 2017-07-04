@@ -35,7 +35,7 @@
         <div class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
                 <span class="heading-large lead-count">1</span><br>
-                <small>Innovation lead added</small>
+                <small>Innovation leads added</small>
             </div>
         </div>
     </div>
@@ -281,7 +281,7 @@ jQuery(document).ready(function(){
         e.preventDefault()
         jQuery('.stakeholder-table tbody tr').removeAttr('aria-hidden');
         var val = jQuery('#filter').val();
-        if(val.length){
+        if(val !== 'any'){
             jQuery('.stakeholder-table tbody tr:not(:contains('+val+'))').attr('aria-hidden','true')
         }
         updatecount();

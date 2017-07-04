@@ -16,6 +16,13 @@ public interface FormInputPopulator<M extends AbstractFormInputViewModel> {
                       ApplicantFormInputResource applicantFormInput,
                       ApplicantFormInputResponseResource applicantResponse);
 
+    M populate(AbstractApplicantResource applicantResource,
+               ApplicantSectionResource applicantSection,
+               ApplicantQuestionResource applicantQuestion,
+               ApplicantFormInputResource applicantFormInput,
+               ApplicantFormInputResponseResource applicantResponse,
+               boolean readOnly);
+
     void addToForm(ApplicationForm form, M viewModel);
 
     FormInputType type();
