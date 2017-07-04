@@ -2,6 +2,8 @@
 Documentation     IFS-604: IFS Admin user navigation to Manage users section
 ...               IFS-605: Manage internal users: List of all internal users and roles
 ...               IFS-606: Manage internal users: Read only view of internal user profile
+...               IFS-27: Invite new internal user
+...               IFS-642: Email to new internal user inviting them to register
 Suite Setup       The user logs-in in new browser  &{ifs_admin_user_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  CompAdmin
@@ -64,7 +66,7 @@ Client side validations for invite new internal user
 
 Administrator can successfully invite a new user
     [Documentation]  IFS-27
-    [Tags]  Happypath
+    [Tags]  HappyPath
     Given the user navigates to the page       ${server}/management/admin/invite-user
     When the user enters text to a text field  id=firstName  Astle
     And the user enters text to a text field   id=lastName  Pimenta
@@ -76,38 +78,24 @@ Administrator can successfully invite a new user
     Then the user should see the element       jQuery=h1:contains("Manage users")
     And the user should see the element        jQuery=.selected:contains("Active")
 
+Invited user can receive the invitation
+    [Documentation]  IFS-642
+    [Tags]  Email  HappyPath
+    The user reads his email and clicks the link  astle.pimenta@innovateuk.test   Invitation to Innovation Funding Service  Your Innovation Funding Service account has been created.
+
 Inviting the same user for the same role again should give an error
     [Documentation]  IFS-27
     [Tags]
-    When the user clicks the button/link           link=Add a new internal user
-    And the user enters text to a text field       id=firstName  Astle
+    [Setup]  log in as a different user            &{ifs_admin_user_credentials}
+    Given the user navigates to the page           ${server}/management/admin/invite-user
+    When the user enters text to a text field      id=firstName  Astle
     And the user enters text to a text field       id=lastName  Pimenta
     And the user enters text to a text field       id=emailAddress  astle.pimenta@innovateuk.test
     And the user selects the option from the drop-down menu  IFS Support User  id=role
     And the user clicks the button/link            jQuery=.button:contains("Send invite")
-    Then the user should see the text in the page  This user has a pending invite. Please check.
+    Then the user should see the element           jQuery=.error-summary:contains("This user has a pending invite. Please check.")
 
 # TODO: Add ATs for IFS-605 with pagination when IFS-637 is implemented
-
-Admin user invites internal user
-    [Documentation]  IFS-27, IFS-642
-    [Tags]  Email  HappyPath
-    [Setup]  The user logs-in in new browser  &{ifs_admin_user_credentials}
-    When the user clicks the button/link  link=Manage users
-    And the user clicks the button/link  link=Add a new internal user
-    Then the user should see the element  jQuery=h1:contains("Add a new internal user")
-    And the user should see the element  jQuery=p:contains("Enter the new user's details below to add them to your invite list.")
-    And the user should see the element  jQuery=form input#firstName
-    And the user should see the element  jQuery=form input#lastName
-    And the user should see the element  jQuery=form input#emailAddress
-    And the user should see the element  jQuery=form select#role
-    Then the user enters text to a text field  id=firstName  Aaron
-    And the user enters text to a text field  id=lastName  Aaronson
-    And the user enters text to a text field  id=emailAddress  test@innovateuk.gov.uk
-    And the user selects the option from the drop-down menu  IFS_ADMINISTRATOR  id=role
-    And the user clicks the button/link  jQuery=button:contains("Send invite")
-    Then the user reads his email and clicks the link   test@innovateuk.gov.uk   Invitation to Innovation Funding Service    Your Innovation Funding Service account has been created. Please check your details
-
 
 *** Keywords ***
 User cannot see manage users page
