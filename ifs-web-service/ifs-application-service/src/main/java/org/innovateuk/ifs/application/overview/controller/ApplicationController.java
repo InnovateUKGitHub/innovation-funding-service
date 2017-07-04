@@ -56,7 +56,7 @@ public class ApplicationController {
                                      UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
 
-        if (application.hasBeenSubmitted()) {
+        if (application.isSubmitted()) {
             return format("redirect:/application/%s/summary", application.getId());
         }
 

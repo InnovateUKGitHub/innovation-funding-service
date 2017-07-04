@@ -226,11 +226,11 @@ public class ApplicationResource {
 
     @JsonIgnore
     public boolean isSubmittable() {
-        return isInSubmittableCompetitionState() && !hasBeenSubmitted();
+        return isInSubmittableCompetitionState() && !isSubmitted();
     }
 
     @JsonIgnore
-    public boolean hasBeenSubmitted() {
+    public boolean isSubmitted() {
         return SUBMITTED_APPLICATION_STATES.contains(applicationState);
     }
 
