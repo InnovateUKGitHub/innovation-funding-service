@@ -4,16 +4,14 @@ services:
   shib:
     image: innovateuk/sp-service:@version@
     healthcheck:
-      test: ["CMD", "curl", "-k", "-f", "https://localhost:443/Shibboleth.sso/Metadata"]
+      test: ["CMD", "curl", "-k", "-f", "https://localhost:9143/Shibboleth.sso/Metadata"]
       interval: 15s
       timeout: 8s
     ports:
-      - "443:443"
+      - "443:9143"
     environment:
       - "SP_DOMAIN=ifs.local-dev"
       - "IDP_DOMAIN=auth.local-dev:9443"
-      - "HTTPS_PORT=443"
-      - "HTTP_PORT=80"
     networks:
       ifs:
         aliases:
