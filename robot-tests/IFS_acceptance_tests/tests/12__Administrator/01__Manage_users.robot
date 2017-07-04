@@ -96,7 +96,7 @@ Admin user invites internal user
     When the user clicks the button/link  link=Manage users
     And the user clicks the button/link  link=Add a new internal user
     Then the user should see the element  jQuery=h1:contains("Add a new internal user")
-    And the user should see the element  jQuery=p:contains("Enter the new internal user's details below to add them to your invite list.")
+    And the user should see the element  jQuery=p:contains("Enter the new user's details below to add them to your invite list.")
     And the user should see the element  jQuery=form input#firstName
     And the user should see the element  jQuery=form input#lastName
     And the user should see the element  jQuery=form input#emailAddress
