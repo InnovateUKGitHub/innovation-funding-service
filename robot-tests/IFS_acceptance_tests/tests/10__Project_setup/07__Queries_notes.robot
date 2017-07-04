@@ -43,20 +43,20 @@ Queries section is linked from viability and this selects viability on the query
     Then the user should see the text in the page    Raise finance queries to the organisation in this section
     When the user clicks the button/link    jQuery=.button:contains("Post a new query")
     Then the user should see the dropdown option selected    Viability    section
-    [Teardown]    the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
 Queries section is linked to from the main finance check summary page
     [Documentation]    INFUND-4840
     [Tags]
+    [Setup]  the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(6)
     Then the user should see the text in the page    Raise finance queries to the organisation in this section
 
 Queries section contains finance contact name, email and telephone
     [Documentation]    INFUND-4840
     [Tags]
-    When the user should see the text in the page    Sarah Peacock
-    And the user should see the text in the page     74373688727
-    And the user should see the element  jQuery=#content p:nth-of-type(1):contains(${successful_applicant_credentials["email"]})
+    When the user should see the element    jQuery=#content p:nth-of-type(1):contains("Sarah Peacock")
+    And the user should see the element     jQuery=#content p:nth-of-type(1):contains("74373688727")
+    And the user should see the element     jQuery=#content p:nth-of-type(1):contains(${successful_applicant_credentials["email"]})
 
 Viability and eligibility sections both available
     [Documentation]    INFUND-4840
