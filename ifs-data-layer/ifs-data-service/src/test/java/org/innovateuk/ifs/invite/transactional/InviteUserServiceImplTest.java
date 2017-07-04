@@ -16,6 +16,7 @@ import java.util.Collections;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_ROLE_INVITE_INVALID;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_ROLE_INVITE_INVALID_EMAIL;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -32,10 +33,13 @@ public class InviteUserServiceImplTest extends BaseUnitTestMocksTest {
     public void setUp() {
 
         invitedUser = UserResourceBuilder.newUserResource()
-                .withFirstName("A")
-                .withLastName("D")
-                .withEmail("A.D@gmail.com")
+                .withFirstName("Astle")
+                .withLastName("Pimenta")
+                .withEmail("Astle.Pimenta@innovateuk.gov.uk")
                 .build();
+
+        String[] environments = new String[]{"environment"};
+        when(environmentMock.getActiveProfiles()).thenReturn(environments);
     }
 
     @Test
@@ -54,6 +58,17 @@ public class InviteUserServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<Void> result = inviteUserService.saveUserInvite(invitedUser, null);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(USER_ROLE_INVITE_INVALID));
+    }
+
+    @Test
+    public void saveUserInviteWhenEmailDomainIsIncorrect() throws Exception {
+
+        AdminRoleType adminRoleType = AdminRoleType.SUPPORT;
+        invitedUser.setEmail("Astle.Pimenta@gmail.com");
+
+        ServiceResult<Void> result = inviteUserService.saveUserInvite(invitedUser, adminRoleType);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(USER_ROLE_INVITE_INVALID_EMAIL));
     }
 
     @Test
