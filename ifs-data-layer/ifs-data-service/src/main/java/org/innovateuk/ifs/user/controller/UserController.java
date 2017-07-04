@@ -88,7 +88,7 @@ public class UserController {
 
     @PostMapping("/internal/create/{inviteHash}")
     public RestResult<Void> createInternalUser(@PathVariable("inviteHash") String inviteHash, @Valid @RequestBody InternalUserRegistrationResource internalUserRegistrationResource){
-        return registrationService.createInternalUser(inviteHash, internalUserRegistrationResource).toPostResponse();
+        return registrationService.createInternalUser(inviteHash, internalUserRegistrationResource).toPostCreateResponse();
     }
 
     @GetMapping("/findAll/")

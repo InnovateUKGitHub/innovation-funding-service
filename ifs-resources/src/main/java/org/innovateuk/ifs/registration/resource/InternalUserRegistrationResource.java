@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.registration.resource;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -89,5 +91,33 @@ public class InternalUserRegistrationResource {
         userResource.setEmail(this.getEmail());
         userResource.setRoles(this.getRoles());
         return userResource;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        InternalUserRegistrationResource that = (InternalUserRegistrationResource) o;
+
+        return new EqualsBuilder()
+                .append(firstName, that.firstName)
+                .append(lastName, that.lastName)
+                .append(email, that.email)
+                .append(password, that.password)
+                .append(roles, that.roles)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(firstName)
+                .append(lastName)
+                .append(email)
+                .append(password)
+                .append(roles)
+                .toHashCode();
     }
 }

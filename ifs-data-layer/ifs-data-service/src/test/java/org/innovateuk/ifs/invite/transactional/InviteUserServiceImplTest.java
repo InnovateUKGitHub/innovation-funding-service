@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
+import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.project.transactional.EmailService;
@@ -26,9 +27,11 @@ import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.invite.builder.RoleInviteResourceBuilder.newRoleInviteResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -237,5 +240,24 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         assertEquals(1, result.getErrors().size());
         assertEquals(CommonFailureKeys.ADMIN_INVALID_USER_ROLE.name(), result.getErrors().get(0).getErrorKey());
         assertEquals(HttpStatus.BAD_REQUEST, result.getErrors().get(0).getStatusCode());
+    }
+
+    @Test
+    public void testGetInvite(){
+        RoleInvite roleInvite = newRoleInvite().build();
+        when(inviteRoleRepositoryMock.getByHash("SomeInviteHash")).thenReturn(roleInvite);
+        when(roleInviteMapperMock.mapToResource(roleInvite)).thenReturn(newRoleInviteResource().build());
+        ServiceResult<RoleInviteResource> result = service.getInvite("SomeInviteHash");
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testCheckExistingUser(){
+        RoleInvite roleInvite = newRoleInvite().build();
+        when(inviteRoleRepositoryMock.getByHash("SomeInviteHash")).thenReturn(roleInvite);
+        when(userRepositoryMock.findByEmail(roleInvite.getEmail())).thenReturn(Optional.of(newUser().build()));
+        ServiceResult<Boolean> result = service.checkExistingUser("SomeInviteHash");
+        assertTrue(result.isSuccess());
+        assertTrue(result.getSuccessObject());
     }
 }

@@ -681,6 +681,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     @Mock
     protected PartnerOrganisationService partnerOrganisationServiceMock;
 
+    @Mock
+    protected RoleInviteMapper roleInviteMapperMock;
+
     @Before
     public void setupMockInjection() {
         // Process mock annotations
