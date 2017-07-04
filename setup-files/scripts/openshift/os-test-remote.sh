@@ -31,7 +31,7 @@ function cleanUp() {
 
 function buildAndPushTestImages() {
     docker build -t ${REGISTRY}/${PROJECT}/robot-framework:1.0-SNAPSHOT robot-tests-tmp/
-    docker login -p $(oc whoami -t) -e unused -u unused ${REGISTRY}
+    docker login -p $(oc whoami -t) -u unused ${REGISTRY}
     docker push ${REGISTRY}/${PROJECT}/robot-framework:1.0-SNAPSHOT
 }
 

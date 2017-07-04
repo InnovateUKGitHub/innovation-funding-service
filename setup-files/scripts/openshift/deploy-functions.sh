@@ -140,7 +140,7 @@ function pushApplicationImages() {
     docker tag innovateuk/ldap-service:${VERSION} \
         ${REGISTRY}/${PROJECT}/ldap-service:${VERSION}
 
-    docker login -p ${REGISTRY_TOKEN} -e unused -u unused ${REGISTRY}
+    docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
 
     docker push ${REGISTRY}/${PROJECT}/data-service:${VERSION}
     docker push ${REGISTRY}/${PROJECT}/project-setup-service:${VERSION}
@@ -158,7 +158,7 @@ function pushDBResetImages() {
     docker tag innovateuk/dbreset:${VERSION} \
         ${REGISTRY}/${PROJECT}/dbreset:${VERSION}
 
-    docker login -p ${REGISTRY_TOKEN} -e unused -u unused ${REGISTRY}
+    docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
 
     docker push ${REGISTRY}/${PROJECT}/dbreset:${VERSION}
 }
