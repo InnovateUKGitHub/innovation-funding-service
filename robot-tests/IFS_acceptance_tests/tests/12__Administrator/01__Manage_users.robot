@@ -2,7 +2,7 @@
 Documentation     IFS-604: IFS Admin user navigation to Manage users section
 ...               IFS-605: Manage internal users: List of all internal users and roles
 ...               IFS-606: Manage internal users: Read only view of internal user profile
-...               IFS-27: Invite new internal user
+...               IFS-27:  Invite new internal user
 ...               IFS-642: Email to new internal user inviting them to register
 Suite Setup       The user logs-in in new browser  &{ifs_admin_user_credentials}
 Suite Teardown    the user closes the browser
