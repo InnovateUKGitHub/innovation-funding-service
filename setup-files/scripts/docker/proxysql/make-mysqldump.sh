@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-mysqldump -uroot -ppassword -h127.0.0.1 -P6033 ifs --skip-extended-insert | gzip -c > /dump/anonymised-dump.sql.gz
+mysqldump -u$DB_USER -p$DB_PASS -h127.0.0.1 -P6033 $DB_NAME --skip-extended-insert | gzip -c > /dump/anonymised-dump.sql.gz
