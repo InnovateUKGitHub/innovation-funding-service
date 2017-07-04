@@ -18,8 +18,17 @@ public class ApplicationTeamManagementViewModel {
     private boolean leadOrganisation;
     private boolean userLeadApplicant;
     private List<ApplicationTeamManagementApplicantRowViewModel> applicants;
+    private boolean organisationExists;
 
-    public ApplicationTeamManagementViewModel(long applicationId, String applicationName, Long organisationId, Long inviteOrganisationId, String organisationName, boolean leadOrganisation, boolean userLeadApplicant, List<ApplicationTeamManagementApplicantRowViewModel> applicants) {
+    public ApplicationTeamManagementViewModel(long applicationId,
+                                              String applicationName,
+                                              Long organisationId,
+                                              Long inviteOrganisationId,
+                                              String organisationName,
+                                              boolean leadOrganisation,
+                                              boolean userLeadApplicant,
+                                              List<ApplicationTeamManagementApplicantRowViewModel> applicants,
+                                              boolean organisationExists) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.organisationId = organisationId;
@@ -28,6 +37,7 @@ public class ApplicationTeamManagementViewModel {
         this.leadOrganisation = leadOrganisation;
         this.userLeadApplicant = userLeadApplicant;
         this.applicants = applicants;
+        this.organisationExists = organisationExists;
     }
 
     public long getApplicationId() {
@@ -60,6 +70,14 @@ public class ApplicationTeamManagementViewModel {
 
     public List<ApplicationTeamManagementApplicantRowViewModel> getApplicants() {
         return applicants;
+    }
+
+    public boolean isOrganisationExists() {
+        return organisationExists;
+    }
+
+    public void setOrganisationExists(boolean organisationExists) {
+        this.organisationExists = organisationExists;
     }
 
     @Override

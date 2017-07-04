@@ -27,22 +27,22 @@ IFS.application.repeatableOrgApplicantRows = (function () {
       if (jQuery(el).data('applicant-table') === 'update-org') {
         newRow = jQuery('<tr class="repeatable-row">' +
           '<td class="form-group">' +
-          '<label for="applicants' + uniqueRowId + '.name"><span class="visually-hidden">Applicant name</span></label>' +
+          '<label for="stagedInvite.name"><span class="visually-hidden">Applicant name</span></label>' +
           '<input class="form-control width-full" type="text" ' +
-          'id="applicants' + uniqueRowId + '.name" ' +
-          'name="applicants[' + uniqueRowId + '].name" value="" ' +
+          'id="stagedInvite.name" ' +
+          'name="stagedInvite.name" value="" ' +
           'data-required-errormessage="Please enter a name." required="required" />' +
           '</td>' +
           '<td class="form-group">' +
-          '<label for="applicants' + uniqueRowId + '.email"><span class="visually-hidden">Applicant email</span></label>' +
+          '<label for="stagedInvite.email"><span class="visually-hidden">Applicant email</span></label>' +
           '<input class="form-control width-full" type="email" ' +
-          'id="applicants' + uniqueRowId + '.email" ' +
-          'name="applicants[' + uniqueRowId + '].email" value="" ' +
+          'id="stagedInvite.email" ' +
+          'name="stagedInvite.email" value="" ' +
           'data-required-errormessage="Please enter an email address." required="required" />' +
           '</td>' +
-          '<td><button class="button" name="updateOrganisation" type="submit">Invite</button></td>' +
+          '<td><button class="button" name="executeStagedInvite" value="true" type="submit">Invite</button></td>' +
           '<td class="alignright">' +
-          '<button class="remove-another-row buttonlink" name="removeApplicant" type="button" value="0">Remove</button>' +
+          '<button class="remove-another-row buttonlink" name="removeInvite" type="button" value="0">Remove</button>' +
           '</td>' +
           '</tr>')
       } else {
@@ -114,11 +114,11 @@ IFS.application.repeatableOrgApplicantRows = (function () {
       })
     },
     showAddRowButton: function () {
-      var addRowButton = jQuery("[name='addApplicant']")
+      var addRowButton = jQuery("[name='addStagedInvite']")
       addRowButton.show()
     },
     hideAddRowButton: function () {
-      var addRowButton = jQuery("[name='addApplicant']")
+      var addRowButton = jQuery("[name='addStagedInvite']")
       addRowButton.hide()
     }
   }

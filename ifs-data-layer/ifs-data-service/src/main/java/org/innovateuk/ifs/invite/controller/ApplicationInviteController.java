@@ -29,7 +29,12 @@ public class ApplicationInviteController {
 
     @PostMapping("/createApplicationInvites")
     public RestResult<InviteResultsResource> createApplicationInvites(@RequestBody InviteOrganisationResource inviteOrganisationResource) {
-        return inviteService.createApplicationInvites(inviteOrganisationResource).toPostCreateResponse();
+        return inviteService.createApplicationInvites(inviteOrganisationResource, inviteOrganisationResource.getInviteResources().get(0).getApplication()).toPostCreateResponse();
+    }
+
+    @PostMapping("/createApplicationInvites/{applicationId}")
+    public RestResult<InviteResultsResource> createApplicationInvitesForApplication(@RequestBody InviteOrganisationResource inviteOrganisationResource, @PathVariable("applicationId") long applicationId) {
+        return inviteService.createApplicationInvites(inviteOrganisationResource, applicationId).toPostCreateResponse();
     }
 
     @GetMapping("/getInviteByHash/{hash}")

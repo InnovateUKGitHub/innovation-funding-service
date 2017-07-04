@@ -208,10 +208,10 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     @Transactional
-    public ServiceResult<InviteResultsResource> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource) {
+    public ServiceResult<InviteResultsResource> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource, Long applicationId) {
         return validateInviteOrganisationResource(inviteOrganisationResource).andOnSuccess(() ->
                 validateUniqueEmails(inviteOrganisationResource.getInviteResources())).andOnSuccess(() ->
-                assembleInviteOrganisationFromResource(inviteOrganisationResource).andOnSuccessReturn(inviteOrganisation -> {
+                assembleInviteOrganisationFromResource(inviteOrganisationResource, applicationId).andOnSuccessReturn(inviteOrganisation -> {
                             List<ApplicationInvite> invites = saveInviteOrganisationWithInvites(inviteOrganisation, inviteOrganisationResource.getInviteResources());
                             return sendInvites(invites);
                         }
@@ -359,23 +359,31 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         return resource;
     }
 
-    private ServiceResult<InviteOrganisation> assembleInviteOrganisationFromResource(InviteOrganisationResource inviteOrganisationResource) {
+    private ServiceResult<InviteOrganisation> assembleInviteOrganisationFromResource(InviteOrganisationResource inviteOrganisationResource, Long applicationId) {
 
         if (inviteOrganisationResource.getOrganisation() != null) {
-            return find(organisation(inviteOrganisationResource.getOrganisation())).andOnSuccess(organisation -> {
-                InviteOrganisation newInviteOrganisation = new InviteOrganisation(
-                        inviteOrganisationResource.getOrganisationName(),
-                        organisation,
-                        null);
-                return serviceSuccess(newInviteOrganisation);
-            });
+            return findCorrespondingOrganisationForInviteOrganisation(inviteOrganisationResource).andOnSuccess(organisation ->
+                    findInviteOrganisationForOrganisationInApplication(inviteOrganisationResource, applicationId).andOnSuccess(inviteOrganisation -> serviceSuccess(inviteOrganisation))
+                            .andOnFailure(() -> serviceSuccess(buildNewInviteOrganisationForOrganisation(inviteOrganisationResource, organisation)))
+            );
         } else {
-            InviteOrganisation newInviteOrganisation = new InviteOrganisation(
-                    inviteOrganisationResource.getOrganisationName(),
-                    null,
-                    null);
-            return serviceSuccess(newInviteOrganisation);
+
+            return serviceSuccess(buildNewInviteOrganisation(inviteOrganisationResource));
         }
+    }
+
+    private InviteOrganisation buildNewInviteOrganisation(InviteOrganisationResource inviteOrganisationResource) {
+        InviteOrganisation newInviteOrganisation = new InviteOrganisation(
+                inviteOrganisationResource.getOrganisationName(),
+                null,
+                null);
+        return newInviteOrganisation;
+    }
+
+    private InviteOrganisation buildNewInviteOrganisationForOrganisation(InviteOrganisationResource inviteOrganisationResource, Organisation organisation) {
+        InviteOrganisation newInviteOrganisation = new InviteOrganisation(inviteOrganisationResource.getOrganisationName(),
+                organisation,null);
+        return newInviteOrganisation;
     }
 
     private List<ApplicationInvite> saveInviteOrganisationWithInvites(InviteOrganisation inviteOrganisation, List<ApplicationInviteResource> applicationInviteResources) {
@@ -532,5 +540,13 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                 .filter(originalRole -> !originalRole.getId().equals(leadApplicantRole.getId()))
                 .map(originalRole -> processRoleTo)
                 .orElse(leadApplicantRole);
+    }
+
+    protected ServiceResult<Organisation> findCorrespondingOrganisationForInviteOrganisation(InviteOrganisationResource inviteOrganisationResource) {
+        return find(organisationRepository.findOne(inviteOrganisationResource.getOrganisation()), notFoundError(Organisation.class, inviteOrganisationResource.getOrganisation()));
+    }
+
+    private ServiceResult<InviteOrganisation> findInviteOrganisationForOrganisationInApplication(InviteOrganisationResource inviteOrganisationResource, Long applicationId) {
+        return find(inviteOrganisationRepository.findOneByOrganisationIdAndInvitesApplicationId(inviteOrganisationResource.getOrganisation(), applicationId), notFoundError(InviteOrganisation.class, inviteOrganisationResource.getOrganisation(), applicationId));
     }
 }

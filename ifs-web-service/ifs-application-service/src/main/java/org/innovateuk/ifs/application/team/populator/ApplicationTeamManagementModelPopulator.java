@@ -41,10 +41,10 @@ public class ApplicationTeamManagementModelPopulator {
 
     public ApplicationTeamManagementViewModel populateModelByOrganisationId(long applicationId, long organisationId, long loggedInUserId) {
         OrganisationResource leadOrganisationResource = getLeadOrganisation(applicationId);
+        InviteOrganisationResource inviteOrganisationResource = getInviteOrganisationByOrganisationId(applicationId, organisationId).orElse(null);
         boolean requestForLeadOrganisation = isRequestForLeadOrganisation(organisationId, leadOrganisationResource);
 
-        return populateModel(applicationId, loggedInUserId, leadOrganisationResource, requestForLeadOrganisation,
-                getInviteOrganisationByOrganisationId(applicationId, organisationId).orElse(null));
+        return populateModel(applicationId, loggedInUserId, leadOrganisationResource, requestForLeadOrganisation, inviteOrganisationResource);
     }
 
     public ApplicationTeamManagementViewModel populateModelByInviteOrganisationId(long applicationId, long inviteOrganisationId, long loggedInUserId) {
@@ -88,13 +88,15 @@ public class ApplicationTeamManagementModelPopulator {
                 true,
                 userLeadApplicant,
                 combineLists(getLeadApplicantViewModel(leadApplicant), simpleMap(invites, applicationInviteResource ->
-                        getApplicantViewModel(applicationInviteResource, userLeadApplicant)))
+                        getApplicantViewModel(applicationInviteResource, userLeadApplicant))),
+                true
         );
     }
 
     private ApplicationTeamManagementViewModel populateModelForNonLeadOrganisation(ApplicationResource applicationResource,
                                                                                    boolean userLeadApplicant,
                                                                                    InviteOrganisationResource inviteOrganisationResource) {
+        boolean organisationExists = inviteOrganisationResource.getOrganisation() != null;
         return new ApplicationTeamManagementViewModel(applicationResource.getId(),
                 applicationResource.getName(),
                 inviteOrganisationResource.getOrganisation(),
@@ -103,7 +105,8 @@ public class ApplicationTeamManagementModelPopulator {
                 false,
                 userLeadApplicant,
                 simpleMap(inviteOrganisationResource.getInviteResources(), applicationInviteResource ->
-                        getApplicantViewModel(applicationInviteResource, userLeadApplicant)));
+                        getApplicantViewModel(applicationInviteResource, userLeadApplicant)),
+                organisationExists);
     }
 
     private ApplicationTeamManagementApplicantRowViewModel getApplicantViewModel(ApplicationInviteResource applicationInviteResource, boolean userLeadApplicant) {

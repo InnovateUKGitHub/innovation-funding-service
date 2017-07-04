@@ -50,6 +50,11 @@ public class ApplicationTeamOrganisationRowViewModel {
         return editable;
     }
 
+    public boolean getOrganisationExists() {
+            return organisationId != null;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
