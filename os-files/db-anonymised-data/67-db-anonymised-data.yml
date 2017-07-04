@@ -24,26 +24,26 @@ items:
       - name: DB_HOST
         valueFrom:
           configMapKeyRef:
-            name: db-config
+            name: db-dump-config
             key: DB_HOST
       - name: DB_PORT
         valueFrom:
           configMapKeyRef:
-            name: db-config
+            name: db-dump-config
             key: DB_PORT
       - name: DB_NAME
         valueFrom:
           configMapKeyRef:
-            name: db-config
+            name: db-dump-config
             key: DB_NAME
       - name: DB_USER
         valueFrom:
           configMapKeyRef:
-            name: db-config
+            name: db-dump-config
             key: DB_USER
       - name: DB_PASS
         valueFrom:
           configMapKeyRef:
-            name: db-config
+            name: db-dump-config
             key: DB_PASS
     restartPolicy: Never
