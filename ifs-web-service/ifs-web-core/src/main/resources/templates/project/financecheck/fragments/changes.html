@@ -558,21 +558,19 @@
 
 <th:block th:fragment="other_funding">
     <th:block th:if="${typeOfChange == 'Change'}">
-        <tr th:class="${changePair.submitted.fundingAmount != changePair.changed.fundingAmount ||
-        changePair.submitted.fundingSource != changePair.changed.fundingSource ||
-        changePair.submitted.securedDate != changePair.changed.securedDate} ? 'item-changed' : ''">
+        <tr th:class="${changePair.submitted.fundingSource.equals(changePair.changed.fundingSource)} ? '' : 'item-changed'">
             <td rowspan="3" th:text="${typeOfChange}"></td>
             <td rowspan="3" th:text="${rowTypeName}"></td>
 
             <th scope="row">Funding Source</th>
             <td th:text="${changePair.submitted.fundingSource}"></td>
-            <td th:text="${changePair.changed.fundingSource}" colspan="2" th:class="${changePair.submitted.fundingSource != changePair.changed.fundingSource} ? 'item-changed' : ''"></td>
+            <td th:text="${changePair.changed.fundingSource}" colspan="2" th:class="${changePair.submitted.fundingSource.equals(changePair.changed.fundingSource)} ? '' : 'item-changed'"></td>
         </tr>
 
-        <tr th:class="${changePair.submitted.securedDate != changePair.changed.securedDate} ? 'item-changed' : ''">
+        <tr th:class="${changePair.submitted.securedDate.equals(changePair.changed.securedDate)} ? '' : 'item-changed'">
             <th scope="row">Secured Date</th>
             <td th:text="${changePair.submitted.securedDate}"></td>
-            <td th:text="${changePair.changed.securedDate}" colspan="2" th:class="${changePair.submitted.securedDate!= changePair.changed.securedDate} ? 'item-changed' : ''"></td>
+            <td th:text="${changePair.changed.securedDate}" colspan="2" th:class="${changePair.submitted.securedDate.equals(changePair.changed.securedDate)} ? '' : 'item-changed'"></td>
         </tr>
 
         <tr th:class="${changePair.submitted.fundingAmount != changePair.changed.fundingAmount} ? 'item-changed' : ''">
