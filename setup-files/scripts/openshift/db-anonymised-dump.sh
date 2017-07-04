@@ -77,12 +77,13 @@ cleanUp
 cloneConfig
 tailorAppInstance
 
-# TODO DW
-export DB_NAME=ifs
-export DB_USER=root
-export DB_PASS=password
-export DB_HOST=ifs-database
-export DB_PORT=3306
+if [[ "$TARGET" == "local" ]]; then
+    export DB_NAME=ifs
+    export DB_USER=root
+    export DB_PASS=password
+    export DB_HOST=ifs-database
+    export DB_PORT=3306
+fi
 
 injectDBVariables
 useContainerRegistry
@@ -91,6 +92,6 @@ pushAnonymisedDatabaseDumpImages
 startupMysqlDumpPod
 waitForMysqlDumpPodToStart
 takeMysqlDump
-shutdownMysqlDumpPodAfterUse
+#shutdownMysqlDumpPodAfterUse
 
 echo "Job complete!  Dump now available at /tmp/anonymised-dump.sql.gz"

@@ -25,6 +25,11 @@ task dbResetUat(type:Exec) {
     args = [openshiftEnv, "uat", project.version]
 }
 
+task dbResetLocal(type:Exec) {
+    executable = 'setup-files/scripts/openshift/db-reset.sh'
+    args = [openshiftEnv, "local", project.version]
+}
+
 task dbAnonymisedDumpLocal(type:Exec) {
     executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
     args = [openshiftEnv, "local", project.version]
