@@ -28,9 +28,11 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...               INFUND-6403 Filter and Pagination on 'Find' tab of Invite dashboard
 ...
 ...               INFUND-6453 Filter and pagination on 'Overview' tab of Invite assessors dashboard
+...
+...               IFS-33 As a comp exec I can select and add multiple assessors to the invite list
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
-Suite Teardown    The user closes the browser
-Force Tags        CompAdmin    Assessor
+Suite Teardown    Custom teardown
+Force Tags        CompAdmin  Assessor
 Resource          ../../resources/defaultResources.robot
 
 *** Variables ***
@@ -40,96 +42,96 @@ ${assessor_to_add}    Alexis Kinney
 Check the initial key statistics
     [Documentation]    INFUND-6388
     [Tags]
-    Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
+    Given the user clicks the button/link  link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
     And the user clicks the button/link    link=Overview
 
 Filtering in the Invite Overview page
     [Documentation]    INFUND-6453
     [Tags]
-    Given the user selects the option from the drop-down menu    Assembly / disassembly / joining    id=filterInnovationArea
-    And the user selects the option from the drop-down menu    Invite declined    id=filterStatus
-    And the user selects the option from the drop-down menu    Yes    id=filterContract
-    When the user clicks the button/link    jQuery=button:contains(Filter)
-    Then the user should see the element    jQuery=td:contains("Josephine")
-    And the user should not see the element    jQuery=td:contains("No")
-    And the user clicks the button/link    jQuery=a:contains("Clear filters")
-    And the user should not see the element    jQuery=td:contains("Josephine")
+    Given the user selects the option from the drop-down menu  Assembly / disassembly / joining  id=filterInnovationArea
+    And the user selects the option from the drop-down menu    Invite declined  id=filterStatus
+    And the user selects the option from the drop-down menu    Yes  id=filterContract
+    When the user clicks the button/link     jQuery=button:contains(Filter)
+    Then the user should see the element     jQuery=td:contains("Josephine")
+    And the user should not see the element  jQuery=td:contains("No")
+    And the user clicks the button/link      jQuery=a:contains("Clear filters")
+    And the user should not see the element  jQuery=td:contains("Josephine")
 
 The User can Add and Remove Assessors
     [Documentation]    INFUND-6602 INFUND-6604 INFUND-6392 INFUND-6412 INFUND-6388
     [Tags]
-    Given The user clicks the button/link    link=Find
-    And the user clicks the button/link    jQuery=a:contains(41 to)
-    When The user clicks the button/link    jQuery=td:contains("Will Smith") ~ td .button:contains("Add")
-    And The user clicks the button/link    link=Invite
-    Then The user should see the text in the page    will.smith@gmail.com
-    And The user should see the text in the page    Will Smith
-    And The user should see the element    jQuery=td:contains("Will Smith") ~ td .yes
-    And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Precision medicine")
-    And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Nanotechnology / nanomaterials")
-    And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Energy systems")
+    Given The user clicks the button/link          link=Find
+    And the user clicks the button/link            jQuery=a:contains(41 to)
+    When the user selects the checkbox             assessor-row-10
+    And the user should see the element            jQuery=.form-hint:contains("1 assessors selected")
+    And the user clicks the button/link            jQuery=button:contains("Add selected to invite list")
+    Then The user should see the text in the page  will.smith@gmail.com
+    And The user should see the element  jQuery=td:contains("Will Smith") ~ td .yes
+    And the user should see the element  jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Precision medicine")
+    And the user should see the element  jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Nanotechnology / nanomaterials")
+    And the user should see the element  jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Energy systems")
     And the calculations of the Assessors on invite list should be correct
-    When The user clicks the button/link    link=Invite
-    And The user clicks the button/link    jQuery=td:contains("Will Smith") ~ td .buttonlink:contains("Remove")
-    Then The user should not see the text in the page    Will Smith
-    [Teardown]    The user clicks the button/link    link=Find
+    When The user clicks the button/link               link=Invite
+    And The user clicks the button/link                jQuery=td:contains("Will Smith") ~ td .buttonlink:contains("Remove")
+    Then The user should not see the text in the page  Will Smith
+    [Teardown]    The user clicks the button/link      link=Find
 
 The user can remove all people from the list
     [Documentation]    IFS-36
     [Tags]
-    Given the user clicks the button/link    jQuery=a:contains("1 to 20")
+    Given the user clicks the button/link          jQuery=a:contains("1 to 20")
     And the user invites multiple assessors
-    And The user clicks the button/link    link=Invite
-    And the user should see the element    jQuery=td:contains("${assessor_to_add}")
-    When the user clicks the button/link    jQuery=button:contains("Remove all")
-    Then the user should not see the element    jQuery=td:contains("${assessor_to_add}")
-    [Teardown]    The user clicks the button/link    link=Find
+    And the user clicks the button/link            jQuery=button:contains("Add selected to invite list")
+    And the user should see the element            jQuery=td:contains("${assessor_to_add}")
+    When the user clicks the button/link           jQuery=button:contains("Remove all")
+    Then the user should not see the element       jQuery=td:contains("${assessor_to_add}")
+    [Teardown]    The user clicks the button/link  link=Find
 
 Filter on innovation area
     [Documentation]    INFUND-6403
     [Tags]
-    Given the user selects the option from the drop-down menu    Offshore wind    id=filterInnovationArea
-    When the user clicks the button/link    jQuery=button:contains(Filter)
-    Then the user should see the element    jQuery=td:contains("Laura Weaver")
-    And the user should not see the element    jQuery=td:contains("${assessor_to_add}")
-    And the user clicks the button/link    jQuery=a:contains("Clear all filters")
-    And the user should not see the element    jQuery=td:contains("Laura Weaver")
-    And the user should see the element    jQuery=td:contains("Addison Shannon")
+    Given the user selects the option from the drop-down menu  Offshore wind  id=filterInnovationArea
+    When the user clicks the button/link     jQuery=button:contains(Filter)
+    Then the user should see the element     jQuery=td:contains("Laura Weaver")
+    And the user should not see the element  jQuery=td:contains("${assessor_to_add}")
+    And the user clicks the button/link      jQuery=a:contains("Clear all filters")
+    And the user should not see the element  jQuery=td:contains("Laura Weaver")
+    And the user should see the element      jQuery=td:contains("Addison Shannon")
 
 Next/Previous pagination on Find tab
     [Documentation]    INFUND-6403
     [Tags]
-    When the user clicks the button/link    jQuery=.pagination-label:contains(Next)
-    Then the user should see the element    jQuery=.pagination-part-title:contains(1 to 20)
-    And the user should see the element    jQuery=.pagination-part-title:contains(41 to)
-    And the user clicks the button/link    jQuery=.pagination-label:contains(Previous)
-    And the user should not see the element    jQuery=.pagination-label:contains(Previous)
-    And the user should not see the element    jQuery=.pagination-part-title:contains(41 to)
+    When the user clicks the button/link     jQuery=.pagination-label:contains(Next)
+    Then the user should see the element     jQuery=.pagination-part-title:contains(1 to 20)
+    And the user should see the element      jQuery=.pagination-part-title:contains(41 to)
+    And the user clicks the button/link      jQuery=.pagination-label:contains(Previous)
+    And the user should not see the element  jQuery=.pagination-label:contains(Previous)
+    And the user should not see the element  jQuery=.pagination-part-title:contains(41 to)
 
 Page list pagination on Find tab
     [Documentation]    INFUND-6403
     [Tags]
-    When the user clicks the button/link    jQuery=a:contains(41 to)
-    Then the user should see the element    jQuery=.pagination-label:contains(Previous)
-    And the user should not see the element    jQuery=.pagination-label:contains("Next)
+    When the user clicks the button/link     jQuery=a:contains(41 to)
+    Then the user should see the element     jQuery=.pagination-label:contains(Previous)
+    And the user should not see the element  jQuery=.pagination-label:contains("Next)
 
 The user can select the profile link
     [Documentation]    INFUND-6669
     [Tags]
     [Setup]
-    When the user clicks the button/link    link=Will Smith
-    Then the user should see the text in the page    will.smith@gmail.com
-    And the user should see the text in the page    028572565937
-    And the user should see the text in the page    Solar energy research
-    And the user should see the text in the page    Precision medicine
-    And the user should see the text in the page    Business
-    [Teardown]    The user clicks the button/link    link=Back
+    When the user clicks the button/link           link=Will Smith
+    Then the user should see the text in the page  will.smith@gmail.com
+    And the user should see the text in the page   028572565937
+    And the user should see the text in the page   Solar energy research
+    And the user should see the text in the page   Precision medicine
+    And the user should see the text in the page   Business
+    [Teardown]    The user clicks the button/link  link=Back
 
 Innovation sector and area are correct
     [Documentation]    INFUND-6389
     [Tags]
-    Given the user should see the element    jQuery=.heading-secondary:contains("Sustainable living models for the future")
+    Given the user should see the element  jQuery=.heading-secondary:contains("Sustainable living models for the future")
     And the user should see the element    jQuery=.standard-definition-list dt:contains("Innovation sector")
     And the user should see the element    jQuery=.standard-definition-list dt:contains("Innovation area")
     And the user should see the element    jQuery=.standard-definition-list dd:contains("Materials and manufacturing")
@@ -138,55 +140,51 @@ Innovation sector and area are correct
 Invite multiple assessors
     [Documentation]    INFUND-6414
     [Tags]
-    Given the user clicks the button/link    jQuery=a:contains("1 to 20")
-    Given the user invites multiple assessors
-    And The user clicks the button/link    link=Invite
-    When the user clicks the button/link    jQuery=a:contains("Review and send invites")
-    And The user should see the text in the page    Please visit our online Innovation Funding Service to respond to this request
-    And The user enters text to a text field    css=#subject    Invitation to assess 'Sustainable living models for the future' @
-    And the user clicks the button/link    jQuery=.button:contains("Send invite")
-    Then The user should not see the text in the page    ${assessor_to_add}
-    And The user clicks the button/link    link=Find
-    And the user should not see the text in the page    ${assessor_to_add}
+    Given the user clicks the button/link              jQuery=a:contains("1 to 20")
+    And the user invites multiple assessors
+    And the user clicks the button/link                jQuery=button:contains("Add selected to invite list")
+    When the user clicks the button/link               jQuery=a:contains("Review and send invites")
+    And The user should see the text in the page       Please visit our online Innovation Funding Service to respond to this request
+    And The user enters text to a text field           css=#subject  Invitation to assess 'Sustainable living models for the future' @
+    And the user clicks the button/link                jQuery=.button:contains("Send invite")
+    Then The user should not see the text in the page  ${assessor_to_add}
+    And The user clicks the button/link                link=Find
+    And the user should not see the text in the page   ${assessor_to_add}
 
 Invite non-registered assessors server side validations
     [Documentation]    INFUND-6411
     [Tags]
-    Given the user clicks the button/link    link=Invite
+    Given the user clicks the button/link   link=Invite
     When the user clicks the button/link    jQuery=span:contains("Add a non-registered assessor to your list")
-    And the user clicks the button/link    jQuery=.button:contains("Add assessors to list")
-    Then the user should see a field error    Please enter an innovation sector and area.
-    And the user should see a field error    Please enter a name.
-    And the user should see a field error    Please enter an email address.
+    And the user clicks the button/link     jQuery=.button:contains("Add assessors to list")
+    Then the user should see a field error  Please enter an innovation sector and area.
+    And the user should see a field error   Please enter a name.
+    And the user should see a field error   Please enter an email address.
 
 Invite non-registered users
-    [Documentation]    INFUND-6411
-    ...
-    ...    INFUND-6448
+    [Documentation]    INFUND-6411 INFUND-6448
     [Tags]
-    When The user enters text to a text field    css=#invite-table tr:nth-of-type(1) td:nth-of-type(1) input    Olivier Giroud
-    And The user should not see the text in the page    Please enter a name.    #check for the client side validation
-    And The user enters text to a text field    css=#invite-table tr:nth-of-type(1) td:nth-of-type(2) input    ${test_mailbox_one}+OlivierGiroud@gmail.com
-    And The user should not see the text in the page    Please enter a name.    #check for the client side validation
-    And the user selects the option from the drop-down menu    Emerging and enabling    css=.js-progressive-group-select
-    And the user selects the option from the drop-down menu    Emerging technology    id=grouped-innovation-area
-    And The user should not see the text in the page    Please enter an innovation sector and area.    #check for the client side validation
-    And the user clicks the button/link    jQuery=.button:contains("Add assessors to list")
-    Then the user should see the element    css=.no
-    And The user should see the element    jQuery=td:contains("Olivier Giroud")
-    And The user should see the element    jQuery=td:contains("Olivier Giroud") ~ td:contains(${test_mailbox_one}+OlivierGiroud@gmail.com)
-    And The user should see the element    jQuery=td:contains("Olivier Giroud") ~ td:contains("Emerging technology")
-    And The user should see the element    jQuery=td:contains("Olivier Giroud") ~ td .buttonlink:contains("Remove")
+    When The user enters text to a text field                css=#invite-table tr:nth-of-type(1) td:nth-of-type(1) input  Olivier Giroud
+    And The user should not see the text in the page         Please enter a name.    #check for the client side validation
+    And The user enters text to a text field                 css=#invite-table tr:nth-of-type(1) td:nth-of-type(2) input  ${test_mailbox_one}+OlivierGiroud@gmail.com
+    And The user should not see the text in the page         Please enter a name.    #check for the client side validation
+    And the user selects the option from the drop-down menu  Emerging and enabling    css=.js-progressive-group-select
+    And the user selects the option from the drop-down menu  Emerging technology    id=grouped-innovation-area
+    And The user should not see the text in the page         Please enter an innovation sector and area.    #check for the client side validation
+    And the user clicks the button/link                      jQuery=.button:contains("Add assessors to list")
+    Then the user should see the element                     css=.no
+    And The user should see the element                      jQuery=td:contains("Olivier Giroud")
+    And The user should see the element                      jQuery=td:contains("Olivier Giroud") ~ td:contains(${test_mailbox_one}+OlivierGiroud@gmail.com)
+    And The user should see the element                      jQuery=td:contains("Olivier Giroud") ~ td:contains("Emerging technology")
+    And The user should see the element                      jQuery=td:contains("Olivier Giroud") ~ td .buttonlink:contains("Remove")
 
 Assessor overview information
-    [Documentation]    INFUND-6450
-    ...
-    ...    INFUND-6449
+    [Documentation]    INFUND-6450 INFUND-6449
     [Tags]
-    Given The user clicks the button/link    link=Overview
+    Given The user clicks the button/link  link=Overview
     And the user clicks the button/link    jQuery=.pagination-label:contains("Next")
     And the user clicks the button/link    jQuery=.pagination-label:contains("Next")
-    Then the user should see the element    jQuery=td:contains("Paul Plum") ~ td:contains("Invite accepted")
+    Then the user should see the element   jQuery=td:contains("Paul Plum") ~ td:contains("Invite accepted")
     And the user clicks the button/link    jQuery=.pagination-label:contains("Previous")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:nth-of-type(5):contains("Invite declined")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Academic")
@@ -196,6 +194,15 @@ Assessor overview information
     And the user clicks the button/link    jQuery=.pagination-label:contains("Previous")
     And the user should see the element    jQuery=td:contains("${assessor_to_add}") ~ td:nth-of-type(5):contains("Awaiting response")
     And the user should see the element    jQuery=td:contains("${assessor_to_add}") ~ td:nth-of-type(6):contains("Invite sent:")
+
+Select to add all assessors to invite list
+    [Documentation]  IFS-33
+    [Tags]
+    [Setup]  the user clicks the button/link  link=Find
+    Given the user selects the checkbox       select-all-check
+    When the user clicks the button/link      jQuery=button:contains("Add selected to invite list")
+    And the user clicks the button/link       link=Find
+    Then the user should see the element      jQuery=td:contains("No available assessors found.")
 
 *** Keywords ***
 The key statistics are calculated
@@ -219,6 +226,11 @@ the calculations of the Assessors on invite list should be correct
     Should Be Equal As Integers    ${ASSESSORS_ON_LIST}    ${ASSESSORS_COUNT}
 
 the user invites multiple assessors
-    the user clicks the button/link      jQuery=td:contains("Alexis Kinney") ~ td:contains("Add")
-    the user clicks the button/link      jQuery=td:contains("Angel Spencer") ~ td:contains("Add")
-    the user clicks the button/link      jQuery=td:contains("Angel Witt") ~ td:contains("Add")
+    the user selects the checkbox  assessor-row-1
+    the user selects the checkbox  assessor-row-2
+    the user selects the checkbox  assessor-row-3
+
+Custom teardown
+    the user clicks the button/link  link=Invite
+    the user clicks the button/link  jQuery=button:contains("Remove all")
+    the user closes the browser

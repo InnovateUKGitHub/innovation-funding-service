@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.resource.FundingDecision;
 
 import java.util.Optional;
 
-public class ManageFundingApplicationsQueryForm {
+public class FundingNotificationFilterForm {
 
     private int page = 0;
     private String stringFilter = "";
@@ -45,11 +45,23 @@ public class ManageFundingApplicationsQueryForm {
     }
 
     public int getPage() {
-
         return page;
     }
 
     public void setPage(int page) {
         this.page = page;
+    }
+
+    public void setAllFilterOptions(String stringFilter, Optional<Boolean> sendFilter, Optional<FundingDecision> fundingFilter) {
+        this.stringFilter = stringFilter;
+        this.fundingFilter = fundingFilter;
+        this.sendFilter = sendFilter;
+
+    }
+
+    public boolean anyFilterIsActive() {
+        return (!this.stringFilter.isEmpty() ||
+                this.sendFilter.isPresent() ||
+                this.fundingFilter.isPresent());
     }
 }

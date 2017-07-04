@@ -178,7 +178,7 @@ the question should not be marked as complete on the application overview page
 the finance summary page should show a warning
     The user clicks the button/link    link=Application overview
     The user clicks the button/link    link=Your finances
-    the user should see the element    jQuery=h3:contains("Your funding") + p:contains("You must select a research category in application details ")
+    the user should see the element    jQuery=h3:contains("Your funding") + p:contains("You must select a research category in"):contains("application details")
 
 Log in and create a new application for the Aerospace competition
     Given the user logs-in in new browser  &{lead_applicant_credentials}

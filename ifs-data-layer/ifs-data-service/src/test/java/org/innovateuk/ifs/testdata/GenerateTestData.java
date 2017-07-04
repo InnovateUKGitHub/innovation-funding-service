@@ -784,7 +784,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     private CompetitionDataBuilder nonIfsCompetitionDataBuilder(CsvUtils.CompetitionLine line) {
         return competitionDataBuilder
                 .createNonIfsCompetition()
-                .withBasicData(line.name, null, null, line.innovationAreas,
+                .withBasicData(line.name, null, line.innovationAreas,
                         line.innovationSector, null, null, null,
                         null, null, null, null, null, null, null,
                         null, emptyList(), null, null, line.nonIfsUrl)
@@ -799,7 +799,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     private CompetitionDataBuilder ifsCompetitionDataBuilder(CsvUtils.CompetitionLine line, Optional<Long> existingCompetitionId) {
         return existingCompetitionId.map(id -> competitionDataBuilder.
                 withExistingCompetition(1L).
-                withBasicData(line.name, line.description, line.type, line.innovationAreas,
+                withBasicData(line.name, line.type, line.innovationAreas,
                         line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
                         line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
                         line.multiStream, line.collaborationLevel, line.leadApplicantTypes, line.researchRatio, line.resubmission, null).
@@ -812,7 +812,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         ).orElse(competitionDataBuilder.
                 createCompetition().
-                withBasicData(line.name, line.description, line.type, line.innovationAreas,
+                withBasicData(line.name, line.type, line.innovationAreas,
                         line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
                         line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
                         line.multiStream, line.collaborationLevel, line.leadApplicantTypes, line.researchRatio, line.resubmission, null).

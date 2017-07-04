@@ -10,21 +10,17 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${competitionSummary.competitionId})}" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding decision',subTitle=|${competitionSummary.competitionId} : ${competitionSummary.competitionName}|,size='heading-xlarge'" />
 
-    <div class="grid-row">
-        <div class="column-two-thirds">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding decision',subTitle=|${competitionSummary.competitionId} : ${competitionSummary.competitionName}|,size='heading-xlarge'" />
-        </div>
-    </div>
 
-    <form method="GET" th:object="${applicationSummaryQueryForm}">
+    <form method="GET" th:object="${fundingDecisionFilterForm}">
         <div class="search-filters extra-margin">
                 <h2 class="heading-medium">Filter applications</h2>
                 <div class="grid-row">
                     <div class="column-half">
                         <div class="form-group">
                             <label class="form-label" for="stringFilter">Search by application number</label>
-                            <input type="text" class="form-control" id="stringFilter" name="stringFilter" th:field="*{stringFilter}"/>
+                            <input type="text" class="form-control" id="stringFilter" name="stringFilter" th:value="*{stringFilterValue}"/>
                         </div>
                     </div>
                     <div class="column-half">
@@ -42,35 +38,46 @@
                 </div>
             <div class="grid-row">
                 <div class="column-half">
-                    <a href="?" class="button button-clear no-margin">Clear all filters</a>
+                    <a href="?filterChanged=1" class="button button-clear no-margin">Clear all filters</a>
                 </div>
                 <div class="column-half alignright">
                     <button class="button no-margin">Filter</button>
                 </div>
             </div>
         </div>
+        <input type="hidden" name="filterChanged" value="1"/>
     </form>
+
     <div th:if="${fundingNotDecidedForAllApplications}" class="event-alert">
         <p><span>A funding decision is required for all applications to the competition.</span></p>
     </div>
+
+    <div class="warning-alert extra-margin-bottom" th:if="${selectionLimitWarning}">
+        <p th:text="#{competition.management.limit.warning}"></p>
+    </div>
+    <div data-selection-limit-exceeded-block=""></div>
+
     <div class="grid-row sorting">
         <div class="column-half">
             <h3><span class="heading-xlarge no-margin" th:text="${results.totalElements}" /> applications</h3>
         </div>
     </div>
-    <form method="POST" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+    <form method="POST"
+          th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+          data-multipage-select=""
+          th:attr="data-total-checkboxes=${results.totalElements}">
         <div class="grid-row sorting">
             <div class="column-half">
                 <div class="select-all">
                     <fieldset>
                         <legend class="visuallyhidden">Select applications</legend>
                         <div class="multiple-choice">
-                            <input data-select-all="[id^=app-row-]" class="select-all" id="select-all-1" value="select-all" type="checkbox" />
+                            <input th:disabled="${selectAllDisabled || selectionLimitWarning}" th:checked="${selectionForm.isAllSelected()}" class="select-all" id="select-all-1" value="select-all" type="checkbox" data-select-all="" />
                             <label for="select-all-1">
                                 Select all applications
                             </label>
                         </div>
-                        <span class="form-hint"><span data-count-selected="[id^=app-row-]">3</span> applications selected</span>
+                        <span class="form-hint"><span th:text="${selectionForm.applicationIds.size()}" data-count-selected="">0</span> applications selected</span>
                     </fieldset>
                 </div>
             </div>
@@ -78,42 +85,72 @@
                 <fieldset class="mark-applications">
                     <legend class="visuallyhidden">Mark selected applications</legend>
                     <h3>Mark application as:</h3>
-                    <button type="submit" value='FUNDED' name="fundingDecision" class="button button-secondary" data-enable-button-when="one-checked">Successful</button>
-                    <button type="submit" value='UNFUNDED' name="fundingDecision" class="button button-secondary" data-enable-button-when="one-checked">Unsuccessful</button>
-                    <button type="submit" value='ON_HOLD' name="fundingDecision" class="button button-secondary" data-enable-button-when="one-checked">On hold</button>
+                    <button th:disabled="${selectionForm.applicationIds.isEmpty()}" type="submit" value='FUNDED' name="fundingDecision" class="button-secondary" data-submit-el="">Successful</button>
+                    <button th:disabled="${selectionForm.applicationIds.isEmpty()}" type="submit" value='UNFUNDED' name="fundingDecision" class="button-secondary" data-submit-el="">Unsuccessful</button>
+                    <button th:disabled="${selectionForm.applicationIds.isEmpty()}" type="submit" value='ON_HOLD' name="fundingDecision" class="button-secondary" data-submit-el="">On hold</button>
                 </fieldset>
             </div>
         </div>
         <div class="table-overflow">
-            <th:block th:insert="fragments/competition-management :: applications-table(competition=${competitionSummary},results=${results})" />
-        </div>
-        <div class="grid-row sorting extra-margin">
-            <div class="column-half">
-                <div class="select-all">
-                    <fieldset>
-                        <legend class="visuallyhidden">Select all applications</legend>
-
-                        <div class="multiple-choice">
-                            <input data-select-all="[id^=app-row-]" class="select-all" id="select-all-2" value="select-all" type="checkbox" />
-                            <label for="select-all-2">
-                                Select all applications
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col" id="fund-project-label">Select applications</th>
+                    <th scope="col">Application number</th>
+                    <th scope="col">Project title</th>
+                    <th scope="col">Lead</th>
+                    <th scope="col">Number of partners</th>
+                    <th scope="col">Grant requested (£)</th>
+                    <th scope="col">Total project cost (£)</th>
+                    <th scope="col">Duration (months)</th>
+                    <th scope="col" id="fund-project-label">Funding decision</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="result, index : ${results.content}" th:class="${competitionSummary.competitionStatus.name() == 'FUNDERS_PANEL' ? 'form-group' : ''}">
+                    <td>
+                        <div class="multiple-choice" th:if="${result.applicationFundingDecisionIsChangeable()}">
+                            <input type="checkbox" name="applicationIds" th:id="${'app-row-'+index.count}" th:checked="${#lists.contains(selectionForm.applicationIds, result.id)}" th:value="${result.id}" aria-labelledby="select-applications-label" />
+                            <label th:for="${'app-row-'+index.count}">
+                                <span class="invisible">Select application</span>
                             </label>
                         </div>
-                        <span class="form-hint"><span data-count-selected="[id^=app-row-]">3</span> applications selected</span>
-                    </fieldset>
-                </div>
-            </div>
-            <div class="column-half">
-                <fieldset class="mark-applications">
-                    <legend class="visuallyhidden">Mark application as:</legend>
-                    <h3>Mark application as:</h3>
-                    <button type="submit" value='FUNDED' name="fundingDecision" class="button button-secondary" data-enable-button-when="one-checked">Successful</button>
-                    <button type="submit" value='UNFUNDED' name="fundingDecision" class="button button-secondary"  data-enable-button-when="one-checked">Unsuccessful</button>
-                    <button type="submit" value='ON_HOLD' name="fundingDecision" class="button button-secondary"  data-enable-button-when="one-checked">On hold</button>
-                </fieldset>
-            </div>
-        </div>
 
+                        <th:block th:unless="${result.applicationFundingDecisionIsChangeable()}">
+                            <span class="empty-table-cell-select">-</span>
+                        </th:block>
+                    </td>
+                    <td><a th:href="@{/competition/{cid}/application/{rid}(cid=${competitionSummary.competitionId}, rid=${result.id})} + ${originQuery}"  th:text="${result.id}"/></td>
+                    <td th:text="${result.name}"></td>
+                    <td th:text="${result.lead}"></td>
+                    <td th:text="${result.numberOfPartners}"></td>
+                    <td th:text="${result.grantRequested}"></td>
+                    <td th:text="${result.totalProjectCost}"></td>
+                    <td th:text="${result.duration}"></td>
+                    <td scope="col" th:text="${result.fundingDecision?.name}"/>
+                </tr>
+                </tbody>
+            </table>
+
+            <table th:if="${activeTab == 'notSubmitted'}">
+                <thead>
+                <tr>
+                    <th scope="col">Application number</th>
+                    <th scope="col">Project title</th>
+                    <th scope="col">Lead</th>
+                    <th scope="col">Percentage complete</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="result : ${results.content}">
+                    <td><a th:href="@{/competition/{cid}/application/{rid}(cid=${competitionSummary.competitionId}, rid=${result.id})} + ${originQuery}"  th:text="${result.id}"/></td>
+                    <td th:text="${result.name}"></td>
+                    <td th:text="${result.lead}"></td>
+                    <td th:text="${result.completedPercentage}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </form>
     <th:block th:insert="fragments/elements :: general-pagination(pagination=${pagination})" />
 

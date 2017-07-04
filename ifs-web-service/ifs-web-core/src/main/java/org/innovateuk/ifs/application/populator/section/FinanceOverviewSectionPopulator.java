@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
+import java.util.Optional;
+
 /**
  * Finance overview section view models.
  */
@@ -24,13 +26,13 @@ public class FinanceOverviewSectionPopulator extends AbstractSectionPopulator<Fi
     private FormInputViewModelGenerator formInputViewModelGenerator;
 
     @Override
-    protected void populate(ApplicantSectionResource section, ApplicationForm form, FinanceOverviewSectionViewModel viewModel, Model model, BindingResult bindingResult) {
+    protected void populateNoReturn(ApplicantSectionResource section, ApplicationForm form, FinanceOverviewSectionViewModel viewModel, Model model, BindingResult bindingResult, Boolean readOnly, Optional<Long> applicantOrganisationId) {
         viewModel.setOpenSectionViewModel((OpenSectionViewModel) openSectionModelPopulator.populateModel(form, model, bindingResult, section));
     }
 
     @Override
-    protected FinanceOverviewSectionViewModel createNew(ApplicantSectionResource section, ApplicationForm form) {
-        return new FinanceOverviewSectionViewModel(section, formInputViewModelGenerator.fromSection(section, section, form), getNavigationViewModel(section), true);
+    protected FinanceOverviewSectionViewModel createNew(ApplicantSectionResource section, ApplicationForm form, Boolean readOnly, Optional<Long> applicantOrganisationId, Boolean readOnlyAllApplicantApplicationFinances) {
+        return new FinanceOverviewSectionViewModel(section, formInputViewModelGenerator.fromSection(section, section, form, readOnly), getNavigationViewModel(section), readOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
     }
 
     @Override

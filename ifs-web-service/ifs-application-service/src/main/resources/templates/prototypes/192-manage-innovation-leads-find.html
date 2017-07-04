@@ -35,7 +35,7 @@
         <div class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
                 <span class="heading-large lead-count">1</span><br>
-                <small>Innovation lead added</small>
+                <small>Innovation leads added</small>
             </div>
         </div>
     </div>
@@ -215,12 +215,12 @@ jQuery(document).ready(function(){
         {
             name: 'Charlie Russell',
             area: 'Materials, process and manufacturing design technologies',
-            selected: false
+            selected: true
         },
         {
             name: 'Clayton Edwards',
             area: 'Digital manufacturing',
-            selected: false
+            selected: true
         },
         {
             name: 'Corey Fraser',
@@ -251,7 +251,7 @@ jQuery(document).ready(function(){
     //doing this for leaving the html copy pasteable
     tableRowContainer.empty();
     jQuery.each(stakeholders, function(){
-        if(!this.selected){
+        if(this.selected === false){
             var name = this.name;
             var area = this.area;
             var html = '<tr><td>' + name + '</td><td>' + area + '</td><td><button type="button" class="button button-secondary no-margin">Add</button></td></tr>';
@@ -283,7 +283,7 @@ jQuery(document).ready(function(){
         e.preventDefault()
         jQuery('.stakeholder-table tbody tr').removeAttr('aria-hidden');
         var val = jQuery('#filter').val();
-        if(val.length){
+        if(val !== 'any'){
             jQuery('.stakeholder-table tbody tr:not(:contains('+val+'))').attr('aria-hidden','true')
         }
         updatecount()

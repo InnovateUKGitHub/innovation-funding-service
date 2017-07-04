@@ -18,4 +18,8 @@ public class FindAssessorsFilterForm extends BaseBindingResultTarget {
     public void setInnovationArea(Optional<Long> innovationArea) {
         this.innovationArea = innovationArea;
     }
+
+    public boolean anyFilterIsActive() {
+        return this.innovationArea.isPresent() && !this.innovationArea.equals(0L);
+    }
 }
