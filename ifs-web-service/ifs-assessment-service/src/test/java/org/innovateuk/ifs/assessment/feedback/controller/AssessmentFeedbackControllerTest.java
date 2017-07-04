@@ -717,7 +717,6 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         assertEquals("validation.field.max.word.count", bindingResult.getFieldError(formInputFeedbackField).getCode());
         assertEquals("100", bindingResult.getFieldError(formInputFeedbackField).getArguments()[1]);
         assertEquals(formInputIdFeedback.toString(), bindingResult.getFieldError(formInputFeedbackField).getArguments()[0]);
-
     }
 
     private CompetitionResource setupCompetitionResource() {
