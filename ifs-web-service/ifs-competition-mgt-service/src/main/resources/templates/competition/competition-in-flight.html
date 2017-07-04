@@ -40,9 +40,11 @@
 
                     <p th:if="${(model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN or
                         model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN or
-                        model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED)}">
-                        <a th:href="@{/competition/setup/{competitionId}(competitionId=${model.competitionId})}">View
-                            and update competition setup</a>
+                        model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED or
+                        model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT)}">
+                        <a th:href="@{/competition/setup/{competitionId}(competitionId=${model.competitionId})}">
+                            View and update competition setup
+                        </a>
                     </p>
                 </div>
 

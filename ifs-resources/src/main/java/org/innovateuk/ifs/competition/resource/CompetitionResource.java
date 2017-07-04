@@ -105,6 +105,13 @@ public class CompetitionResource {
     }
 
     @JsonIgnore
+    public boolean isAssessmentClosed() {
+        return CompetitionStatus.FUNDERS_PANEL.equals(competitionStatus)
+                || CompetitionStatus.ASSESSOR_FEEDBACK.equals(competitionStatus)
+                || CompetitionStatus.PROJECT_SETUP.equals(competitionStatus) ;
+    }
+
+    @JsonIgnore
     public boolean isSetupAndLive() {
         return Boolean.TRUE.equals(setupComplete) && startDate.isBefore(ZonedDateTime.now());
     }

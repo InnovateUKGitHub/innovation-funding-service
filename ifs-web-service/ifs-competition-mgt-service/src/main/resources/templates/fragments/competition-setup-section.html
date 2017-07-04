@@ -996,7 +996,8 @@
                     <div class="multiple-choice" th:each="assessorOption : ${assessorOptions}">
                         <input th:id="${'assessors-' + '__${assessorOption.id}__'}" name="assessorCount"
                                th:value="${assessorOption.optionValue}" type="radio"
-                               th:checked="${assessorOption.optionValue == competitionSetupForm.assessorCount}" />
+                               th:checked="${assessorOption.optionValue == competitionSetupForm.assessorCount}"
+                               th:disabled="${isSetupAndLive and (assessorOption.optionValue != competitionSetupForm.assessorCount)}"/>
                         <label th:for="${'assessors-' + '__${assessorOption.id}__'}">
                             <th:block th:text="${assessorOption.optionName}" />
                         </label>
