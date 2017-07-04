@@ -72,6 +72,7 @@ Administrator can successfully invite a new user
     And the user selects the option from the drop-down menu  IFS Support User  id=role
     And the user clicks the button/link        jQuery=.button:contains("Send invite")
     Then the user cannot see a validation error in the page
+    #The Admin is redirected to the Manage Users page on Success
     Then the user should see the element       jQuery=h1:contains("Manage users")
     And the user should see the element        jQuery=.selected:contains("Active")
 
