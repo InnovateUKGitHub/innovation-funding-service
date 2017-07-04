@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.team.controller;
+package org.innovateuk.ifs.application.team.service;
 
 import org.innovateuk.ifs.application.team.form.ApplicationTeamUpdateForm;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementViewModel;
@@ -8,8 +8,7 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,19 +17,16 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
- * This controller will handle all requests that are related to the management of application participants
+ * Serves as a service for invite retrieval / manipulation for an {@InviteOrganisation} without an existing {@Organisation}.
  */
-@Controller
-@RequestMapping("/application/{applicationId}/team/update/invited/{organisationId}")
-public class ApplicationInvitedTeamManagementController extends AbstractApplicationTeamManagementController {
-
-
-    protected ApplicationTeamManagementViewModel createViewModel(long applicationId, long inviteOrganisationId, UserResource loggedInUser) {
+@Service
+public class InviteOrganisationTeamManagementService extends AbstractTeamManagementService {
+    public ApplicationTeamManagementViewModel createViewModel(long applicationId, long inviteOrganisationId, UserResource loggedInUser) {
         return applicationTeamManagementModelPopulator.populateModelByInviteOrganisationId(
                 applicationId, inviteOrganisationId, loggedInUser.getId());
     }
 
-    protected ServiceResult<InviteResultsResource> executeStagedInvite(long applicationId,
+    public ServiceResult<InviteResultsResource> executeStagedInvite(long applicationId,
                                                                        long inviteOrganisationId,
                                                                        ApplicationTeamUpdateForm form) {
         ApplicationInviteResource invite = createInvite(form, applicationId, inviteOrganisationId);
@@ -38,7 +34,7 @@ public class ApplicationInvitedTeamManagementController extends AbstractApplicat
         return inviteRestService.saveInvites(Arrays.asList(invite)).toServiceResult();
     }
 
-    protected String validateOrganisationAndApplicationIds(Long applicationId, Long organisationInviteId, Supplier<String> supplier) {
+    public String validateOrganisationAndApplicationIds(Long applicationId, Long organisationInviteId, Supplier<String> supplier) {
         InviteOrganisationResource organisation = inviteOrganisationRestService.getById(organisationInviteId).getSuccessObjectOrThrowException();
         if(organisation.getInviteResources().stream().anyMatch(applicationInviteResource -> applicationInviteResource.getApplication().equals(applicationId))) {
             return supplier.get();
@@ -46,7 +42,7 @@ public class ApplicationInvitedTeamManagementController extends AbstractApplicat
         throw new ObjectNotFoundException("Organisation invite id not found in application id provided.", Collections.emptyList());
     }
 
-    protected List<Long> getInviteIds(long applicationId, long organisationId) {
+    public List<Long> getInviteIds(long applicationId, long organisationId) {
         return inviteOrganisationRestService.getById(organisationId)
                 .getSuccessObjectOrThrowException()
                 .getInviteResources().stream()

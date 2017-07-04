@@ -40,16 +40,19 @@ public class ApplicationTeamManagementModelPopulator {
     private UserService userService;
 
     public ApplicationTeamManagementViewModel populateModelByOrganisationId(long applicationId, long organisationId, long loggedInUserId) {
-        OrganisationResource leadOrganisationResource = getLeadOrganisation(applicationId);
         InviteOrganisationResource inviteOrganisationResource = getInviteOrganisationByOrganisationId(applicationId, organisationId).orElse(null);
-        boolean requestForLeadOrganisation = isRequestForLeadOrganisation(organisationId, leadOrganisationResource);
 
-        return populateModel(applicationId, loggedInUserId, leadOrganisationResource, requestForLeadOrganisation, inviteOrganisationResource);
+        return populateModelWithInviteOrganisationResource(applicationId, loggedInUserId, inviteOrganisationResource);
     }
 
     public ApplicationTeamManagementViewModel populateModelByInviteOrganisationId(long applicationId, long inviteOrganisationId, long loggedInUserId) {
-        OrganisationResource leadOrganisationResource = getLeadOrganisation(applicationId);
         InviteOrganisationResource inviteOrganisationResource = getInviteOrganisationByInviteOrganisationId(inviteOrganisationId);
+
+        return populateModelWithInviteOrganisationResource(applicationId, loggedInUserId, inviteOrganisationResource);
+    }
+
+    public ApplicationTeamManagementViewModel populateModelWithInviteOrganisationResource(long applicationId, long loggedInUserId, InviteOrganisationResource inviteOrganisationResource) {
+        OrganisationResource leadOrganisationResource = getLeadOrganisation(applicationId);
         boolean requestForLeadOrganisation = isRequestForLeadOrganisation(inviteOrganisationResource, leadOrganisationResource);
 
         return populateModel(applicationId, loggedInUserId, leadOrganisationResource, requestForLeadOrganisation, inviteOrganisationResource);
