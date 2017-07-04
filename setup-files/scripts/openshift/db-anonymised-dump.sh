@@ -21,7 +21,7 @@ REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 
 echo "Taking an anonymous MySQL Dump of the $PROJECT OpenShift project's database"
 
-function dbTakeMysqlDump() {
+function startupMysqlDumpPod() {
 
     echo "Starting up a new db-anonymised-data pod."
 
@@ -31,14 +31,28 @@ function dbTakeMysqlDump() {
       oc delete -f os-files-tmp/db-anonymised-data/67-db-anonymised-data.yml ${SVC_ACCOUNT_CLAUSE} &> /dev/null;
       sleep 10
     done
+}
 
-    echo "Allowing proxysql time to start up..."
-    sleep 10
+function waitForMysqlDumpPodToStart() {
+
+    until oc logs db-anonymised-data ${SVC_ACCOUNT_CLAUSE} | grep "Standard MySQL Monitor" &> /dev/null;
+    do
+      echo "Allowing proxysql time to start up..."
+      sleep 2
+    done
+}
+
+function takeMysqlDump() {
+
+    echo "Taking anonymised data dump..."
 
     podname=$(oc get pods ${SVC_ACCOUNT_CLAUSE} | grep -m 1 db-anonymised-data | awk '{ print $1 }')
     oc rsh $podname /dump/make-mysqldump.sh > /dev/null;
     oc rsync $podname:/dump/anonymised-dump.sql.gz /tmp > /dev/null;
-    echo "Anonymous data dump taken!"
+    echo "Anonymised data dump taken!"
+}
+
+function shutdownMysqlDumpPodAfterUse() {
 
     echo "Shutting down db-anonymised-data pod.  Waiting for it to stop..."
 
@@ -56,8 +70,6 @@ function dbTakeMysqlDump() {
       sleep 5
       time_waited_so_far=$((time_waited_so_far + 5))
     done
-
-    echo "Job complete!  Dump now available at /tmp/anonymised-dump.sql.gz"
 }
 
 # Entry point
@@ -76,4 +88,9 @@ injectDBVariables
 useContainerRegistry
 
 pushAnonymisedDatabaseDumpImages
-dbTakeMysqlDump
+startupMysqlDumpPod
+waitForMysqlDumpPodToStart
+takeMysqlDump
+shutdownMysqlDumpPodAfterUse
+
+echo "Job complete!  Dump now available at /tmp/anonymised-dump.sql.gz"
