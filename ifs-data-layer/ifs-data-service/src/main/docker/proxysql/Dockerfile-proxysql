@@ -10,13 +10,16 @@ RUN apt-get update && \
     dpkg -i /opt/proxysql_1.3.0f-debian8_amd64.deb && \
     apt-get install -y mysql-client && \
     apt-get install -y rsync && \
+    apt-get install -y vim && \
     rm -f /opt/proxysql_1.3.0f-debian8_amd64.deb && \
     rm -rf /var/lib/apt/lists/*
 
 
-RUN mkdir /dump
+RUN mkdir -p /dump/rewrites
 
-COPY proxysql/entrypoint.sh proxysql/make-mysqldump.sh /dump/
+COPY proxysql/entrypoint.sh proxysql/make-mysqldump.sh proxysql/make-proxysql-cnf-file.sh /dump/
+
+COPY proxysql/rewrites/* /dump/rewrites
 
 COPY proxysql/proxysql.cnf /etc/
 

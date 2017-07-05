@@ -1,0 +1,2 @@
+first_name|CONCAT(first_name,'XX')
+last_name|CONCAT(last_name,'YY')
