@@ -11,12 +11,16 @@
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start"/>
 
+    <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
+        <h2 class="heading-medium error-summary-heading">We were unable to create your account</h2>
+        <ul class="error-summary-list">
+            <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
+        </ul>
+    </div>
+
     <form th:object="${form}" method="post" novalidate="novalidate"  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Create account',size='heading-large'"/>
         <h2 class="heading-medium">Your details</h2>
-
-        <!--<h3 class="heading-small">Name</h3>
-        <p th:text="${model.name}">Robert Plant</p>-->
 
         <div class="form-group" th:classappend="${#fields.hasErrors('*{firstName}')} ? 'form-group-error'">
             <label class="form-label" th:for="${#ids.next('firstName')}">
@@ -63,9 +67,12 @@
             <th:block th:text="${model.email}">robertplant@innovateuk.org</th:block>
         </p>
 
-        <div class="form-group">
+        <div class="form-group" th:classappend="${#fields.hasErrors('password')} ? 'form-group-error'">
             <label class="form-label" for="password">
                 <span class="form-label-bold">Create password</span>
+                <th:block th:if="${#fields.hasErrors('password')}">
+                    <span class="error-message visuallyhidden" th:each="err : ${#fields.errors('password')}" th:text="${err}"></span>
+                </th:block>
             </label>
             <div class="form-hint" id="password-hint">
                 <p>Your password is case-sensitive and needs to:</p>
@@ -88,10 +95,11 @@
                        minlength="8"
                        id="password"
                        name="password"
-                       value=""
+                       th:errorclass="form-control-error"
+                       th:field="*{password}"
                        th:attr="data-required-errormessage=#{validation.standard.password.required},
                                 data-minlength-errormessage=#{validation.standard.password.length.min(null,null,'8')}"/>
-                <button th:field="*{password}" type="button" role="switch" aria-checked="false" aria-label="Show password">Show</button>
+                <button type="button" role="switch" aria-checked="false" aria-label="Show password">Show</button>
             </div>
         </div>
         <button class="button extra-margin">Create account</button>
