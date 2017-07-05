@@ -184,3 +184,92 @@ partner submits his bank details
     wait until keyword succeeds without screenshots  30  500ms  the user clicks the button/link  jQuery=.button:contains("Submit bank account details")
     wait until keyword succeeds without screenshots  30  500ms  the user clicks the button/link  jQuery=.button[name="submit-app-details"]
     wait until element is not visible without screenshots  30  500ms  jQuery=.button[name="submit-app-details"]  # Added this wait so to give extra execution time
+
+Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
+    the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
+
+finance contacts are selected and bank details are approved
+    log in as a different user          &{lead_applicant_credentials}
+    the user navigates to the page     ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/details
+    ${finance_contact}    ${val}=    Run Keyword And Ignore Error Without Screenshots    the user should not see the element    jQuery=#project-details-finance tr:nth-of-type(1):contains("Yes")
+    run keyword if    '${finance_contact}' == 'PASS'  run keywords  partners submit their finance contacts  bank details are approved for all businesses
+
+the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
+    The user logs-in in new browser  &{lead_applicant_credentials}
+    ${update_comp}    ${value}=    Run Keyword And Ignore Error Without Screenshots    the user should not see the element    jQuery=h2:contains("Set up your project") ~ ul a:contains("Sensing & Control network using the lighting infrastructure")
+    run keyword if    '${update_comp}' == 'PASS'   run keywords  the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup  lead partner selects project manager and address
+    Set Suite Variable    ${FUNDERS_PANEL_APPLICATION_1_PROJECT}    ${getProjectId("${FUNDERS_PANEL_APPLICATION_1_TITLE}")}
+
+the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
+    log in as a different user              &{internal_finance_credentials}
+    the user navigates to the page          ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/funding
+    the user moves focus to the element     jQuery=label[for="app-row-1"]
+    the user selects the checkbox           app-row-1
+    the user moves focus to the element     jQuery=label[for="app-row-2"]
+    the user selects the checkbox           app-row-2
+    the user clicks the button/link         jQuery=button:contains("Successful")
+    the user should see the element         jQuery=td:contains("Successful")
+    the user clicks the button/link         jQuery=a:contains("Competition")
+    the user clicks the button/link         jQuery=a:contains("Manage funding notifications")
+    the user moves focus to the element     jQuery=label[for="app-row-103"]
+    the user selects the checkbox           app-row-103
+    the user moves focus to the element     jQuery=label[for="app-row-104"]
+    the user selects the checkbox           app-row-104
+    the user clicks the button/link         jQuery=.button:contains("Write and send email")
+    the user enters text to a text field    css=[labelledby="message"]      testMessage
+    the user clicks the button/link         jQuery=button:contains("Send email to all applicants")
+    the user clicks the button/link         jQuery=.send-to-all-applicants-modal button:contains("Send email to all applicants")
+    the user should see the text in the page    Manage funding applications
+
+lead partner selects project manager and address
+    log in as a different user          &{lead_applicant_credentials}
+    the user navigates to the page       ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/details
+    the user clicks the button/link      link=Project Manager
+    the user selects the radio button    projectManager    projectManager2
+    the user clicks the button/link      jQuery=.button:contains("Save")
+    the user clicks the button/link      link=Project address
+    the user selects the radio button    addressType    REGISTERED
+    the user clicks the button/link      jQuery=.button:contains("Save project address")
+    the user clicks the button/link      jQuery=.button:contains("Mark as complete")
+    the user clicks the button/link      jQuery=button:contains("Submit")
+
+partners submit their finance contacts
+    the partner submits their finance contact    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}    &{lead_applicant_credentials}
+    the partner submits their finance contact    ${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}    &{collaborator1_credentials}
+    the partner submits their finance contact    ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}    &{collaborator2_credentials}
+
+the partner submits their finance contact
+    [Arguments]    ${org_id}    &{credentials}
+    log in as a different user         &{credentials}
+    navigate to external finance contact page, choose finance contact and save  ${org_id}  financeContact1
+
+navigate to external finance contact page, choose finance contact and save
+    [Arguments]  ${org_id}   ${financeContactSelector}
+    the user navigates to the page     ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/details/finance-contact?organisation=${org_id}
+    the user selects the radio button  financeContact  ${financeContactSelector}
+    the user clicks the button/link    jQuery=.button:contains("Save")
+
+bank details are approved for all businesses
+    partners submit bank details
+    the project finance user has approved bank details
+
+partners submit bank details
+    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
+    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
+    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
+
+the project finance user has approved bank details
+    log in as a different user                            &{internal_finance_credentials}
+    the project finance user approves bank details for    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
+    the project finance user approves bank details for    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
+    the project finance user approves bank details for    ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
+
+the project finance user approves bank details for
+    [Arguments]    ${org_name}
+    the user navigates to the page            ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/review-all-bank-details
+    the user clicks the button/link           link=${org_name}
+    the user should see the text in the page  ${org_name}
+    the user clicks the button/link           jQuery=.button:contains("Approve bank account details")
+    the user clicks the button/link           jQuery=.button:contains("Approve account")
+    the user should not see the element       jQuery=.button:contains("Approve bank account details")
+    the user should see the text in the page  The bank details provided have been approved.
