@@ -7,7 +7,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.time.ZonedDateTime;
 
 /**
  * DTO for {@link org.innovateuk.ifs.invite.domain.CompetitionInvite}s.
@@ -19,8 +18,6 @@ public class CompetitionInviteResource extends InviteResource {
     private Long competitionId;
 
     private String competitionName;
-
-    private String competitionDescription;
 
     private ZonedDateTime acceptsDate;
 
@@ -52,14 +49,6 @@ public class CompetitionInviteResource extends InviteResource {
 
     public void setCompetitionName(String competitionName) {
         this.competitionName = competitionName;
-    }
-
-    public String getCompetitionDescription() {
-        return competitionDescription;
-    }
-
-    public void setCompetitionDescription(String competitionDescription) {
-        this.competitionDescription = competitionDescription;
     }
 
     public String getEmail() {
@@ -146,7 +135,6 @@ public class CompetitionInviteResource extends InviteResource {
                 .append(id, that.id)
                 .append(competitionId, that.competitionId)
                 .append(competitionName, that.competitionName)
-                .append(competitionDescription, that.competitionDescription)
                 .append(acceptsDate, that.acceptsDate)
                 .append(deadlineDate, that.deadlineDate)
                 .append(briefingDate, that.briefingDate)
@@ -164,7 +152,6 @@ public class CompetitionInviteResource extends InviteResource {
                 .append(id)
                 .append(competitionId)
                 .append(competitionName)
-                .append(competitionDescription)
                 .append(acceptsDate)
                 .append(deadlineDate)
                 .append(briefingDate)

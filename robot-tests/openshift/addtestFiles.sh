@@ -68,7 +68,7 @@ function addTestFiles() {
     oc rsh ${DATA_SERVICE_POD} cp /tmp/testing.pdf ${virusScanQuarantinedFolder}/8
 
     echo "***********Adding standard file upload location ***********"
-    oc rsh ${DATA_SERVICE_POD} mkdir -p ${storedFileFolder}/000000000_999999999/000000_999999/000_999
+    oc rsh ${DATA_SERVICE_POD} mkdir -p ${storedFileFolder}000000000_999999999/000000_999999/000_999
 
     oc rsync --include=fileForEachDBEntry.sh ${scriptDir}/ ${DATA_SERVICE_POD}:
     oc rsh ${DATA_SERVICE_POD} sh fileForEachDBEntry.sh ${storedFileFolder}

@@ -2,8 +2,8 @@ FROM debian:jessie-slim
 
 LABEL maintainer "infrastructure@orangebus.co.uk"
 
-ENV HTTP_PORT=9080 \
-    HTTPS_PORT=9443 \
+ENV HTTP_PORT=9180 \
+    HTTPS_PORT=9143 \
     WEBAPPS_PROTO=ajp \
     MPM_STARTSERVERS=2 \
     MPM_MINSPARETHREADS=25 \
@@ -20,7 +20,8 @@ ENV HTTP_PORT=9080 \
     SP_PROXY_CERTIFICATE="@auth_sp_proxy_certificate@" \
     SP_PROXY_CACERTIFICATE="@auth_sp_proxy_cacertificate@" \
     IDP_SIGNING_CERTIFICATE="@auth_idp_signing_certificate@" \
-    IDP_ENCRYPTION_CERTIFICATE="@auth_idp_encryption_certificate@"
+    IDP_ENCRYPTION_CERTIFICATE="@auth_idp_encryption_certificate@" \
+    MEMCACHE_ENDPOINT=
 
 WORKDIR /usr/local/bin
 
@@ -37,7 +38,8 @@ RUN apt-get update --fix-missing && \
 
 # configure apache \
   rm -f /etc/apache2/sites-enabled/000-default.conf && \
-  a2enmod shib2 socache_shmcb slotmem_shm ssl proxy_balancer status lbmethod_byrequests proxy_ajp proxy headers rewrite proxy_http reqtimeout && \
+  a2enmod shib2 socache_shmcb ssl status proxy_ajp proxy headers rewrite proxy_http reqtimeout && \
+  a2disconf other-vhosts-access-log && \
   mv /usr/local/files/apache2/mpm_event.conf /etc/apache2/mods-available/ && \
   sed -i -e 's/Listen 80/Listen ${HTTP_PORT}/' -e 's/Listen 443/Listen ${HTTPS_PORT}/' /etc/apache2/ports.conf && \
   mv /usr/local/files/apache2/z-defaults.conf /etc/apache2/conf-available/ && a2enconf z-defaults.conf && \
@@ -54,22 +56,22 @@ RUN apt-get update --fix-missing && \
   mv /usr/local/files/files/* /var/www/html/files/ && \
 
 # run apache as its own user \
-  mkdir -p /var/run/apache2 && \
-  chown -R www-data:0 /etc/apache2 /var/cache/apache2 /run/lock/apache2 /var/run/apache2 /var/www/html/ && \
-  chmod -R u=rwX,g=rwX,o= /etc/apache2 /var/cache/apache2 /run/lock/apache2 /var/www/html/ && \
+  mkdir -p /var/run/apache2 /run/lock/apache2 && \
+  chown -R www-data:0 /etc/apache2 /var/cache/apache2 /run/lock/apache2 /var/run/apache2 /var/cache/modsecurity /var/www/html/ && \
+  chmod -R u=rwX,g=rwX,o= /etc/apache2 /var/cache/apache2 /run/lock/apache2 /var/run/apache2 /var/cache/modsecurity /var/www/html/ && \
 
 # configure shibboleth module \
   mv /usr/local/files/sp/* /etc/shibboleth/ && \
   mkdir /var/www/html/Logout &&  mv /usr/local/files/apache2/index.html /var/www/html/Logout/ && \
-  mkdir /var/run/shibboleth && \
   sed -i "/^log4j\.appender/d" /etc/shibboleth/shibd.logger && cat /etc/shibboleth/appenders.shibd.logger >> /etc/shibboleth/shibd.logger &&  rm /etc/shibboleth/appenders.shibd.logger && \
 # see also certificates and substitutions in entrypoint script \
 
 # run shibboleth sp as its own user (same as apache) \
   mkdir -p /var/run/shibboleth && \
-  chown -R www-data:0 /etc/shibboleth /var/www/html/Logout /var/run/shibboleth && \
-  chmod -R u=rwX,g=rwX,o= /etc/shibboleth /var/www/html/Logout /var/run/shibboleth && \
+  chown -R www-data:0 /etc/shibboleth /var/cache/shibboleth /var/www/html/Logout /var/run/shibboleth && \
+  chmod -R u=rwX,g=rwX,o= /etc/shibboleth /var/cache/shibboleth /var/www/html/Logout /var/run/shibboleth && \
 
   rm -Rf /usr/local/files/
 
+#USER www-data
 ENTRYPOINT [ "run-shibboleth-sp.sh" ]

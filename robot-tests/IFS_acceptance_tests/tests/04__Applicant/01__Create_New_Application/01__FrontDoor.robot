@@ -30,7 +30,7 @@ Guest user can see Competitions and their information
     [Setup]    the user navigates to the page    ${frontDoor}
     Given the user should see the element    link=Home and industrial efficiency programme
     Then the user should see the element    jQuery=h3:contains("Eligibility")
-    And the user should see the element    jQuery=p:contains("UK based business of any size. Must involve at least one SME")
+    And the user should see the element    jQuery=div:contains("UK based business of any size. Must involve at least one SME")
     Then the user should see the element    jQuery=dt:contains("Opened") + dd:contains("15 April 2016")
     And the user should see the element    jQuery=dt:contains("Closes") + dd:contains("9 September 2067")
     #Guest user can filter competitions by Keywords, this is tested in file 05__Public_content.robot

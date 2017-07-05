@@ -5,6 +5,28 @@
     xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
     clockSkew="180">
 
+    <!-- This set of components stores sessions and other persistent data in memcache. -->
+    <!-- ${MEMCACHE_ENDPOINT}
+    <OutOfProcess>
+        <Extensions>
+            <Library path="memcache-store.so" fatal="true"/>
+        </Extensions>
+    </OutOfProcess>
+    <StorageService type="MEMCACHE" id="mc" prefix="ifs-sp:">
+        <Hosts>
+            ${MEMCACHE_ENDPOINT}
+        </Hosts>
+    </StorageService>
+     <StorageService type="MEMCACHE" id="mc-ctx" prefix="ifs-sp:" buildMap="1">
+        <Hosts>
+            ${MEMCACHE_ENDPOINT}
+        </Hosts>
+    </StorageService>
+    <SessionCache type="StorageService" cacheTimeout="28000" StorageService="mc-ctx" StorageServiceLite="mc" />
+    <ReplayCache StorageService="mc"/>
+    <ArtifactMap StorageService="mc" artifactTTL="180"/>
+    ${MEMCACHE_ENDPOINT} -->
+
     <ApplicationDefaults entityID="https://ifs.local-dev"
                          REMOTE_USER="uid">
 
@@ -38,10 +60,8 @@
         <AttributeFilter type="XML" validate="true" path="attribute-policy.xml"/>
         <CredentialResolver type="File" key="/etc/shibboleth/sp_proxy_key.pem" certificate="/etc/shibboleth/sp_proxy_certificate.pem"/>
     </ApplicationDefaults>
+
     <SecurityPolicyProvider type="XML" validate="true" path="security-policy.xml"/>
     <ProtocolProvider type="XML" validate="true" reloadChanges="false" path="protocols.xml"/>
 
 </SPConfig>
-
-
-

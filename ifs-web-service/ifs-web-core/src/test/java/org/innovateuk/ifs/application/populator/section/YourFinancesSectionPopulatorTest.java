@@ -22,6 +22,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
+import java.util.Optional;
+
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
@@ -91,7 +93,7 @@ public class YourFinancesSectionPopulatorTest {
         when(financeService.getApplicationFinanceDetails(section.getCurrentUser().getId(), section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(financeResource);
         when(financeService.getApplicationFinanceTotals(section.getApplication().getId())).thenReturn(asList(financeResource));
 
-        YourFinancesSectionViewModel viewModel = yourFinancesSectionPopulator.populate(section, form, model, bindingResult);
+        YourFinancesSectionViewModel viewModel = yourFinancesSectionPopulator.populate(section, form, model, bindingResult, false, Optional.empty(), false);
 
         assertThat(viewModel.isSection(), equalTo(true));
         assertThat(viewModel.isNotRequestingFunding(), equalTo(true));

@@ -6,7 +6,7 @@ LDAP_VERSION=0.4.0
 IDP_VERSION=0.4.1
 SP_VERSION=0.4.0
 
-docker login -p $(oc whoami -t) -e unused -u unused ${REGISTRY}
+docker login -p $(oc whoami -t) -u unused ${REGISTRY}
 
 if [ -z $(docker images -q innovateuk/ifs-shib-sp:${SP_VERSION}) ]
 then

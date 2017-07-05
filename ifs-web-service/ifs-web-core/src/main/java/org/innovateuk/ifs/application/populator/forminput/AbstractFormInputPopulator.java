@@ -13,8 +13,23 @@ public abstract class AbstractFormInputPopulator<M extends AbstractFormInputView
     public M populate(AbstractApplicantResource applicantResource,
                       ApplicantSectionResource applicantSection,
                       ApplicantQuestionResource applicantQuestion,
-                     ApplicantFormInputResource applicantFormInput,
-                     ApplicantFormInputResponseResource applicantResponse) {
+                      ApplicantFormInputResource applicantFormInput,
+                      ApplicantFormInputResponseResource applicantResponse) {
+        return populate(applicantResource,
+                        applicantSection,
+                        applicantQuestion,
+                        applicantFormInput,
+                        applicantResponse,
+                        false);
+    }
+
+    @Override
+    public M populate(AbstractApplicantResource applicantResource,
+                      ApplicantSectionResource applicantSection,
+                      ApplicantQuestionResource applicantQuestion,
+                      ApplicantFormInputResource applicantFormInput,
+                      ApplicantFormInputResponseResource applicantResponse,
+                      boolean readOnly) {
 
         M viewModel = createNew();
         viewModel.setApplicantSection(applicantSection);
@@ -24,7 +39,7 @@ public abstract class AbstractFormInputPopulator<M extends AbstractFormInputView
         viewModel.setCurrentApplicant(applicantResource.getCurrentApplicant());
         viewModel.setComplete(isComplete(applicantQuestion, applicantResource.getCurrentApplicant()));
         viewModel.setClosed(!applicantResource.getCompetition().isOpen() || !applicantResource.getApplication().isOpen());
-        viewModel.setReadonly(viewModel.isComplete() || viewModel.isClosed());
+        viewModel.setReadonly(viewModel.isComplete() || viewModel.isClosed() || readOnly);
 
         populate(applicantResource, viewModel);
         return viewModel;
@@ -36,7 +51,6 @@ public abstract class AbstractFormInputPopulator<M extends AbstractFormInputView
             form.addFormInput(viewModel.getFormInput().getId().toString(), viewModel.getResponse().getValue());
         }
     }
-
 
     private boolean isComplete(ApplicantQuestionResource applicantQuestion, ApplicantResource currentApplicant) {
         return applicantQuestion.isCompleteByApplicant(currentApplicant);

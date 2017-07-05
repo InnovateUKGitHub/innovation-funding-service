@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body th:class="${(param.view != null and param.view[0] == 'full' ? 'app-overview full-width' : 'app-overview ')}">
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+
+<main id="content">
+  <th:block th:insert="fragments/layout :: main-content-start" />
+
+  <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Invite to panel'}, ${'/prototypes/IFS-707-manage-assessors?tab=invite'})" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+  <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'68: Technology inspired, competition closed'}, ${'Invite assessors to panel'}, ${null})" />
+
+	<h2 class="heading-medium">Recipients</h2>
+  <p>Dave Smith, Christopher Soames, Martin Trollope</p>
+
+	<div class="form-group">
+		<label class="form-label-bold" for="subject">Subject</label>
+    	<input class="form-control width-full" id="subject" type="text" value="Invitation to assess 'Technology inspired'" />
+	</div>
+
+  <h3 class="heading-small">Message</h3>
+  <p class="form-hint" style="white-space: pre-wrap">
+Dear [recipient name]
+
+We are inviting you to the assessment panel for the competition 'Technology inspired'.
+
+We recognise your expertise and would greatly appreciate your comments on the scientific / business merit of the applications assigned to the panel assessment.
+
+Assessment period: 1 September 2016 to 1 October 2019
+
+Please visit our online Innovation Funding Service to respond to this request: [invite URL]
+
+  </p>
+
+	<div class="form-group">
+		<label class="form-label-bold" for="message">Additional text</label>
+    	<textarea id="message" rows="8" class="width-full">
+      </textarea>
+	</div>
+
+  <p class="form-hint">
+      Yours sincerely,
+  </p>
+
+  <p class="form-hint extra-margin">
+      Competitions Team <br>
+      Innovate UK <br>
+      Tel: 0300 321 4357 <br>
+      Email: competitions@innovateuk.gov.uk
+  </p>
+
+	<div class="extra-margin">
+		<a href="/prototypes/IFS-707-manage-assessors?tab=find" class="button">Send invite</a>
+    <a href="/prototypes/IFS-707-manage-assessors?tab=invite" class="button button-clear">Cancel</a>
+	</div>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+	// <![CDATA[
+
+	// ]]>
+</script>
+</body>
+</html>
