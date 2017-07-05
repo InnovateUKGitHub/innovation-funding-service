@@ -16,9 +16,9 @@ RUN apt-get update && \
 
 RUN mkdir /dump
 
-COPY entrypoint.sh make-mysqldump.sh /dump/
+COPY proxysql/entrypoint.sh proxysql/make-mysqldump.sh /dump/
 
-COPY proxysql.cnf /etc/
+COPY proxysql/proxysql.cnf /etc/
 
 RUN chgrp -R 0 /etc && chmod -R g+rwX /etc
 RUN chgrp -R 0 /dump && chmod -R g+rwx /dump
