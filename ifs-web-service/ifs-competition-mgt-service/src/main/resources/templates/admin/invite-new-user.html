@@ -22,7 +22,7 @@
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Add a new internal user',size='heading-large'" />
 
-    <p>Enter the new user's details below to add them to your invite list.</p>
+    <p>Enter the new internal user's details below to add them to your invite list.</p>
     <h2 class="visuallyhidden">User information</h2>
     <form th:object="${form}" method="post" novalidate="novalidate"  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
         <div class="form-group" th:classappend="${#fields.hasErrors('*{firstName}')} ? 'form-group-error'">
