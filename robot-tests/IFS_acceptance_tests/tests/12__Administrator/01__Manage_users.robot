@@ -78,7 +78,7 @@ Administrator can successfully invite a new user
 
 Inviting the same user for the same role again should give an error
     [Documentation]  IFS-27
-    [Tags]
+    [Tags]  
     When the user clicks the button/link           link=Add a new internal user
     And the user enters text to a text field       id=firstName  Astle
     And the user enters text to a text field       id=lastName  Pimenta
@@ -106,7 +106,34 @@ Admin user invites internal user
     And the user enters text to a text field  id=emailAddress  test@innovateuk.gov.uk
     And the user selects the option from the drop-down menu  IFS_ADMINISTRATOR  id=role
     And the user clicks the button/link  jQuery=button:contains("Send invite")
+    And Logout as user
     Then the user reads his email and clicks the link   test@innovateuk.gov.uk   Invitation to Innovation Funding Service    An Innovation Funding Service account was created for you
+
+Account creation validation checks
+    [Documentation]  IFS-643
+    [Tags]
+    When the user clicks the button/link    jQuery=.button:contains("Create account")
+    When The user should see a field error  Please enter a first name.
+    When the user should see a field error  Your first name should have at least 2 characters.
+    When the user should see a field error  Please enter a last name.
+    When the user should see a field error  Your last name should have at least 2 characters.
+
+New user account is created and verified
+    [Documentation]  IFS-643
+    [Tags]   HappyPath
+    When the user enters text to a text field        css=#firstName  Aaron
+    And the user enters text to a text field         css=#lastName  Aaronson
+    And the user should see the element              jQuery=h3:contains("Email") + p:contains("test@innovateuk.gov.uk")
+    And the user enters text to a text field         css=#password  ${short_password}
+    And the user clicks the button/link              jQuery=.button:contains("Create account")
+    Then the user should see the text in the page    Your account has been created
+    When the user clicks the button/link             jQuery=.button:contains("Sign into your account")
+    And Logging in and Error Checking                test@innovateuk.gov.uk  ${short_password}
+    And the user clicks the button/link              jQuery=a:contains("Manage users")
+    And the user clicks the button/link              jQuery=a:contains("Aaron Aaronson")
+    Then the user should see the element             jQuery=#content dl dd:nth-of-type(1):contains("Aaron Aaronson")
+    And the user should see the element              jQuery=#content dl dd:nth-of-type(2):contains("test@innovateuk.gov.uk")
+    And the user should see the element              jQuery=#content dl dd:nth-of-type(3):contains("IFS Administrator")
 
 
 *** Keywords ***
