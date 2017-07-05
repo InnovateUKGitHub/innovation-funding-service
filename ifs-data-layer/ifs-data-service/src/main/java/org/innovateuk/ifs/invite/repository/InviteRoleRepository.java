@@ -14,6 +14,8 @@ public interface InviteRoleRepository extends PagingAndSortingRepository<RoleInv
 
     List<RoleInvite> findByRoleId(Long roleId);
 
+    List<RoleInvite> findByEmail(String email);
+
     List<RoleInvite> findByRoleIdAndEmail(Long roleId, String email);
 
     RoleInvite getByHash(String hash);

@@ -11,11 +11,10 @@ import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.resource.AdminRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -39,12 +38,10 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     @Autowired
     private InviteRoleRepository inviteRoleRepository;
 
-    @Autowired
-    private Environment environment;
+    private static final String DEFAULT_INTERNAL_USER_EMAIL_DOMAIN = "innovateuk.gov.uk";
 
-    private static final String PRODUCTION_ENV_ACTIVE_PROFILE = "environment";
-
-    private static final String INNOVATE_UK_EMAIL_DOMAIN = "innovateuk.gov.uk";
+    @Value("${ifs.system.internal.user.email.domain}")
+    private String internalUserEmailDomain;
 
     @Override
     @Transactional
@@ -52,10 +49,9 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
         return validateInvite(invitedUser, adminRoleType)
                 .andOnSuccess(() -> validateEmail(invitedUser.getEmail()))
+                .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
                 .andOnSuccess(() -> getRole(adminRoleType))
-                .andOnSuccess((Role role) -> validateUserNotAlreadyInvited(invitedUser, role)
-                        .andOnSuccess(() -> saveInvite(invitedUser, role))
-                );
+                .andOnSuccess(role -> saveInvite(invitedUser, role));
     }
 
     private ServiceResult<Void> validateInvite(UserResource invitedUser, AdminRoleType adminRoleType) {
@@ -69,27 +65,25 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
     private ServiceResult<Void> validateEmail(String email) {
 
-        List<String> environments = Arrays.asList(environment.getActiveProfiles());
+        internalUserEmailDomain = StringUtils.defaultIfBlank(internalUserEmailDomain, DEFAULT_INTERNAL_USER_EMAIL_DOMAIN);
 
-        if (environments.contains(PRODUCTION_ENV_ACTIVE_PROFILE)) {
-            String domain = StringUtils.substringAfter(email, "@");
+        String domain = StringUtils.substringAfter(email, "@");
 
-            if (!domain.equalsIgnoreCase(INNOVATE_UK_EMAIL_DOMAIN)) {
-                return serviceFailure(USER_ROLE_INVITE_INVALID_EMAIL);
-            }
+        if (!internalUserEmailDomain.equalsIgnoreCase(domain)) {
+            return serviceFailure(USER_ROLE_INVITE_INVALID_EMAIL);
         }
 
         return serviceSuccess();
     }
 
-    private ServiceResult<Role> getRole(AdminRoleType adminRoleType) {
-        return find(roleRepository.findOneByName(adminRoleType.getName()), notFoundError(Role.class, adminRoleType.getName()));
+    private ServiceResult<Void> validateUserNotAlreadyInvited(UserResource invitedUser) {
+
+        List<RoleInvite> existingInvites = inviteRoleRepository.findByEmail(invitedUser.getEmail());
+        return existingInvites.isEmpty() ? serviceSuccess() : serviceFailure(USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED);
     }
 
-    private ServiceResult<Void> validateUserNotAlreadyInvited(UserResource invitedUser, Role role) {
-
-        List<RoleInvite> existingInvites = inviteRoleRepository.findByRoleIdAndEmail(role.getId(), invitedUser.getEmail());
-        return existingInvites.isEmpty() ? serviceSuccess() : serviceFailure(USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED);
+    private ServiceResult<Role> getRole(AdminRoleType adminRoleType) {
+        return find(roleRepository.findOneByName(adminRoleType.getName()), notFoundError(Role.class, adminRoleType.getName()));
     }
 
     private ServiceResult<Void> saveInvite(UserResource invitedUser, Role role) {
