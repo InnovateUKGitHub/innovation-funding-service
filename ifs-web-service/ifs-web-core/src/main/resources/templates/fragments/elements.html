@@ -115,12 +115,14 @@
 <th:block th:fragment="progress-indicator">
     <div th:class="*{size != null} ? 'progress-container '+${size} : 'progress-container'">
         <div class="progress-indicator">
+            <div aria-hidden="true" class="progress-totals progress-totals--min">0%</div>
             <div class="progress" th:attr="aria-valuenow=${percentage}" aria-valuemin="0" aria-valuemax="100" role="progressbar" th:style="'width:'+${percentage}+'%'">
                 <div>
                     <th:block th:text="${percentage}+'%'" />
                     <span class="visuallyhidden"> Complete</span>
                 </div>
             </div>
+            <div aria-hidden="true" class="progress-totals progress-totals--max">100%</div>
         </div>
     </div>
 </th:block>
