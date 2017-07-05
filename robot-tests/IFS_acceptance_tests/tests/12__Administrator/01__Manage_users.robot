@@ -82,7 +82,7 @@ Administrator can successfully invite a new user
     When the user clicks the button/link  link=Add a new internal user
     And the user enters text to a text field    id=firstName    Astle
     And the user enters text to a text field    id=lastName    Pimenta
-    And the user enters text to a text field    id=emailAddress    astle.pimenta@innovateuk.test
+    And the user enters text to a text field    id=emailAddress    astle.pimenta@innovateuk.gov.uk
     And the user selects the option from the drop-down menu    IFS Support User    id=role
     And the user clicks the button/link    jQuery=.button:contains("Send invite")
     Then the user should see the element  jQuery=h1:contains("Manage users")    #The Admin is redirected to the Manage Users page on Success
@@ -94,8 +94,20 @@ Inviting the same user for the same role again should give an error
     When the user clicks the button/link  link=Add a new internal user
     And the user enters text to a text field    id=firstName    Astle
     And the user enters text to a text field    id=lastName    Pimenta
-    And the user enters text to a text field    id=emailAddress    astle.pimenta@innovateuk.test
+    And the user enters text to a text field    id=emailAddress    astle.pimenta@innovateuk.gov.uk
     And the user selects the option from the drop-down menu    IFS Support User    id=role
+    And the user clicks the button/link    jQuery=.button:contains("Send invite")
+    Then the user should see the text in the page    This user has a pending invite. Please check.
+
+Inviting the same user for the different role again should also give an error
+    [Documentation]  IFS-27
+    [Tags]
+    When the user clicks the button/link  link=Manage users
+    And the user clicks the button/link  link=Add a new internal user
+    And the user enters text to a text field    id=firstName    Astle
+    And the user enters text to a text field    id=lastName    Pimenta
+    And the user enters text to a text field    id=emailAddress    astle.pimenta@innovateuk.gov.uk
+    And the user selects the option from the drop-down menu    Project Finance    id=role
     And the user clicks the button/link    jQuery=.button:contains("Send invite")
     Then the user should see the text in the page    This user has a pending invite. Please check.
 
