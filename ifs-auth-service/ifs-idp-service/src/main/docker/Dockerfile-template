@@ -1,9 +1,13 @@
-FROM ifshibdev/idp-base:1.1.7
+FROM ifshibdev/idp-base
 
 ENV DEBIAN_FRONTEND=noninteractive \
   HTTPPORT=9080 \
   HTTPSPORT=9443 \
+  IDPVER="3.3.1" \
   JAVAVER=8 \
+  JAVAUPD=121 \
+  JAVABLD=13 \
+  JAVASIG=e9e7ea248e2c4826b92b3f075a80e441 \
   JAVA_KEYSTORE_PASSWORD="@java_keystore_password@" \
   LDAPURL="ldaps://ldap:8389" \
   LDAPPORT="8389" \
@@ -52,6 +56,7 @@ RUN  mkdir /etc/apache2/certs && \
   rm -f /etc/apache2/sites-enabled/000-default.conf && \
   a2enmod socache_shmcb ssl status proxy_ajp proxy headers rewrite proxy_http reqtimeout && \
   a2disconf other-vhosts-access-log && \
+  touch /etc/apache2/certs/* && \
   mv /apache/locking /var/www/html/ && \
 
 # run apache as its own user \
@@ -62,12 +67,16 @@ RUN  mkdir /etc/apache2/certs && \
   rm -rf /apache /tmp/* /var/tmp/*
 
 RUN mv /idp/idpproxy.conf /etc/apache2/sites-available/ && \
-  a2ensite idpproxy && \
+  ln -s /etc/apache2/sites-available/idpproxy.conf /etc/apache2/sites-enabled/idpproxy.conf && \
 # directory for certificates, added in entrypoint \
   mkdir /etc/tomcat8/certs && \
   mv /idp/server.xml /etc/tomcat8/ && \
   mv /idp/tomcat8 /etc/default/tomcat8 && \
   mv /idp/ifs-registration-service-@version@.war /var/lib/tomcat8/webapps/shibboleth-api.war && \
+  (cd /etc/tomcat8; chmod -R o-rwx,g-w Catalina *.properties *.xml policy.d) && \
+  curl --connect-timeout 30 -m 120 -s -L --retry 5 http://shibboleth.net/downloads/identity-provider/$IDPVER/shibboleth-identity-provider-$IDPVER.tar.gz | bsdtar -C /root -xf - && \
+  cat /idp/build.xml|tr "3.2.1" "$IDPVER" > /root/shibboleth-identity-provider-$IDPVER/bin/build.xml && rm -f /idp/build.xml && \
+  (cd /root/shibboleth-identity-provider-$IDPVER/bin; ./install.sh) && rm -rf /root/shibboleth-identity-provider-$IDPVER && \
   sed -i -e 's#%{idp.signing.key}#/opt/shibboleth-idp/credentials/idp-signing.key#g' \
          -e 's#%{idp.signing.cert}#/opt/shibboleth-idp/credentials/idp-signing.crt#g' \
          -e 's#%{idp.encryption.key}#/opt/shibboleth-idp/credentials/idp-encryption.key#g' \
@@ -90,7 +99,6 @@ RUN mv /idp/idpproxy.conf /etc/apache2/sites-available/ && \
 
 # start and other useful scripts
 COPY scripts/* /usr/local/bin/
-
 # custom govuk pages
 COPY pages/ /opt/shibboleth-idp/
 RUN chown -R www-data:0 /opt/shibboleth-idp /usr/local/bin && \
