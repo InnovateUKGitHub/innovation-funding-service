@@ -588,7 +588,6 @@
         <tr>
             <td rowspan="3" th:text="${typeOfChange}"></td>
             <td rowspan="3" th:text="${rowTypeName}"></td>
-
             <th scope="row">Funding Source</th>
             <td></td>
             <td colspan="2" th:text="${changePair.changed.fundingSource}"></td>
@@ -614,7 +613,6 @@
         <tr>
             <td rowspan="3" th:text="${typeOfChange}"></td>
             <td rowspan="3" th:text="${rowTypeName}"></td>
-
             <th scope="row">Funding Source</th>
             <td th:text="${changePair.submitted.fundingSource}"></td>
             <td colspan="2"></td>
@@ -642,8 +640,7 @@
         <tr th:class="${changePair.submitted.grantClaimPercentage != changePair.changed.grantClaimPercentage} ? 'item-changed' : ''">
             <td rowspan="1" th:text="${typeOfChange}"></td>
             <td rowspan="1" th:text="${rowTypeName}"></td>
-
-            <th scope="row">Grant Claim Percentage</th>
+            <th scope="row">Funding level</th>
             <td th:text="${changePair.submitted.grantClaimPercentage}"></td>
             <td th:text="${changePair.changed.grantClaimPercentage}" colspan="2" th:class="${changePair.submitted.grantClaimPercentage!= changePair.changed.grantClaimPercentage} ? 'item-changed' : ''"></td>
         </tr>
@@ -657,8 +654,7 @@
         <tr>
             <td rowspan="1" th:text="${typeOfChange}"></td>
             <td rowspan="1" th:text="${rowTypeName}"></td>
-
-            <th scope="row">Grant Claim Percentage<</th>
+            <th scope="row">Funding level</th>
             <td></td>
             <td th:text="${changePair.changed.grantClaimPercentage}" colspan="2"></td>
         </tr>
@@ -671,8 +667,7 @@
         <tr>
             <td rowspan="1" th:text="${typeOfChange}"></td>
             <td rowspan="1" th:text="${rowTypeName}"></td>
-
-            <th scope="row">Grant Claim Percentage<</th>
+            <th scope="row">Funding level</th>
             <td th:text="${changePair.submitted.grantClaimPercentage}"></td>
             <td colspan="2"></td>
         </tr>
