@@ -6,6 +6,11 @@ EXPOSE 8000
 EXPOSE 8080
 ENV JAVA_OPTS -Xmx300m
 ENV JMX_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=8001 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
+RUN adduser -D -u 1000 innovator
+RUN mkdir /var/log/tomcat
+RUN chown innovator /var/log/tomcat
+RUN chgrp -R 0 /var/log/tomcat
+USER innovator
 VOLUME /tmp
 
 ADD newrelic.jar /
