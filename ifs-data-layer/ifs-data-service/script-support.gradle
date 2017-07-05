@@ -61,8 +61,3 @@ task syncShib(type:Exec) {
     workingDir '../'
     commandLine 'docker-compose', 'exec', '--user', 'root', '-T', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh', 'mysql'
 }
-
-task loadShib(type:Exec) {
-    workingDir '../setup-files/scripts/docker'
-    commandLine './_load_shib.sh'
-}
