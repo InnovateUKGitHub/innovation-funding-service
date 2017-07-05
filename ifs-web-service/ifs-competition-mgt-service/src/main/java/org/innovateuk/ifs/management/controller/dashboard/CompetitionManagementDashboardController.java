@@ -24,7 +24,7 @@ import java.util.Map;
 import static java.util.stream.Collectors.joining;
 
 @Controller
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
+@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'competition_technologist')")
 public class CompetitionManagementDashboardController {
     public static final String TEMPLATE_PATH = "dashboard/";
     private static final String MODEL_ATTR = "model";
@@ -42,7 +42,7 @@ public class CompetitionManagementDashboardController {
 
     @GetMapping("/dashboard/live")
     public String live(Model model, UserResource user){
-        boolean supportView = user.hasRole(UserRoleType.SUPPORT);
+        boolean supportView = user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.COMP_TECHNOLOGIST);
         model.addAttribute(MODEL_ATTR, new LiveDashboardViewModel(competitionDashboardSearchService.getLiveCompetitions(),
                 competitionDashboardSearchService.getCompetitionCounts(), supportView));
 
@@ -97,7 +97,7 @@ public class CompetitionManagementDashboardController {
         String trimmedSearchQuery = StringUtils.normalizeSpace(searchQuery);
         model.addAttribute("results", competitionDashboardSearchService.searchCompetitions(trimmedSearchQuery, page - 1));
         model.addAttribute("searchQuery", searchQuery);
-        model.addAttribute("supportView", user.hasRole(UserRoleType.SUPPORT));
+        model.addAttribute("supportView", user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.COMP_TECHNOLOGIST));
         return TEMPLATE_PATH + "search";
     }
 

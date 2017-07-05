@@ -45,7 +45,7 @@ import static org.innovateuk.ifs.util.HttpUtils.getQueryStringParameters;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/application")
-@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support')")
+@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'competition_technologist')")
 public class CompetitionManagementApplicationController {
 
     @Autowired

@@ -482,7 +482,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private boolean createViaRegistration(List<UserRoleType> roles) {
-        return roles.stream().noneMatch(role -> asList(COMP_TECHNOLOGIST, SUPPORT, IFS_ADMINISTRATOR).contains(role));
+        return roles.stream().noneMatch(role -> asList(COMP_TECHNOLOGIST, SUPPORT, IFS_ADMINISTRATOR, COMP_TECHNOLOGIST).contains(role));
     }
 
     private void createCompetitions() {

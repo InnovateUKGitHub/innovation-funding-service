@@ -25,7 +25,7 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/applications")
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
+@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'competition_technologist')")
 public class CompetitionManagementApplicationsController {
 
     private static final String FILTER_FORM_ATTR_NAME = "filterForm";

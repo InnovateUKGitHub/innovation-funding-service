@@ -89,7 +89,7 @@ public class ApplicationSubmitController {
         return applicationModelPopulator.userIsLeadApplicant(application, user.getId()) && application.isSubmittable();
     }
 
-    @PreAuthorize("hasAnyAuthority('applicant', 'support')")
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'competition_technologist')")
     @GetMapping("/{applicationId}/summary")
     public String applicationSummary(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                      UserResource user) {
