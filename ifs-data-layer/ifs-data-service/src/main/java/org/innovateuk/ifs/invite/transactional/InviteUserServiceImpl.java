@@ -11,13 +11,16 @@ import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.resource.AdminRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_ROLE_INVITE_INVALID;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_ROLE_INVITE_INVALID_EMAIL;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -36,11 +39,19 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     @Autowired
     private InviteRoleRepository inviteRoleRepository;
 
+    @Autowired
+    private Environment environment;
+
+    private static final String PRODUCTION_ENV_ACTIVE_PROFILE = "environment";
+
+    private static final String INNOVATE_UK_EMAIL_DOMAIN = "innovateuk.gov.uk";
+
     @Override
     @Transactional
     public ServiceResult<Void> saveUserInvite(UserResource invitedUser, AdminRoleType adminRoleType) {
 
         return validateInvite(invitedUser, adminRoleType)
+                .andOnSuccess(() -> validateEmail(invitedUser.getEmail()))
                 .andOnSuccess(() -> getRole(adminRoleType))
                 .andOnSuccess((Role role) -> validateUserNotAlreadyInvited(invitedUser, role)
                         .andOnSuccess(() -> saveInvite(invitedUser, role))
@@ -53,6 +64,21 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
                 || StringUtils.isEmpty(invitedUser.getLastName()) || adminRoleType == null){
             return serviceFailure(USER_ROLE_INVITE_INVALID);
         }
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> validateEmail(String email) {
+
+        List<String> environments = Arrays.asList(environment.getActiveProfiles());
+
+        if (environments.contains(PRODUCTION_ENV_ACTIVE_PROFILE)) {
+            String domain = StringUtils.substringAfter(email, "@");
+
+            if (!domain.equalsIgnoreCase(INNOVATE_UK_EMAIL_DOMAIN)) {
+                return serviceFailure(USER_ROLE_INVITE_INVALID_EMAIL);
+            }
+        }
+
         return serviceSuccess();
     }
 

@@ -124,6 +124,7 @@ import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.core.env.Environment;
 
 /**
  * This is a convenience subclass for all tests that require Mockito support.  At its simplest this class is simply a
@@ -215,6 +216,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected InviteRoleRepository inviteRoleRepositoryMock;
+
+    @Mock
+    protected Environment environmentMock;
 
     @Mock
     protected RoleService roleServiceMock;
