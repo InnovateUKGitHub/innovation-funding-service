@@ -188,6 +188,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
     }
 
     private ApplicationInviteResource doInviteCollaborator(ApplicationData data, String organisationName, Optional<Long> userId, String email, String name, Optional<String> hash) {
+        Long applicationId = 1L;
 
         ApplicationInviteResourceBuilder baseApplicationInviteBuilder =
                 userId.map(id -> newApplicationInviteResource().withUsers(id)).orElse(newApplicationInviteResource());
@@ -208,7 +209,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         inviteService.createApplicationInvites(newInviteOrganisationResource().
                 withOrganisationName(organisationName).
                 withInviteResources(applicationInvite).
-                build()).getSuccessObjectOrThrowException();
+                build(), applicationId).getSuccessObjectOrThrowException();
 
         testService.flushAndClearSession();
 

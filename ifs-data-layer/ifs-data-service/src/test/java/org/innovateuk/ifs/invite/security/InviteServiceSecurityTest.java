@@ -66,8 +66,9 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
     @Test
     public void testCreateApplicationInvites() {
         final InviteOrganisationResource inviteOrganisation = newInviteOrganisationResource().build();
+        final long applicationId = 1L;
         assertAccessDenied(
-                () -> classUnderTest.createApplicationInvites(inviteOrganisation),
+                () -> classUnderTest.createApplicationInvites(inviteOrganisation, applicationId),
                 () -> {
                     verify(inviteOrganisationPermissionRules).leadApplicantCanCreateApplicationInvitesIfApplicationEditable(eq(inviteOrganisation), any(UserResource.class));
                 });
@@ -126,7 +127,7 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
         }
 
         @Override
-        public ServiceResult<InviteResultsResource> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource) {
+        public ServiceResult<InviteResultsResource> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource, Long applicationId) {
             return null;
         }
 

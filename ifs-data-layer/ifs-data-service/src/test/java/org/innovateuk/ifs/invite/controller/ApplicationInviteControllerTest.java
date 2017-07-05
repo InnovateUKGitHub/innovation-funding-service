@@ -46,6 +46,7 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
 
     @Test
     public void postingOrganisationInviteResourceContainingInviteResourcesShouldInitiateSaveCalls() throws Exception {
+        long applicationId = 1L;
         List<ApplicationInviteResource> inviteResources = newInviteResource()
                 .withApplication(1L)
                 .withName("testname")
@@ -60,19 +61,20 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
         String organisationResourceString = objectMapper.writeValueAsString(inviteOrganisationResource);
 
         InviteResultsResource inviteResultsResource = new InviteResultsResource();
-        when(inviteService.createApplicationInvites(inviteOrganisationResource)).thenReturn(serviceSuccess(inviteResultsResource));
+        when(inviteService.createApplicationInvites(inviteOrganisationResource, applicationId)).thenReturn(serviceSuccess(inviteResultsResource));
 
-        mockMvc.perform(post("/invite/createApplicationInvites", "json")
+        mockMvc.perform(post("/invite/createApplicationInvites/" + applicationId, "json")
                 .contentType(APPLICATION_JSON)
                 .content(organisationResourceString))
                 .andExpect(status().isCreated())
-                .andDo(document("invite/createApplicationInvites"));
+                .andDo(document("invite/createApplicationInvites/" + applicationId));
 
-        verify(inviteService, times(1)).createApplicationInvites(inviteOrganisationResource);
+        verify(inviteService, times(1)).createApplicationInvites(inviteOrganisationResource, applicationId);
     }
 
     @Test
     public void invalidInviteOrganisationResourceShouldReturnErrorMessage() throws Exception {
+        long applicationId = 1L;
         List<ApplicationInviteResource> inviteResources = newInviteResource()
                 .withApplication(1L)
                 .withName("testname")
@@ -85,9 +87,9 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
 
         String organisationResourceString = objectMapper.writeValueAsString(inviteOrganisationResource);
 
-        when(inviteService.createApplicationInvites(inviteOrganisationResource)).thenReturn(serviceFailure(badRequestError("no invites")));
+        when(inviteService.createApplicationInvites(inviteOrganisationResource, applicationId)).thenReturn(serviceFailure(badRequestError("no invites")));
 
-        mockMvc.perform(post("/invite/createApplicationInvites", "json")
+        mockMvc.perform(post("/invite/createApplicationInvites/"+applicationId, "json")
                 .contentType(APPLICATION_JSON)
                 .content(organisationResourceString))
                 .andExpect(status().isBadRequest());

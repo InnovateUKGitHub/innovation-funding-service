@@ -184,6 +184,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void createApplicationInvites() {
+        Long applicationId = 1L;
 
         List<ApplicationInviteResource> inviteResources = newInviteResource()
                 .withApplication(1L)
@@ -218,7 +219,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         when(applicationInviteRepositoryMock.save(saveInvitesExpectations)).thenReturn(savedInvites);
         when(applicationRepositoryMock.findOne(isA(Long.class))).thenReturn(newApplication().withId(1L).build());
 
-        ServiceResult<InviteResultsResource> result = inviteService.createApplicationInvites(inviteOrganisationResource);
+        ServiceResult<InviteResultsResource> result = inviteService.createApplicationInvites(inviteOrganisationResource, applicationId);
         assertTrue(result.isSuccess());
 
         verify(inviteOrganisationRepositoryMock).save(isA(InviteOrganisation.class));
@@ -260,6 +261,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void createApplicationInvitesWithInvalidOrganisationInviteNoOrganisationName() {
+        Long applicationId = 1L;
 
         List<ApplicationInviteResource> inviteResources = newInviteResource()
                 .withApplication(1L)
@@ -276,7 +278,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
 
         when(applicationRepositoryMock.findOne(isA(Long.class))).thenReturn(newApplication().withId(1L).build());
 
-        ServiceResult<InviteResultsResource> result = inviteService.createApplicationInvites(inviteOrganisationResource);
+        ServiceResult<InviteResultsResource> result = inviteService.createApplicationInvites(inviteOrganisationResource, applicationId);
         assertTrue(result.isFailure());
 
         verify(inviteOrganisationRepositoryMock, never()).save(isA(InviteOrganisation.class));
@@ -637,6 +639,8 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     private void assertInvalidInvites(List<ApplicationInviteResource> inviteResources) {
+        Long applicationId = 1L;
+
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource()
                 .withInviteResources(inviteResources)
                 .withOrganisationName("new organisation")
@@ -646,7 +650,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         when(applicationRepositoryMock.findOne(null)).thenReturn(newApplication().withId(1L).build());
         when(inviteOrganisationRepositoryMock.findAll(isA(List.class))).thenReturn(newInviteOrganisation().build(1));
 
-        ServiceResult<InviteResultsResource> result = inviteService.createApplicationInvites(inviteOrganisationResource);
+        ServiceResult<InviteResultsResource> result = inviteService.createApplicationInvites(inviteOrganisationResource, applicationId);
         assertTrue(result.isFailure());
 
         verify(inviteOrganisationRepositoryMock, never()).save(isA(InviteOrganisation.class));
