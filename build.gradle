@@ -182,23 +182,10 @@ dockerCompose {
 
 }
 
-task prepareComposeFile (type: Copy) {
-    outputs.upToDateWhen { false }
-    from '.'
-    into '.'
-    include 'docker-compose-template.yml'
-    rename 'docker-compose-template.yml', 'docker-compose.yml'
-    filter(ReplaceTokens, tokens: [version : project.properties['version']])
-}
-
 task dockerTidy(type:Exec) {
     executable = 'setup-files/scripts/docker/docker_tidy_up.sh'
     args = [project.version]
 }
-
-composeUp.dependsOn prepareComposeFile
-
-import org.apache.tools.ant.filters.*
 
 task happyRobotTests(type:Exec) {
     workingDir 'robot-tests'
