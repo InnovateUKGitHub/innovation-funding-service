@@ -1,8 +1,5 @@
 package org.innovateuk.ifs.registration.viewmodel;
 
-/**
- * Created by rav on 30/06/2017.
- */
 public class InternalUserRegistrationViewModel {
     private String name;
     private String roleName;

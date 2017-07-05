@@ -147,7 +147,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     public ServiceResult<UserResource> createUser(@P("user") UserRegistrationResource userRegistrationResource) {
         final UserResource userResource = userRegistrationResource.toUserResource();
 
-        return validateUser(userResource, userResource.getPassword()).
+        return validateUser(userResource).
                 andOnSuccess(validUser -> {
                     final User user = userMapper.mapToDomain(userResource);
                     return createUserWithUid(user, userResource.getPassword(), userRegistrationResource.getAddress());
@@ -166,7 +166,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
             roleName = APPLICANT.getName();
         }
         User newUser = assembleUserFromResource(userResource);
-        return validateUser(userResource, userResource.getPassword()).
+        return validateUser(userResource).
                 andOnSuccess(
                         () -> addUserToOrganisation(newUser, organisationId).
                                 andOnSuccess(user -> addRoleToUser(user, roleName))).
@@ -175,8 +175,8 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 );
     }
 
-    private ServiceResult<UserResource> validateUser(UserResource userResource, String password) {
-        return passwordPolicyValidator.validatePassword(password, userResource)
+    private ServiceResult<UserResource> validateUser(UserResource userResource) {
+        return passwordPolicyValidator.validatePassword(userResource.getPassword(), userResource)
                 .handleSuccessOrFailure(
                         failure -> serviceFailure(
                                 simpleMap(
@@ -331,17 +331,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 }));
     }
 
-    private ServiceResult<Void> createUser(InternalUserRegistrationResource internalUserRegistrationResource) {
-        final UserResource userResource = internalUserRegistrationResource.toUserResource();
-
-        return validateUser(userResource, userResource.getPassword()).
-                andOnSuccess(validUser -> {
-                    final User user = userMapper.mapToDomain(userResource);
-                    return createUserWithUid(user, userResource.getPassword()).
-                            andOnSuccess(this::activateUser).andOnSuccessReturnVoid();
-                });
-    }
-
     private ServiceResult<List<RoleResource>> getInternalRoleResources(Role role) {
         UserRoleType roleType = UserRoleType.fromName(role.getName());
 
@@ -350,6 +339,17 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         } else {
             return roleService.findByUserRoleType(roleType).andOnSuccess(roleResource -> serviceSuccess(singletonList(roleResource)));
         }
+    }
+
+    private ServiceResult<Void> createUser(InternalUserRegistrationResource internalUserRegistrationResource) {
+        final UserResource userResource = internalUserRegistrationResource.toUserResource();
+
+        return validateUser(userResource).
+                andOnSuccess(validUser -> {
+                    final User user = userMapper.mapToDomain(userResource);
+                    return createUserWithUid(user, userResource.getPassword()).
+                            andOnSuccess(this::activateUser).andOnSuccessReturnVoid();
+                });
     }
 
     private ServiceResult<List<RoleResource>> getIFSAdminRoles(UserRoleType roleType) {
@@ -372,7 +372,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
         return uidFromIdpResult.andOnSuccess(uidFromIdp -> {
             user.setUid(uidFromIdp);
-            user.setStatus(UserStatus.ACTIVE);
             Profile profile = new Profile();
             Profile savedProfile = profileRepository.save(profile);
             user.setProfileId(savedProfile.getId());

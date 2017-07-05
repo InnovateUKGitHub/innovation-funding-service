@@ -83,7 +83,6 @@ public class InternalUserRegistrationController {
 
         return inviteUserRestService.checkExistingUser(inviteHash).andOnSuccessReturn(userExists -> {
             if (!userExists) {
-                // reached here without creating account, redirect back to registatation
                 return format("redirect:/registration/%s/register", inviteHash);
             }
             else {
