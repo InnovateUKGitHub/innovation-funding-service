@@ -560,10 +560,10 @@ Comp Admin is able to see Spend Profile approval page
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
     Then the user should see the element    jQuery=#content div.grid-row div.column-third.alignright.extra-margin h2:contains("Spend profile")
     And the element should be disabled    jQuery=#accept-profile
-    And the user should see the element    jQuery=#content .button.button.button-warning:contains("Reject")
+    And the user should see the element    jQuery=#content .button-warning:contains("Reject")
     And the user should see the text in the page  Innovation Lead
     And the user should see the text in the page  Peter Freeman
-    When the user clicks the button/link    jQuery=#content .button.button.button-warning:contains("Reject")
+    When the user clicks the button/link    jQuery=#content .button-warning:contains("Reject")
     Then the user should see the text in the page    You should contact the Project Manager to explain why the spend profile is being returned.
     When the user clicks the button/link    jQuery=.modal-reject-profile button:contains("Cancel")
     Then the user should not see an error in the page
