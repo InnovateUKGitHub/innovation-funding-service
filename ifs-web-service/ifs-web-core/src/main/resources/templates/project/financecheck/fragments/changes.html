@@ -641,8 +641,8 @@
             <td rowspan="1" th:text="${typeOfChange}"></td>
             <td rowspan="1" th:text="${rowTypeName}"></td>
             <th scope="row">Funding level</th>
-            <td th:text="${changePair.submitted.grantClaimPercentage}"></td>
-            <td th:text="${changePair.changed.grantClaimPercentage}" colspan="2" th:class="${changePair.submitted.grantClaimPercentage!= changePair.changed.grantClaimPercentage} ? 'item-changed' : ''"></td>
+            <td th:text="${changePair.submitted.grantClaimPercentage + '%'}"></td>
+            <td th:text="${changePair.changed.grantClaimPercentage + '%'}" colspan="2" th:class="${changePair.submitted.grantClaimPercentage!= changePair.changed.grantClaimPercentage} ? 'item-changed' : ''"></td>
         </tr>
 
         <tr class="change-row" th:with="difference=${changePair.changed.grantClaimPercentage - changePair.submitted.grantClaimPercentage}">
@@ -656,7 +656,7 @@
             <td rowspan="1" th:text="${rowTypeName}"></td>
             <th scope="row">Funding level</th>
             <td></td>
-            <td th:text="${changePair.changed.grantClaimPercentage}" colspan="2"></td>
+            <td th:text="${changePair.changed.grantClaimPercentage + '%'}" colspan="2"></td>
         </tr>
         <tr class="change-row">
             <td th:text="${#numbers.formatDecimal(changePair.changed.grantClaimPercentage,0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
@@ -668,7 +668,7 @@
             <td rowspan="1" th:text="${typeOfChange}"></td>
             <td rowspan="1" th:text="${rowTypeName}"></td>
             <th scope="row">Funding level</th>
-            <td th:text="${changePair.submitted.grantClaimPercentage}"></td>
+            <td th:text="${changePair.submitted.grantClaimPercentage + '%'}"></td>
             <td colspan="2"></td>
         </tr>
         <tr class="change-row">
