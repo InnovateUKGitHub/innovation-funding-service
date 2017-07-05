@@ -32,7 +32,7 @@ public class CompetitionManagementAssessmentsAssessorsController extends BaseCom
                                      @RequestParam MultiValueMap<String, String> queryParams,
                                      @RequestParam(value = "page", defaultValue = "0") int page,
                                      @RequestParam(value = "filterSearch", defaultValue = "") String filter,
-                                     @RequestParam(value = "origin", defaultValue = "MANAGE_ASSESSORS") String origin) {
+                                     @RequestParam(value = "origin", defaultValue = "MANAGE_ASSESSMENTS") String origin) {
         CompetitionResource competitionResource = getCompetition(competitionId);
 
         AssessorCountSummaryPageResource applicationCounts = getCounts(competitionId, page, filter);
@@ -43,7 +43,7 @@ public class CompetitionManagementAssessmentsAssessorsController extends BaseCom
 
         model.addAttribute("model", manageApplicationsPopulator.populateModel(competitionResource, applicationCounts, filter, originQuery));
         model.addAttribute("originQuery", originQuery);
-        model.addAttribute("manageApplicationsOriginQuery", manageApplicationsOriginQuery);
+        model.addAttribute("manageAssessorsOriginQuery", manageApplicationsOriginQuery);
 
         return "competition/manage-assessors";
     }
