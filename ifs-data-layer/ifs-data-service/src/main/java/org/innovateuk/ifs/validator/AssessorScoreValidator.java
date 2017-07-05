@@ -26,10 +26,10 @@ public class AssessorScoreValidator extends BaseValidator {
                 int assessorScore = Integer.parseInt(value);
 
                 if (assessorScore < 0 || assessorScore > maxScore) {
-                    rejectValue(errors, "value", "validation.assessor.score.betweenZeroAndMax", maxScore);
+                    rejectValue(errors, "value", "validation.assessor.score.betweenZeroAndMax", response.getFormInput().getId(), maxScore);
                 }
             } catch (NumberFormatException e) {
-                rejectValue(errors, "value","validation.assessor.score.notAnInteger");
+                rejectValue(errors, "value","validation.assessor.score.notAnInteger", response.getFormInput().getId());
             }
         }
     }
