@@ -69,9 +69,6 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
                 .withLastName("Pimenta")
                 .withEmail("Astle.Pimenta@innovateuk.gov.uk")
                 .build();
-
-        String[] environments = new String[]{"environment"};
-        when(environmentMock.getActiveProfiles()).thenReturn(environments);
     }
 
     @Override
@@ -111,6 +108,23 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     }
 
     @Test
+    public void saveUserInviteWhenUserAlreadyInvited() throws Exception {
+
+        AdminRoleType adminRoleType = AdminRoleType.SUPPORT;
+
+        Role role = new Role(1L, "support");
+        RoleInvite roleInvite = new RoleInvite();
+
+        when(roleRepositoryMock.findOneByName(adminRoleType.getName())).thenReturn(role);
+        when(inviteRoleRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Collections.singletonList(roleInvite));
+
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, adminRoleType);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED));
+
+    }
+
+    @Test
     public void saveUserInviteWhenUserRoleDoesNotExist() throws Exception {
 
         AdminRoleType adminRoleType = AdminRoleType.SUPPORT;
@@ -120,23 +134,6 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         ServiceResult<Void> result = service.saveUserInvite(invitedUser, adminRoleType);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(Role.class, adminRoleType.getName())));
-
-    }
-
-    @Test
-    public void saveUserInviteWhenUserAlreadyInvited() throws Exception {
-
-        AdminRoleType adminRoleType = AdminRoleType.SUPPORT;
-
-        Role role = new Role(1L, "support");
-        RoleInvite roleInvite = new RoleInvite();
-
-        when(roleRepositoryMock.findOneByName(adminRoleType.getName())).thenReturn(role);
-        when(inviteRoleRepositoryMock.findByRoleIdAndEmail(role.getId(), invitedUser.getEmail())).thenReturn(Collections.singletonList(roleInvite));
-
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, adminRoleType);
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED));
 
     }
 

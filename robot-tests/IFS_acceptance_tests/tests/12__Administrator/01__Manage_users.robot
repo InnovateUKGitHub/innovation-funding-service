@@ -70,7 +70,7 @@ Administrator can successfully invite a new user
     Given the user navigates to the page       ${server}/management/admin/invite-user
     When the user enters text to a text field  id=firstName  Astle
     And the user enters text to a text field   id=lastName  Pimenta
-    And the user enters text to a text field   id=emailAddress  astle.pimenta@innovateuk.test
+    And the user enters text to a text field   id=emailAddress  astle.pimenta@innovateuk.gov.uk
     And the user selects the option from the drop-down menu  IFS Support User  id=role
     And the user clicks the button/link        jQuery=.button:contains("Send invite")
     Then the user cannot see a validation error in the page
@@ -90,10 +90,21 @@ Inviting the same user for the same role again should give an error
     Given the user navigates to the page           ${server}/management/admin/invite-user
     When the user enters text to a text field      id=firstName  Astle
     And the user enters text to a text field       id=lastName  Pimenta
-    And the user enters text to a text field       id=emailAddress  astle.pimenta@innovateuk.test
+    And the user enters text to a text field       id=emailAddress  astle.pimenta@innovateuk.gov.uk
     And the user selects the option from the drop-down menu  IFS Support User  id=role
     And the user clicks the button/link            jQuery=.button:contains("Send invite")
     Then the user should see the element           jQuery=.error-summary:contains("This user has a pending invite. Please check.")
+
+Inviting the same user for the different role again should also give an error
+    [Documentation]  IFS-27
+    [Tags]
+    Given the user navigates to the page       ${server}/management/admin/invite-user
+    When the user enters text to a text field       id=firstName  Astle
+    And the user enters text to a text field       id=lastName  Pimenta
+    And the user enters text to a text field       id=emailAddress  astle.pimenta@innovateuk.gov.uk
+    And the user selects the option from the drop-down menu  Project Finance  id=role
+    And the user clicks the button/link            jQuery=.button:contains("Send invite")
+    Then the user should see the text in the page  This user has a pending invite. Please check.
 
 # TODO: Add ATs for IFS-605 with pagination when IFS-637 is implemented
 
