@@ -5,6 +5,11 @@ if(project.hasProperty('profile') && profile == 'automated') {
     ext.openshiftEnv = project.properties['openshiftEnv'] ?: "automated"
 }
 
+task osInitClusterLocal(type:Exec) {
+    executable = 'setup-files/scripts/openshift/init-local-cluster.sh'
+    args = [openshiftEnv, "local", project.version]
+}
+
 task osDeployRemote(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "remote", project.version]
