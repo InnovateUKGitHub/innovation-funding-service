@@ -35,7 +35,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
@@ -193,7 +192,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         MANAGE_APPLICATIONS("/assessment/competition/{competitionId}/applications"),
         MANAGE_ASSESSORS("/assessment/competition/{competitionId}/assessors"),
         FUNDING_APPLICATIONS("/competition/{competitionId}/funding"),
-        APPLICATION_PROGRESS("/competition/{competitionId}/application/{applicationId}/assessors"),
+        APPLICATION_PROGRESS("/assessment/competition/{competitionId}/application/{applicationId}/assessors"),
         MANAGE_ASSESSMENTS("/assessment/competition/{competitionId}");
 
         private String baseOriginUrl;

@@ -21,9 +21,9 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
  * This controller will handle all Competition Management requests related to allocating assessors to an Application.
  */
 @Controller
-@RequestMapping("/competition/{competitionId}/application/{applicationId}/assessors")
+@RequestMapping("/assessment/competition/{competitionId}/application/{applicationId}/assessors")
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
-public class CompetitionManagementApplicationAssessmentProgressController {
+public class CompetitionManagementAssessmentsApplicationProgressController {
 
     private static final String FORM_ATTR_NAME = "form";
 

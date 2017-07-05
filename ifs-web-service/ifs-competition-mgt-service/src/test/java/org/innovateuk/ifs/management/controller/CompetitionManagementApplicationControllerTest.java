@@ -229,7 +229,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         setupApplicantResource();
 
         assertApplicationOverviewWithBackUrl("APPLICATION_PROGRESS",
-                "/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "/assessors");
+                "/assessment/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "/assessors");
     }
 
     @Test
