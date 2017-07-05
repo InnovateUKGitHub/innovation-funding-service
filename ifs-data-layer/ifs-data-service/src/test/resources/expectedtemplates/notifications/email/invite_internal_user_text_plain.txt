@@ -1,17 +1,12 @@
-Dear User 2,
+Dear User 2
 
-An Innovation Funding Service account was created for you.
+Your Innovation Funding Service account has been created. Please check your details:
 
-Your details:
+Name: User 2
+Role: Role1
 
-Name
-User 2
-Role
-Role1
+Please confirm your account and create your password here: https://ifs-local-dev/invite
 
-Please confirm your account and create your password by going to https://ifs-local-dev/invite
-
-Yours sincerely,
+Yours sincerely
 
 IFS Team
-Innovate UK

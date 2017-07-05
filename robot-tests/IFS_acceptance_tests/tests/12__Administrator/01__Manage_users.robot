@@ -2,6 +2,8 @@
 Documentation     IFS-604: IFS Admin user navigation to Manage users section
 ...               IFS-605: Manage internal users: List of all internal users and roles
 ...               IFS-606: Manage internal users: Read only view of internal user profile
+...               IFS-27:  Invite new internal user
+...               IFS-642: Email to new internal user inviting them to register
 Suite Setup       The user logs-in in new browser  &{ifs_admin_user_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  CompAdmin
@@ -64,26 +66,43 @@ Client side validations for invite new internal user
 
 Administrator can successfully invite a new user
     [Documentation]  IFS-27
-    [Tags]  Happypath
+    [Tags]  HappyPath
     Given the user navigates to the page       ${server}/management/admin/invite-user
     When the user enters text to a text field  id=firstName  Astle
     And the user enters text to a text field   id=lastName  Pimenta
-    And the user enters text to a text field   id=emailAddress  astle.pimenta@innovateuk.test
+    And the user enters text to a text field   id=emailAddress  astle.pimenta@innovateuk.gov.uk
     And the user selects the option from the drop-down menu  IFS Support User  id=role
     And the user clicks the button/link        jQuery=.button:contains("Send invite")
     Then the user cannot see a validation error in the page
-    Then the user should see the element       jQuery=h1:contains("Manage users")
     #The Admin is redirected to the Manage Users page on Success
+    Then the user should see the element       jQuery=h1:contains("Manage users")
     And the user should see the element        jQuery=.selected:contains("Active")
+
+Invited user can receive the invitation
+    [Documentation]  IFS-642
+    [Tags]  Email  HappyPath
+    The user reads his email and clicks the link  astle.pimenta@innovateuk.test   Invitation to Innovation Funding Service  Your Innovation Funding Service account has been created.
 
 Inviting the same user for the same role again should give an error
     [Documentation]  IFS-27
-    [Tags]  
-    When the user clicks the button/link           link=Add a new internal user
-    And the user enters text to a text field       id=firstName  Astle
+    [Tags]
+    [Setup]  log in as a different user            &{ifs_admin_user_credentials}
+    Given the user navigates to the page           ${server}/management/admin/invite-user
+    When the user enters text to a text field      id=firstName  Astle
     And the user enters text to a text field       id=lastName  Pimenta
-    And the user enters text to a text field       id=emailAddress  astle.pimenta@innovateuk.test
+    And the user enters text to a text field       id=emailAddress  astle.pimenta@innovateuk.gov.uk
     And the user selects the option from the drop-down menu  IFS Support User  id=role
+    And the user clicks the button/link            jQuery=.button:contains("Send invite")
+    Then the user should see the element           jQuery=.error-summary:contains("This user has a pending invite. Please check.")
+
+Inviting the same user for the different role again should also give an error
+    [Documentation]  IFS-27
+    [Tags]
+    Given the user navigates to the page       ${server}/management/admin/invite-user
+    When the user enters text to a text field       id=firstName  Astle
+    And the user enters text to a text field       id=lastName  Pimenta
+    And the user enters text to a text field       id=emailAddress  astle.pimenta@innovateuk.gov.uk
+    And the user selects the option from the drop-down menu  Project Finance  id=role
     And the user clicks the button/link            jQuery=.button:contains("Send invite")
     Then the user should see the text in the page  This user has a pending invite. Please check.
 
@@ -134,7 +153,6 @@ New user account is created and verified
     Then the user should see the element             jQuery=#content dl dd:nth-of-type(1):contains("Aaron Aaronson")
     And the user should see the element              jQuery=#content dl dd:nth-of-type(2):contains("test@innovateuk.gov.uk")
     And the user should see the element              jQuery=#content dl dd:nth-of-type(3):contains("IFS Administrator")
-
 
 *** Keywords ***
 User cannot see manage users page

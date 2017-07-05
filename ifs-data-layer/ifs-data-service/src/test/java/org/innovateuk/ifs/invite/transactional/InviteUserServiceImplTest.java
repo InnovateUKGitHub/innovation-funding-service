@@ -43,6 +43,7 @@ import static org.mockito.Mockito.when;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_ROLE_INVITE_INVALID;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_ROLE_INVITE_INVALID_EMAIL;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED;
 import static org.innovateuk.ifs.invite.builder.RoleInviteBuilder.newRoleInvite;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
@@ -67,9 +68,9 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     public void setUp() {
 
         invitedUser = UserResourceBuilder.newUserResource()
-                .withFirstName("A")
-                .withLastName("D")
-                .withEmail("A.D@gmail.com")
+                .withFirstName("Astle")
+                .withLastName("Pimenta")
+                .withEmail("Astle.Pimenta@innovateuk.gov.uk")
                 .build();
     }
 
@@ -99,6 +100,34 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     }
 
     @Test
+    public void saveUserInviteWhenEmailDomainIsIncorrect() throws Exception {
+
+        AdminRoleType adminRoleType = AdminRoleType.SUPPORT;
+        invitedUser.setEmail("Astle.Pimenta@gmail.com");
+
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, adminRoleType);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(USER_ROLE_INVITE_INVALID_EMAIL));
+    }
+
+    @Test
+    public void saveUserInviteWhenUserAlreadyInvited() throws Exception {
+
+        AdminRoleType adminRoleType = AdminRoleType.SUPPORT;
+
+        Role role = new Role(1L, "support");
+        RoleInvite roleInvite = new RoleInvite();
+
+        when(roleRepositoryMock.findOneByName(adminRoleType.getName())).thenReturn(role);
+        when(inviteRoleRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Collections.singletonList(roleInvite));
+
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, adminRoleType);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED));
+
+    }
+
+    @Test
     public void saveUserInviteWhenUserRoleDoesNotExist() throws Exception {
 
         AdminRoleType adminRoleType = AdminRoleType.SUPPORT;
@@ -112,35 +141,18 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     }
 
     @Test
-    public void saveUserInviteWhenUserAlreadyInvited() throws Exception {
-
-        AdminRoleType adminRoleType = AdminRoleType.SUPPORT;
-
-        Role role = new Role(1L, "support");
-        RoleInvite roleInvite = new RoleInvite();
-
-        when(roleRepositoryMock.findOneByName(adminRoleType.getName())).thenReturn(role);
-        when(inviteRoleRepositoryMock.findByRoleIdAndEmail(role.getId(), invitedUser.getEmail())).thenReturn(Collections.singletonList(roleInvite));
-
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, adminRoleType);
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED));
-
-    }
-
-    @Test
     public void inviteInternalUserSendEmailSucceeds() throws Exception {
         Role role = newRole().withName("ifs_administrator").build();
-        RoleInvite expectedRoleInvite = newRoleInvite().withEmail("A.D@gmail.com").withName("A D").withRole(role).withStatus(InviteStatus.CREATED).withHash("").build();
+        RoleInvite expectedRoleInvite = newRoleInvite().withEmail("Astle.Pimenta@innovateuk.gov.uk").withName("Astle Pimenta").withRole(role).withStatus(InviteStatus.CREATED).withHash("").build();
         when(roleRepositoryMock.findOneByName(UserRoleType.IFS_ADMINISTRATOR.getName())).thenReturn(role);
-        when(inviteRoleRepositoryMock.findByRoleIdAndEmail(role.getId(), "A.D@gmail.com")).thenReturn(emptyList());
+        when(inviteRoleRepositoryMock.findByRoleIdAndEmail(role.getId(), "Astle.Pimenta@innovateuk.gov.uk")).thenReturn(emptyList());
         // hash is random, so capture RoleInvite value to verify other fields
         when(inviteRoleRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
 
         RoleResource roleResource = newRoleResource().withName("ifs_administrator").build();
         when(roleMapperMock.mapIdToResource(role.getId())).thenReturn(roleResource);
 
-        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("A D", "A.D@gmail.com");
+        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("Astle Pimenta", "Astle.Pimenta@innovateuk.gov.uk");
         when(emailService.sendEmail(eq(singletonList(notificationTarget)), any(), eq(InviteUserServiceImpl.Notifications.INVITE_INTERNAL_USER))).thenReturn(ServiceResult.serviceSuccess());
 
         when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
@@ -154,13 +166,13 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         verify(emailService).sendEmail(any(), paramsArgumentCaptor.capture(), any());
 
         List<RoleInvite> captured = roleInviteArgumentCaptor.getAllValues();
-        assertEquals("A.D@gmail.com", captured.get(0).getEmail());
-        assertEquals("A D", captured.get(0).getName());
+        assertEquals("Astle.Pimenta@innovateuk.gov.uk", captured.get(0).getEmail());
+        assertEquals("Astle Pimenta", captured.get(0).getName());
         assertEquals(role, captured.get(0).getTarget());
         assertEquals(InviteStatus.CREATED, captured.get(0).getStatus());
 
-        assertEquals("A.D@gmail.com", captured.get(1).getEmail());
-        assertEquals("A D", captured.get(1).getName());
+        assertEquals("Astle.Pimenta@innovateuk.gov.uk", captured.get(1).getEmail());
+        assertEquals("Astle Pimenta", captured.get(1).getName());
         assertEquals(role, captured.get(1).getTarget());
         assertEquals(loggedInUserSupplierMock.get(), captured.get(1).getSentBy());
         assertFalse(ZonedDateTime.now().isBefore(captured.get(1).getSentOn()));
@@ -179,16 +191,16 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     @Test
     public void inviteInternalUserSendEmailFails() throws Exception {
         Role role = newRole().withName("support").build();
-        RoleInvite expectedRoleInvite = newRoleInvite().withEmail("A.D@gmail.com").withName("A D").withRole(role).withStatus(InviteStatus.CREATED).withHash("").build();
+        RoleInvite expectedRoleInvite = newRoleInvite().withEmail("Astle.Pimenta@innovateuk.gov.uk").withName("Astle Pimenta").withRole(role).withStatus(InviteStatus.CREATED).withHash("").build();
         when(roleRepositoryMock.findOneByName(UserRoleType.IFS_ADMINISTRATOR.getName())).thenReturn(role);
-        when(inviteRoleRepositoryMock.findByRoleIdAndEmail(role.getId(), "A.D@gmail.com")).thenReturn(emptyList());
+        when(inviteRoleRepositoryMock.findByRoleIdAndEmail(role.getId(), "Astle.Pimenta@innovateuk.gov.uk")).thenReturn(emptyList());
         // hash is random, so capture RoleInvite value to verify other fields
         when(inviteRoleRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
 
         RoleResource roleResource = newRoleResource().withName("support").build();
         when(roleMapperMock.mapIdToResource(role.getId())).thenReturn(roleResource);
 
-        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("A D", "A.D@gmail.com");
+        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("Astle Pimenta", "Astle.Pimenta@innovateuk.gov.uk");
         when(emailService.sendEmail(eq(singletonList(notificationTarget)), any(), eq(InviteUserServiceImpl.Notifications.INVITE_INTERNAL_USER))).thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR));
 
         ServiceResult<Void> result = service.saveUserInvite(invitedUser, AdminRoleType.IFS_ADMINISTRATOR);
@@ -197,8 +209,8 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         verify(emailService).sendEmail(any(), paramsArgumentCaptor.capture(), any());
 
         List<RoleInvite> captured = roleInviteArgumentCaptor.getAllValues();
-        assertEquals("A.D@gmail.com", captured.get(0).getEmail());
-        assertEquals("A D", captured.get(0).getName());
+        assertEquals("Astle.Pimenta@innovateuk.gov.uk", captured.get(0).getEmail());
+        assertEquals("Astle Pimenta", captured.get(0).getName());
         assertEquals(role, captured.get(0).getTarget());
         assertEquals(InviteStatus.CREATED, captured.get(0).getStatus());
 
@@ -217,9 +229,9 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     @Test
     public void inviteInternalUserSendEmailInvalidRole() throws Exception {
         Role role = newRole().withName("wibble").build();
-        RoleInvite expectedRoleInvite = newRoleInvite().withEmail("A.D@gmail.com").withName("A D").withRole(role).withStatus(InviteStatus.CREATED).withHash("").build();
+        RoleInvite expectedRoleInvite = newRoleInvite().withEmail("Astle.Pimenta@innovateuk.gov.uk").withName("Astle Pimenta").withRole(role).withStatus(InviteStatus.CREATED).withHash("").build();
         when(roleRepositoryMock.findOneByName(UserRoleType.IFS_ADMINISTRATOR.getName())).thenReturn(role);
-        when(inviteRoleRepositoryMock.findByRoleIdAndEmail(role.getId(), "A.D@gmail.com")).thenReturn(emptyList());
+        when(inviteRoleRepositoryMock.findByRoleIdAndEmail(role.getId(), "Astle.Pimenta@innovateuk.gov.uk")).thenReturn(emptyList());
         // hash is random, so capture RoleInvite value to verify other fields
         when(inviteRoleRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
 
@@ -231,8 +243,8 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         verify(inviteRoleRepositoryMock, times(1)).save(roleInviteArgumentCaptor.capture());
 
         List<RoleInvite> captured = roleInviteArgumentCaptor.getAllValues();
-        assertEquals("A.D@gmail.com", captured.get(0).getEmail());
-        assertEquals("A D", captured.get(0).getName());
+        assertEquals("Astle.Pimenta@innovateuk.gov.uk", captured.get(0).getEmail());
+        assertEquals("Astle Pimenta", captured.get(0).getName());
         assertEquals(role, captured.get(0).getTarget());
         assertEquals(InviteStatus.CREATED, captured.get(0).getStatus());
 
