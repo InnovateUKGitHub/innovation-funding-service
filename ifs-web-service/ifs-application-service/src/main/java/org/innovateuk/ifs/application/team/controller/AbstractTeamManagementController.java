@@ -17,6 +17,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
@@ -84,6 +85,7 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
                 ServiceResult<InviteResultsResource> updateResult = teamManagementService.executeStagedInvite(applicationId, organisationId, form);
 
+                form.setStagedInvite(null);
                 return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors())
                         .failNowOrSucceedWith(failureView, () -> getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form));
             });
@@ -136,7 +138,7 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
             return processAnyFailuresOrSucceed(simpleMap(existingApplicantIds, teamManagementService::removeInvite))
                     .handleSuccessOrFailure(
                             failure -> getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form),
-                            success -> getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form)
+                            success -> format("redirect:/application/%s/team", applicationId)
                     );
         });
     }

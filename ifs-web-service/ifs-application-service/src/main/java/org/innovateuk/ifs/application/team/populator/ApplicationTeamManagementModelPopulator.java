@@ -42,16 +42,15 @@ public class ApplicationTeamManagementModelPopulator {
     public ApplicationTeamManagementViewModel populateModelByOrganisationId(long applicationId, long organisationId, long loggedInUserId) {
         InviteOrganisationResource inviteOrganisationResource = getInviteOrganisationByOrganisationId(applicationId, organisationId).orElse(null);
 
-        return populateModelWithInviteOrganisationResource(applicationId, loggedInUserId, inviteOrganisationResource);
+        OrganisationResource leadOrganisationResource = getLeadOrganisation(applicationId);
+        boolean requestForLeadOrganisation = isRequestForLeadOrganisation(organisationId, leadOrganisationResource);
+
+        return populateModel(applicationId, loggedInUserId, leadOrganisationResource, requestForLeadOrganisation, inviteOrganisationResource);
     }
 
     public ApplicationTeamManagementViewModel populateModelByInviteOrganisationId(long applicationId, long inviteOrganisationId, long loggedInUserId) {
         InviteOrganisationResource inviteOrganisationResource = getInviteOrganisationByInviteOrganisationId(inviteOrganisationId);
 
-        return populateModelWithInviteOrganisationResource(applicationId, loggedInUserId, inviteOrganisationResource);
-    }
-
-    public ApplicationTeamManagementViewModel populateModelWithInviteOrganisationResource(long applicationId, long loggedInUserId, InviteOrganisationResource inviteOrganisationResource) {
         OrganisationResource leadOrganisationResource = getLeadOrganisation(applicationId);
         boolean requestForLeadOrganisation = isRequestForLeadOrganisation(inviteOrganisationResource, leadOrganisationResource);
 
@@ -115,11 +114,11 @@ public class ApplicationTeamManagementModelPopulator {
     private ApplicationTeamManagementApplicantRowViewModel getApplicantViewModel(ApplicationInviteResource applicationInviteResource, boolean userLeadApplicant) {
         boolean pending = applicationInviteResource.getStatus() != InviteStatus.OPENED;
         return new ApplicationTeamManagementApplicantRowViewModel(applicationInviteResource.getId(), getApplicantName(applicationInviteResource),
-                applicationInviteResource.getEmail(), false, pending, userLeadApplicant);
+                applicationInviteResource.getEmail(), false, pending, userLeadApplicant, applicationInviteResource.getSentOn());
     }
 
     private ApplicationTeamManagementApplicantRowViewModel getLeadApplicantViewModel(UserResource leadApplicant) {
-        return new ApplicationTeamManagementApplicantRowViewModel(leadApplicant.getName(), leadApplicant.getEmail(), true, false, false);
+        return new ApplicationTeamManagementApplicantRowViewModel(leadApplicant.getName(), leadApplicant.getEmail(), true, false, false, null);
     }
 
     private UserResource getLeadApplicant(ApplicationResource applicationResource) {

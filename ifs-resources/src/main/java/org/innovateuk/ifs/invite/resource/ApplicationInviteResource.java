@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 
+import java.time.ZonedDateTime;
+
 /**
  * A DTO which enables to application to transfer ApplicationInvite entities.
  */
@@ -27,6 +29,7 @@ public class ApplicationInviteResource extends InviteResource {
     private String inviteOrganisationNameConfirmed;
     private String hash;
     private InviteStatus status;
+    private ZonedDateTime sentOn;
 
     public ApplicationInviteResource() {
     	// no-arg constructor
@@ -197,6 +200,14 @@ public class ApplicationInviteResource extends InviteResource {
         return StringUtils.isBlank(getInviteOrganisationNameConfirmed()) ? getInviteOrganisationName() : getInviteOrganisationNameConfirmed();
     }
 
+    public ZonedDateTime getSentOn() {
+        return sentOn;
+    }
+
+    public void setSentOn(ZonedDateTime sentOn) {
+        this.sentOn = sentOn;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -227,6 +238,7 @@ public class ApplicationInviteResource extends InviteResource {
                 .append(inviteOrganisationNameConfirmed, that.inviteOrganisationNameConfirmed)
                 .append(hash, that.hash)
                 .append(status, that.status)
+                .append(sentOn, that.sentOn)
                 .isEquals();
     }
 
@@ -250,6 +262,9 @@ public class ApplicationInviteResource extends InviteResource {
                 .append(inviteOrganisationNameConfirmed)
                 .append(hash)
                 .append(status)
+                .append(sentOn)
                 .toHashCode();
     }
+
+
 }
