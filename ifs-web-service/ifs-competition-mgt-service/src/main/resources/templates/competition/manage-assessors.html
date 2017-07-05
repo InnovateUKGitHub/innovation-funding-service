@@ -36,7 +36,11 @@
                             <td class="aligncentre" th:text="${assessor.accepted}" th:if="${model.inAssessment}">2</td>
                             <td class="aligncentre" th:text="${assessor.submitted}" th:if="${model.inAssessment}">1</td>
                             <td class="alignright">
-                                <a class="button-secondary no-margin" th:text="${model.inAssessment} ? 'View progress' : 'Assign'"></a>
+                                <a class="button-secondary no-margin"
+                                   th:href="@{/assessment/competition/{competitionId}/assessors/{assessorId}(competitionId=${model.competitionId}, assessorId=${assessor.id})}"
+                                   th:text="${model.inAssessment} ? 'View progress' : 'Assign'">
+                                    View progress
+                                </a>
                             </td>
                         </tr>
                     </tbody>
