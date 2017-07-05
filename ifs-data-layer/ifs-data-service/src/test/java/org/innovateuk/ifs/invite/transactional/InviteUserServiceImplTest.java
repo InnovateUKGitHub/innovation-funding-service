@@ -171,7 +171,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         assertTrue(capturedParams.containsKey("role"));
         assertTrue(capturedParams.get("role").equals("IFS Administrator"));
         assertTrue(capturedParams.containsKey("inviteUrl"));
-        assertTrue(((String)capturedParams.get("inviteUrl")).startsWith(webBaseUrl + InviteUserServiceImpl.WEB_CONTEXT + "/accept-invite/"));
+        assertTrue(((String)capturedParams.get("inviteUrl")).startsWith(webBaseUrl + InviteUserServiceImpl.WEB_CONTEXT + "/" + expectedRoleInvite.getHash() + "/register"));
 
         assertTrue(result.isSuccess());
     }
@@ -206,7 +206,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         assertTrue(capturedParams.containsKey("role"));
         assertTrue(capturedParams.get("role").equals("IFS Support User"));
         assertTrue(capturedParams.containsKey("inviteUrl"));
-        assertTrue(((String)capturedParams.get("inviteUrl")).startsWith(webBaseUrl + InviteUserServiceImpl.WEB_CONTEXT + "/accept-invite/"));
+        assertTrue(((String)capturedParams.get("inviteUrl")).startsWith(webBaseUrl + InviteUserServiceImpl.WEB_CONTEXT + "/" + expectedRoleInvite.getHash() + "/register"));
 
         assertTrue(result.isFailure());
         assertEquals(1, result.getErrors().size());
