@@ -5,8 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
   JAVAUPD=131 \
   JAVABLD=11 \
   JAVASIG=d54c1d3a095b4ff2b6607d096fa80163 \
-  ORACLE_JDK_DOMAIN=@oracle_jdk_domain@ \
-  IDPVER="3.3.1"
+  ORACLE_JDK_DOMAIN=@oracle_jdk_domain@
 
 ENV JAVA_HOME=/usr/lib/jvm/java-${JAVAVER}-oracle
 ENV JRE_HOME=${JAVA_HOME}/jre
@@ -30,11 +29,7 @@ RUN apt-get update --fix-missing && \
   dpkg -i --force-depends /idp/default-jre-headless-dummy_1.0_all.deb && rm -f /idp/default-jre-headless-dummy_1.0_all.deb && \
 # tomcat for IDP and Regapi \
   apt-get -y install tomcat8 libtcnative-1 tomcat8-common libtomcat8-java libecj-java ucf && \
-# Shibboleth IDP \
-  curl --connect-timeout 30 -m 120 -s -L --retry 3 http://shibboleth.net/downloads/identity-provider/$IDPVER/shibboleth-identity-provider-$IDPVER.tar.gz | bsdtar -C /root -xf - && \
-  cat /idp/build.xml|tr "3.2.1" "$IDPVER" > /root/shibboleth-identity-provider-$IDPVER/bin/build.xml && rm -f /idp/build.xml && \
-  (cd /root/shibboleth-identity-provider-$IDPVER/bin; ./install.sh) && rm -rf /root/shibboleth-identity-provider-$IDPVER && \
 # apache. not strictly needed \
-  apt-get -y install grep lsof net-tools ldap-utils apache2 && \
+  apt-get -y install grep lsof net-tools wget openssl rsync ldap-utils apache2 && \
   apt-get autoclean && apt-get remove --purge --auto-remove -y gcc libc6-dev libssl-dev make unzip && apt-get --purge -y autoremove && rm -rf /var/lib/apt/lists/* && \
   rm -rf /tmp/* /var/tmp/* /idp
