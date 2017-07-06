@@ -18,7 +18,7 @@
         </ul>
     </div>
 
-    <form th:object="${form}" method="post" novalidate="novalidate"  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+    <form th:object="${form}" method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Create account',size='heading-large'"/>
         <h2 class="heading-medium">Your details</h2>
 
