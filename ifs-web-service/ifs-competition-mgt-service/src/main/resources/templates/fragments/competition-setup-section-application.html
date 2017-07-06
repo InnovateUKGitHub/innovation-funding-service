@@ -1,0 +1,86 @@
+
+<!-- =================== Comp setup section - Application questions (5) ============================== -->
+<th:block th:fragment="section-content">
+    <div class="error-summary" th:attr="aria-hidden=${!#fields.hasErrors('${competitionSetupForm.*}')}">
+        <h2 class="heading-medium error-summary-heading">Unable to mark as complete.</h2>
+        <ul class="error-summary-list">
+            <li>view the application section(s) to resolve the error.</li>
+        </ul>
+    </div>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application process',size='heading-xlarge'" />
+
+    <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
+        <h2 class="heading-medium extra-margin" th:text="${competition.competitionTypeName+' competition questions'}" />
+
+        <p>Here you can review and amend the application and assessment questions and guidance for this competition.
+            Any changes you make will be applied to this competition, but will not affect the default template for this competition type.</p>
+
+        <p>If you're happy with the default questions for this competition type, mark this section as done and continue.</p>
+
+        <h3 class="heading-small">Application details</h3>
+        <ul class="task-list">
+            <li>
+                <div class="task">
+                    <h4 class="heading-small">
+                        <a th:href="@{/competition/setup/{competitionId}/section/application/detail(competitionId=${competition.id})}">Application details</a>
+                    </h4>
+                </div>
+                <!--/* TODO IFS-743 This markup will be required for showing the status of this task in ifs-743 */-->
+                <!--/*<div class="task-status-complete"><span>Complete</span></div>*/-->
+            </li>
+            <li th:each="question : ${projectDetails}">
+                <div class="task">
+                    <h4 class="heading-small">
+                        <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${competition.id}, questionId=${question.id})}" th:text="${question.shortName}">Question Title</a>
+                    </h4>
+                </div>
+                <!--/* TODO IFS-743 This markup will be required for showing the status of this task */-->
+                <!--/*<div class="task-status-complete"><span>Complete</span></div>*/-->
+            </li>
+        </ul>
+
+        <h3 class="heading-small">Assessed questions</h3>
+        <ul class="task-list">
+            <li th:each="question : ${questions}">
+                <div class="task">
+                    <h4 class="heading-small">
+                        <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${competition.id}, questionId=${question.id})}"
+                           th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}">Question Title</a>
+                    </h4>
+                </div>
+                <!--/* TODO IFS-743 This markup will be required for showing the status of this task in ifs-743 */-->
+                <!--/*<div class="task-status-complete"><span>Complete</span></div>*/-->
+            </li>
+        </ul>
+
+        <h3 class="heading-small no-margin">Finances</h3>
+        <ul class="task-list">
+            <li>
+                <div class="task">
+                    <h4 class="heading-small">
+                        <a th:href="@{/competition/setup/{competitionId}/section/application/question/finance(competitionId=${competition.id})}">Finances</a>
+                    </h4>
+                </div>
+                <!--/* TODO IFS-743 This markup will be required for showing the status of this task in ifs-743 */-->
+                <!--/*<div class="task-status-complete"><span>Complete</span></div>*/-->
+            </li>
+        </ul>
+
+        <button th:if="${editable}" class="button extra-margin">Done</button>
+
+        <ul class="pagination">
+            <li class="prev">
+                <a rel="prev" title="Navigate to prev part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='milestones')}">
+                    <span class="pagination-label">Previous</span>
+                    <span class="pagination-part-title">Milestones</span>
+                </a>
+            </li>
+            <li class="next">
+                <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='assessors')}">
+                    <span class="pagination-label">Next</span>
+                    <span class="pagination-part-title">Assessors</span>
+                </a>
+            </li>
+        </ul>
+    </form>
+</th:block>
