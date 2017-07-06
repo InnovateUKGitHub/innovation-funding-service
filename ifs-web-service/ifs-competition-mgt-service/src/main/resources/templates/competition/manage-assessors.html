@@ -14,6 +14,43 @@
 
             <p class="extra-margin">Assign applications to assessors. You will need to confirm assignments before assessors are notified.</p>
 
+            <form method="GET">
+                <div class="search-filters">
+                    <legend class="visuallyhidden">Search filters</legend>
+                    <div class="grid-row">
+                        <div class="column-half">
+                           <div class="form-group">
+                               <label for="filterInnovationArea">Innovation sector</label>
+                               <select class="form-control" name="filterType" id="filterType">
+                                   <option selected="selected">---</option>
+                               </select>
+                           </div>
+                        </div>
+                        <div class="column-half">
+                            <div class="form-group">
+                                <label for="filterType">Type</label>
+                                <select class="form-control" name="filterInnovationArea" id="filterInnovationArea">
+                                    <option selected="selected">---</option>
+                                    <option>Academic</option>
+                                    <option>Business</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid-row">
+                        <div class="column-half">
+                            <a href="?sort">Clear all filters</a>
+                        </div>
+                        <div class="column-half alignright">
+                            <button class="button no-margin">Filter</button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+
+
             <div class="table-overflow">
                 <table>
                     <thead>
