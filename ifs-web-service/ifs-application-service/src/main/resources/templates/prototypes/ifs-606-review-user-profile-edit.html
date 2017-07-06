@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Update internal users details'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader('View or search for an internal user', '/prototypes/27-add-internal-user-overview')" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Update internal users details',size='heading-large'" />
+    <!--/* please change method="get" for method="post" when really implementing */-->
+    <form action="/prototypes/ifs-606-review-user-profile.html" method="get">
+        <h2 class="heading-medium">Personal details</h2>
+        <div class="form-group">
+          <label class="form-label" for="firstName">
+              <span>First name</span>
+          </label>
+          <input class="form-control"
+                 type="text"
+                 name="firstName"
+                 required="required"
+                 minlength="2"
+                 value="Mark"
+                 maxlength="70"
+                 th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)},
+                          data-maxlength-errormessage=#{validation.standard.firstname.length.max},
+                          data-required-errormessage=#{validation.standard.firstname.required}" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="lastName">
+              <span>Last name</span>
+          </label>
+          <input class="form-control"
+                 type="text"
+                 value="Smith"
+                 name="lastName"
+                 required="required"
+                 minlength="2"
+                 maxlength="70"
+                 th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)},
+                          data-maxlength-errormessage=#{validation.standard.lastname.length.max},
+                          data-required-errormessage=#{validation.standard.lastname.required}" />
+        </div>
+        <dl>
+            <dt>Email address</dt>
+            <dd>mark.smith@innovate.gov.uk</dd>
+        </dl>
+        <div class="form-group">
+            <label class="form-label" for="role">
+                <h2 class="heading-medium no-margin-bottom">IFS role</h2>
+                <span class="form-hint">Please choose the appropriate IFS role for the user.</span>
+            </label>
+            <select name="role" class="form-control" id="role" required="required" data-required-errormessage="Please select a role">
+                <option value="IFS Administrator" selected>IFS Administrator</option>
+                <option value="Competition Administrator">Competition Administrator</option>
+                <option value="Project Finance">Project Finance</option>
+                <option value="Customer Support">Customer Support</option>
+            </select>
+        </div>
+
+        <div class="form-group extra-margin">
+            <button class="button">Save and return</button>
+            <a href="/prototypes/606-review-user-profile.html">Cancel</a>
+        </div>
+    </form>
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+
+</body>
+</html>
