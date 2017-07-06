@@ -66,14 +66,7 @@ mysql_users=
 #defines MySQL Query Rules
 mysql_query_rules=
 (
-	{
-		rule_id=1
-		active=1
-		match_pattern="^SELECT /\*!40001 SQL_NO_CACHE \*/ \* FROM `user`"
-		replace_pattern="SELECT SQL_NO_CACHE id,email,image_url,CONCAT(first_name, 'xx'),invite_name,CONCAT(last_name, 'yy'),phone_number,title,status,uid,system_user,gender,disability,ethnicity_id,profile_id,allow_marketing_emails FROM user"
-		destination_hostgroup=0
-		apply=1
-	}
+<<QUERY_RULES>>
 )
 
 scheduler=
