@@ -1,2 +1,3 @@
+email|SUBSTR(email, 1, INSTR(email, '@') - 1)
 first_name|MASK(1, 'X')
 last_name|MASK(1, 'y')

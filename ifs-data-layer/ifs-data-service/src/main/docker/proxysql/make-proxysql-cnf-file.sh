@@ -1,6 +1,7 @@
 #/bin/bash
 
 set -e
+set -x
 
 MASK_REPLACEMENT_INDEX_EXTRACTOR="s/^MASK(\([0-9]\+\),[ ]*'\(.\)')$/\1/g"
 MASK_REPLACEMENT_TOKEN_EXTRACTOR="s/^MASK([0-9]\+,[ ]*'\(.\)')$/\1/g"
@@ -13,13 +14,14 @@ MASK_REPLACEMENT_TOKEN_EXTRACTOR="s/^MASK([0-9]\+,[ ]*'\(.\)')$/\1/g"
 # will just be returned as-is
 function generate_rewrite_from_rule() {
 
-    column_name=$1
-    replacement=$2
+    column_name="$1"
+    replacement="$2"
 
     # this case generates the SQL from a rewrite rule like "MASK(1, 'X')"
-    if [[ "$(echo $replacement | sed $MASK_REPLACEMENT_INDEX_EXTRACTOR)" != "$replacement" ]]; then
-        mask_index=$(echo $replacement | sed "s/^MASK(\([0-9]\+\),[ ]*'\(.\)')$/\1/g")
-        mask_token=$(echo $replacement | sed "s/^MASK([0-9]\+,[ ]*'\(.\)')$/\1/g")
+    mask_test=$(echo "$replacement" | sed "s/^MASK(\([0-9]\+\),[ ]*'\(.\)')$/\1/g")
+    if [[ "$mask_test" != "$replacement" ]]; then
+        mask_index=$(echo "$replacement" | sed "s/^MASK(\([0-9]\+\),[ ]*'\(.\)')$/\1/g")
+        mask_token=$(echo "$replacement" | sed "s/^MASK([0-9]\+,[ ]*'\(.\)')$/\1/g")
         echo "CONCAT(SUBSTR($column_name, 1, $mask_index), REPEAT('$mask_token', CHAR_LENGTH($column_name) - $mask_index))"
     else
         echo "$replacement"
@@ -60,11 +62,11 @@ function generate_query_rules_for_proxysql() {
         replacement_pattern=$full_select_statement_result
         for j in "${!column_array[@]}"; do
             final_rewrite=$(generate_rewrite_from_rule "${column_array[j]}" "${column_rewrite_array[j]}")
-            replacement_pattern=$( echo $replacement_pattern | sed "s/${column_array[j]}/$final_rewrite/g" )
+            replacement_pattern=$( echo $replacement_pattern | sed "s/\([ ,]\+\)${column_array[j]}\([ ,]\+\)/\1$final_rewrite\2/g" )
         done
 
         # and finally output this table's rewrite rule to /dump/query_rules
-        if [ "$((j))" -gt "1" ]; then
+        if [ -e /dump/query_rules ]; then
            echo '    ,' >> /dump/query_rules
         fi
 
@@ -99,3 +101,5 @@ function inject_db_configuration_into_proxysql_cnf() {
 generate_query_rules_for_proxysql
 inject_query_rules_into_proxysql_cnf
 inject_db_configuration_into_proxysql_cnf
+
+cat /etc/proxysql.cnf
