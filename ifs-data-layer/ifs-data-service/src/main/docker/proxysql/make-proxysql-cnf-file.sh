@@ -18,10 +18,10 @@ function generate_rewrite_from_rule() {
     replacement="$2"
 
     # this case generates the SQL from a rewrite rule like "MASK(1, 'X')"
-    mask_test=$(echo "$replacement" | sed "s/^MASK(\([0-9]\+\),[ ]*'\(.\)')$/\1/g")
+    mask_test=$(echo "$replacement" | sed "$MASK_REPLACEMENT_INDEX_EXTRACTOR")
     if [[ "$mask_test" != "$replacement" ]]; then
-        mask_index=$(echo "$replacement" | sed "s/^MASK(\([0-9]\+\),[ ]*'\(.\)')$/\1/g")
-        mask_token=$(echo "$replacement" | sed "s/^MASK([0-9]\+,[ ]*'\(.\)')$/\1/g")
+        mask_index=$(echo "$replacement" | sed "$MASK_REPLACEMENT_INDEX_EXTRACTOR")
+        mask_token=$(echo "$replacement" | sed "$MASK_REPLACEMENT_TOKEN_EXTRACTOR")
         echo "CONCAT(SUBSTR($column_name, 1, $mask_index), REPEAT('$mask_token', CHAR_LENGTH($column_name) - $mask_index))"
         exit 0
     fi
