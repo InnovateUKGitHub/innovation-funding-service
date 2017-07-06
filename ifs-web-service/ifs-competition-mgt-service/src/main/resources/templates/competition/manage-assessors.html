@@ -9,7 +9,7 @@
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Back',linkClass='link-back',linkUrl=@{${manageApplicationsOriginQuery}})" />
+            <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Back',linkClass='link-back',linkUrl=@{${manageAssessorsOriginQuery}})" />
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.inAssessment} ? 'Manage assessors' : 'Allocate assessors',subTitle=|${model.competitionId} : ${model.competitionName}, ${model.inAssessment ? 'in assessment' : 'competition closed'}|, size='heading-xlarge'" />
 
             <p class="extra-margin">Assign applications to assessors. You will need to confirm assignments before assessors are notified.</p>
@@ -24,7 +24,9 @@
                             <th class="aligncentre width-small-medium" scope="col">Assigned</th>
                             <th class="aligncentre width-small-medium" scope="col" th:if="${model.inAssessment}">Accepted</th>
                             <th class="aligncentre width-small-medium" scope="col" th:if="${model.inAssessment}">Completed</th>
+                            <!--/* TODO IFS-156/321
                             <th class="width-small" scope="col"><span class="visuallyhidden">Action</span></th>
+                            */-->
                         </tr>
                     </thead>
                     <tbody>
@@ -35,6 +37,7 @@
                             <td class="aligncentre" th:text="${assessor.assigned}">4</td>
                             <td class="aligncentre" th:text="${assessor.accepted}" th:if="${model.inAssessment}">2</td>
                             <td class="aligncentre" th:text="${assessor.submitted}" th:if="${model.inAssessment}">1</td>
+                            <!--/* TODO IFS-156/321
                             <td class="alignright">
                                 <a class="button-secondary no-margin"
                                    th:href="@{/assessment/competition/{competitionId}/assessors/{assessorId}(competitionId=${model.competitionId}, assessorId=${assessor.id})}"
@@ -42,6 +45,7 @@
                                     View progress
                                 </a>
                             </td>
+                            */-->
                         </tr>
                     </tbody>
                 </table>

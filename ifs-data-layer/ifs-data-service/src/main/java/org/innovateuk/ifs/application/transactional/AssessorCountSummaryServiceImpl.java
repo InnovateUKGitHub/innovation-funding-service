@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
-import org.innovateuk.ifs.application.mapper.AssessorCountSummaryPageMapper;
-import org.innovateuk.ifs.application.repository.AssessorStatisticsRepository;
+import org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATES;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -22,21 +20,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 public class AssessorCountSummaryServiceImpl extends BaseTransactionalService implements AssessorCountSummaryService {
 
     @Autowired
-    private AssessorCountSummaryPageMapper assessorCountSummaryPageMapper;
-
-    @Autowired
-    private AssessorStatisticsRepository assessorStatisticsRepository;
-
-//    @Override
-//    public ServiceResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionId(long competitionId, int pageIndex, int pageSize, Optional<String> filter) {
-//
-//        String filterStr = filter.map(String::trim).orElse("");
-//        Pageable pageable = new PageRequest(pageIndex, pageSize);
-////        Page<AssessorStatistics> assessorStatistics = assessorStatisticsRepository.findByCompetitionParticipantCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_STATES, filterStr, pageable);
-//        Page<AssessorStatistics> assessorStatistics = assessorStatisticsRepository.findByCompetitionParticipantCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, pageable);
-//
-//        return find(assessorStatistics, notFoundError(Page.class)).andOnSuccessReturn(stats -> assessorCountSummaryPageMapper.mapToResource(stats));
-//    }
+    private ApplicationStatisticsRepository applicationStatisticsRepository;
 
     @Override
     public ServiceResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionId(long competitionId, int pageIndex, int pageSize, Optional<String> filter) {
@@ -44,12 +28,13 @@ public class AssessorCountSummaryServiceImpl extends BaseTransactionalService im
         String filterStr = filter.map(String::trim).orElse("");
         Pageable pageable = new PageRequest(pageIndex, pageSize);
 //        Page<AssessorStatistics> assessorStatistics = assessorStatisticsRepository.findByCompetitionParticipantCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_STATES, filterStr, pageable);
-        Page<AssessorCountSummaryResource> assessorStatistics = assessorStatisticsRepository.getAssessorCountSummaryByCompetition(competitionId, filterStr, pageable);
+        Page<AssessorCountSummaryResource> assessorStatistics = applicationStatisticsRepository.getAssessorCountSummaryByCompetition(competitionId, pageable);
 
         return find(assessorStatistics, notFoundError(Page.class)).andOnSuccessReturn(stats -> new AssessorCountSummaryPageResource(
                 assessorStatistics.getTotalElements(),
                 assessorStatistics.getTotalPages(),
                 assessorStatistics.getContent(),
-                assessorStatistics.getNumber(), assessorStatistics.getSize()));
+                assessorStatistics.getNumber(),
+                assessorStatistics.getSize()));
     }
 }
