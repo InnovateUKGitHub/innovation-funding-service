@@ -2,6 +2,30 @@
 
 set -e
 
+MASK_REPLACEMENT_INDEX_EXTRACTOR="s/^MASK(\([0-9]\+\),[ ]*'\(.\)')$/\1/g"
+MASK_REPLACEMENT_TOKEN_EXTRACTOR="s/^MASK([0-9]\+,[ ]*'\(.\)')$/\1/g"
+
+# This function is able to generate SQL rewrite statements for common anonymisation techniques e.g. from the
+# rewrite rule "MASK(2, 'X')", this function will generate the SQL necessary to reproduce the masking of
+# all characters past the 2nd character with 'X'.
+#
+# If the rewrite rule passed in is not recognised as a common anonymisation technique, the unchanged rewrite rule
+# will just be returned as-is
+function generate_rewrite_from_rule() {
+
+    column_name=$1
+    replacement=$2
+
+    # this case generates the SQL from a rewrite rule like "MASK(1, 'X')"
+    if [[ "$(echo $replacement | sed $MASK_REPLACEMENT_INDEX_EXTRACTOR)" != "$replacement" ]]; then
+        mask_index=$(echo $replacement | sed "s/^MASK(\([0-9]\+\),[ ]*'\(.\)')$/\1/g")
+        mask_token=$(echo $replacement | sed "s/^MASK([0-9]\+,[ ]*'\(.\)')$/\1/g")
+        echo "CONCAT(SUBSTR($column_name, 1, $mask_index), REPEAT('$mask_token', CHAR_LENGTH($column_name) - $mask_index))"
+    else
+        echo "$replacement"
+    fi
+}
+
 # A function to generate a set of query_rules for proxysql to rewrite data as it is being selected by mysqldump.
 # This takes rules defined in files in the /dump/rewrites folder and builds a set of proxysql configuration to apply
 # those rewrites.  These rules will be written to /dump/query_rules
@@ -35,7 +59,8 @@ function generate_query_rules_for_proxysql() {
         # now we replace every column name that we wish to replace with its replacement i.e. replace every entry from column_array (e.g. "user") with its rewrite from column_rewrite_array (e.g. "CONCAT(first_name, 'XXX')")
         replacement_pattern=$full_select_statement_result
         for j in "${!column_array[@]}"; do
-            replacement_pattern=$( echo $replacement_pattern | sed "s/${column_array[j]}/${column_rewrite_array[j]}/g" )
+            final_rewrite=$(generate_rewrite_from_rule "${column_array[j]}" "${column_rewrite_array[j]}")
+            replacement_pattern=$( echo $replacement_pattern | sed "s/${column_array[j]}/$final_rewrite/g" )
         done
 
         # and finally output this table's rewrite rule to /dump/query_rules
