@@ -35,21 +35,19 @@ public class CompetitionManagementAssessmentsAssessorsController extends BaseCom
                                      @RequestParam(value = "origin", defaultValue = "MANAGE_ASSESSMENTS") String origin) {
         CompetitionResource competitionResource = getCompetition(competitionId);
 
-        AssessorCountSummaryPageResource applicationCounts = getCounts(competitionId, page, filter);
-
+        AssessorCountSummaryPageResource applicationCounts = getCounts(competitionId, page);
 
         String manageApplicationsOriginQuery = buildBackUrl(origin, competitionId, queryParams);
         String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.MANAGE_ASSESSORS, queryParams);
 
-        model.addAttribute("model", manageApplicationsPopulator.populateModel(competitionResource, applicationCounts, filter, originQuery));
+        model.addAttribute("model", manageApplicationsPopulator.populateModel(competitionResource, applicationCounts, originQuery));
         model.addAttribute("originQuery", originQuery);
         model.addAttribute("manageAssessorsOriginQuery", manageApplicationsOriginQuery);
 
         return "competition/manage-assessors";
     }
 
-    @Override
-    protected AssessorCountSummaryPageResource getCounts(long competitionId, int page, String filter) {
+    protected AssessorCountSummaryPageResource getCounts(long competitionId, int page) {
         return applicationCountSummaryRestService
                 .getAssessorCountSummariesByCompetitionId(competitionId, page, PAGE_SIZE)
                 .getSuccessObjectOrThrowException();
