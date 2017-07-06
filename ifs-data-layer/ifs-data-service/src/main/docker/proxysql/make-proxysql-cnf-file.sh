@@ -44,10 +44,12 @@ function generate_query_rules_for_proxysql() {
         # the column_array is an array of the column names that are rewrite candidates for this table e.g. "first_name"
         mapfile -t column_array < <(sed 's/^\(.*\)|.*$/\1/g' $i)
 
-        # the column_rewrite_array is an array of the rewrite rules against each corresponding column name in the column_array array e.g. "CONCAT(first_name, 'XXX')"
+        # the column_rewrite_array is an array of the rewrite rules against each corresponding column name in the
+        # column_array array e.g. "CONCAT(first_name, 'XXX')"
         mapfile -t column_rewrite_array < <(sed 's/^.*|\(.*\)$/\1/g' $i)
 
-        # a query to find the base select statement that we wish mysqldump to issue against this table when running a dump of its data
+        # a query to find the base select statement that we wish mysqldump to issue against this table when running a
+        # dump of its data
         full_select_statement_query="SELECT CONCAT('SELECT SQL_NO_CACHE ', \
             (SELECT GROUP_CONCAT(t.col) FROM \
                (SELECT COLUMN_NAME as col FROM INFORMATION_SCHEMA.COLUMNS \
@@ -58,10 +60,17 @@ function generate_query_rules_for_proxysql() {
         # the base select statement that we wish mysqldump to issue against this table when running a dump of its data
         full_select_statement_result=$(mysql -h$DB_HOST -u$DB_USER -p$DB_PASS -P$DB_PORT $DB_NAME -N -s -e "$full_select_statement_query")
 
-        # now we replace every column name that we wish to replace with its replacement i.e. replace every entry from column_array (e.g. "user") with its rewrite from column_rewrite_array (e.g. "CONCAT(first_name, 'XXX')")
+        # now we replace every column name that we wish to replace with its replacement i.e. replace every entry from
+        # column_array (e.g. "user") with its rewrite from column_rewrite_array (e.g. "CONCAT(first_name, 'XXX')")
         replacement_pattern=$full_select_statement_result
         for j in "${!column_array[@]}"; do
+
+            # get the replacement rule as a SQL statement (if it is not one already e.g. MASK(1, 'X') will be looked
+            # up and replaced with a masking SQL statement)
             final_rewrite=$(generate_rewrite_from_rule "${column_array[j]}" "${column_rewrite_array[j]}")
+
+            # and swap out the original column in the select statement with this replacement (taking care to only
+            # replace exact column names and not partial substrings of other column names!)
             replacement_pattern=$( echo $replacement_pattern | sed "s/\([ ,]\+\)${column_array[j]}\([ ,]\+\)/\1$final_rewrite\2/g" )
         done
 
