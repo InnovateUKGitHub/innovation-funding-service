@@ -23,9 +23,10 @@ function generate_rewrite_from_rule() {
         mask_index=$(echo "$replacement" | sed "s/^MASK(\([0-9]\+\),[ ]*'\(.\)')$/\1/g")
         mask_token=$(echo "$replacement" | sed "s/^MASK([0-9]\+,[ ]*'\(.\)')$/\1/g")
         echo "CONCAT(SUBSTR($column_name, 1, $mask_index), REPEAT('$mask_token', CHAR_LENGTH($column_name) - $mask_index))"
-    else
-        echo "$replacement"
+        exit 0
     fi
+
+    echo "$replacement"
 }
 
 # A function to generate a set of query_rules for proxysql to rewrite data as it is being selected by mysqldump.
