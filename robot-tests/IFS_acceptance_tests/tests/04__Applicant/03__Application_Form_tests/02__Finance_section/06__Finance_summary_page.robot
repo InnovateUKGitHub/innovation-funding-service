@@ -279,11 +279,14 @@ Innovation lead can see read only view of collaborator Your project costs for La
     And the user clicks the button/link       jQuery=button:contains("Labour")
     When the user clicks the button/link      jQuery=button:contains("Overhead costs")
     Then the user should see the element      jQuery=th:contains("20% of labour costs")
+    And the user clicks the button/link       jQuery=button:contains("Overhead costs")
     When the user clicks the button/link      jQuery=button:contains("Materials")
+    Wait Until Element Is Visible Without Screenshots    jQuery=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2)
+    Wait Until Keyword Succeeds Without Screenshots    30    200ms    element should contain    jQuery=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2)   10
     Then the user should see the element      jQuery=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2):contains("10")
     And the user should see the element       jQuery=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3):contains("100")
     And the user should see the element       jQuery=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1):contains("test")
-    And the user clicks the button/link       jQuery=button:contains("Overhead costs")
+    And the user clicks the button/link       jQuery=button:contains("Materials")
 
 Innovation lead can see read only view of collaborator Your project costs for rest of the categories
     [Documentation]  IFS-802
