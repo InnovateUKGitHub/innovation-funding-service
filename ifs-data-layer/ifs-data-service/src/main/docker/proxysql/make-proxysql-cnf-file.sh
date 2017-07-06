@@ -16,10 +16,10 @@ function generate_query_rules_for_proxysql() {
         table_name=$(echo $i | sed "s/.*\///" | sed "s/.*\///" | sed "s/\..*//")
 
         # the column_array is an array of the column names that are rewrite candidates for this table e.g. "first_name"
-        column_array=( $(cut -d '|' -f1 $i) )
+        mapfile -t column_array < <(sed 's/^\(.*\)|.*$/\1/g' $i)
 
         # the column_rewrite_array is an array of the rewrite rules against each corresponding column name in the column_array array e.g. "CONCAT(first_name, 'XXX')"
-        column_rewrite_array=( $(cut -d '|' -f2 $i) )
+        mapfile -t column_rewrite_array < <(sed 's/^.*|\(.*\)$/\1/g' $i)
 
         # a query to find the base select statement that we wish mysqldump to issue against this table when running a dump of its data
         full_select_statement_query="SELECT CONCAT('SELECT SQL_NO_CACHE ', \
@@ -35,7 +35,7 @@ function generate_query_rules_for_proxysql() {
         # now we replace every column name that we wish to replace with its replacement i.e. replace every entry from column_array (e.g. "user") with its rewrite from column_rewrite_array (e.g. "CONCAT(first_name, 'XXX')")
         replacement_pattern=$full_select_statement_result
         for j in "${!column_array[@]}"; do
-            replacement_pattern=$( echo $replacement_pattern | sed s/${column_array[j]}/${column_rewrite_array[j]}/ )
+            replacement_pattern=$( echo $replacement_pattern | sed "s/${column_array[j]}/${column_rewrite_array[j]}/g" )
         done
 
         # and finally output this table's rewrite rule to /dump/query_rules
