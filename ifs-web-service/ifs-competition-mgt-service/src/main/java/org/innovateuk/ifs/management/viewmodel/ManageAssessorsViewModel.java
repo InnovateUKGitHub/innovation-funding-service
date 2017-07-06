@@ -13,7 +13,7 @@ public class ManageAssessorsViewModel {
     private final String filter;
     private final PaginationViewModel pagination;
 
-    public ManageAssessorsViewModel(Long competitionId,
+    public ManageAssessorsViewModel(long competitionId,
                                     String competitionName,
                                     List<ManageAssessorsRowViewModel> assessors,
                                     boolean inAssessment,

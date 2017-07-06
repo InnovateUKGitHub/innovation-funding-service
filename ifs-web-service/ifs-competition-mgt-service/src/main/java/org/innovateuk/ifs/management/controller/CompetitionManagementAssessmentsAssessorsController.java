@@ -51,7 +51,7 @@ public class CompetitionManagementAssessmentsAssessorsController extends BaseCom
     @Override
     protected AssessorCountSummaryPageResource getCounts(long competitionId, int page, String filter) {
         return applicationCountSummaryRestService
-                .getAssessorCountSummariesByCompetitionId(competitionId, page, PAGE_SIZE, filter)
+                .getAssessorCountSummariesByCompetitionId(competitionId, page, PAGE_SIZE)
                 .getSuccessObjectOrThrowException();
     }
 }
