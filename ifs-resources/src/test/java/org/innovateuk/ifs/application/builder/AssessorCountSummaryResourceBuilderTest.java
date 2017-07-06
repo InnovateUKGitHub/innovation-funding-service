@@ -63,11 +63,11 @@ public class AssessorCountSummaryResourceBuilderTest {
         assertEquals(expectedSubmitteds[0].longValue(), first.getSubmitted());
 
         AssessorCountSummaryResource second = assessorCountSummaryResources.get(1);
-        assertEquals(expectedIds[1], first.getId());
-        assertEquals(expectedNames[1], first.getName());
-        assertEquals(expectedTotalAssigneds[1].longValue(), first.getTotalAssigned());
-        assertEquals(expectedAssigneds[1].longValue(), first.getAssigned());
-        assertEquals(expectedAccepteds[1].longValue(), first.getAccepted());
-        assertEquals(expectedSubmitteds[1].longValue(), first.getSubmitted());
+        assertEquals(expectedIds[1], second.getId());
+        assertEquals(expectedNames[1], second.getName());
+        assertEquals(expectedTotalAssigneds[1].longValue(), second.getTotalAssigned());
+        assertEquals(expectedAssigneds[1].longValue(), second.getAssigned());
+        assertEquals(expectedAccepteds[1].longValue(), second.getAccepted());
+        assertEquals(expectedSubmitteds[1].longValue(), second.getSubmitted());
     }
 }
