@@ -70,10 +70,10 @@ Administrator can successfully invite a new user
     [Documentation]  IFS-27
     [Tags]  HappyPath
     Given the user navigates to the page       ${server}/management/admin/invite-user
-    When the user enters text to a text field  id=firstName  Astle
-    And the user enters text to a text field   id=lastName  Pimenta
+    When the user enters text to a text field  id=firstName  Support
+    And the user enters text to a text field   id=lastName  User
     And the user fills in the email address for the invitee
-    And the user selects the option from the drop-down menu  IFS Support User  id=role
+    And the user selects the option from the drop-down menu  IFS Administrator  id=role
     And the user clicks the button/link        jQuery=.button:contains("Send invite")
     Then the user cannot see a validation error in the page
     Then the user should see the element       jQuery=h1:contains("Manage users")
@@ -91,38 +91,38 @@ Account creation validation checks
     [Documentation]  IFS-643
     [Tags]
     Given the user clicks the button/link   jQuery=.button:contains("Create account")
-#    Then the user should see a field error  Please enter a first name.
-#    And the user should see a field error   Your first name should have at least 2 characters.
-#    When the user should see a field error  Please enter a last name.
-#    Then the user should see a field error  Your last name should have at least 2 characters.
-#    And the user should see the element     jQuery=li[data-valid="false"]:contains("be at least 8 characters long")
+    Then the user should see a field error  Please enter a first name.
+    And the user should see a field error   Your first name should have at least 2 characters.
+    When the user should see a field error  Please enter a last name.
+    Then the user should see a field error  Your last name should have at least 2 characters.
+    And the user should see the element     jQuery=li[data-valid="false"]:contains("be at least 8 characters long")
 
 New user account is created and verified
     [Documentation]  IFS-643
-    [Tags]   HappyPath  Failing
-    When the user enters text to a text field  css=#firstName  Astle
-    And the user enters text to a text field   css=#lastName  Pimenta
-    And the user should see the element        jQuery=h3:contains("Email") + p:contains("astle.pimenta@innovateuk")
+    [Tags]   HappyPath
+    When the user enters text to a text field  css=#firstName  New
+    And the user enters text to a text field   css=#lastName  Administrator
+    And the user should see the element        jQuery=h3:contains("Email") + p:contains("ifs.administrator@innovateuk")
     And the user enters text to a text field   css=#password  ${correct_password}
     And the user clicks the button/link        jQuery=.button:contains("Create account")
     Then the user should see the element       jQuery=h1:contains("Your account has been created")
     When the user clicks the button/link       jQuery=.button:contains("Sign into your account")
-    Then Logging in and Error Checking         test@innovateuk.gov.uk  ${correct_password}
+    Then the invited user logs in
     And the user clicks the button/link        jQuery=a:contains("Manage users")
-    And the user clicks the button/link        jQuery=a:contains("Astle Pimenta")
-    Then the user should see the element       jQuery=dt:contains("Full name") + dd:contains("Astle Pimenta")
-    And the user should see the element        jQuery=dt:contains("Email") + dd:contains("astle.pimenta@innovateuk")
-    And the user should see the element        jQuery=dt:contains("Job role") + dd:contains("IFS Support User")
+    And the user clicks the button/link        jQuery=a:contains("New Administrator")
+    Then the user should see the element       jQuery=dt:contains("Full name") + dd:contains("New Administrator")
+    And the user should see the element        jQuery=dt:contains("Email") + dd:contains("ifs.administrator@innovateuk")
+    And the user should see the element        jQuery=dt:contains("Job role") + dd:contains("IFS Administrator")
 
 Inviting the same user for the same role again should give an error
     [Documentation]  IFS-27
     [Tags]
     [Setup]  log in as a different user            &{ifs_admin_user_credentials}
     Given the user navigates to the page           ${server}/management/admin/invite-user
-    When the user enters text to a text field      id=firstName  Astle
-    And the user enters text to a text field       id=lastName  Pimenta
+    When the user enters text to a text field      id=firstName  New
+    And the user enters text to a text field       id=lastName  Administrator
     And the user fills in the email address for the invitee
-    And the user selects the option from the drop-down menu  IFS Support User  id=role
+    And the user selects the option from the drop-down menu  IFS Administrator  id=role
     And the user clicks the button/link            jQuery=.button:contains("Send invite")
     Then the user should see the element           jQuery=.error-summary:contains("This user has a pending invite. Please check.")
 
@@ -130,8 +130,8 @@ Inviting the same user for the different role again should also give an error
     [Documentation]  IFS-27
     [Tags]
     Given the user navigates to the page       ${server}/management/admin/invite-user
-    When the user enters text to a text field  id=firstName  Astle
-    And the user enters text to a text field   id=lastName  Pimenta
+    When the user enters text to a text field  id=firstName  Project
+    And the user enters text to a text field   id=lastName  Finance
     And the user fills in the email address for the invitee
     And the user selects the option from the drop-down menu  Project Finance  id=role
     And the user clicks the button/link        jQuery=.button:contains("Send invite")
@@ -148,13 +148,19 @@ User cannot see manage users page
 
 the user fills in the email address for the invitee
     # Locally the accepted domain is innovateuk.test
-    run keyword if  ${docker}==1  the user enters text to a text field  id=emailAddress  astle.pimenta@innovateuk.test
+    run keyword if  ${docker}==1  the user enters text to a text field  id=emailAddress  ifs.administrator@innovateuk.test
     # On production the accepted domain is innovateuk.gov.uk
-    run keyword if  ${docker}!=1  the user enters text to a text field  id=emailAddress  astle.pimenta@innovateuk.gov.uk
+    run keyword if  ${docker}!=1  the user enters text to a text field  id=emailAddress  ifs.administrator@innovateuk.gov.uk
 
 The invitee reads his email and clicks the link
     [Arguments]  ${title}  ${pattern}
     # Locally the accepted domain is innovateuk.test
-    run keyword if  ${docker}==1  The user reads his email and clicks the link  astle.pimenta@innovateuk.test  ${title}  ${pattern}
+    run keyword if  ${docker}==1  The user reads his email and clicks the link  ifs.administrator@innovateuk.test  ${title}  ${pattern}
     # On production the accepted domain is innovateuk.gov.uk
-    run keyword if  ${docker}!=1  The user reads his email and clicks the link  astle.pimenta@innovateuk.gov.uk  ${title}  ${pattern}
+    run keyword if  ${docker}!=1  The user reads his email and clicks the link  ifs.administrator@innovateuk.gov.uk  ${title}  ${pattern}
+
+the invited user logs in
+    # Locally the accepted domain is innovateuk.test
+    run keyword if  ${docker}==1  Logging in and Error Checking  ifs.administrator@innovateuk.test  ${correct_password}
+    # On production the accepted domain is innovateuk.gov.uk
+    run keyword if  ${docker}!=1  Logging in and Error Checking  ifs.administrator@innovateuk.gov.uk  ${correct_password}
