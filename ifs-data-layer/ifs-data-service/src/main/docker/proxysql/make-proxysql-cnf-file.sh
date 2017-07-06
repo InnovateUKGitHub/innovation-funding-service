@@ -3,6 +3,8 @@
 set -e
 set -x
 
+REPLACE_REPLACEMENT_TOKEN_EXTRACTOR="s/^REPLACE('\(.\)')$/\1/g"
+
 MASK_REPLACEMENT_INDEX_EXTRACTOR="s/^MASK(\([0-9]\+\),[ ]*'\(.\)')$/\1/g"
 MASK_REPLACEMENT_TOKEN_EXTRACTOR="s/^MASK([0-9]\+,[ ]*'\(.\)')$/\1/g"
 
@@ -16,6 +18,13 @@ function generate_rewrite_from_rule() {
 
     column_name="$1"
     replacement="$2"
+
+    replace_test=$(echo "$replacement" | sed "$REPLACE_REPLACEMENT_TOKEN_EXTRACTOR")
+    if [[ "$replace_test" != "$replacement" ]]; then
+        mask_token=$(echo "$replacement" | sed "$REPLACE_REPLACEMENT_TOKEN_EXTRACTOR")
+        echo "REPEAT('$mask_token', CHAR_LENGTH($column_name))"
+        exit 0
+    fi
 
     # this case generates the SQL from a rewrite rule like "MASK(1, 'X')"
     mask_test=$(echo "$replacement" | sed "$MASK_REPLACEMENT_INDEX_EXTRACTOR")

@@ -1,0 +1,6 @@
+address_line1|REPLACE('1')
+address_line2|REPLACE('2')
+address_line3|REPLACE('3')
+town|REPLACE('T')
+postcode|REPLACE('P')
+county|REPLACE('C')
