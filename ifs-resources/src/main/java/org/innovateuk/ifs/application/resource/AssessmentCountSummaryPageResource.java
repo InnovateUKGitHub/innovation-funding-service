@@ -5,7 +5,7 @@ import org.innovateuk.ifs.commons.resource.PageResource;
 import java.util.List;
 
 /**
- * A single slice of a paginated list of {@link ApplicationCountSummaryResource}s.
+ * A single slice of a paginated list of {@link AssessorCountSummaryResource}s.
  */
 public abstract class AssessmentCountSummaryPageResource<T extends AssessmentCountSummaryResource> extends PageResource<T> {
     protected AssessmentCountSummaryPageResource() {
