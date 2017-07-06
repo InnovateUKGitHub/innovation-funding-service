@@ -11,60 +11,6 @@
         <fieldset th:if="${editable}" id="section-3-edit">
 
             <legend class="visuallyhidden">Eligibility</legend>
-
-            <!--/* INFUND-5682 : Competition streams options have been hidden rather than removed, since they will be required when new competition types are added */-->
-            <!--/*
-                <div class="form-group" th:classappend="${#fields.hasErrors('multipleStream')} ? 'form-group-error'">
-                    <fieldset class="inline">
-                        <legend>
-                            <span class="form-label-bold">Does the competition have multiple streams?</span>
-                            <th:block th:if="${#fields.hasErrors('multipleStream')}">
-                                <span class="error-message"  th:each="err : ${#fields.errors('multipleStream')}" th:text="${err}"></span>
-                            </th:block>
-                        </legend>
-                        <div class="multiple-choice" data-target="competition-stream-name-fields">
-                            <input id="comp-stream-yes"
-                                   value="yes"
-                                   type="radio"
-                                   th:field="*{multipleStream}"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{validation.eligibilityform.multiplestream.required}" />
-                            <label for="comp-stream-yes">Yes</label>
-                        </div>
-                        <div class="multiple-choice">
-                            <input id="comp-stream-no"
-                                   value="no"
-                                   type="radio"
-                                   th:field="*{multipleStream}"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{validation.eligibilityform.multiplestream.required}" />
-                            <label for="comp-stream-no">No</label>
-                        </div>
-                    </fieldset>
-                </div>
-
-                <div id="competition-stream-name-fields" class="form-group js-hidden"  th:classappend="${#fields.hasErrors('streamName')}? 'form-group-error':''">
-                    <fieldset class="inline">
-                        <legend>
-                            <label class="form-label" for="streamName">
-                                <span class="form-label-bold">Stream name</span>
-                                <th:block th:if="${#fields.hasErrors('streamName')}">
-                                      <span class="error-message"  th:each="err : ${#fields.errors('streamName')}" th:text="${err}"></span>
-                                </th:block>
-                            </label>
-                        </legend>
-                        <input class="form-control width-x-large"
-                               th:errorclass="form-control-error"
-                               type="text"
-                               th:field="*{streamName}"
-                               maxlength="255"
-                               required="required"
-                               th:attr="data-required-errormessage=#{validation.eligibilityform.multiplestream.required},
-                                        data-maxlength-errormessage=#{validation.eligibilityform.streamname.length.max(null,null,255)}" />
-                    </fieldset>
-                </div>
-            */-->
-            <!--/* INFUND-5682 : remove hidden input once multiplestreams above becomes available */-->
             <input type="hidden" th:field="*{multipleStream}" />
             <div class="form-group" th:classappend="${#fields.hasErrors('singleOrCollaborative')} ? 'form-group-error'">
                 <fieldset class="inline">
