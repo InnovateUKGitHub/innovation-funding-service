@@ -71,7 +71,7 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
     }
 
     protected UserResource innovationLeadUser() {
-        return getUserWithRole(COMP_TECHNOLOGIST);
+        return getUserWithRole(INNOVATION_LEAD);
     }
 
     protected UserResource assessorUser() {

@@ -11,7 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
  */
 public interface PublicContentService {
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'competition_technologist')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @SecuredBySpring(value = "GET_PUBLIC_CONTENT",
             description = "All internal users can get the public content for a competition.")
     ServiceResult<PublicContentResource> findByCompetitionId(Long id);

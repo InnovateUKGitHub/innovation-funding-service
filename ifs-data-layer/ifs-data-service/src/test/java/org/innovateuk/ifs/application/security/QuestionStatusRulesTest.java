@@ -102,7 +102,7 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
     public void testInnovationLeadUserCanReadQuestionStatus() {
         QuestionStatusResource questionStatusResource = QuestionStatusResourceBuilder.newQuestionStatusResource().build();
 
-        UserResource innovationLeadUser = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_TECHNOLOGIST).build())).build();
+        UserResource innovationLeadUser = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.INNOVATION_LEAD).build())).build();
         UserResource nonInnovationLeadUser = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build();
 
         assertTrue(rules.innovationLeadCanReadQuestionStatus(questionStatusResource, innovationLeadUser));

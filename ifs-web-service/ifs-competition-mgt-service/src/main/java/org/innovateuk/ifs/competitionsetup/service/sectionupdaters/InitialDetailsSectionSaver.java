@@ -36,7 +36,7 @@ import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
+import static org.innovateuk.ifs.user.resource.UserRoleType.INNOVATION_LEAD;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
@@ -191,10 +191,10 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                     "competition.setup.invalid.comp.exec"));
         }
 
-        if (userService.existsAndHasRole(initialDetailsForm.getLeadTechnologistUserId(), COMP_TECHNOLOGIST)) {
+        if (userService.existsAndHasRole(initialDetailsForm.getLeadTechnologistUserId(), INNOVATION_LEAD)) {
             competition.setLeadTechnologist(initialDetailsForm.getLeadTechnologistUserId());
         } else if (initialDetailsForm.getLeadTechnologistUserId() != null) {
-            return asList(fieldError("leadTechnologistUserId",
+            return asList(fieldError("innovationLeadUserId",
                     initialDetailsForm.getLeadTechnologistUserId(),
                     "competition.setup.invalid.comp.technologist"));
         }

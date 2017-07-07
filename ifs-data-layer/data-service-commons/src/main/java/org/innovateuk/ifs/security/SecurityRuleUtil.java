@@ -18,11 +18,11 @@ public class SecurityRuleUtil {
     }
 
     public static boolean isInternal(User user) {
-        return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE) || user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.COMP_TECHNOLOGIST);
+        return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE) || user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD);
     }
 
     public static boolean isInternal(UserResource user) {
-        return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE) || user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.COMP_TECHNOLOGIST);
+        return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE) || user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD);
     }
 
     public static boolean isInternalAdmin(UserResource user) {
@@ -76,6 +76,6 @@ public class SecurityRuleUtil {
         return DefaultPermissionMethodHandler.getAnonymous();
     }
 
-    public static boolean isInnovationLead(UserResource user) { return user.hasRole(COMP_TECHNOLOGIST); }
+    public static boolean isInnovationLead(UserResource user) { return user.hasRole(INNOVATION_LEAD); }
 
 }

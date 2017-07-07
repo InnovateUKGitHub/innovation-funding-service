@@ -111,7 +111,7 @@ public class ApplicationSectionController {
         return APPLICATION_FORM;
     }
 
-    @PreAuthorize("hasAnyAuthority('support', 'competition_technologist')")
+    @PreAuthorize("hasAnyAuthority('support', 'innovation_lead')")
     @GetMapping(SECTION_URL + "{sectionId}/{applicantOrganisationId}")
     public String applicationFormWithOpenSectionForApplicant(@Valid @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form, BindingResult bindingResult, Model model,
                                                              @PathVariable(APPLICATION_ID) final Long applicationId,

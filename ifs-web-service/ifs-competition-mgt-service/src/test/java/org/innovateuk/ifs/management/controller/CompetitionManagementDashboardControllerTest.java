@@ -242,7 +242,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     @Test
     public void testLiveDashBoardSupportViewInnovationLead() throws Exception {
 
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_TECHNOLOGIST).build())).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.INNOVATION_LEAD).build())).build());
 
         Mockito.when(competitionDashboardSearchService.getLiveCompetitions()).thenReturn(competitions);
 

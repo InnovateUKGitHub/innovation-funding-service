@@ -16,7 +16,7 @@ import static org.innovateuk.ifs.commons.service.BaseRestService.buildPagination
 import static org.innovateuk.ifs.documentation.UserDocs.userPageResourceFields;
 import static org.innovateuk.ifs.documentation.UserDocs.userResourceFields;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
+import static org.innovateuk.ifs.user.resource.UserRoleType.INNOVATION_LEAD;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -75,9 +75,9 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     public void findByRole() throws Exception {
 
         final UserResource userResource = newUserResource().build();
-        when(baseUserServiceMock.findByProcessRole(eq(COMP_TECHNOLOGIST))).thenReturn(serviceSuccess(asList(userResource, userResource)));
+        when(baseUserServiceMock.findByProcessRole(eq(INNOVATION_LEAD))).thenReturn(serviceSuccess(asList(userResource, userResource)));
 
-        mockMvc.perform(get("/user/findByRole/{userRoleName}", COMP_TECHNOLOGIST.getName()))
+        mockMvc.perform(get("/user/findByRole/{userRoleName}", INNOVATION_LEAD.getName()))
                 .andDo(document("user/{method-name}",
                         pathParameters(
                                 parameterWithName("userRoleName").description("The name of the role to get the users by.")

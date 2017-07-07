@@ -539,7 +539,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
 
     @Test
     public void allApplicationsSupportViewInnovationLead() throws Exception {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_TECHNOLOGIST).build())).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.INNOVATION_LEAD).build())).build());
 
         Long[] ids = {1L, 2L, 3L};
         String[] titles = {"Title 1", "Title 2", "Title 3"};

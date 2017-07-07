@@ -85,7 +85,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         when(userService.findUserByType(UserRoleType.COMP_ADMIN)).thenReturn(newUserResource().withFirstName("Comp").withLastName("Admin").build(1));
 
-        when(userService.findUserByType(UserRoleType.COMP_TECHNOLOGIST)).thenReturn(newUserResource().withFirstName("Comp").withLastName("Technologist").build(1));
+        when(userService.findUserByType(UserRoleType.INNOVATION_LEAD)).thenReturn(newUserResource().withFirstName("Comp").withLastName("Technologist").build(1));
 
         List<InnovationSectorResource> innovationSectorResources = newInnovationSectorResource()
                 .withName("A Innovation Sector")
@@ -249,7 +249,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(model().attributeHasFieldErrors(COMPETITION_SETUP_FORM_KEY,
                         "executiveUserId",
                         "title",
-                        "leadTechnologistUserId",
+                        "innovationLeadUserId",
                         "openingDateDay",
                         "openingDateMonth",
                         "openingDateYear",
@@ -271,8 +271,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         assertEquals("Please select a competition executive.", bindingResult.getFieldError("executiveUserId").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("title"));
         assertEquals("Please enter a title.", bindingResult.getFieldError("title").getDefaultMessage());
-        assertTrue(bindingResult.hasFieldErrors("leadTechnologistUserId"));
-        assertEquals("Please select an Innovation Lead.", bindingResult.getFieldError("leadTechnologistUserId").getDefaultMessage());
+        assertTrue(bindingResult.hasFieldErrors("innovationLeadUserId"));
+        assertEquals("Please select an Innovation Lead.", bindingResult.getFieldError("innovationLeadUserId").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("openingDateDay"));
         assertEquals("Please enter an opening day.", bindingResult.getFieldError("openingDateDay").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("openingDateMonth"));
@@ -303,7 +303,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(model().attributeHasFieldErrors(COMPETITION_SETUP_FORM_KEY,
                         "executiveUserId",
                         "title",
-                        "leadTechnologistUserId",
+                        "innovationLeadUserId",
                         "openingDateDay",
                         "openingDateMonth",
                         "openingDateYear",
@@ -323,8 +323,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         assertEquals("Please select a competition executive.", bindingResult.getFieldError("executiveUserId").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("title"));
         assertEquals("Please enter a title.", bindingResult.getFieldError("title").getDefaultMessage());
-        assertTrue(bindingResult.hasFieldErrors("leadTechnologistUserId"));
-        assertEquals("Please select an Innovation Lead.", bindingResult.getFieldError("leadTechnologistUserId").getDefaultMessage());
+        assertTrue(bindingResult.hasFieldErrors("innovationLeadUserId"));
+        assertEquals("Please select an Innovation Lead.", bindingResult.getFieldError("innovationLeadUserId").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("openingDateDay"));
         assertEquals("Please enter an opening day.", bindingResult.getFieldError("openingDateDay").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("openingDateMonth"));
