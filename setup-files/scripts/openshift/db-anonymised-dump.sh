@@ -92,6 +92,9 @@ pushAnonymisedDatabaseDumpImages
 startupMysqlDumpPod
 waitForMysqlDumpPodToStart
 takeMysqlDump
+
+
+## TODO DW - reinstate
 #shutdownMysqlDumpPodAfterUse
 
 echo "Job complete!  Dump now available at /tmp/anonymised-dump.sql.gz"

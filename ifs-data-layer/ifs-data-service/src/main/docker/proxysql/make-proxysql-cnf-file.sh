@@ -83,7 +83,7 @@ function generate_query_rules_for_proxysql() {
 
             # and swap out the original column in the select statement with this replacement (taking care to only
             # replace exact column names and not partial substrings of other column names!)
-            replacement_pattern=$( echo $replacement_pattern | sed "s/\([ ,]\+\)${column_array[j]}\([ ,]\+\)/\1$final_rewrite\2/g" )
+            replacement_pattern=$( echo $replacement_pattern | sed "s#\([ ,]\+\)${column_array[j]}\([ ,]\+\)#\1$final_rewrite\2#g" )
         done
 
         # and finally output this table's rewrite rule to /dump/query_rules
