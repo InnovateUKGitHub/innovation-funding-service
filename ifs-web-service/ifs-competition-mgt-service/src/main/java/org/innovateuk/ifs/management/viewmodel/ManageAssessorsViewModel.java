@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.management.viewmodel;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.util.List;
 
 /**
@@ -10,20 +13,17 @@ public class ManageAssessorsViewModel {
     private final String competitionName;
     private final List<ManageAssessorsRowViewModel> assessors;
     private final boolean inAssessment;
-    private final String filter;
     private final PaginationViewModel pagination;
 
-    public ManageAssessorsViewModel(Long competitionId,
+    public ManageAssessorsViewModel(long competitionId,
                                     String competitionName,
                                     List<ManageAssessorsRowViewModel> assessors,
                                     boolean inAssessment,
-                                    String filter,
                                     PaginationViewModel pagination) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.assessors = assessors;
         this.inAssessment = inAssessment;
-        this.filter = filter;
         this.pagination = pagination;
     }
 
@@ -43,11 +43,35 @@ public class ManageAssessorsViewModel {
         return inAssessment;
     }
 
-    public String getFilter() {
-        return filter;
-    }
-
     public PaginationViewModel getPagination() {
         return pagination;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ManageAssessorsViewModel that = (ManageAssessorsViewModel) o;
+
+        return new EqualsBuilder()
+                .append(competitionId, that.competitionId)
+                .append(inAssessment, that.inAssessment)
+                .append(competitionName, that.competitionName)
+                .append(assessors, that.assessors)
+                .append(pagination, that.pagination)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(competitionId)
+                .append(competitionName)
+                .append(assessors)
+                .append(inAssessment)
+                .append(pagination)
+                .toHashCode();
     }
 }

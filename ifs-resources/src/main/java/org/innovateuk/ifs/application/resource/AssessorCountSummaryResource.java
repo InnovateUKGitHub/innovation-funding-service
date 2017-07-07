@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Represents an assessors's statistics for a competition
+ * Represents an Assessors's statistics for Assessments on a Competition.
  */
 public class AssessorCountSummaryResource extends AssessmentCountSummaryResource {
     private String name;
