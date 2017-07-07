@@ -186,6 +186,11 @@ public class UserPermissionRules {
         return userToCheck.getId().equals(user.getId());
     }
 
+    @PermissionRule(value = "EDIT_INTERNAL_USER", description = "Only an IFS Administrator can edit an internal user")
+    public boolean ifsAdminCanEditInternalUser(final UserResource userToEdit, UserResource user) {
+        return user.hasRole(UserRoleType.IFS_ADMINISTRATOR);
+    }
+
     private List<Application> getApplicationsRelatedToUserByProcessRoles(UserResource user, Predicate<ProcessRole> processRoleFilter) {
         List<ProcessRole> applicableProcessRoles = getFilteredProcessRoles(user, processRoleFilter);
         return simpleMap(applicableProcessRoles, processRole -> applicationRepository.findOne(processRole.getApplicationId()));

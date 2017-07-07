@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
@@ -89,6 +90,11 @@ public class UserController {
     @PostMapping("/internal/create/{inviteHash}")
     public RestResult<Void> createInternalUser(@PathVariable("inviteHash") String inviteHash, @Valid @RequestBody InternalUserRegistrationResource internalUserRegistrationResource){
         return registrationService.createInternalUser(inviteHash, internalUserRegistrationResource).toPostCreateResponse();
+    }
+
+    @PostMapping("/internal/edit")
+    public RestResult<Void> editInternalUser(@RequestBody EditUserResource editUserResource){
+        return registrationService.editInternalUser(editUserResource.getUserToEdit(), editUserResource.getUserRoleType()).toPostCreateResponse();
     }
 
     @GetMapping("/findAll/")

@@ -26,6 +26,7 @@ import org.innovateuk.ifs.user.domain.ProjectFinanceEmail;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.EthnicityMapper;
+import org.innovateuk.ifs.user.mapper.RoleMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.CompAdminEmailRepository;
 import org.innovateuk.ifs.user.repository.ProjectFinanceEmailRepository;
@@ -33,6 +34,7 @@ import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.UserStatus;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.method.P;
@@ -44,12 +46,14 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -99,7 +103,13 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     private SystemNotificationSource systemNotificationSource;
 
     @Autowired
+    private BaseUserService baseUserService;
+
+    @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private RoleMapper roleMapper;
 
     @Autowired
     private AddressMapper addressMapper;
@@ -334,6 +344,11 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     private ServiceResult<List<RoleResource>> getInternalRoleResources(Role role) {
         UserRoleType roleType = UserRoleType.fromName(role.getName());
 
+        return getInternalRoleResources(roleType);
+    }
+
+    private ServiceResult<List<RoleResource>> getInternalRoleResources(UserRoleType roleType) {
+
         if(UserRoleType.IFS_ADMINISTRATOR.equals(roleType)){
             return getIFSAdminRoles(roleType); // IFS Admin has multiple roles
         } else {
@@ -378,5 +393,32 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
             User createdUser = userRepository.save(user);
             return serviceSuccess(createdUser);
         });
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> editInternalUser(UserResource userToEdit, UserRoleType userRoleType) {
+
+        return validateInternalUserRole(userRoleType)
+                .andOnSuccess(() -> baseUserService.getUserById(userToEdit.getId()))
+                .andOnSuccess(userResource -> getInternalRoleResources(userRoleType)
+                    .andOnSuccess(roleResources -> {
+
+                        Set<Role> roleList = CollectionFunctions.simpleMapSet(roleResources, roleResource -> roleMapper.mapToDomain(roleResource));
+
+                        User user = userMapper.mapToDomain(userResource);
+                        user.setFirstName(userToEdit.getFirstName());
+                        user.setLastName(userToEdit.getLastName());
+                        user.setRoles(roleList);
+                        userRepository.save(user);
+                        return serviceSuccess();
+                    })
+                );
+    }
+
+    private ServiceResult<Void> validateInternalUserRole(UserRoleType userRoleType) {
+
+        return UserRoleType.internalRoles().stream().anyMatch(internalRole -> internalRole.equals(userRoleType))?
+                serviceSuccess() : serviceFailure(USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED);
     }
 }
