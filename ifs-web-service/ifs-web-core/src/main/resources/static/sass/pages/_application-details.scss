@@ -1,23 +1,24 @@
-
-//everything should be wrapped within this body class. 
+//everything should be wrapped within this body class.
 .app-details {
-	.section {
-		color:$secondary-text-colour;
-		font-size:16px;
+  .section {
+    color:$secondary-text-colour;
+    font-size:16px;
+  }
 
-	}
-	.alignright-button {
-		padding-top:40px;
-	}
-	.progress-container {
-		margin-left: 5px;
-		margin-right:5px;
-	}
+  .alignright-button {
+    padding-top:40px;
+  }
 
+  .progress-container {
+    margin-left: 5px;
+    margin-right:5px;
+  }
 }
 
 @include media-down(mobile){
-	.app-details .progress-container  {
-		margin: 0 25px 65px;
-	}
+  .app-details {
+    .progress-container  {
+      margin: 0 25px 65px;
+    }
+  }
 }

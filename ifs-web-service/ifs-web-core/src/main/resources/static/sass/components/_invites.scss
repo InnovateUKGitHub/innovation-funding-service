@@ -1,13 +1,22 @@
 .contributorsForm {
-  [data-invite-org] > .form-group {
+  [data-invite-org] {
+    > .form-group {
       margin: 1em 0 0.2em;
+    }
+
+    > .alignright {
+      margin: 0.3em 0 0;
+    }
   }
-  [data-invite-org] > .alignright {
-    margin: 0.3em 0 0;
+
+  .boxed-list {
+    li {
+      &:last-child {
+        background-color: $highlight-colour;
+      }
+    }
   }
-  .boxed-list li:last-child {
-    background-color: $highlight-colour;
-  }
+
   .alignright-button {
     padding:10px 0;
   }
