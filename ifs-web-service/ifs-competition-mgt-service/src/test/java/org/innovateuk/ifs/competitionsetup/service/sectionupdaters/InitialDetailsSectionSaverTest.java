@@ -82,7 +82,7 @@ public class InitialDetailsSectionSaverTest {
         competitionSetupForm.setOpeningDateDay(openingDate.getDayOfMonth());
         competitionSetupForm.setOpeningDateMonth(openingDate.getMonthValue());
         competitionSetupForm.setOpeningDateYear(openingDate.getYear());
-        competitionSetupForm.setLeadTechnologistUserId(leadTechnologistId);
+        competitionSetupForm.setInnovationLeadUserId(leadTechnologistId);
         competitionSetupForm.setCompetitionTypeId(competitionTypeId);
         competitionSetupForm.setInnovationSectorCategoryId(innovationSectorId);
 
@@ -192,7 +192,7 @@ public class InitialDetailsSectionSaverTest {
         InitialDetailsForm form = new InitialDetailsForm();
         form.setTitle(newTitle);
         form.setExecutiveUserId(newExec);
-        form.setLeadTechnologistUserId(leadTechnologistId);
+        form.setInnovationLeadUserId(leadTechnologistId);
         form.setCompetitionTypeId(competitionTypeId);
         form.setInnovationSectorCategoryId(innovationSectorId);
 
@@ -243,7 +243,7 @@ public class InitialDetailsSectionSaverTest {
         competitionSetupForm.setOpeningDateDay(openingDate.getDayOfMonth());
         competitionSetupForm.setOpeningDateMonth(openingDate.getMonthValue());
         competitionSetupForm.setOpeningDateYear(openingDate.getYear());
-        competitionSetupForm.setLeadTechnologistUserId(leadTechnologistId);
+        competitionSetupForm.setInnovationLeadUserId(leadTechnologistId);
         competitionSetupForm.setCompetitionTypeId(competitionTypeId);
         competitionSetupForm.setInnovationSectorCategoryId(innovationSectorId);
 
@@ -284,7 +284,7 @@ public class InitialDetailsSectionSaverTest {
         competitionSetupForm.setOpeningDateDay(openingDate.getDayOfMonth());
         competitionSetupForm.setOpeningDateMonth(openingDate.getMonthValue());
         competitionSetupForm.setOpeningDateYear(openingDate.getYear());
-        competitionSetupForm.setLeadTechnologistUserId(leadTechnologistId);
+        competitionSetupForm.setInnovationLeadUserId(leadTechnologistId);
         competitionSetupForm.setCompetitionTypeId(competitionTypeId);
         competitionSetupForm.setInnovationSectorCategoryId(innovationSectorId);
 

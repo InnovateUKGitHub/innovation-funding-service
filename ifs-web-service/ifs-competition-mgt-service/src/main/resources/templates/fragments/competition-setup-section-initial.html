@@ -202,7 +202,7 @@
                         required="required"
                         th:attr="data-required-errormessage=#{validation.initialdetailsform.leadtechnologistuserid.required}">
                     <option value="" th:selected="${competitionSetupForm.innovationLeadUserId == null}" disabled="disabled">Please select &hellip;</option>
-                    <option th:each="(competitionLeadTechUser : ${competitionLeadTechUsers})" th:text="${competitionLeadTechUser.name}" th:value="${competitionLeadTechUser.id}" th:selected="${competitionSetupForm.innovationLeadUserId == competitionLeadTechUser.id}">Innovation Lead</option>
+                    <option th:each="(innovationLeadTechUser : ${innovationLeadTechUsers})" th:text="${innovationLeadTechUser.name}" th:value="${innovationLeadTechUser.id}" th:selected="${competitionSetupForm.innovationLeadUserId == innovationLeadTechUser.id}">Innovation Lead</option>
                 </select>
             </div>
 
@@ -259,7 +259,7 @@
                 <dd th:text="${competitionSetupForm.openingDateDay+'/'+competitionSetupForm.openingDateMonth+'/'+competitionSetupForm.openingDateYear}"></dd>
 
                 <dt>Competition Lead</dt>
-                <dd th:each="(competitionLeadTechUser : ${competitionLeadTechUsers})" th:text="${competitionLeadTechUser.name}" th:if="${competitionLeadTechUser.id == competitionSetupForm.innovationLeadUserId}">Innovation Lead</dd>
+                <dd th:each="(innovationLeadTechUser : ${innovationLeadTechUsers})" th:text="${innovationLeadTechUser.name}" th:if="${innovationLeadTechUser.id == competitionSetupForm.innovationLeadUserId}">Innovation Lead</dd>
 
                 <dt>Competition Executive</dt>
                 <dd th:each="(competitionExecutiveUser : ${competitionExecutiveUsers})" th:text="${competitionExecutiveUser.name}" th:if="${competitionSetupForm.executiveUserId == competitionExecutiveUser.id}">User</dd>

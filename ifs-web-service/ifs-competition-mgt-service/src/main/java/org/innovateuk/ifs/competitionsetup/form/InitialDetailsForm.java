@@ -132,11 +132,11 @@ public class InitialDetailsForm extends CompetitionSetupForm {
         this.competitionTypeId = competitionTypeId;
     }
 
-    public Long getLeadTechnologistUserId() {
+    public Long getInnovationLeadUserId() {
         return innovationLeadUserId;
     }
 
-    public void setLeadTechnologistUserId(Long innovationLeadUserId) {
+    public void setInnovationLeadUserId(Long innovationLeadUserId) {
         this.innovationLeadUserId = innovationLeadUserId;
     }
 

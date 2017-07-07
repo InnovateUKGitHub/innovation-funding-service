@@ -191,11 +191,11 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                     "competition.setup.invalid.comp.exec"));
         }
 
-        if (userService.existsAndHasRole(initialDetailsForm.getLeadTechnologistUserId(), INNOVATION_LEAD)) {
-            competition.setLeadTechnologist(initialDetailsForm.getLeadTechnologistUserId());
-        } else if (initialDetailsForm.getLeadTechnologistUserId() != null) {
+        if (userService.existsAndHasRole(initialDetailsForm.getInnovationLeadUserId(), INNOVATION_LEAD)) {
+            competition.setLeadTechnologist(initialDetailsForm.getInnovationLeadUserId());
+        } else if (initialDetailsForm.getInnovationLeadUserId() != null) {
             return asList(fieldError("innovationLeadUserId",
-                    initialDetailsForm.getLeadTechnologistUserId(),
+                    initialDetailsForm.getInnovationLeadUserId(),
                     "competition.setup.invalid.comp.technologist"));
         }
 

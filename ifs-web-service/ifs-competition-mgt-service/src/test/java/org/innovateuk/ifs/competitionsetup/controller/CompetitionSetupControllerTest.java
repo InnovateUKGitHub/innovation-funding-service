@@ -357,7 +357,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("innovationSectorCategoryId", "1")
                 .param("innovationAreaCategoryIds", "1", "2", "3")
                 .param("competitionTypeId", "1")
-                .param("leadTechnologistUserId", "1")
+                .param("innovationLeadUserId", "1")
                 .param("title", "My competition")
                 .param("unrestricted", "1"))
                 .andExpect(status().isOk())
@@ -376,7 +376,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         assertEquals(new Long(1L), initialDetailsForm.getInnovationSectorCategoryId());
         assertEquals(asList(1L, 2L, 3L), initialDetailsForm.getInnovationAreaCategoryIds());
         assertEquals(new Long(1L), initialDetailsForm.getCompetitionTypeId());
-        assertEquals(new Long(1L), initialDetailsForm.getLeadTechnologistUserId());
+        assertEquals(new Long(1L), initialDetailsForm.getInnovationLeadUserId());
         assertEquals("My competition", initialDetailsForm.getTitle());
 
         verify(competitionService, never()).update(competition);
@@ -400,7 +400,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("innovationSectorCategoryId", "1")
                 .param("innovationAreaCategoryIds", "1", "2", "3")
                 .param("competitionTypeId", "1")
-                .param("leadTechnologistUserId", "1")
+                .param("innovationLeadUserId", "1")
                 .param("title", "My competition")
                 .param("unrestricted", "1"))
                 .andExpect(status().isOk())
@@ -423,7 +423,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         assertEquals(new Long(1L), initialDetailsForm.getInnovationSectorCategoryId());
         assertEquals(asList(1L, 2L, 3L), initialDetailsForm.getInnovationAreaCategoryIds());
         assertEquals(new Long(1L), initialDetailsForm.getCompetitionTypeId());
-        assertEquals(new Long(1L), initialDetailsForm.getLeadTechnologistUserId());
+        assertEquals(new Long(1L), initialDetailsForm.getInnovationLeadUserId());
         assertEquals("My competition", initialDetailsForm.getTitle());
 
         BindingResult bindingResult = initialDetailsForm.getBindingResult();
@@ -460,7 +460,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("innovationSectorCategoryId", "1")
                 .param("innovationAreaCategoryIds", "1", "2", "3")
                 .param("competitionTypeId", "1")
-                .param("leadTechnologistUserId", "1")
+                .param("innovationLeadUserId", "1")
                 .param("title", "My competition")
                 .param("unrestricted", "1"))
                 .andExpect(status().isOk())
@@ -484,7 +484,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         assertEquals(new Long(1L), initialDetailsForm.getInnovationSectorCategoryId());
         assertEquals(asList(1L, 2L, 3L), initialDetailsForm.getInnovationAreaCategoryIds());
         assertEquals(new Long(1L), initialDetailsForm.getCompetitionTypeId());
-        assertEquals(new Long(1L), initialDetailsForm.getLeadTechnologistUserId());
+        assertEquals(new Long(1L), initialDetailsForm.getInnovationLeadUserId());
         assertEquals("My competition", initialDetailsForm.getTitle());
 
         bindingResult.getAllErrors();
@@ -520,7 +520,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("innovationSectorCategoryId", "1")
                 .param("innovationAreaCategoryIds", "1", "2", "3")
                 .param("competitionTypeId", "1")
-                .param("leadTechnologistUserId", "1")
+                .param("innovationLeadUserId", "1")
                 .param("title", "My competition"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"));
