@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.admin.controller;
 
-import org.innovateuk.ifs.admin.form.InviteUserForm;
+import org.innovateuk.ifs.admin.form.EditUserForm;
 import org.innovateuk.ifs.admin.viewmodel.EditUserViewModel;
 import org.innovateuk.ifs.admin.viewmodel.UserListViewModel;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
+import org.innovateuk.ifs.registration.service.InternalUserService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Objects;
 import java.util.function.Supplier;
+
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
 /**
  * This controller will handle all requests that are related to management of users by IFS Administrators.
@@ -44,6 +50,9 @@ public class UserManagementController {
 
     @Autowired
     private ProfileRestService profileRestService;
+
+    @Autowired
+    private InternalUserService internalUserService;
 
     @GetMapping("/users/active")
     public String viewActive(Model model,
@@ -86,15 +95,20 @@ public class UserManagementController {
     }
 
     @GetMapping("/user/{userId}/edit")
-    public String viewEditUser(Model model,
-                             HttpServletRequest request,
-                             UserResource loggedInUser) {
+    public String viewEditUser(@PathVariable Long userId,
+                               Model model,
+                               HttpServletRequest request,
+                               UserResource loggedInUser) {
 
-        return viewEditUser(model);
+        return viewEditUser(model, userId);
     }
 
-    private String viewEditUser(Model model) {
-        InviteUserForm form = new InviteUserForm();
+    private String viewEditUser(Model model, Long userId) {
+
+        UserResource userResource = userRestService.retrieveUserById(userId).getSuccessObjectOrThrowException();
+
+        EditUserForm form = new EditUserForm();
+        form.setEmailAddress(userResource.getEmail());
         model.addAttribute(FORM_ATTR_NAME, form);
 
         return "admin/edit-user";
@@ -105,13 +119,34 @@ public class UserManagementController {
     public String updateUser(@PathVariable Long userId,
                              Model model,
                              HttpServletRequest request,
-                             @Valid @ModelAttribute(FORM_ATTR_NAME) InviteUserForm form,
+                             @Valid @ModelAttribute(FORM_ATTR_NAME) EditUserForm form,
                              @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                              UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> "admin/user/" + userId + "/edit";
+        Supplier<String> failureView = () -> "admin/edit-user";
 
-        return "redirect:/admin/users/active";
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+
+            EditUserResource editUserResource = constructEditUserResource(form, userId);
+
+            ServiceResult<Void> saveResult = internalUserService.editInternalUser(editUserResource);
+
+            return validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
+                    failNowOrSucceedWith(failureView, () -> "redirect:/admin/users/active");
+
+        });
+
     }
 
+    private EditUserResource constructEditUserResource(EditUserForm form, Long userId) {
+
+        UserResource userToEdit = new UserResource();
+        userToEdit.setId(userId);
+        userToEdit.setFirstName(form.getFirstName());
+        userToEdit.setLastName(form.getLastName());
+
+        EditUserResource editUserResource = new EditUserResource(userToEdit, form.getRole());
+
+        return editUserResource;
+    }
 }
