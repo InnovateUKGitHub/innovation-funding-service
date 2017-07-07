@@ -66,7 +66,11 @@
             </li>
         </ul>
 
-        <button th:if="${editable}" class="button extra-margin">Done</button>
+        <div class="grid-row">
+            <div class="column-full extra-margin">
+                <button th:if="${editable}" class="button">Done</button>
+            </div>
+        </div>
 
         <ul class="pagination">
             <li class="prev">
