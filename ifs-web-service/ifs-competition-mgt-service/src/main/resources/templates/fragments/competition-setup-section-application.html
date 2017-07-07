@@ -12,11 +12,10 @@
     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
         <h2 class="heading-medium extra-margin" th:text="${competition.competitionTypeName+' competition questions'}" />
 
-        <p>You can review and amend the application and assessment questions and guidance for this competition.
-            Any changes you make will be applied to this competition, but will not affect the default template for this competition type.</p>
+        <p>You can review and amend the application and assessment questions and guidance for this competition. You can also edit the finances section to update funding rules. Any changes you make will be applied to this competition, but will not affect the default template for this competition type.</p>
 
         <!--/* TODO IFS-743 This line of content needs removing */-->
-        <p>If you're happy with the default questions for this competition type, mark this section as done and continue.</p>
+        <p>Once you are happy with the questions, funding rules and guidance, mark this section as done and continue.</p>
 
         <h3 class="heading-small">Application details</h3>
         <ul class="task-list">
