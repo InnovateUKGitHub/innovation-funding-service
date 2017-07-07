@@ -18,7 +18,7 @@ RUN apt-get update && \
 
 RUN mkdir -p /dump/rewrites
 
-COPY proxysql/entrypoint.sh proxysql/make-mysqldump.sh proxysql/make-proxysql-cnf-file.sh /dump/
+COPY proxysql/entrypoint.sh proxysql/make-mysqldump.sh proxysql/make-proxysql-cnf-file.sh proxysql/rewrite-rule-generator.sh /dump/
 
 COPY proxysql/rewrites/* /dump/rewrites/
 

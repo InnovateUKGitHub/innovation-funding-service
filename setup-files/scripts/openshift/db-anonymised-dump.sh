@@ -67,9 +67,12 @@ function shutdownMysqlDumpPodAfterUse() {
         exit -1;
       fi
       echo "Still waiting for db-anonymised-data pod to shut down..."
-      sleep 5
+      sleep 2
       time_waited_so_far=$((time_waited_so_far + 5))
     done
+
+    echo "Waiting for the dust to settle..."
+    sleep 2
 }
 
 # Entry point
