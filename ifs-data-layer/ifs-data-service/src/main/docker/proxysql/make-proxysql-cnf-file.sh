@@ -12,6 +12,8 @@ MASK_REPLACEMENT_TOKEN_EXTRACTOR="s/^MASK([0-9]\+,[ ]*'\(.\)')$/\1/g"
 
 INTEGER_REPLACEMENT_TOKEN_EXTRACTOR="s/^INTEGER(\(.*\))$/\1/g"
 
+DIFFERENT_IF_NUMBER_REPLACEMENT_TOKEN_EXTRACTOR="s/^DIFFERENT_IF_NUMBER(\(.*\))$/\1/g"
+
 # This function is able to generate SQL rewrite statements for common anonymisation techniques e.g. from the
 # rewrite rule "MASK(2, 'X')", this function will generate the SQL necessary to reproduce the masking of
 # all characters past the 2nd character with 'X'.
@@ -49,6 +51,17 @@ function generate_rewrite_from_rule() {
         deviation_percent_times_two=$((deviation_percent * 2))
 
         echo "ROUND($column_name * (1 + ((RAND() * $deviation_percent_times_two) / 100) - ($deviation_percent / 100)), 0)"
+        exit 0
+    fi
+
+    # this case generates the SQL from a rewrite rule like "INTEGER(0.5)"
+    replace_test=$(echo "$replacement" | sed "$DIFFERENT_IF_NUMBER_REPLACEMENT_TOKEN_EXTRACTOR")
+    if [[ "$replace_test" != "$replacement" ]]; then
+
+        deviation_percent=$(echo "$replacement" | sed "$DIFFERENT_IF_NUMBER_REPLACEMENT_TOKEN_EXTRACTOR")
+        deviation_percent_times_two=$((deviation_percent * 2))
+
+        echo "IF($column_name REGEXP '^[0-9.]+$', ROUND($column_name * (1 + ((RAND() * $deviation_percent_times_two) / 100) - ($deviation_percent / 100)), 0), $column_name)"
         exit 0
     fi
 

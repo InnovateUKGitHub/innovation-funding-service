@@ -1,3 +1,4 @@
 cost|INTEGER(10)
 description|REPLACE('a finance row description here')
 item|REPLACE('a finance row item here')
+quantity|INTEGER(10)
