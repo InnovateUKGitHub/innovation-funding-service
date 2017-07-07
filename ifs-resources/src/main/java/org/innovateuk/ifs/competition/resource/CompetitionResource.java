@@ -96,7 +96,7 @@ public class CompetitionResource {
 
     @JsonIgnore
     public boolean isAssessmentClosed() {
-        return competitionStatus.isLaterThan(CompetitionStatus.IN_ASSESSMENT);
+        return competitionStatus != null && (competitionStatus.isLaterThan(CompetitionStatus.IN_ASSESSMENT));
     }
 
     @JsonIgnore
