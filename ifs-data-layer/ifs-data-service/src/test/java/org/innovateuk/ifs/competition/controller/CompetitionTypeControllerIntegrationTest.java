@@ -59,6 +59,7 @@ public class CompetitionTypeControllerIntegrationTest extends BaseControllerInte
         assertEquals("SBRI", competitionTypes.get(2).getName());
         assertEquals("Special", competitionTypes.get(3).getName());
         assertEquals("Sector", competitionTypes.get(4).getName());
+        assertEquals("Generic", competitionTypes.get(5).getName());
     }
 
 }
