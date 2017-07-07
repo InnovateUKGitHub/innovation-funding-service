@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.team.form.ApplicantInviteForm;
 import org.innovateuk.ifs.application.team.form.ApplicationTeamUpdateForm;
 import org.innovateuk.ifs.application.team.service.AbstractTeamManagementService;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementViewModel;
+import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.InviteResultsResource;
@@ -14,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -39,7 +41,7 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
                                         @PathVariable("organisationId") long organisationId,
                                         UserResource loggedInUser,
                                         @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ApplicationTeamUpdateForm form) {
-        return teamManagementService.validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
+        return validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
             ApplicationTeamManagementViewModel viewModel = teamManagementService.createViewModel(applicationId, organisationId, loggedInUser);
             model.addAttribute("model", viewModel);
             return "application-team/edit-org";
@@ -49,37 +51,36 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
     @PostMapping(params = {"addStagedInvite"})
     public String addStagedInvite(Model model,
                                   @PathVariable("applicationId") long applicationId,
-                                  @PathVariable("organisationId") long inviteOrganisationId,
+                                  @PathVariable("organisationId") long organisationId,
                                   UserResource loggedInUser,
                                   @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
-        return teamManagementService.validateOrganisationAndApplicationIds(applicationId, inviteOrganisationId, () -> {
+        return validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
             form.setStagedInvite(new ApplicantInviteForm());
-            return getUpdateOrganisation(model, applicationId, inviteOrganisationId, loggedInUser, form);
+            return getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form);
         });
     }
 
     @PostMapping(params = {"removeStagedInvite"})
     public String removeStagedInvite(Model model,
                                      @PathVariable("applicationId") long applicationId,
-                                     @RequestParam("organisationId") long inviteOrganisationId,
+                                     @PathVariable("organisationId") long organisationId,
                                      UserResource loggedInUser,
-                                     @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
-                                     @RequestParam(name = "removeApplicant") Integer position) {
-        return teamManagementService.validateOrganisationAndApplicationIds(applicationId, inviteOrganisationId, () -> {
+                                     @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
+        return validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
             form.setStagedInvite(null);
-            return getUpdateOrganisation(model, applicationId, inviteOrganisationId, loggedInUser, form);
+            return getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form);
         });
     }
 
     @PostMapping(params = {"executeStagedInvite"})
     public String inviteApplicant(Model model,
-                                  @PathVariable("applicationId") Long applicationId,
+                                  @PathVariable("applicationId") long applicationId,
                                   @PathVariable("organisationId") long organisationId,
                                   UserResource loggedInUser,
                                   @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
                                   @SuppressWarnings("unused") BindingResult bindingResult,
                                   ValidationHandler validationHandler) {
-        return teamManagementService.validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
+        return validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
             Supplier<String> failureView = () -> getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form);
 
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
@@ -101,7 +102,7 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
                                   @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
                                   ValidationHandler validationHandler) {
 
-        return teamManagementService.validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
+        return validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
             Supplier<String> failureView = () -> getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form);
 
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
@@ -118,7 +119,7 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
                                                   @PathVariable("applicationId") long applicationId,
                                                   @RequestParam("organisationId") long organisationId,
                                                   UserResource loggedInUser) {
-        return teamManagementService.validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
+        return validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
             model.addAttribute("model", teamManagementService.createViewModel(applicationId, organisationId, loggedInUser));
 
             return "application-team/delete-org";
@@ -127,12 +128,12 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
 
     @PostMapping(params = {"deleteOrganisation"})
     public String deleteOrganisation(Model model,
-                                     @PathVariable("applicationId") Long applicationId,
+                                     @PathVariable("applicationId") long applicationId,
                                      @PathVariable("organisationId") long organisationId,
                                      UserResource loggedInUser,
                                      @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
 
-        return teamManagementService.validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
+        return validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
             List<Long> existingApplicantIds = teamManagementService.getInviteIds(applicationId, organisationId);
 
             return processAnyFailuresOrSucceed(simpleMap(existingApplicantIds, teamManagementService::removeInvite))
@@ -143,5 +144,10 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
         });
     }
 
-
+    public String validateOrganisationAndApplicationIds(Long applicationId, Long organisationId, Supplier<String> supplier) {
+        if(teamManagementService.applicationAndOrganisationIdCombinationIsValid(applicationId, organisationId)) {
+            return supplier.get();
+        }
+        throw new ObjectNotFoundException("Organisation invite id not found in application id provided.", Collections.emptyList());
+    }
 }

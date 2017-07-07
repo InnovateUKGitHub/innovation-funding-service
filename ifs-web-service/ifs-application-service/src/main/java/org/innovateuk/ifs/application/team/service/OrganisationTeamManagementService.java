@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.team.service;
 
 import org.innovateuk.ifs.application.team.form.ApplicationTeamUpdateForm;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementViewModel;
-import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteResultsResource;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -34,16 +32,16 @@ public class OrganisationTeamManagementService extends AbstractTeamManagementSer
     public ServiceResult<InviteResultsResource> executeStagedInvite(long applicationId,
                                                                        long organisationId,
                                                                        ApplicationTeamUpdateForm form) {
-        ApplicationInviteResource invite = createInvite(form, applicationId, organisationId);
+        ApplicationInviteResource invite = mapStagedInviteToInviteResource(form, applicationId, organisationId);
         return inviteRestService.createInvitesByOrganisationForApplication(applicationId, organisationId, Arrays.asList(invite)).toServiceResult();
     }
 
-    public String validateOrganisationAndApplicationIds(Long applicationId, Long organisationId, Supplier<String> supplier) {
+    public boolean applicationAndOrganisationIdCombinationIsValid(Long applicationId, Long organisationId) {
         List<ProcessRoleResource> processRoles = processRoleService.getByApplicationId(applicationId);
         if (processRoles.stream().anyMatch(processRoleResource -> organisationId.equals(processRoleResource.getOrganisationId()))) {
-            return supplier.get();
+            return true;
         }
-        throw new ObjectNotFoundException("Organisation id not found in application id provided.", Collections.emptyList());
+        return false;
     }
 
     public List<Long> getInviteIds(long applicationId, long organisationId) {
