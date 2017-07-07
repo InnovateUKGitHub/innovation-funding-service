@@ -1,12 +1,16 @@
 #/bin/bash
 
 set -e
+
+## TODO DW - remove debug flag
 set -x
 
 REPLACE_REPLACEMENT_TOKEN_EXTRACTOR="s/^REPLACE('\(.*\)')$/\1/g"
 
 MASK_REPLACEMENT_INDEX_EXTRACTOR="s/^MASK(\([0-9]\+\),[ ]*'\(.\)')$/\1/g"
 MASK_REPLACEMENT_TOKEN_EXTRACTOR="s/^MASK([0-9]\+,[ ]*'\(.\)')$/\1/g"
+
+INTEGER_REPLACEMENT_TOKEN_EXTRACTOR="s/^INTEGER(\(.*\))$/\1/g"
 
 # This function is able to generate SQL rewrite statements for common anonymisation techniques e.g. from the
 # rewrite rule "MASK(2, 'X')", this function will generate the SQL necessary to reproduce the masking of
@@ -23,8 +27,8 @@ function generate_rewrite_from_rule() {
     replace_test=$(echo "$replacement" | sed "$REPLACE_REPLACEMENT_TOKEN_EXTRACTOR")
     if [[ "$replace_test" != "$replacement" ]]; then
         mask_token=$(echo "$replacement" | sed "$REPLACE_REPLACEMENT_TOKEN_EXTRACTOR")
-        mask_token_length=$(expr length ${mask_token})
-        echo "REPEAT('$mask_token', ((CHAR_LENGTH($column_name) / $mask_token_length) + 1))"
+        mask_token_length=$(expr length "${mask_token}")
+        echo "SUBSTR(REPEAT('$mask_token', ((CHAR_LENGTH($column_name) / $mask_token_length) + 1)), 1, CHAR_LENGTH($column_name))"
         exit 0
     fi
 
@@ -34,6 +38,17 @@ function generate_rewrite_from_rule() {
         mask_index=$(echo "$replacement" | sed "$MASK_REPLACEMENT_INDEX_EXTRACTOR")
         mask_token=$(echo "$replacement" | sed "$MASK_REPLACEMENT_TOKEN_EXTRACTOR")
         echo "CONCAT(SUBSTR($column_name, 1, $mask_index), REPEAT('$mask_token', CHAR_LENGTH($column_name) - $mask_index))"
+        exit 0
+    fi
+
+    # this case generates the SQL from a rewrite rule like "INTEGER(0.5)"
+    replace_test=$(echo "$replacement" | sed "$INTEGER_REPLACEMENT_TOKEN_EXTRACTOR")
+    if [[ "$replace_test" != "$replacement" ]]; then
+
+        deviation_percent=$(echo "$replacement" | sed "$INTEGER_REPLACEMENT_TOKEN_EXTRACTOR")
+        deviation_percent_times_two=$((deviation_percent * 2))
+
+        echo "ROUND($column_name * (1 + ((RAND() * $deviation_percent_times_two) / 100) - ($deviation_percent / 100)), 0)"
         exit 0
     fi
 
@@ -126,4 +141,5 @@ generate_query_rules_for_proxysql
 inject_query_rules_into_proxysql_cnf
 inject_db_configuration_into_proxysql_cnf
 
+## TODO DW - remove cat
 cat /etc/proxysql.cnf
