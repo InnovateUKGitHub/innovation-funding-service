@@ -1,2 +1,3 @@
+cost|ROUND(cost * (1 + ((RAND() / 10) - (1 / 20))), 0)
 description|REPLACE('xxxx ')
 item|REPLACE('xxxx ')

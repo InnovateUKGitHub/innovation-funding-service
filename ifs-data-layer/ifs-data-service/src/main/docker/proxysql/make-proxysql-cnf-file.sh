@@ -48,6 +48,8 @@ function generate_query_rules_for_proxysql() {
     files=(/dump/rewrites/*)
 
     # for each file within the /dump/rewrites folder
+    rule_id=$((1))
+
     for i in "${files[@]}"; do
 
         # the table name is the name of the file e.g. "user"
@@ -83,15 +85,14 @@ function generate_query_rules_for_proxysql() {
 
             # and swap out the original column in the select statement with this replacement (taking care to only
             # replace exact column names and not partial substrings of other column names!)
-            replacement_pattern=$( echo $replacement_pattern | sed "s#\([ ,]\+\)${column_array[j]}\([ ,]\+\)#\1$final_rewrite\2#g" )
+            replacement_pattern=$( echo "$replacement_pattern" | sed "s#\([ ,]\+\)${column_array[j]}\([ ,]\+\)#\1$final_rewrite\2#g" )
         done
 
         # and finally output this table's rewrite rule to /dump/query_rules
-        if [ -e /dump/query_rules ]; then
+        if [ "$rule_id" -gt "1" ]; then
            echo '    ,' >> /dump/query_rules
         fi
 
-        rule_id=$j
         echo '    {' >> /dump/query_rules
         echo "        rule_id=$rule_id" >> /dump/query_rules
         echo '        active=1' >> /dump/query_rules
@@ -101,6 +102,8 @@ function generate_query_rules_for_proxysql() {
         echo '        destination_hostgroup=0' >> /dump/query_rules
         echo '        apply=1' >> /dump/query_rules
         echo '    }' >> /dump/query_rules
+
+        rule_id=$((rule_id + 1))
 
     done
 }
