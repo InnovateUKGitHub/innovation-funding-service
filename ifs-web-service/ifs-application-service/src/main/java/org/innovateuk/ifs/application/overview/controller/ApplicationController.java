@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.forms.populator.AssessorQuestionFeedbackPo
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -56,7 +57,7 @@ public class ApplicationController {
                                      UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
 
-        if (application.isSubmitted()) {
+        if (application.getCompetitionStatus() != CompetitionStatus.OPEN) {
             return format("redirect:/application/%s/summary", application.getId());
         }
 
