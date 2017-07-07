@@ -233,7 +233,7 @@ Support User can see read only view of Your funding
 Innovation lead can see read only summary link for each partner
     [Documentation]  IFS-802
     [Tags]
-    [Setup]  log in as a different user     &{comp_tech_one}
+    [Setup]  log in as a different user     &{innovation_lead_one}
     When the user navigates to the page     ${server}/management/competition/${OPEN_COMPETITION}/applications/all
     And the user clicks the button/link     link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
     And the user expands the Finance summaries
@@ -251,7 +251,7 @@ Innovation lead can see read only summary for lead
 Innovation lead can see read only summary for collaborator
     [Documentation]  IFS-802
     [Tags]
-    [Setup]  log in as a different user     &{comp_tech_one}
+    [Setup]  log in as a different user     &{innovation_lead_one}
     When the user navigates to the page     ${server}/management/competition/${OPEN_COMPETITION}/applications/all
     And the user clicks the button/link     link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
     And the user expands the Finance summaries
@@ -262,7 +262,7 @@ Innovation lead can see read only summary for collaborator
 Innovation lead can see read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
     [Documentation]  IFS-802
     [Tags]
-    [Setup]  log in as a different user       &{comp_tech_one}
+    [Setup]  log in as a different user       &{innovation_lead_one}
     When the user navigates to the page       ${server}/management/competition/${OPEN_COMPETITION}/applications/all
     And the user clicks the button/link       link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
     And the user expands the Finance summaries
@@ -281,8 +281,7 @@ Innovation lead can see read only view of collaborator Your project costs for La
     Then the user should see the element      jQuery=th:contains("20% of labour costs")
     And the user clicks the button/link       jQuery=button:contains("Overhead costs")
     When the user clicks the button/link      jQuery=button:contains("Materials")
-    Wait Until Element Is Visible Without Screenshots    jQuery=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2)
-    Wait Until Keyword Succeeds Without Screenshots    30    200ms    element should contain    jQuery=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2)   10
+    Wait Until Element Is Visible Without Screenshots    jQuery=button[aria-expanded="true"]:contains("Materials")
     Then the user should see the element      jQuery=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2):contains("10")
     And the user should see the element       jQuery=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3):contains("100")
     And the user should see the element       jQuery=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1):contains("test")
@@ -312,6 +311,7 @@ Innovation lead can see read only view of collaborator Your project costs for re
     And the user should see the element       jQuery=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3):contains("100")
     And the user clicks the button/link       jQuery=button:contains("Travel and subsistence")
     When the user clicks the button/link      jQuery=button:contains("Other costs")
+    Wait Until Element Is Visible Without Screenshots    jQuery=button[aria-expanded="true"]:contains("Other costs")
     Then the user should see the element      jQuery=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1):contains("some other costs")
     And the user should see the element       jQuery=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2):contains("50")
 
