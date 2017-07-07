@@ -196,7 +196,7 @@ Milestones: Autosave
     Then the user should see the correct inputs in the Milestones form
 
 Assessor: Server-side validation
-    [Documentation]    INFUND-5641
+    [Documentation]    INFUND-5641, IFS-380
     [Setup]    The user navigates to the Validation competition
     Given the user clicks the button/link    link=Assessors
     And The user enters text to a text field    id=assessorPay    ${EMPTY}
