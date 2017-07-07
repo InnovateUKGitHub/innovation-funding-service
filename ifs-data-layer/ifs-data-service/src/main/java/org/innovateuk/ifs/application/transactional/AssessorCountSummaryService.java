@@ -15,6 +15,6 @@ public interface AssessorCountSummaryService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ", description = "Comp Admins can see all Assessor Summary counts accros the whole system", securedType = AssessorCountSummaryResource.class)
-    ServiceResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionId(long competitionId, int pageIndex, int pageSize, Optional<String> filter);
+    ServiceResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionId(long competitionId, int pageIndex, int pageSize);
 }
 

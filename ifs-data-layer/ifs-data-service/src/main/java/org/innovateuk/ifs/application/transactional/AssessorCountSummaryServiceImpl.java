@@ -11,8 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -23,11 +21,9 @@ public class AssessorCountSummaryServiceImpl extends BaseTransactionalService im
     private ApplicationStatisticsRepository applicationStatisticsRepository;
 
     @Override
-    public ServiceResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionId(long competitionId, int pageIndex, int pageSize, Optional<String> filter) {
+    public ServiceResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionId(long competitionId, int pageIndex, int pageSize) {
 
-        String filterStr = filter.map(String::trim).orElse("");
         Pageable pageable = new PageRequest(pageIndex, pageSize);
-//        Page<AssessorStatistics> assessorStatistics = assessorStatisticsRepository.findByCompetitionParticipantCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_STATES, filterStr, pageable);
         Page<AssessorCountSummaryResource> assessorStatistics = applicationStatisticsRepository.getAssessorCountSummaryByCompetition(competitionId, pageable);
 
         return find(assessorStatistics, notFoundError(Page.class)).andOnSuccessReturn(stats -> new AssessorCountSummaryPageResource(
