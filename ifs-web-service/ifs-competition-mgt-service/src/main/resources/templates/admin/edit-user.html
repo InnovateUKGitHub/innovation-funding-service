@@ -14,7 +14,7 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='View or search for an internal user',linkClass='link-back',linkUrl=@{/admin/users/active}" />
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Update internal users details',size='heading-xlarge'" />
-    <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST">
+    <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST">
         <h2 class="heading-medium">Personal details</h2>
 
         <div class="form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'form-group-error'">
@@ -55,7 +55,7 @@
         </div>
         <dl>
             <dt>Email address</dt>
-            <dd th:text="${model.user.email}">mark.smith@innovate.gov.uk</dd>
+            <dd th:text="${form.emailAddress}">mark.smith@innovate.gov.uk</dd>
         </dl>
         <div class="form-group" th:classappend="${#fields.hasErrors('role')} ? 'form-group-error'">
             <label class="form-label" th:for="${#ids.next('role')}">
@@ -66,7 +66,7 @@
                 <p class="form-hint">Which of the following job roles will the user identify as?</p>
             </label>
             <select name="role" class="form-control" id="role" th:field="*{role}" required="required" data-required-errormessage="Please select a role">
-                <option th:each="adminRole : ${T(org.innovateuk.ifs.user.resource.AdminRoleType).values()}" th:value="${adminRole}" th:text="${adminRole.displayName}"></option>
+                <option th:each="adminRole : ${T(org.innovateuk.ifs.user.resource.UserRoleType).internalRoles()}" th:value="${adminRole}" th:text="${adminRole.displayName}"></option>
             </select>
         </div>
         <div class="form-group extra-margin">
