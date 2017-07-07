@@ -77,7 +77,7 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...
 ...               INFUND-654 Project Finance user has approved viability but date stamp is incorrect
 
-Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
+Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
 Resource          PS_Common.robot
@@ -171,22 +171,21 @@ Proj finance can see the maximum research participation level
 Timestamp approval verification for viability and eligibility
     [Documentation]    INFUND-654
     [Tags]
-    ${today}  get today
     Given the user clicks the button/link                    jQuery=table.table-progress a.viability-0
     And the user selects the checkbox                        project-viable
     And the user selects the option from the drop-down menu  Green  id=rag-rating
     And the user selects the checkbox                        creditReportConfirmed
-    And the user clicks the button/link                      css=#confirm-button
-    And the user clicks the button/link                      name=confirm-viability
-    Then the user should see the text in the page            The partner's finance viability has been approved by Lee Bowman, ${today}
+    And the user clicks the button/link                      css=#confirm-button      #Page confirmation button
+    And the user clicks the button/link                      name=confirm-viability   #Pop-up confirmation button
+    Then the user should see the element                     jQuery=.success-alert p:contains(The partner's finance viability has been approved by Lee Bowman, ${today})
     When the user clicks the button/link                     link=Finance checks
     When the user clicks the button/link                     jQuery=table.table-progress a.eligibility-0
     And the user selects the checkbox                        project-eligible
     And the user selects the option from the drop-down menu  Green  id=rag-rating
     And the user selects the checkbox                        creditReportConfirmed
-    And the user clicks the button/link                      css=#confirm-button
-    And the user clicks the button/link                      name=confirm-eligibility
-    Then the user should see the text in the page            The partner's finance eligibility has been approved by Lee Bowman, ${today}
+    And the user clicks the button/link                      css=#confirm-button        #Page confirmation button
+    And the user clicks the button/link                      name=confirm-eligibility   #Pop-up confirmation button
+    Then the user should see the element                     jQuery=.success-alert p:contains(The partner's finance eligibility has been approved by Lee Bowman, ${today})
 
 External users can view finance checks status on dashboard
     [Documentation]    INFUND-4843, INFUND-8787
@@ -431,7 +430,6 @@ Clicking cancel on the viability modal for partner
 Confirming viability should show credit report info on a readonly page for partner
     [Documentation]    INFUND-4829, INFUND-4830
     [Tags]
-    ${today} =  get today
     When the user clicks the button/link    jQuery=.button:contains("Confirm viability")
     And the user clicks the button/link    name=confirm-viability    # Clicking the confirm button on the modal
     Then the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
@@ -606,7 +604,6 @@ Clicking cancel on the eligibility modal
 Confirming eligibility should show info on a readonly page
     [Documentation]    INFUND-4839, INFUND-7574
     [Tags]
-    ${today} =  get today
     When the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     And the user clicks the button/link    name=confirm-eligibility    # Clicking the confirm button on the modal
     Then the user should see the element    jQuery=a.button-secondary:contains("Return to finance checks")
@@ -763,7 +760,6 @@ Clicking cancel on the eligibility modal for partner
 Confirming eligibility should show info on a readonly page for partner
     [Documentation]    INFUND-4839, INFUND-7574
     [Tags]
-    ${today} =  get today
     When the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     And the user clicks the button/link    name=confirm-eligibility    # Clicking the confirm button on the modal
     Then the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
@@ -808,7 +804,6 @@ Project finance can see updated finance breakdown for different categories
 Project finance can approve academic eligibility
     [Documentation]    INFUND-4428
     [Tags]      HappyPath
-    ${today} =  get today
     When the user clicks the button/link     jQuery=table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Review")
     Then the user should see the text in the page   Je-S Form overview
     When the user selects the checkbox    project-eligible
@@ -1162,6 +1157,11 @@ Non Lead-Partner can view only the external version of finance checks eligibilit
     And the user should see the element    css=input[id="total-cost"][value="£ 114,256"]
 
 *** Keywords ***
+Custom suite setup
+    ${today}  get today
+    set suite variable  ${today}
+    Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
+
 the table row has expected values
     the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(2)    3 months
     the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(3)    £ 503,248
