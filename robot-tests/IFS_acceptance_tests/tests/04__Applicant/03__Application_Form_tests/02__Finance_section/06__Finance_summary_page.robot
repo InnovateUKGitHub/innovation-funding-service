@@ -95,13 +95,15 @@ Collaborator marks finances as complete
     log in as a different user                     &{collaborator1_credentials}
     When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
     the user marks the finances as complete        ${OPEN_COMPETITION_APPLICATION_2_NAME}
+    [Teardown]  the user closes the browser
 
 Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
     [Tags]    Email
-    [Setup]  Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${OPEN_COMPETITION_NAME}  You will be joining as part of the organisation
-    Given The user logs-in in new browser          ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
-    And The user navigates to the academic application finances
+    [Setup]  the guest user opens the browser
+    Given Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${OPEN_COMPETITION_NAME}  You will be joining as part of the organisation
+    When The user logs-in in new browser          ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
+    Then The user navigates to the academic application finances
     And The user clicks the button/link            link=Your project costs
     When the user enters text to a text field      id=incurred-staff  1000000
     And log in as a different user                 &{lead_applicant_credentials}
