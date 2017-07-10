@@ -12,7 +12,6 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...               INFUND-1436 As a lead applicant I want to be able to view the ratio of research participation costs in my consortium so I know my application is within the required range
 ...
 ...               INFUND-8397  Permission denied when submitting your finances as a collaborator
-...
 Suite Setup       The user logs-in in new browser  &{lead_applicant_credentials}
 Suite Teardown    Close browser and delete emails
 Force Tags        Applicant    Support
