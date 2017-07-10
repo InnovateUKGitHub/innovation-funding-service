@@ -34,7 +34,7 @@ public class IntegerValidatorTest {
 
     @Test
     public void testGreaterThanMAX_VALUE() {
-        String greaterThatMaxValue = Integer.MAX_VALUE + "1";
+        String greaterThatMaxValue = Long.MAX_VALUE + "1";
         formInputResponse.setValue(greaterThatMaxValue);
         validator.validate(formInputResponse, bindingResult);
         assertTrue(bindingResult.hasErrors());
@@ -44,7 +44,7 @@ public class IntegerValidatorTest {
 
     @Test
     public void testMultipleFailures() {
-        String multipleFailures = Integer.MAX_VALUE + ".1";
+        String multipleFailures = Long.MAX_VALUE + ".1";
         formInputResponse.setValue(multipleFailures);
         validator.validate(formInputResponse, bindingResult);
         assertEquals(2, bindingResult.getAllErrors().size());

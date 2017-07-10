@@ -8,8 +8,8 @@ import org.springframework.validation.Errors;
 
 import java.math.BigDecimal;
 
-import static java.lang.Integer.MAX_VALUE;
-import static java.lang.Integer.MIN_VALUE;
+import static java.lang.Long.MAX_VALUE;
+import static java.lang.Long.MIN_VALUE;
 import static java.math.BigDecimal.valueOf;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.rejectValue;
 
