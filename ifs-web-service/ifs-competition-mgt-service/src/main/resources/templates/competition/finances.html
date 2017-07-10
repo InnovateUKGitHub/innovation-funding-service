@@ -111,7 +111,7 @@
             <dt class="column-third">Include project growth table</dt>
             <dd class="column-two-thirds" th:text="${competitionSetupForm.includeGrowthTable ? 'Yes' :  'No'}" />
             <dt class="column-full">Funding rules for this competition</dt>
-            <dd class="column-full" ifs:utext="${competitionSetupForm.fundingRules}" />
+            <dd class="column-full wysiwyg-styles" ifs:utext="${competitionSetupForm.fundingRules}" />
         </dl>
         <div class="extra-margin">
             <a class="button" th:unless="${preventEdit}" th:href="@{/competition/setup/{competitionId}/section/application/question/finance/edit(competitionId=${competition.id})}">Edit this question</a>
