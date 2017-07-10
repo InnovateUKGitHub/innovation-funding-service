@@ -88,8 +88,8 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
         return validateInvite(invitedUser, adminRoleType)
                 .andOnSuccess(() -> validateEmail(invitedUser.getEmail()))
-                .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
                 .andOnSuccess(() -> validateUserEmailAvaiable(invitedUser))
+                .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
                 .andOnSuccess(() -> getRole(adminRoleType))
                 .andOnSuccess((Role role) -> validateUserNotAlreadyInvited(invitedUser)
                         .andOnSuccess(() -> saveInvite(invitedUser, role))

@@ -113,6 +113,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         RoleInvite roleInvite = new RoleInvite();
 
         when(roleRepositoryMock.findOneByName(adminRoleType.getName())).thenReturn(role);
+        when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
         when(inviteRoleRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Collections.singletonList(roleInvite));
 
         ServiceResult<Void> result = service.saveUserInvite(invitedUser, adminRoleType);
