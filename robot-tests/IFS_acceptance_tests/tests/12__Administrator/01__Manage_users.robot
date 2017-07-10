@@ -33,12 +33,13 @@ Project finance user cannot navigate to manage users page
     User cannot see manage users page   &{internal_finance_credentials}
 
 Administrator can invite a new Internal User
-    [Documentation]  IFS-27
+    [Documentation]  IFS-27, IFS-803
     [Tags]  HappyPath
     [Setup]  Log in as a different user   &{ifs_admin_user_credentials}
     Given the user navigates to the page  ${server}/management/admin/users/active
     And the user clicks the button/link   link=Add a new internal user
     Then the user should see the element  jQuery=h1:contains("Add a new internal user")
+    And the user should see the element   jQuery=option:contains("Innovation Lead")
 
 Server side validation for invite new internal user
     [Documentation]  IFS-27
@@ -70,7 +71,7 @@ Administrator can successfully invite a new user
     Given the user navigates to the page       ${server}/management/admin/invite-user
     When the user enters text to a text field  id=firstName  Astle
     And the user enters text to a text field   id=lastName  Pimenta
-    And the user enters text to a text field   id=emailAddress  astle.pimenta@innovateuk.gov.uk
+    And the user fills in the email address for the invitee  astle.pimenta
     And the user selects the option from the drop-down menu  IFS Support User  id=role
     And the user clicks the button/link        jQuery=.button:contains("Send invite")
     Then the user cannot see a validation error in the page
@@ -81,7 +82,7 @@ Administrator can successfully invite a new user
 Invited user can receive the invitation
     [Documentation]  IFS-642
     [Tags]  Email  HappyPath
-    The user reads his email and clicks the link  astle.pimenta@innovateuk.test   Invitation to Innovation Funding Service  Your Innovation Funding Service account has been created.
+    The invitee reads his email and clicks the link  astle.pimenta   Invitation to Innovation Funding Service  Your Innovation Funding Service account has been created.
 
 Inviting the same user for the same role again should give an error
     [Documentation]  IFS-27
@@ -90,7 +91,7 @@ Inviting the same user for the same role again should give an error
     Given the user navigates to the page           ${server}/management/admin/invite-user
     When the user enters text to a text field      id=firstName  Astle
     And the user enters text to a text field       id=lastName  Pimenta
-    And the user enters text to a text field       id=emailAddress  astle.pimenta@innovateuk.gov.uk
+    And the user fills in the email address for the invitee  astle.pimenta
     And the user selects the option from the drop-down menu  IFS Support User  id=role
     And the user clicks the button/link            jQuery=.button:contains("Send invite")
     Then the user should see the element           jQuery=.error-summary:contains("This user has a pending invite. Please check.")
@@ -101,7 +102,7 @@ Inviting the same user for the different role again should also give an error
     Given the user navigates to the page       ${server}/management/admin/invite-user
     When the user enters text to a text field       id=firstName  Astle
     And the user enters text to a text field       id=lastName  Pimenta
-    And the user enters text to a text field       id=emailAddress  astle.pimenta@innovateuk.gov.uk
+    And the user fills in the email address for the invitee  astle.pimenta
     And the user selects the option from the drop-down menu  Project Finance  id=role
     And the user clicks the button/link            jQuery=.button:contains("Send invite")
     Then the user should see the text in the page  This user has a pending invite. Please check.
@@ -122,11 +123,11 @@ Admin user invites internal user
     And the user should see the element  jQuery=form select#role
     Then the user enters text to a text field  id=firstName  Aaron
     And the user enters text to a text field  id=lastName  Aaronson
-    And the user enters text to a text field  id=emailAddress  test@innovateuk.gov.uk
+    And the user fills in the email address for the invitee  test
     And the user selects the option from the drop-down menu  IFS_ADMINISTRATOR  id=role
     And the user clicks the button/link  jQuery=button:contains("Send invite")
     And Logout as user
-    Then the user reads his email and clicks the link   test@innovateuk.gov.uk   Invitation to Innovation Funding Service    An Innovation Funding Service account was created for you
+    Then the invitee reads his email and clicks the link   test   Invitation to Innovation Funding Service    Your Innovation Funding Service account has been created. Please check your details
 
 Account creation validation checks
     [Documentation]  IFS-643
@@ -140,19 +141,19 @@ Account creation validation checks
 New user account is created and verified
     [Documentation]  IFS-643
     [Tags]   HappyPath
-    When the user enters text to a text field        css=#firstName  Aaron
-    And the user enters text to a text field         css=#lastName  Aaronson
-    And the user should see the element              jQuery=h3:contains("Email") + p:contains("test@innovateuk.gov.uk")
-    And the user enters text to a text field         css=#password  ${short_password}
-    And the user clicks the button/link              jQuery=.button:contains("Create account")
-    Then the user should see the text in the page    Your account has been created
-    When the user clicks the button/link             jQuery=.button:contains("Sign into your account")
-    And Logging in and Error Checking                test@innovateuk.gov.uk  ${short_password}
-    And the user clicks the button/link              jQuery=a:contains("Manage users")
-    And the user clicks the button/link              jQuery=a:contains("Aaron Aaronson")
-    Then the user should see the element             jQuery=#content dl dd:nth-of-type(1):contains("Aaron Aaronson")
-    And the user should see the element              jQuery=#content dl dd:nth-of-type(2):contains("test@innovateuk.gov.uk")
-    And the user should see the element              jQuery=#content dl dd:nth-of-type(3):contains("IFS Administrator")
+    When the user enters text to a text field           css=#firstName  Aaron
+    And the user enters text to a text field            css=#lastName  Aaronson
+    And the invitee should see the their email header   test
+    And the user enters text to a text field            css=#password  ${short_password}
+    And the user clicks the button/link                 jQuery=.button:contains("Create account")
+    Then the user should see the text in the page       Your account has been created
+    When the user clicks the button/link                jQuery=.button:contains("Sign into your account")
+    And the invitee logs in without error               test  ${short_password}
+    And the user clicks the button/link                 jQuery=a:contains("Manage users")
+    And the user clicks the button/link                 jQuery=a:contains("Aaron Aaronson")
+    Then the user should see the element                jQuery=#content dl dd:nth-of-type(1):contains("Aaron Aaronson")
+    And the invitee should see the their email content  test
+    And the user should see the element                 jQuery=#content dl dd:nth-of-type(3):contains("IFS Administrator")
 
 *** Keywords ***
 User cannot see manage users page
@@ -160,3 +161,38 @@ User cannot see manage users page
     Log in as a different user  ${email}  ${password}
     the user should not see the element   link=Manage users
     the user navigates to the page and gets a custom error message  ${USER_MGMT_URL}  ${403_error_message}
+
+The user fills in the email address for the invitee
+    [Arguments]  ${email}
+    # Locally the accepted domain is innovateuk.test
+    run keyword if  ${docker}==1  the user enters text to a text field  id=emailAddress  ${email}@innovateuk.test
+    # On production the accepted domain is innovateuk.gov.uk
+    run keyword if  ${docker}!=1  the user enters text to a text field  id=emailAddress  ${email}@innovateuk.gov.uk
+
+The invitee reads his email and clicks the link
+    [Arguments]  ${email}  ${title}  ${pattern}
+    # Locally the accepted domain is innovateuk.test
+    run keyword if  ${docker}==1  The user reads his email and clicks the link  ${email}@innovateuk.test  ${title}  ${pattern}
+    # On production the accepted domain is innovateuk.gov.uk
+    run keyword if  ${docker}!=1  The user reads his email and clicks the link  ${email}@innovateuk.gov.uk  ${title}  ${pattern}
+
+The invitee should see the their email header
+    [Arguments]  ${email}
+    # Locally the accepted domain is innovateuk.test
+    run keyword if  ${docker}==1  the user should see the element  jQuery=h3:contains("Email") + p:contains("${email}@innovateuk.test")
+    # On production the accepted domain is innovateuk.gov.uk
+    run keyword if  ${docker}!=1  the user should see the element  jQuery=h3:contains("Email") + p:contains("${email}@innovateuk.gov.uk")
+
+The invitee should see the their email content
+    [Arguments]  ${email}
+    # Locally the accepted domain is innovateuk.test
+    run keyword if  ${docker}==1  the user should see the element  jQuery=#content dl dd:nth-of-type(2):contains("${email}@innovateuk.test")
+    # On production the accepted domain is innovateuk.gov.uk
+    run keyword if  ${docker}!=1  the user should see the element  jQuery=#content dl dd:nth-of-type(2):contains("${email}@innovateuk.gov.uk")
+
+The invitee logs in without error
+    [Arguments]  ${email}  ${short_password}
+    # Locally the accepted domain is innovateuk.test
+    run keyword if  ${docker}==1  Logging in and Error Checking  ${email}@innovateuk.test  ${short_password}
+    # On production the accepted domain is innovateuk.gov.uk
+    run keyword if  ${docker}!=1  Logging in and Error Checking   ${email}@innovateuk.gov.uk  ${short_password}
