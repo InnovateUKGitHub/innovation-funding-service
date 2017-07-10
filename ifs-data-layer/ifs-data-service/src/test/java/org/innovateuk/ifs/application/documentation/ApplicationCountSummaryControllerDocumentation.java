@@ -46,4 +46,26 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
 
         verify(applicationCountSummaryServiceMock).getApplicationCountSummariesByCompetitionId(competitionId, 0, 20, empty());
     }
+
+    @Test
+    public void getApplicationCountSummariesByCompetitionIdAndInnovationArea() throws Exception {
+        Long competitionId = 1L;
+        ApplicationCountSummaryResource applicationCountSummaryResource = applicationCountSummaryResourceBuilder.build();
+        ApplicationCountSummaryPageResource pageResource = new ApplicationCountSummaryPageResource();
+        pageResource.setContent(singletonList(applicationCountSummaryResource));
+
+        when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, 0, 20, empty())).thenReturn(serviceSuccess(pageResource));
+
+
+        mockMvc.perform(get("/applicationCountSummary/findByCompetitionIdAndInnovationArea/{competitionId}", competitionId))
+                .andExpect(status().isOk())
+                .andDo(document("applicationCountSummary/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of competition")
+                        ),
+                        responseFields(applicationCountSummaryResourcesFields)));
+
+        verify(applicationCountSummaryServiceMock).getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, 0, 20, empty());
+    }
+
 }

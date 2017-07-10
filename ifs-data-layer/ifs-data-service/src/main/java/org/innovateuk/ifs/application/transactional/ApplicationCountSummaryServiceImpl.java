@@ -44,4 +44,13 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
 
         return find(applicationStatistics, notFoundError(Page.class)).andOnSuccessReturn(stats -> applicationCountSummaryPageMapper.mapToResource(stats));
     }
+
+    @Override
+    public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndInnovationArea(Long competitionId, int pageIndex, int pageSize, Optional<Long> innovationArea) {
+        Pageable pageable = new PageRequest(pageIndex, pageSize);
+        Page<ApplicationStatistics> applicationStatistics = innovationArea.map(i -> applicationStatisticsRepository.findByCompetitionAndInnovationAreaProcessActivityStateStateIn(competitionId, SUBMITTED_STATES, i, pageable))
+                .orElse(applicationStatisticsRepository.findByCompetitionAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_STATES, "", pageable));
+
+        return find(applicationStatistics, notFoundError(Page.class)).andOnSuccessReturn(stats -> applicationCountSummaryPageMapper.mapToResource(stats));
+    }
 }

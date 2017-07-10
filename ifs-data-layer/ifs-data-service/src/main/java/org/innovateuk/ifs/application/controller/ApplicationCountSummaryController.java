@@ -27,4 +27,12 @@ public class ApplicationCountSummaryController {
                                                                                                        @RequestParam(value = "filter", required = false) Optional<String> filter) {
         return applicationCountSummaryService.getApplicationCountSummariesByCompetitionId(competitionId, pageIndex, pageSize, filter).toGetResponse();
     }
+
+    @GetMapping("/findByCompetitionIdAndInnovationArea/{competitionId}")
+    public RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndInnovationArea(@PathVariable("competitionId") Long competitionId,
+                                                                                                                        @RequestParam(value = "page",defaultValue = "0") int pageIndex,
+                                                                                                                        @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
+                                                                                                                        @RequestParam(value = "innovationArea", required = false) Optional<Long> innovationArea) {
+        return applicationCountSummaryService.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, pageIndex, pageSize, innovationArea).toGetResponse();
+    }
 }

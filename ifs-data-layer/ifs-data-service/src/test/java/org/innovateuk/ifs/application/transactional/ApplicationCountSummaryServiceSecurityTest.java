@@ -31,6 +31,19 @@ public class ApplicationCountSummaryServiceSecurityTest extends BaseServiceSecur
         classUnderTest.getApplicationCountSummariesByCompetitionId(1L, 0, 0, empty());
     }
 
+    @Test
+    public void testGetApplicationCountSummariesByCompetitionIdAndInnovationArea() {
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build());
+        classUnderTest.getApplicationCountSummariesByCompetitionIdAndInnovationArea(1L, 0, 0, empty());
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void testGetApplicationCountSummariesByCompetitionIdAndInnovationArea_notCompadmin() {
+        setLoggedInUser(newUserResource().build());
+        classUnderTest.getApplicationCountSummariesByCompetitionIdAndInnovationArea(1L, 0, 0, empty());
+    }
+
+
     @Override
     protected Class<? extends ApplicationCountSummaryService> getClassUnderTest() {
         return TestApplicationCountSummaryService.class;
@@ -40,6 +53,11 @@ public class ApplicationCountSummaryServiceSecurityTest extends BaseServiceSecur
 
         @Override
         public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(Long competitionId, int pageIndex, int pageSize, Optional<String> filter) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndInnovationArea(Long competitionId, int pageIndex, int pageSize, Optional<Long> innovationArea) {
             return null;
         }
     }

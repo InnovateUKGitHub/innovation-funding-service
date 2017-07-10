@@ -52,4 +52,23 @@ public class ApplicationCountSummaryControllerTest extends BaseControllerMockMVC
 
         verify(applicationCountSummaryServiceMock, only()).getApplicationCountSummariesByCompetitionId(competitionId, page, pageSize, ofNullable(filter));
     }
+
+    @Test
+    public void applicationCountSummariesByCompetitionIdAndInnovationArea() throws Exception {
+        Long competitionId = 1L;
+        int page = 2;
+        int pageSize = 3;
+        Long innovationAreaId = 2L;
+
+        ApplicationCountSummaryPageResource pageResource = new ApplicationCountSummaryPageResource();
+
+        when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, page, pageSize, ofNullable(innovationAreaId))).thenReturn(serviceSuccess(pageResource));
+
+        mockMvc.perform(get("/applicationCountSummary/findByCompetitionIdAndInnovationArea/{competitionId}?page={page}&size={pageSize}&innovationArea={innovationArea}", competitionId, page, pageSize, innovationAreaId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(pageResource)));
+
+        verify(applicationCountSummaryServiceMock, only()).getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, page, pageSize, ofNullable(innovationAreaId));
+    }
+
 }

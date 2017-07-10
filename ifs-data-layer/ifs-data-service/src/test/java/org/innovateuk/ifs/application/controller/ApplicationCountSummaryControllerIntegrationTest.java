@@ -32,11 +32,30 @@ public class ApplicationCountSummaryControllerIntegrationTest extends BaseContro
     }
 
     @Test
-    public void applicationCountSummariesBuCompetitionIdFiltered() {
+    public void applicationCountSummariesByCompetitionIdFiltered() {
         Long competitionId = 1L;
         loginCompAdmin();
 
         ApplicationCountSummaryPageResource counts = controller.getApplicationCountSummariesByCompetitionId(competitionId, 0, 6, ofNullable("3")).getSuccessObject();
+
+        assertEquals(1, counts.getTotalElements());
+        assertEquals(0, counts.getNumber());
+        assertEquals(1, counts.getTotalPages());
+        ApplicationCountSummaryResource summaryResource = counts.getContent().get(0);
+        assertEquals(3, (long)summaryResource.getId());
+        assertEquals("Mobile Phone Data for Logistics Analytics", summaryResource.getName());
+        assertEquals("Empire Ltd", summaryResource.getLeadOrganisation());
+        assertEquals(3, summaryResource.getAssessors());
+        assertEquals(2, summaryResource.getAccepted());
+        assertEquals(2, summaryResource.getSubmitted());
+    }
+
+    @Test
+    public void applicationCountSummariesByCompetitionIdAndInnovationArea() {
+        Long competitionId = 1L;
+        loginCompAdmin();
+
+        ApplicationCountSummaryPageResource counts = controller.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, 0, 6, ofNullable(2L)).getSuccessObject();
 
         assertEquals(1, counts.getTotalElements());
         assertEquals(0, counts.getNumber());

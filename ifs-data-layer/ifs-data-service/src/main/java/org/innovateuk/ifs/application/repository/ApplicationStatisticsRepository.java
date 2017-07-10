@@ -23,6 +23,10 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "AND (a.applicationProcess.activityState.state IN :states) " +
             "AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
 
+    String INNOVATION_AREA_FILTER = "SELECT a FROM ApplicationStatistics a WHERE a.competition = :compId " +
+            "AND (a.applicationProcess.activityState.state IN :states) " +
+            "AND (a.applicationProcess.target.innovationArea.id = :innovationArea OR :innovationArea IS NULL))";
+
     List<ApplicationStatistics> findByCompetitionAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> applicationStates);
 
     @Query(APPLICATION_FILTER)
@@ -31,6 +35,11 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
                                                                                            @Param("filter") String filter,
                                                                                            Pageable pageable);
 
+    @Query(INNOVATION_AREA_FILTER)
+    Page<ApplicationStatistics> findByCompetitionAndInnovationAreaProcessActivityStateStateIn(@Param("compId") long competitionId,
+                                                                                           @Param("states") Collection<State> applicationStates,
+                                                                                           @Param("innovationArea") long innovationArea,
+                                                                                           Pageable pageable);
 
     // TODO pass in the states as enum sets from the service, rather than hardcoding strings
     String REJECTED_AND_SUBMITTED_STATES_STRING = "(org.innovateuk.ifs.workflow.resource.State.REJECTED,org.innovateuk.ifs.workflow.resource.State.WITHDRAWN, org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";

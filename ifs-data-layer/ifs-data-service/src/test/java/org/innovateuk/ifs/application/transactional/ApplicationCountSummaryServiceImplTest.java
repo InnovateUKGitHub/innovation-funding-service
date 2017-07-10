@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.domain.ApplicationStatistics;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.domain.Role;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.domain.Page;
 
@@ -30,22 +31,28 @@ import static org.mockito.Mockito.when;
  */
 public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<ApplicationCountSummaryService> {
 
+    private long competitionId = 1L;
+    private Role leadApplicationRole;
+    private Role applicantRole;
+    private List<ApplicationStatistics> applicationStatistics;
+    private Page<ApplicationStatistics> page;
+    private ApplicationCountSummaryPageResource resource;
+
     @Override
     protected ApplicationCountSummaryService supplyServiceUnderTest() {
         return new ApplicationCountSummaryServiceImpl();
     }
 
-    @Test
-    public void getApplicationCountSummariesByCompetitionId() {
-        Long competitionId = 1L;
-        Role leadApplicationRole = newRole()
+    @Before
+    public void setup() {
+        leadApplicationRole = newRole()
                 .withType(LEADAPPLICANT)
                 .build();
-        Role applicantRole = newRole()
+        applicantRole = newRole()
                 .withType(APPLICANT)
                 .build();
 
-        List<ApplicationStatistics> applicationStatistics = newApplicationStatistics()
+        applicationStatistics = newApplicationStatistics()
                 .withProcessRoles(
                         newProcessRole()
                                 .withRole(applicantRole, leadApplicationRole)
@@ -56,15 +63,29 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
                 )
                 .build(2);
 
-        Page<ApplicationStatistics> page = mock(Page.class);
+        page = mock(Page.class);
         when(page.getContent()).thenReturn(applicationStatistics);
 
-        ApplicationCountSummaryPageResource resource = mock(ApplicationCountSummaryPageResource.class);
+        resource = mock(ApplicationCountSummaryPageResource.class);
+    }
 
+    @Test
+    public void getApplicationCountSummariesByCompetitionId() {
         when(applicationStatisticsRepositoryMock.findByCompetitionAndApplicationProcessActivityStateStateIn(eq(competitionId), eq(SUBMITTED_STATES), eq("filter"), argThat(new PageableMatcher(0, 20)))).thenReturn(page);
         when(applicationCountSummaryPageMapperMock.mapToResource(page)).thenReturn(resource);
 
         ServiceResult<ApplicationCountSummaryPageResource> result = service.getApplicationCountSummariesByCompetitionId(competitionId, 0, 20, ofNullable("filter"));
+
+        assertTrue(result.isSuccess());
+        assertEquals(resource, result.getSuccessObject());
+    }
+
+    @Test
+    public void getApplicationCountSummariesByCompetitionIdAndInnovationArea() {
+        when(applicationStatisticsRepositoryMock.findByCompetitionAndInnovationAreaProcessActivityStateStateIn(eq(competitionId), eq(SUBMITTED_STATES), eq(2L), argThat(new PageableMatcher(0, 20)))).thenReturn(page);
+        when(applicationCountSummaryPageMapperMock.mapToResource(page)).thenReturn(resource);
+
+        ServiceResult<ApplicationCountSummaryPageResource> result = service.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, 0, 20, ofNullable(2L));
 
         assertTrue(result.isSuccess());
         assertEquals(resource, result.getSuccessObject());
