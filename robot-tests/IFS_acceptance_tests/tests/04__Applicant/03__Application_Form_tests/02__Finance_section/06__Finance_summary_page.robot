@@ -13,6 +13,9 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...
 ...               INFUND-8397  Permission denied when submitting your finances as a collaborator
 ...
+...               IFS-401 Support team view of detailed finances in application form
+...
+...               IFS-802 Enable Innovation Lead user profile matching CSS permissions
 Suite Setup       The user logs-in in new browser  &{lead_applicant_credentials}
 Suite Teardown    Close browser and delete emails
 Force Tags        Applicant  HappyPath
