@@ -1,12 +1,9 @@
 package org.innovateuk.ifs.assessment.resource;
 
-import org.innovateuk.ifs.user.resource.UserResource;
-
 import java.util.List;
 
 /**
- * Resource that aggregates a summary of competition's
- * assessor and their assessment data.
+ * Resource that aggregates an assessor's competition assessment data.
  */
 public class AssessorCompetitionSummaryResource {
 
