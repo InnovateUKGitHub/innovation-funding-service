@@ -44,6 +44,11 @@ function generate_query_rules_for_proxysql() {
         replacement_pattern=$full_select_statement_result
         for j in "${!column_array[@]}"; do
 
+            # ignore any blank lines in the rewrite files
+            if [[ -z "${column_array[j]}" ]]; then
+                continue
+            fi
+
             # get the replacement rule as a SQL statement (if it is not one already e.g. MASK(1, 'X') will be looked
             # up and replaced with a masking SQL statement)
             final_rewrite=$(generate_rewrite_from_rule "${column_array[j]}" "${column_rewrite_array[j]}")
