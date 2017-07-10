@@ -1,2 +1,2 @@
 email|EMAIL('x')
-hash|HASH('x')
+hash|UUID('x')

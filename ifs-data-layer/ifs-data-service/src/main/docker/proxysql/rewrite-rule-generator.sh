@@ -19,7 +19,7 @@ DECIMAL_REPLACEMENT_SCALE_EXTRACTOR="s/^DECIMAL(\(.*\),[ ]*\(.*\))$/\2/g"
 
 EMAIL_MASK_TOKEN_EXTRACTOR="s/^EMAIL('\(.*\)')$/\1/g"
 
-HASH_MASK_TOKEN_EXTRACTOR="s/^HASH('\(.*\)')$/\1/g"
+UUID_MASK_TOKEN_EXTRACTOR="s/^UUID('\(.*\)')$/\1/g"
 
 function generate_number_rewrite_rule() {
 
@@ -97,10 +97,10 @@ function generate_rewrite_from_rule() {
         exit 0
     fi
 
-    replace_test=$(echo "$replacement" | sed "$HASH_MASK_TOKEN_EXTRACTOR")
+    replace_test=$(echo "$replacement" | sed "$UUID_MASK_TOKEN_EXTRACTOR")
     if [[ "$replace_test" != "$replacement" ]]; then
 
-        mask_token=$(echo "$replacement" | sed "$HASH_MASK_TOKEN_EXTRACTOR")
+        mask_token=$(echo "$replacement" | sed "$UUID_MASK_TOKEN_EXTRACTOR")
         echo "CONCAT(SUBSTR($column_name, 1, 9), CONCAT(CONCAT(CONCAT(CONCAT(REPEAT('$mask_token', 4), '-'), CONCAT(REPEAT('$mask_token', 4), '-'))), CONCAT(REPEAT('$mask_token', 4), '-')), REPEAT('$mask_token', 12))"
         exit 0
     fi
