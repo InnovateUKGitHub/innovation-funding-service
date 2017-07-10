@@ -511,4 +511,43 @@ dl.standard-definition-list{
 
 }
 
-/*----- Table style grid-row ----*/
+/*----- Navigation list ----*/
+
+ul.navigation-list,
+ol.navigation-list {
+  margin:0;
+  padding:0;
+
+  li {
+    display: inline-block;
+    margin: 0 10px 0 0;
+  }
+
+  li.marked-as-complete{
+    @extend %mark-done-right;
+    background-position: 100% 0%;
+    background-size: 20px;
+  }
+
+  li a {
+    display: inline-block;
+    padding:5px;
+  }
+  //right aligned
+  &.navigation-right {
+    @extend %contain-floats;
+    float: right;
+    li { margin: 0 0 0 10px;}
+    li:first-child {
+      margin-left:0;
+      a {padding-left:0;}
+    }
+  }
+  @include media-down(mobile){
+    &.navigation-right{
+      float:none;
+    }
+  }
+
+
+}

@@ -1,0 +1,78 @@
+
+<!-- =================== Comp setup section - Assessors (6) ============================== -->
+<th:block th:fragment="section-content">
+
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment',size='heading-xlarge'" />
+
+    <form th:action="@{(${editable} ? '' : 'assessors/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate"
+          th:attr="data-competition=${competition.id},data-autosave=${setupComplete != true}?compSetup" data-section="assessors">
+        <th:block th:if="${editable}" id="section-assessors-edit">
+            <div class="form-group" th:classappend="${#fields.hasErrors('assessorCount')} ? 'form-group-error'">
+                <fieldset class="inline">
+                    <legend class="heading-small">
+                        How many assessors are required for each application?
+                        <th:block th:if="${#fields.hasErrors('assessorCount')}">
+                              <span class="error-message"  th:each="err : ${#fields.errors('assessorCount')}" th:text="${err}"></span>
+                        </th:block>
+                    </legend>
+                    <div class="multiple-choice" th:each="assessorOption : ${assessorOptions}">
+                        <input th:id="${'assessors-' + '__${assessorOption.id}__'}" name="assessorCount"
+                               th:value="${assessorOption.optionValue}" type="radio"
+                               th:checked="${assessorOption.optionValue == competitionSetupForm.assessorCount}" />
+                        <label th:for="${'assessors-' + '__${assessorOption.id}__'}">
+                            <th:block th:text="${assessorOption.optionName}" />
+                        </label>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('assessorPay')} ? 'form-group-error'">
+                <label class="form-label" for="assessorPay">
+                    <span class="form-label-bold">How much do assessors receive per application?</span>
+                    <span class="form-hint">This information will be available in the assessor invites.</span>
+                     <th:block th:if="${#fields.hasErrors('assessorPay')}">
+                          <span class="error-message"  th:each="err : ${#fields.errors('assessorPay')}" th:text="${err}"></span>
+                    </th:block>
+                </label>
+                <input class="form-control width-medium" id="assessorPay" name="assessorPay" type="number" min="0" maxlength="8"
+                        th:value="${#fields.hasErrors('assessorPay') ? competitionSetupForm.assessorPay : competitionSetupForm.assessorPay != null ? #numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'COMMA')  : ''}"
+                       data-th-attr="data-maxlength-errormessage=#{validation.assessorsform.assessorPay.max.amount.invalid},
+                                     data-min-errormessage=#{validation.assessorsform.assessorPay.min},
+                                     data-required-errormessage=#{validation.assessorsform.assessorPay.required}"
+                       th:errorclass="form-control-error"
+                       th:readonly="${isSetupAndLive}"/>
+            </div>
+
+            <button class="button">Done</button>
+        </th:block>
+
+       <th:block th:if="${!editable}" id="section-assessors-readonly">
+            <dl class="standard-definition-list">
+                <dt>How many assessors are required for each application?</dt>
+                <dd th:text="${competitionSetupForm.assessorCount}"></dd>
+
+                <dt>How much do assessors receive per application?</dt>
+                <dd th:text="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'COMMA')}"></dd>
+            </dl>
+
+           <button th:unless="${preventEdit}" type="submit" class="button">Edit</button>
+        </th:block>
+    </form>
+
+
+    <ul class="pagination">
+        <li class="prev">
+            <a rel="prev" title="Navigate to prev part"
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='application')}">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title">Application</span>
+            </a>
+        </li>
+        <li class="next">
+            <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{sectionPath}/{competitionId}(competitionId=${competition.id},sectionPath='public-content')}">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title">Public content</span>
+            </a>
+        </li>
+    </ul>
+
+</th:block>
