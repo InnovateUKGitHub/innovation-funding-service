@@ -89,6 +89,7 @@ function generate_rewrite_from_rule() {
         exit 0
     fi
 
+    # this case generates the SQL from a rewrite rule like "EMAIL('x')"
     replace_test=$(echo "$replacement" | sed "$EMAIL_MASK_TOKEN_EXTRACTOR")
     if [[ "$replace_test" != "$replacement" ]]; then
 
@@ -97,6 +98,7 @@ function generate_rewrite_from_rule() {
         exit 0
     fi
 
+    # this case generates the SQL from a rewrite rule like "UUID('x')"
     replace_test=$(echo "$replacement" | sed "$UUID_MASK_TOKEN_EXTRACTOR")
     if [[ "$replace_test" != "$replacement" ]]; then
 
