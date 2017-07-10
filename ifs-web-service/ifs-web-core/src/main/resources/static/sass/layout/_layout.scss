@@ -1,18 +1,25 @@
 //layout
-.header-global .navigation-list  {
-	margin: 0 15px;
-	a{ color:#fff;}
+.header-global {
+  .navigation-list  {
+    margin: 0 15px;
+
+    a {
+      color:#fff;
+    }
+  }
 }
 
 .related-items {
-
   border-top:10px solid $link-colour;
+
   h2 {
     margin: 0.3em 0  0.5em;
   }
+
   ul {
     list-style:none;
   }
+
   li {
     margin: 0 0 0.75em;
   }
@@ -20,93 +27,83 @@
 
 //no margins for the page headers
 .page-header {
-	margin-left:0;
-	margin-right:0;
+  margin-left:0;
+  margin-right:0;
 }
 
 .header-global{
-	padding: 2px 0;
+  padding: 2px 0;
 }
 
 @include ie-lte(8) {
-  .header-global #logo {
-    white-space: nowrap;
+  .header-global {
+    #logo {
+      white-space: nowrap;
+    }
   }
 }
 
-
-.grid-container.phase-banner{
-	border-top: 10px solid $link-colour;
+.grid-container {
+  &.phase-banner{
+    border-top: 10px solid $link-colour;
+  }
 }
 
 .sub-header {
-    clear: both;
-    font-size: 16px;
-    line-height:40px;
-    overflow: hidden;
-    padding: 5px 0px;
+  clear: both;
+  font-size: 16px;
+  line-height:40px;
+  overflow: hidden;
+  padding: 5px 0px;
+  position: relative;
+
+  nav {
+    display: inline;
+  }
+
+  a {
+    @include inline-block;
+    border-bottom: 1px solid $black;
+    color: $black;
+    line-height: 1.25;
+    margin-bottom: $gutter-half;
+    margin-top: $gutter-half;
     position: relative;
+    text-decoration: none;
+    vertical-align: middle;
+  }
 
-    nav {
-        display: inline;
+  .deadline {
+    @include media-down(mobile) {
+      font-size:14px;
     }
 
-    a {
-        @include inline-block;
-        border-bottom: 1px solid $black;
-        color: $black;
-        line-height: 1.25;
-        margin-bottom: $gutter-half;
-        margin-top: $gutter-half;
-        position: relative;
-        text-decoration: none;
-        vertical-align: middle;
-    }
-
-    .deadline {
-        //color: $red;
-        float:right;
-        font-weight:300;
-        line-height:1;
-        margin: 7px 0;
-
-        @include media-down(mobile) {
-            font-size:14px;
-
-            .pie.small {
-                height:30px;
-                width:30px;
-            }
-
-            .pie.small + .pie-overlay {
-                height: 26px;
-                width:26px;
-            }
-
-            .pie.small + .pie-overlay > span {
-                font-size: 12px;
-                line-height: 29px;
-            }
-        }
-    }
+    float:right;
+    font-weight:300;
+    line-height:1;
+    margin: 7px 0;
+  }
 }
 
 details {
-
-    th {
-        box-sizing: border-box;
-        min-width: 50px;
-    }
+  th {
+    box-sizing: border-box;
+    min-width: 50px;
+  }
 }
 
 @include ie(8){
-	.header-logo a {
-		width: image-width('../images/innovateuk_logo.png');
-	}
+  .header-logo {
+    a {
+      width: image-width('../images/innovateuk_logo.png');
+    }
+  }
 }
 
-body.error {
-	border:none;
-	padding:0;
-	margin:0;
+body {
+  &.error {
+    border:none;
+    padding:0;
+    margin:0;
+  }
 }

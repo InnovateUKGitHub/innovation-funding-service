@@ -1,0 +1,5 @@
+title: "Phase Banner"
+status: prototype
+context:
+  phase: "String (Default: BETA)"
+  link: "String (Default: mailto:IFSfeedback@innovateuk.gov.uk)"
