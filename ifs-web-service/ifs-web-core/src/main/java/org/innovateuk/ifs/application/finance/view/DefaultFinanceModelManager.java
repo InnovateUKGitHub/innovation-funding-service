@@ -138,7 +138,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         
-        if(!application.hasBeenSubmitted() && competition.isOpen()) {
+        if(!application.isSubmitted() && competition.isOpen()) {
 	        // add cost for each cost question
 	        for(QuestionResource question: costsQuestions) {
 	        	FinanceRowType costType = costTypeForQuestion(question);

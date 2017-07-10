@@ -1,16 +1,16 @@
-.highlight-panel{
+.highlight-panel {
   background: $highlight-colour;
   padding: 20px 0;
 
   &-padded {
-    box-sizing: border-box;
-    line-height: 1.1em;
-    min-height: 80px;
-    padding: em(10) em(15) em(5) em(15);
-
     @include media-down(mobile) {
       margin-bottom: 15px;
       min-height: auto;
     }
+
+    box-sizing: border-box;
+    line-height: 1.1em;
+    min-height: 80px;
+    padding: em(10) em(15) em(5) em(15);
   }
 }

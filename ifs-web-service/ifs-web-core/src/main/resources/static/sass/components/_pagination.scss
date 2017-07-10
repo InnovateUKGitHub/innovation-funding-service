@@ -1,28 +1,3 @@
-/* SG
-# IFS/Pagination
-
-Next and previous page navigation
-
-```
-<ul class="pagination">
-    <li class="prev"">
-        <a href="#" rel="prev" title="Navigate to previous part">
-            <span class="pagination-label">Previous</span>
-            <span class="pagination-part-title">Business proposition</span>
-        </a>
-    </li>
-    <li class="next">
-        <a href="#" rel="next" title="Navigate to next part">
-            <span class="pagination-label">Next</span>
-            <span class="pagination-part-title">Funding</span>
-        </a>
-    </li>
-</ul>
-```
-
-*/
-
-
 .pagination {
   border-top: 1px solid $grey-2;
   clear: both;

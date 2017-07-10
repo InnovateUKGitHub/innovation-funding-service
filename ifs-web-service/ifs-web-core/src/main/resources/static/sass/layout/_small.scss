@@ -1,20 +1,8 @@
-/* SG
 
-# IFS/Text
-
-```
-<p>I am <strong>such a strong character</strong></p>
-
-<p>Be mean or be <span class="greentext">Green</span></p>
-
-Hello world <small>(just testing smalltext)</small>
-
-<div class="blue-block">test</div>
-```
-*/
 .greentext {
   color:$green;
 }
+
 .uppercase {
   text-transform: uppercase;
 }
@@ -63,129 +51,117 @@ small {
 .bordered {
   border:1px solid $border-colour;
 }
-.no-border,
-table td.no-border,
-table th.no-border {
+
+.no-border {
   border:none;
 }
+
+table {
+  td,
+  th {
+    &.no-border {
+      border:none;
+    }
+  }
+}
+
 .grey-box {
   padding: 15px;
   background: $grey-4;
 }
 
-.border-right,
-.cell-border-right td,
-.cell-border-right th {
+.border-right {
   border-right: 1px solid $border-colour;
 }
 
-table small {
-  display: block;
+.cell-border-right {
+  td,
+  th {
+    border-right: 1px solid $border-colour;
+  }
 }
 
-tfoot td,
-tfoot th {
-  border-top:3px solid #000;
-  border-bottom:none;
+table {
+  small {
+    display: block;
+  }
 }
 
-th[scope="row"]{
-  font-weight:bold;
+tfoot {
+  td,
+  th {
+    border-top:3px solid #000;
+    border-bottom:none;
+  }
+}
+
+th {
+  &[scope="row"]{
+    font-weight:bold;
+  }
 }
 
 .table-bordered {
-  td,th {
+  td,
+  th {
     padding:0.5em;
     border: 1px solid $border-colour;
     vertical-align: top;
+
+    &.fixed-half {
+      width:50%;
+    }
+
+    &.w29 {
+      width:29%;
+    }
   }
-  td.fixed-half,
-  th.fixed-half {
-    width:50%;
-  }
-  td.w29,
-  th.w29 {
-    width:29%;
-  }
+
   caption {
     font-weight: normal;
     margin-bottom:0.8em;
   }
 }
 
-/* SG
-
-# IFS/Right aligned buttons
-```
-<div class="alignright">
-	<button class="button">Button 1</button>
-	<button class="button">Button 2</button>
-</div>
-```
-*/
-
-
 .alignright-button {
-	text-align:right;
   @extend %contain-floats;
+  text-align:right;
 
-	a {
-		line-height:45px;
-	}
-	a.button {
-		line-height:1;
-	}
+  a {
+    line-height:45px;
 
-	a,
-	button,
-	[role="button"] {
-		display:inline-block;
-		margin:0 5px 0 0;
-
-		&:last-child {
-			margin-right:0;
-		}
-	}
-}
-  @include media-down(mobile) {
-  	.alignright-button {
-		a,
-		button,
-		[role="button"] {
-			margin:0 0 5px;
-			display: block;
-			text-align: center;
-		}
-  	}
-  }
-
-  /* SG
-  # IFS/Large button
-
-  ```
-  <button class="button large">Bigger is always better</button>
-  <a href="#" tabindex="0" role="button" class="button large">In Texas</a>
-  ```
-  */
-button,
-.button,
-input[type="button"] {
-
-  &.large {
-    box-shadow: 0px 4px 0px darken($button-colour,15%);
-    font-size: 18px;
-    padding: 15px 45px;
-
-    &.buttonlink{
-      box-shadow: none;
-      color: $link-colour;
-
-      &:hover,
-      &:focus{
-        background: none;
-      }
+    &.button {
+      line-height:1;
     }
   }
+
+  a,
+  button,
+  [role="button"] {
+    display:inline-block;
+    margin:0 5px 0 0;
+
+    &:last-child {
+      margin-right:0;
+    }
+  }
+}
+
+@include media-down(mobile) {
+  .alignright-button {
+    a,
+    button,
+    [role="button"] {
+      margin:0 0 5px;
+      display: block;
+      text-align: center;
+    }
+  }
+}
+
+button,
+.button,
+[type="button"] {
 
   &.button-clear {
     background-color: transparent;
@@ -212,9 +188,7 @@ input[type="button"] {
 }
 
 table {
-
   .button {
-
     &:last-child {
       margin-right: 0;
     }
@@ -222,146 +196,138 @@ table {
 }
 
 .page-title {
-	padding-top: 30px;
+  padding-top: 30px;
 
-	h1+ h2 {
-		margin-top:30px;
-	}
-	h1 {
-		margin-top:0;
-		margin-bottom:30px;
-	}
+  h1+ h2 {
+    margin-top:30px;
+  }
+
+  h1 {
+    margin-top:0;
+    margin-bottom:30px;
+  }
 }
 
-hr.underline {
-	border-bottom: 1px solid #000;
-	margin-bottom: 20px;
- 	margin-top: 10px;
-	display: block;
+hr {
+  &.underline {
+    border-bottom: 1px solid #000;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    display: block;
+  }
 }
 
-
-/*
-
-###subtitle for header
-```
-<p class="subtitle">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, deleniti.</p>
-```
-*/
 .subtitle {
-	color: $grey-1;
-	font-size: 24px;
-	font-weight: 400;
-	line-height: 1.25;
-	@include media-down(tablet){
-		font-size:20px;
-	}
-	@include media-down(mobile){
-		font-size:16px;
-	}
+  @include media-down(tablet){
+    font-size:20px;
+  }
+
+  @include media-down(mobile){
+    font-size:16px;
+  }
+
+  color: $grey-1;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.25;
 }
-p.subtitle {
-	margin: 0;
+
+p {
+  &.subtitle {
+    margin: 0;
+  }
 }
 
 .alignright {
-	text-align:right;
-}
-.aligncentre {
-	text-align:center;
+  text-align:right;
 }
 
-col.border {
-	border-right: 1px solid $border-colour;
+.aligncentre {
+  text-align:center;
 }
+
+col {
+  &.border {
+    border-right: 1px solid $border-colour;
+  }
+}
+
 /*
 
 ###Added icons
 
 */
 .icon-print {
-  width: 16px;
-  height: 18px;
-  background-image: file-url("icons/icon-print.png");
-
   @include device-pixel-ratio() {
     background-image: file-url("icons/icon-print-2x.png");
     background-size: 100%;
   }
+
+  width: 16px;
+  height: 18px;
+  background-image: file-url("icons/icon-print.png");
 }
 
-/*
-
-###Secondary Buttons
-
-```
-<a href="#" class="button-secondary" tabindex="0">Anchor like a button</a>
-<button class="button-secondary">Real button</button>
-
-```
-
-*/
 .button-secondary{
-	@include button($panel-colour);
-	@include box-sizing (border-box);
-	margin: 0 $gutter-half $gutter-half 0;
-	padding: em(10) em(15) em(5) em(15);
-	vertical-align: top;
-
+  @include button($panel-colour);
+  @include box-sizing (border-box);
+  margin: 0 $gutter-half $gutter-half 0;
+  padding: em(10) em(15) em(5) em(15);
+  vertical-align: top;
 }
 
 .button,
 .button-secondary{
-	@include media (mobile) {
-		width: 100%;
-		text-align: center;
-	}
+  @include media (mobile) {
+    width: 100%;
+    text-align: center;
+  }
 }
 
 .questions-dl {
-	 padding-left: 20px;
-	 margin: 15px 0 20px;
+  padding-left: 20px;
+  margin: 15px 0 20px;
 
-		dt div{
-			margin-left: -20px;
-			padding: 12px 0;
-		}
-		dd {
-			display: list-item;
-	    list-style-type: disc;
-			margin-left:20px;
-		}
-		dd,dt {
-			margin-bottom:5px;
-		}
+  dt {
+    margin-bottom:5px;
+
+    div{
+      margin-left: -20px;
+      padding: 12px 0;
+    }
+  }
+
+  dd {
+    display: list-item;
+    list-style-type: disc;
+    margin-left:20px;
+    margin-bottom:5px;
+  }
 }
 
 .boxed {
-	border:1px solid $border-colour;
-	padding:20px;
+  border:1px solid $border-colour;
+  padding:20px;
 }
 
-td.cell-error {
-	background: $red;
-	color: #fff;
+td {
+  &.cell-error {
+    background: $red;
+    color: #fff;
+  }
 }
 
-span.yes{
-	@extend %icon-tick;
-	padding-left: 28px;
-}
+span {
+  &.yes{
+    @extend %icon-tick;
+    padding-left: 28px;
+  }
 
-span.no{
-	@extend %icon-cross;
-	padding-left: 28px;
+  &.no{
+    @extend %icon-cross;
+    padding-left: 28px;
+  }
 }
-// .error-summary-list {
-//   @extend .list list-bullet;
-//
-//   li:first-letter {
-//     text-transform:lowercase;
-//   }
-// }
 
 [data-selector-highlighter] {
   background-color: #ccc;
