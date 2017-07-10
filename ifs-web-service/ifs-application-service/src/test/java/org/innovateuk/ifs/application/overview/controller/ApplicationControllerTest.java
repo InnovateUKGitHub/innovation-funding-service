@@ -19,6 +19,7 @@ import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
@@ -120,13 +121,14 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Test
     public void testApplicationDetails() throws Exception {
         ApplicationResource app = applications.get(0);
+        app.setCompetitionStatus(CompetitionStatus.OPEN);
+
         Set<Long> sections = newHashSet(1L, 2L);
         Map<Long, Set<Long>> mappedSections = new HashMap<>();
         mappedSections.put(organisations.get(0).getId(), sections);
         when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
-
 
         LOG.debug("Show dashboard for application: " + app.getId());
         Map<String, Object> model = mockMvc.perform(get("/application/" + app.getId()))
@@ -159,6 +161,8 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Test
     public void testNonAcceptedInvitationsAffectPendingAssignableUsersAndPendingOrganisationNames() throws Exception {
         ApplicationResource app = applications.get(0);
+        app.setCompetitionStatus(CompetitionStatus.OPEN);
+
         Set<Long> sections = newHashSet(1L, 2L);
         Map<Long, Set<Long>> mappedSections = new HashMap<>();
         mappedSections.put(organisations.get(0).getId(), sections);
@@ -201,6 +205,8 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Test
     public void testPendingOrganisationNamesOmitsEmptyOrganisationName() throws Exception {
         ApplicationResource app = applications.get(0);
+        app.setCompetitionStatus(CompetitionStatus.OPEN);
+
         Set<Long> sections = newHashSet(1L, 2L);
         Map<Long, Set<Long>> mappedSections = new HashMap<>();
         mappedSections.put(organisations.get(0).getId(), sections);
@@ -240,6 +246,8 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Test
     public void testPendingOrganisationNamesOmitsOrganisationNamesThatAreAlreadyCollaborators() throws Exception {
         ApplicationResource app = applications.get(0);
+        app.setCompetitionStatus(CompetitionStatus.OPEN);
+
         Set<Long> sections = newHashSet(1L, 2L);
         Map<Long, Set<Long>> mappedSections = new HashMap<>();
         mappedSections.put(organisations.get(0).getId(), sections);
