@@ -13,9 +13,12 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...
 ...               INFUND-8397  Permission denied when submitting your finances as a collaborator
 ...
+...               IFS-401 Support team view of detailed finances in application form
+...
+...               IFS-802 Enable Innovation Lead user profile matching CSS permissions
 Suite Setup       The user logs-in in new browser  &{lead_applicant_credentials}
 Suite Teardown    Close browser and delete emails
-Force Tags        Applicant    Support
+Force Tags        Applicant  HappyPath
 Default Tags
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../Applicant_Commons.robot
@@ -32,7 +35,7 @@ Calculations for Lead applicant
     [Documentation]    INFUND-524
     [Tags]
     When the user clicks the button/link  link=${CLOSED_COMPETITION_APPLICATION_NAME}
-    And the user expands the Finance summaries
+    And the user expands the section      Finances summary
     Then the finance summary calculations should be correct
     And the finance Funding breakdown calculations should be correct
 
@@ -41,7 +44,7 @@ Calculations for the first collaborator
     [Tags]
     [Setup]  log in as a different user   &{collaborator1_credentials}
     When the user clicks the button/link  link=${CLOSED_COMPETITION_APPLICATION_NAME}
-    And the user expands the Finance summaries
+    And the user expands the section      Finances summary
     Then the finance summary calculations should be correct
     And the finance Funding breakdown calculations should be correct
 
@@ -129,101 +132,99 @@ Alert should not show If research participation is below the maximum level
 
 Support User can see read only summary link for each partner
     [Documentation]  IFS-401
-    [Tags]
+    [Tags]  Support
     [Setup]  log in as a different user     &{support_user_credentials}
     When the user navigates to the page     ${server}/management/competition/${OPEN_COMPETITION}/applications/all
     And the user clicks the button/link     link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
-    And the user expands the Finance summaries
+    And the user expands the section        Finances summary
     Then the user should see the element    jQuery=.finance-summary tbody tr:nth-of-type(1) th:contains("${EMPIRE_LTD_NAME}"):contains("View finances")
     And the user should see the element     jQuery=.finance-summary tbody tr:nth-of-type(2) th:contains("Ludlow"):contains("View finances")
     And the user should see the element     jQuery=.finance-summary tbody tr:nth-of-type(3) th:contains("EGGS"):contains("View finances")
 
 Support User can see read only summary for lead
     [Documentation]  IFS-401
-    [Tags]
-    [Setup]  The user clicks the button/link  jQuery=.finance-summary tbody tr:nth-of-type(1) th a
-    When the user should see the text in the page       Please complete your project finances.
+    [Tags]  Support
+    [Setup]  The user clicks the button/link       jQuery=.finance-summary tbody tr:nth-of-type(1) th a
+    When the user should see the text in the page  Please complete your project finances.
     Then the finance summary table in Your Finances has correct values for lead
 
 Support User can see read only summary for collaborator
     [Documentation]  IFS-401
-    [Tags]
+    [Tags]  Support
     [Setup]  log in as a different user     &{support_user_credentials}
     When the user navigates to the page     ${server}/management/competition/${OPEN_COMPETITION}/applications/all
     And the user clicks the button/link     link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
-    And the user expands the Finance summaries
+    And the user expands the section        Finances summary
     When the user clicks the button/link    jQuery=.finance-summary tbody tr:contains("EGGS") th a
-    And the user should see the text in the page      Please complete your project finances.
+    And the user should see the text in the page  Please complete your project finances.
     Then the finance summary table in Your Finances has correct values for collaborator
 
 Support User can see read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
     [Documentation]  IFS-401
-    [Tags]
-    [Setup]  log in as a different user       &{support_user_credentials}
-    When the user navigates to the page       ${server}/management/competition/${OPEN_COMPETITION}/applications/all
-    And the user clicks the button/link       link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
-    And the user expands the Finance summaries
-    When the user clicks the button/link      jQuery=.finance-summary tbody tr:contains("Ludlow") th a
-    Then the user should see the text in the page       Please complete your project finances.
-    And the user should see the element       jQuery=a:contains("Your project costs")
-    When the user clicks the button/link      jQuery=a:contains("Your project costs")
-    And the user should see the text in the page        Provide the project costs for 'Ludlow'
-    And the user clicks the button/link       jQuery=button:contains("Labour")
-    Then the user should see the element      jQuery=dt:contains("Working days per year") ~ dd:contains("230")
-    And the user should see the element       jQuery=.labour-costs-table td:contains("anotherrole")
-    And the user should see the element       jQuery=.labour-costs-table td:contains("anotherrole") ~ td:contains("120000")
-    And the user should see the element       jQuery=.labour-costs-table td:contains("anotherrole") ~ td:contains("100")
-    And the user clicks the button/link       jQuery=button:contains("Labour")
-    When the user clicks the button/link      jQuery=button:contains("Overhead costs")
-    Then the user should see the element      jQuery=th:contains("20% of labour costs")
-    When the user clicks the button/link      jQuery=button:contains("Materials")
-    Then the user should see the element      jQuery=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2):contains("10")
-    And the user should see the element       jQuery=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3):contains("100")
-    And the user should see the element       jQuery=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1):contains("test")
-    And the user clicks the button/link       jQuery=button:contains("Overhead costs")
+    [Tags]  Support
+    [Setup]  log in as a different user   &{support_user_credentials}
+    When the user navigates to the page   ${server}/management/competition/${OPEN_COMPETITION}/applications/all
+    And the user clicks the button/link   link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
+    And the user expands the section      Finances summary
+    When the user clicks the button/link  jQuery=.finance-summary tbody tr:contains("Ludlow") th a
+    Then the user should see the text in the page  Please complete your project finances.
+    And the user should see the element   jQuery=a:contains("Your project costs")
+    When the user clicks the button/link  jQuery=a:contains("Your project costs")
+    And the user should see the text in the page  Provide the project costs for 'Ludlow'
+    And the user clicks the button/link   jQuery=button:contains("Labour")
+    Then the user should see the element  jQuery=dt:contains("Working days per year") ~ dd:contains("230")
+    And the user should see the element   jQuery=.labour-costs-table td:contains("anotherrole")
+    And the user should see the element   jQuery=.labour-costs-table td:contains("anotherrole") ~ td:contains("120000")
+    And the user should see the element   jQuery=.labour-costs-table td:contains("anotherrole") ~ td:contains("100")
+    And the user clicks the button/link   jQuery=button:contains("Labour")
+    When the user clicks the button/link  jQuery=button:contains("Overhead costs")
+    Then the user should see the element  jQuery=th:contains("20% of labour costs")
+    When the user clicks the button/link  jQuery=button:contains("Materials")
+    Then the user should see the element  jQuery=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2):contains("10")
+    And the user should see the element   jQuery=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3):contains("100")
+    And the user should see the element   jQuery=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1):contains("test")
+    And the user clicks the button/link   jQuery=button:contains("Overhead costs")
 
 Support User can see read only view of collaborator Your project costs for rest of the categories
     [Documentation]  IFS-401
-    [Tags]
-    When the user clicks the button/link      jQuery=button:contains("Capital usage")
-    Then the user should see the element      jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(1):contains("some description")
-    And the user should see the element       jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(2):contains("New")
-    And the user should see the element       jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(3):contains("10")
-    And the user should see the element       jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(4):contains("5000")
-    And the user should see the element       jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(5):contains("25")
-    And the user should see the element       jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(6):contains("100")
-    And the user should see the element       jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(7):contains("£ 4975")
-    And the user clicks the button/link       jQuery=button:contains("Capital usage")
-    When the user clicks the button/link      jQuery=button:contains("Subcontracting costs")
-    Then the user should see the element      jQuery=#subcontracting-table tbody tr:nth-of-type(1) td:nth-of-type(1):contains("SomeName")
-    And the user should see the element       jQuery=#subcontracting-table tbody tr:nth-of-type(1) td:nth-of-type(2):contains("Netherlands")
-    And the user should see the element       jQuery=#subcontracting-table tbody tr:nth-of-type(1) td:nth-of-type(3):contains("Quality Assurance")
-    And the user should see the element       jQuery=#subcontracting-table tbody tr:nth-of-type(1) td:nth-of-type(4):contains("£ 1,000")
-    And the user clicks the button/link       jQuery=button:contains("Subcontracting costs")
-    When the user clicks the button/link      jQuery=button:contains("Travel and subsistence")
-    Then the user should see the element      jQuery=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1):contains("test")
-    And the user should see the element       jQuery=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2):contains("10")
-    And the user should see the element       jQuery=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3):contains("100")
-    And the user clicks the button/link       jQuery=button:contains("Travel and subsistence")
-    When the user clicks the button/link      jQuery=button:contains("Other costs")
-    Then the user should see the element      jQuery=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1):contains("some other costs")
-    And the user should see the element       jQuery=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2):contains("50")
+    [Tags]  Support
+    When the user clicks the button/link  jQuery=button:contains("Capital usage")
+    Then the user should see the element  jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(1):contains("some description")
+    And the user should see the element   jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(2):contains("New")
+    And the user should see the element   jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(3):contains("10")
+    And the user should see the element   jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(4):contains("5000")
+    And the user should see the element   jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(5):contains("25")
+    And the user should see the element   jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(6):contains("100")
+    And the user should see the element   jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(7):contains("£ 4975")
+    And the user clicks the button/link   jQuery=button:contains("Capital usage")
+    When the user clicks the button/link  jQuery=button:contains("Subcontracting costs")
+    Then the user should see the element  jQuery=#subcontracting-table tbody tr:nth-of-type(1) td:nth-of-type(1):contains("SomeName")
+    And the user should see the element   jQuery=#subcontracting-table tbody tr:nth-of-type(1) td:nth-of-type(2):contains("Netherlands")
+    And the user should see the element   jQuery=#subcontracting-table tbody tr:nth-of-type(1) td:nth-of-type(3):contains("Quality Assurance")
+    And the user should see the element   jQuery=#subcontracting-table tbody tr:nth-of-type(1) td:nth-of-type(4):contains("£ 1,000")
+    And the user clicks the button/link   jQuery=button:contains("Subcontracting costs")
+    When the user clicks the button/link  jQuery=button:contains("Travel and subsistence")
+    Then the user should see the element  jQuery=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1):contains("test")
+    And the user should see the element   jQuery=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2):contains("10")
+    And the user should see the element   jQuery=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3):contains("100")
+    And the user clicks the button/link   jQuery=button:contains("Travel and subsistence")
+    When the user clicks the button/link  jQuery=button:contains("Other costs")
+    Then the user should see the element  jQuery=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1):contains("some other costs")
+    And the user should see the element   jQuery=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2):contains("50")
 
 Support User can see read only view of Your organisation
     [Documentation]  IFS-401
-    [Tags]
-    [Setup]
-    When the user clicks the button/link    jQuery=a:contains("Your finances")
-    Then the user should see the text in the page     Please complete your project finances.
-    When the user clicks the button/link    jQuery=a:contains("Your organisation")
-    Then the user should see the text in the page     Organisation size
-    And the user should see the element     jQuery=dt:contains("Turnover") + dd:contains("150")
-    And the user should see the element     jQuery=dt:contains("employees") + dd:contains("0")
+    [Tags]  Support
+    When the user clicks the button/link           jQuery=a:contains("Your finances")
+    Then the user should see the text in the page  Please complete your project finances.
+    When the user clicks the button/link           jQuery=a:contains("Your organisation")
+    Then the user should see the text in the page  Organisation size
+    And the user should see the element            jQuery=dt:contains("Turnover") + dd:contains("150")
+    And the user should see the element            jQuery=dt:contains("employees") + dd:contains("0")
 
 Support User can see read only view of Your funding
     [Documentation]  IFS-401
-    [Tags]
-    [Setup]
+    [Tags]  Support
     When the user clicks the button/link    jQuery=a:contains("Your finances")
     Then the user should see the text in the page     Please complete your project finances.
     When the user clicks the button/link    jQuery=a:contains("Your funding")
@@ -232,109 +233,103 @@ Support User can see read only view of Your funding
 
 Innovation lead can see read only summary link for each partner
     [Documentation]  IFS-802
-    [Tags]
+    [Tags]  InnovationLead
     [Setup]  log in as a different user     &{innovation_lead_one}
     When the user navigates to the page     ${server}/management/competition/${OPEN_COMPETITION}/applications/all
     And the user clicks the button/link     link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
-    And the user expands the Finance summaries
+    And the user expands the section        Finances summary
     Then the user should see the element    jQuery=.finance-summary tbody tr:nth-of-type(1) th:contains("${EMPIRE_LTD_NAME}"):contains("View finances")
     And the user should see the element     jQuery=.finance-summary tbody tr:nth-of-type(2) th:contains("Ludlow"):contains("View finances")
     And the user should see the element     jQuery=.finance-summary tbody tr:nth-of-type(3) th:contains("EGGS"):contains("View finances")
 
 Innovation lead can see read only summary for lead
     [Documentation]  IFS-802
-    [Tags]
+    [Tags]  InnovationLead
     [Setup]  The user clicks the button/link  jQuery=.finance-summary tbody tr:nth-of-type(1) th a
     When the user should see the text in the page       Please complete your project finances.
     Then the finance summary table in Your Finances has correct values for lead
 
 Innovation lead can see read only summary for collaborator
     [Documentation]  IFS-802
-    [Tags]
-    [Setup]  log in as a different user     &{innovation_lead_one}
+    [Tags]  InnovationLead
     When the user navigates to the page     ${server}/management/competition/${OPEN_COMPETITION}/applications/all
     And the user clicks the button/link     link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
-    And the user expands the Finance summaries
+    And the user expands the section        Finances summary
     When the user clicks the button/link    jQuery=.finance-summary tbody tr:contains("EGGS") th a
     And the user should see the text in the page      Please complete your project finances.
     Then the finance summary table in Your Finances has correct values for collaborator
 
 Innovation lead can see read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
     [Documentation]  IFS-802
-    [Tags]
-    [Setup]  log in as a different user       &{innovation_lead_one}
+    [Tags]  InnovationLead
     When the user navigates to the page       ${server}/management/competition/${OPEN_COMPETITION}/applications/all
     And the user clicks the button/link       link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
-    And the user expands the Finance summaries
+    And the user expands the section          Finances summary
     When the user clicks the button/link      jQuery=.finance-summary tbody tr:contains("Ludlow") th a
-    Then the user should see the text in the page       Please complete your project finances.
+    Then the user should see the text in the page  Please complete your project finances.
     And the user should see the element       jQuery=a:contains("Your project costs")
     When the user clicks the button/link      jQuery=a:contains("Your project costs")
-    And the user should see the text in the page        Provide the project costs for 'Ludlow'
-    And the user clicks the button/link       jQuery=button:contains("Labour")
+    And the user should see the text in the page  Provide the project costs for 'Ludlow'
+    And the user expands the section          Labour
     Then the user should see the element      jQuery=dt:contains("Working days per year") ~ dd:contains("230")
     And the user should see the element       jQuery=.labour-costs-table td:contains("anotherrole")
     And the user should see the element       jQuery=.labour-costs-table td:contains("anotherrole") ~ td:contains("120000")
     And the user should see the element       jQuery=.labour-costs-table td:contains("anotherrole") ~ td:contains("100")
-    And the user clicks the button/link       jQuery=button:contains("Labour")
+    And the user collapses the section        Labour
     When the user clicks the button/link      jQuery=button:contains("Overhead costs")
     Then the user should see the element      jQuery=th:contains("20% of labour costs")
     And the user clicks the button/link       jQuery=button:contains("Overhead costs")
-    When the user clicks the button/link      jQuery=button:contains("Materials")
-    Wait Until Element Is Visible Without Screenshots    jQuery=button[aria-expanded="true"]:contains("Materials")
+    When the user expands the section         Materials
     Then the user should see the element      jQuery=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2):contains("10")
     And the user should see the element       jQuery=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3):contains("100")
     And the user should see the element       jQuery=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1):contains("test")
-    And the user clicks the button/link       jQuery=button:contains("Materials")
+    And the user collapses the section        Materials
 
 Innovation lead can see read only view of collaborator Your project costs for rest of the categories
     [Documentation]  IFS-802
-    [Tags]
-    When the user clicks the button/link      jQuery=button:contains("Capital usage")
-    Then the user should see the element      jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(1):contains("some description")
-    And the user should see the element       jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(2):contains("New")
-    And the user should see the element       jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(3):contains("10")
-    And the user should see the element       jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(4):contains("5000")
-    And the user should see the element       jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(5):contains("25")
-    And the user should see the element       jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(6):contains("100")
-    And the user should see the element       jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(7):contains("£ 4975")
-    And the user clicks the button/link       jQuery=button:contains("Capital usage")
-    When the user clicks the button/link      jQuery=button:contains("Subcontracting costs")
-    Then the user should see the element      jQuery=#subcontracting-table tbody tr:nth-of-type(1) td:nth-of-type(1):contains("SomeName")
-    And the user should see the element       jQuery=#subcontracting-table tbody tr:nth-of-type(1) td:nth-of-type(2):contains("Netherlands")
-    And the user should see the element       jQuery=#subcontracting-table tbody tr:nth-of-type(1) td:nth-of-type(3):contains("Quality Assurance")
-    And the user should see the element       jQuery=#subcontracting-table tbody tr:nth-of-type(1) td:nth-of-type(4):contains("£ 1,000")
-    And the user clicks the button/link       jQuery=button:contains("Subcontracting costs")
-    When the user clicks the button/link      jQuery=button:contains("Travel and subsistence")
-    Then the user should see the element      jQuery=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1):contains("test")
-    And the user should see the element       jQuery=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2):contains("10")
-    And the user should see the element       jQuery=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3):contains("100")
-    And the user clicks the button/link       jQuery=button:contains("Travel and subsistence")
-    When the user clicks the button/link      jQuery=button:contains("Other costs")
-    Wait Until Element Is Visible Without Screenshots    jQuery=button[aria-expanded="true"]:contains("Other costs")
-    Then the user should see the element      jQuery=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1):contains("some other costs")
-    And the user should see the element       jQuery=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2):contains("50")
+    [Tags]  InnovationLead
+    When the user expands the section     Capital usage
+    Then the user should see the element  jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(1):contains("some description")
+    And the user should see the element   jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(2):contains("New")
+    And the user should see the element   jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(3):contains("10")
+    And the user should see the element   jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(4):contains("5000")
+    And the user should see the element   jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(5):contains("25")
+    And the user should see the element   jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(6):contains("100")
+    And the user should see the element   jQuery=#capital-usage-table tbody tr:nth-of-type(1) td:nth-of-type(7):contains("£ 4975")
+    And the user collapses the section    Capital usage
+    When the user expands the section     Subcontracting costs
+    Then the user should see the element  jQuery=#subcontracting-table tbody tr:nth-of-type(1) td:nth-of-type(1):contains("SomeName")
+    And the user should see the element   jQuery=#subcontracting-table tbody tr:nth-of-type(1) td:nth-of-type(2):contains("Netherlands")
+    And the user should see the element   jQuery=#subcontracting-table tbody tr:nth-of-type(1) td:nth-of-type(3):contains("Quality Assurance")
+    And the user should see the element   jQuery=#subcontracting-table tbody tr:nth-of-type(1) td:nth-of-type(4):contains("£ 1,000")
+    And the user collapses the section    Subcontracting costs
+    When the user expands the section     Travel and subsistence
+    Then the user should see the element  jQuery=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1):contains("test")
+    And the user should see the element   jQuery=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2):contains("10")
+    And the user should see the element   jQuery=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3):contains("100")
+    And the user collapses the section    Subcontracting costs
+    When the user expands the section     Other costs
+    Then the user should see the element  jQuery=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1):contains("some other costs")
+    And the user should see the element   jQuery=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2):contains("50")
 
 Innovation lead can see read only view of Your organisation
     [Documentation]  IFS-802
-    [Tags]
-    [Setup]
-    When the user clicks the button/link    jQuery=a:contains("Your finances")
-    Then the user should see the text in the page     Please complete your project finances.
-    When the user clicks the button/link    jQuery=a:contains("Your organisation")
-    Then the user should see the text in the page     Organisation size
-    And the user should see the element     jQuery=dt:contains("Turnover") + dd:contains("150")
-    And the user should see the element     jQuery=dt:contains("employees") + dd:contains("0")
+    [Tags]  InnovationLead
+    When the user clicks the button/link           jQuery=a:contains("Your finances")
+    Then the user should see the text in the page  Please complete your project finances.
+    When the user clicks the button/link           jQuery=a:contains("Your organisation")
+    Then the user should see the text in the page  Organisation size
+    And the user should see the element            jQuery=dt:contains("Turnover") + dd:contains("150")
+    And the user should see the element            jQuery=dt:contains("employees") + dd:contains("0")
 
 Innovation lead can see read only view of Your funding
     [Documentation]  IFS-802
-    [Tags]
-    [Setup]
-    When the user clicks the button/link    jQuery=a:contains("Your finances")
-    Then the user should see the text in the page     Please complete your project finances.
-    When the user clicks the button/link    jQuery=a:contains("Your funding")
-    Then the user should see the element    jQuery=dt:contains("Funding level") + dd:contains("45%")
-    And the user should see the element     jQuery=p:contains("No other funding")
+    [Tags]  InnovationLead
+    When the user clicks the button/link           jQuery=a:contains("Your finances")
+    Then the user should see the text in the page  Please complete your project finances.
+    When the user clicks the button/link           jQuery=a:contains("Your funding")
+    Then the user should see the element           jQuery=dt:contains("Funding level") + dd:contains("45%")
+    And the user should see the element            jQuery=p:contains("No other funding")
 
 *** Keywords ***
 the finance summary calculations should be correct
@@ -385,7 +380,7 @@ the red warning should be visible
     the user should see the element  jQuery=.warning-alert h2:contains("not marked their finances as complete")
 
 Lead enters a valid research participation value
-    When the user navigates to the academic application finances
+    the user navigates to the academic application finances
     the user clicks the button/link                   link=Your project costs
     run keyword and ignore error without screenshots  the user clicks the button/link    jQuery=.buttonlink:contains("Edit")
     the user clicks the button/link                   jQuery=button:contains("Labour")
@@ -398,7 +393,7 @@ Lead enters a valid research participation value
     wait for autosave
     the user enters text to a text field              css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    1000
     wait for autosave
-    then the user selects the checkbox                id=agree-state-aid-page
+    the user selects the checkbox                     id=agree-state-aid-page
     the user clicks the button/link                   jQuery= button:contains('Mark as complete')
     wait for autosave
 
@@ -425,6 +420,12 @@ the user fills in the funding information with bigger amount
     the user selects the checkbox              agree-terms-page
     the user clicks the button/link            jQuery=button:contains("Mark as complete")
 
-the user expands the Finance summaries
-    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=button:contains("Finances summary")[aria-expanded="false"]
-    run keyword if  '${status}'=='PASS'  the user clicks the button/link  jQuery=button:contains("Finances summary")[aria-expanded="false"]
+the user expands the section
+    [Arguments]  ${section}
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=button:contains("${section}")[aria-expanded="false"]
+    run keyword if  '${status}'=='PASS'  the user clicks the button/link  jQuery=button:contains("${section}")[aria-expanded="false"]
+
+the user collapses the section
+    [Arguments]  ${section}
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=button:contains("${section}")[aria-expanded="true"]
+    run keyword if  '${status}'=='PASS'  the user clicks the button/link  jQuery=button:contains("${section}")[aria-expanded="true"]
