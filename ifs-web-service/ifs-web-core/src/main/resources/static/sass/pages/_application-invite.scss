@@ -1,3 +1,9 @@
-.app-invite td.form-group:first-child {
-  padding-left: 1.25em;
+.app-invite {
+  td {
+    &.form-group {
+      &:first-child {
+        padding-left: 1.25em;
+      }
+    }
+  }
 }

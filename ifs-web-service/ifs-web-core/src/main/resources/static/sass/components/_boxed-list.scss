@@ -1,36 +1,27 @@
-/* SG
-# IFS/boxed-list
-The boxed list is a list with each list element as a block and bordered.
+ul,
+ol {
+  &.boxed-list {
+    list-style:none;
+    margin:0;
+    padding:0;
 
-```
-<ul class="boxed-list">
-    <li>
-        <h4 class="heading-medium">Rovel Additive Manufacturing Process</h4>
-    </li>
-    <li>
-     	<h4 class="heading-medium">Providing sustainable childcare</h4>
-    </li>
-</ul>
- ```
- */
+    h1,
+    h2,
+    h3,
+    h4 {
+      margin:0;
+    }
 
-ul.boxed-list,
-ol.boxed-list {
-	list-style:none;
-	margin:0;
-	padding:0;
-	h1,h2,h3,h4 {
-		margin:0;
-	}
+    li {
+      padding:15px;
+      display: block;
+      position: relative;
+      margin-top: 10px;
+      border:1px solid $border-colour;
 
-	li {
-		padding:15px;
-		display: block;
-		position: relative;
-		margin-top: 10px;
-		border:1px solid $border-colour;
-	}
-	li.assigned-to-me {
-		background: url("../images/field/field-assigned-right.png") right top no-repeat;
-	}
+      &.assigned-to-me {
+        background: url("../images/field/field-assigned-right.png") right top no-repeat;
+      }
+    }
+  }
 }
