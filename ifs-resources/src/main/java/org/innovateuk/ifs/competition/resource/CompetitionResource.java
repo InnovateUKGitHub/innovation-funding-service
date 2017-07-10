@@ -96,9 +96,7 @@ public class CompetitionResource {
 
     @JsonIgnore
     public boolean isAssessmentClosed() {
-        return CompetitionStatus.FUNDERS_PANEL.equals(competitionStatus)
-                || CompetitionStatus.ASSESSOR_FEEDBACK.equals(competitionStatus)
-                || CompetitionStatus.PROJECT_SETUP.equals(competitionStatus) ;
+        return competitionStatus != null && (competitionStatus.isLaterThan(CompetitionStatus.IN_ASSESSMENT));
     }
 
     @JsonIgnore

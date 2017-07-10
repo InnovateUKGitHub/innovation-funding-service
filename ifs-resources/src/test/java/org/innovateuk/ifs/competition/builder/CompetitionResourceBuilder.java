@@ -196,8 +196,8 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("nonIfsUrl", nonIfsUrl);
     }
 
-    public CompetitionResourceBuilder withUseAssessmentPanel(Boolean useAssessmentPanel) {
-        return with(competition -> competition.setUseAssessmentPanel(useAssessmentPanel));
+    public CompetitionResourceBuilder withUseAssessmentPanel(Boolean... useAssessmentPanel) {
+        return withArraySetFieldByReflection("useAssessmentPanel", useAssessmentPanel);
     }
 
     @Override

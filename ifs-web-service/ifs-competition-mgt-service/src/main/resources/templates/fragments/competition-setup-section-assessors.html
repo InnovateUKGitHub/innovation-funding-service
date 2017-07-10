@@ -18,7 +18,8 @@
                     <div class="multiple-choice" th:each="assessorOption : ${assessorOptions}">
                         <input th:id="${'assessors-' + '__${assessorOption.id}__'}" name="assessorCount"
                                th:value="${assessorOption.optionValue}" type="radio"
-                               th:checked="${assessorOption.optionValue == competitionSetupForm.assessorCount}" />
+                               th:checked="${assessorOption.optionValue == competitionSetupForm.assessorCount}"
+                               th:disabled="${isSetupAndLive and (assessorOption.optionValue != competitionSetupForm.assessorCount)}"/>
                         <label th:for="${'assessors-' + '__${assessorOption.id}__'}">
                             <th:block th:text="${assessorOption.optionName}" />
                         </label>
@@ -41,6 +42,38 @@
                        th:errorclass="form-control-error"
                        th:readonly="${isSetupAndLive}"/>
             </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('useAssessmentPanel')} ? 'form-group-error'">
+                <legend class="heading-small">
+                    Enable assessment panel for this competition?
+                    <th:block th:if="${#fields.hasErrors('useAssessmentPanel')}">
+                        <span class="error-message" th:each="err : ${#fields.errors('useAssessmentPanel')}" th:text="${err}" />
+                    </th:block>
+                </legend>
+                <div class="multiple-choice">
+                    <input id="useAssessmentPanel-0"
+                           type="radio"
+                           th:field="${competitionSetupForm.useAssessmentPanel}"
+                           value="1"
+                           th:errorclass="field-error"
+                           required="required"
+                           th:attr="data-required-errormessage=#{validation.assessorsform.assessmentPanel.required}" />
+                    <label for="useAssessmentPanel-0">
+                        Yes
+                    </label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="useAssessmentPanel-1"
+                           type="radio"
+                           th:field="${competitionSetupForm.useAssessmentPanel}"
+                           th:errorclass="field-error"
+                           required="required"
+                           value="0"
+                           th:attr="data-required-errormessage=#{validation.assessorsform.assessmentPanel.required}" />
+                    <label for="useAssessmentPanel-1">
+                        No
+                    </label>
+                </div>
+            </div>
 
             <button class="button">Done</button>
         </th:block>
@@ -52,6 +85,10 @@
 
                 <dt>How much do assessors receive per application?</dt>
                 <dd th:text="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'COMMA')}"></dd>
+
+                <dt>Enable assessment panel for this competition?</dt>
+                <dd th:if="${competitionSetupForm.useAssessmentPanel}">Yes</dd>
+                <dd th:unless="${competitionSetupForm.useAssessmentPanel}">No</dd>
             </dl>
 
            <button th:unless="${preventEdit}" type="submit" class="button">Edit</button>
