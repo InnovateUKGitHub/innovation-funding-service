@@ -92,7 +92,7 @@ public class InviteUserServiceImplTest extends BaseUnitTestMocksTest {
         AdminRoleType adminRoleType = AdminRoleType.SUPPORT;
 
         when(roleRepositoryMock.findOneByName(adminRoleType.getName())).thenReturn(null);
-        when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.of(newUser().build()));
+        when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
 
         ServiceResult<Void> result = inviteUserService.saveUserInvite(invitedUser, adminRoleType);
         assertTrue(result.isFailure());
@@ -109,7 +109,8 @@ public class InviteUserServiceImplTest extends BaseUnitTestMocksTest {
 
         when(roleRepositoryMock.findOneByName(adminRoleType.getName())).thenReturn(role);
         when(inviteRoleRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Collections.emptyList());
-        when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.of(newUser().build()));
+        when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
+
         ServiceResult<Void> result = inviteUserService.saveUserInvite(invitedUser, adminRoleType);
         assertTrue(result.isSuccess());
         verify(inviteRoleRepositoryMock).save(Mockito.any(RoleInvite.class));
@@ -125,7 +126,8 @@ public class InviteUserServiceImplTest extends BaseUnitTestMocksTest {
 
         when(roleRepositoryMock.findOneByName(adminRoleType.getName())).thenReturn(role);
         when(inviteRoleRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Collections.emptyList());
-        when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
+        when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.of(newUser().build()));
+
         ServiceResult<Void> result = inviteUserService.saveUserInvite(invitedUser, adminRoleType);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(USER_ROLE_INVITE_EMAIL_TAKEN));

@@ -82,7 +82,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     }
 
     private ServiceResult<Void> validateUserEmailAvaiable(UserResource invitedUser) {
-        return userRepository.findByEmail(invitedUser.getEmail()).isPresent() ? serviceSuccess() : serviceFailure(USER_ROLE_INVITE_EMAIL_TAKEN);
+        return userRepository.findByEmail(invitedUser.getEmail()).isPresent() ? serviceFailure(USER_ROLE_INVITE_EMAIL_TAKEN) : serviceSuccess() ;
     }
 
     private ServiceResult<Role> getRole(AdminRoleType adminRoleType) {
