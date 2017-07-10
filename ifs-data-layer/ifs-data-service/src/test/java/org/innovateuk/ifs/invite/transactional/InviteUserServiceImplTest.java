@@ -13,12 +13,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_ROLE_INVITE_INVALID;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_ROLE_INVITE_INVALID_EMAIL;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -91,6 +92,7 @@ public class InviteUserServiceImplTest extends BaseUnitTestMocksTest {
         AdminRoleType adminRoleType = AdminRoleType.SUPPORT;
 
         when(roleRepositoryMock.findOneByName(adminRoleType.getName())).thenReturn(null);
+        when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.of(newUser().build()));
 
         ServiceResult<Void> result = inviteUserService.saveUserInvite(invitedUser, adminRoleType);
         assertTrue(result.isFailure());
@@ -107,10 +109,27 @@ public class InviteUserServiceImplTest extends BaseUnitTestMocksTest {
 
         when(roleRepositoryMock.findOneByName(adminRoleType.getName())).thenReturn(role);
         when(inviteRoleRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Collections.emptyList());
-
+        when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.of(newUser().build()));
         ServiceResult<Void> result = inviteUserService.saveUserInvite(invitedUser, adminRoleType);
         assertTrue(result.isSuccess());
         verify(inviteRoleRepositoryMock).save(Mockito.any(RoleInvite.class));
+
+    }
+
+    @Test
+    public void saveUserInviteWhenEmailAlreadyTaken() throws Exception {
+
+        AdminRoleType adminRoleType = AdminRoleType.IFS_ADMINISTRATOR;
+
+        Role role = new Role(1L, "support");
+
+        when(roleRepositoryMock.findOneByName(adminRoleType.getName())).thenReturn(role);
+        when(inviteRoleRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Collections.emptyList());
+        when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
+        ServiceResult<Void> result = inviteUserService.saveUserInvite(invitedUser, adminRoleType);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(USER_ROLE_INVITE_EMAIL_TAKEN));
+        verify(inviteRoleRepositoryMock, never()).save(Mockito.any(RoleInvite.class));
 
     }
 }

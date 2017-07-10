@@ -18,9 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_ROLE_INVITE_INVALID;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_ROLE_INVITE_INVALID_EMAIL;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
@@ -50,6 +48,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
         return validateInvite(invitedUser, adminRoleType)
                 .andOnSuccess(() -> validateEmail(invitedUser.getEmail()))
                 .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
+                .andOnSuccess(() -> validateUserEmailAvaiable(invitedUser))
                 .andOnSuccess(() -> getRole(adminRoleType))
                 .andOnSuccess(role -> saveInvite(invitedUser, role));
     }
@@ -80,6 +79,10 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
         List<RoleInvite> existingInvites = inviteRoleRepository.findByEmail(invitedUser.getEmail());
         return existingInvites.isEmpty() ? serviceSuccess() : serviceFailure(USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED);
+    }
+
+    private ServiceResult<Void> validateUserEmailAvaiable(UserResource invitedUser) {
+        return userRepository.findByEmail(invitedUser.getEmail()).isPresent() ? serviceSuccess() : serviceFailure(USER_ROLE_INVITE_EMAIL_TAKEN);
     }
 
     private ServiceResult<Role> getRole(AdminRoleType adminRoleType) {
