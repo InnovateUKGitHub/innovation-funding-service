@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.user.resource;
 
+import java.util.Arrays;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -13,7 +13,8 @@ public enum AdminRoleType {
     IFS_ADMINISTRATOR("ifs_administrator", "IFS Administrator"),
     COMP_ADMIN("comp_admin", "Competition Administrator"),
     PROJECT_FINANCE("project_finance", "Project Finance"),
-    SUPPORT("support", "IFS Support User")
+    SUPPORT("support", "IFS Support User"),
+    COMP_TECHNOLOGIST("competition_technologist", "Competition Technologist")
     ;
 
     private String name;
@@ -42,7 +43,7 @@ public enum AdminRoleType {
     }
 
     public static List<String> roleNames(AdminRoleType... roles){
-        return asList(roles).stream().map(r -> r.getName()).collect(toList());
+        return Arrays.stream(roles).map(r -> r.getName()).collect(toList());
     }
 }
 
