@@ -27,6 +27,7 @@
     <form th:if="${editable}" data-autosave="compSetup" method="POST"
           th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
           th:object="${competitionSetupForm}"
+          novalidate="novalidate"
           data-th-attr="data-competition=${competitionId}"
           data-section="application"
           data-subsection="finance">
@@ -85,17 +86,15 @@
                     </th:block>
                 </legend>
                 <div class="textarea-wrapped ">
-                        <textarea data-max_words="500"
-                                  data-editor="html"
-                                  id="fundingRules"
-                                  th:classappend="${#fields.hasErrors('fundingRules')} ? 'form-control-error'"
-                                  th:name="fundingRules"
-                                  required="required"
-                                  ifs:utext="${competitionSetupForm.fundingRules}">
-                        </textarea>
-                    <div class="textarea-footer">
-                        <span class="autosave-info"></span>
-                    </div>
+                    <textarea data-editor="html"
+                              class="form-control"
+                              id="fundingRules"
+                              th:classappend="${#fields.hasErrors('fundingRules')} ? 'form-control-error'"
+                              th:field="${competitionSetupForm.fundingRules}"
+                              required="required"
+                              th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                              ifs:utext="${competitionSetupForm.fundingRules}">
+                    </textarea>
                 </div>
             </fieldset>
         </div>
