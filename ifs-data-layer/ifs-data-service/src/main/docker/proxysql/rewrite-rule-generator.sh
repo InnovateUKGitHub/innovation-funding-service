@@ -94,7 +94,7 @@ function generate_rewrite_from_rule() {
     if [[ "$replace_test" != "$replacement" ]]; then
 
         mask_token=$(echo "$replacement" | sed "$EMAIL_MASK_TOKEN_EXTRACTOR")
-        echo "CONCAT(CONCAT(SUBSTR($column_name, 1, 2), REPEAT('x', INSTR($column_name, '@') - 2)), CONCAT(SUBSTR($column_name, INSTR($column_name, '@'), 3), 'xxxxx.com'))"
+        echo "CONCAT(CONCAT(SUBSTR($column_name, 1, 2), REPEAT('$mask_token', INSTR($column_name, '@') - 2)), CONCAT(SUBSTR($column_name, INSTR($column_name, '@'), 3), 'xx.example.com'))"
         exit 0
     fi
 
