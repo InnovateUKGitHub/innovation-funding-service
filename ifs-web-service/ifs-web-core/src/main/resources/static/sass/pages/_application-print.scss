@@ -1,4 +1,3 @@
-
 .print-bar  {
   position: fixed;
   bottom:0;
@@ -9,151 +8,162 @@
   background-color: rgba(255,255,255,0.5);
   border-top:1px solid $grey-2;
   padding:15px 0;
+
   button {
     margin:0;
   }
 }
-.no-js .print-bar button {
-  display:none;
+
+.no-js {
+  .print-bar {
+    background-color: #fff;
+
+    button {
+      display:none;
+    }
+
+    .hidden {
+      display:block;
+      visibility: visible;
+      text-align:center;
+    }
+  }
 }
-.no-js .print-bar .hidden {
-  display:block;
-  visibility: visible;
-  text-align:center;
-}
-.no-js .print-bar {
-  background-color: #fff;
-}
+
 .print-doc {
   background: #dee0e2;
   margin: 0;
   line-height: 1.5;
-}
 
-
-.print-doc section {
-  background: #fff;
-  width: 19cm;
-  min-height: 26.7cm;
-  display: block;
-  margin: 0.5cm auto;
-  box-sizing:border-box;
-  padding:1.5cm;
-  position: relative;
-  overflow: hidden;
-  @include box-shadow("0 2px 2px 0 rgba(0,0,0,0.1), 0 3px 1px -2px rgba(0,0,0,0.1), 0 1px 5px 0 rgba(0,0,0,0.1)");
-}
-.print-doc .textarea-wrapped .readonly {
-  margin-top:10px;
-  min-height: 1em;
-  resize:none;
-  background-color: #fff;
-}
-.print-doc {
-  table th,
-  table small{
-    font-size: 14px;
+  section {
+    @include box-shadow("0 2px 2px 0 rgba(0,0,0,0.1), 0 3px 1px -2px rgba(0,0,0,0.1), 0 1px 5px 0 rgba(0,0,0,0.1)");
+    background: #fff;
+    width: 19cm;
+    min-height: 26.7cm;
+    display: block;
+    margin: 0.5cm auto;
+    box-sizing:border-box;
+    padding:1.5cm;
+    position: relative;
+    overflow: hidden;
   }
-  table td {
-    font-size:16px;
+
+  .textarea-wrapped {
+    .readonly {
+      margin-top:10px;
+      min-height: 1em;
+      resize:none;
+      background-color: #fff;
+      width:99%;
+    }
+  }
+
+  table {
+    th,
+    small{
+      font-size: 14px;
+    }
+
+    td {
+      font-size:16px;
+    }
+  }
+
+  .form-group {
+    float:none;
+  }
+
+  //for preview
+  .landscape {
+    width: 29.7cm;
+    min-height: 21cm;
+
+    h1,
+    h2 {
+      margin-top:0;
+    }
   }
 }
-
-
-// .page-indication  {
-// top: 29.7cm;
-// border-top:3px dashed rgba(0,0,0,0.5);
-// width: 100%;
-// height: 0px;
-// position: absolute;
-// left:0;
-// }
-//
-// .page-indication + .page-indication{
-// top: 59.4cm;
-// }
-// .page-indication + .page-indication + .page-indication {
-// top: 89.1cm;
-// }
-
-
-.print-doc .form-group {
-  float:none;
-}
-//for preview
-.print-doc .landscape {
-  width: 29.7cm;
-  min-height: 21cm;
-  h1,h2 {margin-top:0;}
-
- }
- .print-doc .textarea-wrapped .readonly {
-     width:99%;
- }
-
-
 
 @media print {
-  body, .print-doc section {
+  body {
     margin: 0;
     padding: 0;
     font-size:12pt;
   }
-  .heading-large {
-    font-size:19pt;
-  }
 
-  .print-doc section,
-  .print-doc .landscape {
-    width: auto;
-    min-height: auto;
-    height: auto;
-    box-shadow: none;
-  }
-  .print-doc section + section {
-    page-break-before: always;
-  }
-  .print-doc  .landscape {
-    min-height: 24cm;
-    overflow: visible;
-    margin:0;
-    padding:0;
-  }
-  .print-doc .landscape > div {
-      page-break-inside:avoid;
-      width:23cm;
-      position: absolute;
-      top:50%;
-      right:5%;
-      @include transform(translateY(-50%) rotate(-90deg));
+  .print-doc {
+    section {
+      margin: 0;
+      padding: 0;
+      font-size:12pt;
+      width: auto;
+      min-height: auto;
+      height: auto;
+      box-shadow: none;
 
-      table th,
-      table small{
-        font-size: 9pt;
+      + section {
+        page-break-before: always;
       }
-      table td {
-        font-size:10pt;
-      }
-      @include ie-lte(8) {
+    }
+
+    .landscape {
+      width: auto;
+      height: auto;
+      box-shadow: none;
+      min-height: 24cm;
+      overflow: visible;
+      margin:0;
+      padding:0;
+
+      > div {
+        @include transform(translateY(-50%) rotate(-90deg));
+        page-break-inside:avoid;
+        width:23cm;
+        position: absolute;
+        top:50%;
+        right:5%;
+
+        table {
+          th,
+          small{
+            font-size: 9pt;
+          }
+
+          td {
+            font-size:10pt;
+          }
+        }
+
+        @include ie-lte(8) {
           left:auto;
           top:auto;
           width:19cm;
-          table td,
-          table th,
-          table small {
-            font-size:9pt;
-          }
-          table td,
-          table th {
-            padding:2px;
-          }
+
           table {
             max-width:17cm;
+
+            td,
+            th {
+              font-size:9pt;
+              padding:2px;
+            }
+
+            small {
+              font-size:9pt;
+            }
           }
+        }
       }
+    }
+
+    .form-group {
+      page-break-inside : avoid;
+    }
   }
-  .print-doc .form-group {
-    page-break-inside : avoid;
+
+  .heading-large {
+    font-size:19pt;
   }
 
   .print-bar,
@@ -161,8 +171,9 @@
   #skiplink-container {
     display:none;
   }
+
   @page {
-  size: A4;
-   margin:1.5cm;
+    size: A4;
+    margin:1.5cm;
   }
 }
