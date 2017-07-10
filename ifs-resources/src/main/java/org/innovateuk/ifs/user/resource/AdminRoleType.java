@@ -14,7 +14,7 @@ public enum AdminRoleType {
     COMP_ADMIN("comp_admin", "Competition Administrator"),
     PROJECT_FINANCE("project_finance", "Project Finance"),
     SUPPORT("support", "IFS Support User"),
-    COMP_TECHNOLOGIST("competition_technologist", "Competition Technologist")
+    INNOVATION_LEAD("innovation_lead", "Innovation Lead")
     ;
 
     private String name;
