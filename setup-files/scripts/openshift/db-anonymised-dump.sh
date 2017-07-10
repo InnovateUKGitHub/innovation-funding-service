@@ -2,6 +2,9 @@
 
 set -e
 
+# TODO DW - remove debug flag
+set -x
+
 PROJECT=$1
 TARGET=$2
 VERSION=$3
@@ -70,9 +73,6 @@ function shutdownMysqlDumpPodAfterUse() {
       sleep 2
       time_waited_so_far=$((time_waited_so_far + 5))
     done
-
-    echo "Waiting for the dust to settle..."
-    sleep 2
 }
 
 # Entry point
