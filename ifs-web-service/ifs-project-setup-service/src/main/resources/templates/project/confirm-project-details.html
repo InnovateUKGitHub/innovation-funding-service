@@ -16,7 +16,7 @@
     <form th:action="@{/project/{id}/details/submit(id=${projectId})}" method="post">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submit project details',subTitle=${projectName},size='heading-xlarge'" />
         <p>Are you sure that you wish to submit your project details to Innovate UK?</p>
-        <button class="button large" name="submit-app-details" >Submit</button>
+        <button class="button" name="submit-app-details" >Submit</button>
     </form>
 
     <th:block th:insert="fragments/layout :: main-content-end" />

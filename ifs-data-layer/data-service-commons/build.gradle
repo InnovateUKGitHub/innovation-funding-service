@@ -30,6 +30,7 @@ dependencies {
     testCompile project(":ifs-commons").sourceSets.test.output
     testCompile project(':ifs-resources')
     testCompile project(":ifs-commons")
+    testCompile "com.h2database:h2:1.4.196"
 
 }
 

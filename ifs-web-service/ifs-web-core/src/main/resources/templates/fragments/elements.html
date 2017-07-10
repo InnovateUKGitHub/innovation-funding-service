@@ -45,7 +45,7 @@
 <!-- ===========================Element: Header links =========================== -->
 <th:block th:fragment="header-links" th:with="loggedIn=${#authentication} ? ${#authorization.expression('isAuthenticated()')} : false">
     <a href="/competition/search"  id="proposition-name">Innovation Funding Service</a>
-    <ul id="proposition-links">
+    <ul th:unless="${hidePropositionLinks}" id="proposition-links">
         <th:block th:if="${loggedIn}">
             <li th:unless="${hideDashboardLink}">
                 <a th:href="${userDashboardLink}" th:classappend="${#httpServletRequest.requestURI == userDashboardLink} ? 'active'">Dashboard</a>
@@ -67,15 +67,6 @@
         </th:block>
     </ul>
 </th:block>
-<!-- =========================== Element: Competition Deadline =========================== -->
-<th:block th:fragment="competition-deadline">
-    <div class="competition-deadline" th:if="${endDate != null}">
-        <div class="day">
-            <th:block th:insert="fragments/elements :: ordinal-day (date=${endDate})" />
-        </div>
-        <div class="month" th:text="${#temporals.monthName(endDate)}+' deadline'" />
-    </div>
-</th:block>
 
 <!-- =========================== Element: simple ordinal day =========================== -->
 
@@ -90,25 +81,6 @@
             Please note that this competition will close shortly. You will not be able to submit after the competition closes and any edits you make will not be saved.
         </div>
     </th:block>
-</th:block>
-<!-- =========================== Element: Pie chart =========================== -->
-<th:block th:fragment="pie-small">
-    <div class="pie-container" th:if="${daysLeft != null}">
-        <div class="pie small" th:text="${daysPercentage}+'%'"></div>
-        <div class="pie-overlay">
-            <span class="day" th:text=" (${daysLeft} &lt; 0 ? '0' : ${daysLeft}) ">18</span>
-            <span class="visuallyhidden">Days left</span>
-        </div>
-    </div>
-</th:block>
-<th:block th:fragment="pie">
-    <div class="pie-container">
-        <div class="pie" th:text="${daysPercentage}+'%'">10%</div>
-        <div class="pie-overlay">
-            <span class="day" th:text=" (${daysLeft} &lt; 0 ? '0' : ${daysLeft}) ">18</span>
-            <span>Days left</span>
-        </div>
-    </div>
 </th:block>
 
 <!-- =========================== Element: Progress indicator =========================== -->
