@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.repository;
 
+import org.innovateuk.ifs.assessment.domain.ApplicationAssessmentCount;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
@@ -8,10 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -68,6 +66,8 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
 
     List<Assessment> findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(Long userId, Long competitionId);
 
+    List<Assessment> findByParticipantUserIdAndActivityStateStateNotIn(long userId, Collection<State> states);
+
     Optional<Assessment> findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(Long userId, Long applicationId);
 
     long countByParticipantUserIdAndActivityStateStateNotIn(Long userId, Set<State> states);
@@ -75,6 +75,24 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
     long countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(Long userId, Long competitionId, Set<State> states);
 
     List<Assessment> findByActivityStateStateAndTargetCompetitionId(State state, long competitionId);
+
+    @Query("SELECT new org.innovateuk.ifs.assessment.domain.ApplicationAssessmentCount( " +
+            "   application, " +
+            "   CAST(COUNT(assessment.id) as int) " +
+            ") " +
+            "FROM Assessment assessment " +
+            "JOIN assessment.target.competition competition " +
+            "JOIN assessment.activityState activityState " +
+            "JOIN assessment.target application " +
+            "WHERE competition.id = :competitionId " +
+            "   AND application.id IN :applicationIds " +
+            "   AND activityState.state NOT IN :states " +
+            "GROUP BY application.id")
+    List<ApplicationAssessmentCount> countByActivityStateStateNotInAndTargetCompetitionIdAndTargetIdInGroupByTarget(
+            @Param("states") Collection<State> states,
+            @Param("competitionId") long competitionId,
+            @Param("applicationIds") Collection<Long> applicationIds
+    );
 
     int countByActivityStateStateAndTargetCompetitionId(State state, Long competitionId);
 

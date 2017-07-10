@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.repository;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.assessment.domain.ApplicationAssessmentCount;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessorFormInputResponse;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
@@ -27,6 +28,7 @@ import java.util.*;
 import java.util.concurrent.atomic.LongAccumulator;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
 import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
 import static java.util.Optional.ofNullable;
@@ -233,6 +235,53 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
+    public void countByActivityStateStateNotInAndTargetCompetitionIdAndTargetIdInGroupByTarget() throws Exception {
+        assessorFormInputResponseRepository.deleteAll();
+        repository.deleteAll();
+
+        ProcessRole participant1 = newProcessRole().withId().build();
+        ProcessRole participant2 = newProcessRole().withId().build();
+        ProcessRole participant3 = newProcessRole().withId().build();
+
+        processRoleRepository.save(asList(participant1, participant2, participant3));
+
+        Application application1 = applicationRepository.findOne(1L);
+        Application application2 = applicationRepository.findOne(2L);
+
+        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, OPEN.getBackingState());
+
+        List<Assessment> assessments = newAssessment()
+                .withId()
+                .withApplication(application1)
+                .withParticipant(participant1, participant2)
+                .withActivityState(openState)
+                .build(2);
+
+        assessments.add(
+                newAssessment()
+                        .withId()
+                        .withApplication(application2)
+                        .withParticipant(participant3)
+                        .withActivityState(openState)
+                        .build()
+        );
+
+        repository.save(assessments);
+
+        List<ApplicationAssessmentCount> counts = repository.countByActivityStateStateNotInAndTargetCompetitionIdAndTargetIdInGroupByTarget(
+                AssessmentStates.getBackingStates(asList(CREATED, REJECTED, WITHDRAWN)),
+                application1.getCompetition().getId(),
+                asList(application1.getId(), application2.getId())
+        );
+
+        assertEquals(2, counts.size());
+        assertEquals(application1.getId(), counts.get(0).getApplication().getId());
+        assertEquals(2, counts.get(0).getCount());
+        assertEquals(application2.getId(), counts.get(1).getApplication().getId());
+        assertEquals(1, counts.get(1).getCount());
+    }
+
+    @Test
     public void countByActivityStateStateAndTargetCompetitionId() throws Exception {
         State state = State.CREATED;
         Application application = applicationRepository.findOne(1L);
@@ -244,8 +293,8 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
-    public void countByActiviteStateStateInAndTargetCommpetitionId() throws Exception {
-        Set<State> states = EnumSet.of(State.CREATED, State.OPEN );
+    public void countByActivityStateStateInAndTargetCompetitionId() throws Exception {
+        Set<State> states = EnumSet.of(State.CREATED, State.OPEN);
 
         Application application = applicationRepository.findOne(1L);
 
