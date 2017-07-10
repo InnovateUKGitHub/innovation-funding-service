@@ -1,5 +1,4 @@
 .grid-row {
-
   &.sorting {
     border-bottom: 1px solid $secondary-text-colour;
   }
@@ -8,42 +7,73 @@
 .column-fifth {
   @include grid-column(1/5);
 }
+
 .column-two-fifth {
   @include grid-column(2/5);
 }
+
 .column-three-fifth {
   @include grid-column(3/5);
 }
+
 .column-four-fifth {
   @include grid-column(4/5);
 }
+
 .grid-container {
   @extend %site-width-container;
 }
+
 .constrain-width {
   max-width:1400px;
   padding:0 15px;
 }
 
-#content.full-width,
-.grid-container.full-width {
-  max-width:95%;
-  @include ie-lte(8){
-    width: 95%;
+#content {
+  &.full-width {
+    @include ie-lte(8){
+      width: 95%;
+    }
+
+    max-width:95%;
   }
 }
+
+.grid-container {
+  &.full-width {
+    @include ie-lte(8){
+      width: 95%;
+    }
+
+    max-width:95%;
+  }
+}
+
+%extra-width {
+  @include media-down(mobile) {
+    width: 95%;
+    max-width: 95%;
+  }
+
+  width:1150px;
+  max-width: 1150px;
+}
+
 .extra-width {
   #content,
-  .grid-container,
-  #global-header .header-wrapper {
-    width:1150px;
-    max-width: 1150px;
-    @include media-down(mobile){
-      width: 95%;
-      max-width: 95%;
+  .grid-container {
+    @extend %extra-width;
+  }
+
+  #global-header {
+    .header-wrapper {
+      @extend %extra-width;
     }
   }
 }
-#content.no-grid {
-  max-width:100%;
+
+#content {
+  &.no-grid {
+    max-width:100%;
+  }
 }

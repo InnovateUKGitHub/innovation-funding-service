@@ -1,0 +1,6 @@
+title: "A simple secondary button component"
+status: ready
+context:
+  text: "Secondary actions"
+  citation: "Fractal Docs"
+notes: Secondary CTA range left (falls under primary CTA on mobile)
