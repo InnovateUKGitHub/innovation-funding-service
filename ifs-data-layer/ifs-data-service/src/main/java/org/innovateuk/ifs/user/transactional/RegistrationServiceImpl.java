@@ -53,7 +53,7 @@ import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOT_AN_INTERNAL_USER_ROLE;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -419,6 +419,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     private ServiceResult<Void> validateInternalUserRole(UserRoleType userRoleType) {
 
         return UserRoleType.internalRoles().stream().anyMatch(internalRole -> internalRole.equals(userRoleType))?
-                serviceSuccess() : serviceFailure(USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED);
+                serviceSuccess() : serviceFailure(NOT_AN_INTERNAL_USER_ROLE);
     }
 }

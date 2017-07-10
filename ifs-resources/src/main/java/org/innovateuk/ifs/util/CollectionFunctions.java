@@ -376,7 +376,7 @@ public final class CollectionFunctions {
 
     /**
      * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code.
-     * The resultant collection is a set which means that duplicates from the input list will be removed.
+     * The resultant collection is a Set which means that duplicates from the input list will be removed.
      */
     public static <T, R> Set<R> simpleMapSet(List<T> list, Function<T, R> mappingFn) {
         if (null == list || list.isEmpty()) {
