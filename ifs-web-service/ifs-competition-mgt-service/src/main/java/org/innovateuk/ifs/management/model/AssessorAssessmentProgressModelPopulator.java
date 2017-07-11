@@ -39,6 +39,8 @@ public class AssessorAssessmentProgressModelPopulator {
         );
 
         return new AssessorAssessmentProgressViewModel(
+                summaryResource.getCompetitionId(),
+                summaryResource.getCompetitionName(),
                 summaryResource.getAssessor().getUser().getName(),
                 innovationAreas,
                 summaryResource.getAssessor().getProfile().getBusinessType(),
