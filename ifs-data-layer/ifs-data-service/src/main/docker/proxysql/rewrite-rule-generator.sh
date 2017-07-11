@@ -2,9 +2,6 @@
 
 set -e
 
-## TODO DW - remove debug flag
-set -x
-
 REPLACE_REPLACEMENT_TOKEN_EXTRACTOR="s/^REPLACE('\(.*\)')$/\1/g"
 
 MASK_REPLACEMENT_INDEX_EXTRACTOR="s/^MASK(\([0-9]\+\),[ ]*'\(.*\)')$/\1/g"

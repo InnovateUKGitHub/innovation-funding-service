@@ -2,9 +2,6 @@
 
 set -e
 
-## TODO DW - remove debug flag
-set -x
-
 # A function to generate a set of query_rules for proxysql to rewrite data as it is being selected by mysqldump.
 # This takes rules defined in files in the /dump/rewrites folder and builds a set of proxysql configuration to apply
 # those rewrites.  These rules will be written to /dump/query_rules
@@ -106,6 +103,3 @@ function inject_db_configuration_into_proxysql_cnf() {
 generate_query_rules_for_proxysql
 inject_query_rules_into_proxysql_cnf
 inject_db_configuration_into_proxysql_cnf
-
-## TODO DW - remove cat
-cat /etc/proxysql.cnf

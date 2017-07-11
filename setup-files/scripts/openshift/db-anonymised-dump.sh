@@ -2,9 +2,6 @@
 
 set -e
 
-# TODO DW - remove debug flag
-set -x
-
 PROJECT=$1
 TARGET=$2
 VERSION=$3
@@ -95,9 +92,6 @@ pushAnonymisedDatabaseDumpImages
 startupMysqlDumpPod
 waitForMysqlDumpPodToStart
 takeMysqlDump
-
-
-## TODO DW - reinstate
-#shutdownMysqlDumpPodAfterUse
+shutdownMysqlDumpPodAfterUse
 
 echo "Job complete!  Dump now available at /tmp/anonymised-dump.sql.gz"

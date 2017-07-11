@@ -10,11 +10,8 @@ RUN apt-get update && \
     dpkg -i /opt/proxysql_1.3.0f-debian8_amd64.deb && \
     apt-get install -y mysql-client && \
     apt-get install -y rsync && \
-    apt-get install -y vim && \
     rm -f /opt/proxysql_1.3.0f-debian8_amd64.deb && \
     rm -rf /var/lib/apt/lists/*
-
-## TODO DW - remove vim as a dependency
 
 RUN mkdir -p /dump/rewrites
 
