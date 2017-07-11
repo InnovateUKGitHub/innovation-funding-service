@@ -18,10 +18,6 @@
                 subTitle=|${model.competitionId} : ${model.competitionName}|,
                 size='heading-xlarge'" />
 
-    <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Back',linkClass='link-back',linkUrl=@{${manageAssessorsOriginQuery}})" />
-    <!-- <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.inAssessment} ? 'Manage assessors' : 'Allocate assessors',subTitle=|${model.competitionId} : ${model.competitionName}, ${model.inAssessment ? 'in assessment' : 'competition closed'}|, size='heading-xlarge'" />
-    -->
-
     <h2 class="heading-large no-margin" th:text="${model.assessorName}"></h2>
 
     <h3 class="heading-medium">Innovation area and skills</h3>
@@ -64,19 +60,10 @@
         </table>
     </div>
 
-
-    <!-- String          model.assessorName
-    List            model.innovationAreas
-    BusinessType    model.businessType
-    int             model.totalApplications
-
-    List            model.assigned
-    long            model.assigned.applicationId
-    String          model.assigned.applicationName
-    String          model.assigned.leadOrganisation
-    int             model.assigned.totalAssessors
-
-    -->
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>
