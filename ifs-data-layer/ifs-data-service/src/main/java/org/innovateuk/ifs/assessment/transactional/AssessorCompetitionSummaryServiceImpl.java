@@ -15,11 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -54,7 +54,7 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
                             INVALID_ASSESSMENT_STATES
                     );
 
-                    List<ApplicationAssessmentCount> applicationAssessmentCounts = emptyList();
+                    List<ApplicationAssessmentCount> applicationAssessmentCounts = new ArrayList<>();
 
                     if (!allAssignedAssessments.isEmpty()) {
                         applicationAssessmentCounts.addAll(
