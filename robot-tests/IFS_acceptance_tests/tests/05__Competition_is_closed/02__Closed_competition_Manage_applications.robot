@@ -48,3 +48,21 @@ Filtering Assessors in the Assign assessors page
     Then the user should see the element    jQuery=td:contains("Paige Godfrey")
     And the user clicks the button/link    jQuery=a:contains("Clear all filters")
     Then the user should see the element    jQuery=td:contains("Riley Butler")
+    [Teardown]  the user clicks the button/link  link=Allocate applications
+
+Manage assessor list is correct
+    [Documentation]    IFS-17
+    [Setup]  the user clicks the button/link  link=Back
+    Given the user clicks the button/link    jQuery=a:contains("Allocate assessors")
+    Then the assessor list is correct before changes
+
+Assessor link goes to the assessor profile
+    [Documentation]  IFS-17
+    [Tags]
+    Given the user clicks the button/link  link=Madeleine Martin
+    Then the user should see the element   jQuery=h1:contains("Assessor profile") ~ p:contains("Madeleine Martin")
+    [Teardown]  the user clicks the button/link  link=Back
+
+*** Keywords ***
+the assessor list is correct before changes
+    the user should see the element  jQuery=td:contains("Madeleine Martin") ~ td:contains("0") ~ td:contains("0")
