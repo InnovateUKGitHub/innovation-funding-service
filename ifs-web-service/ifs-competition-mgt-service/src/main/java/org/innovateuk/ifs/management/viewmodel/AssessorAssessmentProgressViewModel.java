@@ -6,6 +6,8 @@ import java.util.List;
 
 public class AssessorAssessmentProgressViewModel {
 
+    private final long competitionId;
+    private final String competitionName;
     private final String assessorName;
     private final List<String> innovationAreas;
     private final BusinessType businessType;
@@ -13,16 +15,28 @@ public class AssessorAssessmentProgressViewModel {
 
     private final List<AssessorAssessmentProgressAssignedRowViewModel> assigned;
 
-    public AssessorAssessmentProgressViewModel(String assessorName,
+    public AssessorAssessmentProgressViewModel(long competitionId,
+                                               String competitionName,
+                                               String assessorName,
                                                List<String> innovationAreas,
                                                BusinessType businessType,
                                                int totalApplications,
                                                List<AssessorAssessmentProgressAssignedRowViewModel> assigned) {
+        this.competitionId = competitionId;
+        this.competitionName = competitionName;
         this.assessorName = assessorName;
         this.innovationAreas = innovationAreas;
         this.businessType = businessType;
         this.totalApplications = totalApplications;
         this.assigned = assigned;
+    }
+
+    public long getCompetitionId() {
+        return competitionId;
+    }
+
+    public String getCompetitionName() {
+        return competitionName;
     }
 
     public String getAssessorName() {

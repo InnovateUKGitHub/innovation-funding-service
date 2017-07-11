@@ -8,6 +8,15 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Allocate assessors',
+                linkClass='link-back',
+                linkUrl=@{/assessment/competition/{competitionId}/assessors(competitionId=${model.competitionId})}" />
+    <th:block th:insert="fragments/layout :: page-title"
+              th:with="pageTitle='Assessor progress',
+                subTitle=|${model.competitionId} : ${model.competitionName}|,
+                size='heading-xlarge'" />
 
     <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Back',linkClass='link-back',linkUrl=@{${manageAssessorsOriginQuery}})" />
     <!-- <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.inAssessment} ? 'Manage assessors' : 'Allocate assessors',subTitle=|${model.competitionId} : ${model.competitionName}, ${model.inAssessment ? 'in assessment' : 'competition closed'}|, size='heading-xlarge'" />
