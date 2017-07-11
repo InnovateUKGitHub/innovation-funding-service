@@ -18,20 +18,52 @@
                 subTitle=|${model.competitionId} : ${model.competitionName}|,
                 size='heading-xlarge'" />
 
-    <!--
+    <h2 class="heading-large no-margin" th:text="${model.assessorName}"></h2>
 
-    String          model.assessorName
-    List            model.innovationAreas
-    BusinessType    model.businessType
-    int             model.totalApplications
+    <h3 class="heading-medium">Innovation area and skills</h3>
 
-    List            model.assigned
-    long            model.assigned.applicationId
-    String          model.assigned.applicationName
-    String          model.assigned.leadOrganisation
-    int             model.assigned.totalAssessors
+    <div class="grid-row">
+        <div class="column-half">
+            <h4 class="heading-small no-margin">Innovation area</h4>
+            <ul>
+                <li th:each="area : ${model.innovationAreas}" th:text="${area}" />
+            </ul>
+        </div>
+        <div class="coulmn-half">
+            <h4 class="heading-small no-margin">Type</h4>
+            <p th:text="${model.businessType.displayName}" />
+        </div>
+    </div>
 
-    -->
+    <h2 class="heading-medium" th:text="| Assigned (${#lists.size(model.assigned)}) |"/>
+
+    <div class="table-overflow">
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col" class="width-small">Application number</th>
+                    <th scope="col" >Title</th>
+                    <th scope="col" class="width-xlarge">Lead organisation</th>
+                    <th scope="col" class="width-small aligncentre">Assigned</th>
+                    <th scope="col" class="width-small alignright">Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="app : ${model.assigned}">
+                    <td><a href="#" th:text="${app.applicationId}"></a></td>
+                    <td th:text="${app.applicationName}" />
+                    <td th:text="${app.leadOrganisation}" />
+                    <td th:text="${app.totalAssessors}" class="alignright" />
+                    <td class="aligncentre"><button class="button button-secondary no-margin">Remove</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>
