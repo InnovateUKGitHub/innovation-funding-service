@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Exposes endpoints for retrieving assessor summary resources
- * for specific competitions.
+ * Exposes endpoints for retrieving assessor summaries for competitions.
  */
 @RestController
 @RequestMapping("/assessor/{assessorId}/competition/{competitionId}")
