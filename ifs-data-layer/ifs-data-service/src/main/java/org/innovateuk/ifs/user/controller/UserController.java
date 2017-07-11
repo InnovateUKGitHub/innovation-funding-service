@@ -94,7 +94,7 @@ public class UserController {
 
     @PostMapping("/internal/edit")
     public RestResult<Void> editInternalUser(@RequestBody EditUserResource editUserResource){
-        return registrationService.editInternalUser(editUserResource.getUserToEdit(), editUserResource.getUserRoleType()).toPostCreateResponse();
+        return registrationService.editInternalUser(editUserResource.getUserToEdit(), editUserResource.getUserRoleType()).toPostResponse();
     }
 
     @GetMapping("/findAll/")
