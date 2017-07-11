@@ -77,7 +77,7 @@ cleanUp
 cloneConfig
 tailorAppInstance
 
-if [[ "$TARGET" == "local" ]]; then
+if [[ "$TARGET" == "local" || "$TARGET" == "remote" ]]; then
     export DB_NAME=ifs
     export DB_USER=root
     export DB_PASS=password

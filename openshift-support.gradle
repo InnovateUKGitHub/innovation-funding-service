@@ -40,15 +40,20 @@ task dbAnonymisedDumpLocal(type:Exec) {
     args = [openshiftEnv, "local", project.version]
 }
 
+task dbAnonymisedDumpRemote(type:Exec) {
+    executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
+    args = [openshiftEnv, "remote", project.version]
+}
+
 //task dbAnonymisedDumpSysint(type:Exec) {
 //    executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
 //    args = [openshiftEnv, "sysint", project.version]
 //}
 //
-//task dbAnonymisedDumpPerf(type:Exec) {
-//    executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
-//    args = [openshiftEnv, "perf", project.version]
-//}
+task dbAnonymisedDumpPerf(type:Exec) {
+    executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
+    args = [openshiftEnv, "perf", project.version]
+}
 //
 //task dbAnonymisedDumpUat(type:Exec) {
 //    executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
