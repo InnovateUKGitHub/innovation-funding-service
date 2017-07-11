@@ -29,9 +29,25 @@ View the list of the applications
     And The key statistics counts should be correct
     And The user clicks the button/link    jQuery=a:contains("Manage applications")
     Then the application list is correct before changes
+    [Teardown]  the user clicks the button/link  link=Back
+
+View the list of assessors
+    [Documentation]  IFS-319
+    [Tags]
+    Given The user clicks the button/link    jQuery=a:contains("Manage assessors")
+    Then the assessor list is correct before changes
+
+Assessor link goes to the assessor profile
+    [Documentation]  IFS-319
+    [Tags]
+    Given the user clicks the button/link  link=Paul Plum
+    Then the user should see the element   jQuery=h1:contains("Assessor profile") ~ p:contains("Paul Plum")
+    [Teardown]  the user clicks the button/link  link=Back
 
 Filtering of the applications
     [Documentation]    INFUND-8061
+    [Setup]  the user clicks the button/link  link=Back
+    Given the user clicks the button/link  jQuery=a:contains("Manage applications")
     When The user enters text to a text field    css=#filterSearch    22
     and The user clicks the button/link    jQuery=button:contains(Filter)
     Then the user should see the element    jQuery=tr:nth-child(1) td:nth-child(1):contains("22")
@@ -216,3 +232,6 @@ The key statistics counts should be correct
     Should Be Equal As Integers    ${STARTED}    0
     ${SUBMITTED}=    Get text    css=.column-fifth:nth-child(5) span
     Should Be Equal As Integers    ${SUBMITTED}    1
+
+the assessor list is correct before changes
+    the user should see the element  jQuery=td:contains("Paul Plum") ~ td:contains("Town Planning, Construction") ~ td:contains("7") ~ td:contains("7") ~ td:contains("3") ~ td:contains("0")
