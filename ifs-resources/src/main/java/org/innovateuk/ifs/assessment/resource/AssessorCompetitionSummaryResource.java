@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.resource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,7 +16,8 @@ public class AssessorCompetitionSummaryResource {
      * across ALL competitions.
      */
     private int totalApplications;
-    private List<AssessorAssessmentResource> assignedAssessments;
+
+    private List<AssessorAssessmentResource> assignedAssessments = new ArrayList<>();
 
     public AssessorCompetitionSummaryResource() {
     }
