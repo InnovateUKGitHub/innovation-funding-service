@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -53,12 +54,17 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
                             invalidAssessmentStates
                     );
 
-                    List<ApplicationAssessmentCount> applicationAssessmentCounts =
-                            assessmentRepository.countByActivityStateStateNotInAndTargetCompetitionIdAndTargetIdInGroupByTarget(
-                                    invalidAssessmentStates,
-                                    competition.getId(),
-                                    simpleMap(allAssignedAssessments, assessment -> assessment.getTarget().getId())
-                            );
+                    List<ApplicationAssessmentCount> applicationAssessmentCounts = emptyList();
+
+                    if (!allAssignedAssessments.isEmpty()) {
+                        applicationAssessmentCounts.addAll(
+                                assessmentRepository.countByActivityStateStateNotInAndTargetCompetitionIdAndTargetIdInGroupByTarget(
+                                        invalidAssessmentStates,
+                                        competition.getId(),
+                                        simpleMap(allAssignedAssessments, assessment -> assessment.getTarget().getId())
+                                )
+                        );
+                    }
 
                     return serviceSuccess(new AssessorCompetitionSummaryResource(
                             competition.getId(),
