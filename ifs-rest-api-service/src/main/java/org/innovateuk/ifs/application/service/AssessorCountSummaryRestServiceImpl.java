@@ -17,12 +17,7 @@ public class AssessorCountSummaryRestServiceImpl extends BaseRestService impleme
 
     @Override
     public RestResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionId(long competitionId, Integer pageIndex, Integer pageSize) {
-        String uriWithParams = buildUri(assessorCountRestUrl + "/findByCompetitionId/{compId}", pageIndex, pageSize, competitionId);
+        String uriWithParams = buildPaginationUri(assessorCountRestUrl + "/findByCompetitionId/{compId}", pageIndex, pageSize, competitionId);
         return getWithRestResult(uriWithParams, AssessorCountSummaryPageResource.class);
-    }
-
-    private String buildUri(String url, Integer pageNumber, Integer pageSize, Object... uriParameters ) {
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        return buildPaginationUri(url, pageNumber, pageSize, null, params, uriParameters);
     }
 }
