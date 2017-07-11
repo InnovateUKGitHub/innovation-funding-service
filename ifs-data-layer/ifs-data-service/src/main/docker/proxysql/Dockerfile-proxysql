@@ -15,6 +15,8 @@ RUN apt-get update && \
 
 RUN mkdir -p /dump/rewrites
 
+RUN mkdir -p //.gnupg
+
 COPY proxysql/entrypoint.sh proxysql/make-mysqldump.sh proxysql/make-proxysql-cnf-file.sh proxysql/rewrite-rule-generator.sh /dump/
 
 COPY proxysql/rewrites/* /dump/rewrites/
@@ -24,5 +26,6 @@ COPY proxysql/proxysql.cnf /etc/
 RUN chgrp -R 0 /etc && chmod -R g+rwX /etc
 RUN chgrp -R 0 /dump && chmod -R g+rwx /dump
 RUN chgrp -R 0 /var/lib/proxysql && chmod -R g+rwX /var/lib/proxysql
+RUN chgrp -R 0 //.gnupg && chmod -R g+rwX //.gnupg
 
 ENTRYPOINT ["/dump/entrypoint.sh"]
