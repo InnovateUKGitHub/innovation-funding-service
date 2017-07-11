@@ -18,7 +18,7 @@ import java.util.*;
  */
 public interface AssessmentRepository extends ProcessRepository<Assessment>, PagingAndSortingRepository<Assessment, Long> {
 
-    static final String FEEDBACK_COMPLETE = "SELECT CASE WHEN COUNT(formInput.id) = 0" +
+    String FEEDBACK_COMPLETE = "SELECT CASE WHEN COUNT(formInput.id) = 0" +
             "  THEN TRUE" +
             "       ELSE FALSE END AS feedback_complete " +
             "FROM Application application" +
@@ -43,7 +43,7 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
             "      AND formInput.active = TRUE" +
             "      AND assessment.id = :id";
 
-    static final String TOTAL_SCORE = "SELECT NEW org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource(" +
+    String TOTAL_SCORE = "SELECT NEW org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource(" +
             "  CAST(COALESCE(SUM(assessorFormInputResponse.value),0) AS int)," +
             "  CAST(SUM(question.assessorMaximumScore) AS int)) " +
             "FROM Assessment assessment" +

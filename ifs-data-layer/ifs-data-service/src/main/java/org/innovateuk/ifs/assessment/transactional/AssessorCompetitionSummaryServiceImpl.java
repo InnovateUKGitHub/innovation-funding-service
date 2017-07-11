@@ -26,6 +26,12 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Service
 public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitionSummaryService {
 
+    private static final Set<State> INVALID_ASSESSMENT_STATES = AssessmentStates.getBackingStates(asList(
+            AssessmentStates.CREATED,
+            AssessmentStates.REJECTED,
+            AssessmentStates.WITHDRAWN
+    ));
+
     @Autowired
     private AssessorService assessorService;
 
@@ -43,15 +49,9 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
     public ServiceResult<AssessorCompetitionSummaryResource> getAssessorSummary(long assessorId, long competitionId) {
         return assessorService.getAssessorProfile(assessorId).andOnSuccess(assessorProfile ->
                 competitionService.getCompetitionById(competitionId).andOnSuccess(competition -> {
-                    Set<State> invalidAssessmentStates = AssessmentStates.getBackingStates(asList(
-                            AssessmentStates.CREATED,
-                            AssessmentStates.REJECTED,
-                            AssessmentStates.WITHDRAWN
-                    ));
-
                     List<Assessment> allAssignedAssessments = assessmentRepository.findByParticipantUserIdAndActivityStateStateNotIn(
                             assessorProfile.getUser().getId(),
-                            invalidAssessmentStates
+                            INVALID_ASSESSMENT_STATES
                     );
 
                     List<ApplicationAssessmentCount> applicationAssessmentCounts = emptyList();
@@ -59,7 +59,7 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
                     if (!allAssignedAssessments.isEmpty()) {
                         applicationAssessmentCounts.addAll(
                                 assessmentRepository.countByActivityStateStateNotInAndTargetCompetitionIdAndTargetIdInGroupByTarget(
-                                        invalidAssessmentStates,
+                                        INVALID_ASSESSMENT_STATES,
                                         competition.getId(),
                                         simpleMap(allAssignedAssessments, assessment -> assessment.getTarget().getId())
                                 )
