@@ -7,6 +7,11 @@ PROJECT=$1
 TARGET=$2
 VERSION=$3
 
+if [[ "$TARGET" == "production" ]]; then
+    echo "Cannot reset the database on production"
+    exit 1
+fi
+
 . $(dirname $0)/common-functions.sh
 . $(dirname $0)/deploy-functions.sh
 . $(dirname $0)/local-deploy-functions.sh
