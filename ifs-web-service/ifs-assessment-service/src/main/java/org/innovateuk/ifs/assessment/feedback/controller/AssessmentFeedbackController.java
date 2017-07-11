@@ -124,7 +124,6 @@ public class AssessmentFeedbackController {
                     .getSuccessObjectOrThrowException();
 
             AssessorFormInputResponsesResource responses = getFormInputResponses(form, formInputs, assessmentId);
-
             RestResult<Void> updateResult = assessorFormInputResponseRestService.updateFormInputResponses(responses);
 
             return validationHandler.addAnyErrors(updateResult, mappingFieldErrorToField(e -> {
@@ -132,10 +131,11 @@ public class AssessmentFeedbackController {
 
                 if (matcher.find()) {
                     int errorIndex = Integer.parseInt(matcher.group(1));
-
                     Long formInputResponseWithError = responses.getResponses().get(errorIndex).getFormInput();
 
                     return format("formInput[%s]", formInputResponseWithError);
+                } else if (e.isFieldError() && !e.getArguments().isEmpty()) {
+                    return format("formInput[%s]", e.getArguments().get(0));
                 }
 
                 return e.getFieldName();

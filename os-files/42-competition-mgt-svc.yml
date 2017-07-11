@@ -27,7 +27,7 @@ items:
           name: competition-mgt-svc
           livenessProbe:
             httpGet:
-              path: /management/monitoring/live
+              path: /management/monitoring/health
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 30
@@ -35,7 +35,7 @@ items:
             failureThreshold: 3
           readinessProbe:
             httpGet:
-              path: /management/monitoring/ready
+              path: /management/monitoring/health
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 30

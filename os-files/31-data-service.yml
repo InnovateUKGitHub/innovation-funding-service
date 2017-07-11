@@ -27,18 +27,18 @@ items:
           name: data-service
           livenessProbe:
             httpGet:
-              path: /monitoring/live
+              path: /monitoring/health
               port: 8080
-            initialDelaySeconds: 120
+            initialDelaySeconds: 60
             periodSeconds: 30
             timeoutSeconds: 5
             failureThreshold: 3
           readinessProbe:
             httpGet:
-              path: /monitoring/ready
+              path: /monitoring/health
               port: 8080
-            initialDelaySeconds: 120
-            periodSeconds: 30
+            initialDelaySeconds: 40
+            periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 3
           imagePullPolicy: Always
