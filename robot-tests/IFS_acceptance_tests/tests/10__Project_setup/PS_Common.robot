@@ -197,8 +197,12 @@ finance contacts are selected and bank details are approved
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     The user logs-in in new browser  &{lead_applicant_credentials}
     ${update_comp}    ${value}=    Run Keyword And Ignore Error Without Screenshots    the user should not see the element    jQuery=h2:contains("Set up your project") ~ ul a:contains("Sensing & Control network using the lighting infrastructure")
-    run keyword if    '${update_comp}' == 'PASS'   run keywords  the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup  lead partner selects project manager and address
-    Set Suite Variable    ${FUNDERS_PANEL_APPLICATION_1_PROJECT}    ${getProjectId("${FUNDERS_PANEL_APPLICATION_1_TITLE}")}
+    run keyword if    '${update_comp}' == 'PASS'  the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
+    log in as a different user   &{lead_applicant_credentials}
+    the user navigates to the page  ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}
+    ${project_details}  ${completed}=  Run Keyword And Ignore Error Without Screenshots    the user should not see the element    jQuery=ul li.complete a:contains("Project details")
+    run keyword if  '${project_details}' == 'PASS'  lead partner selects project manager and address
+    Set Suite Variable  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  ${getProjectId("${FUNDERS_PANEL_APPLICATION_1_TITLE}")}
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     log in as a different user              &{internal_finance_credentials}
