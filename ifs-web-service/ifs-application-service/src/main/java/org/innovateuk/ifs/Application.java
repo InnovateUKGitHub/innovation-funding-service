@@ -24,9 +24,6 @@ public class Application extends SpringBootServletInitializer {
     @Value("${tomcat.ajp.port}")
     int ajpPort;
 
-    @Value("${tomcat.ajp.remoteauthentication}")
-    String remoteAuthentication;
-
     @Value("${tomcat.ajp.enabled}")
     boolean tomcatAjpEnabled;
 
@@ -43,6 +40,7 @@ public class Application extends SpringBootServletInitializer {
             ajpConnector.setAllowTrace(false);
             ajpConnector.setAttribute("tomcatAuthentication", false);
             ajpConnector.setScheme("ajp");
+            ajpConnector.setAttribute("connectionTimeout", 30000);
             tomcat.addAdditionalTomcatConnectors(ajpConnector);
         }
 
