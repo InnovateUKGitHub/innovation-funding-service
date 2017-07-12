@@ -92,6 +92,6 @@ pushAnonymisedDatabaseDumpImages
 startupMysqlDumpPod
 waitForMysqlDumpPodToStart
 takeMysqlDump
-shutdownMysqlDumpPodAfterUse
+#shutdownMysqlDumpPodAfterUse
 
 echo "Job complete!  Dump now available at /tmp/anonymised-dump.sql.gpg"
