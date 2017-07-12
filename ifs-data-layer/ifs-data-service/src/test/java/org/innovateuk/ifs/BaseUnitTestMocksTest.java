@@ -264,6 +264,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ApplicationCountSummaryService applicationCountSummaryServiceMock;
 
     @Mock
+    protected AssessorCountSummaryService assessorCountSummaryServiceMock;
+
+    @Mock
     protected QuestionService questionServiceMock;
 
     @Mock
