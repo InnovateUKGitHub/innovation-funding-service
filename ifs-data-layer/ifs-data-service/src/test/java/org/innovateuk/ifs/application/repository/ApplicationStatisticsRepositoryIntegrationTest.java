@@ -33,6 +33,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.application.builder.AssessorCountSummaryResourceBuilder.newAssessorCountSummaryResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -408,10 +409,16 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
 
         final AssessorCountSummaryResource assessorCountSummaryResource = statisticsPage.getContent().get(0);
 
-        final AssessorCountSummaryResource expectedAssessmentCountSummaryResource = new AssessorCountSummaryResource(
-                users.get(0).getId(), users.get(0).getName(), profiles.get(0).getSkillsAreas(), 0L,0L, 0L, 1L);
+        final AssessorCountSummaryResource expectedAssessorCountSummaryResource = newAssessorCountSummaryResource()
+                .withId(users.get(0).getId())
+                .withName(users.get(0).getName())
+                .withSkillAreas(profiles.get(0).getSkillsAreas())
+                .withTotalAssigned(0L)
+                .withAssigned(0L)
+                .withAccepted(1L)
+                .build();
 
-        assertEquals(expectedAssessmentCountSummaryResource, assessorCountSummaryResource);
+        assertEquals(expectedAssessorCountSummaryResource, assessorCountSummaryResource);
     }
 
     @Test
