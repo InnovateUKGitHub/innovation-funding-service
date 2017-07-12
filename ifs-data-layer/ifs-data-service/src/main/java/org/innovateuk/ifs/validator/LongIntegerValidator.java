@@ -14,11 +14,11 @@ import static java.math.BigDecimal.valueOf;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.rejectValue;
 
 /**
- * This class validates the FormInputResponse, it checks that there is a number present and that it is an integer.
+ * This class validates the FormInputResponse, it checks that there is a number present and that it is an long integer.
  */
 @Component
-public class IntegerValidator extends BaseValidator {
-    private static final Log LOG = LogFactory.getLog(IntegerValidator.class);
+public class LongIntegerValidator extends BaseValidator {
+    private static final Log LOG = LogFactory.getLog(LongIntegerValidator.class);
 
     @Override
     public final void validate(Object target, Errors errors) {

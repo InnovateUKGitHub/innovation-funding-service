@@ -12,11 +12,11 @@ import static java.math.BigDecimal.valueOf;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.rejectValue;
 
 /**
- * This class validates the FormInputResponse, it checks that there is a number present and that it is an non negative integer.
+ * This class validates the FormInputResponse, it checks that there is a number present and that it is an non negative long integer.
  */
 @Component
-public class NonNegativeIntegerValidator extends IntegerValidator {
-    private static final Log LOG = LogFactory.getLog(NonNegativeIntegerValidator.class);
+public class NonNegativeLongIntegerValidator extends LongIntegerValidator {
+    private static final Log LOG = LogFactory.getLog(NonNegativeLongIntegerValidator.class);
 
     @Override
     protected void validate(BigDecimal value, Errors errors) {

@@ -8,10 +8,9 @@ import org.springframework.validation.Validator;
 
 import static org.innovateuk.ifs.validator.ValidatorTestUtil.getBindingResult;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class NonNegativeIntegerValidatorTest {
+public class NonNegativeLongIntegerValidatorTest {
     
 	private Validator validator;
 	
@@ -20,7 +19,7 @@ public class NonNegativeIntegerValidatorTest {
 	
 	@Before
 	public void setUp() {
-        validator = new NonNegativeIntegerValidator();
+        validator = new NonNegativeLongIntegerValidator();
         formInputResponse = new FormInputResponse();
         bindingResult = getBindingResult(formInputResponse);
     }
