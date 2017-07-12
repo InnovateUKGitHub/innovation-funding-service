@@ -42,7 +42,7 @@
     </fieldset>
 
     <div id="registeredAddress" class="boxed extra-margin" th:if="${model.registeredAddress}">
-        <h3 class="heading-medium no-margin-top">Confirm billing address</h3>
+        <h3 class="heading-medium no-margin-top">Confirm organisation address</h3>
         <p>
           <th:block th:each="addressLine : ${model.registeredAddress.getNonEmptyLines()}">
               <th:block th:text="${addressLine}">An address line</th:block><br />
@@ -50,7 +50,7 @@
         </p>
     </div>
     <div id="operatingAddress" class="boxed extra-margin" th:if="${model.operatingAddress}">
-        <h3 class="heading-medium no-margin-top" th:text="${(address != null and address == 'bankDetails' ? 'Confirm organisation address' : 'Confirm billing address')}">LOCATION TITLE</h3>
+        <h3 class="heading-medium no-margin-top">Confirm operating address</h3>
         <p>
           <th:block th:each="addressLine : ${model.operatingAddress.getNonEmptyLines()}">
               <th:block th:text="${addressLine}">An address line</th:block><br />
