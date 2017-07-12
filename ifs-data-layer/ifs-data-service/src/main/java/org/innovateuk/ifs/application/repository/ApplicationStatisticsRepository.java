@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.repository;
 
 import org.innovateuk.ifs.application.domain.ApplicationStatistics;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
+import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,8 +32,7 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
                                                                                            @Param("filter") String filter,
                                                                                            Pageable pageable);
 
-
-    // TODO pass in the states as enum sets from the service, rather than hardcoding strings
+    // TODO IFS-399 pass in the states as enum sets from the service, rather than hardcoding strings
     String REJECTED_AND_SUBMITTED_STATES_STRING = "(org.innovateuk.ifs.workflow.resource.State.REJECTED,org.innovateuk.ifs.workflow.resource.State.WITHDRAWN, org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
     String NOT_ACCEPTED_OR_SUBMITTED_STATES_STRING = "(org.innovateuk.ifs.workflow.resource.State.PENDING,org.innovateuk.ifs.workflow.resource.State.REJECTED," +
             "org.innovateuk.ifs.workflow.resource.State.WITHDRAWN,org.innovateuk.ifs.workflow.resource.State.CREATED,org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
@@ -55,12 +55,10 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "LEFT JOIN Assessment assessment ON assessment.participant = processRole.id AND assessment.target = application " +
             "LEFT JOIN ActivityState activityState ON assessment.activityState = activityState.id " +
             "WHERE " +
-            "  competitionParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED " +
-            // TODO constraint to assessors only
-            "GROUP BY user, profile " + // TODO group by user should be enough
+            "  competitionParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED AND " +
+            "  competitionParticipant.role = 'ASSESSOR' " +
+            "GROUP BY user " +
             "HAVING sum(case when competitionParticipant.competition.id = :compId THEN 1 ELSE 0 END) > 0")
     Page<AssessorCountSummaryResource> getAssessorCountSummaryByCompetition(@Param("compId") long competitionId,
-//                                                                            @Param("submittedStates") Collection<State> submittedStates, // do we need to filter ineligible?
                                                                             Pageable pageable);
-
 }

@@ -1,0 +1,34 @@
+<h1 class="heading-large">Modal dialogs</h1>
+<p>Controlled with javascript, an alternative standard html page should be used for non-js users</p>
+
+<div>
+  <a href="#" class="button" data-js-modal="test-modal">Launch modal</a>
+</div>
+<div class="extra-margin-top">
+  <a href="#" class="button" data-js-modal="test-warning-modal">Launch warning modal</a>
+</div>
+
+<div class="test-modal" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+  <button class="js-close close" type="button" aria-label="Close Popup">Close</button>
+  <h2 class="heading-medium no-margin">Submit project details</h2>
+  <p>Are you sure you wish to submit your project details to Innovate UK?</p>
+  <hr />
+  <div>
+    <a class="button js-close" href="#">Submit</a>
+    <button aria-label="Close Popup" type="button" class="buttonlink js-close">Cancel</button>
+  </div>
+</div>
+
+<div class="test-warning-modal warning-modal" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+  <button class="js-close close" type="button" aria-label="Close Popup">Close</button>
+  <div class="modal-content">
+    <h2 class="heading-medium no-margin">Changing research category will reset the funding level of this application</h2>
+    <p>All partner organisations that have supplied their funding information will have to review and mark the section as complete again.</p>
+  </div>
+  <hr />
+  <div>
+    <a class="button js-close" href="#">Submit</a>
+    <button aria-label="Close Popup" class="buttonlink js-close">Cancel</button>
+  </div>
+</div>
+<div class="modal-overlay" aria-hidden="true"></div>
