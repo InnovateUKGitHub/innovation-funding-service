@@ -26,6 +26,7 @@ subprojects {
             push = false
             applicationName = 'default-service-name'
             dockerfile = file('src/main/docker/Dockerfile')
+            tagVersion = 'latest'
             doFirst {
                 copy {
                     from jar
@@ -76,4 +77,3 @@ ext {
     javaLanguageLevel = 1.8
     generatedMapperSourcesDir = 'build/classes/main/org/innovateuk/ifs/mappers'
 }
-
