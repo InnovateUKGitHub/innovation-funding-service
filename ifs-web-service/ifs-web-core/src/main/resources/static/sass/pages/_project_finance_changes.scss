@@ -1,37 +1,46 @@
-table.project-changes{
-  tbody{
-    th{
-      font-weight: normal;
-      vertical-align: top;
-    }
-    td{
-      vertical-align: top;
-    }
-
-    .change-row{
-      td,
-      th{
-        padding-bottom: 2.5em;
-      }
-    }
-
-    .item-changed{
-      th,
-      td{
-        font-weight: bold;
-      }
-
-      td:first-child{
+table {
+  &.project-changes {
+    tbody {
+      th {
         font-weight: normal;
+        vertical-align: top;
+      }
 
-        & + td{
-          font-weight: normal;
+      td {
+        vertical-align: top;
+      }
+
+      .change-row {
+        td,
+        th {
+          padding-bottom: 2.5em;
+        }
+      }
+
+      .item-changed {
+        th,
+        td {
+          font-weight: bold;
+        }
+
+        td {
+          > :first-child {
+            font-weight: normal;
+
+            & + td {
+              font-weight: normal;
+            }
+          }
         }
       }
     }
   }
 }
 
-.finance-checks-overview thead th {
-  font-size:0.8em;
+.finance-checks-overview {
+  thead {
+    th {
+      font-size:0.8em;
+    }
+  }
 }

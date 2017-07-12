@@ -1,28 +1,30 @@
 .form-search {
-    position: relative;
-    margin: 2.5em 15px 1.25em;
+  position: relative;
+  margin: 2.5em 15px 1.25em;
 
-    input.search-query {
-        padding-right:35px;
-        height: 35px;
-        box-sizing: border-box;
-        width: 100%;
+  input {
+    &.search-query {
+      padding-right:35px;
+      height: 35px;
+      box-sizing: border-box;
+      width: 100%;
     }
 
-    input[type='submit'] {
-        position: absolute;
-        z-index: 4;
-        right: 0px;
-        top: 0;
-        width: 35px;
-        height: 35px;
-        border:none;
-        border-left: 1px solid $grey-2;
-        @include border-radius(0);
-        overflow: hidden;
-        text-indent: -5000px;
-        color: #fff;
-        background: $govuk-blue url(https://assets.publishing.service.gov.uk/static/search-button-ca89b2a79f944909ceb7370d3f0b78811d32b96e883348fcd8886f63dd619585.png) no-repeat 0 50%;
-        cursor: pointer;
+    &[type='submit'] {
+      @include border-radius(0);
+      position: absolute;
+      z-index: 4;
+      right: 0px;
+      top: 0;
+      width: 35px;
+      height: 35px;
+      border:none;
+      border-left: 1px solid $grey-2;
+      overflow: hidden;
+      text-indent: -5000px;
+      color: #fff;
+      background: $govuk-blue url(https://assets.publishing.service.gov.uk/static/search-button-ca89b2a79f944909ceb7370d3f0b78811d32b96e883348fcd8886f63dd619585.png) no-repeat 0 50%;
+      cursor: pointer;
     }
+  }
 }

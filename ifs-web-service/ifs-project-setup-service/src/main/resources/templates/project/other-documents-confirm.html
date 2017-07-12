@@ -14,7 +14,7 @@
     <p>Are you sure that you wish to submit your documents to Innovate UK?</p>
     <hr/>
     <form th:action="@{/project/{projectId}/partner/documents/submit(projectId=${model.projectId})}" th:if="${model.isShowSubmitDocumentsButton() and  model.submitAllowed and model.submitDate == null}" method="post">
-        <button class="button large" name="submit-other-documents">Submit</button>
+        <button class="button" name="submit-other-documents">Submit</button>
     </form>
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
