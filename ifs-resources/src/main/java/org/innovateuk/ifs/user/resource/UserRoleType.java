@@ -28,7 +28,6 @@ public enum UserRoleType {
     IFS_ADMINISTRATOR("ifs_administrator", "IFS Administrator"),
     SUPPORT("support", "IFS Support User")
     ;
-
     private String name;
     private String displayName;
 
@@ -59,6 +58,6 @@ public enum UserRoleType {
     }
 
     public static Set<UserRoleType> internalRoles(){
-        return new HashSet<>(Arrays.asList(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT));
+        return new HashSet<>(Arrays.asList(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD));
     }
 }
