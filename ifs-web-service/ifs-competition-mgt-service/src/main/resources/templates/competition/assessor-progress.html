@@ -24,13 +24,13 @@
 
     <div class="grid-row">
         <div class="column-half">
-            <h4 class="heading-small no-margin">Innovation area</h4>
+            <h4 class="heading-small">Innovation area</h4>
             <ul>
                 <li th:each="area : ${model.innovationAreas}" th:text="${area}" />
             </ul>
         </div>
-        <div class="coulmn-half">
-            <h4 class="heading-small no-margin">Type</h4>
+        <div class="column-half">
+            <h4 class="heading-small">Type</h4>
             <p th:text="${model.businessType.displayName}" />
         </div>
     </div>
@@ -43,9 +43,9 @@
                 <tr>
                     <th scope="col" class="width-small">Application number</th>
                     <th scope="col" >Title</th>
-                    <th scope="col" class="width-xlarge">Lead organisation</th>
+                    <th scope="col" class="width-large">Lead organisation</th>
                     <th scope="col" class="width-small aligncentre">Assigned</th>
-                    <th scope="col" class="width-small alignright">Remove</th>
+                    <th scope="col" class="width-small-medium aligncentre">Remove</th>
                 </tr>
             </thead>
             <tbody>
@@ -53,12 +53,66 @@
                     <td><a href="#" th:text="${app.applicationId}"></a></td>
                     <td th:text="${app.applicationName}" />
                     <td th:text="${app.leadOrganisation}" />
-                    <td th:text="${app.totalAssessors}" class="alignright" />
+                    <td th:text="${app.totalAssessors}" class="aligncentre" />
                     <td class="aligncentre"><button class="button button-secondary no-margin">Remove</button></td>
                 </tr>
             </tbody>
         </table>
     </div>
+
+    <h2 class="heading-medium">Applications</h2>
+
+    <div class="grid-row sorting">
+        <div class="column-half">
+            <div class="data">
+                <span class="bold-xlarge">2</span>
+                <span class="bold-small">Applications</span>
+            </div>
+        </div>
+        <div class="column-half alignright">
+            <div class="form-group">
+                <label for="sort-by">Sort by</label>
+                <select id="sort-by" name="sort" class="js-auto-submit form-control">
+                    <option value="id">Application no.</option>
+                    <option value="appTitle">Title</option>
+                    <option value="leadOrg">Lead organisation</option>
+                    <option value="assignedApps">Assigned applications</option>
+                </select>
+            </div>
+            <button type="submit" class="button button-secondary no-margin js-hidden">Sort</button>
+        </div>
+    </div>
+
+    <div class="table-overflow">
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col" class="width-small">Application number</th>
+                    <th scope="col" >Title</th>
+                    <th scope="col" class="width-large">Lead organisation</th>
+                    <th scope="col" class="width-small aligncentre">Assigned</th>
+                    <th scope="col" class="width-small-medium aligncentre">Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="#">30</a></td>
+                    <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
+                    <td>Wessex University</td>
+                    <td class="aligncentre">1</td>
+                    <td class="aligncentre"><button class="button button-secondary no-margin">Assign</button></td>
+                </tr>
+                <tr>
+                    <td><a href="#">31</a></td>
+                    <td>Mobility problems and the potential for internet enabled zimmer frame</td>
+                    <td>Plymouth University</td>
+                    <td class="aligncentre">1</td>
+                    <td class="aligncentre"><button class="button button-secondary no-margin">Assign</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
