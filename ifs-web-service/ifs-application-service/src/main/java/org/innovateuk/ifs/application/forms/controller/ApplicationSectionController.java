@@ -121,7 +121,7 @@ public class ApplicationSectionController {
 
         ApplicationResource application = applicationService.getById(applicationId);
 
-        ProcessRoleResource applicantUser = processRoleService.getByApplicationId(application.getId()).stream().filter(pr -> pr.getOrganisationId() == applicantOrganisationId && Arrays.asList(UserApplicationRole.LEAD_APPLICANT.getRoleName(), UserApplicationRole.COLLABORATOR.getRoleName()).contains(pr.getRoleName())).findFirst().orElseThrow(() -> new ObjectNotFoundException());
+        ProcessRoleResource applicantUser = processRoleService.getByApplicationId(application.getId()).stream().filter(pr -> pr.getOrganisationId().equals(applicantOrganisationId) && Arrays.asList(UserApplicationRole.LEAD_APPLICANT.getRoleName(), UserApplicationRole.COLLABORATOR.getRoleName()).contains(pr.getRoleName())).findFirst().orElseThrow(() -> new ObjectNotFoundException());
 
         ApplicantSectionResource applicantSection = applicantRestService.getSection(applicantUser.getUser(), applicationId, sectionId);
         populateSection(model, form, bindingResult, applicantSection, true, Optional.of(applicantOrganisationId), true);
