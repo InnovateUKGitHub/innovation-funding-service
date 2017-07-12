@@ -50,7 +50,7 @@ Filtering of the applications
     [Setup]  the user navigates to the page    ${SERVER}/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}
     Given the user clicks the button/link      jQuery=a:contains("Manage applications")
     When The user enters text to a text field  css=#filterSearch    22
-    and The user clicks the button/link        jQuery=button:contains(Filter)
+    and The user clicks the button/link        jQuery=button:contains("Filter")
     Then the user should see the element       jQuery=tr:nth-child(1) td:nth-child(1):contains("22")
     And The user clicks the button/link        link=Clear all filters
     then the user should not see the element   jQuery=tr:nth-child(1) td:nth-child(1):contains("22")
@@ -67,13 +67,13 @@ Application number navigates to Overview
 View application progress page
     [Documentation]    INFUND-7042, INFUND-7046
     [Tags]
-    Given the user clicks the button/link          jQuery=tr:nth-child(9) a:contains(View progress)
-    Then The user should see the text in the page  29: Living with Augmented Reality
-    And the user should see the text in the page   Tripplezap (Lead)
+    Given the user clicks the button/link          jQuery=tr:nth-child(9) a:contains("View progress")
+    Then The user should see the text in the page  jQuery=h2:contains("Living with Augmented Reality")
+    And the user should see the element            jQuery=h3:contains("Partners") ~ ul:contains("Tripplezap (Lead)")
     And the user should see the element            jQuery=h3:contains("Innovation area") ~ span:contains("Digital manufacturing")
-    And the user should see the text in the page   No assessors have been assigned to this application.
-    And the user should see the text in the page   No assessors have rejected this application.
-    And the user should see the text in the page   No assessors were previously assigned to this application.
+    And the user should see the element            jQuery=p:contains("No assessors have been assigned to this application")
+    And the user should see the element            jQuery=p:contains("No assessors have rejected this application.")
+    And the user should see the element            jQuery=p:contains("No assessors were previously assigned to this application.")
 
 Review the application
     [Documentation]    INFUND-7046
@@ -87,14 +87,14 @@ View the available assessors
     [Documentation]    INFUND-7233\\
     [Tags]
     Then the user should see the element  jQuery=.column-two-thirds:contains("Assessors")
-    And the user clicks the button/link   jQuery=.pagination-label:contains(Next)
+    And the user clicks the button/link   jQuery=.pagination-label:contains("Next")
     And the available assessors information is correct
 
 View the assigned list
     [Documentation]    INFUND-7230 INFUND-7038
     [Tags]
-    Given The user should see the element          jQuery=p:contains(No assessors have been assigned to this application.)
-    When the user clicks the button/link           jQuery=tr:contains(Paul Plum) button:contains("Assign")
+    Given The user should see the element          jQuery=p:contains("No assessors have been assigned to this application.")
+    When the user clicks the button/link           jQuery=tr:contains("Paul Plum") button:contains("Assign")
     Then the user should see the text in the page  Assigned (1)
     And the assigned list is correct before notification
     And the user clicks the button/link            jQuery=.link-back:contains("Allocate applications")
@@ -103,16 +103,16 @@ View the assigned list
 Remove an assigned user (Not notified)
     [Documentation]    INFUND-7230
     [Tags]
-    Given the user clicks the button/link  jQuery=tr:nth-child(9) a:contains(View progress)
+    Given the user clicks the button/link  jQuery=tr:nth-child(9) a:contains("View progress")
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("Remove")
     And the user clicks the button/link    jQuery=button:contains("Remove assessor")
-    And the user clicks the button/link    jQuery=.pagination-label:contains(Next)
+    And the user clicks the button/link    jQuery=.pagination-label:contains("Next")
     And the available assessors information is correct
 
 Notify an assigned user
     [Documentation]    INFUND-7050
     [Tags]
-    Given the user clicks the button/link  jQuery=tr:contains(Paul Plum) button:contains("Assign")
+    Given the user clicks the button/link  jQuery=tr:contains("Paul Plum") button:contains("Assign")
     And the user clicks the button/link    jQuery=a:contains("Allocate applications")
     And the user clicks the button/link    jQuery=a:contains("Back")
     And the user clicks the button/link    jQuery=a:contains("Competition")
@@ -122,7 +122,7 @@ Notify an assigned user
 
 Assessor should see the assigned application
     [Documentation]    INFUND-7050
-    [Setup]    Log in as a different user  email=paul.plum@gmail.com    password=Passw0rd
+    [Setup]    Log in as a different user  &{assessor_credentials}
     When The user clicks the button/link   link=Sustainable living models for the future
     Then The user should see the element   Link=Living with Augmented Reality
 
@@ -133,9 +133,9 @@ Remove and notify an assessor (Notified)
     Given The user clicks the button/link         link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link           jQuery=a:contains("Manage assessments")
     And the user clicks the button/link           jQuery=a:contains("Manage applications")
-    And the user clicks the button/link           jQuery=tr:nth-child(9) a:contains(View progress)
+    And the user clicks the button/link           jQuery=tr:nth-child(9) a:contains("View progress")
     When the user clicks the button/link          jQuery=tr:nth-child(1) a:contains("Remove")
-    And the user clicks the button/link           jQuery=.buttonlink:contains(Cancel)
+    And the user clicks the button/link           jQuery=.buttonlink:contains("Cancel")
     And the user should not see the element       jQuery=button:contains("Remove assessor")
     And the user clicks the button/link           jQuery=tr:nth-child(1) a:contains("Remove")
     And the user clicks the button/link           jQuery=button:contains("Remove assessor")
@@ -145,7 +145,7 @@ Remove and notify an assessor (Notified)
 
 Assessor should not see the removed application
     [Documentation]    INFUND-7232
-    [Setup]    Log in as a different user     email=paul.plum@gmail.com    password=Passw0rd
+    [Setup]    Log in as a different user     &{assessor_credentials}
     When The user clicks the button/link      link=Sustainable living models for the future
     Then The user should not see the element  Link=Living with Augmented Reality
 
@@ -156,7 +156,7 @@ Reassign and notify an assessor (Notified)
     Given The user clicks the button/link          link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link            jQuery=a:contains("Manage assessments")
     And the user clicks the button/link            jQuery=a:contains("Manage applications")
-    And the user clicks the button/link            jQuery=tr:nth-child(9) a:contains(View progress)
+    And the user clicks the button/link            jQuery=tr:nth-child(9) a:contains("View progress")
     And the user should see the text in the page   Previously assigned (1)
     And the user clicks the button/link            jQuery=tr:contains("Paul Plum") button:contains("Reassign")
     Then the user should see the text in the page  Assigned (1)
@@ -169,7 +169,7 @@ Reassign and notify an assessor (Notified)
 
 Assessor should see the reassigned application
     [Documentation]    INFUND-7050
-    [Setup]    Log in as a different user  email=paul.plum@gmail.com    password=Passw0rd
+    [Setup]    Log in as a different user  &{assessor_credentials}
     When The user clicks the button/link   link=Sustainable living models for the future
     Then The user should see the element   Link=Living with Augmented Reality
 
