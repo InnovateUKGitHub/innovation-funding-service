@@ -21,6 +21,9 @@ public class AssessorsForm extends CompetitionSetupForm {
     @NotNull(message = "{validation.assessorsform.assessmentPanel.required}")
     private Boolean useAssessmentPanel;
 
+    @NotNull(message = "{validation.assessorsform.assessmentPanel.required}")
+    private Boolean addInterviewStage;
+
     public Integer getAssessorCount() {
         return assessorCount;
     }
@@ -43,5 +46,13 @@ public class AssessorsForm extends CompetitionSetupForm {
 
     public void setUseAssessmentPanel(Boolean useAssessmentPanel) {
         this.useAssessmentPanel = useAssessmentPanel;
+    }
+
+    public Boolean getAddInterviewStage() {
+        return addInterviewStage;
+    }
+
+    public void setAddInterviewStage(Boolean addInterviewStage) {
+        this.addInterviewStage = addInterviewStage;
     }
 }

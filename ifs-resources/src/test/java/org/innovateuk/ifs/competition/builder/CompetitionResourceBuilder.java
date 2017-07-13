@@ -200,6 +200,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("useAssessmentPanel", useAssessmentPanel);
     }
 
+    public CompetitionResourceBuilder withAddInterviewStage(Boolean... addInterviewStage) {
+        return withArraySetFieldByReflection("addInterviewStage", addInterviewStage);
+    }
+
     @Override
     protected CompetitionResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionResource>> actions) {
         return new CompetitionResourceBuilder(actions);
