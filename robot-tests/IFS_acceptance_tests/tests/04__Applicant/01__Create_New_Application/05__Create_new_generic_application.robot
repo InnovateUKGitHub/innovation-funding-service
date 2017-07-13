@@ -12,7 +12,7 @@ User applies to generic competition
     [Setup]    the user navigates to the page    ${frontDoor}
     Given the user clicks the button/link    link=Generic innovation
     When the user clicks the button/link    link=Start new application
-    Then the user selects the radio button  id="new-application-yes"
+    Then the user selects the radio button  create-application  true
     And the user clicks the button/link  Continue
     And the user clicks the button/link  Begin application
 
