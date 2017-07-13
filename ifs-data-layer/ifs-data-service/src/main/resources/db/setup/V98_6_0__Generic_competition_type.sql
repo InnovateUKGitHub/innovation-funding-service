@@ -1,3 +1,4 @@
+/* Create the generic competition type  */
 INSERT INTO `competition_type` (`name`, `state_aid`, `active`, `template_competition_id`)
 VALUES ('Generic', 1, 1, NULL);
 SET @competition_type_generic_id=LAST_INSERT_ID();
@@ -6,11 +7,13 @@ SET @competition_type_generic_id=LAST_INSERT_ID();
 SET @not_empty_validator = (SELECT `id` FROM form_validator WHERE `clazz_name` = 'org.innovateuk.ifs.validator.NotEmptyValidator');
 SET @word_count_validator = (SELECT `id` FROM form_validator WHERE `clazz_name` = 'org.innovateuk.ifs.validator.WordCountValidator');
 
-
-INSERT INTO `competition` (`name`,`max_research_ratio`,`academic_grant_percentage`,`budget_code`,`code`,`paf_code`,`executive_user_id`,`lead_technologist_user_id`,`competition_type_id`,`activity_code`,`innovate_budget`,`multi_stream`,`collaboration_level`,`stream_name`,`resubmission`,`setup_complete`,`full_application_finance`,`assessor_count`,`assessor_pay`,`template`,`use_resubmission_question`) VALUES ('Template for the Generic competition type',0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,1,0,0.00,1,1);
+/* Create the generic competition for template purpose  */
+INSERT INTO `competition` (`name`,`max_research_ratio`,`academic_grant_percentage`,`budget_code`,`code`,`paf_code`,`executive_user_id`,`lead_technologist_user_id`,`competition_type_id`,`activity_code`,`innovate_budget`,`multi_stream`,`collaboration_level`,`stream_name`,`resubmission`,`setup_complete`,`full_application_finance`,`assessor_count`,`assessor_pay`,`template`,`use_resubmission_question`) VALUES ('Template for the Generic competition type',0,100,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,1,0,0.00,1,1);
 SET @generic_template_id=LAST_INSERT_ID();
 UPDATE competition_type SET template_competition_id = @generic_template_id WHERE id = @competition_type_generic_id;
 
+
+/* Add the required section to the generic competition template  */
 INSERT INTO `section` (`assessor_guidance_description`,`description`,`display_in_assessment_application_summary`,`name`,`priority`,`competition_id`,`parent_section_id`,`question_group`,`section_type`) VALUES ('These sections give important background information on the project. They do not need scoring however you do need to mark the scope.','Please provide Innovate UK with information about your project. These sections are not scored but will provide background to the project.',1,'Project details',1,@generic_template_id,NULL,0,'GENERAL');
 SET @s_project_details=LAST_INSERT_ID();
 INSERT INTO `section` (`assessor_guidance_description`,`description`,`display_in_assessment_application_summary`,`name`,`priority`,`competition_id`,`parent_section_id`,`question_group`,`section_type`) VALUES ('Each question should be given a score out of 10. Written feedback should also be given.','These are the 10 questions which will be marked by assessors. Each question is marked out of 10 points.',1,'Application questions',2,@generic_template_id,NULL,0,'GENERAL');
@@ -43,7 +46,7 @@ INSERT INTO `section` (`assessor_guidance_description`,`description`,`display_in
 SET @s_finance_overview=LAST_INSERT_ID();
 
 
--- Project details questions
+/* Project details questions */
 INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enabled`,`multiple_statuses`,`name`,`short_name`,`priority`,`question_number`,`competition_id`,`section_id`,`assessor_maximum_score`,`question_type`) VALUES (0,'Enter the full title of the project',1,0,'Application details','Application details',1,NULL,@generic_template_id,@s_project_details,NULL,'GENERAL');
 SET @q_application_details=LAST_INSERT_ID();
 INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,5,@generic_template_id,1,'Application details',NULL,NULL,0,@q_application_details,'APPLICATION',1);
@@ -82,11 +85,8 @@ INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@f_
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@how_does_scope, @word_count_validator);
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@f_scope, @word_count_validator);
 
-
-
-
--- Application questions
--- ACTUAL TEMPLATE QUESTIONS
+/* Application questions
+ACTUAL TEMPLATE QUESTIONS */
 INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enabled`,`multiple_statuses`,`name`,`short_name`,`priority`,`question_number`,`competition_id`,`section_id`,`assessor_maximum_score`,`question_type`) VALUES (1,NULL,1,0,'What is the business opportunity that your project addresses?','Business opportunity',5,1,@generic_template_id,@s_application_questions,10,'GENERAL');
 SET @q_business_opportunity=LAST_INSERT_ID();
 INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (400,2,@generic_template_id,1,'1. What is the business opportunity that your project addresses?','What should I include in the business opportunity section?','<p>You should describe:</p><ul class=\"list-bullet\">         <li>the business opportunity you have identified and how you plan to take advantage of it</li><li>the customer needs you have identified and how your project will meet them</li><li>the challenges you expect to face and how you will overcome them</li></ul>',0,@q_business_opportunity,'APPLICATION',1);
@@ -207,15 +207,15 @@ INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@f_
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@main_innovation, @word_count_validator);
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@f_innovation, @word_count_validator);
 
--- No questions for finances section
--- No questions for your finances section
+/* No questions for finances section */
+/* No questions for your finances section */
 
--- Your project costs question
+/* Your project costs question */
 INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enabled`,`multiple_statuses`,`name`,`short_name`,`priority`,`question_number`,`competition_id`,`section_id`,`assessor_maximum_score`,`question_type`) VALUES (0,'Only your organisation can see this level of detail. All members of your organisation can access and edit your finances. We recommend assigning completion of your finances to one member of your team. <a href=\"https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance\" rel=\"external\">Find out which project costs are eligible.</a> ',1,1,'Provide the project costs for \'{organisationName}\'','Project finances',15,NULL,@generic_template_id,@s_your_project_costs,NULL,'GENERAL');
 SET @q_your_project_costs=LAST_INSERT_ID();
 INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,15,@generic_template_id,1,NULL,'','',0,@q_your_project_costs,'APPLICATION',1);
 
--- Your organisation question
+/* Your organisation question */
 SET @staff_count_id = (SELECT id FROM form_input_type WHERE `name` =  'STAFF_COUNT');
 SET @staff_turnover_id = (SELECT id FROM form_input_type WHERE `name` =  'ORGANISATION_TURNOVER');
 INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enabled`,`multiple_statuses`,`name`,`short_name`,`priority`,`question_number`,`competition_id`,`section_id`,`assessor_maximum_score`,`question_type`) VALUES (0,'To determine the level of funding you are eligible to receive please provide your business size using the <a href=\"http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm\" target=\"_blank\" rel=\"external\">EU Definition</a> for guidance.',1,1,'Organisation size','Business size',18,NULL,@generic_template_id,@s_your_organisation,NULL,'GENERAL');
@@ -225,15 +225,15 @@ INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`in
 INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,@staff_turnover_id,@generic_template_id,0,'Turnover (£)','Your turnover from the last financial year.','',1,@q_your_organisation,'APPLICATION',1);
 INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,@staff_count_id,@generic_template_id,0,'Full time employees','Number of full time employees at your organisation.','',2,@q_your_organisation,'APPLICATION',1);
 
--- Add a form input under the organisation size question for all competitions and templates. Default is inactive.
--- Financial Year End. Get the form input type and then do an insert for every organisation size question.
+/* Add a form input under the organisation size question for all competitions and templates. Default is inactive.
+ Financial Year End. Get the form input type and then do an insert for every organisation size question. */
 SET @financial_year_end_id = (SELECT id FROM form_input_type WHERE `name` =  'FINANCIAL_YEAR_END');
 INSERT INTO form_input (word_count, form_input_type_id, competition_id, included_in_application_summary, description, guidance_title, guidance_answer, priority, question_id, scope, active)
      SELECT null, @financial_year_end_id, q.competition_id, false, "End of last financial year", "Enter the date of your last financial year.", "", (SELECT MAX(priority) + 1 FROM form_input AS fi WHERE q.id = fi.question_id), q.id AS `question_id`, "APPLICATION", false
      FROM question AS q
      WHERE q.id = @q_your_organisation;
 
--- Financial Overview rows.
+/* Financial Overview rows. */
 SET @financial_overview_row_id = (SELECT id FROM form_input_type WHERE `name` =  'FINANCIAL_OVERVIEW_ROW');
 INSERT INTO form_input (word_count, form_input_type_id, competition_id, included_in_application_summary, description, guidance_title, guidance_answer, priority, question_id, scope, active)
      SELECT null, @financial_overview_row_id, q.competition_id, false, "Annual turnover", "", "", (SELECT MAX(priority) + 1 FROM form_input AS fi WHERE q.id = fi.question_id), q.id AS `question_id`, "APPLICATION", false
@@ -252,14 +252,14 @@ INSERT INTO form_input (word_count, form_input_type_id, competition_id, included
      FROM question AS q
      WHERE q.id = @q_your_organisation;
 
--- Full time employees at year end
+/* Full time employees at year end */
 SET @financial_staff_count_id = (SELECT id FROM form_input_type WHERE `name` =  'FINANCIAL_STAFF_COUNT');
 INSERT INTO form_input (word_count, form_input_type_id, competition_id, included_in_application_summary, description, guidance_title, guidance_answer, priority, question_id, scope, active)
      SELECT null, @financial_staff_count_id, q.competition_id, false, "Full time employees", "How many full-time employees did you have on the project at the close of your last financial year?", "", (SELECT MAX(priority) + 1 FROM form_input AS fi WHERE q.id = fi.question_id), q.id AS `question_id`, "APPLICATION", false
      FROM question AS q
      WHERE q.id = @q_your_organisation;
 
--- Connect the validator to the form inputs
+/* Connect the validator to the form inputs */
 SET @past_month_validator_id = (SELECT id FROM form_validator WHERE title = 'PastMMYYYYValidator');
 INSERT INTO form_input_validator (`form_input_id`, `form_validator_id`)
      SELECT fi.id, @past_month_validator_id
@@ -274,7 +274,7 @@ INSERT INTO form_input_validator (`form_input_id`, `form_validator_id`)
     WHERE fi.form_input_type_id IN (@financial_overview_row_id)
     AND fi.competition_id=@generic_template_id;
 
--- Connect the validator to the form inputs
+/* Connect the validator to the form inputs */
 SET @non_negative_integer_validator_id = (SELECT id FROM form_validator WHERE title = 'NonNegativeIntegerValidator');
 INSERT INTO form_input_validator (`form_input_id`, `form_validator_id`)
      SELECT fi.id, @non_negative_integer_validator_id
@@ -286,14 +286,14 @@ SET @financial_year_end_type_id = (SELECT id FROM form_input_type WHERE `name` =
 SET @financial_overview_row_type_id = (SELECT id FROM form_input_type WHERE `name` =  'FINANCIAL_OVERVIEW_ROW');
 SET @financial_staff_count_type_id = (SELECT id FROM form_input_type WHERE `name` =  'FINANCIAL_STAFF_COUNT');
 
--- Currently the only competition of type sector is the template - set active to false for all of the relevant
--- form inputs then change to active for the sector template.
+/*  Currently the only competition of type sector is the template - set active to false for all of the relevant
+form inputs then change to active for the sector template. */
 UPDATE form_input SET active = false
  WHERE competition_id=@generic_template_id
    AND (form_input_type_id=@financial_year_end_type_id OR form_input_type_id=@financial_overview_row_type_id OR form_input_type_id=@financial_staff_count_type_id);
 
 
--- Your funding question
+/* Your funding question */
 INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enabled`,`multiple_statuses`,`name`,`short_name`,`priority`,`question_number`,`competition_id`,`section_id`,`assessor_maximum_score`,`question_type`) VALUES (0,'Please tell us if you have ever applied for or received any other public sector funding for this project. You should also include details of any offers of funding you\'ve received.',1,1,'Other funding','Other funding',20,NULL,@generic_template_id,@s_your_funding,NULL,'COST');
 SET @q_other_funding=LAST_INSERT_ID();
 INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,17,@generic_template_id,1,'Other funding','What should I include in the other public funding section?','<p>You must provide details of other public funding that you are currently applying for (or have already applied for) in relation to this project. You do not need to include completed grants that were used to reach this point in the development process. This information is important as other public sector support counts as part of the funding you can receive for your project.</p>',0,@q_other_funding,'APPLICATION',1);
@@ -304,7 +304,7 @@ INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enable
 SET @q_jes_output=LAST_INSERT_ID();
 INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,20,@generic_template_id,1,'Upload a pdf copy of the Je-S output form once you have a status of \'With Council\'.','How do I create my Je-S output?','<p>You should include only supporting information in the appendix. You shouldn’t use it to provide your responses to the question.</p><p>Guidance for this section needs to be created</p>',0,@q_jes_output,'APPLICATION',1);
 
--- Labour question
+/* Labour question */
 INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enabled`,`multiple_statuses`,`name`,`short_name`,`priority`,`question_number`,`competition_id`,`section_id`,`assessor_maximum_score`,`question_type`) VALUES (1,'<p>You may claim the labour costs of all individuals you have working on your project.</p> <p> If your application is awarded funding, you will need to account for all your labour costs as they occur. For example, you should keep timesheets and payroll records. These should show the actual hours worked by individuals and paid by the organisation.</p>',0,1,NULL,NULL,1,NULL,@generic_template_id,@s_labour,NULL,'GENERAL');
 SET @q_labour_content=LAST_INSERT_ID();
 INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,6,@generic_template_id,1,NULL,'Labour costs guidance','<p>You can include the following labour costs, based upon your PAYE records:</p><ul class=\"list-bullet\"><li>gross salary</li><li>National Insurance</li><li>company pension contribution</li><li>life insurance</li><li>other non-discretionary package costs.</li></ul><p>You can\'t include:</p><ul class=\"list-bullet\"><li>discretionary bonuses</li><li>performance related payments of any kind</li></ul><p>You may include the total number of working days for staff but do not include:</p><ul class=\"list-bullet\"><li>sick days</li><li>waiting time</li><li>training days</li><li>non-productive time</li></ul><p>Enter the total number of working days in the year. List the total days worked by all categories of staff on your project. Describe their role.</p><p>We will review the total amount of time and cost of labour before we approve your application. The terms and conditions of the grant include compliance with these points.</p>',0,@q_labour_content,'APPLICATION',1);
@@ -312,7 +312,7 @@ INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enable
 SET @q_labour_cost=LAST_INSERT_ID();
 INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,8,@generic_template_id,1,'Labour',NULL,NULL,0,@q_labour_cost,'APPLICATION',1);
 
--- Overheads question
+/* Overheads question */
 INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enabled`,`multiple_statuses`,`name`,`short_name`,`priority`,`question_number`,`competition_id`,`section_id`,`assessor_maximum_score`,`question_type`) VALUES (1,NULL,0,1,NULL,NULL,1,NULL,@generic_template_id,@s_overheads,NULL,'GENERAL');
 SET @q_overhead_empty=LAST_INSERT_ID();
 INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,6,@generic_template_id,1,NULL,NULL,NULL,0,@q_overhead_empty,'APPLICATION',1);
@@ -320,7 +320,7 @@ INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enable
 SET @q_overhead=LAST_INSERT_ID();
 INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,9,@generic_template_id,1,'Overheads',NULL,NULL,0,@q_overhead,'APPLICATION',1);
 
--- Materials question
+/* Materials question */
 INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enabled`,`multiple_statuses`,`name`,`short_name`,`priority`,`question_number`,`competition_id`,`section_id`,`assessor_maximum_score`,`question_type`) VALUES (1,'<p>You can claim the costs of materials used on your project providing:</p><ul class=\"list-bullet\"><li>they are not already purchased or included in the administration support costs</li><li>they are purchased from third parties</li><li>they won’t have a residual/resale value at the end of your project. If they do you can claim the costs minus this value</li></ul><p><a href=\"https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance\" rel=\"external\">Please refer to our guide to project costs for further information.</a></p>',0,1,NULL,NULL,1,NULL,@generic_template_id,@s_materials,NULL,'GENERAL');
 SET @q_materials_content=LAST_INSERT_ID();
 INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,6,@generic_template_id,1,NULL,'Materials costs guidance','<p>Materials supplied by associated companies or project partners should be charged at cost.</p><p>Software that you have purchased specifically for use during your project may be included. If you already own the software then only additional costs which are incurred and paid during your project, will be eligible. For example, installation, training or customisation.</p><p>Material costs must be itemised to justify that they are eligible.</p>',0,@q_materials_content,'APPLICATION',1);
@@ -328,7 +328,7 @@ INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enable
 SET @q_materials_cost=LAST_INSERT_ID();
 INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,10,@generic_template_id,1,'Materials',NULL,NULL,0,@q_materials_cost,'APPLICATION',1);
 
--- Capital usage
+/* Capital usage */
 INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enabled`,`multiple_statuses`,`name`,`short_name`,`priority`,`question_number`,`competition_id`,`section_id`,`assessor_maximum_score`,`question_type`) VALUES (1,'<p>You should provide details of capital equipment and tools you will buy for, or use on, your project.</p>',0,1,NULL,NULL,1,NULL,@generic_template_id,@s_capital_usage,NULL,'GENERAL');
 SET @q_capital_usage_content=LAST_INSERT_ID();
 INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,6,@generic_template_id,1,NULL,'Capital usage guidance','<p>You will need to calculate a ‘usage’ value for each item. You can do this by deducting its expected value from its original price at the end of your project. If you owned the equipment before the project started then you should use its Net Present Value.</p><p>This value is then multiplied by the amount, in percentages, that is used during the project. This final value represents the eligible cost to your project.</p>',0,@q_capital_usage_content,'APPLICATION',1);
@@ -336,7 +336,7 @@ INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enable
 SET @q_capital_usage_cost=LAST_INSERT_ID();
 INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,11,@generic_template_id,1,'Capital Usage',NULL,NULL,0,@q_capital_usage_cost,'APPLICATION',1);
 
--- Subcontracting costs
+/* Subcontracting costs */
 INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enabled`,`multiple_statuses`,`name`,`short_name`,`priority`,`question_number`,`competition_id`,`section_id`,`assessor_maximum_score`,`question_type`) VALUES (1,'<p>You may subcontract work if you don’t have the expertise in your consortium. You can also subcontract if it is cheaper than developing your skills in-house.</p>',0,1,NULL,NULL,1,NULL,@generic_template_id,@s_subcontracting,NULL,'GENERAL');
 SET @q_subcontracting_content=LAST_INSERT_ID();
 INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,6,@generic_template_id,1,NULL,'Subcontracting costs guidance','<p>Subcontracting costs relate to work carried out by third party organisations. These organisations are not part of your project or collaboration.</p><p>Subcontracting is eligible providing it’s justified as to why the work cannot be performed by a project partner.</p><p>Where possible you should select a UK based contractor. You should name the subcontractor (where known) and describe what they will be doing. You should also state where the work will be undertaken. We will look at the size of this contribution when assessing your eligibility and level of support.</p>',0,@q_subcontracting_content,'APPLICATION',1);
@@ -344,7 +344,7 @@ INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enable
 SET @q_subcontracting_cost=LAST_INSERT_ID();
 INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,12,@generic_template_id,1,'Sub-contracting costs',NULL,NULL,0,@q_subcontracting_cost,'APPLICATION',1);
 
--- Travel costs
+/* Travel costs */
 INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enabled`,`multiple_statuses`,`name`,`short_name`,`priority`,`question_number`,`competition_id`,`section_id`,`assessor_maximum_score`,`question_type`) VALUES (1,'<p>You should include travel and subsistence costs that relate only to this project. </p>',0,1,NULL,NULL,1,NULL,@generic_template_id,@s_travel,NULL,'GENERAL');
 SET @q_travel_content=LAST_INSERT_ID();
 INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,6,@generic_template_id,1,NULL,NULL,NULL,0,@q_travel_content,'APPLICATION',1);
@@ -352,7 +352,7 @@ INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enable
 SET @q_travel_cost=LAST_INSERT_ID();
 INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,13,@generic_template_id,1,'Travel and subsistence',NULL,NULL,0,@q_travel_cost,'APPLICATION',1);
 
--- Other costs
+/* Other costs */
 INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enabled`,`multiple_statuses`,`name`,`short_name`,`priority`,`question_number`,`competition_id`,`section_id`,`assessor_maximum_score`,`question_type`) VALUES (1,'<p>Please tell us if you have applied for or received any other public sector funding for this project. Any other funding received will need to be deducted from the total value of any funding you are claiming for this project.</p>',0,1,NULL,NULL,1,NULL,@generic_template_id,@s_other_costs,NULL,'GENERAL');
 SET @q_other_content=LAST_INSERT_ID();
 INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,6,@generic_template_id,1,NULL,'Other costs guidance','<p>Examples of other costs include:</p><p><strong>Training costs:</strong> these costs are eligible for support if they relate to your project. We may support management training for your project but will not support ongoing training.</p><p><strong>Preparation of technical reports:</strong> if, for example, the main aim of your project is standard support or technology transfer. You should show how this is more than you would produce through good project management.</p><p><strong>Market assessment:</strong> we may support market assessments studies. The study will need to help us understand how your project is a good match for your target market. It could also be eligible if it helps commercialise your product.</p><p><strong>Licensing in new technologies:</strong> if new technology makes up a large part of your project, we will expect you to develop that technology. For instance, if the value of the technology is more than &pound;100,000.</p><p><strong>Patent filing costs for New IP generated by your project:</strong> these are eligible for SMEs up to a limit of &pound;7,500 per partner. You should not include legal costs relating to the filing or trademark related expenditure.</p><p>Regulatory compliance costs are eligible if necessary to carry out your project.</p>',0,@q_other_content,'APPLICATION',1);
@@ -361,7 +361,7 @@ SET @q_other_cost=LAST_INSERT_ID();
 INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,14,@generic_template_id,1,'Other costs',NULL,NULL,0,@q_other_cost,'APPLICATION',1);
 
 
---Finance overview questions
+/* Finance overview questions */
 INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enabled`,`multiple_statuses`,`name`,`short_name`,`priority`,`question_number`,`competition_id`,`section_id`,`assessor_maximum_score`,`question_type`) VALUES (1,NULL,0,0,'FINANCE_SUMMARY_INDICATOR_STRING',NULL,17,NULL,@generic_template_id,@s_finance_overview,NULL,'GENERAL');
 SET @q_finance_summary_indicator=LAST_INSERT_ID();
 INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,16,@generic_template_id,1,NULL,NULL,NULL,0,@q_finance_summary_indicator,'APPLICATION',1);
@@ -369,7 +369,7 @@ INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enable
 SET @q_funding_rules=LAST_INSERT_ID();
 INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,6,@generic_template_id,1,NULL,NULL,NULL,0,@q_funding_rules,'APPLICATION',1);
 
---Assessor counts
+/* Assessor counts for this new competition type */
 INSERT INTO `assessor_count_option` (`competition_type_id`, `option_name`, `option_value`, `default_option`)
 VALUES
 (@competition_type_generic_id, '1', 0, 0),
