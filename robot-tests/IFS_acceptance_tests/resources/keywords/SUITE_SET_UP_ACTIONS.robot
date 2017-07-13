@@ -15,7 +15,7 @@ log in and create new application for collaboration if there is not one already
 Login new application invite academic
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     [Tags]    Email
-    Given the user logs-in in new browser  &{lead_applicant_credentials}
+    Given Logging in and Error Checking  &{lead_applicant_credentials}
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    Academic robot test application
     Run Keyword If    '${status}' == 'FAIL'    Run keywords    Create new application with the same user  Academic robot test application
     ...    AND    Invite and accept the invitation    ${recipient}    ${subject}    ${pattern}
