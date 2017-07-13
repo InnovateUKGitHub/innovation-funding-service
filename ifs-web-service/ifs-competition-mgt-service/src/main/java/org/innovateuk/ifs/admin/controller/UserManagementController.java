@@ -138,7 +138,7 @@ public class UserManagementController {
 
     }
 
-    private EditUserResource constructEditUserResource(EditUserForm form, Long userId) {
+/*    private EditUserResource constructEditUserResource(EditUserForm form, Long userId) {
 
         UserResource userToEdit = new UserResource();
         userToEdit.setId(userId);
@@ -146,6 +146,13 @@ public class UserManagementController {
         userToEdit.setLastName(form.getLastName());
 
         EditUserResource editUserResource = new EditUserResource(userToEdit, form.getRole());
+
+        return editUserResource;
+    }*/
+
+    private EditUserResource constructEditUserResource(EditUserForm form, Long userId) {
+
+        EditUserResource editUserResource = new EditUserResource(userId, form.getFirstName(), form.getLastName(), form.getRole());
 
         return editUserResource;
     }

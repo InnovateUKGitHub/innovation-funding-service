@@ -93,8 +93,23 @@ public class UserController {
     }
 
     @PostMapping("/internal/edit")
-    public RestResult<Void> editInternalUser(@RequestBody EditUserResource editUserResource){
-        return registrationService.editInternalUser(editUserResource.getUserToEdit(), editUserResource.getUserRoleType()).toPostResponse();
+    public RestResult<Void> editInternalUser(@Valid @RequestBody EditUserResource editUserResource){
+
+        System.out.println("Came here");
+
+        UserResource userToEdit = getUserToEdit(editUserResource);
+
+        return registrationService.editInternalUser(userToEdit, editUserResource.getUserRoleType()).toPostResponse();
+    }
+
+    private UserResource getUserToEdit(EditUserResource editUserResource) {
+
+        UserResource userToEdit = new UserResource();
+        userToEdit.setId(editUserResource.getUserId());
+        userToEdit.setFirstName(editUserResource.getFirstName());
+        userToEdit.setLastName(editUserResource.getLastName());
+
+        return userToEdit;
     }
 
     @GetMapping("/findAll/")
