@@ -35,13 +35,13 @@
                 <table>
                     <thead>
                         <tr>
-                            <th scope="col">Application number</th>
+                            <th class="width-small" scope="col">Application number</th>
                             <th scope="col">Title</th>
-                            <th scope="col">Lead organisation</th>
-                            <th class="aligncentre" scope="col">Assessors</th>
-                            <th class="aligncentre" scope="col" th:if="${model.inAssessment}">Accepted</th>
-                            <th class="aligncentre" scope="col" th:if="${model.inAssessment}">Completed</th>
-                            <th scope="col"><span class="visuallyhidden">Action</span></th>
+                            <th class="width-medium" scope="col">Lead organisation</th>
+                            <th class="numeric width-small-medium" scope="col">Assessors</th>
+                            <th class="numeric width-small-medium" scope="col" th:if="${model.inAssessment}">Accepted</th>
+                            <th class="numeric width-small-medium" scope="col" th:if="${model.inAssessment}">Completed</th>
+                            <th class="width-small" scope="col"><span class="visuallyhidden">Action</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -49,10 +49,10 @@
                             <td><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}" th:text="${app.id}"/></td>
                             <td th:text="${app.title}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
                             <td th:text="${app.leadOrganisation}">Wessex University</td>
-                            <td class="aligncentre" th:text="${app.assessors}">4</td>
-                            <td class="aligncentre" th:text="${app.accepted}" th:if="${model.inAssessment}">2</td>
-                            <td class="aligncentre" th:text="${app.completed}" th:if="${model.inAssessment}">1</td>
-                            <td class="alignright">
+                            <td class="numeric" th:text="${app.assessors}">4</td>
+                            <td class="numeric" th:text="${app.accepted}" th:if="${model.inAssessment}">2</td>
+                            <td class="numeric" th:text="${app.completed}" th:if="${model.inAssessment}">1</td>
+                            <td>
                                 <a class="button-secondary no-margin"
                                    th:href="@{/competition/{competitionId}/application/{applicationId}/assessors(competitionId=${model.competitionId},applicationId=${app.id})}"
                                    th:text="${model.inAssessment} ? 'View progress' : 'Assign'"></a>
