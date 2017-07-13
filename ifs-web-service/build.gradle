@@ -30,6 +30,7 @@ subprojects {
             push = false
             applicationName = 'default-service-name'
             dockerfile = file('src/main/docker/Dockerfile')
+            tagVersion = 'latest'
             doFirst {
                 copy {
                     from jar
