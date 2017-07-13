@@ -20,6 +20,9 @@ Force Tags        Experian    Project Setup
 Resource          PS_Common.robot
 
 *** Variables ***
+&{lead_applicant_credentials_ef}  email=${PS_EF_APPLICATION_LEAD_PARTNER_EMAIL}  password=${short_password}
+&{collaborator1_credentials_ef}  email=${PS_EF_APPLICATION_PARTNER_EMAIL}  password=${short_password}
+&{collaborator2_credentials_ef}  email=${PS_EF_APPLICATION_ACADEMIC_EMAIL}  password=${short_password}
 
 *** Test Cases ***
 Project Finance can see Bank details requiring action
@@ -192,54 +195,22 @@ Project partners cannot access this page
 *** Keywords ***
 the text box should be editable
     [Arguments]    ${text_field}
-    Wait Until Element Is Visible Without Screenshots    ${text_field}
-    Element Should Be Enabled    ${text_field}
+    Wait Until Element Is Visible Without Screenshots  ${text_field}
+    Element Should Be Enabled  ${text_field}
 
 all preliminary steps are completed
     finance contacts are submitted by all users
-    project lead submits project details
+    Log in as a different user  &{lead_applicant_credentials_ef}
+    project lead submits project details  ${PS_EF_APPLICATION_PROJECT}
     eligible partners submit their bank details
 
-
 finance contacts are submitted by all users
-    the guest user opens the browser
-    the user navigates to the page    ${server}
-    user submits his finance contacts  ${PS_EF_APPLICATION_ACADEMIC_EMAIL}  ${Wikivu_Id}
-    logout as user
-    user submits his finance contacts  ${PS_EF_APPLICATION_PARTNER_EMAIL}  ${Jetpulse_Id}
-    logout as user
-    user submits his finance contacts  ${PS_EF_APPLICATION_LEAD_PARTNER_EMAIL}  ${Ntag_Id}
-
-user submits his finance contacts
-    [Arguments]  ${user}  ${id}
-    The guest user inserts user email and password    ${user}    ${short_password}
-    the guest user clicks the log-in button
-    the user navigates to the page     ${server}/project-setup/project/${PS_EF_APPLICATION_PROJECT}/details/finance-contact?organisation=${id}
-    the user selects the radio button  financeContact  financeContact1
-    the user clicks the button/link    jQuery=.button:contains("Save")
-
-project lead submits project details
-    the user navigates to the page     ${server}/project-setup/project/${PS_EF_APPLICATION_PROJECT}/details/project-address
-    the user selects the radio button  addressType  address-use-org
-    the user clicks the button/link    jQuery=.button:contains("Save")
-    the user navigates to the page     ${server}/project-setup/project/${PS_EF_APPLICATION_PROJECT}/details/project-manager
-    the user selects the radio button  projectManager  projectManager2
-    the user clicks the button/link    jQuery=.button:contains("Save")
-    the user navigates to the page     ${server}/project-setup/project/${PS_EF_APPLICATION_PROJECT}/details
-    the user clicks the button/link    jQuery=.button:contains("Mark as complete")
-    the user clicks the button/link    jQuery=.button:contains("Submit")
+    the user logs-in in new browser            &{lead_applicant_credentials_ef}
+    the partner submits their finance contact  ${Ntag_Id}  ${PS_EF_APPLICATION_PROJECT}  &{lead_applicant_credentials_ef}
+    the partner submits their finance contact  ${Jetpulse_Id}  ${PS_EF_APPLICATION_PROJECT}  &{collaborator1_credentials_ef}
+    the partner submits their finance contact  ${Wikivu_Id}  ${PS_EF_APPLICATION_PROJECT}  &{collaborator2_credentials_ef}
 
 eligible partners submit their bank details
-    the user fills in his bank details  ${PS_EF_APPLICATION_ACADEMIC_EMAIL}
-    the user fills in his bank details  ${PS_EF_APPLICATION_PARTNER_EMAIL}
-    the user fills in his bank details  ${PS_EF_APPLICATION_LEAD_PARTNER_EMAIL}
-
-the user fills in his bank details
-    [Arguments]  ${user}
-    log in as a different user            ${user}  ${short_password}
-    the user navigates to the page        ${server}/project-setup/project/${PS_EF_APPLICATION_PROJECT}/bank-details
-    the user enters text to a text field  name=accountNumber  ${account_one}
-    the user enters text to a text field  name=sortCode  ${sortCode_one}
-    the user selects the radio button     addressType  address-use-org
-    the user clicks the button/link       jQuery=.button:contains("Submit bank account details")
-    the user clicks the button/link       jQuery=.button:contains("Submit")
+    partner submits his bank details  ${PS_EF_APPLICATION_LEAD_PARTNER_EMAIL}  ${PS_EF_APPLICATION_PROJECT}  ${account_one}  ${sortCode_one}
+    partner submits his bank details  ${PS_EF_APPLICATION_PARTNER_EMAIL}  ${PS_EF_APPLICATION_PROJECT}  ${account_one}  ${sortCode_one}
+    partner submits his bank details  ${PS_EF_APPLICATION_ACADEMIC_EMAIL}  ${PS_EF_APPLICATION_PROJECT}  ${account_one}  ${sortCode_one}
