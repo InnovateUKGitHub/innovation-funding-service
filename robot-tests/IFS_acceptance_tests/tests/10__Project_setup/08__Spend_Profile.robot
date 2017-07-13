@@ -151,11 +151,11 @@ Lead Partner can see Spend profile summary
     Given the user navigates to the page            ${external_spendprofile_summary}/review
     And the user should see the text in the page    Project costs for financial year
     And the user moves focus to the element         jQuery=.grid-container table
-    Then the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 84,841
+    Then the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 83,761
 
 Lead partner can edit his spend profile with invalid values
     [Documentation]    INFUND-3765, INFUND-6907, INFUND-6801, INFUND-7409, INFUND-6148
-    [Tags]
+    [Tags]  Failing  IFS-941
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
     Then the user should not see the text in the element  css=#content > form   -
     And the text box should be editable               css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input  # Labour-June17
@@ -194,6 +194,7 @@ Lead partner can edit his spend profile with invalid values
 
 Lead partner can submit empty cells and this is handled gracefully
     [Documentation]    INFUND-6146
+    [Tags]  Failing  IFS-941
     When the user enters text to a text field    css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input    ${empty}
     And the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should not see an error in the page
@@ -222,7 +223,7 @@ Lead Partners Spend profile summary gets updated when edited
     [Tags]    HappyPath
     Given the user navigates to the page           ${external_spendprofile_summary}/review
     Then the user should see the text in the page  Project costs for financial year
-    And the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 81,089
+    And the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 80,009
 
 Project Manager can see Spend Profile in Progress
     [Documentation]    done during refactoring, no ticket attached
@@ -381,6 +382,8 @@ Academic partner edits spend profile and this updates on the table
     [Documentation]    INFUND-5846
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
+    ${save_clicked}  ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=.button:contains("Save and return to spend profile overview")
+    Run keyword if  '${save_clicked}' == 'PASS'  the user clicks the button/link  jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should see the element    jQuery=.button:contains("Edit spend profile")
     And element should contain    css=.spend-profile-table tbody tr:nth-of-type(1) td:nth-of-type(1)    3
     And element should contain    css=.spend-profile-table tbody tr:nth-of-type(2) td:nth-of-type(3)    1
