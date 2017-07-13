@@ -39,7 +39,7 @@
                 <th:block th:insert="fragments/application :: application-summary (competitionIsOpen = ${currentCompetition.isOpen()}, isApplicant = true)" />
             </form>
 
-            <div th:if="${!currentCompetition.isOpen() and !currentApplication.hasBeenSubmitted()}">
+            <div th:if="${!currentCompetition.isOpen() and !currentApplication.isSubmitted()}">
                 <div class="warning-alert">
                     Registration is now closed, you are no longer able to submit your application.
                 </div>

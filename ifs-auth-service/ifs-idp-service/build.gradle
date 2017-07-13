@@ -101,6 +101,7 @@ task buildDocker(type: Docker) {
     push = false
     applicationName = 'idp-service'
     dockerfile = file('src/main/docker/Dockerfile')
+    tagVersion = 'latest'
     doFirst {
         copy {
             from fileTree('src/main/docker/apache')

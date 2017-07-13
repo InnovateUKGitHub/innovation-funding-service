@@ -1,125 +1,115 @@
-/* SG
-# IFS/Progress indicator
-
-```
-<div class="progress-container">
-	<div class="progress-indicator">
-		<div class="progress" style="width:0%" aria-valuemin="0" aria-valuenow="1" aria-valuemax="100" role="progressbar">
-			<div>
-				0%
-			</div>
-		</div>
-	</div>
-</div>
-
-<div class="progress-container">
-	<div class="progress-indicator">
-		<div class="progress" style="width:51%" aria-valuemin="0" aria-valuenow="51" aria-valuemax="100" role="progressbar">
-			<div>
-				51%
-			</div>
-		</div>
-	</div>
-</div>
-
-```
-*/
 @import "compass/css3/transform";
+
 .progress-container {
-	margin: 10px 37px 65px 37px;
-	//side margin for 0% and 100% overflow of the indicator
+  margin: 10px 37px 65px 37px;
+  //side margin for 0% and 100% overflow of the indicator
 }
 
-.progress-container.medium {
-	.progress-indicator {
-	    height:25px;
-	}
+.progress-container {
+  &.medium {
+    .progress-indicator {
+      height:25px;
+    }
+
     .start,
     .end {
-        bottom:-30px;
+      bottom:-30px;
     }
-    .progress div {
-	    top:37px;
+
+    .progress {
+      div {
+        top:37px;
+      }
     }
+  }
 }
 
 .progress-indicator {
-	display: inline-block;
-	position: relative;
-	width:100%;
-	background: $grey-2;
-	@include border-radius(15px);
-	height:30px;
+  @include border-radius(15px);
+  display: inline-block;
+  position: relative;
+  width:100%;
+  background: $grey-2;
+  height:30px;
 
-	.progress-totals {
+  .progress-totals {
     position: absolute;
     color:$grey-1;
     font-size:15px;
     display:block; // overwriting the aria-hidden="true" as we do want this for non-assisted technlogy users but not for screen readers
     bottom:-40px;
   }
+
   .progress-totals--min {
     left:0;
   }
+
   .progress-totals--max {
-		right:0;
-	}
+    right:0;
+  }
 }
 
 .progress {
-	background-color: $turquoise;
-	height: 100%;
-	position: absolute;
-	left:0;
-	@include border-radius(15px 0 0 15px);
-	text-indent:-9999px;
+  @include border-radius(15px 0 0 15px);
+  background-color: $turquoise;
+  height: 100%;
+  position: absolute;
+  left:0;
+  text-indent:-9999px;
 
-	&[aria-valuenow="1"],
-	&[aria-valuenow="2"],
-	&[aria-valuenow="3"],
-	&[aria-valuenow="4"]{
-		width: 4% !important;
-	}
-	&[aria-valuenow="95"],
-	&[aria-valuenow="96"],
-	&[aria-valuenow="97"],
-	&[aria-valuenow="98"],
-	&[aria-valuenow="99"],
-	&[aria-valuenow="100"]{
-		@include border-radius(15px);
-	}
+  &[aria-valuenow="1"],
+  &[aria-valuenow="2"],
+  &[aria-valuenow="3"],
+  &[aria-valuenow="4"]{
+    width: 4% !important;
+  }
 
-
+  &[aria-valuenow="95"],
+  &[aria-valuenow="96"],
+  &[aria-valuenow="97"],
+  &[aria-valuenow="98"],
+  &[aria-valuenow="99"],
+  &[aria-valuenow="100"]{
+    @include border-radius(15px);
+  }
 }
-.progress div {
-	position: absolute;
-	right:-37px;
-	width:70px;
-	padding: 2px;
-	line-height: 1.5;
-	text-align: center;
-	background:#000;
-	text-indent: 0;
-	top:47px;
-	color:#fff;
-	font-size:18px;
-	z-index:1;
-	&:before {
-		position: absolute;
-		display: block;
-		width:100%;
-		text-align: center;
-		top:-28px;
-		color:#000;
-		font-size: 40px;
-		content: "\25A0";
-		@include rotate(45deg);
-		z-index: -1;
-	}
+
+.progress {
+  div {
+    position: absolute;
+    right:-37px;
+    width:70px;
+    padding: 2px;
+    line-height: 1.5;
+    text-align: center;
+    background:#000;
+    text-indent: 0;
+    top:47px;
+    color:#fff;
+    font-size:18px;
+    z-index:1;
+
+    &:before {
+      @include rotate(45deg);
+      position: absolute;
+      display: block;
+      width:100%;
+      text-align: center;
+      top:-28px;
+      color:#000;
+      font-size: 40px;
+      content: "\25A0";
+      z-index: -1;
+    }
+  }
 }
 
 @include ie-lte(8) {
-	.progress div:before {
-		display: none;
-	}
+  .progress {
+    div {
+      &:before {
+        display: none;
+      }
+    }
+  }
 }

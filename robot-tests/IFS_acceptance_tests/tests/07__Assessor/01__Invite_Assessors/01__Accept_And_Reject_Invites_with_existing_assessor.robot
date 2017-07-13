@@ -134,7 +134,7 @@ Existing assessor: Accept invitation from the invite link
     And the user should see the text in the page    You are invited to assess the competition '${IN_ASSESSMENT_COMPETITION_NAME}'.
     And the user should see the text in the page    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'
     And the user should see the text in the page    12 January 2068 to 28 January 2068: Assessment period
-    And the user should see the text in the page    taking place at 12:00am on 15 April.
+    And the user should see the text in the page    taking place on 15 April.
     And the user should see the text in the page    100 per application.
     And the user selects the radio button  acceptInvitation  true
     And The user clicks the button/link    jQuery=button:contains("Confirm")
@@ -209,7 +209,7 @@ The Admin's invites overview should be updated for accepted invites
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And The user clicks the button/link      jQuery=a:contains("Invite assessors to assess the competition")
     And The user clicks the button/link      link=Overview
-    And the user should see the element      jQuery=tr:nth-child(1) td:contains("Invite accepted")
+    And the user should see the element      jQuery=tr:contains("Alexis Colon") td:contains("Invite accepted")
 
 *** Keywords ***
 the assessor fills all fields with valid inputs
