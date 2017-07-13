@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Update internal users details'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Update internal user\'s details'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
@@ -17,7 +17,7 @@
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Update internal users details',size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Update internal user\'s details',size='heading-xlarge'" />
     <!--/* please change method="get" for method="post" when really implementing */-->
     <form action="/prototypes/ifs-606-review-user-profile.html" method="get">
         <h2 class="heading-medium">Personal details</h2>
@@ -70,7 +70,7 @@
 
         <div class="form-group extra-margin">
             <button class="button">Save and return</button>
-            <a href="/prototypes/606-review-user-profile.html">Cancel</a>
+            <a class="button button-clear" href="/prototypes/606-review-user-profile.html">Cancel</a>
         </div>
     </form>
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
