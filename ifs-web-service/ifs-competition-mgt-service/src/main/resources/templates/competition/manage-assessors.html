@@ -20,10 +20,10 @@
                         <tr>
                             <th class="width-medium" scope="col">Assessor</th>
                             <th scope="col">Skill Areas</th>
-                            <th class="aligncentre width-small-medium" scope="col">Total applications</th>
-                            <th class="aligncentre width-small-medium" scope="col">Assigned</th>
-                            <th class="aligncentre width-small-medium" scope="col" th:if="${model.inAssessment}">Accepted</th>
-                            <th class="aligncentre width-small-medium" scope="col" th:if="${model.inAssessment}">Completed</th>
+                            <th class="numeric width-small-medium" scope="col">Total applications</th>
+                            <th class="numeric width-small-medium" scope="col">Assigned</th>
+                            <th class="numeric width-small-medium" scope="col" th:if="${model.inAssessment}">Accepted</th>
+                            <th class="numeric width-small-medium" scope="col" th:if="${model.inAssessment}">Completed</th>
                             <!--/* TODO IFS-156/321
                             <th class="width-small" scope="col"><span class="visuallyhidden">Action</span></th>
                             */-->
@@ -33,10 +33,10 @@
                         <tr th:each="assessor : ${model.assessors}">
                             <td><a th:href="@{/competition/{cid}/assessors/profile/{aid}(cid=${model.competitionId},aid=${assessor.id})} + ${originQuery}" th:text="${assessor.name}"/></td>
                             <td th:text="${assessor.skillAreas}">skill areas</td>
-                            <td class="aligncentre" th:text="${assessor.total}">4</td>
-                            <td class="aligncentre" th:text="${assessor.assigned}">4</td>
-                            <td class="aligncentre" th:text="${assessor.accepted}" th:if="${model.inAssessment}">2</td>
-                            <td class="aligncentre" th:text="${assessor.submitted}" th:if="${model.inAssessment}">1</td>
+                            <td class="numeric" th:text="${assessor.total}">4</td>
+                            <td class="numeric" th:text="${assessor.assigned}">4</td>
+                            <td class="numeric" th:text="${assessor.accepted}" th:if="${model.inAssessment}">2</td>
+                            <td class="numeric" th:text="${assessor.submitted}" th:if="${model.inAssessment}">1</td>
                             <!--/* TODO IFS-156/321
                             <td class="alignright">
                                 <a class="button-secondary no-margin" th:text="${model.inAssessment} ? 'View progress' : 'Assign'"></a>
