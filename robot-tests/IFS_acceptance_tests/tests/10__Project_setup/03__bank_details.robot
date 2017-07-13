@@ -32,8 +32,8 @@ Resource          PS_Common.robot
 
 *** Variables ***
 &{lead_applicant_credentials_bd}  email=${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  password=${short_password}
-&{collaborator1_credentials_bd}  email=${PS_BD_APPLICATION_PARTNER_EMAIL}  password=${short_password}
-&{collaborator2_credentials_bd}  email=${PS_BD_APPLICATION_ACADEMIC_EMAIL}  password=${short_password}
+&{collaborator1_credentials_bd}   email=${PS_BD_APPLICATION_PARTNER_EMAIL}  password=${short_password}
+&{collaborator2_credentials_bd}   email=${PS_BD_APPLICATION_ACADEMIC_EMAIL}  password=${short_password}
 
 *** Test Cases ***
 Links to other sections in Project setup dependent on project details for partners

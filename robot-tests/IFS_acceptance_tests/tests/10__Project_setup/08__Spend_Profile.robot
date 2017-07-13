@@ -71,8 +71,8 @@ ${project_overview}    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJE
 ${external_spendprofile_summary}    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile
 ${project_duration}    36
 &{lead_applicant_credentials_sp}  email=${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}  password=${short_password}
-&{collaborator1_credentials_sp}  email=${PS_SP_APPLICATION_PARTNER_EMAIL}  password=${short_password}
-&{collaborator2_credentials_sp}  email=${PS_SP_APPLICATION_ACADEMIC_EMAIL}  password=${short_password}
+&{collaborator1_credentials_sp}   email=${PS_SP_APPLICATION_PARTNER_EMAIL}  password=${short_password}
+&{collaborator2_credentials_sp}   email=${PS_SP_APPLICATION_ACADEMIC_EMAIL}  password=${short_password}
 
 *** Test Cases ***
 Project Finance user generates the Spend Profile
@@ -820,8 +820,8 @@ project finance approves bank details
 
 project finance reviews Finance checks
     log in as a different user              &{internal_finance_credentials}
-    project finance approves Viability for  ${Katz_Id}
-    project finance approves Viability for  ${Meembee_Id}
+    project finance approves Viability for  ${Katz_Id}  ${PS_SP_APPLICATION_PROJECT}
+    project finance approves Viability for  ${Meembee_Id}  ${PS_SP_APPLICATION_PROJECT}
     project finance approves Eligibility    ${Katz_Id}  ${Meembee_Id}  ${Zooveo_Id}  ${PS_SP_APPLICATION_PROJECT}
 
 the user returns edit rights for the organisation

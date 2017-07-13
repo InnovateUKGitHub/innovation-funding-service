@@ -21,8 +21,8 @@ Resource          PS_Common.robot
 
 *** Variables ***
 &{lead_applicant_credentials_ef}  email=${PS_EF_APPLICATION_LEAD_PARTNER_EMAIL}  password=${short_password}
-&{collaborator1_credentials_ef}  email=${PS_EF_APPLICATION_PARTNER_EMAIL}  password=${short_password}
-&{collaborator2_credentials_ef}  email=${PS_EF_APPLICATION_ACADEMIC_EMAIL}  password=${short_password}
+&{collaborator1_credentials_ef}   email=${PS_EF_APPLICATION_PARTNER_EMAIL}  password=${short_password}
+&{collaborator2_credentials_ef}   email=${PS_EF_APPLICATION_ACADEMIC_EMAIL}  password=${short_password}
 
 *** Test Cases ***
 Project Finance can see Bank details requiring action
