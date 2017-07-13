@@ -40,6 +40,8 @@ public class InternalUserRegistrationControllerTest  extends BaseControllerMockM
 
     @Test
     public void testYourDetails() throws Exception {
+        setLoggedInUser(null);
+
         when(internalUserRegistrationModelPopulatorMock.populateModel("hash")).thenReturn(new InternalUserRegistrationViewModel("Arden Pimenta", "Project Finance", "arden.pimenta@innovateuk.test"));
 
         mockMvc.perform(get(URL_PREFIX + "/hash/register"))
@@ -49,6 +51,7 @@ public class InternalUserRegistrationControllerTest  extends BaseControllerMockM
 
     @Test
     public void testSubmitYourDetails() throws Exception {
+        setLoggedInUser(null);
         InternalUserRegistrationForm registrationForm = new InternalUserRegistrationForm("Arden", "Pimenta", "Passw0rd");
         when(internalUserServiceMock.createInternalUser("hash", registrationForm)).thenReturn(serviceSuccess());
         mockMvc.perform(post(URL_PREFIX + "/hash/register")
