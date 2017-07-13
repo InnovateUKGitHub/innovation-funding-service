@@ -44,19 +44,6 @@ task startMySql(type:Exec) {
     }
 }
 
-task prepareComposeFile (type: Copy) {
-    outputs.upToDateWhen { false }
-    from '../../'
-    into '../../'
-    include 'docker-compose-template.yml'
-    rename 'docker-compose-template.yml', 'docker-compose.yml'
-    filter(ReplaceTokens, tokens: [version: project.properties['version']])
-}
-
-startMySql.dependsOn prepareComposeFile
-createSchema.dependsOn prepareComposeFile
-createTestSchema.dependsOn prepareComposeFile
-
 task syncShib(type:Exec) {
     workingDir '../'
     commandLine 'docker-compose', 'exec', '--user', 'root', '-T', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh', 'mysql'
