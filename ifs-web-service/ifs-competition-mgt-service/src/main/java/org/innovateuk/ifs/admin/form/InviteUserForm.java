@@ -4,37 +4,41 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.innovateuk.ifs.admin.form.validation.Primary;
+import org.innovateuk.ifs.admin.form.validation.Secondary;
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.innovateuk.ifs.user.resource.AdminRoleType;
 
+import javax.validation.GroupSequence;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 /**
  * Form to capture the posted details of the newly invited user
  */
+@GroupSequence({Primary.class, Secondary.class, InviteUserForm.class})
 public class InviteUserForm extends BaseBindingResultTarget {
 
-    @NotEmpty(message = "{validation.standard.firstname.required}")
-    @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.required}")
+    @NotEmpty(message = "{validation.standard.firstname.required}", groups = Primary.class)
+    @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.required}", groups = Secondary.class)
     @Size.List ({
-            @Size(min=2, message="{validation.standard.firstname.length.min}"),
-            @Size(max=70, message="{validation.standard.firstname.length.max}"),
+            @Size(min=2, message="{validation.standard.firstname.length.min}", groups = Secondary.class),
+            @Size(max=70, message="{validation.standard.firstname.length.max}", groups = Secondary.class),
     })
     private String firstName;
 
-    @NotEmpty(message = "{validation.standard.lastname.required}")
-    @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.lastname.required}")
+    @NotEmpty(message = "{validation.standard.lastname.required}", groups = Primary.class)
+    @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.lastname.required}", groups = Secondary.class)
     @Size.List ({
-            @Size(min=2, message="{validation.standard.lastname.length.min}"),
-            @Size(max=70, message="{validation.standard.lastname.length.max}"),
+            @Size(min=2, message="{validation.standard.lastname.length.min}", groups = Secondary.class),
+            @Size(max=70, message="{validation.standard.lastname.length.max}", groups = Secondary.class),
     })
     private String lastName;
 
-    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
-    @NotEmpty(message = "{validation.invite.email.required}")
-    @Size(max = 256, message = "{validation.standard.email.length.max}")
+    @NotEmpty(message = "{validation.invite.email.required}", groups = Primary.class)
+    @Size(max = 256, message = "{validation.standard.email.length.max}", groups = Secondary.class)
+    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}", groups = Secondary.class)
     private String emailAddress;
 
     private AdminRoleType role;

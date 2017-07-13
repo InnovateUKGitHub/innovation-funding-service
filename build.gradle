@@ -116,7 +116,7 @@ buildscript {
         classpath 'org.owasp:dependency-check-gradle:1.4.5'
         classpath "com.avast.gradle:docker-compose-gradle-plugin:0.3.21"
         classpath "se.transmode.gradle:gradle-docker:1.2"
-        classpath 'net.researchgate:gradle-release:2.6.0'
+        classpath 'net.researchgate:gradle-release:2.4.0'
 	    classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
     }
 
@@ -182,10 +182,23 @@ dockerCompose {
 
 }
 
+task prepareComposeFile (type: Copy) {
+    outputs.upToDateWhen { false }
+    from '.'
+    into '.'
+    include 'docker-compose-template.yml'
+    rename 'docker-compose-template.yml', 'docker-compose.yml'
+    filter(ReplaceTokens, tokens: [version : project.properties['version']])
+}
+
 task dockerTidy(type:Exec) {
     executable = 'setup-files/scripts/docker/docker_tidy_up.sh'
     args = [project.version]
 }
+
+composeUp.dependsOn prepareComposeFile
+
+import org.apache.tools.ant.filters.*
 
 task happyRobotTests(type:Exec) {
     workingDir 'robot-tests'
