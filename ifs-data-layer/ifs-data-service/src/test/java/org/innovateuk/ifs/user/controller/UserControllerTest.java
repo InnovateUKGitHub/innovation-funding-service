@@ -14,6 +14,7 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.transactional.CrmService;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.util.LinkedMultiValueMap;
 
@@ -38,6 +39,7 @@ import static org.innovateuk.ifs.user.resource.UserRelatedURLs.URL_PASSWORD_RESE
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.URL_VERIFY_EMAIL;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -315,16 +317,14 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     @Test
     public void editInternalUser() throws Exception {
 
-        UserResource userToEdit = UserResourceBuilder.newUserResource().build();
-
-        EditUserResource editUserResource = new EditUserResource(userToEdit, UserRoleType.SUPPORT);
-        when(registrationServiceMock.editInternalUser(editUserResource.getUserToEdit(), editUserResource.getUserRoleType())).thenReturn(serviceSuccess());
+        EditUserResource editUserResource = new EditUserResource(1L, "First", "Last", UserRoleType.IFS_ADMINISTRATOR);
+        when(registrationServiceMock.editInternalUser(any(), any())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/user/internal/edit")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(editUserResource)))
                 .andExpect(status().isOk());
 
-        verify(registrationServiceMock).editInternalUser(editUserResource.getUserToEdit(), editUserResource.getUserRoleType());
+        verify(registrationServiceMock).editInternalUser(any(), any());
     }
 }

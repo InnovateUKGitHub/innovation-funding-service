@@ -7,7 +7,9 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 public class EditUserResourceDocs {
 
     public static final FieldDescriptor[] editUserResourceFields = {
-            fieldWithPath("userToEdit").description("The user being edited"),
+            fieldWithPath("userId").description("The id of the user being edited"),
+            fieldWithPath("firstName").description("The first name the user being edited"),
+            fieldWithPath("lastName").description("The last name of the user being edited"),
             fieldWithPath("userRoleType").description("The new role for the user being edited")
     };
 }

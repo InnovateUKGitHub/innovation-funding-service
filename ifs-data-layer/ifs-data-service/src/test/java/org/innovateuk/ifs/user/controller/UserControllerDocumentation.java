@@ -28,6 +28,7 @@ import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResourc
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -180,14 +181,8 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     @Test
     public void editInternalUser() throws Exception {
 
-        UserResource userToEdit = UserResourceBuilder.newUserResource()
-                .withId(1L)
-                .withFirstName("Johnathan")
-                .withLastName("Dow")
-                .build();
-
-        EditUserResource editUserResource = new EditUserResource(userToEdit, UserRoleType.SUPPORT);
-        when(registrationServiceMock.editInternalUser(editUserResource.getUserToEdit(), editUserResource.getUserRoleType())).thenReturn(serviceSuccess());
+        EditUserResource editUserResource = new EditUserResource(1L, "Johnathan", "Dow", UserRoleType.SUPPORT);
+        when(registrationServiceMock.editInternalUser(any(), any())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/user/internal/edit")
                 .contentType(APPLICATION_JSON)
@@ -197,6 +192,6 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
                         requestFields(EditUserResourceDocs.editUserResourceFields)
                 ));
 
-        verify(registrationServiceMock).editInternalUser(editUserResource.getUserToEdit(), editUserResource.getUserRoleType());
+        verify(registrationServiceMock).editInternalUser(any(), any());
     }
 }

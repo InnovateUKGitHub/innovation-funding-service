@@ -95,8 +95,6 @@ public class UserController {
     @PostMapping("/internal/edit")
     public RestResult<Void> editInternalUser(@Valid @RequestBody EditUserResource editUserResource){
 
-        System.out.println("Came here");
-
         UserResource userToEdit = getUserToEdit(editUserResource);
 
         return registrationService.editInternalUser(userToEdit, editUserResource.getUserRoleType()).toPostResponse();
