@@ -47,7 +47,6 @@ Server side validation for invite new internal user
     [Tags]
     Given the user clicks the button/link               jQuery=button:contains("Send invite")
     Then The user should see a field and summary error  Please enter a first name.
-    #And The user should see a field and summary error   Your first name should have at least 2 characters.
     And The user should see a field and summary error   Please enter a last name.
     And The user should see a field and summary error   Please enter an email address.
     [Teardown]  the user clicks the button/link         link=Cancel
