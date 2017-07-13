@@ -15,7 +15,7 @@ import static org.innovateuk.ifs.commons.rest.ValidationMessages.rejectValue;
  * This class validates the FormInputResponse, it checks that there is a number present and that it is an non negative long integer.
  */
 @Component
-public class NonNegativeLongIntegerValidator extends LongIntegerValidator {
+public class NonNegativeLongIntegerValidator extends IntegerValidator {
     private static final Log LOG = LogFactory.getLog(NonNegativeLongIntegerValidator.class);
 
     @Override

@@ -9,7 +9,7 @@ import org.springframework.validation.Validator;
 import static org.innovateuk.ifs.validator.ValidatorTestUtil.getBindingResult;
 import static org.junit.Assert.*;
 
-public class LongIntegerValidatorTest {
+public class SignedLongIntegerValidatorTest {
     
 	private Validator validator;
 	
@@ -18,7 +18,7 @@ public class LongIntegerValidatorTest {
 	
 	@Before
 	public void setUp() {
-        validator = new LongIntegerValidator();
+        validator = new SignedLongIntegerValidator();
         formInputResponse = new FormInputResponse();
         bindingResult = getBindingResult(formInputResponse);
     }
