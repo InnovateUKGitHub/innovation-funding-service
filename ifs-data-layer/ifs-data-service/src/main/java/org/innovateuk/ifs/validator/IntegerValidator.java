@@ -19,8 +19,7 @@ public abstract class IntegerValidator extends BaseValidator {
         BigDecimal value = toBigDecimal(responseValue);
         if (value == null){
             rejectValue(errors, "value", "validation.field.must.not.be.blank");
-        }
-        else {
+        } else {
             if (fractionalPartLength(value) > 0){
                 rejectValue(errors, "value", "validation.standard.integer.non.decimal.format");
             }

@@ -34,8 +34,8 @@ public class SignedLongIntegerValidatorTest {
 
     @Test
     public void testGreaterThanMAX_VALUE() {
-        String greaterThatMaxValue = Long.MAX_VALUE + "1";
-        formInputResponse.setValue(greaterThatMaxValue);
+        String greaterThanMaxValue = Long.MAX_VALUE + "1";
+        formInputResponse.setValue(greaterThanMaxValue);
         validator.validate(formInputResponse, bindingResult);
         assertTrue(bindingResult.hasErrors());
         assertEquals(1, bindingResult.getAllErrors().size());
