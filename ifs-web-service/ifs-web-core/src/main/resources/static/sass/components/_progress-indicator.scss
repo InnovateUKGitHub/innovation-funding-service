@@ -32,20 +32,20 @@
   background: $grey-2;
   height:30px;
 
-  &:before,
-  &:after{
-    content: '0%';
+  .progress-totals {
     position: absolute;
-    left:0;
-    bottom:-40px;
     color:$grey-1;
     font-size:15px;
+    display:block; // overwriting the aria-hidden="true" as we do want this for non-assisted technlogy users but not for screen readers
+    bottom:-40px;
   }
 
-  &:after {
+  .progress-totals--min {
+    left:0;
+  }
+
+  .progress-totals--max {
     right:0;
-    left:auto;
-    content: '100%';
   }
 }
 
