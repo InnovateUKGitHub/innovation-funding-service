@@ -227,7 +227,9 @@
             </th:block>
             <h2 class="heading-medium">Funding rules for this competition</h2>
             <th:block th:if="${formInputViewModel.formInput.type.displayableQuestionType}">
-                <th:block th:insert="question-type/types :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})"></th:block>
+                <div class="wysiwyg-styles">
+                    <th:block th:insert="question-type/types :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})"></th:block>
+                </div>
             </th:block>
         </th:block>
         <a th:href="@{/application/{applicationId}(applicationId=${model.application.id})}" class="button-secondary">Return to application overview</a>
