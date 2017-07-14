@@ -1,5 +1,45 @@
 #/bin/bash
 
+#
+# This script takes the rewrite rules defined in the various csv files and converts them to SQL statements.
+#
+# An example would be for an entry in a csv file like: description|REPLACE('xxyy')
+# This script would replace it by SQL like: SUBSTR(REPEAT('xxyy', ((CHAR_LENGTH(description) / 4) + 1)), 1, CHAR_LENGTH(description))
+#
+# Supported replacements:
+#
+# REPLACE('blah ') - replaces a column's contents with the given string 'blah ', repeating the string like 'blah blah blah bl...'
+#                    until the original length of the column contents is reached
+#
+#                    e.g. "Hello there!" would be replaced by "blah blah bl"
+#
+# MASK(2, 'x') - retains the first 2 character of a column, but replaces the rest with 'x'
+#
+#                e.g. "Hello there!" would be replaced by "Hexxxxxxxxxx"
+#
+# INTEGER(10) - replaces the given column's integer with another integer that can deviat 10% up or 10% down from the original value
+#
+#               e.g. 10 could be replaced by 9, 10 or 11
+#
+# DIFFERENT_IF_NUMBER(10) - replaces the given column's number with another number that can deviate 10% up or 10% down from the
+#                           original value but ONLY if it is a numerical value
+#
+#                           e.g. 10 could be replaced by 9, 10, or 11, but "Hello" will remain as "Hello"
+#
+# DECIMAL(10, 2) - replaces the given column's decimal value with another thqat can deviate 10% up or down from the original value, and
+#                  keep the scale of the decimal at 2 decimal places
+#
+#                  e.g. 10.10 could be replaced by anything from 8.95 to 11.05, always retaining 2 decimal places
+#
+# EMAIL('x') - replaces a given column's email value with a masked email value that retains the first 2 characters of the start string
+#              and replaces the rest with 'x' up to the '@' symbol.  Thereafter the @ portion would be replaced with 'xx.example.com'
+#
+#              e.g. alison@uni.com would be replaced by alxxxx@xx.example.com
+#
+# UUID('x') - replaces a UUID with 'x' symbols apat from the first 8 characters and hyphens
+#
+#             e.g. "12345678-1234-5678-2345-123456789012" would be replaced by "12345678-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+#
 set -e
 
 REPLACE_REPLACEMENT_TOKEN_EXTRACTOR="s/^REPLACE('\(.*\)')$/\1/g"
@@ -91,7 +131,7 @@ function generate_rewrite_from_rule() {
     if [[ "$replace_test" != "$replacement" ]]; then
 
         mask_token=$(echo "$replacement" | sed "$EMAIL_MASK_TOKEN_EXTRACTOR")
-        echo "CONCAT(CONCAT(SUBSTR($column_name, 1, 2), REPEAT('$mask_token', INSTR($column_name, '@') - 2)), CONCAT(SUBSTR($column_name, INSTR($column_name, '@'), 3), 'xx.example.com'))"
+        echo "CONCAT(CONCAT(SUBSTR($column_name, 1, 2), REPEAT('$mask_token', INSTR($column_name, '@') - 2)), CONCAT(SUBSTR($column_name, INSTR($column_name, '@'), 3), '$mask_token$mask_token.example.com'))"
         exit 0
     fi
 
