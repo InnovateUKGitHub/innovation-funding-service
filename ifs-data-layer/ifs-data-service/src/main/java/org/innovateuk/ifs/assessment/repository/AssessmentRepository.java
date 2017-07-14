@@ -78,20 +78,28 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
 
     @Query("SELECT new org.innovateuk.ifs.assessment.domain.ApplicationAssessmentCount( " +
             "   application, " +
+            "   assessorAssessment, " +
             "   CAST(COUNT(assessment.id) as int) " +
             ") " +
             "FROM Assessment assessment " +
+            "JOIN assessment.target application " +
             "JOIN assessment.target.competition competition " +
             "JOIN assessment.activityState activityState " +
-            "JOIN assessment.target application " +
+            "JOIN assessment.participant participant " +
+            "LEFT JOIN Assessment assessorAssessment ON assessorAssessment.id = assessment.id " +
+            "   AND participant.user.id = :assessorId " +
             "WHERE competition.id = :competitionId " +
-            "   AND application.id IN :applicationIds " +
+            "   AND application.id IN ( " +
+            "       SELECT participant.applicationId " +
+            "       FROM participant " +
+            "       WHERE participant.user.id = :assessorId " +
+            "   ) " +
             "   AND activityState.state NOT IN :states " +
             "GROUP BY application.id")
-    List<ApplicationAssessmentCount> countByActivityStateStateNotInAndTargetCompetitionIdAndTargetIdInGroupByTarget(
+    List<ApplicationAssessmentCount> countByActivityStateStateNotInAndTargetCompetitionIdGroupByTargetForAssessorAssessments(
             @Param("states") Collection<State> states,
             @Param("competitionId") long competitionId,
-            @Param("applicationIds") Collection<Long> applicationIds
+            @Param("assessorId") long assessorId
     );
 
     int countByActivityStateStateAndTargetCompetitionId(State state, Long competitionId);

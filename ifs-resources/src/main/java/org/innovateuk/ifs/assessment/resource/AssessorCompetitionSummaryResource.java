@@ -15,7 +15,7 @@ public class AssessorCompetitionSummaryResource {
      * Total number of applications
      * across ALL competitions.
      */
-    private int totalApplications;
+    private long totalApplications;
 
     private List<AssessorAssessmentResource> assignedAssessments = new ArrayList<>();
 
@@ -25,7 +25,7 @@ public class AssessorCompetitionSummaryResource {
     public AssessorCompetitionSummaryResource(long competitionId,
                                               String competitionName,
                                               AssessorProfileResource assessor,
-                                              int totalApplications,
+                                              long totalApplications,
                                               List<AssessorAssessmentResource> assignedAssessments) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
@@ -58,11 +58,11 @@ public class AssessorCompetitionSummaryResource {
         this.assessor = assessor;
     }
 
-    public int getTotalApplications() {
+    public long getTotalApplications() {
         return totalApplications;
     }
 
-    public void setTotalApplications(int totalApplications) {
+    public void setTotalApplications(long totalApplications) {
         this.totalApplications = totalApplications;
     }
 

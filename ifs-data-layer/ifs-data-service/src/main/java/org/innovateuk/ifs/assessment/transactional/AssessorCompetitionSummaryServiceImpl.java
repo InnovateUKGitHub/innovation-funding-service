@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.assessment.domain.ApplicationAssessmentCount;
-import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.assessment.resource.AssessorAssessmentResource;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -49,28 +47,23 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
     public ServiceResult<AssessorCompetitionSummaryResource> getAssessorSummary(long assessorId, long competitionId) {
         return assessorService.getAssessorProfile(assessorId).andOnSuccess(assessorProfile ->
                 competitionService.getCompetitionById(competitionId).andOnSuccess(competition -> {
-                    List<Assessment> allAssignedAssessments = assessmentRepository.findByParticipantUserIdAndActivityStateStateNotIn(
+                    long allAssessmentCount = assessmentRepository.countByParticipantUserIdAndActivityStateStateNotIn(
                             assessorProfile.getUser().getId(),
                             INVALID_ASSESSMENT_STATES
                     );
 
-                    List<ApplicationAssessmentCount> applicationAssessmentCounts = new ArrayList<>();
-
-                    if (!allAssignedAssessments.isEmpty()) {
-                        applicationAssessmentCounts.addAll(
-                                assessmentRepository.countByActivityStateStateNotInAndTargetCompetitionIdAndTargetIdInGroupByTarget(
-                                        INVALID_ASSESSMENT_STATES,
-                                        competition.getId(),
-                                        simpleMap(allAssignedAssessments, assessment -> assessment.getTarget().getId())
-                                )
-                        );
-                    }
+                    List<ApplicationAssessmentCount> applicationAssessmentCounts = assessmentRepository
+                            .countByActivityStateStateNotInAndTargetCompetitionIdGroupByTargetForAssessorAssessments(
+                                    INVALID_ASSESSMENT_STATES,
+                                    competition.getId(),
+                                    assessorId
+                            );
 
                     return serviceSuccess(new AssessorCompetitionSummaryResource(
                             competition.getId(),
                             competition.getName(),
                             assessorProfile,
-                            allAssignedAssessments.size(),
+                            allAssessmentCount,
                             mapCountsToResource(applicationAssessmentCounts)
                     ));
                 })
@@ -88,7 +81,8 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
                     applicationAssessmentCount.getApplication().getId(),
                     applicationAssessmentCount.getApplication().getName(),
                     leadOrganisation.getName(),
-                    applicationAssessmentCount.getCount()
+                    applicationAssessmentCount.getAssessmentCount(),
+                    applicationAssessmentCount.getAssessment().getActivityState()
             );
         });
     }

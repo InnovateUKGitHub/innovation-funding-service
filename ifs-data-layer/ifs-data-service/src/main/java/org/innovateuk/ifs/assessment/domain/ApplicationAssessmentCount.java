@@ -3,23 +3,30 @@ package org.innovateuk.ifs.assessment.domain;
 import org.innovateuk.ifs.application.domain.Application;
 
 /**
- * Domain object that holds counts of the number of assessments per application.
+ * Domain object that holds the total number of assessments for
+ * an application that an assessor is assessing.
  */
 public class ApplicationAssessmentCount {
 
     private Application application;
-    private int count;
+    private Assessment assessment;
+    private int assessmentCount;
 
-    public ApplicationAssessmentCount(Application application, int count) {
+    public ApplicationAssessmentCount(Application application, Assessment assessment, int assessmentCount) {
         this.application = application;
-        this.count = count;
+        this.assessment = assessment;
+        this.assessmentCount = assessmentCount;
     }
 
     public Application getApplication() {
         return application;
     }
 
-    public int getCount() {
-        return count;
+    public Assessment getAssessment() {
+        return assessment;
+    }
+
+    public int getAssessmentCount() {
+        return assessmentCount;
     }
 }
