@@ -12,7 +12,7 @@ ${Kazio_Id}         53
 ${Kazio_Name}       Kazio
 ${Cogilith_Id}      54
 ${Cogilith_Name}    Cogilith
-${PS_GOL_Competition_Id}  10
+${PS_GOL_Competition_Id}  11
 ${PS_GOL_APPLICATION_TITLE}      London underground - enhancements to existing stock and logistics
 ${PS_GOL_APPLICATION_NO}         ${application_ids["${PS_GOL_APPLICATION_TITLE}"]}
 ${PS_GOL_APPLICATION_NUMBER}     ${PS_GOL_APPLICATION_NO}
@@ -34,7 +34,7 @@ ${Wordpedia_Id}     50
 ${Wordpedia_Name}   Wordpedia
 ${Jabbertype_Id}    51
 ${Jabbertype_Name}  Jabbertype
-${PS_MD_Competition_Id}         10
+${PS_MD_Competition_Id}         11
 ${PS_MD_Competition_Name}       Rolling stock future developments
 ${PS_MD_APPLICATION_TITLE}      High-speed rail and its effects on air quality
 ${PS_MD_APPLICATION_NO}         ${application_ids["${PS_MD_APPLICATION_TITLE}"]}
@@ -56,7 +56,7 @@ ${Meembee_Id}      47
 ${Meembee_Name}    Meembee
 ${Zooveo_Id}       48
 ${Zooveo_Name}     Zooveo
-${PS_SP_Competition_Id}         10
+${PS_SP_Competition_Id}         11
 ${PS_SP_Competition_Name}       Rolling stock future developments
 ${PS_SP_APPLICATION_TITLE}      Point control and automated monitoring
 ${PS_SP_APPLICATION_NO}         ${application_ids["${PS_SP_APPLICATION_TITLE}"]}
@@ -78,7 +78,7 @@ ${A_B_Cad_Services_Id}    44
 ${A_B_Cad_Services_Name}  A B Cad Services
 ${Armstrong_Butler_Id}       45
 ${Armstrong_Butler_Name}     Armstrong & Butler Ltd
-${PS_BD_Competition_Id}         10
+${PS_BD_Competition_Id}         11
 ${PS_BD_Competition_Name}       Rolling stock future developments
 ${PS_BD_APPLICATION_TITLE}      Grade crossing manufacture and supply
 ${PS_BD_APPLICATION_NUMBER}     ${application_ids["${PS_BD_APPLICATION_TITLE}"]}
@@ -105,7 +105,7 @@ ${Jetpulse_Id}    42
 ${Jetpulse_Name}  Jetpulse
 ${Wikivu_Id}      43
 ${Wikivu_Name}    Wikivu
-${PS_EF_Competition_Id}         10
+${PS_EF_Competition_Id}         11
 ${PS_EF_Competition_Name}       Rolling stock future developments
 ${PS_EF_APPLICATION_TITLE}      New materials for lighter stock
 ${PS_EF_APPLICATION_NO}         ${application_ids["${PS_EF_APPLICATION_TITLE}"]}
