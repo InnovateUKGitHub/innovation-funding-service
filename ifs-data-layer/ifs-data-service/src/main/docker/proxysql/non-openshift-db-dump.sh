@@ -1,4 +1,9 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
+#
+# This script is for testing anonymised dumps against a local docker-compose environment as opposed to a local or remote
+# OpenShift project
+#
 
 set -e
 
@@ -12,6 +17,6 @@ docker exec -it innovationfundingservice_proxysql_1 /etc/make-mysqldump.sh
 
 sleep 1
 
-docker cp innovationfundingservice_proxysql_1:/tmp/dump.sql /tmp
+docker cp innovationfundingservice_proxysql_1:/dump/anonymised-dump.sql.gpg /tmp
 
 docker kill innovationfundingservice_proxysql_1 && docker rm innovationfundingservice_proxysql_1
