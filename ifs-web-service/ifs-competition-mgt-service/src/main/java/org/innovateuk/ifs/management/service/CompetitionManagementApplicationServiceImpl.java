@@ -193,7 +193,8 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         MANAGE_APPLICATIONS("/assessment/competition/{competitionId}/applications"),
         FUNDING_APPLICATIONS("/competition/{competitionId}/funding"),
         APPLICATION_PROGRESS("/competition/{competitionId}/application/{applicationId}/assessors"),
-        MANAGE_ASSESSMENTS("/assessment/competition/{competitionId}");
+        MANAGE_ASSESSMENTS("/assessment/competition/{competitionId}"),
+        PROJECT_SETUP_MANAGEMENT_STATUS("/project-setup-management/competition/{competitionId}/status");
 
         private String baseOriginUrl;
 

@@ -34,4 +34,6 @@ public interface CompetitionManagementApplicationService {
                                        UserResource user,
                                        Model model);
 
+    public String PROJECT_SETUP_MANAGEMENT_SERVICE = "project-setup-management";
+
 }
