@@ -9,7 +9,7 @@ import org.springframework.validation.Validator;
 import static org.innovateuk.ifs.validator.ValidatorTestUtil.getBindingResult;
 import static org.junit.Assert.*;
 
-public class IntegerValidatorTest {
+public class SignedLongIntegerValidatorTest {
     
 	private Validator validator;
 	
@@ -18,7 +18,7 @@ public class IntegerValidatorTest {
 	
 	@Before
 	public void setUp() {
-        validator = new IntegerValidator();
+        validator = new SignedLongIntegerValidator();
         formInputResponse = new FormInputResponse();
         bindingResult = getBindingResult(formInputResponse);
     }
@@ -34,8 +34,8 @@ public class IntegerValidatorTest {
 
     @Test
     public void testGreaterThanMAX_VALUE() {
-        String greaterThatMaxValue = Integer.MAX_VALUE + "1";
-        formInputResponse.setValue(greaterThatMaxValue);
+        String greaterThanMaxValue = Long.MAX_VALUE + "1";
+        formInputResponse.setValue(greaterThanMaxValue);
         validator.validate(formInputResponse, bindingResult);
         assertTrue(bindingResult.hasErrors());
         assertEquals(1, bindingResult.getAllErrors().size());
@@ -44,7 +44,7 @@ public class IntegerValidatorTest {
 
     @Test
     public void testMultipleFailures() {
-        String multipleFailures = Integer.MAX_VALUE + ".1";
+        String multipleFailures = Long.MAX_VALUE + ".1";
         formInputResponse.setValue(multipleFailures);
         validator.validate(formInputResponse, bindingResult);
         assertEquals(2, bindingResult.getAllErrors().size());
