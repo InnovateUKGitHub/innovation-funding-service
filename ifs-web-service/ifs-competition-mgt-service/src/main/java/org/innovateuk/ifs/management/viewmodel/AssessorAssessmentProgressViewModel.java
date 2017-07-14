@@ -14,6 +14,7 @@ public class AssessorAssessmentProgressViewModel {
     private final int totalApplications;
 
     private final List<AssessorAssessmentProgressAssignedRowViewModel> assigned;
+    private final AssessorAssessmentProgressApplicationsViewModel applicationsView;
 
     public AssessorAssessmentProgressViewModel(long competitionId,
                                                String competitionName,
@@ -21,7 +22,8 @@ public class AssessorAssessmentProgressViewModel {
                                                List<String> innovationAreas,
                                                BusinessType businessType,
                                                int totalApplications,
-                                               List<AssessorAssessmentProgressAssignedRowViewModel> assigned) {
+                                               List<AssessorAssessmentProgressAssignedRowViewModel> assigned,
+                                               AssessorAssessmentProgressApplicationsViewModel applicationsView) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.assessorName = assessorName;
@@ -29,6 +31,7 @@ public class AssessorAssessmentProgressViewModel {
         this.businessType = businessType;
         this.totalApplications = totalApplications;
         this.assigned = assigned;
+        this.applicationsView = applicationsView;
     }
 
     public long getCompetitionId() {
@@ -57,5 +60,9 @@ public class AssessorAssessmentProgressViewModel {
 
     public List<AssessorAssessmentProgressAssignedRowViewModel> getAssigned() {
         return assigned;
+    }
+
+    public AssessorAssessmentProgressApplicationsViewModel getApplicationsView() {
+        return applicationsView;
     }
 }

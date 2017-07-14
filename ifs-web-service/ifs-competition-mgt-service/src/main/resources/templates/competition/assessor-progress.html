@@ -31,7 +31,7 @@
         </div>
         <div class="column-half">
             <h4 class="heading-small">Type</h4>
-            <p th:text="${model.businessType.displayName}" />
+            <p th:text="${model.businessType}? ${model.businessType.displayName}" />
         </div>
     </div>
 
@@ -65,7 +65,7 @@
     <div class="grid-row sorting">
         <div class="column-half">
             <div class="data">
-                <span class="bold-xlarge">2</span>
+                <span class="bold-xlarge" th:text="${model.applicationsView.totalApplications}">2</span>
                 <span class="bold-small">Applications</span>
             </div>
         </div>
@@ -86,34 +86,34 @@
     <div class="table-overflow">
         <table>
             <thead>
-                <tr>
-                    <th scope="col" class="width-small">Application number</th>
-                    <th scope="col" >Title</th>
-                    <th scope="col" class="width-large">Lead organisation</th>
-                    <th scope="col" class="width-small aligncentre">Assigned</th>
-                    <th scope="col" class="width-small-medium aligncentre">Remove</th>
-                </tr>
+            <tr>
+                <th scope="col">Application number</th>
+                <th scope="col">Title</th>
+                <th scope="col">Lead organisation</th>
+                <th class="aligncentre" scope="col">Assessors</th>
+                <th class="aligncentre" scope="col" th:if="${model.applicationsView.inAssessment}">Accepted</th>
+                <th class="aligncentre" scope="col" th:if="${model.applicationsView.inAssessment}">Submitted</th>
+                <th scope="col"><span class="visuallyhidden">Action</span></th>
+            </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td><a href="#">30</a></td>
-                    <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
-                    <td>Wessex University</td>
-                    <td class="aligncentre">1</td>
-                    <td class="aligncentre"><button class="button button-secondary no-margin">Assign</button></td>
-                </tr>
-                <tr>
-                    <td><a href="#">31</a></td>
-                    <td>Mobility problems and the potential for internet enabled zimmer frame</td>
-                    <td>Plymouth University</td>
-                    <td class="aligncentre">1</td>
-                    <td class="aligncentre"><button class="button button-secondary no-margin">Assign</button></td>
-                </tr>
+            <tr th:each="app : ${model.applicationsView.applications}">
+                <td><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}" th:text="${app.id}"/></td>
+                <td th:text="${app.title}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
+                <td th:text="${app.leadOrganisation}">Wessex University</td>
+                <td class="aligncentre" th:text="${app.assessors}">4</td>
+                <td class="aligncentre" th:text="${app.accepted}" th:if="${model.applicationsView.inAssessment}">2</td>
+                <td class="aligncentre" th:text="${app.submitted}" th:if="${model.applicationsView.inAssessment}">1</td>
+                <td class="alignright">
+                    <a class="button-secondary no-margin"
+                       th:href="@{/assessment/competition/{competitionId}/application/{applicationId}/assessors(competitionId=${model.competitionId},applicationId=${app.id})}"
+                        >Assign</a>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>
-
-
+    <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.applicationsView.pagination})" />
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
