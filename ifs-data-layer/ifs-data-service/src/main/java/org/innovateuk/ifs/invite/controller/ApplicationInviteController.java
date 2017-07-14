@@ -29,7 +29,7 @@ public class ApplicationInviteController {
 
     @PostMapping("/createApplicationInvites")
     public RestResult<InviteResultsResource> createApplicationInvites(@RequestBody InviteOrganisationResource inviteOrganisationResource) {
-        return inviteService.createApplicationInvites(inviteOrganisationResource, inviteOrganisationResource.getInviteResources().get(0).getApplication()).toPostCreateResponse();
+        return inviteService.createApplicationInvites(inviteOrganisationResource, null).toPostCreateResponse();
     }
 
     @PostMapping("/createApplicationInvites/{applicationId}")
