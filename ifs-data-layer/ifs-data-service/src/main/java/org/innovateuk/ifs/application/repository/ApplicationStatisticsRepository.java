@@ -37,7 +37,7 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "  concat(user.firstName, ' ', user.lastName), " +
             "  profile.skillsAreas, " +
             "  sum(case when activityState.state NOT IN :rejectedAndSubmittedStates THEN 1 ELSE 0 END), " + // total assigned
-            "  sum(case when competitionParticipant.competition.id = :competitionId AND activityState.state NOT IN :rejectedAndSubmittedStates   THEN 1 ELSE 0 END), " + // TODO rename params assigned
+            "  sum(case when competitionParticipant.competition.id = :competitionId AND activityState.state NOT IN :rejectedAndSubmittedStates   THEN 1 ELSE 0 END), " + // assigned
             "  sum(case when competitionParticipant.competition.id = :competitionId AND activityState.state NOT IN :notAcceptedOrSubmittedStates THEN 1 ELSE 0 END), " + // accepted
             "  sum(case when competitionParticipant.competition.id = :competitionId AND activityState.state     IN :submittedStates              THEN 1 ELSE 0 END)  " + // submitted
             ") " +
