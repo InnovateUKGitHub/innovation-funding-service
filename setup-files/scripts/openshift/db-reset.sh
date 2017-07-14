@@ -12,7 +12,6 @@ if [[ "$TARGET" == "production" ]]; then
     exit 1
 fi
 
-. $(dirname $0)/common-functions.sh
 . $(dirname $0)/deploy-functions.sh
 . $(dirname $0)/local-deploy-functions.sh
 

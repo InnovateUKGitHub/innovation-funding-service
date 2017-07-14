@@ -85,7 +85,6 @@ function rolloutStatus {
     done
 }
 
-. $(dirname $0)/common-functions.sh
 . $(dirname $0)/deploy-functions.sh
 . $(dirname $0)/local-deploy-functions.sh
 
