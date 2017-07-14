@@ -120,7 +120,7 @@ ${PS_EF_APPLICATION_PARTNER_EMAIL}           robert.perez@jetpulse.example.com
 ${PS_EF_APPLICATION_ACADEMIC_EMAIL}          bruce.perez@wikivu.example.com
 
 #Project: Magic material
-${PROJECT_SETUP_COMPETITION}    8
+${PROJECT_SETUP_COMPETITION}    9
 ${PROJECT_SETUP_COMPETITION_NAME}    New designs for a circular economy
 ${PROJECT_SETUP_APPLICATION_1_TITLE}    Magic material
 ${PROJECT_SETUP_APPLICATION_1}    ${application_ids["${PROJECT_SETUP_APPLICATION_1_TITLE}"]}
