@@ -52,8 +52,9 @@ public class InternalUserRegistrationController {
     @GetMapping("/{inviteHash}/register")
     public String yourDetails(Model model,
                               @PathVariable("inviteHash") String inviteHash,
-                              @ModelAttribute(name = FORM_ATTR_NAME, binding = false) InternalUserRegistrationForm form) {
-        return doViewYourDetails(model, inviteHash);
+                              @ModelAttribute(name = FORM_ATTR_NAME, binding = false) InternalUserRegistrationForm form,
+                              UserResource loggedInUser) {
+        return doViewYourDetails(model, inviteHash, loggedInUser);
     }
 
     @PostMapping("/{inviteHash}/register")
@@ -61,15 +62,20 @@ public class InternalUserRegistrationController {
                                     @PathVariable("inviteHash") String inviteHash,
                                     @Valid @ModelAttribute(FORM_ATTR_NAME) InternalUserRegistrationForm registrationForm,
                                     BindingResult bindingResult,
-                                    ValidationHandler validationHandler) {
+                                    ValidationHandler validationHandler,
+                                    UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> doViewYourDetails(model, inviteHash);
+        Supplier<String> failureView = () -> doViewYourDetails(model, inviteHash, loggedInUser);
 
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> result = internalUserService.createInternalUser(inviteHash, registrationForm);
-            return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors()).
-                    failNowOrSucceedWith(failureView, () -> format("redirect:/registration/%s/register/account-created", inviteHash));
-        });
+        if(loggedInUser != null){
+            return failureView.get();
+        } else {
+            return validationHandler.failNowOrSucceedWith(failureView, () -> {
+                ServiceResult<Void> result = internalUserService.createInternalUser(inviteHash, registrationForm);
+                return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors()).
+                        failNowOrSucceedWith(failureView, () -> format("redirect:/registration/%s/register/account-created", inviteHash));
+            });
+        }
     }
 
     @GetMapping(value = "/{inviteHash}/register/account-created")
@@ -91,8 +97,12 @@ public class InternalUserRegistrationController {
         }).getSuccessObjectOrThrowException();
     }
 
-    private String doViewYourDetails(Model model, String inviteHash) {
-        model.addAttribute("model", internalUserRegistrationModelPopulator.populateModel(inviteHash));
-        return "registration/register";
+    private String doViewYourDetails(Model model, String inviteHash, UserResource loggedInUser) {
+        if(loggedInUser != null) {
+            return "registration/error";
+        } else {
+            model.addAttribute("model", internalUserRegistrationModelPopulator.populateModel(inviteHash));
+            return "registration/register";
+        }
     }
 }
