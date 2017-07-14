@@ -194,6 +194,7 @@ Lead partner can edit his spend profile with invalid values
 
 Lead partner can submit empty cells and this is handled gracefully
     [Documentation]    INFUND-6146
+    [Tags]
     When the user enters text to a text field    css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input    ${empty}
     And the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should not see an error in the page
