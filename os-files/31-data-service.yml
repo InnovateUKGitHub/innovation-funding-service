@@ -42,14 +42,14 @@ items:
             timeoutSeconds: 5
             failureThreshold: 3
           imagePullPolicy: Always
-#          lifecycle:
-#            postStart:
-#              exec:
-#                command:
-#                  - "sh"
-#                  - "-c"
-#                  - >
-#                    echo "$DATA_SERVICE_PORT_8080_TCP_ADDR ifs-data-service" >> /etc/hosts && echo "$IDP_PORT_443_TCP_ADDR iuk-auth-localdev" >> /etc/hosts
+          lifecycle:
+             postStart:
+               exec:
+                 command:
+                   - "sh"
+                   - "-c"
+                   - >
+                     echo "$DATA_SERVICE_PORT_8080_TCP_ADDR ifs-data-service" >> /etc/hosts && echo "$IDP_PORT_443_TCP_ADDR iuk-auth-localdev" >> /etc/hosts
           env:
           - name: IFS_WEB_BASEURL
             value: 'https://<<SHIB-ADDRESS>>'
