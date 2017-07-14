@@ -1,24 +1,16 @@
 package org.innovateuk.ifs.validator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
-import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
 import java.math.BigDecimal;
 
-import static java.lang.Integer.MAX_VALUE;
-import static java.lang.Integer.MIN_VALUE;
+import static java.lang.Long.MAX_VALUE;
+import static java.lang.Long.MIN_VALUE;
 import static java.math.BigDecimal.valueOf;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.rejectValue;
 
-/**
- * This class validates the FormInputResponse, it checks that there is a number present and that it is an integer.
- */
-@Component
-public class IntegerValidator extends BaseValidator {
-    private static final Log LOG = LogFactory.getLog(IntegerValidator.class);
+public abstract class IntegerValidator extends BaseValidator {
 
     @Override
     public final void validate(Object target, Errors errors) {
@@ -27,8 +19,7 @@ public class IntegerValidator extends BaseValidator {
         BigDecimal value = toBigDecimal(responseValue);
         if (value == null){
             rejectValue(errors, "value", "validation.field.must.not.be.blank");
-        }
-        else {
+        } else {
             if (fractionalPartLength(value) > 0){
                 rejectValue(errors, "value", "validation.standard.integer.non.decimal.format");
             }
@@ -43,9 +34,7 @@ public class IntegerValidator extends BaseValidator {
         }
     }
 
-    protected void validate(BigDecimal bd, Errors errors){
-
-    }
+    protected abstract void validate(BigDecimal bd, Errors errors);
 
     private BigDecimal toBigDecimal(String value) {
         try {

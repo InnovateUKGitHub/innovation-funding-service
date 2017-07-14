@@ -90,7 +90,7 @@
         </form>
     </div>
     <th:block th:if="${!model.isSentToProjectTeam() and model.grantOfferLetterFile != null}">
-        <button data-js-modal="modal-accept-send-gol" id="send-gol" class="button large">
+        <button data-js-modal="modal-accept-send-gol" id="send-gol" class="button">
             Publish to project team
         </button>
     </th:block>
@@ -109,7 +109,7 @@
     <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable() and model.getSignedGrantOfferLetterApproved() != true}">
         <h2 class="heading-medium">Confirm receipt of signed grant offer letter</h2>
         <p>Do the documents supplied meet the requirements for the grant offer letter?</p>
-        <button data-js-modal="modal-accept-signed-gol" class="button large">Accept signed grant offer letter</button>
+        <button data-js-modal="modal-accept-signed-gol" class="button">Accept signed grant offer letter</button>
     </th:block>
 
     <th:block th:insert="fragments/layout :: main-content-end" />

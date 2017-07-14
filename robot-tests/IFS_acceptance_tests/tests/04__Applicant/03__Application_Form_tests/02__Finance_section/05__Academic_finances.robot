@@ -6,7 +6,7 @@ Documentation     INFUND-917: As an academic partner i want to input my finances
 ...               INFUND-2399: As a Academic partner I want to be able to add my finances including decimals for accurate recording of my finances
 ...
 ...               INFUND-8347: Update 'Your project costs' for academics
-Suite Setup       Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation
+Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Email    Applicant
 Resource          ../../../../resources/defaultResources.robot
@@ -161,6 +161,10 @@ Academic finance overview
     [Teardown]    The user marks the academic application finances as incomplete
 
 *** Keywords ***
+Custom Suite Setup
+    the guest user opens the browser
+    Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${OPEN_COMPETITION_NAME}  You will be joining as part of the organisation
+
 the academic partner fills the finances
     [Documentation]    INFUND-2399
     The user enters text to a text field  id=incurred-staff    999.999

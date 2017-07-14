@@ -1,13 +1,17 @@
 .app-summary {
 
-  div.alignright-button {
-    padding-top: 30px;
+  div {
+    &.alignright-button {
+      padding-top: 30px;
+    }
   }
 
-  a.back {
-    font-size: 16px;
-    display: block;
-    margin-top: 1em;
+  a {
+    &.back {
+      font-size: 16px;
+      display: block;
+      margin-top: 1em;
+    }
   }
 
   .question {
@@ -16,30 +20,38 @@
   }
 }
 
-.no-js .app-summary .agree-to-terms-container {
-  display: none;
-}
-
-.app-summary.is-closed {
-
-  [readonly],
-  .readonly {
-    border:none;
-    padding:0;
-    background:transparent;
-    min-height: 0;
-    resize:none;
-    overflow:visible;
-
-    p:last-child {
-      margin-bottom:0;
+.no-js {
+  .app-summary {
+    .agree-to-terms-container {
+      display: none;
     }
   }
+}
 
-  .textarea-footer {
-    display: none;
-    min-height: 0;
-    resize: none;
+.app-summary {
+  &.is-closed {
+
+    [readonly],
+    .readonly {
+      border:none;
+      padding:0;
+      background:transparent;
+      min-height: 0;
+      resize:none;
+      overflow:visible;
+
+      p {
+        &:last-child {
+          margin-bottom:0;
+        }
+      }
+    }
+
+    .textarea-footer {
+      display: none;
+      min-height: 0;
+      resize: none;
+    }
   }
 }
 
@@ -59,26 +71,28 @@
   h2 {
     border: 0;
 
-    button[aria-expanded] {
-      background-color: $grey-3;
-      border: 0;
-      border-radius: 0;
-      box-shadow: 0 2px 0 #b5babe;
-      box-sizing: border-box;
-      color: $black;
-      cursor: pointer;
-      display: inline-block;
-      font-size: 1em;
-      font-weight: 400;
-      line-height: 1.25;
-      padding: .526315em .789473em .263157em;
-      position: relative;
-      text-decoration: none;
-      vertical-align: top;
-      width: auto;
+    button {
+      &[aria-expanded] {
+        background-color: $grey-3;
+        border: 0;
+        border-radius: 0;
+        box-shadow: 0 2px 0 #b5babe;
+        box-sizing: border-box;
+        color: $black;
+        cursor: pointer;
+        display: inline-block;
+        font-size: 1em;
+        font-weight: 400;
+        line-height: 1.25;
+        padding: .526315em .789473em .263157em;
+        position: relative;
+        text-decoration: none;
+        vertical-align: top;
+        width: auto;
 
-      &::after {
-        display: none;
+        &::after {
+          display: none;
+        }
       }
     }
   }
