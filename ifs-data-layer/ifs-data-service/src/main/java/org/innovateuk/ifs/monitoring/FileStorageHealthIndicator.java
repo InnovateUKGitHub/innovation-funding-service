@@ -1,16 +1,16 @@
 package org.innovateuk.ifs.monitoring;
 
-import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * this class supplies the /health endpoint with the knowledge about if the file storage cluster is accessible.
@@ -23,7 +23,7 @@ public class FileStorageHealthIndicator implements HealthIndicator {
     private String fileStoragePath;
 
     @Override public Health health() {
-        LOG.info("checking filesystem Health");
+        LOG.debug("checking filesystem health");
         Path storagePath = FileSystems.getDefault().getPath(fileStoragePath);
         createStoragePathIfNotExist(storagePath);
 
