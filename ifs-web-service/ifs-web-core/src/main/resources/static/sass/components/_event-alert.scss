@@ -1,117 +1,76 @@
-/* SG
-# IFS/Alerts
-
-Don't use the javascript underneath which is just for demo, just add the html fragment
-```
-<div style="display:none" id="event-examples">
-
-  <!-- the html of the alerts -->
-  <div class="event-alert">
-      <p><span>This is an info</span></p>
-  </div>
-
-  <div class="event-alert event-warning">
-      <p><span>This is a warning</span></p>
-  </div>
-
-  <div class="event-alert event-error">
-      <p><span>This is an error</span></p>
-  </div>
-
-  <div class="event-alert no-animation">
-      <p><span>This is a message that sticks and never goes away because it has the no-animation css class</span></p>
-  </div>
-
-</div>
-<script>
-  function showAlertInfo(){
-    jQuery('body').prepend(jQuery('#event-examples .event-alert:nth-child(1)')[0].outerHTML);
-  }
-  function showAlertWarning(){
-    jQuery('body').prepend(jQuery('#event-examples .event-alert.event-warning')[0].outerHTML);
-  }
-  function showAlertError(){
-    jQuery('body').prepend(jQuery('#event-examples .event-alert.event-error')[0].outerHTML);
-  }
-  function showNoAnimation(){
-    jQuery('body').prepend(jQuery('#event-examples .event-alert.no-animation')[0].outerHTML);
-  }
-</script>
-
-<button onclick="showAlertInfo()">Show an info alert</button>
-<button onclick="showAlertWarning()">Show a warning alert</button>
-<button onclick="showAlertError()">Show an error alert</button>
-<button onclick="showNoAnimation()">Show an alert that stays on top</button>
-```
-*/
 @import "compass/css3/animation";
-@include keyframes(slideup) {
-    0% {
-        @include transform(translate(0,0));
-    }
-    100% {
-        @include transform(translate(0,-120px));
 
-    }
+@include keyframes(slideup) {
+  0% {
+    @include transform(translate(0,0));
+  }
+
+  100% {
+    @include transform(translate(0,-120px));
+
+  }
 }
 
 .event-alert {
-    position:fixed;
-    @include ie-lte(10) {
-      position:relative; //because ie9 and lower don't have css animations we have the content at the top of the page all the time.
+  @include ie-lte(10) {
+    position:relative; //because ie9 and lower don't have css animations we have the content at the top of the page all the time.
+  }
+
+  position:fixed;
+  background-color: $grey-3;
+  display: block;
+  font-size: 19px;
+  left: 0;
+  text-align: center;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  max-height: 120px;
+  overflow: hidden;
+  animation: slideup .66s ease-in-out 3s forwards;
+  -webkit-animation: slideup .66s ease-in-out 3s forwards;
+
+  p {
+    border-top: 10px solid $govuk-blue;
+    margin: 0;
+    padding: 0 10px;
+
+    span {
+      background: {
+        image: url(/images/icons/icon-information.png);
+        repeat: no-repeat;
+        position: 0 50%;
+      }
+      display: inline-block;
+      padding: 15px 0 15px 35px;
     }
+  }
 
-    background-color: $grey-3;
-    display: block;
-    font-size: 19px;
-    left: 0;
-    text-align: center;
-    top: 0;
-    width: 100%;
-    z-index: 100;
+  &.no-animation {
+    @include animation(none);
+    position: relative;
+    z-index: 99;
+  }
 
-    max-height: 120px;
-    overflow: hidden;
-    animation: slideup .66s ease-in-out 3s forwards;
-    -webkit-animation: slideup .66s ease-in-out 3s forwards;
-
+  &.event-warning {
     p {
-        border-top: 10px solid $govuk-blue;
-        margin: 0;
-        padding: 0 10px;
+      border-top: 10px solid $beta-colour;
 
-        span {
-            background: {
-                image: url(/images/icons/icon-information.png);
-                repeat: no-repeat;
-                position: 0 50%;
-            }
-            display: inline-block;
-            padding: 15px 0 15px 35px;
-        }
+      span {
+        background-image: url(/images/icons/icon-important.png);
+        padding: 15px 0 15px 45px;
+      }
     }
-    &.no-animation {
-      position: relative;
-      @include animation(none);
-      z-index: 99;
+  }
+
+  &.event-error {
+    p {
+      border-top: 10px solid $error-colour;
+
+      span {
+        background-image: url(/images/icons/icon-important.png);
+        padding: 15px 0 15px 45px;
+      }
     }
-
-    &.event-warning p {
-          border-top: 10px solid $beta-colour;
-
-          span {
-              background-image: url(/images/icons/icon-important.png);
-              padding: 15px 0 15px 45px;
-          }
-
-    }
-
-    &.event-error p {
-          border-top: 10px solid $error-colour;
-
-          span {
-              background-image: url(/images/icons/icon-important.png);
-              padding: 15px 0 15px 45px;
-          }
-    }
+  }
 }

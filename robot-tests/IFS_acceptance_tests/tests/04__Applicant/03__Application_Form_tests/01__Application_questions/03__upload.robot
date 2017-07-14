@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INFUND-832
 ...               INFUND-409
-Suite Setup       Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation
+Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Upload    Applicant    Email
 Resource          ../../../../resources/defaultResources.robot
@@ -150,6 +150,10 @@ Quarantined files are not returned to the user and the user is informed
     And the user should see the text in the page   This file has been found to be unsafe
 
 *** Keywords ***
+Custom Suite Setup
+    the guest user opens the browser
+    Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${OPEN_COMPETITION_NAME}  You will be joining as part of the organisation
+
 the user can re-assign the question back to the lead applicant
     the user reloads the page
     the user clicks the button/link  name=assign_question

@@ -2,114 +2,174 @@
 // //Good ie7 support plus better performance, SVG would be even better but isn't supported
 // //font icons are blocking and this is just a couple of bytes of background images
 
-.hallotoolbar .list {
-  margin:0;
-  padding:0;
+.hallotoolbar {
+  .list {
+    margin:0;
+    padding:0;
+  }
 }
+
 .ui-dialog-title {
   display: none;
 }
+
 .fa {
+  @include inline-block;
   height: 12px;
   width: 12px;
-	@include inline-block;
   background-image: url('/images/wysiwyg/editorControls.png');
   background-repeat: no-repeat;
 }
+
 .fa-bold {
   background-position: 0 -12px;
 }
+
 .fa-italic {
   background-position: 0 -36px;
 }
+
 .fa-list-ordered {
   background-position: 0 -60px;
 }
+
 .fa-list-unordered {
   background-position: 0 -84px;
 }
+
 .fa-link {
   background-position: 0 -108px;
 }
 
-button.ui-state-active .fa-bold {
-  background-position: 0 0;
-}
-button.ui-state-active .fa-italic {
-  background-position: 0 -24px;
-}
-button.ui-state-active .fa-list-ordered {
-  background-position: 0 -48px;
-}
-button.ui-state-active .fa-list-unordered {
-  background-position: 0 -72px;
-}
-button.ui-state-active .fa-link {
-  background-position: 0 -96px;
+button {
+  &.ui-state-active {
+    .fa-bold {
+      background-position: 0 0;
+    }
+
+    .fa-italic {
+      background-position: 0 -24px;
+    }
+
+    .fa-list-ordered {
+      background-position: 0 -48px;
+    }
+
+    .fa-list-unordered {
+      background-position: 0 -72px;
+    }
+
+    .fa-link {
+      background-position: 0 -96px;
+    }
+  }
 }
 
 @include device-pixel-ratio() {
-  .fa.fa,
-  button.ui-state-active .fa.fa {
-		background-image: url('/images/wysiwyg/editorControls@2x.png');
-    background-size: 12px;
+  .fa {
+    &.fa {
+      background-image: url('/images/wysiwyg/editorControls@2x.png');
+      background-size: 12px;
+    }
+  }
+
+  button {
+    &.ui-state-active {
+      .fa {
+        &.fa {
+          background-image: url('/images/wysiwyg/editorControls@2x.png');
+          background-size: 12px;
+        }
+      }
+    }
+  }
+}
+
+%wysiwyg-styles {
+  b {
+    font-weight:bold;
+    font-style:inherit;
+  }
+
+  i {
+    font-style:italic;
+    font-weight:inherit;
+  }
+
+  ol,
+  ul {
+    @extend .list;
+  }
+
+  ol {
+    @extend .list-number;
+  }
+
+  ul {
+    @extend .list-bullet;
+  }
+
+  li {
+    p {
+      padding: 0;
+      margin: 0;
+    }
+  }
+
+  > div {
+    @extend p;
   }
 }
 
 [contenteditable="true"],
-.wysiwyg-styles,
-.textarea-wrapped .readonly {
-
-    b {
-        font-weight:bold;
-        font-style:inherit;
-    }
-    i {
-        font-style:italic;
-        font-weight:inherit;
-    }
-    ol, ul {
-        @extend .list;
-    }
-    ol {
-        @extend .list-number;
-    }
-    ul {
-        @extend .list-bullet;
-    }
-    li p {
-        padding: 0;
-        margin: 0;
-    }
-    > div {
-      @extend p;
-    }
+.wysiwyg-styles {
+  @extend %wysiwyg-styles;
 }
-.textarea-wrapped [contenteditable="true"] {
-	padding-top: 50px;
+
+.textarea-wrapped {
+  .readonly {
+    @extend %wysiwyg-styles;
+  }
+}
+
+.textarea-wrapped {
+  [contenteditable="true"] {
+    padding-top: 50px;
+  }
 }
 
 .hallotoolbar {
-	@include border-radius(10px);
-	background:#fff;
-	border:1px solid $border-colour;
-	width:auto!important;
-	margin:50px 10px 0 10px;
+  @include border-radius(10px);
+  background:#fff;
+  border:1px solid $border-colour;
+  width:auto!important;
+  margin:50px 10px 0 10px;
 
-	.ui-buttonset:first-child button.ui-corner-left{
-			@include border-radius(10px 0 0 10px);
-	}
-	.ui-buttonset:last-child button.ui-corner-right{
-			@include border-radius(0 10px 10px 0);
-	}
+  .ui-buttonset {
+    &:first-child {
+      button {
+        &.ui-corner-left{
+          @include border-radius(10px 0 0 10px);
+        }
+      }
+    }
 
-	button {
-		border:none;
-		background:#fff;
-		padding:8px 10px;
+    &:last-child {
+      button {
+        &.ui-corner-right{
+          @include border-radius(0 10px 10px 0);
+        }
+      }
+    }
+  }
 
-	}
-	button.ui-state-active {
-		background: #000;
-	}
+  button {
+    border:none;
+    background:#fff;
+    padding:8px 10px;
+
+    &.ui-state-active {
+      background: #000;
+    }
+  }
 }

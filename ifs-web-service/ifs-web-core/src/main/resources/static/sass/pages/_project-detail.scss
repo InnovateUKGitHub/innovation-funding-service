@@ -1,8 +1,13 @@
-body.project-detail {
-    th.larger-cols {
+body {
+  &.project-detail {
+    th {
+      &.larger-cols {
         width: 45%;
-    }
-    th.smaller-col {
+      }
+
+      &.smaller-col {
         width: 10%;
+      }
     }
+  }
 }
