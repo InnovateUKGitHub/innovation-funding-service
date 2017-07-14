@@ -22,6 +22,8 @@ Documentation     INFUND-2982: Create a Competition: Step 1: Initial details
 ...               INFUND-5641 As a Competitions team member I want to be able to update the assessor setup questions so that I can amend the defaults if required for the competition
 ...
 ...               IFS-380 As a comp executive I am able to confirm if an assessment panel is required in competition setup
+...
+...               IFS-631 As a comp executive I am able to confirm if an interview stage is required in competition setup
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -198,13 +200,14 @@ Milestones: Autosave
     Then the user should see the correct inputs in the Milestones form
 
 Assessor: Server-side validation
-    [Documentation]    INFUND-5641, IFS-380
+    [Documentation]    INFUND-5641, IFS-380, IFS-631
     [Setup]    The user navigates to the Validation competition
     Given the user clicks the button/link    link=Assessors
     And The user enters text to a text field    id=assessorPay    ${EMPTY}
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see an error    Please enter how much assessors will be paid.
     And the user should see an error     Please select an assessment panel option.
+    And the user should see an error     Please select an interview stage option.
 
 Assessor: Client-side validation
     [Documentation]    INFUND-5641

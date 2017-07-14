@@ -21,7 +21,7 @@ public class AssessorsForm extends CompetitionSetupForm {
     @NotNull(message = "{validation.assessorsform.assessmentPanel.required}")
     private Boolean useAssessmentPanel;
 
-    @NotNull(message = "{validation.assessorsform.assessmentPanel.required}")
+    @NotNull(message = "{validation.assessorsform.interviewStage.required}")
     private Boolean addInterviewStage;
 
     public Integer getAssessorCount() {
