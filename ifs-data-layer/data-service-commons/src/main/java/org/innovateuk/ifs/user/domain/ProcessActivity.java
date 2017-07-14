@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.invite.domain;
+package org.innovateuk.ifs.user.domain;
 
 
 /**

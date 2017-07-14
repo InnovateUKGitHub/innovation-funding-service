@@ -2,6 +2,7 @@ package org.innovateuk.ifs.user.transactional;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.security.UserLookupStrategies;
@@ -118,6 +119,11 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
 
         @Override
         public ServiceResult<Void> activateAssessorAndSendDiversitySurvey(long userId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> createInternalUser(String inviteHash, InternalUserRegistrationResource userRegistrationResource) {
             return null;
         }
 

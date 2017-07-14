@@ -30,6 +30,13 @@ public class UserDocs {
             fieldWithPath("allowMarketingEmails").description("allow marketing emails")
     };
 
+    public static final FieldDescriptor[] internalUserRegistrationResourceFields = {
+            fieldWithPath("firstName").description("first name of the user"),
+            fieldWithPath("lastName").description("last name of the user"),
+            fieldWithPath("email").description("e-mail address of the user"),
+            fieldWithPath("password").description("password of the user"),
+            fieldWithPath("roles").description("roles that the user is associated with"),
+    };
 
     public static final FieldDescriptor[] userPageResourceFields = pageResourceFields;
 }
