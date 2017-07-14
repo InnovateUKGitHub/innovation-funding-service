@@ -47,7 +47,6 @@ public class CompetitionManagementAssessmentsApplicationsController extends Base
         return "competition/manage-applications";
     }
 
-    @Override
     protected ApplicationCountSummaryPageResource getCounts(long competitionId, int page, String filter) {
         return applicationCountSummaryRestService
                 .getApplicationCountSummariesByCompetitionId(competitionId, page, PAGE_SIZE, filter)

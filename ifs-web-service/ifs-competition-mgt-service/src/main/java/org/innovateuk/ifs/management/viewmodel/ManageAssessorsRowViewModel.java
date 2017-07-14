@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.management.viewmodel;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
 
 /**
@@ -50,5 +52,37 @@ public class ManageAssessorsRowViewModel {
 
     public long getSubmitted() {
         return submitted;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ManageAssessorsRowViewModel that = (ManageAssessorsRowViewModel) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(total, that.total)
+                .append(assigned, that.assigned)
+                .append(accepted, that.accepted)
+                .append(submitted, that.submitted)
+                .append(name, that.name)
+                .append(skillAreas, that.skillAreas)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(name)
+                .append(skillAreas)
+                .append(total)
+                .append(assigned)
+                .append(accepted)
+                .append(submitted)
+                .toHashCode();
     }
 }

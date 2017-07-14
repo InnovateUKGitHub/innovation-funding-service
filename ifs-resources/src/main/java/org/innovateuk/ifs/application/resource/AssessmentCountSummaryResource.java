@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public abstract class AssessmentCountSummaryResource  {
+ public abstract class AssessmentCountSummaryResource  {
     private Long id;
 
     public AssessmentCountSummaryResource() {

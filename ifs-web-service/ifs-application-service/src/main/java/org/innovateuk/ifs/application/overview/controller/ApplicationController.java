@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.forms.populator.AssessorQuestionFeedbackPo
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import static java.lang.String.format;
 
 /**
  * This controller will handle all requests that are related to the application overview.
@@ -48,9 +51,15 @@ public class ApplicationController {
     private AssessorQuestionFeedbackPopulator assessorQuestionFeedbackPopulator;
 
     @GetMapping("/{applicationId}")
-    public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
+    public String applicationDetails(ApplicationForm form,
+                                     Model model,
+                                     @PathVariable("applicationId") long applicationId,
                                      UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
+
+        if (application.getCompetitionStatus() != CompetitionStatus.OPEN) {
+            return format("redirect:/application/%s/summary", application.getId());
+        }
 
         if (form == null) {
             form = new ApplicationForm();

@@ -25,8 +25,6 @@ public abstract class BaseCompetitionManagementAssessmentsController<T extends A
         return competitionService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
     }
 
-    protected abstract T getCounts(long competitionId, int page, String filter);
-
     protected String buildBackUrl(String origin, long competitionId, MultiValueMap<String, String> queryParams) {
         String baseUrl = ApplicationOverviewOrigin.valueOf(origin).getBaseOriginUrl();
         queryParams.remove("origin");

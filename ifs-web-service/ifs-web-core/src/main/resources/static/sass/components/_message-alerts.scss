@@ -1,27 +1,16 @@
-/* SG
-
-# IFS/Message Alert Dialog
-Large message panel
-
-```
-<div class="message-alert">
-    <h1 class="heading-medium">
-        New request for assessment
-    </h1>
-
-    <p>
-      You have been requested to act as an assessor on a new competition: <strong>Solving urban problems with data</strong>
-    </p>
-
-    <ul class="message-summary-list">
-      <li><strong><a href="#">Respond to assessment request</a></strong></li>
-    </ul>
- </div>
-
- ```
-*/
-
 %alert-panel {
+  @include media-down(mobile) {
+    padding: 20px 10px 20px 30px;
+    background-position: 8px 50%;
+    background-size: 16px 16px;
+
+    p {
+      a {
+        margin-left: 0;
+      }
+    }
+  }
+
   padding: 20px 20px 20px 60px;
   border-style: solid;
   border-width: 0 0 0 5px;
@@ -32,20 +21,13 @@ Large message panel
   background-size: 20px 20px;
   clear: both;
 
-  p, .heading-small, .heading-medium, ul, ol {
+  p,
+  .heading-small,
+  .heading-medium,
+  ul,
+  ol {
     margin: 0;
   }
-
- 	@include media-down(mobile) {
-    padding: 20px 10px 20px 30px;
-    background-position: 8px 50%;
-    background-size: 16px 16px;
-
-    p a {
-      margin-left: 0;
-    }
- 	}
-
 }
 
 .success-alert {

@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import static java.util.Collections.singletonList;
-
 /**
  * Implementing class for {@link AssessorCountSummaryRestService}, for the action on retrieving application statistics.
  */
@@ -18,16 +16,13 @@ public class AssessorCountSummaryRestServiceImpl extends BaseRestService impleme
     private static final String assessorCountRestUrl = "/assessorCountSummary";
 
     @Override
-    public RestResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionId(long competitionId, Integer pageIndex, Integer pageSize, String filter) {
-        String uriWithParams = buildUri(assessorCountRestUrl + "/findByCompetitionId/{compId}", pageIndex, pageSize, filter, competitionId);
+    public RestResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionId(long competitionId, Integer pageIndex, Integer pageSize) {
+        String uriWithParams = buildUri(assessorCountRestUrl + "/findByCompetitionId/{compId}", pageIndex, pageSize, competitionId);
         return getWithRestResult(uriWithParams, AssessorCountSummaryPageResource.class);
     }
 
-    private String buildUri(String url, Integer pageNumber, Integer pageSize, String filter, Object... uriParameters ) {
+    private String buildUri(String url, Integer pageNumber, Integer pageSize, Object... uriParameters ) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        if (filter != null) {
-            params.put("filter", singletonList(filter));
-        }
         return buildPaginationUri(url, pageNumber, pageSize, null, params, uriParameters);
     }
 }
