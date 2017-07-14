@@ -646,20 +646,21 @@ IFS.core.formValidation = (function () {
         // server side remove in form group
         formGroup.find('.error-message:not([data-errorfield]):contains("' + message + '")').first().remove()
 
-        // if this was the last error we remove the error styling on the form group
-        if (formGroup.find('[data-errorfield],.error-message:not([data-errorfield])').length === 0) {
-          formGroup.removeClass('form-group-error')
-        }
-        // in certain situations a form group can have multiple fields so we check if this is the last error of the field by checking the errorfield name.
-        // Also if there er no server side errors anymore we set the field valid.
-        if (formGroup.find('[data-errorfield="' + name + '"],.error-message:not([data-errorfield])').length === 0) {
-          field.removeClass('form-control-error')
+        // In certain situations a form group can have multiple fields client side errors.
+        // So we check if this is the last error of the field checking the errorfield name.
+        if (formGroup.find('[data-errorfield="' + name + '"]').length === 0) {
+          field.removeClass('form-control-error') // set only this field valid but others in the form group can be invalid
           if (s.html5validationMode) {
             // looping through the name attribute for setting checkboxes and radios valid
             jQuery('[name="' + name + '"]').each(function () {
               this.setCustomValidity('')
             })
           }
+        }
+        // if this was the last error we remove the error styling on the form group and the field(s)
+        if (formGroup.find('[data-errorfield],.error-message:not([data-errorfield])').length === 0) {
+          formGroup.removeClass('form-group-error')
+          formGroup.find('.form-control-error').removeClass('form-control-error')
         }
       }
 
