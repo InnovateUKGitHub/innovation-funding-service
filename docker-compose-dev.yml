@@ -109,16 +109,6 @@ services:
     networks:
       - ifs
 
-#  proxysql:
-#    build:
-#      context: setup-files/scripts/docker/proxysql
-#      dockerfile: Dockerfile-proxysql
-#    links:
-#      - mysql
-#    restart: on-failure
-#    networks:
-#      - ifs
-
   zipkin:
     hostname: zipkin
     image: openzipkin/zipkin
