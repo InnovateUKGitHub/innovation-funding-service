@@ -211,7 +211,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     public ServiceResult<InviteResultsResource> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource, Long applicationId) {
         return validateInviteOrganisationResource(inviteOrganisationResource).andOnSuccess(() ->
                 validateUniqueEmails(inviteOrganisationResource.getInviteResources())).andOnSuccess(() ->
-                assembleInviteOrganisationFromResource(inviteOrganisationResource, applicationId).andOnSuccessReturn(inviteOrganisation -> {
+                findOrAssembleInviteOrganisationFromResource(inviteOrganisationResource, applicationId).andOnSuccessReturn(inviteOrganisation -> {
                             List<ApplicationInvite> invites = saveInviteOrganisationWithInvites(inviteOrganisation, inviteOrganisationResource.getInviteResources());
                             return sendInvites(invites);
                         }
@@ -359,13 +359,10 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         return resource;
     }
 
-    private ServiceResult<InviteOrganisation> assembleInviteOrganisationFromResource(InviteOrganisationResource inviteOrganisationResource, Long applicationId) {
+    private ServiceResult<InviteOrganisation> findOrAssembleInviteOrganisationFromResource(InviteOrganisationResource inviteOrganisationResource, Long applicationId) {
 
         if (inviteOrganisationResource.getOrganisation() != null) {
-            return findCorrespondingOrganisationForInviteOrganisation(inviteOrganisationResource).andOnSuccess(organisation ->
-                    findInviteOrganisationForOrganisationInApplication(inviteOrganisationResource, applicationId).andOnSuccess(inviteOrganisation -> serviceSuccess(inviteOrganisation))
-                            .andOnFailure(() -> serviceSuccess(buildNewInviteOrganisationForOrganisation(inviteOrganisationResource, organisation)))
-            );
+            return eitherFindExistingInviteOrganisationOrCreateNewInviteOrganisationForOrganisation(inviteOrganisationResource, applicationId);
         } else {
 
             return serviceSuccess(buildNewInviteOrganisation(inviteOrganisationResource));
@@ -418,7 +415,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         Set<String> uniqueEmails = getUniqueEmailAddressesForApplication(applicationId);
         forEachWithIndex(inviteResources, (index, invite) -> {
             if (!uniqueEmails.add(invite.getEmail())) {
-                failures.add(fieldError(format("applicants[%s].email", index), invite.getEmail(), "email.already.in.invite"));
+                failures.add(fieldError(format("stagedInvite.email", index), invite.getEmail(), "email.already.in.invite"));
             }
         });
         return failures.isEmpty() ? serviceSuccess() : serviceFailure(failures);
@@ -542,11 +539,19 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                 .orElse(leadApplicantRole);
     }
 
-    protected ServiceResult<Organisation> findCorrespondingOrganisationForInviteOrganisation(InviteOrganisationResource inviteOrganisationResource) {
+    protected ServiceResult<Organisation> findOrganisationForInviteOrganisation(InviteOrganisationResource inviteOrganisationResource) {
         return find(organisationRepository.findOne(inviteOrganisationResource.getOrganisation()), notFoundError(Organisation.class, inviteOrganisationResource.getOrganisation()));
     }
 
     private ServiceResult<InviteOrganisation> findInviteOrganisationForOrganisationInApplication(InviteOrganisationResource inviteOrganisationResource, Long applicationId) {
         return find(inviteOrganisationRepository.findOneByOrganisationIdAndInvitesApplicationId(inviteOrganisationResource.getOrganisation(), applicationId), notFoundError(InviteOrganisation.class, inviteOrganisationResource.getOrganisation(), applicationId));
+    }
+
+    private ServiceResult<InviteOrganisation> eitherFindExistingInviteOrganisationOrCreateNewInviteOrganisationForOrganisation(InviteOrganisationResource inviteOrganisationResource, Long applicationId) {
+        return findOrganisationForInviteOrganisation(inviteOrganisationResource)
+                .andOnSuccess(organisation -> findInviteOrganisationForOrganisationInApplication(inviteOrganisationResource, applicationId)
+                        .andOnSuccess(inviteOrganisation -> serviceSuccess(inviteOrganisation))
+                        .andOnFailure(() -> serviceSuccess(buildNewInviteOrganisationForOrganisation(inviteOrganisationResource, organisation)))
+                );
     }
 }

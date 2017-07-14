@@ -7,5 +7,4 @@ public class AbstractTeamManagementServiceTest {
     public void removeInvite_shouldCallRemoveCollaboratorAndReturnResult() throws Exception {
 
     }
-
 }

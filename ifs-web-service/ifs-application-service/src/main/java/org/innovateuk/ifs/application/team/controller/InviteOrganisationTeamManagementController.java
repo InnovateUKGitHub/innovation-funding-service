@@ -11,4 +11,5 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/application/{applicationId}/team/update/invited/{organisationId}")
 public class InviteOrganisationTeamManagementController extends AbstractTeamManagementController<InviteOrganisationTeamManagementService> {
+
 }

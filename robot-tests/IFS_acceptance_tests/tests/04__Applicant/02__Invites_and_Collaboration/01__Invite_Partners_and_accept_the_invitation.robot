@@ -50,7 +50,7 @@ Lead Adds/Removes rows
     [Documentation]    INFUND-901  INFUND-7974  INFUND-8590
     [Tags]    HappyPath
     When The user clicks the button/link      jquery=a:contains("Update ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}")
-    And the user clicks the button/link       jQuery=button:contains("Add new applicant")
+    And the user clicks the button/link       jQuery=button:contains("Add another contributor")
     And The user should not see the element   jQuery=.modal-delete-organisation button:contains('Delete organisation')
     Then The user should see the element      jQuery=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)
     And The user clicks the button/link       jQuery=button:contains('Remove')
@@ -64,11 +64,11 @@ Lead cannot be removed
 Lead organisation server-side validations
     [Documentation]    INFUND-901  INFUND-7974
     [Tags]    HappyPath
-    When The user clicks the button/link      jQuery=button:contains("Add new applicant")
+    When The user clicks the button/link      jQuery=button:contains("Add another contributor")
     And The user enters text to a text field  jQuery=tr:nth-of-type(2) td:nth-of-type(1) input    ${EMPTY}
     And The user enters text to a text field  jQuery=tr:nth-of-type(2) td:nth-of-type(2) input    @test.co.uk
     And browser validations have been disabled
-    And the user clicks the button/link       jQuery=.button:contains("Update organisation")
+    And the user clicks the button/link       jQuery=.button:contains("Invite")
     Then the user should see an error         Please enter a valid email address.
     And the user should see an error          Please enter a name.
 
@@ -206,10 +206,10 @@ Partner can invite others to his own organisation
     [Documentation]    INFUND-2335  INFUND-7977
     [Tags]    Email
     When the user clicks the button/link      jQuery=a:contains("Update NOMENSA LTD")
-    And the user clicks the button/link       jQuery=button:contains("Add new applicant")
+    And the user clicks the button/link       jQuery=button:contains("Add another contributor")
     And The user enters text to a text field  jQuery=tr:nth-of-type(2) td:nth-of-type(1) input    Mark
     And The user enters text to a text field  jQuery=tr:nth-of-type(2) td:nth-of-type(2) input    mark21@innovateuk.com
-    And the user clicks the button/link       jQuery=button:contains("Update organisation")
+    And the user clicks the button/link       jQuery=button:contains("Invite")
     Then The user should see the element      jQuery=td:contains("mark21@innovateuk.com") + td:contains("Invite pending")
 
 Lead should see the accepted partner in the assign list
@@ -230,12 +230,11 @@ Lead applicant invites a non registered user in the same organisation
     When the user clicks the button/link           link=view team members and add collaborators
     When the user clicks the button/link           jQuery=a:contains("Update ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}")
     Then the user should see the text in the page  Update ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
-    And the user clicks the button/link            jQuery=button:contains("Add new applicant")
-    When The user enters text to a text field      name= applicants[0].name    Roger Axe
-    And The user enters text to a text field       name=applicants[0].email    ${test_mailbox_one}+inviteorg2@gmail.com
-    And the user clicks the button/link            jQuery=button:contains("Update organisation")
-    Then the user should see the text in the page  Application team
-    And the user should see the text in the page   View and manage your participants in the application
+    And the user clicks the button/link            jQuery=button:contains("Add another contributor")
+    When The user enters text to a text field      name=stagedInvite.name    Roger Axe
+    And The user enters text to a text field       name=stagedInvite.email    ${test_mailbox_one}+inviteorg2@gmail.com
+    And the user clicks the button/link            jQuery=button:contains("Invite")
+    Then the user should see the text in the page  Invite pending for 0 days
     [Teardown]    Logout as user
 
 Registered partner should not create new org but should follow the create account flow
