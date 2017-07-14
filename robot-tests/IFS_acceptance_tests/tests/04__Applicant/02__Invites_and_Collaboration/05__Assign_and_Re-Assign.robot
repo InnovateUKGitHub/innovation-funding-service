@@ -55,7 +55,7 @@ The question is enabled for the assignee
     [Tags]  HappyPath  Email
     [Setup]  log in as a different user   ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     Given the user navigates to the page  ${DASHBOARD_URL}
-    And the user clicks the button/link   jQuery=.in-progress:contains("Assign test")  #Application Title
+    And the user clicks the button/link   link=Assign test  #Application Title
     Then the user should see the browser notification  Stuart ANDERSON has assigned a question to you
     And the user should see the element   jQuery=li:contains("Public description") .action-required
     And the user clicks the button/link   link= Public description
