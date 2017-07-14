@@ -86,7 +86,7 @@
 
 //double class to be more specific as the @extend gets processed last by compass
 .assign-container {
-  .assign-container {
+  &.assign-container {
     .assign-button {
       button {
         padding: 0;
