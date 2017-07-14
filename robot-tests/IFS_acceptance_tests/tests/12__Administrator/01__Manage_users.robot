@@ -124,7 +124,7 @@ Inviting the same user for the same role again should give an error
     And the user fills in the email address for the invitee
     And the user selects the option from the drop-down menu  IFS Administrator  id=role
     And the user clicks the button/link            jQuery=.button:contains("Send invite")
-    Then the user should see the element           jQuery=.error-summary:contains("This user has a pending invite. Please check.")
+    Then the user should see the element           jQuery=.error-summary:contains("This email address is already in use.")
 
 Inviting the same user for the different role again should also give an error
     [Documentation]  IFS-27
@@ -135,7 +135,7 @@ Inviting the same user for the different role again should also give an error
     And the user fills in the email address for the invitee
     And the user selects the option from the drop-down menu  Project Finance  id=role
     And the user clicks the button/link        jQuery=.button:contains("Send invite")
-    Then the user should see the text in the page  This user has a pending invite. Please check.
+    Then the user should see the text in the page  This email address is already in use.
 
 # TODO: Add ATs for IFS-605 with pagination when IFS-637 is implemented
 
