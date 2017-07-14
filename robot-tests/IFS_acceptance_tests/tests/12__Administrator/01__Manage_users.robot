@@ -137,6 +137,55 @@ Inviting the same user for the different role again should also give an error
     And the user clicks the button/link        jQuery=.button:contains("Send invite")
     Then the user should see the text in the page  This email address is already in use.
 
+Administrator can view the internal user's details
+    [Documentation]  IFS-18
+    [Tags]
+    Given the user navigates to the page       ${server}/management/admin/users/active
+    And the user clicks the button/link        link=New Administrator
+    Then the user should see the text in the page  View internal user's details
+    And the user should see the text in the page  New Administrator
+    And the user should see the text in the page  ifs.administrator@innovateuk.test
+    And the user should see the text in the page  IFS Administrator
+
+Administrator can navigate to edit page to edit the internal user's details
+    [Documentation]  IFS-18
+    [Tags]
+    Given the user clicks the button/link       link=Edit
+    And the user should see the text in the page  Update internal user's details
+
+Server side validation for edit internal user's details
+    [Documentation]  IFS-18
+    [Tags]
+    Given the user clicks the button/link   jQuery=button:contains("Save and return")
+    Then the user should see a field error  Please enter a first name.
+    And the user should see a field error  Your first name should have at least 2 characters.
+    And the user should see a field error  Please enter a last name.
+    And the user should see a field error  Your last name should have at least 2 characters.
+
+Client side validations for edit internal user's details
+    [Documentation]  IFS-18
+    [Tags]
+    Given the user enters text to a text field  id=firstName  A
+    Then the user should not see the element   jQuery=.error-message:contains("Please enter a first name.")
+    And the user should see the element        jQuery=.error-message:contains("Your first name should have at least 2 characters.")
+    When the user enters text to a text field  id=lastName  D
+    Then the user should not see the element   jQuery=.error-message:contains("Please enter a last name.")
+    And the user should see the element        jQuery=.error-message:contains("Your last name should have at least 2 characters.")
+
+Administrator can successfully edit internal user's details
+    [Documentation]  IFS-18
+    [Tags]
+    Given the user enters text to a text field  id=firstName  Edited
+    And the user enters text to a text field   id=lastName  Admin
+    And the user selects the option from the drop-down menu  IFS Support User  id=role
+    And the user clicks the button/link        jQuery=.button:contains("Save and return")
+    Then the user cannot see a validation error in the page
+    Then the user should see the element       jQuery=h1:contains("Manage users")
+    #The Admin is redirected to the Manage Users page on Success
+    And the user should see the element        jQuery=.selected:contains("Active")
+    And the user should see the element     link=Edited Admin
+    [Teardown]  close any open browsers
+
 # TODO: Add ATs for IFS-605 with pagination when IFS-637 is implemented
 
 *** Keywords ***

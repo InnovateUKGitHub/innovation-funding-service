@@ -1,16 +1,24 @@
 package org.innovateuk.ifs.admin.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.admin.form.EditUserForm;
 import org.innovateuk.ifs.admin.viewmodel.EditUserViewModel;
 import org.innovateuk.ifs.admin.viewmodel.UserListViewModel;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.registration.service.InternalUserService;
+import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.ZonedDateTime;
 
@@ -27,6 +35,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserManagementControllerTest extends BaseControllerMockMVCTest<UserManagementController>{
 
     private UserPageResource userPageResource;
+
+    @Mock
+    private InternalUserService internalUserServiceMock;
 
     @Before
     public void setUp(){
@@ -70,6 +81,56 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/user"))
                 .andExpect(model().attribute("model", new EditUserViewModel("abc", now, user)));
+    }
+
+    @Test
+    public void updateUserWhenUpdateFails() throws Exception {
+
+        when(internalUserServiceMock.editInternalUser(Mockito.any()))
+                .thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.NOT_AN_INTERNAL_USER_ROLE));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/user/{userId}/edit", 1L).
+                param("firstName", "First").
+                param("lastName", "Last").
+                param("emailAddress", "asdf@asdf.com").
+                param("role", "COLLABORATOR"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/edit-user"));
+    }
+
+    @Test
+    public void updateUserSuccess() throws Exception {
+
+        when(internalUserServiceMock.editInternalUser(Mockito.any()))
+                .thenReturn(ServiceResult.serviceSuccess());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/user/{userId}/edit", 1L).
+                param("firstName", "First").
+                param("lastName", "Last").
+                param("emailAddress", "asdf@asdf.com").
+                param("role", "IFS_ADMINISTRATOR"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/admin/users/active"));
+    }
+
+    @Test
+    public void viewEditUserSuccess() throws Exception {
+
+        String email = "asdf@asdf.com";
+        UserResource userResource = UserResourceBuilder.newUserResource()
+                .withEmail(email)
+                .build();
+
+        when(userRestServiceMock.retrieveUserById(1L))
+                .thenReturn(RestResult.restSuccess(userResource));
+
+        EditUserForm expectedForm = new EditUserForm();
+        expectedForm.setEmailAddress(email);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/admin/user/{userId}/edit", 1L))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/edit-user"))
+                .andExpect(model().attribute("form", expectedForm));
     }
 
     @Override
