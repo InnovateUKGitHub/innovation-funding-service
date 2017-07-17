@@ -96,7 +96,7 @@ Last update message is correctly updating
     And the user clicks the button/link   link= Assign test
     And the user clicks the button/link   link= Public description
     When the collaborator edits the 'public description' question
-    Then the user should see the element  jQuery=.form-footer:contains("Last updated: Today by you")
+    Then the user should see the element  jQuery=.form-footer .form-footer__info:contains("Last updated: Today by you")
 
 Collaborators cannot assign a question
     [Documentation]  INFUND-839
