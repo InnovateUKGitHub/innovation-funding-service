@@ -54,8 +54,8 @@ Filtering Assessors in the Assign assessors page
 Manage assessor list is correct
     [Documentation]    IFS-17
     [Tags]
-    [Setup]  the user clicks the button/link  link=Back
-    Given the user clicks the button/link     jQuery=a:contains("Allocate assessors")
+    [Setup]  the user clicks the button/link  link=Manage assessments
+    Given the user clicks the button/link     link=Allocate assessors
     Then the assessor list is correct before changes
 
 Assessor link goes to the assessor profile

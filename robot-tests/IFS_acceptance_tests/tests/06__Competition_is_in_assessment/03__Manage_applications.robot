@@ -31,7 +31,7 @@ View the list of the applications
     And The key statistics counts should be correct
     And The user clicks the button/link          jQuery=a:contains("Manage applications")
     Then the application list is correct before changes
-    [Teardown]  the user clicks the button/link  link=Back
+    [Teardown]  the user clicks the button/link  link=Manage assessments
 
 View the list of assessors
     [Documentation]  IFS-319
@@ -68,7 +68,7 @@ View application progress page
     [Documentation]    INFUND-7042, INFUND-7046
     [Tags]
     Given the user clicks the button/link          jQuery=tr:nth-child(9) a:contains("View progress")
-    Then The user should see the text in the page  jQuery=h2:contains("Living with Augmented Reality")
+    Then The user should see the element           jQuery=h2:contains("Living with Augmented Reality")
     And the user should see the element            jQuery=h3:contains("Partners") ~ ul:contains("Tripplezap (Lead)")
     And the user should see the element            jQuery=h3:contains("Innovation area") ~ span:contains("Digital manufacturing")
     And the user should see the element            jQuery=p:contains("No assessors have been assigned to this application")
@@ -113,9 +113,9 @@ Notify an assigned user
     [Documentation]    INFUND-7050
     [Tags]
     Given the user clicks the button/link  jQuery=tr:contains("Paul Plum") button:contains("Assign")
-    And the user clicks the button/link    jQuery=a:contains("Allocate applications")
-    And the user clicks the button/link    jQuery=a:contains("Back")
-    And the user clicks the button/link    jQuery=a:contains("Competition")
+    And the user clicks the button/link    link=Allocate applications
+    And the user clicks the button/link    link=Manage assessments
+    And the user clicks the button/link    link=Competition
     And the user clicks the button/link    jQuery=button:contains("Notify assessors")
     And the element should be disabled     jQuery=button:contains("Notify assessors")
     #TODO Check email once 7249 is done
@@ -161,9 +161,9 @@ Reassign and notify an assessor (Notified)
     And the user clicks the button/link            jQuery=tr:contains("Paul Plum") button:contains("Reassign")
     Then the user should see the text in the page  Assigned (1)
     And the assigned list is correct before notification
-    And the user clicks the button/link            jQuery=a:contains("Allocate applications")
-    And the user clicks the button/link            jQuery=a:contains("Back")
-    And the user clicks the button/link            jQuery=a:contains("Competition")
+    And the user clicks the button/link            link=Allocate applications
+    And the user clicks the button/link            link=Manage assessments
+    And the user clicks the button/link            link=Competition
     And the user clicks the button/link            jQuery=button:contains("Notify assessors")
     And the element should be disabled             jQuery=button:contains("Notify assessors")
 
