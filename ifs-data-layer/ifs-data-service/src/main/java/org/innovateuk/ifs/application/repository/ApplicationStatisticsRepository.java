@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.repository;
 
 import org.innovateuk.ifs.application.domain.ApplicationStatistics;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -24,6 +24,15 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "AND (a.applicationProcess.activityState.state IN :states) " +
             "AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
 
+    String REJECTED_AND_SUBMITTED_STATES_STRING =
+            "(org.innovateuk.ifs.workflow.resource.State.REJECTED," +
+            "org.innovateuk.ifs.workflow.resource.State.WITHDRAWN," +
+            "org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
+    String NOT_ACCEPTED_OR_SUBMITTED_STATES_STRING =
+            "(org.innovateuk.ifs.workflow.resource.State.PENDING,org.innovateuk.ifs.workflow.resource.State.REJECTED," +
+            "org.innovateuk.ifs.workflow.resource.State.WITHDRAWN,org.innovateuk.ifs.workflow.resource.State.CREATED,org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
+    String SUBMITTED_STATES_STRING = "(org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
+
     List<ApplicationStatistics> findByCompetitionAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> applicationStates);
 
     @Query(APPLICATION_FILTER)
@@ -31,12 +40,6 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
                                                                                            @Param("states") Collection<State> applicationStates,
                                                                                            @Param("filter") String filter,
                                                                                            Pageable pageable);
-
-    // TODO IFS-399 pass in the states as enum sets from the service, rather than hardcoding strings
-    String REJECTED_AND_SUBMITTED_STATES_STRING = "(org.innovateuk.ifs.workflow.resource.State.REJECTED,org.innovateuk.ifs.workflow.resource.State.WITHDRAWN, org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
-    String NOT_ACCEPTED_OR_SUBMITTED_STATES_STRING = "(org.innovateuk.ifs.workflow.resource.State.PENDING,org.innovateuk.ifs.workflow.resource.State.REJECTED," +
-            "org.innovateuk.ifs.workflow.resource.State.WITHDRAWN,org.innovateuk.ifs.workflow.resource.State.CREATED,org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
-    String SUBMITTED_STATES_STRING = "(org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
 
     @Query("SELECT NEW org.innovateuk.ifs.application.resource.AssessorCountSummaryResource(" +
             "  user.id, " +

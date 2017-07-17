@@ -24,15 +24,4 @@ public abstract class BaseCompetitionManagementAssessmentsController<T extends A
     protected CompetitionResource getCompetition(long competitionId) {
         return competitionService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
     }
-
-    protected String buildBackUrl(String origin, long competitionId, MultiValueMap<String, String> queryParams) {
-        String baseUrl = ApplicationOverviewOrigin.valueOf(origin).getBaseOriginUrl();
-        queryParams.remove("origin");
-
-        return UriComponentsBuilder.fromPath(baseUrl)
-                .queryParams(queryParams)
-                .buildAndExpand(asMap("competitionId", competitionId))
-                .encode()
-                .toUriString();
-    }
 }

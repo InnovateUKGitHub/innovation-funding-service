@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.user.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
+import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -8,13 +10,18 @@ import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.util.LinkedMultiValueMap;
 
+import java.util.List;
+
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
+import static org.innovateuk.ifs.documentation.UserDocs.internalUserRegistrationResourceFields;
 import static org.innovateuk.ifs.documentation.UserDocs.userPageResourceFields;
 import static org.innovateuk.ifs.documentation.UserDocs.userResourceFields;
+import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
 import static org.mockito.Matchers.eq;
@@ -138,5 +145,30 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         pageResource.setTotalPages(2);
         pageResource.setContent(newUserResource().withEmail("example@innovateuk.test").build(5));
         return pageResource;
+    }
+
+    @Test
+    public void createInternalUser() throws Exception {
+
+        List<RoleResource> roleResources = newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build(1);
+        InternalUserRegistrationResource internalUserRegistrationResource = newInternalUserRegistrationResource()
+                .withFirstName("First")
+                .withLastName("Last")
+                .withEmail("email@example.com")
+                .withPassword("Passw0rd123")
+                .withRoles(roleResources)
+                .build();
+
+        when(registrationServiceMock.createInternalUser("SomeHashString", internalUserRegistrationResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/user/internal/create/{inviteHash}", "SomeHashString")
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(internalUserRegistrationResource)))
+                .andDo(document("user/{method-name}",
+                        pathParameters(
+                                parameterWithName("inviteHash").description("Hash from invite to be used for creating new account")
+                        ),
+                        requestFields(internalUserRegistrationResourceFields)
+                ));
     }
 }

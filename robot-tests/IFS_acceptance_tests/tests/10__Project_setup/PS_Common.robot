@@ -179,8 +179,8 @@ partner submits his bank details
     the user navigates to the page                   ${server}/project-setup/project/${project}/bank-details
     the user enters text to a text field             id=bank-acc-number  ${account_number}
     the user enters text to a text field             id=bank-sort-code  ${sort_code}
-    the user clicks the button twice                 jQuery=div:nth-child(2) label[for="address-use-org"]
-    the user should see the element                  jQuery=#registeredAddress h3:contains("Confirm billing address")
+    the user clicks the button twice                 css=label[for="address-use-org"]
+    the user should see the element                  css=#registeredAddress
     wait until keyword succeeds without screenshots  30  500ms  the user clicks the button/link  jQuery=.button:contains("Submit bank account details")
     wait until keyword succeeds without screenshots  30  500ms  the user clicks the button/link  jQuery=.button[name="submit-app-details"]
     wait until element is not visible without screenshots  30  500ms  jQuery=.button[name="submit-app-details"]  # Added this wait so to give extra execution time
@@ -197,8 +197,12 @@ finance contacts are selected and bank details are approved
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     The user logs-in in new browser  &{lead_applicant_credentials}
     ${update_comp}    ${value}=    Run Keyword And Ignore Error Without Screenshots    the user should not see the element    jQuery=h2:contains("Set up your project") ~ ul a:contains("Sensing & Control network using the lighting infrastructure")
-    run keyword if    '${update_comp}' == 'PASS'   run keywords  the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup  lead partner selects project manager and address
-    Set Suite Variable    ${FUNDERS_PANEL_APPLICATION_1_PROJECT}    ${getProjectId("${FUNDERS_PANEL_APPLICATION_1_TITLE}")}
+    run keyword if    '${update_comp}' == 'PASS'  the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
+    log in as a different user   &{lead_applicant_credentials}
+    the user navigates to the page  ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}
+    ${project_details}  ${completed}=  Run Keyword And Ignore Error Without Screenshots    the user should not see the element    jQuery=ul li.complete a:contains("Project details")
+    run keyword if  '${project_details}' == 'PASS'  lead partner selects project manager and address
+    Set Suite Variable  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  ${getProjectId("${FUNDERS_PANEL_APPLICATION_1_TITLE}")}
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     log in as a different user              &{internal_finance_credentials}

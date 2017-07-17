@@ -7,7 +7,6 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 
@@ -18,7 +17,14 @@ public class AssessorCountSummaryServiceSecurityTest extends BaseServiceSecurity
 
     @Test
     public void testGetAssessorCountSummariesByCompetitionId() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build());
+        setLoggedInUser(
+                newUserResource()
+                        .withRolesGlobal(
+                                newRoleResource()
+                                        .withType(UserRoleType.COMP_ADMIN)
+                                        .build(1))
+                        .build()
+        );
         classUnderTest.getAssessorCountSummariesByCompetitionId(1L, 0, 0);
     }
 

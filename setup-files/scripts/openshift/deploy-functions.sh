@@ -14,6 +14,7 @@ function injectDBVariables() {
     sed -i.bak "s#<<DB-HOST>>#$DB_HOST#g" os-files-tmp/db-reset/*.yml
     sed -i.bak "s#<<DB-PORT>>#$DB_PORT#g" os-files-tmp/db-reset/*.yml
 }
+}
 
 function injectFlywayVariables() {
     [ -z "$FLYWAY_LOCATIONS" ] && { echo "Set FLYWAY_LOCATIONS environment variable"; exit -1; }
@@ -94,7 +95,7 @@ function tailorAppInstance() {
         fi
     fi
 
-    if [[ ${TARGET} == "production" || ${TARGET} == "uat" ]]
+    if [[ ${TARGET} == "production" || ${TARGET} == "uat" || ${TARGET} == "perf"  ]]
     then
         sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/4*.yml
     fi
@@ -119,25 +120,25 @@ function useContainerRegistry() {
 }
 
 function pushApplicationImages() {
-    docker tag innovateuk/data-service:${VERSION} \
+    docker tag innovateuk/data-service:latest \
         ${REGISTRY}/${PROJECT}/data-service:${VERSION}
-    docker tag innovateuk/project-setup-service:${VERSION} \
+    docker tag innovateuk/project-setup-service:latest \
         ${REGISTRY}/${PROJECT}/project-setup-service:${VERSION}
-    docker tag innovateuk/project-setup-management-service:${VERSION} \
+    docker tag innovateuk/project-setup-management-service:latest \
         ${REGISTRY}/${PROJECT}/project-setup-management-service:${VERSION}
-    docker tag innovateuk/competition-management-service:${VERSION} \
+    docker tag innovateuk/competition-management-service:latest \
         ${REGISTRY}/${PROJECT}/competition-management-service:${VERSION}
-    docker tag innovateuk/assessment-service:${VERSION} \
+    docker tag innovateuk/assessment-service:latest \
         ${REGISTRY}/${PROJECT}/assessment-service:${VERSION}
-    docker tag innovateuk/application-service:${VERSION} \
+    docker tag innovateuk/application-service:latest \
         ${REGISTRY}/${PROJECT}/application-service:${VERSION}
-    docker tag innovateuk/front-door-service:${VERSION} \
+    docker tag innovateuk/front-door-service:latest \
         ${REGISTRY}/${PROJECT}/front-door-service:${VERSION}
-    docker tag innovateuk/sp-service:${VERSION} \
+    docker tag innovateuk/sp-service:latest \
         ${REGISTRY}/${PROJECT}/sp-service:${VERSION}
-    docker tag innovateuk/idp-service:${VERSION} \
+    docker tag innovateuk/idp-service:latest \
         ${REGISTRY}/${PROJECT}/idp-service:${VERSION}
-    docker tag innovateuk/ldap-service:${VERSION} \
+    docker tag innovateuk/ldap-service:latest \
         ${REGISTRY}/${PROJECT}/ldap-service:${VERSION}
 
     docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}

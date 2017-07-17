@@ -3,7 +3,9 @@ package org.innovateuk.ifs.application.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
- public abstract class AssessmentCountSummaryResource  {
+import java.io.Serializable;
+
+public abstract class AssessmentCountSummaryResource implements Serializable {
     private Long id;
 
     public AssessmentCountSummaryResource() {
