@@ -45,17 +45,52 @@
                     <th scope="col" >Title</th>
                     <th scope="col" class="width-large">Lead organisation</th>
                     <th scope="col" class="width-small aligncentre">Assigned</th>
+                    <th scope="col" class="width-small aligncentre">Notified</th>
+                    <th scope="col" class="width-small aligncentre">Accepted</th>
+                    <th scope="col" class="width-small aligncentre">Started</th>
+                    <th scope="col" class="width-small aligncentre">Submitted</th>
                     <th scope="col" class="width-small-medium aligncentre">Remove</th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="app : ${model.assigned}">
                     <td><a href="#" th:text="${app.applicationId}"></a></td>
-                    <td th:text="${app.applicationName}" />
-                    <td th:text="${app.leadOrganisation}" />
-                    <td th:text="${app.totalAssessors}" class="aligncentre" />
+                    <td th:text="${app.applicationName}">Application name</td>
+                    <td th:text="${app.leadOrganisation}">Lead organisation</td>
+                    <td th:text="${app.totalAssessors}" class="aligncentre">3</td>
+                    <td class="aligncentre"
+                        th:text="${app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).PENDING or
+                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).ACCEPTED or
+                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).OPEN or
+                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).DECIDE_IF_READY_TO_SUBMIT or
+                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).READY_TO_SUBMIT or
+                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).SUBMITTED}
+                        ? 'Yes' : '-'">
+                        Yes
+                    </td>
+                    <td class="aligncentre"
+                        th:text="${app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).ACCEPTED or
+                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).OPEN or
+                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).DECIDE_IF_READY_TO_SUBMIT or
+                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).READY_TO_SUBMIT or
+                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).SUBMITTED}
+                        ? 'Yes' : '-'">
+                        Yes
+                    </td>
+                    <td class="aligncentre"
+                        th:text="${app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).OPEN or
+                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).DECIDE_IF_READY_TO_SUBMIT or
+                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).READY_TO_SUBMIT or
+                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).SUBMITTED}
+                        ? 'Yes' : '-'">
+                        Yes
+                    </td>
+                    <td class="aligncentre"
+                        th:text="${app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).SUBMITTED} ? 'Yes' : '-'">
+                        Yes
+                    </td>
                     <td class="aligncentre"><button class="button button-secondary no-margin">Remove</button></td>
-                </tr>
+                </tr>¬
             </tbody>
         </table>
     </div>

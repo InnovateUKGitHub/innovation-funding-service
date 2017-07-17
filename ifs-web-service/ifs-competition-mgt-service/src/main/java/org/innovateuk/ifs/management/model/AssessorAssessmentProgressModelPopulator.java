@@ -35,7 +35,8 @@ public class AssessorAssessmentProgressModelPopulator {
                         assignedAssessment.getApplicationId(),
                         assignedAssessment.getApplicationName(),
                         assignedAssessment.getLeadOrganisation(),
-                        assignedAssessment.getTotalAssessors()
+                        assignedAssessment.getTotalAssessors(),
+                        assignedAssessment.getState()
                 )
         );
 
