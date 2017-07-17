@@ -31,18 +31,15 @@ public class CompetitionManagementAssessmentsApplicationsController extends Base
                                      @PathVariable("competitionId") long competitionId,
                                      @RequestParam MultiValueMap<String, String> queryParams,
                                      @RequestParam(value = "page", defaultValue = "0") int page,
-                                     @RequestParam(value = "filterSearch", defaultValue = "") String filter,
-                                     @RequestParam(value = "origin", defaultValue = "MANAGE_ASSESSMENTS") String origin) {
+                                     @RequestParam(value = "filterSearch", defaultValue = "") String filter) {
         CompetitionResource competitionResource = getCompetition(competitionId);
 
         ApplicationCountSummaryPageResource applicationCounts = getCounts(competitionId, page, filter);
 
-        String backUrl = buildBackUrl(origin, competitionId, queryParams);
         String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.MANAGE_APPLICATIONS, queryParams);
 
         model.addAttribute("model", manageApplicationsPopulator.populateModel(competitionResource, applicationCounts, filter, originQuery));
         model.addAttribute("originQuery", originQuery);
-        model.addAttribute("backUrl", backUrl);
 
         return "competition/manage-applications";
     }
