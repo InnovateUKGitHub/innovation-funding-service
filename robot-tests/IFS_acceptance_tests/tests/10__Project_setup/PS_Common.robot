@@ -12,12 +12,12 @@ ${Kazio_Id}         53
 ${Kazio_Name}       Kazio
 ${Cogilith_Id}      54
 ${Cogilith_Name}    Cogilith
-${PS_GOL_Competition_Id}  11
+${PS_GOL_Competition_Id}         ${competition_ids["Rolling stock future developments"]}
 ${PS_GOL_APPLICATION_TITLE}      London underground - enhancements to existing stock and logistics
 ${PS_GOL_APPLICATION_NO}         ${application_ids["${PS_GOL_APPLICATION_TITLE}"]}
 ${PS_GOL_APPLICATION_NUMBER}     ${PS_GOL_APPLICATION_NO}
 ${PS_GOL_APPLICATION_HEADER}     ${PS_GOL_APPLICATION_TITLE}
-${PS_GOL_APPLICATION_PROJECT}    ${project_ids['${PS_GOL_APPLICATION_TITLE}']}
+${PS_GOL_APPLICATION_PROJECT}    ${project_ids["${PS_GOL_APPLICATION_TITLE}"]}
 ${PS_GOL_APPLICATION_LEAD_ORGANISATION_ID}      ${Gabtype_ID}
 ${PS_GOL_APPLICATION_LEAD_ORGANISATION_NAME}    ${Gabtype_NAME}
 ${PS_GOL_APPLICATION_LEAD_PARTNER_EMAIL}        ${test_mailbox_one}+amy@gmail.com
@@ -34,13 +34,13 @@ ${Wordpedia_Id}     50
 ${Wordpedia_Name}   Wordpedia
 ${Jabbertype_Id}    51
 ${Jabbertype_Name}  Jabbertype
-${PS_MD_Competition_Id}         11
 ${PS_MD_Competition_Name}       Rolling stock future developments
+${PS_MD_Competition_Id}         ${competition_ids["${PS_MD_Competition_Name}"]}
 ${PS_MD_APPLICATION_TITLE}      High-speed rail and its effects on air quality
 ${PS_MD_APPLICATION_NO}         ${application_ids["${PS_MD_APPLICATION_TITLE}"]}
 ${PS_MD_APPLICATION_NUMBER}     ${PS_MD_APPLICATION_NO}
 ${PS_MD_APPLICATION_HEADER}     ${PS_MD_APPLICATION_TITLE}
-${PS_MD_APPLICATION_PROJECT}    ${project_ids['${PS_MD_APPLICATION_TITLE}']}
+${PS_MD_APPLICATION_PROJECT}    ${project_ids["${PS_MD_APPLICATION_TITLE}"]}
 ${PS_MD_APPLICATION_LEAD_ORGANISATION_ID}    ${Ooba_ID}
 ${PS_MD_APPLICATION_LEAD_ORGANISATION_NAME}  ${Ooba_Name}
 ${PS_MD_APPLICATION_LEAD_PARTNER_EMAIL}      ralph.young@ooba.example.com
@@ -56,13 +56,13 @@ ${Meembee_Id}      47
 ${Meembee_Name}    Meembee
 ${Zooveo_Id}       48
 ${Zooveo_Name}     Zooveo
-${PS_SP_Competition_Id}         11
 ${PS_SP_Competition_Name}       Rolling stock future developments
+${PS_SP_Competition_Id}         ${competition_ids["${PS_SP_Competition_Name}"]}
 ${PS_SP_APPLICATION_TITLE}      Point control and automated monitoring
 ${PS_SP_APPLICATION_NO}         ${application_ids["${PS_SP_APPLICATION_TITLE}"]}
 ${PS_SP_APPLICATION_NUMBER}     ${PS_SP_APPLICATION_NO}
 ${PS_SP_APPLICATION_HEADER}     ${PS_SP_APPLICATION_TITLE}
-${PS_SP_APPLICATION_PROJECT}    ${project_ids['${PS_SP_APPLICATION_TITLE}']}
+${PS_SP_APPLICATION_PROJECT}    ${project_ids["${PS_SP_APPLICATION_TITLE}"]}
 ${PS_SP_APPLICATION_LEAD_ORGANISATION_ID}    ${Katz_Id}
 ${PS_SP_APPLICATION_LEAD_ORGANISATION_NAME}  ${Katz_Name}
 ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}      theo.simpson@katz.example.com
@@ -78,12 +78,12 @@ ${A_B_Cad_Services_Id}    44
 ${A_B_Cad_Services_Name}  A B Cad Services
 ${Armstrong_Butler_Id}       45
 ${Armstrong_Butler_Name}     Armstrong & Butler Ltd
-${PS_BD_Competition_Id}         11
+${PS_BD_Competition_Id}         ${competition_ids["Rolling stock future developments"]}
 ${PS_BD_Competition_Name}       Rolling stock future developments
 ${PS_BD_APPLICATION_TITLE}      Grade crossing manufacture and supply
 ${PS_BD_APPLICATION_NUMBER}     ${application_ids["${PS_BD_APPLICATION_TITLE}"]}
 ${PS_BD_APPLICATION_HEADER}     ${PS_BD_APPLICATION_TITLE}
-${PS_BD_APPLICATION_PROJECT}    ${project_ids['${PS_BD_APPLICATION_TITLE}']}
+${PS_BD_APPLICATION_PROJECT}    ${project_ids["${PS_BD_APPLICATION_TITLE}"]}
 ${PS_BD_APPLICATION_LEAD_ORGANISATION_ID}    ${Vitruvius_Id}
 ${PS_BD_APPLICATION_LEAD_ORGANISATION_NAME}  ${Vitruvius_Name}
 ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}      diane.scott@vitruvius.example.com
@@ -105,13 +105,13 @@ ${Jetpulse_Id}    42
 ${Jetpulse_Name}  Jetpulse
 ${Wikivu_Id}      43
 ${Wikivu_Name}    Wikivu
-${PS_EF_Competition_Id}         11
+${PS_EF_Competition_Id}         ${competition_ids["Rolling stock future developments"]}
 ${PS_EF_Competition_Name}       Rolling stock future developments
 ${PS_EF_APPLICATION_TITLE}      New materials for lighter stock
 ${PS_EF_APPLICATION_NO}         ${application_ids["${PS_EF_APPLICATION_TITLE}"]}
 ${PS_EF_APPLICATION_NUMBER}     ${PS_EF_APPLICATION_NO}
 ${PS_EF_APPLICATION_HEADER}     ${PS_EF_APPLICATION_TITLE}
-${PS_EF_APPLICATION_PROJECT}    ${project_ids['${PS_EF_APPLICATION_TITLE}']}
+${PS_EF_APPLICATION_PROJECT}    ${project_ids["${PS_EF_APPLICATION_TITLE}"]}
 ${PS_EF_APPLICATION_LEAD_ORGANISATION_ID}    ${Ntag_Id}
 ${PS_EF_APPLICATION_LEAD_ORGANISATION_NAME}  ${Ntag_Name}
 ${PS_EF_APPLICATION_LEAD_PARTNER_EMAIL}      steven.hicks@ntag.example.com
@@ -120,13 +120,13 @@ ${PS_EF_APPLICATION_PARTNER_EMAIL}           robert.perez@jetpulse.example.com
 ${PS_EF_APPLICATION_ACADEMIC_EMAIL}          bruce.perez@wikivu.example.com
 
 #Project: Magic material
-${PROJECT_SETUP_COMPETITION}    9
-${PROJECT_SETUP_COMPETITION_NAME}    New designs for a circular economy
-${PROJECT_SETUP_APPLICATION_1_TITLE}    Magic material
-${PROJECT_SETUP_APPLICATION_1}    ${application_ids["${PROJECT_SETUP_APPLICATION_1_TITLE}"]}
+${PROJECT_SETUP_COMPETITION}          ${competition_ids["New designs for a circular economy"]}
+${PROJECT_SETUP_COMPETITION_NAME}     New designs for a circular economy
+${PROJECT_SETUP_APPLICATION_1_TITLE}  Magic material
+${PROJECT_SETUP_APPLICATION_1}        ${application_ids["${PROJECT_SETUP_APPLICATION_1_TITLE}"]}
 ${PROJECT_SETUP_APPLICATION_1_NUMBER}    ${PROJECT_SETUP_APPLICATION_1}
 ${PROJECT_SETUP_APPLICATION_1_HEADER}    ${PROJECT_SETUP_APPLICATION_1_TITLE}
-${PROJECT_SETUP_APPLICATION_1_PROJECT}   ${project_ids['${PROJECT_SETUP_APPLICATION_1_TITLE}']}
+${PROJECT_SETUP_APPLICATION_1_PROJECT}   ${project_ids["${PROJECT_SETUP_APPLICATION_1_TITLE}"]}
 ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}    ${EMPIRE_LTD_ID}
 ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}    ${EMPIRE_LTD_NAME}
 ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_COMPANY_NUMBER}    60674010
