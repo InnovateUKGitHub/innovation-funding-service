@@ -97,8 +97,9 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
             "JOIN assessment.participant participant " +
             "WHERE competition.id = :competitionId " +
             "   AND participant.user.id = :assessorId " +
-            "   AND activityState.state NOT IN :states ")
-    List<ApplicationAssessmentCount> countByActivityStateStateNotInAndTargetCompetitionIdForAssessorAssessments(
+            "   AND activityState.state NOT IN :states " +
+            "ORDER BY application.id")
+    List<ApplicationAssessmentCount> getAssessorApplicationAssessmentCounts(
             @Param("states") Collection<State> states,
             @Param("competitionId") long competitionId,
             @Param("assessorId") long assessorId

@@ -271,7 +271,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
         repository.save(assessments);
 
-        List<ApplicationAssessmentCount> counts = repository.countByActivityStateStateNotInAndTargetCompetitionIdForAssessorAssessments(
+        List<ApplicationAssessmentCount> counts = repository.getAssessorApplicationAssessmentCounts(
                 AssessmentStates.getBackingStates(asList(CREATED, REJECTED, WITHDRAWN)),
                 application1.getCompetition().getId(),
                 paulPlum.getId()
