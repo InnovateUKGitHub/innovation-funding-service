@@ -437,6 +437,7 @@ class CsvUtils {
         String activityCode;
         Integer assessorCount;
         BigDecimal assessorPay;
+        Boolean useAssessmentPanel;
         boolean published;
         String shortDescription;
         String fundingRange;
@@ -487,6 +488,7 @@ class CsvUtils {
             code = nullable(line.get(i++));
             assessorCount = nullableInteger(line.get(i++));
             assessorPay = nullableBigDecimal(line.get(i++));
+            useAssessmentPanel = nullableBoolean(line.get(i++));
             published = nullableBoolean(line.get(i++));
             shortDescription = nullable(line.get(i++));
             fundingRange = nullable(line.get(i++));
