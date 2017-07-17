@@ -235,7 +235,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
-    public void countByActivityStateStateNotInAndTargetCompetitionIdGroupByTargetForAssessorAssessments() throws Exception {
+    public void getAssessorApplicationAssessmentCountsForStates() throws Exception {
         assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();
 
@@ -271,10 +271,10 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
         repository.save(assessments);
 
-        List<ApplicationAssessmentCount> counts = repository.getAssessorApplicationAssessmentCounts(
-                AssessmentStates.getBackingStates(asList(CREATED, REJECTED, WITHDRAWN)),
+        List<ApplicationAssessmentCount> counts = repository.getAssessorApplicationAssessmentCountsForStates(
                 application1.getCompetition().getId(),
-                paulPlum.getId()
+                paulPlum.getId(),
+                AssessmentStates.getBackingStates(complementOf(of(CREATED, REJECTED, WITHDRAWN)))
         );
 
         assertEquals(2, counts.size());

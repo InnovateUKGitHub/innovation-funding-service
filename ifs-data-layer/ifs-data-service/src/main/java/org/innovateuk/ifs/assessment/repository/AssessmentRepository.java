@@ -86,7 +86,7 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
             "   FROM Assessment otherAssessment " +
             "   JOIN otherAssessment.activityState otherActivityState " +
             "   WHERE otherAssessment.target.id = application.id " +
-            "       AND otherActivityState.state NOT IN :states " +
+            "       AND otherActivityState.state IN :states " +
             "   GROUP BY otherAssessment.target " +
             "   ) as int)" +
             ") " +
@@ -97,12 +97,12 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
             "JOIN assessment.participant participant " +
             "WHERE competition.id = :competitionId " +
             "   AND participant.user.id = :assessorId " +
-            "   AND activityState.state NOT IN :states " +
+            "   AND activityState.state IN :states " +
             "ORDER BY application.id")
-    List<ApplicationAssessmentCount> getAssessorApplicationAssessmentCounts(
-            @Param("states") Collection<State> states,
+    List<ApplicationAssessmentCount> getAssessorApplicationAssessmentCountsForStates(
             @Param("competitionId") long competitionId,
-            @Param("assessorId") long assessorId
+            @Param("assessorId") long assessorId,
+            @Param("states") Collection<State> states
     );
 
     int countByActivityStateStateAndTargetCompetitionId(State state, Long competitionId);
