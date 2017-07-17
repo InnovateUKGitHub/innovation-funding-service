@@ -225,7 +225,7 @@ The question is disabled on the summary page for other collaborators
     [Tags]
     Given the user navigates to the page     ${SUMMARY_URL}
     When the user clicks the button/link     jQuery=button:contains("Public description")
-    Then the user should see the element     css=.textarea-wrapped .readonly
+    Then the user should see the element     css=#collapsible-2 .question .readonly
     And the user should not see the element  jQuery=button:contains("Assign to lead for review")
 
 Lead applicant should be able to remove the partner organisation

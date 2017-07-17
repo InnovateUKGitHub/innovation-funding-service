@@ -13,13 +13,13 @@ User applies to generic competition
     Given the user clicks the button/link    link=Generic innovation
     When the user clicks the button/link    link=Start new application
     Then the user selects the radio button  create-application  true
-    And the user clicks the button/link  Continue
-    And the user clicks the button/link  Begin application
+    And the user clicks the button/link  jQuery=button:contains("Continue")
+    And the user clicks the button/link  jQuery=a:contains("Begin application")
 
 User can edit six assesed questions
     [Documentation]    IFS-747
     Given the user should not see the element  a:contains("7.")
     When the user clicks the button/link  link=6. Innovation
-    Then the user should see the element  a:contains("Mark as complete")
+    Then the user should see the element  jQuery=button:contains("Mark as complete")
 
 *** Keywords ***
