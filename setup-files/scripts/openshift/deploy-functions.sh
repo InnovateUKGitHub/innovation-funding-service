@@ -14,6 +14,7 @@ function injectDBVariables() {
     sed -i.bak "s#<<DB-HOST>>#$DB_HOST#g" os-files-tmp/db-reset/*.yml
     sed -i.bak "s#<<DB-PORT>>#$DB_PORT#g" os-files-tmp/db-reset/*.yml
 }
+}
 
 function injectFlywayVariables() {
     [ -z "$FLYWAY_LOCATIONS" ] && { echo "Set FLYWAY_LOCATIONS environment variable"; exit -1; }
@@ -94,7 +95,7 @@ function tailorAppInstance() {
         fi
     fi
 
-    if [[ ${TARGET} == "production" || ${TARGET} == "uat" ]]
+    if [[ ${TARGET} == "production" || ${TARGET} == "uat" || ${TARGET} == "perf"  ]]
     then
         sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/4*.yml
     fi
