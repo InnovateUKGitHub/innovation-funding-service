@@ -16,6 +16,7 @@ import static org.innovateuk.ifs.application.transactional.AssessorCountSummaryS
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -46,7 +47,7 @@ public class AssessorCountSummaryServiceImplTest extends BaseServiceUnitTest<Ass
         when(page.getSize()).thenReturn(pageSize);
 
         when(applicationStatisticsRepositoryMock.getAssessorCountSummaryByCompetition(
-                eq(competitionId), argThat(new PageableMatcher(pageNumber, pageSize)))
+                eq(competitionId), eq(null), argThat(new PageableMatcher(pageNumber, pageSize)))
         ).thenReturn(page);
 
         final AssessorCountSummaryPageResource expectedPageResource =

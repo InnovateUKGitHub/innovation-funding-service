@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.repository;
 
 import org.innovateuk.ifs.application.domain.ApplicationStatistics;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
+import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -59,9 +60,11 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "LEFT JOIN ActivityState activityState ON assessment.activityState = activityState.id " +
             "WHERE " +
             "  competitionParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED AND " +
-            "  competitionParticipant.role = 'ASSESSOR' " +
+            "  competitionParticipant.role = 'ASSESSOR' AND " +
+            "  (:businessType IS NULL OR profile.businessType = :businessType)" +
             "GROUP BY user " +
             "HAVING sum(case when competitionParticipant.competition.id = :compId THEN 1 ELSE 0 END) > 0")
     Page<AssessorCountSummaryResource> getAssessorCountSummaryByCompetition(@Param("compId") long competitionId,
+                                                                            @Param("businessType") BusinessType businessType,
                                                                             Pageable pageable);
 }

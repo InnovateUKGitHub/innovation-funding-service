@@ -19,6 +19,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.innovateuk.ifs.workflow.resource.State;
@@ -176,7 +177,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         final int pageNumber = 0;
         Pageable pageable = new PageRequest(pageNumber, pageSize);
 
-        Page<AssessorCountSummaryResource> statisticsPage = repository.getAssessorCountSummaryByCompetition(competitionId, pageable);
+        Page<AssessorCountSummaryResource> statisticsPage = repository.getAssessorCountSummaryByCompetition(competitionId, null, pageable);
 
         assertEquals(2, statisticsPage.getTotalElements());
         assertEquals(1, statisticsPage.getTotalPages());
@@ -191,6 +192,78 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
 
         assertEquals(expectedAssessmentCountSummaryResource, assessorCountSummaryResource);
     }
+
+    @Test
+    public void getAssessorCountSummaryByCompetition_businessType() throws Exception {
+        long competitionId = 1L;
+
+        loginCompAdmin();
+        Competition competition = competitionRepository.findById(competitionId);
+
+        List<Profile> profiles = newProfile().with(id(null)).withSkillsAreas("Java Development").withBusinessType(BusinessType.BUSINESS, BusinessType.ACADEMIC).build(2);
+        profileRepository.save(profiles);
+
+        List<User> users = newUser()
+                .with(id(null))
+                .withFirstName("Tom", "Cari")
+                .withLastName("Baldwin", "Morton")
+                .withProfileId(profiles.stream().map(Profile::getId).toArray(Long[]::new))
+                .withUid("f6b9ddeb-f169-4ac4-b606-90cb877ce8c8", "f6b9ddeb-f169-4ac4-b606-90cb877ce8c9")
+                .build(2);
+        userRepository.save(users);
+
+        List<CompetitionParticipant> competitionParticipants = newCompetitionParticipant()
+                .with(id(null))
+                .withUser(users.toArray(new User[users.size()]))
+                .withCompetition(competition)
+                .withStatus(ParticipantStatus.ACCEPTED)
+                .withRole(CompetitionParticipantRole.ASSESSOR)
+                .build(2);
+        competitionParticipantRepository.save(competitionParticipants);
+
+        Application application = newApplication().withCompetition(competition).with(id(null)).build();
+        applicationRepository.save(application);
+
+        ProcessRole processRole = newProcessRole()
+                .with(id(null))
+                .withRole(ASSESSOR)
+                .withApplication(application)
+                .withUser(users.get(1))
+                .build();
+
+        processRoleRepository.save(processRole);
+
+        Assessment assessment = newAssessment()
+                .with(id(null))
+                .withApplication(application)
+                .withParticipant(processRole)
+                .withActivityState(assessmentState(PENDING))
+                .build();
+
+        assessmentRepository.save(assessment);
+
+        flushAndClearSession();
+
+        final int pageSize = 10;
+        final int pageNumber = 0;
+        Pageable pageable = new PageRequest(pageNumber, pageSize);
+
+        Page<AssessorCountSummaryResource> statisticsPage = repository.getAssessorCountSummaryByCompetition(competitionId, BusinessType.ACADEMIC, pageable);
+
+        assertEquals(1, statisticsPage.getTotalElements());
+        assertEquals(1, statisticsPage.getTotalPages());
+        assertEquals(pageSize, statisticsPage.getSize());
+        assertEquals(pageNumber, statisticsPage.getNumber());
+        assertEquals(1, statisticsPage.getNumberOfElements());
+
+        final AssessorCountSummaryResource assessorCountSummaryResource = statisticsPage.getContent().get(0);
+
+        final AssessorCountSummaryResource expectedAssessmentCountSummaryResource = new AssessorCountSummaryResource(
+                users.get(1).getId(), users.get(1).getName(), profiles.get(1).getSkillsAreas(), 1L,1L, 0L, 0L);
+
+        assertEquals(expectedAssessmentCountSummaryResource, assessorCountSummaryResource);
+    }
+
 
     @Test
     public void getAssessorCountSummaryByCompetition_accepted() throws Exception {
@@ -247,7 +320,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         final int pageNumber = 0;
         Pageable pageable = new PageRequest(pageNumber, pageSize);
 
-        Page<AssessorCountSummaryResource> statisticsPage = repository.getAssessorCountSummaryByCompetition(competitionId, pageable);
+        Page<AssessorCountSummaryResource> statisticsPage = repository.getAssessorCountSummaryByCompetition(competitionId, null, pageable);
 
         assertEquals(2, statisticsPage.getTotalElements());
         assertEquals(1, statisticsPage.getTotalPages());
@@ -331,7 +404,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         Pageable pageable = new PageRequest(pageNumber, pageSize);
 
         Page<AssessorCountSummaryResource> statisticsPage =
-                repository.getAssessorCountSummaryByCompetition(otherCompetition.getId(), pageable);
+                repository.getAssessorCountSummaryByCompetition(otherCompetition.getId(), null, pageable);
 
         assertEquals(2, statisticsPage.getTotalElements());
         assertEquals(1, statisticsPage.getTotalPages());
@@ -403,7 +476,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         Pageable pageable = new PageRequest(pageNumber, pageSize);
 
         Page<AssessorCountSummaryResource> statisticsPage =
-                repository.getAssessorCountSummaryByCompetition(competitionId, pageable);
+                repository.getAssessorCountSummaryByCompetition(competitionId, null, pageable);
 
         assertEquals(2, statisticsPage.getTotalElements());
         assertEquals(1, statisticsPage.getTotalPages());
@@ -435,7 +508,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         Pageable pageable = new PageRequest(pageNumber, pageSize);
 
         Page<AssessorCountSummaryResource> statisticsPage =
-                repository.getAssessorCountSummaryByCompetition(competitionId, pageable);
+                repository.getAssessorCountSummaryByCompetition(competitionId, null, pageable);
 
         assertEquals(0, statisticsPage.getTotalElements());
         assertEquals(0, statisticsPage.getTotalPages());
