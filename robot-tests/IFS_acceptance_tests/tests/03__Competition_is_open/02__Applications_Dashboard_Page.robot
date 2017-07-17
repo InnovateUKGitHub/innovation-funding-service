@@ -151,7 +151,7 @@ Comp admin should be able to view but not edit the finances for every partner
 *** Keywords ***
 the user uploads the file to the 'technical approach' question
     [Arguments]    ${file_name}
-    Choose File    name=formInput[1123]    ${UPLOAD_FOLDER}/${file_name}
+    Choose File    css=input.inputfile   ${UPLOAD_FOLDER}/${file_name}
 
 the user can see the option to upload a file on the page
     [Arguments]    ${url}

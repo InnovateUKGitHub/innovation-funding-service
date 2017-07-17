@@ -16,7 +16,7 @@ Mark as complete is impossible for empty questions
     And the user clicks the button/link    link=Public description
     When the "Project Summary" question is empty
     And The user clicks the button/link    css=.textarea-wrapped .buttonlink[name="mark_as_complete"]
-    Then the user should see the element    css=.textarea-wrapped .error-message
+    Then the user should see the element    css=.question .error-message
     And the user should see the element    css=.error-summary li
 
 Error should not be visible when the text area is not empty
