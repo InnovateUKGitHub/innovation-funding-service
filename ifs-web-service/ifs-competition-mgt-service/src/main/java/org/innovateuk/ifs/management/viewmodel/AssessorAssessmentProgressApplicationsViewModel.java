@@ -7,17 +7,20 @@ public class AssessorAssessmentProgressApplicationsViewModel {
     private List<AssessorAssessmentProgressApplicationRowViewModel> applications;
     private boolean inAssessment;
     private Optional<Long> innovationArea;
+    private String sortField;
     private PaginationViewModel pagination;
     private long totalApplications;
 
     public AssessorAssessmentProgressApplicationsViewModel(List<AssessorAssessmentProgressApplicationRowViewModel> applications,
                                                            boolean inAssessment,
                                                            Optional<Long> innovationArea,
+                                                           String sortField,
                                                            PaginationViewModel pagination,
                                                            long totalApplications) {
         this.applications = applications;
         this.inAssessment = inAssessment;
         this.innovationArea = innovationArea;
+        this.sortField = sortField;
         this.pagination = pagination;
         this.totalApplications = totalApplications;
     }
@@ -44,5 +47,9 @@ public class AssessorAssessmentProgressApplicationsViewModel {
 
     public long getTotalApplications() {
         return totalApplications;
+    }
+
+    public String getSortField() {
+        return sortField;
     }
 }

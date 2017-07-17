@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
+import static java.util.Collections.sort;
 
 /**
  * Implementing class for {@link ApplicationCountSummaryRestService}, for the action on retrieving application statistics.
@@ -34,13 +35,15 @@ public class ApplicationCountSummaryRestServiceImpl extends BaseRestService impl
     public RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndInnovationArea(long competitionId,
                                                                                                                         Integer pageIndex,
                                                                                                                         Integer pageSize,
-                                                                                                                        Optional<Long> innovationArea) {
+                                                                                                                        Optional<Long> innovationArea,
+                                                                                                                        String sortField) {
 
         String baseUrl = format("%s/%s/%s", applicationCountRestUrl, "findByCompetitionIdAndInnovationArea", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("page", pageIndex)
-                .queryParam("size", pageSize);
+                .queryParam("size", pageSize)
+                .queryParam("sortField", sortField);
 
         innovationArea.ifPresent(innovationAreaId -> builder.queryParam("innovationArea", innovationAreaId));
         return getWithRestResult(builder.toUriString(), ApplicationCountSummaryPageResource.class);

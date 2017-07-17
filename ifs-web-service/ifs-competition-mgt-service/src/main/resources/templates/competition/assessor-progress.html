@@ -61,27 +61,29 @@
     </div>
 
     <h2 class="heading-medium">Applications</h2>
-
-    <div class="grid-row sorting">
-        <div class="column-half">
-            <div class="data">
-                <span class="bold-xlarge" th:text="${model.applicationsView.totalApplications}">2</span>
-                <span class="bold-small">Applications</span>
+    <form method="GET">
+        <div class="grid-row sorting">
+            <div class="column-half">
+                <div class="data">
+                    <span class="bold-xlarge" th:text="${model.applicationsView.totalApplications}">2</span>
+                    <span class="bold-small">Applications</span>
+                </div>
+            </div>
+            <div class="column-half alignright">
+                <div class="form-group">
+                    <label for="sort-by">Sort by</label>
+                    <select id="sort-by" name="sortField" class="js-auto-submit form-control">
+                        <option value="id" th:selected="${(model.applicationsView.sortField == 'id')}">Application no.</option>
+                        <option value="appTitle" th:selected="${(model.applicationsView.sortField == 'appTitle')}">Title</option>
+                        <option value="leadOrg" th:selected="${(model.applicationsView.sortField == 'leadOrg')}">Lead organisation</option>
+                        <option value="assignedApps" th:selected="${(model.applicationsView.sortField == 'assignedApps')}">Assigned applications</option>
+                        <option th:if="${model.applicationsView.inAssessment}" value="completedApps" th:selected="${(model.applicationsView.sortField == 'completedApps')}">Completed applications</option>
+                    </select>
+                </div>
+                <button type="submit" class="button button-secondary no-margin js-hidden">Sort</button>
             </div>
         </div>
-        <div class="column-half alignright">
-            <div class="form-group">
-                <label for="sort-by">Sort by</label>
-                <select id="sort-by" name="sort" class="js-auto-submit form-control">
-                    <option value="id">Application no.</option>
-                    <option value="appTitle">Title</option>
-                    <option value="leadOrg">Lead organisation</option>
-                    <option value="assignedApps">Assigned applications</option>
-                </select>
-            </div>
-            <button type="submit" class="button button-secondary no-margin js-hidden">Sort</button>
-        </div>
-    </div>
+    </form>
 
     <div class="table-overflow">
         <table>

@@ -19,5 +19,6 @@ public interface ApplicationCountSummaryRestService {
     RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndInnovationArea(long competitionId,
                                                                                                                  Integer pageIndex,
                                                                                                                  Integer pageSize,
-                                                                                                                 Optional<Long> innovationArea);
+                                                                                                                 Optional<Long> innovationArea,
+                                                                                                                 String sortField);
 }

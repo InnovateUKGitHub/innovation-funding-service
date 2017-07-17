@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.Collection;
 import java.util.List;
@@ -52,6 +53,7 @@ import static org.innovateuk.ifs.workflow.resource.State.ACCEPTED;
 import static org.innovateuk.ifs.workflow.resource.State.PENDING;
 import static org.innovateuk.ifs.workflow.resource.State.SUBMITTED;
 import static org.junit.Assert.assertEquals;
+import static org.springframework.data.domain.Sort.Direction.ASC;
 
 public class ApplicationStatisticsRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<ApplicationStatisticsRepository> {
 
@@ -133,7 +135,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         long competitionId = 1L;
         long innovationAreaId = 2L;
 
-        Pageable pageable = new PageRequest(0, 20);
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, new String[]{"id"}));
         InnovationArea innovationArea = newInnovationArea()
                 .withId(innovationAreaId)
                 .withName("Exotic Propulsion")

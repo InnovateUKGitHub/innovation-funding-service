@@ -9,10 +9,12 @@ import org.innovateuk.ifs.user.domain.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
 import static java.util.Optional.ofNullable;
+import static org.innovateuk.ifs.PageableMatcher.srt;
 import static org.innovateuk.ifs.application.builder.ApplicationStatisticsBuilder.newApplicationStatistics;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATES;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -25,6 +27,7 @@ import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.springframework.data.domain.Sort.Direction.ASC;
 
 /**
  * Tests for {@link ApplicationCountSummaryServiceImpl}
@@ -82,10 +85,10 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
 
     @Test
     public void getApplicationCountSummariesByCompetitionIdAndInnovationArea() {
-        when(applicationStatisticsRepositoryMock.findByCompetitionAndInnovationAreaProcessActivityStateStateIn(eq(competitionId), eq(SUBMITTED_STATES), eq(2L), argThat(new PageableMatcher(0, 20)))).thenReturn(page);
+        when(applicationStatisticsRepositoryMock.findByCompetitionAndInnovationAreaProcessActivityStateStateIn(eq(competitionId), eq(SUBMITTED_STATES), eq(2L), argThat(new PageableMatcher(0, 20, srt("id", ASC ))))).thenReturn(page);
         when(applicationCountSummaryPageMapperMock.mapToResource(page)).thenReturn(resource);
 
-        ServiceResult<ApplicationCountSummaryPageResource> result = service.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, 0, 20, ofNullable(2L));
+        ServiceResult<ApplicationCountSummaryPageResource> result = service.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, 0, 20, ofNullable(2L), "");
 
         assertTrue(result.isSuccess());
         assertEquals(resource, result.getSuccessObject());

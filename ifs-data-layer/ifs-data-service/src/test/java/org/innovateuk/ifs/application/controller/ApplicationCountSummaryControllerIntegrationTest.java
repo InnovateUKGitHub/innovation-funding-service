@@ -55,7 +55,7 @@ public class ApplicationCountSummaryControllerIntegrationTest extends BaseContro
         Long competitionId = 1L;
         loginCompAdmin();
 
-        ApplicationCountSummaryPageResource counts = controller.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, 0, 6, ofNullable(2L)).getSuccessObject();
+        ApplicationCountSummaryPageResource counts = controller.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, 0, 6, ofNullable(2L), "").getSuccessObject();
 
         assertEquals(1, counts.getTotalElements());
         assertEquals(0, counts.getNumber());

@@ -54,7 +54,7 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
         ApplicationCountSummaryPageResource pageResource = new ApplicationCountSummaryPageResource();
         pageResource.setContent(singletonList(applicationCountSummaryResource));
 
-        when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, 0, 20, empty())).thenReturn(serviceSuccess(pageResource));
+        when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, 0, 20, empty(), "")).thenReturn(serviceSuccess(pageResource));
 
 
         mockMvc.perform(get("/applicationCountSummary/findByCompetitionIdAndInnovationArea/{competitionId}", competitionId))
@@ -65,7 +65,7 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
                         ),
                         responseFields(applicationCountSummaryResourcesFields)));
 
-        verify(applicationCountSummaryServiceMock).getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, 0, 20, empty());
+        verify(applicationCountSummaryServiceMock).getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, 0, 20, empty(), "");
     }
 
 }
