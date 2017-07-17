@@ -95,7 +95,7 @@ function tailorAppInstance() {
         fi
     fi
 
-    if [[ ${TARGET} == "production" || ${TARGET} == "uat" || ${TARGET} == "production"  ]]
+    if [[ ${TARGET} == "production" || ${TARGET} == "uat" || ${TARGET} == "perf"  ]]
     then
         sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/4*.yml
     fi
