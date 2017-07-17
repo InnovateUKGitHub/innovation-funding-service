@@ -1,3 +1,7 @@
-#table-project-status th[scope="row"] {
-  font-weight:normal;
+#table-project-status {
+  th {
+    &[scope="row"] {
+      font-weight:normal;
+    }
+  }
 }

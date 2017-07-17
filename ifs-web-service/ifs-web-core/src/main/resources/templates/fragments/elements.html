@@ -43,32 +43,29 @@
 </th:block>
 
 <!-- ===========================Element: Header links =========================== -->
-<th:block th:fragment="header-links">
-    <a href="/"  id="proposition-name">Innovation Funding Service</a>
-    <ul id="proposition-links">
-        <th:block th:if="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}">
-            <li th:unless="${hideDashboardLink} == 'true'">
-                <a th:href="${userDashboardLink}" th:class="${#httpServletRequest.requestURI == userDashboardLink ? 'active' : ''}">My dashboard</a>
+<th:block th:fragment="header-links" th:with="loggedIn=${#authentication} ? ${#authorization.expression('isAuthenticated()')} : false">
+    <a href="/competition/search"  id="proposition-name">Innovation Funding Service</a>
+    <ul th:unless="${hidePropositionLinks}" id="proposition-links">
+        <th:block th:if="${loggedIn}">
+            <li th:unless="${hideDashboardLink}">
+                <a th:href="${userDashboardLink}" th:classappend="${#httpServletRequest.requestURI == userDashboardLink} ? 'active'">Dashboard</a>
+            </li>
+            <li th:unless="${hideDashboardLink} or ${#strings.isEmpty(userProfileLink)}">
+                <a th:href="${userProfileLink}" th:classappend="${(#httpServletRequest.requestURI == userProfileLink)} ? 'active'">Profile</a>
+            </li>
+            <li th:if="${showManageUsersLink}">
+                <a href="/management/admin/users/active" th:classappend="${(#httpServletRequest.requestURI == '/management/admin/users/active')} ? 'active'">Manage users</a>
             </li>
             <li>
                 <a th:href="${logoutUrl}">Sign out</a>
             </li>
         </th:block>
-        <th:block th:unless="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}">
+        <th:block th:unless="${loggedIn}">
             <li>
                 <a href="/">Sign in</a>
             </li>
         </th:block>
     </ul>
-</th:block>
-<!-- =========================== Element: Competition Deadline =========================== -->
-<th:block th:fragment="competition-deadline">
-    <div class="competition-deadline" th:if="${endDate != null}">
-        <div class="day">
-            <th:block th:insert="fragments/elements :: ordinal-day (date=${endDate})" />
-        </div>
-        <div class="month" th:text="${#temporals.monthName(endDate)}+' deadline'" />
-    </div>
 </th:block>
 
 <!-- =========================== Element: simple ordinal day =========================== -->
@@ -85,36 +82,19 @@
         </div>
     </th:block>
 </th:block>
-<!-- =========================== Element: Pie chart =========================== -->
-<th:block th:fragment="pie-small">
-    <div class="pie-container" th:if="${daysLeft != null}">
-        <div class="pie small" th:text="${daysPercentage}+'%'"></div>
-        <div class="pie-overlay">
-            <span class="day" th:text=" (${daysLeft} &lt; 0 ? '0' : ${daysLeft}) ">18</span>
-            <span class="visuallyhidden">Days left</span>
-        </div>
-    </div>
-</th:block>
-<th:block th:fragment="pie">
-    <div class="pie-container">
-        <div class="pie" th:text="${daysPercentage}+'%'">10%</div>
-        <div class="pie-overlay">
-            <span class="day" th:text=" (${daysLeft} &lt; 0 ? '0' : ${daysLeft}) ">18</span>
-            <span>Days left</span>
-        </div>
-    </div>
-</th:block>
 
 <!-- =========================== Element: Progress indicator =========================== -->
 <th:block th:fragment="progress-indicator">
     <div th:class="*{size != null} ? 'progress-container '+${size} : 'progress-container'">
         <div class="progress-indicator">
+            <div aria-hidden="true" class="progress-totals progress-totals--min">0%</div>
             <div class="progress" th:attr="aria-valuenow=${percentage}" aria-valuemin="0" aria-valuemax="100" role="progressbar" th:style="'width:'+${percentage}+'%'">
                 <div>
                     <th:block th:text="${percentage}+'%'" />
                     <span class="visuallyhidden"> Complete</span>
                 </div>
             </div>
+            <div aria-hidden="true" class="progress-totals progress-totals--max">100%</div>
         </div>
     </div>
 </th:block>
@@ -198,7 +178,7 @@
             <input id="agree-state-aid-page" th:field="${form.stateAidAgreed}" type="checkbox" value="yes" data-switches-button-status="#mark-all-as-complete" />
             <label for="agree-state-aid-page">
                 By ticking this box you are accepting that the project costs for your organisation are eligible as defined in the
-                <a href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance">project costs guidance</a>
+                <a target="_blank" href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance">project costs guidance (opens in a new window)</a>
             </label>
         </div>
     </div>

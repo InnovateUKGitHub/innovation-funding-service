@@ -28,7 +28,10 @@ def String idpSigningCertificateFile = "${idpCertsVolume}/idp-signing.crt"
 def String idpEncryptionKeyFile = "${idpCertsVolume}/idp-encryption.key"
 def String idpEncryptionCertificateFile = "${idpCertsVolume}/idp-encryption.crt"
 
+def String ldapEncryptionCertificateFile = "${idpCertsVolume}/ldap-encryption.crt"
 def String authIdpRegapiKey = project.properties['auth.idp.regapikey'] ?:"1234567890"
+def String javaKeystorePassword = project.properties['java.keystore.password'] ?:"changeit"
+
 
 task prepareDockerFile {
     dependsOn ':ifs-auth-service:prepareSecrets'
@@ -45,6 +48,8 @@ task prepareDockerFile {
     def String idpSigningCertificate = file(idpSigningCertificateFile).text.trim().replace('\n', '\\n')
     def String idpEncryptionKey = file(idpEncryptionKeyFile).text.trim().replace('\n', '\\n')
     def String idpEncryptionCertificate = file(idpEncryptionCertificateFile).text.trim().replace('\n', '\\n')
+
+    def String ldapEncryptionCertificate = file(ldapEncryptionCertificateFile).text.trim().replace('\n', '\\n')
 
     copy {
         from 'src/main/docker/'
@@ -68,8 +73,10 @@ task prepareDockerFile {
                                        auth_idp_signing_certificate: idpSigningCertificate,
                                        auth_idp_encryption_key: idpEncryptionKey,
                                        auth_idp_encryption_certificate: idpEncryptionCertificate,
+                                       auth_ldap_encryption_certificate: ldapEncryptionCertificate,
+                                       java_keystore_password: javaKeystorePassword,
                                        version: project.properties['version']])
-    }
+   }
 }
 
 task buildDockerBaseImage(type: Docker) {
@@ -94,6 +101,7 @@ task buildDocker(type: Docker) {
     push = false
     applicationName = 'idp-service'
     dockerfile = file('src/main/docker/Dockerfile')
+    tagVersion = 'latest'
     doFirst {
         copy {
             from fileTree('src/main/docker/apache')

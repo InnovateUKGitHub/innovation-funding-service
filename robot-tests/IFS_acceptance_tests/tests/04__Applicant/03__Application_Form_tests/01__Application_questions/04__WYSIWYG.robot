@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INFUND-187: As an applicant in the application form, I should be able to format my text in a basic way (bold, underline and bullets), so I can style my text properly
 Suite Setup       log in and create new application if there is not one already
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 
@@ -82,7 +82,6 @@ all text entered should be in Numbering bullets and stay the same after page ref
     Focus    css=.app-submit-btn
     wait for autosave
     the user reloads the page
-    Run Keyword And Ignore Error Without Screenshots    Confirm Action
     the user should see the element    css=#form-input-1045 .editor ol
 
 all text entered should be in Bullet format and stay the same after page refresh

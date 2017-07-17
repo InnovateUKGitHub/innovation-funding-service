@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create account'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+
+    <!-- HARDCODED PROTOTYPE HTML -->
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage users',size='heading-large'" />
+    <p>You can view the status of active and inactive users and add new users.</p>
+    <p><a href="/prototypes/27-add-internal-user.html">Add a new internal user</a></p>
+
+    <ul class="inline-nav extra-marigin cf">
+      <li class="selected">
+        <a href="#">Active (9)</a>
+      </li>
+      <li>
+        <a href="#">Inactive (0)</a>
+      </li>
+    </ul>
+
+
+    <h2 class="heading-medium">Active users</h2>
+    <p>
+        <span class="heading-xlarge no-margin">4</span>
+        <span class="heading-small">active internal users</span>
+    </p>
+
+    <div class="table-overflow">
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Role profile</th>
+                <th scope="col">Email address</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><a href="/prototypes/ifs-606-review-user-profile.html">John Doe</a></td>
+                <td>Competition Administrator</td>
+                <td><a href="#">john.doe@innovateuk.test</a></td>
+            </tr>
+            <tr>
+                <td><a href="/prototypes/ifs-606-review-user-profile.html">Robert Johnson</a></td>
+                <td>Competition Administrator</td>
+                <td><a href="#">robert.johnson@innovateuk.test</a></td>
+            </tr>
+            <tr>
+                <td><a href="/prototypes/ifs-606-review-user-profile.html">Veronica Ledermann</a></td>
+                <td>Competition Administrator</td>
+                <td><a href="#">veronica.ledermann@innovateuk.test</a></td>
+            </tr>
+            <tr>
+                <td><a href="/prototypes/ifs-606-review-user-profile.html">Toby Reader</a></td>
+                <td>Competition Administrator</td>
+                <td><a href="#">toby.reader@innovateuk.test</a></td>
+            </tr>
+        </tbody>
+        </table>
+    </div>
+
+    <!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>

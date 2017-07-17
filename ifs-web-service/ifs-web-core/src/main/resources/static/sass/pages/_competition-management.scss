@@ -1,132 +1,195 @@
+.grid-row {
+  &.sort-by {
+    border-bottom:1px solid $grey-1;
+    padding: 30px 0 5px;
+    margin: 0 0 5px;
 
-.grid-row.sort-by {
-  border-bottom:1px solid $grey-1;
-  padding: 30px 0 5px;
-  margin: 0 0 5px;
-  > [class^="column"]{
-    padding:0;
+    > [class^="column"] {
+      padding:0;
+    }
+
+    h3 {
+      font-weight: bold;
+    }
   }
-  h3 {
-    font-weight: bold;
+}
+
+.info-area {
+  > p > span {
+    display: block;
+  }
+
+  &.bottom {
+    position: absolute;
+  }
+
+  &.sticky {
+    position: fixed;
+    top:0;
   }
 }
 
-.info-area > p > span {
-  display: block;
-}
-
-.info-area.sticky {
-  position: fixed;
-  top:0;
-}
-.info-area.bottom {
-  position: absolute;
-}
-
-.competition-management table + .pagination {
+.competition-management {
+  table + .pagination {
     border-top:none;
     margin-top:0;
     margin-bottom:0;
+  }
 }
 
-.competition-management.app-summary #content  {
-  padding-bottom:0;
+.competition-management {
+  &.app-summary {
+    #content {
+      padding-bottom:0;
+    }
+  }
 }
 
-.js-enabled #save-funding-decision {
-  display:none;
+.js-enabled {
+  #save-funding-decision {
+    display:none;
+  }
 }
 
 @media (min-width: 1200px){
-    .info-area .button,
-    .info-area .button-secondary {
-        display:block;
+  .info-area {
+    .button,
+    .button-secondary {
+      display:block;
     }
+  }
 }
+
 @media(max-width: 1200px){
-  .competition-data .column-fifth,
-  .competition-data .column-four-fifth {
+  .competition-data {
+    .column-fifth,
+    .column-four-fifth {
       float:none;
       width:100%;
+    }
   }
+
   .info-area {
-      overflow:hidden;
-      margin-bottom:30px;
-      > p:first-child {
+    overflow:hidden;
+    margin-bottom:30px;
+
+    > p {
+      &:first-child {
         clear:both;
         width:100%;
       }
-      > p + p {
-        padding-right: 1%;
-        width:24%;
-        float:left;
-        word-wrap:break-word;
-      }
+    }
+
+    > p + p {
+      padding-right: 1%;
+      width:24%;
+      float:left;
+      word-wrap:break-word;
+    }
   }
 }
 
 .button-dashboard{
-    background: $grey-4;
-    padding: 20px 20px 15px 20px;
-    display: block;
-    min-height: 110px;
-    text-decoration: none;
+  background: $grey-4;
+  padding: 20px 20px 15px 20px;
+  display: block;
+  min-height: 110px;
+  text-decoration: none;
 
-    &:hover{
-        background: $highlight-colour;
+  &:hover{
+    background: $highlight-colour;
+  }
+
+  &.highlight{
+    background: $button-colour;
+    color: white;
+  }
+}
+
+.competition-management {
+  &.competition-setup {
+    .inline-nav {
+      a {
+        font-size:15px;
+      }
     }
+  }
+}
 
-    &.highlight{
-        background: $button-colour;
-        color: white;
+@media (max-width: 1100px) {
+  .competition-management {
+    &.competition-setup {
+      .inline-nav {
+        li {
+          float:none;
+
+          &.selected {
+            a {
+              border-bottom: 1px solid $border-colour;
+            }
+          }
+        }
+      }
     }
+  }
 }
 
-.competition-management.competition-setup .inline-nav a {
-    font-size:15px;
-}
-@media (max-width: 1100px){
-  .competition-management.competition-setup .inline-nav li {
-    float:none;
-  }
-  .competition-management.competition-setup .inline-nav li.selected a {
-    border-bottom: 1px solid $border-colour;
-  }
-}
-.milestones-table thead th {
-  width: 10%;
-  &#milestone {
-    width: 40%;
+.milestones-table {
+  thead {
+    th {
+      width: 10%;
+
+      &#milestone {
+        width: 40%;
+      }
+    }
   }
 }
-.funder-row button.remove-funder {
-    margin-left: 20px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+
+.funder-row {
+  button {
+    &.remove-funder {
+      margin-left: 20px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+  }
 }
-.guidance-row button.remove-guidance-row {
-  margin-left: 20px;
-  margin-top: 10px;
-  margin-bottom: 10px;
+
+.guidance-row {
+  button {
+    &.remove-guidance-row {
+      margin-left: 20px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+  }
 }
+
 .application-question-list {
   dt,
   dd {
     margin-bottom: 15px;
   }
 }
+
 .competition-setup {
-    select[disabled] {
-        background:  $grey-4;
-        border: 1px solid $border-colour;
-        color: $black;
+  select {
+    &[disabled] {
+      background:  $grey-4;
+      border: 1px solid $border-colour;
+      color: $black;
     }
+  }
 }
 
-[id="guidance-table"] td {
-  vertical-align:top;
-  textarea {
-    margin:0 !important; //strange bug where resizing sets a big margin in FF
+[id="guidance-table"] {
+  td {
+    vertical-align:top;
+
+    textarea {
+      margin:0 !important; //strange bug where resizing sets a big margin in FF
+    }
   }
 }
 
@@ -134,21 +197,28 @@
   @extend %contain-floats;
   padding: 30px 0;
   border-top: 1px solid $border-colour;
-}
-.contentGroup:last-child{
-  margin-bottom: 30px;
-  border-bottom: 1px solid $border-colour;
-}
 
-
-.select-all {
-  padding:10px 0;
-
-  .form-hint {
-    display:inline-block;
-    margin: 8px 10px 0;
+  &:last-child{
+    margin-bottom: 30px;
+    border-bottom: 1px solid $border-colour;
   }
 }
+
+.select-all {
+  padding-top: 12px;
+
+  .form-hint {
+    @include media-down(mobile) {
+      display: block;
+      text-align: center;
+    }
+
+    display:inline-block;
+    margin: 8px 10px 0;
+    text-align: left;
+  }
+}
+
 .mark-applications {
   padding:10px 0;
   text-align:right;
@@ -158,7 +228,14 @@
     font-weight: bold;
     margin: 8px 18px 0 0;
   }
+
   button {
-   margin: 0 0 10px;
+    margin: 0 0 10px;
+  }
+}
+
+.column-half {
+  &.select-all {
+    padding-left: 20px;
   }
 }

@@ -10,7 +10,7 @@ Suite Setup       log in and create new application if there is not one already 
 Suite Teardown    the user closes the browser    # this keyword no longer needs to mark the application details as incomplete, due to the recent addition of research category this section is already incomplete
 Force Tags        HappyPath    Applicant
 Resource          ../../../../resources/defaultResources.robot
-Resource          ../../FinanceSection_Commons.robot
+Resource          ../../Applicant_Commons.robot
 
 *** Variables ***
 ${OTHER_FUNDING_SOURCE}    Alice

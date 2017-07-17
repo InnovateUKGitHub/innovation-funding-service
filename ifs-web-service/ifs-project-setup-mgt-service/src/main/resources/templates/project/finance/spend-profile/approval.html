@@ -60,8 +60,7 @@
         <ul>
             <li th:each="organisation : ${model.organisations}">
                 <a th:href="'/project-setup-management/project/' + ${projectId} + '/partner-organisation/' + ${organisation.id} + '/spend-profile-export/csv'"
-                   th:text="${organisation.name} + '-spend-profile.csv (opens in a new window)'"
-                   target="_blank">spend-profile.csv</a>
+                   th:text="${organisation.name} + '-spend-profile.csv'">spend-profile.csv</a>
             </li>
         </ul>
 
@@ -75,10 +74,10 @@
                     </label>
                 </div>
             </div>
-            <button data-js-modal="modal-accept-profile" id="accept-profile" class="button large">
+            <button data-js-modal="modal-accept-profile" id="accept-profile" class="button">
                 Approved
             </button>
-            <button data-js-modal="modal-reject-profile" class="button button-warning large">
+            <button data-js-modal="modal-reject-profile" class="button button-warning">
                 Reject
             </button>
         </th:block>

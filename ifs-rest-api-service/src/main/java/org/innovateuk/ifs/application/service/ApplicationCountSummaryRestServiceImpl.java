@@ -19,7 +19,7 @@ public class ApplicationCountSummaryRestServiceImpl extends BaseRestService impl
     private static final String applicationCountRestUrl = "/applicationCountSummary";
 
     @Override
-    public RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(Long competitionId, Integer pageIndex, Integer pageSize, String filter) {
+    public RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(long competitionId, Integer pageIndex, Integer pageSize, String filter) {
         String uriWithParams = buildUri(applicationCountRestUrl + "/findByCompetitionId/{compId}", pageIndex, pageSize, filter, competitionId);
         return getWithRestResult(uriWithParams, ApplicationCountSummaryPageResource.class);
     }

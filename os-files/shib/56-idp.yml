@@ -23,7 +23,7 @@ items:
         containers:
         - image: innovateuk/idp-service:1.0-SNAPSHOT
           name: idp
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
           - name: IDP_PROXY_CERTIFICATE
             value: "<<SSLCERT>>"
@@ -41,6 +41,12 @@ items:
             value: "9443"
           - name: HTTPPORT
             value: "9080"
+          - name: LDAPURL
+            value: "ldaps://ldap:389"
+          - name: LDAPRURL
+            value: "ldaps://ldap:389"
+          - name: LDAPPORT
+            value: "389"
           ports:
           - containerPort: 9443
           - containerPort: 9080

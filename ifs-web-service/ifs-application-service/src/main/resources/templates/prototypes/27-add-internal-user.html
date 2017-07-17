@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create account'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage Users',linkClass='link-back',linkUrl='/prototypes/27-add-internal-user-overview.html'" />
+
+    <!-- PROTOTYPE HTML -->
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Add a new internal user',size='heading-large'" />
+
+    <p>Enter the new user's details below to add them to your invite list.</p>
+    <h2 class="visuallyhidden">User information</h2>
+    <form action="/prototypes/27-add-internal-user-overview.html" novalidate="novalidate">
+    <div class="form-group">
+        <label class="form-label" for="firstName">
+            <span>First name</span>
+        </label>
+        <input class="form-control"
+               type="text"
+               name="firstName"
+               required="required"
+               minlength="2"
+               maxlength="70"
+               th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)},
+                                    data-maxlength-errormessage=#{validation.standard.firstname.length.max},
+                                    data-required-errormessage=#{validation.standard.firstname.required}" />
+    </div>
+    <div class="form-group">
+        <label class="form-label" for="lastName">
+            <span>Last name</span>
+        </label>
+        <input class="form-control"
+               id="lastName"
+               type="text"
+               name="lastName"
+               required="required"
+               minlength="2"
+               maxlength="70"
+               th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)},
+                                    data-maxlength-errormessage=#{validation.standard.lastname.length.max},
+                                    data-required-errormessage=#{validation.standard.lastname.required}" />
+    </div>
+    <div class="form-group">
+        <label class="form-label" for="email">
+            <span>Email</span>
+        </label>
+        <input class="form-control"
+               type="email"
+               name="email"
+               maxlength="256"
+               required="required"
+               th:attr="data-maxlength-errormessage=#{validation.standard.email.length.max(256)},
+                                    data-required-errormessage=#{validation.standard.email.required}" />
+    </div>
+    <div class="form-group">
+        <label class="form-label" for="role">
+            <span class="form-label-bold">IFS role</span>
+            <p class="form-hint">Please choose the appropriate IFS role for the user.</p>
+        </label>
+        <select name="role" class="form-control" id="role" required="required" data-required-errormessage="Please select a role">
+            <option value="a">IFS Administrator</option>
+            <option value="b">Competition Administrator</option>
+            <option value="c">Project Finance</option>
+            <option value="d">Customer Support</option>
+        </select>
+    </div>
+    <div class="form-group extra-margin">
+        <button class="button">Send invite</button>
+        <a href="/prototypes/27-add-internal-user-overview.html">Cancel</a>
+    </div>
+</form>
+    <!--  PROTOTYPE HTML -->
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>

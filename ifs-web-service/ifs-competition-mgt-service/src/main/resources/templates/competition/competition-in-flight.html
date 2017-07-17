@@ -70,24 +70,55 @@
                 <ul class="link-list">
                     <li>
                         <a class="disabled" aria-disabled="true"
-                           th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN}">Applications: All, submitted, ineligible</a>
+                           th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN}">
+                            Applications: All, submitted, ineligible
+                        </a>
                         <a th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN}"
-                           th:href="@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}">Applications: All, submitted, ineligible</a>
-                    </li>
-                    <li>
-                        <a th:href="@{/competition/{competitionId}/assessors(competitionId=${model.competitionId})}">Invite assessors to assess the competition</a>
-                    </li>
-                    <li>
-                        <a class="disabled" aria-disabled="true"
-                           th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN}">Manage assessments</a>
-                        <a th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN}"
-                           th:href="@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}">Manage assessments</a>
+                           th:href="@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}">
+                            Applications: All, submitted, ineligible
+                        </a>
                     </li>
                     <li>
                         <a class="disabled" aria-disabled="true"
-                           th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}">Input and review funding decision</a>
-                        <a th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}"
-                           th:href="@{/competition/{competitionId}/funding(competitionId=${model.competitionId})}">Input and review funding decision</a>
+                           th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL
+                            or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).ASSESSOR_FEEDBACK
+                            or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PROJECT_SETUP}">
+                            Invite assessors to assess the competition
+                        </a>
+                        <a th:href="@{/competition/{competitionId}/assessors(competitionId=${model.competitionId})}"
+                           th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL
+                            or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).ASSESSOR_FEEDBACK
+                            or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PROJECT_SETUP}">
+                            Invite assessors to assess the competition
+                        </a>
+                    </li>
+                    <li>
+                        <a class="disabled" aria-disabled="true"
+                           th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
+                            or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN}">
+                            Manage assessments
+                        </a>
+                        <a th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
+                            or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN}"
+                           th:href="@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}">
+                            Manage assessments
+                        </a>
+                    </li>
+                    <li>
+                        <a class="disabled" aria-disabled="true"
+                           th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
+                            or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN
+                            or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED
+                            or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}">
+                            Input and review funding decision
+                        </a>
+                        <a th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
+                            or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN
+                            or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED
+                            or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}"
+                           th:href="@{/competition/{competitionId}/funding(competitionId=${model.competitionId})}">
+                            Input and review funding decision
+                        </a>
                     </li>
                 </ul>
             </div>

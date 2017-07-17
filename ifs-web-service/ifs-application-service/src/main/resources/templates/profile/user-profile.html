@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your Profile'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Profile'" />
 </head>
 <body th:with="context='applicant'" class="user-profile">
 
@@ -12,7 +12,7 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}" />
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your profile',size='heading-large'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Profile',size='heading-large'" />
 
     <hr/>
 

@@ -29,6 +29,7 @@ subprojects {
         task buildDocker(type: Docker, dependsOn: build) {
             push = false
             applicationName = 'default-service-name'
+            tagVersion = 'latest'
             dockerfile = file('src/main/docker/Dockerfile')
             doFirst {
                 copy {

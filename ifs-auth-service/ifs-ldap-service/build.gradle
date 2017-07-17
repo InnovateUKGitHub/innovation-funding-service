@@ -9,16 +9,26 @@ buildscript {
     }
 }
 
-def String ldap_password = project.properties['auth.ldap.password'] ?:"default"
+def String ldapCertsVolume = 'src/main/docker/certs'
+
+def String ldapEncryptionKeyFile = "${ldapCertsVolume}/ldap-encryption.key"
+def String ldapEncryptionCertificateFile = "${ldapCertsVolume}/ldap-encryption.crt"
+
+def String ldapPassword = project.properties['auth.ldap.password'] ?:"default"
 
 task prepareDockerFile(type: Copy) {
     outputs.upToDateWhen { false }
+
+    def String ldapEncryptionKey = file(ldapEncryptionKeyFile).text.trim().replace('\n', '\\n')
+    def String ldapEncryptionCertificate = file(ldapEncryptionCertificateFile).text.trim().replace('\n', '\\n')
 
     from 'src/main/docker/'
     into 'src/main/docker/'
     include 'Dockerfile-template'
     rename 'Dockerfile-template', 'Dockerfile'
-    filter(ReplaceTokens, tokens: [auth_ldap_password: ldap_password])
+    filter(ReplaceTokens, tokens: [auth_ldap_password: ldapPassword,
+                                   auth_ldap_encryption_key: ldapEncryptionKey,
+                                   auth_ldap_encryption_certificate: ldapEncryptionCertificate])
 }
 
 task buildDocker(type: Docker) {
@@ -27,6 +37,7 @@ task buildDocker(type: Docker) {
     push = false
     applicationName = 'ldap-service'
     dockerfile = file('src/main/docker/Dockerfile')
+    tagVersion = 'latest'
     doFirst {
         copy {
             from fileTree('src/main/docker/scripts')

@@ -1,63 +1,64 @@
 .column-three-quarters{
-	@include grid-column( 9/12 );
+  @include grid-column( 9/12 );
 }
 
 .column-one-quarter{
-	@include grid-column( 3/12 );
+  @include grid-column( 3/12 );
 }
 
 .column-one{
-	@include grid-column( 12/12 );
+  @include grid-column( 12/12 );
 }
 
 .no-pad{
-	padding: 0;
+  padding: 0;
 
-	.heading-large,
-	.heading-xlarge{
-		margin-bottom: 10px;
-	}
+  .heading-large,
+  .heading-xlarge{
+    margin-bottom: 10px;
+  }
 
-	.subtitle{
-		margin: 20px 0 30px 0;
-	}
+  .subtitle{
+    margin: 20px 0 30px 0;
+  }
 }
 
 .no-margin{
-	margin: 0;
+  margin: 0;
 }
 
 .no-margin-left{
-	margin-left: 0;
+  margin-left: 0;
 }
 
 .no-margin-right{
-	margin-right: 0;
+  margin-right: 0;
 }
 
 .no-margin-top{
-	margin-top: 0;
+  margin-top: 0;
 }
 
 .no-margin-bottom{
-	margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .extra-margin{
-	margin-top: 30px;
+  margin-top: 30px;
 }
+
 .extra-margin-bottom{
   margin-bottom: 30px;
 }
 
 .width-150{
-	width: 150px;
+  width: 150px;
 }
 
 .dl-pad{
-	dd{
-		padding-bottom: 20px;
-	}
+  dd{
+    padding-bottom: 20px;
+  }
 }
 
 table {
@@ -97,6 +98,10 @@ table {
     width: 20px;
   }
 
+  .multiple-choice{
+    margin-left: 5px;
+  }
+
   .empty-table-cell-select {
     margin-left: 20px;
   }
@@ -128,21 +133,8 @@ table {
   color: $grey-1;
 }
 
-/* SG
-# IFS/warning button
-
-```
-<button class="button-warning button large">No</button>
-```
-
-*/
-
 .button-warning{
-	@include button(#c00000);
-
-	&.large{
-		box-shadow: 0px 4px 0px darken(#c00000,15%);
-	}
+  @include button(#c00000);
 }
 
 .button-block{

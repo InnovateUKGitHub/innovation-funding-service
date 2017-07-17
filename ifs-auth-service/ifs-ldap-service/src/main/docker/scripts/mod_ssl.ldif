@@ -1,0 +1,15 @@
+dn: cn=config
+changetype: modify
+add: olcTLSCACertificateFile
+olcTLSCACertificateFile: /etc/ldap/ldap-encryption.crt
+-
+replace: olcTLSCertificateFile
+olcTLSCertificateFile: /etc/ldap/ldap-encryption.crt
+-
+replace: olcTLSCertificateKeyFile
+olcTLSCertificateKeyFile: /etc/ldap/ldap-encryption.key
+
+#dn: olcDatabase={1}mdb,cn=config
+#changetype: modify
+#add: olcSecurity
+#olcSecurity: tls=1

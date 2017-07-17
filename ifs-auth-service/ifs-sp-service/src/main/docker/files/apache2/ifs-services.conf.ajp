@@ -48,6 +48,14 @@ ShibCompatValidUser On
     </If>
   </Location>
 
+  # status page
+  <Location /monitoring/status>
+    ProxyPass !
+    SetHandler server-status
+    Require all denied
+    Require env TrustedIP
+  </Location>
+
   # Errors & holding pages
   <Location /holding>
     ProxyPass !
@@ -214,6 +222,7 @@ ShibCompatValidUser On
   ProxyPass  /management/ ajp://competition-mgt-svc:8009/management/ timeout=30 connectiontimeout=30 retry=2
   ProxyPass  /project-setup-management/ ajp://project-setup-mgt-svc:8009/project-setup-management/ timeout=30 connectiontimeout=30 retry=2
   ProxyPass  /project-setup/ ajp://project-setup-svc:8009/project-setup/ timeout=30 connectiontimeout=30 retry=2
+  ProxyPass  /competition/ ajp://front-door-svc:8009/competition/ timeout=30 connectiontimeout=30 retry=2
   ProxyPass  / ajp://application-svc:8009/ timeout=30 connectiontimeout=30 retry=2
 
   LogLevel warn proxy:info proxy_ajp:info
