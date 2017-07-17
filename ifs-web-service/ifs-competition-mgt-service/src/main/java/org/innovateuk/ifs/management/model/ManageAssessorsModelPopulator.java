@@ -14,12 +14,11 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Component
 public class ManageAssessorsModelPopulator extends BaseManageAssessmentsModelPopulator<AssessorCountSummaryResource, AssessorCountSummaryPageResource, ManageAssessorsViewModel> {
 
-    public ManageAssessorsViewModel populateModel(CompetitionResource competition, AssessorCountSummaryPageResource assessorCounts, String filter, String origin) {
+    public ManageAssessorsViewModel populateModel(CompetitionResource competition, AssessorCountSummaryPageResource assessorCounts, String origin) {
         return new ManageAssessorsViewModel(
                 competition.getId(), competition.getName(),
                 simpleMap(assessorCounts.getContent(), this::getRowViewModel),
-                IN_ASSESSMENT.equals(competition.getCompetitionStatus()),
-                filter,
+                competition.getCompetitionStatus() == IN_ASSESSMENT,
                 new PaginationViewModel(assessorCounts, origin));
     }
 

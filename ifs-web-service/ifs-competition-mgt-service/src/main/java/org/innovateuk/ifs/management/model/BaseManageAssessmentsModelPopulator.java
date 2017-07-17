@@ -6,5 +6,4 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
 public abstract class BaseManageAssessmentsModelPopulator<T extends AssessmentCountSummaryResource, P extends AssessmentCountSummaryPageResource<T>,V> {
 
-    public abstract V populateModel(CompetitionResource competition, P assessorCounts, String filter, String origin);
 }

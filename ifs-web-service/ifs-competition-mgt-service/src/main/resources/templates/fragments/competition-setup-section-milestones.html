@@ -1,0 +1,162 @@
+
+<!-- =================Section: Milestones (4) =========================== -->
+<th:block th:fragment="section-content">
+    <div class="error-summary" th:attr="aria-hidden=${!#fields.hasErrors('${competitionSetupForm.*}')}">
+        <h2 class="heading-medium error-summary-heading">Unable to save section</h2>
+        <ul class="error-summary-list">
+            <li th:each="err : ${#fields.errors('${competitionSetupForm.*}')}" th:text="${err}"></li>
+        </ul>
+    </div>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Milestones',size='heading-xlarge'" />
+
+    <div class="panel">
+        Define the competition milestones. Make sure that dates are in order of milestones, for example the briefing date cannot come after the submission date.
+    </div>
+
+    <form th:action="@{(${editable} ? '' : 'milestones/edit')}"
+          th:attrappend="data-autosave=${setupComplete != true}?compSetup"
+          th:attr="data-competition=${competition.id}" data-section="milestones"
+          method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
+        <fieldset th:if="${editable}" id="section-4-edit">
+
+
+            <legend class="visuallyhidden">Milestones</legend>
+
+            <table class="milestones-table">
+                <thead>
+                <tr>
+                    <th scope="col" id="milestone">Milestone</th>
+                    <th scope="col">Time</th>
+                    <th scope="col">Weekday</th>
+                    <th scope="col">Day</th>
+                    <th scope="col">Month</th>
+                    <th scope="col">Year</th>
+                </tr>
+                </thead>
+                <tbody>
+                  <tr th:each="(milestoneEntry : ${competitionSetupForm.milestoneEntries})"
+                      th:if="${milestoneEntry.value.milestoneType.presetDate}"
+                      class="date-group form-group-row"
+                      data-future-date=""
+                      th:attr="data-date-invalid-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription + ': Please enter a valid date.'},
+                               data-date-future-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription  + ': Please enter a future date' + (milestoneEntry.value.firstMilestone ? '' : ' that is after the previous milestone') + '.'}">
+
+                      <th scope="row" th:id="${'milestone-' + milestoneEntry.key}">
+                        <span th:text="${milestoneEntry.value.milestoneType.milestoneDescription}" />
+                      </th>
+                      <input type="hidden"
+                             required="required"
+                             th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].milestoneType'"
+                             th:value="${milestoneEntry.key}" />
+                      <input type="hidden"
+                             th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].editable'"
+                             th:value="${milestoneEntry.value.editable}" />
+                      <td class="time">
+                          <select th:if="${milestoneEntry.value.timeOption}"
+                                  th:id="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
+                                  class="form-control width-large"
+                                  required="required"
+                                  th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
+                                  th:readonly="${!milestoneEntry.value.readonly}">
+                              <option th:each="time : ${T(org.innovateuk.ifs.competitionsetup.form.MilestoneTime).values()}"
+                                      th:text="${time.display}" th:value="${time}" th:attr="data-time=${time.hour}" th:selected="${time == milestoneEntry.value.time}"></option>
+                          </select>
+                          <th:block th:if="${milestoneEntry.value.middayTime}" >
+                              12:00 pm
+                            <input type="hidden"
+                                data-time="12"
+                                th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
+                                th:id="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
+                                th:value="${T(org.innovateuk.ifs.competitionsetup.form.MilestoneTime).TWELVE_PM}">
+                          </th:block>
+                      </td>
+                      <td class="js-addWeekDay" th:text="${milestoneEntry.value.dayOfWeek}"></td>
+                      <td class="day">
+                          <input type="number"
+                                 placeholder="DD"
+                                 min="1"
+                                 max="31"
+                                 data-maxlength-errormessage=""
+                                 required="required"
+                                 class="form-control width-small"
+                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},
+                                           data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year}"
+                                 th:value="${milestoneEntry.value.day}"
+                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].day'"
+                                 th:readonly="${milestoneEntry.value.readonly}" />
+                      </td>
+                      <td class="month">
+                          <input type="number"
+                                placeholder="MM"
+                                min="1"
+                                max="12"
+                                required="required"
+                                class="form-control width-small"
+                                th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year}"
+                                th:value="${milestoneEntry.value.month}"
+                                th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].month'"
+                                th:readonly="${milestoneEntry.value.readonly}"/>
+                      </td>
+                      <td class="year" >
+                          <input type="number"
+                                 placeholder="YYYY"
+                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},
+                                 data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year},
+                                 min=${#dates.format(#dates.createNow(), 'yyyy')}"
+                                 required="required"
+                                 class="form-control width-small"
+                                 th:value="${milestoneEntry.value.year}"
+                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].year'"
+                                 th:readonly="${milestoneEntry.value.readonly}" />
+                          </td>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="button extra-margin">Done</button>
+
+        </fieldset>
+
+        <th:block th:unless="${editable}">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col" id="milestone">Milestone</th>
+                        <th scope="col">Time</th>
+                        <th scope="col">Weekday</th>
+                        <th scope="col">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="milestoneEntry : ${competitionSetupForm.milestoneEntries}"
+                        th:if="${milestoneEntry.value.milestoneType.presetDate}">
+                        <td th:text="${milestoneEntry.value.milestoneType.milestoneDescription}"></td>
+                        <td>
+                            <th:block th:if="${milestoneEntry.value.timeOption}" th:text="${milestoneEntry.value.time.display}"/>
+                            <th:block th:if="${milestoneEntry.value.middayTime}">12:00 pm</th:block>
+                        </td>
+                        <td th:text="${milestoneEntry.value.dayOfWeek}"></td>
+                        <td th:text="${#temporals.format(milestoneEntry.value.date, 'd MMMM yyyy')}"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button th:unless="${preventEdit}" type="submit" class="button extra-margin">Edit</button>
+        </th:block>
+    </form>
+
+    <ul class="pagination">
+        <li class="prev">
+            <a rel="prev" title="Navigate to next part"
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='eligibility')}">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title">Eligibility</span>
+            </a>
+        </li>
+        <li class="next">
+            <a rel="next" title="Navigate to next part"
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='application')}">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title">Application</span>
+            </a>
+        </li>
+    </ul>
+</th:block>

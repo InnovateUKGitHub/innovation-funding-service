@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='View internal user details'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
@@ -13,31 +13,31 @@
 
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'View or search for an internal user'}, ${'#'})" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader('View or search for an internal user', '/prototypes/27-add-internal-user-overview')" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
   <h1 class="heading-xlarge">
-	  View internal users details
+	  View internal user's details
 	</h1>
 
   <h2 class="heading-medium">Personal details</h2>
 
   <dl>
     <dt>Full name</dt>
-    <dd class="extra-margin-bottom">Mark Smith</dd>
+    <dd class="extra-margin-bottom" th:text="${(param.firstName == null) and (param.lastName == null)} ? 'Mark Smith' : |${param.firstName} ${param.lastName}|">Mark Smith</dd>
 
     <dt>Email address</dt>
     <dd class="extra-margin-bottom">mark.smith@innovate.gov.uk</dd>
 
     <dt>Job role</dt>
-    <dd class="extra-margin-bottom">Super admin</dd>
+    <dd class="extra-margin-bottom" th:text="${param.role == null} ? 'IFS Administrator' : ${param.role}">IFS Administrator</dd>
   </dl>
 
   <div class="form-footer">
     <div class="form-footer__actions">
-      <a href="#">Edit</a>
+      <a href="/prototypes/ifs-606-review-user-profile-edit.html">Edit</a>
     </div>
     <div class="form-footer__info">
       Created by Susan Smith on 23rd March 2017

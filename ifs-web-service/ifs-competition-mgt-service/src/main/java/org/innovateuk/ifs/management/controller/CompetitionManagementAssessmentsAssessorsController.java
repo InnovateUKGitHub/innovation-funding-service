@@ -32,26 +32,22 @@ public class CompetitionManagementAssessmentsAssessorsController extends BaseCom
                                      @RequestParam MultiValueMap<String, String> queryParams,
                                      @RequestParam(value = "page", defaultValue = "0") int page,
                                      @RequestParam(value = "filterSearch", defaultValue = "") String filter,
-                                     @RequestParam(value = "origin", defaultValue = "MANAGE_ASSESSORS") String origin) {
+                                     @RequestParam(value = "origin", defaultValue = "MANAGE_ASSESSMENTS") String origin) {
         CompetitionResource competitionResource = getCompetition(competitionId);
 
-        AssessorCountSummaryPageResource applicationCounts = getCounts(competitionId, page, filter);
+        AssessorCountSummaryPageResource applicationCounts = getCounts(competitionId, page);
 
-
-        String manageApplicationsOriginQuery = buildBackUrl(origin, competitionId, queryParams);
         String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.MANAGE_ASSESSORS, queryParams);
 
-        model.addAttribute("model", manageApplicationsPopulator.populateModel(competitionResource, applicationCounts, filter, originQuery));
+        model.addAttribute("model", manageApplicationsPopulator.populateModel(competitionResource, applicationCounts, originQuery));
         model.addAttribute("originQuery", originQuery);
-        model.addAttribute("manageApplicationsOriginQuery", manageApplicationsOriginQuery);
 
         return "competition/manage-assessors";
     }
 
-    @Override
-    protected AssessorCountSummaryPageResource getCounts(long competitionId, int page, String filter) {
+    protected AssessorCountSummaryPageResource getCounts(long competitionId, int page) {
         return applicationCountSummaryRestService
-                .getAssessorCountSummariesByCompetitionId(competitionId, page, PAGE_SIZE, filter)
+                .getAssessorCountSummariesByCompetitionId(competitionId, page, PAGE_SIZE)
                 .getSuccessObjectOrThrowException();
     }
 }

@@ -32,7 +32,11 @@ public class AssessorCountSummaryResourceBuilder extends AssessmentCountSummaryR
         return withArraySetFieldByReflection("skillAreas", skillAreasList);
     }
 
-    public AssessorCountSummaryResourceBuilder withAssigned(Long... assessors) {
-        return withArraySetFieldByReflection("assigned", assessors);
+    public AssessorCountSummaryResourceBuilder withAssigned(Long... assigned) {
+        return withArraySetFieldByReflection("assigned", assigned);
+    }
+
+    public AssessorCountSummaryResourceBuilder withTotalAssigned(Long... totalAssigned) {
+        return withArraySetFieldByReflection("totalAssigned", totalAssigned);
     }
 }

@@ -2,8 +2,10 @@ package org.innovateuk.ifs.user.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -25,7 +27,9 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VER
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
 import static org.innovateuk.ifs.token.resource.TokenType.VERIFY_EMAIL_ADDRESS;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.URL_PASSWORD_RESET;
@@ -283,5 +287,24 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     public void testFindInactiveInternalUsers() throws Exception {
         when(userServiceMock.findInactiveByProcessRoles(UserRoleType.internalRoles(), new PageRequest(0, 5))).thenReturn(serviceSuccess(new UserPageResource()));
         mockMvc.perform(get(buildPaginationUri("/user/internal/inactive", 0, 5, null, new LinkedMultiValueMap<>()))).andExpect(status().isOk());
+    }
+
+    @Test
+    public void testCreateInternalUser() throws Exception {
+        List<RoleResource> roleResources = newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build(1);
+        InternalUserRegistrationResource internalUserRegistrationResource = newInternalUserRegistrationResource()
+                .withFirstName("First")
+                .withLastName("Last")
+                .withEmail("email@example.com")
+                .withPassword("Passw0rd123")
+                .withRoles(roleResources)
+                .build();
+
+        when(registrationServiceMock.createInternalUser("SomeHashString", internalUserRegistrationResource)).thenReturn(serviceSuccess());
+        mockMvc.perform(
+                post("/user/internal/create/SomeHashString")
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(internalUserRegistrationResource))
+        ).andExpect(status().isCreated());
     }
 }

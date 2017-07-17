@@ -24,6 +24,8 @@ browser validations have been disabled
 
 the user cannot see a validation error in the page
     Element Should Not Be Visible    css=.error
+    element should not be visible    css=.error-message
+    element should not be visible    css=.error-summary
 
 The user should see a summary error
     [Arguments]    ${ERROR_TEXT}

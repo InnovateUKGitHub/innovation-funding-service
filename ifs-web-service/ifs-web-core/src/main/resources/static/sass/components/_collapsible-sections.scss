@@ -1,130 +1,121 @@
-/* SG
-# IFS/Collapsible
-The collapsible element will show a normal header when there is no javascript, when there is a javascript it will be toggleable
-
-```
-<div class="collapsible">
-    <h2 class="open">Collapsible header</h2>
-    <div>content goes here</div>
-		<h2 class="open">Collapsible header 2</h2>
-		<div>content goes here 2</div>
-</div>
-```
-*/
-
 %toggle-button {
-	font-size: 19px;
-	font-weight: 700;
-	text-align:left;
-	padding: 10px 40px 10px 10px; //padding right for the icons
-	background:#fff;
-	@include media-down(mobile){
-		font-size:15px;
-	}
+  @include media-down(mobile){
+    font-size:15px;
+  }
+
+  font-size: 19px;
+  font-weight: 700;
+  text-align:left;
+  padding: 10px 40px 10px 10px; //padding right for the icons
+  background:#fff;
 }
+
 .collapsible {
+  > h2,
+  > h3 {
+    position: relative;
+    border-top: 1px solid $border-colour;
+    clear:both;
 
-	> h2,
-	> h3{
-		position: relative;
-		border-top: 1px solid $border-colour;
-		clear:both;
-	}
-	> h2:last-child,
-	> h3:last-child {
-		border-top: 1px solid $border-colour;
-	}
+    &:last-child {
+      border-top: 1px solid $border-colour;
+    }
 
-	> h2 button,
-	> h3 button {
-		border:0;
-		cursor: pointer;
-		position: relative;
-		@extend %toggle-button;
+    button {
+      @extend %toggle-button;
+      border:0;
+      cursor: pointer;
+      position: relative;
 
-		&::-moz-focus-inner{
-			padding: 0;
-			border: 0;
-		}
-		&[aria-expanded="true"]{
-			margin-bottom:0;
-		}
-	}
+      &::-moz-focus-inner {
+        padding: 0;
+        border: 0;
+      }
 
-	> h2 button[aria-expanded],
-	> h3 button[aria-expanded]  {
-		display: block;
-		width: 100%;
-		&:after {
-			content: '\25bc\0020';
-			position:absolute; //absolute position for ie8
-			right:15px;
-			top:15px;
-			line-height: 1;
-		}
-	}
-	> h2 button[aria-expanded="true"],
-	> h3 button[aria-expanded="true"]{
-		margin-bottom: 0;
-		&:after {
-			content: '\25b2\0020';
-		}
-	}
-	> h2 + [aria-hidden],
-	> h3 + [aria-hidden] {
-		display: none;
-	}
+      &[aria-expanded="true"] {
+        margin-bottom:0;
 
-	> h2 + [aria-hidden="false"],
-	> h3 + [aria-hidden="false"] {
-		display: block;
-		@extend %contain-floats;
-		padding:0 0 3em;
-	}
-	.status {
-		float:right;
-		padding-top:2px;
-		font-weight:normal;
-		font-size:0.9em;
-	}
-	.section {
-		margin-left: 10px;
-		padding-left: 10px;
-		background-repeat:no-repeat;
-		background-position: 100% 0;
-		&:last-child {
-			padding-bottom:10px;
-		}
-	}
-	> h2 [data-mirror],
-	> h3 [data-mirror]{
-		float:right;
-	}
-	.collapsible-content {
-		@extend %contain-floats;
-		padding:10px;
-	}
+        &:after {
+          content: '\25b2\0020';
+        }
+      }
 
-	.section-score {
-		float: right;
-		font-weight: normal;
-		margin-right: 190px;
-		width: 144px;
-		text-align: left;
-		font-size: 16px;
-		@include media-down(mobile){
-			margin-right: 0;
-			width: auto;
-			float: none;
-		}
-	}
+      &[aria-expanded]  {
+        display: block;
+        width: 100%;
+
+        &:after {
+          content: '\25bc\0020';
+          position:absolute; //absolute position for ie8
+          right:15px;
+          top:15px;
+          line-height: 1;
+        }
+      }
+    }
+
+    + [aria-hidden] {
+      display: none;
+    }
+
+    + [aria-hidden="false"] {
+      @extend %contain-floats;
+      display: block;
+      padding:0 0 3em;
+    }
+
+    [data-mirror]{
+      float:right;
+    }
+  }
+
+  .status {
+    float:right;
+    padding-top:2px;
+    font-weight:normal;
+    font-size:0.9em;
+  }
+
+  .section {
+    margin-left: 10px;
+    padding-left: 10px;
+    background-repeat:no-repeat;
+    background-position: 100% 0;
+
+    &:last-child {
+      padding-bottom:10px;
+    }
+  }
+
+  .collapsible-content {
+    @extend %contain-floats;
+    padding:10px;
+  }
+
+  .section-score {
+    @include media-down(mobile){
+      margin-right: 0;
+      width: auto;
+      float: none;
+    }
+
+    float: right;
+    font-weight: normal;
+    margin-right: 190px;
+    width: 144px;
+    text-align: left;
+    font-size: 16px;
+  }
 }
 
-.no-js .collapsible > h2,
-.no-js .collapsible > h3 {
-	@extend %toggle-button;
-	padding-right:2px;
-}
-.no-js .collapsible {
-	padding:0 0 15px;
+.no-js {
+  .collapsible {
+    padding:0 0 15px;
+
+    > h2,
+    > h3 {
+      @extend %toggle-button;
+      padding-right:2px;
+    }
+  }
 }

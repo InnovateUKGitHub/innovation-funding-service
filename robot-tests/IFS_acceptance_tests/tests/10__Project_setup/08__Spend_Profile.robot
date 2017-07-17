@@ -151,7 +151,7 @@ Lead Partner can see Spend profile summary
     Given the user navigates to the page            ${external_spendprofile_summary}/review
     And the user should see the text in the page    Project costs for financial year
     And the user moves focus to the element         jQuery=.grid-container table
-    Then the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 83,761
+    Then the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 84,841
 
 Lead partner can edit his spend profile with invalid values
     [Documentation]    INFUND-3765, INFUND-6907, INFUND-6801, INFUND-7409, INFUND-6148
@@ -194,6 +194,7 @@ Lead partner can edit his spend profile with invalid values
 
 Lead partner can submit empty cells and this is handled gracefully
     [Documentation]    INFUND-6146
+    [Tags]
     When the user enters text to a text field    css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input    ${empty}
     And the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should not see an error in the page
@@ -204,7 +205,7 @@ Lead partner can edit his spend profile with valid values
     [Tags]    HappyPath
     Given the user navigates to the page                ${external_spendprofile_summary}/review
     When the user clicks the button/link                jQuery=.button:contains("Edit spend profile")
-    And the user should not see the element             css=table a[type="number"]    # checking here that the table is not read-only
+    And the user should see the element                 css=table [type="number"]    # checking here that the table is not read-only
     Then the text box should be editable                css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input  # Labour
     When the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input    140
     And the user moves focus to the element             css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(2) input
@@ -222,7 +223,7 @@ Lead Partners Spend profile summary gets updated when edited
     [Tags]    HappyPath
     Given the user navigates to the page           ${external_spendprofile_summary}/review
     Then the user should see the text in the page  Project costs for financial year
-    And the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 80,009
+    And the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 81,089
 
 Project Manager can see Spend Profile in Progress
     [Documentation]    done during refactoring, no ticket attached
@@ -551,7 +552,7 @@ Project Finance is able to see Spend Profile approval page
     Then the element should be disabled    jQuery=#accept-profile
     When the user selects the checkbox    approvedByLeadTechnologist
     Then the user should see the element    jQuery=#accept-profile
-    And the user should see the element    jQuery=#content .button.button.button-warning.large:contains("Reject")
+    And the user should see the element    jQuery=#content .button.button.button-warning:contains("Reject")
 
 Comp Admin is able to see Spend Profile approval page
     [Documentation]    INFUND-2638, INFUND-5617, INFUND-6226, INFUND-5549
@@ -560,10 +561,10 @@ Comp Admin is able to see Spend Profile approval page
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
     Then the user should see the element    jQuery=#content div.grid-row div.column-third.alignright.extra-margin h2:contains("Spend profile")
     And the element should be disabled    jQuery=#accept-profile
-    And the user should see the element    jQuery=#content .button.button.button-warning.large:contains("Reject")
+    And the user should see the element    jQuery=#content .button-warning:contains("Reject")
     And the user should see the text in the page  Innovation Lead
     And the user should see the text in the page  Peter Freeman
-    When the user clicks the button/link    jQuery=#content .button.button.button-warning.large:contains("Reject")
+    When the user clicks the button/link    jQuery=#content .button-warning:contains("Reject")
     Then the user should see the text in the page    You should contact the Project Manager to explain why the spend profile is being returned.
     When the user clicks the button/link    jQuery=.modal-reject-profile button:contains("Cancel")
     Then the user should not see an error in the page
@@ -608,12 +609,12 @@ Project Finance is able to Reject Spend Profile
     [Tags]
     [Setup]    Log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
-    And the user should see the element      jQuery=#content .button.button.button-warning.large:contains("Reject")
-    When the user clicks the button/link     jQuery=#content .button.button.button-warning.large:contains("Reject")
+    And the user should see the element      jQuery=#content .button.button.button-warning:contains("Reject")
+    When the user clicks the button/link     jQuery=#content .button.button.button-warning:contains("Reject")
     Then the user should see the text in the page    You should contact the Project Manager to explain why the spend profile is being returned.
     When the user clicks the button/link    jQuery=.modal-reject-profile button:contains("Cancel")
     Then the user should not see an error in the page
-    When the user clicks the button/link    jQuery=#content .button.button.button-warning.large:contains("Reject")
+    When the user clicks the button/link    jQuery=#content .button.button.button-warning:contains("Reject")
     And the user clicks the button/link    jQuery=.modal-reject-profile button:contains('Reject')
 
 Status updates to a cross for the internal user's table
