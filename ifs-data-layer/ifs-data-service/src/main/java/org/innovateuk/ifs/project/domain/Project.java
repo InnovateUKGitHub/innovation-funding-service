@@ -26,6 +26,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
  *  A project represents an application that has been accepted (and is now in project setup phase).
  *  It stores details specific to project (which are different from application)
  */
+//TODO
 @Entity
 public class Project implements ProcessActivity {
     @Id
