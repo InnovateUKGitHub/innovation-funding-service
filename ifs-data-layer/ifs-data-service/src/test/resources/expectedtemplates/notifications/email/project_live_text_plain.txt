@@ -1,6 +1,4 @@
-<#import "layout/default.html" as layout>
-<@layout.defaultPlainText>
-Dear ${notificationTarget.name},
+Dear User 2,
 
 Innovate UK has reviewed and accepted the signed grant offer letter which was uploaded for your project.
 You can begin your project on the agreed start date.
@@ -9,5 +7,7 @@ If you have questions please contact the grants team using the details below.
 
 Yours sincerely,
 
-<@layout.grantsSenderPlainText/>
-</@layout.defaultPlainText>
+Grants team
+Innovate UK
+Tel: 0300 321 4357
+Email: grants@innovateuk.gov.uk
