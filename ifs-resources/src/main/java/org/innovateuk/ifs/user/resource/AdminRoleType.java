@@ -8,7 +8,6 @@ import static java.util.stream.Collectors.toList;
 /**
  * The AdminRoleType enumeration defines the available admin user roles.
  */
-//TODO
 public enum AdminRoleType {
 
     IFS_ADMINISTRATOR("ifs_administrator", "IFS Administrator"),
