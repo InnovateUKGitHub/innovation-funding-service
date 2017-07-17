@@ -12,7 +12,6 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -61,10 +60,14 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "WHERE " +
             "  competitionParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED AND " +
             "  competitionParticipant.role = 'ASSESSOR' AND " +
-            "  (:businessType IS NULL OR profile.businessType = :businessType)" +
+            " (:innovationSectorId IS NULL OR :innovationSectorId IN (SELECT innovationAreaLink.category.sector.id " +
+            "                                             FROM ProfileInnovationAreaLink innovationAreaLink" +
+            "                                             WHERE innovationAreaLink.profile = profile)) AND " +
+            "  (:businessType IS NULL OR profile.businessType = :businessType) " +
             "GROUP BY user " +
             "HAVING sum(case when competitionParticipant.competition.id = :compId THEN 1 ELSE 0 END) > 0")
     Page<AssessorCountSummaryResource> getAssessorCountSummaryByCompetition(@Param("compId") long competitionId,
+                                                                            @Param("innovationSectorId") Long innovationSectorId,
                                                                             @Param("businessType") BusinessType businessType,
                                                                             Pageable pageable);
 }

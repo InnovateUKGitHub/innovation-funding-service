@@ -38,7 +38,7 @@ public class AssessorCountSummaryServiceImpl extends BaseTransactionalService im
 
         Pageable pageable = new PageRequest(pageIndex, pageSize);
         Page<AssessorCountSummaryResource> assessorStatistics =
-                applicationStatisticsRepository.getAssessorCountSummaryByCompetition(competitionId, null, pageable);
+                applicationStatisticsRepository.getAssessorCountSummaryByCompetition(competitionId, null, null, pageable);
 
         return find(assessorStatistics, notFoundError(Page.class)).andOnSuccessReturn(stats -> new AssessorCountSummaryPageResource(
                 assessorStatistics.getTotalElements(),
