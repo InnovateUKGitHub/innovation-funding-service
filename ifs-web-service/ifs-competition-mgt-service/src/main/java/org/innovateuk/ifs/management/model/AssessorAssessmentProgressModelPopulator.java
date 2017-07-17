@@ -5,6 +5,7 @@ import org.innovateuk.ifs.assessment.service.AssessorCompetitionSummaryRestServi
 import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.management.viewmodel.AssessorAssessmentProgressAssignedRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.AssessorAssessmentProgressViewModel;
+import org.innovateuk.ifs.user.resource.BusinessType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,12 +39,13 @@ public class AssessorAssessmentProgressModelPopulator {
                 )
         );
 
+        BusinessType businessType = summaryResource.getAssessor().getProfile().getBusinessType();
         return new AssessorAssessmentProgressViewModel(
                 summaryResource.getCompetitionId(),
                 summaryResource.getCompetitionName(),
                 summaryResource.getAssessor().getUser().getName(),
                 innovationAreas,
-                summaryResource.getAssessor().getProfile().getBusinessType(),
+                businessType != null ? businessType.getDisplayName() : "",
                 summaryResource.getTotalApplications(),
                 assigned
         );

@@ -10,8 +10,8 @@ public class AssessorAssessmentProgressViewModel {
     private final String competitionName;
     private final String assessorName;
     private final List<String> innovationAreas;
-    private final BusinessType businessType;
-    private final int totalApplications;
+    private final String businessType;
+    private final long totalApplications;
 
     private final List<AssessorAssessmentProgressAssignedRowViewModel> assigned;
 
@@ -19,8 +19,8 @@ public class AssessorAssessmentProgressViewModel {
                                                String competitionName,
                                                String assessorName,
                                                List<String> innovationAreas,
-                                               BusinessType businessType,
-                                               int totalApplications,
+                                               String businessType,
+                                               long totalApplications,
                                                List<AssessorAssessmentProgressAssignedRowViewModel> assigned) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
@@ -47,11 +47,11 @@ public class AssessorAssessmentProgressViewModel {
         return innovationAreas;
     }
 
-    public BusinessType getBusinessType() {
+    public String getBusinessType() {
         return businessType;
     }
 
-    public int getTotalApplications() {
+    public long getTotalApplications() {
         return totalApplications;
     }
 
