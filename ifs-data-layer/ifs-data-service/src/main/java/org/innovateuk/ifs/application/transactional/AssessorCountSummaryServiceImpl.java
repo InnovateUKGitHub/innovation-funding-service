@@ -30,7 +30,6 @@ public class AssessorCountSummaryServiceImpl extends BaseTransactionalService im
             simpleMapSet(EnumSet.of(PENDING, REJECTED, WITHDRAWN, CREATED, SUBMITTED), AssessmentStates::getBackingState);
     public static final Set<State> SUBMITTED_ASSESSMENT_STATES = EnumSet.of(SUBMITTED.getBackingState());
 
-
     @Autowired
     private ApplicationStatisticsRepository applicationStatisticsRepository;
 
@@ -39,12 +38,7 @@ public class AssessorCountSummaryServiceImpl extends BaseTransactionalService im
 
         Pageable pageable = new PageRequest(pageIndex, pageSize);
         Page<AssessorCountSummaryResource> assessorStatistics =
-                applicationStatisticsRepository.getAssessorCountSummaryByCompetition(
-                        competitionId,
-                        REJECTED_AND_SUBMITTED_ASSESSMENT_STATES,
-                        NOT_ACCEPTED_OR_SUBMITTED_ASSESSMENT_STATES,
-                        SUBMITTED_ASSESSMENT_STATES,
-                        pageable);
+                applicationStatisticsRepository.getAssessorCountSummaryByCompetition(competitionId, pageable);
 
         return find(assessorStatistics, notFoundError(Page.class)).andOnSuccessReturn(stats -> new AssessorCountSummaryPageResource(
                 assessorStatistics.getTotalElements(),

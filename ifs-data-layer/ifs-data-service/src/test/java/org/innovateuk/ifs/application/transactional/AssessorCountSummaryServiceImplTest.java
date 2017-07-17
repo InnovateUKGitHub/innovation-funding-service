@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
 import org.junit.Test;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -47,11 +46,7 @@ public class AssessorCountSummaryServiceImplTest extends BaseServiceUnitTest<Ass
         when(page.getSize()).thenReturn(pageSize);
 
         when(applicationStatisticsRepositoryMock.getAssessorCountSummaryByCompetition(
-                eq(competitionId),
-                eq(REJECTED_AND_SUBMITTED_ASSESSMENT_STATES),
-                eq(NOT_ACCEPTED_OR_SUBMITTED_ASSESSMENT_STATES),
-                eq(SUBMITTED_ASSESSMENT_STATES),
-                argThat(new PageableMatcher(pageNumber, pageSize)))
+                eq(competitionId), argThat(new PageableMatcher(pageNumber, pageSize)))
         ).thenReturn(page);
 
         final AssessorCountSummaryPageResource expectedPageResource =
