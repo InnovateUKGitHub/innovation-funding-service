@@ -43,7 +43,6 @@ ext.postcodeLookupKey=""
 ext.ifsFileStorageLocation="/mnt/ifs_storage"
 
 ext.ifsWebBaseURL="https://ifs.local-dev"
-ext.internalUserEmailDomain="innovateuk.test"
 
 ext.serverPort=8080
 ext.activeProfile="local"

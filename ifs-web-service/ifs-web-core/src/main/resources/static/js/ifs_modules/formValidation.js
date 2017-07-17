@@ -649,9 +649,10 @@ IFS.core.formValidation = (function () {
         // if this was the last error we remove the error styling
         if (formGroup.find('[data-errorfield],.error-message:not([data-errorfield])').length === 0) {
           formGroup.removeClass('form-group-error')
+        }
+        if (formGroup.find('[data-errorfield="' + name + '"]').length === 0) {
           field.removeClass('form-control-error')
           if (s.html5validationMode) {
-            // looping through the name attribute for setting checkboxes and radios valid
             jQuery('[name="' + name + '"]').each(function () {
               this.setCustomValidity('')
             })
