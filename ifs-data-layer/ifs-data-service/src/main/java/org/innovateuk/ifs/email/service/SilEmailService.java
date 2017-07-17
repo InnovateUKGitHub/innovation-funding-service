@@ -37,7 +37,7 @@ public class SilEmailService implements EmailService {
         // TODO improve the logging and change the logging levels to INFO and control whether they are output on a environmental basis
         if (toEmails != null) {
             for (SilEmailAddress silEmailAddress : toEmails) {
-                LOG.error("About to send email to: " + (silEmailAddress != null ? silEmailAddress.getEmail() : " no email address ") + " with subject " + subject);
+                LOG.info("About to send email to: " + (silEmailAddress != null ? silEmailAddress.getEmail() : " no email address ") + " with subject " + subject);
             }
         } else {
             LOG.error("toEmails is null");
@@ -46,7 +46,7 @@ public class SilEmailService implements EmailService {
         // TODO improve the logging and change the logging levels to INFO and control whether they are output on a environmental basis
         if (toEmails != null) {
             for (SilEmailAddress silEmailAddress : toEmails) {
-                LOG.error("Email sent to: " + (silEmailAddress != null ? silEmailAddress.getEmail() : " no email address ") + " with subject " + subject);
+                LOG.info("Email sent to: " + (silEmailAddress != null ? silEmailAddress.getEmail() : " no email address ") + " with subject " + subject);
             }
         } else {
             LOG.error("toEmails is null");

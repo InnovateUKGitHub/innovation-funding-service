@@ -5,7 +5,7 @@ import org.innovateuk.ifs.Builder;
 import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.Invite;
-import org.innovateuk.ifs.invite.domain.ProcessActivity;
+import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
 
 import java.util.List;
