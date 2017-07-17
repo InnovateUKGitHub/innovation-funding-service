@@ -29,8 +29,8 @@ subprojects {
         task buildDocker(type: Docker, dependsOn: build) {
             push = false
             applicationName = 'default-service-name'
-            dockerfile = file('src/main/docker/Dockerfile')
             tagVersion = 'latest'
+            dockerfile = file('src/main/docker/Dockerfile')
             doFirst {
                 copy {
                     from jar
