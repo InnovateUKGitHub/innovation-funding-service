@@ -8,7 +8,6 @@ import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceModelManager;
 import org.innovateuk.ifs.application.finance.viewmodel.AcademicFinanceViewModel;
 import org.innovateuk.ifs.application.form.Form;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.OrganisationService;
@@ -66,7 +65,6 @@ public class JESFinanceModelManager implements FinanceModelManager {
 
     @Override
     public void addOrganisationFinanceDetails(Model model, Long applicationId, List<QuestionResource> costsQuestions, Long userId, Form form, Long organisationId) {
-        initFinanceRows(applicationId, userId);
         ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(applicationId, userId);
 
         if (applicationFinanceResource != null) {
@@ -97,7 +95,6 @@ public class JESFinanceModelManager implements FinanceModelManager {
     public AcademicFinanceViewModel getFinanceViewModel(Long applicationId, List<QuestionResource> costsQuestions, Long userId, Form form, Long organisationId) {
         AcademicFinanceViewModel financeViewModel = new AcademicFinanceViewModel();
 
-        initFinanceRows(applicationId, userId);
         ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(applicationId, userId);
 
         if (applicationFinanceResource != null) {
@@ -126,7 +123,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
         return financeViewModel;
     }
 
-    private void initFinanceRows(Long applicationId, Long userId) {
+    /*private void initFinanceRows(Long applicationId, Long userId) {
         ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(applicationId, userId);
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinanceDetails = applicationFinanceResource.getFinanceOrganisationDetails();
         organisationFinanceDetails.forEach((financeRowType, financeRowCostCategory) -> {
@@ -147,7 +144,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
 
     private boolean costNeedsInitialising(FinanceRowType financeRowType, FinanceRowCostCategory financeRowCostCategory) {
         return financeRowCostCategory.getCosts().isEmpty() && !FinanceRowType.ACADEMIC.equals(financeRowType);
-    }
+    }*/
 
     @Override
     public void addCost(Model model, FinanceRowItem costItem, long applicationId, long organisationId, long userId, Long questionId, FinanceRowType costType) {
