@@ -239,10 +239,11 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();
 
+        User felixWilson = userRepository.findByEmail("felix.wilson@gmail.com").orElse(null);
         User paulPlum = userRepository.findByEmail("paul.plum@gmail.com").orElse(null);
 
         ProcessRole participant1 = newProcessRole().withId().withUser(paulPlum).build();
-        ProcessRole participant2 = newProcessRole().withId().withUser(paulPlum).build();
+        ProcessRole participant2 = newProcessRole().withId().withUser(felixWilson).build();
         ProcessRole participant3 = newProcessRole().withId().withUser(paulPlum).build();
 
         processRoleRepository.save(asList(participant1, participant2, participant3));
@@ -270,7 +271,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
         repository.save(assessments);
 
-        List<ApplicationAssessmentCount> counts = repository.countByActivityStateStateNotInAndTargetCompetitionIdGroupByTargetForAssessorAssessments(
+        List<ApplicationAssessmentCount> counts = repository.countByActivityStateStateNotInAndTargetCompetitionIdForAssessorAssessments(
                 AssessmentStates.getBackingStates(asList(CREATED, REJECTED, WITHDRAWN)),
                 application1.getCompetition().getId(),
                 paulPlum.getId()

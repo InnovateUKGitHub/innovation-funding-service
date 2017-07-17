@@ -53,7 +53,7 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
                     );
 
                     List<ApplicationAssessmentCount> applicationAssessmentCounts = assessmentRepository
-                            .countByActivityStateStateNotInAndTargetCompetitionIdGroupByTargetForAssessorAssessments(
+                            .countByActivityStateStateNotInAndTargetCompetitionIdForAssessorAssessments(
                                     INVALID_ASSESSMENT_STATES,
                                     competition.getId(),
                                     assessorId

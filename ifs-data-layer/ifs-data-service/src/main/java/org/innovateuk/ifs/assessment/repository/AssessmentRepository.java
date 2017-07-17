@@ -9,7 +9,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -78,25 +81,24 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
 
     @Query("SELECT new org.innovateuk.ifs.assessment.domain.ApplicationAssessmentCount( " +
             "   application, " +
-            "   assessorAssessment, " +
-            "   CAST(COUNT(assessment.id) as int) " +
+            "   assessment, " +
+            "   CAST((SELECT COUNT(otherAssessment) " +
+            "   FROM Assessment otherAssessment " +
+            "   JOIN otherAssessment.activityState otherActivityState " +
+            "   WHERE otherAssessment.target.id = application.id " +
+            "       AND otherActivityState.state NOT IN :states " +
+            "   GROUP BY otherAssessment.target " +
+            "   ) as int)" +
             ") " +
             "FROM Assessment assessment " +
             "JOIN assessment.target application " +
             "JOIN assessment.target.competition competition " +
             "JOIN assessment.activityState activityState " +
             "JOIN assessment.participant participant " +
-            "LEFT JOIN Assessment assessorAssessment ON assessorAssessment.id = assessment.id " +
-            "   AND participant.user.id = :assessorId " +
             "WHERE competition.id = :competitionId " +
-            "   AND application.id IN ( " +
-            "       SELECT participant.applicationId " +
-            "       FROM participant " +
-            "       WHERE participant.user.id = :assessorId " +
-            "   ) " +
-            "   AND activityState.state NOT IN :states " +
-            "GROUP BY application.id")
-    List<ApplicationAssessmentCount> countByActivityStateStateNotInAndTargetCompetitionIdGroupByTargetForAssessorAssessments(
+            "   AND participant.user.id = :assessorId " +
+            "   AND activityState.state NOT IN :states ")
+    List<ApplicationAssessmentCount> countByActivityStateStateNotInAndTargetCompetitionIdForAssessorAssessments(
             @Param("states") Collection<State> states,
             @Param("competitionId") long competitionId,
             @Param("assessorId") long assessorId
