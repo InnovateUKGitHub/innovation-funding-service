@@ -54,7 +54,13 @@
             </thead>
             <tbody>
                 <tr th:each="app : ${model.assigned}">
-                    <td><a href="#" th:text="${app.applicationId}"></a></td>
+                    <td>
+                        <a href="#"
+                           th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.applicationId})} + ${originQuery}"
+                           th:text="${app.applicationId}">
+                        1
+                        </a>
+                    </td>
                     <td th:text="${app.applicationName}">Application name</td>
                     <td th:text="${app.leadOrganisation}">Lead organisation</td>
                     <td th:text="${app.totalAssessors}" class="aligncentre">3</td>
