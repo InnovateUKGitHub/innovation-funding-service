@@ -54,7 +54,7 @@ the applicant assigns the Project Summary question from the overview page
 
 the applicant assigns the Project Summary
     [Arguments]    ${assignee_name}
-    the user clicks the button/link  css=.textarea-wrapped .assign-button button
+    the user clicks the button/link  css=.question .assign-button button
     the user clicks the button/link  jQuery=button:contains("${assignee_name}")
 
 a blue flag should be visible for the Project Summary in overview page
