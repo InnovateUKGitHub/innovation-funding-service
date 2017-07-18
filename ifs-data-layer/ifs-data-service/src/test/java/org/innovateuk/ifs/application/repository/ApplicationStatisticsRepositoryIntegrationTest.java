@@ -8,7 +8,9 @@ import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
+import org.innovateuk.ifs.category.repository.InnovationSectorRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
@@ -34,8 +36,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
+import static freemarker.template.utility.Collections12.singletonList;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.AssessorCountSummaryResourceBuilder.newAssessorCountSummaryResource;
@@ -46,6 +50,7 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessm
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
+import static org.innovateuk.ifs.category.builder.InnovationSectorBuilder.newInnovationSector;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -94,6 +99,9 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     private InnovationAreaRepository innovationAreaRepository;
 
     @Autowired
+    private InnovationSectorRepository innovationSectorRepository;
+
+    @Autowired
     private UserMapper userMapper;
 
     @Autowired
@@ -134,22 +142,27 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         assertEquals(0, statisticsPage.getNumber());
     }
 
+
     @Test
     public void findByCompetitionAndInnovationArea() throws Exception {
         long competitionId = 1L;
-        long innovationAreaId = 2L;
 
-        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, new String[]{"id"}));
         InnovationArea innovationArea = newInnovationArea()
-                .withId(innovationAreaId)
                 .withName("Exotic Propulsion")
                 .build();
-        innovationAreaRepository.save(innovationArea);
+
+        InnovationSector innovationSector = newInnovationSector()
+                .withName("Future Transport")
+                .withChildren(singletonList(innovationArea))
+                .build();
+
+        innovationSectorRepository.save(innovationSector);
 
         Application application = newApplication()
                 .withApplicationState(ApplicationState.SUBMITTED)
                 .withName("Warp Drive")
                 .withNoInnovationAreaApplicable(false)
+                .withCompetition(competitionRepository.findById(competitionId))
                 .withInnovationArea(innovationArea).build();
         application.getApplicationProcess().setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED));
 
@@ -175,7 +188,9 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
 
         flushAndClearSession();
 
-        Page<ApplicationStatistics> statisticsPage = repository.findByCompetitionAndInnovationAreaProcessActivityStateStateIn(competitionId, SUBMITTED_STATUSES, innovationAreaId, pageable);
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, new String[]{"id"}));
+
+        Page<ApplicationStatistics> statisticsPage = repository.findByCompetitionAndInnovationAreaProcessActivityStateStateIn(competitionId, SUBMITTED_STATUSES, innovationArea.getId(), pageable);
         assertEquals(1, statisticsPage.getTotalElements());
         assertEquals(20, statisticsPage.getSize());
         assertEquals(0, statisticsPage.getNumber());

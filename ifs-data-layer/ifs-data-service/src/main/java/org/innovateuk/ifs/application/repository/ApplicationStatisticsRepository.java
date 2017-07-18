@@ -25,15 +25,17 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
 
     String INNOVATION_AREA_FILTER = "SELECT a FROM ApplicationStatistics a WHERE a.competition = :compId " +
             "AND (a.applicationProcess.activityState.state IN :states) " +
-            "AND (a.applicationProcess.target.innovationArea.id = :innovationArea OR :innovationArea IS NULL))";
+            "AND (a.applicationProcess.target.innovationArea.category.id = :innovationArea OR :innovationArea IS NULL))";
 
     String REJECTED_AND_SUBMITTED_STATES_STRING =
             "(org.innovateuk.ifs.workflow.resource.State.REJECTED," +
                     "org.innovateuk.ifs.workflow.resource.State.WITHDRAWN," +
                     "org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
+
     String NOT_ACCEPTED_OR_SUBMITTED_STATES_STRING =
             "(org.innovateuk.ifs.workflow.resource.State.PENDING,org.innovateuk.ifs.workflow.resource.State.REJECTED," +
                     "org.innovateuk.ifs.workflow.resource.State.WITHDRAWN,org.innovateuk.ifs.workflow.resource.State.CREATED,org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
+
     String SUBMITTED_STATES_STRING = "(org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
 
     List<ApplicationStatistics> findByCompetitionAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> applicationStates);
