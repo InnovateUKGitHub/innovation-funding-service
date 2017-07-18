@@ -18,7 +18,7 @@ public class AssessmentApplicationAssessorCountBuilder extends BaseBuilder<Asses
         super(newActions);
     }
 
-    public static AssessmentApplicationAssessorCountBuilder newApplicationAssessmentCount() {
+    public static AssessmentApplicationAssessorCountBuilder newAssessmentApplicationAssessorCount() {
         return new AssessmentApplicationAssessorCountBuilder();
     }
 
