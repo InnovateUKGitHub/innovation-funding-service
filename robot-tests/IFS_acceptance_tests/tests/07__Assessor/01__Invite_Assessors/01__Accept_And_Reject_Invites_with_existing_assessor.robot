@@ -116,7 +116,7 @@ Existing Assessor tries to accept closed competition
     And the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
     Then The user should see the text in the page    This invitation is now closed
     [Teardown]    Run Keywords    Connect to Database    @{database}
-    ...    AND    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE type='ASSESSMENT_CLOSED' AND competition_id=${competition_ids['${IN_ASSESSMENT_COMPETITION_NAME}']};
+    ...    AND    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE type='ASSESSMENT_CLOSED' AND competition_id=${competition_ids["${IN_ASSESSMENT_COMPETITION_NAME}"]};
 
 Existing assessor: Accept invitation from the invite link
     [Documentation]    INFUND-228
