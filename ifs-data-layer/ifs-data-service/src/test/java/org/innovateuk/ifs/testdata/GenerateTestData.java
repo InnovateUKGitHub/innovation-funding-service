@@ -35,8 +35,8 @@ import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 import org.junit.Ignore;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.Advised;
@@ -793,7 +793,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                 .withFundersPanelEndDate(line.fundersPanelEndDate)
                 .withReleaseFeedbackDate(line.releaseFeedback)
                 .withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
-                        line.competitionDescription, line.fundingType, line.projectSize, line.keywords);
+                        line.competitionDescription, line.fundingType, line.projectSize, line.keywords, line.inviteOnly);
     }
 
     private CompetitionDataBuilder ifsCompetitionDataBuilder(CsvUtils.CompetitionLine line, Optional<Long> existingCompetitionId) {
@@ -808,7 +808,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withReleaseFeedbackDate(line.releaseFeedback).
                 withFeedbackReleasedDate(line.feedbackReleased).
                 withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
-                        line.competitionDescription, line.fundingType, line.projectSize, line.keywords)
+                        line.competitionDescription, line.fundingType, line.projectSize, line.keywords, line.inviteOnly)
 
         ).orElse(competitionDataBuilder.
                 createCompetition().
@@ -835,7 +835,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withReleaseFeedbackDate(line.releaseFeedback).
                 withFeedbackReleasedDate(line.feedbackReleased).
                 withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
-                line.competitionDescription, line.fundingType, line.projectSize, line.keywords);
+                line.competitionDescription, line.fundingType, line.projectSize, line.keywords, line.inviteOnly);
     }
 
     private void freshDb() throws Exception {

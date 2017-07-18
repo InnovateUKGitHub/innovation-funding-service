@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * A single slice of a paginated list of {@link ApplicationCountSummaryResource}s.
  */
-public class ApplicationCountSummaryPageResource extends PageResource<ApplicationCountSummaryResource> {
+public class ApplicationCountSummaryPageResource extends AssessmentCountSummaryPageResource<ApplicationCountSummaryResource> {
     public ApplicationCountSummaryPageResource() {
         super();
     }
