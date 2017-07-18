@@ -89,6 +89,10 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
         when(internalUserServiceMock.editInternalUser(Mockito.any()))
                 .thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.NOT_AN_INTERNAL_USER_ROLE));
 
+        UserResource userResource = UserResourceBuilder.newUserResource().build();
+        when(userRestServiceMock.retrieveUserById(1L))
+                .thenReturn(RestResult.restSuccess(userResource));
+
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/user/{userId}/edit", 1L).
                 param("firstName", "First").
                 param("lastName", "Last").

@@ -133,7 +133,6 @@ public class UserManagementController {
                     failNowOrSucceedWith(failureView, () -> "redirect:/admin/users/active");
 
         });
-
     }
 
     private EditUserResource constructEditUserResource(EditUserForm form, Long userId) {
