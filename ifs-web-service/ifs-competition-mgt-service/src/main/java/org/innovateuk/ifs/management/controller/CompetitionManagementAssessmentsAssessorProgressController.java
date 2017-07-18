@@ -21,10 +21,10 @@ public class CompetitionManagementAssessmentsAssessorProgressController {
     private AssessorAssessmentProgressModelPopulator assessorAssessmentProgressModelPopulator;
 
     @GetMapping("/{assessorId}")
-    public String assessmentProgress(@PathVariable("competitionId") long competitionId,
-                                     @PathVariable("assessorId") long assessorId,
-                                     @RequestParam MultiValueMap<String, String> params,
-                                     Model model) {
+    public String assessorProgress(@PathVariable("competitionId") long competitionId,
+                                   @PathVariable("assessorId") long assessorId,
+                                   @RequestParam MultiValueMap<String, String> params,
+                                   Model model) {
         params.add("assessorId", String.valueOf(assessorId));
         model.addAttribute("originQuery", buildOriginQueryString(ApplicationOverviewOrigin.ASSESSOR_PROGRESS, params));
         model.addAttribute("model", assessorAssessmentProgressModelPopulator.populateModel(competitionId, assessorId));
