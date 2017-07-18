@@ -3,8 +3,8 @@ package org.innovateuk.ifs.assessment.repository;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.assessment.domain.AssessmentApplicationAssessorCount;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.domain.AssessmentApplicationAssessorCount;
 import org.innovateuk.ifs.assessment.domain.AssessorFormInputResponse;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource;
@@ -171,6 +171,23 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
         assertEquals(assessments.size() - statesNotToCount.size() * numOfAssessmentsForEachState, repository
                 .countByParticipantUserIdAndActivityStateStateNotIn(user.getId(), statesNotToCount));
+    }
+
+    @Test
+    public void countByParticipantUserIdAndActivityStateStateIn() throws Exception {
+        assessorFormInputResponseRepository.deleteAll();
+        repository.deleteAll();
+
+        int numOfAssessmentsForEachState = 2;
+
+        Application application = applicationRepository.findOne(1L);
+        setUpAssessments(user, application, numOfAssessmentsForEachState);
+        Set<State> states = AssessmentStates.getBackingStates(of(CREATED, PENDING));
+
+        assertEquals(
+                states.size() * numOfAssessmentsForEachState,
+                repository.countByParticipantUserIdAndActivityStateStateIn(user.getId(), states)
+        );
     }
 
     @Test
