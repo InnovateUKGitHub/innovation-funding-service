@@ -54,6 +54,7 @@ function deploy() {
         oc create -f os-files-tmp/shib/ ${SVC_ACCOUNT_CLAUSE}
         oc create -f os-files-tmp/gluster/ ${SVC_ACCOUNT_CLAUSE}
         oc create -f os-files-tmp/spring-admin/ ${SVC_ACCOUNT_CLAUSE}
+        oc create -f os-files-tmp/zipkin/ ${SVC_ACCOUNT_CLAUSE}
         oc create -f os-files-tmp/ ${SVC_ACCOUNT_CLAUSE}
     fi
 }
