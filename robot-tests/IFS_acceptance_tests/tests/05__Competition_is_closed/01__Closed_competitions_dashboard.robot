@@ -21,7 +21,7 @@ Competition dashboard
     ...
     ...    INFUND-7362
     When The user clicks the button/link    link=${CLOSED_COMPETITION_NAME}
-    Then The user should see the text in the page    12: Machine learning for transport infrastructure
+    Then The user should see the text in the page    13: Machine learning for transport infrastructure
     And The user should see the text in the page    Closed
     And The user should see the text in the page    Programme
     And The user should see the text in the page    Infrastructure systems
@@ -60,7 +60,7 @@ Notify Assessors
     When The user clicks the button/link    jQuery=.button:contains("Notify assessors")
     Then the user should see the text in the page    In assessment
     [Teardown]    Run Keywords    Connect to Database    @{database}
-    ...    AND    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE type='ASSESSORS_NOTIFIED' AND competition_id=12;
+    ...    AND    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE type='ASSESSORS_NOTIFIED' AND competition_id=${competition_ids['${CLOSED_COMPETITION_NAME}']};
 
 *** Keywords ***
 Get The expected values from the invite page

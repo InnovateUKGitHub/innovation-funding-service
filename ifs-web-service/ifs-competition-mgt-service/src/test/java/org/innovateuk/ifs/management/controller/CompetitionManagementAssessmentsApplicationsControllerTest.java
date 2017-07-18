@@ -40,7 +40,7 @@ public class CompetitionManagementAssessmentsApplicationsControllerTest extends 
     }
 
     @Test
-    public void testManageApplications() throws Exception {
+    public void manageApplications() throws Exception {
         CompetitionResource competitionResource = newCompetitionResource()
                 .withName("name")
                 .withCompetitionStatus(IN_ASSESSMENT)
@@ -89,7 +89,7 @@ public class CompetitionManagementAssessmentsApplicationsControllerTest extends 
     }
 
     @Test
-    public void displayApplicationOverview_AssessorManagementOrigin() throws Exception {
+    public void manageApplications_assessorManagementOrigin() throws Exception {
         CompetitionResource competitionResource = newCompetitionResource()
                 .withName("name")
                 .withCompetitionStatus(IN_ASSESSMENT)
@@ -108,12 +108,10 @@ public class CompetitionManagementAssessmentsApplicationsControllerTest extends 
         when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionId(competitionResource.getId(), 0,20,"")).thenReturn(restSuccess(expectedPageResource));
 
         String origin = "MANAGE_ASSESSMENTS";
-        String expectedBackUrl = "/assessment/competition/" + competitionResource.getId();
 
         mockMvc.perform(get("/assessment/competition/{competitionId}/applications", competitionResource.getId())
                 .param("origin", origin))
                 .andExpect(status().isOk())
-                .andExpect(view().name("competition/manage-applications"))
-                .andExpect(model().attribute("backUrl", expectedBackUrl));
+                .andExpect(view().name("competition/manage-applications"));
     }
 }
