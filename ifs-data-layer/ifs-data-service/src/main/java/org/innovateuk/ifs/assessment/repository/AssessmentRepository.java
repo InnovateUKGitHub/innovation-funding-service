@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.repository;
 
-import org.innovateuk.ifs.assessment.domain.ApplicationAssessmentCount;
+import org.innovateuk.ifs.assessment.domain.AssessmentApplicationAssessorCount;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
@@ -73,15 +73,17 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
 
     Optional<Assessment> findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(Long userId, Long applicationId);
 
+    long countByParticipantUserIdAndActivityStateStateIn(Long userId, Set<State> states);
+
     long countByParticipantUserIdAndActivityStateStateNotIn(Long userId, Set<State> states);
 
     long countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(Long userId, Long competitionId, Set<State> states);
 
     List<Assessment> findByActivityStateStateAndTargetCompetitionId(State state, long competitionId);
 
-    @Query("SELECT new org.innovateuk.ifs.assessment.domain.ApplicationAssessmentCount( " +
-            "   application, " +
+    @Query("SELECT new org.innovateuk.ifs.assessment.domain.AssessmentApplicationAssessorCount( " +
             "   assessment, " +
+            "   application, " +
             "   CAST((SELECT COUNT(otherAssessment) " +
             "   FROM Assessment otherAssessment " +
             "   JOIN otherAssessment.activityState otherActivityState " +
@@ -99,7 +101,7 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
             "   AND participant.user.id = :assessorId " +
             "   AND activityState.state IN :states " +
             "ORDER BY application.id")
-    List<ApplicationAssessmentCount> getAssessorApplicationAssessmentCountsForStates(
+    List<AssessmentApplicationAssessorCount> getAssessorApplicationAssessmentCountsForStates(
             @Param("competitionId") long competitionId,
             @Param("assessorId") long assessorId,
             @Param("states") Collection<State> states

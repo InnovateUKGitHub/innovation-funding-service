@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.assessment.resource;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,5 +75,33 @@ public class AssessorCompetitionSummaryResource {
 
     public void setAssignedAssessments(List<AssessorAssessmentResource> assignedAssessments) {
         this.assignedAssessments = assignedAssessments;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AssessorCompetitionSummaryResource that = (AssessorCompetitionSummaryResource) o;
+
+        return new EqualsBuilder()
+                .append(competitionId, that.competitionId)
+                .append(totalApplications, that.totalApplications)
+                .append(assessor, that.assessor)
+                .append(competitionName, that.competitionName)
+                .append(assignedAssessments, that.assignedAssessments)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(assessor)
+                .append(competitionId)
+                .append(competitionName)
+                .append(totalApplications)
+                .append(assignedAssessments)
+                .toHashCode();
     }
 }

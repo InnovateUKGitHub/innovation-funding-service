@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import com.google.common.collect.Sets;
-import org.innovateuk.ifs.assessment.domain.ApplicationAssessmentCount;
+import org.innovateuk.ifs.assessment.domain.AssessmentApplicationAssessorCount;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.assessment.resource.AssessorAssessmentResource;
@@ -50,12 +50,12 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
     public ServiceResult<AssessorCompetitionSummaryResource> getAssessorSummary(long assessorId, long competitionId) {
         return assessorService.getAssessorProfile(assessorId).andOnSuccess(assessorProfile ->
                 competitionService.getCompetitionById(competitionId).andOnSuccess(competition -> {
-                    long allAssessmentCount = assessmentRepository.countByParticipantUserIdAndActivityStateStateNotIn(
+                    long allAssessmentCount = assessmentRepository.countByParticipantUserIdAndActivityStateStateIn(
                             assessorProfile.getUser().getId(),
                             VALID_ASSESSMENT_STATES
                     );
 
-                    List<ApplicationAssessmentCount> applicationAssessmentCounts = assessmentRepository
+                    List<AssessmentApplicationAssessorCount> counts = assessmentRepository
                             .getAssessorApplicationAssessmentCountsForStates(
                                     competition.getId(),
                                     assessorId,
@@ -67,25 +67,25 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
                             competition.getName(),
                             assessorProfile,
                             allAssessmentCount,
-                            mapCountsToResource(applicationAssessmentCounts)
+                            mapCountsToResource(counts)
                     ));
                 })
         );
     }
 
-    private List<AssessorAssessmentResource> mapCountsToResource(List<ApplicationAssessmentCount> applicationAssessmentCounts) {
-        return simpleMap(applicationAssessmentCounts, applicationAssessmentCount -> {
+    private List<AssessorAssessmentResource> mapCountsToResource(List<AssessmentApplicationAssessorCount> counts) {
+        return simpleMap(counts, count -> {
 
             Organisation leadOrganisation = organisationRepository.findOne(
-                    applicationAssessmentCount.getApplication().getLeadOrganisationId()
+                    count.getApplication().getLeadOrganisationId()
             );
 
             return new AssessorAssessmentResource(
-                    applicationAssessmentCount.getApplication().getId(),
-                    applicationAssessmentCount.getApplication().getName(),
+                    count.getApplication().getId(),
+                    count.getApplication().getName(),
                     leadOrganisation.getName(),
-                    applicationAssessmentCount.getAssessmentCount(),
-                    applicationAssessmentCount.getAssessment().getActivityState()
+                    count.getAssessorCount(),
+                    count.getAssessment().getActivityState()
             );
         });
     }

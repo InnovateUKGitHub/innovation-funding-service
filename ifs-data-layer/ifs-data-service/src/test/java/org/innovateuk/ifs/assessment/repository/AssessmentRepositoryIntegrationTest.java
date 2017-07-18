@@ -3,7 +3,7 @@ package org.innovateuk.ifs.assessment.repository;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.assessment.domain.ApplicationAssessmentCount;
+import org.innovateuk.ifs.assessment.domain.AssessmentApplicationAssessorCount;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessorFormInputResponse;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
@@ -271,7 +271,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
         repository.save(assessments);
 
-        List<ApplicationAssessmentCount> counts = repository.getAssessorApplicationAssessmentCountsForStates(
+        List<AssessmentApplicationAssessorCount> counts = repository.getAssessorApplicationAssessmentCountsForStates(
                 application1.getCompetition().getId(),
                 paulPlum.getId(),
                 AssessmentStates.getBackingStates(complementOf(of(CREATED, REJECTED, WITHDRAWN)))
@@ -279,9 +279,9 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
         assertEquals(2, counts.size());
         assertEquals(application1.getId(), counts.get(0).getApplication().getId());
-        assertEquals(2, counts.get(0).getAssessmentCount());
+        assertEquals(2, counts.get(0).getAssessorCount());
         assertEquals(application2.getId(), counts.get(1).getApplication().getId());
-        assertEquals(1, counts.get(1).getAssessmentCount());
+        assertEquals(1, counts.get(1).getAssessorCount());
         assertEquals(paulPlum, counts.get(0).getAssessment().getParticipant().getUser());
         assertEquals(paulPlum, counts.get(1).getAssessment().getParticipant().getUser());
     }
