@@ -90,6 +90,7 @@ Initial details - User enters valid values and marks as done
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link                       link=Initial details
+    And the user should see the option in the drop-down menu    Generic  id=competitionTypeId
     When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     And the user clicks the button/link                         jQuery=button:contains("+ add another innovation area")
     And the user enters valid data in the initial details

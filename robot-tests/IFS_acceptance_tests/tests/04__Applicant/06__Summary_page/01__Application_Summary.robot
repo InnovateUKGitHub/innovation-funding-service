@@ -32,9 +32,9 @@ Edit link navigates to the application form
     [Documentation]    INFUND-193
     [Tags]    HappyPath
     Given the user clicks the button/link    jQuery=button:contains("Project summary")
-    When the user clicks the button/link    jQuery=#form-input-1039 button:contains("Return and edit")
+    When the user clicks the button/link    jQuery=.textarea-wrapped button:contains("Return and edit")
     Then the user should see the text in the page    Project summary
-    And The user enters text to a text field    css=#form-input-1039 .editor    Test text 123
+    And The user enters text to a text field    css=.textarea-wrapped .editor    Test text 123
     [Teardown]    The user clicks the button/link    jQuery=Button:contains(Save and return to application overview)
 
 Application overview button
