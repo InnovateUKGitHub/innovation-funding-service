@@ -170,6 +170,10 @@
   dt,
   dd {
     margin-bottom: 15px;
+
+    &.no-margin {
+      margin: 0;
+    }
   }
 }
 

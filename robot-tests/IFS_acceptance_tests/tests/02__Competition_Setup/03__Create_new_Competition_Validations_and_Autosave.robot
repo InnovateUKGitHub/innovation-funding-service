@@ -195,6 +195,31 @@ Milestones: Autosave
     And the user clicks the button/link    link=Milestones
     Then the user should see the correct inputs in the Milestones form
 
+Application finances: validation empty
+    [Documentation]    IFS-630
+    [Setup]    The user navigates to the Validation competition
+    Given the user clicks the button/link  link=Application
+    And the user clicks the button/link  link=Finances
+    And the user clicks the button/link  jQuery=a:contains("Edit this question")
+    And the user enters text to a text field    css=.editor    ${EMPTY}
+    When the user moves focus to the element  jQuery=button:contains("Save and close")
+    Then the user should see an error    This field cannot be left blank.
+    And the user enters text to a text field    css=.editor    Funding rules for this competition added
+    And the user clicks the button/link    jQuery=button:contains("Save and close")
+
+
+Application finances: able to edit the field
+    [Documentation]    IFS-630
+    [Setup]    The user navigates to the Validation competition
+    Given the user clicks the button/link  link=Application
+    And the user clicks the button/link  link=Finances
+    And the user should see the element  jQuery=.button:contains("Edit this question")
+    When the user clicks the button/link  link=Edit this question
+    Then the user enters text to a text field    css=.editor    Funding rules for this competition updated
+    And the user clicks the button/link    jQuery=button:contains("Save and close")
+    And the user clicks the button/link    jQuery=button:contains("Done")
+    And the user should not see an error in the page
+
 Assessor: Server-side validation
     [Documentation]    INFUND-5641
     [Setup]    The user navigates to the Validation competition
