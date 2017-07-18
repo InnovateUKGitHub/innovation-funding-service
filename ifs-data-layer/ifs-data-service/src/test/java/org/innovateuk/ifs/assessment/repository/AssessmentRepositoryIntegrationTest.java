@@ -3,8 +3,8 @@ package org.innovateuk.ifs.assessment.repository;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.assessment.domain.ApplicationAssessmentCount;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.domain.AssessmentApplicationAssessorCount;
 import org.innovateuk.ifs.assessment.domain.AssessorFormInputResponse;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource;
@@ -174,6 +174,23 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
+    public void countByParticipantUserIdAndActivityStateStateIn() throws Exception {
+        assessorFormInputResponseRepository.deleteAll();
+        repository.deleteAll();
+
+        int numOfAssessmentsForEachState = 2;
+
+        Application application = applicationRepository.findOne(1L);
+        setUpAssessments(user, application, numOfAssessmentsForEachState);
+        Set<State> states = AssessmentStates.getBackingStates(of(CREATED, PENDING));
+
+        assertEquals(
+                states.size() * numOfAssessmentsForEachState,
+                repository.countByParticipantUserIdAndActivityStateStateIn(user.getId(), states)
+        );
+    }
+
+    @Test
     @Rollback
     public void countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn() throws Exception {
         assessorFormInputResponseRepository.deleteAll();
@@ -235,13 +252,16 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
-    public void countByActivityStateStateNotInAndTargetCompetitionIdAndTargetIdInGroupByTarget() throws Exception {
+    public void getAssessorApplicationAssessmentCountsForStates() throws Exception {
         assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();
 
-        ProcessRole participant1 = newProcessRole().withId().build();
-        ProcessRole participant2 = newProcessRole().withId().build();
-        ProcessRole participant3 = newProcessRole().withId().build();
+        User felixWilson = userRepository.findByEmail("felix.wilson@gmail.com").orElse(null);
+        User paulPlum = userRepository.findByEmail("paul.plum@gmail.com").orElse(null);
+
+        ProcessRole participant1 = newProcessRole().withId().withUser(paulPlum).build();
+        ProcessRole participant2 = newProcessRole().withId().withUser(felixWilson).build();
+        ProcessRole participant3 = newProcessRole().withId().withUser(paulPlum).build();
 
         processRoleRepository.save(asList(participant1, participant2, participant3));
 
@@ -268,17 +288,19 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
         repository.save(assessments);
 
-        List<ApplicationAssessmentCount> counts = repository.countByActivityStateStateNotInAndTargetCompetitionIdAndTargetIdInGroupByTarget(
-                AssessmentStates.getBackingStates(asList(CREATED, REJECTED, WITHDRAWN)),
+        List<AssessmentApplicationAssessorCount> counts = repository.getAssessorApplicationAssessmentCountsForStates(
                 application1.getCompetition().getId(),
-                asList(application1.getId(), application2.getId())
+                paulPlum.getId(),
+                AssessmentStates.getBackingStates(complementOf(of(CREATED, REJECTED, WITHDRAWN)))
         );
 
         assertEquals(2, counts.size());
         assertEquals(application1.getId(), counts.get(0).getApplication().getId());
-        assertEquals(2, counts.get(0).getCount());
+        assertEquals(2, counts.get(0).getAssessorCount());
         assertEquals(application2.getId(), counts.get(1).getApplication().getId());
-        assertEquals(1, counts.get(1).getCount());
+        assertEquals(1, counts.get(1).getAssessorCount());
+        assertEquals(paulPlum, counts.get(0).getAssessment().getParticipant().getUser());
+        assertEquals(paulPlum, counts.get(1).getAssessment().getParticipant().getUser());
     }
 
     @Test

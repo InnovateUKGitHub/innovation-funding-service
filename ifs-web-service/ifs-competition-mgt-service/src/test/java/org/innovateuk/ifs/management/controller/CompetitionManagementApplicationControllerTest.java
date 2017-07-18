@@ -257,6 +257,23 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     }
 
     @Test
+    public void displayApplicationOverview_assessorProgressOrigin() throws Exception {
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+
+        this.setupApplicationResponses();
+        this.setupInvites();
+        this.setupResearchCategories();
+
+        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId())
+                .param("origin", "ASSESSOR_PROGRESS")
+                .param("assessorId", "10"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition-mgt-application-overview"))
+                .andExpect(model().attribute("backUrl", "/assessment/competition/" + competitionResource.getId() + "/assessors/10"));
+    }
+
+    @Test
     public void displayApplicationOverview_invalidOrigin() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();

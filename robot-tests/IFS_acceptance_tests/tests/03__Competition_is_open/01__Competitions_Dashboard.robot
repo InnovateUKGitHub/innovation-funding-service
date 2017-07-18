@@ -17,7 +17,7 @@ Competition dashboard Open competition
     [Documentation]    INFUND-7562
     [Tags]
     When The user clicks the button/link    link=${OPEN_COMPETITION_NAME}
-    Then the user should see the element    jQuery=span:contains("15: Predicting market trends programme")
+    Then the user should see the element    jQuery=span:contains("16: Predicting market trends programme")
     And the user should see the element    jQuery=h1:contains("Open")
     And the user should see the element    jQuery=dt:contains("Competition type") ~ dd:contains("Programme")
     And the user should see the element    jQuery=dt:contains("Innovation sector") ~ dd:contains("Materials and manufacturing")
@@ -44,7 +44,7 @@ Competition dashboard ready to Open competition
     [Tags]
     Given the user navigates to the page    ${CA_UpcomingComp}
     When The user clicks the button/link    link=${READY_TO_OPEN_COMPETITION_NAME}
-    Then the user should see the element    jQuery=span:contains("6: Photonics for health")
+    Then the user should see the element    jQuery=span:contains("7: Photonics for health")
     And the user should see the element    jQuery=h1:contains("Ready to open")
     And the user should see the element    jQuery=h1:contains("Ready to open")
     And the user should see the element    jQuery=dt:contains("Competition type") ~ dd:contains("Programme")

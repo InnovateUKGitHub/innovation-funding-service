@@ -19,7 +19,7 @@ public class AssessorCompetitionSummaryResourceBuilderTest {
         long expectedCompetitionId = 1L;
         String expectedCompetitionName = "Test Competition";
         AssessorProfileResource expectedAssessor = new AssessorProfileResource();
-        int expectedTotalApplications = 10;
+        long expectedTotalApplications = 10L;
         List<AssessorAssessmentResource> expectedAssignedAssessments = newAssessorAssessmentResource()
                 .withApplicationId(1L)
                 .withApplicationName("Test Application")
@@ -45,7 +45,7 @@ public class AssessorCompetitionSummaryResourceBuilderTest {
         Long[] expectedCompetitionIds = {1L, 2L};
         String[] expectedCompetitionNames = {"Test Competition 1", "Test Competition 2"};
         AssessorProfileResource[] expectedAssessors = newAssessorProfileResource().buildArray(2, AssessorProfileResource.class);
-        Integer[] expectedTotalApplications = {10, 20};
+        Long[] expectedTotalApplications = {10L, 20L};
         List<AssessorAssessmentResource> expectedAssignedAssessments1 = newAssessorAssessmentResource().build(1);
         List<AssessorAssessmentResource> expectedAssignedAssessments2 = newAssessorAssessmentResource().build(1);
 

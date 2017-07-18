@@ -46,7 +46,7 @@ public class AssessorCompetitionSummaryResourceBuilder extends BaseBuilder<Asses
         return withArraySetFieldByReflection("competitionName", competitionNames);
     }
 
-    public AssessorCompetitionSummaryResourceBuilder withTotalApplications(Integer ...totalApplications) {
+    public AssessorCompetitionSummaryResourceBuilder withTotalApplications(Long ...totalApplications) {
         return withArraySetFieldByReflection("totalApplications", totalApplications);
     }
 

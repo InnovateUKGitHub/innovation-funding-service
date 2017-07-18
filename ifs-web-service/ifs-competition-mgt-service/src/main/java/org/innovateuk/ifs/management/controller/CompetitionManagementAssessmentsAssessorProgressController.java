@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.management.model.AssessorAssessmentProgressModelPopulator;
+import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,18 +24,16 @@ public class CompetitionManagementAssessmentsAssessorProgressController {
     private AssessorAssessmentProgressModelPopulator assessorAssessmentProgressModelPopulator;
 
     @GetMapping("/{assessorId}")
-    public String assessmentProgress(@PathVariable("competitionId") long competitionId,
-                                     @PathVariable("assessorId") long assessorId,
-                                     @RequestParam(value = "page", defaultValue = "0") int page,
-                                     @RequestParam(value = "innovationArea", required = false) Optional<Long> innovationArea,
-                                     @RequestParam(value = "sortField", defaultValue = "") String sortField,
-                                     @RequestParam MultiValueMap<String, String> queryParams,
-                                     Model model) {
-
-        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.MANAGE_ASSESSORS, queryParams);
-
+    public String assessorProgress(@PathVariable("competitionId") long competitionId,
+                                   @PathVariable("assessorId") long assessorId,
+                                   @RequestParam(value = "page", defaultValue = "0") int page,
+                                   @RequestParam(value = "innovationArea", required = false) Optional<Long> innovationArea,
+                                   @RequestParam(value = "sortField", defaultValue = "") String sortField,
+                                   @RequestParam MultiValueMap<String, String> params,
+                                   Model model) {
+        params.add("assessorId", String.valueOf(assessorId));
+        model.addAttribute("originQuery", buildOriginQueryString(ApplicationOverviewOrigin.ASSESSOR_PROGRESS, params));
         model.addAttribute("model", assessorAssessmentProgressModelPopulator.populateModel(competitionId, assessorId, page, innovationArea, sortField, originQuery));
-        model.addAttribute("originQuery", originQuery);
 
         return "competition/assessor-progress";
     }

@@ -15,8 +15,7 @@ public class AssessorAssessmentResource {
     private String applicationName;
     private String leadOrganisation;
     private int totalAssessors;
-
-    // TODO: IFS-321 - Additional resource properties
+    private AssessmentStates state;
 
     public AssessorAssessmentResource() {
     }
@@ -24,11 +23,13 @@ public class AssessorAssessmentResource {
     public AssessorAssessmentResource(long applicationId,
                                       String applicationName,
                                       String leadOrganisation,
-                                      int totalAssessors) {
+                                      int totalAssessors,
+                                      AssessmentStates state) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.leadOrganisation = leadOrganisation;
         this.totalAssessors = totalAssessors;
+        this.state = state;
     }
 
     public long getApplicationId() {
@@ -63,6 +64,14 @@ public class AssessorAssessmentResource {
         this.totalAssessors = totalAssessors;
     }
 
+    public AssessmentStates getState() {
+        return state;
+    }
+
+    public void setState(AssessmentStates state) {
+        this.state = state;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -76,6 +85,7 @@ public class AssessorAssessmentResource {
                 .append(totalAssessors, that.totalAssessors)
                 .append(applicationName, that.applicationName)
                 .append(leadOrganisation, that.leadOrganisation)
+                .append(state, that.state)
                 .isEquals();
     }
 
@@ -86,6 +96,7 @@ public class AssessorAssessmentResource {
                 .append(applicationName)
                 .append(leadOrganisation)
                 .append(totalAssessors)
+                .append(state)
                 .toHashCode();
     }
 }

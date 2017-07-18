@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseRepository;
+import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.assessment.resource.AssessorAssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorCompetitionSummaryResource;
 import org.innovateuk.ifs.category.domain.InnovationArea;
@@ -27,6 +28,7 @@ import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -38,6 +40,7 @@ import static org.hamcrest.Matchers.isIn;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.AssessorAssessmentResourceBuilder.newAssessorAssessmentResource;
+import static org.innovateuk.ifs.assessment.resource.AssessmentStates.ACCEPTED;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.SUBMITTED;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -166,13 +169,14 @@ public class AssessorCompetitionSummaryControllerIntegrationTest extends BaseCon
 
         processRoleRepository.save(processRoles);
 
-        ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, SUBMITTED.getBackingState());
+        ActivityState submittedState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, SUBMITTED.getBackingState());
+        ActivityState acceptedState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, ACCEPTED.getBackingState());
 
         List<Assessment> assessments = newAssessment()
                 .withId()
                 .withApplication(applications.get(0), applications.get(1), applications.get(2), applications.get(0), applications.get(1))
                 .withParticipant(processRoles.get(0), processRoles.get(1), processRoles.get(2), processRoles.get(3), processRoles.get(4))
-                .withActivityState(activityState)
+                .withActivityState(submittedState, submittedState, acceptedState, submittedState, submittedState)
                 .build(5);
 
         assessorFormInputResponseRepository.deleteAll();
@@ -208,6 +212,7 @@ public class AssessorCompetitionSummaryControllerIntegrationTest extends BaseCon
                 .withApplicationName(applications.get(0).getName(), applications.get(1).getName(), applications.get(2).getName())
                 .withLeadOrganisation(organisations.get(0).getName(), organisations.get(1).getName(), organisations.get(2).getName())
                 .withTotalAssessors(2, 2, 1)
+                .withState(SUBMITTED, SUBMITTED, ACCEPTED)
                 .buildArray(3, AssessorAssessmentResource.class);
 
         assertThat(summaryResource.getAssignedAssessments(), hasItems(expectedAssessorAssessmentResources));

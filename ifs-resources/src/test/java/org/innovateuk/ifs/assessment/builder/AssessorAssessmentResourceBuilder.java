@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.assessment.resource.AssessorAssessmentResource;
 
 import java.util.List;
@@ -42,5 +43,9 @@ public class AssessorAssessmentResourceBuilder extends BaseBuilder<AssessorAsses
 
     public AssessorAssessmentResourceBuilder withTotalAssessors(Integer... totalAssessors) {
         return withArraySetFieldByReflection("totalAssessors", totalAssessors);
+    }
+
+    public AssessorAssessmentResourceBuilder withState(AssessmentStates... states) {
+        return withArraySetFieldByReflection("state", states);
     }
 }

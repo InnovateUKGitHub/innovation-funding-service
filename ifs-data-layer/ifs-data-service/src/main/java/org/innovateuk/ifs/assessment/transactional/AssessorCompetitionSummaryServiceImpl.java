@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.transactional;
 
-import org.innovateuk.ifs.assessment.domain.ApplicationAssessmentCount;
-import org.innovateuk.ifs.assessment.domain.Assessment;
+import com.google.common.collect.Sets;
+import org.innovateuk.ifs.assessment.domain.AssessmentApplicationAssessorCount;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.assessment.resource.AssessorAssessmentResource;
@@ -15,22 +15,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Service
 public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitionSummaryService {
 
-    private static final Set<State> INVALID_ASSESSMENT_STATES = AssessmentStates.getBackingStates(asList(
+    public static final Set<State> INVALID_ASSESSMENT_STATES = AssessmentStates.getBackingStates(EnumSet.of(
             AssessmentStates.CREATED,
             AssessmentStates.REJECTED,
             AssessmentStates.WITHDRAWN
     ));
+
+    public static final Set<State> VALID_ASSESSMENT_STATES = Sets.complementOf(INVALID_ASSESSMENT_STATES);
 
     @Autowired
     private AssessorService assessorService;
@@ -49,46 +50,42 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
     public ServiceResult<AssessorCompetitionSummaryResource> getAssessorSummary(long assessorId, long competitionId) {
         return assessorService.getAssessorProfile(assessorId).andOnSuccess(assessorProfile ->
                 competitionService.getCompetitionById(competitionId).andOnSuccess(competition -> {
-                    List<Assessment> allAssignedAssessments = assessmentRepository.findByParticipantUserIdAndActivityStateStateNotIn(
+                    long allAssessmentCount = assessmentRepository.countByParticipantUserIdAndActivityStateStateIn(
                             assessorProfile.getUser().getId(),
-                            INVALID_ASSESSMENT_STATES
+                            VALID_ASSESSMENT_STATES
                     );
 
-                    List<ApplicationAssessmentCount> applicationAssessmentCounts = new ArrayList<>();
-
-                    if (!allAssignedAssessments.isEmpty()) {
-                        applicationAssessmentCounts.addAll(
-                                assessmentRepository.countByActivityStateStateNotInAndTargetCompetitionIdAndTargetIdInGroupByTarget(
-                                        INVALID_ASSESSMENT_STATES,
-                                        competition.getId(),
-                                        simpleMap(allAssignedAssessments, assessment -> assessment.getTarget().getId())
-                                )
-                        );
-                    }
+                    List<AssessmentApplicationAssessorCount> counts = assessmentRepository
+                            .getAssessorApplicationAssessmentCountsForStates(
+                                    competition.getId(),
+                                    assessorId,
+                                    VALID_ASSESSMENT_STATES
+                            );
 
                     return serviceSuccess(new AssessorCompetitionSummaryResource(
                             competition.getId(),
                             competition.getName(),
                             assessorProfile,
-                            allAssignedAssessments.size(),
-                            mapCountsToResource(applicationAssessmentCounts)
+                            allAssessmentCount,
+                            mapCountsToResource(counts)
                     ));
                 })
         );
     }
 
-    private List<AssessorAssessmentResource> mapCountsToResource(List<ApplicationAssessmentCount> applicationAssessmentCounts) {
-        return simpleMap(applicationAssessmentCounts, applicationAssessmentCount -> {
+    private List<AssessorAssessmentResource> mapCountsToResource(List<AssessmentApplicationAssessorCount> counts) {
+        return simpleMap(counts, count -> {
 
             Organisation leadOrganisation = organisationRepository.findOne(
-                    applicationAssessmentCount.getApplication().getLeadOrganisationId()
+                    count.getApplication().getLeadOrganisationId()
             );
 
             return new AssessorAssessmentResource(
-                    applicationAssessmentCount.getApplication().getId(),
-                    applicationAssessmentCount.getApplication().getName(),
+                    count.getApplication().getId(),
+                    count.getApplication().getName(),
                     leadOrganisation.getName(),
-                    applicationAssessmentCount.getCount()
+                    count.getAssessorCount(),
+                    count.getAssessment().getActivityState()
             );
         });
     }

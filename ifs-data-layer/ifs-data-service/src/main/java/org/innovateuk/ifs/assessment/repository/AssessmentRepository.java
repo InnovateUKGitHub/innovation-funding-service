@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.repository;
 
-import org.innovateuk.ifs.assessment.domain.ApplicationAssessmentCount;
+import org.innovateuk.ifs.assessment.domain.AssessmentApplicationAssessorCount;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
@@ -9,7 +9,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -70,28 +73,38 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
 
     Optional<Assessment> findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(Long userId, Long applicationId);
 
+    long countByParticipantUserIdAndActivityStateStateIn(Long userId, Set<State> states);
+
     long countByParticipantUserIdAndActivityStateStateNotIn(Long userId, Set<State> states);
 
     long countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(Long userId, Long competitionId, Set<State> states);
 
     List<Assessment> findByActivityStateStateAndTargetCompetitionId(State state, long competitionId);
 
-    @Query("SELECT new org.innovateuk.ifs.assessment.domain.ApplicationAssessmentCount( " +
+    @Query("SELECT new org.innovateuk.ifs.assessment.domain.AssessmentApplicationAssessorCount( " +
+            "   assessment, " +
             "   application, " +
-            "   CAST(COUNT(assessment.id) as int) " +
+            "   CAST((SELECT COUNT(otherAssessment) " +
+            "   FROM Assessment otherAssessment " +
+            "   JOIN otherAssessment.activityState otherActivityState " +
+            "   WHERE otherAssessment.target.id = application.id " +
+            "       AND otherActivityState.state IN :states " +
+            "   GROUP BY otherAssessment.target " +
+            "   ) as int)" +
             ") " +
             "FROM Assessment assessment " +
+            "JOIN assessment.target application " +
             "JOIN assessment.target.competition competition " +
             "JOIN assessment.activityState activityState " +
-            "JOIN assessment.target application " +
+            "JOIN assessment.participant participant " +
             "WHERE competition.id = :competitionId " +
-            "   AND application.id IN :applicationIds " +
-            "   AND activityState.state NOT IN :states " +
-            "GROUP BY application.id")
-    List<ApplicationAssessmentCount> countByActivityStateStateNotInAndTargetCompetitionIdAndTargetIdInGroupByTarget(
-            @Param("states") Collection<State> states,
+            "   AND participant.user.id = :assessorId " +
+            "   AND activityState.state IN :states " +
+            "ORDER BY application.id")
+    List<AssessmentApplicationAssessorCount> getAssessorApplicationAssessmentCountsForStates(
             @Param("competitionId") long competitionId,
-            @Param("applicationIds") Collection<Long> applicationIds
+            @Param("assessorId") long assessorId,
+            @Param("states") Collection<State> states
     );
 
     int countByActivityStateStateAndTargetCompetitionId(State state, Long competitionId);
