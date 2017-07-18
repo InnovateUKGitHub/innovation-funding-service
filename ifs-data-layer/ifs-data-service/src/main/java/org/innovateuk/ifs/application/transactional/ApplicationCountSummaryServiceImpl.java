@@ -41,7 +41,7 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
     private ApplicationStatisticsRepository applicationStatisticsRepository;
 
     private static final Map<String, Sort> SORT_FIELD_TO_DB_SORT_FIELDS = new HashMap<String, Sort>() {{
-        put("title", new Sort(ASC, new String[]{"name", "id"}));
+        put("appTitle", new Sort(ASC, new String[]{"name", "id"}));
         put("leadOrg", new Sort(ASC, new String[]{"leadOrganisation", "id"}));
         put("assignedApps", new Sort(ASC, new String[]{"assessors", "id"}));
         put("completedApps", new Sort(ASC, new String[]{"submitted", "id"}));
