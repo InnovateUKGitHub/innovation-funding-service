@@ -100,14 +100,12 @@ public class UserManagementController {
                                HttpServletRequest request,
                                UserResource loggedInUser) {
 
-        return viewEditUser(model, userId);
+        return viewEditUser(model, userId, new EditUserForm());
     }
 
-    private String viewEditUser(Model model, Long userId) {
+    private String viewEditUser(Model model, Long userId, EditUserForm form) {
 
         UserResource userResource = userRestService.retrieveUserById(userId).getSuccessObjectOrThrowException();
-
-        EditUserForm form = new EditUserForm();
         form.setEmailAddress(userResource.getEmail());
         model.addAttribute(FORM_ATTR_NAME, form);
 
@@ -123,7 +121,7 @@ public class UserManagementController {
                              @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                              UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> "admin/edit-user";
+        Supplier<String> failureView = () -> viewEditUser(model, userId, form);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 

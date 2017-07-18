@@ -21,7 +21,7 @@
     </div>
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Update internal user\'s details',size='heading-xlarge'" />
-    <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="POST">
+    <form th:object="${form}" novalidate="novalidate" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST">
         <h2 class="heading-medium">Personal details</h2>
 
         <div class="form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'form-group-error'">
