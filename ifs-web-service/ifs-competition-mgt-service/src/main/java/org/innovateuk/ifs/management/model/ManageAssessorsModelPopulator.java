@@ -18,7 +18,7 @@ public class ManageAssessorsModelPopulator extends BaseManageAssessmentsModelPop
         return new ManageAssessorsViewModel(
                 competition.getId(), competition.getName(),
                 simpleMap(assessorCounts.getContent(), this::getRowViewModel),
-                IN_ASSESSMENT.equals(competition.getCompetitionStatus()),
+                competition.getCompetitionStatus() == IN_ASSESSMENT,
                 new PaginationViewModel(assessorCounts, origin));
     }
 

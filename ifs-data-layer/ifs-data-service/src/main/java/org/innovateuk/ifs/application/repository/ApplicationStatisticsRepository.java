@@ -27,6 +27,15 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "AND (a.applicationProcess.activityState.state IN :states) " +
             "AND (a.applicationProcess.target.innovationArea.id = :innovationArea OR :innovationArea IS NULL))";
 
+    String REJECTED_AND_SUBMITTED_STATES_STRING =
+            "(org.innovateuk.ifs.workflow.resource.State.REJECTED," +
+                    "org.innovateuk.ifs.workflow.resource.State.WITHDRAWN," +
+                    "org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
+    String NOT_ACCEPTED_OR_SUBMITTED_STATES_STRING =
+            "(org.innovateuk.ifs.workflow.resource.State.PENDING,org.innovateuk.ifs.workflow.resource.State.REJECTED," +
+                    "org.innovateuk.ifs.workflow.resource.State.WITHDRAWN,org.innovateuk.ifs.workflow.resource.State.CREATED,org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
+    String SUBMITTED_STATES_STRING = "(org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
+
     List<ApplicationStatistics> findByCompetitionAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> applicationStates);
 
     @Query(APPLICATION_FILTER)
@@ -40,12 +49,6 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
                                                                                            @Param("states") Collection<State> applicationStates,
                                                                                            @Param("innovationArea") long innovationArea,
                                                                                            Pageable pageable);
-
-    // TODO IFS-399 pass in the states as enum sets from the service, rather than hardcoding strings
-    String REJECTED_AND_SUBMITTED_STATES_STRING = "(org.innovateuk.ifs.workflow.resource.State.REJECTED,org.innovateuk.ifs.workflow.resource.State.WITHDRAWN, org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
-    String NOT_ACCEPTED_OR_SUBMITTED_STATES_STRING = "(org.innovateuk.ifs.workflow.resource.State.PENDING,org.innovateuk.ifs.workflow.resource.State.REJECTED," +
-            "org.innovateuk.ifs.workflow.resource.State.WITHDRAWN,org.innovateuk.ifs.workflow.resource.State.CREATED,org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
-    String SUBMITTED_STATES_STRING = "(org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
 
     @Query("SELECT NEW org.innovateuk.ifs.application.resource.AssessorCountSummaryResource(" +
             "  user.id, " +

@@ -10,6 +10,9 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.AssessorCountSummaryResourceBuilder.newAssessorCountSummaryResource;
+import static org.innovateuk.ifs.application.transactional.AssessorCountSummaryServiceImpl.NOT_ACCEPTED_OR_SUBMITTED_ASSESSMENT_STATES;
+import static org.innovateuk.ifs.application.transactional.AssessorCountSummaryServiceImpl.REJECTED_AND_SUBMITTED_ASSESSMENT_STATES;
+import static org.innovateuk.ifs.application.transactional.AssessorCountSummaryServiceImpl.SUBMITTED_ASSESSMENT_STATES;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
@@ -43,8 +46,7 @@ public class AssessorCountSummaryServiceImplTest extends BaseServiceUnitTest<Ass
         when(page.getSize()).thenReturn(pageSize);
 
         when(applicationStatisticsRepositoryMock.getAssessorCountSummaryByCompetition(
-                eq(competitionId), argThat(new PageableMatcher(pageNumber, pageSize))
-                )
+                eq(competitionId), argThat(new PageableMatcher(pageNumber, pageSize)))
         ).thenReturn(page);
 
         final AssessorCountSummaryPageResource expectedPageResource =

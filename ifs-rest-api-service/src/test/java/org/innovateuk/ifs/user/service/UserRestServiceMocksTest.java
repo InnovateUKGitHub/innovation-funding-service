@@ -2,10 +2,8 @@ package org.innovateuk.ifs.user.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.user.resource.Disability;
-import org.innovateuk.ifs.user.resource.Gender;
-import org.innovateuk.ifs.user.resource.UserPageResource;
-import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
+import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.LinkedMultiValueMap;
@@ -17,10 +15,13 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userListType;
+import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Title.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 
@@ -273,5 +274,30 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         UserPageResource result = service.getInactiveInternalUsers(0, 5).getSuccessObjectOrThrowException();
 
         assertEquals(expected, result);
+    }
+
+    @Test
+    public void testCreateInternalUser(){
+        setLoggedInUser(null);
+
+        List<RoleResource> roleResources = newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build(1);
+
+        InternalUserRegistrationResource internalUserRegistrationResource = newInternalUserRegistrationResource()
+                .withFirstName("First")
+                .withLastName("Last")
+                .withEmail("email@example.com")
+                .withPassword("Passw0rd123")
+                .withRoles(roleResources)
+                .build();
+
+        String inviteHash = "hash";
+
+        setupPostWithRestResultAnonymousExpectations(usersUrl + "/internal/create/" + inviteHash, Void.class, internalUserRegistrationResource, null, CREATED);
+
+        RestResult<Void> result = service.createInternalUser(inviteHash, internalUserRegistrationResource);
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(CREATED, result.getStatusCode());
     }
 }

@@ -32,12 +32,6 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
     private ApplicationCountSummaryPageMapper applicationCountSummaryPageMapper;
 
     @Autowired
-    private ApplicationRepository applicationRepository;
-
-    @Autowired
-    private OrganisationRepository processRoleRepository;
-
-    @Autowired
     private ApplicationStatisticsRepository applicationStatisticsRepository;
 
     private static final Map<String, Sort> SORT_FIELD_TO_DB_SORT_FIELDS = new HashMap<String, Sort>() {{
