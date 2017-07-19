@@ -65,6 +65,7 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
                     return serviceSuccess(new AssessorCompetitionSummaryResource(
                             competition.getId(),
                             competition.getName(),
+                            competition.getCompetitionStatus(),
                             assessorProfile,
                             allAssessmentCount,
                             mapCountsToResource(counts)
