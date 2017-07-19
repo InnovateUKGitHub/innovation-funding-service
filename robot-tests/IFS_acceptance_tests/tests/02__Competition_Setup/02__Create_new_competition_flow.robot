@@ -90,6 +90,7 @@ Initial details - User enters valid values and marks as done
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link                       link=Initial details
+    And the user should see the option in the drop-down menu    Generic  id=competitionTypeId
     When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     And the user clicks the button/link                         jQuery=button:contains("+ add another innovation area")
     And the user enters valid data in the initial details
@@ -449,10 +450,12 @@ Application: Finances
     And the user should see the element      css=label[for="full-application-finance-no"]
     # Please note that the above radio button is not clickable at the moment. Not part of the MVP. Is included for future functionality purpose.
     When the user selects the radio button   includeGrowthTable  include-growth-table-no
+    And the user enters text to a text field  css=.editor  Funding rules for this competition are now entered.
     And The user clicks the button/link      jQuery=button:contains("Save and close")
     Then the user navigates to the page      ${landingPage}
     When the user clicks the button/link     link=Finances
     Then the user should see the element     jQuery=dt:contains("Include project growth table") ~ dd:contains("No")
+    Then the user should see the element     jQuery=dt:contains("Funding rules for this competition") ~ dd:contains("Funding rules for this competition are now entered.")
 
 Application: Mark as done should display green tick
     [Documentation]    INFUND-5964

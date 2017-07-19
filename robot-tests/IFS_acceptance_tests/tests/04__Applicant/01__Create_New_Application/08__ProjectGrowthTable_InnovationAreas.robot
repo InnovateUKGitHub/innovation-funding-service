@@ -366,6 +366,7 @@ the user decides about the growth table
     the user clicks the button/link    link=Finances
     the user clicks the button/link    jQuery=a:contains("Edit this question")
     the user clicks the button twice   jQuery=label[for="include-growth-table-${edit}"]
+    the user enters text to a text field  css=.editor  Funding rules for the competition added
     the user clicks the button/link    jQuery=button:contains("Save and close")
     the user clicks the button/link    link=Finances
     the user should see the element    jQuery=dt:contains("Include project growth table") + dd:contains("${read}")
