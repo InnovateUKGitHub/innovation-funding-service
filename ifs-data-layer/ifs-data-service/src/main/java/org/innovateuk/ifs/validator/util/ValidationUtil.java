@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.validation.SpendProfileCostValidator;
+import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -140,8 +141,8 @@ public class ValidationUtil {
         return binder.getBindingResult();
     }
 
-    public BindingResult validationJesForm(FormInputResponse response) {
-        DataBinder binder = new DataBinder(response);
+    public BindingResult validationJesForm(Application application) {
+        DataBinder binder = new DataBinder(application);
         binder.addValidators(new AcademicJesValidator());
         binder.validate();
         return binder.getBindingResult();
@@ -188,7 +189,7 @@ public class ValidationUtil {
         if (formInput.getFormValidators().isEmpty() && !hasValidator(formInput)) {
             // no validator? question is valid!
         } else {
-            BindingResult validationResult = validatorService.validateFormInputResponse(application.getId(), formInput.getId(), markedAsCompleteById);
+            BindingResult validationResult = validatorService.validateFormInputResponse(application, formInput.getId(), markedAsCompleteById);
 
             if (validationResult.hasErrors()) {
                 validationMessages.add(new ValidationMessages(formInput.getId(), validationResult));

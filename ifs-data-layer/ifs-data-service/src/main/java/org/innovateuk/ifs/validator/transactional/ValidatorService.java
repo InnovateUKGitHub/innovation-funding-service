@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.validator.transactional;
 
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
@@ -14,7 +15,7 @@ public interface ValidatorService {
     List<BindingResult> validateFormInputResponse(Long applicationId, Long formInputId);
 
     @NotSecured(value = "This service is used to validate existing data", mustBeSecuredByOtherServices = false)
-    BindingResult validateFormInputResponse(Long applicationId, Long formInputId, Long markedAsCompleteById);
+    BindingResult validateFormInputResponse(Application application, Long formInputId, Long markedAsCompleteById);
 
     @NotSecured(value = "This service is used to validate existing data", mustBeSecuredByOtherServices = false)
     List<ValidationMessages> validateCostItem(Long applicationId, Question question, Long markedAsCompleteById);
