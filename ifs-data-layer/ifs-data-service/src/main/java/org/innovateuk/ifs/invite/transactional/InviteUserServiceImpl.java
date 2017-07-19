@@ -134,15 +134,6 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
         return existingInvites.isEmpty() ? serviceSuccess() : serviceFailure(USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED);
     }
 
-/*    private ServiceResult<Role> getRole(UserRoleType adminRoleType) {
-        return find(roleRepository.findOneByName(adminRoleType.getName()), notFoundError(Role.class, adminRoleType.getName()));
-    }*/
-
-    //Existing
-/*    protected ServiceResult<Role> getRole(String roleName) {
-        return find(roleRepository.findOneByName(roleName), notFoundError(Role.class, roleName));
-    }*/
-
     private ServiceResult<RoleInvite> saveInvite(UserResource invitedUser, Role role) {
         RoleInvite roleInvite = new RoleInvite(invitedUser.getFirstName() + " " + invitedUser.getLastName(),
                 invitedUser.getEmail(),
