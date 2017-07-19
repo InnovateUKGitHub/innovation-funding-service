@@ -1,13 +1,23 @@
 package org.innovateuk.ifs.management.viewmodel;
 
-import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 public class AssessorAssessmentProgressViewModel {
 
+    private static final Set<CompetitionStatus> IN_ASSESSMENT_STATES = EnumSet.complementOf(EnumSet.of(
+            CompetitionStatus.COMPETITION_SETUP,
+            CompetitionStatus.READY_TO_OPEN,
+            CompetitionStatus.OPEN,
+            CompetitionStatus.CLOSED
+    ));
+
     private final long competitionId;
     private final String competitionName;
+    private final CompetitionStatus competitionStatus;
     private final String assessorName;
     private final List<String> innovationAreas;
     private final String businessType;
@@ -17,6 +27,7 @@ public class AssessorAssessmentProgressViewModel {
 
     public AssessorAssessmentProgressViewModel(long competitionId,
                                                String competitionName,
+                                               CompetitionStatus competitionStatus,
                                                String assessorName,
                                                List<String> innovationAreas,
                                                String businessType,
@@ -24,6 +35,7 @@ public class AssessorAssessmentProgressViewModel {
                                                List<AssessorAssessmentProgressAssignedRowViewModel> assigned) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
+        this.competitionStatus = competitionStatus;
         this.assessorName = assessorName;
         this.innovationAreas = innovationAreas;
         this.businessType = businessType;
@@ -37,6 +49,10 @@ public class AssessorAssessmentProgressViewModel {
 
     public String getCompetitionName() {
         return competitionName;
+    }
+
+    public CompetitionStatus getCompetitionStatus() {
+        return competitionStatus;
     }
 
     public String getAssessorName() {
@@ -57,5 +73,9 @@ public class AssessorAssessmentProgressViewModel {
 
     public List<AssessorAssessmentProgressAssignedRowViewModel> getAssigned() {
         return assigned;
+    }
+
+    public boolean isCompetitionInAssessment() {
+        return IN_ASSESSMENT_STATES.contains(competitionStatus);
     }
 }

@@ -45,11 +45,31 @@
                     <th scope="col" >Title</th>
                     <th scope="col" class="width-large">Lead organisation</th>
                     <th scope="col" class="width-small aligncentre">Assigned</th>
-                    <th scope="col" class="width-small aligncentre">Notified</th>
-                    <th scope="col" class="width-small aligncentre">Accepted</th>
-                    <th scope="col" class="width-small aligncentre">Started</th>
-                    <th scope="col" class="width-small aligncentre">Submitted</th>
-                    <th scope="col" class="width-small-medium aligncentre">Remove</th>
+                    <th scope="col"
+                        class="width-small aligncentre"
+                        th:if="${model.competitionInAssessment}">
+                        Notified
+                    </th>
+                    <th scope="col"
+                        class="width-small aligncentre"
+                        th:if="${model.competitionInAssessment}">
+                        Accepted
+                    </th>
+                    <th scope="col"
+                        class="width-small aligncentre"
+                        th:if="${model.competitionInAssessment}">
+                        Started
+                    </th>
+                    <th scope="col"
+                        class="width-small aligncentre"
+                        th:if="${model.competitionInAssessment}">
+                        Submitted
+                    </th>
+                    <th scope="col"
+                        class="width-small-medium aligncentre"
+                        th:if="${model.competitionInAssessment}">
+                        Remove
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -65,34 +85,23 @@
                     <td th:text="${app.leadOrganisation}">Lead organisation</td>
                     <td th:text="${app.totalAssessors}" class="aligncentre">3</td>
                     <td class="aligncentre"
-                        th:text="${app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).PENDING or
-                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).ACCEPTED or
-                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).OPEN or
-                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).DECIDE_IF_READY_TO_SUBMIT or
-                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).READY_TO_SUBMIT or
-                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).SUBMITTED}
-                        ? 'Yes' : '-'">
+                        th:if="${model.competitionInAssessment}"
+                        th:text="${app.notified} ? 'Yes' : '-'">
                         Yes
                     </td>
                     <td class="aligncentre"
-                        th:text="${app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).ACCEPTED or
-                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).OPEN or
-                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).DECIDE_IF_READY_TO_SUBMIT or
-                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).READY_TO_SUBMIT or
-                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).SUBMITTED}
-                        ? 'Yes' : '-'">
+                        th:if="${model.competitionInAssessment}"
+                        th:text="${app.accepted} ? 'Yes' : '-'">
                         Yes
                     </td>
                     <td class="aligncentre"
-                        th:text="${app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).OPEN or
-                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).DECIDE_IF_READY_TO_SUBMIT or
-                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).READY_TO_SUBMIT or
-                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).SUBMITTED}
-                        ? 'Yes' : '-'">
+                        th:if="${model.competitionInAssessment}"
+                        th:text="${app.started} ? 'Yes' : '-'">
                         Yes
                     </td>
                     <td class="aligncentre"
-                        th:text="${app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).SUBMITTED} ? 'Yes' : '-'">
+                        th:if="${model.competitionInAssessment}"
+                        th:text="${app.submitted} ? 'Yes' : '-'">
                         Yes
                     </td>
                     <td class="aligncentre"><button class="button button-secondary no-margin">Remove</button></td>

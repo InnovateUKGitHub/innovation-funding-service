@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ public class AssessorCompetitionSummaryResource {
     private AssessorProfileResource assessor;
     private long competitionId;
     private String competitionName;
+    private CompetitionStatus competitionStatus;
     /**
      * Total number of applications
      * across ALL competitions.
@@ -27,11 +29,13 @@ public class AssessorCompetitionSummaryResource {
 
     public AssessorCompetitionSummaryResource(long competitionId,
                                               String competitionName,
+                                              CompetitionStatus competitionStatus,
                                               AssessorProfileResource assessor,
                                               long totalApplications,
                                               List<AssessorAssessmentResource> assignedAssessments) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
+        this.competitionStatus = competitionStatus;
         this.assessor = assessor;
         this.totalApplications = totalApplications;
         this.assignedAssessments = assignedAssessments;
@@ -51,6 +55,14 @@ public class AssessorCompetitionSummaryResource {
 
     public void setCompetitionName(String competitionName) {
         this.competitionName = competitionName;
+    }
+
+    public CompetitionStatus getCompetitionStatus() {
+        return competitionStatus;
+    }
+
+    public void setCompetitionStatus(CompetitionStatus competitionStatus) {
+        this.competitionStatus = competitionStatus;
     }
 
     public AssessorProfileResource getAssessor() {
@@ -86,10 +98,11 @@ public class AssessorCompetitionSummaryResource {
         AssessorCompetitionSummaryResource that = (AssessorCompetitionSummaryResource) o;
 
         return new EqualsBuilder()
-                .append(competitionId, that.competitionId)
-                .append(totalApplications, that.totalApplications)
                 .append(assessor, that.assessor)
+                .append(competitionId, that.competitionId)
                 .append(competitionName, that.competitionName)
+                .append(competitionStatus, that.competitionStatus)
+                .append(totalApplications, that.totalApplications)
                 .append(assignedAssessments, that.assignedAssessments)
                 .isEquals();
     }
@@ -100,6 +113,7 @@ public class AssessorCompetitionSummaryResource {
                 .append(assessor)
                 .append(competitionId)
                 .append(competitionName)
+                .append(competitionStatus)
                 .append(totalApplications)
                 .append(assignedAssessments)
                 .toHashCode();

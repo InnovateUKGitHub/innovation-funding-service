@@ -8,6 +8,7 @@ import org.innovateuk.ifs.assessment.resource.AssessorCompetitionSummaryResource
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
@@ -28,6 +29,7 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentStates.SUBMITTED;
 import static org.innovateuk.ifs.assessment.transactional.AssessorCompetitionSummaryServiceImpl.VALID_ASSESSMENT_STATES;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -61,6 +63,7 @@ public class AssessorCompetitionSummaryServiceImplTest extends BaseUnitTestMocks
         CompetitionResource competition = newCompetitionResource()
                 .withId(competitionId)
                 .withName("Test Competition")
+                .withCompetitionStatus(IN_ASSESSMENT)
                 .build();
 
         when(competitionServiceMock.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competition));
@@ -130,6 +133,7 @@ public class AssessorCompetitionSummaryServiceImplTest extends BaseUnitTestMocks
         AssessorCompetitionSummaryResource expected = newAssessorCompetitionSummaryResource()
                 .withCompetitionId(competitionId)
                 .withCompetitionName("Test Competition")
+                .withCompetitionStatus(IN_ASSESSMENT)
                 .withTotalApplications(20L)
                 .withAssessor(assessor)
                 .withAssignedAssessments(
