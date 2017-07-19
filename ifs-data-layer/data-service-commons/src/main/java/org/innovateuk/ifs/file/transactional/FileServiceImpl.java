@@ -112,8 +112,15 @@ public class FileServiceImpl extends RootTransactionalService implements FileSer
         });
     }
 
+    /**
+     * Avoid using this and use deleteFileIgnoreNotFound unless you intend to block user from not being able to
+     * remove file entrys with associated files missing.  See IFS-955
+     * @param fileEntryId
+     * @return
+     */
     @Override
     @Transactional
+    @Deprecated
     public ServiceResult<FileEntry> deleteFile(long fileEntryId) {
 
         return findFileEntry(fileEntryId).
@@ -123,6 +130,33 @@ public class FileServiceImpl extends RootTransactionalService implements FileSer
                 FileStorageStrategy storageLocation = fileAndStorageLocation.getValue();
                 return storageLocation.deleteFile(fileEntry).andOnSuccessReturn(() -> fileEntry);
             }));
+    }
+
+    /**
+     * This method is preferred over deleteFile method above to avoid blocking removal of files when they are missing.
+     * There have been issues on production environment resulting in missing files.  This meant users were not able
+     * to reupload after removing files.  See IFS-955.
+     * Such records where files are actually missing will be logged as an error but file entry record will be removed
+     * and no exception thrown.  So re-upload is allowed.
+     * @param fileEntryId
+     * @return
+     */
+    @Override
+    @Transactional
+    public ServiceResult<FileEntry> deleteFileIgnoreNotFound(long fileEntryId) {
+        return findFileEntry(fileEntryId).
+                andOnSuccess(fileEntry ->
+                        findFileForDelete(fileEntry).
+                                andOnSuccess(fileAndStorageLocation -> {
+                                    FileStorageStrategy storageLocation = fileAndStorageLocation.getValue();
+                                    return storageLocation.deleteFile(fileEntry).andOnSuccess(() -> fileEntryRepository.delete(fileEntry)).andOnSuccessReturn(() -> fileEntry);
+                                }).
+                                andOnFailure(() -> {
+                                    fileEntryRepository.delete(fileEntry);
+                                    LOG.error(String.format("JES file associated with file entry %1d not found.  File entry record deleted.", fileEntry.getId()));
+                                    return serviceSuccess(fileEntry);
+                                })
+                );
     }
 
     private ServiceResult<FileEntry> updateFileEntry(FileEntry updatedFileDetails) {
