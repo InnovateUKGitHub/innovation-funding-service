@@ -341,20 +341,20 @@ proj finance approves the spend profiles
     the user clicks the button/link  jQuery=.modal-accept-profile button:contains("Approve")
 
 all partners submit their Spend Profile
-    Login and submit partners spend profile  ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${short_password}  ${Kazio_Id}  ${PS_GOL_APPLICATION_PROJECT}
-    Login and submit partners spend profile  ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}  ${short_password}  ${Cogilith_Id}  ${PS_GOL_APPLICATION_PROJECT}
-    Login and submit leads spend profile     ${PS_GOL_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}  ${Gabtype_Id}  ${Gabtype_Name}  ${PS_GOL_APPLICATION_PROJECT}
+    Login and submit partners spend profile  ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${Kazio_Id}  ${PS_GOL_APPLICATION_PROJECT}
+    Login and submit partners spend profile  ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}  ${Cogilith_Id}  ${PS_GOL_APPLICATION_PROJECT}
+    Login and submit leads spend profile     ${PS_GOL_APPLICATION_LEAD_PARTNER_EMAIL}  ${Gabtype_Id}  ${Gabtype_Name}  ${PS_GOL_APPLICATION_PROJECT}
 
 Login and submit partners spend profile
-    [Arguments]  ${email}  ${password}  ${org_id}  ${project}
-    log in as a different user       ${email}  ${password}
+    [Arguments]  ${email}  ${org_id}  ${project}
+    log in as a different user       ${email}  ${short_password}
     the user navigates to the page   ${server}/project-setup/project/${project}/partner-organisation/${org_id}/spend-profile
     the user clicks the button/link  jQuery=a:contains("Submit to lead partner")
     the user clicks the button/link  jQuery=.button:contains("Submit")
 
 Login and submit leads spend profile
-    [Arguments]  ${email}  ${password}  ${org_id}  ${org_name}  ${project}
-    log in as a different user       ${email}  ${password}
+    [Arguments]  ${email}  ${org_id}  ${org_name}  ${project}
+    log in as a different user       ${email}  ${short_password}
     the user navigates to the page   ${server}/project-setup/project/${project}/partner-organisation/${org_id}/spend-profile
     the user clicks the button/link  link=${org_name}
     the user clicks the button/link  jQuery=.button:contains("Mark as complete")
