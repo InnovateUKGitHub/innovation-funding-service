@@ -94,6 +94,16 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     }
 
     @Test
+    public void saveUserInviteWhenRoleSpecifiedIsNotInternalRole() {
+
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, UserRoleType.COLLABORATOR);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(NOT_AN_INTERNAL_USER_ROLE));
+
+    }
+
+    @Test
     public void saveUserInviteWhenEmailDomainIsIncorrect() throws Exception {
 
         UserRoleType adminRoleType = UserRoleType.SUPPORT;
