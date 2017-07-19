@@ -65,11 +65,13 @@
                         th:if="${model.competitionInAssessment}">
                         Submitted
                     </th>
+
+                    <!--/*
                     <th scope="col"
-                        class="width-small-medium aligncentre"
-                        th:if="${model.competitionInAssessment}">
+                        class="width-small-medium aligncentre">
                         Remove
                     </th>
+                    */-->
                 </tr>
             </thead>
             <tbody>
@@ -104,7 +106,9 @@
                         th:text="${app.submitted} ? 'Yes' : '-'">
                         Yes
                     </td>
+                    <!--/*
                     <td class="aligncentre"><button class="button button-secondary no-margin">Remove</button></td>
+                    */-->
                 </tr>
             </tbody>
         </table>
