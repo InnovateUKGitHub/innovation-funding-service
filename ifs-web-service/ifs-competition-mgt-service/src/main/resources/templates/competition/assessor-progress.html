@@ -147,11 +147,13 @@
                 <td class="aligncentre" th:text="${app.assessors}">4</td>
                 <td class="aligncentre" th:text="${app.accepted}" th:if="${model.applicationsView.inAssessment}">2</td>
                 <td class="aligncentre" th:text="${app.submitted}" th:if="${model.applicationsView.inAssessment}">1</td>
-                <td class="alignright">
+                <!--
+                    <td class="alignright">
                     <a class="button-secondary no-margin"
                        th:href="@{/assessment/competition/{competitionId}/application/{applicationId}/assessors(competitionId=${model.competitionId},applicationId=${app.id})}"
                         >Assign</a>
-                </td>
+                    </td
+                >-->
             </tr>
             </tbody>
         </table>

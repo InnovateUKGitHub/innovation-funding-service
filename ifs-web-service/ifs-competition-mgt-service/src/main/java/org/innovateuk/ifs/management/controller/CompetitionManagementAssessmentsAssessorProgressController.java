@@ -32,7 +32,7 @@ public class CompetitionManagementAssessmentsAssessorProgressController {
                                    @RequestParam MultiValueMap<String, String> params,
                                    Model model) {
         params.add("assessorId", String.valueOf(assessorId));
-        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.MANAGE_ASSESSORS, params);
+        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.ASSESSOR_PROGRESS, params);
         model.addAttribute("originQuery", originQuery);
         model.addAttribute("model", assessorAssessmentProgressModelPopulator.populateModel(competitionId, assessorId, page, innovationArea, sortField, originQuery));
 
