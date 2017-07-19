@@ -10,6 +10,7 @@ import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.registration.service.InternalUserService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -106,6 +107,10 @@ public class UserManagementController {
     private String viewEditUser(Model model, Long userId, EditUserForm form) {
 
         UserResource userResource = userRestService.retrieveUserById(userId).getSuccessObjectOrThrowException();
+        form.setFirstName(userResource.getFirstName());
+        form.setLastName(userResource.getLastName());
+        // userResource.getRolesString() will return a single role for internal users
+        form.setRole(UserRoleType.fromDisplayName(userResource.getRolesString()));
         form.setEmailAddress(userResource.getEmail());
         model.addAttribute(FORM_ATTR_NAME, form);
 

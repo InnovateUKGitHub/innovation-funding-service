@@ -53,6 +53,15 @@ public enum UserRoleType {
         throw new IllegalArgumentException("No UserRoleType with name " + name);
     }
 
+    public static UserRoleType fromDisplayName(final String displayName){
+        for (final UserRoleType userRoleType : UserRoleType.values()){
+            if (userRoleType.getDisplayName().equals(displayName)){
+                return userRoleType;
+            }
+        }
+        throw new IllegalArgumentException("No UserRoleType with displayName " + displayName);
+    }
+
     public static List<String> roleNames(UserRoleType... roles){
         return Arrays.stream(roles).map(UserRoleType::getName).collect(toList());
     }
