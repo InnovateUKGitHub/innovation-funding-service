@@ -9,9 +9,12 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.registration.service.InternalUserService;
+import org.innovateuk.ifs.user.builder.RoleResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
+import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +24,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.ZonedDateTime;
+import java.util.Collections;
 
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -89,7 +93,13 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
         when(internalUserServiceMock.editInternalUser(Mockito.any()))
                 .thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.NOT_AN_INTERNAL_USER_ROLE));
 
-        UserResource userResource = UserResourceBuilder.newUserResource().build();
+        RoleResource role = RoleResourceBuilder.newRoleResource()
+                .withName("ifs_administrator")
+                .build();
+
+        UserResource userResource = UserResourceBuilder.newUserResource()
+                .withRolesGlobal(Collections.singletonList(role))
+                .build();
         when(userRestServiceMock.retrieveUserById(1L))
                 .thenReturn(RestResult.restSuccess(userResource));
 
@@ -120,15 +130,25 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
     @Test
     public void viewEditUserSuccess() throws Exception {
 
+        RoleResource role = RoleResourceBuilder.newRoleResource()
+                .withName("ifs_administrator")
+                .build();
+
         String email = "asdf@asdf.com";
         UserResource userResource = UserResourceBuilder.newUserResource()
+                .withFirstName("first")
+                .withLastName("last")
                 .withEmail(email)
+                .withRolesGlobal(Collections.singletonList(role))
                 .build();
 
         when(userRestServiceMock.retrieveUserById(1L))
                 .thenReturn(RestResult.restSuccess(userResource));
 
         EditUserForm expectedForm = new EditUserForm();
+        expectedForm.setFirstName("first");
+        expectedForm.setLastName("last");
+        expectedForm.setRole(UserRoleType.IFS_ADMINISTRATOR);
         expectedForm.setEmailAddress(email);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/user/{userId}/edit", 1L))
