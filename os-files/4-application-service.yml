@@ -46,7 +46,7 @@ items:
           - name: SPRING_APPLICATION_JSON
             value: '{"logout":{"url": "https://<<SHIB-ADDRESS>>/Logout/"}}'
           - name: JAVA_OPTS
-            value: -Xms600m -Xmx600m
+            value: -Xms1000m -Xmx1000m
           ports:
           - containerPort: 8080
           resources:
