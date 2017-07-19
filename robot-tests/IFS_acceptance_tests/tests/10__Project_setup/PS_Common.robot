@@ -145,7 +145,6 @@ ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}    EGGS
 ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}   ${collaborator2_credentials["email"]}
 ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}    HIVE IT LIMITED
 ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_EMAIL}   ewan+1@hiveit.co.uk
-${PROJECT_SETUP_PROJECT_ID_MAGIC_MATERIAl}  4
 
 ${project_in_setup_page}                ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
 ${project_in_setup_details_page}        ${project_in_setup_page}/details
@@ -305,8 +304,8 @@ project finance generates the Spend Profile
     project finance approves Viability for  ${partner}  ${project}
     project finance approves Eligibility    ${lead}  ${partner}  ${academic_partner}  ${project}
     the user navigates to the page          ${server}/project-setup-management/project/${project}/finance-check
-    the user clicks the button/link         jQuery=.generate-spend-profile-main-button
-    the user clicks the button/link         jQuery=#generate-spend-profile-modal-button
+    the user clicks the button/link         css=.generate-spend-profile-main-button
+    the user clicks the button/link         css=#generate-spend-profile-modal-button
 
 project finance approves Viability for
     [Arguments]  ${partner}  ${project}
@@ -348,21 +347,21 @@ all partners submit their Spend Profile
 
 Login and submit partners spend profile
     [Arguments]  ${email}  ${password}  ${org_id}  ${project}
-    log in as a different user       ${email}  ${short_password}
+    log in as a different user       ${email}  ${password}
     the user navigates to the page   ${server}/project-setup/project/${project}/partner-organisation/${org_id}/spend-profile
     the user clicks the button/link  jQuery=a:contains("Submit to lead partner")
     the user clicks the button/link  jQuery=.button:contains("Submit")
 
 Login and submit leads spend profile
     [Arguments]  ${email}  ${password}  ${org_id}  ${org_name}  ${project}
-    log in as a different user       ${email}  ${short_password}
+    log in as a different user       ${email}  ${password}
     the user navigates to the page   ${server}/project-setup/project/${project}/partner-organisation/${org_id}/spend-profile
     the user clicks the button/link  link=${org_name}
     the user clicks the button/link  jQuery=.button:contains("Mark as complete")
     the user navigates to the page   ${server}/project-setup/project/${project}/partner-organisation/${org_id}/spend-profile
     the user clicks the button/link  jQuery=.button:contains("Review and send total project spend profile")
     the user clicks the button/link  jQuery=.button:contains("Send project spend profile")
-    the user clicks the button/link  jQuery=.modal-confirm-spend-profile-totals .button[value="Send"]
+    the user clicks the button/link  css=.modal-confirm-spend-profile-totals .button[value="Send"]
 
 project finance approves bank details for ${PS_GOL_APPLICATION_TITLE}
     log in as a different user                          &{internal_finance_credentials}

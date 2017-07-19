@@ -788,9 +788,9 @@ the field has value
     should be equal as strings    ${var}    ${value}
 
 the user should see all spend profiles as complete
-    the user should see the element  jQuery=.task-list li:nth-child(1):contains("Complete")
-    the user should see the element  jQuery=.task-list li:nth-child(2):contains("Complete")
-    the user should see the element  jQuery=.task-list li:nth-child(3):contains("Complete")
+    the user should see the element  jQuery=.task-list li:contains(${Katz_Name}) span:contains("Complete")
+    the user should see the element  jQuery=.task-list li:contains(${Meembee_Name}) span:contains("Complete")
+    the user should see the element  jQuery=.task-list li:contains(${Zooveo_name}) span:contains("Complete")
 
 all previous sections of the project are completed
     the user logs-in in new browser           &{lead_applicant_credentials}

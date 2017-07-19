@@ -89,7 +89,7 @@ Comp Admin user can see the internal project summary page
 the project is completed if it is not already complete
     The user logs-in in new browser  &{lead_applicant_credentials}
     the user navigates to the page    ${project_in_setup_page}/details
-    ${project_manager_not_set}    ${value}=    run keyword and ignore error without screenshots    The user should not see the element    jQuery=#project-manager-status.yes
+    ${project_manager_not_set}    ${value}=    run keyword and ignore error without screenshots    The user should not see the element    css=#project-manager-status.yes
     run keyword if  '${project_manager_not_set}' == 'PASS'  all previous sections of the project are completed
     run keyword if  '${project_manager_not_set}' == 'FAIL'  login as a different user  &{internal_finance_credentials}
 
@@ -101,18 +101,18 @@ all previous sections of the project are completed
     project finance submits monitoring officer  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  Grace  Harper  ${test_mailbox_two}+monitoringofficer@gmail.com  08549731414
 
 partners submit finance contacts
-    the partner submits their finance contact  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}  ${PROJECT_SETUP_PROJECT_ID_MAGIC_MATERIAl}  &{lead_applicant_credentials}
-    the partner submits their finance contact  ${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}  ${PROJECT_SETUP_PROJECT_ID_MAGIC_MATERIAl}  &{collaborator1_credentials}
-    the partner submits their finance contact  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}  ${PROJECT_SETUP_PROJECT_ID_MAGIC_MATERIAl}  &{collaborator2_credentials}
+    the partner submits their finance contact  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  &{lead_applicant_credentials}
+    the partner submits their finance contact  ${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  &{collaborator1_credentials}
+    the partner submits their finance contact  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  &{collaborator2_credentials}
 
 all partners submit their bank details
-    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}  ${PROJECT_SETUP_PROJECT_ID_MAGIC_MATERIAl}  ${account_one}  ${sortCode_one}
-    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}  ${PROJECT_SETUP_PROJECT_ID_MAGIC_MATERIAl}  ${account_one}  ${sortCode_one}
+    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
+    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
 
 project finance approves bank details
     log in as a different user                          &{internal_finance_credentials}
-    the project finance user approves bank details for  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}  ${PROJECT_SETUP_PROJECT_ID_MAGIC_MATERIAl}
-    the project finance user approves bank details for  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}  ${PROJECT_SETUP_PROJECT_ID_MAGIC_MATERIAl}
+    the project finance user approves bank details for  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}
+    the project finance user approves bank details for  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}
 
 
 
