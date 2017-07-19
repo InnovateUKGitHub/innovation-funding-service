@@ -57,7 +57,24 @@ Invite a user with the same organisation under the same organisation
     When Existing user creates a new application and invites a user from the same organisation
     Then the invited user should get a message to contact the helpdesk  ${test_mailbox_one}+invite2@gmail.com  Invitation to collaborate in ${OPEN_COMPETITION_NAME}  You will be joining as part of the organisation
 
+#Lead should not see pending status for accepted invite
+#    [Documentation]    INFUND-1779
+#    [Tags]    HappyPath  Email
+#    [Setup]  change the invite sent date
+#    Log in as a different user                  ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
+#    Given the user navigates to the page        ${DASHBOARD_URL}
+#    When the user clicks the button/link        link=Invite a user with the same org
+#    And the user clicks the button/link         link=view team members and add collaborators
+#    And the user clicks the button/link         link=Update INNOVATE LTD
+#    And the user should see the element         jQuery=.table-overflow td:contains(${test_mailbox_one}+invite2@gmail.com) + td:contains("Invite pending for 14 days")
+
 *** Keywords ***
+#change the invite sent date
+#    ${fortnight} =  get fortnight
+#    ${fortnight_fullDate}=    Convert Date    ${fortnight}    result_format=%Y-%m-%d    exclude_millis=true
+#    Connect to Database    @{database}
+#    execute sql string    UPDATE `${database_name}`.`invite` SET `sent_on`='${fortnight_fullDate}' WHERE `target_id`='149' and email = '${test_mailbox_one}+invite2@gmail.com';
+
 the user enters profile details
     The user enters text to a text field  id=firstName    Dennis
     The user enters text to a text field  id=lastName    Bergkamp
@@ -80,10 +97,12 @@ Existing user creates a new application and invites a user from the same organis
     The user enters text to a text field  name=stagedInvite.name    Olivier Giroud
     The user enters text to a text field  name=stagedInvite.email    ${test_mailbox_one}+invite2@gmail.com
     the user clicks the button/link       jQuery=button:contains("Invite")
+    the user reloads the page
+    the user should see the element       jQuery=.table-overflow td:contains(${test_mailbox_one}+invite2@gmail.com) + td:contains("Invite pending for 0 days")
     the user clicks the button/link       link=Return to application
     the user clicks the button/link       jQuery=a:contains("Begin application")
     the user clicks the button/link       link=Application details
-    the user enters text to a text field  id=application_details-title    Invite a user with the same org@
+    the user enters text to a text field  id=application_details-title    Invite a user with the same org
     the user clicks the button/link       jQuery=button:contains("Save and return")
 
 The invited user should get a message to contact the helpdesk
