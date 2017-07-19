@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INFUND-832
 ...               INFUND-409
-Suite Setup       Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation
+Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Upload    Applicant    Email
 Resource          ../../../../resources/defaultResources.robot
@@ -37,7 +37,7 @@ Large pdf uploads not allowed
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link     link=Academic robot test application
     And the user clicks the button/link     link=5. Technical approach
-    When the user uploads the file          name=formInput[1062]    ${too_large_pdf}
+    When the user uploads the file          css=.inputfile    ${too_large_pdf}
     Then the user should get an error page  ${too_large_pdf_validation_error}
 
 Non pdf uploads not allowed
@@ -46,7 +46,7 @@ Non pdf uploads not allowed
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link   link=Academic robot test application
     And the user clicks the button/link   link=5. Technical approach
-    When the user uploads the file        name=formInput[1062]    ${text_file}
+    When the user uploads the file        css=.inputfile    ${text_file}
     The user should see an error          ${wrong_filetype_validation_error}
 
 
@@ -57,7 +57,7 @@ Lead applicant can upload a pdf file
     Given the user navigates to the page          ${DASHBOARD_URL}
     And the user clicks the button/link           link=Academic robot test application
     And the user clicks the button/link           link=5. Technical approach
-    Then the user uploads the file                name=formInput[1062]    ${valid_pdf}
+    Then the user uploads the file                css=.inputfile    ${valid_pdf}
     And the user should see the text in the page  ${valid_pdf}
 
 Lead applicant can view a file
@@ -134,7 +134,7 @@ Collaborators can upload a file when the question is assigned
     And the user clicks the button/link            link=Academic robot test application
     And the user clicks the button/link            link=6. Innovation
     When the user should see the text in the page  Upload
-    Then the user uploads the file                 name=formInput[1066]     ${valid_pdf}
+    Then the user uploads the file                 css=.inputfile     ${valid_pdf}
     And the user can re-assign the question back to the lead applicant
 
 Quarantined files are not returned to the user and the user is informed
@@ -150,6 +150,10 @@ Quarantined files are not returned to the user and the user is informed
     And the user should see the text in the page   This file has been found to be unsafe
 
 *** Keywords ***
+Custom Suite Setup
+    the guest user opens the browser
+    Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${OPEN_COMPETITION_NAME}  You will be joining as part of the organisation
+
 the user can re-assign the question back to the lead applicant
     the user reloads the page
     the user clicks the button/link  name=assign_question

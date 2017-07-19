@@ -61,16 +61,12 @@
 
         <ul class="link-list">
 
-            <!-- /* TODO: 'Manage assessors' functionality - IFS-319, IFS-17
-
-            <li class="column-fifth dashboard-actions">
-                <a class="button"
-                   th:href="">
+            <li>
+                <a th:href="@{/assessment/competition/{competitionId}/assessors(competitionId=${model.competitionId})} + ${originQuery}"
+                   th:text="${model.inAssessment} ? 'Manage assessors' : 'Allocate assessors'">
                     Allocate/Manage assessors
                 </a>
             </li>
-            */ -->
-
             <li>
                 <a th:href="@{/assessment/competition/{competitionId}/applications(competitionId=${model.competitionId})} + ${originQuery}"
                    th:text="${model.inAssessment} ? 'Manage applications' : 'Allocate applications'">

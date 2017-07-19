@@ -47,7 +47,7 @@
             <legend class="heading-medium no-margin-bottom">Financial overview</legend>
             <span class="form-hint">Details relating to your organisation over the last financial year.</span><br>
             <div class="grid-row">
-                <div class="column-half">
+                <div class="column-two-thirds">
                     <table class="extra-margin-bottom">
                         <thead>
                         <tr>
@@ -64,15 +64,13 @@
                                 </label>
                             </td>
                             <td class="numeric">
-                                <input class="form-control width-small"
+                                <input class="form-control width-large"
                                        th:disabled="${formInputViewModel.readonly}"
                                        th:id="${'input-'+formInput.id}"
                                        th:name="'formInput['+${formInput.id}+']'"
                                        th:value="*{formInput[__${formInput.id}__]}"
                                        th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'form-control-error'"
                                        required="required"
-                                       min="-2147483647"
-                                       max="2147483647"
                                        type="number"/>
                             </td>
                         </tr>
@@ -225,8 +223,11 @@
                     <div th:replace="finance/finance-summary :: ${formInput.type.nameLower}"/>
                 </th:block>
             </th:block>
+            <h2 class="heading-medium">Funding rules for this competition</h2>
             <th:block th:if="${formInputViewModel.formInput.type.displayableQuestionType}">
-                <th:block th:insert="question-type/types :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})"></th:block>
+                <div class="wysiwyg-styles">
+                    <th:block th:insert="question-type/types :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})"></th:block>
+                </div>
             </th:block>
         </th:block>
         <a th:href="@{/application/{applicationId}(applicationId=${model.application.id})}" class="button-secondary">Return to application overview</a>

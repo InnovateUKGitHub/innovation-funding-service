@@ -15,7 +15,7 @@ log in and create new application for collaboration if there is not one already
 Login new application invite academic
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     [Tags]    Email
-    Given the user logs-in in new browser  &{lead_applicant_credentials}
+    Given Logging in and Error Checking  &{lead_applicant_credentials}
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    Academic robot test application
     Run Keyword If    '${status}' == 'FAIL'    Run keywords    Create new application with the same user  Academic robot test application
     ...    AND    Invite and accept the invitation    ${recipient}    ${subject}    ${pattern}
@@ -45,49 +45,48 @@ the user marks every section but one as complete
     the user navigates to the page    ${server}
     the user clicks the button/link    link=${application_name}
     the user clicks the button/link    link=Project summary
-    the user marks the section as complete    1039
+    the user marks the section as complete
     the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=Public description
-    the user marks the section as complete    1040
+    the user marks the section as complete
     the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=Scope
-    the user marks the section as complete    1041
+    the user marks the section as complete
     the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=1. Business opportunity
-    the user marks the section as complete    1045
+    the user marks the section as complete
     the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=2. Potential market
-    the user marks the section as complete    1049
+    the user marks the section as complete
     the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=3. Project exploitation
-    the user marks the section as complete    1053
+    the user marks the section as complete
     the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=4. Economic benefit
-    the user marks the section as complete    1057
+    the user marks the section as complete
     the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=5. Technical approach
-    the user marks the section as complete    1061
+    the user marks the section as complete
     the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=6. Innovation
-    the user marks the section as complete    1065
+    the user marks the section as complete
     the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=7. Risks
-    the user marks the section as complete    1069
+    the user marks the section as complete
     the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=8. Project team
-    the user marks the section as complete    1073
+    the user marks the section as complete
     the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=9. Funding
-    the user marks the section as complete    1077
+    the user marks the section as complete
     the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=10. Adding value
-    the user marks the section as complete    1081
+    the user marks the section as complete
 
 the user marks the section as complete
-    [Arguments]    ${form-id}
-    Wait Until Element Is Visible Without Screenshots    css=#form-input-${form-id} .editor
-    Input Text    css=#form-input-${form-id} .editor    Entering text to allow valid mark as complete
-    Mouse Out    css=#form-input-${form-id} .editor
+    Wait Until Element Is Visible Without Screenshots    css=.textarea-wrapped .editor
+    Input Text    css=.textarea-wrapped .editor    Entering text to allow valid mark as complete
+    Mouse Out    css=.textarea-wrapped .editor
     wait for autosave
     the user clicks the button/link    name=mark_as_complete
     #the user clicks the button/link    css=.next
