@@ -37,7 +37,7 @@
 
     <h2 class="heading-medium" th:text="| Assigned (${#lists.size(model.assigned)}) |"/>
 
-    <div class="table-overflow">
+    <div class="table-overflow" th:if="${!#lists.isEmpty(model.assigned)}">
         <table>
             <thead>
                 <tr>
@@ -113,6 +113,8 @@
             </tbody>
         </table>
     </div>
+
+    <p th:if="${#lists.isEmpty(model.assigned)}">No applications have been assigned to this assessor.</p>
 
     <h2 class="heading-medium">Applications</h2>
 
