@@ -148,7 +148,7 @@
                 <th scope="col">Application number</th>
                 <th scope="col">Title</th>
                 <th scope="col">Lead organisation</th>
-                <th class="aligncentre" scope="col">Assessors</th>
+                <th class="aligncentre" scope="col" th:text="${model.applicationsView.inAssessment ? 'Assessors' : 'Assigned'}">Assessors</th>
                 <th class="aligncentre" scope="col" th:if="${model.applicationsView.inAssessment}">Accepted</th>
                 <th class="aligncentre" scope="col" th:if="${model.applicationsView.inAssessment}">Submitted</th>
                 <th scope="col"><span class="visuallyhidden">Action</span></th>
