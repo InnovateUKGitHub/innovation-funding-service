@@ -20,7 +20,7 @@
 
     <h2 class="heading-large no-margin" th:text="${model.assessorName}"></h2>
 
-    <h3 class="heading-medium">Innovation area and skills</h3>
+    <h3 class="heading-medium no-margin">Innovation area and skills</h3>
 
     <div class="grid-row">
         <div class="column-half">
@@ -42,9 +42,9 @@
             <thead>
                 <tr>
                     <th scope="col" class="width-small">Application number</th>
-                    <th scope="col" >Title</th>
-                    <th scope="col" class="width-large">Lead organisation</th>
-                    <th scope="col" class="width-small aligncentre">Assigned</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Lead organisation</th>
+                    <th scope="col" class="width-small numeric">Assigned</th>
                     <th scope="col"
                         class="width-small aligncentre"
                         th:if="${model.competitionInAssessment}">
@@ -85,7 +85,7 @@
                     </td>
                     <td th:text="${app.applicationName}">Application name</td>
                     <td th:text="${app.leadOrganisation}">Lead organisation</td>
-                    <td th:text="${app.totalAssessors}" class="aligncentre">3</td>
+                    <td th:text="${app.totalAssessors}" class="numeric">3</td>
                     <td class="aligncentre"
                         th:if="${model.competitionInAssessment}"
                         th:text="${app.notified} ? 'Yes' : '-'">
@@ -145,7 +145,7 @@
                     <th scope="col" >Title</th>
                     <th scope="col" class="width-large">Lead organisation</th>
                     <th scope="col" class="width-small aligncentre">Assigned</th>
-                    <th scope="col" class="width-small-medium aligncentre">Remove</th>
+                    <th scope="col" class="width-small-medium">Remove</th>
                 </tr>
             </thead>
             <tbody>
@@ -153,14 +153,14 @@
                     <td><a href="#">30</a></td>
                     <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
                     <td>Wessex University</td>
-                    <td class="aligncentre">1</td>
+                    <td class="numeric">1</td>
                     <td class="aligncentre"><button class="button button-secondary no-margin">Assign</button></td>
                 </tr>
                 <tr>
                     <td><a href="#">31</a></td>
                     <td>Mobility problems and the potential for internet enabled zimmer frame</td>
                     <td>Plymouth University</td>
-                    <td class="aligncentre">1</td>
+                    <td class="numeric">1</td>
                     <td class="aligncentre"><button class="button button-secondary no-margin">Assign</button></td>
                 </tr>
             </tbody>
