@@ -20,7 +20,7 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.mapper.RoleMapper;
 import org.innovateuk.ifs.user.repository.RoleRepository;
-import org.innovateuk.ifs.user.resource.AdminRoleType;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,26 +84,31 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
     @Override
     @Transactional
-    public ServiceResult<Void> saveUserInvite(UserResource invitedUser, AdminRoleType adminRoleType) {
+    public ServiceResult<Void> saveUserInvite(UserResource invitedUser, UserRoleType adminRoleType) {
 
         return validateInvite(invitedUser, adminRoleType)
+                .andOnSuccess(() -> validateInternalUserRole(adminRoleType))
                 .andOnSuccess(() -> validateEmail(invitedUser.getEmail()))
-                .andOnSuccess(() -> validateUserEmailAvaiable(invitedUser))
+                .andOnSuccess(() -> validateUserEmailAvailable(invitedUser))
                 .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
                 .andOnSuccess(() -> getRole(adminRoleType))
-                .andOnSuccess((Role role) -> validateUserNotAlreadyInvited(invitedUser)
-                        .andOnSuccess(() -> saveInvite(invitedUser, role))
-                        .andOnSuccess((i) -> inviteInternalUser(i))
-                );
+                .andOnSuccess(role -> saveInvite(invitedUser, role))
+                .andOnSuccess(roleInvite -> inviteInternalUser(roleInvite));
     }
 
-    private ServiceResult<Void> validateInvite(UserResource invitedUser, AdminRoleType adminRoleType) {
+    private ServiceResult<Void> validateInvite(UserResource invitedUser, UserRoleType adminRoleType) {
 
         if (StringUtils.isEmpty(invitedUser.getEmail()) || StringUtils.isEmpty(invitedUser.getFirstName())
                 || StringUtils.isEmpty(invitedUser.getLastName()) || adminRoleType == null){
             return serviceFailure(USER_ROLE_INVITE_INVALID);
         }
         return serviceSuccess();
+    }
+
+    private ServiceResult<Void> validateInternalUserRole(UserRoleType userRoleType) {
+
+        return UserRoleType.internalRoles().stream().anyMatch(internalRole -> internalRole.equals(userRoleType))?
+                serviceSuccess() : serviceFailure(NOT_AN_INTERNAL_USER_ROLE);
     }
 
     private ServiceResult<Void> validateEmail(String email) {
@@ -119,19 +124,24 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
         return serviceSuccess();
     }
 
+    private ServiceResult<Void> validateUserEmailAvailable(UserResource invitedUser) {
+        return userRepository.findByEmail(invitedUser.getEmail()).isPresent() ? serviceFailure(USER_ROLE_INVITE_EMAIL_TAKEN) : serviceSuccess() ;
+    }
+
     private ServiceResult<Void> validateUserNotAlreadyInvited(UserResource invitedUser) {
 
         List<RoleInvite> existingInvites = inviteRoleRepository.findByEmail(invitedUser.getEmail());
         return existingInvites.isEmpty() ? serviceSuccess() : serviceFailure(USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED);
     }
 
-    private ServiceResult<Void> validateUserEmailAvaiable(UserResource invitedUser) {
-        return userRepository.findByEmail(invitedUser.getEmail()).isPresent() ? serviceFailure(USER_ROLE_INVITE_EMAIL_TAKEN) : serviceSuccess() ;
-    }
-
-    private ServiceResult<Role> getRole(AdminRoleType adminRoleType) {
+/*    private ServiceResult<Role> getRole(UserRoleType adminRoleType) {
         return find(roleRepository.findOneByName(adminRoleType.getName()), notFoundError(Role.class, adminRoleType.getName()));
-    }
+    }*/
+
+    //Existing
+/*    protected ServiceResult<Role> getRole(String roleName) {
+        return find(roleRepository.findOneByName(roleName), notFoundError(Role.class, roleName));
+    }*/
 
     private ServiceResult<RoleInvite> saveInvite(UserResource invitedUser, Role role) {
         RoleInvite roleInvite = new RoleInvite(invitedUser.getFirstName() + " " + invitedUser.getLastName(),
