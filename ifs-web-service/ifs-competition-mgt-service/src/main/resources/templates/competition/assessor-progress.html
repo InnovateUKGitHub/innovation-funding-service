@@ -31,7 +31,7 @@
         </div>
         <div class="column-half">
             <h4 class="heading-small">Type</h4>
-            <p th:text="${model.businessType}? ${model.businessType.displayName}" />
+            <p th:text="${model.businessType}" />
         </div>
     </div>
 
@@ -156,8 +156,7 @@
             </tbody>
         </table>
     </div>
-
-
+    <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.applicationsView.pagination})" />
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
