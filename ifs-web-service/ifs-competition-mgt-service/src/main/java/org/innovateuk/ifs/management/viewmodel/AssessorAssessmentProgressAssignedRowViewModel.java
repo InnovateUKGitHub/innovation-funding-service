@@ -1,8 +1,35 @@
 package org.innovateuk.ifs.management.viewmodel;
 
+import com.google.common.collect.Sets;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 
+import java.util.Set;
+
 public class AssessorAssessmentProgressAssignedRowViewModel {
+
+    private static final Set<AssessmentStates> NOTIFIED_STATES = Sets.immutableEnumSet(
+            AssessmentStates.PENDING,
+            AssessmentStates.ACCEPTED,
+            AssessmentStates.OPEN,
+            AssessmentStates.DECIDE_IF_READY_TO_SUBMIT,
+            AssessmentStates.READY_TO_SUBMIT,
+            AssessmentStates.SUBMITTED
+    );
+
+    private static final Set<AssessmentStates> ACCEPTED_STATES = Sets.immutableEnumSet(
+            AssessmentStates.ACCEPTED,
+            AssessmentStates.OPEN,
+            AssessmentStates.DECIDE_IF_READY_TO_SUBMIT,
+            AssessmentStates.READY_TO_SUBMIT,
+            AssessmentStates.SUBMITTED
+    );
+
+    private static final Set<AssessmentStates> STARTED_STATES = Sets.immutableEnumSet(
+            AssessmentStates.OPEN,
+            AssessmentStates.DECIDE_IF_READY_TO_SUBMIT,
+            AssessmentStates.READY_TO_SUBMIT,
+            AssessmentStates.SUBMITTED
+    );
 
     private final long applicationId;
     private final String applicationName;
@@ -40,5 +67,21 @@ public class AssessorAssessmentProgressAssignedRowViewModel {
 
     public AssessmentStates getState() {
         return state;
+    }
+
+    public boolean isNotified() {
+        return NOTIFIED_STATES.contains(state);
+    }
+
+    public boolean isAccepted() {
+        return ACCEPTED_STATES.contains(state);
+    }
+
+    public boolean isStarted() {
+        return STARTED_STATES.contains(state);
+    }
+
+    public boolean isSubmitted() {
+        return state == AssessmentStates.SUBMITTED;
     }
 }

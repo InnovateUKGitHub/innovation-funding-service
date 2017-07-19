@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.controller;
 import org.innovateuk.ifs.assessment.resource.AssessorCompetitionSummaryResource;
 import org.innovateuk.ifs.assessment.transactional.AssessorCompetitionSummaryService;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

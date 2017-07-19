@@ -70,9 +70,11 @@ public class AssessorAssessmentProgressModelPopulator {
                 origin);
 
         BusinessType businessType = summaryResource.getAssessor().getProfile().getBusinessType();
+
         return new AssessorAssessmentProgressViewModel(
                 summaryResource.getCompetitionId(),
                 summaryResource.getCompetitionName(),
+                summaryResource.getCompetitionStatus(),
                 summaryResource.getAssessor().getUser().getName(),
                 innovationAreas,
                 businessType != null ? businessType.getDisplayName() : "",

@@ -34,6 +34,7 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentStates.ACCEPTED;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.SUBMITTED;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -96,6 +97,7 @@ public class CompetitionManagementAssessmentsAssessorProgressControllerTest exte
         AssessorCompetitionSummaryResource assessorCompetitionSummaryResource = newAssessorCompetitionSummaryResource()
                 .withCompetitionId(competitionId)
                 .withCompetitionName("Test Competition")
+                .withCompetitionStatus(IN_ASSESSMENT)
                 .withTotalApplications(20L)
                 .withAssessor(assessor)
                 .withAssignedAssessments(assignedAssessments)
@@ -117,6 +119,7 @@ public class CompetitionManagementAssessmentsAssessorProgressControllerTest exte
         assertEquals("Paul Plum", model.getAssessorName());
         assertEquals(competitionId, model.getCompetitionId());
         assertEquals("Test Competition", model.getCompetitionName());
+        assertEquals(IN_ASSESSMENT, model.getCompetitionStatus());
         assertEquals("Academic", model.getBusinessType());
         assertEquals(20L, model.getTotalApplications());
         assertThat(model.getInnovationAreas(), hasItems("Innovation 1", "Innovation 2"));

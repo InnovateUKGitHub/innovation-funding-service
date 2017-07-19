@@ -20,7 +20,7 @@
 
     <h2 class="heading-large no-margin" th:text="${model.assessorName}"></h2>
 
-    <h3 class="heading-medium">Innovation area and skills</h3>
+    <h3 class="heading-medium no-margin">Innovation area and skills</h3>
 
     <div class="grid-row">
         <div class="column-half">
@@ -37,19 +37,41 @@
 
     <h2 class="heading-medium" th:text="| Assigned (${#lists.size(model.assigned)}) |"/>
 
-    <div class="table-overflow">
+    <div class="table-overflow" th:if="${!#lists.isEmpty(model.assigned)}">
         <table>
             <thead>
                 <tr>
                     <th scope="col" class="width-small">Application number</th>
-                    <th scope="col" >Title</th>
-                    <th scope="col" class="width-large">Lead organisation</th>
-                    <th scope="col" class="width-small aligncentre">Assigned</th>
-                    <th scope="col" class="width-small aligncentre">Notified</th>
-                    <th scope="col" class="width-small aligncentre">Accepted</th>
-                    <th scope="col" class="width-small aligncentre">Started</th>
-                    <th scope="col" class="width-small aligncentre">Submitted</th>
-                    <th scope="col" class="width-small-medium aligncentre">Remove</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Lead organisation</th>
+                    <th scope="col" class="width-small numeric">Assigned</th>
+                    <th scope="col"
+                        class="width-small aligncentre"
+                        th:if="${model.competitionInAssessment}">
+                        Notified
+                    </th>
+                    <th scope="col"
+                        class="width-small aligncentre"
+                        th:if="${model.competitionInAssessment}">
+                        Accepted
+                    </th>
+                    <th scope="col"
+                        class="width-small aligncentre"
+                        th:if="${model.competitionInAssessment}">
+                        Started
+                    </th>
+                    <th scope="col"
+                        class="width-small aligncentre"
+                        th:if="${model.competitionInAssessment}">
+                        Submitted
+                    </th>
+
+                    <!--/*
+                    <th scope="col"
+                        class="width-small-medium aligncentre">
+                        Remove
+                    </th>
+                    */-->
                 </tr>
             </thead>
             <tbody>
@@ -63,43 +85,36 @@
                     </td>
                     <td th:text="${app.applicationName}">Application name</td>
                     <td th:text="${app.leadOrganisation}">Lead organisation</td>
-                    <td th:text="${app.totalAssessors}" class="aligncentre">3</td>
+                    <td th:text="${app.totalAssessors}" class="numeric">3</td>
                     <td class="aligncentre"
-                        th:text="${app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).PENDING or
-                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).ACCEPTED or
-                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).OPEN or
-                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).DECIDE_IF_READY_TO_SUBMIT or
-                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).READY_TO_SUBMIT or
-                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).SUBMITTED}
-                        ? 'Yes' : '-'">
+                        th:if="${model.competitionInAssessment}"
+                        th:text="${app.notified} ? 'Yes' : '-'">
                         Yes
                     </td>
                     <td class="aligncentre"
-                        th:text="${app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).ACCEPTED or
-                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).OPEN or
-                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).DECIDE_IF_READY_TO_SUBMIT or
-                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).READY_TO_SUBMIT or
-                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).SUBMITTED}
-                        ? 'Yes' : '-'">
+                        th:if="${model.competitionInAssessment}"
+                        th:text="${app.accepted} ? 'Yes' : '-'">
                         Yes
                     </td>
                     <td class="aligncentre"
-                        th:text="${app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).OPEN or
-                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).DECIDE_IF_READY_TO_SUBMIT or
-                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).READY_TO_SUBMIT or
-                        app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).SUBMITTED}
-                        ? 'Yes' : '-'">
+                        th:if="${model.competitionInAssessment}"
+                        th:text="${app.started} ? 'Yes' : '-'">
                         Yes
                     </td>
                     <td class="aligncentre"
-                        th:text="${app.state == T(org.innovateuk.ifs.assessment.resource.AssessmentStates).SUBMITTED} ? 'Yes' : '-'">
+                        th:if="${model.competitionInAssessment}"
+                        th:text="${app.submitted} ? 'Yes' : '-'">
                         Yes
                     </td>
+                    <!--/*
                     <td class="aligncentre"><button class="button button-secondary no-margin">Remove</button></td>
+                    */-->
                 </tr>
             </tbody>
         </table>
     </div>
+
+    <p th:if="${#lists.isEmpty(model.assigned)}">No applications have been assigned to this assessor.</p>
 
     <h2 class="heading-medium">Applications</h2>
     <form method="GET">
@@ -144,9 +159,9 @@
                 <td><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}" th:text="${app.id}"/></td>
                 <td th:text="${app.title}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
                 <td th:text="${app.leadOrganisation}">Wessex University</td>
-                <td class="aligncentre" th:text="${app.assessors}">4</td>
-                <td class="aligncentre" th:text="${app.accepted}" th:if="${model.applicationsView.inAssessment}">2</td>
-                <td class="aligncentre" th:text="${app.submitted}" th:if="${model.applicationsView.inAssessment}">1</td>
+                <td class="numeric" th:text="${app.assessors}">4</td>
+                <td class="numeric" th:text="${app.accepted}" th:if="${model.applicationsView.inAssessment}">2</td>
+                <td class="numeric" th:text="${app.submitted}" th:if="${model.applicationsView.inAssessment}">1</td>
                 <!--
                     <td class="alignright">
                     <a class="button-secondary no-margin"

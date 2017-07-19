@@ -1,13 +1,11 @@
 package org.innovateuk.ifs.assessment.controller;
 
-import org.hamcrest.Matchers;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseRepository;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.assessment.resource.AssessorAssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorCompetitionSummaryResource;
 import org.innovateuk.ifs.category.domain.InnovationArea;
@@ -28,7 +26,6 @@ import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -52,9 +49,7 @@ import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class AssessorCompetitionSummaryControllerIntegrationTest extends BaseControllerIntegrationTest<AssessorCompetitionSummaryController> {
 
@@ -193,6 +188,7 @@ public class AssessorCompetitionSummaryControllerIntegrationTest extends BaseCon
 
         assertEquals(competition.getId().longValue(), summaryResource.getCompetitionId());
         assertEquals(competition.getName(), summaryResource.getCompetitionName());
+        assertEquals(competition.getCompetitionStatus(), summaryResource.getCompetitionStatus());
         assertEquals(3, summaryResource.getTotalApplications());
         assertEquals(getPaulPlum(), summaryResource.getAssessor().getUser());
         assertEquals(ACADEMIC, summaryResource.getAssessor().getProfile().getBusinessType());

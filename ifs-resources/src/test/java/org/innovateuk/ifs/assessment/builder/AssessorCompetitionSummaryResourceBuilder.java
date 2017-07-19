@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.assessment.resource.AssessorAssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorCompetitionSummaryResource;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.util.Collections;
 import java.util.List;
@@ -44,6 +45,10 @@ public class AssessorCompetitionSummaryResourceBuilder extends BaseBuilder<Asses
 
     public AssessorCompetitionSummaryResourceBuilder withCompetitionName(String ...competitionNames) {
         return withArraySetFieldByReflection("competitionName", competitionNames);
+    }
+
+    public AssessorCompetitionSummaryResourceBuilder withCompetitionStatus(CompetitionStatus ...competitionStatuses) {
+        return withArraySetFieldByReflection("competitionStatus", competitionStatuses);
     }
 
     public AssessorCompetitionSummaryResourceBuilder withTotalApplications(Long ...totalApplications) {
