@@ -42,7 +42,7 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
     }};
 
     @Override
-    public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(Long competitionId, int pageIndex, int pageSize, Optional<String> filter) {
+    public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(long competitionId, int pageIndex, int pageSize, Optional<String> filter) {
 
         String filterStr = filter.map(String::trim).orElse("");
         Pageable pageable = new PageRequest(pageIndex, pageSize);
@@ -52,13 +52,16 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
     }
 
     @Override
-    public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndInnovationArea(Long competitionId, int pageIndex, int pageSize, Optional<Long> innovationArea, String sortField) {
+    public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndInnovationArea(long competitionId,
+                                                                                                                           long assessorId,
+                                                                                                                           int pageIndex,
+                                                                                                                           int pageSize,
+                                                                                                                           Optional<Long> innovationArea, String sortField) {
         Sort sort = getApplicationSummarySortField(sortField);
         Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
 
-        Page<ApplicationStatistics> applicationStatistics = innovationArea.map(i ->
-                applicationStatisticsRepository.findByCompetitionAndInnovationAreaProcessActivityStateStateIn(competitionId, SUBMITTED_STATES, i, pageable))
-                .orElse(applicationStatisticsRepository.findByCompetitionAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_STATES, "", pageable));
+        Page<ApplicationStatistics> applicationStatistics =
+        applicationStatisticsRepository.findByCompetitionAndInnovationAreaProcessActivityStateStateIn(competitionId, assessorId, SUBMITTED_STATES, innovationArea.orElse(null), pageable);
 
         return find(applicationStatistics, notFoundError(Page.class)).andOnSuccessReturn(stats -> applicationCountSummaryPageMapper.mapToResource(stats));
     }

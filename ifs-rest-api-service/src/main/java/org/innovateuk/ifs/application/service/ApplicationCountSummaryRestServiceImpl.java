@@ -24,8 +24,8 @@ public class ApplicationCountSummaryRestServiceImpl extends BaseRestService impl
 
     @Override
     public RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(long competitionId,
-                                                                                                       Integer pageIndex,
-                                                                                                       Integer pageSize,
+                                                                                                       int pageIndex,
+                                                                                                       int pageSize,
                                                                                                        String filter) {
         String uriWithParams = buildUri(applicationCountRestUrl + "/findByCompetitionId/{compId}", pageIndex, pageSize, filter, competitionId);
         return getWithRestResult(uriWithParams, ApplicationCountSummaryPageResource.class);
@@ -33,14 +33,16 @@ public class ApplicationCountSummaryRestServiceImpl extends BaseRestService impl
 
     @Override
     public RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndInnovationArea(long competitionId,
-                                                                                                                        Integer pageIndex,
-                                                                                                                        Integer pageSize,
+                                                                                                                        long assessorId,
+                                                                                                                        int pageIndex,
+                                                                                                                        int pageSize,
                                                                                                                         Optional<Long> innovationArea,
                                                                                                                         String sortField) {
 
         String baseUrl = format("%s/%s/%s", applicationCountRestUrl, "findByCompetitionIdAndInnovationArea", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
+                .queryParam("assessorId", assessorId)
                 .queryParam("page", pageIndex)
                 .queryParam("size", pageSize)
                 .queryParam("sortField", sortField);

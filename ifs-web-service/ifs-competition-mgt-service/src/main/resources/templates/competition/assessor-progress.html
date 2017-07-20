@@ -125,7 +125,8 @@
                     <span class="bold-small">Applications</span>
                 </div>
             </div>
-<!--            <div class="column-half alignright">
+            <!--/*
+                <div class="column-half alignright">
                 <div class="form-group">
                     <label for="sort-by">Sort by</label>
                     <select id="sort-by" name="sortField" class="js-auto-submit form-control">
@@ -137,7 +138,8 @@
                     </select>
                 </div>
                 <button type="submit" class="button button-secondary no-margin js-hidden">Sort</button>
-            </div>-->
+                 </div>
+            */-->
         </div>
     </form>
 
@@ -162,13 +164,13 @@
                 <td class="numeric" th:text="${app.assessors}">4</td>
                 <td class="numeric" th:text="${app.accepted}" th:if="${model.applicationsView.inAssessment}">2</td>
                 <td class="numeric" th:text="${app.submitted}" th:if="${model.applicationsView.inAssessment}">1</td>
-                <!--
+                <!--/*
                     <td class="alignright">
                     <a class="button-secondary no-margin"
                        th:href="@{/assessment/competition/{competitionId}/application/{applicationId}/assessors(competitionId=${model.competitionId},applicationId=${app.id})}"
                         >Assign</a>
-                    </td
-                >-->
+                    </td>
+               */-->
             </tr>
             </tbody>
         </table>

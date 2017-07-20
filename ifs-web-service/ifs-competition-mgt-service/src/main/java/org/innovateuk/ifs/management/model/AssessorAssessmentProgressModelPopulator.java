@@ -61,7 +61,12 @@ public class AssessorAssessmentProgressModelPopulator {
                 )
         );
 
-        ApplicationCountSummaryPageResource applicationCounts = getApplicationCounts(competitionId, page, innovationArea, sortField);
+        ApplicationCountSummaryPageResource applicationCounts = getApplicationCounts(
+                competitionId,
+                assessorId,
+                page,
+                innovationArea,
+                sortField);
         AssessorAssessmentProgressApplicationsViewModel applicationsViewModel = getApplicationsViewModel(
                 applicationCounts,
                 competitionId,
@@ -84,9 +89,9 @@ public class AssessorAssessmentProgressModelPopulator {
         );
     }
 
-    private ApplicationCountSummaryPageResource getApplicationCounts(long competitionId, int page, Optional<Long> innovationArea, String sortField) {
+    private ApplicationCountSummaryPageResource getApplicationCounts(long competitionId, long assessorId, int page, Optional<Long> innovationArea, String sortField) {
         return applicationCountSummaryRestService
-                .getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, page, PAGE_SIZE, innovationArea, sortField)
+                .getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, assessorId, page, PAGE_SIZE, innovationArea, sortField)
                 .getSuccessObjectOrThrowException();
     }
 
@@ -99,7 +104,7 @@ public class AssessorAssessmentProgressModelPopulator {
 
         return new AssessorAssessmentProgressApplicationsViewModel(
                 simpleMap(applicationCounts.getContent(), this::getRowViewModel),
-                IN_ASSESSMENT.equals(competition.getCompetitionStatus()),
+                IN_ASSESSMENT == competition.getCompetitionStatus(),
                 innovationArea,
                 sortField,
                 new PaginationViewModel(applicationCounts, origin),

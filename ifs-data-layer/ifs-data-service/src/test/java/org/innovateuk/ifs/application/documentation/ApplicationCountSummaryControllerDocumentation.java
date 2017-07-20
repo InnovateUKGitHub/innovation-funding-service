@@ -49,23 +49,27 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
 
     @Test
     public void getApplicationCountSummariesByCompetitionIdAndInnovationArea() throws Exception {
-        Long competitionId = 1L;
+        long competitionId = 1L;
+        long assessorId = 2L;
         ApplicationCountSummaryResource applicationCountSummaryResource = applicationCountSummaryResourceBuilder.build();
         ApplicationCountSummaryPageResource pageResource = new ApplicationCountSummaryPageResource();
         pageResource.setContent(singletonList(applicationCountSummaryResource));
 
-        when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, 0, 20, empty(), "")).thenReturn(serviceSuccess(pageResource));
+        when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, assessorId,0, 20, empty(), "")).thenReturn(serviceSuccess(pageResource));
 
-        mockMvc.perform(get("/applicationCountSummary/findByCompetitionIdAndInnovationArea/{competitionId}?sortField=", competitionId))
+        mockMvc.perform(get("/applicationCountSummary/findByCompetitionIdAndInnovationArea/{competitionId}?assessorId={assessorId}&sortField=", competitionId, assessorId))
                 .andExpect(status().isOk())
                 .andDo(document("applicationCountSummary/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of competition")
                         ),
-                        requestParameters(parameterWithName("sortField").description("Field to sort by")),
+                        requestParameters(
+                                parameterWithName("assessorId").description("Id of assessor to exclude results for"),
+                                parameterWithName("sortField").description("Field to sort by")
+                        ),
                         responseFields(applicationCountSummaryResourcesFields)));
 
-        verify(applicationCountSummaryServiceMock).getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, 0, 20, empty(), "");
+        verify(applicationCountSummaryServiceMock).getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, assessorId,0, 20, empty(), "");
     }
 
 }

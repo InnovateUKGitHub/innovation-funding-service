@@ -85,10 +85,10 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
 
     @Test
     public void getApplicationCountSummariesByCompetitionIdAndInnovationArea() {
-        when(applicationStatisticsRepositoryMock.findByCompetitionAndInnovationAreaProcessActivityStateStateIn(eq(competitionId), eq(SUBMITTED_STATES), eq(2L), argThat(new PageableMatcher(0, 20, srt("id", ASC ))))).thenReturn(page);
+        when(applicationStatisticsRepositoryMock.findByCompetitionAndInnovationAreaProcessActivityStateStateIn(eq(competitionId), eq(1L), eq(SUBMITTED_STATES), eq(2L), argThat(new PageableMatcher(0, 20, srt("id", ASC ))))).thenReturn(page);
         when(applicationCountSummaryPageMapperMock.mapToResource(page)).thenReturn(resource);
 
-        ServiceResult<ApplicationCountSummaryPageResource> result = service.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, 0, 20, ofNullable(2L), "");
+        ServiceResult<ApplicationCountSummaryPageResource> result = service.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, 1L,0, 20, ofNullable(2L), "");
 
         assertTrue(result.isSuccess());
         assertEquals(resource, result.getSuccessObject());

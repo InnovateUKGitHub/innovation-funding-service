@@ -100,6 +100,7 @@ public class ApplicationCountSummaryControllerIntegrationTest extends BaseContro
     public void applicationCountSummariesByCompetitionIdAndInnovationArea() {
         Long competitionId = 1L;
         long innovationAreaId = 54L;
+        long assessorId = 20L;
         loginCompAdmin();
 
         Application application = newApplication()
@@ -126,7 +127,7 @@ public class ApplicationCountSummaryControllerIntegrationTest extends BaseContro
 
         flushAndClearSession();
 
-        ApplicationCountSummaryPageResource counts = controller.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, 0, 6, "", ofNullable(innovationAreaId)).getSuccessObject();
+        ApplicationCountSummaryPageResource counts = controller.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, assessorId, 0, 6, "", ofNullable(innovationAreaId)).getSuccessObject();
 
         assertEquals(1, counts.getTotalElements());
         assertEquals(0, counts.getNumber());

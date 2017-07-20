@@ -30,12 +30,12 @@ public class ApplicationCountSummaryRestServiceTest extends BaseRestServiceUnitT
 
     @Test
     public void getApplicationCountSummariesByCompetitionIdAndInnovationArea() {
-        String expectedUrl = "/applicationCountSummary/findByCompetitionIdAndInnovationArea/1?page=2&size=3&sortField=&innovationArea=4";
+        String expectedUrl = "/applicationCountSummary/findByCompetitionIdAndInnovationArea/1?assessorId=10&page=2&size=3&sortField=&innovationArea=4";
         ApplicationCountSummaryPageResource pageResource = new ApplicationCountSummaryPageResource();
 
         setupGetWithRestResultExpectations(expectedUrl, ApplicationCountSummaryPageResource.class, pageResource, OK);
 
-        ApplicationCountSummaryPageResource result = service.getApplicationCountSummariesByCompetitionIdAndInnovationArea(1L, 2, 3, ofNullable(4L), "").getSuccessObject();
+        ApplicationCountSummaryPageResource result = service.getApplicationCountSummariesByCompetitionIdAndInnovationArea(1L, 10L,2, 3, ofNullable(4L), "").getSuccessObject();
         Assert.assertEquals(pageResource, result);
     }
 }

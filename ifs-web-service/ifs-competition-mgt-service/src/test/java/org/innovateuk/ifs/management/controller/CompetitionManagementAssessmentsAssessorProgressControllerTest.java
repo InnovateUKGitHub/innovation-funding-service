@@ -121,8 +121,7 @@ public class CompetitionManagementAssessmentsAssessorProgressControllerTest exte
         when(assessorCompetitionSummaryRestService.getAssessorSummary(assessorId, competitionId))
                 .thenReturn(restSuccess(assessorCompetitionSummaryResource));
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
-        when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, 0, 20, empty(), "")).thenReturn(restSuccess(expectedPageResource));
-
+        when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, assessorId, 0, 20, empty(), "")).thenReturn(restSuccess(expectedPageResource));
 
         MvcResult result = mockMvc.perform(get("/assessment/competition/{competitionId}/assessors/{assessorId}", competitionId, assessorId))
                 .andExpect(model().attributeExists("model"))
@@ -187,7 +186,7 @@ public class CompetitionManagementAssessmentsAssessorProgressControllerTest exte
 
         when(assessorCompetitionSummaryRestService.getAssessorSummary(assessorId, competitionResource.getId())).thenReturn(restSuccess(summaryResource));
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
-        when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionResource.getId(), 1, 20, empty(), "")).thenReturn(restSuccess(expectedPageResource));
+        when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionResource.getId(), assessorId, 1, 20, empty(), "")).thenReturn(restSuccess(expectedPageResource));
 
         AssessorAssessmentProgressViewModel model = (AssessorAssessmentProgressViewModel) mockMvc.perform(get("/assessment/competition/{competitionId}/assessors/{assessorId}?page=1", competitionResource.getId(), assessorId))
                 .andExpect(status().isOk())

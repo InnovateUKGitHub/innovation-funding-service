@@ -12,13 +12,14 @@ import java.util.Optional;
  */
 public interface ApplicationCountSummaryRestService {
     RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(long competitionId,
-                                                                                                Integer pageIndex,
-                                                                                                Integer pageSize,
+                                                                                                int pageIndex,
+                                                                                                int pageSize,
                                                                                                 String filter);
 
     RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndInnovationArea(long competitionId,
-                                                                                                                 Integer pageIndex,
-                                                                                                                 Integer pageSize,
+                                                                                                                 long assessorId,
+                                                                                                                 int pageIndex,
+                                                                                                                 int pageSize,
                                                                                                                  Optional<Long> innovationArea,
                                                                                                                  String sortField);
 }
