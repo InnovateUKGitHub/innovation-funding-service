@@ -135,7 +135,7 @@
                         <input type="file"  th:id="${formInputId}" th:name="${inputField}" class="inputfile" data-autosave-disabled=""/>
                     </th:block>
                     <th:block th:unless="${autoSaveOff}">
-                        <input type="file"  th:id="${formInputId}" th:name="${inputField}" class="inputfile" data-autosave-disabled=""/>
+                        <input type="file"  th:id="${formInputId}" th:name="${inputField}" class="inputfile" />
                     </th:block>
                     <label th:for="${formInputId}" class="button-secondary extra-margin">+ Upload</label>
                     <button th:name="${saveName}" class="button-secondary" type="submit" th:attr="data-for-file-upload=${formInputId}">Save</button>
