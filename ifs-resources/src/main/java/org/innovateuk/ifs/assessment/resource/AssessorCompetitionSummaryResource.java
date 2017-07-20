@@ -16,6 +16,7 @@ public class AssessorCompetitionSummaryResource {
     private long competitionId;
     private String competitionName;
     private CompetitionStatus competitionStatus;
+    
     /**
      * Total number of applications
      * across ALL competitions.
