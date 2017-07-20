@@ -150,17 +150,23 @@ Administrator can view the internal user's details
 Administrator can navigate to edit page to edit the internal user's details
     [Documentation]  IFS-18
     [Tags]
-    Given the user clicks the button/link       link=Edit
+    Given the user clicks the button/link         link=Edit
     And the user should see the text in the page  Update internal user's details
+    And the user should see the element           css=#firstName[value="New"]
+    And the user should see the element           css=#lastName[value="Administrator"]
+    And the user should see the element           jQuery=dt:contains("Email address") ~ dd:contains("ifs.administrator@innovateuk.test")
+    And the user should see the dropdown option selected  IFS Administrator  id=role
 
 Server side validation for edit internal user's details
     [Documentation]  IFS-18
     [Tags]
-    Given the user clicks the button/link   jQuery=button:contains("Save and return")
-    Then the user should see a field error  Please enter a first name.
-    And the user should see a field error  Your first name should have at least 2 characters.
-    And the user should see a field error  Please enter a last name.
-    And the user should see a field error  Your last name should have at least 2 characters.
+    Given the user enters text to a text field  id=firstName  ${empty}
+    And the user enters text to a text field    id=lastName  ${empty}
+    When the user clicks the button/link        jQuery=button:contains("Save and return")
+    Then the user should see a field error      Please enter a first name.
+    And the user should see a field error       Your first name should have at least 2 characters.
+    And the user should see a field error       Please enter a last name.
+    And the user should see a field error       Your last name should have at least 2 characters.
 
 Client side validations for edit internal user's details
     [Documentation]  IFS-18
