@@ -153,7 +153,7 @@ public class FileServiceImpl extends RootTransactionalService implements FileSer
                                 }).
                                 andOnFailure(() -> {
                                     fileEntryRepository.delete(fileEntry);
-                                    LOG.error(String.format("JES file associated with file entry %1d not found.  File entry record deleted.", fileEntry.getId()));
+                                    LOG.error(String.format("File associated with file entry %1d not found.  File entry record deleted.", fileEntry.getId()));
                                     return serviceSuccess(fileEntry);
                                 })
                 );
