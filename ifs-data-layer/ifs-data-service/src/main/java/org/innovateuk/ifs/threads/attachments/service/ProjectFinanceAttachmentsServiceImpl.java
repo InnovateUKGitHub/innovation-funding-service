@@ -78,7 +78,7 @@ public class ProjectFinanceAttachmentsServiceImpl implements ProjectFinanceAttac
         return ofNullable(mapper.mapIdToDomain(attachmentId))
                 .map(attachment -> {
                     attachmentsRepository.delete(attachment.id());
-                    return fileService.deleteFile(attachment.fileId()).andOnSuccessReturnVoid();
+                    return fileService.deleteFileIgnoreNotFound(attachment.fileId()).andOnSuccessReturnVoid();
                 }).orElse(ServiceResult.serviceFailure(notFoundError(AttachmentResource.class, attachmentId)));
     }
 
