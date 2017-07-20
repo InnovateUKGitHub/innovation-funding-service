@@ -60,15 +60,10 @@ public enum OrganisationTypeEnum {
         return researchParticipationTypes.contains(organisationType);
     }
 
-    public static boolean isParentResearchParticipationType(OrganisationTypeEnum organisationType) {
-        OrganisationTypeEnum parent = organisationType.getParentOrganisationType();
-        return parent != null && isResearchParticipationType(parent);
-    }
-
     public static boolean isResearchParticipationOrganisation(Long organisationTypeId) {
         if(organisationTypeId != null) {
             OrganisationTypeEnum type = getFromId(organisationTypeId);
-            return isResearchParticipationType(type) || isParentResearchParticipationType(type);
+            return isResearchParticipationType(type);
         } else {
             return false;
         }
