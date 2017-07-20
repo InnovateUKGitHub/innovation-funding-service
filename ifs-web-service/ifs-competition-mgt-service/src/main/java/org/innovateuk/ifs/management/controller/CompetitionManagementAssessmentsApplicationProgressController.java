@@ -48,7 +48,7 @@ public class CompetitionManagementAssessmentsApplicationProgressController {
                                  @PathVariable("assessorId") Long assessorId,
                                  @RequestParam(value = "sortField", defaultValue = "TITLE") String sortField) {
         assessmentRestService.createAssessment(new AssessmentCreateResource(applicationId, assessorId)).getSuccessObjectOrThrowException();
-        return format("redirect:/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, sortField);
+        return format("redirect:/assessment/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, sortField);
     }
 
     @PostMapping("/withdraw/{assessmentId}")
@@ -57,7 +57,7 @@ public class CompetitionManagementAssessmentsApplicationProgressController {
                                      @PathVariable("assessmentId") Long assessmentId,
                                      @RequestParam(value = "sortField", defaultValue = "TITLE") String sortField) {
         assessmentRestService.withdrawAssessment(assessmentId).getSuccessObjectOrThrowException();
-        return format("redirect:/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, sortField);
+        return format("redirect:/assessment/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, sortField);
     }
 
     @GetMapping(value = "/withdraw/{assessmentId}/confirm")
