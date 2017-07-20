@@ -16,11 +16,18 @@
 
     <hr/>
 
+    <!--/* TODO move Edit your details as per Lisa's comment on IFS-951 */-->
+
     <h2 class="heading-medium no-margin-bottom">Your details <small><a href="/profile/edit"> Edit your details</a></small></h2>
     <h3 class="heading-small">Your organisation</h3>
     <p th:text="${model.organisationName}" />
+
+    <h3 class="heading-small">Organisation type</h3>
+    <p th:text="${model.organisationTypeName}" />
+
     <h3 class="heading-small">Registration number</h3>
     <p th:text="${model.registrationNumber}" />
+
     <h3 class="heading-small">Address</h3>
     <div th:text="${model.addressLine1}" />
     <div th:text="${model.addressLine2}" />
