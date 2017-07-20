@@ -1,10 +1,12 @@
 package org.innovateuk.ifs.validator;
 
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
-import org.innovateuk.ifs.form.domain.FormInputResponse;
-import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.organisation.transactional.OrganisationService;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -13,46 +15,46 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.reject;
 
+
 /**
- * This class validates the FormInputResponse, it checks if there is a value present.
+ * This class validates the Application finances, it checks if there is a value present.
  */
 @Component
 public class AcademicJesValidator implements Validator {
 
+    @Autowired
+    private LoggedInUserSupplier loggedInUserSupplier;
+
+    @Autowired
+    private OrganisationService organisationService;
+
     @Override
     public boolean supports(Class<?> clazz) {
-        return FormInputResponse.class.isAssignableFrom(clazz);
+        return Application.class.isAssignableFrom(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        final FormInputResponse response = (FormInputResponse) target;
+        final Application application = (Application) target;
 
-        if (FormInputType.FINANCE_UPLOAD.equals(response.getFormInput().getType())) {
-            if (responseIsEmpty(response) || financeFileIsEmpty(response)) {
-                reject(errors, "validation.application.jes.upload.required");
-            }
+        if (financeFileIsEmpty(application)) {
+            reject(errors, "validation.application.jes.upload.required");
         }
     }
 
-    private boolean financeFileIsEmpty(FormInputResponse response) {
-        List<ApplicationFinance> applicationFinances = response.getApplication().getApplicationFinances();
+    private boolean financeFileIsEmpty(Application application) {
+        List<ApplicationFinance> applicationFinances = application.getApplicationFinances();
+        Optional<OrganisationResource> organisationOpt = organisationService.getPrimaryForUser(loggedInUserSupplier.get().getId()).getOptionalSuccessObject();
 
-        if(applicationFinances == null) {
+        if (applicationFinances == null || !organisationOpt.isPresent()) {
             return true;
         }
 
         Optional<ApplicationFinance> applicationFinanceOpt = applicationFinances
                 .stream()
-                .filter(applicationFinance -> applicationFinance.getOrganisation().getId().equals(response.getUpdatedBy().getOrganisationId()))
+                .filter(applicationFinance -> applicationFinance.getOrganisation().getId().equals(organisationOpt.get().getId()))
                 .findAny();
 
         return !applicationFinanceOpt.isPresent() || applicationFinanceOpt.get().getFinanceFileEntry() == null;
     }
-
-    private boolean responseIsEmpty(FormInputResponse response) {
-        return StringUtils.isEmpty(response.getValue()) || "".equals(response.getValue().trim());
-    }
-
-
 }
