@@ -346,7 +346,7 @@ public class CompetitionSetupServiceImplTest {
         CompetitionSetupSection section = CompetitionSetupSection.INITIAL_DETAILS;
         String[] restrictedFieldNames = new String[]{"competitionTypeId", "openingDate"};
         String[] unrestrictedFieldNames = new String[]{"title", "innovationSectorCategoryId",
-                "autosaveInnovationAreaIds", "leadTechnologistUserId", "executiveUserId"};
+                "autosaveInnovationAreaIds", "innovationLeadUserId", "executiveUserId"};
         String value = "testValue";
         Optional<Long> objectId = Optional.empty();
         CompetitionSetupForm form = new InitialDetailsForm();

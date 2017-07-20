@@ -366,7 +366,6 @@ the user decides about the growth table
     the user clicks the button/link    link=Finances
     the user clicks the button/link    jQuery=a:contains("Edit this question")
     the user clicks the button twice   jQuery=label[for="include-growth-table-${edit}"]
-    the user enters text to a text field  css=.editor  Funding rules for the competition added
     the user clicks the button/link    jQuery=button:contains("Save and close")
     the user clicks the button/link    link=Finances
     the user should see the element    jQuery=dt:contains("Include project growth table") + dd:contains("${read}")
@@ -517,7 +516,7 @@ the user fills in the Open-All Initial details
     the user enters text to a text field                 css=#openingDateDay  1
     the user enters text to a text field                 css=#openingDateMonth  ${month}
     the user enters text to a text field                 css=#openingDateYear  ${nextyear}
-    the user selects the option from the drop-down menu  Ian Cooper  id=leadTechnologistUserId
+    the user selects the option from the drop-down menu  Ian Cooper  id=innovationLeadUserId
     the user selects the option from the drop-down menu  Robert Johnson  id=executiveUserId
     the user clicks the button/link                      jQuery=button:contains("Done")
     the user clicks the button/link                      link=Competition setup

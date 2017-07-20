@@ -58,7 +58,6 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     private UserResource user3;
     private UserResource assessor;
     private UserResource compAdmin;
-    private UserResource support;
 
     private Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
     private Role collaboratorRole = newRole().withType(UserRoleType.COLLABORATOR).build();
@@ -73,7 +72,6 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         user3 = newUserResource().build();
         compAdmin = compAdminUser();
         assessor = assessorUser();
-        support = supportUser();
 
         processRole1 = newProcessRole().withRole(leadApplicantRole).build();
         processRole2 = newProcessRole().withRole(applicantRole).build();
@@ -160,6 +158,19 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
                 assertTrue(rules.supportUserCanSeeApplicationFinancesTotals(applicationResource, user));
             } else {
                 assertFalse(rules.supportUserCanSeeApplicationFinancesTotals(applicationResource, user));
+            }
+        });
+    }
+
+    @Test
+    public void testInnovationLeadUserCanSeeApplicationFinanceTotals() {
+
+        ApplicationResource applicationResource = newApplicationResource().build();
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(innovationLeadUser())) {
+                assertTrue(rules.innovationLeadCanSeeApplicationFinancesTotals(applicationResource, user));
+            } else {
+                assertFalse(rules.innovationLeadCanSeeApplicationFinancesTotals(applicationResource, user));
             }
         });
     }
