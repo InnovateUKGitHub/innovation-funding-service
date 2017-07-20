@@ -236,18 +236,21 @@ Mark Organisation as complete when yes
     [Documentation]    INFUND-6393
     [Tags]
     [Setup]    the user navigates to the growth table finances
-    Given the user clicks the button/link        link=Your organisation
+    Given the user clicks the button/link                    link=Your organisation
     And the user selects medium organisation size
-    Then the user enters text to a text field    css=input[name$="month"]    12
-    And the user enters text to a text field     css=input[name$="year"]    2016
+    Then the user enters text to a text field                css=input[name$="month"]    12
+    And the user enters text to a text field                 css=input[name$="year"]    2016
+    When the user enters text to a text field                jQuery=label:contains("employees") + input    4
+    # TODO pending due to IFS-1019
+    #    And the user clicks the button/link                      jQuery=button:contains("Mark as complete")
+    #    then the user should see a field and summary error       This field cannot be left blank.
     And the user populates the project growth table
-    When the user enters text to a text field    jQuery=label:contains("employees") + input    4
     # TODO pending due to INFUND-8107
-    #    And the user clicks the button/link     jQuery=a:contains("Return to finances")
-    #    And the user clicks the button/link     link=Your organisation
-    #    Then the user should see the element    jQuery=td:contains("Research and development spend") + td input[value="15000"]
-    When the user clicks the button/link         jQuery=button:contains("Mark as complete")
-    Then the user should see the element         jQuery=li:contains("Your organisation") > .task-status-complete
+    #    And the user clicks the button/link                 jQuery=a:contains("Return to finances")
+    #    And the user clicks the button/link                 link=Your organisation
+    #    Then the user should see the element                jQuery=td:contains("Research and development spend") + td input[value="15000"]
+    When the user clicks the button/link                     jQuery=button:contains("Mark as complete")
+    Then the user should see the element                     jQuery=li:contains("Your organisation") > .task-status-complete
 
 The Lead Applicant is able to edit and re-submit when yes
     [Documentation]    INFUND-8518
