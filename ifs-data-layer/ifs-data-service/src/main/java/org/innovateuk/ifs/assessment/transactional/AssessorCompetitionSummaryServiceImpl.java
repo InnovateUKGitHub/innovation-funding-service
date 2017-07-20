@@ -26,7 +26,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitionSummaryService {
 
     public static final Set<State> INVALID_ASSESSMENT_STATES = AssessmentStates.getBackingStates(EnumSet.of(
-            AssessmentStates.CREATED,
             AssessmentStates.REJECTED,
             AssessmentStates.WITHDRAWN
     ));
