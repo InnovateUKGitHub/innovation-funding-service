@@ -536,4 +536,60 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         assertEquals("/dashboard/live", model.getBackURL());
         assertEquals(expectedApplicationRows, model.getApplications());
     }
+
+    @Test
+    public void allApplicationsSupportViewInnovationLead() throws Exception {
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.INNOVATION_LEAD).build())).build());
+
+        Long[] ids = {1L, 2L, 3L};
+        String[] titles = {"Title 1", "Title 2", "Title 3"};
+        String[] leads = {"Lead 1", "Lead 2", "Lead 3"};
+        String[] innovationAreas = {"Innovation Area 1", "Innovation Area 1", "Innovation Area 1"};
+        String[] statuses = {"Submitted", "Started", "Started"};
+        Integer[] percentages = {100, 70, 20};
+
+        List<AllApplicationsRowViewModel> expectedApplicationRows = asList(
+                new AllApplicationsRowViewModel(ids[0], titles[0], leads[0], innovationAreas[0], statuses[0], percentages[0]),
+                new AllApplicationsRowViewModel(ids[1], titles[1], leads[1], innovationAreas[1], statuses[1], percentages[1]),
+                new AllApplicationsRowViewModel(ids[2], titles[2], leads[2], innovationAreas[2], statuses[2], percentages[2])
+        );
+
+        List<ApplicationSummaryResource> expectedSummaries = newApplicationSummaryResource()
+                .withId(ids)
+                .withName(titles)
+                .withLead(leads)
+                .withInnovationArea(innovationAreas)
+                .withStatus(statuses)
+                .withCompletedPercentage(percentages)
+                .build(3);
+
+        ApplicationSummaryPageResource expectedSummaryPageResource = new ApplicationSummaryPageResource();
+        expectedSummaryPageResource.setContent(expectedSummaries);
+
+        when(applicationSummaryRestService.getAllApplications(COMPETITION_ID, "", 0, 20, Optional.empty()))
+                .thenReturn(restSuccess(expectedSummaryPageResource));
+        when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID))
+                .thenReturn(restSuccess(defaultExpectedCompetitionSummary));
+
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/applications/all", COMPETITION_ID))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/all-applications"))
+                .andExpect(model().attribute("originQuery", "?origin=ALL_APPLICATIONS"))
+                .andReturn();
+
+        AllApplicationsViewModel model = (AllApplicationsViewModel) result.getModelAndView().getModel().get("model");
+
+        verify(applicationSummaryRestService).getAllApplications(COMPETITION_ID, "", 0, 20, Optional.empty());
+        verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
+
+        assertEquals(COMPETITION_ID, model.getCompetitionId());
+        assertEquals(defaultExpectedCompetitionSummary.getCompetitionName(), model.getCompetitionName());
+        assertEquals(defaultExpectedCompetitionSummary.getApplicationsInProgress(), model.getApplicationsInProgress());
+        assertEquals(defaultExpectedCompetitionSummary.getApplicationsStarted(), model.getApplicationsStarted());
+        assertEquals(defaultExpectedCompetitionSummary.getApplicationsSubmitted(), model.getApplicationsSubmitted());
+        assertEquals(defaultExpectedCompetitionSummary.getTotalNumberOfApplications(), model.getTotalNumberOfApplications());
+        assertEquals("Dashboard", model.getBackTitle());
+        assertEquals("/dashboard/live", model.getBackURL());
+        assertEquals(expectedApplicationRows, model.getApplications());
+    }
 }

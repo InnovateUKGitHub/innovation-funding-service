@@ -2,6 +2,7 @@ package org.innovateuk.ifs.user.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
@@ -299,5 +300,16 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         assertTrue(result.isSuccess());
 
         assertEquals(CREATED, result.getStatusCode());
+    }
+
+    @Test
+    public void editInternalUser() throws Exception {
+        EditUserResource editUserResource = new EditUserResource();
+        String url = usersUrl + "/internal/edit";
+        setupPostWithRestResultExpectations(url, editUserResource, HttpStatus.OK);
+
+        RestResult<Void> result = service.editInternalUser(editUserResource);
+        assertTrue(result.isSuccess());
+        assertEquals(OK, result.getStatusCode());
     }
 }
