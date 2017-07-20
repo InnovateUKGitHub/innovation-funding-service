@@ -47,8 +47,8 @@
                             <th scope="col">Assessor</th>
                             <th scope="col">Type</th>
                             <th scope="col">Innovation area</th>
-                            <th class="aligncentre" scope="col">Total applications</th>
-                            <th class="aligncentre" scope="col">Assigned</th>
+                            <th class="numeric" scope="col">Total applications</th>
+                            <th class="numeric" scope="col">Assigned</th>
                             <th th:if="${model.inAssessment}" class="aligncentre" scope="col">Notified</th>
                             <th th:if="${model.inAssessment}" class="aligncentre" scope="col">Accepted</th>
                             <th th:if="${model.inAssessment}" class="aligncentre" scope="col">Started</th>
@@ -62,8 +62,8 @@
                                    th:text="${assessor.name}">Oliver Romero</a></td>
                             <td th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Academic</td>
                             <td th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Healthcare, Regenerative medicine</td>
-                            <td class="aligncentre" th:text="${assessor.totalApplicationsCount}">6</td>
-                            <td class="aligncentre" th:text="${assessor.assignedCount}">4</td>
+                            <td class="numeric" th:text="${assessor.totalApplicationsCount}">6</td>
+                            <td class="numeric" th:text="${assessor.assignedCount}">4</td>
                             <td th:if="${model.inAssessment}" class="aligncentre">
                                 <span th:remove="${assessor.notified} ? 'all' : 'tag'">-</span>
                                 <span th:remove="${assessor.notified} ? 'tag' : 'all'" class="yes">Yes</span>
@@ -106,8 +106,8 @@
                             <th scope="col">Assessor</th>
                             <th scope="col">Type</th>
                             <th scope="col">Innovation area</th>
-                            <th class="aligncentre" scope="col">Total applications</th>
-                            <th class="aligncentre" scope="col">Assigned</th>
+                            <th class="numeric" scope="col">Total applications</th>
+                            <th class="numeric" scope="col">Assigned</th>
                             <th scope="col">Reason</th>
                         </tr>
                     </thead>
@@ -117,8 +117,8 @@
                                th:text="${assessor.name}">Irving Wolfe</a></td>
                             <td th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Academic</td>
                             <td th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Healthcare, Regenerative medicine</td>
-                            <td class="aligncentre" th:text="${assessor.totalApplicationsCount}">6</td>
-                            <td class="aligncentre" th:text="${assessor.assignedCount}">4</td>
+                            <td class="numeric" th:text="${assessor.totalApplicationsCount}">6</td>
+                            <td class="numeric" th:text="${assessor.assignedCount}">4</td>
                             <td><strong th:text="${assessor.rejectReason.displayLabel}">Too many assignments</strong><br /><th:block th:text="${assessor.rejectComment}">You have frequently assignme me too may applications, I can and have told you previously that will only be able to assign a reduced amount of applications during th summer. I do like reviewing the applications to your competitions but please do not assign so many to me.</th:block></td>
                         </tr>
                     </tbody>
@@ -134,12 +134,12 @@
                 <table class="assessors-previous">
                     <thead>
                         <tr>
-                            <th scope="col">Assessor</th>
-                            <th scope="col">Type</th>
+                            <th class="width-large" scope="col">Assessor</th>
+                            <th class="width-small" scope="col">Type</th>
                             <th scope="col">Innovation area</th>
-                            <th class="aligncentre" scope="col">Total applications</th>
-                            <th class="aligncentre" scope="col">Assigned</th>
-                            <th scope="col"><span class="visuallyhidden">Reassign</span></th>
+                            <th class="numeric width-small-medium" scope="col">Total applications</th>
+                            <th class="numeric width-small-medium" scope="col">Assigned</th>
+                            <th class="width-small" scope="col"><span class="visuallyhidden">Reassign</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -148,9 +148,9 @@
                                    th:text="${assessor.name}">Dave Smith</a></td>
                             <td th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Business</td>
                             <td th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Electronics, sensors &amp; photonics, Materials</td>
-                            <td class="aligncentre" th:text="${assessor.totalApplicationsCount}">6</td>
-                            <td class="aligncentre" th:text="${assessor.assignedCount}">4</td>
-                            <td class="alignright">
+                            <td class="numeric" th:text="${assessor.totalApplicationsCount}">6</td>
+                            <td class="numeric" th:text="${assessor.assignedCount}">4</td>
+                            <td>
                                 <form method="post"
                                       th:action="@{/competition/{cid}/application/{appId}/assessors/assign/{assId}(cid=${model.competitionId}, appId=${model.applicationId}, assId=${assessor.id})}">
                                     <button type="submit" class="button-secondary no-margin">Reassign</button>
@@ -230,12 +230,12 @@
                 <table class="assessors-available">
                     <thead>
                         <tr>
-                            <th scope="col">Assessor</th>
+                            <th class="width-large" scope="col">Assessor</th>
                             <th scope="col">Skill areas</th>
-                            <th class="aligncentre" scope="col">Total applications</th>
-                            <th class="aligncentre" scope="col">Assigned</th>
-                            <th class="aligncentre" scope="col">Submitted</th>
-                            <th scope="col"><span class="visuallyhidden">Actions</span></th>
+                            <th class="numeric width-small-medium" scope="col">Total applications</th>
+                            <th class="numeric width-small-medium" scope="col">Assigned</th>
+                            <th class="numeric width-small-medium" scope="col">Submitted</th>
+                            <th class="width-small" scope="col"><span class="visuallyhidden">Actions</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -243,10 +243,10 @@
                             <td><a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${assessorProfileOriginQuery}"
                                    th:text="${assessor.name}">John Barnes</a></td>
                             <td th:text="${assessor.skillAreas}">skills</td>
-                            <td class="aligncentre" th:text="${assessor.totalApplicationsCount}">4</td>
-                            <td class="aligncentre" th:text="${assessor.assignedCount}">2</td>
-                            <td class="aligncentre" th:text="${assessor.submittedApplications}">1</td>
-                            <td class="alignright">
+                            <td class="numeric" th:text="${assessor.totalApplicationsCount}">4</td>
+                            <td class="numeric" th:text="${assessor.assignedCount}">2</td>
+                            <td class="numeric" th:text="${assessor.submittedApplications}">1</td>
+                            <td>
                                 <form method="post"
                                       th:action="@{/competition/{cid}/application/{appId}/assessors/assign/{assId}(cid=${model.competitionId}, appId=${model.applicationId}, assId=${assessor.id}, filterInnovationArea=${model.filterInnovationArea})}">
                                     <button type="submit" class="button-secondary no-margin">Assign</button>

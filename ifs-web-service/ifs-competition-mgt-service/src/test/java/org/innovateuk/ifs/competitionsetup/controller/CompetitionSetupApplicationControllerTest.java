@@ -117,11 +117,13 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
         final boolean fullApplicationFinance = true;
         final boolean includeGrowthTable = false;
+        final String fundingRules = "Funding rules for this competition";
 
         mockMvc.perform(post(URL_PREFIX + "/question/finance/edit")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("fullApplicationFinance", String.valueOf(fullApplicationFinance))
-                .param("includeGrowthTable", String.valueOf(includeGrowthTable)))
+                .param("includeGrowthTable", String.valueOf(includeGrowthTable))
+                .param("fundingRules", String.valueOf(fundingRules)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX + "/landing-page"));
 

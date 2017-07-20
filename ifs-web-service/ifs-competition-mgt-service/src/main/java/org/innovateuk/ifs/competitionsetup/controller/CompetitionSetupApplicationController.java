@@ -135,7 +135,7 @@ public class CompetitionSetupApplicationController {
     }
 
     @PostMapping("/question/finance/edit")
-    public String submitApplicationFinances(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationFinanceForm form,
+    public String submitApplicationFinances(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationFinanceForm form,
                                             BindingResult bindingResult,
                                             ValidationHandler validationHandler,
                                             @PathVariable(COMPETITION_ID_KEY) long competitionId,

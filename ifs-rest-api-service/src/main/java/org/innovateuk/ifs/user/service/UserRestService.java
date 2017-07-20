@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.user.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserPageResource;
@@ -39,4 +40,5 @@ public interface UserRestService {
                                                                 String phoneNumber, String gender, Long ethnicity, String disability, Long organisationId, Boolean allowMarketingEmails);
     RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability, boolean allowMarketingEmails);
     RestResult<Void> createInternalUser(String inviteHash, InternalUserRegistrationResource internalUserRegistrationResource);
+    RestResult<Void> editInternalUser(EditUserResource editUserResource);
 }

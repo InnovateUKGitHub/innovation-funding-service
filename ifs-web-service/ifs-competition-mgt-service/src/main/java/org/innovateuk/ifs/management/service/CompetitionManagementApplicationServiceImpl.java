@@ -35,7 +35,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
@@ -98,13 +97,13 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         List<OrganisationResource> organisations = (List<OrganisationResource>) model.asMap().get("applicationOrganisations");
         Map<Long, BaseFinanceResource> organisationFinances = (Map<Long, BaseFinanceResource> ) model.asMap().get("organisationFinances");
         Map<Long, Boolean> detailedFinanceLink = organisations.stream().collect(Collectors.toMap(o -> o.getId(),
-                o -> user.hasRole(UserRoleType.SUPPORT) &&
+                o -> (user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD)) &&
                 ((organisationFinances.containsKey(o.getId()) && organisationFinances.get(o.getId()).getOrganisationSize() != null) ||
                   isAcademicOrganisation.get(o.getId()))
             ? Boolean.TRUE : Boolean.FALSE));
         model.addAttribute("showDetailedFinanceLink", detailedFinanceLink);
 
-        model.addAttribute("isSupportUser", user.hasRole(UserRoleType.SUPPORT));
+        model.addAttribute("isSupportUser", user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD));
         model.addAttribute("form", form);
         model.addAttribute("applicationReadyForSubmit", false);
         model.addAttribute("isCompManagementDownload", true);
@@ -191,6 +190,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         SUBMITTED_APPLICATIONS("/competition/{competitionId}/applications/submitted"),
         INELIGIBLE_APPLICATIONS("/competition/{competitionId}/applications/ineligible"),
         MANAGE_APPLICATIONS("/assessment/competition/{competitionId}/applications"),
+        MANAGE_ASSESSORS("/assessment/competition/{competitionId}/assessors"),
         FUNDING_APPLICATIONS("/competition/{competitionId}/funding"),
         APPLICATION_PROGRESS("/competition/{competitionId}/application/{applicationId}/assessors"),
         MANAGE_ASSESSMENTS("/assessment/competition/{competitionId}");
