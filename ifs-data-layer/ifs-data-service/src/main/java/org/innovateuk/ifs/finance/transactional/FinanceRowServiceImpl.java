@@ -369,20 +369,20 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
     @Override
     @Transactional
     public ServiceResult<FileEntryResource> createFinanceFileEntry(long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-        ApplicationFinance applicationFinance = applicationFinanceRepository.findOne(applicationFinanceId);
-        return getOpenApplication(applicationFinance.getApplication().getId()).andOnSuccess(app ->
+        Application application = applicationFinanceRepository.findOne(applicationFinanceId).getApplication();
+        return getOpenApplication(application.getId()).andOnSuccess(app ->
                 fileService.createFile(fileEntryResource, inputStreamSupplier).
-                        andOnSuccessReturn(fileResults -> linkFileEntryToApplicationFinance(applicationFinance, fileResults))
+                        andOnSuccessReturn(fileResults -> linkFileEntryToApplicationFinance(applicationFinanceId, fileResults))
         );
     }
 
     @Override
     @Transactional
     public ServiceResult<FileEntryResource> updateFinanceFileEntry(long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-        ApplicationFinance applicationFinance = applicationFinanceRepository.findOne(applicationFinanceId);
-        return getOpenApplication(applicationFinance.getApplication().getId()).andOnSuccess(app ->
+        Application application = applicationFinanceRepository.findOne(applicationFinanceId).getApplication();
+        return getOpenApplication(application.getId()).andOnSuccess(app ->
                 fileService.updateFile(fileEntryResource, inputStreamSupplier).
-                        andOnSuccessReturn(fileResults -> linkFileEntryToApplicationFinance(applicationFinance, fileResults))
+                        andOnSuccessReturn(fileResults -> linkFileEntryToApplicationFinance(applicationFinanceId, fileResults))
         );
     }
 
@@ -392,11 +392,9 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
         Application application = applicationFinanceRepository.findOne(applicationFinanceId).getApplication();
         return getOpenApplication(application.getId()).andOnSuccess(app ->
                 getApplicationFinanceById(applicationFinanceId).
-                        andOnSuccess(finance -> {
-                            fileService.deleteFile(finance.getFinanceFileEntry());
-                            removeFileEntryFromApplicationFinance(finance);
-                            return serviceSuccess();
-                        })
+                        andOnSuccess(finance -> fileService.deleteFileIgnoreNotFound(finance.getFinanceFileEntry()).
+                                andOnSuccess(() -> removeFileEntryFromApplicationFinance(finance))).
+                        andOnSuccessReturnVoid()
         );
     }
 
@@ -415,10 +413,10 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
         });
     }
 
-    private FileEntryResource linkFileEntryToApplicationFinance(ApplicationFinance applicationFinance, Pair<File, FileEntry> fileResults) {
+    private FileEntryResource linkFileEntryToApplicationFinance(long applicationFinanceId, Pair<File, FileEntry> fileResults) {
         FileEntry fileEntry = fileResults.getValue();
 
-        ApplicationFinanceResource applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
+        ApplicationFinanceResource applicationFinanceResource = getApplicationFinanceById(applicationFinanceId).getSuccessObject();
 
         if (applicationFinanceResource != null) {
             applicationFinanceResource.setFinanceFileEntry(fileEntry.getId());
