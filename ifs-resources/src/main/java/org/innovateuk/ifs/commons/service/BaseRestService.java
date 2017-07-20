@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -222,16 +223,20 @@ public abstract class BaseRestService {
     }
 
     public static String buildPaginationUri(String url, Integer pageNumber, Integer pageSize, String sort, MultiValueMap<String, String> params, Object... uriParameters ) {
-        if(pageNumber != null) {
+        if (pageNumber != null) {
             params.put("page", singletonList(pageNumber.toString()));
         }
-        if(pageSize != null) {
+        if (pageSize != null) {
             params.put("size", singletonList(pageSize.toString()));
         }
         if (sort != null) {
             params.put("sort", singletonList(sort));
         }
         return UriComponentsBuilder.fromPath(url).queryParams(params).buildAndExpand(uriParameters).encode().toUriString();
+    }
+
+    public static String buildPaginationUri(String url, Integer pageNumber, Integer pageSize, Object... uriParameters ) {
+        return buildPaginationUri(url, pageNumber, pageSize, null, new LinkedMultiValueMap<>(), uriParameters);
     }
 }
 

@@ -10,6 +10,7 @@ import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.registration.service.InternalUserService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -100,14 +101,16 @@ public class UserManagementController {
                                HttpServletRequest request,
                                UserResource loggedInUser) {
 
-        return viewEditUser(model, userId);
+        return viewEditUser(model, userId, new EditUserForm());
     }
 
-    private String viewEditUser(Model model, Long userId) {
+    private String viewEditUser(Model model, Long userId, EditUserForm form) {
 
         UserResource userResource = userRestService.retrieveUserById(userId).getSuccessObjectOrThrowException();
-
-        EditUserForm form = new EditUserForm();
+        form.setFirstName(userResource.getFirstName());
+        form.setLastName(userResource.getLastName());
+        // userResource.getRolesString() will return a single role for internal users
+        form.setRole(UserRoleType.fromDisplayName(userResource.getRolesString()));
         form.setEmailAddress(userResource.getEmail());
         model.addAttribute(FORM_ATTR_NAME, form);
 
@@ -123,7 +126,7 @@ public class UserManagementController {
                              @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                              UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> "admin/edit-user";
+        Supplier<String> failureView = () -> viewEditUser(model, userId, form);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -135,7 +138,6 @@ public class UserManagementController {
                     failNowOrSucceedWith(failureView, () -> "redirect:/admin/users/active");
 
         });
-
     }
 
     private EditUserResource constructEditUserResource(EditUserForm form, Long userId) {

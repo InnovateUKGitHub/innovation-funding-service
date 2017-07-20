@@ -57,6 +57,7 @@ public class InviteUserController {
     @PostMapping("/invite-user")
     public String saveUserInvite(@Validated({Default.class, Primary.class}) @ModelAttribute(FORM_ATTR_NAME) InviteUserForm form,
                                @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler) {
+
         Supplier<String> failureView = () -> "admin/invite-new-user";
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {

@@ -351,7 +351,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         when(userRepositoryMock.findOne(internalUserResource.getId())).thenReturn(internalUser);
         when(golWorkflowHandlerMock.removeGrantOfferLetter(project, internalUser)).thenReturn(true);
         when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
-        when(fileServiceMock.deleteFile(existingGOLFile.getId())).thenReturn(serviceSuccess(existingGOLFile));
+        when(fileServiceMock.deleteFileIgnoreNotFound(existingGOLFile.getId())).thenReturn(serviceSuccess(existingGOLFile));
 
         ServiceResult<Void> result = service.removeGrantOfferLetterFileEntry(123L);
 
@@ -359,7 +359,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         assertNull(project.getGrantOfferLetter());
 
         verify(golWorkflowHandlerMock).removeGrantOfferLetter(project, internalUser);
-        verify(fileServiceMock).deleteFile(existingGOLFile.getId());
+        verify(fileServiceMock).deleteFileIgnoreNotFound(existingGOLFile.getId());
     }
 
     @Test
@@ -375,7 +375,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         when(userRepositoryMock.findOne(internalUserResource.getId())).thenReturn(internalUser);
         when(golWorkflowHandlerMock.removeGrantOfferLetter(project, internalUser)).thenReturn(true);
         when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.LIVE);
-        when(fileServiceMock.deleteFile(existingGOLFile.getId())).thenReturn(serviceSuccess(existingGOLFile));
+        when(fileServiceMock.deleteFileIgnoreNotFound(existingGOLFile.getId())).thenReturn(serviceSuccess(existingGOLFile));
 
         ServiceResult<Void> result = service.removeGrantOfferLetterFileEntry(123L);
 
@@ -419,14 +419,14 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         when(userRepositoryMock.findOne(internalUserResource.getId())).thenReturn(internalUser);
         when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
-        when(fileServiceMock.deleteFile(existingSignedGOLFile.getId())).thenReturn(serviceSuccess(existingSignedGOLFile));
+        when(fileServiceMock.deleteFileIgnoreNotFound(existingSignedGOLFile.getId())).thenReturn(serviceSuccess(existingSignedGOLFile));
 
         ServiceResult<Void> result = service.removeSignedGrantOfferLetterFileEntry(123L);
 
         assertTrue(result.isSuccess());
         assertNull(project.getSignedGrantOfferLetter());
 
-        verify(fileServiceMock).deleteFile(existingSignedGOLFile.getId());
+        verify(fileServiceMock).deleteFileIgnoreNotFound(existingSignedGOLFile.getId());
     }
 
     @Test
@@ -441,7 +441,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         when(userRepositoryMock.findOne(internalUserResource.getId())).thenReturn(internalUser);
         when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.LIVE);
-        when(fileServiceMock.deleteFile(existingSignedGOLFile.getId())).thenReturn(serviceSuccess(existingSignedGOLFile));
+        when(fileServiceMock.deleteFileIgnoreNotFound(existingSignedGOLFile.getId())).thenReturn(serviceSuccess(existingSignedGOLFile));
 
         ServiceResult<Void> result = service.removeSignedGrantOfferLetterFileEntry(123L);
 

@@ -13,8 +13,15 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='View or search for an internal user',linkClass='link-back',linkUrl=@{/admin/users/active}" />
 
+    <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
+        <h2 class="heading-medium error-summary-heading">We were unable to update internal user's details</h2>
+        <ul class="error-summary-list">
+            <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
+        </ul>
+    </div>
+
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Update internal user\'s details',size='heading-xlarge'" />
-    <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST">
+    <form th:object="${form}" novalidate="novalidate" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST">
         <h2 class="heading-medium">Personal details</h2>
 
         <div class="form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'form-group-error'">
@@ -57,6 +64,7 @@
             <dt>Email address</dt>
             <dd th:text="${form.emailAddress}">mark.smith@innovate.gov.uk</dd>
         </dl>
+        <p/>
         <div class="form-group" th:classappend="${#fields.hasErrors('role')} ? 'form-group-error'">
             <label class="form-label" th:for="${#ids.next('role')}">
                 <span class="form-label-bold">Job role</span>

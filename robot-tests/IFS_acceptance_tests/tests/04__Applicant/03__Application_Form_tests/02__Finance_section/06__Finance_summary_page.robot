@@ -169,7 +169,6 @@ Support User can see read only view of collaborator Your project costs for Labou
     And the user expands the section      Finances summary
     When the user clicks the button/link  jQuery=.finance-summary tbody tr:contains("Ludlow") th a
     Then the user should see the text in the page  Please complete your project finances.
-    And the user should see the element   jQuery=a:contains("Your project costs")
     When the user clicks the button/link  jQuery=a:contains("Your project costs")
     And the user should see the text in the page  Provide the project costs for 'Ludlow'
     And the user clicks the button/link   jQuery=button:contains("Labour")
@@ -268,7 +267,6 @@ Innovation lead can see read only view of collaborator Your project costs for La
     And the user expands the section          Finances summary
     When the user clicks the button/link      jQuery=.finance-summary tbody tr:contains("Ludlow") th a
     Then the user should see the text in the page  Please complete your project finances.
-    And the user should see the element       jQuery=a:contains("Your project costs")
     When the user clicks the button/link      jQuery=a:contains("Your project costs")
     And the user should see the text in the page   Provide the project costs for 'Ludlow'
     And the user clicks the button/link       jQuery=button:contains("Labour")
