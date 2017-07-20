@@ -717,7 +717,7 @@ public class BaseUnitTest {
 
     public void setupInvites() {
         when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(emptyList()));
-        InviteOrganisationResource inviteOrganisation = new InviteOrganisationResource(2L, "Invited Organisation Ltd", null, null);
+        InviteOrganisationResource inviteOrganisation = new InviteOrganisationResource(2L, "Invited Organisation Ltd", "Org type", null, null);
 
         invite = new ApplicationInviteResource();
         invite.setStatus(InviteStatus.SENT);
