@@ -517,7 +517,7 @@ the user fills in the Open-All Initial details
     the user enters text to a text field                 css=#openingDateDay  1
     the user enters text to a text field                 css=#openingDateMonth  ${month}
     the user enters text to a text field                 css=#openingDateYear  ${nextyear}
-    the user selects the option from the drop-down menu  Ian Cooper  id=leadTechnologistUserId
+    the user selects the option from the drop-down menu  Ian Cooper  id=innovationLeadUserId
     the user selects the option from the drop-down menu  Robert Johnson  id=executiveUserId
     the user clicks the button/link                      jQuery=button:contains("Done")
     the user clicks the button/link                      link=Competition setup

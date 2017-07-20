@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Update internal user\'s details'" />
+</head>
+<body>
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='View or search for an internal user',linkClass='link-back',linkUrl=@{/admin/users/active}" />
+
+    <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
+        <h2 class="heading-medium error-summary-heading">We were unable to update internal user's details</h2>
+        <ul class="error-summary-list">
+            <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
+        </ul>
+    </div>
+
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Update internal user\'s details',size='heading-xlarge'" />
+    <form th:object="${form}" novalidate="novalidate" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST">
+        <h2 class="heading-medium">Personal details</h2>
+
+        <div class="form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'form-group-error'">
+          <label class="form-label" th:for="${#ids.next('firstName')}">
+              <span>First name</span>
+              <th:block th:if="${#fields.hasErrors('firstName')}">
+                  <span class="error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
+              </th:block>
+          </label>
+          <input class="form-control"
+                 type="text"
+                 required="required"
+                 minlength="2"
+                 maxlength="70"
+                 th:errorclass="form-control-error"
+                 th:field="*{firstName}"
+                 th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)},
+                          data-maxlength-errormessage=#{validation.standard.firstname.length.max},
+                          data-required-errormessage=#{validation.standard.firstname.required}" />
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'form-group-error'">
+          <label class="form-label" th:for="${#ids.next('lastName')}">
+              <span>Last name</span>
+              <th:block th:if="${#fields.hasErrors('lastName')}">
+                  <span class="error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
+              </th:block>
+          </label>
+          <input class="form-control"
+                 type="text"
+                 required="required"
+                 minlength="2"
+                 maxlength="70"
+                 th:errorclass="form-control-error"
+                 th:field="*{lastName}"
+                 th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)},
+                          data-maxlength-errormessage=#{validation.standard.lastname.length.max},
+                          data-required-errormessage=#{validation.standard.lastname.required}" />
+        </div>
+        <dl>
+            <dt>Email address</dt>
+            <dd th:text="${form.emailAddress}">mark.smith@innovate.gov.uk</dd>
+        </dl>
+        <p/>
+        <div class="form-group" th:classappend="${#fields.hasErrors('role')} ? 'form-group-error'">
+            <label class="form-label" th:for="${#ids.next('role')}">
+                <span class="form-label-bold">Job role</span>
+                <th:block th:if="${#fields.hasErrors('role')}">
+                    <span class="error-message" th:each="err : ${#fields.errors('role')}" th:text="${err}"></span>
+                </th:block>
+                <p class="form-hint">Which of the following job roles will the user identify as?</p>
+            </label>
+            <select name="role" class="form-control" id="role" th:field="*{role}" required="required" data-required-errormessage="Please select a role">
+                <option th:each="adminRole : ${T(org.innovateuk.ifs.user.resource.UserRoleType).internalRoles()}" th:value="${adminRole}" th:text="${adminRole.displayName}"></option>
+            </select>
+        </div>
+        <div class="form-group extra-margin">
+            <button class="button">Save and return</button>
+            <a class="button button-clear" th:href="@{/admin/users/active}">Cancel</a>
+        </div>
+    </form>
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+
+</body>
+</html>

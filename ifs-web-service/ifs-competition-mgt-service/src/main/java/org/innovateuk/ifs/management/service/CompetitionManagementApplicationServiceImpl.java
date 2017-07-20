@@ -98,13 +98,13 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         List<OrganisationResource> organisations = (List<OrganisationResource>) model.asMap().get("applicationOrganisations");
         Map<Long, BaseFinanceResource> organisationFinances = (Map<Long, BaseFinanceResource>) model.asMap().get("organisationFinances");
         Map<Long, Boolean> detailedFinanceLink = organisations.stream().collect(Collectors.toMap(o -> o.getId(),
-                o -> user.hasRole(UserRoleType.SUPPORT) &&
+                o -> (user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD)) &&
                         ((organisationFinances.containsKey(o.getId()) && organisationFinances.get(o.getId()).getOrganisationSize() != null) ||
                                 isAcademicOrganisation.get(o.getId()))
                         ? Boolean.TRUE : Boolean.FALSE));
         model.addAttribute("showDetailedFinanceLink", detailedFinanceLink);
 
-        model.addAttribute("isSupportUser", user.hasRole(UserRoleType.SUPPORT));
+        model.addAttribute("isSupportUser", user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD));
         model.addAttribute("form", form);
         model.addAttribute("applicationReadyForSubmit", false);
         model.addAttribute("isCompManagementDownload", true);
