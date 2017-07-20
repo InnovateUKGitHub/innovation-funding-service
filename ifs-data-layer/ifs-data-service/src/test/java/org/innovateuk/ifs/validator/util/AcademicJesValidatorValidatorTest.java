@@ -1,92 +1,50 @@
 package org.innovateuk.ifs.validator.util;
 
-import org.innovateuk.ifs.form.domain.FormInputResponse;
-import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.organisation.transactional.OrganisationService;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.validator.AcademicJesValidator;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.validation.BindingResult;
 
-import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
-import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
-import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.validator.ValidatorTestUtil.getBindingResult;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class AcademicJesValidatorValidatorTest {
+    @InjectMocks
     private AcademicJesValidator validator;
-    private FormInputResponse formInputResponse;
+
+    @Mock
+    private LoggedInUserSupplier loggedInUserSupplier;
+
+    @Mock
+    private OrganisationService organisationService;
+
+    private Application application;
+
     private BindingResult bindingResult;
-    private static final Long FORM_INPUT_ID = 1086L;
+
+    private static final Long USER_ID = 123912L;
+
     private static final Long ORGANISATION_ID = 123L;
+
 
     @Before
     public void setUp() {
-        validator = new AcademicJesValidator();
-        formInputResponse = newFormInputResponse()
-                .withFormInputs(newFormInput()
-                        .withId(FORM_INPUT_ID)
-                        .withType(FormInputType.FINANCE_UPLOAD).build())
-                .with(response -> {
-                        response.setApplication(newApplication()
-                                .with(application -> application.setApplicationFinances(
-                                        newApplicationFinance()
-                                                .withOrganisation(newOrganisation()
-                                                        .withId(ORGANISATION_ID)
-                                                        .build())
-                                                .with(
-                                                        applicationFinance -> applicationFinance.setFinanceFileEntry(
-                                                                newFileEntry().build())
-                                                )
-                                                .build(1)
-                                ))
-                                .build());
-                        response.setUpdatedBy(newProcessRole().withOrganisationId(ORGANISATION_ID).build());
-                    }
-                )
-                .build();
-        bindingResult = getBindingResult(formInputResponse);
-    }
-
-    @Test
-    public void testValidate_formInputWithoutResponseShouldBeInvalid() throws Exception {
-        formInputResponse.setValue("");
-        validator.validate(formInputResponse, bindingResult);
-
-        assertTrue(bindingResult.hasErrors());
-
-        formInputResponse.setValue(" ");
-        validator.validate(formInputResponse, bindingResult);
-
-        assertTrue(bindingResult.hasErrors());
-    }
-
-    @Test
-    public void testValidate_formInputWithResponseShouldBeValid() throws Exception {
-        formInputResponse.setValue("SomeFileUpload.pdf");
-
-        validator.validate(formInputResponse, bindingResult);
-
-        assertFalse(bindingResult.hasErrors());
-    }
-
-    @Test
-    public void testValidate_formInputWithDifferentTypeShouldBeValid() throws Exception {
-        formInputResponse.setFormInput(newFormInput().withType(FormInputType.FILEUPLOAD).build());
-
-        validator.validate(formInputResponse, bindingResult);
-
-        assertFalse(bindingResult.hasErrors());
-    }
-
-    @Test
-    public void testValidate_applicationFinanceNoEntry() throws Exception {
-        formInputResponse.setApplication(newApplication()
+        application = newApplication()
                 .with(application -> application.setApplicationFinances(
                         newApplicationFinance()
                                 .withOrganisation(newOrganisation()
@@ -94,29 +52,37 @@ public class AcademicJesValidatorValidatorTest {
                                         .build())
                                 .with(applicationFinance -> applicationFinance.setFinanceFileEntry(null))
                                 .build(1)
-                ))
-                .build());
+                )).build();
+        when(loggedInUserSupplier.get()).thenReturn(newUser().withId(USER_ID).build());
+        when(organisationService.getPrimaryForUser(USER_ID))
+                .thenReturn(ServiceResult.serviceSuccess(newOrganisationResource().withId(ORGANISATION_ID).build()));
+        bindingResult = getBindingResult(application);
+    }
 
-        validator.validate(formInputResponse, bindingResult);
+    @Test
+    public void testValidate_applicationFinanceNoEntry() throws Exception {
+
+        validator.validate(application, bindingResult);
 
         assertTrue(bindingResult.hasErrors());
     }
 
     @Test
     public void testValidate_NoApplicationFinance() throws Exception {
-        formInputResponse.setApplication(newApplication()
+        application = newApplication()
                 .with(application -> application.setApplicationFinances(null))
-                .build());
+                .build();
 
-        validator.validate(formInputResponse, bindingResult);
+        validator.validate(application, bindingResult);
 
         assertTrue(bindingResult.hasErrors());
     }
 
     @Test
     public void testValidate_NoApplicationFinanceWithSameOrg() throws Exception {
-        formInputResponse.setUpdatedBy(newProcessRole().withOrganisationId(88L).build());
-        validator.validate(formInputResponse, bindingResult);
+        when(organisationService.getPrimaryForUser(USER_ID)).thenReturn(ServiceResult.serviceSuccess(newOrganisationResource().withId(1202020L).build()));
+
+        validator.validate(application, bindingResult);
 
         assertTrue(bindingResult.hasErrors());
     }
