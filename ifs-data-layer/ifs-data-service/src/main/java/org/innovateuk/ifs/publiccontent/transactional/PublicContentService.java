@@ -11,14 +11,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
  */
 public interface PublicContentService {
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @SecuredBySpring(value = "GET_PUBLIC_CONTENT",
             description = "All internal users can get the public content for a competition.")
     ServiceResult<PublicContentResource> findByCompetitionId(Long id);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "INITIALISE_PUBLIC_CONTENT",
-            description = "The Competition Admin, or project finance user can initalise the public content for a competition.")
+            description = "The Competition Admin, or project finance user can initialise the public content for a competition.")
     ServiceResult<Void> initialiseByCompetitionId(Long id);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")

@@ -66,7 +66,7 @@ Initial details: client-side validations
     #Then the user should not see the error any more    Please enter an opening month.
     When the user enters text to a text field    id=openingDateYear    2017
     #Then the user should not see the error any more    Please enter an opening year.
-    When the user selects the option from the drop-down menu    Ian Cooper    id=leadTechnologistUserId
+    When the user selects the option from the drop-down menu    Ian Cooper    id=innovationLeadUserId
     Then the user should not see the error any more    Please select an Innovation Lead.
     When the user selects the option from the drop-down menu    John Doe     id=executiveUserId
     Then The user should not see the text in the page    Please select a competition executive.    #Couldn't use this keyword : "Then the user should not see the error any more" . Because there is not any error in the page
@@ -449,7 +449,7 @@ The user enters valid data in the initial details
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2017
-    And the user selects the option from the drop-down menu    Ian Cooper    id=leadTechnologistUserId
+    And the user selects the option from the drop-down menu    Ian Cooper    id=innovationLeadUserId
     And the user selects the option from the drop-down menu    John Doe    id=executiveUserId
 
 The user navigates to the Validation competition
