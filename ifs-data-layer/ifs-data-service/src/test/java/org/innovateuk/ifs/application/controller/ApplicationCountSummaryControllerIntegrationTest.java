@@ -132,11 +132,11 @@ public class ApplicationCountSummaryControllerIntegrationTest extends BaseContro
         assertEquals(0, counts.getNumber());
         assertEquals(1, counts.getTotalPages());
         ApplicationCountSummaryResource summaryResource = counts.getContent().get(0);
-        assertEquals(3, (long) summaryResource.getId());
+        assertEquals((long) application.getId(), (long) summaryResource.getId());
         assertEquals("Warp Drive", summaryResource.getName());
         assertEquals("Empire Ltd", summaryResource.getLeadOrganisation());
-        assertEquals(3, summaryResource.getAssessors());
-        assertEquals(2, summaryResource.getAccepted());
-        assertEquals(2, summaryResource.getSubmitted());
+        assertEquals(0, summaryResource.getAssessors());
+        assertEquals(0, summaryResource.getAccepted());
+        assertEquals(0, summaryResource.getSubmitted());
     }
 }

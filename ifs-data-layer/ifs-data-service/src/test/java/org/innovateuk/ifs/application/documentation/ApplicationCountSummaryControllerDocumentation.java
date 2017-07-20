@@ -18,6 +18,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ApplicationCountSummaryControllerDocumentation extends BaseControllerMockMVCTest<ApplicationCountSummaryController> {
@@ -34,7 +35,6 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
         pageResource.setContent(singletonList(applicationCountSummaryResource));
 
         when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionId(competitionId, 0, 20, empty())).thenReturn(serviceSuccess(pageResource));
-
 
         mockMvc.perform(get("/applicationCountSummary/findByCompetitionId/{competitionId}", competitionId))
                 .andExpect(status().isOk())
@@ -56,13 +56,13 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
 
         when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, 0, 20, empty(), "")).thenReturn(serviceSuccess(pageResource));
 
-
-        mockMvc.perform(get("/applicationCountSummary/findByCompetitionIdAndInnovationArea/{competitionId}", competitionId))
+        mockMvc.perform(get("/applicationCountSummary/findByCompetitionIdAndInnovationArea/{competitionId}?sortField=", competitionId))
                 .andExpect(status().isOk())
                 .andDo(document("applicationCountSummary/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of competition")
                         ),
+                        requestParameters(parameterWithName("sortField").description("Field to sort by")),
                         responseFields(applicationCountSummaryResourcesFields)));
 
         verify(applicationCountSummaryServiceMock).getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, 0, 20, empty(), "");

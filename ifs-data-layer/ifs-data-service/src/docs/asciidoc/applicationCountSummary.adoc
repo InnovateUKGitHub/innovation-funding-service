@@ -14,6 +14,7 @@ include::{snippets}/applicationCountSummary/get-application-count-summaries-by-c
 ==== Request
 include::{snippets}/applicationCountSummary/get-application-count-summaries-by-competition-id-and-innovation-area/http-request.adoc[]
 include::{snippets}/applicationCountSummary/get-application-count-summaries-by-competition-id-and-innovation-area/path-parameters.adoc[]
+include::{snippets}/applicationCountSummary/get-application-count-summaries-by-competition-id-and-innovation-area/request-parameters.adoc[]
 
 ==== Response
 include::{snippets}/applicationCountSummary/get-application-count-summaries-by-competition-id-and-innovation-area/http-response.adoc[]

@@ -103,8 +103,26 @@ public class CompetitionManagementAssessmentsAssessorProgressControllerTest exte
                 .withAssignedAssessments(assignedAssessments)
                 .build();
 
+        List<ApplicationCountSummaryResource> summaryResources = newApplicationCountSummaryResource()
+                .withName("one", "two")
+                .withLeadOrganisation("Lead Org 1", "Lead Org 2")
+                .withAccepted(2L, 3L)
+                .withAssessors(3L, 4L)
+                .withSubmitted(1L, 2L).build(2);
+
+        ApplicationCountSummaryPageResource expectedPageResource = new ApplicationCountSummaryPageResource(41, 3, summaryResources, 1, 20);
+
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withId(competitionId)
+                .withName("name")
+                .withCompetitionStatus(IN_ASSESSMENT)
+                .build();
+
         when(assessorCompetitionSummaryRestService.getAssessorSummary(assessorId, competitionId))
                 .thenReturn(restSuccess(assessorCompetitionSummaryResource));
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
+        when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, 0, 20, empty(), "")).thenReturn(restSuccess(expectedPageResource));
+
 
         MvcResult result = mockMvc.perform(get("/assessment/competition/{competitionId}/assessors/{assessorId}", competitionId, assessorId))
                 .andExpect(model().attributeExists("model"))
