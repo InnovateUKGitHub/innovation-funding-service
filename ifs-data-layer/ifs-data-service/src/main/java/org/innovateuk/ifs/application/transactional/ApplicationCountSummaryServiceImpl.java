@@ -35,10 +35,11 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
     private ApplicationStatisticsRepository applicationStatisticsRepository;
 
     private static final Map<String, Sort> SORT_FIELD_TO_DB_SORT_FIELDS = new HashMap<String, Sort>() {{
-        put("appTitle", new Sort(ASC, new String[]{"name", "id"}));
-        put("leadOrg", new Sort(ASC, new String[]{"leadOrganisation", "id"}));
-        put("assignedApps", new Sort(ASC, new String[]{"assessors", "id"}));
-        put("completedApps", new Sort(ASC, new String[]{"submitted", "id"}));
+        put("id", new Sort(ASC, "id"));
+        put("appTitle", new Sort(ASC, "name", "id"));
+        put("leadOrg", new Sort(ASC, "leadOrganisation", "id"));
+        put("assignedApps", new Sort(ASC, "assessors", "id"));
+        put("completedApps", new Sort(ASC, "submitted", "id"));
     }};
 
     @Override
@@ -68,6 +69,6 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
 
     private Sort getApplicationSummarySortField(String sortBy) {
         Sort result = SORT_FIELD_TO_DB_SORT_FIELDS.get(sortBy);
-        return result != null ? result : new Sort(ASC, new String[]{"id"});
+        return result != null ? result : SORT_FIELD_TO_DB_SORT_FIELDS.get("id");
     }
 }
