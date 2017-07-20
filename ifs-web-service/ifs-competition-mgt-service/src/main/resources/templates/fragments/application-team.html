@@ -7,14 +7,14 @@
     <div class="grid-row">
         <div th:if="${organisation.registeredAddress != null && organisation.registeredAddress.getAddress() != null}"
              class="column-third" th:id="applicationTeamOrganisationRegisteredAddress + ${orgId}">
-            <h3 class="heading-small">Registered Address</h3>
+            <h3 class="heading-small">Registered address</h3>
             <th:block th:each="addressLine : ${organisation.registeredAddress.getAddress().getNonEmptyLines()}">
                 <span th:text="${addressLine}">An address line</span><br />
             </th:block>
         </div>
         <div th:if="${organisation.operatingAddress != null && organisation.operatingAddress.getAddress() != null}"
              class="column-third" th:id="applicationTeamOrganisationOperatingAddress + ${orgId}">
-            <h3 class="heading-small">Operating Address</h3>
+            <h3 class="heading-small">Operating address</h3>
             <th:block th:each="addressLine : ${organisation.operatingAddress.getAddress().getNonEmptyLines()}">
                 <span th:text="${addressLine}">An address line</span><br />
             </th:block>
