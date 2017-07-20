@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.user.resource;
 
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
@@ -17,6 +18,8 @@ public enum OrganisationTypeEnum {
             lookup.put(d.getId(), d);
         }
     }
+
+    private static final EnumSet<OrganisationTypeEnum> researchParticipationTypes = EnumSet.of(RESEARCH, RTO, PUBLICSECTOR_OR_CHARITY);
 
     private final Long organisationTypeId;
     private final boolean restrictOrganisationName; // if true, the user won't be able to enter his organisation name, and should use the search to find his organisation
@@ -46,7 +49,26 @@ public enum OrganisationTypeEnum {
 
     public static boolean isResearch(Long organisationTypeId){
         if(organisationTypeId!=null) {
-            return isResearch(getFromId(organisationTypeId));
+            OrganisationTypeEnum organisationType = getFromId(organisationTypeId);
+            return isResearch(organisationType);
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean isResearchParticipationType(OrganisationTypeEnum organisationType) {
+        return researchParticipationTypes.contains(organisationType);
+    }
+
+    public static boolean isParentResearchParticipationType(OrganisationTypeEnum organisationType) {
+        OrganisationTypeEnum parent = organisationType.getParentOrganisationType();
+        return parent != null && isResearchParticipationType(parent);
+    }
+
+    public static boolean isResearchParticipationOrganisation(Long organisationTypeId) {
+        if(organisationTypeId != null) {
+            OrganisationTypeEnum type = getFromId(organisationTypeId);
+            return isResearchParticipationType(type) || isParentResearchParticipationType(type);
         } else {
             return false;
         }
