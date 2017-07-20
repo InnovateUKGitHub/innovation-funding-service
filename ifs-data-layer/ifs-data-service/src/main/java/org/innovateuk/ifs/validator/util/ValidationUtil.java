@@ -51,6 +51,8 @@ public class ValidationUtil {
     @Autowired
     ApplicationContext context;
 
+    @Autowired
+    private AcademicJesValidator academicJesValidator;
 
     @Autowired
     @Lazy
@@ -143,7 +145,7 @@ public class ValidationUtil {
 
     public BindingResult validationJesForm(Application application) {
         DataBinder binder = new DataBinder(application);
-        binder.addValidators(new AcademicJesValidator());
+        binder.addValidators(academicJesValidator);
         binder.validate();
         return binder.getBindingResult();
     }
