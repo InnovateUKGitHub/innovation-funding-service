@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.registration.service;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.registration.form.InternalUserRegistrationForm;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -22,5 +23,10 @@ public class InternalUserServiceImpl implements InternalUserService {
         internalUserRegistrationResource.setFirstName(registrationForm.getFirstName());
         internalUserRegistrationResource.setLastName(registrationForm.getLastName());
         return userRestService.createInternalUser(inviteHash, internalUserRegistrationResource).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> editInternalUser(EditUserResource editUserResource) {
+        return userRestService.editInternalUser(editUserResource).toServiceResult();
     }
 }

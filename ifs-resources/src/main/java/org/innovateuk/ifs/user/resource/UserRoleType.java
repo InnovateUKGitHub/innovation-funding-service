@@ -18,7 +18,7 @@ public enum UserRoleType {
     LEADAPPLICANT("leadapplicant", "Lead Applicant"),
     COMP_ADMIN("comp_admin", "Competition Administrator"),
     COMP_EXEC("competition_executive", "Competition Executive"),
-    COMP_TECHNOLOGIST("competition_technologist", "Competition Technologist"),
+    INNOVATION_LEAD("innovation_lead", "Innovation Lead"),
     SYSTEM_MAINTAINER("system_maintainer", "System Maintainer"),
     SYSTEM_REGISTRATION_USER("system_registrar", "System Registration User"),
     PROJECT_FINANCE("project_finance", "Project Finance"),
@@ -28,7 +28,6 @@ public enum UserRoleType {
     IFS_ADMINISTRATOR("ifs_administrator", "IFS Administrator"),
     SUPPORT("support", "IFS Support User")
     ;
-
     private String name;
     private String displayName;
 
@@ -54,11 +53,20 @@ public enum UserRoleType {
         throw new IllegalArgumentException("No UserRoleType with name " + name);
     }
 
+    public static UserRoleType fromDisplayName(final String displayName){
+        for (final UserRoleType userRoleType : UserRoleType.values()){
+            if (userRoleType.getDisplayName().equals(displayName)){
+                return userRoleType;
+            }
+        }
+        throw new IllegalArgumentException("No UserRoleType with displayName " + displayName);
+    }
+
     public static List<String> roleNames(UserRoleType... roles){
         return Arrays.stream(roles).map(UserRoleType::getName).collect(toList());
     }
 
     public static Set<UserRoleType> internalRoles(){
-        return new HashSet<>(Arrays.asList(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT));
+        return new HashSet<>(Arrays.asList(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD));
     }
 }
