@@ -392,7 +392,7 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
         Application application = applicationFinanceRepository.findOne(applicationFinanceId).getApplication();
         return getOpenApplication(application.getId()).andOnSuccess(app ->
                 getApplicationFinanceById(applicationFinanceId).
-                        andOnSuccess(finance -> fileService.deleteFile(finance.getFinanceFileEntry()).
+                        andOnSuccess(finance -> fileService.deleteFileIgnoreNotFound(finance.getFinanceFileEntry()).
                                 andOnSuccess(() -> removeFileEntryFromApplicationFinance(finance))).
                         andOnSuccessReturnVoid()
         );
