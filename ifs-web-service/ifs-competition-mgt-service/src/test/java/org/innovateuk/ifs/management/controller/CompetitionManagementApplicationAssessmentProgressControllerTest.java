@@ -164,7 +164,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
 
         mockMvc.perform(post("/assessment/competition/{competitionId}/application/{applicationId}/assessors/assign/{assessorId}", competitionId, applicationId, assessorId))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TITLE.name())));
+                .andExpect(redirectedUrl(format("/assessment/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TITLE.name())));
 
         verify(assessmentRestService, only()).createAssessment(expectedAssessmentCreateResource);
         verifyNoMoreInteractions(assessmentRestService, applicationAssessmentSummaryRestService);
@@ -188,7 +188,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         mockMvc.perform(post("/assessment/competition/{competitionId}/application/{applicationId}/assessors/assign/{assessorId}", competitionId, applicationId, assessorId)
                 .param("sortField", TOTAL_APPLICATIONS.name()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TOTAL_APPLICATIONS.name())));
+                .andExpect(redirectedUrl(format("/assessment/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TOTAL_APPLICATIONS.name())));
 
         verify(assessmentRestService, only()).createAssessment(expectedAssessmentCreateResource);
         verifyNoMoreInteractions(assessmentRestService, applicationAssessmentSummaryRestService);
@@ -205,7 +205,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         mockMvc.perform(
                 post("/assessment/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}", competitionId, applicationId, assessmentId))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TITLE.name())));
+                .andExpect(redirectedUrl(format("/assessment/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TITLE.name())));
 
         InOrder inOrder = inOrder(assessmentRestService);
         inOrder.verify(assessmentRestService).withdrawAssessment(assessmentId);
@@ -224,7 +224,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 post("/assessment/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}", competitionId, applicationId, assessmentId)
                         .param("sortField", TOTAL_APPLICATIONS.name()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TOTAL_APPLICATIONS.name())));
+                .andExpect(redirectedUrl(format("/assessment/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TOTAL_APPLICATIONS.name())));
 
         InOrder inOrder = inOrder(assessmentRestService);
         inOrder.verify(assessmentRestService).withdrawAssessment(assessmentId);
