@@ -20,10 +20,7 @@ import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyMap;
@@ -193,9 +190,8 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
 
     @Override
     public ApplicationFinanceRow updateCost(final ApplicationFinanceRow newCostItem) {
-        return find(applicationFinanceRowRepository.findOne(newCostItem.getId()),  notFoundError(ApplicationFinanceRow.class, newCostItem.getId())).andOnSuccess(financeRow ->
-                find(applicationFinanceRowRepository.findByTargetIdAndNameAndQuestionId(financeRow.getTarget().getId(), financeRow.getName(), financeRow.getQuestion().getId()),
-                        notFoundError(ApplicationFinanceRow.class, newCostItem.getId())).andOnSuccess(foundCostItems -> checkAndUpdateCostItem(newCostItem, foundCostItems))).getSuccessObjectOrThrowException();
+        return find(applicationFinanceRowRepository.findOne(newCostItem.getId()),  notFoundError(ApplicationFinanceRow.class, newCostItem.getId()))
+                .andOnSuccess(costItem -> serviceSuccess(applicationFinanceRowRepository.save(newCostItem))).getSuccessObjectOrThrowException();
     }
 
     @Override
@@ -203,14 +199,6 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
         List<ApplicationFinanceRow> financeRows = applicationFinanceRowRepository.findByTargetIdAndNameAndQuestionId(applicationFinanceId, newCostItem.getName(), questionId);
         return checkAndAddCostItem(newCostItem, financeRows).getSuccessObjectOrThrowException();
 
-    }
-
-    private ServiceResult<ApplicationFinanceRow> checkAndUpdateCostItem(final ApplicationFinanceRow newCostItem, List<ApplicationFinanceRow> foundApplicationFinanceRows) {
-        if(foundApplicationFinanceRows.isEmpty() || foundApplicationFinanceRows.size() == 1) {
-            return serviceSuccess(applicationFinanceRowRepository.save(newCostItem));
-        }
-
-        return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
     }
 
     private ServiceResult<ApplicationFinanceRow> checkAndAddCostItem(final ApplicationFinanceRow newCostItem, List<ApplicationFinanceRow> foundApplicationFinanceRows) {
