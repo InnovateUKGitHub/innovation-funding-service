@@ -77,7 +77,7 @@ Summary: Questions should show without score
 Summary:Questions should show as complete
     [Documentation]    INFUND-550
     [Tags]    HappyPath
-    [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/4
+    [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/${IN_ASSESSMENT_COMPETITION}
     Given The user clicks the button/link    link=Intelligent Building
     And the user adds score and feedback for every question
     When the user clicks the button/link    link=Review and complete your assessment
@@ -301,57 +301,57 @@ the user adds score and feedback for every question
     The user clicks the button/link    jQuery=label:contains(Yes)
     The user enters text to a text field    css=.editor    Testing scope feedback text
     Focus    jQuery=a:contains("Sign out")
-    Wait Until Page Contains Without Screenshots    Saving
+    Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Business opportunity feedback text
     Focus    jQuery=a:contains("Sign out")
-    Wait Until Page Contains Without Screenshots    Saving
+    Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Potential market feedback text
     Focus    jQuery=a:contains("Sign out")
-    Wait Until Page Contains Without Screenshots    Saving
+    Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Project exploitation feedback text
     Focus    jQuery=a:contains("Sign out")
-    Wait Until Page Contains Without Screenshots    Saving
+    Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Economic benefit feedback text
     Focus    jQuery=a:contains("Sign out")
-    Wait Until Page Contains Without Screenshots    Saving
+    Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Technical approach feedback text
     Focus    jQuery=a:contains("Sign out")
-    Wait Until Page Contains Without Screenshots    Saving
+    Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Innovation feedback text
     Focus    jQuery=a:contains("Sign out")
-    Wait Until Page Contains Without Screenshots    Saving
+    Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Risks feedback text
     Focus    jQuery=a:contains("Sign out")
-    Wait Until Page Contains Without Screenshots    Saving
+    Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Project team feedback text
     Focus    jQuery=a:contains("Sign out")
-    Wait Until Page Contains Without Screenshots    Saving
+    Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Funding feedback text
     Focus    jQuery=a:contains("Sign out")
-    Wait Until Page Contains Without Screenshots    Saving
+    Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Adding value feedback text
     Focus    jQuery=a:contains("Sign out")
-    Wait Until Page Contains Without Screenshots    Saving
+    Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button/link    jquery=button:contains("Save and return to assessment overview")
 
 the word count should be correct

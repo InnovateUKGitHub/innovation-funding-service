@@ -306,7 +306,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         formInputLocal.setQuestion(question);
         question.setFormInputs(singletonList(formInputLocal));
 
-        when(fileServiceMock.deleteFile(alreadyExistingFileEntry.getId())).thenReturn(serviceSuccess(alreadyExistingFileEntry));
+        when(fileServiceMock.deleteFileIgnoreNotFound(alreadyExistingFileEntry.getId())).thenReturn(serviceSuccess(alreadyExistingFileEntry));
 
         when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).thenReturn(serviceSuccess(Pair.of(fileFound, alreadyExistingFileEntry)));
 
@@ -516,7 +516,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(456L, 123L)).thenReturn(existingFormInputResponses);
         when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(serviceSuccess(inputStreamSupplier));
         when(formInputResponseRepositoryMock.save(existingFormInputResponse)).thenReturn(unlinkedFormInputFileEntry);
-        when(fileServiceMock.deleteFile(999L)).thenReturn(serviceSuccess(existingFileEntry));
+        when(fileServiceMock.deleteFileIgnoreNotFound(999L)).thenReturn(serviceSuccess(existingFileEntry));
         when(formInputRepositoryMock.findOne(formInputResponseFileEntryResource.getCompoundId().getFormInputId())).thenReturn(formInput);
 
         ServiceResult<FormInputResponse> result =
@@ -536,7 +536,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         //when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
         when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(456L, 123L)).thenReturn(existingFormInputResponses);
         when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(serviceSuccess(inputStreamSupplier));
-        when(fileServiceMock.deleteFile(999L)).thenReturn(serviceFailure(internalServerErrorError()));
+        when(fileServiceMock.deleteFileIgnoreNotFound(999L)).thenReturn(serviceFailure(internalServerErrorError()));
         when(formInputRepositoryMock.findOne(formInputResponseFileEntryResource.getCompoundId().getFormInputId())).thenReturn(formInput);
 
         ServiceResult<FormInputResponse> result =

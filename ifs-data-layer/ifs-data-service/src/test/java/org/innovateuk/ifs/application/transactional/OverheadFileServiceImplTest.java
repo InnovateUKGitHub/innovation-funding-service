@@ -203,13 +203,13 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
         when(financeRowMetaValueRepositoryMock.financeRowIdAndFinanceRowMetaFieldId(overhead.getId(), financeRowMetaField.getId())).thenReturn(financeRowMetaValue);
 
         FileEntry fileEntryToDelete = newFileEntry().build();
-        when(fileServiceMock.deleteFile(fileId)).thenReturn(serviceSuccess(fileEntryToDelete));
+        when(fileServiceMock.deleteFileIgnoreNotFound(fileId)).thenReturn(serviceSuccess(fileEntryToDelete));
 
         ServiceResult<Void> result = service.deleteFileEntry(overheadId);
 
         assertTrue(result.isSuccess());
 
-        verify(fileServiceMock).deleteFile(fileId);
+        verify(fileServiceMock).deleteFileIgnoreNotFound(fileId);
         verify(financeRowMetaValueRepositoryMock).delete(financeRowMetaValue.getId());
     }
 }

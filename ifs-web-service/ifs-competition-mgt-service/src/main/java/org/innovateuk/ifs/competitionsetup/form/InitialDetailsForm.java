@@ -51,7 +51,7 @@ public class InitialDetailsForm extends CompetitionSetupForm {
     private Long competitionTypeId;
 
     @NotNull(message = "{validation.initialdetailsform.leadtechnologistuserid.required}")
-    private Long leadTechnologistUserId;
+    private Long innovationLeadUserId;
 
     private String innovationAreaNamesFormatted;
 
@@ -132,12 +132,12 @@ public class InitialDetailsForm extends CompetitionSetupForm {
         this.competitionTypeId = competitionTypeId;
     }
 
-    public Long getLeadTechnologistUserId() {
-        return leadTechnologistUserId;
+    public Long getInnovationLeadUserId() {
+        return innovationLeadUserId;
     }
 
-    public void setLeadTechnologistUserId(Long leadTechnologistUserId) {
-        this.leadTechnologistUserId = leadTechnologistUserId;
+    public void setInnovationLeadUserId(Long innovationLeadUserId) {
+        this.innovationLeadUserId = innovationLeadUserId;
     }
 
     public String getInnovationAreaNamesFormatted() {

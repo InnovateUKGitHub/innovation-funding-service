@@ -45,8 +45,8 @@ public class AllApplicationsPageModelPopulator {
                 filter.orElse(""),
                 getApplications(applicationSummaryPageResource),
                 new PaginationViewModel(applicationSummaryPageResource, origin),
-                user.hasRole(UserRoleType.SUPPORT) ? "Dashboard" : "Applications",
-                user.hasRole(UserRoleType.SUPPORT) ? "/dashboard/live" : "/competition/" + competitionId + "/applications"
+                user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD) ? "Dashboard" : "Applications",
+                user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD) ? "/dashboard/live" : "/competition/" + competitionId + "/applications"
         );
     }
 
