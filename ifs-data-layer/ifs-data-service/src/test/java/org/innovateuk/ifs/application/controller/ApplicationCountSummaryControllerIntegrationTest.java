@@ -88,7 +88,7 @@ public class ApplicationCountSummaryControllerIntegrationTest extends BaseContro
         assertEquals(0, counts.getNumber());
         assertEquals(1, counts.getTotalPages());
         ApplicationCountSummaryResource summaryResource = counts.getContent().get(0);
-        assertEquals(3, (long) summaryResource.getId());
+        assertEquals(3L, (long) summaryResource.getId());
         assertEquals("Mobile Phone Data for Logistics Analytics", summaryResource.getName());
         assertEquals("Empire Ltd", summaryResource.getLeadOrganisation());
         assertEquals(3, summaryResource.getAssessors());

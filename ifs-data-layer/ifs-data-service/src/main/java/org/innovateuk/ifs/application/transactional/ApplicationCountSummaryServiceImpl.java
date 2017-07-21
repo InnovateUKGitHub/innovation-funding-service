@@ -43,7 +43,10 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
     }};
 
     @Override
-    public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(long competitionId, int pageIndex, int pageSize, Optional<String> filter) {
+    public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(long competitionId,
+                                                                                                          int pageIndex,
+                                                                                                          int pageSize,
+                                                                                                          Optional<String> filter) {
 
         String filterStr = filter.map(String::trim).orElse("");
         Pageable pageable = new PageRequest(pageIndex, pageSize);
@@ -53,11 +56,13 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
     }
 
     @Override
-    public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndInnovationArea(long competitionId,
-                                                                                                                           long assessorId,
-                                                                                                                           int pageIndex,
-                                                                                                                           int pageSize,
-                                                                                                                           Optional<Long> innovationArea, String sortField) {
+    public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndInnovationArea(
+                                                                                        long competitionId,
+                                                                                        long assessorId,
+                                                                                        int pageIndex,
+                                                                                        int pageSize,
+                                                                                        Optional<Long> innovationArea,
+                                                                                        String sortField) {
         Sort sort = getApplicationSummarySortField(sortField);
         Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
 
