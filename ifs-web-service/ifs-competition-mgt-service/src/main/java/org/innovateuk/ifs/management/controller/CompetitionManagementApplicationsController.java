@@ -43,8 +43,8 @@ public class CompetitionManagementApplicationsController {
     private IneligibleApplicationsModelPopulator ineligibleApplicationsModelPopulator;
 
     @GetMapping
-    public String applicationsMenu(Model model, @PathVariable("competitionId") long competitionId) {
-        model.addAttribute("model", applicationsMenuModelPopulator.populateModel(competitionId));
+    public String applicationsMenu(Model model, @PathVariable("competitionId") long competitionId, UserResource user) {
+        model.addAttribute("model", applicationsMenuModelPopulator.populateModel(competitionId, user));
         return "competition/applications-menu";
     }
 
