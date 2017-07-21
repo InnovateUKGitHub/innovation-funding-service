@@ -83,23 +83,6 @@ public class UserManagementController {
         return view(model, "pending", page, size, Objects.toString(request.getQueryString(), ""));
     }
 
-/*    private String view(Model model, String activeTab, int page, int size, String existingQueryString){
-        return userRestService.getActiveInternalUsers(page, size)
-                .andOnSuccessReturn(activeInternalUsers -> userRestService.getInactiveInternalUsers(page, size)
-                        .andOnSuccessReturn(inactiveInternalUsers -> {
-            model.addAttribute("model",
-                    new UserListViewModel(
-                            activeTab,
-                            activeInternalUsers.getContent(),
-                            inactiveInternalUsers.getContent(),
-                            activeInternalUsers.getTotalElements(),
-                            inactiveInternalUsers.getTotalElements(),
-                            new PaginationViewModel(activeInternalUsers, "active?" + existingQueryString) ,
-                            new PaginationViewModel(inactiveInternalUsers, "inactive?" + existingQueryString)));
-            return "admin/users";
-        }).getSuccessObjectOrThrowException()).getSuccessObjectOrThrowException();
-    }*/
-
     private String view(Model model, String activeTab, int page, int size, String existingQueryString){
         return userRestService.getActiveInternalUsers(page, size)
                 .andOnSuccessReturn(activeInternalUsers -> userRestService.getInactiveInternalUsers(page, size)
