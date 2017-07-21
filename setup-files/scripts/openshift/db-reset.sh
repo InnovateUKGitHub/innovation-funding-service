@@ -1,7 +1,6 @@
 #!/bin/bash
 
 set -e
-set -x
 
 PROJECT=$1
 TARGET=$2
@@ -51,11 +50,11 @@ if [[ "$TARGET" == "local" || "$TARGET" == "remote" ]]; then
     export DB_PORT=3306
 
     export LDAP_HOST="ldap"
-    export LDAP_PORT=8389
+    export LDAP_PORT=389
     export LDAP_PASS="default"
     export LDAP_DOMAIN="dc=nodomain"
 
-    export FLYWAY_LOCATIONS="db/migration,db/setup,db/webtest"
+    export FLYWAY_LOCATIONS="filesystem:/flyway/sql/db/migration,filesystem:/flyway/sql/db/setup,filesystem:/flyway/sql/db/webtest"
 fi
 
 injectDBVariables
