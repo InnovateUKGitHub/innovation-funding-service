@@ -64,7 +64,7 @@ Submit flow (complete application)
     Given log in as a different user                        ${submit_test_email}    ${correct_password}
     And the user navigates to the page                      ${SERVER}
     And the user clicks the button/link                     link=${application_name}
-    And the user should see the text in the page            Now the application is complete, you need to review and then submit.
+    And the user should see the text in the element         css=.message-alert  Now the application is complete, you need to review and then submit.
     When the user clicks the button/link                    link=Review and submit
     Then the user should be redirected to the correct page   summary
     And the applicant clicks the submit button and the clicks cancel in the submit modal
