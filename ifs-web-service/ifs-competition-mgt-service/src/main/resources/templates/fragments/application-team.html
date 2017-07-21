@@ -4,7 +4,8 @@
         <th:block th:text="${isLead} ? ${organisation.organisationName} + ' (Lead)' : ${organisation.organisationName}">Organisation name</th:block>
     </h2>
 
-    <h3 class="heading-small" th="${organisation.organisationTypeName}">Research</h3>
+    <h3 class="heading-small">Organisation type</h3>
+    <p th:text="${organisation.organisationTypeName}">ORGANISATION TYPE</p>
 
     <div class="grid-row">
         <div th:if="${organisation.registeredAddress != null && organisation.registeredAddress.getAddress() != null}"
