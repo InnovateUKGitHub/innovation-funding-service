@@ -61,6 +61,7 @@ Your Project costs section is read-only once application is submitted
 Submit flow (complete application)
     [Documentation]    INFUND-205, INFUND-9058, INFUND-1887, INFUND-3107, INFUND-4010, IFS-942
     [Tags]    HappyPath    Email    SmokeTest
+    exit tests
     Given log in as a different user                        ${submit_test_email}    ${correct_password}
     And the user navigates to the page                      ${SERVER}
     And the user clicks the button/link                     link=${application_name}
