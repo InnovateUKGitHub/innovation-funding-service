@@ -79,7 +79,7 @@
                            th:text="${linkTitle}">
                         </a>
                     </li>
-                    <li>
+                    <li th:unless="${model.readOnly}">
                         <a class="disabled" aria-disabled="true"
                            th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL
                             or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).ASSESSOR_FEEDBACK
