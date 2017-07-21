@@ -23,9 +23,11 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "AND (a.applicationProcess.activityState.state IN :states) " +
             "AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
 
-    String INNOVATION_AREA_FILTER = "SELECT a FROM ApplicationStatistics a WHERE a.competition = :compId " +
+    String INNOVATION_AREA_FILTER = "SELECT a FROM ApplicationStatistics a " +
+            "LEFT JOIN ApplicationInnovationAreaLink innovationArea ON innovationArea.application.id = a.id " +
+            "WHERE a.competition = :compId " +
             "AND (a.applicationProcess.activityState.state IN :states) " +
-            "AND (a.applicationProcess.target.innovationArea.category.id = :innovationArea OR :innovationArea IS NULL)" +
+            "AND (innovationArea.category.id = :innovationArea OR :innovationArea IS NULL)" +
             "AND NOT EXISTS (SELECT 'found' FROM Assessment b WHERE b.participant.user.id = :assessorId AND b.target.id = a.id)";
 
     String REJECTED_AND_SUBMITTED_STATES_STRING =
