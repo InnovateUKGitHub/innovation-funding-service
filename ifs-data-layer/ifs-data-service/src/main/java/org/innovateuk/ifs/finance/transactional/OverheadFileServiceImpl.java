@@ -90,7 +90,7 @@ public class OverheadFileServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<Void> deleteMetaValueAndFileByMetaValue(FinanceRowMetaValue metaValue) {
-        return fileService.deleteFile(Long.valueOf(metaValue.getValue())).
+        return fileService.deleteFileIgnoreNotFound(Long.valueOf(metaValue.getValue())).
                 andOnSuccessReturnVoid(() -> financeRowMetaValueRepository.delete(metaValue.getId()));
     }
     private ServiceResult<FileEntryResource> createOrUpdateFileByMetaField(FinanceRow overheadFinanceRow, BasicFileAndContents fileAndContents) {

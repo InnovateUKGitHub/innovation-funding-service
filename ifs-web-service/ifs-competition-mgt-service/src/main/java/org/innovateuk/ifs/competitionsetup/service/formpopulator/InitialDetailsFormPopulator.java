@@ -46,7 +46,7 @@ public class InitialDetailsFormPopulator implements CompetitionSetupFormPopulato
 		Set<Long> innovationAreaCategoryIds = competitionResource.getInnovationAreas();
 		competitionSetupForm.setInnovationAreaCategoryIds(setInnovationAreas(innovationAreaCategoryIds, allInnovationAreas));
 		competitionSetupForm.setInnovationAreaNamesFormatted(getFormattedInnovationAreaNames(innovationAreaCategoryIds, allInnovationAreas));
-		competitionSetupForm.setLeadTechnologistUserId(competitionResource.getLeadTechnologist());
+		competitionSetupForm.setInnovationLeadUserId(competitionResource.getLeadTechnologist());
 
 		if (competitionResource.getStartDate() != null) {
 			competitionSetupForm.setOpeningDateDay(competitionResource.getStartDate().getDayOfMonth());

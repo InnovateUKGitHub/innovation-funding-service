@@ -165,8 +165,8 @@ the user fills in Capital usage
     the user enters text to a text field  css=.form-finances-capital-usage-npv  5000
     the user enters text to a text field  css=.form-finances-capital-usage-residual-value  25
     the user enters text to a text field  css=.form-finances-capital-usage-utilisation   100
-    focus                                 jQuery=.section-total-summary > [data-mirror="#section-total-192"]
-    the user should see the element       jQuery=.section-total-summary > [data-mirror="#section-total-192"]
+    focus                                 jQuery=.section-total-summary > [data-mirror="#section-total-207"]
+    the user should see the element       jQuery=.section-total-summary > [data-mirror="#section-total-207"]
     textfield should contain              css=#capital_usage .form-row:nth-of-type(1) [readonly]  £ 4,975
     the user clicks the button/link       jQuery=button:contains("Capital usage")
 
@@ -323,8 +323,8 @@ the user completes the new account creation
     the user clicks the button/link              jQuery=button:contains("Sign in")
 
 the applicant adds some content and marks this section as complete
-    Focus    css=#form-input-1057 .editor
-    Input Text    css=#form-input-1057 .editor    This is some random text
+    Focus    css=.textarea-wrapped .editor
+    Input Text    css=.textarea-wrapped .editor    This is some random text
     the user clicks the button/link    name=mark_as_complete
     the user should see the element    name=mark_as_incomplete
 

@@ -27,6 +27,7 @@
     <form th:if="${editable}" data-autosave="compSetup" method="POST"
           th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
           th:object="${competitionSetupForm}"
+          novalidate="novalidate"
           data-th-attr="data-competition=${competitionId}"
           data-section="application"
           data-subsection="finance">
@@ -76,6 +77,27 @@
                 </div>
             </fieldset>
         </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('fundingRules')} ? 'form-group-error'">
+            <fieldset class="inline">
+                <legend>
+                    <span class="form-label-bold">Funding rules for this competition</span>
+                    <th:block th:if="${#fields.hasErrors('fundingRules')}">
+                        <span class="error-message"  th:each="err : ${#fields.errors('fundingRules')}" th:text="${err}"></span>
+                    </th:block>
+                </legend>
+                <div class="textarea-wrapped ">
+                    <textarea data-editor="html"
+                              class="form-control"
+                              id="fundingRules"
+                              th:classappend="${#fields.hasErrors('fundingRules')} ? 'form-control-error'"
+                              th:field="${competitionSetupForm.fundingRules}"
+                              required="required"
+                              th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                              ifs:utext="${competitionSetupForm.fundingRules}">
+                    </textarea>
+                </div>
+            </fieldset>
+        </div>
 
 
         <button type="submit" class="button">Save and close</button>
@@ -88,6 +110,8 @@
             <dd class="column-two-thirds" th:text="${competitionSetupForm.fullApplicationFinance ? 'Full application finances' :  'Light finances'}" />
             <dt class="column-third">Include project growth table</dt>
             <dd class="column-two-thirds" th:text="${competitionSetupForm.includeGrowthTable ? 'Yes' :  'No'}" />
+            <dt class="column-full no-margin">Funding rules for this competition</dt>
+            <dd class="column-full wysiwyg-styles" ifs:utext="${competitionSetupForm.fundingRules}" />
         </dl>
         <div class="extra-margin">
             <a class="button" th:unless="${preventEdit}" th:href="@{/competition/setup/{competitionId}/section/application/question/finance/edit(competitionId=${competition.id})}">Edit this question</a>

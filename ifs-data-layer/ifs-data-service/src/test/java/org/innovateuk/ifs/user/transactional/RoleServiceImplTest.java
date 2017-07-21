@@ -26,14 +26,14 @@ public class RoleServiceImplTest extends BaseUnitTestMocksTest {
         Role role = newRole().build();
         RoleResource roleResource = newRoleResource().build();
 
-        when(roleRepositoryMock.findOneByName(LEADAPPLICANT.name())).thenReturn(role);
+        when(roleRepositoryMock.findOneByName(LEADAPPLICANT.getName())).thenReturn(role);
         when(roleMapperMock.mapToResource(same(role))).thenReturn(roleResource);
 
         ServiceResult<RoleResource> result = roleService.findByUserRoleType(LEADAPPLICANT);
         assertTrue(result.isSuccess());
         assertEquals(roleResource, result.getSuccessObject());
 
-        verify(roleRepositoryMock, only()).findOneByName(LEADAPPLICANT.name());
+        verify(roleRepositoryMock, only()).findOneByName(LEADAPPLICANT.getName());
     }
 
 }

@@ -243,7 +243,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             FormInput formInput = formInputRepository.findOne(formInputFileEntryResource.getCompoundId().getFormInputId());
             if (formInput != null) {
                 boolean questionHasMultipleStatuses = questionHasMultipleStatuses(formInput);
-                return fileService.deleteFile(fileEntryId).
+                return fileService.deleteFileIgnoreNotFound(fileEntryId).
                         andOnSuccess(deletedFile -> {
                             if (questionHasMultipleStatuses) {
                                 return getFormInputResponse(formInputFileEntryResource.getCompoundId());

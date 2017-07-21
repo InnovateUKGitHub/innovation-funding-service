@@ -426,23 +426,23 @@ Non lead cannot see the signed GOL
 PM receives an email when the GOL is approved
     [Documentation]    INFUND-6375
     [Tags]    Email    HappyPath
-    Then the user reads his email    ${PS_GOL_APPLICATION_PM_EMAIL}    Grant offer letter approval    Innovate UK has reviewed and accepted the signed grant offer letter you have uploaded for your project.
+    Then the user reads his email    ${PS_GOL_APPLICATION_PM_EMAIL}    Grant offer letter approval    Innovate UK has reviewed and accepted the signed grant offer letter which was uploaded for your project.
 
 Lead finance contact receives an email when the GOL is approved
     [Documentation]    INFUND-6375
     [Tags]    Email    HappyPath
-    Then the user reads his email    ${PS_GOL_APPLICATION_FINANCE_CONTACT_EMAIL}    Grant offer letter approval    Innovate UK has reviewed and accepted the signed grant offer letter you have uploaded for your project.
+    Then the user reads his email    ${PS_GOL_APPLICATION_FINANCE_CONTACT_EMAIL}    Grant offer letter approval    Innovate UK has reviewed and accepted the signed grant offer letter which was uploaded for your project.
 
 
 Industrial finance contact receives an email when the GOL is approved
     [Documentation]    INFUND-6375
     [Tags]    Email    HappyPath
-    Then the user reads his email    ${PS_GOL_APPLICATION_PARTNER_EMAIL}    Grant offer letter approval    Innovate UK has reviewed and accepted the signed grant offer letter you have uploaded for your project.
+    Then the user reads his email    ${PS_GOL_APPLICATION_PARTNER_EMAIL}    Grant offer letter approval    Innovate UK has reviewed and accepted the signed grant offer letter which was uploaded for your project.
 
 Academic finance contact receives an email when the GOL is approved
     [Documentation]    INFUND-6375
     [Tags]    Email    HappyPath
-    Then the user reads his email    ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}    Grant offer letter approval    Innovate UK has reviewed and accepted the signed grant offer letter you have uploaded for your project.
+    Then the user reads his email    ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}    Grant offer letter approval    Innovate UK has reviewed and accepted the signed grant offer letter which was uploaded for your project.
 
 
 *** Keywords ***

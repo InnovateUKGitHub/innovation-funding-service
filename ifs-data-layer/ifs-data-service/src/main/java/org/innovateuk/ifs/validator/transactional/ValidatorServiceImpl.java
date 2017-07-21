@@ -74,11 +74,11 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
     }
 
     @Override
-    public BindingResult validateFormInputResponse(Long applicationId, Long formInputId, Long markedAsCompleteById) {
-        FormInputResponse response = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(applicationId, markedAsCompleteById, formInputId);
+    public BindingResult validateFormInputResponse(Application application, Long formInputId, Long markedAsCompleteById) {
+        FormInputResponse response = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(application.getId(), markedAsCompleteById, formInputId);
         BindingResult result = validationUtil.validateResponse(response, false);
 
-        validateFileUploads(formInputId, response).forEach(objectError -> result.addError(objectError));
+        validateFileUploads(application, formInputId).forEach(objectError -> result.addError(objectError));
 
         return result;
     }
@@ -105,16 +105,12 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
         return projectFinanceRowService.getCostHandler(costItem);
     }
 
-    private List<ObjectError> validateFileUploads(Long formInputId, FormInputResponse response) {
+    private List<ObjectError> validateFileUploads(Application application, Long formInputId) {
         List<ObjectError> errors = new ArrayList<>();
         FormInput formInput = formInputRepository.findOne(formInputId);
 
         if(FormInputType.FINANCE_UPLOAD.equals(formInput.getType()) && isResearchUser()) {
-            if (response == null) {
-                errors.add(new ObjectError("value", "validation.application.jes.upload.required"));
-            } else {
-                errors.addAll(validationUtil.validationJesForm(response).getAllErrors());
-            }
+            errors.addAll(validationUtil.validationJesForm(application).getAllErrors());
         }
 
         return errors;
