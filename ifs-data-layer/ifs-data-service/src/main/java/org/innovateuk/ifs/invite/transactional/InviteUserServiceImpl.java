@@ -20,12 +20,15 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.mapper.RoleMapper;
 import org.innovateuk.ifs.user.repository.RoleRepository;
+import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +43,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -209,4 +213,27 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
         inviteRoleRepository.save(roleInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now()));
         return true;
     }
+
+    @Override
+    public ServiceResult<UserPageResource> findPendingInternalUsers(Pageable pageable) {
+
+        Page<RoleInvite> pagedResult = inviteRoleRepository.findByStatus(InviteStatus.SENT, pageable);
+        List<UserResource> userResources = simpleMap(pagedResult.getContent(), roleInvite -> constructUserResource(roleInvite));
+        return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), userResources, pagedResult.getNumber(), pagedResult.getSize()));
+    }
+
+    private UserResource constructUserResource(RoleInvite roleInvite){
+
+        Role role = roleInvite.getTarget();
+        RoleResource roleResource = roleMapper.mapToResource(role);
+
+        UserResource userResource = new UserResource();
+        // Just setting the first name here as getName contains the full name. This would suffice.
+        userResource.setFirstName(roleInvite.getName());
+        userResource.setEmail(roleInvite.getEmail());
+        userResource.setRoles(Collections.singletonList(roleResource));
+
+        return userResource;
+    }
+
 }
