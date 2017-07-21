@@ -22,27 +22,35 @@
 
     <div class="grid-row">
         <div class="column-half">
-          <dl class="font-xsmall">
-            <dt>Application number:</dt>
-            <dd th:text="${model.currentApplication.id}" />
-            <dt>Competition:</dt>
-            <dd th:text="${model.currentCompetition.name}" />
-            <dt>Funding body:</dt>
-            <dd>Innovate UK</dd>
-            <dt>Application deadline:</dt>
-            <dd>
-              <th:block th:text="${#strings.toLowerCase(#temporals.format(model.currentCompetition.endDate, 'hh:mma '))}" />
-              <th:block th:text="${#temporals.format(model.currentCompetition.endDate, 'EEEE d MMMM yyyy')}" />
-            </dd>
-          </dl>
-          <h2 class="heading-medium no-margin-bottom">Application progress</h2>
-          <div th:include="fragments/elements :: progress-indicator" th:with="percentage=${model.completedQuestionsPercentage},size='medium'" class="extra-margin" />
+            <dl class="font-xsmall">
+                <dt>Application number:</dt>
+                <dd th:text="${model.currentApplication.id}"/>
+                <dt>Competition:</dt>
+                <dd th:text="${model.currentCompetition.name}"/>
+                <dt>Funding body:</dt>
+                <dd>Innovate UK</dd>
+                <dt>Application deadline:</dt>
+                <dd>
+                    <th:block
+                        th:text="${#strings.toLowerCase(#temporals.format(model.currentCompetition.endDate, 'hh:mma '))}"/>
+                    <th:block th:text="${#temporals.format(model.currentCompetition.endDate, 'EEEE d MMMM yyyy')}"/>
+                </dd>
+            </dl>
+            <h2 class="heading-medium no-margin-bottom">Application progress</h2>
+            <div th:include="fragments/elements :: progress-indicator"
+                 th:with="percentage=${model.completedQuestionsPercentage},size='medium'" class="extra-margin"/>
         </div>
         <div class="column-half">
             <ul class="list list-bullet">
                 <li><a th:href="@{/application/{applicationId}/team(applicationId=${model.currentApplication.id})}">view team members and add collaborators</a></li>
                 <li><a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}">view the grant terms and conditions</a></li>
             </ul>
+        </div>
+
+        <div class="column-one">
+            <div class="message-alert" th:if="${model.completedQuestionsPercentage == 100 and !model.currentApplication.submitted}">
+                <p>Now the application is complete, you need to review and then submit.</p>
+            </div>
         </div>
     </div>
 
