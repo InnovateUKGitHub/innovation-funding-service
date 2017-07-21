@@ -6,7 +6,7 @@
 
 </head>
 
-<body class="full-width">
+<body>
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
@@ -15,17 +15,17 @@
 
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Manage assessments'}, ${'/prototypes/5052-manage-assessments'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')})" />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Manage assessment panel'}, ${'/prototypes/IFS-707-manage-assessment-panel'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')})" />
 
     <!-- HARDCODED PROTOTYPE HTML -->
 
-    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Allocate applications'}, ${'competition closed'})" />
+    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'68: Technology inspired, competition closed'}, ${'Assign application to panel'}, ${'competition closed'})" />
 
     <p class="extra-margin">Assign assessors to applications. You will need to confirm assignments before assessors are notified.</p>
 
     <th:block th:insert="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Applications',filterType=false,sortByType=1" />
 
-    <th:block th:insert="prototypes/fragments/manage-applications :: prototype-application-list-table" />
+    <th:block th:insert="prototypes/fragments/manage-applications :: prototype-application-list-table" th:width=""/>
 
     <ul class="pagination">
 
