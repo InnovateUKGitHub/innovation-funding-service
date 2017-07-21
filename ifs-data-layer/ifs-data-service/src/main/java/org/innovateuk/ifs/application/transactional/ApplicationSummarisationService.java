@@ -1,20 +1,19 @@
 package org.innovateuk.ifs.application.transactional;
 
-import java.math.BigDecimal;
-
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.commons.service.ServiceResult;
+import java.math.BigDecimal;
 
 public interface ApplicationSummarisationService {
 
 	@SecuredBySpring(value = "READ", description = "Only those with either comp admin or project finance roles can read total project costs for an application")
-	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
+	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'innovation_lead')")
 	ServiceResult<BigDecimal> getTotalProjectCost(Application application);
 
 	@SecuredBySpring(value = "READ", description = "Only those with either comp admin or project finance roles can read funding sought for an application")
-	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
+	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'innovation_lead')")
 	ServiceResult<BigDecimal> getFundingSought(Application application);
 }
