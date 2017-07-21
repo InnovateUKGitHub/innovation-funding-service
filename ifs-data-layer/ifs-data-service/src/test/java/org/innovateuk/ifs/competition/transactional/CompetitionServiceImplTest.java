@@ -38,6 +38,7 @@ import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResourc
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.SUPPORT;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -404,5 +405,38 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         List<OrganisationTypeResource> response = service.getCompetitionOrganisationTypes(competitionId).getSuccessObjectOrThrowException();
 
         assertEquals(organisationTypeResources, response);
+    }
+
+    @Test
+    public void testTopLevelNavigationLinkIsSetCorrectly() throws Exception {
+        List<Competition> competitions = Lists.newArrayList(new Competition());
+        when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(PublicContentResourceBuilder.newPublicContentResource().build()));
+        when(competitionRepositoryMock.findLive()).thenReturn(competitions);
+
+        List<CompetitionSearchResultItem> response = service.findLiveCompetitions().getSuccessObjectOrThrowException();
+        assertTopLevelFlagForNonSupportUser(competitions, response);
+
+        UserResource userResource = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(SUPPORT).build())).build();
+        User user = newUser().withId(userResource.getId()).withRoles(Sets.newLinkedHashSet(newRole().withType(SUPPORT).build())).build();
+        when(userRepositoryMock.findOne(userResource.getId())).thenReturn(user);
+        setLoggedInUser(userResource);
+        response = service.findLiveCompetitions().getSuccessObjectOrThrowException();
+        assertTopLevelFlagForSupportUser(competitions, response);
+    }
+
+    private void assertTopLevelFlagForNonSupportUser(List<Competition> competitions, List<CompetitionSearchResultItem> searchResults) {
+
+        forEachWithIndex(searchResults, (i, searchResult) -> {
+            Competition c = competitions.get(i);
+            assertEquals("/competition/"+ c.getId(), searchResult.getTopLevelNavigationLink());
+        });
+    }
+
+    private void assertTopLevelFlagForSupportUser(List<Competition> competitions, List<CompetitionSearchResultItem> searchResults) {
+
+        forEachWithIndex(searchResults, (i, searchResult) -> {
+            Competition c = competitions.get(i);
+            assertEquals("/competition/" + c.getId() + "/applications/all", searchResult.getTopLevelNavigationLink());
+        });
     }
 }
