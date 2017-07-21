@@ -18,6 +18,16 @@
     <th:block th:insert="fragments/elements :: general-pagination(pagination=${pagination})" />
 </th:block>
 
+<th:block th:fragment="pending(users, count, pagination)" xmlns:th="http://www.w3.org/1999/html">
+    <h2 class="heading-medium">Pending</h2>
+    <p>
+        <span class="heading-xlarge no-margin" th:text="${count}">10</span>
+        <span class="heading-small">pending internal users</span>
+    </p>
+    <th:block th:insert="fragments/admin-users :: users-table(users=${users})" />
+    <th:block th:insert="fragments/elements :: general-pagination(pagination=${pagination})" />
+</th:block>
+
 <th:block th:fragment="users-table(users)" xmlns:th="http://www.w3.org/1999/html">
     <div class="table-overflow">
         <table>
@@ -31,7 +41,12 @@
             </thead>
             <tbody>
             <tr th:each="user : ${users}">
-                <td><a th:href="${'/management/admin/user/' + user.id}" th:text="${user.name}">Steve Smith</a></td>
+                <th:block th:if="${user.id == null}">
+                    <td><th:block th:text="${user.name}"/></td>
+                </th:block>
+                <th:block th:unless="${user.id == null}">
+                    <td><a th:href="${'/management/admin/user/' + user.id}" th:text="${user.name}">Steve Smith</a></td>
+                </th:block>
                 <td th:text="${user.getRolesString()}">IFS Admin</td>
                 <td><a th:href="${'mailto:' + user.email}" th:text="${user.email}">steve.smith@empire.com</a></td>
                 <td><span class="form-hint"></span></td>
