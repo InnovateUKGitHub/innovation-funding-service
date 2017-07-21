@@ -599,47 +599,27 @@ the project is completed if it is not already complete
     run keyword if  '${project_manager_not_set}' == 'PASS'  all previous sections of the project are completed
 
 all previous sections of the project are completed
-    lead partner selects project manager and address
-    partners submit their finance contacts
+    project lead submits project details        ${PROJECT_SETUP_APPLICATION_1_PROJECT}
+    all partners submit their finance contacts
     project finance submits monitoring officer  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  Grace  Harper  ${test_mailbox_two}+monitoringofficer@gmail.com  08549731414
 
-lead partner selects project manager and address
-    log in as a different user           &{lead_applicant_credentials}
-    the user navigates to the page       ${project_in_setup_details_page}
-    the user clicks the button/link      link=Project Manager
-    the user selects the radio button    projectManager    projectManager2
-    the user clicks the button/link      jQuery=.button:contains("Save")
-    the user clicks the button/link      link=Project address
-    the user selects the radio button    addressType    REGISTERED
-    the user clicks the button/link      jQuery=.button:contains("Save project address")
-    the user clicks the button/link      jQuery=.button:contains("Mark as complete")
-    the user clicks the button/link      jQuery=button:contains("Submit")
-
-partners submit their finance contacts
-    navigate to external finance contact page, choose finance contact and save  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}  financeContact1
-    log in as a different user         &{collaborator1_credentials}
-    navigate to external finance contact page, choose finance contact and save  ${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}  financeContact1
-    log in as a different user         &{collaborator2_credentials}
-    navigate to external finance contact page, choose finance contact and save  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}  financeContact1
-
-navigate to external finance contact page, choose finance contact and save
-    [Arguments]  ${org_id}   ${financeContactSelector}
-    the user navigates to the page     ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/finance-contact?organisation=${org_id}
-    the user selects the radio button  financeContact  ${financeContactSelector}
-    the user clicks the button/link    jQuery=.button:contains("Save")
+all partners submit their finance contacts
+    the partner submits their finance contact  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  &{lead_applicant_credentials}
+    the partner submits their finance contact  ${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  &{collaborator1_credentials}
+    the partner submits their finance contact  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  &{collaborator2_credentials}
 
 the user uploads to the collaboration agreement question
-    [Arguments]    ${file_name}
-    choose file    name=collaborationAgreement    ${upload_folder}/${file_name}
+    [Arguments]  ${file_name}
+    choose file  name=collaborationAgreement  ${upload_folder}/${file_name}
 
 the user uploads to the exploitation plan question
-    [Arguments]    ${file_name}
-    choose file    name=exploitationPlan    ${upload_folder}/${file_name}
+    [Arguments]  ${file_name}
+    choose file  name=exploitationPlan  ${upload_folder}/${file_name}
 
 the user should see the file without error
     the user should not see an error in the page
     the user goes back to the previous page
 
 partners submit bank details
-    partner submits his bank details   ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
-    partner submits his bank details   ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
+    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
+    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
