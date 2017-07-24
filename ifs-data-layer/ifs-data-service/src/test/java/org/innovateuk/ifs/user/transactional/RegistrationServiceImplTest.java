@@ -7,14 +7,20 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.authentication.service.RestIdentityProviderService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationSource;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.profile.domain.Profile;
+import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.resource.TokenType;
+import org.innovateuk.ifs.user.builder.RoleBuilder;
+import org.innovateuk.ifs.user.builder.RoleResourceBuilder;
+import org.innovateuk.ifs.user.builder.UserBuilder;
+import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.*;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
@@ -40,17 +46,22 @@ import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddre
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOT_AN_INTERNAL_USER_ROLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.invite.builder.RoleInviteBuilder.newRoleInvite;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
+import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.CompAdminEmailBuilder.newCompAdminEmail;
 import static org.innovateuk.ifs.user.builder.EthnicityBuilder.newEthnicity;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.ProjectFinanceEmailBuilder.newProjectFinanceEmail;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Disability.NO;
@@ -60,6 +71,7 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -71,6 +83,16 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 public class RegistrationServiceImplTest extends BaseServiceUnitTest<RegistrationServiceImpl> {
 
     private static final String webBaseUrl = "http://ifs-local-dev";
+
+    private UserResource userToEdit;
+
+    private UserResource userResourceInDB;
+
+    private User userInDB;
+
+    private RoleResource roleResource;
+
+    private Role role;
 
     @Mock
     private StandardPasswordEncoder standardPasswordEncoder;
@@ -570,5 +592,113 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         final ServiceResult<Void> result = service.resendUserVerificationEmail(userResource);
         assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testCreateInternalUser() throws Exception {
+        RoleInvite roleInvite = newRoleInvite().withRole(newRole().withType(UserRoleType.PROJECT_FINANCE)).build();
+        Set<Role> roles = newRole().withType(UserRoleType.PROJECT_FINANCE).buildSet(1);
+        List<RoleResource> roleResources = newRoleResource().withId(roles.iterator().next().getId()).withType(UserRoleType.PROJECT_FINANCE).build(1);
+        InternalUserRegistrationResource internalUserRegistrationResource = newInternalUserRegistrationResource()
+                .withFirstName("First")
+                .withLastName("Last")
+                .withEmail("email@example.com")
+                .withPassword("Passw0rd123")
+                .withRoles(roleResources)
+                .build();
+
+        UserResource userResource = internalUserRegistrationResource.toUserResource();
+
+        User userToCreate = newUser()
+                .withId((Long) null)
+                .withFirstName("First")
+                .withLastName("Last")
+                .withEmailAddress("email@example.com")
+                .withRoles(roles)
+                .build();
+
+        when(inviteRoleRepositoryMock.getByHash("SomeInviteHash")).thenReturn(roleInvite);
+        when(roleServiceMock.findByUserRoleType(UserRoleType.PROJECT_FINANCE)).thenReturn(serviceSuccess(roleResources.get(0)));
+        when(passwordPolicyValidatorMock.validatePassword(anyString(), any(UserResource.class))).thenReturn(serviceSuccess());
+        when(idpServiceMock.createUserRecordWithUid("email@example.com", "Passw0rd123")).thenReturn(serviceSuccess("new-uid"));
+        when(profileRepositoryMock.save(any(Profile.class))).thenReturn(newProfile().build());
+        when(userMapperMock.mapToDomain(any(UserResource.class))).thenReturn(userToCreate);
+        when(idpServiceMock.activateUser("new-uid")).thenReturn(serviceSuccess("new-uid"));
+        when(userRepositoryMock.save(any(User.class))).thenReturn(userToCreate);
+        ServiceResult<Void> result = service.createInternalUser("SomeInviteHash", internalUserRegistrationResource);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void editInternalUserWhenNewRoleIsNotInternalRole() {
+
+        UserResource userToEdit = UserResourceBuilder.newUserResource().build();
+
+        ServiceResult<Void> result = service.editInternalUser(userToEdit, UserRoleType.COLLABORATOR);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(NOT_AN_INTERNAL_USER_ROLE));
+
+    }
+
+    @Test
+    public void editInternalUserWhenUserDoesNotExist() {
+
+        UserResource userToEdit = UserResourceBuilder.newUserResource().build();
+
+        when(baseUserServiceMock.getUserById(userToEdit.getId())).thenReturn(serviceFailure(notFoundError(User.class, userToEdit.getId())));
+
+        ServiceResult<Void> result = service.editInternalUser(userToEdit, UserRoleType.SUPPORT);
+
+        assertTrue(result.isFailure());
+        assertEquals(GENERAL_NOT_FOUND.getErrorKey(), result.getErrors().get(0).getErrorKey());
+
+    }
+
+    @Test
+    public void editInternalUserSuccess() {
+
+        setUpUsersForEditInternalUserSuccess();
+
+        UserRoleType newRole = UserRoleType.SUPPORT;
+
+        when(baseUserServiceMock.getUserById(userToEdit.getId())).thenReturn(serviceSuccess(userResourceInDB));
+        when(roleServiceMock.findByUserRoleType(newRole)).thenReturn(serviceSuccess(roleResource));
+        when(roleMapperMock.mapToDomain(roleResource)).thenReturn(role);
+        when(userMapperMock.mapToDomain(userResourceInDB)).thenReturn(userInDB);
+
+        ServiceResult<Void> result = service.editInternalUser(userToEdit, newRole);
+
+        assertTrue(result.isSuccess());
+        verify(userRepositoryMock).save(userInDB);
+        assertTrue(userInDB.getRoles().stream().anyMatch(role1 -> role1.equals(role)));
+        assertEquals(userInDB.getFirstName(), userToEdit.getFirstName());
+        assertEquals(userInDB.getLastName(), userToEdit.getLastName());
+
+    }
+
+    private void setUpUsersForEditInternalUserSuccess() {
+
+        userToEdit = UserResourceBuilder.newUserResource()
+                .withFirstName("Johnathan")
+                .withLastName("Dow")
+                .build();
+
+        userResourceInDB = UserResourceBuilder.newUserResource()
+                .withFirstName("John")
+                .withLastName("Doe")
+                .build();
+
+        userInDB = UserBuilder.newUser()
+                .withFirstName("John")
+                .withLastName("Doe")
+                .build();
+
+        roleResource = RoleResourceBuilder.newRoleResource()
+                .withName("support")
+                .build();
+        role = RoleBuilder.newRole()
+                .withName("support")
+                .build();
     }
 }

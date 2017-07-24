@@ -15,7 +15,7 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.*;
  * Role defines database relations and a model to use client side and server side.
  */
 @Entity
-public class Role {
+public class Role implements ProcessActivity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

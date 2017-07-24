@@ -257,7 +257,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
                 .withRolesGlobal(
                         Collections.singletonList(
                                 newRoleResource()
-                                        .withType(UserRoleType.COMP_TECHNOLOGIST)
+                                        .withType(UserRoleType.INNOVATION_LEAD)
                                         .build()))
                 .withEmail("a@b.c")
                 .withFirstName("A")

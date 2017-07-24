@@ -521,6 +521,17 @@ include::{snippets}/project/set-credit-report/http-response.adoc[]
 ===== Curl Example
 include::{snippets}/project/set-credit-report/curl-request.adoc[]
 
+=== Save User Invite
+==== Success
+===== Request
+include::{snippets}/inviteUser/saveInvite/save-user-invite/http-request.adoc[]
+include::{snippets}/inviteUser/saveInvite/save-user-invite/request-fields.adoc[]
+
+===== Response
+include::{snippets}/inviteUser/saveInvite/save-user-invite/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/inviteUser/saveInvite/save-user-invite/curl-request.adoc[]
 
 === Get Project Team Status
 ==== Success

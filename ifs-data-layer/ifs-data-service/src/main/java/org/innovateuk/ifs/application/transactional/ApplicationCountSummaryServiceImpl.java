@@ -27,12 +27,6 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
     private ApplicationCountSummaryPageMapper applicationCountSummaryPageMapper;
 
     @Autowired
-    private ApplicationRepository applicationRepository;
-
-    @Autowired
-    private OrganisationRepository processRoleRepository;
-
-    @Autowired
     private ApplicationStatisticsRepository applicationStatisticsRepository;
 
     @Override

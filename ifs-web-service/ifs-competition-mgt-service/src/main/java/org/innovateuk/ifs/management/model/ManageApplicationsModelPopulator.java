@@ -17,7 +17,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * Build the model for the Manage applications page
  */
 @Component
-public class ManageApplicationsModelPopulator {
+public class ManageApplicationsModelPopulator extends BaseManageAssessmentsModelPopulator<ApplicationCountSummaryResource, ApplicationCountSummaryPageResource, ManageApplicationsViewModel> {
 
     public ManageApplicationsViewModel populateModel(CompetitionResource competition, ApplicationCountSummaryPageResource applicationCounts, String filter, String origin) {
         ManageApplicationsViewModel model = new ManageApplicationsViewModel(

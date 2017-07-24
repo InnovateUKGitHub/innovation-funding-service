@@ -26,6 +26,6 @@ Assessors shouldn't see the closed competition
 *** Keywords ***
 Custom Suite Teardown
     Connect to Database  @{database}
-    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE type='ASSESSMENT_CLOSED' AND competition_id=4;
+    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE type='ASSESSMENT_CLOSED' AND competition_id=${competition_ids['${IN_ASSESSMENT_COMPETITION_NAME}']};
     #Changed the status of the competition to "In Assessment" for the rest of the tests
     the user closes the browser
