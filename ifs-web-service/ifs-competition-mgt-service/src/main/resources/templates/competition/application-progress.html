@@ -85,8 +85,8 @@
                                    th:href="${removeActionNonJs}"
                                    th:attr="data-modal-form-action=${removeAction}"
                                    th:with="
-                                   removeAction=@{/competition/{cId}/application/{apId}/assessors/withdraw/{asId}(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},filterInnovationArea=${model.filterInnovationArea})},
-                                   removeActionNonJs=@{/competition/{cId}/application/{apId}/assessors/withdraw/{asId}/confirm(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},filterInnovationArea=${model.filterInnovationArea})}"
+                                   removeAction=@{/assessment/competition/{cId}/application/{apId}/assessors/withdraw/{asId}(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},filterInnovationArea=${model.filterInnovationArea})},
+                                   removeActionNonJs=@{/assessment/competition/{cId}/application/{apId}/assessors/withdraw/{asId}/confirm(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},filterInnovationArea=${model.filterInnovationArea})}"
                                    th:unless="${assessor.submitted}">Remove</a>
                             </td>
                         </tr>
@@ -152,7 +152,7 @@
                             <td class="numeric" th:text="${assessor.assignedCount}">4</td>
                             <td>
                                 <form method="post"
-                                      th:action="@{/competition/{cid}/application/{appId}/assessors/assign/{assId}(cid=${model.competitionId}, appId=${model.applicationId}, assId=${assessor.id})}">
+                                      th:action="@{/assessment/competition/{cid}/application/{appId}/assessors/assign/{assId}(cid=${model.competitionId}, appId=${model.applicationId}, assId=${assessor.id})}">
                                     <button type="submit" class="button-secondary no-margin">Reassign</button>
                                 </form>
                             </td>
@@ -248,7 +248,7 @@
                             <td class="numeric" th:text="${assessor.submittedApplications}">1</td>
                             <td>
                                 <form method="post"
-                                      th:action="@{/competition/{cid}/application/{appId}/assessors/assign/{assId}(cid=${model.competitionId}, appId=${model.applicationId}, assId=${assessor.id}, filterInnovationArea=${model.filterInnovationArea})}">
+                                      th:action="@{/assessment/competition/{cid}/application/{appId}/assessors/assign/{assId}(cid=${model.competitionId}, appId=${model.applicationId}, assId=${assessor.id}, filterInnovationArea=${model.filterInnovationArea})}">
                                     <button type="submit" class="button-secondary no-margin">Assign</button>
                                 </form>
                             </td>
