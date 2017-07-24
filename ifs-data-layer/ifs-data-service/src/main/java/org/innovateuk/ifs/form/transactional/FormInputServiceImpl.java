@@ -96,24 +96,26 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
     @Override
     @Transactional
     public ServiceResult<FormInputResponse> saveQuestionResponse(FormInputResponseCommand formInputResponseCommand) {
-        long applicationId = formInputResponseCommand.getApplicationId();
-        long formInputId = formInputResponseCommand.getFormInputId();
+        Long applicationId = formInputResponseCommand.getApplicationId();
+        Long formInputId = formInputResponseCommand.getFormInputId();
         String htmlUnescapedValue = formInputResponseCommand.getValue();
-        long userId = formInputResponseCommand.getUserId();
+        Long userId = formInputResponseCommand.getUserId();
         ProcessRole userAppRole = processRoleRepository.findByUserIdAndApplicationId(userId, applicationId);
+
         return find(user(userId), formInput(formInputId), openApplication(applicationId)).
                 andOnSuccess((user, formInput, application) ->
-                getOrCreateResponse(application, formInput, userAppRole).andOnSuccessReturn(response -> {
-                    if (!response.getValue().equals(htmlUnescapedValue)) {
-                        response.setUpdateDate(ZonedDateTime.now());
-                        response.setUpdatedBy(userAppRole);
-                    }
-                    response.setValue(htmlUnescapedValue);
-                    application.addFormInputResponse(response, userAppRole);
-                    applicationRepository.save(application);
-                    return response;
-                })
-            );
+                        getOrCreateResponse(application, formInput, userAppRole).andOnSuccessReturn(response -> {
+                            if (!response.getValue().equals(htmlUnescapedValue)) {
+                                response.setUpdateDate(ZonedDateTime.now());
+                                response.setUpdatedBy(userAppRole);
+                            }
+                            response.setValue(htmlUnescapedValue);
+                            application.addFormInputResponse(response, userAppRole);
+                            applicationRepository.save(application);
+                            formInputResponseRepository.save(response);
+                            return response;
+                        })
+                );
     }
 
     @Override
@@ -131,7 +133,7 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
 
     private ServiceResult<FormInputResponse> getOrCreateResponse(Application application, FormInput formInput, ProcessRole userAppRole) {
 
-    	Optional<FormInputResponse> existingResponse = application.getFormInputResponseByFormInputAndProcessRole(formInput, userAppRole);
+        Optional<FormInputResponse> existingResponse = application.getFormInputResponseByFormInputAndProcessRole(formInput, userAppRole);
 
         return existingResponse != null && existingResponse.isPresent() ?
                 serviceSuccess(existingResponse.get()) :
