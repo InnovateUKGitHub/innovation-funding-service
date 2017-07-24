@@ -1258,6 +1258,200 @@
 
 </div>
 
+<!-- =========================== Application list table =========================== -->
+<div th:fragment="prototype-application-list-table">
+
+    <div class="grid-row sorting" th:unless="${type=='assigned' or type=='reviewPermissions'}">
+        <div class="column-two-thirds">
+            <h2>
+                <span class="heading-xlarge">20</span>
+                <span class="heading-small">Applications</span>
+            </h2>
+        </div>
+        <div class="column-third alignright">
+            <label for="sort-by">Sort by</label>
+            <select name="sort-by" id="sort-by" class="form-control width-large">
+                <option value="Application no.">Application number</option>
+                <option value="Project title">Title</option>
+                <option value="Area">Innovation area</option>
+                <option value="Lead">Lead organisation</option>
+                <option value="Assessors">Assessors</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="table-overflow">
+        <table id="application-list">
+            <thead>
+            <tr>
+                <th:block th:if="${type == 'reviewPermissions'}">
+                    <th scope="col" class="width-small">Visible to assessor</th>
+                    <th scope="col" class="width-small">COI declared</th>
+                </th:block>
+
+                <th scope="col" class="width-samll">Application number</th>
+                <th scope="col">Title</th>
+                <th scope="col" class="width-medium">Innovation area</th>
+                <th scope="col" class="width-medium">Lead organisation</th>
+
+                <th:block th:unless="${type == 'reviewPermissions'}">
+                    <th scope="col" class="numeric width-small">Assessors</th>
+                    <th scope="col" class="width-small"><span class="visuallyhidden">Assign</span></th>
+                </th:block>
+
+            </tr>
+            </thead>
+            <tbody th:if="${type == 'assigned'}">
+            <tr id="no-applications">
+                <td colspan="6" class="aligncentre"><span class="heading-small">There are currently no assessors assigned to the application</span></td>
+            </tr>
+            <tr id="application-assigned">
+                <td><a href="#">5602</a></td>
+                <td>Mobility problems and the potential for internet enabled zimmer frame</td>
+                <td>Information &amp; communications technology (ICT)</td>
+                <td>Plymouth University</td>
+                <td class="numeric">1</td>
+                <td>
+                    <a href="#" class="button-secondary no-margin" id="remove-application">Remove</a>
+                </td>
+            </tr>
+            </tbody>
+            <tbody th:unless="${type=='assigned'}">
+                <tr id="application-available">
+                    <th:block th:if="${type == 'reviewPermissions'}">
+                        <td>
+                            <div class="multiple-choice">
+                                <input type="checkbox" id="assessor-row-1" value="view" name="selectedApplication" checked="checked">
+                                <label for="assessor-row-1">
+                                    <span class="invisible">View</span>
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            No
+                        </td>
+                    </th:block>
+                    <td><a th:href="${(status == 'removed' ? '/prototypes/1968-admin-readonly-application?status=removed' : '/prototypes/1968-admin-readonly-application?comp=Closed')}">10001</a></td>
+                    <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
+                    <td>Information &amp; communications technology (ICT)</td>
+                    <td>Wessex University</td>
+
+                    <th:block th:unless="${type == 'reviewPermissions'}">
+                        <td class="numeric">1</td>
+                        <td>
+                            <a href="#" class="button-secondary no-margin" id="assign-application">Assign</a>
+                        </td>
+                    </th:block>
+                </tr>
+                <tr>
+                    <th:block th:if="${type == 'reviewPermissions'}">
+                        <td>
+                            <div class="multiple-choice">
+                                <input type="checkbox" id="assessor-row-2" value="view" name="selectedApplication">
+                                <label for="assessor-row-1">
+                                    <span class="invisible">View</span>
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            Yes
+                        </td>
+                    </th:block>
+                    <td><a href="#">5602</a></td>
+                    <td>Mobility problems and the potential for internet enabled zimmer frame</td>
+                    <td>Information &amp; communications technology (ICT)</td>
+                    <td>Plymouth University</td>
+
+                    <th:block th:unless="${type == 'reviewPermissions'}">
+                        <td class="numeric">1</td>
+                        <td>
+                            <a href="#" class="button-secondary no-margin">Assign</a>
+                        </td>
+                    </th:block>
+
+                </tr>
+                <tr>
+                    <th:block th:if="${type == 'reviewPermissions'}">
+                        <td>
+                            <div class="multiple-choice">
+                                <input type="checkbox" id="assessor-row-3" value="view" name="selectedApplication" checked="checked">
+                                <label for="assessor-row-1">
+                                    <span class="invisible">View</span>
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            No
+                        </td>
+                    </th:block>
+                    <td><a href="#">4568</a></td>
+                    <td>Modifying internal domestic plumbing systems to enhance fire prevention in the home</td>
+                    <td>Information &amp; communications technology (ICT)</td>
+                    <td>Horizon Ltd</td>
+                    <th:block th:unless="${type == 'reviewPermissions'}">
+                        <td class="numeric">0</td>
+                        <td>
+                            <a href="#" class="button-secondary no-margin">Assign</a>
+                        </td>
+                    </th:block>
+                </tr>
+                <tr>
+                    <th:block th:if="${type == 'reviewPermissions'}">
+                        <td>
+                            <div class="multiple-choice">
+                                <input type="checkbox" id="assessor-row-4" value="view" name="selectedApplication" checked="checked">
+                                <label for="assessor-row-1">
+                                    <span class="invisible">View</span>
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            No
+                        </td>
+                    </th:block>
+                    <td><a href="#">125</a></td>
+                    <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
+                    <td>Information &amp; communications technology (ICT)</td>
+                    <td>Zodiac Industries Ltd</td>
+                    <th:block th:unless="${type == 'reviewPermissions'}">
+                        <td class="numeric">5</td>
+                        <td>
+                            <a href="#" class="button-secondary no-margin">Assign</a>
+                        </td>
+                    </th:block>
+
+                </tr>
+                <tr>
+                    <th:block th:if="${type == 'reviewPermissions'}">
+                        <td>
+                            <div class="multiple-choice">
+                                <input type="checkbox" id="assessor-row-5" value="view" name="selectedApplication">
+                                <label for="assessor-row-1">
+                                    <span class="invisible">View</span>
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            Yes
+                        </td>
+                    </th:block>
+                    <td><a href="#">4587</a></td>
+                    <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
+                    <td>Information &amp; communications technology (ICT)</td>
+                    <td>Durham University</td>
+                    <th:block th:unless="${type == 'reviewPermissions'}">
+                        <td class="numeric">1</td>
+                        <td>
+                            <a href="/prototypes/5386-assign-application" class="button-secondary no-margin">Assign</a>
+                        </td>
+                    </th:block>
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
 
 
 

@@ -19,13 +19,31 @@
 
     <!-- HARDCODED PROTOTYPE HTML -->
 
-    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'68: Technology inspired, competition closed'}, ${'Assign application to panel'}, ${'competition closed'})" />
+    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'68: Technology inspired'}, ${'Assign application to panel'}, ${'competition closed'})" />
 
-    <p class="extra-margin">Assign assessors to applications. You will need to confirm assignments before assessors are notified.</p>
+    <h2 class="heading-medium">Assign applications to panel</h2>
 
-    <th:block th:insert="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Applications',filterType=false,sortByType=1" />
+    <th:block th:insert="prototypes/fragments/manage-assessment-panel :: prototype-application-list-table" th:with="type='assigned'"/>
 
-    <th:block th:insert="prototypes/fragments/manage-applications :: prototype-application-list-table" th:width=""/>
+    <h2 class="heading-medium">Available applications</h2>
+
+    <div class="search-filters">
+        <fieldset>
+            <legend class="visuallyhidden">Filter applications</legend>
+            <div class="grid-row">
+                <div class="column-two-thirds">
+                    <label class="form-label" for="filterSearch">Application number</label>
+                    <input class="form-control extra-margin-bottom" id="filterSearch" name="filterSearch" value="" type="text">
+                    <a href="?sort=">Clear all filters</a>
+                </div>
+                <div class="column-third">
+                    <button class="button">Filter</button>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <th:block th:insert="prototypes/fragments/manage-assessment-panel :: prototype-application-list-table" th:with="type='available'"/>
 
     <ul class="pagination">
 
@@ -61,5 +79,24 @@
 <th:block th:insert="fragments/layout :: body-end" />
 <script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
 <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script type="text/javascript">
+	// <![CDATA[
+	$(document).ready(function() {
+
+	    $('#application-assigned').hide();
+
+		$('#assign-application').on('click', function(event) {
+			event.preventDefault();
+			$('#application-assigned').show();
+			$('#application-available, #no-applications').hide();
+		});
+		$('#remove-application').on('click', function(event) {
+			event.preventDefault();
+			$('#application-assigned').hide();
+			$('#application-available, #no-applications').show();
+		});
+	});
+	// ]]>
+</script>
 </body>
 </html>
