@@ -103,7 +103,7 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
             researchParticipation = researchCosts.divide(totalCosts, 6, BigDecimal.ROUND_HALF_UP);
         }
         researchParticipation = researchParticipation.multiply(BigDecimal.valueOf(100));
-        return researchParticipation.setScale(2, BigDecimal.ROUND_HALF_UP);
+        return researchParticipation.setScale(2, BigDecimal.ROUND_CEILING);
     }
 
     private void setApplicationFinanceDetails(ApplicationFinanceResource applicationFinanceResource) {
