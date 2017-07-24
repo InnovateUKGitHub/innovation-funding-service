@@ -22,8 +22,6 @@ Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
 Resource          ../../10__Project_setup/PS_Common.robot
 
-*** Variables ***
-
 *** Test Cases ***
 Submit button disabled when application is incomplete
     [Documentation]    INFUND-927
@@ -57,23 +55,17 @@ Your Project costs section is read-only once application is submitted
     then the user should not see the element    css=input
 
 Submit flow (complete application)
-    [Documentation]    INFUND-205  INFUND-9058
-    ...
-    ...    INFUND-1887
-    ...
-    ...    INFUND-3107
-    ...
-    ...    INFUND-4010
-    [Tags]    HappyPath    Email    SmokeTest
-    Given log in as a different user                        ${submit_test_email}    ${correct_password}
+    [Documentation]  INFUND-205 INFUND-9058 INFUND-1887 INFUND-3107 INFUND-4010
+    [Tags]  HappyPath  Email  SmokeTest
+    Given log in as a different user                        ${submit_test_email}  ${correct_password}
     And the user navigates to the page                      ${SERVER}
     And the user clicks the button/link                     link=${application_name}
     When the user clicks the button/link                    link=Review and submit
-    Then the user should be redirected to the correct page   summary
+    Then the user should be redirected to the correct page  summary
     And the applicant clicks the submit button and the clicks cancel in the submit modal
     And the applicant clicks the submit and then clicks the "close button" in the modal
     And the applicant clicks Yes in the submit modal
-    Then the user should be redirected to the correct page   submit
+    Then the user should be redirected to the correct page  submit
     And the user should see the text in the page            Application submitted
     And The user should see the element                     link=Finished
     # TODO add check here once INFUND-9195 done
