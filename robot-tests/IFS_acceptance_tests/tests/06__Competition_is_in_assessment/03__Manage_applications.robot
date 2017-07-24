@@ -24,6 +24,7 @@ Resource          ../../resources/defaultResources.robot
 *** Variables ***
 ${Molecular_id}        ${application_ids['Molecular tree breeding']}
 ${Virtual_Reality_id}  ${application_ids['Living with Virtual Reality']}
+${Paul_Plum_id}        161
 
 *** Test Cases ***
 View the list of the applications
@@ -65,10 +66,10 @@ View assessor progress page
 Accepting the application changes the Accepted column
     [Documentation]  IFS-321
     [Tags]
-    [Setup]  Log in as a different user  &{assessor_credentials}
+    [Setup]  Log in as a different user   &{assessor_credentials}
     Given the user accepts the application
-    And Log in as a different user  &{Comp_admin1_credentials}
-    When the user navigates to the page  https://ifs.local-dev/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}/assessors/161
+    And Log in as a different user        &{Comp_admin1_credentials}
+    When the user navigates to the page   ${server}/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}/assessors/${Paul_Plum_id}
     Then the user should see the element  jQuery=td:contains("${Molecular_id}") ~ td:contains("Yes") + td:contains("Yes")
 
 Filtering of the applications
