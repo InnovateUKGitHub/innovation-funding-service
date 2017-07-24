@@ -13,16 +13,16 @@ Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
 View and edit profile link is visible in the Dashboard page
-    [Documentation]    INFUND-1042  IFS-951
+    [Documentation]    INFUND-1042
     [Tags]    HappyPath
     When the user navigates to the page   ${DASHBOARD_URL}
     Then the user should see the element  link=Profile
-    And the user should see the element   jQuery=h3:contains("Organisation type")+p:contains("Business")
 
 View and edit profile link redirects to the Your profile page
-    [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
+    [Documentation]    INFUND-1042  IFS-951
     [Tags]    HappyPath
     When the user clicks the button/link  link=Profile
+    And the user should see the element   jQuery=h3:contains("Organisation type")+p:contains("Business")
     Then the user should see the element  link=Edit your details
 
 Edit the profile and verify if the changes are saved
