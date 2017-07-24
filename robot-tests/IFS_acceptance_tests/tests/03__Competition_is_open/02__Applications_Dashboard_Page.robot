@@ -84,7 +84,7 @@ Application has team link and team details
     And the user should see the text in the page  ${OPEN_COMPETITION_APPLICATION_NAME}
     When the user clicks the button/link  link=view application team details
     Then the user should see the text in the page  Application team
-    And the user should see the text in the page  View application participants for both the lead and collaborating organisations.
+    And the user should see the text in the page  View team members for both the lead and collaborating organisations.
     And the user should see the element    jQuery=h2:nth-of-type(1):contains("${EMPIRE_LTD_NAME} (Lead)")+h3:contains("Organisation type")+p:contains("Business")
     And the user should see the element    jQuery=div#applicationTeamOrganisationRegisteredAddress0 span:nth-of-type(1):contains("1")
     And the user should see the element    jQuery=div#applicationTeamOrganisationRegisteredAddress0 span:nth-of-type(2):contains("Empire Road")
