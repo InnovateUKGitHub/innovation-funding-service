@@ -48,7 +48,7 @@
         </div>
 
         <div class="column-one extra-margin-bottom">
-            <div class="message-alert" th:if="${model.completedQuestionsPercentage == 100 and !model.currentApplication.submitted}">
+            <div class="message-alert" th:if="${model.completedQuestionsPercentage == 100 and !model.currentApplication.submitted and model.user.userIsLeadApplicant}">
                 <p>Now your application is complete, you need to review and then submit.</p>
             </div>
         </div>
