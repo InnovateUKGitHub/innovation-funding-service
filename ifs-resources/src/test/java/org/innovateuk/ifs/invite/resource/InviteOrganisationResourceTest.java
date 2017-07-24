@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.invite.builder.InviteResourceBuilder.newInviteResource;
+import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 
 public class InviteOrganisationResourceTest {
@@ -25,7 +25,7 @@ public class InviteOrganisationResourceTest {
         name = "organisationTestName";
         type = "organisationTypeName";
         organisation = newOrganisationResource().build();
-        invites = newInviteResource().build(5);
+        invites = newApplicationInviteResource().build(5);
         id = 1L;
 
         setInviteOrganisationResource = new InviteOrganisationResource();
