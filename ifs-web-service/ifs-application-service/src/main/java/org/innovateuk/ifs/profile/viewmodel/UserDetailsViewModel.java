@@ -16,6 +16,7 @@ import static org.innovateuk.ifs.util.ProfileUtil.getAddress;
  */
 public class UserDetailsViewModel {
     private String organisationName;
+    private String organisationTypeName;
     private String registrationNumber;
     private String addressLine1;
     private String addressLine2;
@@ -33,6 +34,7 @@ public class UserDetailsViewModel {
     public UserDetailsViewModel(final UserResource user, final OrganisationResource organisation, final List<EthnicityResource> ethnicityResourceList) {
         if(organisation != null) {
             this.organisationName = organisation.getName();
+            this.organisationTypeName = organisation.getOrganisationTypeName();
             this.registrationNumber = organisation.getCompanyHouseNumber();
             Optional<OrganisationAddressResource> organisationAddress = getAddress(organisation);
 
@@ -125,6 +127,10 @@ public class UserDetailsViewModel {
 
     public String getDisability() {
         return ifEmptyReturnAText(disability);
+    }
+
+    public String getOrganisationTypeName() {
+        return organisationTypeName;
     }
 
     private String ifEmptyReturnAText(String string) {

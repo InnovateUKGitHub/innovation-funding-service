@@ -21,9 +21,9 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
  * This controller will handle all Competition Management requests related to allocating assessors to an Application.
  */
 @Controller
-@RequestMapping("/competition/{competitionId}/application/{applicationId}/assessors")
+@RequestMapping("/assessment/competition/{competitionId}/application/{applicationId}/assessors")
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
-public class CompetitionManagementApplicationAssessmentProgressController {
+public class CompetitionManagementAssessmentsApplicationProgressController {
 
     private static final String FORM_ATTR_NAME = "form";
 
@@ -48,7 +48,7 @@ public class CompetitionManagementApplicationAssessmentProgressController {
                                  @PathVariable("assessorId") Long assessorId,
                                  @RequestParam(value = "sortField", defaultValue = "TITLE") String sortField) {
         assessmentRestService.createAssessment(new AssessmentCreateResource(applicationId, assessorId)).getSuccessObjectOrThrowException();
-        return format("redirect:/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, sortField);
+        return format("redirect:/assessment/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, sortField);
     }
 
     @PostMapping("/withdraw/{assessmentId}")
@@ -57,7 +57,7 @@ public class CompetitionManagementApplicationAssessmentProgressController {
                                      @PathVariable("assessmentId") Long assessmentId,
                                      @RequestParam(value = "sortField", defaultValue = "TITLE") String sortField) {
         assessmentRestService.withdrawAssessment(assessmentId).getSuccessObjectOrThrowException();
-        return format("redirect:/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, sortField);
+        return format("redirect:/assessment/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, sortField);
     }
 
     @GetMapping(value = "/withdraw/{assessmentId}/confirm")
