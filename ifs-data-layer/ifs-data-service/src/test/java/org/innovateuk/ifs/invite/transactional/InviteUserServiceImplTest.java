@@ -3,24 +3,31 @@ package org.innovateuk.ifs.invite.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.builder.RoleInviteBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.project.transactional.EmailService;
+import org.innovateuk.ifs.user.builder.RoleBuilder;
+import org.innovateuk.ifs.user.builder.RoleResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -29,6 +36,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -309,5 +317,39 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         ServiceResult<Boolean> result = service.checkExistingUser("SomeInviteHash");
         assertTrue(result.isSuccess());
         assertTrue(result.getSuccessObject());
+    }
+
+    @Test
+    public void findPendingInternalUsers() {
+        Pageable pageable = new PageRequest(0, 5);
+
+        Role role = RoleBuilder.newRole().withName("ifs_administrator").build();
+
+        List<RoleInvite> roleInvites = RoleInviteBuilder.newRoleInvite()
+                .withRole(role)
+                .withName("Arden Pimenta")
+                .withEmail("Arden.Pimenta@innovateuk.test")
+                .build(4);
+        Page<RoleInvite> page = new PageImpl<>(roleInvites, pageable, 4L);
+
+        RoleResource roleResource = RoleResourceBuilder.newRoleResource().withName("ifs_administrator").build();
+
+        when(inviteRoleRepositoryMock.findByStatus(InviteStatus.SENT, pageable)).thenReturn(page);
+        when(roleMapperMock.mapToResource(role)).thenReturn(roleResource);
+
+        ServiceResult<UserPageResource> result = service.findPendingInternalUsers(pageable);
+        assertTrue(result.isSuccess());
+
+        UserResource expectedUserResource = new UserResource();
+        expectedUserResource.setFirstName("Arden Pimenta");
+        expectedUserResource.setEmail("Arden.Pimenta@innovateuk.test");
+        expectedUserResource.setRoles(Collections.singletonList(roleResource));
+
+        UserPageResource resultObject = result.getSuccessObject();
+        assertEquals(5, resultObject.getSize());
+        assertEquals(1, resultObject.getTotalPages());
+        assertEquals(4, resultObject.getContent().size());
+        assertEquals(expectedUserResource, resultObject.getContent().get(0));
+
     }
 }
