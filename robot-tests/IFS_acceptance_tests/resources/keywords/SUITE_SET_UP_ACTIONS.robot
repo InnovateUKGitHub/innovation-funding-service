@@ -27,7 +27,7 @@ new account complete all but one
 
 create new account for submitting
     Given the guest user opens the browser
-    the user navigates to the page              ${COMPETITION_OVERVIEW_URL}
+    the user navigates to the page              ${COMPETITION_OVERVIEW_URL}  # This comp forces RTO lead!
     the user clicks the button/link             jQuery=a:contains("Start new application")
     the user clicks the button/link             jQuery=a:contains("Create account")
     And the user enters text to a text field    id=organisationSearchName    Hive IT
