@@ -358,7 +358,7 @@
                                 data-max_words="100"
                                 data-maxwordslength="100"
                                 data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
-                                th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.familyFinancialInterests.required,data-maxlength-errormessage=#{validation.field.too.many.characters(null,100)}}"
+                                th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.familyFinancialInterests.required},data-maxlength-errormessage=#{validation.field.too.many.characters(null,100)}"
                                 th:errorclass="form-control-error"
                                 th:field="*{familyFinancialInterests}"
                                 th:required="*{hasFamilyFinancialInterests}"></textarea>
