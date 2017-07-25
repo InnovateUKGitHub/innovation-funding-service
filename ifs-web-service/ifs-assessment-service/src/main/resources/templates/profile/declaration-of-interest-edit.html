@@ -69,7 +69,7 @@
                             data-max_words="100"
                             data-maxwordslength="100"
                             data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
-                            th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,100)}"
+                            th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null, 100)}"
                             th:errorclass="field-error"
                             th:field="*{professionalAffiliations}"></textarea>
                         <div class="textarea-footer" th:with="professionalAffiliations=*{professionalAffiliations}">
@@ -206,7 +206,7 @@
                                 data-max_words="100"
                                 data-maxwordslength="100"
                                 data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
-                                th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,100)},data-required-errormessage=#{validation.assessorprofiledeclarationform.financialInterests.required}"
+                                th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null, 100)},data-required-errormessage=#{validation.assessorprofiledeclarationform.financialInterests.required}"
                                 th:errorclass="form-control-error"
                                 th:field="*{financialInterests}"
                                 th:required="*{hasFinancialInterests}"></textarea>
@@ -358,7 +358,7 @@
                                 data-max_words="100"
                                 data-maxwordslength="100"
                                 data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
-                                th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.familyFinancialInterests.required},data-maxlength-errormessage=#{validation.field.too.many.characters(null,100)}"
+                                th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.familyFinancialInterests.required},data-maxlength-errormessage=#{validation.field.too.many.characters(null, 100)}"
                                 th:errorclass="form-control-error"
                                 th:field="*{familyFinancialInterests}"
                                 th:required="*{hasFamilyFinancialInterests}"></textarea>
