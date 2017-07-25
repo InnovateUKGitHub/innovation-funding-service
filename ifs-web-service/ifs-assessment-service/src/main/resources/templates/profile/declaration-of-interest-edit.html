@@ -380,6 +380,7 @@
 
                         <div class="multiple-choice">
                             <input type="checkbox" th:field="*{accurateAccount}"
+                                   required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.accurateAccount.required}" />
                             <label th:for="${#ids.prev('accurateAccount')}">
                                 I confirm that the above is an accurate account, to the best of my knowledge, of my active financial interests.
