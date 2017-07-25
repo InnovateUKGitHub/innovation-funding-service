@@ -294,3 +294,17 @@ function cleanUp() {
 function scaleDataService() {
     oc scale dc data-service --replicas=2 ${SVC_ACCOUNT_CLAUSE}
 }
+
+function createProject() {
+    until oc new-project $PROJECT ${SVC_ACCOUNT_CLAUSE}
+    do
+      oc delete project $PROJECT ${SVC_ACCOUNT_CLAUSE} || true
+      sleep 10
+    done
+}
+
+function createProjectIfNecessaryForNonNamedEnvs() {
+    if ! $(isNamedEnvironment $TARGET); then
+        createProject
+    fi
+}

@@ -125,6 +125,16 @@ task osUpgradePerf(type:Exec) {
     args = [openshiftEnv, "perf", project.version]
 }
 
+task osStageLocal(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-stage.sh'
+    args = [openshiftEnv, "local", project.version]
+}
+
+task osUpgradeLocal(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-upgrade-perform.sh'
+    args = [openshiftEnv, "local", project.version]
+}
+
 task robotTestsFilter (type: Copy) {
     from 'robot-tests/IFS_acceptance_tests/resources/variables/'
     into 'robot-tests/IFS_acceptance_tests/resources/variables/'
