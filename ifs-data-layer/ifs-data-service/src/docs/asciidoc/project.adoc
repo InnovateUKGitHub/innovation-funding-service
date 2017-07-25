@@ -533,6 +533,18 @@ include::{snippets}/inviteUser/saveInvite/save-user-invite/http-response.adoc[]
 ===== Curl Example
 include::{snippets}/inviteUser/saveInvite/save-user-invite/curl-request.adoc[]
 
+=== Find Pending Internal Users
+==== Success
+===== Request
+include::{snippets}/inviteUser/internal/pending/find-pending-internal-users/http-request.adoc[]
+
+==== Response
+include::{snippets}/inviteUser/internal/pending/find-pending-internal-users/http-response.adoc[]
+include::{snippets}/inviteUser/internal/pending/find-pending-internal-users/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/inviteUser/internal/pending/find-pending-internal-users/curl-request.adoc[]
+
 === Get Project Team Status
 ==== Success
 ===== Request
