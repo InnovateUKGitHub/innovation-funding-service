@@ -45,16 +45,6 @@ task dbAnonymisedDumpRemote(type:Exec) {
     args = [openshiftEnv, "remote", project.version]
 }
 
-task dbAnonymisedDumpSysint(type:Exec) {
-    executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
-    args = [openshiftEnv, "sysint", project.version]
-}
-
-task dbAnonymisedDumpPerf(type:Exec) {
-    executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
-    args = [openshiftEnv, "perf", project.version]
-}
-
 task dbAnonymisedDumpUat(type:Exec) {
     executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
     args = [openshiftEnv, "uat", project.version]
