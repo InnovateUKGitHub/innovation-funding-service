@@ -104,18 +104,21 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
 
         return find(user(userId), formInput(formInputId), openApplication(applicationId)).
                 andOnSuccess((user, formInput, application) ->
-                        getOrCreateResponse(application, formInput, userAppRole).andOnSuccessReturn(response -> {
-                            if (!response.getValue().equals(htmlUnescapedValue)) {
-                                response.setUpdateDate(ZonedDateTime.now());
-                                response.setUpdatedBy(userAppRole);
-                            }
-                            response.setValue(htmlUnescapedValue);
-                            application.addFormInputResponse(response, userAppRole);
-                            applicationRepository.save(application);
-                            formInputResponseRepository.save(response);
-                            return response;
-                        })
+                        getOrCreateResponse(application, formInput, userAppRole)
+                                .andOnSuccessReturn(response -> updateAndSaveResponse(response, htmlUnescapedValue, userAppRole, application))
                 );
+    }
+
+    private FormInputResponse updateAndSaveResponse(FormInputResponse response, String htmlUnescapedValue, ProcessRole userAppRole, Application application) {
+        if (!response.getValue().equals(htmlUnescapedValue)) {
+            response.setUpdateDate(ZonedDateTime.now());
+            response.setUpdatedBy(userAppRole);
+        }
+        response.setValue(htmlUnescapedValue);
+        application.addFormInputResponse(response, userAppRole);
+        applicationRepository.save(application);
+        formInputResponseRepository.save(response);
+        return response;
     }
 
     @Override

@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.form.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
@@ -60,7 +61,6 @@ public class FormInputResponseController {
 
     @PostMapping("/saveQuestionResponse")
     public RestResult<ValidationMessages> saveQuestionResponse(@RequestBody JsonNode jsonObj) {
-
         Long userId = jsonObj.get("userId").asLong();
         Long applicationId = jsonObj.get("applicationId").asLong();
         Long formInputId = jsonObj.get("formInputId").asLong();
@@ -69,16 +69,18 @@ public class FormInputResponseController {
         String value = HtmlUtils.htmlUnescape(jsonObj.get("value").asText(""));
 
         ServiceResult<ValidationMessages> result = formInputService.saveQuestionResponse(new FormInputResponseCommand(formInputId, applicationId, userId, value))
-                .andOnSuccessReturn(response -> {
-                    BindingResult bindingResult = validationUtil.validateResponse(response, ignoreEmpty);
-                    if (bindingResult.hasErrors()) {
-                        LOG.debug("Got validation errors: ");
-                        bindingResult.getAllErrors().stream().forEach(e -> LOG.debug("Validation: " + e.getDefaultMessage()));
-                    }
-
-                    return new ValidationMessages(bindingResult);
-                });
+                .andOnSuccessReturn(response -> buildBindingResultWithCheckErrors(response, ignoreEmpty));
 
         return result.toPostWithBodyResponse();
+    }
+
+    private ValidationMessages buildBindingResultWithCheckErrors(FormInputResponse response, Boolean ignoreEmpty) {
+        BindingResult bindingResult = validationUtil.validateResponse(response, ignoreEmpty);
+        if (bindingResult.hasErrors()) {
+            LOG.debug("Got validation errors: ");
+            bindingResult.getAllErrors().stream().forEach(e -> LOG.debug("Validation: " + e.getDefaultMessage()));
+        }
+
+        return new ValidationMessages(bindingResult);
     }
 }
