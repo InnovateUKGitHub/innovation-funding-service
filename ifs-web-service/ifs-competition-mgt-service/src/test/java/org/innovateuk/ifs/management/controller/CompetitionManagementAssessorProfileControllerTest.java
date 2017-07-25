@@ -100,7 +100,7 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
 
         when(assessorRestService.getAssessorProfile(assessorId)).thenReturn(restSuccess(expectedProfile));
 
-        String expectedBackUrl = "/competition/" + competition.getId() + "/application/" + applicationId + "/assessors?param1=abc&param2=def%26ghi";
+        String expectedBackUrl = "/assessment/competition/" + competition.getId() + "/application/" + applicationId + "/assessors?param1=abc&param2=def%26ghi";
 
         mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}", competition.getId(), assessorId)
                 .param("param1", "abc")
