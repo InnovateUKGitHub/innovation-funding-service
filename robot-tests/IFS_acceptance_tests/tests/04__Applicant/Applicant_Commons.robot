@@ -102,7 +102,7 @@ the user fills in the project costs
     the user fills in Subcontracting costs
     the user fills in Travel and subsistence
     the user fills in Other costs
-    the user selects the checkbox    agree-state-aid-page
+    the user clicks the button/link  css=label[for="agree-state-aid-page"]
     the user clicks the button/link  jQuery=button:contains("Mark as complete")
     the user clicks the button/link  link=Your project costs
     the user has read only view once section is marked complete
@@ -176,8 +176,6 @@ the user fills in Subcontracting costs
     the user enters text to a text field  jQuery=input.form-control[name^=subcontracting-country]  Netherlands
     the user enters text to a text field  jQuery=textarea.form-control[name^=subcontracting-role]  Quality Assurance
     the user enters text to a text field  jQuery=input.form-control[name^=subcontracting-subcontractingCost]  1000
-    #focus                                 css=#section-total-193[readonly]  # values will differ with runs. INFUND-8152
-    #textfield should contain              css=#section-total-193[readonly]  £ 1,000  # values will differ with runs. INFUND-8152.
     the user clicks the button/link       jQuery=button:contains("Subcontracting costs")
 
 the user fills in Travel and subsistence
@@ -185,8 +183,6 @@ the user fills in Travel and subsistence
     the user enters text to a text field  css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
     the user enters text to a text field  css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
     the user enters text to a text field  css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
-    #focus                                css=#section-total-194[readonly]    # values will differ with runs. INFUND-8152
-    #textfield should contain             css=#section-total-194[readonly]    £ 1,000 # values will differ with runs. INFUND-8152.
     the user clicks the button/link       jQuery=button:contains("Travel and subsistence")
 
 the user fills in Other costs
