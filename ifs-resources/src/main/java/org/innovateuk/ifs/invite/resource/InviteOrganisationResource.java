@@ -13,6 +13,7 @@ public class InviteOrganisationResource {
     private Long id;
     private String organisationName;
     private String organisationNameConfirmed;
+    private String organisationTypeName;
     private Long organisation;
     private List<ApplicationInviteResource> inviteResources;
 
@@ -20,9 +21,10 @@ public class InviteOrganisationResource {
     	// no-arg constructor
     }
 
-    public InviteOrganisationResource(Long id, String organisationName, Long organisation, List<ApplicationInviteResource> inviteResources) {
+    public InviteOrganisationResource(Long id, String organisationName, String organisationTypeName, Long organisation, List<ApplicationInviteResource> inviteResources) {
         this.id = id;
         this.organisationName = organisationName;
+        this.organisationTypeName = organisationTypeName;
         this.organisation = organisation;
         this.inviteResources = inviteResources;
     }
@@ -39,9 +41,18 @@ public class InviteOrganisationResource {
         return organisationName;
     }
 
+    public String getOrganisationTypeName() {
+        return organisationTypeName;
+    }
+
     public void setOrganisationName(String organisationName) {
         this.organisationName = organisationName;
     }
+
+    public void setOrganisationTypeName(String organisationTypeName) {
+        this.organisationTypeName = organisationTypeName;
+    }
+
     public List<ApplicationInviteResource> getInviteResources() {
         return inviteResources;
     }

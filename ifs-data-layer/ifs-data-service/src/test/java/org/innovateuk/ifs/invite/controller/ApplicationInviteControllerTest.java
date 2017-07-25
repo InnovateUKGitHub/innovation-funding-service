@@ -17,8 +17,8 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
-import static org.innovateuk.ifs.invite.builder.InviteResourceBuilder.newInviteResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -46,7 +46,7 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
 
     @Test
     public void postingOrganisationInviteResourceContainingInviteResourcesShouldInitiateSaveCalls() throws Exception {
-        List<ApplicationInviteResource> inviteResources = newInviteResource()
+        List<ApplicationInviteResource> inviteResources = newApplicationInviteResource()
                 .withApplication(1L)
                 .withName("testname")
                 .withEmail("testemail")
@@ -73,7 +73,7 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
 
     @Test
     public void invalidInviteOrganisationResourceShouldReturnErrorMessage() throws Exception {
-        List<ApplicationInviteResource> inviteResources = newInviteResource()
+        List<ApplicationInviteResource> inviteResources = newApplicationInviteResource()
                 .withApplication(1L)
                 .withName("testname")
                 .withEmail("testemail")
