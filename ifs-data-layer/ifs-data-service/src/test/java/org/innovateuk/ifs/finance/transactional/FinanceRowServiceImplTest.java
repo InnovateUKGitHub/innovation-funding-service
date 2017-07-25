@@ -247,7 +247,7 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
 
         when(applicationFinanceRowRepositoryMock.findOne(costId)).thenReturn(currentApplicationFinanceRow);
         when(organisationFinanceDefaultHandlerMock.costItemToCost(any())).thenReturn(convertedApplicationFinanceRow);
-        when(applicationFinanceRowRepositoryMock.save(any(ApplicationFinanceRow.class))).thenReturn(convertedApplicationFinanceRow);
+        when(organisationFinanceDefaultHandlerMock.updateCost(any())).thenReturn(convertedApplicationFinanceRow);
         when(financeRowMetaValueRepositoryMock.financeRowIdAndFinanceRowMetaFieldId(any(), any())).thenReturn(currentFinanceRowMetaValue.get(0));
 
         ServiceResult<FinanceRowItem> result = service.updateCost(costId, newFinanceRowItem);
@@ -278,7 +278,7 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
 
         when(applicationFinanceRowRepositoryMock.findOne(costId)).thenReturn(currentApplicationFinanceRow);
         when(organisationFinanceDefaultHandlerMock.costItemToCost(any())).thenReturn(convertedApplicationFinanceRow);
-        when(applicationFinanceRowRepositoryMock.save(any(ApplicationFinanceRow.class))).thenReturn(currentApplicationFinanceRow);
+        when(organisationFinanceDefaultHandlerMock.updateCost(any())).thenReturn(currentApplicationFinanceRow);
         when(financeRowMetaValueRepositoryMock.financeRowIdAndFinanceRowMetaFieldId(any(), any())).thenReturn(null);
         when(financeRowMetaFieldRepositoryMock.findOne(financeRowMetaField.getId())).thenReturn(financeRowMetaField);
 
@@ -298,7 +298,7 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
 
         when(applicationFinanceRowRepositoryMock.findOne(costId)).thenReturn(currentApplicationFinanceRow);
         when(organisationFinanceDefaultHandlerMock.costItemToCost(any())).thenReturn(convertedApplicationFinanceRow);
-        when(applicationFinanceRowRepositoryMock.save(any(ApplicationFinanceRow.class))).thenReturn(currentApplicationFinanceRow);
+        when(organisationFinanceDefaultHandlerMock.updateCost(any())).thenReturn(currentApplicationFinanceRow);
         when(financeRowMetaValueRepositoryMock.financeRowIdAndFinanceRowMetaFieldId(any(), any())).thenReturn(null);
         when(financeRowMetaFieldRepositoryMock.findOne(financeRowMetaField.getId())).thenReturn(financeRowMetaField);
 
