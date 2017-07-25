@@ -70,6 +70,7 @@ Client-side validations
     And The user should not see the text in the page    Please tell us if any of your immediate family members have any appointments or directorships.
     And The user should not see the text in the page    Please tell us if any of your immediate family members have any other financial interests.
     And The user should not see the text in the page    You must agree that your account is accurate.
+    And the user should not see the text in the page    Maximum word count exceeded. Please reduce your word count to 100.
 
 Successful save for the DOI form
     [Documentation]    INFUND-3715
