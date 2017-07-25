@@ -52,6 +52,8 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
         when(userRestServiceMock.getActiveInternalUsers(1, 5)).thenReturn(RestResult.restSuccess(userPageResource));
 
         when(userRestServiceMock.getInactiveInternalUsers(1, 5)).thenReturn(RestResult.restSuccess(userPageResource));
+
+        when(inviteUserRestServiceMock.getPendingInternalUsers(1, 5)).thenReturn(RestResult.restSuccess(userPageResource));
     }
 
     @Test
@@ -61,7 +63,9 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
                 .param("size", "5"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/users"))
-                .andExpect(model().attribute("model", new UserListViewModel("active", userPageResource.getContent(), userPageResource.getContent(), userPageResource.getTotalElements(), userPageResource.getTotalElements(), new PaginationViewModel(userPageResource, "active"), new PaginationViewModel(userPageResource, "inactive"))));
+                .andExpect(model().attribute("model", new UserListViewModel("active", userPageResource.getContent(), userPageResource.getContent(), userPageResource.getContent(),
+                        userPageResource.getTotalElements(), userPageResource.getTotalElements(), userPageResource.getTotalElements(),
+                        new PaginationViewModel(userPageResource, "active"), new PaginationViewModel(userPageResource, "inactive"), new PaginationViewModel(userPageResource, "pending"))));
     }
 
     @Test
@@ -71,7 +75,21 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
                 .param("size", "5"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/users"))
-                .andExpect(model().attribute("model", new UserListViewModel("inactive", userPageResource.getContent(), userPageResource.getContent(), userPageResource.getTotalElements(), userPageResource.getTotalElements(), new PaginationViewModel(userPageResource, "active"), new PaginationViewModel(userPageResource, "inactive"))));
+                .andExpect(model().attribute("model", new UserListViewModel("inactive", userPageResource.getContent(), userPageResource.getContent(), userPageResource.getContent(),
+                        userPageResource.getTotalElements(), userPageResource.getTotalElements(), userPageResource.getTotalElements(),
+                        new PaginationViewModel(userPageResource, "active"), new PaginationViewModel(userPageResource, "inactive"), new PaginationViewModel(userPageResource, "pending"))));
+    }
+
+    @Test
+    public void testViewPending() throws Exception {
+        mockMvc.perform(get("/admin/users/pending")
+                .param("page", "1")
+                .param("size", "5"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/users"))
+                .andExpect(model().attribute("model", new UserListViewModel("pending", userPageResource.getContent(), userPageResource.getContent(), userPageResource.getContent(),
+                        userPageResource.getTotalElements(), userPageResource.getTotalElements(), userPageResource.getTotalElements(),
+                        new PaginationViewModel(userPageResource, "active"), new PaginationViewModel(userPageResource, "inactive"), new PaginationViewModel(userPageResource, "pending"))));
     }
 
     @Test
