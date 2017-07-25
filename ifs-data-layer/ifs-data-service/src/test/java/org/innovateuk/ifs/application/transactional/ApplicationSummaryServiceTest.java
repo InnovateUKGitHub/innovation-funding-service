@@ -7,10 +7,12 @@ import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryPageMapper;
-import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
+import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
@@ -21,6 +23,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.resource.State;
@@ -38,20 +41,15 @@ import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.PageableMatcher.srt;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.address.builder.AddressTypeBuilder.newAddressType;
 import static org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.application.domain.FundingDecisionStatus.FUNDED;
-import static org.innovateuk.ifs.application.domain.FundingDecisionStatus.ON_HOLD;
-import static org.innovateuk.ifs.application.domain.FundingDecisionStatus.UNFUNDED;
+import static org.innovateuk.ifs.application.domain.FundingDecisionStatus.*;
 import static org.innovateuk.ifs.application.resource.ApplicationState.*;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATES;
-import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
@@ -61,7 +59,6 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
-import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.argThat;
@@ -559,14 +556,44 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
         AddressType registeredAddressType = newAddressType().withName("REGISTERED").build();
         AddressType operatingAddressType = newAddressType().withName("OPERATING").build();
-        Address address1 = newAddress().withAddressLine1("1E").withAddressLine2("2.16").withAddressLine3("Polaris House").withTown("Swindon").withCounty("Wilts").withPostcode("SN1 1AA").build();
-        Address address2 = newAddress().withAddressLine1("2E").withAddressLine2("2.17").withAddressLine3("North Star House").withTown("Swindon").withCounty("Wiltshire").withPostcode("SN2 2AA").build();
+        Address address1 = newAddress()
+                .withAddressLine1("1E")
+                .withAddressLine2("2.16")
+                .withAddressLine3("Polaris House")
+                .withTown("Swindon")
+                .withCounty("Wilts")
+                .withPostcode("SN1 1AA")
+                .build();
+        Address address2 = newAddress()
+                .withAddressLine1("2E")
+                .withAddressLine2("2.17")
+                .withAddressLine3("North Star House")
+                .withTown("Swindon")
+                .withCounty("Wiltshire")
+                .withPostcode("SN2 2AA")
+                .build();
         OrganisationAddress leadOrgRegisteredAddress = newOrganisationAddress().withAddressType(registeredAddressType).withAddress(address1).build();
         OrganisationAddress leadOrgOperatingAddress = newOrganisationAddress().withAddressType(operatingAddressType).withAddress(address2).build();
 
-        Organisation leadOrg = newOrganisation().withName("Lead").withUser(Arrays.asList(leadOrgLeadUser,leadOrgNonLeadUser1,leadOrgNonLeadUser2)).withAddress(Arrays.asList(leadOrgRegisteredAddress, leadOrgOperatingAddress)).build();
-        Organisation partnerOrgA = newOrganisation().withName("A").withUser(singletonList(partnerOrgLeadUser1)).withAddress(singletonList(leadOrgRegisteredAddress)).build();
-        Organisation partnerOrgB = newOrganisation().withName("B").withUser(singletonList(partnerOrgLeadUser2)).withAddress(singletonList(leadOrgOperatingAddress)).build();
+        Organisation leadOrg = newOrganisation()
+                .withName("Lead")
+                .withOrganisationType(OrganisationTypeEnum.RESEARCH)
+                .withUser(Arrays.asList(leadOrgLeadUser,leadOrgNonLeadUser1,leadOrgNonLeadUser2))
+                .withAddress(Arrays.asList(leadOrgRegisteredAddress, leadOrgOperatingAddress))
+                .build();
+        Organisation partnerOrgA = newOrganisation()
+                .withName("A")
+                .withOrganisationType(OrganisationTypeEnum.RESEARCH)
+                .withUser(singletonList(partnerOrgLeadUser1))
+                .withAddress(singletonList(leadOrgRegisteredAddress))
+                .build();
+        Organisation partnerOrgB = newOrganisation()
+                .withName("B")
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS)
+                .withUser(singletonList(partnerOrgLeadUser2))
+                .withAddress(singletonList(leadOrgOperatingAddress))
+                .build();
+
         when(applicationRepositoryMock.findOne(123L)).thenReturn(app);
         when(organisationRepositoryMock.findOne(234L)).thenReturn(leadOrg);
         when(organisationRepositoryMock.findOne(345L)).thenReturn(partnerOrgB);
@@ -574,8 +601,21 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
         AddressTypeResource registeredAddressTypeResource = newAddressTypeResource().withName("REGISTERED").build();
         AddressTypeResource operatingAddressTypeResource = newAddressTypeResource().withName("OPERATING").build();
-        AddressResource addressResource1 = newAddressResource().withAddressLine1("1E").withAddressLine2("2.16").withAddressLine3("Polaris House").withTown("Swindon").withCounty("Wilts").withPostcode("SN1 1AA").build();
-        AddressResource addressResource2 = newAddressResource().withAddressLine1("2E").withAddressLine2("2.17").withAddressLine3("North Star House").withTown("Swindon").withCounty("Wiltshire").withPostcode("SN2 2AA").build();
+        AddressResource addressResource1 = newAddressResource()
+                .withAddressLine1("1E")
+                .withAddressLine2("2.16")
+                .withAddressLine3("Polaris House")
+                .withTown("Swindon")
+                .withCounty("Wilts")
+                .withPostcode("SN1 1AA")
+                .build();
+        AddressResource addressResource2 = newAddressResource()
+                .withAddressLine1("2E")
+                .withAddressLine2("2.17")
+                .withAddressLine3("North Star House")
+                .withTown("Swindon").withCounty("Wiltshire")
+                .withPostcode("SN2 2AA")
+                .build();
         OrganisationAddressResource leadOrgRegisteredAddressResource = newOrganisationAddressResource().withAddressType(registeredAddressTypeResource).withAddress(addressResource1).build();
         OrganisationAddressResource leadOrgOperatingAddressResource = newOrganisationAddressResource().withAddressType(operatingAddressTypeResource).withAddress(addressResource2).build();
         when(organisationAddressMapper.mapToResource(leadOrgRegisteredAddress)).thenReturn(leadOrgRegisteredAddressResource);
