@@ -10,14 +10,13 @@ SET @sector=5;
 SET @generic=6;
 
 -- Organisation types
-set @research = 2;
 SET @RTO=3;
 SET @charity=4;
 
 -- Research categories
-SELECT @feasibility := id FROM category WHERE name='Feasibility studies';
-SELECT @industrial  := id FROM category WHERE name='Industrial research';
-SELECT @experimental:= id FROM category WHERE name='Experimental development';
+SET @feasibility = (SELECT id FROM category WHERE name='Feasibility studies');
+SET @industrial = (SELECT id FROM category WHERE name='Industrial research');
+SET @experimental = (SELECT id FROM category WHERE name='Experimental development');
 
 -- Delete old items to avoid duplicates
 DELETE FROM grant_claim_maximum
