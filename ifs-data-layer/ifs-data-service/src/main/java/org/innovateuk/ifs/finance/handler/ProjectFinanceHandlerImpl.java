@@ -53,7 +53,7 @@ public class ProjectFinanceHandlerImpl implements ProjectFinanceHandler {
 
         BigDecimal researchCosts = applicationFinanceResources.stream()
                 .filter(f ->
-                        OrganisationTypeEnum.isResearch(organisationRepository.findOne(f.getOrganisation()).getOrganisationType().getId())
+                        OrganisationTypeEnum.isResearchParticipationOrganisation(organisationRepository.findOne(f.getOrganisation()).getOrganisationType().getId())
                 )
                 .map(ProjectFinanceResource::getTotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
