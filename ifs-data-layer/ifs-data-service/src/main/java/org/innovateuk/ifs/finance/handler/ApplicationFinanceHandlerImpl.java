@@ -89,10 +89,9 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
                 .map(ApplicationFinanceResource::getTotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-
         BigDecimal researchCosts = applicationFinanceResources.stream()
                 .filter(f ->
-                        OrganisationTypeEnum.isResearch(organisationRepository.findOne(f.getOrganisation()).getOrganisationType().getId())
+                        OrganisationTypeEnum.isResearchParticipationOrganisation(organisationRepository.findOne(f.getOrganisation()).getOrganisationType().getId())
                 )
                 .map(ApplicationFinanceResource::getTotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -103,7 +102,7 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
             researchParticipation = researchCosts.divide(totalCosts, 6, BigDecimal.ROUND_HALF_UP);
         }
         researchParticipation = researchParticipation.multiply(BigDecimal.valueOf(100));
-        return researchParticipation.setScale(2, BigDecimal.ROUND_HALF_UP);
+        return researchParticipation.setScale(2, BigDecimal.ROUND_CEILING);
     }
 
     private void setApplicationFinanceDetails(ApplicationFinanceResource applicationFinanceResource) {

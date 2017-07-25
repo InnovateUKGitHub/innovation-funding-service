@@ -23,7 +23,9 @@ Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
 Resource          ../../10__Project_setup/PS_Common.robot
 
-*** Variables ***
+# In this suite we are using the competition: Predicting market trends programme
+# That forces the lead applicant to be RTO!! So we need to be careful with the Research participation in the project.
+# TODO this suite should be properly written. Please see ticket IFS-1051
 
 *** Test Cases ***
 Submit button disabled when application is incomplete
@@ -45,9 +47,13 @@ Applicant has read only view after submission
     then the applicant completes the application details    Application details
     and the user clicks the button/link    link=Return to application overview
     and the user clicks the button/link    link=Your finances
-    and the user marks the finances as complete    ${application_name}
-    when the user clicks the button/link    link=Review and submit
-    then the user should not see the element    css=input
+    When Run Keyword And Ignore Error Without Screenshots  the user clicks the button/link  jQuery=.extra-margin-bottom [aria-expanded="false"]
+    Then the user clicks the button/link   jQuery=button:contains("Not requesting funding")
+    And the user puts zero project costs
+    When the user clicks the button/link     link=Return to application overview
+    And the user clicks the button/link      link=Review and submit
+#    and the user marks the finances as complete    ${application_name}
+#    then the user should not see the element    css=input
 
 Your Project costs section is read-only once application is submitted
     [Documentation]    INFUND-6788, INFUND-7405
@@ -62,18 +68,18 @@ Submit flow (complete application)
     [Documentation]    INFUND-205, INFUND-9058, INFUND-1887, INFUND-3107, INFUND-4010, IFS-942
     [Tags]    HappyPath    Email    SmokeTest
     Given log in as a different user                        ${submit_test_email}    ${correct_password}
-    And the user navigates to the page                      ${SERVER}
+    And the user navigates to the page                      ${dashboard_url}
     And the user clicks the button/link                     link=${application_name}
     And the user should see the text in the element         css=.message-alert  Now your application is complete, you need to review and then submit.
     When the user clicks the button/link                    link=Review and submit
-    Then the user should be redirected to the correct page   summary
+    Then the user should be redirected to the correct page  summary
     And the applicant clicks the submit button and the clicks cancel in the submit modal
     And the applicant clicks the submit and then clicks the "close button" in the modal
     And the applicant clicks Yes in the submit modal
-    Then the user should be redirected to the correct page   submit
+    Then the user should be redirected to the correct page  submit
     And the user should see the text in the page            Application submitted
     And The user should see the element                     link=Finished
-    # TODO add check here once INFUND-9195 done
+    # TODO add check here once IFS-270 done
 
 The applicant should get a confirmation email
     [Documentation]    INFUND-1887
@@ -107,10 +113,6 @@ the applicant clicks Yes in the submit modal
     the user clicks the button/link    jQuery=.button:contains("Submit application")
     the user clicks the button/link    jQuery=.button:contains("Yes, I want to submit my application")
 
-the user marks the first section as incomplete
-    The user clicks the button/link    link=Project summary
-    The user clicks the button/link    name=mark_as_incomplete
-
 the applicant clicks the submit button and the clicks cancel in the submit modal
     Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Submit application")
     the user clicks the button/link    jQuery=.button:contains("Submit application")
@@ -143,3 +145,11 @@ the applicant clicks the submit and then clicks the "close button" in the modal
     Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Submit application")
     the user clicks the button/link    jQuery=.button:contains("Submit application")
     the user clicks the button/link    jQuery=button:contains("Close")
+
+the user puts zero project costs
+    [Documentation]  To be refactored with existing keyword
+    the user clicks the button/link  link=Your project costs
+    the user clicks the button/link  css=label[for="agree-state-aid-page"]
+    the user clicks the button/link  jQuery=button:contains("Mark as complete")
+    the user clicks the button/link  link=Your project costs
+    the user has read only view once section is marked complete
