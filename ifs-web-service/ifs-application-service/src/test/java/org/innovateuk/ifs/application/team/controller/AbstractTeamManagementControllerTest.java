@@ -20,7 +20,6 @@ import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.same;
@@ -96,17 +95,12 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
         when(testTeamManagementService.applicationAndOrganisationIdCombinationIsValid(same(testApplicationId), same(testOrganisationId))).thenReturn(true);
         when(testTeamManagementService.createViewModel(anyLong(), anyLong(), any())).thenReturn(createAViewModel());
 
-        MvcResult result = mockMvc.perform(post("/application/{applicationId}/team/update/invited/{organisationId}", testApplicationId, testOrganisationId)
+        mockMvc.perform(post("/application/{applicationId}/team/update/invited/{organisationId}", testApplicationId, testOrganisationId)
                 .param("removeStagedInvite", "true")
                 .param("stagedInvite.email", "an email")
                 .param("stagedInvite.name", "a name"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("application-team/edit-org"))
-                .andExpect(model().attribute("model", createAViewModel())).andReturn();
-
-        ApplicationTeamUpdateForm model = (ApplicationTeamUpdateForm) result.getModelAndView().getModel().get("form");
-
-        assertNull(model.getStagedInvite());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name(format("redirect:/application/%s/team/update/invited/%s", testApplicationId, testOrganisationId)));
     }
 
     @Test
@@ -129,9 +123,8 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
 
         mockMvc.perform(post("/application/{applicationId}/team/update/invited/{organisationId}", testApplicationId, testOrganisationId)
                 .param("executeStagedInvite", "true"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("application-team/edit-org"))
-                .andExpect(model().attribute("model", createAViewModel())).andReturn();
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name(format("redirect:/application/%s/team/update/invited/%s", testApplicationId, testOrganisationId)));
     }
 
     @Test
@@ -147,9 +140,8 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
                 .param("executeStagedInvite", "true")
                 .param("stagedInvite.name", validName)
                 .param("stagedInvite.email", validEmail))
-                .andExpect(status().isOk())
-                .andExpect(view().name("application-team/edit-org"))
-                .andExpect(model().attribute("model", createAViewModel())).andReturn();
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name(format("redirect:/application/%s/team/update/invited/%s", testApplicationId, testOrganisationId)));
 
         //TODO: verify invite contents
         verify(testTeamManagementService, times(1)).executeStagedInvite(anyLong(), anyLong(), any());
@@ -287,7 +279,10 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
 
     @RequestMapping("/application/{applicationId}/team/update/invited/{organisationId}")
     public class TestTeamManagementController extends AbstractTeamManagementController<TestTeamManagementService> {
-
+        @Override
+        protected String getMappingFormatString(long applicationId, long organisationid) {
+            return format("/application/%s/team/update/invited/%s", applicationId, organisationid);
+        }
     }
 
     private static ApplicationTeamManagementViewModel createAViewModel() {

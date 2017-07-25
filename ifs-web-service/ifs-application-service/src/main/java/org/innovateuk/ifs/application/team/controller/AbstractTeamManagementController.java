@@ -35,6 +35,8 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
     @Autowired
     private TeamManagementServiceType teamManagementService;
 
+    protected abstract String getMappingFormatString(long applicationId, long organisationId);
+
     @GetMapping
     public String getUpdateOrganisation(Model model,
                                         @PathVariable("applicationId") long applicationId,
@@ -66,10 +68,8 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
                                      @PathVariable("organisationId") long organisationId,
                                      UserResource loggedInUser,
                                      @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
-        return validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
-            form.setStagedInvite(null);
-            return getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form);
-        });
+        return validateOrganisationAndApplicationIds(applicationId, organisationId, () ->
+            redirectToOrganisationTeamPage(applicationId, organisationId));
     }
 
     @PostMapping(params = {"executeStagedInvite"})
@@ -86,9 +86,8 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
                 ServiceResult<InviteResultsResource> updateResult = teamManagementService.executeStagedInvite(applicationId, organisationId, form);
 
-                form.setStagedInvite(null);
                 return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors())
-                        .failNowOrSucceedWith(failureView, () -> getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form));
+                        .failNowOrSucceedWith(failureView, () -> redirectToOrganisationTeamPage(applicationId, organisationId));
             });
         });
     }
@@ -139,9 +138,17 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
             return processAnyFailuresOrSucceed(simpleMap(existingApplicantIds, teamManagementService::removeInvite))
                     .handleSuccessOrFailure(
                             failure -> getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form),
-                            success -> format("redirect:/application/%s/team", applicationId)
+                            success -> redirectToApplicationTeamPage(applicationId)
                     );
         });
+    }
+
+    public String redirectToApplicationTeamPage(long applicationId) {
+        return format("redirect:/application/%s/team", applicationId);
+    }
+
+    public String redirectToOrganisationTeamPage(long applicationId, long organisationId) {
+        return format("redirect:%s", getMappingFormatString(applicationId, organisationId));
     }
 
     public String validateOrganisationAndApplicationIds(Long applicationId, Long organisationId, Supplier<String> supplier) {
