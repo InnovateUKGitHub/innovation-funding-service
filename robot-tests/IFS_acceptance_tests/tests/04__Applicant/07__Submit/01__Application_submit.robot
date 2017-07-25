@@ -25,6 +25,7 @@ Resource          ../../10__Project_setup/PS_Common.robot
 
 # In this suite we are using the competition: Predicting market trends programme
 # That forces the lead applicant to be RTO!! So we need to be careful with the Research participation in the project.
+# TODO this suite should be properly written. Please see ticket IFS-1051
 
 *** Test Cases ***
 Submit button disabled when application is incomplete
