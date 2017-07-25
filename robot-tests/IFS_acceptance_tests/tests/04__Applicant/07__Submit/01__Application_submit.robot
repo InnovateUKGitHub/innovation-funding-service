@@ -1,11 +1,11 @@
 *** Settings ***
-Documentation     -INFUND-172: As a lead applicant and I am on the application summary, I can submit the application, so I can verify it that it is ready for submission
+Documentation     INFUND-172: As a lead applicant and I am on the application summary, I can submit the application, so I can verify it that it is ready for submission
 ...
-...               -INFUND-185: As an applicant, on the application summary and pressing the submit application button, it should give me a message that I can no longer alter the application.
+...               INFUND-185: As an applicant, on the application summary and pressing the submit application button, it should give me a message that I can no longer alter the application.
 ...
-...               -INFUND-927 As a lead partner i want the system to show me when all questions and sections (partner finances) are complete on the finance summary, so that i know i can submit the application
+...               INFUND-927 As a lead partner i want the system to show me when all questions and sections (partner finances) are complete on the finance summary, so that i know i can submit the application
 ...
-...               -INFUND-1137 As an applicant I want to be shown confirmation information when I submit my application submission so I can confirm this has been sent and I can be given guidance for the next stages
+...               INFUND-1137 As an applicant I want to be shown confirmation information when I submit my application submission so I can confirm this has been sent and I can be given guidance for the next stages
 ...
 ...               INFUND-1887 As the Service Delivery Manager, I want to send an email notification to an applicant once they have successfully submitted a completed application so they have confidence their application has been received by Innovate UK
 ...
@@ -14,7 +14,8 @@ Documentation     -INFUND-172: As a lead applicant and I am on the application s
 ...               INFUND-1786 As a lead applicant I would like view the submitting an application terms and conditions page so that I know what I am agreeing to
 ...
 ...               INFUND-9058 Update 'Application submitted' and 'Application status' pages to the same view
-
+...
+...               IFS-942 Information message when application has reached 100% complete
 Suite Setup       new account complete all but one
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
@@ -24,10 +25,11 @@ Resource          ../../10__Project_setup/PS_Common.robot
 
 *** Test Cases ***
 Submit button disabled when application is incomplete
-    [Documentation]    INFUND-927
+    [Documentation]    INFUND-927, IFS-942
     [Tags]    Email    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
     When the user clicks the button/link    link=${application_name}
+    And the user should not see the text in the page    Now your application is complete, you need to review and then submit.
     And the user clicks the button/link    link=Your finances
     And the user clicks the button/link    link= Application overview
     And the user clicks the button/link    jQuery=.button:contains("Review and submit")
@@ -46,7 +48,7 @@ Applicant has read only view after submission
     then the user should not see the element    css=input
 
 Your Project costs section is read-only once application is submitted
-    [Documentation]    INFUND-6788,INFUND-7405
+    [Documentation]    INFUND-6788, INFUND-7405
     [Tags]
     When the user navigates to Your-finances page    ${application_name}
     then the user clicks the button/link    link=Your project costs
@@ -55,11 +57,12 @@ Your Project costs section is read-only once application is submitted
     then the user should not see the element    css=input
 
 Submit flow (complete application)
-    [Documentation]  INFUND-205 INFUND-9058 INFUND-1887 INFUND-3107 INFUND-4010
-    [Tags]  HappyPath  Email  SmokeTest
-    Given log in as a different user                        ${submit_test_email}  ${correct_password}
+    [Documentation]    INFUND-205, INFUND-9058, INFUND-1887, INFUND-3107, INFUND-4010, IFS-942
+    [Tags]    HappyPath    Email    SmokeTest
+    Given log in as a different user                        ${submit_test_email}    ${correct_password}
     And the user navigates to the page                      ${SERVER}
     And the user clicks the button/link                     link=${application_name}
+    And the user should see the text in the element         css=.message-alert  Now your application is complete, you need to review and then submit.
     When the user clicks the button/link                    link=Review and submit
     Then the user should be redirected to the correct page  summary
     And the applicant clicks the submit button and the clicks cancel in the submit modal
@@ -76,7 +79,7 @@ The applicant should get a confirmation email
     Then the user reads his email    ${test_mailbox_one}+submittest@gmail.com    Successful submission of application    You have successfully submitted an application
 
 Submitted application is read only
-    [Documentation]    INFUND-1938  INFUND-9058
+    [Documentation]    INFUND-1938, INFUND-9058
     [Tags]    Email    SmokeTest
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=${application_name}

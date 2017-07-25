@@ -32,6 +32,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
@@ -72,17 +73,19 @@ public class CompetitionManagementApplicationController {
                                              @ModelAttribute(name = "form", binding = false) ApplicationForm form,
                                              UserResource user,
                                              @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
+                                             @RequestParam(value = "assessorId", required = false) Optional<Long> assessorId,
                                              @RequestParam MultiValueMap<String, String> queryParams,
                                              Model model) {
         return competitionManagementApplicationService
                 .validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> competitionManagementApplicationService
-                        .displayApplicationOverview(user, competitionId, form, origin, queryParams, model, application));
+                        .displayApplicationOverview(user, competitionId, form, origin, queryParams, model, application, assessorId));
     }
 
     @PostMapping(value = "/{applicationId}", params = {"markAsIneligible"})
     public String markAsIneligible(@PathVariable("applicationId") final long applicationId,
                                    @PathVariable("competitionId") final long competitionId,
                                    @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
+                                   @RequestParam(value = "assessorId", required = false) Optional<Long> assessorId,
                                    @ModelAttribute("form") @Valid ApplicationForm applicationForm,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    ValidationHandler validationHandler,
@@ -96,11 +99,12 @@ public class CompetitionManagementApplicationController {
         MultiValueMap<String, String> queryParams = getQueryStringParameters(request);
 
         return validationHandler.failNowOrSucceedWith(
-                () -> displayApplicationOverview(applicationId, competitionId, applicationForm, user, origin, queryParams, model),
+                () -> displayApplicationOverview(applicationId, competitionId, applicationForm, user, origin, assessorId, queryParams, model),
                 () -> competitionManagementApplicationService
                                 .markApplicationAsIneligible(
                                         applicationId,
                                         competitionId,
+                                        assessorId,
                                         origin,
                                         queryParams,
                                         applicationForm,
