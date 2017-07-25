@@ -95,11 +95,6 @@ task osDeployPerf(type:Exec) {
     args = [openshiftEnv, "perf", project.version]
 }
 
-task osUpgradeRemote(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-upgrade.sh'
-    args = [openshiftEnv, "remote", project.version]
-}
-
 task osUpgradeProduction(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "production", project.version]
@@ -131,8 +126,18 @@ task osStageLocal(type:Exec) {
 }
 
 task osUpgradeLocal(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-upgrade-perform.sh'
+    executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "local", project.version]
+}
+
+task osStageRemote(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-stage.sh'
+    args = [openshiftEnv, "remote", project.version]
+}
+
+task osUpgradeRemote(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-upgrade.sh'
+    args = [openshiftEnv, "remote", project.version]
 }
 
 task robotTestsFilter (type: Copy) {
