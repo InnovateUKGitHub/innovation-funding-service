@@ -32,8 +32,8 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
-import static org.innovateuk.ifs.invite.builder.InviteResourceBuilder.newInviteResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
@@ -128,7 +128,7 @@ public class OrganisationDetailsViewModelPopulatorTest extends BaseUnitTestMocks
 
         List<InviteOrganisationResource> pendingInvites = newInviteOrganisationResource()
                 .withOrganisation(1L)
-                .withInviteResources(newInviteResource()
+                .withInviteResources(newApplicationInviteResource()
                         .with((applicationInviteResource) -> {
                             applicationInviteResource.setStatus(InviteStatus.SENT);
                             applicationInviteResource.setInviteOrganisationNameConfirmed("OrgNameConfirmed");

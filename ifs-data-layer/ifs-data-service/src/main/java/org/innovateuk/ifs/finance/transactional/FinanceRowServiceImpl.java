@@ -137,7 +137,7 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
                         return serviceSuccess(organisationFinanceHandler.costToCostItem((ApplicationFinanceRow)newCost));
                     } else {
                         ApplicationFinanceRow cost = new ApplicationFinanceRow(applicationFinance, question);
-                        financeRowRepository.save(cost);
+                        organisationFinanceHandler.addCost(cost.getTarget().getId(), cost.getQuestion().getId(), cost);
                         return serviceSuccess(organisationFinanceHandler.costToCostItem(cost));
                     }
                 })
@@ -200,7 +200,7 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
                     ApplicationFinanceRow newCost = organisationFinanceHandler.costItemToCost(newCostItem);
                     ApplicationFinanceRow updatedCost = mapCost(existingCost, newCost);
 
-                    ApplicationFinanceRow savedCost = financeRowRepository.save(updatedCost);
+                    ApplicationFinanceRow savedCost = organisationFinanceHandler.updateCost(updatedCost);
 
                     newCost.getFinanceRowMetadata()
                             .stream()
@@ -441,18 +441,18 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
         cost.setQuestion(question);
         cost.setTarget(applicationFinance);
 
-        return persistCostHandlingCostValues(cost);
+        return persistCostHandlingCostValues(cost, organisationFinanceHandler);
     }
 
-    private ApplicationFinanceRow persistCostHandlingCostValues(FinanceRow cost) {
+    private ApplicationFinanceRow persistCostHandlingCostValues(FinanceRow cost, OrganisationFinanceHandler financeHandler) {
 
         List<FinanceRowMetaValue> costValues = cost.getFinanceRowMetadata();
         cost.setFinanceRowMetadata(new ArrayList<>());
-        ApplicationFinanceRow persistedCost = financeRowRepository.save((ApplicationFinanceRow)cost);
+        ApplicationFinanceRow persistedCost = financeHandler.addCost(cost.getTarget().getId(), cost.getQuestion().getId(),(ApplicationFinanceRow)cost);
         costValues.stream().forEach(costVal -> costVal.setFinanceRowId(persistedCost.getId()));
         persistedCost.setFinanceRowMetadata(costValues);
         financeRowMetaValueRepository.save(costValues);
-        return financeRowRepository.save(persistedCost);
+        return financeHandler.updateCost(persistedCost);
     }
 
     private ApplicationFinanceRow mapCost(ApplicationFinanceRow currentCost, ApplicationFinanceRow newCost) {
