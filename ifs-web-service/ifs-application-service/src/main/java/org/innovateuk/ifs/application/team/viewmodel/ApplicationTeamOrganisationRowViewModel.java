@@ -13,14 +13,16 @@ public class ApplicationTeamOrganisationRowViewModel {
     private Long organisationId;
     private Long inviteOrganisationId;
     private String name;
+    private String type;
     private boolean lead;
     private List<ApplicationTeamApplicantRowViewModel> applicants;
     private boolean editable;
 
-    public ApplicationTeamOrganisationRowViewModel(Long organisationId, Long inviteOrganisationId, String name, boolean lead, List<ApplicationTeamApplicantRowViewModel> applicants, boolean editable) {
+    public ApplicationTeamOrganisationRowViewModel(Long organisationId, Long inviteOrganisationId, String name, String type, boolean lead, List<ApplicationTeamApplicantRowViewModel> applicants, boolean editable) {
         this.organisationId = organisationId;
         this.inviteOrganisationId = inviteOrganisationId;
         this.name = name;
+        this.type = type;
         this.lead = lead;
         this.applicants = applicants;
         this.editable = editable;
@@ -36,6 +38,10 @@ public class ApplicationTeamOrganisationRowViewModel {
 
     public String getName() {
         return name;
+    }
+
+    public String getType() {
+        return type;
     }
 
     public boolean isLead() {

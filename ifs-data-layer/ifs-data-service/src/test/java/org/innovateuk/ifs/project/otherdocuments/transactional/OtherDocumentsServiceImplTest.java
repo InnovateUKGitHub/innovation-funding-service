@@ -340,13 +340,13 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
         FileEntry fileToDelete = newFileEntry().build();
 
         fileSetter.accept(fileToDelete);
-        when(fileServiceMock.deleteFile(fileToDelete.getId())).thenReturn(serviceSuccess(fileToDelete));
+        when(fileServiceMock.deleteFileIgnoreNotFound(fileToDelete.getId())).thenReturn(serviceSuccess(fileToDelete));
 
         ServiceResult<Void> result = deleteFileFn.get();
         assertTrue(result.isSuccess());
         assertNull(fileGetter.get());
 
-        verify(fileServiceMock).deleteFile(fileToDelete.getId());
+        verify(fileServiceMock).deleteFileIgnoreNotFound(fileToDelete.getId());
     }
 
     @Test

@@ -30,7 +30,7 @@
 
     <div class="form-footer">
         <div class="form-footer__actions">
-            <a href="#">Edit</a>
+            <a th:href="@{|/admin/user/${model.user.id}/edit|}">Edit</a>
         </div>
         <div class="form-footer__info" th:text="|Created by ${model.createdByUser} on ${#temporals.format(model.createdOn, 'dd MMMM yyyy')}|">
             Created by Susan Smith on 23rd March 2017

@@ -35,6 +35,10 @@ public class ApplicationFinanceRowBuilder extends BaseFinanceRowBuilder<Applicat
         return with(financeRow -> financeRow.setTarget(applicationFinance));
     }
 
+    public ApplicationFinanceRowBuilder withId(Long... id){
+        return withArray((value, financeRow) -> financeRow.setId(value), id);
+    }
+
     @Override
     protected ApplicationFinanceRow createInitial() {
         return new ApplicationFinanceRow();

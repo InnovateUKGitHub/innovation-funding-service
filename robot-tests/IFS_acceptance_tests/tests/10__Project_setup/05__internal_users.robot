@@ -73,7 +73,6 @@ Other internal users cannot see Bank details or Finance checks
     And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details    ${403_error_message}
     And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check    ${403_error_message}
 
-
 Comp Admin user can see the internal project summary page
     [Documentation]    INFUND-4049, INFUND-5899
     [Tags]
@@ -85,61 +84,35 @@ Comp Admin user can see the internal project summary page
     When the user clicks the button/link    link=Competition dashboard
     Then the user should see the text in the page    All competitions
 
-
 *** Keywords ***
 
 the project is completed if it is not already complete
     The user logs-in in new browser  &{lead_applicant_credentials}
     the user navigates to the page    ${project_in_setup_page}/details
-    ${project_manager_not_set}    ${value}=    run keyword and ignore error without screenshots    The user should not see the element    jQuery=#project-manager-status.yes
-    run keyword if    '${project_manager_not_set}' == 'PASS'     all previous sections of the project are completed
-    run keyword if    '${project_manager_not_set}' == 'FAIL'    login as a different user    &{internal_finance_credentials}
+    ${project_manager_not_set}    ${value}=    run keyword and ignore error without screenshots    The user should not see the element    css=#project-manager-status.yes
+    run keyword if  '${project_manager_not_set}' == 'PASS'  all previous sections of the project are completed
+    run keyword if  '${project_manager_not_set}' == 'FAIL'  login as a different user  &{internal_finance_credentials}
 
 all previous sections of the project are completed
-    lead partner selects project manager and address
-    partners submit their finance contacts
-    partners submit bank details
+    project lead submits project details        ${PROJECT_SETUP_APPLICATION_1_PROJECT}
+    partners submit finance contacts
+    all partners submit their bank details
     project finance approves bank details
     project finance submits monitoring officer  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  Grace  Harper  ${test_mailbox_two}+monitoringofficer@gmail.com  08549731414
 
-lead partner selects project manager and address
-    the user clicks the button/link      link=Project Manager
-    the user selects the radio button    projectManager    projectManager2
-    the user clicks the button/link      jQuery=.button:contains("Save")
-    the user clicks the button/link      link=Project address
-    the user selects the radio button    addressType    REGISTERED
-    the user clicks the button/link      jQuery=.button:contains("Save project address")
-    the user clicks the button/link      jQuery=.button:contains("Mark as complete")
-    the user clicks the button/link      jQuery=button:contains("Submit")
+partners submit finance contacts
+    the partner submits their finance contact  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  &{lead_applicant_credentials}
+    the partner submits their finance contact  ${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  &{collaborator1_credentials}
+    the partner submits their finance contact  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  &{collaborator2_credentials}
 
-partners submit their finance contacts
-    navigate to external finance contact page, choose finance contact and save  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}  financeContact1
-    log in as a different user         &{collaborator1_credentials}
-    navigate to external finance contact page, choose finance contact and save  ${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}  financeContact1
-    log in as a different user         &{collaborator2_credentials}
-    navigate to external finance contact page, choose finance contact and save  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}  financeContact1
-
-navigate to external finance contact page, choose finance contact and save
-    [Arguments]  ${org_id}   ${financeContactSelector}
-    the user navigates to the page     ${project_in_setup_page}/details/finance-contact?organisation=${org_id}
-    the user selects the radio button  financeContact  ${financeContactSelector}
-    the user clicks the button/link    jQuery=.button:contains("Save")
-
-partners submit bank details
+all partners submit their bank details
     partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
     partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
 
 project finance approves bank details
-    log in as a different user                   &{internal_finance_credentials}
-    proj finance approves partners bank details  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}
-    proj finance approves partners bank details  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}
-
-proj finance approves partners bank details
-    [Arguments]  ${id}
-    the user navigates to the page     ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/organisation/${id}/review-bank-details
-    the user clicks the button/link    jQuery=.button:contains("Approve bank account details")
-    the user clicks the button/link    jQuery=.button:contains("Approve account")
-
+    log in as a different user                          &{internal_finance_credentials}
+    the project finance user approves bank details for  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}
+    the project finance user approves bank details for  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}
 
 
 

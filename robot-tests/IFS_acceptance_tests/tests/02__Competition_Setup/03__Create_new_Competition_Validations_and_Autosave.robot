@@ -66,7 +66,7 @@ Initial details: client-side validations
     #Then the user should not see the error any more    Please enter an opening month.
     When the user enters text to a text field    id=openingDateYear    2017
     #Then the user should not see the error any more    Please enter an opening year.
-    When the user selects the option from the drop-down menu    Ian Cooper    id=leadTechnologistUserId
+    When the user selects the option from the drop-down menu    Ian Cooper    id=innovationLeadUserId
     Then the user should not see the error any more    Please select an Innovation Lead.
     When the user selects the option from the drop-down menu    John Doe     id=executiveUserId
     Then The user should not see the text in the page    Please select a competition executive.    #Couldn't use this keyword : "Then the user should not see the error any more" . Because there is not any error in the page
@@ -194,6 +194,31 @@ Milestones: Autosave
     When the user clicks the button/link    link=Competition setup
     And the user clicks the button/link    link=Milestones
     Then the user should see the correct inputs in the Milestones form
+
+Application finances: validation empty
+    [Documentation]    IFS-630
+    [Setup]    The user navigates to the Validation competition
+    Given the user clicks the button/link  link=Application
+    And the user clicks the button/link  link=Finances
+    And the user clicks the button/link  jQuery=a:contains("Edit this question")
+    And the user enters text to a text field    css=.editor    ${EMPTY}
+    When the user moves focus to the element  jQuery=button:contains("Save and close")
+    Then the user should see an error    This field cannot be left blank.
+    And the user enters text to a text field    css=.editor    Funding rules for this competition added
+    And the user clicks the button/link    jQuery=button:contains("Save and close")
+
+
+Application finances: able to edit the field
+    [Documentation]    IFS-630
+    [Setup]    The user navigates to the Validation competition
+    Given the user clicks the button/link  link=Application
+    And the user clicks the button/link  link=Finances
+    And the user should see the element  jQuery=.button:contains("Edit this question")
+    When the user clicks the button/link  link=Edit this question
+    Then the user enters text to a text field    css=.editor    Funding rules for this competition updated
+    And the user clicks the button/link    jQuery=button:contains("Save and close")
+    And the user clicks the button/link    jQuery=button:contains("Done")
+    And the user should not see an error in the page
 
 Assessor: Server-side validation
     [Documentation]    INFUND-5641
@@ -424,7 +449,7 @@ The user enters valid data in the initial details
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2017
-    And the user selects the option from the drop-down menu    Ian Cooper    id=leadTechnologistUserId
+    And the user selects the option from the drop-down menu    Ian Cooper    id=innovationLeadUserId
     And the user selects the option from the drop-down menu    John Doe    id=executiveUserId
 
 The user navigates to the Validation competition

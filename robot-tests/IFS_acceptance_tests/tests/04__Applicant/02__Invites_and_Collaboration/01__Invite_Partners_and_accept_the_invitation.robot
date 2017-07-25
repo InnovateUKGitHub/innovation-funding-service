@@ -24,6 +24,8 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...               INFUND-7977 As a non lead applicant I want to edit my application team
 ...
 ...               INFUND-8590 Lead applicant can Delete a partner Organisation
+...
+...               IFS-951  Display 'Organisation type' against user
 Suite Setup       log in and create new application for collaboration if there is not one already
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
@@ -135,7 +137,6 @@ The Lead's inputs should not be visible in other application invites
     [Tags]
     Then the user should not see the element  css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input
 
-
 Pending users visible in the assign list but not clickable
     [Documentation]    INFUND-928  INFUND-1962
     [Tags]
@@ -181,7 +182,7 @@ Complete account verification
     Then the user should be redirected to the correct page  ${REGISTRATION_VERIFIED}
 
 Partner should be able to log-in and see the new company name
-    [Documentation]    INFUND-2083
+    [Documentation]    INFUND-2083  IFS-951
     ...
     ...    INFUND-7976
     [Tags]    Email    HappyPath    SmokeTest
@@ -263,7 +264,7 @@ Lead should not see pending status for accepted invite
 
 *** Keywords ***
 The lead applicant should have the correct status
-    the user should see the element  jQuery=h2:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}"):contains("(Lead)")
+    the user should see the element  jQuery=h2:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}"):contains("(Lead)")+h3:contains("Organisation type")+p:contains("Business")
     the user should see the element  jQuery=.table-overflow tr:nth-child(1) td:nth-child(1):contains("Steve Smith")
     the user should see the element  jQuery=.table-overflow tr:nth-child(1) td:nth-child(2):contains("${lead_applicant}")
     the user should see the element  jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
@@ -286,7 +287,7 @@ the user can see the updated company name throughout the application
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link   link=${application_name}
     When the user clicks the button/link  link=view team members and add collaborators
-    Then the user should see the element  jQuery=h2:contains("NOMENSA LTD")
+    Then the user should see the element  jQuery=h2:contains("NOMENSA LTD")+h3:contains("Organisation type")+p:contains("Business")
 
 the lead applicant cannot be removed
     the user should see the text in the element  jQuery=tr:nth-of-type(1) td:nth-of-type(3)    Lead

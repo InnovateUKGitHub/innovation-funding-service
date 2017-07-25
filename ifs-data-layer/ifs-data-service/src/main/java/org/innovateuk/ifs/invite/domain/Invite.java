@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.invite.domain;
 
 import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
