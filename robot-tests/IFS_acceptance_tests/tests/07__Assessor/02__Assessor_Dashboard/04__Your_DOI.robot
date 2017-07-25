@@ -56,6 +56,8 @@ Server-side when Yes selected at yes/no
     And the user should see a field error    Please enter a position.
     And the user should see a field error    Please enter your family's financial interests.
     And the user should see a field error    Please enter your financial interests.
+    Then the user enters multiple strings into a text field  id=professionalAffiliations  a${SPACE}  101
+    And the user should see a field error    Maximum word count exceeded. Please reduce your word count to 100.
 
 Client-side validations
     [Documentation]    INFUND-3715
