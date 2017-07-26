@@ -57,6 +57,9 @@ function shibInit() {
 }
 
 # Entry point
+cleanUp
+cloneConfig
+tailorAppInstance
 deploy
 blockUntilServiceIsUp
 

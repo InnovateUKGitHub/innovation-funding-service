@@ -20,8 +20,5 @@ REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 
 # Entry point
 createProjectIfNecessaryForNonNamedEnvs
-cleanUp
-cloneConfig
-tailorAppInstance
 useContainerRegistry
 pushApplicationImages

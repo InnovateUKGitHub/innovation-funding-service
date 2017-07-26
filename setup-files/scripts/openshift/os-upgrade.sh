@@ -88,6 +88,9 @@ function rolloutStatus {
 }
 
 # Entry point
+cleanUp
+cloneConfig
+tailorAppInstance
 upgradeServices
 
 if [[ ${bamboo_openshift_force_reload} == "true" ]]
