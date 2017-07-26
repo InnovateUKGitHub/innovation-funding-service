@@ -23,7 +23,6 @@ IFS.application.repeatableOrgApplicantRows = (function () {
     addRow: function (el) {
       var newRow
       var target = jQuery(el).attr('data-repeatable-rowcontainer')
-      var uniqueRowId = jQuery(target).children('.repeatable-row').length || 0
       if (jQuery(el).data('applicant-table') === 'update-org') {
         newRow = jQuery('<tr class="repeatable-row">' +
           '<td class="form-group">' +
