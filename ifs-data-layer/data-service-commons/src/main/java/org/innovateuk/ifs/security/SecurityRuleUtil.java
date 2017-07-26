@@ -51,6 +51,8 @@ public class SecurityRuleUtil {
 
     public static boolean isSupport(UserResource user) { return user.hasRole(SUPPORT); }
 
+    public static boolean isSupport(User user) { return user.hasRole(SUPPORT); }
+
     public static boolean checkProcessRole(final UserResource user,
                                            final Long applicationId,
                                            final Long organisationId,
@@ -78,4 +80,5 @@ public class SecurityRuleUtil {
 
     public static boolean isInnovationLead(UserResource user) { return user.hasRole(INNOVATION_LEAD); }
 
+    public static boolean isInnovationLead(User user) { return user.hasRole(INNOVATION_LEAD); }
 }
