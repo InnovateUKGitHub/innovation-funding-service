@@ -21,15 +21,11 @@ import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.CompAdminEmail;
-import org.innovateuk.ifs.user.domain.ProjectFinanceEmail;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.innovateuk.ifs.user.mapper.RoleMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.repository.CompAdminEmailRepository;
-import org.innovateuk.ifs.user.repository.ProjectFinanceEmailRepository;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -41,13 +37,8 @@ import org.springframework.security.access.method.P;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
@@ -58,7 +49,8 @@ import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.UserRoleType.APPLICANT;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -89,12 +81,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private ProfileRepository profileRepository;
-
-    @Autowired
-    private CompAdminEmailRepository compAdminEmailRepository;
-
-    @Autowired
-    private ProjectFinanceEmailRepository projectFinanceEmailRepository;
 
     @Autowired
     private NotificationService notificationService;
@@ -132,26 +118,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
-    private boolean isUserCompAdmin(final String email) {
-        if (StringUtils.hasText(email)) {
-            CompAdminEmail existingUserSearch = compAdminEmailRepository.findOneByEmail(email);
-            if (existingUserSearch != null) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isUserProjectFinance(String email) {
-        if (StringUtils.hasText(email)) {
-            ProjectFinanceEmail existingUserSearch = projectFinanceEmailRepository.findOneByEmail(email);
-            if (existingUserSearch != null) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     @Override
     @Transactional
     public ServiceResult<UserResource> createUser(@P("user") UserRegistrationResource userRegistrationResource) {
@@ -167,14 +133,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Override
     @Transactional
     public ServiceResult<UserResource> createOrganisationUser(long organisationId, UserResource userResource) {
-        String roleName;
-        if (isUserCompAdmin(userResource.getEmail())) {
-            roleName = COMP_ADMIN.getName();
-        } else if (isUserProjectFinance(userResource.getEmail())) {
-            roleName = PROJECT_FINANCE.getName();
-        } else {
-            roleName = APPLICANT.getName();
-        }
+        String roleName = APPLICANT.getName();
         User newUser = assembleUserFromResource(userResource);
         return validateUser(userResource).
                 andOnSuccess(
@@ -309,9 +268,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         final String emailVerificationHash = getEmailVerificationHash(user);
 
         final ObjectNode extraInfo = factory.objectNode();
-        if (competitionId.isPresent()) {
-            extraInfo.put("competitionId", competitionId.get());
-        }
+        competitionId.ifPresent(aLong -> extraInfo.put("competitionId", aLong));
         final Token token = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), user.getId(), emailVerificationHash, now(), extraInfo);
         return tokenRepository.save(token);
     }

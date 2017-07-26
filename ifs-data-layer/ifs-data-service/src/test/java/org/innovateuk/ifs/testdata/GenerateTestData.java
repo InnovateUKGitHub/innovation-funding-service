@@ -366,7 +366,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private void createExternalUsers() {
         testService.doWithinTransaction(() ->
-            externalUserLines.forEach(line -> createUser(externalUserBuilder, line, true)));
+            externalUserLines.forEach(line -> createUser(externalUserBuilder, line)));
     }
 
     private void createAssessors() {
@@ -467,22 +467,16 @@ public class GenerateTestData extends BaseIntegrationTest {
         testService.doWithinTransaction(() ->
             internalUserLines.forEach(line -> {
 
-                List<UserRoleType> roles = simpleMap(line.roles, role -> UserRoleType.fromName(role));
+                List<UserRoleType> roles = simpleMap(line.roles, UserRoleType::fromName);
 
-                InternalUserDataBuilder baseBuilder = internalUserBuilder.
-                        withRoles(roles).
-                        createPreRegistrationEntry(line.emailAddress);
+                InternalUserDataBuilder baseBuilder = internalUserBuilder.withRoles(roles);
 
                 if (line.emailVerified) {
-                    createUser(baseBuilder, line, createViaRegistration(roles));
+                    createUser(baseBuilder, line);
                 } else {
                     baseBuilder.build();
                 }
             }));
-    }
-
-    private boolean createViaRegistration(List<UserRoleType> roles) {
-        return roles.stream().noneMatch(role -> asList(INNOVATION_LEAD, SUPPORT, IFS_ADMINISTRATOR).contains(role));
     }
 
     private void createCompetitions() {
@@ -1014,7 +1008,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                 build();
     }
 
-    private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, CsvUtils.UserLine line, boolean createViaRegistration) {
+    private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, CsvUtils.UserLine line) {
 
         Function<S, S> createOrgIfNecessary = builder -> {
 
@@ -1039,13 +1033,9 @@ public class GenerateTestData extends BaseIntegrationTest {
             return builder.withNewOrganisation(organisation);
         };
 
-        Function<S, S> registerUserIfNecessary = builder ->
-                createViaRegistration ?
-                        builder.registerUser(line.firstName, line.lastName, line.emailAddress, line.organisationName, line.phoneNumber) :
-                        builder.createUserDirectly(line.firstName, line.lastName, line.emailAddress, line.organisationName, line.phoneNumber, line.emailVerified);
+        Function<S, S> registerUserIfNecessary = builder -> builder.registerUser(line.firstName, line.lastName, line.emailAddress, line.organisationName, line.phoneNumber);
 
-        Function<S, S> verifyEmailIfNecessary = builder ->
-                createViaRegistration && line.emailVerified ? builder.verifyEmail() : builder;
+        Function<S, S> verifyEmailIfNecessary = builder -> line.emailVerified ? builder.verifyEmail() : builder;
 
         createOrgIfNecessary.andThen(registerUserIfNecessary).andThen(verifyEmailIfNecessary).apply(baseBuilder).build();
     }

@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.testdata.builders.data.InternalUserData;
-import org.innovateuk.ifs.user.domain.CompAdminEmail;
-import org.innovateuk.ifs.user.domain.ProjectFinanceEmail;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -15,8 +13,6 @@ import java.util.UUID;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -28,24 +24,7 @@ public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserDat
 
     @Override
     public InternalUserDataBuilder registerUser(String firstName, String lastName, String emailAddress, String organisationName, String phoneNumber) {
-        return with(data -> {
-
-            doAs(systemRegistrar(), () ->
-                    registerUser(firstName, lastName, data.getEmailAddress(), organisationName, phoneNumber, data.getRoles(), data));
-        });
-    }
-
-    @Override
-    public InternalUserDataBuilder createUserDirectly(String firstName, String lastName, String emailAddress, String organisationName, String phoneNumber, boolean emailVerified){
-        return with(data -> {
-
-            User user = userRepository.save(new User(firstName, lastName, emailAddress, null, UUID.randomUUID().toString()));
-            List<String> roleNames = simpleMap(data.getRoles(), userRoleType -> userRoleType.getName());
-            List<Role> roles = roleRepository.findByNameIn(roleNames);
-            user.getRoles().addAll(roles);
-            user.setStatus(emailVerified ? UserStatus.ACTIVE : UserStatus.INACTIVE);
-            userRepository.save(user);
-        });
+        return with(data -> doAs(systemRegistrar(), () -> registerUser(firstName, lastName, data.getEmailAddress(), organisationName, phoneNumber, data.getRoles(), data)));
     }
 
     public static InternalUserDataBuilder newInternalUserData(ServiceLocator serviceLocator) {
@@ -70,27 +49,7 @@ public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserDat
     }
 
     public InternalUserDataBuilder withRoles(List<UserRoleType> roles) {
-        return with(data -> {
-           data.setRoles(roles);
-        });
-    }
-
-    public InternalUserDataBuilder createPreRegistrationEntry(String emailAddress) {
-        return with(data -> {
-            if (data.getRoles().contains(COMP_ADMIN)) {
-                CompAdminEmail preregistrationEntry = new CompAdminEmail();
-                preregistrationEntry.setEmail(emailAddress);
-                compAdminEmailRepository.save(preregistrationEntry);
-            }
-
-            if (data.getRoles().contains(PROJECT_FINANCE)) {
-                ProjectFinanceEmail preregistrationEntry = new ProjectFinanceEmail();
-                preregistrationEntry.setEmail(emailAddress);
-                projectFinanceEmailRepository.save(preregistrationEntry);
-            }
-
-            data.setEmailAddress(emailAddress);
-        });
+        return with(data -> data.setRoles(roles));
     }
 
     @Override

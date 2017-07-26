@@ -118,7 +118,6 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected TokenRepository tokenRepository;
     protected TokenService tokenService;
     protected InviteService inviteService;
-    protected CompAdminEmailRepository compAdminEmailRepository;
     protected MilestoneService milestoneService;
     protected ApplicationService applicationService;
     protected QuestionService questionService;
@@ -131,7 +130,6 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected MonitoringOfficerService monitoringOfficerService;
     protected FinanceRowService financeRowService;
     protected SectionService sectionService;
-    protected ProjectFinanceEmailRepository projectFinanceEmailRepository;
     protected UsersRolesService usersRolesService;
     protected ApplicationInviteRepository applicationInviteRepository;
     protected EthnicityRepository ethnicityRepository;
@@ -199,7 +197,6 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         tokenRepository = serviceLocator.getBean(TokenRepository.class);
         tokenService = serviceLocator.getBean(TokenService.class);
         inviteService = serviceLocator.getBean(InviteService.class);
-        compAdminEmailRepository = serviceLocator.getBean(CompAdminEmailRepository.class);
         milestoneService = serviceLocator.getBean(MilestoneService.class);
         applicationService = serviceLocator.getBean(ApplicationService.class);
         questionService = serviceLocator.getBean(QuestionService.class);
@@ -212,7 +209,6 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         monitoringOfficerService = serviceLocator.getBean(MonitoringOfficerService.class);
         financeRowService = serviceLocator.getBean(FinanceRowService.class);
         sectionService = serviceLocator.getBean(SectionService.class);
-        projectFinanceEmailRepository = serviceLocator.getBean(ProjectFinanceEmailRepository.class);
         usersRolesService = serviceLocator.getBean(UsersRolesService.class);
         applicationInviteRepository = serviceLocator.getBean(ApplicationInviteRepository.class);
         ethnicityRepository = serviceLocator.getBean(EthnicityRepository.class);
