@@ -83,10 +83,10 @@ public class UserManagementController {
         return view(model, "pending", page, size, Objects.toString(request.getQueryString(), ""));
     }
 
-    private String view(Model model, String activeTab, int page, int size, String existingQueryString){
+    private String viewOLD(Model model, String activeTab, int page, int size, String existingQueryString){
         return userRestService.getActiveInternalUsers(page, size)
                 .andOnSuccessReturn(activeInternalUsers -> userRestService.getInactiveInternalUsers(page, size)
-                        .andOnSuccessReturn(inactiveInternalUsers -> inviteUserRestService.getPendingInternalUsers(page, size)
+                        .andOnSuccessReturn(inactiveInternalUsers -> inviteUserRestService.getPendingInternalUserInvites(page, size)
                                 .andOnSuccessReturn(pendingInternalUsers ->
                         {
                             model.addAttribute("model",
@@ -103,6 +103,28 @@ public class UserManagementController {
                                             new PaginationViewModel(pendingInternalUsers, "pending?" + existingQueryString)));
                             return "admin/users";
                         }).getSuccessObjectOrThrowException()).getSuccessObjectOrThrowException()).getSuccessObjectOrThrowException();
+    }
+
+    private String view(Model model, String activeTab, int page, int size, String existingQueryString){
+        return userRestService.getActiveInternalUsers(page, size)
+                .andOnSuccessReturn(activeInternalUsers -> userRestService.getInactiveInternalUsers(page, size)
+                        .andOnSuccessReturn(inactiveInternalUsers -> inviteUserRestService.getPendingInternalUserInvites(page, size)
+                                .andOnSuccessReturn(pendingInternalUserInvites ->
+                                {
+                                    model.addAttribute("model",
+                                            new UserListViewModel(
+                                                    activeTab,
+                                                    activeInternalUsers.getContent(),
+                                                    inactiveInternalUsers.getContent(),
+                                                    pendingInternalUserInvites.getContent(),
+                                                    activeInternalUsers.getTotalElements(),
+                                                    inactiveInternalUsers.getTotalElements(),
+                                                    pendingInternalUserInvites.getTotalElements(),
+                                                    new PaginationViewModel(activeInternalUsers, "active?" + existingQueryString),
+                                                    new PaginationViewModel(inactiveInternalUsers, "inactive?" + existingQueryString),
+                                                    new PaginationViewModel(pendingInternalUserInvites, "pending?" + existingQueryString)));
+                                    return "admin/users";
+                                }).getSuccessObjectOrThrowException()).getSuccessObjectOrThrowException()).getSuccessObjectOrThrowException();
     }
 
     @GetMapping("/user/{userId}")

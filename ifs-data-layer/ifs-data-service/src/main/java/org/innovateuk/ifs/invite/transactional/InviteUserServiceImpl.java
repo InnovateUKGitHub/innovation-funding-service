@@ -11,6 +11,7 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.mapper.RoleInviteMapper;
 import org.innovateuk.ifs.invite.repository.InviteRoleRepository;
+import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -214,12 +215,35 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
         return true;
     }
 
-    @Override
-    public ServiceResult<UserPageResource> findPendingInternalUsers(Pageable pageable) {
+    //@Override
+    public ServiceResult<UserPageResource> findPendingInternalUsersOLD(Pageable pageable) {
 
         Page<RoleInvite> pagedResult = inviteRoleRepository.findByStatus(InviteStatus.SENT, pageable);
         List<UserResource> userResources = simpleMap(pagedResult.getContent(), roleInvite -> constructUserResource(roleInvite));
         return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), userResources, pagedResult.getNumber(), pagedResult.getSize()));
+    }
+
+    private UserResource constructUserResourceOLD(RoleInvite roleInvite){
+
+        Role role = roleInvite.getTarget();
+        RoleResource roleResource = roleMapper.mapToResource(role);
+
+        UserResource userResource = new UserResource();
+        // Just setting the first name here as getName contains the full name. This would suffice.
+        userResource.setFirstName(roleInvite.getName());
+        userResource.setEmail(roleInvite.getEmail());
+        userResource.setRoles(Collections.singletonList(roleResource));
+
+        return userResource;
+    }
+
+    @Override
+    public ServiceResult<RoleInvitePageResource> findPendingInternalUserInvites(Pageable pageable) {
+
+        Page<RoleInvite> pagedResult = inviteRoleRepository.findByStatus(InviteStatus.SENT, pageable);
+        List<RoleInviteResource> roleInviteResources = simpleMap(pagedResult.getContent(), roleInvite -> roleInviteMapper.mapToResource(roleInvite));
+
+        return serviceSuccess(new RoleInvitePageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), roleInviteResources, pagedResult.getNumber(), pagedResult.getSize()));
     }
 
     private UserResource constructUserResource(RoleInvite roleInvite){

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.admin.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 
@@ -18,7 +19,7 @@ public class UserListViewModel {
 
     private List<UserResource> inactiveUsers;
 
-    private List<UserResource> pendingUsers;
+    private List<RoleInviteResource> pendingInvites;
 
     private long activeCount;
 
@@ -30,21 +31,21 @@ public class UserListViewModel {
 
     private PaginationViewModel inactiveUsersPagination;
 
-    private PaginationViewModel pendingUsersPagination;
+    private PaginationViewModel pendingInvitesPagination;
 
-    public UserListViewModel(String tab, List<UserResource> activeUsers, List<UserResource> inactiveUsers, List<UserResource> pendingUsers,
+    public UserListViewModel(String tab, List<UserResource> activeUsers, List<UserResource> inactiveUsers, List<RoleInviteResource> pendingInvites,
                              long activeCount, long inactiveCount, long pendingCount,
-                             PaginationViewModel activeUsersPagination, PaginationViewModel inactiveUsersPagination, PaginationViewModel pendingUsersPagination) {
+                             PaginationViewModel activeUsersPagination, PaginationViewModel inactiveUsersPagination, PaginationViewModel pendingInvitesPagination) {
         this.tab = tab;
         this.activeUsers = activeUsers;
         this.inactiveUsers = inactiveUsers;
-        this.pendingUsers = pendingUsers;
+        this.pendingInvites = pendingInvites;
         this.activeCount = activeCount;
         this.inactiveCount = inactiveCount;
         this.pendingCount = pendingCount;
         this.activeUsersPagination = activeUsersPagination;
         this.inactiveUsersPagination = inactiveUsersPagination;
-        this.pendingUsersPagination = pendingUsersPagination;
+        this.pendingInvitesPagination = pendingInvitesPagination;
     }
 
     public long getActiveCount() {
@@ -67,8 +68,8 @@ public class UserListViewModel {
         return inactiveUsers;
     }
 
-    public List<UserResource> getPendingUsers() {
-        return pendingUsers;
+    public List<RoleInviteResource> getPendingInvites() {
+        return pendingInvites;
     }
 
     public PaginationViewModel getActiveUsersPagination() {
@@ -79,8 +80,8 @@ public class UserListViewModel {
         return inactiveUsersPagination;
     }
 
-    public PaginationViewModel getPendingUsersPagination() {
-        return pendingUsersPagination;
+    public PaginationViewModel getPendingInvitesPagination() {
+        return pendingInvitesPagination;
     }
 
     public String getTab() {
@@ -102,10 +103,10 @@ public class UserListViewModel {
                 .append(tab, that.tab)
                 .append(activeUsers, that.activeUsers)
                 .append(inactiveUsers, that.inactiveUsers)
-                .append(pendingUsers, that.pendingUsers)
+                .append(pendingInvites, that.pendingInvites)
                 .append(activeUsersPagination, that.activeUsersPagination)
                 .append(inactiveUsersPagination, that.inactiveUsersPagination)
-                .append(pendingUsersPagination, that.pendingUsersPagination)
+                .append(pendingInvitesPagination, that.pendingInvitesPagination)
                 .isEquals();
     }
 
@@ -115,13 +116,13 @@ public class UserListViewModel {
                 .append(tab)
                 .append(activeUsers)
                 .append(inactiveUsers)
-                .append(pendingUsers)
+                .append(pendingInvites)
                 .append(activeCount)
                 .append(inactiveCount)
                 .append(pendingCount)
                 .append(activeUsersPagination)
                 .append(inactiveUsersPagination)
-                .append(pendingUsersPagination)
+                .append(pendingInvitesPagination)
                 .toHashCode();
     }
 }

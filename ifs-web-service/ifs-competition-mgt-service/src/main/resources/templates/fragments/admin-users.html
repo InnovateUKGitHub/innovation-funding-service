@@ -18,14 +18,37 @@
     <th:block th:insert="fragments/elements :: general-pagination(pagination=${pagination})" />
 </th:block>
 
-<th:block th:fragment="pending(users, count, pagination)" xmlns:th="http://www.w3.org/1999/html">
+<th:block th:fragment="pending(invites, count, pagination)" xmlns:th="http://www.w3.org/1999/html">
     <h2 class="heading-medium">Pending</h2>
     <p>
         <span class="heading-xlarge no-margin" th:text="${count}">10</span>
         <span class="heading-small">pending internal users</span>
     </p>
-    <th:block th:insert="fragments/admin-users :: users-table(users=${users})" />
+    <th:block th:insert="fragments/admin-users :: invites-table(invites=${invites})" />
     <th:block th:insert="fragments/elements :: general-pagination(pagination=${pagination})" />
+</th:block>
+
+<th:block th:fragment="invites-table(invites)" xmlns:th="http://www.w3.org/1999/html">
+    <div class="table-overflow">
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Role profile</th>
+                <th scope="col">Email address</th>
+                <th scope="col"><span class="visuallyhidden">Invite status</span></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="invite : ${invites}">
+                <td><th:block th:text="${invite.name}"/></td>
+                <td th:text="${invite.getRoleDisplayName()}">IFS Admin</td>
+                <td><a th:href="${'mailto:' + invite.email}" th:text="${invite.email}">steve.smith@empire.com</a></td>
+                <td><span class="form-hint"></span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </th:block>
 
 <th:block th:fragment="users-table(users)" xmlns:th="http://www.w3.org/1999/html">

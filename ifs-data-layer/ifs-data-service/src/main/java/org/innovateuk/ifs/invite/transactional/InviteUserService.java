@@ -2,6 +2,7 @@ package org.innovateuk.ifs.invite.transactional;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -28,6 +29,6 @@ public interface InviteUserService {
             description = "The System Registration user can get status of invite using hash to process registration")
     ServiceResult<Boolean> checkExistingUser(String inviteHash);
 
-    @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<UserPageResource> findPendingInternalUsers(Pageable pageable);
+    //@PostAuthorize("hasPermission(returnObject, 'READ')") - TODO - Add similar permissions
+    ServiceResult<RoleInvitePageResource> findPendingInternalUserInvites(Pageable pageable);
 }

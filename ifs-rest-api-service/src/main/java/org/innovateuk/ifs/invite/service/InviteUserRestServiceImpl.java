@@ -3,6 +3,7 @@ package org.innovateuk.ifs.invite.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
+import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.springframework.stereotype.Service;
@@ -37,9 +38,9 @@ public class InviteUserRestServiceImpl extends BaseRestService implements Invite
     }
 
     @Override
-    public RestResult<UserPageResource> getPendingInternalUsers(int pageNumber, int pageSize) {
+    public RestResult<RoleInvitePageResource> getPendingInternalUserInvites(int pageNumber, int pageSize) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         String uriWithParams = buildPaginationUri(inviteRestUrl + "/internal/pending", pageNumber, pageSize, null, params);
-        return getWithRestResult(uriWithParams, UserPageResource.class);
+        return getWithRestResult(uriWithParams, RoleInvitePageResource.class);
     }
 }

@@ -51,7 +51,7 @@
 
     <th:block th:if="${model.tab == 'inactive'}" th:insert="fragments/admin-users :: inactive(users=${model.inactiveUsers}, count=${model.inactiveCount}, pagination=${model.inactiveUsersPagination})" />
 
-    <th:block th:if="${model.tab == 'pending'}" th:insert="fragments/admin-users :: pending(users=${model.pendingUsers}, count=${model.pendingCount}, pagination=${model.pendingUsersPagination})" />
+    <th:block th:if="${model.tab == 'pending'}" th:insert="fragments/admin-users :: pending(invites=${model.pendingInvites}, count=${model.pendingCount}, pagination=${model.pendingInvitesPagination})" />
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
