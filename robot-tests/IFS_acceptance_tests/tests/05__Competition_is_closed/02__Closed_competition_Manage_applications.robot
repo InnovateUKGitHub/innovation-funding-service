@@ -13,6 +13,9 @@ Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 
+*** Variables ***
+${Neural_id}   ${application_ids['Neural networks to optimise freight train routing']}
+
 *** Test Cases ***
 Search for applications
     [Documentation]    INFUND-8061
@@ -64,6 +67,13 @@ Assessor link goes to the assessor profile
     Given the user clicks the button/link        link=Madeleine Martin
     Then the user should see the element         jQuery=h1:contains("Assessor profile") ~ p:contains("Madeleine Martin")
     [Teardown]  the user clicks the button/link  link=Back
+
+Assessor Progress page
+    [Documentation]  IFS-156
+    [Tags]
+    Given the user clicks the button/link  jQuery=td:contains("Madeleine Martin") ~ td a:contains("Assign")
+    Then the user should see the element   jQuery=h2:contains("Assigned") + p:contains("No applications have been assigned to this assessor")
+    And the user should see the element    jQuery=h2:contains("Applications") ~ div td:contains("${Neural_id}") + td:contains("Neural") + td:contains("Neural Industries") + td:contains("1")
 
 *** Keywords ***
 the assessor list is correct before changes

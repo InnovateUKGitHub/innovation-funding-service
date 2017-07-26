@@ -17,6 +17,9 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import static org.innovateuk.ifs.security.SecurityRuleUtil.isSupport;
+import static org.innovateuk.ifs.security.SecurityRuleUtil.isInnovationLead;
+
 @Component
 @PermissionRules
 public class QuestionStatusRules {
@@ -42,8 +45,14 @@ public class QuestionStatusRules {
 
     @PermissionRule(value = "READ", description = "Support users can read statuses of all questions")
     public boolean supportCanReadQuestionStatus(QuestionStatusResource questionStatusResource, UserResource user){
-        return user.hasRole(UserRoleType.SUPPORT);
+        return isSupport(user);
     }
+
+    @PermissionRule(value = "READ", description = "Innovation lead users can read statuses of all questions")
+    public boolean innovationLeadCanReadQuestionStatus(QuestionStatusResource questionStatusResource, UserResource user){
+        return isInnovationLead(user);
+    }
+
 
     @PermissionRule(value = "UPDATE", description = "Users can only update statuses of questions they are assigned to")
     public boolean userCanUpdateQuestionStatus(QuestionStatusResource questionStatusResource, UserResource user){
@@ -65,7 +74,7 @@ public class QuestionStatusRules {
     }
 
     private boolean userIsConnected(Long applicationId, UserResource user){
-        ProcessRole processRole = processRoleRepository.findByUserIdAndApplicationId(user.getId(),  applicationId);
+        ProcessRole processRole = processRoleRepository.findByUserIdAndApplicationId(user.getId(), applicationId);
         return processRole != null;
     }
 
@@ -79,7 +88,7 @@ public class QuestionStatusRules {
     }
 
     private boolean userIsLeadApplicant(Long applicationId, UserResource user){
-        ProcessRole processRole = processRoleRepository.findByUserIdAndApplicationId(user.getId(),  applicationId);
+        ProcessRole processRole = processRoleRepository.findByUserIdAndApplicationId(user.getId(), applicationId);
         return processRole.getRole().getName().equals(UserRoleType.LEADAPPLICANT.getName());
     }
 }

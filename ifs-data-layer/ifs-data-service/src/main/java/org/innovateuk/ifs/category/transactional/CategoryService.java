@@ -10,19 +10,19 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import java.util.List;
 
 public interface CategoryService {
-    @SecuredBySpring(value = "READ", description = "Only those with either comp admin, project finance, support, assessor or system registrar roles can read innovation areas")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'assessor', 'system_registrar')")
+    @SecuredBySpring(value = "READ", description = "Only those with either comp admin, project finance, support, assessor, innovation lead or system registrar roles can read innovation areas")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'assessor', 'system_registrar', 'innovation_lead')")
     ServiceResult<List<InnovationAreaResource>> getInnovationAreas();
 
-    @SecuredBySpring(value = "READ", description = "Only those with either comp admin, project finance, support or assessor roles can read innovation sectors")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'assessor')")
+    @SecuredBySpring(value = "READ", description = "Only those with either comp admin, project finance, support, innovation lead or assessor roles can read innovation sectors")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'assessor', 'innovation_lead')")
     ServiceResult<List<InnovationSectorResource>> getInnovationSectors();
 
-    @SecuredBySpring(value = "READ", description = "Only those with either comp admin, project finance, support, assessor or applicant roles can read research categories")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'assessor', 'applicant')")
+    @SecuredBySpring(value = "READ", description = "Only those with either comp admin, project finance, support, assessor, innovation lead or applicant roles can read research categories")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'assessor', 'applicant', 'innovation_lead')")
     ServiceResult<List<ResearchCategoryResource>> getResearchCategories();
 
-    @SecuredBySpring(value = "READ", description = "Only those with either comp admin, project finance or support roles can read innovation areas by sector")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
+    @SecuredBySpring(value = "READ", description = "Only those with either comp admin, project finance, innovation lead or support roles can read innovation areas by sector")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     ServiceResult<List<InnovationAreaResource>> getInnovationAreasBySector(long sectorId);
 }

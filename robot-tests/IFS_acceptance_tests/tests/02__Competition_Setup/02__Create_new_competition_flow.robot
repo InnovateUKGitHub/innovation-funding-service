@@ -627,7 +627,7 @@ The user enters valid data in the initial details
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear  ${nextyear}
-    And the user selects the option from the drop-down menu    Ian Cooper    id=leadTechnologistUserId
+    And the user selects the option from the drop-down menu    Ian Cooper    id=innovationLeadUserId
     And the user selects the option from the drop-down menu    John Doe   id=executiveUserId
 
 The competition should show in the correct section

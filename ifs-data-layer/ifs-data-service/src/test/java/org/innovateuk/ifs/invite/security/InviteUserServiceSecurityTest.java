@@ -5,7 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.invite.transactional.InviteUserService;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
-import org.innovateuk.ifs.user.resource.AdminRoleType;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +29,7 @@ public class InviteUserServiceSecurityTest extends BaseServiceSecurityTest<Invit
         UserResource invitedUser = UserResourceBuilder.newUserResource().build();
 
         assertAccessDenied(
-                () -> classUnderTest.saveUserInvite(invitedUser, AdminRoleType.SUPPORT),
+                () -> classUnderTest.saveUserInvite(invitedUser, UserRoleType.SUPPORT),
                 () -> {
                     verify(inviteUserPermissionRules).ifsAdminCanSaveNewUserInvite(any(UserResource.class), any(UserResource.class));
                 });
@@ -43,7 +43,7 @@ public class InviteUserServiceSecurityTest extends BaseServiceSecurityTest<Invit
     public static class TestInviteUserService implements InviteUserService {
 
         @Override
-        public ServiceResult<Void> saveUserInvite(UserResource invitedUser, AdminRoleType adminRoleType) {
+        public ServiceResult<Void> saveUserInvite(UserResource invitedUser, UserRoleType adminRoleType) {
             return null;
         }
 

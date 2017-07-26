@@ -229,7 +229,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         setupApplicantResource();
 
         assertApplicationOverviewWithBackUrl("APPLICATION_PROGRESS",
-                "/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "/assessors");
+                "/assessment/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "/assessors");
     }
 
     @Test
@@ -254,6 +254,23 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
 
         assertApplicationOverviewWithBackUrl("INELIGIBLE_APPLICATIONS",
                 "/competition/" + competitionResource.getId() + "/applications/ineligible");
+    }
+
+    @Test
+    public void displayApplicationOverview_assessorProgressOrigin() throws Exception {
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+
+        this.setupApplicationResponses();
+        this.setupInvites();
+        this.setupResearchCategories();
+
+        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId())
+                .param("origin", "ASSESSOR_PROGRESS")
+                .param("assessorId", "10"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition-mgt-application-overview"))
+                .andExpect(model().attribute("backUrl", "/assessment/competition/" + competitionResource.getId() + "/assessors/10"));
     }
 
     @Test
