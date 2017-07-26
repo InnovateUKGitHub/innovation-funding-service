@@ -235,7 +235,7 @@ Lead applicant invites a non registered user in the same organisation
     When The user enters text to a text field      name=stagedInvite.name    Roger Axe
     And The user enters text to a text field       name=stagedInvite.email    ${test_mailbox_one}+inviteorg2@gmail.com
     And the user clicks the button/link            jQuery=button:contains("Invite")
-    Then the user should see the text in the page  Invite pending for 0 days
+    Then the user should see the element           jQuery=.table-overflow td:contains(${test_mailbox_one}+inviteorg2@gmail.com)+td:contains("Invite pending for 0 days")
    [Teardown]    Logout as user
 
 Registered partner should not create new org but should follow the create account flow
@@ -259,8 +259,8 @@ Lead should not see pending status for accepted invite
     Logging in and Error Checking               &{lead_applicant_credentials}
     When the user clicks the button/link        link=Invite robot test application
     And the user clicks the button/link         link=view team members and add collaborators
-    And the user clicks the button/link         link=Update Empire Ltd
-    And the user should see the element         jQuery=.table-overflow td:contains(${test_mailbox_one}+inviteorg2@gmail.com)
+    And the user clicks the button/link         link=Update ${EMPIRE_LTD_NAME}
+    Then the user should see the element         jQuery=.table-overflow td:contains(${test_mailbox_one}+inviteorg2@gmail.com)
 
 *** Keywords ***
 The lead applicant should have the correct status

@@ -59,8 +59,7 @@ Invite a user with the same organisation under the same organisation
 
 Lead should not see pending status for accepted invite
     [Documentation]    IFS-68
-    [Tags]     Email  Pending
-    #  TODO Pending due to IFS-1007
+    [Tags]     Email
     [Setup]  change the invite sent date
     Log in as a different user                  ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     Given the user navigates to the page        ${DASHBOARD_URL}
