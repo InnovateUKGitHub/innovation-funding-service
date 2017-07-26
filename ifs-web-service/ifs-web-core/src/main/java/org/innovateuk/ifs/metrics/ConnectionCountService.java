@@ -15,7 +15,11 @@ public class ConnectionCountService {
     }
 
     public boolean connectionHealthy() {
-        return 0 < connManager.getTotalStats().getAvailable();
+        return connManager.getMaxTotal() > getUsedConnections();
+    }
+
+    private int getUsedConnections(){
+        return connManager.getTotalStats().getLeased();
     }
 
 }
