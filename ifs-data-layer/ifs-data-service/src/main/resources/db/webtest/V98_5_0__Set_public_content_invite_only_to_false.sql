@@ -1,2 +1,0 @@
--- Same was added in V95_4_0__Add_inviteOnly_column_to_competition.sql so this then new flag could be set on all envs, but it is required here again post rebaselining
-UPDATE `public_content` SET `invite_only`=b'0';

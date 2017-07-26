@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.builder.ApplicationBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.invite.builder.InviteResourceBuilder;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.user.domain.Role;
@@ -17,6 +16,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -61,7 +61,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
 
     @Test
     public void testLeadApplicantCanInviteAnOrganisationToTheApplication() throws Exception {
-        List<ApplicationInviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
+        List<ApplicationInviteResource> inviteResource = newApplicationInviteResource().withApplication(applicationResource.getId()).build(5);
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
 
         assertTrue(rules.leadApplicantCanInviteAnOrganisationToTheApplication(inviteOrganisationResource, leadApplicant));
@@ -71,7 +71,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
 
     @Test
     public void testConsortiumCanViewAnyInviteOrganisation() throws Exception {
-        List<ApplicationInviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
+        List<ApplicationInviteResource> inviteResource = newApplicationInviteResource().withApplication(applicationResource.getId()).build(5);
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
 
         assertTrue(rules.consortiumCanViewAnyInviteOrganisation(inviteOrganisationResource, leadApplicant));
@@ -81,7 +81,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
 
     @Test
     public void testConsortiumCanViewAnInviteOrganisationToTheApplication() throws Exception {
-        List<ApplicationInviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
+        List<ApplicationInviteResource> inviteResource = newApplicationInviteResource().withApplication(applicationResource.getId()).build(5);
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
 
         assertTrue(rules.consortiumCanViewAnInviteOrganisation(inviteOrganisationResource, leadApplicant));
@@ -91,7 +91,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
 
     @Test
     public void testConsortiumCanViewAnInviteOrganisationToTheApplicationForAConfirmedOrganisation() throws Exception {
-        List<ApplicationInviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
+        List<ApplicationInviteResource> inviteResource = newApplicationInviteResource().withApplication(applicationResource.getId()).build(5);
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource()
                 .withOrganisation(organisationResource.getId())
                 .withInviteResources(inviteResource).build();
@@ -103,7 +103,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
 
     @Test
     public void testLeadApplicantCanSaveInviteAnOrganisationToTheApplication() throws Exception {
-        List<ApplicationInviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
+        List<ApplicationInviteResource> inviteResource = newApplicationInviteResource().withApplication(applicationResource.getId()).build(5);
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
 
         assertTrue(rules.leadApplicantCanSaveInviteAnOrganisationToTheApplication(inviteOrganisationResource, leadApplicant));
@@ -113,7 +113,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
 
     @Test
     public void leadApplicantCanCreateApplicationInvitesIfApplicationEditableWhenApplicationCreated() throws Exception {
-        List<ApplicationInviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
+        List<ApplicationInviteResource> inviteResource = newApplicationInviteResource().withApplication(applicationResource.getId()).build(5);
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
 
         Application application = ApplicationBuilder.newApplication()
@@ -128,7 +128,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
 
     @Test
     public void leadApplicantCanCreateApplicationInvitesIfApplicationEditableWhenApplicationOpen() throws Exception {
-        List<ApplicationInviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
+        List<ApplicationInviteResource> inviteResource = newApplicationInviteResource().withApplication(applicationResource.getId()).build(5);
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
 
         Application application = ApplicationBuilder.newApplication()
@@ -143,7 +143,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
 
     @Test
     public void leadApplicantCanCreateApplicationInvitesIfApplicationEditableWhenApplicationSubmitted() throws Exception {
-        List<ApplicationInviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
+        List<ApplicationInviteResource> inviteResource = newApplicationInviteResource().withApplication(applicationResource.getId()).build(5);
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
 
         Application application = ApplicationBuilder.newApplication()

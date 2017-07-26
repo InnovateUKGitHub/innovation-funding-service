@@ -187,6 +187,8 @@ task dockerTidy(type:Exec) {
     args = [project.version]
 }
 
+import org.apache.tools.ant.filters.*
+
 task happyRobotTests(type:Exec) {
     workingDir 'robot-tests'
     commandLine './micro_run_tests.sh', '-hnw'

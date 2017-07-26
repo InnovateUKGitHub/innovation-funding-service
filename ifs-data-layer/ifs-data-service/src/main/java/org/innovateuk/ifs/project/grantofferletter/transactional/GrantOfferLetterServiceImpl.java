@@ -338,7 +338,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
                 .andOnSuccess(project ->
                         validateRemoveGrantOfferLetter(project).andOnSuccess(() ->
                                 getGrantOfferLetterFileEntry(project).andOnSuccess(fileEntry ->
-                                        fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
+                                        fileService.deleteFileIgnoreNotFound(fileEntry.getId()).andOnSuccessReturnVoid(() ->
                                                 removeGrantOfferLetterFileFromProject(project)))));
     }
 
@@ -367,7 +367,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         return getProject(projectId).andOnSuccess(this::validateProjectIsInSetup)
                 .andOnSuccess(project ->
                         getSignedGrantOfferLetterFileEntry(project).andOnSuccess(fileEntry ->
-                                fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
+                                fileService.deleteFileIgnoreNotFound(fileEntry.getId()).andOnSuccessReturnVoid(() ->
                                         removeSignedGrantOfferLetterFileFromProject(project))));
     }
 

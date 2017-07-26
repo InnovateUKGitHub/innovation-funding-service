@@ -50,6 +50,8 @@ public class ValidationUtil {
     @Autowired
     ApplicationContext context;
 
+    @Autowired
+    private AcademicJesValidator academicJesValidator;
 
     @Autowired
     @Lazy
@@ -140,9 +142,9 @@ public class ValidationUtil {
         return binder.getBindingResult();
     }
 
-    public BindingResult validationJesForm(FormInputResponse response) {
-        DataBinder binder = new DataBinder(response);
-        binder.addValidators(new AcademicJesValidator());
+    public BindingResult validationJesForm(Application application) {
+        DataBinder binder = new DataBinder(application);
+        binder.addValidators(academicJesValidator);
         binder.validate();
         return binder.getBindingResult();
     }
@@ -188,7 +190,7 @@ public class ValidationUtil {
         if (formInput.getFormValidators().isEmpty() && !hasValidator(formInput)) {
             // no validator? question is valid!
         } else {
-            BindingResult validationResult = validatorService.validateFormInputResponse(application.getId(), formInput.getId(), markedAsCompleteById);
+            BindingResult validationResult = validatorService.validateFormInputResponse(application, formInput.getId(), markedAsCompleteById);
 
             if (validationResult.hasErrors()) {
                 validationMessages.add(new ValidationMessages(formInput.getId(), validationResult));
