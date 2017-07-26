@@ -412,4 +412,12 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
         ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
         return applicationFinanceRowRepository.findByTargetId(applicationFinance.getId());
     }
+
+    public ApplicationFinanceRow updateCost(ApplicationFinanceRow newCostItem) {
+        return applicationFinanceRowRepository.save(newCostItem);
+    }
+
+    public ApplicationFinanceRow addCost(Long applicationFinanceId, Long questionId, ApplicationFinanceRow newCostItem) {
+        return applicationFinanceRowRepository.save(newCostItem);
+    }
 }

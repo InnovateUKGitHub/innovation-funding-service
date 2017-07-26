@@ -45,6 +45,7 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.invite.service.InviteUserService;
 import org.innovateuk.ifs.invite.service.RejectionReasonRestService;
 import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
@@ -213,6 +214,8 @@ public class BaseUnitTest {
     public StatusService statusService;
     @Mock
     public ProjectDetailsService projectDetailsService;
+    @Mock
+    public InviteUserService inviteUserServiceMock;
     @Mock
     public MonitoringOfficerService monitoringOfficerService;
     @Mock
@@ -714,7 +717,7 @@ public class BaseUnitTest {
 
     public void setupInvites() {
         when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(emptyList()));
-        InviteOrganisationResource inviteOrganisation = new InviteOrganisationResource(2L, "Invited Organisation Ltd", null, null);
+        InviteOrganisationResource inviteOrganisation = new InviteOrganisationResource(2L, "Invited Organisation Ltd", "Org type", null, null);
 
         invite = new ApplicationInviteResource();
         invite.setStatus(InviteStatus.SENT);

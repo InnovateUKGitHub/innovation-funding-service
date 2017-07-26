@@ -191,7 +191,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     }
 
     @Test
-    public void searchDashboardWithExtraWhitesapce() throws Exception {
+    public void searchDashboardWithExtraWhitespace() throws Exception {
         CompetitionSearchResult searchResult = new CompetitionSearchResult();
         String searchQuery = "  search  term  ";
         String trimmedQuery = "search term";
@@ -222,6 +222,27 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     public void testLiveDashBoardSupportView() throws Exception {
 
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.SUPPORT).build())).build());
+
+        Mockito.when(competitionDashboardSearchService.getLiveCompetitions()).thenReturn(competitions);
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/live"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("dashboard/live"))
+                .andReturn();
+
+        Object model = result.getModelAndView().getModelMap().get("model");
+        assertTrue(model.getClass().equals(LiveDashboardViewModel.class));
+
+        LiveDashboardViewModel viewModel = (LiveDashboardViewModel) model;
+        assertEquals(competitions, viewModel.getCompetitions());
+        assertEquals(counts, viewModel.getCounts());
+        assertEquals(true, viewModel.isSupportView());
+    }
+
+    @Test
+    public void testLiveDashBoardSupportViewInnovationLead() throws Exception {
+
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.INNOVATION_LEAD).build())).build());
 
         Mockito.when(competitionDashboardSearchService.getLiveCompetitions()).thenReturn(competitions);
 

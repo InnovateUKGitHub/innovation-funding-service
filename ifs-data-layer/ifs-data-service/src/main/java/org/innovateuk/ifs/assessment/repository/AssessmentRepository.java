@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.repository;
 
+import org.innovateuk.ifs.assessment.domain.AssessmentApplicationAssessorCount;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
@@ -20,7 +21,7 @@ import java.util.Set;
  */
 public interface AssessmentRepository extends ProcessRepository<Assessment>, PagingAndSortingRepository<Assessment, Long> {
 
-    static final String FEEDBACK_COMPLETE = "SELECT CASE WHEN COUNT(formInput.id) = 0" +
+    String FEEDBACK_COMPLETE = "SELECT CASE WHEN COUNT(formInput.id) = 0" +
             "  THEN TRUE" +
             "       ELSE FALSE END AS feedback_complete " +
             "FROM Application application" +
@@ -45,7 +46,7 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
             "      AND formInput.active = TRUE" +
             "      AND assessment.id = :id";
 
-    static final String TOTAL_SCORE = "SELECT NEW org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource(" +
+    String TOTAL_SCORE = "SELECT NEW org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource(" +
             "  CAST(COALESCE(SUM(assessorFormInputResponse.value),0) AS int)," +
             "  CAST(SUM(question.assessorMaximumScore) AS int)) " +
             "FROM Assessment assessment" +
@@ -68,13 +69,43 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
 
     List<Assessment> findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(Long userId, Long competitionId);
 
+    List<Assessment> findByParticipantUserIdAndActivityStateStateNotIn(long userId, Collection<State> states);
+
     Optional<Assessment> findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(Long userId, Long applicationId);
+
+    long countByParticipantUserIdAndActivityStateStateIn(Long userId, Set<State> states);
 
     long countByParticipantUserIdAndActivityStateStateNotIn(Long userId, Set<State> states);
 
     long countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(Long userId, Long competitionId, Set<State> states);
 
     List<Assessment> findByActivityStateStateAndTargetCompetitionId(State state, long competitionId);
+
+    @Query("SELECT new org.innovateuk.ifs.assessment.domain.AssessmentApplicationAssessorCount( " +
+            "   assessment, " +
+            "   application, " +
+            "   CAST((SELECT COUNT(otherAssessment) " +
+            "   FROM Assessment otherAssessment " +
+            "   JOIN otherAssessment.activityState otherActivityState " +
+            "   WHERE otherAssessment.target.id = application.id " +
+            "       AND otherActivityState.state IN :states " +
+            "   GROUP BY otherAssessment.target " +
+            "   ) as int)" +
+            ") " +
+            "FROM Assessment assessment " +
+            "JOIN assessment.target application " +
+            "JOIN assessment.target.competition competition " +
+            "JOIN assessment.activityState activityState " +
+            "JOIN assessment.participant participant " +
+            "WHERE competition.id = :competitionId " +
+            "   AND participant.user.id = :assessorId " +
+            "   AND activityState.state IN :states " +
+            "ORDER BY application.id")
+    List<AssessmentApplicationAssessorCount> getAssessorApplicationAssessmentCountsForStates(
+            @Param("competitionId") long competitionId,
+            @Param("assessorId") long assessorId,
+            @Param("states") Collection<State> states
+    );
 
     int countByActivityStateStateAndTargetCompetitionId(State state, Long competitionId);
 

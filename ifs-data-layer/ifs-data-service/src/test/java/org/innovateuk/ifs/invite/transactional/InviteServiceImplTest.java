@@ -54,9 +54,9 @@ import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newAp
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
+import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
-import static org.innovateuk.ifs.invite.builder.InviteResourceBuilder.newInviteResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
@@ -185,7 +185,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
     @Test
     public void createApplicationInvites() {
 
-        List<ApplicationInviteResource> inviteResources = newInviteResource()
+        List<ApplicationInviteResource> inviteResources = newApplicationInviteResource()
                 .withApplication(1L)
                 .withName("testname")
                 .withEmail("testemail", "testemail1", "testemail2", "testemail3", "testemail4")
@@ -228,7 +228,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
     @Test
     public void createApplicationInvitesWithInvalidInvitesNoApplicationId() {
 
-        List<ApplicationInviteResource> inviteResources = newInviteResource()
+        List<ApplicationInviteResource> inviteResources = newApplicationInviteResource()
                 .withName("testname")
                 .withEmail("testemail")
                 .build(5);
@@ -239,7 +239,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
     @Test
     public void createApplicationInvitesWithInvalidInvitesNoEmailAddress() {
 
-        List<ApplicationInviteResource> inviteResources = newInviteResource()
+        List<ApplicationInviteResource> inviteResources = newApplicationInviteResource()
                 .withId(1L)
                 .withName("testname")
                 .build(5);
@@ -250,7 +250,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
     @Test
     public void createApplicationInvitesWithInvalidInvitesNoName() {
 
-        List<ApplicationInviteResource> inviteResources = newInviteResource()
+        List<ApplicationInviteResource> inviteResources = newApplicationInviteResource()
                 .withId(1L)
                 .withEmail("testemail")
                 .build(5);
@@ -261,7 +261,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
     @Test
     public void createApplicationInvitesWithInvalidOrganisationInviteNoOrganisationName() {
 
-        List<ApplicationInviteResource> inviteResources = newInviteResource()
+        List<ApplicationInviteResource> inviteResources = newApplicationInviteResource()
                 .withApplication(1L)
                 .withName("testname")
                 .withEmail("testemail")
@@ -283,10 +283,8 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         verify(applicationInviteRepositoryMock, never()).save(isA(List.class));
     }
 
-    @Ignore
     @Test
     public void getInviteOrganisationByHash() {
-
         Competition competition = newCompetition().build();
         Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
         User user = newUser().build();
@@ -296,23 +294,20 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         Application application = newApplication().withCompetition(competition).withProcessRoles(leadApplicantProcessRole).build();
         InviteOrganisation inviteOrganisation = newInviteOrganisation().build();
         ApplicationInvite invite = ApplicationInviteBuilder.newApplicationInvite().withInviteOrganisation(inviteOrganisation).withApplication(application).build();
-        ApplicationInviteResource inviteResource = newInviteResource().withOrganisation(1L).withApplication(application.getId()).build();
+        ApplicationInviteResource inviteResource = newApplicationInviteResource().withApplication(application.getId()).build();
 
-
-        when(applicationInviteRepositoryMock.getByHash("an organisation hash")).thenReturn(invite);
-
-        ServiceResult<InviteOrganisationResource> organisationInvite = inviteService.getInviteOrganisationByHash("an organisation hash");
-        assertTrue(organisationInvite.isSuccess());
-
-
-        List<ApplicationInviteResource> expectedInvites = singletonList(inviteResource);
-
-        InviteOrganisationResource expectedInviteOrganisation = newInviteOrganisationResource().
+        InviteOrganisationResource expectedInviteOrganisationResoucr = newInviteOrganisationResource().
                 withId(inviteOrganisation.getId()).
-                withInviteResources(expectedInvites).
+                withInviteResources(singletonList(inviteResource)).
                 build();
 
-        assertEquals(expectedInviteOrganisation, organisationInvite.getSuccessObject());
+        when(applicationInviteRepositoryMock.getByHash("an organisation hash")).thenReturn(invite);
+        when(inviteOrganisationRepositoryMock.findOne(inviteOrganisation.getId())).thenReturn(inviteOrganisation);
+        when(inviteOrganisationMapper.mapToResource(inviteOrganisation)).thenReturn(expectedInviteOrganisationResoucr);
+
+        InviteOrganisationResource inviteOrganisationResource = inviteService.getInviteOrganisationByHash("an organisation hash").getSuccessObject();
+
+        assertEquals(expectedInviteOrganisationResoucr, inviteOrganisationResource);
     }
 
     @Test

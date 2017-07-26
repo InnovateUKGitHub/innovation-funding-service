@@ -14,15 +14,15 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 public class SecurityRuleUtil {
 
     public static boolean isCompAdmin(UserResource user) {
-        return user.hasRole( COMP_ADMIN);
+        return user.hasRole(COMP_ADMIN);
     }
 
     public static boolean isInternal(User user) {
-        return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE) || user.hasRole(UserRoleType.SUPPORT);
+        return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE) || user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD);
     }
 
     public static boolean isInternal(UserResource user) {
-        return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE) || user.hasRole(UserRoleType.SUPPORT);
+        return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE) || user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD);
     }
 
     public static boolean isInternalAdmin(UserResource user) {
@@ -38,15 +38,15 @@ public class SecurityRuleUtil {
     }
 
     public static boolean isSystemMaintenanceUser(UserResource user) {
-        return user.hasRole( SYSTEM_MAINTAINER);
+        return user.hasRole(SYSTEM_MAINTAINER);
     }
 
     public static boolean isSystemRegistrationUser(UserResource user) {
-        return user.hasRole( SYSTEM_REGISTRATION_USER);
+        return user.hasRole(SYSTEM_REGISTRATION_USER);
     }
 
     public static boolean isAssessor(UserResource user) {
-        return user.hasRole( ASSESSOR);
+        return user.hasRole(ASSESSOR);
     }
 
     public static boolean isSupport(UserResource user) { return user.hasRole(SUPPORT); }
@@ -75,5 +75,7 @@ public class SecurityRuleUtil {
     public static UserResource getAnonymous() {
         return DefaultPermissionMethodHandler.getAnonymous();
     }
+
+    public static boolean isInnovationLead(UserResource user) { return user.hasRole(INNOVATION_LEAD); }
 
 }

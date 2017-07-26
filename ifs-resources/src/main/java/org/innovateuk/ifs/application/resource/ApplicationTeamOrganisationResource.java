@@ -11,6 +11,7 @@ public class ApplicationTeamOrganisationResource {
     private OrganisationAddressResource operatingAddress;
     private OrganisationAddressResource registeredAddress;
     private String organisationName;
+    private String organisationTypeName;
     private List<ApplicationTeamUserResource> users;
 
     public OrganisationAddressResource getRegisteredAddress() {
@@ -35,6 +36,14 @@ public class ApplicationTeamOrganisationResource {
 
     public void setOrganisationName(String organisationName) {
         this.organisationName = organisationName;
+    }
+
+    public String getOrganisationTypeName() {
+        return organisationTypeName;
+    }
+
+    public void setOrganisationTypeName(String organisationTypeName) {
+        this.organisationTypeName = organisationTypeName;
     }
 
     public List<ApplicationTeamUserResource>getUsers() {

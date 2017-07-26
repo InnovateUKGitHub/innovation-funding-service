@@ -85,7 +85,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         when(userService.findUserByType(UserRoleType.COMP_ADMIN)).thenReturn(newUserResource().withFirstName("Comp").withLastName("Admin").build(1));
 
-        when(userService.findUserByType(UserRoleType.COMP_TECHNOLOGIST)).thenReturn(newUserResource().withFirstName("Comp").withLastName("Technologist").build(1));
+        when(userService.findUserByType(UserRoleType.INNOVATION_LEAD)).thenReturn(newUserResource().withFirstName("Comp").withLastName("Technologist").build(1));
 
         List<InnovationSectorResource> innovationSectorResources = newInnovationSectorResource()
                 .withName("A Innovation Sector")
@@ -249,7 +249,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(model().attributeHasFieldErrors(COMPETITION_SETUP_FORM_KEY,
                         "executiveUserId",
                         "title",
-                        "leadTechnologistUserId",
+                        "innovationLeadUserId",
                         "openingDateDay",
                         "openingDateMonth",
                         "openingDateYear",
@@ -271,8 +271,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         assertEquals("Please select a competition executive.", bindingResult.getFieldError("executiveUserId").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("title"));
         assertEquals("Please enter a title.", bindingResult.getFieldError("title").getDefaultMessage());
-        assertTrue(bindingResult.hasFieldErrors("leadTechnologistUserId"));
-        assertEquals("Please select an Innovation Lead.", bindingResult.getFieldError("leadTechnologistUserId").getDefaultMessage());
+        assertTrue(bindingResult.hasFieldErrors("innovationLeadUserId"));
+        assertEquals("Please select an Innovation Lead.", bindingResult.getFieldError("innovationLeadUserId").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("openingDateDay"));
         assertEquals("Please enter an opening day.", bindingResult.getFieldError("openingDateDay").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("openingDateMonth"));
@@ -303,7 +303,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(model().attributeHasFieldErrors(COMPETITION_SETUP_FORM_KEY,
                         "executiveUserId",
                         "title",
-                        "leadTechnologistUserId",
+                        "innovationLeadUserId",
                         "openingDateDay",
                         "openingDateMonth",
                         "openingDateYear",
@@ -323,8 +323,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         assertEquals("Please select a competition executive.", bindingResult.getFieldError("executiveUserId").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("title"));
         assertEquals("Please enter a title.", bindingResult.getFieldError("title").getDefaultMessage());
-        assertTrue(bindingResult.hasFieldErrors("leadTechnologistUserId"));
-        assertEquals("Please select an Innovation Lead.", bindingResult.getFieldError("leadTechnologistUserId").getDefaultMessage());
+        assertTrue(bindingResult.hasFieldErrors("innovationLeadUserId"));
+        assertEquals("Please select an Innovation Lead.", bindingResult.getFieldError("innovationLeadUserId").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("openingDateDay"));
         assertEquals("Please enter an opening day.", bindingResult.getFieldError("openingDateDay").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("openingDateMonth"));
@@ -357,7 +357,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("innovationSectorCategoryId", "1")
                 .param("innovationAreaCategoryIds", "1", "2", "3")
                 .param("competitionTypeId", "1")
-                .param("leadTechnologistUserId", "1")
+                .param("innovationLeadUserId", "1")
                 .param("title", "My competition")
                 .param("unrestricted", "1"))
                 .andExpect(status().isOk())
@@ -376,7 +376,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         assertEquals(new Long(1L), initialDetailsForm.getInnovationSectorCategoryId());
         assertEquals(asList(1L, 2L, 3L), initialDetailsForm.getInnovationAreaCategoryIds());
         assertEquals(new Long(1L), initialDetailsForm.getCompetitionTypeId());
-        assertEquals(new Long(1L), initialDetailsForm.getLeadTechnologistUserId());
+        assertEquals(new Long(1L), initialDetailsForm.getInnovationLeadUserId());
         assertEquals("My competition", initialDetailsForm.getTitle());
 
         verify(competitionService, never()).update(competition);
@@ -400,7 +400,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("innovationSectorCategoryId", "1")
                 .param("innovationAreaCategoryIds", "1", "2", "3")
                 .param("competitionTypeId", "1")
-                .param("leadTechnologistUserId", "1")
+                .param("innovationLeadUserId", "1")
                 .param("title", "My competition")
                 .param("unrestricted", "1"))
                 .andExpect(status().isOk())
@@ -423,7 +423,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         assertEquals(new Long(1L), initialDetailsForm.getInnovationSectorCategoryId());
         assertEquals(asList(1L, 2L, 3L), initialDetailsForm.getInnovationAreaCategoryIds());
         assertEquals(new Long(1L), initialDetailsForm.getCompetitionTypeId());
-        assertEquals(new Long(1L), initialDetailsForm.getLeadTechnologistUserId());
+        assertEquals(new Long(1L), initialDetailsForm.getInnovationLeadUserId());
         assertEquals("My competition", initialDetailsForm.getTitle());
 
         BindingResult bindingResult = initialDetailsForm.getBindingResult();
@@ -460,7 +460,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("innovationSectorCategoryId", "1")
                 .param("innovationAreaCategoryIds", "1", "2", "3")
                 .param("competitionTypeId", "1")
-                .param("leadTechnologistUserId", "1")
+                .param("innovationLeadUserId", "1")
                 .param("title", "My competition")
                 .param("unrestricted", "1"))
                 .andExpect(status().isOk())
@@ -484,7 +484,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         assertEquals(new Long(1L), initialDetailsForm.getInnovationSectorCategoryId());
         assertEquals(asList(1L, 2L, 3L), initialDetailsForm.getInnovationAreaCategoryIds());
         assertEquals(new Long(1L), initialDetailsForm.getCompetitionTypeId());
-        assertEquals(new Long(1L), initialDetailsForm.getLeadTechnologistUserId());
+        assertEquals(new Long(1L), initialDetailsForm.getInnovationLeadUserId());
         assertEquals("My competition", initialDetailsForm.getTitle());
 
         bindingResult.getAllErrors();
@@ -520,7 +520,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("innovationSectorCategoryId", "1")
                 .param("innovationAreaCategoryIds", "1", "2", "3")
                 .param("competitionTypeId", "1")
-                .param("leadTechnologistUserId", "1")
+                .param("innovationLeadUserId", "1")
                 .param("title", "My competition"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"));

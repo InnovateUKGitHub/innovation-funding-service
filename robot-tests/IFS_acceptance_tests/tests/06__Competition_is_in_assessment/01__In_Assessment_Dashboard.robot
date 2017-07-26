@@ -11,7 +11,7 @@ Resource          ../../resources/defaultResources.robot
 In Assessment dashboard page
     [Documentation]    INFUND-7363
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    Then The user should see the text in the page    4: Sustainable living models for the future
+    Then The user should see the text in the page   Sustainable living models for the future
     And The user should see the text in the page    In assessment
     And The user should see the text in the page    Programme
     And The user should see the text in the page    Materials and manufacturing

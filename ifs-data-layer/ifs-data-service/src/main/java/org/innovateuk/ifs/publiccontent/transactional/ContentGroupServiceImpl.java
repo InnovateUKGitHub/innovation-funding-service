@@ -68,7 +68,7 @@ public class ContentGroupServiceImpl extends BaseTransactionalService implements
                     FileEntry fileEntry = contentGroup.getFileEntry();
                     if (fileEntry != null) {
                         contentGroup.setFileEntry(null);
-                        return fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid();
+                        return fileService.deleteFileIgnoreNotFound(fileEntry.getId()).andOnSuccessReturnVoid();
                     } else {
                         return serviceSuccess();
                     }
