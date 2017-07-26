@@ -19,6 +19,11 @@ Innovation Lead should see Submitted and Ineligible Applications
     Then the user should see the element      jQuery=td:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ td:contains("28,902")
     When the user navigates to the page       ${server}/management/competition/${competition_ids['${CLOSED_COMPETITION_NAME}']}/applications/ineligible
     Then the user should see the element      css=#application-list
+    When the user navigates to the page       ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/ineligible
+    And the user clicks the button/link       jQuery=a:contains(${application_ids["Ineligible Virtualisation"]})
+    And the user should not see the element   jQuery=.button:contains("Reinstate application")
+    When the user clicks the button/link      jQuery=a:contains("Back")
+    Then the user should not see the element  jQuery=.button:contains("Inform applicant")
 
 Innovation lead cannot access CompSetup, Invite Assessors, Manage assessments, Funding decision
     [Documentation]  IFS-984
