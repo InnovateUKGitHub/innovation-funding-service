@@ -208,7 +208,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     @Transactional
-    public ServiceResult<InviteResultsResource> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource, Long applicationId) {
+    public ServiceResult<InviteResultsResource> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource, Optional<Long> applicationId) {
         return validateInviteOrganisationResource(inviteOrganisationResource).andOnSuccess(() ->
                 validateUniqueEmails(inviteOrganisationResource.getInviteResources())).andOnSuccess(() ->
                 findOrAssembleInviteOrganisationFromResource(inviteOrganisationResource, applicationId).andOnSuccessReturn(inviteOrganisation -> {
@@ -359,10 +359,10 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         return resource;
     }
 
-    private ServiceResult<InviteOrganisation> findOrAssembleInviteOrganisationFromResource(InviteOrganisationResource inviteOrganisationResource, Long applicationId) {
+    private ServiceResult<InviteOrganisation> findOrAssembleInviteOrganisationFromResource(InviteOrganisationResource inviteOrganisationResource, Optional<Long> applicationId) {
 
-        if (inviteOrganisationResource.getOrganisation() != null) {
-            return eitherFindExistingInviteOrganisationOrCreateNewInviteOrganisationForOrganisation(inviteOrganisationResource, applicationId);
+        if (inviteOrganisationResource.getOrganisation() != null && applicationId.isPresent()) {
+            return eitherFindExistingInviteOrganisationOrCreateNewInviteOrganisationForOrganisation(inviteOrganisationResource, applicationId.get());
         } else {
 
             return serviceSuccess(buildNewInviteOrganisation(inviteOrganisationResource));

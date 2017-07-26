@@ -209,7 +209,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         inviteService.createApplicationInvites(newInviteOrganisationResource().
                 withOrganisationName(organisationName).
                 withInviteResources(applicationInvite).
-                build(), applicationId).getSuccessObjectOrThrowException();
+                build(), Optional.of(applicationId)).getSuccessObjectOrThrowException();
 
         testService.flushAndClearSession();
 
