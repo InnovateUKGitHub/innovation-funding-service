@@ -83,28 +83,6 @@ public class UserManagementController {
         return view(model, "pending", page, size, Objects.toString(request.getQueryString(), ""));
     }
 
-    private String viewOLD(Model model, String activeTab, int page, int size, String existingQueryString){
-        return userRestService.getActiveInternalUsers(page, size)
-                .andOnSuccessReturn(activeInternalUsers -> userRestService.getInactiveInternalUsers(page, size)
-                        .andOnSuccessReturn(inactiveInternalUsers -> inviteUserRestService.getPendingInternalUserInvites(page, size)
-                                .andOnSuccessReturn(pendingInternalUsers ->
-                        {
-                            model.addAttribute("model",
-                                    new UserListViewModel(
-                                            activeTab,
-                                            activeInternalUsers.getContent(),
-                                            inactiveInternalUsers.getContent(),
-                                            pendingInternalUsers.getContent(),
-                                            activeInternalUsers.getTotalElements(),
-                                            inactiveInternalUsers.getTotalElements(),
-                                            pendingInternalUsers.getTotalElements(),
-                                            new PaginationViewModel(activeInternalUsers, "active?" + existingQueryString),
-                                            new PaginationViewModel(inactiveInternalUsers, "inactive?" + existingQueryString),
-                                            new PaginationViewModel(pendingInternalUsers, "pending?" + existingQueryString)));
-                            return "admin/users";
-                        }).getSuccessObjectOrThrowException()).getSuccessObjectOrThrowException()).getSuccessObjectOrThrowException();
-    }
-
     private String view(Model model, String activeTab, int page, int size, String existingQueryString){
         return userRestService.getActiveInternalUsers(page, size)
                 .andOnSuccessReturn(activeInternalUsers -> userRestService.getInactiveInternalUsers(page, size)

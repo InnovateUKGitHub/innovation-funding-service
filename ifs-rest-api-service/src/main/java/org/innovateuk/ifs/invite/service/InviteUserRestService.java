@@ -4,7 +4,6 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
-import org.innovateuk.ifs.user.resource.UserPageResource;
 
 /**
  * REST service for Invite User

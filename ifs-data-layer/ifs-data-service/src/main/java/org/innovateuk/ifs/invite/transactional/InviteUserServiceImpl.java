@@ -21,7 +21,6 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.mapper.RoleMapper;
 import org.innovateuk.ifs.user.repository.RoleRepository;
-import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -215,28 +214,6 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
         return true;
     }
 
-    //@Override
-    public ServiceResult<UserPageResource> findPendingInternalUsersOLD(Pageable pageable) {
-
-        Page<RoleInvite> pagedResult = inviteRoleRepository.findByStatus(InviteStatus.SENT, pageable);
-        List<UserResource> userResources = simpleMap(pagedResult.getContent(), roleInvite -> constructUserResource(roleInvite));
-        return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), userResources, pagedResult.getNumber(), pagedResult.getSize()));
-    }
-
-    private UserResource constructUserResourceOLD(RoleInvite roleInvite){
-
-        Role role = roleInvite.getTarget();
-        RoleResource roleResource = roleMapper.mapToResource(role);
-
-        UserResource userResource = new UserResource();
-        // Just setting the first name here as getName contains the full name. This would suffice.
-        userResource.setFirstName(roleInvite.getName());
-        userResource.setEmail(roleInvite.getEmail());
-        userResource.setRoles(Collections.singletonList(roleResource));
-
-        return userResource;
-    }
-
     @Override
     public ServiceResult<RoleInvitePageResource> findPendingInternalUserInvites(Pageable pageable) {
 
@@ -245,19 +222,4 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
         return serviceSuccess(new RoleInvitePageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), roleInviteResources, pagedResult.getNumber(), pagedResult.getSize()));
     }
-
-    private UserResource constructUserResource(RoleInvite roleInvite){
-
-        Role role = roleInvite.getTarget();
-        RoleResource roleResource = roleMapper.mapToResource(role);
-
-        UserResource userResource = new UserResource();
-        // Just setting the first name here as getName contains the full name. This would suffice.
-        userResource.setFirstName(roleInvite.getName());
-        userResource.setEmail(roleInvite.getEmail());
-        userResource.setRoles(Collections.singletonList(roleResource));
-
-        return userResource;
-    }
-
 }

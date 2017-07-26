@@ -64,12 +64,7 @@
             </thead>
             <tbody>
             <tr th:each="user : ${users}">
-                <th:block th:if="${user.id == null}">
-                    <td><th:block th:text="${user.name}"/></td>
-                </th:block>
-                <th:block th:unless="${user.id == null}">
-                    <td><a th:href="${'/management/admin/user/' + user.id}" th:text="${user.name}">Steve Smith</a></td>
-                </th:block>
+                <td><a th:href="${'/management/admin/user/' + user.id}" th:text="${user.name}">Steve Smith</a></td>
                 <td th:text="${user.getRolesString()}">IFS Admin</td>
                 <td><a th:href="${'mailto:' + user.email}" th:text="${user.email}">steve.smith@empire.com</a></td>
                 <td><span class="form-hint"></span></td>
