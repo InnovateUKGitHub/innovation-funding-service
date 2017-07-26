@@ -129,7 +129,7 @@ Summary:Feedback should show in each section
     Then the user should see the text in the page    Testing Project team feedback text
     When the user clicks the button/link    jQuery=button:contains("9. Funding")
     Then the user should see the text in the page    Testing Funding feedback text
-    When the user clicks the button/link    jQuery=button:contains("10. Adding value)
+    When the user clicks the button/link    jQuery=button:contains("10. Adding value")
     Then the user should see the text in the page    Testing Adding value feedback text
     When the user clicks the button/link    jQuery=button:contains("Scope")
     Then the user should see the text in the page    Testing scope feedback text
