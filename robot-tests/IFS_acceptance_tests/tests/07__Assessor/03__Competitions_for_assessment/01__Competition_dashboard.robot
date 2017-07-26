@@ -124,7 +124,7 @@ Check the comp admin see the assessor has rejected the application
     And the user clicks the button/link    jQuery=a:contains("Manage assessments")
     And the user clicks the button/link    jQuery=a:contains("Manage applications")
     And the user should see the element    jQuery=tr:nth-child(1) td:nth-child(2):contains("Park living")
-    And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
+    And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("View progress")
     And the user should see the text in the page    Rejected (1)
     And the user should see the element    jQuery=.assessors-rejected td:nth-child(6):contains("Not my area of expertise")
     And the user should see the element    jQuery=.assessors-rejected td:nth-child(6):contains("Unable to assess the application as i'm on holiday.")
