@@ -51,7 +51,7 @@
 
             <ul class="link-list">
 
-                <li>
+                <li th:unless="${model.innovationLeadView}">
                     <a class="" th:href="@{/competition/{cid}/applications/all(cid=${model.competitionId})}">All applications</a>
                 </li>
 

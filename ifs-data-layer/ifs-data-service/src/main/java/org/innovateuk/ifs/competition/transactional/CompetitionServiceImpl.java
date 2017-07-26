@@ -33,6 +33,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.security.SecurityRuleUtil.isSupport;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -121,7 +122,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     private CompetitionSearchResultItem searchResultFromCompetition(Competition c) {
-        return new CompetitionSearchResultItem(c.getId(),
+        return getCurrentlyLoggedInUser().andOnSuccess(currentUser -> serviceSuccess(new CompetitionSearchResultItem(c.getId(),
                 c.getName(),
                 ofNullable(c.getInnovationAreas()).orElseGet(Collections::emptySet)
                         .stream()
@@ -132,8 +133,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                 c.getCompetitionStatus(),
                 ofNullable(c.getCompetitionType()).map(CompetitionType::getName).orElse(null),
                 projectRepository.findByApplicationCompetitionId(c.getId()).size(),
-                publicContentService.findByCompetitionId(c.getId()).getSuccessObjectOrThrowException().getPublishDate()
-        );
+                publicContentService.findByCompetitionId(c.getId()).getSuccessObjectOrThrowException().getPublishDate(),
+                isSupport(currentUser) ? "/competition/" + c.getId() + "/applications/all" : "/competition/" + c.getId()
+        ))).getSuccessObjectOrThrowException();
     }
 
     @Override

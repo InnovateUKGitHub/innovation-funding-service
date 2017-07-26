@@ -113,7 +113,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition-mgt-application-overview"))
-                .andExpect(model().attribute("isSupportUser", false));
+                .andExpect(model().attribute("readOnly", false));
     }
 
     @Test
