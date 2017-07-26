@@ -17,8 +17,10 @@ public class ConnectionCountService {
     }
 
     public boolean connectionHealthy() {
-        boolean healthy = connManager.getMaxTotal() > getUsedConnections();
-        LOG.info("connection healthy = "+ healthy);
+        int max = connManager.getMaxTotal();
+        int connections = connManager.getTotalStats().getLeased();
+        boolean healthy = max > connections;
+        LOG.info("connection used = " + connections + "/" + max + " healthy = "+ healthy);
         return healthy;
     }
 
