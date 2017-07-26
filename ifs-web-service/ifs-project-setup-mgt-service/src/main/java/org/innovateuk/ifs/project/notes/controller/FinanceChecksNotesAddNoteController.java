@@ -320,6 +320,6 @@ public class FinanceChecksNotesAddNoteController {
 
     private boolean postParametersMatchOrigin(HttpServletRequest request, Long projectId, Long organisationId, Long userId){
         List<Long> getParams = cookieUtil.getCookieAsList(request, ORIGIN_GET_COOKIE, new TypeReference<List<Long>>() {});
-        return getParams.size() == 3 && getParams.get(0) == projectId && getParams.get(1) == organisationId && getParams.get(2) == userId;
+        return getParams.size() == 3 && Objects.equals(getParams.get(0), projectId) && Objects.equals(getParams.get(1), organisationId) && Objects.equals(getParams.get(2), userId);
     }
 }
