@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.invite.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.user.builder.RoleResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.RoleResource;
@@ -50,6 +51,19 @@ public class InviteUserPermissionRulesTest extends BasePermissionRulesTest<Invit
     public void testIfsAdminCanSaveNewUserInvite() {
         assertTrue(rules.ifsAdminCanSaveNewUserInvite(invitedUser, ifsAdmin));
         assertFalse(rules.ifsAdminCanSaveNewUserInvite(invitedUser, nonIfsAdmin));
+    }
+
+    @Test
+    public void internalUsersCanViewPendingInternalUserInvites() {
+        RoleInvitePageResource invite = new RoleInvitePageResource();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (allInternalUsers.contains(user)) {
+                assertTrue(rules.internalUsersCanViewPendingInternalUserInvites(invite, user));
+            } else {
+                assertFalse(rules.internalUsersCanViewPendingInternalUserInvites(invite, user));
+            }
+        });
     }
 }
 

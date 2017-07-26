@@ -7,6 +7,7 @@ import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
@@ -27,6 +28,6 @@ public interface InviteUserService {
             description = "The System Registration user can get status of invite using hash to process registration")
     ServiceResult<Boolean> checkExistingUser(String inviteHash);
 
-    //@PostAuthorize("hasPermission(returnObject, 'READ')") - TODO - Add similar permissions
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<RoleInvitePageResource> findPendingInternalUserInvites(Pageable pageable);
 }

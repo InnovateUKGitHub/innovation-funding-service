@@ -3,6 +3,7 @@ package org.innovateuk.ifs.invite.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
+import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.junit.Test;
@@ -56,11 +57,11 @@ public class InviteUserRestServiceImplTest extends BaseRestServiceUnitTest<Invit
 
     @Test
     public void getPendingInternalUsers() throws Exception {
-        UserPageResource expected = new UserPageResource();
+        RoleInvitePageResource expected = new RoleInvitePageResource();
 
-        setupGetWithRestResultExpectations(buildPaginationUri(inviteRestBaseUrl + "/internal/pending", 0, 5, null, new LinkedMultiValueMap<>()), UserPageResource.class, expected, OK);
+        setupGetWithRestResultExpectations(buildPaginationUri(inviteRestBaseUrl + "/internal/pending", 0, 5, null, new LinkedMultiValueMap<>()), RoleInvitePageResource.class, expected, OK);
 
-        UserPageResource result = service.getPendingInternalUsers(0, 5).getSuccessObjectOrThrowException();
+        RoleInvitePageResource result = service.getPendingInternalUserInvites(0, 5).getSuccessObjectOrThrowException();
 
         assertEquals(expected, result);
     }

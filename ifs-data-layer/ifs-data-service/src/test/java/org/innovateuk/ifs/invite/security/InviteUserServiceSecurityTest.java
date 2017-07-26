@@ -2,13 +2,12 @@ package org.innovateuk.ifs.invite.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.invite.transactional.InviteUserService;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
-import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.security.UserPermissionRules;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
@@ -22,14 +21,10 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 public class InviteUserServiceSecurityTest extends BaseServiceSecurityTest<InviteUserService> {
 
     private InviteUserPermissionRules inviteUserPermissionRules;
-    private UserPermissionRules userPermissionRules;
-
 
     @Before
     public void lookupPermissionRules() {
         inviteUserPermissionRules = getMockPermissionRulesBean(InviteUserPermissionRules.class);
-        userPermissionRules = getMockPermissionRulesBean(UserPermissionRules.class);
-
     }
 
     @Test
@@ -46,15 +41,15 @@ public class InviteUserServiceSecurityTest extends BaseServiceSecurityTest<Invit
     }
 
     @Test
-    public void testFindPendingInternalUsers() {
+    public void testFindPendingInternalUserInvites() {
 
         Pageable pageable = new PageRequest(0, 5);
 
         assertAccessDenied(
-                () -> classUnderTest.findPendingInternalUsers(pageable),
+                () -> classUnderTest.findPendingInternalUserInvites(pageable),
                 () -> {
-                    verify(userPermissionRules).internalUsersCanViewEveryone(any(UserPageResource.class), any(UserResource.class));
-                    verifyNoMoreInteractions(userPermissionRules);
+                    verify(inviteUserPermissionRules).internalUsersCanViewPendingInternalUserInvites(any(RoleInvitePageResource.class), any(UserResource.class));
+                    verifyNoMoreInteractions(inviteUserPermissionRules);
                 });
     }
 
@@ -81,8 +76,8 @@ public class InviteUserServiceSecurityTest extends BaseServiceSecurityTest<Invit
         }
 
         @Override
-        public ServiceResult<UserPageResource> findPendingInternalUsers(Pageable pageable) {
-            return serviceSuccess(new UserPageResource());
+        public ServiceResult<RoleInvitePageResource> findPendingInternalUserInvites(Pageable pageable) {
+            return serviceSuccess(new RoleInvitePageResource());
         }
     }
 }

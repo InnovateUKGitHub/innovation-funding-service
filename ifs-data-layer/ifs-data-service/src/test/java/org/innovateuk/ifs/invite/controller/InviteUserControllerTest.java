@@ -2,9 +2,9 @@ package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
+import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
-import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -77,13 +77,13 @@ public class InviteUserControllerTest  extends BaseControllerMockMVCTest<InviteU
     }
 
     @Test
-    public void findPendingInternalUsers() throws Exception {
+    public void findPendingInternalUserInvites() throws Exception {
 
-        when(inviteUserServiceMock.findPendingInternalUsers(Mockito.any(PageRequest.class))).thenReturn(serviceSuccess(new UserPageResource()));
+        when(inviteUserServiceMock.findPendingInternalUserInvites(Mockito.any(PageRequest.class))).thenReturn(serviceSuccess(new RoleInvitePageResource()));
 
         mockMvc.perform(get("/inviteUser/internal/pending")).andExpect(status().isOk());
 
-        verify(inviteUserServiceMock).findPendingInternalUsers(Mockito.any(PageRequest.class));
+        verify(inviteUserServiceMock).findPendingInternalUserInvites(Mockito.any(PageRequest.class));
 
     }
 }
