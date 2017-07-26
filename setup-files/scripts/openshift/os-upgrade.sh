@@ -91,6 +91,7 @@ function rolloutStatus {
 cleanUp
 cloneConfig
 tailorAppInstance
+useContainerRegistry
 upgradeServices
 
 if [[ ${bamboo_openshift_force_reload} == "true" ]]

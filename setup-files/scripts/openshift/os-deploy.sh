@@ -60,6 +60,7 @@ function shibInit() {
 cleanUp
 cloneConfig
 tailorAppInstance
+useContainerRegistry
 deploy
 blockUntilServiceIsUp
 
