@@ -21,7 +21,11 @@ public class ConnectionCountHealthIndicator implements HealthIndicator{
 
     @Override public Health health() {
         LOG.debug("checking connection count health");
-        return service.connectionHealthy() ? Health.up().build() : Health.down().build();
+        if(service.connectionHealthy()){
+            return Health.up().build();
+        } else {
+            return Health.down().build();
+        }
     }
 
 
