@@ -66,14 +66,14 @@ Lead should not see pending status for accepted invite
     When the user clicks the button/link        link=Invite a user with the same org
     And the user clicks the button/link         link=view team members and add collaborators
     And the user clicks the button/link         link=Update INNOVATE LTD
-    And the user should see the element         jQuery=.table-overflow td:contains(${test_mailbox_one}+invite2@gmail.com) + td:contains("Invite pending for 14 days")
+    And the user should see the element         jQuery=.table-overflow td:contains(${test_mailbox_one}+invite2@gmail.com) + td:contains("Invite pending for -1 day")
 
 *** Keywords ***
 change the invite sent date
-    ${fortnight} =  get fortnight
-    ${fortnight_fullDate}=    Convert Date    ${fortnight}    result_format=%Y-%m-%d    exclude_millis=true
+    ${yesterday} =  get yesterday
+    ${yesterday_fullDate}=    Convert Date    ${yesterday}    result_format=%Y-%m-%d    exclude_millis=true
     Connect to Database    @{database}
-    execute sql string    UPDATE `${database_name}`.`invite` SET `sent_on`='${fortnight_fullDate}' WHERE `target_id`='149' and email = '${test_mailbox_one}+invite2@gmail.com';
+    execute sql string    UPDATE `${database_name}`.`invite` SET `sent_on`='${yesterday_fullDate}' WHERE `target_id`='${OPEN_COMPETITION_APPLICATION_1_NUMBER}' and email = '${test_mailbox_one}+invite2@gmail.com';
 
 the user enters profile details
     The user enters text to a text field  id=firstName    Dennis
