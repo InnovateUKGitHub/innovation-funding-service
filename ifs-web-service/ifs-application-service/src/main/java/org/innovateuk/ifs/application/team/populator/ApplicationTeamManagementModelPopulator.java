@@ -39,7 +39,7 @@ public class ApplicationTeamManagementModelPopulator {
     @Autowired
     private UserService userService;
 
-    public ApplicationTeamManagementViewModel populateModelByOrganisationId(long applicationId, long organisationId, long loggedInUserId) {
+    public ApplicationTeamManagementViewModel populateModelByOrganisationId(Long applicationId, Long organisationId, long loggedInUserId) {
         InviteOrganisationResource inviteOrganisationResource = getInviteOrganisationByOrganisationId(applicationId, organisationId).orElse(null);
 
         OrganisationResource leadOrganisationResource = getLeadOrganisation(applicationId);
@@ -48,7 +48,7 @@ public class ApplicationTeamManagementModelPopulator {
         return populateModel(applicationId, loggedInUserId, leadOrganisationResource, requestForLeadOrganisation, inviteOrganisationResource);
     }
 
-    public ApplicationTeamManagementViewModel populateModelByInviteOrganisationId(long applicationId, long inviteOrganisationId, long loggedInUserId) {
+    public ApplicationTeamManagementViewModel populateModelByInviteOrganisationId(Long applicationId, Long inviteOrganisationId, long loggedInUserId) {
         InviteOrganisationResource inviteOrganisationResource = getInviteOrganisationByInviteOrganisationId(inviteOrganisationId);
 
         OrganisationResource leadOrganisationResource = getLeadOrganisation(applicationId);
@@ -57,8 +57,8 @@ public class ApplicationTeamManagementModelPopulator {
         return populateModel(applicationId, loggedInUserId, leadOrganisationResource, requestForLeadOrganisation, inviteOrganisationResource);
     }
 
-    private ApplicationTeamManagementViewModel populateModel(long applicationId,
-                                                             long loggedInUserId,
+    private ApplicationTeamManagementViewModel populateModel(Long applicationId,
+                                                             Long loggedInUserId,
                                                              OrganisationResource leadOrganisationResource,
                                                              boolean requestForLeadOrganisation,
                                                              InviteOrganisationResource inviteOrganisationResource) {
@@ -74,7 +74,7 @@ public class ApplicationTeamManagementModelPopulator {
         return populateModelForNonLeadOrganisation(applicationResource, userLeadApplicant, inviteOrganisationResource);
     }
 
-    private ApplicationTeamManagementViewModel populateModelForLeadOrganisation(long organisationId, String organisationName,
+    private ApplicationTeamManagementViewModel populateModelForLeadOrganisation(Long organisationId, String organisationName,
                                                                                 ApplicationResource applicationResource,
                                                                                 UserResource leadApplicant,
                                                                                 boolean userLeadApplicant,

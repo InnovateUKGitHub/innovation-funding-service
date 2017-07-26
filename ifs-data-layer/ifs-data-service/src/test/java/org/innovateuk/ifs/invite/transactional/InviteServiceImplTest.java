@@ -26,7 +26,6 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
@@ -38,6 +37,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
@@ -64,9 +64,7 @@ import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
@@ -221,7 +219,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         when(applicationInviteRepositoryMock.save(saveInvitesExpectations)).thenReturn(savedInvites);
         when(applicationRepositoryMock.findOne(isA(Long.class))).thenReturn(newApplication().withId(1L).build());
 
-        ServiceResult<InviteResultsResource> result = inviteService.createApplicationInvites(inviteOrganisationResource, applicationId);
+        ServiceResult<InviteResultsResource> result = inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
         assertTrue(result.isSuccess());
 
         verify(inviteOrganisationRepositoryMock).save(isA(InviteOrganisation.class));
@@ -279,7 +277,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         when(inviteOrganisationRepositoryMock.findAll(isA(List.class))).thenReturn(newInviteOrganisation().build(inviteResources.size()));
         when(applicationRepositoryMock.findOne(isA(Long.class))).thenReturn(newApplication().withId(1L).build());
 
-        ServiceResult<InviteResultsResource> result = inviteService.createApplicationInvites(inviteOrganisationResource, applicationId);
+        ServiceResult<InviteResultsResource> result = inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
         assertTrue(result.isFailure());
 
         verify(inviteOrganisationRepositoryMock, never()).save(isA(InviteOrganisation.class));
@@ -305,7 +303,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         when(inviteOrganisationRepositoryMock.findAll(isA(List.class))).thenReturn(newInviteOrganisation().build(inviteResources.size()));
         when(applicationRepositoryMock.findOne(isA(Long.class))).thenReturn(newApplication().withId(1L).build());
 
-        ServiceResult<InviteResultsResource> result = inviteService.createApplicationInvites(inviteOrganisationResource, applicationId);
+        ServiceResult<InviteResultsResource> result = inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
 
         assertTrue(result.isSuccess());
 
@@ -340,7 +338,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         when(organisationRepositoryMock.findOne(inviteOrganisationResource.getOrganisation())).thenReturn(organisation);
         when(applicationRepositoryMock.findOne(isA(Long.class))).thenReturn(newApplication().withId(1L).build());
 
-        ServiceResult<InviteResultsResource> result = inviteService.createApplicationInvites(inviteOrganisationResource, applicationId);
+        ServiceResult<InviteResultsResource> result = inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
 
         assertTrue(result.isSuccess());
 
@@ -379,7 +377,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
 
         when(applicationRepositoryMock.findOne(isA(Long.class))).thenReturn(newApplication().withId(1L).build());
 
-        ServiceResult<InviteResultsResource> result = inviteService.createApplicationInvites(inviteOrganisationResource, applicationId);
+        ServiceResult<InviteResultsResource> result = inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
 
         assertTrue(result.isSuccess());
 
@@ -751,7 +749,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         when(applicationRepositoryMock.findOne(null)).thenReturn(newApplication().withId(1L).build());
         when(inviteOrganisationRepositoryMock.findAll(isA(List.class))).thenReturn(newInviteOrganisation().build(1));
 
-        ServiceResult<InviteResultsResource> result = inviteService.createApplicationInvites(inviteOrganisationResource, applicationId);
+        ServiceResult<InviteResultsResource> result = inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
         assertTrue(result.isFailure());
 
         verify(inviteOrganisationRepositoryMock, never()).save(isA(InviteOrganisation.class));

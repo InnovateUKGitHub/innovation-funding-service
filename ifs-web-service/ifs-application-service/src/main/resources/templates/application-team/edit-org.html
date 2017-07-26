@@ -48,7 +48,7 @@
                         <tr th:each="applicant, applicantStat : ${model.applicants}">
                             <td th:text="${applicant.name}">Steve Smith</td>
                             <td th:text="${applicant.email}">steve.smith@empire.com</td>
-                            <td th:if="${applicant.lead}" th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Invite pending' : '')">Lead</td>
+                            <td th:if="${applicant.lead}">Lead</td>
                             <td th:unless="${applicant.lead}" th:text="${applicant.pending} ? |Invite pending for ${applicant.daysPending} days| : ''">
                             </td>
                             <td class="alignright">

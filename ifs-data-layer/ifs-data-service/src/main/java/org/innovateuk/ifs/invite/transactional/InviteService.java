@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.access.prepost.PreFilter;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface InviteService {
 
@@ -27,7 +28,7 @@ public interface InviteService {
     ServiceResult<ApplicationInvite> findOne(Long id);
 
     @PreAuthorize("hasPermission(#inviteOrganisationResource, 'CREATE_APPLICATION_INVITES')")
-    ServiceResult<InviteResultsResource> createApplicationInvites(@P("inviteOrganisationResource") final InviteOrganisationResource inviteOrganisationResource, Long applicationId);
+    ServiceResult<InviteResultsResource> createApplicationInvites(@P("inviteOrganisationResource") final InviteOrganisationResource inviteOrganisationResource, Optional<Long> applicationId);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "READ_INVITE_ORGANISATION_ON_HASH",

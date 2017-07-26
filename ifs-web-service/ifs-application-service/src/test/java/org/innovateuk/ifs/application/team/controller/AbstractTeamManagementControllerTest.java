@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.team.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.team.form.ApplicantInviteForm;
 import org.innovateuk.ifs.application.team.form.ApplicationTeamUpdateForm;
 import org.innovateuk.ifs.application.team.service.AbstractTeamManagementService;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementViewModel;
@@ -8,6 +9,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.springframework.stereotype.Service;
 import org.springframework.test.web.servlet.MvcResult;
@@ -19,6 +21,7 @@ import java.util.List;
 import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
@@ -143,8 +146,14 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name(format("redirect:/application/%s/team/update/invited/%s", testApplicationId, testOrganisationId)));
 
-        //TODO: verify invite contents
-        verify(testTeamManagementService, times(1)).executeStagedInvite(anyLong(), anyLong(), any());
+
+        ArgumentCaptor<ApplicationTeamUpdateForm> captor = ArgumentCaptor.forClass(ApplicationTeamUpdateForm.class);
+
+        verify(testTeamManagementService, times(1)).executeStagedInvite(anyLong(), anyLong(), captor.capture());
+        ApplicantInviteForm inviteResource = captor.getValue().getStagedInvite();
+
+        assertEquals(validEmail, inviteResource.getEmail());
+        assertEquals(validName, inviteResource.getName());
     }
 
     @Test

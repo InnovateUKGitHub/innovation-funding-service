@@ -14,6 +14,7 @@ import org.springframework.security.access.method.P;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
@@ -68,7 +69,7 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
         final InviteOrganisationResource inviteOrganisation = newInviteOrganisationResource().build();
         final long applicationId = 1L;
         assertAccessDenied(
-                () -> classUnderTest.createApplicationInvites(inviteOrganisation, applicationId),
+                () -> classUnderTest.createApplicationInvites(inviteOrganisation, Optional.of(applicationId)),
                 () -> {
                     verify(inviteOrganisationPermissionRules).leadApplicantCanCreateApplicationInvitesIfApplicationEditable(eq(inviteOrganisation), any(UserResource.class));
                 });
@@ -127,7 +128,7 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
         }
 
         @Override
-        public ServiceResult<InviteResultsResource> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource, Long applicationId) {
+        public ServiceResult<InviteResultsResource> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource, Optional<Long> applicationId) {
             return null;
         }
 

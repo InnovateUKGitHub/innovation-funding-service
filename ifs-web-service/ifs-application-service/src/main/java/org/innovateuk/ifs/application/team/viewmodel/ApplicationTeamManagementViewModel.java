@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class ApplicationTeamManagementViewModel {
 
-    private long applicationId;
+    private Long applicationId;
     private String applicationName;
     private Long organisationId;
     private Long inviteOrganisationId;
@@ -20,7 +20,7 @@ public class ApplicationTeamManagementViewModel {
     private List<ApplicationTeamManagementApplicantRowViewModel> applicants;
     private boolean organisationExists;
 
-    public ApplicationTeamManagementViewModel(long applicationId,
+    public ApplicationTeamManagementViewModel(Long applicationId,
                                               String applicationName,
                                               Long organisationId,
                                               Long inviteOrganisationId,

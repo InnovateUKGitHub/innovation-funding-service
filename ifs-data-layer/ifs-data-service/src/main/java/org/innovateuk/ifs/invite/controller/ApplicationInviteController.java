@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.invite.resource.ApplicationInviteConstants.GET_USER_BY_HASH_MAPPING;
 
@@ -29,12 +30,12 @@ public class ApplicationInviteController {
 
     @PostMapping("/createApplicationInvites")
     public RestResult<InviteResultsResource> createApplicationInvites(@RequestBody InviteOrganisationResource inviteOrganisationResource) {
-        return inviteService.createApplicationInvites(inviteOrganisationResource, null).toPostCreateResponse();
+        return inviteService.createApplicationInvites(inviteOrganisationResource, Optional.empty()).toPostCreateResponse();
     }
 
     @PostMapping("/createApplicationInvites/{applicationId}")
     public RestResult<InviteResultsResource> createApplicationInvitesForApplication(@RequestBody InviteOrganisationResource inviteOrganisationResource, @PathVariable("applicationId") long applicationId) {
-        return inviteService.createApplicationInvites(inviteOrganisationResource, applicationId).toPostCreateResponse();
+        return inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId)).toPostCreateResponse();
     }
 
     @GetMapping("/getInviteByHash/{hash}")

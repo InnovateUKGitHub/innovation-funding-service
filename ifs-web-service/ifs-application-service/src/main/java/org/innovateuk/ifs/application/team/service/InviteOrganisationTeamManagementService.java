@@ -10,6 +10,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,10 +41,16 @@ public class InviteOrganisationTeamManagementService extends AbstractTeamManagem
     }
 
     public List<Long> getInviteIds(long applicationId, long organisationId) {
-        return inviteOrganisationRestService.getById(organisationId)
+        List<ApplicationInviteResource> invites = inviteOrganisationRestService.getById(organisationId)
                 .getSuccessObjectOrThrowException()
-                .getInviteResources().stream()
-                .map(ApplicationInviteResource::getId)
-                .collect(Collectors.toList());
+                .getInviteResources();
+
+        if(invites != null) {
+            return invites.stream()
+                    .map(ApplicationInviteResource::getId)
+                    .collect(Collectors.toList());
+        } else {
+            return Collections.emptyList();
+        }
     }
 }

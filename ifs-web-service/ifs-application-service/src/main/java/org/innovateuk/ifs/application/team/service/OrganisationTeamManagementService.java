@@ -45,13 +45,16 @@ public class OrganisationTeamManagementService extends AbstractTeamManagementSer
     }
 
     public List<Long> getInviteIds(long applicationId, long organisationId) {
-        return inviteOrganisationRestService.getByOrganisationIdWithInvitesForApplication(organisationId, applicationId)
-                .toOptionalIfNotFound()
+        List<ApplicationInviteResource> invites = inviteOrganisationRestService.getByOrganisationIdWithInvitesForApplication(organisationId, applicationId)
                 .getSuccessObjectOrThrowException()
-                .map(organisation -> organisation.getInviteResources().stream()
-                        .map(ApplicationInviteResource::getId)
-                        .collect(Collectors.toList())
-                )
-                .orElse(Collections.emptyList());
+                .getInviteResources();
+
+        if(invites != null) {
+            return invites.stream()
+                    .map(ApplicationInviteResource::getId)
+                    .collect(Collectors.toList());
+        } else {
+            return Collections.emptyList();
+        }
     }
 }

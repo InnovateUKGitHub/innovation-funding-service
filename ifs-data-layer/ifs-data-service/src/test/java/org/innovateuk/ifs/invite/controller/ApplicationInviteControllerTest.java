@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
@@ -61,7 +62,7 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
         String organisationResourceString = objectMapper.writeValueAsString(inviteOrganisationResource);
 
         InviteResultsResource inviteResultsResource = new InviteResultsResource();
-        when(inviteService.createApplicationInvites(inviteOrganisationResource, applicationId)).thenReturn(serviceSuccess(inviteResultsResource));
+        when(inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId))).thenReturn(serviceSuccess(inviteResultsResource));
 
         mockMvc.perform(post("/invite/createApplicationInvites/" + applicationId, "json")
                 .contentType(APPLICATION_JSON)
@@ -69,7 +70,7 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
                 .andExpect(status().isCreated())
                 .andDo(document("invite/createApplicationInvites/" + applicationId));
 
-        verify(inviteService, times(1)).createApplicationInvites(inviteOrganisationResource, applicationId);
+        verify(inviteService, times(1)).createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
     }
 
     @Test
@@ -88,7 +89,7 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
 
         String organisationResourceString = objectMapper.writeValueAsString(inviteOrganisationResource);
 
-        when(inviteService.createApplicationInvites(inviteOrganisationResource, applicationId)).thenReturn(serviceFailure(badRequestError("no invites")));
+        when(inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId))).thenReturn(serviceFailure(badRequestError("no invites")));
 
         mockMvc.perform(post("/invite/createApplicationInvites/"+applicationId, "json")
                 .contentType(APPLICATION_JSON)
