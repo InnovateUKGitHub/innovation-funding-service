@@ -89,6 +89,7 @@ public class Competition implements ProcessActivity {
     private boolean multiStream;
     private Boolean resubmission;
     private Boolean useAssessmentPanel;
+    private Boolean addInterviewStage;
 
     private String streamName;
     @Enumerated(EnumType.STRING)
@@ -637,6 +638,14 @@ public class Competition implements ProcessActivity {
 
     public void setUseAssessmentPanel(Boolean useAssessmentPanel) {
         this.useAssessmentPanel = useAssessmentPanel;
+    }
+
+    public Boolean isAddInterviewStage(){
+        return addInterviewStage;
+    }
+
+    public void setAddInterviewStage(Boolean addInterviewStage) {
+        this.addInterviewStage = addInterviewStage;
     }
 }
 
