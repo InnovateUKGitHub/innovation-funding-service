@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.profile.form;
 
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
+import org.innovateuk.ifs.commons.validation.constraints.WordCount;
 import org.innovateuk.ifs.controller.BindingResultTarget;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -11,6 +12,7 @@ import org.springframework.validation.ObjectError;
 import javax.validation.Valid;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +29,9 @@ public class AssessorProfileDeclarationForm implements BindingResultTarget {
     private String principalEmployer;
     @NotEmpty(message = "{validation.assessorprofiledeclarationform.role.required}")
     private String role;
+
+    @Size(max = 5000, message = "{validation.field.too.many.characters}")
+    @WordCount(max = 100, message = "{validation.field.max.word.count}")
     private String professionalAffiliations;
 
     @NotNull(message = "{validation.assessorprofiledeclarationform.hasAppointments.required}")
@@ -36,6 +41,8 @@ public class AssessorProfileDeclarationForm implements BindingResultTarget {
 
     @NotNull(message = "{validation.assessorprofiledeclarationform.hasFinancialInterests.required}")
     private Boolean hasFinancialInterests;
+    @Size(max = 5000, message = "{validation.field.too.many.characters}")
+    @WordCount(max = 100, message = "{validation.field.max.word.count}")
     private String financialInterests;
 
     @NotNull(message = "{validation.assessorprofiledeclarationform.hasFamilyAffiliations.required}")
@@ -45,6 +52,8 @@ public class AssessorProfileDeclarationForm implements BindingResultTarget {
 
     @NotNull(message = "{validation.assessorprofiledeclarationform.hasFamilyFinancialInterests.required}")
     private Boolean hasFamilyFinancialInterests;
+    @Size(max = 5000, message = "{validation.field.too.many.characters}")
+    @WordCount(max = 100, message = "{validation.field.max.word.count}")
     private String familyFinancialInterests;
 
     @NotNull(message = "{validation.assessorprofiledeclarationform.accurateAccount.required}")
