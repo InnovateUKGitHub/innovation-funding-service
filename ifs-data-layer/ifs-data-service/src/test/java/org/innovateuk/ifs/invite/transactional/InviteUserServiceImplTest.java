@@ -31,6 +31,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -346,6 +347,56 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         assertEquals(1, resultObject.getTotalPages());
         assertEquals(4, resultObject.getContent().size());
         assertEquals(roleInviteResource, resultObject.getContent().get(0));
+
+    }
+
+    @Test
+    public void findPendingInternalUsersEnsureSortedByName() {
+        Pageable pageable = new PageRequest(0, 5);
+
+        Role role = RoleBuilder.newRole().withName("ifs_administrator").build();
+
+        RoleInvite roleInvite1 = RoleInviteBuilder.newRoleInvite()
+                .withId(1L)
+                .withRole(role)
+                .withName("Rianne Almeida")
+                .withEmail("Rianne.Almeida@innovateuk.test")
+                .build();
+
+        RoleInvite roleInvite2 = RoleInviteBuilder.newRoleInvite()
+                .withId(2L)
+                .withRole(role)
+                .withName("Arden Pimenta")
+                .withEmail("Arden.Pimenta@innovateuk.test")
+                .build();
+
+        List<RoleInvite> roleInvites = new ArrayList<>();
+        roleInvites.add(roleInvite1);
+        roleInvites.add(roleInvite2);
+        Page<RoleInvite> page = new PageImpl<>(roleInvites, pageable, 4L);
+
+        RoleInviteResource roleInviteResource1 = new RoleInviteResource();
+        roleInviteResource1.setName("Rianne Almeida");
+        roleInviteResource1.setEmail("Rianne.Almeida@innovateuk.test");
+        roleInviteResource1.setRoleName("ifs_administrator");
+
+        RoleInviteResource roleInviteResource2 = new RoleInviteResource();
+        roleInviteResource2.setName("Arden Pimenta");
+        roleInviteResource2.setEmail("Arden.Pimenta@innovateuk.test");
+        roleInviteResource2.setRoleName("ifs_administrator");
+
+        when(inviteRoleRepositoryMock.findByStatus(InviteStatus.SENT, pageable)).thenReturn(page);
+        when(roleInviteMapperMock.mapToResource(roleInvite1)).thenReturn(roleInviteResource1);
+        when(roleInviteMapperMock.mapToResource(roleInvite2)).thenReturn(roleInviteResource2);
+
+        ServiceResult<RoleInvitePageResource> result = service.findPendingInternalUserInvites(pageable);
+        assertTrue(result.isSuccess());
+
+        RoleInvitePageResource resultObject = result.getSuccessObject();
+
+        // Ensure they are sorted by name
+        assertEquals(roleInviteResource2, resultObject.getContent().get(0));
+        assertEquals(roleInviteResource1, resultObject.getContent().get(1));
 
     }
 }

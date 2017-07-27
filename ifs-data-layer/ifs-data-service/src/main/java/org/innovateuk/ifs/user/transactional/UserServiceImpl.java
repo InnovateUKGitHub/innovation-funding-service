@@ -210,13 +210,17 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     public ServiceResult<UserPageResource> findActiveByProcessRoles(Set<UserRoleType> roleTypes, Pageable pageable) {
         Page<User> pagedResult = userRepository.findDistinctByStatusAndRolesNameIn(UserStatus.ACTIVE, roleTypes.stream().map(UserRoleType::getName).collect(Collectors.toSet()), pageable);
         List<UserResource> userResources = simpleMap(pagedResult.getContent(), user -> userMapper.mapToResource(user));
-        return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), userResources, pagedResult.getNumber(), pagedResult.getSize()));
+        return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), sortByFirstName(userResources), pagedResult.getNumber(), pagedResult.getSize()));
     }
 
     @Override
     public ServiceResult<UserPageResource> findInactiveByProcessRoles(Set<UserRoleType> roleTypes, Pageable pageable) {
         Page<User> pagedResult = userRepository.findDistinctByStatusAndRolesNameIn(UserStatus.INACTIVE, roleTypes.stream().map(UserRoleType::getName).collect(Collectors.toSet()), pageable);
         List<UserResource> userResources = simpleMap(pagedResult.getContent(), user -> userMapper.mapToResource(user));
-        return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), userResources, pagedResult.getNumber(), pagedResult.getSize()));
+        return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), sortByFirstName(userResources), pagedResult.getNumber(), pagedResult.getSize()));
+    }
+
+    private List<UserResource> sortByFirstName(List<UserResource> userResources) {
+        return userResources.stream().sorted(Comparator.comparing(UserResource::getFirstName)).collect(Collectors.toList());
     }
 }

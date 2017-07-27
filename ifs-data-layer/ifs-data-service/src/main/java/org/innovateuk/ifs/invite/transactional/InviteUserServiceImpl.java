@@ -34,9 +34,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -220,6 +222,10 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
         Page<RoleInvite> pagedResult = inviteRoleRepository.findByStatus(InviteStatus.SENT, pageable);
         List<RoleInviteResource> roleInviteResources = simpleMap(pagedResult.getContent(), roleInvite -> roleInviteMapper.mapToResource(roleInvite));
 
-        return serviceSuccess(new RoleInvitePageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), roleInviteResources, pagedResult.getNumber(), pagedResult.getSize()));
+        return serviceSuccess(new RoleInvitePageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), sortByName(roleInviteResources), pagedResult.getNumber(), pagedResult.getSize()));
+    }
+
+    private List<RoleInviteResource> sortByName(List<RoleInviteResource> roleInviteResources) {
+        return roleInviteResources.stream().sorted(Comparator.comparing(RoleInviteResource::getName)).collect(Collectors.toList());
     }
 }
