@@ -294,19 +294,6 @@ IFS Admin can see Bank Details
     When the user clicks the button/link          link=${Vitruvius_Name}
     Then the user should see the element          jQuery=.button:contains("Approve bank account details")
 
-IFS Admin can go to application details and navigate back
-    [Documentation]    IFS-544
-    [Tags]  HappyPath
-    [Setup]  log in as a different user            &{ifs_admin_user_credentials}
-    Given the user navigates to the page          ${COMP_MANAGEMENT_PROJECT_SETUP}
-    And the user clicks the button/link           link=${PS_BD_Competition_Name}
-    Then the user should see the element          jQuery=h2:contains("Projects in setup")
-    When the user clicks the button/link          jQuery=#table-project-status tr:nth-of-type(1) th a
-    Then the user should see the element          jQuery=h1:contains("Application overview")
-    When the user clicks the button/link          jQuery=a:contains("Back")
-    Then the user should see the element          jQuery=h2:contains("Projects in setup")
-    And the user navigates to the page and gets a custom error message  ${SERVER}/management/competition/${competition_ids["New designs for a circular economy"]}  ${404_error_message}
-
 Other internal users do not have access to bank details export
     [Documentation]  INFUND-5852
     [Tags]
