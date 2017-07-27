@@ -23,11 +23,3 @@ Back navigation is to dashboard
     [Documentation]    IFS-188
     Given the user clicks the button/link    jQuery=.link-back:contains("Dashboard")
     Then the user should see the element    jQuery=h1:contains("All competitions")
-
-*** Keywords ***
-the user should see all live competitions
-    the user should see the element  jQuery=h2:contains("Open")
-    the user should see the element  jQuery=h2:contains("Closed")
-    the user should see the element  jQuery=h2:contains("In assessment")
-    the user should see the element  jQuery=h2:contains("Panel")
-    the user should see the element  jQuery=h2:contains("Inform")
