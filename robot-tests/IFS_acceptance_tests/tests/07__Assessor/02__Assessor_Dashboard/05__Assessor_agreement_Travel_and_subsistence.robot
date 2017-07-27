@@ -31,7 +31,7 @@ Cancel returns you back to the dashboard
     [Tags]
     Given The user should see the element   link=your assessor agreement    #his checks the alert message on the top of the page
     And the user clicks the button/link    jQuery=a:contains("your assessor agreement")
-    When the user clicks the button/link    jQuery=a:contains(Cancel)
+    When the user clicks the button/link    jQuery=a:contains("Cancel")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
     [Teardown]    the user clicks the button/link    jQuery=a:contains("your assessor agreement")
 
