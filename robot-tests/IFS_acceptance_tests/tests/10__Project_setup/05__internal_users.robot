@@ -50,7 +50,7 @@ Pr Finance can visit an application and navigate back
     [Documentation]  IFS-544
     [Tags]  HappyPath
     Given the user navigates to the page  ${internal_competition_status}
-    When the user clicks the button/link  link=${project_ids['Mobile Phone Data for Logistics Analytics']}
+    When the user clicks the button/link  link=${PROJECT_SETUP_APPLICATION_1}
     Then the user should see the element  jQuery=h1:contains("Application overview")
     When the user clicks the button/link  link=Back
     Then the user should be redirected to the correct page  ${internal_competition_status}
