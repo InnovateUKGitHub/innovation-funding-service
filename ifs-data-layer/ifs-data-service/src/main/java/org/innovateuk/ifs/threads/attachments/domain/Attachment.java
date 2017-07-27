@@ -27,6 +27,7 @@ public class Attachment {
     private FileEntry fileEntry;
 
     @CreatedDate
+    @Column(nullable = false, updatable = false)
     private ZonedDateTime createdOn;
 
     public Attachment() {}
