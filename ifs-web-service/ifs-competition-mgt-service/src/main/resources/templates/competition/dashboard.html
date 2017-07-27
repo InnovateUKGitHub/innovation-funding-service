@@ -54,10 +54,7 @@
                     <th:block th:insert="competition/dashboard :: competition-name" />
                 </a>
                 <th:block th:if="${competition.competitionStatus.inFlight}">
-                    <a th:href="@{/competition/{competitionId}/applications/all(competitionId=${competition.id})}" th:if="${supportView}">
-                        <th:block th:insert="competition/dashboard :: competition-name" />
-                    </a>
-                    <a th:href="@{/competition/{competitionId}(competitionId=${competition.id})}" th:unless="${supportView}">
+                    <a th:href="@{${competition.topLevelNavigationLink}}">
                         <th:block th:insert="competition/dashboard :: competition-name" />
                     </a>
                 </th:block>

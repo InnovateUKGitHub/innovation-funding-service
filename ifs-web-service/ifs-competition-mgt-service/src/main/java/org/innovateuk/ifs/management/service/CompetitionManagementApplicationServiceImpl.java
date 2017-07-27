@@ -104,7 +104,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
                         ? Boolean.TRUE : Boolean.FALSE));
         model.addAttribute("showDetailedFinanceLink", detailedFinanceLink);
 
-        model.addAttribute("isSupportUser", user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD));
+        model.addAttribute("readOnly", user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD));
         model.addAttribute("form", form);
         model.addAttribute("applicationReadyForSubmit", false);
         model.addAttribute("isCompManagementDownload", true);
