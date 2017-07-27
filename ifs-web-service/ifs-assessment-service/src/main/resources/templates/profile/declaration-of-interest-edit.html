@@ -60,7 +60,22 @@
                             <span class="error-message"  th:each="err : ${#fields.errors('professionalAffiliations')}" th:text="${err}"></span>
                         </th:block>
                     </label>
-                    <textarea class="form-control width-full" cols="30" rows="3" th:field="*{professionalAffiliations}" th:errorclass="form-control-error"></textarea>
+                    <div class="textarea-wrapped word-count">
+                        <textarea
+                            class="form-control width-full"
+                            cols="30"
+                            rows="3"
+                            maxlength="5000"
+                            data-max_words="100"
+                            data-maxwordslength="100"
+                            data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
+                            th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null, 100)}"
+                            th:errorclass="field-error"
+                            th:field="*{professionalAffiliations}"></textarea>
+                        <div class="textarea-footer" th:with="professionalAffiliations=*{professionalAffiliations}">
+                            <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, professionalAffiliations)})" />
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('hasAppointments')} ? 'form-group-error'">
@@ -182,10 +197,23 @@
                                 <span class="error-message"  th:each="err : ${#fields.errors('financialInterests')}" th:text="${err}"></span>
                             </th:block>
                         </label>
-                        <textarea class="form-control width-full" cols="30" rows="3"
-                                  th:field="*{financialInterests}" th:errorclass="form-control-error"
-                                  th:required="*{hasFinancialInterests}"
-                                  th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.financialInterests.required}"></textarea>
+
+                        <div class="textarea-wrapped word-count">
+                            <textarea
+                                class="form-control width-full"
+                                cols="30"
+                                rows="3"
+                                data-max_words="100"
+                                data-maxwordslength="100"
+                                data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
+                                th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null, 100)},data-required-errormessage=#{validation.assessorprofiledeclarationform.financialInterests.required}"
+                                th:errorclass="form-control-error"
+                                th:field="*{financialInterests}"
+                                th:required="*{hasFinancialInterests}"></textarea>
+                            <div class="textarea-footer" th:with="financialInterests=*{financialInterests}">
+                                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, financialInterests)})" />
+                            </div>
+                        </div>
                     </fieldset>
                 </div>
 
@@ -322,10 +350,22 @@
                                 <span class="error-message"  th:each="err : ${#fields.errors('familyFinancialInterests')}" th:text="${err}"></span>
                             </th:block>
                         </label>
-                        <textarea class="form-control width-full" cols="30" rows="3"
-                                  th:field="*{familyFinancialInterests}" th:errorclass="form-control-error"
-                                  th:required="*{hasFamilyFinancialInterests}"
-                                  th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.familyFinancialInterests.required}"></textarea>
+                        <div class="textarea-wrapped word-count">
+                            <textarea
+                                class="form-control width-full"
+                                cols="30"
+                                rows="3"
+                                data-max_words="100"
+                                data-maxwordslength="100"
+                                data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
+                                th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.familyFinancialInterests.required},data-maxlength-errormessage=#{validation.field.too.many.characters(null, 100)}"
+                                th:errorclass="form-control-error"
+                                th:field="*{familyFinancialInterests}"
+                                th:required="*{hasFamilyFinancialInterests}"></textarea>
+                            <div class="textarea-footer" th:with="familyFinancialInterests=*{familyFinancialInterests}">
+                                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, familyFinancialInterests)})" />
+                            </div>
+                        </div>
                     </fieldset>
                 </div>
 

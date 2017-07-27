@@ -1,131 +1,132 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" class="no-js" lang="en">
-    <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Summary'" />
-    </head>
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Summary'" />
+</head>
 
-    <body th:with="context='comp-management'" class="app-summary competition-management" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
-        <th:block th:insert="fragments/modals :: modal-overlay" />
-        <th:block th:insert="fragments/layout :: body-start" />
-        <th:block th:insert="fragments/layout :: global-header" />
+<body th:with="context='comp-management'" class="app-summary competition-management" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
+<th:block th:insert="fragments/modals :: modal-overlay" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
-        <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: main-content-start" />
-            <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Back',linkClass='link-back',linkUrl=@{${backUrl}})" />
+<main tabindex="-1" id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Back',linkClass='link-back',linkUrl=@{${backUrl}})" />
 
-            <th:block th:with="applicationName=${#strings.isEmpty(currentApplication.name)} ? #{ifs.application.no_title} : ${currentApplication.name}">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application overview',subTitle=${applicationName},size='heading-xlarge'" />
-            </th:block>
+    <th:block th:with="applicationName=${#strings.isEmpty(currentApplication.name)} ? #{ifs.application.no_title} : ${currentApplication.name}">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application overview',subTitle=${applicationName},size='heading-xlarge'" />
+    </th:block>
 
-            <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
-                <h2 class="heading-medium error-summary-heading">Unable to mark this application as ineligible</h2>
-                <ul class="error-summary-list">
-                    <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
-                </ul>
-            </div>
+    <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
+        <h2 class="heading-medium error-summary-heading">Unable to mark this application as ineligible</h2>
+        <ul class="error-summary-list">
+            <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
+        </ul>
+    </div>
 
-            <th:block th:if="${ineligibility.ineligible}">
+    <th:block th:if="${ineligibility.ineligible}">
         <h2 class="heading-small">Removed by</h2>
         <p th:text="|${ineligibility.removedBy}, ${#temporals.format(ineligibility.removedOn, 'dd MMMM yyyy')}|">Peter Kault, 20 December 2016</p>
 
         <h2 class="heading-small">Reason for removal</h2>
         <p th:text="${ineligibility.reasonForRemoval}"></p>
+        <th:block th:unless="${readOnly}">
+            <div class="extra-margin">
+                <a th:href="@{/competition/{competitionId}/application/{applicationId}/reinstateIneligibleApplication/confirm(competitionId=${currentApplication.competition},applicationId=${currentApplication.id})}"
+                   class="button button-secondary" data-js-modal="modal-reinstate" role="button" tabindex="0">Reinstate application</a>
+            </div>
 
-        <div class="extra-margin">
-            <a th:href="@{/competition/{competitionId}/application/{applicationId}/reinstateIneligibleApplication/confirm(competitionId=${currentApplication.competition},applicationId=${currentApplication.id})}"
-               class="button button-secondary" data-js-modal="modal-reinstate" role="button" tabindex="0">Reinstate application</a>
-        </div>
+            <div class="modal-reinstate" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+                <form th:action="@{/competition/{competitionId}/application/{applicationId}/reinstateIneligibleApplication(competitionId=${currentCompetition.id},applicationId=${currentApplication.id})}" method="post">
+                    <th:block th:insert="fragments/modals :: close-button" />
+                    <div>
+                        <h2 class="heading-medium no-margin">Reinstate application</h2>
+                        <p>Are you sure that you wish to reinstate this application?</p>
+                        <p>It will be added to applications requiring assessment, and will require assessors to be assigned to it.</p>
 
-        <div class="modal-reinstate" role="dialog" aria-hidden="true" style="margin-top: -174px;">
-            <form th:action="@{/competition/{competitionId}/application/{applicationId}/reinstateIneligibleApplication(competitionId=${currentCompetition.id},applicationId=${currentApplication.id})}" method="post">
-                <th:block th:insert="fragments/modals :: close-button" />
-                <div>
-                    <h2 class="heading-medium no-margin">Reinstate application</h2>
-                    <p>Are you sure that you wish to reinstate this application?</p>
-                    <p>It will be added to applications requiring assessment, and will require assessors to be assigned to it.</p>
+                        <hr />
 
-                    <hr />
-
-                    <button class="button" type="submit">Reinstate application</button>
-                    <button class="js-close buttonlink" type="button">Cancel</button>
-                </div>
-            </form>
-        </div>
+                        <button class="button" type="submit">Reinstate application</button>
+                        <button class="js-close buttonlink" type="button">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </th:block>
     </th:block>
 
     <form action="#" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
-                  method="post" enctype="multipart/form-data"
-                  th:object="${form}" class="form-serialize-js section-overview">
+          method="post" enctype="multipart/form-data"
+          th:object="${form}" class="form-serialize-js section-overview">
 
-                <th:block th:insert="fragments/application :: application-summary (isApplicant = false)" />
-            </form>
+        <th:block th:insert="fragments/application :: application-summary (isApplicant = false)" />
+    </form>
 
-            <div class="extra-margin">
-                <a th:href="@{/competition/{compId}/application/{appId}/print(compId=${currentCompetition.id},appId=${currentApplication.id})}"
-                   rel="nofollow"
-                   target="_blank">
-                    <span class="icon icon-print"></span>
-                    Print application
+    <div class="extra-margin">
+        <a th:href="@{/competition/{compId}/application/{appId}/print(compId=${currentCompetition.id},appId=${currentApplication.id})}"
+           rel="nofollow"
+           target="_blank">
+            <span class="icon icon-print"></span>
+            Print application
+        </a>
+    </div>
+
+    <th:block th:if="${not #lists.isEmpty(appendices)}">
+        <h2 class="heading-medium">Appendices</h2>
+
+        <th:block th:each="appendix : ${appendices}">
+            <div class="form-group download">
+                <h3 class="heading-small no-margin" th:text="${appendix.title}">
+                    View project management appendix:
+                </h3>
+                <a target="_blank" th:href="${appendix.getDownloadURL()}"
+                   th:text="${appendix.name + ', ' + appendix.getHumanReadableFileSize() + ' (opens in a new window)'}">
+                    Project-plan.pdf (161.96 KB)
                 </a>
             </div>
+        </th:block>
+    </th:block>
 
-            <th:block th:if="${not #lists.isEmpty(appendices)}">
-                <h2 class="heading-medium">Appendices</h2>
+    <div th:if="${currentApplication.applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).SUBMITTED && !readOnly}"
+         class="extra-margin collapsible collapsible-eligibility collapsible-stateless"
+         th:classappend="${#fields.hasErrors('${form.*}')} ? 'collapsible-expanded'">
+        <h2>Mark application as ineligible</h2>
+        <div>
+            <form th:action="@{~__${#httpServletRequest.requestURI} + '?' + ${#httpServletRequest.queryString}__}"
+                  th:object="${form}"
+                  method="POST">
 
-                <th:block th:each="appendix : ${appendices}">
-                    <div class="form-group download">
-                        <h3 class="heading-small no-margin" th:text="${appendix.title}">
-                            View project management appendix:
-                        </h3>
-                        <a target="_blank" th:href="${appendix.getDownloadURL()}"
-                           th:text="${appendix.name + ', ' + appendix.getHumanReadableFileSize() + ' (opens in a new window)'}">
-                            Project-plan.pdf (161.96 KB)
-                        </a>
+                <div class="form-group word-count" th:classappend="${#fields.hasErrors('ineligibleReason')} ? 'form-group-error'">
+                    <label class="form-label" th:for="ineligibleReason">
+                        Please enter the reason for removing this application from assessment
+                        <th:block th:if="${#fields.hasErrors('ineligibleReason')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('ineligibleReason')}" th:text="${err}"></span>
+                        </th:block>
+                    </label>
+                    <textarea class="form-control width-full"
+                              maxlength="5000"
+                              data-max_words="400"
+                              data-maxwordslength="400"
+                              th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5,000')}, data-maxwordslength-errormessage=#{validation.field.max.word.count(null, '400')}"
+                              th:errorclass="form-control-error"
+                              rows="10"
+                              th:field="*{ineligibleReason}"></textarea>
+                    <div class="textarea-footer" th:with="content=*{ineligibleReason}">
+                        <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=400, currentWordsLeft=${#ifsUtil.wordsRemaining(400, content)})" />
                     </div>
-                </th:block>
-            </th:block>
-
-            <div th:if="${currentApplication.applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).SUBMITTED && !isSupportUser}"
-                 class="extra-margin collapsible collapsible-eligibility collapsible-stateless"
-                 th:classappend="${#fields.hasErrors('${form.*}')} ? 'collapsible-expanded'">
-                <h2>Mark application as ineligible</h2>
-                <div>
-                    <form th:action="@{~__${#httpServletRequest.requestURI} + '?' + ${#httpServletRequest.queryString}__}"
-                          th:object="${form}"
-                          method="POST">
-
-                        <div class="form-group word-count" th:classappend="${#fields.hasErrors('ineligibleReason')} ? 'form-group-error'">
-                            <label class="form-label" th:for="ineligibleReason">
-                                Please enter the reason for removing this application from assessment
-                                <th:block th:if="${#fields.hasErrors('ineligibleReason')}">
-                                    <span class="error-message" th:each="err : ${#fields.errors('ineligibleReason')}" th:text="${err}"></span>
-                                </th:block>
-                            </label>
-                            <textarea class="form-control width-full"
-                                      maxlength="5000"
-                                      data-max_words="400"
-                                      data-maxwordslength="400"
-                                      th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5,000')}, data-maxwordslength-errormessage=#{validation.field.max.word.count(null, '400')}"
-                                      th:errorclass="form-control-error"
-                                      rows="10"
-                                      th:field="*{ineligibleReason}"></textarea>
-                            <div class="textarea-footer" th:with="content=*{ineligibleReason}">
-                                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=400, currentWordsLeft=${#ifsUtil.wordsRemaining(400, content)})" />
-                            </div>
-                        </div>
-
-                        <div class="alignright">
-                            <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${currentCompetition.id},applicationId=${currentApplication.id})}" class="button button-clear">Cancel</a>
-                            <button type="submit" name="markAsIneligible" class="button no-margin">Mark application as ineligible</button>
-                        </div>
-                    </form>
                 </div>
-            </div>
 
-            <th:block th:insert="fragments/layout :: main-content-end" />
-        </main>
+                <div class="alignright">
+                    <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${currentCompetition.id},applicationId=${currentApplication.id})}" class="button button-clear">Cancel</a>
+                    <button type="submit" name="markAsIneligible" class="button no-margin">Mark application as ineligible</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-        <th:block th:insert="fragments/layout :: footer" />
-        <th:block th:insert="fragments/layout :: body-end" />
-    </body>
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
 </html>
