@@ -45,7 +45,7 @@ public class Application extends SpringBootServletInitializer {
             ajpConnector.setAttribute("connectionTimeout", 30000);
             ajpConnector.setAttribute("acceptCount", maxConnections+100);
             ajpConnector.setAttribute("maxConnections", maxConnections);
-            ajpConnector.setAttribute("maxThreads", 100);
+            ajpConnector.setAttribute("maxThreads", maxConnections+100);
             ajpConnector.setAttribute("minSpareThreads", 20);
             ajpConnector.setScheme("ajp");
             tomcat.addAdditionalTomcatConnectors(ajpConnector);
