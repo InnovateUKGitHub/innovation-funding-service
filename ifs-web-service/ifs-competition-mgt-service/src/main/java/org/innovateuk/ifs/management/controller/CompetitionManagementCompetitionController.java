@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,6 +34,8 @@ public class CompetitionManagementCompetitionController {
         if (competition.getCompetitionStatus().isInFlight()) {
             model.addAttribute("model", competitionInFlightModelPopulator.populateModel(competition));
             return "competition/competition-in-flight";
+        } if (competition.getCompetitionStatus().equals(CompetitionStatus.PROJECT_SETUP)) {
+            throw new ObjectNotFoundException();
         } else {
             throw new IllegalStateException("Unexpected competition state for competition: " + competitionId);
         }
