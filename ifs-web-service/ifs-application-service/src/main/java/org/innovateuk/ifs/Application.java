@@ -27,6 +27,9 @@ public class Application extends SpringBootServletInitializer {
     @Value("${tomcat.ajp.enabled}")
     boolean tomcatAjpEnabled;
 
+    @Value("${ifs.web.rest.connections.max.total}")
+    int maxConnections;
+
     @Bean
     public EmbeddedServletContainerFactory servletContainer() {
 
@@ -40,8 +43,8 @@ public class Application extends SpringBootServletInitializer {
             ajpConnector.setAllowTrace(false);
             ajpConnector.setAttribute("tomcatAuthentication", false);
             ajpConnector.setAttribute("connectionTimeout", 30000);
-            ajpConnector.setAttribute("acceptCount", 200);
-            ajpConnector.setAttribute("maxConnections", 100);
+            ajpConnector.setAttribute("acceptCount", maxConnections+100);
+            ajpConnector.setAttribute("maxConnections", maxConnections);
             ajpConnector.setAttribute("maxThreads", 100);
             ajpConnector.setAttribute("minSpareThreads", 20);
             ajpConnector.setScheme("ajp");
