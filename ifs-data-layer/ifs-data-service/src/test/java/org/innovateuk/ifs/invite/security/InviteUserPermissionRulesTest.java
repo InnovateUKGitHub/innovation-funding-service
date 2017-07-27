@@ -57,13 +57,8 @@ public class InviteUserPermissionRulesTest extends BasePermissionRulesTest<Invit
     public void internalUsersCanViewPendingInternalUserInvites() {
         RoleInvitePageResource invite = new RoleInvitePageResource();
 
-        allGlobalRoleUsers.forEach(user -> {
-            if (allInternalUsers.contains(user)) {
-                assertTrue(rules.internalUsersCanViewPendingInternalUserInvites(invite, user));
-            } else {
-                assertFalse(rules.internalUsersCanViewPendingInternalUserInvites(invite, user));
-            }
-        });
+        assertTrue(rules.internalUsersCanViewPendingInternalUserInvites(invite, ifsAdmin));
+        assertFalse(rules.internalUsersCanViewPendingInternalUserInvites(invite, nonIfsAdmin));
     }
 }
 
