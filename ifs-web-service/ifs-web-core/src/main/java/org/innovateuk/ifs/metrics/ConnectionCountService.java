@@ -20,14 +20,8 @@ public class ConnectionCountService {
         int max = connManager.getMaxTotal();
         int connections = connManager.getTotalStats().getLeased();
         boolean healthy = max > connections;
-        LOG.info("connection used = " + connections + "/" + max + " healthy = "+ healthy);
+        LOG.info("outgoing connection used = " + connections + "/" + max + " healthy = "+ healthy);
         return healthy;
-    }
-
-    private int getUsedConnections(){
-        int connections = connManager.getTotalStats().getLeased();
-        LOG.info(connections + " connections used");
-        return connections;
     }
 
 }
