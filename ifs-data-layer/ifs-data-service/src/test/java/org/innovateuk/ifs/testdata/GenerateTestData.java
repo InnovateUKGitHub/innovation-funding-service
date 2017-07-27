@@ -60,6 +60,7 @@ import java.util.function.UnaryOperator;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.testdata.CsvUtils.*;
@@ -591,13 +592,18 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         List<String> applicants = combineLists(applicationLine.leadApplicant, applicationLine.collaborators);
 
+
+
         List<Triple<String, String, OrganisationTypeEnum>> organisations = simpleMap(applicants, email -> {
             UserResource user = retrieveUserByEmail(email);
             OrganisationResource organisation = retrieveOrganisationByUserId(user.getId());
             return Triple.of(user.getEmail(), organisation.getName(), OrganisationTypeEnum.getFromId(organisation.getOrganisationType()));
         });
 
-        List<UnaryOperator<ApplicationFinanceDataBuilder>> financeBuilders = simpleMap(organisations, orgDetails -> {
+        List<Triple<String, String, OrganisationTypeEnum>> uniqueOrganisations = new ArrayList<>();
+        uniqueOrganisations.addAll(organisations.stream().filter(triple -> isDuplicateOrganisation(triple, organisations)).collect(toList()));
+
+        List<UnaryOperator<ApplicationFinanceDataBuilder>> financeBuilders = simpleMap(uniqueOrganisations, orgDetails -> {
 
             String user = orgDetails.getLeft();
             String organisationName = orgDetails.getMiddle();
@@ -652,6 +658,10 @@ public class GenerateTestData extends BaseIntegrationTest {
         }
 
         return baseBuilder;
+    }
+
+    private boolean isDuplicateOrganisation(Triple<String, String, OrganisationTypeEnum> currentOrganisation, List<Triple<String, String, OrganisationTypeEnum>> organisationList) {
+        return organisationList.stream().filter(triple -> triple.getMiddle().equals(currentOrganisation.getMiddle())).findFirst().get().equals(currentOrganisation);
     }
 
     private UnaryOperator<ApplicationFinanceDataBuilder> generateIndustrialCostsFromSuppliedData(String user, String organisationName, ApplicationOrganisationFinanceBlock organisationFinances, boolean markAsComplete) {
