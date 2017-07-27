@@ -9,6 +9,7 @@ import javax.servlet.ServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -17,8 +18,8 @@ public class ConnectionCountFilter extends GenericFilterBean {
     private static final Log LOG = LogFactory.getLog(ConnectionCountFilter.class);
 
     private int count = 0;
-    //@Value("${ifs.web.rest.connections.max.total}")
-    private int max = 2;
+    @Value("${ifs.web.rest.connections.max.total}")
+    private int max;
 
 
     @Override public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {
