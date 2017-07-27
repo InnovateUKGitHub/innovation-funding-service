@@ -7,6 +7,8 @@ import org.innovateuk.ifs.management.form.IneligibleApplicationsForm;
 import org.innovateuk.ifs.management.viewmodel.IneligibleApplicationsRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.IneligibleApplicationsViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +30,8 @@ public class IneligibleApplicationsModelPopulator {
                                                          String origin,
                                                          int page,
                                                          String sorting,
-                                                         IneligibleApplicationsForm filterForm) {
+                                                         IneligibleApplicationsForm filterForm,
+                                                         UserResource user) {
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService
                 .getCompetitionSummary(competitionId)
                 .getSuccessObjectOrThrowException();
@@ -48,7 +51,8 @@ public class IneligibleApplicationsModelPopulator {
                 sorting,
                 filterForm.getFilterSearch(),
                 getApplications(summaryPageResource),
-                new PaginationViewModel(summaryPageResource, origin)
+                new PaginationViewModel(summaryPageResource, origin),
+                user.hasRole(UserRoleType.INNOVATION_LEAD) || user.hasRole(UserRoleType.SUPPORT)
         );
     }
 

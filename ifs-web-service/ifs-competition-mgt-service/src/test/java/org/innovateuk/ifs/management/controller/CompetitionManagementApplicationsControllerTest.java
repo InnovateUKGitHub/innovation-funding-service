@@ -9,6 +9,7 @@ import org.innovateuk.ifs.management.model.ApplicationsMenuModelPopulator;
 import org.innovateuk.ifs.management.model.IneligibleApplicationsModelPopulator;
 import org.innovateuk.ifs.management.model.SubmittedApplicationsModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.*;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +30,8 @@ import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceB
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.INNOVATION_LEAD;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -91,6 +94,43 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         assertEquals(defaultExpectedCompetitionSummary.getApplicationsSubmitted(), model.getApplicationsSubmitted());
         assertEquals(defaultExpectedCompetitionSummary.getIneligibleApplications(), model.getIneligibleApplications());
         assertEquals(defaultExpectedCompetitionSummary.getAssessorsInvited(), model.getAssessorsInvited());
+        assertEquals(false, model.isInnovationLeadView());
+    }
+
+    @Test
+    public void applicationsMenuCheckInnovationLeadViewFlag() throws Exception {
+
+        when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID)).thenReturn(restSuccess(defaultExpectedCompetitionSummary));
+
+        {
+            UserResource userResource = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build();
+
+            setLoggedInUser(userResource);
+
+            MvcResult result = mockMvc.perform(get("/competition/{competitionId}/applications", COMPETITION_ID))
+                    .andExpect(status().isOk())
+                    .andExpect(view().name("competition/applications-menu"))
+                    .andReturn();
+
+            ApplicationsMenuViewModel model = (ApplicationsMenuViewModel) result.getModelAndView().getModel().get("model");
+
+            assertEquals(false, model.isInnovationLeadView());
+        }
+
+        {
+            UserResource userResource = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(INNOVATION_LEAD).build())).build();
+
+            setLoggedInUser(userResource);
+
+            MvcResult result = mockMvc.perform(get("/competition/{competitionId}/applications", COMPETITION_ID))
+                    .andExpect(status().isOk())
+                    .andExpect(view().name("competition/applications-menu"))
+                    .andReturn();
+
+            ApplicationsMenuViewModel model = (ApplicationsMenuViewModel) result.getModelAndView().getModel().get("model");
+
+            assertEquals(true, model.isInnovationLeadView());
+        }
     }
 
     @Test

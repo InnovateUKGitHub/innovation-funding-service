@@ -21,6 +21,8 @@ public class CompetitionSearchResultItem {
     private String competitionTypeName;
     private Integer projectsCount;
     private ZonedDateTime publishDate;
+    private String topLevelNavigationLink;
+
 
     // for JSON marshalling
     CompetitionSearchResultItem() {
@@ -28,7 +30,8 @@ public class CompetitionSearchResultItem {
 
     public CompetitionSearchResultItem(Long id, String name, Set<String> innovationAreaNames, Integer numberOfApplications,
                                        String startDateDisplay, CompetitionStatus competitionStatus,
-                                       String competitionTypeName, Integer projectsCount, ZonedDateTime publishDate) {
+                                       String competitionTypeName, Integer projectsCount, ZonedDateTime publishDate,
+                                       String topLevelNavigationLink) {
         this.id = id;
         this.name = name;
         this.innovationAreaNames = new TreeSet<>(innovationAreaNames);
@@ -38,6 +41,7 @@ public class CompetitionSearchResultItem {
         this.competitionTypeName = competitionTypeName;
         this.projectsCount = projectsCount;
         this.publishDate = publishDate;
+        this.topLevelNavigationLink = topLevelNavigationLink;
     }
 
     public Long getId() {
@@ -110,6 +114,10 @@ public class CompetitionSearchResultItem {
 
     public void setPublishDate(ZonedDateTime publishDate) {
         this.publishDate = publishDate;
+    }
+
+    public String getTopLevelNavigationLink() {
+        return topLevelNavigationLink;
     }
 
     @Override
