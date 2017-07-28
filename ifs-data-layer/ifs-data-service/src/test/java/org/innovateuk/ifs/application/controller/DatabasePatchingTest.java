@@ -32,7 +32,7 @@ public class DatabasePatchingTest extends BaseIntegrationTest {
     }
 
     @Test
-    @IfProfileValue(name = "tests", values = {"dbpatch"})
+    @IfProfileValue(name = "testGroups", values = {"dbpatch"})
     public void testProductionPatches() throws Exception {
 
         try {
