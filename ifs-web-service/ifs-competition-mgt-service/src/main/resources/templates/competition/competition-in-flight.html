@@ -38,13 +38,12 @@
                         <dd th:text="${model.executive}">Paul Ray</dd>
                     </dl>
 
-                    <p th:if="${(model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN or
-                        model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN or
-                        model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED or
-                        model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT)}">
-                        <a th:href="@{/competition/setup/{competitionId}(competitionId=${model.competitionId})}">
-                            View and update competition setup
-                        </a>
+                    <p th:unless="${model.readOnly}"
+                       th:if="${(model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN or
+                       model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN or
+                       model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED or
+                       model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT)}">
+                       <a th:href="@{/competition/setup/{competitionId}(competitionId=${model.competitionId})}">View and update competition setup</a>
                     </p>
                 </div>
 
@@ -52,6 +51,7 @@
                     <div class="grid-row extra-margin">
                         <div class="column-third dashboard-actions">
                             <button type="submit"
+                                    th:unless="${model.readOnly}"
                                     th:formaction="@{/competition/{competitionId}/notify-assessors(competitionId=${model.competitionId})}"
                                     th:disabled="${!(model.changesSinceLastNotify > 0)}"
                                     class="button button-large">Notify assessors
@@ -70,17 +70,17 @@
 
                 <h2 class="heading-medium">Competition navigation</h2>
                 <ul class="link-list">
-                    <li>
+                    <li th:with="linkTitle=${model.readOnly ? 'Applications: Submitted, ineligible' : 'Applications: All, submitted, ineligible'}">
                         <a class="disabled" aria-disabled="true"
-                           th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN}">
-                            Applications: All, submitted, ineligible
+                           th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN}"
+                            th:text="${linkTitle}">
                         </a>
                         <a th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN}"
-                           th:href="@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}">
-                            Applications: All, submitted, ineligible
+                           th:href="@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}"
+                           th:text="${linkTitle}">
                         </a>
                     </li>
-                    <li>
+                    <li th:unless="${model.readOnly}">
                         <a class="disabled" aria-disabled="true"
                            th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL
                             or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).ASSESSOR_FEEDBACK
@@ -94,7 +94,7 @@
                             Invite assessors to assess the competition
                         </a>
                     </li>
-                    <li>
+                    <li th:unless="${model.readOnly}">
                         <a class="disabled" aria-disabled="true"
                            th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
                             or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN}">
@@ -106,7 +106,7 @@
                             Manage assessments
                         </a>
                     </li>
-                    <li>
+                    <li th:unless="${model.readOnly}">
                         <a class="disabled" aria-disabled="true"
                            th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
                             or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN
@@ -136,26 +136,30 @@
                                 10 October 2017</p>
                         </li>
                         <th:block th:switch="${milestone.milestoneType}">
-                            <button th:case="${T(org.innovateuk.ifs.competition.resource.MilestoneType).ASSESSOR_BRIEFING}"
+                            <button th:unless="${model.readOnly}"
+                                    th:case="${T(org.innovateuk.ifs.competition.resource.MilestoneType).ASSESSOR_BRIEFING}"
                                     type="submit"
                                     th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED}"
                                     th:formaction="@{/competition/{competitionId}/notify-assessors(competitionId=${model.competitionId})}"
                                     class="button button-large">Notify assessors
                             </button>
-                            <button type="submit"
+                            <button th:unless="${model.readOnly}"
+                                    type="submit"
                                     th:case="${T(org.innovateuk.ifs.competition.resource.MilestoneType).ASSESSOR_DEADLINE}"
                                     th:formaction="@{/competition/{competitionId}/close-assessment(competitionId=${model.competitionId})}"
                                     th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}"
                                     class="button button-large">Close assessment
                             </button>
-                            <th:block th:case="${T(org.innovateuk.ifs.competition.resource.MilestoneType).FUNDERS_PANEL}"
+                            <th:block th:unless="${model.readOnly}"
+                                      th:case="${T(org.innovateuk.ifs.competition.resource.MilestoneType).FUNDERS_PANEL}"
                                       th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL || model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).ASSESSOR_FEEDBACK}">
                                 <a class="button button-large" th:href="@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}"
                                     th:if="${model.keyStatistics.canManageFundingNotifications}">Manage funding notifications</a>
                                 <a class="disabled button button-large" aria-disabled="true"
                                    th:unless="${model.keyStatistics.canManageFundingNotifications}">Manage funding notifications</a>
                             </th:block>
-                            <button type="submit"
+                            <button th:unless="${model.readOnly}"
+                                    type="submit"
                                     th:case="${T(org.innovateuk.ifs.competition.resource.MilestoneType).RELEASE_FEEDBACK}"
                                     th:disabled="${!model.keyStatistics.canReleaseFeedback}"
                                     th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).ASSESSOR_FEEDBACK}"

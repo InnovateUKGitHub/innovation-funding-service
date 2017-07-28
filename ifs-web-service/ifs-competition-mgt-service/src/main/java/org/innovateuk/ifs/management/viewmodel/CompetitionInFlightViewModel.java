@@ -25,8 +25,9 @@ public class CompetitionInFlightViewModel {
     private List<MilestonesRowViewModel> milestones;
     private long changesSinceLastNotify;
     private CompetitionInFlightStatsViewModel keyStatistics;
+    private boolean readOnly;
 
-    public CompetitionInFlightViewModel(CompetitionResource competitionResource, List<MilestonesRowViewModel> milestones, long changesSinceLastNotify, CompetitionInFlightStatsViewModel keyStatistics) {
+    public CompetitionInFlightViewModel(CompetitionResource competitionResource, List<MilestonesRowViewModel> milestones, long changesSinceLastNotify, CompetitionInFlightStatsViewModel keyStatistics, boolean readOnly) {
         this.competitionId = competitionResource.getId();
         this.competitionName = competitionResource.getName();
         this.competitionStatus = competitionResource.getCompetitionStatus();
@@ -39,6 +40,7 @@ public class CompetitionInFlightViewModel {
         this.keyStatistics = keyStatistics;
         this.milestones = milestones;
         this.changesSinceLastNotify = changesSinceLastNotify;
+        this.readOnly = readOnly;
     }
 
     public Long getCompetitionId() {
@@ -87,5 +89,9 @@ public class CompetitionInFlightViewModel {
 
     public CompetitionInFlightStatsViewModel getKeyStatistics() {
         return keyStatistics;
+    }
+
+    public boolean isReadOnly() {
+        return readOnly;
     }
 }

@@ -240,3 +240,10 @@ The applications should be sorted by column
     ${test_sorting_list}=    Copy List    ${sorted_column_contents}
     Sort List    ${test_sorting_list}
     Lists Should Be Equal    ${sorted_column_contents}    ${test_sorting_list}
+
+the user should see all live competitions
+    the user should see the element  jQuery=h2:contains("Open")
+    the user should see the element  jQuery=h2:contains("Closed")
+    the user should see the element  jQuery=h2:contains("In assessment")
+    the user should see the element  jQuery=h2:contains("Panel")
+    the user should see the element  jQuery=h2:contains("Inform")
