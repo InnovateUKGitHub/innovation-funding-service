@@ -73,8 +73,8 @@ public class CompetitionResource {
     private boolean setupComplete = false;
 
     private boolean useResubmissionQuestion;
-    private Boolean useAssessmentPanel;
-    private Boolean addInterviewStage;
+    private Boolean hasAssessmentPanel;
+    private Boolean hasInterviewStage;
 
     private boolean nonIfs = false;
     private String nonIfsUrl;
@@ -519,19 +519,19 @@ public class CompetitionResource {
         this.nonIfsUrl = nonIfsUrl;
     }
 
-    public Boolean isUseAssessmentPanel() {
-        return useAssessmentPanel;
+    public Boolean isHasAssessmentPanel() {
+        return hasAssessmentPanel;
     }
 
-    public void setUseAssessmentPanel(Boolean useAssessmentPanel) {
-        this.useAssessmentPanel = useAssessmentPanel;
+    public void setHasAssessmentPanel(Boolean hasAssessmentPanel) {
+        this.hasAssessmentPanel = hasAssessmentPanel;
     }
 
-    public Boolean isAddInterviewStage(){
-        return addInterviewStage;
+    public Boolean isHasInterviewStage(){
+        return hasInterviewStage;
     }
 
-    public void setAddInterviewStage(Boolean addInterviewStage){
-        this.addInterviewStage = addInterviewStage;
+    public void setHasInterviewStage(Boolean hasInterviewStage){
+        this.hasInterviewStage = hasInterviewStage;
     }
 }

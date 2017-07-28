@@ -19,10 +19,10 @@ public class AssessorsForm extends CompetitionSetupForm {
     private BigDecimal assessorPay;
 
     @NotNull(message = "{validation.assessorsform.assessmentPanel.required}")
-    private Boolean useAssessmentPanel;
+    private Boolean hasAssessmentPanel;
 
     @NotNull(message = "{validation.assessorsform.interviewStage.required}")
-    private Boolean addInterviewStage;
+    private Boolean hasInterviewStage;
 
     public Integer getAssessorCount() {
         return assessorCount;
@@ -40,19 +40,19 @@ public class AssessorsForm extends CompetitionSetupForm {
         this.assessorPay = assessorPay;
     }
 
-    public Boolean getUseAssessmentPanel() {
-        return useAssessmentPanel;
+    public Boolean getHasAssessmentPanel() {
+        return hasAssessmentPanel;
     }
 
-    public void setUseAssessmentPanel(Boolean useAssessmentPanel) {
-        this.useAssessmentPanel = useAssessmentPanel;
+    public void setHasAssessmentPanel(Boolean hasAssessmentPanel) {
+        this.hasAssessmentPanel = hasAssessmentPanel;
     }
 
-    public Boolean getAddInterviewStage() {
-        return addInterviewStage;
+    public Boolean getHasInterviewStage() {
+        return hasInterviewStage;
     }
 
-    public void setAddInterviewStage(Boolean addInterviewStage) {
-        this.addInterviewStage = addInterviewStage;
+    public void setHasInterviewStage(Boolean hasInterviewStage) {
+        this.hasInterviewStage = hasInterviewStage;
     }
 }

@@ -59,8 +59,8 @@ public class AssessorsSectionSaver extends AbstractSectionSaver implements Compe
 
 	private void setFieldsAllowedFromChangeAfterSetupAndLive(CompetitionResource competition, AssessorsForm assessorsForm) {
 		competition.setAssessorCount(assessorsForm.getAssessorCount());
-		competition.setUseAssessmentPanel(assessorsForm.getUseAssessmentPanel());
-		competition.setAddInterviewStage(assessorsForm.getAddInterviewStage());
+		competition.setHasAssessmentPanel(assessorsForm.getHasAssessmentPanel());
+		competition.setHasInterviewStage(assessorsForm.getHasInterviewStage());
 	}
 
 	@Override

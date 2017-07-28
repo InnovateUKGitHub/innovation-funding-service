@@ -128,8 +128,8 @@ the user fills in the CS Assessors
     the user clicks the button/link   link=Assessors
     the user selects the radio button  assessorCount  3
     the user should see the element   css=#assessorPay[value="100"]
-    the user selects the radio button  useAssessmentPanel  0
-    the user selects the radio button  addInterviewStage  0
+    the user selects the radio button  hasAssessmentPanel  0
+    the user selects the radio button  hasInterviewStage  0
     the user clicks the button/link   jQuery=button:contains("Done")
     the user should see the element   jQuery=dt:contains("How many") + dd:contains("3")
     the user clicks the button/link   link=Competition setup

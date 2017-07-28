@@ -196,12 +196,12 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("nonIfsUrl", nonIfsUrl);
     }
 
-    public CompetitionResourceBuilder withUseAssessmentPanel(Boolean... useAssessmentPanel) {
-        return withArraySetFieldByReflection("useAssessmentPanel", useAssessmentPanel);
+    public CompetitionResourceBuilder withHasAssessmentPanel(Boolean... hasAssessmentPanel) {
+        return withArraySetFieldByReflection("hasAssessmentPanel", hasAssessmentPanel);
     }
 
-    public CompetitionResourceBuilder withAddInterviewStage(Boolean... addInterviewStage) {
-        return withArraySetFieldByReflection("addInterviewStage", addInterviewStage);
+    public CompetitionResourceBuilder withHasInterviewStage(Boolean... hasInterviewStage) {
+        return withArraySetFieldByReflection("hasInterviewStage", hasInterviewStage);
     }
 
     @Override

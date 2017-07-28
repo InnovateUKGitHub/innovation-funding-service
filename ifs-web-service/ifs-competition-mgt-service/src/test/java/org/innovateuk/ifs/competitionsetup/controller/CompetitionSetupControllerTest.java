@@ -728,8 +728,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/assessors")
                 .param("assessorCount", "1")
                 .param("assessorPay", "10")
-                .param("useAssessmentPanel", "0")
-                .param("addInterviewStage", "0"))
+                .param("hasAssessmentPanel", "0")
+                .param("hasInterviewStage", "0"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/assessors"));
 

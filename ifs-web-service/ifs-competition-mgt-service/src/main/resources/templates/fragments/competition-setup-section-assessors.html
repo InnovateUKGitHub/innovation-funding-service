@@ -42,69 +42,69 @@
                        th:errorclass="form-control-error"
                        th:readonly="${isSetupAndLive}"/>
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('useAssessmentPanel')} ? 'form-group-error'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('hasAssessmentPanel')} ? 'form-group-error'">
                 <fieldset class="inline">
                     <legend class="heading-small">
                         Enable assessment panel for this competition?
-                        <th:block th:if="${#fields.hasErrors('useAssessmentPanel')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('useAssessmentPanel')}" th:text="${err}" />
+                        <th:block th:if="${#fields.hasErrors('hasAssessmentPanel')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('hasAssessmentPanel')}" th:text="${err}" />
                         </th:block>
                     </legend>
                     <div class="multiple-choice">
-                        <input id="useAssessmentPanel-0"
+                        <input id="hasAssessmentPanel-0"
                                type="radio"
-                               th:field="${competitionSetupForm.useAssessmentPanel}"
+                               th:field="${competitionSetupForm.hasAssessmentPanel}"
                                value="1"
                                th:errorclass="field-error"
                                required="required"
                                th:attr="data-required-errormessage=#{validation.assessorsform.assessmentPanel.required}" />
-                        <label for="useAssessmentPanel-0">
+                        <label for="hasAssessmentPanel-0">
                             Yes
                         </label>
                     </div>
                     <div class="multiple-choice">
-                        <input id="useAssessmentPanel-1"
+                        <input id="hasAssessmentPanel-1"
                                type="radio"
-                               th:field="${competitionSetupForm.useAssessmentPanel}"
+                               th:field="${competitionSetupForm.hasAssessmentPanel}"
                                th:errorclass="field-error"
                                required="required"
                                value="0"
                                th:attr="data-required-errormessage=#{validation.assessorsform.assessmentPanel.required}" />
-                        <label for="useAssessmentPanel-1">
+                        <label for="hasAssessmentPanel-1">
                             No
                         </label>
                     </div>
                 </fieldset>
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('addInterviewStage')} ? 'form-group-error'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('hasInterviewStage')} ? 'form-group-error'">
                 <fieldset class="inline">
                     <legend class="heading-small">
                         Enable interview stage for this competition?
-                        <th:block th:if="${#fields.hasErrors('addInterviewStage')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('addInterviewStage')}" th:text="${err}" />
+                        <th:block th:if="${#fields.hasErrors('hasInterviewStage')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('hasInterviewStage')}" th:text="${err}" />
                         </th:block>
                     </legend>
                     <div class="multiple-choice">
-                        <input id="addInterviewStage-0"
+                        <input id="hasInterviewStage-0"
                                type="radio"
-                               th:field="${competitionSetupForm.addInterviewStage}"
+                               th:field="${competitionSetupForm.hasInterviewStage}"
                                value="1"
                                th:errorclass="field-error"
                                required="required"
                                th:attr="data-required-errormessage=#{validation.assessorsform.interviewStage.required}" />
-                        <label for="addInterviewStage-0">
+                        <label for="hasInterviewStage-0">
                             Yes
                         </label>
                     </div>
                     <div class="multiple-choice">
-                        <input id="addInterviewStage-1"
+                        <input id="hasInterviewStage-1"
                                type="radio"
-                               th:field="${competitionSetupForm.addInterviewStage}"
+                               th:field="${competitionSetupForm.hasInterviewStage}"
                                th:errorclass="field-error"
                                required="required"
                                value="0"
                                th:attr="data-required-errormessage=#{validation.assessorsform.interviewStage.required}" />
-                        <label for="addInterviewStage-1">
+                        <label for="hasInterviewStage-1">
                             No
                         </label>
                     </div>
@@ -123,12 +123,12 @@
                 <dd th:text="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'COMMA')}"></dd>
 
                 <dt>Enable assessment panel for this competition?</dt>
-                <dd th:if="${competitionSetupForm.useAssessmentPanel}">Yes</dd>
-                <dd th:unless="${competitionSetupForm.useAssessmentPanel}">No</dd>
+                <dd th:if="${competitionSetupForm.hasAssessmentPanel}">Yes</dd>
+                <dd th:unless="${competitionSetupForm.hasAssessmentPanel}">No</dd>
 
                 <dt>Enable interview stage for this competition?</dt>
-                <dd th:if="${competitionSetupForm.addInterviewStage}">Yes</dd>
-                <dd th:unless="${competitionSetupForm.addInterviewStage}">No</dd>
+                <dd th:if="${competitionSetupForm.hasInterviewStage}">Yes</dd>
+                <dd th:unless="${competitionSetupForm.hasInterviewStage}">No</dd>
             </dl>
 
            <button th:unless="${preventEdit}" type="submit" class="button">Edit</button>

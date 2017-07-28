@@ -35,8 +35,8 @@ public class AssessorSectionSaverTest {
 		AssessorsForm competitionSetupForm = new AssessorsForm();
 		competitionSetupForm.setAssessorCount(1);
 		competitionSetupForm.setAssessorPay(BigDecimal.TEN);
-		competitionSetupForm.setUseAssessmentPanel(Boolean.FALSE);
-		competitionSetupForm.setAddInterviewStage(Boolean.FALSE);
+		competitionSetupForm.setHasAssessmentPanel(Boolean.FALSE);
+		competitionSetupForm.setHasInterviewStage(Boolean.FALSE);
 
 		CompetitionResource competition = newCompetitionResource()
 				.withId(1L).build();
@@ -52,8 +52,8 @@ public class AssessorSectionSaverTest {
 
 		assertEquals(Integer.valueOf(1), competition.getAssessorCount());
 		assertEquals(BigDecimal.TEN, competition.getAssessorPay());
-		assertEquals(Boolean.FALSE, competition.isUseAssessmentPanel());
-		assertEquals(Boolean.FALSE, competition.isAddInterviewStage());
+		assertEquals(Boolean.FALSE, competition.isHasAssessmentPanel());
+		assertEquals(Boolean.FALSE, competition.isHasInterviewStage());
 
         verify(competitionService).getAssessorOptionsForCompetitionType(competition.getCompetitionType());
 		verify(competitionService).update(competition);
