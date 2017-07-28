@@ -226,6 +226,6 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     }
 
     private List<RoleInviteResource> sortByName(List<RoleInviteResource> roleInviteResources) {
-        return roleInviteResources.stream().sorted(Comparator.comparing(RoleInviteResource::getName)).collect(Collectors.toList());
+        return roleInviteResources.stream().sorted(Comparator.comparing(roleInviteResource -> roleInviteResource.getName().toUpperCase())).collect(Collectors.toList());
     }
 }

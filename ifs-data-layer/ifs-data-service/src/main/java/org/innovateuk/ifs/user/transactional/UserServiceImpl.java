@@ -221,6 +221,6 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     private List<UserResource> sortByName(List<UserResource> userResources) {
-        return userResources.stream().sorted(Comparator.comparing(UserResource::getName)).collect(Collectors.toList());
+        return userResources.stream().sorted(Comparator.comparing(userResource -> userResource.getName().toUpperCase())).collect(Collectors.toList());
     }
 }
