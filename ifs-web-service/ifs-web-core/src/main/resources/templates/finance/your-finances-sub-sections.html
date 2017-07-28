@@ -105,9 +105,14 @@
             </div>
             <div>
                 <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.section.parentSection})}"
-                   class="extra-margin"
-                   th:classappend="${model.complete} ? 'button-secondary' : 'button'"
-                   th:text="${model.complete} ? 'Return to finances' : 'Save and return to finances'"></a>
+                   th:if="${model.complete}"
+                   class="extra-margin button-secondary">Return to finances
+                </a>
+                <button type="submit"
+                   th:unless="${model.complete}"
+                   class="extra-margin button">
+                    Save and return to finances
+                </button>
             </div>
         </th:block>
     </th:block>
