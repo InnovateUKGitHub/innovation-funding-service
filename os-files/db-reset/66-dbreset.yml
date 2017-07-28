@@ -97,6 +97,11 @@ items:
           configMapKeyRef:
             name: ldap-config
             key: LDAP_DOMAIN
+      - name: LDAP_SCHEME
+        valueFrom:
+          configMapKeyRef:
+            name: ldap-config
+            key: LDAP_SCHEME
       - name: FLYWAY_LOCATIONS
         valueFrom:
           configMapKeyRef:
