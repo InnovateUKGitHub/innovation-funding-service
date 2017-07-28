@@ -43,7 +43,8 @@
           <tr th:each="project : ${model.competitionProjectsStatusResource.projectStatusResources}">
               <th scope="row">
                 <div class="heading-small no-margin" th:text="${project.projectTitle}" />
-                <a th:text="${project.applicationNumber}" th:href="${'/management/competition/'+model.competitionProjectsStatusResource.competitionNumber+'/application/'+project.applicationNumber}" />
+                  <!--/*  origin must one of org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin */-->
+                <a th:text="${project.applicationNumber}" th:href="${'/management/competition/'+model.competitionProjectsStatusResource.competitionNumber+'/application/'+project.applicationNumber+'?origin=PROJECT_SETUP_MANAGEMENT_STATUS'}" />
                 <small>
                   <th:block th:text="${project.numberOfPartners > 1 ? project.numberOfPartners+' partners' : project.numberOfPartners+' partner'}" /><br/>
                   <th:block th:text="${'Lead: '+project.projectLeadOrganisationName}" />
