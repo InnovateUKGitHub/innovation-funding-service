@@ -1,0 +1,2 @@
+funder|REPLACE('A funder name. ')
+funder_budget|DECIMAL(10, 2)
