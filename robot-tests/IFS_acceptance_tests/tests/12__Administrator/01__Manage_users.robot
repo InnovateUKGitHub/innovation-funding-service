@@ -68,7 +68,7 @@ Client side validations for invite new internal user
     And the user should see the element        jQuery=.error-message:contains("Please enter a valid email address.")
 
 Administrator can successfully invite a new user
-    [Documentation]  IFS-27, IFS-983
+    [Documentation]  IFS-27  IFS-983
     [Tags]  HappyPath
     Given the user navigates to the page       ${server}/management/admin/invite-user
     When the user enters text to a text field  id=firstName  Support
