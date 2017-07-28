@@ -70,17 +70,21 @@ Client side validations for invite new internal user
 Administrator can successfully invite a new user
     [Documentation]  IFS-27  IFS-983
     [Tags]  HappyPath
-    Given the user navigates to the page       ${server}/management/admin/invite-user
-    When the user enters text to a text field  id=firstName  Support
-    And the user enters text to a text field   id=lastName  User
+    Given the user navigates to the page                     ${server}/management/admin/invite-user
+    When the user enters text to a text field                id=firstName  Support
+    And the user enters text to a text field                 id=lastName   User
     And the user fills in the email address for the invitee
     And the user selects the option from the drop-down menu  IFS Administrator  id=role
-    And the user clicks the button/link        jQuery=.button:contains("Send invite")
+    And the user clicks the button/link                      jQuery=.button:contains("Send invite")
     Then the user cannot see a validation error in the page
-    Then the user should see the element       jQuery=h1:contains("Manage users")
+    Then the user should see the element                     jQuery=h1:contains("Manage users")
     #The Admin is redirected to the Manage Users page on Success
-    And the user should see the element        jQuery=.selected:contains("Pending")
+    And the user should see the element                      jQuery=.selected:contains("Pending")
     Then the user verifies pending tab content
+    When the user clicks the button/link                     jQuery=a:contains("Active")
+    Then the user should not see the element                 jQuery=td:contains("Support User") ~ td:contains("IFS Administrator")
+    When the user clicks the button/link                     jQuery=a:contains("Inactive")
+    Then the user should not see the element                 jQuery=td:contains("Support User") ~ td:contains("IFS Administrator")
     [Teardown]  close any open browsers
 
 Invited user can receive the invitation
