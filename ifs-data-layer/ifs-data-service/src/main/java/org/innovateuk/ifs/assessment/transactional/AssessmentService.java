@@ -33,7 +33,7 @@ public interface AssessmentService {
             description = "Comp admins and execs can see assessments in a particular state per competition")
     ServiceResult<List<AssessmentResource>> findByStateAndCompetition(AssessmentStates state, long competitionId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'innovation_lead')")
     @SecuredBySpring(
             value = "COUNT_BY_STATE_AND_COMPETITION",
             description = "Comp admins and execs can see a count of assessments in a particular state per competition")
