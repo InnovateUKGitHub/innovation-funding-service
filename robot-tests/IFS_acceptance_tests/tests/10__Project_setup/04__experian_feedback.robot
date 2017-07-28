@@ -109,7 +109,6 @@ Bank account number and sort code validations server side
      Then the user should see the text in the page    Please enter a valid account number
      And the user should see the text in the page    Please enter a valid sort code
 
-
 Project Finance cancels bank details changes
     [Documentation]    INFUND-4054,  INFUND-5899
     [Tags]    HappyPath

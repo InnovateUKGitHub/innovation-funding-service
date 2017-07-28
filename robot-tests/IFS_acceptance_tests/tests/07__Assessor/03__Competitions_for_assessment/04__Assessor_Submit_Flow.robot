@@ -48,30 +48,30 @@ Summary:Number of days remaining until assessment submission
 
 Summary shows questions as incomplete
     [Documentation]    INFUND-550
-    Then the collapsible button should contain    jQuery=button:contains(1. Business opportunity)    Incomplete
-    And the collapsible button should contain    jQuery=button:contains(2. Potential market)    Incomplete
-    And the collapsible button should contain    jQuery=button:contains(3. Project exploitation)    Incomplete
-    And the collapsible button should contain    jQuery=button:contains(4. Economic benefit)    Incomplete
-    And the collapsible button should contain    jQuery=button:contains(5. Technical approach)    Incomplete
-    And the collapsible button should contain    jQuery=button:contains(6. Innovation)    Incomplete
-    And the collapsible button should contain    jQuery=button:contains(7. Risks)    Incomplete
-    And the collapsible button should contain    jQuery=button:contains(8. Project team)    Incomplete
-    And the collapsible button should contain    jQuery=button:contains(9. Funding)    Incomplete
-    And the collapsible button should contain    jQuery=button:contains(10. Adding value)    Incomplete
-    And the collapsible button should contain    jQuery=button:contains(Scope)    Incomplete
+    Then the collapsible button should contain    jQuery=button:contains("1. Business opportunity")    Incomplete
+    And the collapsible button should contain    jQuery=button:contains("2. Potential market")    Incomplete
+    And the collapsible button should contain    jQuery=button:contains("3. Project exploitation")    Incomplete
+    And the collapsible button should contain    jQuery=button:contains("4. Economic benefit")    Incomplete
+    And the collapsible button should contain    jQuery=button:contains("5. Technical approach")    Incomplete
+    And the collapsible button should contain    jQuery=button:contains("6. Innovation")    Incomplete
+    And the collapsible button should contain    jQuery=button:contains("7. Risks")    Incomplete
+    And the collapsible button should contain    jQuery=button:contains("8. Project team")    Incomplete
+    And the collapsible button should contain    jQuery=button:contains("9. Funding")    Incomplete
+    And the collapsible button should contain    jQuery=button:contains("10. Adding value")    Incomplete
+    And the collapsible button should contain    jQuery=button:contains("Scope")    Incomplete
 
 Summary: Questions should show without score
     [Documentation]    INFUND-550
-    Then the collapsible button should contain    jQuery=button:contains(1. Business opportunity)    N/A
-    And the collapsible button should contain    jQuery=button:contains(2. Potential market)    N/A
-    And the collapsible button should contain    jQuery=button:contains(3. Project exploitation)    N/A
-    And the collapsible button should contain    jQuery=button:contains(4. Economic benefit)    N/A
-    And the collapsible button should contain    jQuery=button:contains(5. Technical approach)    N/A
-    And the collapsible button should contain    jQuery=button:contains(6. Innovation)    N/A
-    And the collapsible button should contain    jQuery=button:contains(7. Risks)    N/A
-    And the collapsible button should contain    jQuery=button:contains(8. Project team)    N/A
-    And the collapsible button should contain    jQuery=button:contains(9. Funding)    N/A
-    And the collapsible button should contain    jQuery=button:contains(10. Adding value)    N/A
+    Then the collapsible button should contain    jQuery=button:contains("1. Business opportunity")    N/A
+    And the collapsible button should contain    jQuery=button:contains("2. Potential market")    N/A
+    And the collapsible button should contain    jQuery=button:contains("3. Project exploitation")    N/A
+    And the collapsible button should contain    jQuery=button:contains("4. Economic benefit")    N/A
+    And the collapsible button should contain    jQuery=button:contains("5. Technical approach")    N/A
+    And the collapsible button should contain    jQuery=button:contains("6. Innovation")    N/A
+    And the collapsible button should contain    jQuery=button:contains("7. Risks")    N/A
+    And the collapsible button should contain    jQuery=button:contains("8. Project team")    N/A
+    And the collapsible button should contain    jQuery=button:contains("9. Funding")    N/A
+    And the collapsible button should contain    jQuery=button:contains("10. Adding value")    N/A
     [Teardown]    The user clicks the button/link    link=Back to your assessment overview
 
 Summary:Questions should show as complete
@@ -81,88 +81,88 @@ Summary:Questions should show as complete
     Given The user clicks the button/link    link=Intelligent Building
     And the user adds score and feedback for every question
     When the user clicks the button/link    link=Review and complete your assessment
-    Then the collapsible button should contain    jQuery=button:contains(1. Business opportunity)    Complete
-    And the collapsible button should contain    jQuery=button:contains(2. Potential market)    Complete
-    And the collapsible button should contain    jQuery=button:contains(3. Project exploitation)    Complete
-    And the collapsible button should contain    jQuery=button:contains(4. Economic benefit)    Complete
-    And the collapsible button should contain    jQuery=button:contains(5. Technical approach)    Complete
-    And the collapsible button should contain    jQuery=button:contains(6. Innovation)    Complete
-    And the collapsible button should contain    jQuery=button:contains(7. Risks)    Complete
-    And the collapsible button should contain    jQuery=button:contains(8. Project team)    Complete
-    And the collapsible button should contain    jQuery=button:contains(9. Funding)    Complete
-    And the collapsible button should contain    jQuery=button:contains(10. Adding value)    Complete
-    And the collapsible button should contain    jQuery=button:contains(Scope)    Complete
+    Then the collapsible button should contain    jQuery=button:contains("1. Business opportunity")    Complete
+    And the collapsible button should contain    jQuery=button:contains("2. Potential market")    Complete
+    And the collapsible button should contain    jQuery=button:contains("3. Project exploitation")    Complete
+    And the collapsible button should contain    jQuery=button:contains("4. Economic benefit")    Complete
+    And the collapsible button should contain    jQuery=button:contains("5. Technical approach")    Complete
+    And the collapsible button should contain    jQuery=button:contains("6. Innovation")    Complete
+    And the collapsible button should contain    jQuery=button:contains("7. Risks")    Complete
+    And the collapsible button should contain    jQuery=button:contains("8. Project team")    Complete
+    And the collapsible button should contain    jQuery=button:contains("9. Funding")    Complete
+    And the collapsible button should contain    jQuery=button:contains("10. Adding value")    Complete
+    And the collapsible button should contain    jQuery=button:contains("Scope")    Complete
 
 Summary:Questions should show the scores
     [Documentation]    INFUND-550
     [Tags]    HappyPath
     Then The user should see the text in the page    Total: 100/100
     And The user should see the text in the page    100%
-    And the collapsible button should contain    jQuery=button:contains(1. Business opportunity)    Score 10/10
-    And the collapsible button should contain    jQuery=button:contains(2. Potential market)    Score 10/10
-    And the collapsible button should contain    jQuery=button:contains(3. Project exploitation)    Score 10/10
-    And the collapsible button should contain    jQuery=button:contains(4. Economic benefit)    Score 10/10
-    And the collapsible button should contain    jQuery=button:contains(5. Technical approach)    Score 10/10
-    And the collapsible button should contain    jQuery=button:contains(6. Innovation)    Score 10/10
-    And the collapsible button should contain    jQuery=button:contains(7. Risks)    Score 10/10
-    And the collapsible button should contain    jQuery=button:contains(8. Project team)    Score 10/10
-    And the collapsible button should contain    jQuery=button:contains(9. Funding)    Score 10/10
-    And the collapsible button should contain    jQuery=button:contains(10. Adding value)    Score 10/10
+    And the collapsible button should contain    jQuery=button:contains("1. Business opportunity")    Score 10/10
+    And the collapsible button should contain    jQuery=button:contains("2. Potential market")    Score 10/10
+    And the collapsible button should contain    jQuery=button:contains("3. Project exploitation")    Score 10/10
+    And the collapsible button should contain    jQuery=button:contains("4. Economic benefit")    Score 10/10
+    And the collapsible button should contain    jQuery=button:contains("5. Technical approach")    Score 10/10
+    And the collapsible button should contain    jQuery=button:contains("6. Innovation")    Score 10/10
+    And the collapsible button should contain    jQuery=button:contains("7. Risks")    Score 10/10
+    And the collapsible button should contain    jQuery=button:contains("8. Project team")    Score 10/10
+    And the collapsible button should contain    jQuery=button:contains("9. Funding")    Score 10/10
+    And the collapsible button should contain    jQuery=button:contains("10. Adding value")    Score 10/10
 
 Summary:Feedback should show in each section
     [Documentation]    INFUND-550
-    When the user clicks the button/link    jQuery=button:contains(1. Business opportunity)
+    When the user clicks the button/link    jQuery=button:contains("1. Business opportunity")
     Then the user should see the text in the page    Testing Business opportunity feedback text
-    When the user clicks the button/link    jQuery=button:contains(2. Potential market)
+    When the user clicks the button/link    jQuery=button:contains("2. Potential market")
     Then the user should see the text in the page    Testing Potential market feedback text
-    When the user clicks the button/link    jQuery=button:contains(3. Project exploitation)
+    When the user clicks the button/link    jQuery=button:contains("3. Project exploitation")
     Then the user should see the text in the page    Testing Project exploitation feedback text
-    When the user clicks the button/link    jQuery=button:contains(4. Economic benefit)
+    When the user clicks the button/link    jQuery=button:contains("4. Economic benefit")
     Then the user should see the text in the page    Testing Economic benefit feedback text
-    When the user clicks the button/link    jQuery=button:contains(5. Technical approach)
+    When the user clicks the button/link    jQuery=button:contains("5. Technical approach")
     Then the user should see the text in the page    Testing Technical approach feedback text
-    When the user clicks the button/link    jQuery=button:contains(6. Innovation)
+    When the user clicks the button/link    jQuery=button:contains("6. Innovation")
     Then the user should see the text in the page    Testing Innovation feedback text
-    When the user clicks the button/link    jQuery=button:contains(7. Risks)
+    When the user clicks the button/link    jQuery=button:contains("7. Risks")
     Then the user should see the text in the page    Testing Risks feedback text
-    When the user clicks the button/link    jQuery=button:contains(8. Project team)
+    When the user clicks the button/link    jQuery=button:contains("8. Project team")
     Then the user should see the text in the page    Testing Project team feedback text
-    When the user clicks the button/link    jQuery=button:contains(9. Funding)
+    When the user clicks the button/link    jQuery=button:contains("9. Funding")
     Then the user should see the text in the page    Testing Funding feedback text
-    When the user clicks the button/link    jQuery=button:contains(10. Adding value)
+    When the user clicks the button/link    jQuery=button:contains("10. Adding value")
     Then the user should see the text in the page    Testing Adding value feedback text
-    When the user clicks the button/link    jQuery=button:contains(Scope)
+    When the user clicks the button/link    jQuery=button:contains("Scope")
     Then the user should see the text in the page    Testing scope feedback text
 
 Summary:Assessor can return to each question
     [Documentation]    INFUND-4648
-    And the user should see the element    jQuery=#collapsible-0 a:contains(Return to this question in the application)
-    And the user should see the element    jQuery=#collapsible-1 a:contains(Return to this question in the application)
-    And the user should see the element    jQuery=#collapsible-2 a:contains(Return to this question in the application)
-    And the user should see the element    jQuery=#collapsible-3 a:contains(Return to this question in the application)
-    And the user should see the element    jQuery=#collapsible-4 a:contains(Return to this question in the application)
-    And the user should see the element    jQuery=#collapsible-5 a:contains(Return to this question in the application)
-    And the user should see the element    jQuery=#collapsible-6 a:contains(Return to this question in the application)
-    And the user should see the element    jQuery=#collapsible-7 a:contains(Return to this question in the application)
-    And the user should see the element    jQuery=#collapsible-8 a:contains(Return to this question in the application)
-    And the user should see the element    jQuery=#collapsible-9 a:contains(Return to this question in the application)
-    And the user should see the element    jQuery=#collapsible-10 a:contains(Return to this question in the application)
-    When the user clicks the button/link    jQuery=#collapsible-1 a:contains(Return to this question in the application)
+    And the user should see the element    jQuery=#collapsible-0 a:contains("Return to this question in the application")
+    And the user should see the element    jQuery=#collapsible-1 a:contains("Return to this question in the application")
+    And the user should see the element    jQuery=#collapsible-2 a:contains("Return to this question in the application")
+    And the user should see the element    jQuery=#collapsible-3 a:contains("Return to this question in the application")
+    And the user should see the element    jQuery=#collapsible-4 a:contains("Return to this question in the application")
+    And the user should see the element    jQuery=#collapsible-5 a:contains("Return to this question in the application")
+    And the user should see the element    jQuery=#collapsible-6 a:contains("Return to this question in the application")
+    And the user should see the element    jQuery=#collapsible-7 a:contains("Return to this question in the application")
+    And the user should see the element    jQuery=#collapsible-8 a:contains("Return to this question in the application")
+    And the user should see the element    jQuery=#collapsible-9 a:contains("Return to this question in the application")
+    And the user should see the element    jQuery=#collapsible-10 a:contains("Return to this question in the application")
+    When the user clicks the button/link    jQuery=#collapsible-1 a:contains("Return to this question in the application")
     Then the user should see the text in the page    What is the business opportunity that your project addresses?
     And the user goes back to the previous page
-    When the user clicks the button/link    jQuery=#collapsible-10 a:contains(Return to this question in the application)
+    When the user clicks the button/link    jQuery=#collapsible-10 a:contains("Return to this question in the application")
     Then the user should see the text in the page    How does financial support from Innovate UK and its funding partners add value?
     And the user goes back to the previous page
 
 Summary:Assessor should be able to re-edit before submit
     [Documentation]    INFUND-3400
-    When The user clicks the button/link    jQuery=#collapsible-1 a:contains(Return to this question)
+    When The user clicks the button/link    jQuery=#collapsible-1 a:contains("Return to this question")
     and The user should see the text in the page    What is the business opportunity that your project addresses?
     When the user selects the option from the drop-down menu    8    id=assessor-question-score
     And the user enters text to a text field    css=.editor    This is a new feedback entry.
-    And the user clicks the button/link    jQuery=a:contains(Back to your assessment overview)
-    And the user clicks the button/link    jQuery=a:contains(Review and complete your assessment)
-    When The user clicks the button/link    jQuery=button:contains(1. Business opportunity)
+    And the user clicks the button/link    jQuery=a:contains("Back to your assessment overview")
+    And the user clicks the button/link    jQuery=a:contains("Review and complete your assessment")
+    When The user clicks the button/link    jQuery=button:contains("1. Business opportunity")
     Then the user should see the text in the page    This is a new feedback entry.
     And the user should see the text in the page    8
 
@@ -173,12 +173,12 @@ Summary:Funding Decision Validations
     ...
     ...    INFUND-5228
     [Tags]
-    When The user clicks the button/link    jQuery=.button:contains(Save assessment)
+    When The user clicks the button/link    jQuery=.button:contains("Save assessment")
     And The user should see an error    Please indicate your decision.
     And The user enters text to a text field    id=feedback    ${EMPTY}
     And The user enters text to a text field    id=comment    ${EMPTY}
     Then the user selects the radio button    fundingConfirmation    false
-    And The user clicks the button/link    jQuery=.button:contains(Save assessment)
+    And The user clicks the button/link    jQuery=.button:contains("Save assessment")
     Then The user should see an error    Please enter your feedback.
 
 Summary:Word count check(Your feedback)
@@ -298,7 +298,7 @@ the collapsible button should contain
 the user adds score and feedback for every question
     The user clicks the button/link    link=Scope
     The user selects the index from the drop-down menu    1    id=research-category
-    The user clicks the button/link    jQuery=label:contains(Yes)
+    The user clicks the button/link    jQuery=label:contains("Yes")
     The user enters text to a text field    css=.editor    Testing scope feedback text
     Focus    jQuery=a:contains("Sign out")
     Wait Until Page Contains Without Screenshots    Saved!

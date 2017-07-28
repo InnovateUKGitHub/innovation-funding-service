@@ -27,7 +27,7 @@ Client-side validations
 Cancel button redirects to the read-only view without changes
     [Documentation]    INFUND-8009
     [Tags]
-    Given the user clicks the button/link    jQuery=a:contains(Cancel)
+    Given the user clicks the button/link    jQuery=a:contains("Cancel")
     Then the user should be redirected to the correct page    ${assessment_skills_url}
     [Teardown]    the user clicks the button/link    jQuery=a:contains("Edit")
 
@@ -75,7 +75,7 @@ Your skills does not appear in dashboard alert
 Return to assessor dashboard from skills page
     [Documentation]    INFUND-8009
     [Tags]
-    When the user clicks the button/link    jQuery=a:contains(Return to assessor dashboard)
+    When the user clicks the button/link    jQuery=a:contains("Return to assessor dashboard")
     Then the user should be redirected to the correct page     ${assessor_dashboard_url}
 
 *** Keywords ***

@@ -151,8 +151,7 @@ ${project_in_setup_details_page}        ${project_in_setup_page}/details
 ${project_in_setup_team_status_page}    ${project_in_setup_page}/team-status
 ${project_start_date_page}              ${project_in_setup_details_page}/start-date
 ${project_address_page}                 ${project_in_setup_details_page}/project-address
-${internal_project_summary}             ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
-
+${internal_competition_status}          ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
 
 
 #Bank details
