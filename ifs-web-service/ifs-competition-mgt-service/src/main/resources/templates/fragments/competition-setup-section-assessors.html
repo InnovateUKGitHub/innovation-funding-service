@@ -43,68 +43,72 @@
                        th:readonly="${isSetupAndLive}"/>
             </div>
             <div class="form-group" th:classappend="${#fields.hasErrors('useAssessmentPanel')} ? 'form-group-error'">
-                <legend class="heading-small">
-                    Enable assessment panel for this competition?
-                    <th:block th:if="${#fields.hasErrors('useAssessmentPanel')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('useAssessmentPanel')}" th:text="${err}" />
-                    </th:block>
-                </legend>
-                <div class="multiple-choice">
-                    <input id="useAssessmentPanel-0"
-                           type="radio"
-                           th:field="${competitionSetupForm.useAssessmentPanel}"
-                           value="1"
-                           th:errorclass="field-error"
-                           required="required"
-                           th:attr="data-required-errormessage=#{validation.assessorsform.assessmentPanel.required}" />
-                    <label for="useAssessmentPanel-0">
-                        Yes
-                    </label>
-                </div>
-                <div class="multiple-choice">
-                    <input id="useAssessmentPanel-1"
-                           type="radio"
-                           th:field="${competitionSetupForm.useAssessmentPanel}"
-                           th:errorclass="field-error"
-                           required="required"
-                           value="0"
-                           th:attr="data-required-errormessage=#{validation.assessorsform.assessmentPanel.required}" />
-                    <label for="useAssessmentPanel-1">
-                        No
-                    </label>
-                </div>
+                <fieldset class="inline">
+                    <legend class="heading-small">
+                        Enable assessment panel for this competition?
+                        <th:block th:if="${#fields.hasErrors('useAssessmentPanel')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('useAssessmentPanel')}" th:text="${err}" />
+                        </th:block>
+                    </legend>
+                    <div class="multiple-choice">
+                        <input id="useAssessmentPanel-0"
+                               type="radio"
+                               th:field="${competitionSetupForm.useAssessmentPanel}"
+                               value="1"
+                               th:errorclass="field-error"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.assessorsform.assessmentPanel.required}" />
+                        <label for="useAssessmentPanel-0">
+                            Yes
+                        </label>
+                    </div>
+                    <div class="multiple-choice">
+                        <input id="useAssessmentPanel-1"
+                               type="radio"
+                               th:field="${competitionSetupForm.useAssessmentPanel}"
+                               th:errorclass="field-error"
+                               required="required"
+                               value="0"
+                               th:attr="data-required-errormessage=#{validation.assessorsform.assessmentPanel.required}" />
+                        <label for="useAssessmentPanel-1">
+                            No
+                        </label>
+                    </div>
+                </fieldset>
             </div>
             <div class="form-group" th:classappend="${#fields.hasErrors('addInterviewStage')} ? 'form-group-error'">
-                <legend class="heading-small">
-                    Enable interview stage for this competition?
-                    <th:block th:if="${#fields.hasErrors('addInterviewStage')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('addInterviewStage')}" th:text="${err}" />
-                    </th:block>
-                </legend>
-                <div class="multiple-choice">
-                    <input id="addInterviewStage-0"
-                           type="radio"
-                           th:field="${competitionSetupForm.addInterviewStage}"
-                           value="1"
-                           th:errorclass="field-error"
-                           required="required"
-                           th:attr="data-required-errormessage=#{validation.assessorsform.interviewStage.required}" />
-                    <label for="addInterviewStage-0">
-                        Yes
-                    </label>
-                </div>
-                <div class="multiple-choice">
-                    <input id="addInterviewStage-1"
-                           type="radio"
-                           th:field="${competitionSetupForm.addInterviewStage}"
-                           th:errorclass="field-error"
-                           required="required"
-                           value="0"
-                           th:attr="data-required-errormessage=#{validation.assessorsform.interviewStage.required}" />
-                    <label for="addInterviewStage-1">
-                        No
-                    </label>
-                </div>
+                <fieldset class="inline">
+                    <legend class="heading-small">
+                        Enable interview stage for this competition?
+                        <th:block th:if="${#fields.hasErrors('addInterviewStage')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('addInterviewStage')}" th:text="${err}" />
+                        </th:block>
+                    </legend>
+                    <div class="multiple-choice">
+                        <input id="addInterviewStage-0"
+                               type="radio"
+                               th:field="${competitionSetupForm.addInterviewStage}"
+                               value="1"
+                               th:errorclass="field-error"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.assessorsform.interviewStage.required}" />
+                        <label for="addInterviewStage-0">
+                            Yes
+                        </label>
+                    </div>
+                    <div class="multiple-choice">
+                        <input id="addInterviewStage-1"
+                               type="radio"
+                               th:field="${competitionSetupForm.addInterviewStage}"
+                               th:errorclass="field-error"
+                               required="required"
+                               value="0"
+                               th:attr="data-required-errormessage=#{validation.assessorsform.interviewStage.required}" />
+                        <label for="addInterviewStage-1">
+                            No
+                        </label>
+                    </div>
+                </fieldset>
             </div>
 
             <button class="button">Done</button>
