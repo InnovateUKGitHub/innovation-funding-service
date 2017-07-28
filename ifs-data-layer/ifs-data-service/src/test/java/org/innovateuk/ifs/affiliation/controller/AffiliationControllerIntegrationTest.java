@@ -9,7 +9,6 @@ import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.lang.Boolean.TRUE;
@@ -60,7 +59,7 @@ public class AffiliationControllerIntegrationTest extends BaseControllerIntegrat
     public void testUpdateUserAffiliations() throws Exception {
         loginPaulPlum();
 
-        User user = userRepository.findOne(getPaulPlum().getId());
+        User user = userMapper.mapToDomain(getPaulPlum());
         Long userId = user.getId();
 
         // Save some existing Affiliations
