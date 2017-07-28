@@ -75,7 +75,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
     public CompetitionDataBuilder withBasicData(String name, String competitionTypeName, List<String> innovationAreaNames,
                                                 String innovationSectorName, String researchCategoryName, String leadTechnologist,
-                                                String compExecutive, String budgetCode, String pafCode, String code, String activityCode, Integer assessorCount, BigDecimal assessorPay, Boolean hasAssessmentPanel,
+                                                String compExecutive, String budgetCode, String pafCode, String code, String activityCode, Integer assessorCount, BigDecimal assessorPay, Boolean hasAssessmentPanel, Boolean hasInterviewStage,
                                                 Boolean multiStream, String collaborationLevelCode, List<OrganisationTypeEnum> leadApplicantTypes, Integer researchRatio, Boolean resubmission, String nonIfsUrl) {
 
         return asCompAdmin(data -> {
@@ -118,6 +118,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setAssessorPay(assessorPay);
                 competition.setAssessorCount(assessorCount);
                 competition.setHasAssessmentPanel(hasAssessmentPanel);
+                competition.setHasInterviewStage(hasInterviewStage);
                 competition.setNonIfsUrl(nonIfsUrl);
             });
         });
