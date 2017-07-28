@@ -5,6 +5,11 @@ if(project.hasProperty('profile') && profile == 'automated') {
     ext.openshiftEnv = project.properties['openshiftEnv'] ?: "automated"
 }
 
+task osInitClusterLocal(type:Exec) {
+    executable = 'setup-files/scripts/openshift/init-local-cluster.sh'
+    args = [openshiftEnv, "local", project.version]
+}
+
 task osDeployRemote(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "remote", project.version]
@@ -25,9 +30,34 @@ task dbResetUat(type:Exec) {
     args = [openshiftEnv, "uat", project.version]
 }
 
+task dbResetLocal(type:Exec) {
+    executable = 'setup-files/scripts/openshift/db-reset.sh'
+    args = [openshiftEnv, "local", project.version]
+}
+
+task dbAnonymisedDumpLocal(type:Exec) {
+    executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
+    args = [openshiftEnv, "local", project.version]
+}
+
+task dbAnonymisedDumpRemote(type:Exec) {
+    executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
+    args = [openshiftEnv, "remote", project.version]
+}
+
+task dbAnonymisedDumpUat(type:Exec) {
+    executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
+    args = [openshiftEnv, "uat", project.version]
+}
+
+task dbAnonymisedDumpProduction(type:Exec) {
+    executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
+    args = [openshiftEnv, "production", project.version]
+}
+
 task osDeployLocal(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
-    args = [openshiftEnv, "local"]
+    args = [openshiftEnv, "local", project.version]
 }
 
 task osDeployProduction(type:Exec) {
