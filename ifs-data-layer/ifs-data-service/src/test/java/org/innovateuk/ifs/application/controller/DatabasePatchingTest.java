@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.test.annotation.IfProfileValue;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.fail;
@@ -31,6 +32,7 @@ public class DatabasePatchingTest extends BaseIntegrationTest {
     }
 
     @Test
+    @IfProfileValue(name = "tests", values = {"dbpatch"})
     public void testProductionPatches() throws Exception {
 
         try {
