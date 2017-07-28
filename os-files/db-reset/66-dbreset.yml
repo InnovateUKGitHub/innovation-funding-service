@@ -26,6 +26,7 @@ items:
     LDAP_PORT: "<<LDAP-PORT>>"
     LDAP_PASS: "<<LDAP-PASS>>"
     LDAP_DOMAIN: "<<LDAP-DOMAIN>>"
+    LDAP_SCHEME: "<<LDAP-SCHEME>>"
 - apiVersion: v1
   kind: Pod
   metadata:
