@@ -260,7 +260,7 @@ Lead should not see pending status for accepted invite
     When the user clicks the button/link        link=Invite robot test application
     And the user clicks the button/link         link=view team members and add collaborators
     And the user clicks the button/link         link=Update ${EMPIRE_LTD_NAME}
-    Then the user should see the element         jQuery=.table-overflow td:contains(${test_mailbox_one}+inviteorg2@gmail.com)
+    Then the user should see the element         jQuery=.table-overflow td:contains("${test_mailbox_one}+inviteorg2@gmail.com") ~ td:contains("Remove")
 
 *** Keywords ***
 The lead applicant should have the correct status

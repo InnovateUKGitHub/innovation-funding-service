@@ -134,6 +134,19 @@ task dbResetDocker(type: Docker, dependsOn: build) {
 }
 
 
+task dbAnonymisedDumpDocker(type: Docker, dependsOn: build) {
+    push = false
+    applicationName = 'db-anonymised-data'
+    dockerfile = file('src/main/docker/proxysql/Dockerfile-proxysql')
+    doFirst {
+        copy {
+            from "src/main/docker/proxysql"
+            into "${stageDir}/proxysql"
+        }
+    }
+}
+
+
 asciidoctor {
     onlyIf { file(snippetsDir).exists() }
     dependsOn test

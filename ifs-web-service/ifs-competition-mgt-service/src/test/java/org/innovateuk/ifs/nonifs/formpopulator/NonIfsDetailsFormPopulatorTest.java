@@ -33,7 +33,7 @@ public class NonIfsDetailsFormPopulatorTest {
     public void testPopulate() {
         CompetitionResource competition = newCompetitionResource()
                 .withName(COMPETITION_NAME).withInnovationSector(INNOVATION_SECTOR).withInnovationAreas(asSet(INNOVATION_AREA))
-                .withNonIfsUrl(COMPETITION_URL).withReleaseFeedbackDate(NOTIFIED).withStartDate(OPEN).withEndDate(CLOSE)
+                .withNonIfsUrl(COMPETITION_URL).withFundersPanelEndDate(NOTIFIED).withStartDate(OPEN).withEndDate(CLOSE)
                 .build();
 
         NonIfsDetailsForm form = target.populate(competition);

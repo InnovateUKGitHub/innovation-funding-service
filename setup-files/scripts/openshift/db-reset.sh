@@ -6,22 +6,22 @@ PROJECT=$1
 TARGET=$2
 VERSION=$3
 
-if [[ ${TARGET} == "production" ]]; then PROJECT="production"; fi
-if [[ ${TARGET} == "demo" ]]; then PROJECT="demo"; fi
-if [[ ${TARGET} == "uat" ]]; then PROJECT="uat"; fi
-if [[ ${TARGET} == "sysint" ]]; then PROJECT="sysint"; fi
-if [[ ${TARGET} == "perf" ]]; then PROJECT="perf"; fi
+if [[ "$TARGET" == "production" ]]; then
+    echo "Cannot reset the database on production"
+    exit 1
+fi
 
-if [[ (${TARGET} == "local") ]]; then HOST=ifs-local; else HOST=prod.ifs-test-clusters.com; fi
+. $(dirname $0)/deploy-functions.sh
+. $(dirname $0)/local-deploy-functions.sh
 
-if [ -z "$bamboo_openshift_svc_account_token" ]; then  SVC_ACCOUNT_TOKEN=$(oc whoami -t); else SVC_ACCOUNT_TOKEN=${bamboo_openshift_svc_account_token}; fi
-
-SVC_ACCOUNT_CLAUSE="--namespace=${PROJECT} --token=${SVC_ACCOUNT_TOKEN} --server=https://console.prod.ifs-test-clusters.com:443 --insecure-skip-tls-verify=true"
-REGISTRY_TOKEN=${SVC_ACCOUNT_TOKEN};
-
-ROUTE_DOMAIN=apps.$HOST
-REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
-INTERNAL_REGISTRY=172.30.80.28:5000
+PROJECT=$(getProjectName $PROJECT $TARGET)
+SVC_ACCOUNT_TOKEN=$(getSvcAccountToken)
+HOST=$(getHost $TARGET)
+ROUTE_DOMAIN=$(getRouteDomain $TARGET $HOST)
+REGISTRY=$(getRegistry)
+INTERNAL_REGISTRY=$(getInternalRegistry)
+SVC_ACCOUNT_CLAUSE=$(getSvcAccountClause $TARGET $PROJECT $SVC_ACCOUNT_TOKEN)
+REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 
 echo "Resetting the $PROJECT Openshift project"
 
@@ -32,24 +32,38 @@ function dbReset() {
       sleep 10
     done
 
+    
     oc rsh ${SVC_ACCOUNT_CLAUSE} $(oc get pods ${SVC_ACCOUNT_CLAUSE} | grep -m 1 data-service | awk '{ print $1 }') /bin/bash -c 'cd /mnt/ifs_storage && ls | grep -v .trashcan | xargs rm -rf'
 }
-
-. $(dirname $0)/deploy-functions.sh
 
 # Entry point
 cleanUp
 cloneConfig
 tailorAppInstance
+
+if [[ "$TARGET" == "local" || "$TARGET" == "remote" ]]; then
+
+    export DB_NAME=ifs
+    export DB_USER=root
+    export DB_PASS=password
+    export DB_HOST=ifs-database
+    export DB_PORT=3306
+
+    export LDAP_HOST="ldap"
+    export LDAP_PORT=389
+    export LDAP_PASS="default"
+    export LDAP_DOMAIN="dc=nodomain"
+    export LDAP_SCHEME="ldaps"
+
+    export FLYWAY_LOCATIONS="filesystem:/flyway/sql/db/migration,filesystem:/flyway/sql/db/setup,filesystem:/flyway/sql/db/webtest"
+fi
+
 injectDBVariables
 injectLDAPVariables
 injectFlywayVariables
 
-if [[ (${TARGET} != "local") ]]
-then
-    useContainerRegistry
-    pushDBResetImages
-fi
+useContainerRegistry
+pushDBResetImages
 
 dbReset
 

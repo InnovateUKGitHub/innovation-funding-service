@@ -3,6 +3,7 @@ package org.innovateuk.ifs.management.controller;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/competition")
-@PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
+@PreAuthorize("hasAnyAuthority('comp_admin','project_finance','innovation_lead')")
 public class CompetitionManagementCompetitionController {
 
     @Autowired
@@ -27,10 +28,10 @@ public class CompetitionManagementCompetitionController {
     private CompetitionInFlightModelPopulator competitionInFlightModelPopulator;
 
     @GetMapping("/{competitionId}")
-    public String competition(Model model, @PathVariable("competitionId") Long competitionId) {
+    public String competition(Model model, @PathVariable("competitionId") Long competitionId, UserResource user) {
         CompetitionResource competition = competitionService.getById(competitionId);
         if (competition.getCompetitionStatus().isInFlight()) {
-            model.addAttribute("model", competitionInFlightModelPopulator.populateModel(competition));
+            model.addAttribute("model", competitionInFlightModelPopulator.populateModel(competition, user));
             return "competition/competition-in-flight";
         } else {
             throw new IllegalStateException("Unexpected competition state for competition: " + competitionId);
