@@ -583,7 +583,7 @@ Status updates correctly for internal user's table
     [Documentation]    INFUND-4049 , INFUND-5543
     [Tags]    Experian    HappyPath
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
-    When the user navigates to the page    ${internal_project_summary}
+    When the user navigates to the page    ${internal_competition_status}
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(1).status.ok
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(2).status.ok
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(3).status

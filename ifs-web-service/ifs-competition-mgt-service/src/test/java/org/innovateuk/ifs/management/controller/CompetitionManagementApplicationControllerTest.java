@@ -550,6 +550,21 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         verify(applicationService).markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource));
     }
 
+    @Test
+    public void displayApplicationOverview_projectSetupManagementStatusOrigin() throws Exception {
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+        this.setupApplicationResponses();
+        this.loginDefaultUser();
+        this.setupInvites();
+        this.setupOrganisationTypes();
+        this.setupResearchCategories();
+        setupApplicantResource();
+
+        assertApplicationOverviewWithBackUrl("PROJECT_SETUP_MANAGEMENT_STATUS",
+                "/project-setup-management/competition/" + competitionResource.getId() + "/status");
+    }
+
     private void assertApplicationOverviewWithBackUrl(final String origin, final String expectedBackUrl) throws Exception {
         this.setupApplicationResponses();
         this.setupInvites();
