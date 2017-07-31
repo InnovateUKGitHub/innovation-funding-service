@@ -1,14 +1,14 @@
 package org.innovateuk.ifs.validator.util;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.validation.SpendProfileCostValidator;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.handler.item.MaterialsHandler;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
-import org.innovateuk.ifs.form.domain.FormInputResponse;
-import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
+import org.innovateuk.ifs.validator.AcademicJesValidator;
 import org.innovateuk.ifs.validator.transactional.ValidatorService;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -20,8 +20,7 @@ import org.springframework.validation.BindingResult;
 
 import java.math.BigDecimal;
 
-import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
-import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
@@ -37,6 +36,9 @@ public class ValidationUtilTest extends BaseUnitTestMocksTest {
 
     @Mock
     private ValidatorService validatorServiceMock;
+
+    @Mock
+    private AcademicJesValidator academicJesValidatorMock;
 
     @InjectMocks
     private ValidationUtil validationUtil;
@@ -57,12 +59,12 @@ public class ValidationUtilTest extends BaseUnitTestMocksTest {
 
     @Test
     public void testValidationJesForm() {
-        FormInputResponse formInputResponse = newFormInputResponse().withFormInputs(
-                newFormInput().withType(FormInputType.FILEUPLOAD).build()).build();
+        Application application = newApplication().build();
+        when(academicJesValidatorMock.supports(Application.class)).thenReturn(true);
 
-        BindingResult result = validationUtil.validationJesForm(formInputResponse);
+        BindingResult result = validationUtil.validationJesForm(application);
 
-        assertEquals(formInputResponse, result.getTarget());
+        assertEquals(application, result.getTarget());
     }
 
 

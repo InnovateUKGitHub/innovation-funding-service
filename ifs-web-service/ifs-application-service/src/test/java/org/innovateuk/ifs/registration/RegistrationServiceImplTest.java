@@ -16,8 +16,8 @@ import org.mockito.Mock;
 import static java.util.Optional.of;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
+import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
-import static org.innovateuk.ifs.invite.builder.InviteResourceBuilder.newInviteResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.when;
@@ -52,7 +52,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         UserResource userOne = new UserResource();
         userOne.setEmail("email@testOne.com");
 
-        ApplicationInviteResource inviteResource = newInviteResource().withEmail("email@testOne.com").build();
+        ApplicationInviteResource inviteResource = newApplicationInviteResource().withEmail("email@testOne.com").build();
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withOrganisation(2L).build();
         inviteOrganisationResource.setOrganisationNameConfirmed("Name Two");
 
@@ -68,7 +68,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         UserResource userOne = new UserResource();
         userOne.setEmail("email@testOne.com");
 
-        ApplicationInviteResource inviteResource = newInviteResource().withEmail("email@testOne.com").build();
+        ApplicationInviteResource inviteResource = newApplicationInviteResource().withEmail("email@testOne.com").build();
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withOrganisation(2L).build();
         inviteOrganisationResource.setOrganisationNameConfirmed("Name Two");
 
@@ -85,7 +85,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         UserResource userOne = new UserResource();
         userOne.setEmail("email@testOne.com");
 
-        ApplicationInviteResource inviteResource = newInviteResource().withEmail("email@testOne.com").build();
+        ApplicationInviteResource inviteResource = newApplicationInviteResource().withEmail("email@testOne.com").build();
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().build();
 
         when(organisationService.getOrganisationForUser(anyLong())).thenReturn(expected);

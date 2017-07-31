@@ -14,11 +14,12 @@ import org.springframework.security.access.method.P;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
+import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
-import static org.innovateuk.ifs.invite.builder.InviteResourceBuilder.newInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteResultResourceBuilder.newInviteResultResource;
 import static org.innovateuk.ifs.invite.security.InviteServiceSecurityTest.TestInviteService.ARRAY_SIZE_FOR_POST_FILTER_TESTS;
 import static org.junit.Assert.assertTrue;
@@ -66,8 +67,9 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
     @Test
     public void testCreateApplicationInvites() {
         final InviteOrganisationResource inviteOrganisation = newInviteOrganisationResource().build();
+        final long applicationId = 1L;
         assertAccessDenied(
-                () -> classUnderTest.createApplicationInvites(inviteOrganisation),
+                () -> classUnderTest.createApplicationInvites(inviteOrganisation, Optional.of(applicationId)),
                 () -> {
                     verify(inviteOrganisationPermissionRules).leadApplicantCanCreateApplicationInvitesIfApplicationEditable(eq(inviteOrganisation), any(UserResource.class));
                 });
@@ -95,7 +97,7 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
     @Test
     public void testSaveInvites() {
         int nInvites = 2;
-        final List<ApplicationInviteResource> invites = newInviteResource().build(nInvites);
+        final List<ApplicationInviteResource> invites = newApplicationInviteResource().build(nInvites);
         classUnderTest.saveInvites(invites);
         verify(invitePermissionRules, times(nInvites)).collaboratorCanSaveInviteToApplicationForTheirOrganisation(any(ApplicationInviteResource.class), any(UserResource.class));
         verify(invitePermissionRules, times(nInvites)).leadApplicantCanSaveInviteToTheApplication(any(ApplicationInviteResource.class), any(UserResource.class));
@@ -126,7 +128,7 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
         }
 
         @Override
-        public ServiceResult<InviteResultsResource> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource) {
+        public ServiceResult<InviteResultsResource> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource, Optional<Long> applicationId) {
             return null;
         }
 

@@ -1,0 +1,3 @@
+comment|REPLACE('A comment about the outcome. ')
+description|REPLACE('A description about the outcome. ')
+outcome|REPLACE('More information about the outcome. ')

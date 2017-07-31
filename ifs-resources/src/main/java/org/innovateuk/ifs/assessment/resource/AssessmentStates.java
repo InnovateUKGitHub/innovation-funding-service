@@ -4,6 +4,7 @@ import org.innovateuk.ifs.workflow.resource.ProcessStates;
 import org.innovateuk.ifs.workflow.resource.State;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -61,6 +62,10 @@ public enum AssessmentStates implements ProcessStates {
     }
 
     public static Set<State> getBackingStates(Set<AssessmentStates> states) {
+        return simpleMapSet(states, AssessmentStates::getBackingState);
+    }
+
+    public static Set<State> getBackingStates(List<AssessmentStates> states) {
         return simpleMapSet(states, AssessmentStates::getBackingState);
     }
 }

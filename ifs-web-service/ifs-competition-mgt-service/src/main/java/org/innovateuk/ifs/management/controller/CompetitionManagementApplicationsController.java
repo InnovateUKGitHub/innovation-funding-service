@@ -43,8 +43,8 @@ public class CompetitionManagementApplicationsController {
     private IneligibleApplicationsModelPopulator ineligibleApplicationsModelPopulator;
 
     @GetMapping
-    public String applicationsMenu(Model model, @PathVariable("competitionId") long competitionId) {
-        model.addAttribute("model", applicationsMenuModelPopulator.populateModel(competitionId));
+    public String applicationsMenu(Model model, @PathVariable("competitionId") long competitionId, UserResource user) {
+        model.addAttribute("model", applicationsMenuModelPopulator.populateModel(competitionId, user));
         return "competition/applications-menu";
     }
 
@@ -83,9 +83,10 @@ public class CompetitionManagementApplicationsController {
                                          @PathVariable("competitionId") long competitionId,
                                          @RequestParam MultiValueMap<String, String> queryParams,
                                          @RequestParam(value = "page", defaultValue = "0") int page,
-                                         @RequestParam(value = "sort", defaultValue = "") String sort) {
+                                         @RequestParam(value = "sort", defaultValue = "") String sort,
+                                         UserResource user) {
         String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.INELIGIBLE_APPLICATIONS, queryParams);
-        model.addAttribute("model", ineligibleApplicationsModelPopulator.populateModel(competitionId, originQuery, page, sort, filterForm));
+        model.addAttribute("model", ineligibleApplicationsModelPopulator.populateModel(competitionId, originQuery, page, sort, filterForm, user));
         model.addAttribute("originQuery", originQuery);
 
         return "competition/ineligible-applications";

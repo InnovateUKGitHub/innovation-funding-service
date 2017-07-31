@@ -11,7 +11,6 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -24,13 +23,22 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "AND (a.applicationProcess.activityState.state IN :states) " +
             "AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
 
+    String INNOVATION_AREA_FILTER = "SELECT a FROM ApplicationStatistics a " +
+            "LEFT JOIN ApplicationInnovationAreaLink innovationArea ON innovationArea.application.id = a.id " +
+            "WHERE a.competition = :compId " +
+            "AND (a.applicationProcess.activityState.state IN :states) " +
+            "AND (innovationArea.category.id = :innovationArea OR :innovationArea IS NULL)" +
+            "AND NOT EXISTS (SELECT 'found' FROM Assessment b WHERE b.participant.user.id = :assessorId AND b.target.id = a.id)";
+
     String REJECTED_AND_SUBMITTED_STATES_STRING =
             "(org.innovateuk.ifs.workflow.resource.State.REJECTED," +
-            "org.innovateuk.ifs.workflow.resource.State.WITHDRAWN," +
-            "org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
+                    "org.innovateuk.ifs.workflow.resource.State.WITHDRAWN," +
+                    "org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
+
     String NOT_ACCEPTED_OR_SUBMITTED_STATES_STRING =
             "(org.innovateuk.ifs.workflow.resource.State.PENDING,org.innovateuk.ifs.workflow.resource.State.REJECTED," +
-            "org.innovateuk.ifs.workflow.resource.State.WITHDRAWN,org.innovateuk.ifs.workflow.resource.State.CREATED,org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
+                    "org.innovateuk.ifs.workflow.resource.State.WITHDRAWN,org.innovateuk.ifs.workflow.resource.State.CREATED,org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
+
     String SUBMITTED_STATES_STRING = "(org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
 
     List<ApplicationStatistics> findByCompetitionAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> applicationStates);
@@ -39,6 +47,13 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
     Page<ApplicationStatistics> findByCompetitionAndApplicationProcessActivityStateStateIn(@Param("compId") long competitionId,
                                                                                            @Param("states") Collection<State> applicationStates,
                                                                                            @Param("filter") String filter,
+                                                                                           Pageable pageable);
+
+    @Query(INNOVATION_AREA_FILTER)
+    Page<ApplicationStatistics> findByCompetitionAndInnovationAreaProcessActivityStateStateIn(@Param("compId") long competitionId,
+                                                                                           @Param("assessorId") long assessorId,
+                                                                                           @Param("states") Collection<State> applicationStates,
+                                                                                           @Param("innovationArea") Long innovationArea,
                                                                                            Pageable pageable);
 
     @Query("SELECT NEW org.innovateuk.ifs.application.resource.AssessorCountSummaryResource(" +

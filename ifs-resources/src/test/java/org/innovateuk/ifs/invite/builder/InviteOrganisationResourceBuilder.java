@@ -34,6 +34,10 @@ public class InviteOrganisationResourceBuilder extends BaseBuilder<InviteOrganis
         return withArraySetFieldByReflection("organisationName", organisationNames);
     }
 
+    public InviteOrganisationResourceBuilder withOrganisationTypeName(String... organisationTypeNames) {
+        return withArraySetFieldByReflection("organisationTypeName", organisationTypeNames);
+    }
+
     public InviteOrganisationResourceBuilder withOrganisationNameConfirmed(String... organisationNameConfirmeds) {
         return withArraySetFieldByReflection("organisationNameConfirmed", organisationNameConfirmeds);
     }

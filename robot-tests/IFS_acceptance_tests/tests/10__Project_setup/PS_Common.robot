@@ -151,8 +151,7 @@ ${project_in_setup_details_page}        ${project_in_setup_page}/details
 ${project_in_setup_team_status_page}    ${project_in_setup_page}/team-status
 ${project_start_date_page}              ${project_in_setup_details_page}/start-date
 ${project_address_page}                 ${project_in_setup_details_page}/project-address
-${internal_project_summary}             ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
-
+${internal_competition_status}          ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
 
 
 #Bank details
@@ -189,19 +188,19 @@ Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
 
 finance contacts are selected and bank details are approved
-    log in as a different user          &{lead_applicant_credentials}
-    the user navigates to the page     ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/details
-    ${finance_contact}    ${val}=    Run Keyword And Ignore Error Without Screenshots    the user should not see the element    jQuery=#project-details-finance tr:nth-of-type(1):contains("Yes")
-    run keyword if    '${finance_contact}' == 'PASS'  run keywords  partners submit their finance contacts  bank details are approved for all businesses
+    log in as a different user      &{lead_applicant_credentials}
+    the user navigates to the page  ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/details
+    ${finance_contact}  ${val}=  Run Keyword And Ignore Error Without Screenshots  the user should not see the element  jQuery=#project-details-finance tr:nth-of-type(1):contains("Yes")
+    run keyword if  '${finance_contact}' == 'PASS'  run keywords  partners submit their finance contacts  bank details are approved for all businesses
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     The user logs-in in new browser  &{lead_applicant_credentials}
-    ${update_comp}    ${value}=    Run Keyword And Ignore Error Without Screenshots    the user should not see the element    jQuery=h2:contains("Set up your project") ~ ul a:contains("Sensing & Control network using the lighting infrastructure")
+    ${update_comp}  ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should not see the element  jQuery=h2:contains("Set up your project") ~ ul a:contains("Sensing & Control network using the lighting infrastructure")
     run keyword if    '${update_comp}' == 'PASS'  the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     log in as a different user   &{lead_applicant_credentials}
     the user navigates to the page  ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}
     ${project_details}  ${completed}=  Run Keyword And Ignore Error Without Screenshots    the user should not see the element    jQuery=ul li.complete a:contains("Project details")
-    run keyword if  '${project_details}' == 'PASS'  lead partner selects project manager and address
+    run keyword if  '${project_details}' == 'PASS'  lead partner navigates to project and fills project details
     Set Suite Variable  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  ${getProjectId("${FUNDERS_PANEL_APPLICATION_1_TITLE}")}
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
@@ -225,31 +224,35 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
     the user clicks the button/link         jQuery=.send-to-all-applicants-modal button:contains("Send email to all applicants")
     the user should see the text in the page    Manage funding applications
 
-lead partner selects project manager and address
-    log in as a different user          &{lead_applicant_credentials}
-    the user navigates to the page       ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/details
-    the user clicks the button/link      link=Project Manager
-    the user selects the radio button    projectManager    projectManager2
-    the user clicks the button/link      jQuery=.button:contains("Save")
-    the user clicks the button/link      link=Project address
-    the user selects the radio button    addressType    REGISTERED
-    the user clicks the button/link      jQuery=.button:contains("Save project address")
-    the user clicks the button/link      jQuery=.button:contains("Mark as complete")
-    the user clicks the button/link      jQuery=button:contains("Submit")
+lead partner navigates to project and fills project details
+    log in as a different user            &{lead_applicant_credentials}
+    project lead submits project details  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}
+
+project lead submits project details
+    [Arguments]  ${project_id}
+    the user navigates to the page     ${server}/project-setup/project/${project_id}/details/project-address
+    the user selects the radio button  addressType  address-use-org
+    the user clicks the button/link    jQuery=.button:contains("Save")
+    the user navigates to the page     ${server}/project-setup/project/${project_id}/details/project-manager
+    the user selects the radio button  projectManager  projectManager2
+    the user clicks the button/link    jQuery=.button:contains("Save")
+    the user navigates to the page     ${server}/project-setup/project/${project_id}/details
+    the user clicks the button/link    jQuery=.button:contains("Mark as complete")
+    the user clicks the button/link    jQuery=.button:contains("Submit")
 
 partners submit their finance contacts
-    the partner submits their finance contact    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}    &{lead_applicant_credentials}
-    the partner submits their finance contact    ${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}    &{collaborator1_credentials}
-    the partner submits their finance contact    ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}    &{collaborator2_credentials}
+    the partner submits their finance contact  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  &{lead_applicant_credentials}
+    the partner submits their finance contact  ${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  &{collaborator1_credentials}
+    the partner submits their finance contact  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}    ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  &{collaborator2_credentials}
 
 the partner submits their finance contact
-    [Arguments]    ${org_id}    &{credentials}
-    log in as a different user         &{credentials}
-    navigate to external finance contact page, choose finance contact and save  ${org_id}  financeContact1
+    [Arguments]    ${org_id}  ${project}  &{credentials}
+    log in as a different user  &{credentials}
+    navigate to external finance contact page, choose finance contact and save  ${org_id}  financeContact1  ${project}
 
 navigate to external finance contact page, choose finance contact and save
-    [Arguments]  ${org_id}   ${financeContactSelector}
-    the user navigates to the page     ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/details/finance-contact?organisation=${org_id}
+    [Arguments]  ${org_id}   ${financeContactSelector}  ${project}
+    the user navigates to the page     ${server}/project-setup/project/${project}/details/finance-contact?organisation=${org_id}
     the user selects the radio button  financeContact  ${financeContactSelector}
     the user clicks the button/link    jQuery=.button:contains("Save")
 
@@ -263,17 +266,104 @@ partners submit bank details
     partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
 
 the project finance user has approved bank details
-    log in as a different user                            &{internal_finance_credentials}
-    the project finance user approves bank details for    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
-    the project finance user approves bank details for    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
-    the project finance user approves bank details for    ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
+    log in as a different user                          &{internal_finance_credentials}
+    the project finance user approves bank details for  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}
+    the project finance user approves bank details for  ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}
+    the project finance user approves bank details for  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}
 
 the project finance user approves bank details for
-    [Arguments]    ${org_name}
-    the user navigates to the page            ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/review-all-bank-details
+    [Arguments]    ${org_name}  ${org_id}
+    the user navigates to the page            ${server}/project-setup-management/project/${org_id}/review-all-bank-details
     the user clicks the button/link           link=${org_name}
     the user should see the text in the page  ${org_name}
     the user clicks the button/link           jQuery=.button:contains("Approve bank account details")
     the user clicks the button/link           jQuery=.button:contains("Approve account")
-    the user should not see the element       jQuery=.button:contains("Approve bank account details")
-    the user should see the text in the page  The bank details provided have been approved.
+
+project manager submits other documents
+    [Arguments]  ${email}  ${password}  ${project}
+    log in as a different user       ${email}  ${password}
+    the user navigates to the page   ${server}/project-setup/project/${project}/partner/documents
+    choose file                      name=collaborationAgreement    ${upload_folder}/testing.pdf
+    choose file                      name=exploitationPlan    ${upload_folder}/testing.pdf
+    the user reloads the page
+    the user clicks the button/link  jQuery=.button:contains("Submit documents")
+    the user clicks the button/link  jQuery=.button:contains("Submit")
+
+project finance approves other documents
+    [Arguments]  ${project}
+    log in as a different user       &{internal_finance_credentials}
+    the user navigates to the page   ${SERVER}/project-setup-management/project/${project}/partner/documents
+    the user clicks the button/link  jQuery=.button:contains("Accept documents")
+    the user clicks the button/link  jQuery=.modal-accept-docs .button:contains("Accept Documents")
+
+project finance generates the Spend Profile
+    [Arguments]  ${lead}  ${partner}  ${academic_partner}  ${project}
+    log in as a different user              &{internal_finance_credentials}
+    project finance approves Viability for  ${lead}  ${project}
+    project finance approves Viability for  ${partner}  ${project}
+    project finance approves Eligibility    ${lead}  ${partner}  ${academic_partner}  ${project}
+    the user navigates to the page          ${server}/project-setup-management/project/${project}/finance-check
+    the user clicks the button/link         css=.generate-spend-profile-main-button
+    the user clicks the button/link         css=#generate-spend-profile-modal-button
+
+project finance approves Viability for
+    [Arguments]  ${partner}  ${project}
+    the user navigates to the page       ${server}/project-setup-management/project/${project}/finance-check/organisation/${partner}/viability
+    the user selects the checkbox        costs-reviewed
+    the user selects the checkbox        project-viable
+    the user moves focus to the element  link=Contact us
+    the user selects the option from the drop-down menu  Green  id=rag-rating
+    the user clicks the button/link      css=#confirm-button
+    the user clicks the button/link      jQuery=.modal-confirm-viability .button:contains("Confirm viability")
+
+project finance approves Eligibility
+    [Arguments]  ${lead}  ${partner}  ${academic_partner}  ${project}
+    the user navigates to the page  ${server}/project-setup-management/project/${project}/finance-check/organisation/${lead}/eligibility
+    the user approves project costs
+    the user navigates to the page  ${server}/project-setup-management/project/${project}/finance-check/organisation/${partner}/eligibility
+    the user approves project costs
+    the user navigates to the page  ${server}/project-setup-management/project/${project}/finance-check/organisation/${academic_partner}/eligibility
+    the user approves project costs
+
+the user approves project costs
+    the user selects the checkbox      project-eligible
+    the user selects the option from the drop-down menu  Green  id=rag-rating
+    the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
+    the user clicks the button/link    name=confirm-eligibility
+
+proj finance approves the spend profiles
+    [Arguments]  ${project}
+    log in as a different user       &{internal_finance_credentials}
+    the user navigates to the page   ${server}/project-setup-management/project/${project}/spend-profile/approval
+    the user selects the checkbox    approvedByLeadTechnologist
+    the user clicks the button/link  jQuery=.button:contains("Approved")
+    the user clicks the button/link  jQuery=.modal-accept-profile button:contains("Approve")
+
+all partners submit their Spend Profile
+    Login and submit partners spend profile  ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${Kazio_Id}  ${PS_GOL_APPLICATION_PROJECT}
+    Login and submit partners spend profile  ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}  ${Cogilith_Id}  ${PS_GOL_APPLICATION_PROJECT}
+    Login and submit leads spend profile     ${PS_GOL_APPLICATION_LEAD_PARTNER_EMAIL}  ${Gabtype_Id}  ${Gabtype_Name}  ${PS_GOL_APPLICATION_PROJECT}
+
+Login and submit partners spend profile
+    [Arguments]  ${email}  ${org_id}  ${project}
+    log in as a different user       ${email}  ${short_password}
+    the user navigates to the page   ${server}/project-setup/project/${project}/partner-organisation/${org_id}/spend-profile
+    the user clicks the button/link  jQuery=a:contains("Submit to lead partner")
+    the user clicks the button/link  jQuery=.button:contains("Submit")
+
+Login and submit leads spend profile
+    [Arguments]  ${email}  ${org_id}  ${org_name}  ${project}
+    log in as a different user       ${email}  ${short_password}
+    the user navigates to the page   ${server}/project-setup/project/${project}/partner-organisation/${org_id}/spend-profile
+    the user clicks the button/link  link=${org_name}
+    the user clicks the button/link  jQuery=.button:contains("Mark as complete")
+    the user navigates to the page   ${server}/project-setup/project/${project}/partner-organisation/${org_id}/spend-profile
+    the user clicks the button/link  jQuery=.button:contains("Review and send total project spend profile")
+    the user clicks the button/link  jQuery=.button:contains("Send project spend profile")
+    the user clicks the button/link  css=.modal-confirm-spend-profile-totals .button[value="Send"]
+
+project finance approves bank details for ${PS_GOL_APPLICATION_TITLE}
+    log in as a different user                          &{internal_finance_credentials}
+    the project finance user approves bank details for  ${Gabtype_Name}  ${PS_GOL_APPLICATION_PROJECT}
+    the project finance user approves bank details for  ${Kazio_Name}  ${PS_GOL_APPLICATION_PROJECT}
+    the project finance user approves bank details for  ${Cogilith_Name}  ${PS_GOL_APPLICATION_PROJECT}

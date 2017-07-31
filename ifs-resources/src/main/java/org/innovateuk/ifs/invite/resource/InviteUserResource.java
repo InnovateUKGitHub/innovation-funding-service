@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.invite.resource;
 
-import org.innovateuk.ifs.user.resource.AdminRoleType;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 /**
@@ -10,9 +10,9 @@ public class InviteUserResource {
 
     private UserResource invitedUser;
 
-    private AdminRoleType adminRoleType;
+    private UserRoleType adminRoleType;
 
-    public InviteUserResource(UserResource invitedUser, AdminRoleType adminRoleType) {
+    public InviteUserResource(UserResource invitedUser, UserRoleType adminRoleType) {
         this.invitedUser = invitedUser;
         this.adminRoleType = adminRoleType;
     }
@@ -29,11 +29,11 @@ public class InviteUserResource {
         this.invitedUser = invitedUser;
     }
 
-    public AdminRoleType getAdminRoleType() {
+    public UserRoleType getAdminRoleType() {
         return adminRoleType;
     }
 
-    public void setAdminRoleType(AdminRoleType adminRoleType) {
+    public void setAdminRoleType(UserRoleType adminRoleType) {
         this.adminRoleType = adminRoleType;
     }
 }

@@ -24,6 +24,7 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourc
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.INNOVATION_LEAD;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
@@ -105,7 +106,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         AssessmentStates state = AssessmentStates.CREATED;
         long competitionId = 1L;
 
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.countByStateAndCompetition(state, competitionId), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.countByStateAndCompetition(state, competitionId), COMP_ADMIN, PROJECT_FINANCE, INNOVATION_LEAD);
     }
 
     @Test
