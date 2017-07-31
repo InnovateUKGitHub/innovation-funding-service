@@ -38,6 +38,8 @@ Submit button disabled when application is incomplete
     And the user clicks the button/link    link= Application overview
     And the user clicks the button/link    jQuery=.button:contains("Review and submit")
     Then the submit button should be disabled
+    When the user clicks the button/link   jQuery= button:contains("Application details")
+    Then the user should see the element   jQuery= div[id="collapsible-0"] button:contains("Mark as complete")+button:contains("Return and edit")
 
 Applicant has read only view after submission
     [Documentation]    INFUND-7405, INFUND-8599
