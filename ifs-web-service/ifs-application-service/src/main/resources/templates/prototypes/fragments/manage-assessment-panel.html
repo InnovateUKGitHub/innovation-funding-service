@@ -323,28 +323,6 @@
                 </div>
             </div>
 
-            <div class="grid-row sorting">
-              <div class="column-half select-all">
-                  <div class="multiple-choice">
-                      <input type="checkbox" data-select-all="" id="select-all-check">
-                      <label for="select-all-check">
-                          Select all assessors
-                      </label>
-                  </div>
-                  <span class="form-hint">
-                      <span data-count-selected="" class="applications-selected">0</span> assessors selected
-                  </span>
-              </div>
-              <div class="column-half select-all alignright">
-                <form method="get">
-                  <input type="hidden" name="tab" value="invite">
-                  <button class="button" name="addSelected" data-submit-el="" disabled="disabled" th:formaction="${#httpServletRequest.requestURI}">
-                      Add selected to invite list
-                  </button>
-                </form>
-              </div>
-            </div>
-
             <div class="table-overflow">
               <table>
                 <thead>

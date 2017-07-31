@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Allocate applications'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-assessor-header" th:with="status='loggedIn'" />
+
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back to your competition dashboard'}, ${'/prototypes/IFS-807-apps-for-panel'})" />
+
+    <!-- HARDCODED PROTOTYPE HTML -->
+
+    <h1 class="heading-xlarge">Accept application</h1>
+
+    <p>You are invited to assess the competition <strong>'Technology inspired'</strong>.</p>
+
+    <section class="boxed">
+        <div class="grid-row">
+            <div class="column-half">
+                <h2 class="heading-small no-margin">Title:</h2>
+                <p>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</p>
+
+                <h2 class="heading-small">Project summary:</h2>
+                <p>This is the applicant response for project summary</p>
+
+            </div>
+            <div class="column-half">
+                <h2 class="heading-small no-margin">Partners:</h2>
+                <p>Wessex University <strong>(Lead)</strong></p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2 class="heading-small">Review the project summary above to make sure:</h2>
+        <ul class="list list-bullet">
+            <li>you do not have a conflict of interest with this application</li>
+        </ul>
+    </section>
+
+    <h2 class="heading-medium">Select your ability to assess this application</h2>
+    <form action="/prototypes/IFS-807-app-readonly">
+        <div class="form-group">
+            <fieldset>
+                <legend class="visuallyhidden">Select your ability to assess this application</legend>
+                <div class="multiple-choice">
+                    <input id="acceptCompetition" value="true" type="radio" required="required" name="acceptInvitation">
+                    <label for="acceptCompetition">
+                        Accept, I am to able to assess this application
+                    </label>
+                </div>
+
+                <p class="panel panel-border" id="accept-dialog">
+                    You will still have the option to reject after accepting and viewing the full application
+                </p>
+
+                <div class="multiple-choice" data-target="reject-competition">
+                    <input id="rejectCompetition" value="false" type="radio" required="required" name="acceptInvitation">
+                    <label for="rejectCompetition">
+                        Reject, I am not to able to assess this application
+                    </label>
+                </div>
+
+                <div class="textarea-wrapped word-count panel panel-border" id="reject-dialog">
+                    <label for="reject-text">
+                        Use this space to provide more information
+                    </label>
+                    <textarea name="" id="reject-text" cols="30" rows="5" data-editor="md" required="required" data-required-errormessage="Please enter some text." data-max_words="100" data-maxwordslength="100" data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100.">
+                    </textarea>
+                    <div class="form-footer">
+                        <div class="form-footer__info">
+                            <span class="count-label">
+                                <span aria-live="polite" class="count-down positive">Words remaining: 100</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+
+            </fieldset>
+        </div>
+        <button class="button" type="submit">Confirm</button>
+    </form>
+
+
+    <!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script type="text/javascript">
+	// <![CDATA[
+    $(document).ready(function() {
+
+        $('#accept-dialog').hide();
+		$('#reject-dialog').hide()
+
+		$('#acceptCompetition').on('click', function(event) {
+			$('#accept-dialog').show();
+			$('#reject-dialog').hide();
+		});
+		$('#rejectCompetition').on('click', function(event) {
+			$('#accept-dialog').hide();
+			$('#reject-dialog').show();
+		});
+	});
+	// ]]>
+</script>
+</body>
+</html>

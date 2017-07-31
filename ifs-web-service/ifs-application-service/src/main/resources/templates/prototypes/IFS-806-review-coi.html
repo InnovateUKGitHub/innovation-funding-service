@@ -37,9 +37,23 @@
     <div class="grid-row sorting">
         <div class="column-two-thirds">
             <h2>
-                <span class="heading-xlarge">7</span>
+                <span class="heading-xlarge">5</span>
                 <span class="heading-small">Applications</span>
             </h2>
+        </div>
+    </div>
+
+    <div class="grid-row sorting">
+        <div class="column-one select-all">
+            <div class="multiple-choice">
+                <input type="checkbox" data-select-all="" id="select-all-check">
+                <label for="select-all-check">
+                    Select all applications
+                </label>
+            </div>
+            <span class="form-hint">
+              <span data-count-selected="" class="applications-selected">0</span> applications selected
+            </span>
         </div>
     </div>
 
@@ -57,7 +71,48 @@
 <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
 <script type="text/javascript">
 	// <![CDATA[
+        jQuery(document).ready(function(){
+            function rowsSelected(){
+              var count = jQuery('input[name="selectedApplication"]:checked').length;
+              jQuery('.applications-selected').html(count);
+              return count;
+            }
 
+             jQuery('input').on('click',function(e){
+                var link = $('.link-back');
+                link.attr('href', link.attr('href') + '?action=update');
+             }
+
+            jQuery('input#select-all-check').on('click',function(e){
+              if (jQuery(this).is(':checked') ) {
+                jQuery('button[name="addSelected"]').prop('disabled', false);
+                jQuery('input[name="selectedApplication"]').prop('checked', true);
+                jQuery("input#select-all-check").prop('checked', true);
+                rowsSelected();
+              }else{
+                jQuery('button[name="addSelected"]').prop('disabled', true);
+                jQuery('input[name="selectedApplication"]').prop('checked', false);
+                jQuery("input#select-all-check").prop('checked', false);
+                rowsSelected();
+              }
+            });
+
+            jQuery('input[name="selectedApplication"]').on('click',function(e){
+
+              if (jQuery(this).is(':checked') ) { // if checked ensure buttons become active
+                jQuery('button[name="addSelected"]').prop('disabled', false);
+                rowsSelected();
+              }else{
+                jQuery("input.select-all").prop('checked', false);
+
+                if( rowsSelected() < 1){
+                  jQuery('button[name="addSelected"]').prop('disabled', true);
+                }
+              }
+            });
+
+
+          });
 	// ]]>
 </script>
 </body>

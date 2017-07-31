@@ -50,7 +50,7 @@
                     <th scope="col">Innovation area</th>
                     <th scope="col" class="width-small">Contract and DOI</th>
                     <th scope="col" class="width-small">Status</th>
-                    <th scope="col" class="width-medium"><span class="visuallyhidden">Add</span></th>
+                    <th scope="col" th:class="${param.status != null and param.status[0] == 'edit' ? 'width-small-medium' : 'width-medium'}"><span class="visuallyhidden">Add</span></th>
                 </tr>
             </thead>
             <tbody>
@@ -61,7 +61,7 @@
                     <td><span class="no">No</span></td>
                     <td>Invite accepted</td>
                     <td>
-                        <a href="/prototypes/IFS-806-review-coi?name=John%20Barnes" class="button-secondary no-margin">Review COI</a>
+                        <a href="/prototypes/IFS-806-review-coi?name=John%20Barnes" class="button-secondary no-margin" th:text="${param.status != null and param.status[0] == 'edit' ? 'Edit COI' : 'Review COI'}">COI CTA</a>
                     </td>
                 </tr>
                 <tr>
@@ -71,7 +71,7 @@
                     <td><span class="no">No</span></td>
                     <td>Invite accepted</td>
                     <td>
-                        <a href="/prototypes/IFS-806-review-coi?name=Oliver%20Romero" class="button-secondary no-margin">Review COI</a>
+                        <a href="/prototypes/IFS-806-review-coi?name=Oliver%20Romero" class="button-secondary no-margin" th:text="${param.status != null and param.status[0] == 'edit' ? 'Edit COI' : 'Review COI'}">COI CTA</a>
                     </td>
                 </tr>
                 <tr>
@@ -81,7 +81,7 @@
                     <td><span class="yes">Yes</span></td>
                     <td>Invite accepted</td>
                     <td>
-                        <a href="/prototypes/IFS-806-review-coi?name=Jeffrey%20Carlson" class="button-secondary no-margin">Review COI</a>
+                        <a href="/prototypes/IFS-806-review-coi?name=Jeffrey%20Carlson" class="button-secondary no-margin" th:text="${param.status != null and param.status[0] == 'edit' ? 'Edit COI' : 'Review COI'}">COI CTA</a>
                     </td>
                 </tr>
                 <tr>
@@ -91,7 +91,7 @@
                     <td><span class="yes">Yes</span></td>
                     <td>Invite accepted</td>
                     <td>
-                        <a href="/prototypes/IFS-806-review-coi?name=Bill%20Limp" class="button-secondary no-margin">Review COI</a>
+                        <a href="/prototypes/IFS-806-review-coi?name=Bill%20Limp" class="button-secondary no-margin" th:text="${param.status != null and param.status[0] == 'edit' ? 'Edit COI' : 'Review COI'}">COI CTA</a>
                     </td>
                 </tr>
                 <tr>
@@ -101,7 +101,7 @@
                     <td><span class="yes">Yes</span></td>
                     <td>Invite accepted</td>
                     <td>
-                        <a href="/prototypes/IFS-806-review-coi?name=Dave%20Smit" class="button-secondary no-margin">Review COI</a>
+                        <a href="/prototypes/IFS-806-review-coi?name=Dave%20Smith" class="button-secondary no-margin" th:text="${param.status != null and param.status[0] == 'edit' ? 'Edit COI' : 'Review COI'}">COI CTA</a>
                     </td>
                 </tr>
             </tbody>

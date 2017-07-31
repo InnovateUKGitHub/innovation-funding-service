@@ -85,10 +85,13 @@
 
 	    $('#application-assigned').hide();
 
+	    var link = $('.link-back');
+
 		$('#assign-application').on('click', function(event) {
 			event.preventDefault();
 			$('#application-assigned').show();
 			$('#application-available, #no-applications').hide();
+			link.attr('href', link.attr('href') + '?action=update');
 		});
 		$('#remove-application').on('click', function(event) {
 			event.preventDefault();
