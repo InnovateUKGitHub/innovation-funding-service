@@ -47,6 +47,19 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
     }
 
     @Override
+    public RestResult<InviteResultsResource> createInvitesByOrganisationForApplication(Long applicationId, Long organisationId, List<ApplicationInviteResource> invites) {
+        InviteOrganisationResource inviteOrganisation = new InviteOrganisationResource();
+
+        inviteOrganisation.setOrganisation(organisationId);
+        inviteOrganisation.setInviteResources(invites);
+
+
+        String url = inviteRestUrl + String.format("/createApplicationInvites/%s", applicationId);
+
+        return postWithRestResult(url, inviteOrganisation, InviteResultsResource.class);
+    }
+
+    @Override
     public RestResult<InviteResultsResource> saveInvites(List<ApplicationInviteResource> inviteResources) {
         String url = inviteRestUrl + "/saveInvites";
         return postWithRestResult(url, inviteResources, InviteResultsResource.class);
