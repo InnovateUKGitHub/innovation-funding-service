@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +33,12 @@ public class CompetitionController {
     @GetMapping("/{id}")
     public RestResult<CompetitionResource> getCompetitionById(@PathVariable("id") final Long id) {
         return competitionService.getCompetitionById(id).toGetResponse();
+    }
+
+    @GetMapping("/{id}/innovation-leads")
+    public RestResult<List<UserResource>> findInnovationLeads(@PathVariable("id") final Long competitionId) {
+
+        return competitionService.findInnovationLeads(competitionId).toGetResponse();
     }
 
     @GetMapping("/{id}/getOrganisationTypes")
