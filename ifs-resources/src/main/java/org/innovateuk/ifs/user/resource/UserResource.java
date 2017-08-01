@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.util.StringUtils;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,6 +36,10 @@ public class UserResource {
     private Long ethnicity;
     private Long profileId;
     private boolean allowMarketingEmails;
+    private ZonedDateTime createdOn;
+    private String createdBy;
+    private ZonedDateTime modifiedOn;
+    private String modifiedBy;
 
     public UserResource() {
         // no-arg constructor
@@ -199,6 +204,38 @@ public class UserResource {
         this.allowMarketingEmails = allowMarketingEmails;
     }
 
+    public ZonedDateTime getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(ZonedDateTime createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public ZonedDateTime getModifiedOn() {
+        return modifiedOn;
+    }
+
+    public void setModifiedOn(ZonedDateTime modifiedOn) {
+        this.modifiedOn = modifiedOn;
+    }
+
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
+
     /**
      * Currently only used for IFS-605 to display role for internal users
      * @return Single role display string. (may show comma separated roles if multiple exist.  Except for IFS_Administrator
@@ -246,6 +283,10 @@ public class UserResource {
                 .append(ethnicity, that.ethnicity)
                 .append(profileId, that.profileId)
                 .append(allowMarketingEmails, that.allowMarketingEmails)
+                .append(createdBy, that.createdBy)
+                .append(createdOn, that.createdOn)
+                .append(modifiedBy, that.modifiedBy)
+                .append(modifiedOn, that.modifiedOn)
                 .isEquals();
     }
 
@@ -269,6 +310,10 @@ public class UserResource {
                 .append(ethnicity)
                 .append(profileId)
                 .append(allowMarketingEmails)
+                .append(createdBy)
+                .append(createdOn)
+                .append(modifiedBy)
+                .append(modifiedOn)
                 .toHashCode();
     }
 }

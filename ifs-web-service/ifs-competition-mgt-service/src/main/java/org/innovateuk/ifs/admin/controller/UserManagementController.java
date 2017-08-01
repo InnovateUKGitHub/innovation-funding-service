@@ -7,7 +7,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
-import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.registration.service.InternalUserService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -50,9 +49,6 @@ public class UserManagementController {
     private UserRestService userRestService;
 
     @Autowired
-    private ProfileRestService profileRestService;
-
-    @Autowired
     private InternalUserService internalUserService;
 
     @GetMapping("/users/active")
@@ -88,11 +84,10 @@ public class UserManagementController {
 
     @GetMapping("/user/{userId}")
     public String viewUser(@PathVariable Long userId, Model model){
-        return userRestService.retrieveUserById(userId).andOnSuccess( user ->
-                profileRestService.getUserProfile(userId).andOnSuccessReturn(profile -> {
-                    model.addAttribute("model", new EditUserViewModel(profile.getCreatedBy(), profile.getCreatedOn(), user, profile.getModifiedBy(), profile.getModifiedOn()));
+        return userRestService.retrieveUserById(userId).andOnSuccessReturn( user -> {
+                    model.addAttribute("model", new EditUserViewModel(user));
                     return "admin/user";
-                })).getSuccessObjectOrThrowException();
+        }).getSuccessObjectOrThrowException();
     }
 
     @GetMapping("/user/{userId}/edit")

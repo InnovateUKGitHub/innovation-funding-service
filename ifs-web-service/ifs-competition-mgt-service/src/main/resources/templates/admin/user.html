@@ -33,7 +33,7 @@
             <div class="form-footer__actions">
                 <a th:href="@{/admin/user/{id}/reactivate(id=${model.user.id})}" data-js-modal="modal-confirm-reactivate-user">Reactivate user</a>
             </div>
-            <div class="form-footer__info" th:text="|Deactivated by ${model.modifiedByUser} on ${#temporals.format(model.modifiedOn, 'dd MMM yyyy')}">
+            <div class="form-footer__info" th:text="|Deactivated by ${model.user.modifiedBy} on ${#temporals.format(model.user.modifiedOn, 'dd MMM yyyy')}">
                 Deactivated by Susan Smith on 23rd March 2017
             </div>
         </div>
@@ -42,7 +42,7 @@
         <div class="form-footer__actions">
             <a th:href="@{|/admin/user/${model.user.id}/edit|}">Edit</a>
         </div>
-        <div class="form-footer__info" th:text="|Created by ${model.createdByUser} on ${#temporals.format(model.createdOn, 'dd MMMM yyyy')}|">
+        <div class="form-footer__info" th:text="|Created by ${model.user.createdBy} on ${#temporals.format(model.user.createdOn, 'dd MMMM yyyy')}|">
             Created by Susan Smith on 23rd March 2017
         </div>
     </div>

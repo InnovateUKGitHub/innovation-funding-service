@@ -23,7 +23,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 
-import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -75,14 +74,13 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
     @Test
     public void testViewUser() throws Exception {
         ZonedDateTime now = ZonedDateTime.now();
-        UserResource user = newUserResource().build();
+        UserResource user = newUserResource().withCreatedOn(now).withCreatedBy("abc").withModifiedOn(now).withModifiedBy("abc").build();
         when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restSuccess(user));
-        when(profileRestService.getUserProfile(1L)).thenReturn(RestResult.restSuccess(newUserProfileResource().withCreatedBy("abc").withCreatedOn(now).build()));
 
         mockMvc.perform(get("/admin/user/{userId}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/user"))
-                .andExpect(model().attribute("model", new EditUserViewModel("abc", now, user, "abc", now)));
+                .andExpect(model().attribute("model", new EditUserViewModel(user)));
     }
 
     @Test
