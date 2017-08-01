@@ -31,7 +31,7 @@
         </div>
         <div class="column-half">
             <h4 class="heading-small">Type</h4>
-            <p th:text="${model.businessType}" />
+            <p th:text="${#strings.isEmpty(model.businessType)} ? 'Unknown' : ${model.businessType}" />
         </div>
     </div>
 
