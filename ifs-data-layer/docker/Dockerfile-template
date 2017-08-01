@@ -15,8 +15,8 @@ RUN bin/keytool -import -trustcacerts -keystore jre/lib/security/cacerts -storep
 WORKDIR /
 VOLUME /tmp
 
-RUN curl --connect-timeout 30 -O https://tools.innovateuk.org/holding/newrelic/newrelic.jar && \
-    curl --connect-timeout 30 -O https://tools.innovateuk.org/holding/newrelic/newrelic.yml
+ADD newrelic.jar /
+ADD newrelic.yml /
 ADD coscale-monitoring.sh /root/coscale-monitoring.sh
 ADD ifs-data-service-@version@.jar app.jar
 

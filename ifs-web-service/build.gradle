@@ -13,7 +13,31 @@ subprojects {
     // ifs-web-core is not a docker project.
     if (it.name != 'ifs-web-core') {
 
+        task getNewRelicAgent {
+            buildDir.mkdir()
+            exec {
+                executable = 'curl'
+                args = ['--connect-timeout', '30',
+                        '-o', '/tmp/newrelic.jar',
+                        'https://tools.innovateuk.org/holding/newrelic/newrelic.jar'
+                ]
+            }
+            exec {
+                executable = 'curl'
+                args = ['--connect-timeout', '30',
+                        '-o', '/tmp/newrelic.yml',
+                        'https://tools.innovateuk.org/holding/newrelic/newrelic.yml'
+                ]
+            }
+            copy {
+                from file('/tmp/newrelic.jar')
+                from file('/tmp/newrelic.yml')
+                into 'src/main/docker/'
+            }
+        }
+
         task prepareDockerFile(type: Copy) {
+            dependsOn getNewRelicAgent
 
             ext.appName = 'default-service-name'
             outputs.upToDateWhen { false }
@@ -38,6 +62,11 @@ subprojects {
                 }
                 copy {
                     from file("${rootProject.projectDir}/setup-files/scripts/docker/coscale-monitoring.sh")
+                    into stageDir
+                }
+                copy {
+                    from file('src/main/docker/newrelic.jar')
+                    from file('src/main/docker/newrelic.yml')
                     into stageDir
                 }
             }
