@@ -31,9 +31,9 @@ public class AJPConfig {
             ajpConnector.setAllowTrace(false);
             ajpConnector.setAttribute("tomcatAuthentication", false);
             ajpConnector.setAttribute("connectionTimeout", 30000);
-            ajpConnector.setAttribute("acceptCount", maxConnections+100);
+            ajpConnector.setAttribute("acceptCount", maxConnections);
             ajpConnector.setAttribute("maxConnections", maxConnections);
-            ajpConnector.setAttribute("maxThreads", maxConnections+100);
+            ajpConnector.setAttribute("maxThreads", maxConnections);
             ajpConnector.setAttribute("minSpareThreads", 20);
             ajpConnector.setScheme("ajp");
             tomcat.addAdditionalTomcatConnectors(ajpConnector);
