@@ -355,6 +355,7 @@
                 </div>
             </th:block>
         <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (${model})"/>
+        <th:block th:if="${model.summary and model.readonly}" th:insert="question-type/form-elements :: form-edit-question-button (${model})"/>
     </th:block>
 
                     <!-- ===========================Form: empty / no question =========================== -->
