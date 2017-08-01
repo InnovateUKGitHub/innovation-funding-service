@@ -358,7 +358,7 @@ the finance summary table in Your Finances has correct values for lead
 
 the finance summary table in Your Finances has correct values for collaborator
     the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(1)  Total project costs
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(1)  £495
+    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(1)  £990
     the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
     the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(2)  100%
     the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(3)  Funding sought
