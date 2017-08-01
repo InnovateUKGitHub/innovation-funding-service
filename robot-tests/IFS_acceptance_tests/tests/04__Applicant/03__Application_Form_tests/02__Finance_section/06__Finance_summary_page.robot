@@ -356,19 +356,26 @@ User verifies captial usage, subcontracting, travel and other costs
     the user expands the section     Capital usage
     the user should see the element  jQuery=#capital-usage-table td:contains("some description") + td:contains("New") + td:contains("10") + td:contains("5000")
     the user should see the element  jQuery=#capital-usage-table td:contains("some description") ~ td:contains("25") + td:contains("100") + td:contains("£ 4975")
+    the user collapses the section   Capital usage
     the user expands the section     Subcontracting costs
     the user should see the element  jQuery=#subcontracting-table td:contains("SomeName") + td:contains("Netherlands") + td:contains("Quality Assurance") + td:contains("£ 1,000")
+    the user collapses the section   Subcontracting costs
     the user expands the section     Travel and subsistence
     the user should see the element  jQuery=#travel-costs-table td:contains("test") + td:contains("10") + td:contains("100") + td:contains("£ 1,000")
+    the user collapses the section   Travel and subsistence
     the user expands the section     Other costs
     the user should see the element  jQuery=#other-costs-table td:contains("some other costs") + td:contains("50")
+    the user collapses the section   Other costs
 
 User verifies labour, overhead costs and materials
     the user expands the section     Labour
     the user should see the element  jQuery=dt:contains("Working days per year") ~ dd:contains("230")
     the user should see the element  jQuery=.labour-costs-table td:contains("anotherrole") ~ td:contains("120000") ~ td:contains("100")
+    the user collapses the section   Labour
     the user expands the section     Overhead costs
     the user should see the element  jQuery=th:contains("20% of labour costs")
     the user clicks the button/link  jQuery=button:contains("Overhead costs")
+    the user collapses the section   Overhead costs
     the user expands the section     Materials
     the user should see the element  jQuery=#material-costs-table td:contains("test") + td:contains("10") + td:contains("100") + td:contains("1,000")
+    the user collapses the section   Materials
