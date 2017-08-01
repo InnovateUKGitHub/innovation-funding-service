@@ -17,6 +17,9 @@ import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm.Unrestricted;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -63,6 +66,9 @@ public class CompetitionSetupController {
 
     @Autowired
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;
+
+    @Autowired
+    private UserService userService;
 
     private static final String READY_TO_OPEN_KEY = "readyToOpen";
 
@@ -318,6 +324,16 @@ public class CompetitionSetupController {
     public String setAsReadyToOpen(@PathVariable(COMPETITION_ID_KEY) long competitionId) {
         competitionSetupService.setCompetitionAsReadyToOpen(competitionId);
         return String.format("redirect:/competition/setup/%d", competitionId);
+    }
+
+    @GetMapping("/{competitionId}/manage-innovation-leads")
+    public String manageInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId) {
+
+        List<UserResource> allInnovationLeads = userService.findUserByType(UserRoleType.INNOVATION_LEAD);
+
+        List<UserResource> innovationLeadsAssignedToCompetition = competitionService.findInnovationLeads(competitionId);
+
+        return "competition/manage-innovation-leads";
     }
 
 
