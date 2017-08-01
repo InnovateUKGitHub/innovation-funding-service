@@ -140,6 +140,8 @@ function tailorAppInstance() {
     sed -i.bak -e $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" -e 's/<<>>/\\n/g' os-files-tmp/shib/*.yml
     sed -i.bak -e $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" -e 's/<<>>/\\n/g' os-files-tmp/shib/named-envs/*.yml
 
+    sed -i.bak "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" os-files-tmp/*.yml
+
     if [[ ${TARGET} == "production" ]]
     then
       sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
