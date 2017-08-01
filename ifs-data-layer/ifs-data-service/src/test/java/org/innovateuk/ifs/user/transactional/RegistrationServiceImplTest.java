@@ -677,6 +677,48 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
     }
 
+    @Test
+    public void deactivateUserSuccess() {
+
+        setUpUsersForEditInternalUserSuccess();
+
+        when(userRepositoryMock.findOne(userToEdit.getId())).thenReturn(userInDB);
+        when(idpServiceMock.deactivateUser(userToEdit.getUid())).thenReturn(ServiceResult.serviceSuccess(""));
+        userInDB.setStatus(UserStatus.INACTIVE);
+        when(userRepositoryMock.save(userInDB)).thenReturn(userInDB);
+
+        ServiceResult<Void> result = service.deactivateUser(userToEdit.getId());
+
+        verify(userRepositoryMock).save(userInDB);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void deactivateUserIdpFails() {
+
+        setUpUsersForEditInternalUserSuccess();
+
+        when(userRepositoryMock.findOne(userToEdit.getId())).thenReturn(userInDB);
+        when(idpServiceMock.deactivateUser(userToEdit.getUid())).thenReturn(ServiceResult.serviceFailure(GENERAL_NOT_FOUND));
+
+        ServiceResult<Void> result = service.deactivateUser(userToEdit.getId());
+
+        assertNull(result.getSuccessObject());
+    }
+
+    @Test
+    public void deactivateUserNoUser() {
+
+        setUpUsersForEditInternalUserSuccess();
+
+        when(userRepositoryMock.findOne(userToEdit.getId())).thenReturn(null);
+
+        ServiceResult<Void> result = service.deactivateUser(userToEdit.getId());
+
+        assertTrue(result.isFailure());
+    }
+
     private void setUpUsersForEditInternalUserSuccess() {
 
         userToEdit = UserResourceBuilder.newUserResource()

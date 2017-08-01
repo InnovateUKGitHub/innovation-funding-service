@@ -399,4 +399,31 @@
     </div>
 </th:block>
 
+
+<!-- confirmation of user profile deactivation -->
+<th:block th:fragment="modal-confirm-deactivate-user">
+    <div class="modal-confirm-deactivate-user" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <p>Are you sure you want to deactivate this user?</p>
+        <hr />
+        <div>
+            <button class="button" name="deactivateUser" type="submit">Yes, deactivate</button>
+            <button class="buttonlink js-close" type="button">Cancel</button>
+        </div>
+    </div>
+</th:block>
+
+<!-- confirmation of user profile reactivation -->
+<th:block th:fragment="modal-confirm-reactivate-user">
+    <div class="modal-confirm-reactivate-user" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <p>Are you sure you want to reactivate this user profile?</p>
+        <hr />
+        <div>
+            <button class="button" name="reactivateUser" type="submit">Yes, reactivate</button>
+            <button class="buttonlink js-close" type="button">Cancel</button>
+        </div>
+    </div>
+</th:block>
+
 </html>

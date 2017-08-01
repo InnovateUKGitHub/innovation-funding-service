@@ -28,6 +28,7 @@ import java.util.Collections;
 
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -84,7 +85,7 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
         mockMvc.perform(get("/admin/user/{userId}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/user"))
-                .andExpect(model().attribute("model", new EditUserViewModel("abc", now, user)));
+                .andExpect(model().attribute("model", new EditUserViewModel("abc", now, user, "abc", now)));
     }
 
     @Test
@@ -155,6 +156,111 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/edit-user"))
                 .andExpect(model().attribute("form", expectedForm));
+    }
+
+    @Test
+    public void deactivateUserSuccess() throws Exception {
+
+        String email = "asdf@asdf.com";
+        RoleResource role = RoleResourceBuilder.newRoleResource()
+                .withName("ifs_administrator")
+                .build();
+        UserResource userResource = UserResourceBuilder.newUserResource()
+                .withFirstName("first")
+                .withLastName("last")
+                .withEmail(email)
+                .withRolesGlobal(Collections.singletonList(role))
+                .build();
+
+        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restSuccess(userResource));
+        when(userRestServiceMock.deactivateUser(1L)).thenReturn(RestResult.restSuccess());
+        mockMvc.perform(get("/admin/user/{userId}/deactivate", 1L))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/user"));
+
+        verify(userRestServiceMock).deactivateUser(1L);
+    }
+
+    @Test
+    public void deactivateUserDeactivateFails() throws Exception {
+
+        String email = "asdf@asdf.com";
+        RoleResource role = RoleResourceBuilder.newRoleResource()
+                .withName("ifs_administrator")
+                .build();
+        UserResource userResource = UserResourceBuilder.newUserResource()
+                .withFirstName("first")
+                .withLastName("last")
+                .withEmail(email)
+                .withRolesGlobal(Collections.singletonList(role))
+                .build();
+
+        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restSuccess(userResource));
+        when(userRestServiceMock.deactivateUser(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
+        mockMvc.perform(get("/admin/user/{userId}/deactivate", 1L))
+                .andExpect(status().isNotFound());
+
+        verify(userRestServiceMock).deactivateUser(1L);
+    }
+
+    @Test
+    public void deactivateUserFindUserFails() throws Exception {
+        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_FORBIDDEN));
+        mockMvc.perform(get("/admin/user/{userId}/deactivate", 1L))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void reactivateUserSuccess() throws Exception {
+
+        String email = "asdf@asdf.com";
+        RoleResource role = RoleResourceBuilder.newRoleResource()
+                .withName("ifs_administrator")
+                .build();
+        UserResource userResource = UserResourceBuilder.newUserResource()
+                .withFirstName("first")
+                .withLastName("last")
+                .withEmail(email)
+                .withRolesGlobal(Collections.singletonList(role))
+                .build();
+
+        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restSuccess(userResource));
+        when(userRestServiceMock.reactivateUser(1L)).thenReturn(RestResult.restSuccess());
+        mockMvc.perform(get("/admin/user/{userId}/reactivate", 1L))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/user"));
+
+        verify(userRestServiceMock).reactivateUser(1L);
+    }
+
+    @Test
+    public void reactivateUserReactivateFails() throws Exception {
+
+        String email = "asdf@asdf.com";
+        RoleResource role = RoleResourceBuilder.newRoleResource()
+                .withName("ifs_administrator")
+                .build();
+        UserResource userResource = UserResourceBuilder.newUserResource()
+                .withFirstName("first")
+                .withLastName("last")
+                .withEmail(email)
+                .withRolesGlobal(Collections.singletonList(role))
+                .build();
+
+        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restSuccess(userResource));
+        when(userRestServiceMock.reactivateUser(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
+        mockMvc.perform(get("/admin/user/{userId}/reactivate", 1L))
+                .andExpect(status().isNotFound());
+
+        verify(userRestServiceMock).reactivateUser(1L);
+    }
+
+    @Test
+    public void reactivateUserFindUserFails() throws Exception {
+
+        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_FORBIDDEN));
+        mockMvc.perform(get("/admin/user/{userId}/reactivate", 1L))
+                .andExpect(status().isForbidden());
     }
 
     @Override

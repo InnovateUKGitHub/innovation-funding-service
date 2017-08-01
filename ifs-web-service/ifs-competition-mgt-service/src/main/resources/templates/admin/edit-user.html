@@ -77,6 +77,11 @@
                 <option th:each="adminRole : ${T(org.innovateuk.ifs.user.resource.UserRoleType).internalRoles()}" th:value="${adminRole}" th:text="${adminRole.displayName}"></option>
             </select>
         </div>
+
+        <th:block th:if="${model.user.status.equals(T(org.innovateuk.ifs.user.resource.UserStatus).ACTIVE)}">
+            <a th:href="@{/user/${model.user.id}/deactivate}" data-js-modal="modal-confirm-deactivate-user">Deactivate user</a>
+        </th:block>
+
         <div class="form-group extra-margin">
             <button class="button">Save and return</button>
             <a class="button button-clear" th:href="@{/admin/users/active}">Cancel</a>

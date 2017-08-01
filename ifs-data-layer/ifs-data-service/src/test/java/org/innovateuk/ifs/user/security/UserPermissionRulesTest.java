@@ -620,6 +620,34 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         });
     }
 
+    @Test
+    public void testIfsAdminCanDeactivateUser(){
+
+        UserResource userToDeactivate = UserResourceBuilder.newUserResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(ifsAdminUser())) {
+                assertTrue(rules.ifsAdminCanDeactivateUsers(userToDeactivate, user));
+            } else {
+                assertFalse(rules.ifsAdminCanDeactivateUsers(userToDeactivate, user));
+            }
+        });
+    }
+
+    @Test
+    public void testIfsAdminCanReactivateUser(){
+
+        UserResource userToReactivate = UserResourceBuilder.newUserResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(ifsAdminUser())) {
+                assertTrue(rules.ifsAdminCanDeactivateUsers(userToReactivate, user));
+            } else {
+                assertFalse(rules.ifsAdminCanDeactivateUsers(userToReactivate, user));
+            }
+        });
+    }
+
     @Override
     protected UserPermissionRules supplyPermissionRulesUnderTest() {
         return new UserPermissionRules();

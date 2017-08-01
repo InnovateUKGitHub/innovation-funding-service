@@ -90,7 +90,7 @@ public class UserManagementController {
     public String viewUser(@PathVariable Long userId, Model model){
         return userRestService.retrieveUserById(userId).andOnSuccess( user ->
                 profileRestService.getUserProfile(userId).andOnSuccessReturn(profile -> {
-                    model.addAttribute("model", new EditUserViewModel(profile.getCreatedBy(), profile.getCreatedOn(), user));
+                    model.addAttribute("model", new EditUserViewModel(profile.getCreatedBy(), profile.getCreatedOn(), user, profile.getModifiedBy(), profile.getModifiedOn()));
                     return "admin/user";
                 })).getSuccessObjectOrThrowException();
     }
@@ -145,5 +145,18 @@ public class UserManagementController {
         EditUserResource editUserResource = new EditUserResource(userId, form.getFirstName(), form.getLastName(), form.getRole());
 
         return editUserResource;
+    }
+
+
+    @GetMapping("/user/{userId}/deactivate")
+    public String deactivateUser(@PathVariable Long userId) {
+        return userRestService.retrieveUserById(userId).andOnSuccess( user ->
+                userRestService.deactivateUser(userId).andOnSuccessReturn(p -> "admin/user")).getSuccessObjectOrThrowException();
+    }
+
+    @GetMapping("/user/{userId}/reactivate")
+    public String reactivateUser(@PathVariable Long userId) {
+        return userRestService.retrieveUserById(userId).andOnSuccess( user ->
+                userRestService.reactivateUser(userId).andOnSuccessReturn(p -> "admin/user")).getSuccessObjectOrThrowException();
     }
 }

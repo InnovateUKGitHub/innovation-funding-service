@@ -195,4 +195,15 @@ public class UserController {
     public RestResult<Void> updateDetails(@RequestBody UserResource userResource) {
         return userService.updateDetails(userResource).andOnSuccessReturnVoid(() -> crmService.syncCrmContact(userResource.getId())).toPutResponse();
     }
+
+
+    @GetMapping("/id/{id}/deactivate")
+    public RestResult<Void> deactivateUser(@PathVariable("id") final Long id) {
+        return registrationService.deactivateUser(id).toGetResponse();
+    }
+
+    @GetMapping("/id/{id}/reactivate")
+    public RestResult<Void> reactivateUser(@PathVariable("id") final Long id) {
+        return registrationService.activateUser(id).toGetResponse();
+    }
  }

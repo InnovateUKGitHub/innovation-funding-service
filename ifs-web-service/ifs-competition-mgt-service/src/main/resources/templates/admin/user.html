@@ -26,6 +26,9 @@
 
         <dt>Job role</dt>
         <dd class="extra-margin-bottom" th:text="${model.user.getRolesString()}">Super admin</dd>
+        <th:block th:if="${model.user.status.equals(T(org.innovateuk.ifs.user.resource.UserStatus).INACTIVE)}">
+            <a th:href="@{/user/${model.user.id}/reactivate}" data-js-modal="modal-confirm-reactivate-user">Reactivate user</a> Deactivated by <th:block th:text="${model.modifiedBy}"></th:block> on <th:block th:text="${#temporals.format(model.modifiedOn, 'dd MMM yyyy')}"></th:block>
+        </th:block>
     </dl>
 
     <div class="form-footer">

@@ -53,6 +53,7 @@ import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_UNEXPECTED_ERROR;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOT_AN_INTERNAL_USER_ROLE;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -209,6 +210,21 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 .activateUser(user.getUid())
                 .andOnSuccessReturn(() -> {
                     user.setStatus(UserStatus.ACTIVE);
+                    return userRepository.save(user);
+                });
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> deactivateUser(long userId) {
+        return getUser(userId).andOnSuccessReturnVoid(this::deactivateUser);
+    }
+
+    private ServiceResult<User> deactivateUser(User user) {
+        return idpService
+                .deactivateUser(user.getUid())
+                .andOnSuccessReturn(() -> {
+                    user.setStatus(UserStatus.INACTIVE);
                     return userRepository.save(user);
                 });
     }

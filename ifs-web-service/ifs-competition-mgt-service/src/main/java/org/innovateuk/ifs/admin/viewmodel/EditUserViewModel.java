@@ -17,10 +17,16 @@ public class EditUserViewModel {
 
     private UserResource user;
 
-    public EditUserViewModel(String createdByUser, ZonedDateTime createdOn, UserResource user) {
+    private String modifiedByUser;
+
+    private ZonedDateTime modifiedOn;
+
+    public EditUserViewModel(String createdByUser, ZonedDateTime createdOn, UserResource user, String modifiedByUser, ZonedDateTime modifiedOn) {
         this.createdByUser = createdByUser;
         this.createdOn = createdOn;
         this.user = user;
+        this.modifiedByUser = modifiedByUser;
+        this.modifiedOn = modifiedOn;
     }
 
     public String getCreatedByUser() {
@@ -47,6 +53,22 @@ public class EditUserViewModel {
         this.createdOn = createdOn;
     }
 
+    public String getModifiedByUser() {
+        return modifiedByUser;
+    }
+
+    public void setModifiedByUser(String modifiedByUser) {
+        this.modifiedByUser = modifiedByUser;
+    }
+
+    public ZonedDateTime getModifiedOn() {
+        return modifiedOn;
+    }
+
+    public void setModifiedOn(ZonedDateTime modifiedOn) {
+        this.modifiedOn = modifiedOn;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -58,6 +80,8 @@ public class EditUserViewModel {
         return new EqualsBuilder()
                 .append(createdByUser, that.createdByUser)
                 .append(createdOn, that.createdOn)
+                .append(modifiedByUser, that.createdByUser)
+                .append(modifiedOn, that.createdOn)
                 .append(user, that.user)
                 .isEquals();
     }
@@ -67,6 +91,8 @@ public class EditUserViewModel {
         return new HashCodeBuilder(17, 37)
                 .append(createdByUser)
                 .append(createdOn)
+                .append(modifiedByUser)
+                .append(modifiedOn)
                 .append(user)
                 .toHashCode();
     }
