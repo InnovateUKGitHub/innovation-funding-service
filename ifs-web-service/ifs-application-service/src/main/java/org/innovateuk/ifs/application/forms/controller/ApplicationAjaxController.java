@@ -14,7 +14,7 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.exception.AutosaveElementException;
+import org.innovateuk.ifs.exception.AutoSaveElementException;
 import org.innovateuk.ifs.exception.BigDecimalNumberFormatException;
 import org.innovateuk.ifs.exception.IntegerNumberFormatException;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
@@ -106,28 +106,27 @@ public class ApplicationAjaxController {
 
             fieldId = storeFieldResult.getFieldId();
 
-            return this.createJsonObjectNode(true, fieldId);
+            return createJsonObjectNode(true, fieldId);
 
         } catch (Exception e) {
-            AutosaveElementException ex = new AutosaveElementException(inputIdentifier, value, applicationId, e);
-            handleAutosaveException(errors, e, ex);
-            return this.createJsonObjectNode(false, fieldId);
+            AutoSaveElementException ex = new AutoSaveElementException(inputIdentifier, value, applicationId, e);
+            handleAutoSaveException(errors, e, ex);
+            return createJsonObjectNode(false, fieldId);
         }
     }
 
-    private void handleAutosaveException(List<String> errors, Exception e, AutosaveElementException ex) {
+    private void handleAutoSaveException(List<String> errors, Exception e, AutoSaveElementException ex) {
         List<Object> args = new ArrayList<>();
         args.add(ex.getErrorMessage());
         if (e.getClass().equals(IntegerNumberFormatException.class) || e.getClass().equals(BigDecimalNumberFormatException.class)) {
             errors.add(lookupErrorMessageResourceBundleEntry(messageSource, e.getMessage(), args));
         } else {
             LOG.error("Got an exception on autosave : " + e.getMessage());
-            LOG.debug("Autosave exception: ", e);
             errors.add(ex.getErrorMessage());
         }
     }
 
-    private StoreFieldResult storeField(Long applicationId, Long userId, Long competitionId, String fieldName, String inputIdentifier, String value) {
+    private StoreFieldResult storeField(Long applicationId, Long userId, Long competitionId, String fieldName, String inputIdentifier, String value) throws NumberFormatException {
         Long organisationType = organisationService.getOrganisationType(userId, applicationId);
 
         if (fieldName.startsWith("application.")) {
@@ -183,7 +182,7 @@ public class ApplicationAjaxController {
         return node;
     }
 
-    private List<String> saveApplicationDetails(Long applicationId, String fieldName, String value) {
+    private List<String> saveApplicationDetails(Long applicationId, String fieldName, String value) throws NumberFormatException {
         List<String> errors = new ArrayList<>();
         ApplicationResource application = applicationService.getById(applicationId);
 

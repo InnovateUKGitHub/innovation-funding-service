@@ -8,19 +8,19 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content" th:object="${form}">
+<main tabindex="-1" id="content" >
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
-    <div class="error-summary" th:if="${#fields.hasErrors('${manageFundingApplicationsQueryForm.*}')}">
+    <div class="error-summary" th:if="${#fields.hasErrors('${fundingNotificationFilterForm.*}')}">
         <h2 class="heading-medium error-summary-heading">There is a problem on this page</h2>
         <ul class="error-summary-list">
-            <li th:classappend="list-header" th:text="${err}" th:each="err : ${#fields.errors('${manageFundingApplicationsQueryForm.*}')}"></li>
+            <li th:classappend="list-header" th:text="${err}" th:each="err : ${#fields.errors('${fundingNotificationFilterForm.*}')}"></li>
         </ul>
     </div>
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage funding applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
 
     <div th:replace="competition/key-statistics :: key-statistics(keyStatistics=${model.keyStatistics})" />
-    <form method="GET" th:object="${manageFundingApplicationsQueryForm}">
+    <form method="GET" th:object="${fundingNotificationFilterForm}">
         <div class="search-filters extra-margin">
             <fieldset>
                 <legend class="heading-medium">Filter applications</legend>
@@ -56,15 +56,22 @@
             </fieldset>
             <div class="grid-row">
                 <div class="column-half">
-                    <a href="?" class="button button-clear no-margin">Clear all filters</a>
+                    <a href="?filterChanged=1" class="button button-clear no-margin">Clear all filters</a>
                 </div>
                 <div class="column-half alignright">
                     <button class="button no-margin">Filter</button>
                 </div>
             </div>
         </div>
+        <input type="hidden" name="filterChanged" value="1"/>
     </form>
-    <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+
+    <div class="warning-alert extra-margin-bottom" th:if="${model.selectAllDisabled}">
+        <p th:text="#{competition.management.limit.warning}"></p>
+    </div>
+    <div data-selection-limit-exceeded-block=""></div>
+
+    <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"  data-multipage-select="" th:attr="data-total-checkboxes=${model.keyStatistics.statThree}"><!--/* todo: total checkboxes attribute ? */-->
         <div class="grid-row sorting">
             <div class="column-half">
                 <div class="select-all">
@@ -72,23 +79,26 @@
                         <legend class="visuallyhidden">Select applications</legend>
 
                         <div class="multiple-choice">
-                                <input data-select-all="[id^=app-row-]" class="select-all" id="select-all-1" value="select-all" type="checkbox" />
+                                <input data-select-all="" id="select-all-1" type="checkbox"
+                                       th:checked="${selectionForm.isAllSelected()}"
+                                       th:disabled="${model.selectAllDisabled || !model.anythingChangeable}"/>
                                 <label for="select-all-1">
                                     Select all applications
                                 </label>
                         </div>
-                        <span class="form-hint"><span data-count-selected="[id^=app-row-]">3</span> applications selected</span>
+                        <span class="form-hint"><span data-count-selected="" th:text="${#lists.size(selectionForm.ids)}">3</span> applications selected</span>
                     </fieldset>
                 </div>
             </div>
             <div class="column-half">
                 <fieldset class="mark-applications">
-                    <button class="button button-notification extra-margin-top" data-enable-button-when="one-checked" type="submit" name="write-an-send-email">Write and send email</button>
+                    <button class="button button-notification extra-margin-top" data-submit-el="" type="submit" name="write-and-send-email"
+                            th:attr="disabled=${#lists.isEmpty(selectionForm.ids)}">Write and send email</button>
                 </fieldset>
             </div>
         </div>
 
-        <div class="form-group" th:classappend="${#fields.hasErrors('ids')} ? form-group-error : ''">
+        <div class="form-group" th:classappend="${#fields.hasErrors('selectionForm.ids')} ? form-group-error : ''">
             <div class="table-overflow">
                 <table id="application-list">
                     <thead>
@@ -106,7 +116,12 @@
                     <tr th:each="applicationSummary, stat : ${model.content}">
                         <td class="form-group-cell">
                             <div class="multiple-choice" th:if="${applicationSummary.applicationFundingDecisionIsChangeable()}">
-                                <input data-switches-button-status="[name=write-an-send-email]" type="checkbox" class="app-row-select row-successful" th:field="*{ids[__${stat.index}__]}" th:value="${applicationSummary.id}" aria-labelledby="select-applications-label" th:id="'app-row-' + ${applicationSummary.id}" />
+                                <input type="checkbox"
+                                       class="app-row-select row-successful"
+                                       th:field="*{selectionForm.ids}"
+                                       th:value="${applicationSummary.id}"
+                                       aria-labelledby="select-applications-label"
+                                       th:id="'app-row-' + ${applicationSummary.id}" />
                                 <label th:for="'app-row-' + ${applicationSummary.id}">
                                     <span class="invisible">Select application</span>
                                 </label>
@@ -128,30 +143,11 @@
                         <td th:text="${applicationSummary.manageFundingEmailDate} ? 'Sent' : '-'">-</td>
                         <td class="alignright" th:text="${applicationSummary.manageFundingEmailDate} ? ${#temporals.format(applicationSummary.manageFundingEmailDate, 'dd MMMM yyyy')} : '-'">9 January 2017</td>
                     </tr>
+                    <tr th:if="${#lists.isEmpty(model.content)}">
+                        <td colspan="5">No applications found.</td>
+                    </tr>
                     </tbody>
                 </table>
-            </div>
-        </div>
-
-        <div class="grid-row sorting">
-            <div class="column-half">
-                <div class="select-all">
-                    <fieldset>
-                        <legend class="visuallyhidden">Select applications</legend>
-                        <div class="multiple-choice">
-                            <label for="select-all-2">
-                                <input data-select-all="[id^=app-row-]" class="select-all" id="select-all-2" value="select-all" type="checkbox">
-                                Select all applications
-                            </label>
-                        </div>
-                        <span class="form-hint"><span data-count-selected="[id^=app-row-]">3</span> applications selected</span>
-                    </fieldset>
-                </div>
-            </div>
-            <div class="column-half">
-                <fieldset class="mark-applications">
-                    <button class="button button-notification extra-margin-top" data-enable-button-when="one-checked" type="submit" name="write-an-send-email">Write and send email</button>
-                </fieldset>
             </div>
         </div>
     </form>

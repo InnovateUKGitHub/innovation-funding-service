@@ -25,15 +25,14 @@
                 <h2 class="heading-medium no-margin" th:text="|${#temporals.format(model.acceptsDate, 'dd MMMM yyyy')} to ${#temporals.format(model.deadlineDate, 'dd MMMM yyyy')}: Assessment period|">
                     21 March 2017 to 28 March 2017: Assessment period
                 </h2>
-                <p>This is the given timescale for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the number could be less dependant on how many applications have been submitted. Our assessment fee for this competition is &pound;<th:block th:text="${#numbers.formatDecimal(model.assessorPay,0, 'COMMA', 0, 'POINT')}">100</th:block> per application.</p>
+                <p>This is the given timescale for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the number could be less dependent on how many applications have been submitted. Our assessment fee for this competition is &pound;<th:block th:text="${#numbers.formatDecimal(model.assessorPay,0, 'COMMA', 0, 'POINT')}">100</th:block> per application.</p>
 
                 <p th:if="${model.briefingDate}" th:text="|The assessor webinar briefing will last one hour,
-                    taking place at ${#strings.toLowerCase(#temporals.format(model.briefingDate, 'hh:mma'))} on ${#temporals.format(model.briefingDate, 'dd MMMM')}.|"></p>
+                    taking place on ${#temporals.format(model.briefingDate, 'dd MMMM')}.|"></p>
             </section>
 
             <section>
                 <h2 class="heading-medium" th:text="|Competition details: ${model.competitionName}|">Competition details: Technology inspired</h2>
-                <p th:text="${model.competitionDescription}">Description of the competition.</p>
 
                 <p><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">See competition brief</a></p>
 

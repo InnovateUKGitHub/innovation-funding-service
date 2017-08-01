@@ -48,7 +48,7 @@ public class ApplicationFundingDecisionServiceImplTest extends BaseServiceUnitTe
 		applicationSummaryPageResource.setContent(applicationSummaryResources);
 
 		when(applicationFundingDecisionRestService.saveApplicationFundingDecisionData(any(), any())).thenReturn(restSuccess());
-		when(applicationSummaryRestService.getSubmittedApplications(1L, null, 0, Integer.MAX_VALUE, null, Optional.empty())).thenReturn(restSuccess(applicationSummaryPageResource));
+		when(applicationSummaryRestService.getSubmittedApplications(1L, null, 0, Integer.MAX_VALUE, Optional.empty(), Optional.empty())).thenReturn(restSuccess(applicationSummaryPageResource));
 
 		service.saveApplicationFundingDecisionData(1L, FundingDecision.ON_HOLD, applicationIds);
 
@@ -57,7 +57,7 @@ public class ApplicationFundingDecisionServiceImplTest extends BaseServiceUnitTe
 		expectedDecisionMap.put(9L, FundingDecision.ON_HOLD);
 
 		verify(applicationFundingDecisionRestService).saveApplicationFundingDecisionData(1L, expectedDecisionMap);
-		when(applicationSummaryRestService.getSubmittedApplications(1L, null, 0, Integer.MAX_VALUE, null, Optional.empty())).thenReturn(restSuccess(applicationSummaryPageResource));
+		when(applicationSummaryRestService.getSubmittedApplications(1L, null, 0, Integer.MAX_VALUE, Optional.empty(), Optional.empty())).thenReturn(restSuccess(applicationSummaryPageResource));
 	}
 
 	@Test
@@ -89,14 +89,14 @@ public class ApplicationFundingDecisionServiceImplTest extends BaseServiceUnitTe
 		applicationSummaryPageResource.setContent(applicationSummaryResources);
 
 		when(applicationFundingDecisionRestService.saveApplicationFundingDecisionData(any(), any())).thenReturn(restSuccess());
-		when(applicationSummaryRestService.getSubmittedApplications(1L, null, 0, Integer.MAX_VALUE, null, Optional.empty())).thenReturn(restSuccess(applicationSummaryPageResource));
+		when(applicationSummaryRestService.getSubmittedApplications(1L, null, 0, Integer.MAX_VALUE, Optional.empty(), Optional.empty())).thenReturn(restSuccess(applicationSummaryPageResource));
 
 		service.saveApplicationFundingDecisionData(1L, FundingDecision.ON_HOLD, applicationIds);
 
 		Map<Long, FundingDecision> expectedDecisionMap = new HashMap<>();
 
 		verify(applicationFundingDecisionRestService).saveApplicationFundingDecisionData(1L, expectedDecisionMap);
-		when(applicationSummaryRestService.getSubmittedApplications(1L, null, 0, Integer.MAX_VALUE, null, Optional.empty())).thenReturn(restSuccess(applicationSummaryPageResource));
+		when(applicationSummaryRestService.getSubmittedApplications(1L, null, 0, Integer.MAX_VALUE, Optional.empty(), Optional.empty())).thenReturn(restSuccess(applicationSummaryPageResource));
 	}
 
 	@Test
@@ -110,7 +110,7 @@ public class ApplicationFundingDecisionServiceImplTest extends BaseServiceUnitTe
 		applicationSummaryPageResource.setContent(applicationSummaryResources);
 
 		when(applicationFundingDecisionRestService.saveApplicationFundingDecisionData(any(), any())).thenReturn(restSuccess());
-		when(applicationSummaryRestService.getSubmittedApplications(1L, null, 0, Integer.MAX_VALUE, null, Optional.empty())).thenReturn(restSuccess(applicationSummaryPageResource));
+		when(applicationSummaryRestService.getSubmittedApplications(1L, null, 0, Integer.MAX_VALUE, Optional.empty(), Optional.empty())).thenReturn(restSuccess(applicationSummaryPageResource));
 
 		service.saveApplicationFundingDecisionData(1L, FundingDecision.ON_HOLD, applicationIds);
 
@@ -119,7 +119,7 @@ public class ApplicationFundingDecisionServiceImplTest extends BaseServiceUnitTe
 		expectedDecisionMap.put(9L, FundingDecision.ON_HOLD);
 
 		verify(applicationFundingDecisionRestService).saveApplicationFundingDecisionData(1L, expectedDecisionMap);
-		when(applicationSummaryRestService.getSubmittedApplications(1L, null, 0, Integer.MAX_VALUE, null, Optional.empty())).thenReturn(restSuccess(applicationSummaryPageResource));
+		when(applicationSummaryRestService.getSubmittedApplications(1L, null, 0, Integer.MAX_VALUE, Optional.empty(), Optional.empty())).thenReturn(restSuccess(applicationSummaryPageResource));
 	}
 
 	@Test

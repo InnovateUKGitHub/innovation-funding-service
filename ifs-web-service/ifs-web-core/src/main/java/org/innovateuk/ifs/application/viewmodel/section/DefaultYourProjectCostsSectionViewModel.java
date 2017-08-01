@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Default your project costs view model.
@@ -13,8 +14,8 @@ public class DefaultYourProjectCostsSectionViewModel extends AbstractYourProject
 
     private List<DefaultProjectCostSection> defaultProjectCostSections;
 
-    public DefaultYourProjectCostsSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly) {
-        super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly);
+    public DefaultYourProjectCostsSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly, Optional<Long> applicantOrganisationId, boolean readOnlyAllApplicantApplicationFinances) {
+        super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
     }
 
     @Override

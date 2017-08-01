@@ -21,16 +21,18 @@ items:
           deploymentconfig: idp
       spec:
         containers:
-        - image: innovateuk/ifs-shib-idp:0.6.1
+        - image: innovateuk/idp-service:1.0-SNAPSHOT
           name: idp
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
-          - name: SSLCERT
+          - name: IDP_PROXY_CERTIFICATE
             value: "<<SSLCERT>>"
-          - name: SSLCACERT
+          - name: IDP_PROXY_CACERTIFICATE
             value: "<<SSLCACERT>>"
-          - name: SSLKEY
+          - name: IDP_PROXY_KEY
             value: "<<SSLKEY>>"
+          - name: SP_PROXY_CERTIFICATE
+            value: "<<SSLCERT>>"
           - name: SPHOST
             value: <<SHIB-ADDRESS>>
           - name: IDPHOST
@@ -39,6 +41,12 @@ items:
             value: "9443"
           - name: HTTPPORT
             value: "9080"
+          - name: LDAPURL
+            value: "ldaps://ldap:389"
+          - name: LDAPRURL
+            value: "ldaps://ldap:389"
+          - name: LDAPPORT
+            value: "389"
           ports:
           - containerPort: 9443
           - containerPort: 9080

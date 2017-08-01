@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.*;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -26,6 +27,8 @@ public interface CompetitionInviteRestService {
 
     RestResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, int page, Optional<Long> innovationArea);
 
+    RestResult<List<Long>> getAvailableAssessorIds(long competitionId, Optional<Long> innovationArea);
+
     RestResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, int page);
 
     RestResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
@@ -37,6 +40,8 @@ public interface CompetitionInviteRestService {
     RestResult<CompetitionInviteStatisticsResource> getInviteStatistics(long competitionId);
 
     RestResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource existingUserStagedInvite);
+
+    RestResult<Void> inviteUsers(ExistingUserStagedInviteListResource existingUserStagedInvite);
 
     RestResult<Void> inviteNewUsers(NewUserStagedInviteListResource newUserStagedInvites, long competitionId);
 

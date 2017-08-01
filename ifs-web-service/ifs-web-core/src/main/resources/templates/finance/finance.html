@@ -73,7 +73,6 @@
         <th:block th:if="${model.readonly}">
             <!--/* view  */-->
             <dl class="readonly-data">
-                Organisation Size
                 <dt th:text="${formInput.description}">Organisation size</dt>
 
                 <th:block th:unless="${model.organisationFinanceSize == null}" th:each="size : ${model.organisationSizes}">
@@ -99,7 +98,6 @@
                        th:value="*{formInput[__${formInput.id}__]}"
                        required="required"
                        min="0"
-                       max="2147483647"
                        type="number" />
             </div>
         </th:block>

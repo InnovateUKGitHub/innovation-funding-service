@@ -56,7 +56,7 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               INFUND-9152 Add an 'Innovation sector' of 'Open' where 'Competition type' is 'Sector'
 Suite Setup       Custom suite setup
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot
@@ -90,6 +90,7 @@ Initial details - User enters valid values and marks as done
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link                       link=Initial details
+    And the user should see the option in the drop-down menu    Generic  id=competitionTypeId
     When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     And the user clicks the button/link                         jQuery=button:contains("+ add another innovation area")
     And the user enters valid data in the initial details
@@ -449,10 +450,12 @@ Application: Finances
     And the user should see the element      css=label[for="full-application-finance-no"]
     # Please note that the above radio button is not clickable at the moment. Not part of the MVP. Is included for future functionality purpose.
     When the user selects the radio button   includeGrowthTable  include-growth-table-no
+    And the user enters text to a text field  css=.editor  Funding rules for this competition are now entered.
     And The user clicks the button/link      jQuery=button:contains("Save and close")
     Then the user navigates to the page      ${landingPage}
     When the user clicks the button/link     link=Finances
     Then the user should see the element     jQuery=dt:contains("Include project growth table") ~ dd:contains("No")
+    Then the user should see the element     jQuery=dt:contains("Funding rules for this competition") ~ dd:contains("Funding rules for this competition are now entered.")
 
 Application: Mark as done should display green tick
     [Documentation]    INFUND-5964
@@ -609,7 +612,7 @@ the pre-field date should be correct
     Should Be Equal As Strings    ${DAY}    1
 
 the resubmission should not have a default selection
-    the user sees that the radio button is not selected    resubmission
+    the user should see the element  css=[name="resubmission"]:not(:checked) ~ label
 
 The user enters valid data in the initial details
     Given the user enters text to a text field                css=#title  Competition title
@@ -624,7 +627,7 @@ The user enters valid data in the initial details
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear  ${nextyear}
-    And the user selects the option from the drop-down menu    Ian Cooper    id=leadTechnologistUserId
+    And the user selects the option from the drop-down menu    Ian Cooper    id=innovationLeadUserId
     And the user selects the option from the drop-down menu    John Doe   id=executiveUserId
 
 The competition should show in the correct section
@@ -636,7 +639,7 @@ the user fills the scope assessment questions
     The user enters text to a text field    id=guidancerow-2-subject    New subject
     The user enters text to a text field    id=guidancerow-2-justification    This is a justification
     The user enters text to a text field    id=question.assessmentGuidance    Guidance for assessing scope section
-    The user clicks the button/link    id=remove-guidance-row-0
+    The user clicks the button/link    id=remove-guidance-row-1
 
 the user checks the scope assessment questions
     The user should see the text in the page    New subject
@@ -675,7 +678,7 @@ the user should not see the assessed question feedback
     the user should not see the text in the page    There is little or no business drive to the project.
 
 Custom suite setup
-    Guest user log-in    &{Comp_admin1_credentials}
+    The user logs-in in new browser  &{Comp_admin1_credentials}
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
 

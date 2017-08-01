@@ -60,104 +60,32 @@
   color: $red;
 }
 
-/*
-###Collapsible showing form status
-Status is displayed in the collapsible header area.
-
-```
-<div class='collapsible'>
-    <h2 class='open' class='section-status-finance complete'>
-        Application details 1
-        <span style='' data-subsection-id='1' class='section-status complete place-in-header'><span data-binding-output='subsection-total-1'>Complete</span></span>
-    </h2>
-    <div>
-        <ul>
-            <li class='section'>
-                <a tabindex='0' href='#'>Application details</a>
-            </li>
-            <li class='section'>
-                <a tabindex='0' href='#'>Project Summary</a>
-            </li>
-            <li class='section'>
-                <a tabindex='0' href='#'>Public Description</a>
-            </li>
-        </ul>
-    </div>
-    <h2 class='section-status-finance incomplete'>Another Section 2
-        <span style='' data-subsection-id='2' class='section-status incomplete place-in-header'><span data-binding-output='subsection-total-2'>Incomplete</span></span></h2>
-    <div>
-        <ul>
-            <li class='section'>
-                <a tabindex='0' href='#'>Another subsection</a>
-            </li>
-            <li class='section'>
-                <a tabindex='0' href='#'>Another subsection</a>
-            </li>
-        </ul>
-    </div>
-    <h2 class='section-status-finance assigned'>Another Section 3
-        <span style='' data-subsection-id='3' class='section-status assigned place-in-header'><span data-binding-output='subsection-total-3'>Assigned to me</span></span></h2>
-    </h2>
-    <div>
-        <ul>
-            <li class='section'>
-                <a tabindex='0' href='#'>Another subsection</a>
-            </li>
-            <li class='section'>
-                <a tabindex='0' href='#'>Another subsection</a>
-            </li>
-        </ul>
-    </div>
-</div>
-```
-
-###Rows inside collapsible container
-
-```
-<div class='collapsible'>
-    <ul>
-        <li class='section marked-as-complete'>
-            <div class='grid-row'>
-                <div class='column-two-thirds'>
-                    <h4 class='heading-medium'><a href='#'>Application details</a></h4>
-                </div>
-            </div>
-        </li>
-        <li class='section assigned-to-me'>
-            <div class='grid-row'>
-                <div class='column-two-thirds'>
-                    <h4 class='heading-medium'><a href='#'>Project summary</a></h4>
-                </div>
-            </div>
-        </li>
-    </ul>
-</div>
-```
-
-*/
-
 .collapsible,
 .list-overview {
   li {
     position: relative;
   }
 
-  img.section-status {
-    position: absolute;
-    right: 0;
-    top: 0;
+  img {
+    &.section-status {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
   }
 
-  div.section-status {
-    float: right;
-    font-weight: 300;
-    font-size: 16px;
-    color: $grey-1;
-    padding-left: 20px;
-    padding-right: 0;
-    text-align: left;
-    color: $button-colour;
-    font-weight: bold;
+  div {
+    &.section-status {
+      float: right;
+      font-weight: 300;
+      font-size: 16px;
+      color: $grey-1;
+      padding-left: 20px;
+      padding-right: 0;
+      text-align: left;
+      color: $button-colour;
+      font-weight: bold;
+    }
   }
 
   .section-complete,
@@ -167,107 +95,80 @@ Status is displayed in the collapsible header area.
     background-size: 14px;
   }
 
-    .section-complete {
-      margin-left: 11px;
-      @extend %icon-tick;
-    }
+  .section-complete {
+    @extend %icon-tick;
+    margin-left: 11px;
+  }
 
-    .section-incomplete {
-      @extend %icon-incomplete;
+  .section-incomplete {
+    @extend %icon-incomplete;
+
+    &.section-status {
+      color: $red;
+    }
+  }
+
+  @include media-down(mobile) {
+    div {
       &.section-status {
-        color: $red;
-      }
-    }
-
-    @include media-down(mobile) {
-      div.section-status {
         float: none;
         padding-left: 25px;
         padding-right: 0;
         background-position: left 50%;
       }
     }
+  }
 }
 
-/* SG
-# IFS/Wrapped textareas : Complete
-```
-<div class='textarea-wrapped marked-as-complete word-count'>
-    <div class='textarea-header'>
-         <img class='marked-as-complete' alt='' src='/images/field/field-done.png'>
-         <div class='assignee'>This question is <strong>marked as complete</strong></div>
-    </div>
-        <textarea readonly='readonly' name='formInput[12]' id='form-textarea-12' data-max_words='400'></textarea>
-    <div class='textarea-footer'>
-          <p>
-            <small>Last updated: Yesterday by you</small>
-                <span class='count-label'>
-                    <span aria-live='polite' class='count-down positive'>Words remaining: 400 </span>
-                </span>
-          </p>
-    </div>
-</div>
-```
-*/
-
-/* SG
-# IFS/Wrapped textareas : Assigned to me
-```
-<div class='textarea-wrapped assigned-to-me  word-count'>
-     <div class='textarea-header'>
-        <img class='assigned-to-me' alt='' src='/images/field/field-assigned.png'>
-        <div class='assignee assigned-to-me'>
-            This question has been reassigned to
-              <span>you</span> by
-              <span>Jessica Doe</span>
-        </div>
-    </div>
-        <textarea data-max_words='400'></textarea>
-    <div class='textarea-footer'>
-          <p>
-            <small>Last updated: Yesterday by you</small>
-                <span class='count-label'>
-                        <span aria-live='polite' class='count-down positive'>Words remaining: 400</span>
-                </span>
-          </p>
-    </div>
-</div>
-```
-*/
 
 .textarea-wrapped {
   .textarea-header {
     position: relative;
   }
 
-  img.marked-as-complete,
-  img.assigned-to-me {
-    position: absolute;
-    left: 1px;
-    top: 1px;
+  img {
+    .marked-as-complete,
+    .assigned-to-me {
+      position: absolute;
+      left: 1px;
+      top: 1px;
+    }
   }
 
-  &.marked-as-complete textarea[readonly],
-  &.marked-as-complete .readonly,
-  &.marked-as-complete .textarea-header {
+  %marked-as-complete {
     border-width: 2px;
     border-color: $panel-colour;
     background-color: $grey-4;
   }
 
-  &.assigned-to-me .editor,
-  &.assigned-to-me textarea,
-  &.assigned-to-me .textarea-header {
-    border: 2px solid $text-colour;
+  &.marked-as-complete {
+    textarea {
+      &[readonly] {
+        @extend %marked-as-complete;
+      }
+    }
+
+    .readonly,
+    .textarea-header {
+      @extend %marked-as-complete;
+    }
   }
 
-  &.assigned-to-me .textarea-header + .editor,
-  &.assigned-to-me .textarea-header + textarea {
-    border-top: none;
-  }
+  &.assigned-to-me {
+    .editor,
+    textarea,
+    .textarea-header {
+      border: 2px solid $text-colour;
+    }
 
-  &.assigned-to-me .textarea-header {
-    border-bottom: none;
+    .textarea-header {
+      border-bottom: none;
+
+      + .editor,
+      + textarea {
+        border-top: none;
+      }
+    }
   }
 }
 
@@ -277,113 +178,135 @@ caption {
   text-align: left;
 }
 
-td.status,
-th.status,
-span.status {
-  &.na {
-    background: $grey-3;
-  }
+td,
+th,
+span {
+  &.status {
+    &.na {
+      background: $grey-3;
+    }
 
-  &.ok {
-    @extend %icon-tick;
-    color: $button-colour;
-    padding-left: 25px;
-  }
+    &.ok {
+      @extend %icon-tick;
+      color: $button-colour;
+      padding-left: 25px;
+    }
 
-  &.rejected {
-    @extend %icon-cross;
-  }
-  &.waiting {
-    color: $secondary-text-colour;
-  }
+    &.rejected {
+      @extend %icon-cross;
+    }
 
-  a {
-    display: block;
-    padding-top: 50px;
+    &.waiting {
+      color: $secondary-text-colour;
+    }
+
+    a {
+      display: block;
+      padding-top: 50px;
+    }
   }
 }
 
 .icon-table {
-  td.status {
-    vertical-align: bottom;
-    background-position: center center;
-    &.ok {
-      background-size: 18px;
-      padding-left: 0.625em;
-      a:link {
-        color: $button-colour;
-      }
-    }
-
-    &.rejected {
-      a:link {
-        color: $red;
-      }
-    }
-
-    &.action {
-      @extend %action-required;
+  td {
+    &.status {
+      vertical-align: bottom;
       background-position: center center;
+
+      &.ok {
+        background-size: 18px;
+        padding-left: 0.625em;
+
+        a {
+          &:link {
+            color: $button-colour;
+          }
+        }
+      }
+
+      &.rejected {
+        a {
+          &:link {
+            color: $red;
+          }
+        }
+      }
+
+      &.action {
+        @extend %action-required;
+        background-position: center center;
+      }
+
+      &.waiting {
+        @extend %icon-timer;
+        background-size: 33px 30px;
+
+        a {
+          color: $secondary-text-colour;
+        }
+      }
     }
+  }
+}
+
+td,
+th {
+  &.status {
+    text-align: center;
+    padding-left: 0.625em;
+    padding-right: 0.625em;
+    background-position: 10px 19px;
+    width: 70px;
+  }
+}
+
+span {
+  &.status {
+    padding-left: 28px;
+    background-position: left center;
 
     &.waiting {
-      @extend %icon-timer;
-      background-size: 33px 30px;
-      a {
-        color: $secondary-text-colour;
-      }
+      background-size: 25px;
     }
   }
-
 }
 
 
-td.status,
-th.status {
-  text-align: center;
-  padding-left: 0.625em;
-  padding-right: 0.625em;
-  background-position: 10px 19px;
-  width: 70px;
-}
+ul {
+  &.status {
+    li {
+      position: relative;
 
-span.status {
-  padding-left: 28px;
-  background-position: left center;
+      &[data-valid] {
+        list-style:none;
 
-  &.waiting {
-    background-size: 25px;
-  }
-}
+        &:before{
+          position: absolute;
+          left:-20px;
+          top:5px;
+          background-size: 14px;
+          display: block;
+          width:14px;
+          height: 14px;
+          content:""
+        }
+      }
 
+      &[data-valid="true"]{
+        color: $button-colour;
 
-ul.status {
-  li {
-    position: relative;
-  }
-  li[data-valid] {
-    list-style:none;
-  }
-  li[data-valid]:before{
-    position: absolute;
-    left:-20px;
-    top:5px;
-    background-size: 14px;
-    display: block;
-    width:14px;
-    height: 14px;
-    content:""
-  }
-  li[data-valid="true"]{
-    color: $button-colour;
-  }
-  li[data-valid="true"]:before{
-    @extend %icon-tick;
-  }
-  li[data-valid="false"]{
-    color: $error-colour;
-  }
-  li[data-valid="false"]:before{
-    @extend %icon-cross;
+        &:before{
+          @extend %icon-tick;
+        }
+      }
+
+      &[data-valid="false"]{
+        color: $error-colour;
+
+        &:before{
+          @extend %icon-cross;
+        }
+      }
+    }
   }
 }

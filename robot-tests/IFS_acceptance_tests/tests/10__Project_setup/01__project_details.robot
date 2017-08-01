@@ -48,7 +48,7 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-9062 Validation missing when inviting self as finance contact or PM
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
-Force Tags        Project Setup
+Force Tags        Project Setup  Applicant
 Resource          PS_Common.robot
 
 *** Variables ***
@@ -58,8 +58,8 @@ ${project_details_submitted_message}    The project details have been submitted 
 Internal users can see Project Details not yet completed
     [Documentation]    INFUND-5856
     [Tags]    HappyPath
-    [Setup]    log in as user                      &{Comp_admin1_credentials}
-    Given the user navigates to the page           ${internal_project_summary}
+    [Setup]  The user logs-in in new browser       &{Comp_admin1_credentials}
+    Given the user navigates to the page           ${internal_competition_status}
     Then the user should not see the element       jQuery=#table-project-status tr:nth-child(1) td.status.ok a    #Check here that there is no Green-Check
     When the user clicks the button/link           jQuery=#table-project-status tr:nth-child(1) td:nth-child(2) a
     Then the user should see the text in the page  These project details were supplied by the lead partner on behalf of the project.
@@ -72,7 +72,7 @@ Internal users can see Project Details not yet completed
     And the user should see the element            jQuery=#project-details-finance tr:nth-child(2) td:nth-child(2):contains("Not yet completed")
     And the user should see the element            jQuery=#project-details-finance tr:nth-child(3) td:nth-child(2):contains("Not yet completed")
     When Log in as a different user                &{internal_finance_credentials}
-    Then the user navigates to the page            ${internal_project_summary}
+    Then the user navigates to the page            ${internal_competition_status}
     And the user clicks the button/link            jQuery=#table-project-status tr:nth-child(1) td:nth-child(2) a
     Then the user should see the element           jQuery=#no-project-manager:contains("Not yet completed")
     And the user should see the element            jQuery=#project-details-finance tr:nth-child(3) td:nth-child(2):contains("Not yet completed")
@@ -81,7 +81,7 @@ Status updates correctly for internal user's table
     [Documentation]    INFUND-4049, INFUND-5507,INFUND-5543
     [Tags]    HappyPath
     [Setup]  log in as a different user    &{Comp_admin1_credentials}
-    When the user navigates to the page    ${internal_project_summary}
+    When the user navigates to the page    ${internal_competition_status}
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.waiting    #Project details
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status    #MO
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status    #Bank details
@@ -195,7 +195,7 @@ Lead partner is able to see finances without an error
     [Documentation]  INFUND-7634
     [Tags]
     Given the user clicks the button/link  jQuery=button:contains("Finances summary")
-    When the user clicks the button/link   link=Detailed Organisation Finances
+    When the user clicks the button/link   link=View finances
     And the user should see the element    jQuery=h2:contains("Finance summary")
     Then the user clicks the button/link   link=Application summary
 
@@ -229,7 +229,7 @@ Lead partner can change the Start Date
     And Mouse Out    id=projectStartDate_year
     And wait for autosave
     When the user clicks the button/link    jQuery=.button:contains("Save")
-    Then The user redirects to the page    You are providing these details as the lead on behalf of the overall project    Project details
+    Then The user should see the text in the page   Project details
     And the user should see the text in the page    1 Jan ${nextyear}
     Then the matching status checkbox is updated    project-details    1    yes
     [Teardown]    the user changes the start date back again
@@ -292,7 +292,7 @@ Invited project manager registration flow
     [Documentation]  INFUND-3550 INFUND-3554
     [Tags]  HappyPath  Email
     Given the user accepts invitation and signs in  ${TEST_MAILBOX_ONE}+invitedprojectmanager@gmail.com  Project Manager invitation  managing the project  Bob  Jones
-    When the guest user inserts user email & password  ${test_mailbox_one}+invitedprojectmanager@gmail.com  ${correct_password}
+    When The guest user inserts user email and password  ${test_mailbox_one}+invitedprojectmanager@gmail.com  ${correct_password}
     And the guest user clicks the log-in button
     Then the user should see the element        jQuery=.progress-list:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
     Then the user should not see the element    jQuery=.my-applications .in-progress  #applications in progress section
@@ -461,7 +461,7 @@ Invited finance contact registration flow
     [Documentation]  INFUND-3524 INFUND-3530
     [Tags]  HappyPath  Email
     Given the user accepts invitation and signs in  ${test_mailbox_one}+invitedfinancecontact@gmail.com  Finance contact invitation  providing finance details  John  Smith
-    When the guest user inserts user email & password  ${test_mailbox_one}+invitedfinancecontact@gmail.com  ${correct_password}
+    When The guest user inserts user email and password  ${test_mailbox_one}+invitedfinancecontact@gmail.com  ${correct_password}
     And the guest user clicks the log-in button
     Then the user should see the element  jQuery=.progress-list:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
 
@@ -504,7 +504,7 @@ Internal user should see project details are incomplete
     [Documentation]    INFUND-6781
     [Tags]
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
-    Given the user navigates to the page     ${internal_project_summary}
+    Given the user navigates to the page     ${internal_competition_status}
     When the user clicks the button/link     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.waiting
     Then the user should see the text in the page  Not yet completed
 
@@ -609,7 +609,7 @@ Internal user can see the Project details as submitted
     [Documentation]    INFUND-5856
     [Tags]
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
-    Given the user navigates to the page     ${internal_project_summary}
+    Given the user navigates to the page     ${internal_competition_status}
     When the user clicks the button/link     jQuery=#table-project-status tr:nth-child(2) td.status.ok a
     Then the user should see the element     jQuery=#project-details
     And the user can see all project details completed
@@ -699,7 +699,7 @@ Custom suite setup
 the invitee is able to assign himself as Finance Contact
     [Arguments]  ${email}  ${title}  ${pattern}  ${name}  ${famName}
     the user accepts invitation and signs in      ${email}  ${title}  ${pattern}  ${name}  ${famName}
-    the guest user inserts user email & password  ${email}  ${correct_password}
+    The guest user inserts user email and password  ${email}  ${correct_password}
     the guest user clicks the log-in button
     the user navigates to the page  ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/finance-contact?organisation=${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}
     the user selects the radio button  financeContact  financeContact3

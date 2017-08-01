@@ -18,26 +18,28 @@ def String spProxyCacertificateFile = "${spCertsVolume}/sp_proxy_cacertificate.p
 def String idpSigningCertificateFile = "${spCertsVolume}/idp-signing.crt"
 def String idpEncryptionCertificateFile = "${spCertsVolume}/idp-encryption.crt"
 
-
 task prepareDockerFile(type: Copy) {
     dependsOn ':ifs-auth-service:prepareSecrets'
 
-    doFirst {
-        assert file(spProxyKeyFile).exists() 
-        assert file(spProxyCertificateFile).exists() 
-        assert file(spProxyCacertificateFile).exists() 
-
-        assert file(idpSigningCertificateFile).exists() 
-        assert file(idpEncryptionCertificateFile).exists() 
-    }
-
     outputs.upToDateWhen { false }
+
+    def String spProxyKey = file(spProxyKeyFile).text.trim().replace('\n', '\\n')
+    def String spProxyCertificate = file(spProxyCertificateFile).text.trim().replace('\n', '\\n')
+    def String spProxyCacertificate = file(spProxyCacertificateFile).text.trim().replace('\n', '\\n')
+
+    def String idpSigningCertificate = file(idpSigningCertificateFile).text.trim().replace('\n', '\\n')
+    def String idpEncryptionCertificate = file(idpEncryptionCertificateFile).text.trim().replace('\n', '\\n')
 
     from 'src/main/docker/'
     into 'src/main/docker/'
     include 'Dockerfile-template'
     rename 'Dockerfile-template', 'Dockerfile'
-    filter(ReplaceTokens, tokens: [auth_service_trusted_ip: '-R \'127.0.0.1\''])
+    filter(ReplaceTokens, tokens: [auth_service_trusted_ip: '-R \'127.0.0.1\'',
+                                   auth_sp_proxy_key: spProxyKey,
+                                   auth_sp_proxy_certificate: spProxyCertificate,
+                                   auth_sp_proxy_cacertificate: spProxyCacertificate,
+                                   auth_idp_signing_certificate: idpSigningCertificate,
+                                   auth_idp_encryption_certificate: idpEncryptionCertificate])
 }
 
 task buildDocker(type: Docker) {
@@ -46,6 +48,7 @@ task buildDocker(type: Docker) {
     push = false
     applicationName = 'sp-service'
     dockerfile = file('src/main/docker/Dockerfile')
+    tagVersion = 'latest'
     doFirst {
         copy {
             from fileTree('src/main/docker/files')

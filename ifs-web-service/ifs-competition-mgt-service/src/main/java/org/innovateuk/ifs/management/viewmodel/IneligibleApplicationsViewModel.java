@@ -1,21 +1,26 @@
 package org.innovateuk.ifs.management.viewmodel;
 
-import javafx.scene.control.Pagination;
-
 import java.util.List;
-import java.util.Optional;
 
 /**
  * View model for the Ineligible Competition Management Applications page
  */
 public class IneligibleApplicationsViewModel extends BaseApplicationsViewModel<IneligibleApplicationsRowViewModel> {
 
+    private boolean readOnly;
+
     public IneligibleApplicationsViewModel(long competitionId,
                                            String competitionName,
                                            String sorting,
                                            String filter,
                                            List<IneligibleApplicationsRowViewModel> applications,
-                                           PaginationViewModel pagination) {
+                                           PaginationViewModel pagination,
+                                           boolean readOnly) {
         super(competitionId, competitionName, applications, pagination, sorting, filter);
+        this.readOnly = readOnly;
+    }
+
+    public boolean isReadOnly() {
+        return readOnly;
     }
 }

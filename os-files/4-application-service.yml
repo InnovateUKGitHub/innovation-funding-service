@@ -27,7 +27,7 @@ items:
           name: application-svc
           livenessProbe:
             httpGet:
-              path: /monitoring/live
+              path: /monitoring/health
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 30
@@ -35,7 +35,7 @@ items:
             failureThreshold: 3
           readinessProbe:
             httpGet:
-              path: /monitoring/ready
+              path: /monitoring/health
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 30
@@ -45,6 +45,8 @@ items:
           env:
           - name: SPRING_APPLICATION_JSON
             value: '{"logout":{"url": "https://<<SHIB-ADDRESS>>/Logout/"}}'
+          - name: JAVA_OPTS
+            value: -Xms600m -Xmx600m
           ports:
           - containerPort: 8080
           resources:

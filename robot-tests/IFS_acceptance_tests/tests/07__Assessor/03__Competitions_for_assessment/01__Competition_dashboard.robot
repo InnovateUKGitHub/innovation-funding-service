@@ -18,8 +18,8 @@ Documentation     INFUND-1188 As an assessor I want to be able to review my asse
 ...               INFUND-4797 Handle scenario where invitation to assess an application has been removed from this user before they have responded
 ...
 ...               INFUND-5494 An assessor CAN follow a link to the competition brief from the competition dashboard
-Suite Setup       Guest user log-in  &{assessor2_credentials}
-Suite Teardown    TestTeardown User closes the browser
+Suite Setup       The user logs-in in new browser  &{assessor2_credentials}
+Suite Teardown    The user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
@@ -29,7 +29,7 @@ User cannot accept/reject an invite to an application that has been withdrawn
     [Tags]
     When the user navigates to the page    ${server}/assessment/${WITHDRAWN_ASSESSMENT}/assignment
     Then the user should see the text in the page    Invitation withdrawn
-    [Teardown]    the user clicks the button/link    jQuery=#proposition-links a:contains(My dashboard)
+    [Teardown]    the user clicks the button/link    jQuery=#proposition-links a:contains(Dashboard)
 
 Competition link should navigate to the applications
     [Documentation]    INFUND-3716
@@ -121,21 +121,21 @@ Check the comp admin see the assessor has rejected the application
     [Tags]
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
+    And the user clicks the button/link    jQuery=a:contains("Manage assessments")
+    And the user clicks the button/link    jQuery=a:contains("Manage applications")
     And the user should see the element    jQuery=tr:nth-child(1) td:nth-child(2):contains("Park living")
-    And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
+    And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("View progress")
     And the user should see the text in the page    Rejected (1)
     And the user should see the element    jQuery=.assessors-rejected td:nth-child(6):contains("Not my area of expertise")
     And the user should see the element    jQuery=.assessors-rejected td:nth-child(6):contains("Unable to assess the application as i'm on holiday.")
 
 *** Keywords ***
 the assessor fills all fields with valid inputs
-    Select From List By Index    id=rejectReason    2
-    The user should not see the text in the page    Please enter a reason
-    The user enters text to a text field    id=rejectComment    Hello all, Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco ullamco
-    the user moves focus to the element    jQuery=.button:contains("Confirm")
-    The user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
-    The user enters text to a text field    id=rejectComment    Unable to assess the application as i'm on holiday.
+    Select From List By Index                                   id=rejectReason    2
+    The user should not see the text in the page                Please enter a reason
+    the user enters multiple strings into a text field          id=rejectComment  a${SPACE}  102
+    The user should see an error                                Maximum word count exceeded. Please reduce your word count to 100.
+    The user enters text to a text field                        id=rejectComment    Unable to assess the application as i'm on holiday.
 
 the application for assessment should be removed
     The user should not see the element    link=Park living

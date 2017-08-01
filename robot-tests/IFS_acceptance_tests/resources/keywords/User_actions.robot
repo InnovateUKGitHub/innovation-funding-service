@@ -43,11 +43,10 @@ The user should see the notification
     Wait Until Page Contains Without Screenshots    ${MESSAGE}
 
 The applicant assigns the question to the collaborator
-    [Arguments]    ${TEXT_AREA}    ${TEXT}    ${NAME}
-    focus    ${TEXT_AREA}
-    The user enters text to a text field    ${TEXT_AREA}    ${TEXT}
-    When the user clicks the button/link    css=.assign-button > button
-    Then the user clicks the button/link    jQuery=button:contains("${NAME}")
+    [Arguments]  ${name}
+    focus  jQuery=.assign-container
+    the user clicks the button/link  jQuery=button:contains("Assign this question to someone else")
+    the user clicks the button/link  jQuery=li button:contains("${name}")
 
 the user assigns the question to the collaborator
     [Arguments]    ${name}
@@ -94,13 +93,13 @@ the user cannot login with either password
     Input Password    id=password    ${correct_password}
     Click Button    css=button[name="_eventId_proceed"]
     Page Should Contain    ${unsuccessful_login_message}
-    Page Should Contain    Your email/password combination doesn't seem to work
+    Page Should Contain    Your email/password combination doesn't seem to work.
     go to    ${LOGIN_URL}
     Input Text    id=username    ${valid_email}
     Input Password    id=password    ${incorrect_password}
     Click Button    css=button[name="_eventId_proceed"]
     Page Should Contain    ${unsuccessful_login_message}
-    Page Should Contain    Your email/password combination doesn't seem to work
+    Page Should Contain    Your email/password combination doesn't seem to work.
 
 
 the lead applicant invites a registered user
@@ -111,7 +110,7 @@ the lead applicant invites a registered user
 
 invite a new academic
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
-    guest user log-in    ${EMAIL_LEAD}    ${correct_password}
+    the user logs-in in new browser    ${EMAIL_LEAD}  ${correct_password}
     the user clicks the button/link    link=${application_name}
     the user clicks the button/link    link=view team members and add collaborators
     the user clicks the button/link    jQuery=.button:contains("Invite new contributors")

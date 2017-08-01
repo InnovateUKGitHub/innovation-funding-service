@@ -1,428 +1,303 @@
-/*
-
-##1. Assessor view - Applications for assessment
-Each row appears as a list item within 'boxed-list', the status column changes colour depending on whether it is submitted and recommended, or submitted and not recommended. The boxed-list also has an extra class of 'bulk-select', this allows room for the bulk select checkboxes to appear to the right of each row.
-
-```
-<div class="app-dashboard">
-	<div class="in-progress">
-		<ul class="boxed-list bulk-select">
-			<li>
-		        <div class="grid-row">
-		            <div class="column-assessment-details">
-		                <h4 class="heading-medium">
-		                    <a href="/assessor/competitions/1/applications/1">A novel solution to an old problem</a>
-		                </h4>
-		                <div><p>Empire Ltd</p></div>
-		            </div>
-		            <div class="column-assessment-status navigation-right">
-		                <div class="application-status submitted open">
-		                    <p>Open</p>
-		                </div>
-		            </div>
-		        </div>
-		        <label>
-		            <input class="assessment-submit-checkbox" type="checkbox" name="submitted[]" value="1">
-		        </label>
-		    </li>
-		    <li>
-		        <div class="grid-row">
-		            <div class="column-assessment-details">
-		                <h4 class="heading-medium">
-		                    <a href="/assessor/competitions/1/applications/1">A novel solution to an old problem</a>
-		                </h4>
-		                <div><p>Empire Ltd</p></div>
-		            </div>
-		            <div class="column-assessment-status navigation-right">
-		                <div class="application-status submitted no">
-		                    <p>Submitted</p>
-		                    <p class="application-listing_pending">
-		                        </p><h3 class="score"><span>60.0</span>%</h3>
-		                        <small>Overall score</small>
-		                        <div class="recommend-container">
-		                            <p class="recommend no"> <span>Not recommended</span> </p>
-		                        </div>
-		                    <p></p>
-		                </div>
-		            </div>
-		        </div>
-		        <label>
-		            <input class="assessment-submit-checkbox" type="checkbox" name="submitted[]" value="1">
-		        </label>
-		    </li>
-			<li>
-		        <div class="grid-row">
-		            <div class="column-assessment-details">
-		                <h4 class="heading-medium">
-		                    <a href="/assessor/competitions/1/applications/1">A novel solution to an old problem</a>
-		                </h4>
-		                <div><p>Empire Ltd</p></div>
-		            </div>
-		            <div class="column-assessment-status navigation-right">
-		                <div class="application-status submitted yes">
-		                    <p>Submitted</p>
-		                    <p class="application-listing_pending">
-		                        </p><h3 class="score"><span>60.0</span>%</h3>
-		                        <small>Overall score</small>
-		                        <div class="recommend-container">
-		                            <p class="recommend yes"> <span>Recommended</span> </p>
-		                        </div>
-		                    <p></p>
-		                </div>
-		            </div>
-		        </div>
-		        <label>
-		            <input class="assessment-submit-checkbox" type="checkbox" name="submitted[]" value="1">
-		        </label>
-		    </li>
-		</ul>
-	</div>
-</div>
-
-```
-
-
-##2. Assessor view - Submitted applications
-The view is similar to the applications for assessment, but have a grey background
-
-```
-<div class="app-dashboard">
-	<div class="submitted">
-		<ul class="boxed-list bulk-select">
-			<li>
-		        <div class="grid-row">
-		            <div class="column-assessment-details">
-		                <h4 class="heading-medium">
-		                    <a href="/assessor/competitions/1/applications/1">A novel solution to an old problem</a>
-		                </h4>
-		                <div><p>Empire Ltd</p></div>
-		            </div>
-		            <div class="column-assessment-status navigation-right">
-		                <div class="application-status submitted yes">
-		                    <p>Submitted</p>
-		                    <p class="application-listing_pending">
-		                        </p><h3 class="score"><span>60.0</span>%</h3>
-		                        <small>Overall score</small>
-		                        <div class="recommend-container">
-		                            <p class="recommend yes"> <span>Recommended</span> </p>
-		                        </div>
-		                    <p></p>
-		                </div>
-		            </div>
-		        </div>
-		        <label>
-		            <input class="assessment-submit-checkbox" type="checkbox" name="submitted[]" value="1">
-		        </label>
-		    </li>
-		</ul>
-	</div>
-</div>
-```
-
-
-##3. Applicant dashboard - awaiting assessment
-
-```
-<div class="app-dashboard">
-	<div class="awaiting-assessment">
-	    Awaiting <br/> assessment
-	</div>
-</div>
-```
-
-*/
-
 @mixin with-hourglass {
-	background: url(../images/icons/icon-awaiting-assessment.png) no-repeat;
-	width: 105px;
-	text-align: center;
-	line-height: 1.2em;
-	font-size: 14px;
-	float: right;
-	color: $secondary-text-colour;
-	margin: 0;
+  background: url(../images/icons/icon-awaiting-assessment.png) no-repeat;
+  width: 105px;
+  text-align: center;
+  line-height: 1.2em;
+  font-size: 14px;
+  float: right;
+  color: $secondary-text-colour;
+  margin: 0;
 }
 
 .column-assessment-details{
-	@include grid-column( 13/16 );
-	@include media-down(tablet) {
-		@include grid-column( 12/16 );
-	}
+  @include grid-column( 13/16 );
+
+  @include media-down(tablet) {
+    @include grid-column( 12/16 );
+  }
 }
 
 .column-assessment-status{
-	@include grid-column( 3/16 );
-	@include media-down(tablet) {
-		@include grid-column( 4/16 );
-	}
+  @include grid-column( 3/16 );
+
+  @include media-down(tablet) {
+    @include grid-column( 4/16 );
+  }
 }
 
 
 .application-status {
-		border-left: 1px solid $border-colour;
-		text-align: center;
-		margin: -15px;
-		min-height: 110px;
+  @include media-down(mobile) {
+    min-height: auto;
+    margin: 10px -15px -15px -15px;
+  }
 
-		@include media-down(mobile) {
-			min-height: auto;
-			margin: 10px -15px -15px -15px;
-		}
-}
-.application-status p {
-	margin: 0;
-	padding: 5px;
-	color: $secondary-text-colour;
-}
-.application-status {
+  border-left: 1px solid $border-colour;
+  text-align: center;
+  margin: -15px;
+  min-height: 110px;
 
-	.results-status{
-		font-weight: 700;
-		margin: 0;
-		padding: 45px 0;
-		color: $text-colour;
+  p {
+    margin: 0;
+    padding: 5px;
+    color: $secondary-text-colour;
+  }
 
-		@include media-down(mobile) {
-			padding: 10px 0;
-		}
-	}
+  .results-status{
+    @include media-down(mobile) {
+      padding: 10px 0;
+    }
 
-	&.pending{
-		p{
-			&.application-listing_pending{
-				background-color: $link-colour;
-				padding: 35px 0;
-				a{
-					color: $page-colour;
-					text-decoration: none;
-				}
-			}
-		}
-	}
+    font-weight: 700;
+    margin: 0;
+    padding: 45px 0;
+    color: $text-colour;
+  }
 
-	&.open{
-		p{
-			padding-top: 45px;
-		}
-	}
+  &.pending {
+    p {
+      &.application-listing_pending {
+        background-color: $link-colour;
+        padding: 35px 0;
 
-	&.assessed,
-	&.submitted{
+        a {
+          color: $page-colour;
+          text-decoration: none;
+        }
+      }
+    }
+  }
 
-		&.yes{
-			background: #d9ece1;
-		}
+  &.open {
+    p {
+      padding-top: 45px;
+    }
+  }
 
-		&.no{
-			background: #fae0e0;
-		}
+  &.assessed,
+  &.submitted {
 
-		.application-listing_pending{display: none;}
+    &.yes {
+      background: #d9ece1;
+    }
 
-		.score{
-			font-size: 40px;
-			color: $black;
-			font-weight: bold;
-			line-height: 1em;
-		}
+    &.no {
+      background: #fae0e0;
+    }
 
-		.recommend-container + p{
-			display: none;
-		}
+    .application-listing_pending {
+      display: none;
+    }
 
-		p.recommend{
-			background: $grey-2;
-			font-size: 14px;
-				font-weight: 700;
-				color: black;
+    .score {
+      font-size: 40px;
+      color: $black;
+      font-weight: bold;
+      line-height: 1em;
+    }
 
-			&.yes{
-				span{
-					background: url(../images/tick-green.png) left 50% no-repeat;
-					padding: 0 0 0 20px;
-				}
-			}
+    .recommend-container + p {
+      display: none;
+    }
 
-			&.no{
-				span{
-					background: url(../images/cross-red.png) left 3px no-repeat;
-					padding: 0 0 0 20px;
-				}
-			}
+    p {
+      &.recommend {
+        background: $grey-2;
+        font-size: 14px;
+        font-weight: 700;
+        color: black;
 
-		}
+        &.yes {
+          span {
+            background: url(../images/tick-green.png) left 50% no-repeat;
+            padding: 0 0 0 20px;
+          }
+        }
 
-	}
+        &.no {
+          span {
+            background: url(../images/cross-red.png) left 3px no-repeat;
+            padding: 0 0 0 20px;
+          }
+        }
 
-	@include media-down(mobile) {
+      }
+    }
+  }
 
-		border-top: 1px solid $border-colour;
-		border-left: none;
+  @include media-down(mobile) {
 
-		&.open{
-			p{
-				padding: 5px;
-			}
-		}
+    border-top: 1px solid $border-colour;
+    border-left: none;
 
-		&.pending{
-			p{
-				&.application-listing_pending{
-					padding: 15px;
-				}
-			}
-		}
-	}
+    &.open {
+      p {
+        padding: 5px;
+      }
+    }
 
+    &.pending {
+      p {
+        &.application-listing_pending {
+          padding: 15px;
+        }
+      }
+    }
+  }
 }
 
 .app-dashboard,
 .assessor-dashboard,
-.assessor-comp-dashboard{
+.assessor-comp-dashboard {
+  .competition-deadline {
+    margin:0;
+  }
 
-    .competition-deadline{
-        margin:0;
-    }
-
-    @include media(tablet){
-        .my-applications .in-progress .grid-row{
-            margin: 5px 0 0 12px;
+  @include media(tablet) {
+    .my-applications {
+      .in-progress {
+        .grid-row {
+          margin: 5px 0 0 12px;
         }
+      }
+    }
+  }
+
+  .boxed-list {
+    &.bulk-select {
+      @include media-down(mobile) {
+        max-width: 92%;
+      }
+
+      max-width: 96%;
+    }
+  }
+
+  .awaiting-assessment {
+    @include with-hourglass;
+    padding-top: 110px;
+  }
+
+  .project-in-setup {
+    @include with-hourglass;
+    padding-top: 46px;
+    background-size: 36px 36px;
+    background-position: 32px 0px;
+  }
+
+  .assessment-submit-checkbox {
+    position: absolute;
+    top: 35%;
+    right: -34px;
+  }
+
+  .submitted {
+    .boxed-list {
+      li {
+        background: #e8e9eb;
+      }
     }
 
-    .boxed-list.bulk-select{
-        max-width: 96%;
+    .application-status {
+      background: #e8e9eb !important;
+    }
+  }
 
-        @include media-down(mobile) {
-            max-width: 92%;
+  .button {
+    &[name="submit_assessments"] {
+      margin: 15px 0 0 0;
+    }
+  }
+
+  .modal-confirm-submit {
+    .button {
+      &[name="submit_assessments"] {
+        margin: 0;
+      }
+    }
+  }
+
+  .boxed-list {
+    .progress-container {
+      margin: 20px 0 55px 0;
+    }
+
+    .column-half + .column-half {
+      padding: 0 20px 0 0;
+      text-align:right;
+    }
+  }
+
+  @include media-down(tablet) {
+    .boxed-list {
+      .column-half + .column-half {
+        text-align:left;
+        padding: 15px 15px;
+      }
+    }
+  }
+
+  .grid-row {
+    .row {
+      @include grid-column(1);
+    }
+  }
+
+  .competition-details {
+    .list-bullet {
+      margin-bottom: 45px;
+    }
+  }
+
+  .panel-indent {
+    margin-bottom: 0;
+  }
+
+  .form-hint {
+    margin-bottom: 0;
+  }
+
+  .collapsible {
+    .column-three-quarters {
+      padding-left: 30px;
+    }
+
+    .column-full {
+      padding: 0 18px;
+    }
+
+    .accordion_item {
+      border-top: 1px solid $border-colour;
+      padding-top: 20px;
+
+      &:first-child {
+        border: none;
+      }
+    }
+
+    .assessor-score {
+      text-align: center;
+      margin-right: 60px;
+      font-weight: bold;
+      float: right;
+
+      .score {
+        font-size: 48px;
+      }
+    }
+  }
+
+  .my-applications {
+    .in-progress {
+      li {
+        .grid-row {
+          margin: 0 -15px;
         }
+      }
     }
+  }
 
-    .awaiting-assessment{
-        @include with-hourglass;
-            padding-top: 110px;
-        }
-
-    .project-in-setup{
-        @include with-hourglass;
-        padding-top: 46px;
-        background-size: 36px 36px;
-        background-position: 32px 0px;
-    }
-
-    .assessment-submit-checkbox{
-        position: absolute;
-        top: 35%;
-        right: -34px;
-    }
-
-    .submitted{
-
-        .boxed-list{
-
-            li{
-                background: #e8e9eb;
-            }
-        }
-
-        .application-status{
-            background: #e8e9eb !important;
-        }
-    }
-
-    .button[name="submit_assessments"]{
-        margin: 15px 0 0 0;
-    }
-
-    .modal-confirm-submit{
-
-        .button[name="submit_assessments"]{
-            margin: 0;
-        }
-    }
-
-    .boxed-list .progress-container{
-        margin: 20px 0 55px 0;
-    }
-
-    .boxed-list .column-half + .column-half{
-        padding: 0 20px 0 0;
-        text-align:right;
-    }
-
-    .boxed-list .pie-container{
-        vertical-align:top;
-        margin-left:30px;
-    }
-
-    @include media-down(tablet){
-        .boxed-list .column-half + .column-half{
-            text-align:left;
-            padding: 15px 15px;
-        }
-    }
-
-    .grid-row{
-
-        .row{
-            @include grid-column(1);
-        }
-    }
-
-    .competition-details{
-
-        .list-bullet{
-            margin-bottom: 45px;
-        }
-    }
-
-    .panel-indent{
-        margin-bottom: 0;
-    }
-
-    .form-hint{
-        margin-bottom: 0;
-    }
-
-    .collapsible{
-
-        .column-three-quarters{
-            padding-left: 30px;
-        }
-
-        .column-full{
-            padding: 0 18px;
-        }
-
-        .accordion_item{
-            border-top: 1px solid $border-colour;
-            padding-top: 20px;
-
-            &:first-child{
-                border: none;
-            }
-        }
-
-        .assessor-score{
-            text-align: center;
-            margin-right: 60px;
-            font-weight: bold;
-            float: right;
-
-            .score{
-                font-size: 48px;
-            }
-        }
-    }
-
-    .my-applications .in-progress li{
-
-        .grid-row{
-            margin: 0 -15px;
-        }
-    }
-
-    .bulk-select{
-        max-width: 96%;
-    }
+  .bulk-select {
+    max-width: 96%;
+  }
 }

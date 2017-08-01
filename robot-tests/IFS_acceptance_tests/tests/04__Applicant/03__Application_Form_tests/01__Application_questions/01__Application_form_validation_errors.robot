@@ -6,7 +6,7 @@ Documentation     INFUND-43 As an applicant and I am on the application form on 
 ...               INFUND-6823 As an Applicant I want to be invited to select the primary 'Research area' for my project
 Suite Setup       Run keywords    log in and create new application if there is not one already
 ...               AND    Applicant goes to the application details page of the Robot application
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 
@@ -118,7 +118,7 @@ Empty text area
     When the applicant clears the text area of the "Project Summary"
     When the user clicks the button/link    jQuery=Button:contains("Mark as complete")
     Then the user should see an error    Please enter some text.
-    When The user enters text to a text field    css=#form-input-1039 .editor    Test 123
+    When The user enters text to a text field    css=.textarea-wrapped .editor    Test 123
     Then the applicant should not see the validation error any more
 
 *** Keywords ***
@@ -145,8 +145,8 @@ the applicant inserts an invalid date
     The user enters text to a text field    id=application_details-startdate_month    11
 
 the applicant clears the text area of the "Project Summary"
-    Clear Element Text    css=#form-input-1039 .editor
-    Press Key    css=#form-input-1039 .editor    \\8
+    Clear Element Text    css=.textarea-wrapped .editor
+    Press Key    css=.textarea-wrapped .editor    \\8
     Focus    css=.app-submit-btn
     wait for autosave
 

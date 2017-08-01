@@ -78,7 +78,7 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
         Long applicationId = 2L;
         Long markedAsInCompleteById = 3L;
 
-        service.markAsInComplete(questionId, applicationId, markedAsInCompleteById);
+        service.markAsIncomplete(questionId, applicationId, markedAsInCompleteById);
 
         verify(questionRestService).markAsInComplete(questionId, applicationId, markedAsInCompleteById);
     }

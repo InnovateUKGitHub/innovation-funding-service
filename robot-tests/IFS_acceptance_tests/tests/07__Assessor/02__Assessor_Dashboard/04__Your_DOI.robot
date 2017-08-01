@@ -4,8 +4,8 @@ Documentation     INFUND-3715 - As an Assessor I need to declare any conflicts o
 ...               INFUND-5432 As an assessor I want to receive an alert to complete my profile when I log into my dashboard so...
 ...
 ...               INFUND-7060 As an assessor I can view my declaration of interest page so...
-Suite Setup       guest user log-in    &{existing_assessor1_credentials}
-Suite Teardown    TestTeardown User closes the browser
+Suite Setup       The user logs-in in new browser    &{existing_assessor1_credentials}
+Suite Teardown    The user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
@@ -56,6 +56,8 @@ Server-side when Yes selected at yes/no
     And the user should see a field error    Please enter a position.
     And the user should see a field error    Please enter your family's financial interests.
     And the user should see a field error    Please enter your financial interests.
+    Then the user enters multiple strings into a text field  id=professionalAffiliations  a${SPACE}  101
+    And the user should see a field error    Maximum word count exceeded. Please reduce your word count to 100.
 
 Client-side validations
     [Documentation]    INFUND-3715
@@ -68,6 +70,7 @@ Client-side validations
     And The user should not see the text in the page    Please tell us if any of your immediate family members have any appointments or directorships.
     And The user should not see the text in the page    Please tell us if any of your immediate family members have any other financial interests.
     And The user should not see the text in the page    You must agree that your account is accurate.
+    And the user should not see the text in the page    Maximum word count exceeded. Please reduce your word count to 100.
 
 Successful save for the DOI form
     [Documentation]    INFUND-3715

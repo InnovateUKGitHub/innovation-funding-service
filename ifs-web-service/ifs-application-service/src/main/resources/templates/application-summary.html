@@ -19,7 +19,7 @@
 
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"/>
+            <th:block th:unless="${currentApplication.isOpen() and currentCompetition.isOpen()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"/>
 
             <th:block th:if="${currentApplication.isOpen() and currentCompetition.isOpen()}" th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Application overview',linkClass='link-back',linkUrl=@{/application/{id}(id=${currentApplication.id})}"/>
 
@@ -39,7 +39,7 @@
                 <th:block th:insert="fragments/application :: application-summary (competitionIsOpen = ${currentCompetition.isOpen()}, isApplicant = true)" />
             </form>
 
-            <div th:if="${!currentCompetition.isOpen() and !currentApplication.hasBeenSubmitted()}">
+            <div th:if="${!currentCompetition.isOpen() and !currentApplication.isSubmitted()}">
                 <div class="warning-alert">
                     Registration is now closed, you are no longer able to submit your application.
                 </div>

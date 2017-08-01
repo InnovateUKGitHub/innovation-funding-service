@@ -40,15 +40,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class CompetitionManagementApplicationAssessmentProgressControllerTest extends BaseControllerMockMVCTest<CompetitionManagementApplicationAssessmentProgressController> {
+public class CompetitionManagementApplicationAssessmentProgressControllerTest extends BaseControllerMockMVCTest<CompetitionManagementAssessmentsApplicationProgressController> {
 
     @Spy
     @InjectMocks
     private ApplicationAssessmentProgressModelPopulator applicationAssessmentProgressModelPopulator;
 
     @Override
-    protected CompetitionManagementApplicationAssessmentProgressController supplyControllerUnderTest() {
-        return new CompetitionManagementApplicationAssessmentProgressController();
+    protected CompetitionManagementAssessmentsApplicationProgressController supplyControllerUnderTest() {
+        return new CompetitionManagementAssessmentsApplicationProgressController();
     }
 
     @Test
@@ -92,7 +92,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 expectedPaginationModel
         );
 
-        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/assessors?page=0&filterInnovationArea=2", competitionId, applicationId))
+        mockMvc.perform(get("/assessment/competition/{competitionId}/application/{applicationId}/assessors?page=0&filterInnovationArea=2", competitionId, applicationId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("applicationOriginQuery", assessorOrigin))
                 .andExpect(model().attribute("assessorProfileOriginQuery", "?origin=APPLICATION_PROGRESS&page=0&filterInnovationArea=2&applicationId=" + applicationId))
@@ -120,7 +120,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         when(applicationAssessmentSummaryRestService.getAvailableAssessors(applicationId,0,20,null)).thenReturn(restSuccess(pageResource));
         when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(emptyList()));
 
-        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/assessors?param1=abc&param2=def", competitionId, applicationId))
+        mockMvc.perform(get("/assessment/competition/{competitionId}/application/{applicationId}/assessors?param1=abc&param2=def", competitionId, applicationId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("applicationOriginQuery", "?origin=APPLICATION_PROGRESS&param1=abc&param2=def&applicationId=" + applicationId))
                 .andExpect(model().attribute("assessorProfileOriginQuery", "?origin=APPLICATION_PROGRESS&param1=abc&param2=def&applicationId=" + applicationId))
@@ -140,7 +140,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         when(applicationAssessmentSummaryRestService.getAvailableAssessors(applicationId,0,20,null)).thenReturn(restSuccess(pageResource));
         when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(emptyList()));
 
-        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/assessors?param1=abc&origin=ANOTHER_ORIGIN&param2=def", competitionId, applicationId))
+        mockMvc.perform(get("/assessment/competition/{competitionId}/application/{applicationId}/assessors?param1=abc&origin=ANOTHER_ORIGIN&param2=def", competitionId, applicationId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("applicationOriginQuery", "?origin=APPLICATION_PROGRESS&param1=abc&param2=def&applicationId=" + applicationId))
                 .andExpect(model().attribute("assessorProfileOriginQuery", "?origin=APPLICATION_PROGRESS&param1=abc&param2=def&applicationId=" + applicationId))
@@ -162,9 +162,9 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
 
         when(assessmentRestService.createAssessment(expectedAssessmentCreateResource)).thenReturn(restSuccess(expectedAssessmentResource));
 
-        mockMvc.perform(post("/competition/{competitionId}/application/{applicationId}/assessors/assign/{assessorId}", competitionId, applicationId, assessorId))
+        mockMvc.perform(post("/assessment/competition/{competitionId}/application/{applicationId}/assessors/assign/{assessorId}", competitionId, applicationId, assessorId))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TITLE.name())));
+                .andExpect(redirectedUrl(format("/assessment/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TITLE.name())));
 
         verify(assessmentRestService, only()).createAssessment(expectedAssessmentCreateResource);
         verifyNoMoreInteractions(assessmentRestService, applicationAssessmentSummaryRestService);
@@ -185,10 +185,10 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
 
         when(assessmentRestService.createAssessment(expectedAssessmentCreateResource)).thenReturn(restSuccess(expectedAssessmentResource));
 
-        mockMvc.perform(post("/competition/{competitionId}/application/{applicationId}/assessors/assign/{assessorId}", competitionId, applicationId, assessorId)
+        mockMvc.perform(post("/assessment/competition/{competitionId}/application/{applicationId}/assessors/assign/{assessorId}", competitionId, applicationId, assessorId)
                 .param("sortField", TOTAL_APPLICATIONS.name()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TOTAL_APPLICATIONS.name())));
+                .andExpect(redirectedUrl(format("/assessment/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TOTAL_APPLICATIONS.name())));
 
         verify(assessmentRestService, only()).createAssessment(expectedAssessmentCreateResource);
         verifyNoMoreInteractions(assessmentRestService, applicationAssessmentSummaryRestService);
@@ -203,9 +203,9 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         when(assessmentRestService.withdrawAssessment(assessmentId)).thenReturn(restSuccess());
 
         mockMvc.perform(
-                post("/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}", competitionId, applicationId, assessmentId))
+                post("/assessment/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}", competitionId, applicationId, assessmentId))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TITLE.name())));
+                .andExpect(redirectedUrl(format("/assessment/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TITLE.name())));
 
         InOrder inOrder = inOrder(assessmentRestService);
         inOrder.verify(assessmentRestService).withdrawAssessment(assessmentId);
@@ -221,10 +221,10 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         when(assessmentRestService.withdrawAssessment(assessmentId)).thenReturn(restSuccess());
 
         mockMvc.perform(
-                post("/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}", competitionId, applicationId, assessmentId)
+                post("/assessment/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}", competitionId, applicationId, assessmentId)
                         .param("sortField", TOTAL_APPLICATIONS.name()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TOTAL_APPLICATIONS.name())));
+                .andExpect(redirectedUrl(format("/assessment/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TOTAL_APPLICATIONS.name())));
 
         InOrder inOrder = inOrder(assessmentRestService);
         inOrder.verify(assessmentRestService).withdrawAssessment(assessmentId);
@@ -245,7 +245,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         );
 
         mockMvc.perform(
-                get("/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}/confirm", competitionId, applicationId, assessmentId))
+                get("/assessment/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}/confirm", competitionId, applicationId, assessmentId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedModel))
                 .andExpect(model().attributeExists("model"))
@@ -266,7 +266,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         );
 
         mockMvc.perform(
-                get("/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}/confirm", competitionId, applicationId, assessmentId)
+                get("/assessment/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}/confirm", competitionId, applicationId, assessmentId)
                         .param("sortField", TOTAL_APPLICATIONS.name()))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedModel))

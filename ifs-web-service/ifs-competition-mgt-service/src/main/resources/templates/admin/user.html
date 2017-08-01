@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Users'" />
+</head>
+<body class="competition-management">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage users',linkClass='link-back',linkUrl=@{/admin/users/active}"  />
+
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='View internal user\'s details',size='heading-xlarge'" />
+
+    <h2 class="heading-medium">Personal details</h2>
+
+    <dl>
+        <dt>Full name</dt>
+        <dd class="extra-margin-bottom" th:text="${model.user.name}">Mark Smith</dd>
+
+        <dt>Email address</dt>
+        <dd class="extra-margin-bottom" th:text="${model.user.email}">mark.smith@innovate.gov.uk</dd>
+
+        <dt>Job role</dt>
+        <dd class="extra-margin-bottom" th:text="${model.user.getRolesString()}">Super admin</dd>
+    </dl>
+
+    <div class="form-footer">
+        <div class="form-footer__actions">
+            <a th:href="@{|/admin/user/${model.user.id}/edit|}">Edit</a>
+        </div>
+        <div class="form-footer__info" th:text="|Created by ${model.createdByUser} on ${#temporals.format(model.createdOn, 'dd MMMM yyyy')}|">
+            Created by Susan Smith on 23rd March 2017
+        </div>
+    </div>
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+
+</body>
+</html>

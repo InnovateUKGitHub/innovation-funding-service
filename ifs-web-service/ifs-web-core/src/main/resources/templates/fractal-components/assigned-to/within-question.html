@@ -1,0 +1,41 @@
+<h1 class="heading-large">Assign to</h1>
+
+<h2 class="heading-medium">Example 1. As lead</h2>
+
+<div class="assign-container assigned-alert">
+    <span class="action-required">
+        Assigned to you.
+    </span>
+    <div class="assign-button-container">
+        <div class="assign-button">
+            <span class="action-required">
+                Assign this question to someone else
+            </span>
+        </div>
+        {{ render '@assign-list' }}
+    </div>
+  </div>
+
+  <h2 class="heading-medium">Example 2. As lead</h2>
+
+  <div class="assign-container assigned-alert">
+      <span class="action-required">
+          Assigned to Jessica Doe.
+      </span>
+      <div class="assign-button-container">
+          <div class="assign-button">
+              <span class="action-required">
+                  Assign this question to someone else
+              </span>
+          </div>
+          {{ render '@assign-list' }}
+      </div>
+    </div>
+
+    <h2 class="heading-medium">Example 3. As collaborator</h2>
+
+    <div class="assign-container assigned-alert">
+        <span class="assignee">
+            This question is assigned to Steve Smith
+        </span>
+      </div>

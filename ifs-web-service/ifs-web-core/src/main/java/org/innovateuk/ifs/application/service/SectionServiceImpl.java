@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -92,9 +93,8 @@ public class SectionServiceImpl implements SectionService {
         sections = sections.stream()
                 .filter(s -> !childSections.stream()
                         .anyMatch(c -> c.getId().equals(s.getId())))
+                .sorted(Comparator.comparing(SectionResource::getPriority))
                 .collect(toList());
-        sections.stream()
-                .filter(s -> s.getChildSections()!=null);
         return sections;
     }
 

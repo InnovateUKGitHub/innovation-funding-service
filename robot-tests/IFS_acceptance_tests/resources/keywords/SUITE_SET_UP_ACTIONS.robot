@@ -3,23 +3,22 @@ Resource          ../defaultResources.robot
 
 *** Keywords ***
 log in and create new application if there is not one already
-    Given Guest user log-in    &{lead_applicant_credentials}
+    Given the user logs-in in new browser  &{lead_applicant_credentials}
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    Robot test application
     Run Keyword If    '${status}' == 'FAIL'    Create new application with the same user  Robot test application
 
 log in and create new application for collaboration if there is not one already
-    Given Guest user log-in    &{lead_applicant_credentials}
+    Given the user logs-in in new browser  &{lead_applicant_credentials}
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    Invite robot test application
     Run Keyword If    '${status}' == 'FAIL'    Create new application with the same user  Invite robot test application
 
 Login new application invite academic
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     [Tags]    Email
-    Given Guest user log-in    &{lead_applicant_credentials}
+    Given Logging in and Error Checking  &{lead_applicant_credentials}
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    Academic robot test application
     Run Keyword If    '${status}' == 'FAIL'    Run keywords    Create new application with the same user  Academic robot test application
     ...    AND    Invite and accept the invitation    ${recipient}    ${subject}    ${pattern}
-    ...    AND    the user closes the browser
 
 new account complete all but one
     Run keyword if    ${smoke_test}!=1    create new account for submitting
@@ -28,7 +27,7 @@ new account complete all but one
 
 create new account for submitting
     Given the guest user opens the browser
-    the user navigates to the page              ${COMPETITION_OVERVIEW_URL}
+    the user navigates to the page              ${COMPETITION_OVERVIEW_URL}  # This comp forces RTO lead!
     the user clicks the button/link             jQuery=a:contains("Start new application")
     the user clicks the button/link             jQuery=a:contains("Create account")
     And the user enters text to a text field    id=organisationSearchName    Hive IT
@@ -43,53 +42,51 @@ create new account for submitting
     And the user clicks the button/link        jQuery=.button:contains("Sign in")
 
 the user marks every section but one as complete
-    Guest user log-in    ${submit_test_email}    ${correct_password}
     the user navigates to the page    ${server}
     the user clicks the button/link    link=${application_name}
     the user clicks the button/link    link=Project summary
-    the user marks the section as complete    1039
+    the user marks the section as complete
     the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=Public description
-    the user marks the section as complete    1040
+    the user marks the section as complete
     the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=Scope
-    the user marks the section as complete    1041
+    the user marks the section as complete
     the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=1. Business opportunity
-    the user marks the section as complete    1045
+    the user marks the section as complete
     the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=2. Potential market
-    the user marks the section as complete    1049
+    the user marks the section as complete
     the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=3. Project exploitation
-    the user marks the section as complete    1053
+    the user marks the section as complete
     the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=4. Economic benefit
-    the user marks the section as complete    1057
+    the user marks the section as complete
     the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=5. Technical approach
-    the user marks the section as complete    1061
+    the user marks the section as complete
     the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=6. Innovation
-    the user marks the section as complete    1065
+    the user marks the section as complete
     the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=7. Risks
-    the user marks the section as complete    1069
+    the user marks the section as complete
     the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=8. Project team
-    the user marks the section as complete    1073
+    the user marks the section as complete
     the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=9. Funding
-    the user marks the section as complete    1077
+    the user marks the section as complete
     the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=10. Adding value
-    the user marks the section as complete    1081
+    the user marks the section as complete
 
 the user marks the section as complete
-    [Arguments]    ${form-id}
-    Wait Until Element Is Visible Without Screenshots    css=#form-input-${form-id} .editor
-    Input Text    css=#form-input-${form-id} .editor    Entering text to allow valid mark as complete
-    Mouse Out    css=#form-input-${form-id} .editor
+    Wait Until Element Is Visible Without Screenshots    css=.textarea-wrapped .editor
+    Input Text    css=.textarea-wrapped .editor    Entering text to allow valid mark as complete
+    Mouse Out    css=.textarea-wrapped .editor
     wait for autosave
     the user clicks the button/link    name=mark_as_complete
     #the user clicks the button/link    css=.next
@@ -109,7 +106,7 @@ create new submit application
     When the user navigates to the page                 ${COMPETITION_OVERVIEW_URL}
     the user clicks the button/link                     jQuery=a:contains("Start new application")
     And the user clicks the button/link                 jQuery=p ~ a:contains("Sign in")
-    And the guest user inserts user email & password    ${test_mailbox_one}+submittest@gmail.com    Passw0rd123
+    And The guest user inserts user email and password  ${test_mailbox_one}+submittest@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
     And the user clicks the button/link                 jQuery=Label:contains("Yes, I want to create a new application.")
     And the user clicks the button/link                 jQuery=.button:contains("Continue")
@@ -129,8 +126,7 @@ Invite and accept the invitation
     And the user enters text to a text field    name=applicants[0].name    Arsene Wenger
     And the user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+academictest@gmail.com
     And the user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
-    And the user closes the browser
-    And the guest user opens the browser
+    And logout as user
     When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}    3
     And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
     When the user selects the radio button    organisationType    2
@@ -150,18 +146,7 @@ Invite and accept the invitation
     And the user fills the create account form    Arsene    Wenger
     And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    We now need you to verify your email address
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And guest user log-in    ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
-
-The user redirects to the page
-    [Arguments]    ${TEXT1}    ${TEXT2}
-    Wait Until Keyword Succeeds Without Screenshots    10    500ms    Page Should Contain    ${TEXT1}
-    Page Should Contain    ${TEXT2}
-    Page Should Not Contain    error
-    Page Should Not Contain    ${404_error_message}
-    Page Should Not Contain    ${403_error_message}
-    # Header checking (INFUND-1892)
-    Wait Until Element Is Visible Without Screenshots    id=global-header
-    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
+    And Logging in and Error Checking      ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
 
 The user navigates to the summary page of the Robot test application
     Given the user navigates to the page    ${DASHBOARD_URL}
@@ -191,7 +176,6 @@ The user marks the academic application finances as incomplete
 
 invite a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
-    the guest user opens the browser
     the user navigates to the page                           ${COMPETITION_OVERVIEW_URL}
     the user follows the flow to register their organisation
     the user verifies email                                    Stuart   Anderson    ${EMAIL_LEAD}
@@ -219,7 +203,7 @@ the user verifies email
     the user reads his email and clicks the link               ${EMAIL_INVITED}  Please verify your email address  Once verified you can sign into your account
     The user should be redirected to the correct page          ${REGISTRATION_VERIFIED}
     The user clicks the button/link                            jQuery=.button:contains("Sign in")
-    The guest user inserts user email & password               ${EMAIL_INVITED}  ${correct_password}
+    The guest user inserts user email and password             ${EMAIL_INVITED}  ${correct_password}
     The guest user clicks the log-in button
 
 the user follows the flow to register their organisation
@@ -231,7 +215,10 @@ the user follows the flow to register their organisation
     the user selects the checkbox               address-same
     the user should not see the element         jQuery=h3:contains("Organisation type")
     the user clicks the button/link             jQuery=.button:contains("Continue")
+#    This is added as the flow differs if comp is setup to have either Business or RTO as lead org type but not both
+    run keyword and ignore error  the user selects the radio button    organisationTypeId   radio-1
     the user clicks the button/link             jQuery=.button:contains("Save and continue")
+    run keyword and ignore error  the user clicks the button/link             jQuery=.button:contains("Save and continue")
 
 the user enters the details and clicks the create account
     [Arguments]   ${first_name}  ${last_name}  ${REG_EMAIL}

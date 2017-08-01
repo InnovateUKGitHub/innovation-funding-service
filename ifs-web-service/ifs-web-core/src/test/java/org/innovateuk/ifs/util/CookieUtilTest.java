@@ -18,6 +18,8 @@ import java.util.Optional;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
+import static org.innovateuk.ifs.util.CompressionUtil.getCompressedString;
+import static org.innovateuk.ifs.util.CompressionUtil.getDecompressedString;
 import static org.junit.Assert.*;
 
 public class CookieUtilTest {
@@ -61,6 +63,20 @@ public class CookieUtilTest {
         assertEquals(value, encryptor.decrypt(cookie.getValue()));
         assertTrue(0 < cookie.getMaxAge());
         assertTrue(cookie.getSecure());
+    }
+
+    @Test
+    public void saveToCompressedCookie() throws Exception {
+        String fieldName =  "cookie_fieldname";
+        String value =  "cookieValue";
+
+        cookieUtil.saveToCompressedCookie(response, fieldName, value);
+
+        assertEquals(1, ((MockHttpServletResponse) response).getCookies().length);
+        Cookie cookie = ((MockHttpServletResponse) response).getCookie(fieldName);
+        assertNotEquals(null, cookie);
+        assertTrue(0 < cookie.getMaxAge());
+        assertEquals(value, getDecompressedString(cookie.getValue()));
     }
 
     @Test
@@ -109,6 +125,18 @@ public class CookieUtilTest {
         ((MockHttpServletRequest) request).setCookies(new Cookie(fieldName, encryptor.encrypt(value)));
 
         String cookieValue = cookieUtil.getCookieValue(request, fieldName);
+
+        assertEquals(value, cookieValue);
+    }
+
+    @Test
+    public void getCompressedCookieValue() throws Exception {
+        String fieldName = "cookie_fieldname";
+        String value =  "cookieValue";
+
+        String content = getCompressedString(value);
+        ((MockHttpServletRequest) request).setCookies(new Cookie(fieldName, content));
+        String cookieValue = cookieUtil.getCompressedCookieValue(request, fieldName);
 
         assertEquals(value, cookieValue);
     }

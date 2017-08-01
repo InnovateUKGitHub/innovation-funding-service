@@ -2,7 +2,7 @@
 Documentation     INFUND-7363 Inflight competitions dashboards: In assessment dashboard
 ...
 ...               INFUND-7560 Inflight competition dashboards- Viewing key statistics for 'Ready to Open', 'Open', 'Closed' and 'In assessment' competition states
-Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
+Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
 Resource          ../../resources/defaultResources.robot
@@ -11,7 +11,7 @@ Resource          ../../resources/defaultResources.robot
 In Assessment dashboard page
     [Documentation]    INFUND-7363
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    Then The user should see the text in the page    4: Sustainable living models for the future
+    Then The user should see the text in the page   Sustainable living models for the future
     And The user should see the text in the page    In assessment
     And The user should see the text in the page    Programme
     And The user should see the text in the page    Materials and manufacturing

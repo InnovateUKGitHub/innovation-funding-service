@@ -51,7 +51,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public void markAsInComplete(Long questionId, Long applicationId, Long markedAsInCompleteById) {
+    public void markAsIncomplete(Long questionId, Long applicationId, Long markedAsInCompleteById) {
         LOG.debug(String.format("mark section as incomplete %s / %s /%s ", questionId, applicationId, markedAsInCompleteById));
         questionRestService.markAsInComplete(questionId, applicationId, markedAsInCompleteById);
     }

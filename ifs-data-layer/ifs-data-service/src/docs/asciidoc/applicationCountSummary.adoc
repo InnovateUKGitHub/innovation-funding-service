@@ -1,0 +1,24 @@
+=== Find by competition id
+==== Request
+include::{snippets}/applicationCountSummary/get-application-count-summaries-by-competition-id/http-request.adoc[]
+include::{snippets}/applicationCountSummary/get-application-count-summaries-by-competition-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/applicationCountSummary/get-application-count-summaries-by-competition-id/http-response.adoc[]
+include::{snippets}/applicationCountSummary/get-application-count-summaries-by-competition-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/applicationCountSummary/get-application-count-summaries-by-competition-id/curl-request.adoc[]
+
+=== Find by competition id and innovation area
+==== Request
+include::{snippets}/applicationCountSummary/get-application-count-summaries-by-competition-id-and-innovation-area/http-request.adoc[]
+include::{snippets}/applicationCountSummary/get-application-count-summaries-by-competition-id-and-innovation-area/path-parameters.adoc[]
+include::{snippets}/applicationCountSummary/get-application-count-summaries-by-competition-id-and-innovation-area/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/applicationCountSummary/get-application-count-summaries-by-competition-id-and-innovation-area/http-response.adoc[]
+include::{snippets}/applicationCountSummary/get-application-count-summaries-by-competition-id-and-innovation-area/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/applicationCountSummary/get-application-count-summaries-by-competition-id-and-innovation-area/curl-request.adoc[]

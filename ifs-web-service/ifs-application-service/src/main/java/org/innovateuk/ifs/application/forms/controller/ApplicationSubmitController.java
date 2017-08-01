@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.ASSIGN_QUESTION_PARAM;
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MARK_AS_COMPLETE;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.collectValidationMessages;
 
@@ -39,10 +41,7 @@ import static org.innovateuk.ifs.commons.rest.ValidationMessages.collectValidati
 
 @Controller
 @RequestMapping("/application")
-@PreAuthorize("hasAuthority('applicant')")
 public class ApplicationSubmitController {
-    public static final String ASSIGN_QUESTION_PARAM = "assign_question";
-    public static final String MARK_AS_COMPLETE = "mark_as_complete";
 
     @Autowired
     private QuestionService questionService;
@@ -90,6 +89,7 @@ public class ApplicationSubmitController {
         return applicationModelPopulator.userIsLeadApplicant(application, user.getId()) && application.isSubmittable();
     }
 
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead')")
     @GetMapping("/{applicationId}/summary")
     public String applicationSummary(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                      UserResource user) {
@@ -121,6 +121,7 @@ public class ApplicationSubmitController {
         }
     }
 
+    @PreAuthorize("hasAuthority('applicant')")
     @PostMapping("/{applicationId}/summary")
     public String applicationSummarySubmit(@PathVariable("applicationId") long applicationId,
                                            UserResource user,
@@ -138,7 +139,7 @@ public class ApplicationSubmitController {
                 List<ValidationMessages> markAsCompleteErrors = questionService.markAsComplete(markQuestionCompleteId, applicationId, processRole.getId());
 
                 if (collectValidationMessages(markAsCompleteErrors).hasErrors()) {
-                    questionService.markAsInComplete(markQuestionCompleteId, applicationId, processRole.getId());
+                    questionService.markAsIncomplete(markQuestionCompleteId, applicationId, processRole.getId());
                 }
             }
         }
@@ -146,6 +147,7 @@ public class ApplicationSubmitController {
         return "redirect:/application/" + applicationId + "/summary";
     }
 
+    @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/{applicationId}/confirm-submit")
     public String applicationConfirmSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                            UserResource user) {
@@ -156,6 +158,7 @@ public class ApplicationSubmitController {
         return "application-confirm-submit";
     }
 
+    @PreAuthorize("hasAuthority('applicant')")
     @PostMapping("/{applicationId}/submit")
     public String applicationSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                     UserResource user,
@@ -175,6 +178,7 @@ public class ApplicationSubmitController {
         return "application-submitted";
     }
 
+    @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/{applicationId}/track")
     public String applicationTrack(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                    UserResource user) {

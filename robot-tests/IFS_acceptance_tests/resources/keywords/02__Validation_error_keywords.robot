@@ -24,6 +24,8 @@ browser validations have been disabled
 
 the user cannot see a validation error in the page
     Element Should Not Be Visible    css=.error
+    element should not be visible    css=.error-message
+    element should not be visible    css=.error-summary
 
 The user should see a summary error
     [Arguments]    ${ERROR_TEXT}
@@ -39,3 +41,9 @@ the user should not see an error in the page
     Page Should Not Contain    ${500_error_message}
     Page Should Not Contain    ${404_error_message}
     Page Should Not Contain    ${403_error_message}
+
+The user navigates to the page and gets a custom error message
+    [Arguments]    ${TARGET_URL}    ${CUSTOM_ERROR_MESSAGE}
+    Wait for autosave
+    Go To    ${TARGET_URL}
+    Page Should Contain    ${CUSTOM_ERROR_MESSAGE}

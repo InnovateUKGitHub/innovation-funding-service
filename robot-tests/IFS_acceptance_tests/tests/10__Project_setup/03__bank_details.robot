@@ -31,6 +31,9 @@ Resource          PS_Common.robot
 # is tested in the File 01__project_details.robot
 
 *** Variables ***
+&{lead_applicant_credentials_bd}  email=${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  password=${short_password}
+&{collaborator1_credentials_bd}   email=${PS_BD_APPLICATION_PARTNER_EMAIL}  password=${short_password}
+&{collaborator2_credentials_bd}   email=${PS_BD_APPLICATION_ACADEMIC_EMAIL}  password=${short_password}
 
 *** Test Cases ***
 Links to other sections in Project setup dependent on project details for partners
@@ -273,9 +276,10 @@ Project Finance can see the progress of partners bank details
     And the user should see the text in the page    ${PS_BD_APPLICATION_ACADEMIC_EMAIL}
 
 
-Project Finance can see Bank Details
-    [Documentation]    INFUND-4903, INFUND-4903
+IFS Admin can see Bank Details
+    [Documentation]    INFUND-4903, INFUND-4903, IFS-603
     [Tags]  HappyPath
+    [Setup]  log in as a different user            &{ifs_admin_user_credentials}
     Given the user navigates to the page          ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link           link=${PS_BD_Competition_Name}
     Then the user should see the element          jQuery=h2:contains("Projects in setup")
@@ -313,28 +317,16 @@ the user moves focus away from the element
 
 the user submits the bank account details
     [Arguments]    ${account_number}    ${sort_code}
-    the user enters text to a text field    name=accountNumber    ${account_number}
-    the user enters text to a text field    name=sortCode    ${sort_code}
-    the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
-    the user clicks the button/link    jQuery=.button:contains("Submit")
+    the user enters text to a text field  name=accountNumber  ${account_number}
+    the user enters text to a text field  name=sortCode  ${sort_code}
+    the user clicks the button/link       jQuery=.button:contains("Submit bank account details")
+    the user clicks the button/link       jQuery=.button:contains("Submit")
 
 finance contacts are submitted by all users
-    the guest user opens the browser
-    the user navigates to the page    ${server}
-    user submits his finance contacts  ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${Armstrong_Butler_Id}
-    logout as user
-    user submits his finance contacts  ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${A_B_Cad_Services_Id}
-    logout as user
-    user submits his finance contacts  ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${Vitruvius_Id}
-
-user submits his finance contacts
-    [Arguments]  ${user}  ${id}
-    the guest user inserts user email & password    ${user}    ${short_password}
-    the guest user clicks the log-in button
-    the user navigates to the page     ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/details/finance-contact?organisation=${id}
-    the user selects the radio button  financeContact  financeContact1
-    the user clicks the button/link    jQuery=.button:contains("Save")
-
+    the user logs-in in new browser            &{lead_applicant_credentials_bd}
+    the partner submits their finance contact  ${Vitruvius_Id}  ${PS_BD_APPLICATION_PROJECT}  &{lead_applicant_credentials_bd}
+    the partner submits their finance contact  ${A_B_Cad_Services_Id}  ${PS_BD_APPLICATION_PROJECT}  &{collaborator1_credentials_bd}
+    the partner submits their finance contact  ${Armstrong_Butler_Id}  ${PS_BD_APPLICATION_PROJECT}  &{collaborator2_credentials_bd}
 
 the project finance user downloads the bank details
     the user downloads the file  ${internal_finance_credentials["email"]}  ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status/bank-details/export  ${DOWNLOAD_FOLDER}/bank_details.csv

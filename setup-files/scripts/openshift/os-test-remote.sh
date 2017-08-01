@@ -31,7 +31,7 @@ function cleanUp() {
 
 function buildAndPushTestImages() {
     docker build -t ${REGISTRY}/${PROJECT}/robot-framework:1.0-SNAPSHOT robot-tests-tmp/
-    docker login -p $(oc whoami -t) -e unused -u unused ${REGISTRY}
+    docker login -p $(oc whoami -t) -u unused ${REGISTRY}
     docker push ${REGISTRY}/${PROJECT}/robot-framework:1.0-SNAPSHOT
 }
 
@@ -48,7 +48,7 @@ function fileFixtures() {
 }
 
 function copyNecessaryFiles() {
-    cp -r ifs-data-service/docker-build.gradle robot-tests-tmp/docker-build.gradle
+    cp -r ifs-data-layer/ifs-data-service/docker-build.gradle robot-tests-tmp/docker-build.gradle
 }
 
 function navigateToRoot(){

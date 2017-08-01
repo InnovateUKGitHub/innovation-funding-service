@@ -6,7 +6,7 @@ Documentation     INFUND-7358 Inflight competition dashboards: Ready to open das
 ...               INFUND-7561 Inflight competition dashboards- View milestones
 ...
 ...               INFUND-7560 Inflight competition dashboards- Viewing key statistics for 'Ready to Open', 'Open', 'Closed' and 'In assessment' competition states
-Suite Setup       Log in as user    &{Comp_admin1_credentials}
+Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
@@ -17,7 +17,7 @@ Competition dashboard Open competition
     [Documentation]    INFUND-7562
     [Tags]
     When The user clicks the button/link    link=${OPEN_COMPETITION_NAME}
-    Then the user should see the element    jQuery=span:contains("15: Predicting market trends programme")
+    Then the user should see the element    jQuery=span:contains("16: Predicting market trends programme")
     And the user should see the element    jQuery=h1:contains("Open")
     And the user should see the element    jQuery=dt:contains("Competition type") ~ dd:contains("Programme")
     And the user should see the element    jQuery=dt:contains("Innovation sector") ~ dd:contains("Materials and manufacturing")
@@ -27,7 +27,7 @@ Competition dashboard Open competition
     And the user should see the element    jQuery=a:contains("Applications: All, submitted, ineligible")
     #The following checks test if the correct buttons are disabled
     And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("Input and review funding decision")
-    And the user should see the element    jQuery=a:contains("Assessor management: Assignments")[aria-disabled="true"]
+    And the user should see the element    jQuery=a:contains("Manage assessments")[aria-disabled="true"]
 
 Milestones for the Open Competitions
     [Documentation]    INFUND-7561
@@ -44,7 +44,7 @@ Competition dashboard ready to Open competition
     [Tags]
     Given the user navigates to the page    ${CA_UpcomingComp}
     When The user clicks the button/link    link=${READY_TO_OPEN_COMPETITION_NAME}
-    Then the user should see the element    jQuery=span:contains("6: Photonics for health")
+    Then the user should see the element    jQuery=span:contains("7: Photonics for health")
     And the user should see the element    jQuery=h1:contains("Ready to open")
     And the user should see the element    jQuery=h1:contains("Ready to open")
     And the user should see the element    jQuery=dt:contains("Competition type") ~ dd:contains("Programme")
@@ -54,7 +54,7 @@ Competition dashboard ready to Open competition
     And the user should see the element    jQuery=a:contains("Invite assessors to assess the competition")
     #The following checks test if the correct buttons are disabled
     And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("Input and review funding decision")
-    And the user should see the element    jQuery=a:contains("Assessor management: Assignments")[aria-disabled="true"]
+    And the user should see the element    jQuery=a:contains("Manage assessments")[aria-disabled="true"]
     And the user should see the element    jQuery=a:contains("Applications: All, submitted, ineligible")[aria-disabled="true"]
 
 Milestones for the ready to Open Competitions

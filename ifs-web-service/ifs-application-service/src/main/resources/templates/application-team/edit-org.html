@@ -31,9 +31,9 @@
 
             <form th:action="${actionUrl}"
                   th:object="${form}" method="POST" class="contributorsForm" th:with="
-                  actionUrl=${model.inviteOrganisationId} ?
-                  @{/application/{applicationId}/team/update(applicationId=${model.applicationId},inviteOrganisation=${model.inviteOrganisationId})} :
-                  @{/application/{applicationId}/team/update(applicationId=${model.applicationId},organisation=${model.organisationId})}">
+                  actionUrl=${model.organisationExists} ?
+                  @{/application/{applicationId}/team/update/existing/{organisationId}(applicationId=${model.applicationId},organisationId=${model.organisationId})} :
+                    @{/application/{applicationId}/team/update/invited/{organisationId}(applicationId=${model.applicationId},organisationId=${model.inviteOrganisationId})}">
 
                 <table id="applicant-table" class="table-overflow">
                     <thead>
@@ -45,51 +45,53 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="applicant, applicantStat : ${model.applicants}" th:unless="${#sets.contains(form.markedForRemoval, applicant.applicationInviteId)}">
+                        <tr th:each="applicant, applicantStat : ${model.applicants}">
                             <td th:text="${applicant.name}">Steve Smith</td>
                             <td th:text="${applicant.email}">steve.smith@empire.com</td>
-                            <td th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Invite pending' : '')">Lead</td>
+                            <td th:if="${applicant.lead}">Lead</td>
+                            <td th:unless="${applicant.lead}" th:text="${applicant.pending} ? |Invite pending for ${applicant.daysPending} days| : ''">
+                            </td>
                             <td class="alignright">
                                 <button th:if="${applicant.removable and applicantStat.size > 1}"
                                         th:value="${applicant.applicationInviteId}"
                                         class="buttonlink"
-                                        name="markForRemoval"
+                                        name="removeInvite"
                                         type="submit">
                                     Remove
                                 </button>
                             </td>
                         </tr>
 
-                        <tr th:each="applicant, applicantStat: *{applicants}" class="repeatable-row">
-                            <td class="form-group" th:classappend="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')} ? 'form-group-error'">
-                                <label th:for="'applicants'+${applicantStat.index}+'.name'">
+                        <tr th:if="*{stagedInvite}" class="repeatable-row">
+                            <td class="form-group" th:classappend="${#fields.hasErrors('stagedInvite.name')} ? 'form-group-error'">
+                                <label th:for="'stagedInvite.name'">
                                     <span class="visually-hidden">Applicant name</span>
-                                    <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}">
-                                        <span th:each="err : ${#fields.errors('applicants[__${applicantStat.index}__].name')}"
+                                    <th:block th:if="${#fields.hasErrors('stagedInvite.name')}">
+                                        <span th:each="err : ${#fields.errors('stagedInvite.name')}"
                                               th:text="${err}"
                                               class="error-message"
-                                              th:data-errorfield="'applicants['+${applicantStat.index}+'].name'">Please enter a name</span>
+                                              th:data-errorfield="'stagedInvite.name'">Please enter a name</span>
                                     </th:block>
                                 </label>
                                 <input type="text"
-                                       th:field="*{applicants[__${applicantStat.index}__].name}"
+                                       th:field="*{stagedInvite.name}"
                                        class="form-control width-full"
                                        th:errorclass="form-control-error"
                                        required="required"
                                        th:attr="data-required-errormessage=#{validation.standard.name.required}" />
                             </td>
-                            <td class="form-group" th:classappend="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')} ? 'form-group-error'">
-                                <label th:for="'applicants'+${applicantStat.index}+'.email'">
+                            <td class="form-group" th:classappend="${#fields.hasErrors('stagedInvite.email')} ? 'form-group-error'">
+                                <label th:for="'stagedInvite.email'">
                                     <span class="visually-hidden">Applicant email</span>
-                                    <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}">
-                                        <span th:each="err : ${#fields.errors('applicants[__${applicantStat.index}__].email')}"
+                                    <th:block th:if="${#fields.hasErrors('stagedInvite.email')}">
+                                        <span th:each="err : ${#fields.errors('stagedInvite.email')}"
                                               th:text="${err}"
                                               class="error-message"
-                                              th:data-errorfield="'applicants['+${applicantStat.index}+'].email'">Please enter an email</span>
+                                              th:data-errorfield="'stagedInvite.email'">Please enter an email</span>
                                     </th:block>
                                 </label>
                                 <input type="email"
-                                       th:field="*{applicants[__${applicantStat.index}__].email}"
+                                       th:field="*{stagedInvite.email}"
                                        class="form-control width-full"
                                        th:errorclass="form-control-error"
                                        required="required"
@@ -97,11 +99,13 @@
                                                 data-email-errormessage=#{validation.standard.email.format},
                                                 data-email-duplication-errormessage=#{email.already.in.invite}" />
                             </td>
-                            <td></td>
+                            <td>
+                               <button class="button" name="executeStagedInvite" value="true" type="submit">Invite</button>
+                            </td>
                             <td class="alignright">
                                 <button class="remove-another-row buttonlink"
-                                        th:value="${applicantStat.index}"
-                                        name="removeApplicant"
+                                        name="removeStagedInvite"
+                                        value="true"
                                         type="submit">
                                     Remove
                                 </button>
@@ -110,21 +114,22 @@
                     </tbody>
                 </table>
 
-                <p>
+                <p th:unless="*{stagedInvite}">
                     <button class="buttonlink"
                            data-repeatable-rowcontainer="#applicant-table tbody"
                            data-applicant-table="update-org"
                            type="submit"
-                           name="addApplicant">
-                        Add new applicant
+                            value="true"
+                           name="addStagedInvite">
+                        Add another contributor
                     </button>
                 </p>
 
                 <div th:if="${model.userLeadApplicant and !model.leadOrganisation}">
                     <div class="alignright">
-                        <a th:href="${model.inviteOrganisationId} ?
-                        @{/application/{applicationId}/team/update(applicationId=${model.applicationId}, inviteOrganisation=${model.inviteOrganisationId}, deleteOrganisation='')} :
-                        @{/application/{applicationId}/team/update(applicationId=${model.applicationId}, organisation=${model.organisationId}, deleteOrganisation='')}"
+                        <a th:href="${model.organisationExists} ?
+                        @{/application/{applicationId}/team/update/existing/{organisationId}(applicationId=${model.applicationId}, organisationId=${model.organisationId}, deleteOrganisation='')} :
+                        @{/application/{applicationId}/team/update/invited/{organisationId}(applicationId=${model.applicationId}, organisationId=${model.inviteOrganisationId}, deleteOrganisation='')} "
                            class="button-secondary"
                            data-js-modal="modal-delete-organisation">
                             Delete organisation
@@ -138,12 +143,8 @@
                 <p th:if="${model.userLeadApplicant}">You should not remove members of your team without discussing this action with them first. Members who are removed may not receive a notification from Innovate UK.</p>
 
                 <p class="extra-margin">
-                    <button class="button" name="updateOrganisation" type="submit">Update organisation</button>
-                    <a th:href="@{/application/{applicationId}/team(applicationId=${model.applicationId})}" class="button button-clear">Cancel</a>
+                    <a th:href="@{/application/{applicationId}/team(applicationId=${model.applicationId})}" class="button-secondary">Return to application</a>
                 </p>
-
-                <input type="hidden" th:field="*{markedForRemoval}" />
-                <input type="hidden" th:field="*{existingApplicants}" />
             </form>
 
             <th:block th:insert="fragments/layout :: main-content-end" />

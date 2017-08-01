@@ -4,16 +4,10 @@ Documentation     INFUND-5182 As an assessor creating an account I need to suppl
 ...               INFUND-5432 As an assessor I want to receive an alert to complete my profile when I log into my dashboard so that I can ensure that it is complete.
 ...
 ...               INFUND-7059 As an assessor I can view my skills page so I can decide if my skills need updating
-Suite Setup       guest user log-in    &{existing_assessor1_credentials}
-Suite Teardown    TestTeardown User closes the browser
+Suite Setup       The user logs-in in new browser  &{existing_assessor1_credentials}
+Suite Teardown    The user closes the browser
 Force Tags        Assessor
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
-Resource          ../../../resources/variables/PASSWORD_VARIABLES.robot
+Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Client-side validations
@@ -33,7 +27,7 @@ Client-side validations
 Cancel button redirects to the read-only view without changes
     [Documentation]    INFUND-8009
     [Tags]
-    Given the user clicks the button/link    jQuery=a:contains(Cancel)
+    Given the user clicks the button/link    jQuery=a:contains("Cancel")
     Then the user should be redirected to the correct page    ${assessment_skills_url}
     [Teardown]    the user clicks the button/link    jQuery=a:contains("Edit")
 
@@ -81,7 +75,7 @@ Your skills does not appear in dashboard alert
 Return to assessor dashboard from skills page
     [Documentation]    INFUND-8009
     [Tags]
-    When the user clicks the button/link    jQuery=a:contains(Return to assessor dashboard)
+    When the user clicks the button/link    jQuery=a:contains("Return to assessor dashboard")
     Then the user should be redirected to the correct page     ${assessor_dashboard_url}
 
 *** Keywords ***

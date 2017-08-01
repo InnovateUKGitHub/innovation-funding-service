@@ -1,4 +1,4 @@
-<EntitiesDescriptor Name="g2g3dev"
+<EntitiesDescriptor Name="innovateuk"
     xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
     xmlns:mdalg="urn:oasis:names:tc:SAML:metadata:algsupport" xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui"
     xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -127,7 +127,7 @@
         <ds:KeyName>ifs.local-dev</ds:KeyName>
         <ds:X509Data>
           <ds:X509SubjectName>CN=ifs.local-dev,O=Innovate UK,L=Swindon,ST=Wiltshire,C=GB</ds:X509SubjectName>
-          <ds:X509Certificate>${PROXY_CERTIFICATE}</ds:X509Certificate>
+          <ds:X509Certificate>${SP_PROXY_CERTIFICATE}</ds:X509Certificate>
         </ds:X509Data>
       </ds:KeyInfo>
       <EncryptionMethod Algorithm="http://www.w3.org/2009/xmlenc11#aes128-gcm"/>

@@ -39,7 +39,7 @@ the user fills in the CS Initial details
     the user enters text to a text field                 css=#openingDateDay  1
     the user enters text to a text field                 css=#openingDateMonth  ${month}
     the user enters text to a text field                 css=#openingDateYear  ${nextyear}
-    the user selects the option from the drop-down menu  Ian Cooper  id=leadTechnologistUserId
+    the user selects the option from the drop-down menu  Ian Cooper  id=innovationLeadUserId
     the user selects the option from the drop-down menu  Robert Johnson  id=executiveUserId
     the user clicks the button/link                      jQuery=button:contains("Done")
     the user clicks the button/link                      link=Competition setup
@@ -186,7 +186,7 @@ the user fills in the Public content and publishes
     the user clicks the button/link         jQuery=.button:contains("Return to public content")
     the user should see the element         jQuery=div:contains("Supporting information") ~ .task-status-complete
     # Publish and return
-    the user clicks the button/link         jQuery=button:contains("Publish public content")
+    the user clicks the button/link         jQuery=button:contains("Publish content")
 
 Change the open date of the Competition in the database to one day before
     [Arguments]  ${competition}
@@ -198,11 +198,50 @@ Change the close date of the Competition in the database to tomorrow
     ${tomorrow} =  get tomorrow
     execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${tomorrow}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'SUBMISSION_DATE';
 
+Change the close date of the Competition in the database to a fortnight
+    [Arguments]  ${competition}
+    ${fortnight} =  get fortnight
+    execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${fortnight}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'SUBMISSION_DATE';
+
+Change the close date of the Competition in the database to thirteen days
+    [Arguments]  ${competition}
+    ${thirteen} =  get thirteen days
+    execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${thirteen}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'SUBMISSION_DATE';
+
+Change the open date of the Competition in the database to tomorrow
+    [Arguments]  ${competition}
+    ${tomorrow} =  get tomorrow
+    execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${tomorrow}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'OPEN_DATE';
+
+Reset the open and close date of the Competition in the database
+    [Arguments]  ${competition}
+    execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='2018-02-24 11:00:00' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'OPEN_DATE';
+    execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='2018-03-16 11:00:00' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'SUBMISSION_DATE';
+
 the internal user navigates to public content
     [Arguments]  ${comp}
     the user navigates to the page     ${CA_UpcomingComp}
     the user clicks the button/link    link=${comp}
     the user clicks the button/link    link=Public content
 
-the compadmin logs in
-    Guest user log-in    &{Comp_admin1_credentials}
+The application list is sorted by
+    [Arguments]    ${sorting_factor}
+    Select From List    name=sort    ${sorting_factor}
+
+The applications should be sorted by column
+    [Arguments]    ${column_number}
+    ${row_count}=    get matching xpath count    //*[td]
+    @{sorted_column_contents}=    Create List
+    : FOR    ${row}    IN RANGE    2    ${row_count}
+    \    ${cell_contents}=    get table cell    css=table    ${row}    ${column_number}
+    \    append to list    ${sorted_column_contents}    ${cell_contents}
+    ${test_sorting_list}=    Copy List    ${sorted_column_contents}
+    Sort List    ${test_sorting_list}
+    Lists Should Be Equal    ${sorted_column_contents}    ${test_sorting_list}
+
+the user should see all live competitions
+    the user should see the element  jQuery=h2:contains("Open")
+    the user should see the element  jQuery=h2:contains("Closed")
+    the user should see the element  jQuery=h2:contains("In assessment")
+    the user should see the element  jQuery=h2:contains("Panel")
+    the user should see the element  jQuery=h2:contains("Inform")

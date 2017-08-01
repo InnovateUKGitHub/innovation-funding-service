@@ -148,8 +148,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         AssessorCompetitionDashboardViewModel model = (AssessorCompetitionDashboardViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(competition.getName(), model.getCompetitionTitle());
-        assertEquals("Juggling Craziness (CRD3359)", model.getCompetition());
-        assertEquals("Competition Technologist", model.getLeadTechnologist());
+        assertEquals("Innovation Lead", model.getLeadTechnologist());
         assertEquals(competition.getAssessorAcceptsDate(), model.getAcceptDeadline());
         assertEquals(competition.getAssessorDeadlineDate(), model.getSubmitDeadline());
         assertEquals(expectedSubmitted, model.getSubmitted());
@@ -236,8 +235,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         AssessorCompetitionDashboardViewModel model = (AssessorCompetitionDashboardViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(competition.getName(), model.getCompetitionTitle());
-        assertEquals("Juggling Craziness (CRD3359)", model.getCompetition());
-        assertEquals("Competition Technologist", model.getLeadTechnologist());
+        assertEquals("Innovation Lead", model.getLeadTechnologist());
         assertEquals(competition.getAssessorAcceptsDate(), model.getAcceptDeadline());
         assertEquals(competition.getAssessorDeadlineDate(), model.getSubmitDeadline());
         assertEquals(expectedSubmitted, model.getSubmitted());
@@ -272,8 +270,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         AssessorCompetitionDashboardViewModel model = (AssessorCompetitionDashboardViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(competition.getName(), model.getCompetitionTitle());
-        assertEquals("Juggling Craziness (CRD3359)", model.getCompetition());
-        assertEquals("Competition Technologist", model.getLeadTechnologist());
+        assertEquals("Innovation Lead", model.getLeadTechnologist());
         assertEquals(competition.getAssessorAcceptsDate(), model.getAcceptDeadline());
         assertEquals(competition.getAssessorDeadlineDate(), model.getSubmitDeadline());
         assertTrue(model.getSubmitted().isEmpty());
@@ -368,9 +365,8 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
 
         return newCompetitionResource()
                 .withName("Juggling Craziness")
-                .withDescription("Juggling Craziness (CRD3359)")
                 .withLeadTechnologist(2L)
-                .withLeadTechnologistName("Competition Technologist")
+                .withLeadTechnologistName("Innovation Lead")
                 .withAssessorAcceptsDate(assessorAcceptsDate)
                 .withAssessorDeadlineDate(assessorDeadlineDate)
                 .build();

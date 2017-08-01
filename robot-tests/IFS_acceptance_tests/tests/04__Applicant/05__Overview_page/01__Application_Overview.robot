@@ -11,7 +11,7 @@ Documentation     -INFUND-408: As an applicant, and I am on the application over
 ...
 ...               -INFUND-1162: As an applicant I want the ability to have a printable version of my application for review, so I can print and download it for offline use.
 Suite Setup       log in and create new application if there is not one already
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Default Tags
 Resource          ../../../resources/defaultResources.robot
@@ -66,9 +66,9 @@ User can print the application
 
 *** Keywords ***
 the applicant can see the overview page divided in three sections
-    the user should see the element  jQuery=#section-184 h2:contains("Project details")
-    the user should see the element  jQuery=#section-185 h2:contains("Application questions")
-    the user should see the element  jQuery=#section-186 h2:contains("Finances")
+    the user should see the element  jQuery=section h2:contains("Project details")
+    the user should see the element  jQuery=section h2:contains("Application questions")
+    the user should see the element  jQuery=section h2:contains("Finances")
 
 the user should get a new print window
     Select Window    Title=Print Application - Innovation Funding Service

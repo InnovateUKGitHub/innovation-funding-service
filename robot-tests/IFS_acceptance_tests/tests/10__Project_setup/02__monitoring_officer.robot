@@ -37,7 +37,7 @@ Status updates correctly for internal user's table
     [Documentation]    INFUND-4049, INFUND-5507,INFUND-5543
     [Tags]      HappyPath
     [Setup]    log in as a different user   &{Comp_admin1_credentials}
-    When the user navigates to the page    ${internal_project_summary}
+    When the user navigates to the page    ${internal_competition_status}
     Then the user should see the element   jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(1).status.ok       # Project details
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(2).status.action   # MO
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(3).status          # Bank details are not yet provided by any partner yet
@@ -247,11 +247,11 @@ Custom suite setup
 
 
 the lead partner fills in project details if they are not already filled in
-    log in as user    &{lead_applicant_credentials}
+    The user logs-in in new browser   &{lead_applicant_credentials}
     the user navigates to the page    ${project_in_setup_page}
-    the user clicks the button/link    link=Project details
-    ${project_details_not_completed}    ${value}=    run keyword and ignore error without screenshots    the user should not see the element    css=#project-address-status.yes
-    run keyword if    '${project_details_not_completed}' == 'PASS'    the users fill in project details
+    the user clicks the button/link   link=Project details
+    ${project_details_not_completed}  ${value} =  run keyword and ignore error without screenshots  the user should not see the element  css=#project-address-status.yes
+    run keyword if  '${project_details_not_completed}' == 'PASS'  the users fill in project details
 
 
 the users fill in project details

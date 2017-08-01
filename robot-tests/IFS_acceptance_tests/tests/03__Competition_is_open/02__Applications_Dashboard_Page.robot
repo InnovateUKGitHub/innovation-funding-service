@@ -10,11 +10,12 @@ Documentation     INFUND-2135 As a Competition Administrator I want to be able t
 ...               INFUND-7369 Competition management: View list of all applications
 ...
 ...               INFUND-8010 Filter, sorting and pagination on 'All applications' dashboard
-Suite Setup       Log in as user    &{Comp_admin1_credentials}
+Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          ../10__Project_setup/PS_Common.robot
+Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Variables ***
 ${valid_pdf}      testing.pdf
@@ -83,25 +84,25 @@ Application has team link and team details
     And the user should see the text in the page  ${OPEN_COMPETITION_APPLICATION_NAME}
     When the user clicks the button/link  link=view application team details
     Then the user should see the text in the page  Application team
-    And the user should see the text in the page  View application participants for both the lead and collaborating organisations.
-    And the user should see the element    jQuery=h2:nth-of-type(1):contains("${EMPIRE_LTD_NAME} (Lead)")
+    And the user should see the text in the page  View team members for both the lead and collaborating organisations.
+    And the user should see the element    jQuery=h2:nth-of-type(1):contains("${EMPIRE_LTD_NAME} (Lead)")+h3:contains("Organisation type")+p:contains("Business")
     And the user should see the element    jQuery=div#applicationTeamOrganisationRegisteredAddress0 span:nth-of-type(1):contains("1")
     And the user should see the element    jQuery=div#applicationTeamOrganisationRegisteredAddress0 span:nth-of-type(2):contains("Empire Road")
     And the user should see the element    jQuery=table#applicationTeamOrganisationUser0 tbody tr:nth-of-type(1) td:contains("Steve Smith (Lead)")
     And the user should see the element    jQuery=table#applicationTeamOrganisationUser0 tbody tr:nth-of-type(1) td:contains("${lead_applicant}")
     And the user should see the element    jQuery=table#applicationTeamOrganisationUser0 tbody tr:nth-of-type(1) td:contains("46439359578")
-    And the user should see the element    jQuery=h2:nth-of-type(2):contains("${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}")
+    And the user should see the element    jQuery=h2:nth-of-type(2):contains("${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}")+h3:contains("Organisation type")+p:contains("Research")
     And the user should see the element    jQuery=div#applicationTeamOrganisationRegisteredAddress1 span:nth-of-type(1):contains("43")
     And the user should see the element    jQuery=div#applicationTeamOrganisationRegisteredAddress1 span:nth-of-type(2):contains("Deer Rise")
     And the user should see the element    jQuery=table#applicationTeamOrganisationUser1 tbody tr:nth-of-type(1) td:contains("Pete Tom")
     And the user should see the element    jQuery=table#applicationTeamOrganisationUser1 tbody tr:nth-of-type(1) td:contains("${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}")
     And the user should see the element    jQuery=table#applicationTeamOrganisationUser1 tbody tr:nth-of-type(1) td:contains("81877706440")
-    And the user should see the element    jQuery=h2:nth-of-type(3):contains("${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}")
+    And the user should see the element    jQuery=h2:nth-of-type(3):contains("${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}")+h3:contains("Organisation type")+p:contains("Business")
     And the user should see the element    jQuery=div#applicationTeamOrganisationRegisteredAddress2 span:nth-of-type(1):contains("Electric Works, Sheffield Digital Campus")
     And the user should see the element    jQuery=table#applicationTeamOrganisationUser2 tbody tr:nth-of-type(1) td:contains("Ewan Cormack")
     And the user should see the element    jQuery=table#applicationTeamOrganisationUser2 tbody tr:nth-of-type(1) td:contains("${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_EMAIL}")
     And the user should see the element    jQuery=table#applicationTeamOrganisationUser2 tbody tr:nth-of-type(1) td:contains("36267829240")
-    And the user should see the element    jQuery=h2:nth-of-type(4):contains("${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}")
+    And the user should see the element    jQuery=h2:nth-of-type(4):contains("${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}")+h3:contains("Organisation type")+p:contains("Business")
     And the user should see the element    jQuery=div#applicationTeamOrganisationRegisteredAddress3 span:nth-of-type(1):contains("20")
     And the user should see the element    jQuery=div#applicationTeamOrganisationRegisteredAddress3 span:nth-of-type(2):contains("Fallow Lane")
     And the user should see the element    jQuery=table#applicationTeamOrganisationUser3 tbody tr:nth-of-type(1) td:contains("Jessica Doe")
@@ -111,19 +112,19 @@ Application has team link and team details
 Comp admin can open the view mode of the application
     [Documentation]    INFUND-2300,INFUND-2304, INFUND-2435, INFUND-7503
     [Tags]    HappyPath
-    [Setup]    Run keywords    Guest user log-in    &{lead_applicant_credentials}
-    ...    AND    the user can see the option to upload a file on the page    ${technical_approach_url}
-    ...    AND    the user uploads the file to the 'technical approach' question    ${valid_pdf}
-    Given log in as a different user    &{Comp_admin1_credentials}
-    And the user navigates to the page    ${COMP_MANAGEMENT_APPLICATIONS_LIST}
-    #Then the user should see the element    id=sort-by
-    #And the user selects the option from the drop-down menu    id    id=sort-by
-    And the user clicks the button/link    link=All applications
-    When the user clicks the button/link    link=${OPEN_COMPETITION_APPLICATION_1_NUMBER}
-    Then the user should be redirected to the correct page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
-    And the user should see the element    link=Print application
-    And the user should see the text in the page    Climate science the history of Greenland's ice
-    And the user should see the text in the page    ${valid_pdf}
+    [Setup]  The user logs-in in new browser                             &{lead_applicant_credentials}
+    When the user can see the option to upload a file on the page        ${technical_approach_url}
+    Then the user uploads the file to the 'technical approach' question  ${valid_pdf}
+    When log in as a different user                         &{Comp_admin1_credentials}
+    And the user navigates to the page                      ${COMP_MANAGEMENT_APPLICATIONS_LIST}
+    #Then the user should see the element  id=sort-by
+    #And the user selects the option from the drop-down menu  id  id=sort-by
+    And the user clicks the button/link                     link=All applications
+    When the user clicks the button/link                    link=${OPEN_COMPETITION_APPLICATION_1_NUMBER}
+    Then the user should be redirected to the correct page  ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
+    And the user should see the element                     link=Print application
+    And the user should see the text in the page            Climate science the history of Greenland's ice
+    And the user should see the text in the page            ${valid_pdf}
     And the user can view this file without any errors
     #    And the user should see the text in the page    ${quarantine_pdf}
     #    And the user cannot see this file but gets a quarantined message
@@ -150,7 +151,7 @@ Comp admin should be able to view but not edit the finances for every partner
 *** Keywords ***
 the user uploads the file to the 'technical approach' question
     [Arguments]    ${file_name}
-    Choose File    name=formInput[1062]    ${UPLOAD_FOLDER}/${file_name}
+    Choose File    css=input.inputfile   ${UPLOAD_FOLDER}/${file_name}
 
 the user can see the option to upload a file on the page
     [Arguments]    ${url}

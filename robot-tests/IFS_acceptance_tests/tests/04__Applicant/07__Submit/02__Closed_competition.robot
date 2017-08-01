@@ -4,8 +4,8 @@ Documentation     INFUND-2312: Competition status in assessment
 ...               INFUND-3175: Applications in project setup still have a 'Review and submit' button
 ...
 ...               INFUND-3740: Buttons still show as if the application were editable
-Suite Setup       Guest user log-in    &{lead_applicant_credentials}
-Suite Teardown    TestTeardown User closes the browser
+Suite Setup       The user logs-in in new browser  &{lead_applicant_credentials}
+Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 

@@ -10,7 +10,7 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...               INFUND-7561 Inflight competition dashboards- View milestones
 ...
 ...               INFUND-7560 Inflight competition dashboards- Viewing key statistics for 'Ready to Open', 'Open', 'Closed' and 'In assessment' competition states
-Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
+Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
@@ -21,7 +21,7 @@ Competition dashboard
     ...
     ...    INFUND-7362
     When The user clicks the button/link    link=${CLOSED_COMPETITION_NAME}
-    Then The user should see the text in the page    12: Machine learning for transport infrastructure
+    Then The user should see the text in the page    13: Machine learning for transport infrastructure
     And The user should see the text in the page    Closed
     And The user should see the text in the page    Programme
     And The user should see the text in the page    Infrastructure systems
@@ -60,7 +60,7 @@ Notify Assessors
     When The user clicks the button/link    jQuery=.button:contains("Notify assessors")
     Then the user should see the text in the page    In assessment
     [Teardown]    Run Keywords    Connect to Database    @{database}
-    ...    AND    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE type='ASSESSORS_NOTIFIED' AND competition_id=12;
+    ...    AND    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE type='ASSESSORS_NOTIFIED' AND competition_id=${competition_ids['${CLOSED_COMPETITION_NAME}']};
 
 *** Keywords ***
 Get The expected values from the invite page
@@ -70,9 +70,11 @@ Get The expected values from the invite page
     ${Accepted}=    Get text    css=div:nth-child(2) > div > span
     Set Test Variable    ${Accepted}
     The user clicks the button/link    link=Competition
-    The user clicks the button/link    jQuery=a:contains(Assessor management: Assignments)
+    The user clicks the button/link    link=Manage assessments
+    The user clicks the button/link    jQuery=a:contains("Allocate applications")
     ${NUMBER_OF_APPLICATIONS}=    Get matching xpath count    //div[2]/table/tbody/tr
     Set Test Variable    ${NUMBER_OF_APPLICATIONS}
+    The user clicks the button/link    link=Manage assessments
     The user clicks the button/link    link=Competition
 
 the counts of the key statistics of the closed competition should be correct
