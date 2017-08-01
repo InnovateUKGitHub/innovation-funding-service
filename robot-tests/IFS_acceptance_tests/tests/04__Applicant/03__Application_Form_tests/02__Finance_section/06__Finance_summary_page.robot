@@ -50,7 +50,7 @@ Calculations for the first collaborator
 
 Contribution to project and funding sought should not be negative number
     [Documentation]    INFUND-524
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  log in as a different user                       &{lead_applicant_credentials}
     When the user navigates to Your-finances page             ${OPEN_COMPETITION_APPLICATION_2_NAME}
     And the user fills in the project costs                   ${OPEN_COMPETITION_APPLICATION_2_NAME}
