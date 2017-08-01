@@ -78,8 +78,8 @@
             </select>
         </div>
 
-        <th:block th:if="${model.user.status.equals(T(org.innovateuk.ifs.user.resource.UserStatus).ACTIVE)}">
-            <a th:href="@{/user/${model.user.id}/deactivate}" data-js-modal="modal-confirm-deactivate-user">Deactivate user</a>
+        <th:block th:if="${user.status.equals(T(org.innovateuk.ifs.user.resource.UserStatus).ACTIVE)}">
+            <a th:href="@{/admin/user/{id}/deactivate(id=${user.id})}" data-js-modal="modal-confirm-deactivate-user">Deactivate user</a>
         </th:block>
 
         <div class="form-group extra-margin">

@@ -113,6 +113,7 @@ public class UserManagementController {
         form.setRole(UserRoleType.fromDisplayName(userResource.getRolesString()));
         form.setEmailAddress(userResource.getEmail());
         model.addAttribute(FORM_ATTR_NAME, form);
+        model.addAttribute("user", userResource);
 
         return "admin/edit-user";
 
@@ -151,12 +152,12 @@ public class UserManagementController {
     @GetMapping("/user/{userId}/deactivate")
     public String deactivateUser(@PathVariable Long userId) {
         return userRestService.retrieveUserById(userId).andOnSuccess( user ->
-                userRestService.deactivateUser(userId).andOnSuccessReturn(p -> "admin/user")).getSuccessObjectOrThrowException();
+                userRestService.deactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccessObjectOrThrowException();
     }
 
     @GetMapping("/user/{userId}/reactivate")
     public String reactivateUser(@PathVariable Long userId) {
         return userRestService.retrieveUserById(userId).andOnSuccess( user ->
-                userRestService.reactivateUser(userId).andOnSuccessReturn(p -> "admin/user")).getSuccessObjectOrThrowException();
+                userRestService.reactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccessObjectOrThrowException();
     }
 }

@@ -11,10 +11,7 @@ import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.registration.service.InternalUserService;
 import org.innovateuk.ifs.user.builder.RoleResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
-import org.innovateuk.ifs.user.resource.RoleResource;
-import org.innovateuk.ifs.user.resource.UserPageResource;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -141,6 +138,7 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
                 .withLastName("last")
                 .withEmail(email)
                 .withRolesGlobal(Collections.singletonList(role))
+                .withStatus(UserStatus.ACTIVE)
                 .build();
 
         when(userRestServiceMock.retrieveUserById(1L))
@@ -155,7 +153,8 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/user/{userId}/edit", 1L))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/edit-user"))
-                .andExpect(model().attribute("form", expectedForm));
+                .andExpect(model().attribute("form", expectedForm))
+                .andExpect(model().attribute("user", userResource));
     }
 
     @Test
@@ -175,8 +174,8 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
         when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restSuccess(userResource));
         when(userRestServiceMock.deactivateUser(1L)).thenReturn(RestResult.restSuccess());
         mockMvc.perform(get("/admin/user/{userId}/deactivate", 1L))
-                .andExpect(status().isOk())
-                .andExpect(view().name("admin/user"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/user/1"));
 
         verify(userRestServiceMock).deactivateUser(1L);
     }
@@ -227,8 +226,8 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
         when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restSuccess(userResource));
         when(userRestServiceMock.reactivateUser(1L)).thenReturn(RestResult.restSuccess());
         mockMvc.perform(get("/admin/user/{userId}/reactivate", 1L))
-                .andExpect(status().isOk())
-                .andExpect(view().name("admin/user"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/user/1"));
 
         verify(userRestServiceMock).reactivateUser(1L);
     }

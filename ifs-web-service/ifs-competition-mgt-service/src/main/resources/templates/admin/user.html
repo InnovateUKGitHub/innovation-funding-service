@@ -26,11 +26,18 @@
 
         <dt>Job role</dt>
         <dd class="extra-margin-bottom" th:text="${model.user.getRolesString()}">Super admin</dd>
-        <th:block th:if="${model.user.status.equals(T(org.innovateuk.ifs.user.resource.UserStatus).INACTIVE)}">
-            <a th:href="@{/user/${model.user.id}/reactivate}" data-js-modal="modal-confirm-reactivate-user">Reactivate user</a> Deactivated by <th:block th:text="${model.modifiedBy}"></th:block> on <th:block th:text="${#temporals.format(model.modifiedOn, 'dd MMM yyyy')}"></th:block>
-        </th:block>
     </dl>
 
+    <th:block th:if="${model.user.status.equals(T(org.innovateuk.ifs.user.resource.UserStatus).INACTIVE)}">
+        <div class="form-footer">
+            <div class="form-footer__actions">
+                <a th:href="@{/admin/user/{id}/reactivate(id=${model.user.id})}" data-js-modal="modal-confirm-reactivate-user">Reactivate user</a>
+            </div>
+            <div class="form-footer__info" th:text="|Deactivated by ${model.modifiedByUser} on ${#temporals.format(model.modifiedOn, 'dd MMM yyyy')}">
+                Deactivated by Susan Smith on 23rd March 2017
+            </div>
+        </div>
+    </th:block>
     <div class="form-footer">
         <div class="form-footer__actions">
             <a th:href="@{|/admin/user/${model.user.id}/edit|}">Edit</a>
