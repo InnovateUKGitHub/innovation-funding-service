@@ -48,7 +48,7 @@ items:
           - name: JAVA_OPTS
             value: -Xms600m -Xmx600m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
-            value: "ifs-application-service"
+            value: "ifs-project-setup-mgt-service"
           - name: NEW_RELIC_LICENSE_KEY
             value: "<<NEWRELIC-LICENCE-KEY>>"
           - name: NEW_RELIC_LOG
