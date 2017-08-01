@@ -53,7 +53,7 @@ public class InviteUserControllerTest extends BaseControllerMockMVCTest<InviteUs
                 param("emailAddress", "asdf@asdf.com").
                 param("role", "IFS_ADMINISTRATOR"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/admin/users/active"));
+                .andExpect(view().name("redirect:/admin/users/pending"));
     }
 
     @Override
