@@ -6,6 +6,10 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * class for keeping track of the outgoing connections
+ */
+
 @Service
 public class ConnectionCountService {
     private static final Log LOG = LogFactory.getLog(ConnectionCountService.class);
@@ -20,7 +24,7 @@ public class ConnectionCountService {
         int max = connManager.getMaxTotal();
         int connections = connManager.getTotalStats().getLeased();
         boolean healthy = max > connections;
-        LOG.info("outgoing connection used = " + connections + "/" + max + " healthy = "+ healthy);
+        LOG.debug("outgoing connection used = " + connections + "/" + max + " healthy = "+ healthy);
         return healthy;
     }
 

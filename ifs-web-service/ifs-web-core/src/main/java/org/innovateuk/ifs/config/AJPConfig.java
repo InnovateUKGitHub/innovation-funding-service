@@ -7,6 +7,10 @@ import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletCon
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * this class is for configuring the AJP connector on the webservices
+ */
+
 @Configuration
 public class AJPConfig {
     @Value("${tomcat.ajp.port}")

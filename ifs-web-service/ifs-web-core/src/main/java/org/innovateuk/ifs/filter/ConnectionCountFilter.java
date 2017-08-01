@@ -14,6 +14,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.GenericFilterBean;
 
+/**
+ * This class is used for keeping track of the incoming connections.
+ */
+
 @Service
 public class ConnectionCountFilter extends GenericFilterBean {
     private static final Log LOG = LogFactory.getLog(ConnectionCountFilter.class);
