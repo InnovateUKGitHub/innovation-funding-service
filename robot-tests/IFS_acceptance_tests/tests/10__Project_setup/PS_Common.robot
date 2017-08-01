@@ -174,6 +174,15 @@ project finance submits monitoring officer
 
 partner submits his bank details
     [Arguments]  ${email}  ${project}  ${account_number}  ${sort_code}
+    partner fills in his bank details  ${email}  ${project}  ${account_number}  ${sort_code}
+    the user should see the element    jQuery=dt:contains("Account number") + dd:contains("****")
+    # Have splitted this check from the rest of the keyword, which i now name into 'partner fills in his bank details'
+    # Because this little check adds a bit of extra time and validation that the Bank details are submitted.
+    # However, not all test cases submit the Bank details when the button is pressed, as we also check for validation messages
+    # I am using in those test cases the keyword 'partner fills in his bank details' directly
+
+partner fills in his bank details
+    [Arguments]  ${email}  ${project}  ${account_number}  ${sort_code}
     log in as a different user                       ${email}    ${short_password}
     the user navigates to the page                   ${server}/project-setup/project/${project}/bank-details
     the user enters text to a text field             id=bank-acc-number  ${account_number}
@@ -184,7 +193,6 @@ partner submits his bank details
     wait until keyword succeeds without screenshots  30  500ms  the user clicks the button/link  jQuery=.button:contains("Submit bank account details")
     wait until keyword succeeds without screenshots  30  500ms  the user clicks the button/link  jQuery=.button[name="submit-app-details"]
     wait until element is not visible without screenshots  30  500ms  jQuery=.button[name="submit-app-details"]  # Added this wait so to give extra execution time
-    the user should see the element                  jQuery=dt:contains("Account number") + dd:contains("****")
 
 Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
