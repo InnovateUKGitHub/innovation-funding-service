@@ -179,10 +179,12 @@ partner submits his bank details
     the user enters text to a text field             id=bank-acc-number  ${account_number}
     the user enters text to a text field             id=bank-sort-code  ${sort_code}
     the user clicks the button twice                 css=label[for="address-use-org"]
+    the user sees that the radio button is selected  addressType  REGISTERED  # Added this check to give extra execution time
     the user should see the element                  css=#registeredAddress
     wait until keyword succeeds without screenshots  30  500ms  the user clicks the button/link  jQuery=.button:contains("Submit bank account details")
     wait until keyword succeeds without screenshots  30  500ms  the user clicks the button/link  jQuery=.button[name="submit-app-details"]
     wait until element is not visible without screenshots  30  500ms  jQuery=.button[name="submit-app-details"]  # Added this wait so to give extra execution time
+    the user should see the element                  jQuery=dt:contains("Account number") + dd:contains("****")
 
 Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already

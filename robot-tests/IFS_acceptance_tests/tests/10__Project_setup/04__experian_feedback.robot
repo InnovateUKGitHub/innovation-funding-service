@@ -28,14 +28,14 @@ Resource          PS_Common.robot
 Project Finance can see Bank details requiring action
     [Documentation]    INFUND-3763, INFUND-4903
     [Tags]    HappyPath
-    [Setup]  log in as a different user            &{internal_finance_credentials}
+    [Setup]  log in as a different user   &{internal_finance_credentials}
     Given the user navigates to the page  ${server}/management/dashboard/project-setup
     When the user clicks the button/link  link=${PS_EF_Competition_Name}
     Then the user should see the element  jQuery=#table-project-status tr:nth-child(1) td:nth-child(2).status.ok
     And the user should see the element   jQuery=#table-project-status tr:nth-child(1) td:nth-child(3).status.action
     And the user should see the element   jQuery=#table-project-status tr:nth-child(1) td:nth-child(4).status.action
     Then the user clicks the button/link  jQuery=#table-project-status tr:nth-child(1) td:nth-child(4).status.action a
-    And the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details
+    And the user should be redirected to the correct page  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details
 
 Project Finance can see the company name with score
     [Documentation]  INFUND-3763
