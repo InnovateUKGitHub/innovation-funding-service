@@ -172,7 +172,7 @@ Support User can see read only view of collaborator Your project costs for Labou
     When the user clicks the button/link  jQuery=a:contains("Your project costs")
     And the user should see the text in the page  Provide the project costs for 'Ludlow'
     When User verifies labour, overhead costs and materials
-    And User verifies captial usage, subcontracting, travel and other costs
+    Then User verifies captial usage, subcontracting, travel and other costs
 
 Support User can see read only view of Your organisation
     [Documentation]  IFS-401
@@ -232,7 +232,7 @@ Innovation lead can see read only view of collaborator Your project costs for La
     When the user clicks the button/link      jQuery=a:contains("Your project costs")
     And the user should see the text in the page   Provide the project costs for 'Ludlow'
     When User verifies labour, overhead costs and materials
-    And User verifies captial usage, subcontracting, travel and other costs
+    Then User verifies captial usage, subcontracting, travel and other costs
 
 Innovation lead can see read only view of Your organisation
     [Documentation]  IFS-802
@@ -353,28 +353,22 @@ the user collapses the section
     run keyword if  '${status}'=='PASS'  the user clicks the button/link  jQuery=button:contains("${section}")[aria-expanded="true"]
 
 User verifies captial usage, subcontracting, travel and other costs
-    When the user clicks the button/link  jQuery=button:contains("Capital usage")
-    Then the user should see the element  jQuery=#capital-usage-table td:contains("some description") + td:contains("New") + td:contains("10") + td:contains("5000")
-    And the user should see the element   jQuery=#capital-usage-table td:contains("some description") ~ td:contains("25") + td:contains("100") + td:contains("£ 4975")
-    And the user clicks the button/link   jQuery=button:contains("Capital usage")
-    When the user clicks the button/link  jQuery=button:contains("Subcontracting costs")
-    And the user should see the element   jQuery=#subcontracting-table td:contains("SomeName") + td:contains("Netherlands") + td:contains("Quality Assurance") + td:contains("£ 1,000")
-    And the user clicks the button/link   jQuery=button:contains("Subcontracting costs")
-    When the user clicks the button/link  jQuery=button:contains("Travel and subsistence")
-    And the user should see the element   jQuery=#travel-costs-table td:contains("test") + td:contains("10") + td:contains("100") + td:contains("£ 1,000")
-    And the user clicks the button/link   jQuery=button:contains("Travel and subsistence")
-    When the user clicks the button/link  jQuery=button:contains("Other costs")
-    And the user should see the element   jQuery=#other-costs-table td:contains("some other costs") + td:contains("50")
-    And the user clicks the button/link   jQuery=button:contains("Other costs")
+    the user expands the section     Capital usage
+    the user should see the element  jQuery=#capital-usage-table td:contains("some description") + td:contains("New") + td:contains("10") + td:contains("5000")
+    the user should see the element  jQuery=#capital-usage-table td:contains("some description") ~ td:contains("25") + td:contains("100") + td:contains("£ 4975")
+    the user expands the section     Subcontracting costs
+    the user should see the element  jQuery=#subcontracting-table td:contains("SomeName") + td:contains("Netherlands") + td:contains("Quality Assurance") + td:contains("£ 1,000")
+    the user expands the section     Travel and subsistence
+    the user should see the element  jQuery=#travel-costs-table td:contains("test") + td:contains("10") + td:contains("100") + td:contains("£ 1,000")
+    the user expands the section     Other costs
+    the user should see the element  jQuery=#other-costs-table td:contains("some other costs") + td:contains("50")
 
 User verifies labour, overhead costs and materials
-    the user clicks the button/link  jQuery=button:contains("Labour")
+    the user expands the section     Labour
     the user should see the element  jQuery=dt:contains("Working days per year") ~ dd:contains("230")
     the user should see the element  jQuery=.labour-costs-table td:contains("anotherrole") ~ td:contains("120000") ~ td:contains("100")
-    the user clicks the button/link  jQuery=button:contains("Labour")
-    the user clicks the button/link  jQuery=button:contains("Overhead costs")
+    the user expands the section     Overhead costs
     the user should see the element  jQuery=th:contains("20% of labour costs")
     the user clicks the button/link  jQuery=button:contains("Overhead costs")
-    the user clicks the button/link  jQuery=button:contains("Materials")
+    the user expands the section     Materials
     the user should see the element  jQuery=#material-costs-table td:contains("test") + td:contains("10") + td:contains("100") + td:contains("1,000")
-    the user collapses the section   Materials
