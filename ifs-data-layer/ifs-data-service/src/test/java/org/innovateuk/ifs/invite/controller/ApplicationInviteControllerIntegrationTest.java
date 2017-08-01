@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.controller.ApplicationController;
 import org.innovateuk.ifs.application.controller.QuestionController;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
@@ -47,10 +46,10 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
     private UserController userController;
 
     @Autowired
-    ApplicationInviteRepository applicationInviteRepository;
+    private ApplicationInviteRepository applicationInviteRepository;
 
     @Autowired
-    UserMapper userMapper;
+    private UserMapper userMapper;
     private UserResource userResource;
 
     @Autowired
@@ -58,6 +57,7 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
     protected void setControllerUnderTest(ApplicationInviteController controller) {
         this.controller = controller;
     }
+
     @Autowired
     protected void setApplicationController(ApplicationController controller) {
         this.applicationController = controller;
@@ -98,9 +98,6 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
         swapOutForUser(userResource);
 
         assertTrue(applicationController.getApplicationById(APPLICATION_ID).isSuccess());
-        ApplicationResource application = applicationController.getApplicationById(APPLICATION_ID).getSuccessObject();
-        LOG.info(String.format("Existing application id: %s", application.getId()));
-        LOG.info(String.format("Existing application name: %s", application.getName()));
     }
 
     @Test
