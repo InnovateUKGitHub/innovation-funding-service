@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * A controller that can be used for load testing purposes
  */
 @Controller
-@RequestMapping("/benchmark")
+@RequestMapping("/monitoring/benchmark")
 public class BenchmarkController extends BaseRestService {
 
     private static final Log LOG = LogFactory.getLog(BenchmarkController.class);
@@ -50,7 +50,7 @@ public class BenchmarkController extends BaseRestService {
 
         long start = System.currentTimeMillis();
 
-        RestResult<String> dataLayerResponse = getWithRestResultAnonymous("/benchmark/to-database?process_time_millis=" + dataLayerProcessTimeMillis, String.class);
+        RestResult<String> dataLayerResponse = getWithRestResultAnonymous("/monitoring/benchmark/to-database?process_time_millis=" + dataLayerProcessTimeMillis, String.class);
 
         if (dataLayerResponse.isFailure()) {
             return "Error response from data layer whilst processing \"to-database\" benchmarking test - " + dataLayerResponse.getFailure().getErrors();

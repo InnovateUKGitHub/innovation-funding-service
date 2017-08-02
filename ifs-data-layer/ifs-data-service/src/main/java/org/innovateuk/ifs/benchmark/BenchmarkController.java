@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * A controller that can be used for load testing purposes
  */
 @Controller
-@RequestMapping("/benchmark")
+@RequestMapping("/monitoring/benchmark")
 public class BenchmarkController {
 
     private static final Log LOG = LogFactory.getLog(BenchmarkController.class);
