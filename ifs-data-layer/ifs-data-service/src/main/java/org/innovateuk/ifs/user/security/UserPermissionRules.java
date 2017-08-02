@@ -77,7 +77,7 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "READ", description = "Internal users can view everyone")
     public boolean internalUsersCanViewEveryone(UserPageResource userToView, UserResource user) {
-        return isInternal(user);
+        return user.hasRole(UserRoleType.IFS_ADMINISTRATOR);
     }
 
     @PermissionRule(value = "READ", description = "The System Registration user can view everyone")
@@ -184,6 +184,11 @@ public class UserPermissionRules {
     @PermissionRule(value = "CHECK_USER_APPLICATION", description = "The user can check if they have an application for the competition")
     public boolean userCanCheckTheyHaveApplicationForCompetition(UserResource userToCheck, UserResource user) {
         return userToCheck.getId().equals(user.getId());
+    }
+
+    @PermissionRule(value = "EDIT_INTERNAL_USER", description = "Only an IFS Administrator can edit an internal user")
+    public boolean ifsAdminCanEditInternalUser(final UserResource userToEdit, UserResource user) {
+        return user.hasRole(UserRoleType.IFS_ADMINISTRATOR);
     }
 
     private List<Application> getApplicationsRelatedToUserByProcessRoles(UserResource user, Predicate<ProcessRole> processRoleFilter) {

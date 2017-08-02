@@ -1,29 +1,22 @@
 
-set terminal jpeg
+set terminal png
 
-set output "graphs/NAME.jpg"
+set output "graphs/NAME.png"
 
-set title "Benchmark testing - URL"
+set title "Benchmark testing - NAME"
 
-set key left top
-
-# nicer aspect ratio for image size
 set size 1,0.7
 
 # y-axis grid
 set grid y
 
 # x-axis label
-set xlabel "request"
+set xlabel "percentile"
 
 # y-axis label
 set ylabel "response time (ms)"
 
-set datafile separator '\t'
-set style fill solid border
-set boxwidth 8 absolute
-set yrange [0:*]
-bin(x) = 10*floor(x/10.0)
+set datafile separator ","
 
-plot "data/NAME.tsv" using (bin($5)):(1) every ::1 smooth frequency with boxes title 'ttime'
+plot "data/NAME.csv" with lines title "server"
 exit

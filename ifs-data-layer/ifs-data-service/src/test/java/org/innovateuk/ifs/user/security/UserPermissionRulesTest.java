@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
@@ -66,6 +67,20 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
                     assertFalse(rules.internalUsersCanViewEveryone(otherUser, user));
                 }
             });
+        });
+    }
+
+    @Test
+    public void internalUsersCanViewEveryoneUserPageResource() {
+
+        UserPageResource userPageResource = new UserPageResource();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(ifsAdminUser())) {
+                assertTrue(rules.internalUsersCanViewEveryone(userPageResource, user));
+            } else {
+                assertFalse(rules.internalUsersCanViewEveryone(userPageResource, user));
+            }
         });
     }
 
@@ -601,6 +616,20 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
                 assertTrue(rules.ifsAdminCanViewAnyUsersProfile(newUserProfileResource().build(), user));
             } else {
                 assertFalse(rules.ifsAdminCanViewAnyUsersProfile(newUserProfileResource().build(), user));
+            }
+        });
+    }
+
+    @Test
+    public void testIfsAdminCanEditInternalUser(){
+
+        UserResource userToEdit = UserResourceBuilder.newUserResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(ifsAdminUser())) {
+                assertTrue(rules.ifsAdminCanEditInternalUser(userToEdit, user));
+            } else {
+                assertFalse(rules.ifsAdminCanEditInternalUser(userToEdit, user));
             }
         });
     }

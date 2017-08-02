@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assessor progress'" />
+</head>
+<body th:with="context='comp-management'" class="competition-management">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Allocate assessors',
+                linkClass='link-back',
+                linkUrl=@{/assessment/competition/{competitionId}/assessors(competitionId=${model.competitionId})}" />
+    <th:block th:insert="fragments/layout :: page-title"
+              th:with="pageTitle='Assessor progress',
+                subTitle=|${model.competitionId} : ${model.competitionName}|,
+                size='heading-xlarge'" />
+
+    <h2 class="heading-large no-margin" th:text="${model.assessorName}"></h2>
+
+    <h3 class="heading-medium no-margin">Innovation area and skills</h3>
+
+    <div class="grid-row">
+        <div class="column-half">
+            <h4 class="heading-small">Innovation area</h4>
+            <ul>
+                <li th:each="area : ${model.innovationAreas}" th:text="${area}" />
+            </ul>
+        </div>
+        <div class="column-half">
+            <h4 class="heading-small">Type</h4>
+            <p th:text="${#strings.isEmpty(model.businessType)} ? 'Unknown' : ${model.businessType}" />
+        </div>
+    </div>
+
+    <h2 class="heading-medium" th:text="| Assigned (${#lists.size(model.assigned)}) |"/>
+
+    <div class="table-overflow" th:if="${!#lists.isEmpty(model.assigned)}">
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col" class="width-small">Application number</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Lead organisation</th>
+                    <th scope="col" class="width-small numeric">Assigned</th>
+                    <th scope="col"
+                        class="width-small aligncentre"
+                        th:if="${model.competitionInAssessment}">
+                        Notified
+                    </th>
+                    <th scope="col"
+                        class="width-small aligncentre"
+                        th:if="${model.competitionInAssessment}">
+                        Accepted
+                    </th>
+                    <th scope="col"
+                        class="width-small aligncentre"
+                        th:if="${model.competitionInAssessment}">
+                        Started
+                    </th>
+                    <th scope="col"
+                        class="width-small aligncentre"
+                        th:if="${model.competitionInAssessment}">
+                        Submitted
+                    </th>
+
+                    <!--/*
+                    <th scope="col"
+                        class="width-small-medium aligncentre">
+                        Remove
+                    </th>
+                    */-->
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="app : ${model.assigned}">
+                    <td>
+                        <a href="#"
+                           th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.applicationId})} + ${originQuery}"
+                           th:text="${app.applicationId}">
+                        1
+                        </a>
+                    </td>
+                    <td th:text="${app.applicationName}">Application name</td>
+                    <td th:text="${app.leadOrganisation}">Lead organisation</td>
+                    <td th:text="${app.totalAssessors}" class="numeric">3</td>
+                    <td class="aligncentre"
+                        th:if="${model.competitionInAssessment}"
+                        th:text="${app.notified} ? 'Yes' : '-'">
+                        Yes
+                    </td>
+                    <td class="aligncentre"
+                        th:if="${model.competitionInAssessment}"
+                        th:text="${app.accepted} ? 'Yes' : '-'">
+                        Yes
+                    </td>
+                    <td class="aligncentre"
+                        th:if="${model.competitionInAssessment}"
+                        th:text="${app.started} ? 'Yes' : '-'">
+                        Yes
+                    </td>
+                    <td class="aligncentre"
+                        th:if="${model.competitionInAssessment}"
+                        th:text="${app.submitted} ? 'Yes' : '-'">
+                        Yes
+                    </td>
+                    <!--/*
+                    <td class="aligncentre"><button class="button button-secondary no-margin">Remove</button></td>
+                    */-->
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p th:if="${#lists.isEmpty(model.assigned)}">No applications have been assigned to this assessor.</p>
+
+    <h2 class="heading-medium">Applications</h2>
+
+    <p>These are rest of the applications for this competition. You can assign more to this assessor.</p>
+
+    <form method="GET">
+        <div class="grid-row sorting">
+            <div class="column-half">
+                <div class="data">
+                    <span class="bold-xlarge" th:text="${model.applicationsView.totalApplications}">2</span>
+                    <span class="bold-small">Applications</span>
+                </div>
+            </div>
+            <!--/*
+                <div class="column-half alignright">
+                <div class="form-group">
+                    <label for="sort-by">Sort by</label>
+                    <select id="sort-by" name="sortField" class="js-auto-submit form-control">
+                        <option value="id" th:selected="${(model.applicationsView.sortField == 'id')}">Application no.</option>
+                        <option value="appTitle" th:selected="${(model.applicationsView.sortField == 'appTitle')}">Title</option>
+                        <option value="leadOrg" th:selected="${(model.applicationsView.sortField == 'leadOrg')}">Lead organisation</option>
+                        <option value="assignedApps" th:selected="${(model.applicationsView.sortField == 'assignedApps')}">Assigned applications</option>
+                        <option th:if="${model.applicationsView.inAssessment}" value="completedApps" th:selected="${(model.applicationsView.sortField == 'completedApps')}">Completed applications</option>
+                    </select>
+                </div>
+                <button type="submit" class="button button-secondary no-margin js-hidden">Sort</button>
+                 </div>
+            */-->
+        </div>
+    </form>
+
+    <div class="table-overflow">
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">Application number</th>
+                <th scope="col">Title</th>
+                <th scope="col">Lead organisation</th>
+                <th class="aligncentre" scope="col" th:text="${model.applicationsView.inAssessment ? 'Assessors' : 'Assigned'}">Assessors</th>
+                <th class="aligncentre" scope="col" th:if="${model.applicationsView.inAssessment}">Accepted</th>
+                <th class="aligncentre" scope="col" th:if="${model.applicationsView.inAssessment}">Submitted</th>
+                <th scope="col"><span class="visuallyhidden">Action</span></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="app : ${model.applicationsView.applications}">
+                <td><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}" th:text="${app.id}"/></td>
+                <td th:text="${app.title}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
+                <td th:text="${app.leadOrganisation}">Wessex University</td>
+                <td class="numeric" th:text="${app.assessors}">4</td>
+                <td class="numeric" th:text="${app.accepted}" th:if="${model.applicationsView.inAssessment}">2</td>
+                <td class="numeric" th:text="${app.submitted}" th:if="${model.applicationsView.inAssessment}">1</td>
+                <!--/*
+                    <td class="alignright">
+                    <a class="button-secondary no-margin"
+                       th:href="@{/assessment/competition/{competitionId}/application/{applicationId}/assessors(competitionId=${model.competitionId},applicationId=${app.id})}"
+                        >Assign</a>
+                    </td>
+               */-->
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.applicationsView.pagination})" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>

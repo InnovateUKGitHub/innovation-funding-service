@@ -27,6 +27,8 @@ public interface OrganisationFinanceHandler {
     FinanceRowItem costToCostItem(ProjectFinanceRow cost);
     FinanceRowHandler getCostHandler(FinanceRowType costType);
     List<FinanceRowItem> costToCostItem(List<ApplicationFinanceRow> costs);
+    ApplicationFinanceRow updateCost(ApplicationFinanceRow financeRow);
+    ApplicationFinanceRow addCost(Long applicationFinanceId, Long questionId, ApplicationFinanceRow financeRow);
 
     List<ApplicationFinanceRow> costItemsToCost(List<FinanceRowItem> costItems);
 

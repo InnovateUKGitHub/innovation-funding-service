@@ -6,10 +6,11 @@ import org.innovateuk.ifs.management.viewmodel.ApplicationTeamViewModel;
 import org.springframework.stereotype.Component;
 
 /**
- * Populator for {@Link ApplicationTeamViewModel}
+ * Populator for {@link ApplicationTeamViewModel}
  */
 @Component
 public class ApplicationTeamModelPopulator {
+
     public ApplicationTeamViewModel populateModel(ApplicationResource application, ApplicationTeamResource team, String params) {
         ApplicationTeamViewModel applicationTeam = new ApplicationTeamViewModel();
         applicationTeam.setApplicationName(application.getName());

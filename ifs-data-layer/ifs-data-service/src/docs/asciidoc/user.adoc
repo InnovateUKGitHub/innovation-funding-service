@@ -92,3 +92,28 @@ include::{snippets}/user/test-find-inactive-internal-users/response-fields.adoc[
 
 ==== Curl Example
 include::{snippets}/user/test-find-inactive-internal-users/curl-request.adoc[]
+
+== Create internal user
+=== Success case
+=== Request
+include::{snippets}/user/create-internal-user/http-request.adoc[]
+include::{snippets}/user/create-internal-user/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/user/create-internal-user/http-response.adoc[]
+include::{snippets}/user/create-internal-user/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/user/create-internal-user/curl-request.adoc[]
+
+== Edit Internal User
+=== Success
+=== Request
+include::{snippets}/user/internal/edit/edit-internal-user/http-request.adoc[]
+include::{snippets}/user/internal/edit/edit-internal-user/request-fields.adoc[]
+
+==== Response
+include::{snippets}/user/internal/edit/edit-internal-user/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/user/internal/edit/edit-internal-user/curl-request.adoc[]

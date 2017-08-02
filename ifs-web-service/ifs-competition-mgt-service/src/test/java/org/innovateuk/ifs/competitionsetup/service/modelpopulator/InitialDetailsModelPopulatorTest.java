@@ -70,7 +70,7 @@ public class InitialDetailsModelPopulatorTest {
 		List<CompetitionTypeResource> competitionTypes = new ArrayList<>();
 		when(competitionService.getAllCompetitionTypes()).thenReturn(competitionTypes);
 		List<UserResource> leadTechs = new ArrayList<>();
-		when(userService.findUserByType(UserRoleType.COMP_TECHNOLOGIST)).thenReturn(leadTechs);
+		when(userService.findUserByType(UserRoleType.INNOVATION_LEAD)).thenReturn(leadTechs);
 		
 		populator.populateModel(model, competition);
 		
@@ -80,6 +80,6 @@ public class InitialDetailsModelPopulatorTest {
         List<InnovationAreaResource> resultAreas = (List<InnovationAreaResource>) model.asMap().get("innovationAreas");
 		assertTrue(resultAreas.containsAll(innovationAreas));
 		assertEquals(competitionTypes, model.asMap().get("competitionTypes"));
-		assertEquals(leadTechs, model.asMap().get("competitionLeadTechUsers"));
+		assertEquals(leadTechs, model.asMap().get("innovationLeadTechUsers"));
 	}
 }

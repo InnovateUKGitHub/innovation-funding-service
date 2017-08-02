@@ -70,6 +70,9 @@ Resource          PS_Common.robot
 ${project_overview}    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
 ${external_spendprofile_summary}    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile
 ${project_duration}    36
+&{lead_applicant_credentials_sp}  email=${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}  password=${short_password}
+&{collaborator1_credentials_sp}   email=${PS_SP_APPLICATION_PARTNER_EMAIL}  password=${short_password}
+&{collaborator2_credentials_sp}   email=${PS_SP_APPLICATION_ACADEMIC_EMAIL}  password=${short_password}
 
 *** Test Cases ***
 Project Finance user generates the Spend Profile
@@ -151,11 +154,11 @@ Lead Partner can see Spend profile summary
     Given the user navigates to the page            ${external_spendprofile_summary}/review
     And the user should see the text in the page    Project costs for financial year
     And the user moves focus to the element         jQuery=.grid-container table
-    Then the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 83,761
+    Then the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 84,841
 
 Lead partner can edit his spend profile with invalid values
     [Documentation]    INFUND-3765, INFUND-6907, INFUND-6801, INFUND-7409, INFUND-6148
-    [Tags]  Failing  IFS-941
+    [Tags]
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
     Then the user should not see the text in the element  css=#content > form   -
     And the text box should be editable               css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input  # Labour-June17
@@ -191,10 +194,9 @@ Lead partner can edit his spend profile with invalid values
     And the user should not see the element            jQuery=.form-group-row:nth-child(1) .cell-error input[id^='row-total-']
     Then the user clicks the button/link               jQuery=.button:contains("Save and return to spend profile overview")
 
-
 Lead partner can submit empty cells and this is handled gracefully
     [Documentation]    INFUND-6146
-    [Tags]  Failing  IFS-941
+    [Tags]
     When the user enters text to a text field    css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input    ${empty}
     And the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should not see an error in the page
@@ -205,7 +207,7 @@ Lead partner can edit his spend profile with valid values
     [Tags]    HappyPath
     Given the user navigates to the page                ${external_spendprofile_summary}/review
     When the user clicks the button/link                jQuery=.button:contains("Edit spend profile")
-    And the user should not see the element             css=table a[type="number"]    # checking here that the table is not read-only
+    And the user should see the element                 css=table [type="number"]    # checking here that the table is not read-only
     Then the text box should be editable                css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input  # Labour
     When the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input    140
     And the user moves focus to the element             css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(2) input
@@ -223,7 +225,7 @@ Lead Partners Spend profile summary gets updated when edited
     [Tags]    HappyPath
     Given the user navigates to the page           ${external_spendprofile_summary}/review
     Then the user should see the text in the page  Project costs for financial year
-    And the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 80,009
+    And the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 81,089
 
 Project Manager can see Spend Profile in Progress
     [Documentation]    done during refactoring, no ticket attached
@@ -260,7 +262,6 @@ Links to other sections in Project setup dependent on project details (applicabl
     And the user should see the element         link = Finance checks
     And the user should see the element             link= Spend profile
     And the user should not see the element         link = Grant offer letter
-
 
 Non-lead partner can view spend profile page
     [Documentation]    INFUND-3970, INFUND-6138, INFUND-5899
@@ -382,8 +383,6 @@ Academic partner edits spend profile and this updates on the table
     [Documentation]    INFUND-5846
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
-    ${save_clicked}  ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=.button:contains("Save and return to spend profile overview")
-    Run keyword if  '${save_clicked}' == 'PASS'  the user clicks the button/link  jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should see the element    jQuery=.button:contains("Edit spend profile")
     And element should contain    css=.spend-profile-table tbody tr:nth-of-type(1) td:nth-of-type(1)    3
     And element should contain    css=.spend-profile-table tbody tr:nth-of-type(2) td:nth-of-type(3)    1
@@ -789,31 +788,23 @@ the field has value
     should be equal as strings    ${var}    ${value}
 
 the user should see all spend profiles as complete
-    the user should see the element    jQuery=.task-list li:nth-child(1):contains("Complete")
-    the user should see the element    jQuery=.task-list li:nth-child(2):contains("Complete")
-    the user should see the element    jQuery=.task-list li:nth-child(3):contains("Complete")
+    the user should see the element  jQuery=.task-list li:contains(${Katz_Name}) span:contains("Complete")
+    the user should see the element  jQuery=.task-list li:contains(${Meembee_Name}) span:contains("Complete")
+    the user should see the element  jQuery=.task-list li:contains(${Zooveo_name}) span:contains("Complete")
 
 all previous sections of the project are completed
-    partners submit their finance contacts
+    the user logs-in in new browser           &{lead_applicant_credentials}
+    project partners submit finance contacts
     partners submit bank details
     project finance approves bank details
-    project manager submits other documents
-    project finance approves other documents
+    project manager submits other documents   ${PS_SP_APPLICATION_PM_EMAIL}  ${short_password}  ${PS_SP_APPLICATION_PROJECT}
+    project finance approves other documents  ${PS_SP_APPLICATION_PROJECT}
     project finance reviews Finance checks
 
-partners submit their finance contacts
-    The user logs-in in new browser    ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
-    the user navigates to the page     ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/details/finance-contact?organisation=${Katz_Id}
-    the user selects the radio button  financeContact    financeContact1
-    the user clicks the button/link    jQuery=.button:contains("Save")
-    log in as a different user         ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
-    the user navigates to the page     ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/details/finance-contact?organisation=${Meembee_Id}
-    the user selects the radio button  financeContact    financeContact1
-    the user clicks the button/link    jQuery=.button:contains("Save")
-    log in as a different user         ${PS_SP_APPLICATION_ACADEMIC_EMAIL}    ${short_password}
-    the user navigates to the page     ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/details/finance-contact?organisation=${Zooveo_Id}
-    the user selects the radio button  financeContact    financeContact1
-    the user clicks the button/link    jQuery=.button:contains("Save")
+project partners submit finance contacts
+    the partner submits their finance contact  ${Katz_Id}  ${PS_SP_APPLICATION_PROJECT}  &{lead_applicant_credentials_sp}
+    the partner submits their finance contact  ${Meembee_Id}  ${PS_SP_APPLICATION_PROJECT}  &{collaborator1_credentials_sp}
+    the partner submits their finance contact  ${Zooveo_Id}  ${PS_SP_APPLICATION_PROJECT}  &{collaborator2_credentials_sp}
 
 partners submit bank details
     partner submits his bank details  ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}  ${PS_SP_APPLICATION_PROJECT}  ${account_one}  ${sortCode_one}
@@ -821,66 +812,20 @@ partners submit bank details
     partner submits his bank details  ${PS_SP_APPLICATION_ACADEMIC_EMAIL}  ${PS_SP_APPLICATION_PROJECT}  ${account_one}  ${sortCode_one}
 
 project finance approves bank details
-    log in as a different user                   &{internal_finance_credentials}
-    proj finance approves partners bank details  ${Katz_Id}
-    proj finance approves partners bank details  ${Meembee_Id}
-    proj finance approves partners bank details  ${Zooveo_Id}
-
-proj finance approves partners bank details
-    [Arguments]  ${id}
-    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/organisation/${id}/review-bank-details
-    the user clicks the button/link    jQuery=.button:contains("Approve bank account details")
-    the user clicks the button/link    jQuery=.button:contains("Approve account")
-
-project manager submits other documents
-    log in as a different user        ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
-    the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner/documents
-    choose file                       name=collaborationAgreement    ${upload_folder}/testing.pdf
-    choose file                       name=exploitationPlan    ${upload_folder}/testing.pdf
-    the user reloads the page
-    the user clicks the button/link    jQuery=.button:contains("Submit documents")
-    the user clicks the button/link    jQuery=.button:contains("Submit")
-
-project finance approves other documents
-    log in as a different user         &{internal_finance_credentials}
-    the user navigates to the page     ${SERVER}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/partner/documents
-    the user clicks the button/link    jQuery=.button:contains("Accept documents")
-    the user clicks the button/link    jQuery=.modal-accept-docs .button:contains("Accept Documents")
+    log in as a different user                          &{internal_finance_credentials}
+    the project finance user approves bank details for  ${Katz_Name}  ${PS_SP_APPLICATION_PROJECT}
+    the project finance user approves bank details for  ${Meembee_Name}  ${PS_SP_APPLICATION_PROJECT}
+    the project finance user approves bank details for  ${Zooveo_Name}  ${PS_SP_APPLICATION_PROJECT}
 
 project finance reviews Finance checks
-    log in as a different user         &{internal_finance_credentials}
-    project finance approves Viability for  ${Katz_Id}
-    project finance approves Viability for  ${Meembee_Id}
-    project finance approves Eligibility
-
-project finance approves Viability for
-    [Arguments]  ${partner}
-    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${partner}/viability
-    the user selects the checkbox      costs-reviewed
-    the user selects the checkbox      project-viable
-    the user moves focus to the element  link=Contact us
-    the user selects the option from the drop-down menu  Green  id=rag-rating
-    the user clicks the button/link    css=#confirm-button
-    the user clicks the button/link    jQuery=.modal-confirm-viability .button:contains("Confirm viability")
-
-project finance approves Eligibility
-    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Katz_Id}/eligibility
-    the user approves project costs
-    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Meembee_Id}/eligibility
-    the user approves project costs
-    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Zooveo_Id}/eligibility
-    the user approves project costs
-
-the user approves project costs
-    the user selects the checkbox    project-eligible
-    the user selects the option from the drop-down menu    Green    id=rag-rating
-    the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
-    the user clicks the button/link    name=confirm-eligibility
-
+    log in as a different user              &{internal_finance_credentials}
+    project finance approves Viability for  ${Katz_Id}  ${PS_SP_APPLICATION_PROJECT}
+    project finance approves Viability for  ${Meembee_Id}  ${PS_SP_APPLICATION_PROJECT}
+    project finance approves Eligibility    ${Katz_Id}  ${Meembee_Id}  ${Zooveo_Id}  ${PS_SP_APPLICATION_PROJECT}
 
 the user returns edit rights for the organisation
     [Arguments]    ${org_name}
-    the user clicks the button/link    link=${org_name}
-    the user clicks the button/link    jQuery=.button:contains("Allow edits")
-    the user clicks the button/link    jQuery=.button:contains("Allow partner to edit")
+    the user clicks the button/link  link=${org_name}
+    the user clicks the button/link  jQuery=.button:contains("Allow edits")
+    the user clicks the button/link  jQuery=.button:contains("Allow partner to edit")
     the user should see the text in the page    In progress

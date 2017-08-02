@@ -134,6 +134,19 @@ task dbResetDocker(type: Docker, dependsOn: build) {
 }
 
 
+task dbAnonymisedDumpDocker(type: Docker, dependsOn: build) {
+    push = false
+    applicationName = 'db-anonymised-data'
+    dockerfile = file('src/main/docker/proxysql/Dockerfile-proxysql')
+    doFirst {
+        copy {
+            from "src/main/docker/proxysql"
+            into "${stageDir}/proxysql"
+        }
+    }
+}
+
+
 asciidoctor {
     onlyIf { file(snippetsDir).exists() }
     dependsOn test
@@ -196,3 +209,6 @@ task initDB() {
 task wrapper(type: Wrapper) {
     gradleVersion = '3.0'
 }
+
+// Following is required to override allowed suffix on test environments. See comments on IFS-27.
+ext.internalUserEmailDomain="innovateuk.test"

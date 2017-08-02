@@ -5,9 +5,10 @@ import org.innovateuk.ifs.Builder;
 import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.Invite;
-import org.innovateuk.ifs.invite.domain.ProcessActivity;
+import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -48,4 +49,8 @@ public abstract class BaseInviteBuilder<V extends ProcessActivity, T extends Inv
     public S withStatus(InviteStatus... statuses) {
         return withArraySetFieldByReflection("status", statuses);
     }
+
+    public S withSentBy(User... users) { return withArraySetFieldByReflection("sentBy", users);}
+
+    public S withSentOn(ZonedDateTime... zonedDateTimes) { return withArraySetFieldByReflection("sentOn", zonedDateTimes);}
 }

@@ -39,24 +39,26 @@ public class ApplicationTeamManagementModelPopulator {
     @Autowired
     private UserService userService;
 
-    public ApplicationTeamManagementViewModel populateModelByOrganisationId(long applicationId, long organisationId, long loggedInUserId) {
+    public ApplicationTeamManagementViewModel populateModelByOrganisationId(Long applicationId, Long organisationId, long loggedInUserId) {
+        InviteOrganisationResource inviteOrganisationResource = getInviteOrganisationByOrganisationId(applicationId, organisationId).orElse(null);
+
         OrganisationResource leadOrganisationResource = getLeadOrganisation(applicationId);
         boolean requestForLeadOrganisation = isRequestForLeadOrganisation(organisationId, leadOrganisationResource);
 
-        return populateModel(applicationId, loggedInUserId, leadOrganisationResource, requestForLeadOrganisation,
-                getInviteOrganisationByOrganisationId(applicationId, organisationId).orElse(null));
+        return populateModel(applicationId, loggedInUserId, leadOrganisationResource, requestForLeadOrganisation, inviteOrganisationResource);
     }
 
-    public ApplicationTeamManagementViewModel populateModelByInviteOrganisationId(long applicationId, long inviteOrganisationId, long loggedInUserId) {
-        OrganisationResource leadOrganisationResource = getLeadOrganisation(applicationId);
+    public ApplicationTeamManagementViewModel populateModelByInviteOrganisationId(Long applicationId, Long inviteOrganisationId, long loggedInUserId) {
         InviteOrganisationResource inviteOrganisationResource = getInviteOrganisationByInviteOrganisationId(inviteOrganisationId);
+
+        OrganisationResource leadOrganisationResource = getLeadOrganisation(applicationId);
         boolean requestForLeadOrganisation = isRequestForLeadOrganisation(inviteOrganisationResource, leadOrganisationResource);
 
         return populateModel(applicationId, loggedInUserId, leadOrganisationResource, requestForLeadOrganisation, inviteOrganisationResource);
     }
 
-    private ApplicationTeamManagementViewModel populateModel(long applicationId,
-                                                             long loggedInUserId,
+    private ApplicationTeamManagementViewModel populateModel(Long applicationId,
+                                                             Long loggedInUserId,
                                                              OrganisationResource leadOrganisationResource,
                                                              boolean requestForLeadOrganisation,
                                                              InviteOrganisationResource inviteOrganisationResource) {
@@ -72,7 +74,7 @@ public class ApplicationTeamManagementModelPopulator {
         return populateModelForNonLeadOrganisation(applicationResource, userLeadApplicant, inviteOrganisationResource);
     }
 
-    private ApplicationTeamManagementViewModel populateModelForLeadOrganisation(long organisationId, String organisationName,
+    private ApplicationTeamManagementViewModel populateModelForLeadOrganisation(Long organisationId, String organisationName,
                                                                                 ApplicationResource applicationResource,
                                                                                 UserResource leadApplicant,
                                                                                 boolean userLeadApplicant,
@@ -88,13 +90,15 @@ public class ApplicationTeamManagementModelPopulator {
                 true,
                 userLeadApplicant,
                 combineLists(getLeadApplicantViewModel(leadApplicant), simpleMap(invites, applicationInviteResource ->
-                        getApplicantViewModel(applicationInviteResource, userLeadApplicant)))
+                        getApplicantViewModel(applicationInviteResource, userLeadApplicant))),
+                true
         );
     }
 
     private ApplicationTeamManagementViewModel populateModelForNonLeadOrganisation(ApplicationResource applicationResource,
                                                                                    boolean userLeadApplicant,
                                                                                    InviteOrganisationResource inviteOrganisationResource) {
+        boolean organisationExists = inviteOrganisationResource.getOrganisation() != null;
         return new ApplicationTeamManagementViewModel(applicationResource.getId(),
                 applicationResource.getName(),
                 inviteOrganisationResource.getOrganisation(),
@@ -103,17 +107,18 @@ public class ApplicationTeamManagementModelPopulator {
                 false,
                 userLeadApplicant,
                 simpleMap(inviteOrganisationResource.getInviteResources(), applicationInviteResource ->
-                        getApplicantViewModel(applicationInviteResource, userLeadApplicant)));
+                        getApplicantViewModel(applicationInviteResource, userLeadApplicant)),
+                organisationExists);
     }
 
     private ApplicationTeamManagementApplicantRowViewModel getApplicantViewModel(ApplicationInviteResource applicationInviteResource, boolean userLeadApplicant) {
         boolean pending = applicationInviteResource.getStatus() != InviteStatus.OPENED;
         return new ApplicationTeamManagementApplicantRowViewModel(applicationInviteResource.getId(), getApplicantName(applicationInviteResource),
-                applicationInviteResource.getEmail(), false, pending, userLeadApplicant);
+                applicationInviteResource.getEmail(), false, pending, userLeadApplicant, applicationInviteResource.getSentOn());
     }
 
     private ApplicationTeamManagementApplicantRowViewModel getLeadApplicantViewModel(UserResource leadApplicant) {
-        return new ApplicationTeamManagementApplicantRowViewModel(leadApplicant.getName(), leadApplicant.getEmail(), true, false, false);
+        return new ApplicationTeamManagementApplicantRowViewModel(leadApplicant.getName(), leadApplicant.getEmail(), true, false, false, null);
     }
 
     private UserResource getLeadApplicant(ApplicationResource applicationResource) {
