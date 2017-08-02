@@ -62,10 +62,6 @@ function tailorAppInstance() {
       sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/named-envs/*.yml
     fi
 
-    if [[ ${TARGET} == "perf" ]]
-    then
-        sed -i.bak "s/<<ZIPKIN-ADDRESS>>/zipkin-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/zipkin/*.yml
-    fi
 
     sed -i.bak "s/<<MAIL-ADDRESS>>/mail-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/mail/*.yml
     sed -i.bak "s/<<ADMIN-ADDRESS>>/admin-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/spring-admin/*.yml
