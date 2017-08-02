@@ -1,14 +1,14 @@
 [
   {
     "name": "application-service-isolated",
-    "endpoint": "http://ifs.local-dev:8081/benchmark/isolated?process_time_millis=5000"
+    "endpoint": "http://ifs.local-dev:8081/monitoring/benchmark/isolated?process_time_millis=5000"
   },
   {
     "name": "application-service-datalayer-solo",
-    "endpoint": "http://ifs.local-dev:8081/benchmark/to-data-layer?process_time_millis=5000&data_layer_process_time_millis=2000"
+    "endpoint": "http://ifs.local-dev:8081/monitoring/benchmark/to-data-layer?process_time_millis=5000&data_layer_process_time_millis=2000"
   },
   {
     "name": "application-service-datalayer-db",
-    "endpoint": "http://ifs.local-dev:8081/benchmark/to-data-layer-with-database?process_time_millis=3000&data_layer_process_time_millis=2000"
+    "endpoint": "http://ifs.local-dev:8081/monitoring/benchmark/to-data-layer-with-database?process_time_millis=3000&data_layer_process_time_millis=2000"
   }
 ]
