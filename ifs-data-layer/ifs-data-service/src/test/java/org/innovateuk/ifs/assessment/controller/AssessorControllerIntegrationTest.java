@@ -10,9 +10,11 @@ import org.innovateuk.ifs.user.mapper.AffiliationMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
@@ -21,6 +23,7 @@ import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newPr
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.resource.AffiliationType.PROFESSIONAL;
 import static org.junit.Assert.assertEquals;
@@ -65,10 +68,18 @@ public class AssessorControllerIntegrationTest extends BaseControllerIntegration
                 .build(1);
         user.setProfileId(profile.getId());
         user.setAffiliations(affiliations);
-        userRepository.save(user);
+        user = userRepository.save(user);
+
+        UserResource userRes = userMapper.mapToResource(user);
+
+        flushAndClearSession();
+
+        //copy fields that are set during save
+        userRes.setModifiedOn(user.getModifiedOn());
+        userRes.setModifiedBy(userRepository.findByEmail(getCompAdmin().getEmail()).get().getName());
 
         AssessorProfileResource expectedAssessorProfileResource = newAssessorProfileResource()
-                .withUser(userMapper.mapToResource(user))
+                .withUser(userRes/*userMapper.mapToResource(user)*/)
                 .withProfile(
                         newProfileResource()
                                 .withAffiliations(affiliationMapper.mapToResource(user.getAffiliations()))
@@ -77,7 +88,8 @@ public class AssessorControllerIntegrationTest extends BaseControllerIntegration
                 )
                 .build();
 
-        flushAndClearSession();
+        // truncate time - saved in DB to seconds resolution
+        expectedAssessorProfileResource.getUser().setModifiedOn(expectedAssessorProfileResource.getUser().getModifiedOn().truncatedTo(ChronoUnit.SECONDS));
 
         AssessorProfileResource actualAssessorProfileResource = controller.getAssessorProfile(3L).getSuccessObjectOrThrowException();
 
