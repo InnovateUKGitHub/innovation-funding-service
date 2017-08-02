@@ -1,0 +1,30 @@
+[
+  {
+    "name": "application-service-health",
+    "endpoint": "http://ifs.local-dev:8081/monitoring/health"
+  },
+  {
+    "name": "assessment-service-health",
+    "endpoint": "http://ifs.local-dev:8082/assessment/monitoring/health"
+  },
+  {
+    "name": "comp-management-service-health",
+    "endpoint": "http://ifs.local-dev:8083/management/monitoring/health"
+  },
+  {
+    "name": "project-setup-management-service-health",
+    "endpoint": "http://ifs.local-dev:8084/project-setup-management/monitoring/health"
+  },
+  {
+    "name": "project-setup-service-health",
+    "endpoint": "http://ifs.local-dev:8085/project-setup/monitoring/health"
+  },
+  {
+    "name": "data-service-health",
+    "endpoint": "http://ifs.local-dev:8086/monitoring/health"
+  },
+  {
+    "name": "frontdoor-service-health",
+    "endpoint": "http://ifs.local-dev:8087/monitoring/health"
+  }
+]

@@ -1,3 +1,3 @@
 #!/bin/sh
-echo "testing endpoints.txt with concurrency 10 and 1000 requests"
- ./run-test.sh endpoints.txt 10 100 && ./plot.sh endpoints.txt
+echo "testing endpoints.txt with concurrency 25 and 1000 requests"
+ ./run-test.sh health-endpoints.json 25 1000 && ./plot.sh health-endpoints.json

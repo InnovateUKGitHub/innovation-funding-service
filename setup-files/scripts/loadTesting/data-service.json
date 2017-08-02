@@ -1,0 +1,10 @@
+[
+  {
+    "name": "data-service-isolated",
+    "endpoint":"http://ifs.local-dev:8086/benchmark/isolated?process_time_millis=1000"
+  },
+  {
+    "name": "data-service-db",
+    "endpoint": "http://ifs.local-dev:8086/benchmark/to-database?process_time_millis=3000"
+  }
+]
