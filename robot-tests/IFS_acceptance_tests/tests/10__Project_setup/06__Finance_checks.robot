@@ -166,7 +166,7 @@ Proj finance can see the maximum research participation level
     #TODO IFS-1134:    And the user should see the text in the page       Maximum research participation exceeded
     #TODO IFS-1134:    And the user should see the text in the page       Please seek confirmation that the project is still eligible for funding.
     When the user clicks the button/link               link=Finance checks
-    And the user should see the text in the page        Maximum research participation exceeded
+    #TODO IFS-1134:    And the user should see the text in the page        Maximum research participation exceeded
 
 Timestamp approval verification for viability and eligibility
     [Documentation]    INFUND-654
