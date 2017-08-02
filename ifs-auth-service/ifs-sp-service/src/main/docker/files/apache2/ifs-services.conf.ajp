@@ -188,6 +188,13 @@ ShibCompatValidUser On
     require shibboleth
   </Location>
 
+  <Location ~ "^/benchmark/.*">
+    AuthType shibboleth
+    ShibRequireSession Off
+    ShibRequestSetting isPassive On
+    ShibRequestSetting applicationId default
+    require shibboleth
+  </Location>
 
   # if that becomes a bigger requirement we might have to rethink it (using glusterfs?)
   <Location /files>
