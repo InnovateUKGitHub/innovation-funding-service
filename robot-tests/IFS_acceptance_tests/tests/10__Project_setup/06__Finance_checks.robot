@@ -149,25 +149,24 @@ Project finance can see the within limit research participation level
     When the user clicks the button/link               link=Finance checks
     And the user should not see the text in the page   The research participation levels of this project are within the required range.
 
-#TODO IFS-1134
-#Proj finance can see the maximum research participation level
-#    [Documentation]    INFUND-7579
-#    [Tags]
-#    When the user navigates to the page                ${server}/project-setup-management/project/${ELBOW_GREASE_PROJECT}/finance-check
-#    Then the user should see the text in the element   css=.list-eligibility dt:nth-of-type(1)   Maximum research participation
-#    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(1)    50 %
-#    And the user should see the text in the element    css=.list-eligibility dt:nth-of-type(2)    Current research participation
-#    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(2)    57.34 %
-#    And the user should see the text in the page       Maximum research participation exceeded
-#    When the user clicks the button/link               link=Project finance overview
-#    Then the user should see the text in the element   css=.list-eligibility dt:nth-of-type(1)   Maximum research participation
-#    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(1)    50 %
-#    And the user should see the text in the element    css=.list-eligibility dt:nth-of-type(2)    Current research participation
-#    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(2)    57.34 %
-#    And the user should see the text in the page       Maximum research participation exceeded
-#    And the user should see the text in the page       Please seek confirmation that the project is still eligible for funding.
-#    When the user clicks the button/link               link=Finance checks
-#    And the user should see the text in the page        Maximum research participation exceeded
+Proj finance can see the maximum research participation level
+    [Documentation]    INFUND-7579
+    [Tags]
+    When the user navigates to the page                ${server}/project-setup-management/project/${ELBOW_GREASE_PROJECT}/finance-check
+    #TODO IFS-1134:    Then the user should see the text in the element   css=.list-eligibility dt:nth-of-type(1)   Maximum research participation
+    #TODO IFS-1134:    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(1)    50 %
+    #TODO IFS-1134:    And the user should see the text in the element    css=.list-eligibility dt:nth-of-type(2)    Current research participation
+    #TODO IFS-1134:    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(2)    57.34 %
+    #TODO IFS-1134:    And the user should see the text in the page       Maximum research participation exceeded
+    When the user clicks the button/link               link=Project finance overview
+    #TODO IFS-1134:    Then the user should see the text in the element   css=.list-eligibility dt:nth-of-type(1)   Maximum research participation
+    #TODO IFS-1134:    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(1)    50 %
+    #TODO IFS-1134:    And the user should see the text in the element    css=.list-eligibility dt:nth-of-type(2)    Current research participation
+    #TODO IFS-1134:    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(2)    57.34 %
+    #TODO IFS-1134:    And the user should see the text in the page       Maximum research participation exceeded
+    #TODO IFS-1134:    And the user should see the text in the page       Please seek confirmation that the project is still eligible for funding.
+    When the user clicks the button/link               link=Finance checks
+    And the user should see the text in the page        Maximum research participation exceeded
 
 Timestamp approval verification for viability and eligibility
     [Documentation]    INFUND-654
