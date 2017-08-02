@@ -1,0 +1,7 @@
+http://ifs.local-dev:8081/monitoring/health
+http://ifs.local-dev:8082/assessment/monitoring/health
+http://ifs.local-dev:8083/management/monitoring/health
+http://ifs.local-dev:8084/project-setup-management/monitoring/health
+http://ifs.local-dev:8085/project-setup/monitoring/health
+http://ifs.local-dev:8086/monitoring/health
+http://ifs.local-dev:8087/monitoring/health
