@@ -7,6 +7,7 @@ import org.innovateuk.ifs.admin.viewmodel.UserListViewModel;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.registration.service.InternalUserService;
 import org.innovateuk.ifs.user.builder.RoleResourceBuilder;
@@ -40,6 +41,8 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
 
     private UserPageResource userPageResource;
 
+    private RoleInvitePageResource roleInvitePageResource;
+
     @Mock
     private InternalUserService internalUserServiceMock;
 
@@ -49,9 +52,13 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
 
         userPageResource = new UserPageResource();
 
+        roleInvitePageResource = new RoleInvitePageResource();
+
         when(userRestServiceMock.getActiveInternalUsers(1, 5)).thenReturn(RestResult.restSuccess(userPageResource));
 
         when(userRestServiceMock.getInactiveInternalUsers(1, 5)).thenReturn(RestResult.restSuccess(userPageResource));
+
+        when(inviteUserRestServiceMock.getPendingInternalUserInvites(1, 5)).thenReturn(RestResult.restSuccess(roleInvitePageResource));
     }
 
     @Test
@@ -61,7 +68,9 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
                 .param("size", "5"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/users"))
-                .andExpect(model().attribute("model", new UserListViewModel("active", userPageResource.getContent(), userPageResource.getContent(), userPageResource.getTotalElements(), userPageResource.getTotalElements(), new PaginationViewModel(userPageResource, "active"), new PaginationViewModel(userPageResource, "inactive"))));
+                .andExpect(model().attribute("model", new UserListViewModel("active", userPageResource.getContent(), userPageResource.getContent(), roleInvitePageResource.getContent(),
+                        userPageResource.getTotalElements(), userPageResource.getTotalElements(), roleInvitePageResource.getTotalElements(),
+                        new PaginationViewModel(userPageResource, "active"), new PaginationViewModel(userPageResource, "inactive"), new PaginationViewModel(roleInvitePageResource, "pending"))));
     }
 
     @Test
@@ -71,7 +80,21 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
                 .param("size", "5"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/users"))
-                .andExpect(model().attribute("model", new UserListViewModel("inactive", userPageResource.getContent(), userPageResource.getContent(), userPageResource.getTotalElements(), userPageResource.getTotalElements(), new PaginationViewModel(userPageResource, "active"), new PaginationViewModel(userPageResource, "inactive"))));
+                .andExpect(model().attribute("model", new UserListViewModel("inactive", userPageResource.getContent(), userPageResource.getContent(), roleInvitePageResource.getContent(),
+                        userPageResource.getTotalElements(), userPageResource.getTotalElements(), roleInvitePageResource.getTotalElements(),
+                        new PaginationViewModel(userPageResource, "active"), new PaginationViewModel(userPageResource, "inactive"), new PaginationViewModel(roleInvitePageResource, "pending"))));
+    }
+
+    @Test
+    public void testViewPending() throws Exception {
+        mockMvc.perform(get("/admin/users/pending")
+                .param("page", "1")
+                .param("size", "5"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/users"))
+                .andExpect(model().attribute("model", new UserListViewModel("pending", userPageResource.getContent(), userPageResource.getContent(), roleInvitePageResource.getContent(),
+                        userPageResource.getTotalElements(), userPageResource.getTotalElements(), roleInvitePageResource.getTotalElements(),
+                        new PaginationViewModel(userPageResource, "active"), new PaginationViewModel(userPageResource, "inactive"), new PaginationViewModel(roleInvitePageResource, "pending"))));
     }
 
     @Test
