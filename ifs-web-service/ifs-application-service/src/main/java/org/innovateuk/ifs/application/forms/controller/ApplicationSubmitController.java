@@ -171,10 +171,9 @@ public class ApplicationSubmitController {
         }
 
         applicationRestService.updateApplicationState(applicationId, SUBMITTED).getSuccessObjectOrThrowException();
-        application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, model, form, userApplicationRoles, Optional.empty());
+        applicationModelPopulator.addApplicationWithoutDetails(application, competition, model);
+
         return "application-submitted";
     }
 

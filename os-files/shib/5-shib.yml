@@ -23,6 +23,23 @@ items:
         containers:
         - image: innovateuk/sp-service:1.0-SNAPSHOT
           name: shib
+          livenessProbe:
+            httpGet:
+              path: /Shibboleth.sso/Metadata
+              port: 9443
+              scheme: HTTPS
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            exec:
+              command:
+              - readiness-probe
+            initialDelaySeconds: 60
+            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 1
           imagePullPolicy: Always
           env:
           - name: SP_PROXY_CERTIFICATE
@@ -44,7 +61,7 @@ items:
           - containerPort: 9080
           resources:
             limits:
-              memory: 2G
+              memory: 1536Mi
           test: false
     triggers:
     - type: ConfigChange
