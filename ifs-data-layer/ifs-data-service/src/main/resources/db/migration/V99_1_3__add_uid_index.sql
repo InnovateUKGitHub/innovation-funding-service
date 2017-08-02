@@ -1,0 +1,1 @@
+CREATE INDEX uid_idx on user (uid);
