@@ -44,6 +44,26 @@ public class BenchmarkController extends BaseRestService {
         return dataLayerResponse.getSuccessObject() + "\n" + thisLayerProcessingMessage + "\n" + totalTimeMessage;
     }
 
+    @GetMapping("/to-data-layer-with-database")
+    public @ResponseBody String toDataLayerWithDatabase(@RequestParam("process_time_millis") long processTimeMillis,
+                                            @RequestParam("data_layer_process_time_millis") long dataLayerProcessTimeMillis) {
+
+        long start = System.currentTimeMillis();
+
+        RestResult<String> dataLayerResponse = getWithRestResultAnonymous("/benchmark/to-database?process_time_millis=" + dataLayerProcessTimeMillis, String.class);
+
+        if (dataLayerResponse.isFailure()) {
+            return "Error response from data layer whilst processing \"to-database\" benchmarking test - " + dataLayerResponse.getFailure().getErrors();
+        }
+
+        String thisLayerProcessingMessage = processForMillis(processTimeMillis, () -> Math.tanh(Math.random()), "web layer portion");
+
+        String totalTimeMessage = "Overall took " + (System.currentTimeMillis() - start) + " milliseconds to process " +
+                "the web layer plus \"data layer and database\" benchmarking test";
+
+        return dataLayerResponse.getSuccessObject() + "\n" + thisLayerProcessingMessage + "\n" + totalTimeMessage;
+    }
+
     private String processForMillis(long processTimeMillis, Runnable action, String processMessage) {
 
         long start = System.currentTimeMillis();
