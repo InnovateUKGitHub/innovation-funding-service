@@ -4,7 +4,7 @@ set -e
 
 ## reset the db
 cd ../..
-./gradlew initDB
+##./gradlew initDB
 cd -
 
 ## regenerate users data
@@ -15,4 +15,4 @@ mysql ifs -hifs-database -uroot -ppassword < regenerate_invites_data.sql | tail 
 
 ## and finally, clean up the database again
 cd ../..
-./gradlew flywayClean flywayMigrate syncShib
+#./gradlew flywayClean flywayMigrate syncShib

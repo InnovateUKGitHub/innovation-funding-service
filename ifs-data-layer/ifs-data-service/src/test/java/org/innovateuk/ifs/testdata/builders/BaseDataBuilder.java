@@ -90,7 +90,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
 
     public static final String COMP_ADMIN_EMAIL = "john.doe@innovateuk.test";
-    public static final String IFS_SYSTEM_MAINTENANCE_USER_EMAIL = "ifs_system_maintenance_user@innovateuk.org";
+    public static final String IFS_SYSTEM_MAINTENANCE_USER_EMAIL = "ifxxxxxxxxxxxxxxxxxxxxxxxxxx15@inxx.example.com";
     public static final String PROJECT_FINANCE_EMAIL = "lee.bowman@innovateuk.test";
 
     protected ServiceLocator serviceLocator;

@@ -6,3 +6,4 @@ phone_number|MASK(2, 'x')
 disability|'NOT_STATED'
 gender|'NOT_STATED'
 uid|''
+ethnicity_id|7
