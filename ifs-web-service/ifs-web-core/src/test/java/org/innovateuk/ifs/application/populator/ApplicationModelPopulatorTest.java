@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.populator;
 
-import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
@@ -13,7 +12,6 @@ import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -29,6 +27,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.ui.Model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -36,8 +35,10 @@ import java.util.Optional;
 
 import static java.util.Collections.emptyMap;
 import static org.hamcrest.Matchers.equalTo;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -80,9 +81,9 @@ public class ApplicationModelPopulatorTest {
     @Test
     public void testAddApplicationAndSections() {
         LocalDate startDate = LocalDate.now();
-        ApplicationResource application = ApplicationResourceBuilder.newApplicationResource()
+        ApplicationResource application = newApplicationResource()
             .withStartDate(startDate).build();
-        CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().build();
+        CompetitionResource competition = newCompetitionResource().build();
         Long userId = 1L;
         Long organisationId = 3L;
         OrganisationResource organisationResource = newOrganisationResource()
@@ -137,6 +138,21 @@ public class ApplicationModelPopulatorTest {
         assertThat(formInputs.get("application_details-startdate_day"), equalTo(String.valueOf(application.getStartDate().getDayOfMonth())));
         assertThat(formInputs.get("application_details-startdate_month"), equalTo(String.valueOf(application.getStartDate().getMonthValue())));
         assertThat(formInputs.get("application_details-startdate_year"), equalTo(String.valueOf(application.getStartDate().getYear())));
+    }
+
+    @Test
+    public void testAddApplicationWithoutDetails() {
+        Model model = mock(Model.class);
+        final BigDecimal completion = new BigDecimal(67.23);
+        final CompetitionResource competitionResource = newCompetitionResource().withId(123L).withName("Competition").build();
+        final ApplicationResource applicationResource = newApplicationResource().withCompetition(123L).withCompletion(completion).build();
+
+        applicationModelPopulator.addApplicationWithoutDetails(applicationResource, competitionResource, model);
+
+        verify(model).addAttribute("completedQuestionsPercentage", completion);
+        verify(model).addAttribute("currentApplication", applicationResource);
+        verify(model).addAttribute("currentCompetition", competitionResource);
+        verifyNoMoreInteractions(model);
     }
 
     @Test
