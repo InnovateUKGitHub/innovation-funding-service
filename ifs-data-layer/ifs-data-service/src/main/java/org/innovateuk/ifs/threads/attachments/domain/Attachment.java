@@ -32,14 +32,10 @@ public class Attachment {
 
     public Attachment() {}
 
-    public Attachment(User uploader, FileEntry fileEntry) {
-        this(null, uploader, fileEntry);
-    }
-
-    public Attachment(Long id, User uploader, FileEntry fileEntry) {
-        this.id = id;
+    public Attachment(User uploader, FileEntry fileEntry, ZonedDateTime createdOn) {
         this.uploader = uploader;
         this.fileEntry = fileEntry;
+        this.createdOn = createdOn;
     }
 
     public Long id() {
@@ -64,5 +60,9 @@ public class Attachment {
 
     public Long fileId() {
         return fileEntry.getId();
+    }
+
+    public ZonedDateTime getCreatedOn() {
+        return createdOn;
     }
 }
