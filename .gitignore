@@ -102,6 +102,8 @@ robot-tests/target
 robot-tests/test_counting
 robot-tests/benchmarking_report.txt
 robot-tests/ubuntu-vm-headless/logs
+setup-files/scripts/loadTesting/data/
+setup-files/scripts/loadTesting/graphs/
 jmeter/jmeter.log
 **/docker/shibImages/*
 !**/docker/shibImages/PUT_SHIB_IMAGE_HERE.txt
