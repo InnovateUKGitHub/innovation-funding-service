@@ -113,10 +113,6 @@ test {
     if (project.hasProperty('excludeTests')) {
         exclude "${project.excludeTests}"
     }
-
-    if (project.hasProperty('testGroups')) {
-        systemProperty 'testGroups', project.getProperty('testGroups')
-    }
 }
 
 

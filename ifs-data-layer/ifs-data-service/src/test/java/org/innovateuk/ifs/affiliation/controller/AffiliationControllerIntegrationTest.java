@@ -3,7 +3,6 @@ package org.innovateuk.ifs.affiliation.controller;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.junit.Test;
@@ -29,14 +28,11 @@ public class AffiliationControllerIntegrationTest extends BaseControllerIntegrat
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private UserMapper userMapper;
-
     @Test
     public void testGetUserAffiliations() throws Exception {
         loginPaulPlum();
 
-        User user = userMapper.mapToDomain(getPaulPlum());
+        User user = userRepository.findOne(getPaulPlum().getId());
         Long userId = user.getId();
 
         // Save some existing Affiliations
@@ -59,7 +55,7 @@ public class AffiliationControllerIntegrationTest extends BaseControllerIntegrat
     public void testUpdateUserAffiliations() throws Exception {
         loginPaulPlum();
 
-        User user = userMapper.mapToDomain(getPaulPlum());
+        User user = userRepository.findOne(getPaulPlum().getId());
         Long userId = user.getId();
 
         // Save some existing Affiliations
