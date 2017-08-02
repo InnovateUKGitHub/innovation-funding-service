@@ -46,7 +46,7 @@ Invite existing academic collaborator
     When the user clicks the button/link                          link=${Application_name_business}
     And the user clicks the button/link                          link=view team members and add collaborators
     And the user clicks the button/link                          link=Add partner organisation
-    Then the user enters text to a text field                     css=#organisationName  eggs
+    Then the user enters text to a text field                    css=#organisationName  eggs
     And the user enters text to a text field                     css=input[id="applicants0.name"]  Pete
     And the user enters text to a text field                     css=input[id="applicants0.email"]  ${collaborator2_credentials["email"]}
     And the user clicks the button/link                          jQuery=button:contains("Add organisation and invite applicants")
@@ -77,6 +77,15 @@ lead RTO applicant invites a Charity member
     And the user fills in the organisation information                         ${Application_name_RTO}  ${SMALL_ORGANISATION_SIZE}
     Then the funding displayed is as expected
     [Teardown]  logout as user
+
+invite existing academic collaborator for RTO lead
+
+Rto lead able to submit finances
+
+Research participation is right for RTO lead
+
+Research participation is right for Business lead
+
 
 *** Keywords ***
 the user navigates to the competition overview
