@@ -23,11 +23,6 @@ ShibCompatValidUser On
 
   DocumentRoot /var/www/html
 
-  # Trusted hosts
-  SetEnvIfExpr "${TRUSTED_IP}" TrustedIP=1
-
-  RewriteEngine On
-
   <Location /Shibboleth.sso>
     Satisfy Any
     Allow from all
@@ -41,19 +36,13 @@ ShibCompatValidUser On
           ShibRequestSetting applicationId default
           require valid-user
       </RequireAll>
-    # Manual Holding Page(s)
-    # Certain addresses are exempt
-    <If "(! reqenv('TrustedIP') == '1') && (! %{REQUEST_URI} -strmatch '/holding/*' )&& ( -f '/var/www/html/locking/bros' || -f 'var/www/html/locking/BROS' )">
-      RedirectMatch 504 ^
-    </If>
   </Location>
 
   # status page
   <Location /monitoring/status>
     ProxyPass !
     SetHandler server-status
-    Require all denied
-    Require env TrustedIP
+    Require local
   </Location>
 
   # Errors & holding pages
