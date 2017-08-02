@@ -20,8 +20,8 @@ public class BenchmarkController extends BaseRestService {
     private static final Log LOG = LogFactory.getLog(BenchmarkController.class);
 
     @GetMapping("/isolated")
-    public @ResponseBody String process(@RequestParam("process_time_millis") long processTimeMillis) {
-        return processForMillis(processTimeMillis, "isolated web layer benchmarking test");
+    public @ResponseBody String isolated(@RequestParam("process_time_millis") long processTimeMillis) {
+        return processForMillis(processTimeMillis, () -> Math.tanh(Math.random()),"isolated web layer benchmarking test");
     }
 
     @GetMapping("/to-data-layer")
@@ -36,7 +36,7 @@ public class BenchmarkController extends BaseRestService {
             return "Error response from data layer whilst processing \"to-data-layer\" benchmarking test - " + dataLayerResponse.getFailure().getErrors();
         }
 
-        String thisLayerProcessingMessage = processForMillis(processTimeMillis, "web layer portion");
+        String thisLayerProcessingMessage = processForMillis(processTimeMillis, () -> Math.tanh(Math.random()), "web layer portion");
 
         String totalTimeMessage = "Overall took " + (System.currentTimeMillis() - start) + " milliseconds to process " +
                 "the web layer plus data layer benchmarking test";
@@ -44,15 +44,15 @@ public class BenchmarkController extends BaseRestService {
         return dataLayerResponse.getSuccessObject() + "\n" + thisLayerProcessingMessage + "\n" + totalTimeMessage;
     }
 
-    private String processForMillis(long processTimeMillis, String processTimeMessage) {
+    private String processForMillis(long processTimeMillis, Runnable action, String processMessage) {
+
         long start = System.currentTimeMillis();
 
-        double i = 0;
         do {
-            Math.tanh(i++);
+            action.run();
         } while ((System.currentTimeMillis() - start) < processTimeMillis);
 
-        String response = "Took " + (System.currentTimeMillis() - start) + " milliseconds to process " + processTimeMessage;
+        String response = "Took " + (System.currentTimeMillis() - start) + " milliseconds to process " + processMessage;
         LOG.debug(response);
         return response;
     }
