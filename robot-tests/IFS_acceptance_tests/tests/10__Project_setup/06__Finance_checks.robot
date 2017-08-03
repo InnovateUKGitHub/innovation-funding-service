@@ -313,7 +313,7 @@ Viability checks are populated in the table
 IFS Admin user can see the viability check page for the lead partner
     [Documentation]    INFUND-4831, INFUND-4830, INFUND-4825
     [Setup]  log in as a different user    &{internal_finance_credentials}
-    [Tags]    1085
+    [Tags]
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")    # clicking the review button for the lead partner
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
@@ -323,7 +323,7 @@ IFS Admin user can see the viability check page for the lead partner
 
 Project finance user can see the lead partner's information
     [Documentation]    INFUND-4825
-    [Tags]    1085
+    [Tags]
     # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
     When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(1)    £200,903
     When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    30%
@@ -333,7 +333,7 @@ Project finance user can see the lead partner's information
 
 Checking the approve viability checkbox enables RAG selection but not confirm viability button
     [Documentation]    INFUND-4831, INFUND-4856, INFUND-4830
-    [Tags]    1085
+    [Tags]
     When the user selects the checkbox    project-viable
     Then the user should see the element    id=rag-rating
     And the user should see the element    jQuery=.button.disabled:contains("Confirm viability")
@@ -343,14 +343,14 @@ RAG choices update on the finance checks page
     When the rag rating updates on the finance check page for lead for viability   Green
     And the rag rating updates on the finance check page for lead for viability   Amber
     And the rag rating updates on the finance check page for lead for viability   Red
-    [Tags]    1085
+    [Tags]
     When the user selects the option from the drop-down menu    --    id=rag-rating
     Then the user should see the element    jQuery=.button.disabled:contains("Confirm viability")
     [Teardown]    the user selects the option from the drop-down menu    Green    id=rag-rating
 
 Credit report information saves when leaving the page
     [Documentation]    INFUND-4829
-    [Tags]   1085
+    [Tags]
     When the user selects the checkbox    creditReportConfirmed
     And the user clicks the button/link    jQuery=.button-secondary:contains("Save and return to finance checks")
     And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")
@@ -358,7 +358,7 @@ Credit report information saves when leaving the page
 
 Clicking cancel on the viability modal
     [Documentation]    INFUND-4822, INFUND-4830
-    [Tags]    1085
+    [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Confirm viability")
     And the user clicks the button/link    jQuery=.buttonlink.js-close    # Clicking the cancel link on the modal
     Then the user should see the element    id=rag-rating
@@ -368,7 +368,7 @@ Clicking cancel on the viability modal
 
 Confirming viability should show credit report info on a readonly page
     [Documentation]    INFUND-4829, INFUND-4830
-    [Tags]    1085
+    [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Confirm viability")
     And the user clicks the button/link    name=confirm-viability    # Clicking the confirm button on the modal
     Then the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
@@ -379,13 +379,13 @@ Confirming viability should show credit report info on a readonly page
 
 Confirming viability should update on the finance checks page
     [Documentation]    INFUND-4831, INFUND-4822
-    [Tags]    1085
+    [Tags]
     When the user clicks the button/link    link=Finance checks
     Then the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Approved")
 
 Project finance user can see the viability checks for the industrial partner
     [Documentation]    INFUND-4831, INFUND-4830, INFUND-7578
-    [Tags]    1085
+    [Tags]
     When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(3) td:nth-child(2) a:contains("Review")
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_NUMBER}
@@ -394,14 +394,14 @@ Project finance user can see the viability checks for the industrial partner
 
 Checking the approve viability checkbox enables RAG selection but not confirm viability button for partner
     [Documentation]    INFUND-4831, INFUND-4856, INFUND-4830
-    [Tags]    1085
+    [Tags]
     When the user selects the checkbox    project-viable
     Then the user should see the element    id=rag-rating
     And the user should see the element    jQuery=.button.disabled:contains("Confirm viability")
 
 RAG choices update on the finance checks page for partner
     [Documentation]    INFUND-4822, INFUND-4856
-    [Tags]    1085
+    [Tags
     When the rag rating updates on the finance check page for partner for viability    Green
     And the rag rating updates on the finance check page for partner for viability      Amber
     And the rag rating updates on the finance check page for partner for viability      Red
@@ -411,7 +411,7 @@ RAG choices update on the finance checks page for partner
 
 Credit report information saves when leaving the page for partner
     [Documentation]    INFUND-4829
-    [Tags]    1085
+    [Tags]
     When the user selects the checkbox    creditReportConfirmed
     And the user clicks the button/link    jQuery=.button-secondary:contains("Save and return to finance checks")
     And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(3) td:nth-child(2) a:contains("Review")
@@ -419,7 +419,7 @@ Credit report information saves when leaving the page for partner
 
 Clicking cancel on the viability modal for partner
     [Documentation]    INFUND-4822, INFUND-4830
-    [Tags]    1085
+    [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Confirm viability")
     And the user clicks the button/link    jQuery=.buttonlink.js-close    # Clicking the cancel link on the modal
     Then the user should see the element    id=rag-rating
@@ -429,7 +429,7 @@ Clicking cancel on the viability modal for partner
 
 Confirming viability should show credit report info on a readonly page for partner
     [Documentation]    INFUND-4829, INFUND-4830
-    [Tags]    1085
+    [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Confirm viability")
     And the user clicks the button/link    name=confirm-viability    # Clicking the confirm button on the modal
     Then the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
@@ -441,13 +441,13 @@ Confirming viability should show credit report info on a readonly page for partn
 
 Confirming viability should update on the finance checks page for partner
     [Documentation]    INFUND-4831, INFUND-4822
-    [Tags]    1085
+    [Tags]
     When the user clicks the button/link    link=Finance checks
     Then the user should see the element    jQuery=table.table-progress tr:nth-child(3) td:nth-child(2) a:contains("Approved")
 
 Eligibility checks are populated in the table
     [Documentation]    INFUND-4823
-    [Tags]    1085
+    [Tags]
     And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(4)    Review
     And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(5)    Not set
     And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(4)    Review
@@ -457,13 +457,13 @@ Eligibility checks are populated in the table
 
 Project finance user can see the Eligibility check page for the lead partner
     [Documentation]    INFUND-4823
-    [Tags]   1085
+    [Tags]
     When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")    # clicking the review button for the lead partner
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
 
 Project finance user can see the lead partner's information about eligibility
     [Documentation]    INFUND-4832
-    [Tags]   1085
+    [Tags]
     # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
     When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(1)    3 months
     When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(2)    £ 200,903
@@ -474,7 +474,7 @@ Project finance user can see the lead partner's information about eligibility
 
 Finance checks eligibility validations
     [Documentation]    INFUND-4833
-    [Tags]  1085
+    [Tags]
     When the user clicks the button/link             jQuery=section:nth-of-type(1) button:contains("Labour")
     And the user clicks the button/link              jQuery=section:nth-of-type(1) a:contains("Edit")
     When the user enters text to a text field        css=[name^="labour-labourDaysYearly"]    -230
@@ -517,7 +517,7 @@ Finance checks eligibility validations
 
 Project finance user can amend all sections of eligibility for lead
     [Documentation]    INFUND-4834
-    [Tags]   1085
+    [Tags]
     When Project finance user amends labour details in eligibility for lead
     And Project finance user amends materials details in eligibility for lead
     And Project finance user amends capital usage details in eligibility for lead
@@ -527,7 +527,7 @@ Project finance user can amend all sections of eligibility for lead
 
 Project Finance user can edit and save Lead Partner's 20% of labour costs option
     [Documentation]     INFUND-7577
-    [Tags]    1085
+    [Tags]
     When the user clicks the button/link        jQuery=section:nth-of-type(2) button
     And the user clicks the button/link         jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user clicks the button/link         jQuery=[data-target="overhead-default-percentage"] label
@@ -540,7 +540,7 @@ Project Finance user can edit and save Lead Partner's 20% of labour costs option
 
 Project Finance user can Edit and Save Lead Partner's no overhead costs option
     [Documentation]     INFUND-7577
-    [Tags]    1085
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user clicks the button/link    jQuery=[data-target="overhead-none"] label
     Then the user should see the element     jQuery=h3:contains("No overhead costs")
@@ -551,7 +551,7 @@ Project Finance user can Edit and Save Lead Partner's no overhead costs option
 
 Project Finance user can edit and save Lead Partner's calculate overheads option
     [Documentation]     INFUND-7577
-    [Tags]    1085
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user clicks the button/link    jQuery=[data-target="overhead-total"] label
     And the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
@@ -564,7 +564,7 @@ Project Finance user can edit and save Lead Partner's calculate overheads option
 
 Project Finance user can enter overhead values for Lead Partner manually
     [Documentation]     INFUND-7577
-    [Tags]    1085
+    [Tags]
     When the user clicks the button/link    css=a.eligibility-0
     And the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user enters text to a text field     jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  1954
@@ -575,14 +575,14 @@ Project Finance user can enter overhead values for Lead Partner manually
 
 Checking the approve eligibility checkbox enables RAG selection but not Approve eligibility button
     [Documentation]    INFUND-4839
-    [Tags]    1085
+    [Tags]
     When the user selects the checkbox    project-eligible
     Then the user should see the element    id=rag-rating
     And the user should see the element    jQuery=.button.disabled:contains("Approve eligible costs")
 
 RAG choices update on the finance checks page for eligibility
     [Documentation]    INFUND-4839, INFUND-4823
-    [Tags]    1085
+    [Tags]
     When the rag rating updates on the finance check page for lead for eligibility   Green
     And the rag rating updates on the finance check page for lead for eligibility    Amber
     And the rag rating updates on the finance check page for lead for eligibility   Red
@@ -591,7 +591,7 @@ RAG choices update on the finance checks page for eligibility
 
 Clicking cancel on the eligibility modal
     [Documentation]    INFUND-4839
-    [Tags]    1085
+    [Tags]
     When the user selects the option from the drop-down menu    Green    id=rag-rating
     And the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     And the user clicks the button/link    jQuery=.buttonlink.js-close    # Clicking the cancel link on the modal
@@ -601,7 +601,7 @@ Clicking cancel on the eligibility modal
 
 Confirming eligibility should show info on a readonly page
     [Documentation]    INFUND-4839, INFUND-7574
-    [Tags]    1085
+    [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     And the user clicks the button/link    name=confirm-eligibility    # Clicking the confirm button on the modal
     Then the user should see the element    jQuery=a.button-secondary:contains("Return to finance checks")
@@ -611,13 +611,13 @@ Confirming eligibility should show info on a readonly page
 
 Confirming eligibility should update on the finance checks page
     [Documentation]    INFUND-4823
-    [Tags]    1085
+    [Tags]
     When the user clicks the button/link    jQuery=.button-secondary:contains("Return to finance checks")
     Then the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Approved")
 
 Proj Finance is able to see the Finances amended
     [Documentation]  INFUND-8501
-    [Tags]    1085-2
+    [Tags]
     Given log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page  ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/eligibility
     Then the user clicks the button/link  link=View changes to finances
@@ -629,7 +629,7 @@ Proj Finance is able to see the Finances amended
 
 Project finance user can see updated finance overview after lead changes to eligibility
     [Documentation]    INFUND-5508
-    [Tags]    1085-2
+    [Tags]
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    £ 373,928
     And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 107,935
@@ -637,7 +637,7 @@ Project finance user can see updated finance overview after lead changes to elig
 
 Project finance user can see the Eligibility check page for the partner
     [Documentation]    INFUND-4823
-    [Tags]    1085-2
+    [Tags]
     Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(3) td:nth-child(4) a:contains("Review")
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
@@ -645,7 +645,7 @@ Project finance user can see the Eligibility check page for the partner
 # The below test deviates to a different project to check 0% funding for a partner
 Project finance user can see the partner's zero funding request
     [Documentation]    INFUND-9269
-    [Tags]    1085-2
+    [Tags]
     When the user navigates to the page                 ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check/organisation/${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}/eligibility
     Then the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 200,903   # Total costs
     And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)     0%          # % Grant
@@ -654,7 +654,7 @@ Project finance user can see the partner's zero funding request
 
 Project finance user can see the partner's information about eligibility
     [Documentation]    INFUND-4832
-    [Tags]    1085-2
+    [Tags]
     # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
     When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(1)    3 months
     When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(2)    £ 200,903
@@ -665,7 +665,7 @@ Project finance user can see the partner's information about eligibility
 
 Project finance user can amend all sections of eligibility for partner
     [Documentation]    INFUND-4834
-    [Tags]    1085-2
+    [Tags]
     When Project finance user amends labour details in eligibility for lead
     And Project finance user amends materials details in eligibility for lead
     And Project finance user amends capital usage details in eligibility for lead
@@ -675,7 +675,7 @@ Project finance user can amend all sections of eligibility for partner
 
 Project Finance user can edit and save partner's 20% of labour costs option
     [Documentation]     INFUND-7577
-    [Tags]    1085-2
+    [Tags]
     When the user clicks the button/link        jQuery=section:nth-of-type(2) button
     And the user clicks the button/link         jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user clicks the button/link         jQuery=[data-target="overhead-default-percentage"] label
@@ -688,7 +688,7 @@ Project Finance user can edit and save partner's 20% of labour costs option
 
 Project Finance user can edit and save Partner's no overhead costs option
     [Documentation]     INFUND-7577
-    [Tags]    1085-2
+    [Tags]
     When the user clicks the button/link        jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user clicks the button/link         jQuery=[data-target="overhead-none"] label
     Then the user should see the element        jQuery=h3:contains("No overhead costs")
@@ -699,7 +699,7 @@ Project Finance user can edit and save Partner's no overhead costs option
 
 Project Finance user can edit and save in Partner's calculate overheads option
     [Documentation]     INFUND-7577
-    [Tags]    1085-2
+    [Tags]
     When the user clicks the button/link        jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user clicks the button/link         jQuery=[data-target="overhead-total"] label
     And the user clicks the button/link         jQuery=section:nth-of-type(2) button:contains("Save")
@@ -711,7 +711,7 @@ Project Finance user can edit and save in Partner's calculate overheads option
 
 Project Finance user can enter overhead values for partner manually
     [Documentation]     INFUND-7577
-    [Tags]    1085-2
+    [Tags]
     When the user clicks the button/link         jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user enters text to a text field    jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  1954
     Then the user clicks the button/link        jQuery=section:nth-of-type(2) button:contains("Save")
@@ -721,21 +721,21 @@ Project Finance user can enter overhead values for partner manually
 
 Project finance user can see the eligibility checks for the industrial partner
     [Documentation]    INFUND-4823
-    [Tags]    1085-2
+    [Tags]
     When the user clicks the button/link   link=Finance checks
     And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(3) td:nth-child(4) a:contains("Review")
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
 
 Checking the approve eligibility checkbox enables RAG selection but not confirm viability button for partner
     [Documentation]    INFUND-4839
-    [Tags]    1085-2
+    [Tags]
     When the user selects the checkbox    project-eligible
     Then the user should see the element    id=rag-rating
     And the user should see the element    jQuery=.button.disabled:contains("Approve eligible costs")
 
 RAG choices update on the finance checks page for eligibility for partner
     [Documentation]    INFUND-4839, INFUND-4823
-    [Tags]    1085-2
+    [Tags]
     When the rag rating updates on the finance check page for partner for eligibility   Green
     And the rag rating updates on the finance check page for partner for eligibility    Amber
     And the rag rating updates on the finance check page for partner for eligibility    Red
@@ -744,7 +744,7 @@ RAG choices update on the finance checks page for eligibility for partner
 
 Clicking cancel on the eligibility modal for partner
     [Documentation]    INFUND-4839
-    [Tags]    1085-2
+    [Tags]
     When the user selects the option from the drop-down menu    Green    id=rag-rating
     And the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     And the user clicks the button/link    jQuery=.buttonlink.js-close    # Clicking the cancel link on the modal
@@ -754,7 +754,7 @@ Clicking cancel on the eligibility modal for partner
 
 Confirming eligibility should show info on a readonly page for partner
     [Documentation]    INFUND-4839, INFUND-7574
-    [Tags]    1085-2
+    [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     And the user clicks the button/link    name=confirm-eligibility    # Clicking the confirm button on the modal
     Then the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
@@ -764,7 +764,7 @@ Confirming eligibility should show info on a readonly page for partner
 
 Confirming partner eligibility should update on the finance checks page
     [Documentation]    INFUND-4823, INFUND-7076
-    [Tags]    1085-2
+    [Tags]
     When the user clicks the button/link    link=Finance checks
     Then the user should see the element    jQuery=table.table-progress tr:nth-child(3) td:nth-child(4) a:contains("Approved")
     And The user should see the element    jQuery=.generate-spend-profile-main-button
@@ -772,7 +772,7 @@ Confirming partner eligibility should update on the finance checks page
 
 Project finance user can see updated finance overview after partner changes to eligibility
     [Documentation]    INFUND-5508
-    [Tags]    1085-3
+    [Tags]
     Given log in as a different user    &{internal_finance_credentials}
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/
     Then the user should see the text in the element   jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    £ 345,059
@@ -781,7 +781,7 @@ Project finance user can see updated finance overview after partner changes to e
 
 Project finance can see updated finance breakdown for different categories
     [Documentation]    INFUND-4846
-    [Tags]    1085-3
+    [Tags]
     When the user clicks the button/link   link=Project finance overview
     #check breakdown for lead partner
     Then the user should see the text in the element   css=.form-group tbody tr:nth-of-type(1) th strong  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
@@ -799,7 +799,7 @@ Project finance can see updated finance breakdown for different categories
 
 Project finance can approve academic eligibility
     [Documentation]    INFUND-4428
-    [Tags]    1085-3      HappyPath
+    [Tags]      HappyPath
     When the user clicks the button/link     jQuery=table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Review")
     Then the user should see the text in the page   Je-S Form overview
     When the user selects the checkbox    project-eligible
@@ -813,7 +813,7 @@ Project finance can approve academic eligibility
 
 Project finance user can view Updated finance overview for the consortium
     [Documentation]    INFUND-4846
-    [Tags]    1085-3
+    [Tags]
     When the user clicks the button/link    link=Project finance overview
     Then the user should see the element    jQuery=h1:contains("Finance overview")
     # the below figures are listed as:       RowNumber  StartDate      Duration    TotalProjectCost    GrantAppliedFor     OtherPublicSectorFunding    Total%Grant
@@ -821,7 +821,7 @@ Project finance user can view Updated finance overview for the consortium
 
 Project finance user can view updated finances summary for the consortium
     [Documentation]    INFUND-4846
-    [Tags]    1085-3
+    [Tags]
     Given the user should see the element   jQuery=h3:contains("Finances summary")
     #check summary for lead partner
     Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tbody tr:nth-of-type(1) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
@@ -839,7 +839,7 @@ Project finance user can view updated finances summary for the consortium
 
 Project finance user can view Lead Partner's changes to finances
     [Documentation]    INFUND-4837
-    [Tags]    1085-3
+    [Tags]
     Given the user clicks the button/link       link=Finance checks
     When the user clicks the button/link        css=a.eligibility-0
     And the user clicks the button/link        link=View changes to finances
@@ -851,7 +851,7 @@ Project finance user can view Lead Partner's changes to finances
 #1.materials section
 Project finance user can view Lead partner's changes for Materials
     [Documentation]    INFUND-4837
-    [Tags]    1085-3
+    [Tags]
     Then the user verifies the action and section for revised finances     Change    Materials
     And the revised categories are verified for specified Section          Change    Materials    1    Cost per item    10020    8000
     And the revised cost is verified for the specified section             Change    Materials    2   -20,200
@@ -859,7 +859,7 @@ Project finance user can view Lead partner's changes for Materials
 #2.overheads section
 Project finance user can view Lead partner's changes for Overheads
     [Documentation]    INFUND-4837
-    [Tags]    1085-3
+    [Tags]
     Then the user verifies the action and section for revised finances     Change    Overheads
     And the revised categories are verified for specified Section          Change    Overheads    0   Amount    ${empty}    1954
     And the revised cost is verified for the specified section             Change    Overheads    1   0
@@ -867,7 +867,7 @@ Project finance user can view Lead partner's changes for Overheads
 #3.capital usage section
 Project finance user can view Lead partner's changes for capital usage
     [Documentation]    INFUND-4837
-    [Tags]    1085-3
+    [Tags]
     Then the user verifies the action and section for revised finances     Change    Capital usage
     And the revised categories are verified for specified Section          Change    Capital usage    0   New or existing     Existing    New
     And the revised categories are verified for specified Section          Change    Capital usage    1   Depreciation period   12    12
@@ -880,7 +880,7 @@ Project finance user can view Lead partner's changes for capital usage
 #4.other costs section
 Project finance user can view Lead partner's changes for other costs
     [Documentation]    INFUND-4837
-    [Tags]    1085-3
+    [Tags]
     Then the user verifies the action and section for revised finances     Change  Other costs
     And the revised categories are verified for specified Section          Change  Other costs  0  Total  1100  5000
     And the revised cost is verified for the specified section             Change  Other costs  1  3,900
@@ -888,7 +888,7 @@ Project finance user can view Lead partner's changes for other costs
 #5.Travel and subsistence section
 Project finance user can view Lead partner's changes for Travel and subsistence
     [Documentation]    INFUND-4837
-    [Tags]    1085-3
+    [Tags]
     Then the user verifies the action and section for revised finances     Change  Travel and subsistence
     And the revised categories are verified for specified Section          Change  Travel and subsistence  0  Number of times  15  10
     And the revised categories are verified for specified Section          Change  Travel and subsistence  1  Cost each  398  1000
@@ -897,7 +897,7 @@ Project finance user can view Lead partner's changes for Travel and subsistence
 #6.Subcontracting section
 Project finance user can view Lead partner's changes for Subcontracting
     [Documentation]    INFUND-4837
-    [Tags]    1085-3
+    [Tags]
     Then the user verifies the action and section for revised finances     Change  Subcontracting
     And the revised categories are verified for specified Section          Change  Subcontracting  1  Role  To develop stuff  Develop
     And the revised categories are verified for specified Section          Change  Subcontracting  2  Cost  90000  10600
@@ -906,7 +906,7 @@ Project finance user can view Lead partner's changes for Subcontracting
 #7. Labour section
 Project finance user can view Lead partner's changes for Labour
     [Documentation]    INFUND-4837
-    [Tags]    1085-3
+    [Tags]
     Given the user clicks the button/link                                   link=Eligibility
     When the user clicks the button/link                                    link=View changes to finances
     Then the user verifies the action and section for revised finances     Change  Labour
@@ -919,7 +919,7 @@ Project finance user can view Lead partner's changes for Labour
 
 Project finance user can view Partner's changes to finances
     [Documentation]    INFUND-4837
-    [Tags]    1085-3
+    [Tags]
     Given the user clicks the button/link       link=Finance checks
     When the user clicks the button/link        css=a.eligibility-2
     And the user clicks the button/link        link=View changes to finances
@@ -929,7 +929,7 @@ Project finance user can view Partner's changes to finances
 #1.materials section
 Project finance user can view partner's changes for Materials
     [Documentation]    INFUND-4837
-    [Tags]    1085-3
+    [Tags]
     Then the user verifies the action and section for revised finances     Change    Materials
     And the revised categories are verified for specified Section          Change    Materials    1    Cost per item    10020    8000
     And the revised cost is verified for the specified section             Change    Materials    2   -20,200
@@ -937,7 +937,7 @@ Project finance user can view partner's changes for Materials
 #2.overheads section
 Project finance user can view Partner's changes Overheads
     [Documentation]    INFUND-4837
-    [Tags]    1085-3
+    [Tags]
     Then the user verifies the action and section for revised finances     Change    Overheads
     And the revised categories are verified for specified Section          Change    Overheads    0   Amount    ${empty}    1954
     And the revised cost is verified for the specified section             Change    Overheads    1   0
@@ -945,7 +945,7 @@ Project finance user can view Partner's changes Overheads
 #3.capital usage section
 Project finance user can view partner's revised changes for capital usage
     [Documentation]    INFUND-4837
-    [Tags]    1085-3
+    [Tags]
     Then the user verifies the action and section for revised finances     Change    Capital usage
     And the revised categories are verified for specified Section          Change    Capital usage    0   New or existing     Existing    New
     And the revised categories are verified for specified Section          Change    Capital usage    1   Depreciation period   12    12
@@ -958,7 +958,7 @@ Project finance user can view partner's revised changes for capital usage
 #4.other costs section
 Project finance user can view partner's revised changes other costs
     [Documentation]    INFUND-4837
-    [Tags]    1085-3
+    [Tags]
     Then the user verifies the action and section for revised finances     Change  Other costs
     And the revised categories are verified for specified Section          Change  Other costs  0  Total  1100  5000
     And the revised cost is verified for the specified section             Change  Other costs  1  3,900
@@ -966,7 +966,7 @@ Project finance user can view partner's revised changes other costs
 #5.Travel and subsistence section
 Project finance user can view partner's revised changes for travel and subsistence
     [Documentation]    INFUND-4837
-    [Tags]    1085-3
+    [Tags]
     Then the user verifies the action and section for revised finances     Change  Travel and subsistence
     And the revised categories are verified for specified Section          Change  Travel and subsistence  0  Number of times  15  10
     And the revised categories are verified for specified Section          Change  Travel and subsistence  1  Cost each  398  1000
@@ -975,7 +975,7 @@ Project finance user can view partner's revised changes for travel and subsisten
 #6.Subcontracting section
 Project finance user can view partner's revised changes for Subcontracting
     [Documentation]    INFUND-4837
-    [Tags]    1085-3
+    [Tags]
     Then the user verifies the action and section for revised finances     Change  Subcontracting
     And the revised categories are verified for specified Section          Change  Subcontracting  1  Role  To develop stuff  Develop
     And the revised categories are verified for specified Section          Change  Subcontracting  2  Cost  90000  10600
@@ -984,7 +984,7 @@ Project finance user can view partner's revised changes for Subcontracting
 #7. Labour section
 Project finance user can view partner's revised changes for Labour
     [Documentation]    INFUND-4837
-    [Tags]    1085-3
+    [Tags]
     Given the user clicks the button/link                                   link=Eligibility
     When the user clicks the button/link                                    link=View changes to finances
     Then the user verifies the action and section for revised finances     Change  Labour
@@ -996,7 +996,7 @@ Project finance user can view partner's revised changes for Labour
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
-    [Tags]    1085-3
+    [Tags]
     [Setup]    log in as a different user   &{collaborator1_credentials}
     When the user clicks the button/link    jQuery=.projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     And the user should see the element     jQuery=ul li.complete:nth-child(1)
@@ -1008,7 +1008,7 @@ Links to other sections in Project setup dependent on project details (applicabl
 
 Status updates correctly for internal user's table
      [Documentation]    INFUND-4049,INFUND-5543
-     [Tags]    1085-3      HappyPath
+     [Tags]      HappyPath
      [Setup]    log in as a different user   &{Comp_admin1_credentials}
      When the user navigates to the page    ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/status
      Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details
@@ -1021,14 +1021,14 @@ Status updates correctly for internal user's table
 
 Other internal users do not have access to Finance checks
     [Documentation]    INFUND-4821
-    [Tags]    1085-3    HappyPath
+    [Tags]    HappyPath
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     # This is added to HappyPath because CompAdmin should NOT have access to FC page
     Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check    ${403_error_message}
 
 Finance contact can access the external view of the finance checks page
     [Documentation]    INFUND-7573, INFUND 8787
-    [Tags]    1085-3
+    [Tags]
     [Setup]    Log in as a different user   &{successful_applicant_credentials}
     Given the user clicks the button/link   jQuery=.projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
@@ -1039,7 +1039,7 @@ Finance contact can access the external view of the finance checks page
 
 Lead Partner can view finance checks page
     [Documentation]    INFUND-7573, INFUND 8787
-    [Tags]    1085-3
+    [Tags]
     Given log in as a different user        &{lead_applicant_credentials}
     When the user clicks the button/link    jQuery=.projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     Then the user should see the element    jQuery=li.complete:contains("Finance")
@@ -1048,7 +1048,7 @@ Lead Partner can view finance checks page
 
 Lead partner can view only the external version of finance checks eligibility table
     [Documentation]    INFUND-8778, INFUND-8880
-    [Tags]    1085-3
+    [Tags]
     When the user clicks the button/link    link=View finances
     Then the user should see the element    jQuery=h2:contains("Detailed finances")
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 59,430    £ 1,954     £ 80,000    £ 5,050    £ 10,600    £ 10,000     £ 5,000
@@ -1056,13 +1056,13 @@ Lead partner can view only the external version of finance checks eligibility ta
 
 Lead Partner can see the Finances amended
     [Documentation]  INFUND-8501
-    [Tags]    1085-3
+    [Tags]
     When the user clicks the button/link  link=View changes to finances
     Then the user should see the finance values amended by internal user
 
 Academic user can view Finance checks page
     [Documentation]     INFUND-8787, INFUND-8880
-    [Tags]    1085-3
+    [Tags]
     Given log in as a different user        &{collaborator2_credentials}
     When the user clicks the button/link    jQuery=.projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
@@ -1075,7 +1075,7 @@ Academic user can view Finance checks page
 
 Non Lead Partner can view finance checks page
     [Documentation]     INFUND-8787
-    [Tags]    1085-3
+    [Tags]
     Given log in as a different user        &{collaborator1_credentials}
     When the user clicks the button/link    jQuery=.projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
@@ -1085,7 +1085,7 @@ Non Lead Partner can view finance checks page
 
 Non Lead-Partner can view only the external version of finance checks eligibility table
     [Documentation]    INFUND-8778, INFUND-8880
-    [Tags]    1085-3
+    [Tags]
     When the user clicks the button/link    link=View finances
     Then the user should see the element    jQuery=h2:contains("Detailed finances")
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 59,430    £ 1,954     £ 80,000    £ 5,050    £ 10,600    £ 10,000     £ 5,000
