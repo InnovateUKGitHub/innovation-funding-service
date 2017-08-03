@@ -8,7 +8,9 @@ import org.innovateuk.ifs.workflow.resource.OutcomeType;
 public enum AssessmentPanelApplicationInviteEvent implements OutcomeType {
     NOTIFY("notify"),
     ACCEPT("accept"),
-    REJECT("reject");
+    REJECT("reject"),
+    MARK_CONFLICT_OF_INTEREST("mark_conflict_of_interest"),
+    UNMARK_CONFLICT_OF_INTEREST("unmark_conflict_of_interest");
 
     String event;
 

@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.assessment.panel.workflow.configuration;
 
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.resource.ApplicationOutcome;
 import org.innovateuk.ifs.assessment.panel.domain.AssessmentPanelApplicationInvite;
 import org.innovateuk.ifs.assessment.panel.domain.AssessmentPanelApplicationInviteRejectOutcome;
 import org.innovateuk.ifs.assessment.panel.repository.AssessmentPanelApplicationInviteRepository;
@@ -20,9 +22,7 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelApplicationInviteEvent.ACCEPT;
-import static org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelApplicationInviteEvent.NOTIFY;
-import static org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelApplicationInviteEvent.REJECT;
+import static org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelApplicationInviteEvent.*;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_PANEL_APPICATION_INVITE;
 
 // TODO class comment
@@ -47,16 +47,29 @@ public class AssessmentPanelApplicationInviteWorkflowHandler extends BaseWorkflo
         return new AssessmentPanelApplicationInvite(target, participant);
     }
 
+    public boolean notifyInvitation(AssessmentPanelApplicationInvite assessmentPanelApplicationInvite) {
+        return fireEvent(assessmentPanelApplicationInviteMessage(assessmentPanelApplicationInvite, NOTIFY), assessmentPanelApplicationInvite);
+    }
+
     public boolean rejectInvitation(AssessmentPanelApplicationInvite assessmentPanelApplicationInvite, AssessmentPanelApplicationInviteRejectOutcome rejectOutcome) {
         return fireEvent(rejectMessage(assessmentPanelApplicationInvite, rejectOutcome), assessmentPanelApplicationInvite);
+    }
+
+    private static MessageBuilder<AssessmentPanelApplicationInviteEvent> rejectMessage(AssessmentPanelApplicationInvite assessmentPanelApplicationInvite, AssessmentPanelApplicationInviteRejectOutcome ineligibleOutcome) {
+        return assessmentPanelApplicationInviteMessage(assessmentPanelApplicationInvite, REJECT)
+                .setHeader("rejection", ineligibleOutcome);
     }
 
     public boolean acceptInvitation(AssessmentPanelApplicationInvite assessmentPanelApplicationInvite) {
         return fireEvent(assessmentPanelApplicationInviteMessage(assessmentPanelApplicationInvite, ACCEPT), assessmentPanelApplicationInvite);
     }
 
-    public boolean notify(AssessmentPanelApplicationInvite assessmentPanelApplicationInvite) {
-        return fireEvent(assessmentPanelApplicationInviteMessage(assessmentPanelApplicationInvite, NOTIFY), assessmentPanelApplicationInvite);
+    public boolean markConflictOfInterest(AssessmentPanelApplicationInvite assessmentPanelApplicationInvite) {
+        return fireEvent(assessmentPanelApplicationInviteMessage(assessmentPanelApplicationInvite, MARK_CONFLICT_OF_INTEREST), assessmentPanelApplicationInvite);
+    }
+
+    public boolean unmarkConflictOfInterest(AssessmentPanelApplicationInvite assessmentPanelApplicationInvite) {
+        return fireEvent(assessmentPanelApplicationInviteMessage(assessmentPanelApplicationInvite, UNMARK_CONFLICT_OF_INTEREST), assessmentPanelApplicationInvite);
     }
 
     @Override
@@ -90,12 +103,7 @@ public class AssessmentPanelApplicationInviteWorkflowHandler extends BaseWorkflo
     }
 
 
-    private MessageBuilder<AssessmentPanelApplicationInviteEvent> rejectMessage(AssessmentPanelApplicationInvite assessmentPanelApplicationInvite, AssessmentPanelApplicationInviteRejectOutcome rejectOutcome) {
-        return assessmentPanelApplicationInviteMessage(assessmentPanelApplicationInvite, REJECT)
-                .setHeader("rejection", rejectOutcome);
-    }
-
-    private MessageBuilder<AssessmentPanelApplicationInviteEvent> assessmentPanelApplicationInviteMessage(AssessmentPanelApplicationInvite assessmentPanelApplicationInvite, AssessmentPanelApplicationInviteEvent event) {
+    private static MessageBuilder<AssessmentPanelApplicationInviteEvent> assessmentPanelApplicationInviteMessage(AssessmentPanelApplicationInvite assessmentPanelApplicationInvite, AssessmentPanelApplicationInviteEvent event) {
         return MessageBuilder
                 .withPayload(event)
                 .setHeader("target", assessmentPanelApplicationInvite);
