@@ -1,6 +1,6 @@
 FROM davidcaste/alpine-java-unlimited-jce:jdk8
 MAINTAINER David Soff <dsoff@worth.systems>
-RUN apk --update add curl
+RUN apk --update add curl rsync apache2-utils
 EXPOSE 8009
 EXPOSE 8000
 EXPOSE 8080
