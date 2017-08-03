@@ -1,4 +1,4 @@
--- new activity_state type 'ASSESSMENT_PANEL_APPLICATION_INVITE', and state 'CONFLICT_OF_INTEREST'
+R-- new activity_state type 'ASSESSMENT_PANEL_APPLICATION_INVITE', and state 'CONFLICT_OF_INTEREST'
 ALTER TABLE activity_state
     MODIFY COLUMN activity_type
         ENUM('APPLICATION_ASSESSMENT',
