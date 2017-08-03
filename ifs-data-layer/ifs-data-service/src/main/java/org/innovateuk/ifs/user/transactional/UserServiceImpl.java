@@ -12,6 +12,7 @@ import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.transactional.UserTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.UserPageResource;
@@ -79,6 +80,9 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     @Autowired
     private RegistrationService registrationService;
+
+    @Autowired
+    private EthnicityMapper ethnicityMapper;
 
     @Override
     public ServiceResult<UserResource> findByEmail(final String email) {
@@ -170,22 +174,18 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     @Override
     public ServiceResult<Void> updateDetails(UserResource userResource) {
         return find(userRepository.findByEmail(userResource.getEmail()), notFoundError(User.class, userResource.getEmail()))
-                .andOnSuccess( user -> {
-                    UserResource existingUserResource = userMapper.mapToResource(user);
-                    return updateUser(existingUserResource, userResource);
-                });
+                .andOnSuccess( user -> updateUser(user, userResource));
     }
 
-    private ServiceResult<Void> updateUser(UserResource existingUserResource, UserResource updatedUserResource) {
-        existingUserResource.setPhoneNumber(updatedUserResource.getPhoneNumber());
-        existingUserResource.setTitle(updatedUserResource.getTitle());
-        existingUserResource.setLastName(updatedUserResource.getLastName());
-        existingUserResource.setFirstName(updatedUserResource.getFirstName());
-        existingUserResource.setGender(updatedUserResource.getGender());
-        existingUserResource.setDisability(updatedUserResource.getDisability());
-        existingUserResource.setEthnicity(updatedUserResource.getEthnicity());
-        existingUserResource.setAllowMarketingEmails(updatedUserResource.getAllowMarketingEmails());
-        User existingUser = userMapper.mapToDomain(existingUserResource);
+    private ServiceResult<Void> updateUser(User existingUser, UserResource updatedUserResource) {
+        existingUser.setPhoneNumber(updatedUserResource.getPhoneNumber());
+        existingUser.setTitle(updatedUserResource.getTitle());
+        existingUser.setLastName(updatedUserResource.getLastName());
+        existingUser.setFirstName(updatedUserResource.getFirstName());
+        existingUser.setGender(updatedUserResource.getGender());
+        existingUser.setDisability(updatedUserResource.getDisability());
+        existingUser.setEthnicity(ethnicityMapper.mapIdToDomain(updatedUserResource.getEthnicity()));
+        existingUser.setAllowMarketingEmails(updatedUserResource.getAllowMarketingEmails());
         return serviceSuccess(userRepository.save(existingUser)).andOnSuccessReturnVoid();
     }
 
