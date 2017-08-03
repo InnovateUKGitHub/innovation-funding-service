@@ -17,7 +17,7 @@
               th:with="pageTitle='Assessor progress',
                 subTitle=|${model.competitionId} : ${model.competitionName}|,
                 size='heading-xlarge'" />
-    
+
     <h2 class="heading-large no-margin" th:text="${model.assessorName}"></h2>
 
     <h3 class="heading-medium no-margin">Innovation area and skills</h3>
@@ -31,11 +31,11 @@
         </div>
         <div class="column-half">
             <h4 class="heading-small">Type</h4>
-            <p th:text="${#strings.isEmpty(model.businessType)} ? 'Unknown' : ${model.businessType}" />
+            <span th:text="${#strings.isEmpty(model.businessType)} ? 'Unknown' : ${model.businessType}" />
         </div>
     </div>
 
-    <div class="extra-margin-top">
+    <div class="extra-margin">
         <a th:href="@{/competition/{cid}/assessors/profile/{aid}(cid=${model.competitionId},aid=${model.assessorId})} + ${originQuery}"
            th:text="'Review assessor'"/>
     </div>
