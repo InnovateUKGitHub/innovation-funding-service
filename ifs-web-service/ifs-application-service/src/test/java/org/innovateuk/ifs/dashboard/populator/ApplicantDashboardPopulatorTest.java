@@ -65,11 +65,12 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
                 .withApplicationState(ApplicationState.SUBMITTED)
                 .withCompetition(competitionResource.getId()).build());
 
-        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionsByUserId(loggedInUser.getId())).thenReturn(restSuccess(competitionResources));
 
-        when(processRoleService.findProcessRole(loggedInUser.getId(), APPLICATION_ID_IN_PROGRESS)).thenReturn(newProcessRoleResource().withRoleName(UserRoleType.LEADAPPLICANT.getName()).build());
-        when(processRoleService.findProcessRole(loggedInUser.getId(), APPLICATION_ID_IN_PROJECT)).thenReturn(newProcessRoleResource().withRoleName(UserRoleType.LEADAPPLICANT.getName()).build());
-        when(processRoleService.findProcessRole(loggedInUser.getId(), APPLICATION_ID_IN_FINISH)).thenReturn(newProcessRoleResource().withRoleName(UserRoleType.APPLICANT.getName()).build());
+        when(processRoleService.getByUserId(loggedInUser.getId())).thenReturn(newProcessRoleResource()
+                .withApplication(APPLICATION_ID_IN_PROGRESS, APPLICATION_ID_IN_PROJECT, APPLICATION_ID_IN_FINISH)
+                .withRoleName(UserRoleType.LEADAPPLICANT.getName(),UserRoleType.LEADAPPLICANT.getName(), UserRoleType.APPLICANT.getName())
+                .build(3));
     }
 
     @Test
