@@ -80,7 +80,13 @@
         </div>
 
         <th:block th:if="${user.status.equals(T(org.innovateuk.ifs.user.resource.UserStatus).ACTIVE)}">
-            <a th:href="@{/admin/user/{id}/deactivate(id=${user.id})}" data-js-modal="modal-confirm-deactivate-user">Deactivate user</a>
+            <a
+            th:href="@{/admin/user/{id}/deactivate(id=${user.id})}"
+            data-js-modal="modal-confirm-deactivate-user"
+            name="deactivateUser">
+            Deactivate user
+        </a>
+            <th:block th:insert="fragments/modals :: modal-confirm-deactivate-user" />
         </th:block>
 
         <div class="form-group extra-margin">

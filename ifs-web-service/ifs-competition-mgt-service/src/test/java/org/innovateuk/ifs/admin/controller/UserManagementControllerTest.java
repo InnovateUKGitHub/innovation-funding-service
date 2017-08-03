@@ -171,7 +171,8 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
 
         when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restSuccess(userResource));
         when(userRestServiceMock.deactivateUser(1L)).thenReturn(RestResult.restSuccess());
-        mockMvc.perform(get("/admin/user/{userId}/deactivate", 1L))
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/user/{userId}/edit", 1L).
+                    param("deactivateUser", ""))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/user/1"));
 
@@ -194,7 +195,8 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
 
         when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restSuccess(userResource));
         when(userRestServiceMock.deactivateUser(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
-        mockMvc.perform(get("/admin/user/{userId}/deactivate", 1L))
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/user/{userId}/edit", 1L).
+                    param("deactivateUser", ""))
                 .andExpect(status().isNotFound());
 
         verify(userRestServiceMock).deactivateUser(1L);
@@ -203,7 +205,8 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
     @Test
     public void deactivateUserFindUserFails() throws Exception {
         when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_FORBIDDEN));
-        mockMvc.perform(get("/admin/user/{userId}/deactivate", 1L))
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/user/{userId}/edit", 1L).
+                    param("deactivateUser", ""))
                 .andExpect(status().isForbidden());
     }
 
@@ -223,7 +226,8 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
 
         when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restSuccess(userResource));
         when(userRestServiceMock.reactivateUser(1L)).thenReturn(RestResult.restSuccess());
-        mockMvc.perform(get("/admin/user/{userId}/reactivate", 1L))
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/user/{userId}", 1L).
+                    param("reactivateUser", ""))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/user/1"));
 
@@ -246,7 +250,8 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
 
         when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restSuccess(userResource));
         when(userRestServiceMock.reactivateUser(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
-        mockMvc.perform(get("/admin/user/{userId}/reactivate", 1L))
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/user/{userId}", 1L).
+                    param("reactivateUser", ""))
                 .andExpect(status().isNotFound());
 
         verify(userRestServiceMock).reactivateUser(1L);
@@ -256,7 +261,8 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
     public void reactivateUserFindUserFails() throws Exception {
 
         when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_FORBIDDEN));
-        mockMvc.perform(get("/admin/user/{userId}/reactivate", 1L))
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/user/{userId}", 1L).
+                    param("reactivateUser", ""))
                 .andExpect(status().isForbidden());
     }
 

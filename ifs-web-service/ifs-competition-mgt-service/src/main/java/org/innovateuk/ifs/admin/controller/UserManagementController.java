@@ -90,6 +90,7 @@ public class UserManagementController {
         }).getSuccessObjectOrThrowException();
     }
 
+    @PreAuthorize("hasPermission(#userId, 'ACCESS_USER_EDIT')")
     @GetMapping("/user/{userId}/edit")
     public String viewEditUser(@PathVariable Long userId,
                                Model model,
@@ -114,6 +115,7 @@ public class UserManagementController {
 
     }
 
+    @PreAuthorize("hasPermission(#userId, 'ACCESS_USER_EDIT')")
     @PostMapping("/user/{userId}/edit")
     public String updateUser(@PathVariable Long userId,
                              Model model,
@@ -143,14 +145,14 @@ public class UserManagementController {
         return editUserResource;
     }
 
-
-    @GetMapping("/user/{userId}/deactivate")
-    public String deactivateUser(@PathVariable Long userId) {
+    @PreAuthorize("hasPermission(#userId, 'ACCESS_USER_EDIT')")
+    @PostMapping(value = "/user/{userId}/edit", params = "deactivateUser")
+    public String deactivateUserPost(@PathVariable Long userId) {
         return userRestService.retrieveUserById(userId).andOnSuccess( user ->
                 userRestService.deactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccessObjectOrThrowException();
     }
 
-    @GetMapping("/user/{userId}/reactivate")
+    @PostMapping(value = "/user/{userId}", params = "reactivateUser")
     public String reactivateUser(@PathVariable Long userId) {
         return userRestService.retrieveUserById(userId).andOnSuccess( user ->
                 userRestService.reactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccessObjectOrThrowException();

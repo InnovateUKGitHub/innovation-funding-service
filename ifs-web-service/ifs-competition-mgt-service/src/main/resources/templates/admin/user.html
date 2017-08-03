@@ -32,9 +32,17 @@
     <th:block th:if="${model.user.status.equals(T(org.innovateuk.ifs.user.resource.UserStatus).INACTIVE)}">
         <div class="form-footer">
             <div class="form-footer__actions">
-                <a th:href="@{/admin/user/{id}/reactivate(id=${model.user.id})}" data-js-modal="modal-confirm-reactivate-user">Reactivate user</a>
+                <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST">
+                    <a
+                        th:href="@{/admin/user/{id}/reactivate(id=${model.user.id})}"
+                        data-js-modal="modal-confirm-reactivate-user"
+                        name="reactivateUser">
+                        Reactivate user
+                    </a>
+                    <th:block th:insert="fragments/modals :: modal-confirm-reactivate-user" />
+                </form>
             </div>
-            <div class="form-footer__info" th:text="|Deactivated by ${model.user.modifiedBy} on ${#temporals.format(model.user.modifiedOn, 'dd MMM yyyy')}">
+            <div class="form-footer__info" th:text="|Deactivated by ${model.user.modifiedBy} on ${#temporals.format(model.user.modifiedOn, 'dd MMMM yyyy')}">
                 Deactivated by Susan Smith on 23rd March 2017
             </div>
         </div>
