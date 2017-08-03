@@ -665,7 +665,8 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         UserRoleType newRole = UserRoleType.SUPPORT;
 
-        when(baseUserServiceMock.getUserById(userToEdit.getId())).thenReturn(serviceSuccess(userResourceInDB));
+        //when(baseUserServiceMock.getUserById(userToEdit.getId())).thenReturn(serviceSuccess(userResourceInDB));
+        when(userRepositoryMock.findOne(userToEdit.getId())).thenReturn(userInDB);
         when(roleServiceMock.findByUserRoleType(newRole)).thenReturn(serviceSuccess(roleResource));
         when(roleMapperMock.mapToDomain(roleResource)).thenReturn(role);
         when(userMapperMock.mapToDomain(userResourceInDB)).thenReturn(userInDB);
