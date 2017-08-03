@@ -63,6 +63,12 @@ View assessor progress page
     And the user should see the element    jQuery=h2:contains("Applications") ~ div td:contains("${Virtual_Reality_id}") + td:contains("Living with Virtual Reality") + td:contains("Caneplus")
     And the user should see the element    jQuery=h2:contains("Applications") ~ div td:contains("${Virtual_Reality_id}") ~ td:contains("0") + td:contains("0") + td:contains("0")
 
+Selecting Review assessor link shows the assessor page
+    [Documentation]  IFS-1046
+    [Tags]
+    Given the user clicks the button/link  link=Review assessor
+    Then the user should see the element   jQuery=h3:contains("Name") + p:contains("Paul Plum")
+
 Accepting the application changes the Accepted column
     [Documentation]  IFS-321
     [Tags]
