@@ -23,7 +23,6 @@ import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newPr
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
-import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.resource.AffiliationType.PROFESSIONAL;
 import static org.junit.Assert.assertEquals;
@@ -79,7 +78,7 @@ public class AssessorControllerIntegrationTest extends BaseControllerIntegration
         userRes.setModifiedBy(userRepository.findByEmail(getCompAdmin().getEmail()).get().getName());
 
         AssessorProfileResource expectedAssessorProfileResource = newAssessorProfileResource()
-                .withUser(userRes/*userMapper.mapToResource(user)*/)
+                .withUser(userRes)
                 .withProfile(
                         newProfileResource()
                                 .withAffiliations(affiliationMapper.mapToResource(user.getAffiliations()))
