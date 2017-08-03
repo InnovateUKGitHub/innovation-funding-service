@@ -89,4 +89,14 @@ public class ProcessRoleServiceImplTest extends BaseServiceUnitTest<ProcessRoleS
         assertEquals(resources, returnedResources);
     }
 
+    @Test
+    public void testGetByUserId() throws Exception {
+        List<ProcessRoleResource> resources = Lists.newArrayList(new ProcessRoleResource());
+        when(userRestService.findProcessRoleByUserId(123L)).thenReturn(restSuccess(resources));
+
+        List<ProcessRoleResource> returnedResources = service.getByUserId(123L);
+
+        assertEquals(resources, returnedResources);
+    }
+
 }
