@@ -19,17 +19,8 @@ public class AJPConfig {
     @Value("${tomcat.ajp.enabled}")
     boolean tomcatAjpEnabled;
 
-    @Value("${ifs.web.ajp.connections.timeout}")
-    int connectionTimeout;
-
-    @Value("${ifs.web.ajp.connections.max.total}")
+    @Value("${ifs.web.rest.connections.max.total}")
     int maxConnections;
-
-    @Value("${ifs.web.ajp.connections.accept.count}")
-    int acceptCount;
-
-    @Value("${ifs.web.ajp.connections.max.threads}")
-    int maxThreads;
 
     @Bean
     public EmbeddedServletContainerFactory servletContainer() {
@@ -43,10 +34,10 @@ public class AJPConfig {
             ajpConnector.setSecure(false);
             ajpConnector.setAllowTrace(false);
             ajpConnector.setAttribute("tomcatAuthentication", false);
-            ajpConnector.setAttribute("connectionTimeout", connectionTimeout);
-            ajpConnector.setAttribute("acceptCount", acceptCount);
+            ajpConnector.setAttribute("connectionTimeout", 30000);
+            ajpConnector.setAttribute("acceptCount", maxConnections);
             ajpConnector.setAttribute("maxConnections", maxConnections);
-            ajpConnector.setAttribute("maxThreads", maxThreads);
+            ajpConnector.setAttribute("maxThreads", maxConnections);
             ajpConnector.setAttribute("minSpareThreads", 20);
             ajpConnector.setScheme("ajp");
             tomcat.addAdditionalTomcatConnectors(ajpConnector);

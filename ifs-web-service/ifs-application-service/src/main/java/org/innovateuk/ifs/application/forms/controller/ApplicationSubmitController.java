@@ -180,11 +180,12 @@ public class ApplicationSubmitController {
 
     @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/{applicationId}/track")
-    public String applicationTrack(Model model,
-                                   @PathVariable("applicationId") long applicationId) {
+    public String applicationTrack(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
+                                   UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        applicationModelPopulator.addApplicationWithoutDetails(application, competition, model);
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, model, form, userApplicationRoles, Optional.empty());
         return "application-track";
     }
 
