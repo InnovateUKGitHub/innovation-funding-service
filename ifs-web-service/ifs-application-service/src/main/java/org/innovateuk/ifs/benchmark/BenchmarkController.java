@@ -1,14 +1,21 @@
 package org.innovateuk.ifs.benchmark;
 
+import java.util.List;
+import java.util.Random;
+import java.util.stream.LongStream;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * A controller that can be used for load testing purposes
@@ -18,6 +25,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class BenchmarkController extends BaseRestService {
 
     private static final Log LOG = LogFactory.getLog(BenchmarkController.class);
+    private static final String THYMELEAF_TESTING = "thymeleaf-test";
+    private static final Random r = new Random();
 
     @GetMapping("/isolated")
     public @ResponseBody String isolated(@RequestParam("process_time_millis") long processTimeMillis) {
@@ -64,6 +73,15 @@ public class BenchmarkController extends BaseRestService {
         return dataLayerResponse.getSuccessObject() + "\n" + thisLayerProcessingMessage + "\n" + totalTimeMessage;
     }
 
+    @GetMapping("/thymeleaf")
+    public String isolatedThymeleaf(@RequestParam("rows") long rows,
+        @RequestParam("cols") long cols,
+        Model model){
+
+        model.addAttribute("table", generateTable(rows, cols));
+        return THYMELEAF_TESTING;
+    }
+
     private String processForMillis(long processTimeMillis, Runnable action, String processMessage) {
 
         long start = System.currentTimeMillis();
@@ -75,5 +93,21 @@ public class BenchmarkController extends BaseRestService {
         String response = "Took " + (System.currentTimeMillis() - start) + " milliseconds to process " + processMessage;
         LOG.debug(response);
         return response;
+    }
+
+    private List<List<String>> generateTable(long rows, long cols){
+        return LongStream.range(0, rows)
+            .mapToObj(
+                row -> generateRandomList(cols)
+            )
+            .collect(toList());
+    }
+
+
+    private List<String> generateRandomList(long length) {
+        return LongStream.range(0,length)
+            .mapToObj(
+                i -> Integer.toString(r.nextInt())
+            ).collect(toList());
     }
 }
