@@ -57,7 +57,7 @@ View assessor progress page
     Given the user clicks the button/link  jQuery=td:contains("Paul Plum") ~ td a:contains("View progress")
     Then The user should see the element   jQuery=h2:contains("Paul Plum")
     And the user should see the element    jQuery=h4:contains("Innovation area") ~ ul li:contains("Urban living") ~ li:contains("Smart infrastructure")
-    And the user should see the element    jQuery=h4:contains("Type") ~ p:contains("Academic")
+    And the user should see the element    jQuery=h4:contains("Type") ~ span:contains("Academic")
     And the user should see the element    jQuery=h2:contains("Assigned") + div td:contains("${Molecular_id}") + td:contains("Molecular tree breeding") + td:contains("Forest Universe") + td:contains("2")
     And the user should see the element    jQuery=h2:contains("Assigned") + div td:contains("${Molecular_id}") ~ td:contains("Yes") + td:contains("-") + td:contains("-")
     And the user should see the element    jQuery=h2:contains("Applications") ~ div td:contains("${Virtual_Reality_id}") + td:contains("Living with Virtual Reality") + td:contains("Caneplus")
