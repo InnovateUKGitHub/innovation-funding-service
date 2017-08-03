@@ -401,7 +401,7 @@ Checking the approve viability checkbox enables RAG selection but not confirm vi
 
 RAG choices update on the finance checks page for partner
     [Documentation]    INFUND-4822, INFUND-4856
-    [Tags
+    [Tags]
     When the rag rating updates on the finance check page for partner for viability    Green
     And the rag rating updates on the finance check page for partner for viability      Amber
     And the rag rating updates on the finance check page for partner for viability      Red
