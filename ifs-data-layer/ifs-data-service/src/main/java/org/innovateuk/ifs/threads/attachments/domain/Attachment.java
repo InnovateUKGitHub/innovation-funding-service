@@ -38,6 +38,13 @@ public class Attachment {
         this.createdOn = createdOn;
     }
 
+    public Attachment(Long id, User uploader, FileEntry fileEntry, ZonedDateTime createdOn) {
+        this.id = id;
+        this.uploader = uploader;
+        this.fileEntry = fileEntry;
+        this.createdOn = createdOn;
+    }
+
     public Long id() {
         return id;
     }
