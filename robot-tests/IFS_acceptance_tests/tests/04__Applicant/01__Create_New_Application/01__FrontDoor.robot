@@ -19,8 +19,8 @@ Guest user navigates to Front Door
     And the user should see the element     css=#keywords
     Then the user should see the element     css=#innovation-area
     # Guest user can see competitions sorted in reverse chronological order by opening date
-    When verify first date is greater than second  css=li:nth-child(1) .date-definition-list dd:nth-of-type(1)  css=li:nth-child(2) .date-definition-list dd:nth-of-type(1)
-    Then verify first date is greater than second  css=li:nth-child(2) .date-definition-list dd:nth-of-type(1)  css=li:nth-child(3) .date-definition-list dd:nth-of-type(1)
+    When verify first date is greater than or equal to second  css=li:nth-child(1) .date-definition-list dd:nth-of-type(1)  css=li:nth-child(2) .date-definition-list dd:nth-of-type(1)
+    Then verify first date is greater than or equal to second  css=li:nth-child(2) .date-definition-list dd:nth-of-type(1)  css=li:nth-child(3) .date-definition-list dd:nth-of-type(1)
     When the user clicks the button/link     link=Contact us
     Then the user should see the element     jQuery=h1:contains("Contact us")
     And the user should not see an error in the page
