@@ -255,20 +255,20 @@ Innovation lead can see read only view of Your funding
 
 *** Keywords ***
 the finance summary calculations should be correct
-    the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("£248,100")
-    the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("£29,396")
-    the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("£501,234")
-    the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("£70,316")
+    the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("£349,046")
+    the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("£58,793")
+    the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("£502,468")
+    the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("£140,632")
 
 the finance Funding breakdown calculations should be correct
     the user should see the element  jQuery=.project-cost-breakdown th:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}") + td:contains("£147,153")
-    the user should see the element  jQuery=.project-cost-breakdown th:contains("${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}") + td:contains("£100,452")
-    the user should see the element  jQuery=.project-cost-breakdown th:contains("${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}") + td:contains("£495")
-    the user should see the element  jQuery=.project-cost-breakdown th:contains("Total") + td:contains("£248,100")
+    the user should see the element  jQuery=.project-cost-breakdown th:contains("${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}") + td:contains("£200,903")
+    the user should see the element  jQuery=.project-cost-breakdown th:contains("${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}") + td:contains("£990")
+    the user should see the element  jQuery=.project-cost-breakdown th:contains("Total") + td:contains("£349,046")
 
 the finance summary table in Your Finances has correct values for lead
     the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(1)  Total project costs
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(1)  £71,622
+    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(1)  £72,611
     the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
     the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(2)  30%
     the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(3)  Funding sought
@@ -280,11 +280,11 @@ the finance summary table in Your Finances has correct values for lead
 
 the finance summary table in Your Finances has correct values for collaborator
     the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(1)  Total project costs
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(1)  £495
+    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(1)  £990
     the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
     the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(2)  100%
     the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(3)  Funding sought
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(3)  £495
+    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(3)  £990
     the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(4)  Other public sector funding
     the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(4)  £0
     the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(5)  Contribution to project

@@ -264,14 +264,13 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void testApplicationTrack() throws Exception {
         ApplicationResource app = applications.get(0);
-
         when(applicationService.getById(app.getId())).thenReturn(app);
-        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+        when(competitionService.getById(anyLong())).thenReturn(competitionResource);
 
         mockMvc.perform(get("/application/1/track"))
                 .andExpect(view().name("application-track"))
                 .andExpect(model().attribute("currentApplication", app))
-                .andExpect(model().attribute("responses", formInputsToFormInputResponses));
+                .andExpect(model().attribute("currentCompetition", competitionResource));
 
     }
 }
