@@ -1,5 +1,10 @@
 package org.innovateuk.ifs.application.populator;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
 import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
@@ -21,11 +26,6 @@ import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
@@ -66,6 +66,17 @@ public class ApplicationModelPopulator {
                                                          ApplicationForm form,
                                                          List<ProcessRoleResource> userApplicationRoles) {
         return addApplicationAndSections(application, competition, user, section, currentQuestionId, model, form, userApplicationRoles, Optional.empty());
+    }
+
+    public ApplicationResource addApplicationWithoutDetails(ApplicationResource application,
+        CompetitionResource competition,
+        Model model) {
+
+        model.addAttribute("completedQuestionsPercentage", application.getCompletion());
+        model.addAttribute("currentApplication", application);
+        model.addAttribute("currentCompetition", competition);
+
+        return application;
     }
 
     public ApplicationResource addApplicationAndSections(ApplicationResource application,
