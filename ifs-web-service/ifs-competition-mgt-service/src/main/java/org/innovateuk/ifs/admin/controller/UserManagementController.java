@@ -6,6 +6,7 @@ import org.innovateuk.ifs.admin.viewmodel.UserListViewModel;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
+import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.registration.service.InternalUserService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -49,6 +50,9 @@ public class UserManagementController {
     private UserRestService userRestService;
 
     @Autowired
+    private InviteUserRestService inviteUserRestService;
+
+    @Autowired
     private InternalUserService internalUserService;
 
     @GetMapping("/users/active")
@@ -67,19 +71,34 @@ public class UserManagementController {
         return view(model, "inactive", page, size, Objects.toString(request.getQueryString(), ""));
     }
 
+    @GetMapping("/users/pending")
+    public String viewPending(Model model,
+                               HttpServletRequest request,
+                               @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
+                               @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size) {
+        return view(model, "pending", page, size, Objects.toString(request.getQueryString(), ""));
+    }
+
     private String view(Model model, String activeTab, int page, int size, String existingQueryString){
-        return userRestService.getActiveInternalUsers(page, size).andOnSuccessReturn(activeInternalUsers -> userRestService.getInactiveInternalUsers(page, size).andOnSuccessReturn(inactiveInternalUsers -> {
-            model.addAttribute("model",
-                    new UserListViewModel(
-                            activeTab,
-                            activeInternalUsers.getContent(),
-                            inactiveInternalUsers.getContent(),
-                            activeInternalUsers.getTotalElements(),
-                            inactiveInternalUsers.getTotalElements(),
-                            new PaginationViewModel(activeInternalUsers, "active?" + existingQueryString) ,
-                            new PaginationViewModel(inactiveInternalUsers, "inactive?" + existingQueryString)));
-            return "admin/users";
-        }).getSuccessObjectOrThrowException()).getSuccessObjectOrThrowException();
+        return userRestService.getActiveInternalUsers(page, size)
+                .andOnSuccessReturn(activeInternalUsers -> userRestService.getInactiveInternalUsers(page, size)
+                        .andOnSuccessReturn(inactiveInternalUsers -> inviteUserRestService.getPendingInternalUserInvites(page, size)
+                                .andOnSuccessReturn(pendingInternalUserInvites ->
+                                {
+                                    model.addAttribute("model",
+                                            new UserListViewModel(
+                                                    activeTab,
+                                                    activeInternalUsers.getContent(),
+                                                    inactiveInternalUsers.getContent(),
+                                                    pendingInternalUserInvites.getContent(),
+                                                    activeInternalUsers.getTotalElements(),
+                                                    inactiveInternalUsers.getTotalElements(),
+                                                    pendingInternalUserInvites.getTotalElements(),
+                                                    new PaginationViewModel(activeInternalUsers, "active?" + existingQueryString),
+                                                    new PaginationViewModel(inactiveInternalUsers, "inactive?" + existingQueryString),
+                                                    new PaginationViewModel(pendingInternalUserInvites, "pending?" + existingQueryString)));
+                                    return "admin/users";
+                                }).getSuccessObjectOrThrowException()).getSuccessObjectOrThrowException()).getSuccessObjectOrThrowException();
     }
 
     @PreAuthorize("hasPermission(#userId, 'ACCESS_INTERNAL_USER')")

@@ -8,6 +8,8 @@ ENV JAVA_OPTS -Xmx300m
 ENV JMX_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=8001 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
 VOLUME /tmp
 
+ADD newrelic.jar /
+ADD newrelic.yml /
 ADD coscale-monitoring.sh /root/coscale-monitoring.sh
 ADD @app_name@-@version@.jar app.jar
 

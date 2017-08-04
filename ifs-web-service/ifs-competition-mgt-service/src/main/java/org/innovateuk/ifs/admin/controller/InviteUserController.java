@@ -67,7 +67,7 @@ public class InviteUserController {
             ServiceResult<Void> saveResult = inviteUserService.saveUserInvite(inviteUserResource);
 
             return validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
-                    failNowOrSucceedWith(failureView, () -> "redirect:/admin/users/active");
+                    failNowOrSucceedWith(failureView, () -> "redirect:/admin/users/pending");
 
         });
     }

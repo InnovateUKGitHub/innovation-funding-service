@@ -7,6 +7,7 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.authentication.service.RestIdentityProviderService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
@@ -610,8 +611,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 .withRoles(roleResources)
                 .build();
 
-        UserResource userResource = internalUserRegistrationResource.toUserResource();
-
         User userToCreate = newUser()
                 .withId((Long) null)
                 .withFirstName("First")
@@ -630,6 +629,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(userRepositoryMock.save(any(User.class))).thenReturn(userToCreate);
         ServiceResult<Void> result = service.createInternalUser("SomeInviteHash", internalUserRegistrationResource);
         assertTrue(result.isSuccess());
+        assertEquals(InviteStatus.OPENED, roleInvite.getStatus());
     }
 
     @Test
