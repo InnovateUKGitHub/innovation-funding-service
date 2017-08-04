@@ -5,7 +5,8 @@ Documentation     IFS-604: IFS Admin user navigation to Manage users section
 ...               IFS-27:  Invite new internal user
 ...               IFS-642: Email to new internal user inviting them to register
 ...               IFS-643: Complete internal user registration
-Suite Setup       Delete the emails from both test mailboxes
+...               IFS-644: Disable or reenable user profile
+Suite Setup       Custom Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  CompAdmin
 Resource          ../../resources/defaultResources.robot
@@ -181,20 +182,48 @@ Client side validations for edit internal user's details
 Administrator can successfully edit internal user's details
     [Documentation]  IFS-18
     [Tags]
-    Given the user enters text to a text field  id=firstName  Edited
-    And the user enters text to a text field   id=lastName  Admin
+    Given the user enters text to a text field               id=firstName  Edited
+    Then the user enters text to a text field                id=lastName  Admin
     And the user selects the option from the drop-down menu  IFS Support User  id=role
-    And the user clicks the button/link        jQuery=.button:contains("Save and return")
+    And the user clicks the button/link                      jQuery=.button:contains("Save and return")
     Then the user cannot see a validation error in the page
-    Then the user should see the element       jQuery=h1:contains("Manage users")
+    When the user should see the element                     jQuery=h1:contains("Manage users")
     #The Admin is redirected to the Manage Users page on Success
-    And the user should see the element        jQuery=.selected:contains("Active")
-    And the user should see the element     link=Edited Admin
-    [Teardown]  close any open browsers
+    And the user should see the element                      jQuery=.selected:contains("Active")
+    And the user should see the element                      jQuery=td:contains("Edited Admin") + td:contains("IFS Support User")
+
+Administrator is able to disable internal users
+    [Documentation]  IFS-644
+    [Tags]  HappyPath
+    Given the user navigates to the View internal users details  Edited Admin  active
+    And the user clicks the button/link   link=Edit
+    Then the user should see the element  css=.form-group input
+    When the user clicks the button/link  link=Deactivate user
+    Then the user clicks the button/link  jQuery=button:contains("Cancel")
+    When the user clicks the button/link  link=Deactivate user
+    And the user clicks the button/link   jQuery=button:contains("Yes, deactivate")
+    Then the user should see the element  jQuery=.form-footer *:contains("Reactivate user") + *:contains("Deactivated by Arden Pimenta on")  #TODO add ${today}
+
+Deactivated user cannot login till he is activated
+    [Documentation]  IFS-644
+    [Tags]
+    [Setup]  the user logs out if they are logged in
+    Given the user cannot login with their new details  ifs.administrator@innovateuk.test  ${correct_password}
+    When Logging in and Error Checking                  &{ifs_admin_user_credentials}
+    Then the user navigates to the View internal users details  Edited Admin  inactive
+#    When the user clicks the button/link  link=Edit    # TODO IFS-1136
+#    Then the user should not see an error in the page
+    When the user clicks the button/link                link=Reactivate user
+    Then the user clicks the button/link                jQuery=button:contains("Yes, reactivate")
+    When log in as a different user                     ifs.administrator@innovateuk.test  ${correct_password}
+    Then the user should not see an error in the page
 
 # TODO: Add ATs for IFS-605 with pagination when IFS-637 is implemented
 
 *** Keywords ***
+Custom Suite Setup
+    Delete the emails from both test mailboxes
+
 User cannot see manage users page
     [Arguments]  ${email}  ${password}
     Log in as a different user  ${email}  ${password}
@@ -219,3 +248,8 @@ the invited user logs in
     run keyword if  ${docker}==1  Logging in and Error Checking  ifs.administrator@innovateuk.test  ${correct_password}
     # On production the accepted domain is innovateuk.gov.uk
     run keyword if  ${docker}!=1  Logging in and Error Checking  ifs.administrator@innovateuk.gov.uk  ${correct_password}
+
+the user navigates to the View internal users details
+    [Arguments]  ${user}  ${status}
+    the user navigates to the page   ${server}/management/admin/users/${status}
+    the user clicks the button/link  link=${user}
