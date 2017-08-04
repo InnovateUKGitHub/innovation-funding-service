@@ -80,6 +80,7 @@ public class AssessorAssessmentProgressModelPopulator {
                 summaryResource.getCompetitionId(),
                 summaryResource.getCompetitionName(),
                 summaryResource.getCompetitionStatus(),
+                assessorId,
                 summaryResource.getAssessor().getUser().getName(),
                 innovationAreas,
                 businessType != null ? businessType.getDisplayName() : "",
