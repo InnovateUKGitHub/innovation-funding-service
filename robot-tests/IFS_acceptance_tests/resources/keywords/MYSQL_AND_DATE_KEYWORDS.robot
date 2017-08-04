@@ -132,7 +132,7 @@ get comp id from comp title
 
 # The below keyword gets date from first selector and checks if it is greater than the date from second selector
 # For example 12 February 2018 > 26 January 2017 . Greater in this case means latest.
-verify first date is greater than second
+verify first date is greater than or equal to second
     [Arguments]  ${selector1}   ${selector2}
     ${date_in_text_format1}=  Get text  ${selector1}
     ${date1}=  Convert Date  ${date_in_text_format1}  date_format=%d %B %Y  exclude_millis=true
