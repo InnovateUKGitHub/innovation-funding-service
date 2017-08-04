@@ -11,13 +11,16 @@ Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Test Cases ***
 Guest user navigates to Front Door
-    [Documentation]    INFUND-6923 INFUND-7946
+    [Documentation]    INFUND-6923 INFUND-7946 IFS-247
     [Tags]
     [Setup]    the user navigates to the front door
     When the user should see the element     jQuery=a:contains("Innovate UK")
     Then the user should see the element     jQuery=h1:contains("Innovation competitions")
     And the user should see the element     css=#keywords
     Then the user should see the element     css=#innovation-area
+    # Guest user can see competitions sorted in reverse chronological order by opening date
+    When verify first date is greater than second  css=li:nth-child(1) .date-definition-list dd:nth-of-type(1)  css=li:nth-child(2) .date-definition-list dd:nth-of-type(1)
+    Then verify first date is greater than second  css=li:nth-child(2) .date-definition-list dd:nth-of-type(1)  css=li:nth-child(3) .date-definition-list dd:nth-of-type(1)
     When the user clicks the button/link     link=Contact us
     Then the user should see the element     jQuery=h1:contains("Contact us")
     And the user should not see an error in the page
@@ -92,17 +95,6 @@ Guest user can see the non ifs competition warnings
     And the user clicks the button/link    link=${NON_IFS_COMPETITION_NAME}
     Then the user should see the text in the page       Registration has now closed.
     And execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='2020-06-24 11:00:00' WHERE `${database_name}`.`competition`.`name`='Transforming big data' and `${database_name}`.`milestone`.`type` = 'SUBMISSION_DATE';
-
-Guest user can see competitions sorted in reverse chronological order by opening date
-    [Documentation]    IFS-247
-    [Tags]
-    [Setup]  the user navigates to the page  ${frontDoor}
-    When the user should see the element     jQuery=li:nth-child(1):contains("Photonics for health") dt:contains("Opens") + dd:contains("24 February 2018")
-    When the user should see the element     jQuery=li:nth-child(2):contains("Transforming big data") dt:contains("Opened") + dd:contains("24 January 2017")
-    When the user should see the element     jQuery=li:nth-child(3):contains("Aerospace technology investment sector") dt:contains("Opened") + dd:contains("15 April 2016")
-    When the user should see the element     jQuery=li:nth-child(4):contains("Predicting market trends programme") dt:contains("Opened") + dd:contains("15 April 2016")
-    When the user should see the element     jQuery=li:nth-child(5):contains("Home and industrial efficiency programme") dt:contains("Opened") + dd:contains("15 April 2016")
-    When the user should see the element     jQuery=li:nth-child(6):contains("Generic innovation") dt:contains("Opened") + dd:contains("24 June 2015")
 
 Guest user can see the public information of a competition
     [Documentation]    INFUND-6923

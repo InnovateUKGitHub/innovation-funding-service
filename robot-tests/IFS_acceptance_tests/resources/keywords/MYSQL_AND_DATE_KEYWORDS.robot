@@ -129,3 +129,13 @@ get comp id from comp title
     ${competitionId} =    get from list    ${result}    0
     Log    ${competitionId}
     [Return]    ${competitionId}
+
+# The below keyword gets date from first selector and checks if it is greater than the date from second selector
+# For example 12 February 2018 > 26 January 2017 . Greater in this case means latest.
+verify first date is greater than second
+    [Arguments]  ${selector1}   ${selector2}
+    ${date_in_text_format1}=  Get text  ${selector1}
+    ${date1}=  Convert Date  ${date_in_text_format1}  date_format=%d %B %Y  exclude_millis=true
+    ${date_in_text_format2}=  Get text  ${selector2}
+    ${date2}=  Convert Date  ${date_in_text_format2}  date_format=%d %B %Y  exclude_millis=true
+    Should be true  '${date1}'>='${date2}'
