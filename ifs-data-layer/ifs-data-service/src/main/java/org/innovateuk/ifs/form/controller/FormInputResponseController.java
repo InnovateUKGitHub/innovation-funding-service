@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.form.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
@@ -37,30 +38,29 @@ public class FormInputResponseController {
     private static final Log LOG = LogFactory.getLog(FormInputResponseController.class);
 
     @GetMapping("/findResponsesByApplication/{applicationId}")
-    public RestResult<List<FormInputResponseResource>> findResponsesByApplication(@PathVariable("applicationId") final Long applicationId){
+    public RestResult<List<FormInputResponseResource>> findResponsesByApplication(@PathVariable("applicationId") final Long applicationId) {
         return formInputService.findResponsesByApplication(applicationId).toGetResponse();
     }
 
     @GetMapping("/findResponseByFormInputIdAndApplicationId/{formInputId}/{applicationId}")
-    public RestResult<List<FormInputResponseResource>> findByFormInputIdAndApplication(@PathVariable("formInputId") final Long formInputId, @PathVariable("applicationId") final Long applicationId){
+    public RestResult<List<FormInputResponseResource>> findByFormInputIdAndApplication(@PathVariable("formInputId") final Long formInputId, @PathVariable("applicationId") final Long applicationId) {
         return formInputService.findResponsesByFormInputIdAndApplicationId(formInputId, applicationId).toGetResponse();
     }
 
     @GetMapping("/findByApplicationIdAndQuestionName/{applicationId}/{questionName}")
     public RestResult<FormInputResponseResource> findByApplicationIdAndQuestionName(@PathVariable long applicationId,
-                                                                                 @PathVariable String questionName) {
+                                                                                    @PathVariable String questionName) {
         return formInputService.findResponseByApplicationIdAndQuestionName(applicationId, questionName).toGetResponse();
     }
 
     @GetMapping("/findByApplicationIdAndQuestionId/{applicationId}/{questionId}")
     public RestResult<List<FormInputResponseResource>> findByApplicationIdAndQuestionId(@PathVariable long applicationId,
-                                                                                  @PathVariable long questionId) {
+                                                                                        @PathVariable long questionId) {
         return formInputService.findResponseByApplicationIdAndQuestionId(applicationId, questionId).toGetResponse();
     }
 
     @PostMapping("/saveQuestionResponse")
     public RestResult<ValidationMessages> saveQuestionResponse(@RequestBody JsonNode jsonObj) {
-
         Long userId = jsonObj.get("userId").asLong();
         Long applicationId = jsonObj.get("applicationId").asLong();
         Long formInputId = jsonObj.get("formInputId").asLong();
@@ -68,20 +68,19 @@ public class FormInputResponseController {
         Boolean ignoreEmpty = ignoreEmptyNode != null && ignoreEmptyNode.asBoolean();
         String value = HtmlUtils.htmlUnescape(jsonObj.get("value").asText(""));
 
-        ServiceResult<ValidationMessages> result = formInputService.saveQuestionResponse(new FormInputResponseCommand(formInputId, applicationId,  userId, value)).andOnSuccessReturn(response -> {
-
-            BindingResult bindingResult = validationUtil.validateResponse(response, ignoreEmpty);
-            if (bindingResult.hasErrors()) {
-                LOG.debug("Got validation errors: ");
-                bindingResult.getAllErrors().stream().forEach(e -> LOG.debug("Validation: " + e.getDefaultMessage()));
-            }
-
-            formInputResponseRepository.save(response);
-            LOG.debug("Single question saved!");
-
-            return new ValidationMessages(bindingResult);
-        });
+        ServiceResult<ValidationMessages> result = formInputService.saveQuestionResponse(new FormInputResponseCommand(formInputId, applicationId, userId, value))
+                .andOnSuccessReturn(response -> buildBindingResultWithCheckErrors(response, ignoreEmpty));
 
         return result.toPostWithBodyResponse();
+    }
+
+    private ValidationMessages buildBindingResultWithCheckErrors(FormInputResponse response, Boolean ignoreEmpty) {
+        BindingResult bindingResult = validationUtil.validateResponse(response, ignoreEmpty);
+        if (bindingResult.hasErrors()) {
+            LOG.debug("Got validation errors: ");
+            bindingResult.getAllErrors().stream().forEach(e -> LOG.debug("Validation: " + e.getDefaultMessage()));
+        }
+
+        return new ValidationMessages(bindingResult);
     }
 }

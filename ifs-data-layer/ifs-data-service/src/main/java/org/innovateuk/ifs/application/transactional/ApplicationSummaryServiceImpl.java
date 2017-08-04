@@ -249,7 +249,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
         Organisation organisation = organisationRepository.findOne(organisationId);
 
         teamOrg.setOrganisationName(organisation.getName());
-
+        teamOrg.setOrganisationTypeName(organisation.getOrganisationType().getName());
         teamOrg.setRegisteredAddress(getAddressByType(organisation, OrganisationAddressType.REGISTERED));
 
         teamOrg.setOperatingAddress(getAddressByType(organisation, OrganisationAddressType.OPERATING));

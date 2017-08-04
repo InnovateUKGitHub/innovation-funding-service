@@ -66,9 +66,9 @@ User can print the application
 
 *** Keywords ***
 the applicant can see the overview page divided in three sections
-    the user should see the element  jQuery=#section-184 h2:contains("Project details")
-    the user should see the element  jQuery=#section-185 h2:contains("Application questions")
-    the user should see the element  jQuery=#section-186 h2:contains("Finances")
+    the user should see the element  jQuery=section h2:contains("Project details")
+    the user should see the element  jQuery=section h2:contains("Application questions")
+    the user should see the element  jQuery=section h2:contains("Finances")
 
 the user should get a new print window
     Select Window    Title=Print Application - Innovation Funding Service

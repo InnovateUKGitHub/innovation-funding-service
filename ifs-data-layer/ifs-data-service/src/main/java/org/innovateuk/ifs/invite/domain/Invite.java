@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.invite.domain;
 
 import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -117,14 +118,14 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
 
     public ZonedDateTime getSentOn() {
         if (InviteStatus.CREATED == getStatus()) {
-            throw new IllegalStateException("cannot get sentOn for an unsent Invite");
+            return null;
         }
         return requireNonNull(sentOn, "Unexpected null sentOn on a " + getStatus() + " Invite");
     }
 
     public User getSentBy() {
         if (InviteStatus.CREATED == getStatus()) {
-            throw new IllegalStateException("cannot get sentBy for an unsent Invite");
+            return null;
         }
         return requireNonNull(sentBy, "Unexpected null sentBy on a " + getStatus() + " Invite");
     }

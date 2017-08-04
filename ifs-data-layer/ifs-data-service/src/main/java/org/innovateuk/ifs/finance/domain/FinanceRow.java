@@ -19,7 +19,7 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_LENGTH
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "row_type", discriminatorType = DiscriminatorType.STRING)
-public abstract class FinanceRow<FinanceType> {
+public abstract class FinanceRow<FinanceType extends Finance> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

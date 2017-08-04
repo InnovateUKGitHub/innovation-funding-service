@@ -5,6 +5,8 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.innovateuk.ifs.invite.resource.EditUserResource;
+import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.user.resource.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -211,5 +213,17 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         }
         String url = userRestURL + "/updateDetails";
         return postWithRestResult(url, user, UserResource.class);
+    }
+
+    @Override
+    public RestResult<Void> createInternalUser(String inviteHash, InternalUserRegistrationResource internalUserRegistrationResource) {
+        String url = userRestURL + "/internal/create/" + inviteHash;
+        return postWithRestResultAnonymous(url, internalUserRegistrationResource, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> editInternalUser(EditUserResource editUserResource) {
+        String url = userRestURL + "/internal/edit";
+        return postWithRestResult(url, editUserResource, Void.class);
     }
 }

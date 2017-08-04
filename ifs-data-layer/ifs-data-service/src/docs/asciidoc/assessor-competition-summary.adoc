@@ -1,0 +1,11 @@
+=== Get assessor competition summary
+==== Request
+include::{snippets}/assessor-competition-summary/get-assessor-summary/http-request.adoc[]
+include::{snippets}/assessor-competition-summary/get-assessor-summary/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessor-competition-summary/get-assessor-summary/http-response.adoc[]
+include::{snippets}/assessor-competition-summary/get-assessor-summary/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessor-competition-summary/get-assessor-summary/curl-request.adoc[]

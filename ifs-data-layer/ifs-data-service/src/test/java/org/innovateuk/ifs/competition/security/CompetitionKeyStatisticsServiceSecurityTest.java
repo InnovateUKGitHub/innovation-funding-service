@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.transactional.CompetitionKeyStatisticsServ
 import org.junit.Test;
 
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.INNOVATION_LEAD;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 
 public class CompetitionKeyStatisticsServiceSecurityTest extends BaseServiceSecurityTest<CompetitionKeyStatisticsService> {
@@ -19,27 +20,27 @@ public class CompetitionKeyStatisticsServiceSecurityTest extends BaseServiceSecu
 
     @Test
     public void getReadyToOpenKeyStatisticsByCompetition() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getReadyToOpenKeyStatisticsByCompetition(1L), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getReadyToOpenKeyStatisticsByCompetition(1L), COMP_ADMIN, PROJECT_FINANCE, INNOVATION_LEAD);
     }
 
     @Test
     public void getOpenKeyStatisticsByCompetition() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getOpenKeyStatisticsByCompetition(1L), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getOpenKeyStatisticsByCompetition(1L), COMP_ADMIN, PROJECT_FINANCE, INNOVATION_LEAD);
     }
 
     @Test
     public void getClosedKeyStatisticsByCompetition() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getClosedKeyStatisticsByCompetition(1L), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getClosedKeyStatisticsByCompetition(1L), COMP_ADMIN, PROJECT_FINANCE, INNOVATION_LEAD);
     }
 
     @Test
     public void getInAssessmentKeyStatisticsByCompetition() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInAssessmentKeyStatisticsByCompetition(1L), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInAssessmentKeyStatisticsByCompetition(1L), COMP_ADMIN, PROJECT_FINANCE, INNOVATION_LEAD);
     }
 
     @Test
     public void getFundedKeyStatisticsByCompetition() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getFundedKeyStatisticsByCompetition(1L), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getFundedKeyStatisticsByCompetition(1L), COMP_ADMIN, PROJECT_FINANCE, INNOVATION_LEAD);
     }
 
     public static class TestCompetitionKeyStatisticsService implements CompetitionKeyStatisticsService {

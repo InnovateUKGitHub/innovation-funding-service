@@ -15,7 +15,6 @@ ENV HTTP_PORT=9180 \
     SP_DOMAIN=ifs.local-dev \
     IDP_DOMAIN=idp \
     IDP_PORT=8443 \
-    TRUSTED_IP="@auth_service_trusted_ip@" \
     SP_PROXY_KEY="@auth_sp_proxy_key@" \
     SP_PROXY_CERTIFICATE="@auth_sp_proxy_certificate@" \
     SP_PROXY_CACERTIFICATE="@auth_sp_proxy_cacertificate@" \

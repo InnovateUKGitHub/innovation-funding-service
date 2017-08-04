@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.finance.handler;
 
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
@@ -22,6 +24,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyMap;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Component
 public class OrganisationJESFinance implements OrganisationFinanceHandler {
@@ -180,5 +186,26 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
     @Override
     public List<ApplicationFinanceRow> costItemsToCost(List<FinanceRowItem> costItems) {
         return costItems.stream().map(c -> costItemToCost(c)).collect(Collectors.toList());
+    }
+
+    @Override
+    public ApplicationFinanceRow updateCost(final ApplicationFinanceRow newCostItem) {
+        return find(applicationFinanceRowRepository.findOne(newCostItem.getId()),  notFoundError(ApplicationFinanceRow.class, newCostItem.getId()))
+                .andOnSuccess(costItem -> serviceSuccess(applicationFinanceRowRepository.save(newCostItem))).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public ApplicationFinanceRow addCost(Long applicationFinanceId, Long questionId, ApplicationFinanceRow newCostItem) {
+        List<ApplicationFinanceRow> financeRows = applicationFinanceRowRepository.findByTargetIdAndNameAndQuestionId(applicationFinanceId, newCostItem.getName(), questionId);
+        return checkAndAddCostItem(newCostItem, financeRows).getSuccessObjectOrThrowException();
+
+    }
+
+    private ServiceResult<ApplicationFinanceRow> checkAndAddCostItem(final ApplicationFinanceRow newCostItem, List<ApplicationFinanceRow> foundApplicationFinanceRows) {
+        if(foundApplicationFinanceRows.isEmpty()) {
+            return serviceSuccess(applicationFinanceRowRepository.save(newCostItem));
+        }
+
+        return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
     }
 }

@@ -23,6 +23,6 @@ public class RoleServiceImpl extends UserTransactionalService implements RoleSer
 
     @Override
     public ServiceResult<RoleResource> findByUserRoleType(UserRoleType userRoleType) {
-        return find(roleRepository.findOneByName(userRoleType.name()), notFoundError(Role.class, userRoleType.name())).andOnSuccessReturn(roleMapper::mapToResource);
+        return find(roleRepository.findOneByName(userRoleType.getName()), notFoundError(Role.class, userRoleType.getName())).andOnSuccessReturn(roleMapper::mapToResource);
     }
 }

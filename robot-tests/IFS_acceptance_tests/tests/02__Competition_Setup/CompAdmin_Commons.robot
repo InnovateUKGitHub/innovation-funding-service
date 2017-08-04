@@ -39,7 +39,7 @@ the user fills in the CS Initial details
     the user enters text to a text field                 css=#openingDateDay  1
     the user enters text to a text field                 css=#openingDateMonth  ${month}
     the user enters text to a text field                 css=#openingDateYear  ${nextyear}
-    the user selects the option from the drop-down menu  Ian Cooper  id=leadTechnologistUserId
+    the user selects the option from the drop-down menu  Ian Cooper  id=innovationLeadUserId
     the user selects the option from the drop-down menu  Robert Johnson  id=executiveUserId
     the user clicks the button/link                      jQuery=button:contains("Done")
     the user clicks the button/link                      link=Competition setup
@@ -238,3 +238,10 @@ The applications should be sorted by column
     ${test_sorting_list}=    Copy List    ${sorted_column_contents}
     Sort List    ${test_sorting_list}
     Lists Should Be Equal    ${sorted_column_contents}    ${test_sorting_list}
+
+the user should see all live competitions
+    the user should see the element  jQuery=h2:contains("Open")
+    the user should see the element  jQuery=h2:contains("Closed")
+    the user should see the element  jQuery=h2:contains("In assessment")
+    the user should see the element  jQuery=h2:contains("Panel")
+    the user should see the element  jQuery=h2:contains("Inform")

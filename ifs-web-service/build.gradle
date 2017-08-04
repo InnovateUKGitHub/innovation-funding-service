@@ -13,7 +13,28 @@ subprojects {
     // ifs-web-core is not a docker project.
     if (it.name != 'ifs-web-core') {
 
+        task getNewRelicAgent {
+            if ( !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar").exists() ||
+                 !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml").exists() ) {
+                exec {
+                    executable = 'curl'
+                    args = ['--connect-timeout', '30',
+                            '-o', "${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar",
+                            'https://tools.innovateuk.org/holding/newrelic/newrelic.jar'
+                    ]
+                }
+                exec {
+                    executable = 'curl'
+                    args = ['--connect-timeout', '30',
+                            '-o', "${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml",
+                            'https://tools.innovateuk.org/holding/newrelic/newrelic.yml'
+                    ]
+                }
+            }
+        }
+
         task prepareDockerFile(type: Copy) {
+            dependsOn getNewRelicAgent
 
             ext.appName = 'default-service-name'
             outputs.upToDateWhen { false }
@@ -29,8 +50,8 @@ subprojects {
         task buildDocker(type: Docker, dependsOn: build) {
             push = false
             applicationName = 'default-service-name'
-            dockerfile = file('src/main/docker/Dockerfile')
             tagVersion = 'latest'
+            dockerfile = file('src/main/docker/Dockerfile')
             doFirst {
                 copy {
                     from jar
@@ -38,6 +59,11 @@ subprojects {
                 }
                 copy {
                     from file("${rootProject.projectDir}/setup-files/scripts/docker/coscale-monitoring.sh")
+                    into stageDir
+                }
+                copy {
+                    from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar")
+                    from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml")
                     into stageDir
                 }
             }

@@ -35,8 +35,8 @@ import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 import org.junit.Ignore;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.Advised;
@@ -60,6 +60,7 @@ import java.util.function.UnaryOperator;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.testdata.CsvUtils.*;
@@ -482,7 +483,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private boolean createViaRegistration(List<UserRoleType> roles) {
-        return roles.stream().noneMatch(role -> asList(COMP_TECHNOLOGIST, SUPPORT, IFS_ADMINISTRATOR).contains(role));
+        return roles.stream().noneMatch(role -> asList(INNOVATION_LEAD, SUPPORT, IFS_ADMINISTRATOR).contains(role));
     }
 
     private void createCompetitions() {
@@ -597,7 +598,10 @@ public class GenerateTestData extends BaseIntegrationTest {
             return Triple.of(user.getEmail(), organisation.getName(), OrganisationTypeEnum.getFromId(organisation.getOrganisationType()));
         });
 
-        List<UnaryOperator<ApplicationFinanceDataBuilder>> financeBuilders = simpleMap(organisations, orgDetails -> {
+        List<Triple<String, String, OrganisationTypeEnum>> uniqueOrganisations =
+                organisations.stream().filter(triple -> isUniqueOrFirstDuplicateOrganisation(triple, organisations)).collect(toList());
+
+        List<UnaryOperator<ApplicationFinanceDataBuilder>> financeBuilders = simpleMap(uniqueOrganisations, orgDetails -> {
 
             String user = orgDetails.getLeft();
             String organisationName = orgDetails.getMiddle();
@@ -652,6 +656,10 @@ public class GenerateTestData extends BaseIntegrationTest {
         }
 
         return baseBuilder;
+    }
+
+    private boolean isUniqueOrFirstDuplicateOrganisation(Triple<String, String, OrganisationTypeEnum> currentOrganisation, List<Triple<String, String, OrganisationTypeEnum>> organisationList) {
+        return organisationList.stream().filter(triple -> triple.getMiddle().equals(currentOrganisation.getMiddle())).findFirst().get().equals(currentOrganisation);
     }
 
     private UnaryOperator<ApplicationFinanceDataBuilder> generateIndustrialCostsFromSuppliedData(String user, String organisationName, ApplicationOrganisationFinanceBlock organisationFinances, boolean markAsComplete) {
@@ -729,16 +737,16 @@ public class GenerateTestData extends BaseIntegrationTest {
                                 costs -> costs.
                                         withWorkingDaysPerYear(123).
                                         withGrantClaim(30).
-                                        withOtherFunding("Lottery", LocalDate.of(2016, 04, 01), bd("1234")).
-                                        withLabourEntry("Role 1", 100, 200).
-                                        withLabourEntry("Role 2", 200, 300).
-                                        withLabourEntry("Role 3", 300, 365).
+                                        withOtherFunding("Lottery", LocalDate.of(2016, 04, 01), bd("2468")).
+                                        withLabourEntry("Role 1", 200, 200).
+                                        withLabourEntry("Role 2", 400, 300).
+                                        withLabourEntry("Role 3", 600, 365).
                                         withAdministrationSupportCostsNone().
-                                        withMaterials("Generator", bd("5010"), 10).
-                                        withCapitalUsage(12, "Depreciating Stuff", true, bd("1060"), bd("600"), 60).
-                                        withSubcontractingCost("Developers", "UK", "To develop stuff", bd("45000")).
-                                        withTravelAndSubsistence("To visit colleagues", 15, bd("199")).
-                                        withOtherCosts("Some more costs", bd("550")).
+                                        withMaterials("Generator", bd("10020"), 10).
+                                        withCapitalUsage(12, "Depreciating Stuff", true, bd("2120"), bd("1200"), 60).
+                                        withSubcontractingCost("Developers", "UK", "To develop stuff", bd("90000")).
+                                        withTravelAndSubsistence("To visit colleagues", 15, bd("398")).
+                                        withOtherCosts("Some more costs", bd("1100")).
                                         withOrganisationSize(1L))
                         .markAsComplete(markAsComplete);
     }
@@ -749,15 +757,15 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withUser(user).
                 withAcademicCosts(costs -> costs.
                         withTsbReference("My REF").
-                        withDirectlyIncurredStaff(bd("11")).
-                        withDirectlyIncurredTravelAndSubsistence(bd("22")).
-                        withDirectlyIncurredOtherCosts(bd("33")).
-                        withDirectlyAllocatedInvestigators(bd("44")).
-                        withDirectlyAllocatedEstateCosts(bd("55")).
-                        withDirectlyAllocatedOtherCosts(bd("66")).
-                        withIndirectCosts(bd("77")).
-                        withExceptionsStaff(bd("88")).
-                        withExceptionsOtherCosts(bd("99")).
+                        withDirectlyIncurredStaff(bd("22")).
+                        withDirectlyIncurredTravelAndSubsistence(bd("44")).
+                        withDirectlyIncurredOtherCosts(bd("66")).
+                        withDirectlyAllocatedInvestigators(bd("88")).
+                        withDirectlyAllocatedEstateCosts(bd("110")).
+                        withDirectlyAllocatedOtherCosts(bd("132")).
+                        withIndirectCosts(bd("154")).
+                        withExceptionsStaff(bd("176")).
+                        withExceptionsOtherCosts(bd("198")).
                         withUploadedJesForm())
                 .markAsComplete(markAsComplete);
     }
@@ -793,7 +801,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                 .withFundersPanelEndDate(line.fundersPanelEndDate)
                 .withReleaseFeedbackDate(line.releaseFeedback)
                 .withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
-                        line.competitionDescription, line.fundingType, line.projectSize, line.keywords);
+                        line.competitionDescription, line.fundingType, line.projectSize, line.keywords, line.inviteOnly);
     }
 
     private CompetitionDataBuilder ifsCompetitionDataBuilder(CsvUtils.CompetitionLine line, Optional<Long> existingCompetitionId) {
@@ -808,7 +816,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withReleaseFeedbackDate(line.releaseFeedback).
                 withFeedbackReleasedDate(line.feedbackReleased).
                 withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
-                        line.competitionDescription, line.fundingType, line.projectSize, line.keywords)
+                        line.competitionDescription, line.fundingType, line.projectSize, line.keywords, line.inviteOnly)
 
         ).orElse(competitionDataBuilder.
                 createCompetition().
@@ -835,7 +843,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withReleaseFeedbackDate(line.releaseFeedback).
                 withFeedbackReleasedDate(line.feedbackReleased).
                 withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
-                line.competitionDescription, line.fundingType, line.projectSize, line.keywords);
+                line.competitionDescription, line.fundingType, line.projectSize, line.keywords, line.inviteOnly);
     }
 
     private void freshDb() throws Exception {

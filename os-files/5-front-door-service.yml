@@ -30,23 +30,31 @@ items:
               path: /monitoring/health
               port: 8080
             initialDelaySeconds: 60
-            periodSeconds: 30
+            periodSeconds: 31
             timeoutSeconds: 5
+            successThreshold: 1
             failureThreshold: 3
           readinessProbe:
             httpGet:
               path: /monitoring/health
               port: 8080
             initialDelaySeconds: 60
-            periodSeconds: 30
+            periodSeconds: 5
             timeoutSeconds: 5
-            failureThreshold: 3
+            successThreshold: 1
+            failureThreshold: 1
           imagePullPolicy: Always
           env:
           - name: SPRING_APPLICATION_JSON
             value: '{"logout":{"url": "https://<<SHIB-ADDRESS>>/Logout/"}}'
           - name: JAVA_OPTS
-            value: -Xms600m -Xmx600m
+            value: -Xms600m -Xmx600m -javaagent:/newrelic.jar
+          - name: NEW_RELIC_APP_NAME
+            value: "ifs-front-door-service"
+          - name: NEW_RELIC_LICENSE_KEY
+            value: "<<NEWRELIC-LICENCE-KEY>>"
+          - name: NEW_RELIC_LOG
+            value: "STDOUT"
           ports:
           - containerPort: 8080
           resources:

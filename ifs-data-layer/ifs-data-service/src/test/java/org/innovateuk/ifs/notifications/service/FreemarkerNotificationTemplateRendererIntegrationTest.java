@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.io.File.separator;
+import static java.util.Collections.emptyMap;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -193,6 +194,26 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
         assertRenderedEmailTemplateContainsExpectedLines("finance_contact_spend_profile_available_subject.txt", templateArguments);
         assertRenderedEmailTemplateContainsExpectedLines("finance_contact_spend_profile_available_text_plain.txt", templateArguments);
         assertRenderedEmailTemplateContainsExpectedLines("finance_contact_spend_profile_available_text_html.html", templateArguments);
+    }
+
+    @Test
+    public void testSendProjectLiveEmail() throws URISyntaxException, IOException {
+
+        assertRenderedEmailTemplateContainsExpectedLines("project_live_subject.txt", emptyMap());
+        assertRenderedEmailTemplateContainsExpectedLines("project_live_text_plain.txt", emptyMap());
+        assertRenderedEmailTemplateContainsExpectedLines("project_live_text_html.html", emptyMap());
+    }
+
+    @Test
+    public void testSendInternalUserInviteEmail() throws URISyntaxException, IOException {
+        Map<String, Object> templateArguments = asMap(
+                "inviteUrl", "https://ifs-local-dev/invite",
+                "role", "Role1"
+        );
+
+        assertRenderedEmailTemplateContainsExpectedLines("invite_internal_user_subject.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("invite_internal_user_text_plain.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("invite_internal_user_text_html.html", templateArguments);
     }
 
     private void assertRenderedEmailTemplateContainsExpectedLines(String templateName, Map<String, Object> templateArguments) throws IOException, URISyntaxException {

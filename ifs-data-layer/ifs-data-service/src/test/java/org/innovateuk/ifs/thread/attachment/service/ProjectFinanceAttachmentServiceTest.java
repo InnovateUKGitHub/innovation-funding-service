@@ -102,7 +102,7 @@ public class ProjectFinanceAttachmentServiceTest extends BaseUnitTestMocksTest {
         final Long attachmentsFileEntryId = 101L;
         final FileEntry attachmentsFileEntry = new FileEntry(attachmentsFileEntryId, "name", APPLICATION_JSON, 432);
         when(attachmentMapperMock.mapIdToDomain(attachmentId)).thenReturn(new Attachment(attachmentId, newUser().build(), attachmentsFileEntry));
-        when(fileServiceMock.deleteFile(attachmentsFileEntryId)).thenReturn(ServiceResult.serviceSuccess(attachmentsFileEntry));
+        when(fileServiceMock.deleteFileIgnoreNotFound(attachmentsFileEntryId)).thenReturn(ServiceResult.serviceSuccess(attachmentsFileEntry));
         ServiceResult<Void> response = service.delete(attachmentId);
         assertTrue(response.isSuccess());
     }
@@ -114,7 +114,7 @@ public class ProjectFinanceAttachmentServiceTest extends BaseUnitTestMocksTest {
         final FileEntry attachmentsFileEntry = new FileEntry(attachmentsFileEntryId, "name", APPLICATION_JSON, 432);
         when(attachmentMapperMock.mapIdToDomain(attachmentId))
                 .thenReturn(new Attachment(attachmentId, newUser().build(), attachmentsFileEntry));
-        when(fileServiceMock.deleteFile(attachmentsFileEntryId))
+        when(fileServiceMock.deleteFileIgnoreNotFound(attachmentsFileEntryId))
                 .thenReturn(ServiceResult.serviceFailure(notFoundError(FileEntry.class, attachmentsFileEntryId)));
         ServiceResult<Void> response = service.delete(attachmentId);
         assertTrue(response.isFailure()
