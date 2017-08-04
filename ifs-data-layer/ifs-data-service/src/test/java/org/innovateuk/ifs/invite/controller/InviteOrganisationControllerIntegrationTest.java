@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.mapper.InviteOrganisationMapper;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
@@ -21,6 +22,7 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -154,6 +156,11 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
 
         assertTrue(controller.put(inviteOrganisationResource).isSuccess());
         InviteOrganisationResource found = controller.getById(inviteOrganisation.getId()).getSuccessObjectOrThrowException();
+
+        InviteOrganisationResource expectedOrganisationResource = inviteOrganisationResource;
+        expectedOrganisationResource.getInviteResources().get(0).setSentOn(null);
+        expectedOrganisationResource.getInviteResources().get(0).setStatus(InviteStatus.CREATED);
+
         assertEquals(inviteOrganisationResource, found);
     }
 
@@ -213,7 +220,10 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
                 .withApplication(application)
                 .withName("Example User1")
                 .withEmail("example+user1@example.com")
+                .withStatus(InviteStatus.SENT)
                 .withInviteOrganisation(inviteOrganisation)
+                .withSentBy(newUser().withId(1L).build())
+                .withSentOn(ZonedDateTime.now())
                 .build();
 
         flushAndClearSession();
@@ -232,7 +242,10 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
                 .withApplication(application)
                 .withName("Example User1")
                 .withEmail("example+user1@example.com")
+                .withStatus(InviteStatus.SENT)
                 .withInviteOrganisation(inviteOrganisation)
+                .withSentBy(newUser().withId(1L).build())
+                .withSentOn(ZonedDateTime.now())
                 .build();
 
         flushAndClearSession();

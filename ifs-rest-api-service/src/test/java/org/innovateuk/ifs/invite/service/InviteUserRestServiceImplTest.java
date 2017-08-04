@@ -3,12 +3,17 @@ package org.innovateuk.ifs.invite.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
+import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
+import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.LinkedMultiValueMap;
 
+import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.springframework.http.HttpStatus.OK;
 
 public class InviteUserRestServiceImplTest extends BaseRestServiceUnitTest<InviteUserRestServiceImpl> {
 
@@ -48,5 +53,16 @@ public class InviteUserRestServiceImplTest extends BaseRestServiceUnitTest<Invit
         RestResult<Boolean> returnedResponse = service.checkExistingUser(inviteHash);
         assertTrue(returnedResponse.isSuccess());
         assertTrue(returnedResponse.getSuccessObject());
+    }
+
+    @Test
+    public void getPendingInternalUsers() throws Exception {
+        RoleInvitePageResource expected = new RoleInvitePageResource();
+
+        setupGetWithRestResultExpectations(buildPaginationUri(inviteRestBaseUrl + "/internal/pending", 0, 5, null, new LinkedMultiValueMap<>()), RoleInvitePageResource.class, expected, OK);
+
+        RoleInvitePageResource result = service.getPendingInternalUserInvites(0, 5).getSuccessObjectOrThrowException();
+
+        assertEquals(expected, result);
     }
 }

@@ -6,6 +6,7 @@ Documentation     IFS-604: IFS Admin user navigation to Manage users section
 ...               IFS-642: Email to new internal user inviting them to register
 ...               IFS-643: Complete internal user registration
 ...               IFS-644: Disable or reenable user profile
+...               IFS-983: Manage users: Pending registration tab
 Suite Setup       Custom Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  CompAdmin
@@ -68,18 +69,23 @@ Client side validations for invite new internal user
     And the user should see the element        jQuery=.error-message:contains("Please enter a valid email address.")
 
 Administrator can successfully invite a new user
-    [Documentation]  IFS-27
+    [Documentation]  IFS-27 IFS-983
     [Tags]  HappyPath
-    Given the user navigates to the page       ${server}/management/admin/invite-user
-    When the user enters text to a text field  id=firstName  Support
-    And the user enters text to a text field   id=lastName  User
+    Given the user navigates to the page                     ${server}/management/admin/invite-user
+    When the user enters text to a text field                id=firstName  Support
+    And the user enters text to a text field                 id=lastName  User
     And the user fills in the email address for the invitee
     And the user selects the option from the drop-down menu  IFS Administrator  id=role
-    And the user clicks the button/link        jQuery=.button:contains("Send invite")
+    And the user clicks the button/link                      jQuery=.button:contains("Send invite")
     Then the user cannot see a validation error in the page
-    Then the user should see the element       jQuery=h1:contains("Manage users")
+    Then the user should see the element                     jQuery=h1:contains("Manage users")
     #The Admin is redirected to the Manage Users page on Success
-    And the user should see the element        jQuery=.selected:contains("Active")
+    And the user should see the element                      jQuery=.selected:contains("Pending")
+    Then the user verifies pending tab content
+    When the user clicks the button/link                     jQuery=a:contains("Active")
+    Then the user should not see the element                 jQuery=td:contains("Support User") ~ td:contains("IFS Administrator")
+    When the user clicks the button/link                     jQuery=a:contains("Inactive")
+    Then the user should not see the element                 jQuery=td:contains("Support User") ~ td:contains("IFS Administrator")
     [Teardown]  close any open browsers
 
 Invited user can receive the invitation
@@ -99,7 +105,7 @@ Account creation validation checks
     And the user should see the element     jQuery=li[data-valid="false"]:contains("be at least 8 characters long")
 
 New user account is created and verified
-    [Documentation]  IFS-643
+    [Documentation]  IFS-643 IFS-983
     [Tags]   HappyPath
     When the user enters text to a text field  css=#firstName  New
     And the user enters text to a text field   css=#lastName  Administrator
@@ -114,6 +120,11 @@ New user account is created and verified
     Then the user should see the element       jQuery=dt:contains("Full name") + dd:contains("New Administrator")
     And the user should see the element        jQuery=dt:contains("Email") + dd:contains("ifs.administrator@innovateuk")
     And the user should see the element        jQuery=dt:contains("Job role") + dd:contains("IFS Administrator")
+    When the user clicks the button/link       jQuery=a:contains("Manage users")
+    And the user clicks the button/link        jQuery=a:contains("Pending")
+    Then the user should see the element       jQuery=span:contains("0") + span:contains("pending internal users")
+    And the user should not see the element    css=.table-overflow ~ td
+    And the user clicks the button/link        jQuery=a:contains("Active")
 
 Inviting the same user for the same role again should give an error
     [Documentation]  IFS-27
@@ -248,6 +259,12 @@ the invited user logs in
     run keyword if  ${docker}==1  Logging in and Error Checking  ifs.administrator@innovateuk.test  ${correct_password}
     # On production the accepted domain is innovateuk.gov.uk
     run keyword if  ${docker}!=1  Logging in and Error Checking  ifs.administrator@innovateuk.gov.uk  ${correct_password}
+
+the user verifies pending tab content
+    # Locally the accepted domain is innovateuk.test
+    run keyword if  ${docker}==1  the user should see the element  jQuery=td:contains("Support User") ~ td:contains("IFS Administrator") ~ td:contains("ifs.administrator@innovateuk.test")
+    # On production the accepted domain is innovateuk.gov.uk
+    run keyword if  ${docker}!=1  the user should see the element  jQuery=td:contains("Support User") ~ td:contains("IFS Administrator") ~ td:contains("ifs.administrator@innovateuk.gov.uk")
 
 the user navigates to the View internal users details
     [Arguments]  ${user}  ${status}
