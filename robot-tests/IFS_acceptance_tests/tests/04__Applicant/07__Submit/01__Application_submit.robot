@@ -23,48 +23,40 @@ Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
 Resource          ../../10__Project_setup/PS_Common.robot
 
-# In this suite we are using the competition: Predicting market trends programme
-# That forces the lead applicant to be RTO!! So we need to be careful with the Research participation in the project.
-# TODO this suite should be properly written. Please see ticket IFS-1051
-
 *** Test Cases ***
 Submit button disabled when application is incomplete
     [Documentation]    INFUND-927, IFS-942
     [Tags]    Email    HappyPath
-    Given the user navigates to the page    ${DASHBOARD_URL}
-    When the user clicks the button/link    link=${application_name}
-    And the user should not see the text in the page    Now your application is complete, you need to review and then submit.
-    And the user clicks the button/link    link=Your finances
-    And the user clicks the button/link    link= Application overview
-    And the user clicks the button/link    jQuery=.button:contains("Review and submit")
+    Given the user navigates to the page              ${DASHBOARD_URL}
+    When the user clicks the button/link              link=${application_name}
+    And the user should not see the text in the page  Now your application is complete, you need to review and then submit.
+    And the user clicks the button/link               link=Your finances
+    And the user clicks the button/link               link= Application overview
+    And the user clicks the button/link               jQuery=.button:contains("Review and submit")
     Then the submit button should be disabled
-    When the user clicks the button/link   jQuery= button:contains("Application details")
-    Then the user should see the element   jQuery= div[id="collapsible-0"] button:contains("Mark as complete")+button:contains("Return and edit")
+    When the user clicks the button/link              jQuery= button:contains("Application details")
+    Then the user should see the element              jQuery= div[id="collapsible-0"] button:contains("Mark as complete")+button:contains("Return and edit")
 
 Applicant has read only view after submission
     [Documentation]    INFUND-7405, INFUND-8599
     [Tags]    HappyPath
-    When the user navigates to the page    ${DASHBOARD_URL}
-    and the user clicks the button/link    link=${application_name}
-    then the applicant completes the application details    Application details
-    and the user clicks the button/link    link=Return to application overview
-    and the user clicks the button/link    link=Your finances
-    When Run Keyword And Ignore Error Without Screenshots  the user clicks the button/link  jQuery=.extra-margin-bottom [aria-expanded="false"]
-    Then the user clicks the button/link   jQuery=button:contains("Not requesting funding")
-    And the user puts zero project costs
-    When the user clicks the button/link     link=Return to application overview
-    And the user clicks the button/link      link=Review and submit
-#    and the user marks the finances as complete    ${application_name}
-#    then the user should not see the element    css=input
+    Given the user navigates to the page                  ${DASHBOARD_URL}
+    And the user clicks the button/link                   link=${application_name}
+    When the applicant completes the application details  Application details
+    And the user clicks the button/link                   link=Return to application overview
+    And the user clicks the button/link                   link=Your finances
+    And the user marks the finances as complete           ${application_name}
+    And the user clicks the button/link                   link=Review and submit
+    Then the user should not see the element              css=input
 
 Your Project costs section is read-only once application is submitted
     [Documentation]    INFUND-6788, INFUND-7405
     [Tags]
-    When the user navigates to Your-finances page    ${application_name}
-    then the user clicks the button/link    link=Your project costs
-    and the user should not see the element    css=input
-    When the user clicks the button/link    jQuery=button:contains("Overhead costs")
-    then the user should not see the element    css=input
+    Given the user navigates to Your-finances page  ${application_name}
+    And the user clicks the button/link             link=Your project costs
+    And the user should not see the element         css=input
+    When the user clicks the button/link            jQuery=button:contains("Overhead costs")
+    Then the user should not see the element        css=input
 
 Submit flow (complete application)
     [Documentation]    INFUND-205, INFUND-9058, INFUND-1887, INFUND-3107, INFUND-4010, IFS-942

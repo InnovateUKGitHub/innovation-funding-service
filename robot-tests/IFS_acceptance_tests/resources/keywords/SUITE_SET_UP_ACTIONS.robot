@@ -27,7 +27,7 @@ new account complete all but one
 
 create new account for submitting
     Given the guest user opens the browser
-    the user navigates to the page              ${COMPETITION_OVERVIEW_URL}  # This comp forces RTO lead!
+    the user navigates to the page              ${COMPETITION_OVERVIEW_URL_2}  # This comp forces RTO lead!
     the user clicks the button/link             jQuery=a:contains("Start new application")
     the user clicks the button/link             jQuery=a:contains("Create account")
     And the user enters text to a text field    id=organisationSearchName    Hive IT
@@ -35,6 +35,9 @@ create new account for submitting
     And the user clicks the button/link         link=${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
     And the user selects the checkbox           address-same
     And the user clicks the button/link         jQuery=.button:contains("Continue")
+    And the user clicks the button/link         jQuery=.button:contains("Save and continue")
+    And the user selects the radio button       organisationTypeId  radio-1
+    And the user clicks the button/link         jQuery=.button:contains("Save and continue")
     And the user clicks the button/link         jQuery=.button:contains("Save and continue")
     And the user enters text to a text field    name=email    ${test_mailbox_one}+submittest@gmail.com
     And the user fills the create account form    Temur    Ketsbaia
@@ -108,8 +111,6 @@ create new submit application
     And the user clicks the button/link                 jQuery=p ~ a:contains("Sign in")
     And The guest user inserts user email and password  ${test_mailbox_one}+submittest@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
-    And the user clicks the button/link                 jQuery=Label:contains("Yes, I want to create a new application.")
-    And the user clicks the button/link                 jQuery=.button:contains("Continue")
     And the user clicks the button/link                 jQuery=a:contains("Begin application")
     And the user clicks the button/link                 link=Application details
     And the user enters text to a text field            id=application_details-title    ${application_name}
