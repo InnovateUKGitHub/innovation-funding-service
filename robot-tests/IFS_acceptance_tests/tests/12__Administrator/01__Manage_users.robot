@@ -192,8 +192,11 @@ Client side validations for edit internal user's details
 
 Administrator can successfully edit internal user's details
     [Documentation]  IFS-18
-    [Tags]
-    Given the user enters text to a text field               id=firstName  Edited
+    [Tags]  HappyPath
+    [Setup]  log in as a different user                      &{ifs_admin_user_credentials}
+    Given the user navigates to the View internal users details  New Administrator  active
+    And the user clicks the button/link                      link=Edit
+    When the user enters text to a text field                id=firstName  Edited
     Then the user enters text to a text field                id=lastName  Admin
     And the user selects the option from the drop-down menu  IFS Support User  id=role
     And the user clicks the button/link                      jQuery=.button:contains("Save and return")
