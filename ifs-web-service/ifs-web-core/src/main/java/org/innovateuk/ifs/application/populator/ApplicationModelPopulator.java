@@ -68,6 +68,17 @@ public class ApplicationModelPopulator {
         return addApplicationAndSections(application, competition, user, section, currentQuestionId, model, form, userApplicationRoles, Optional.empty());
     }
 
+    public ApplicationResource addApplicationWithoutDetails(ApplicationResource application,
+                                                         CompetitionResource competition,
+                                                         Model model) {
+
+        model.addAttribute("completedQuestionsPercentage", application.getCompletion());
+        model.addAttribute("currentApplication", application);
+        model.addAttribute("currentCompetition", competition);
+
+        return application;
+    }
+
     public ApplicationResource addApplicationAndSections(ApplicationResource application,
                                                          CompetitionResource competition,
                                                          UserResource user,
