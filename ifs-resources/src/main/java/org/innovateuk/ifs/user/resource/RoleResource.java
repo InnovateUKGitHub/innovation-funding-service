@@ -4,14 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class RoleResource {
     private Long id;
     private String name;
     private String url;
-    private List<Long> users = new ArrayList<>();
 
     public RoleResource() {
     	// no-arg constructor
@@ -42,14 +38,6 @@ public class RoleResource {
         this.id = id;
     }
 
-    public List<Long> getUsers() {
-        return this.users;
-    }
-
-    public void setUsers(List<Long> users) {
-        this.users = users;
-    }
-
     @JsonIgnore
     public String getDisplayName(){
         return UserRoleType.fromName(name).getDisplayName();
@@ -70,7 +58,6 @@ public class RoleResource {
         return new EqualsBuilder()
             .append(this.id, rhs.id)
             .append(this.name, rhs.name)
-            .append(this.users, rhs.users)
             .isEquals();
     }
 
@@ -79,7 +66,6 @@ public class RoleResource {
         return new HashCodeBuilder()
             .append(id)
             .append(name)
-            .append(users)
             .toHashCode();
     }
 

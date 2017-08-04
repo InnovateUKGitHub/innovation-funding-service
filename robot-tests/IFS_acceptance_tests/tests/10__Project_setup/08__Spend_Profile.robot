@@ -102,7 +102,6 @@ Project Finance generates the Spend Profile
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(4).ok
 
-
 Lead partner can view spend profile page
     [Documentation]    INFUND-3970, INFUND-6138, INFUND-5899, INFUND-7685
     [Tags]    HappyPath
@@ -133,104 +132,83 @@ Lead partner can see correct project start date and duration
 Calculations in the spend profile table
     [Documentation]    INFUND-3764, INFUND-6148
     [Tags]    HappyPath
-    Given the user should see the element    jQuery=div.spend-profile-table
-    Then element should contain    css=.spend-profile-table tbody tr:nth-child(1) td:nth-last-child(2)    £ 4,622     #Labour
-    Then element should contain    css=.spend-profile-table tbody tr:nth-child(2) td:nth-last-child(2)    £ 0     #Overheads
-    Then element should contain    css=.spend-profile-table tbody tr:nth-child(3) td:nth-last-child(2)    £ 150,300    #Materials
-    Then element should contain    css=.spend-profile-table tbody tr:nth-child(4) td:nth-last-child(2)    £ 828    #Capital usage
-    Then element should contain    css=.spend-profile-table tbody tr:nth-child(5) td:nth-last-child(2)    £ 135,000    #Subcontracting
-    Then element should contain    css=.spend-profile-table tbody tr:nth-child(6) td:nth-last-child(2)    £ 8,955    #Travel & subsistence
-    Then element should contain    css=.spend-profile-table tbody tr:nth-child(7) td:nth-last-child(2)    £ 1,650    #Other costs
+    Given the user should see the element  jQuery=.spend-profile-table
+    Then the user should see the element   jQuery=th:contains("Labour") ~ td.fix-right:contains("£ 3,081")
+    And the user should see the element    jQuery=th:contains("Overheads") ~ td.fix-right:contains("£ 0")
+    And the user should see the element    jQuery=th:contains("Materials") ~ td.fix-right:contains("£ 100,200")
+    And the user should see the element    jQuery=th:contains("Capital usage") ~ td.fix-right:contains("£ 552")
+    And the user should see the element    jQuery=th:contains("Subcontracting") ~ td.fix-right:contains("£ 90,000")
+    And the user should see the element    jQuery=th:contains("Travel and subsistence") ~ td.fix-right:contains("£ 5,970")
+    And the user should see the element    jQuery=th:contains("Other costs") ~ td.fix-right:contains("£ 1,100")
+    And the user should see the element    jQuery=th:contains("Finance") ~ td.fix-right:contains("£ 30")
+    And the user should see the element    jQuery=th:contains("Other Funding") ~ td.fix-right:contains("£ 2,468")
     #${duration} is No of Months + 1, due to header
-    And the sum of tds equals the total    div.spend-profile-table    1    38    4622     # Labour
-    And the sum of tds equals the total    div.spend-profile-table    3    38    150300    # Materials
-    And the sum of tds equals the total    div.spend-profile-table    5    38    135000    # Subcontracting
-    And the sum of tds equals the total    div.spend-profile-table    6    38    8955    # Travel & subsistence
-    And the sum of tds equals the total    div.spend-profile-table    7    38    1650    # Other costs
+    And the sum of tds equals the total    .spend-profile-table  1  38  3081    # Labour
+    And the sum of tds equals the total    .spend-profile-table  3  38  100200  # Materials
+    And the sum of tds equals the total    .spend-profile-table  5  38  90000   # Subcontracting
+    And the sum of tds equals the total    .spend-profile-table  6  38  5970    # Travel & subsistence
+    And the sum of tds equals the total    .spend-profile-table  7  38  1100    # Other costs
 
 Lead Partner can see Spend profile summary
     [Documentation]    INFUND-3971, INFUND-6148
     [Tags]
-    Given the user navigates to the page            ${external_spendprofile_summary}/review
-    And the user should see the text in the page    Project costs for financial year
-    And the user moves focus to the element         jQuery=.grid-container table
-    Then the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 84,841
+    Given the user navigates to the page  ${external_spendprofile_summary}/review
+    When the user should see the element  jQuery=.grid-container th:contains("Financial year") + th:contains("Project spend")
+    Then the user should see the element  jQuery=.grid-container table tr:nth-child(1) td:nth-child(2):contains("£ 56,605")
 
-Lead partner can edit his spend profile with invalid values
-    [Documentation]    INFUND-3765, INFUND-6907, INFUND-6801, INFUND-7409, INFUND-6148
+Lead partner can edit his spend profile with invalid values and see the error messages
+    [Documentation]  INFUND-3765, INFUND-6907, INFUND-6801, INFUND-7409, INFUND-6148 INFUND-6146
     [Tags]
-    When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
-    Then the user should not see the text in the element  css=#content > form   -
-    And the text box should be editable               css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input  # Labour-June17
-    When the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input   520
-    And the user moves focus to the element            css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(3) input
-    Then the user should see the text in the page      Unable to submit spend profile.
-    And the user should see the text in the page       Your total costs are higher than your eligible costs
-    Then the field has value                           css=.spend-profile-table tbody .form-group-row:nth-child(1) input[id^='row-total-']    £ 5,000
-    And the user should see the element                jQuery=.form-group-row:nth-child(1) .cell-error input[id^='row-total-']
-    And the user clicks the button/link                jQuery=.button:contains("Save and return to spend profile overview")
-    Then the user should see the text in the page      You cannot submit your spend profile. Your total costs are higher than the eligible project costs.
-    And the user should see the element                jQuery=.error-summary-list li:contains("Labour")
-    When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
-    Then the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input    142
-    And the user should not see the element            jQuery=.form-group-row:nth-child(1) .cell-error input[id^='row-total-']
-    When the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(2) td:nth-of-type(3) input    -55  # Materials-Aug17
-    And the user moves focus to the element            css=.spend-profile-table tbody .form-group-row:nth-child(2) td:nth-of-type(2) input
-    Then the user should see the element               jQuery=.error-summary-list li:contains("This field should be 0 or higher")
-    When the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(2) td:nth-of-type(3) input    35.25
-    And the user moves focus to the element            css=.spend-profile-table tbody .form-group-row:nth-child(2) td:nth-of-type(3) input
-    Then the user should see the text in the page      This field can only accept whole numbers
-    When the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(3) input    abcd
-    And the user moves focus to the element            css=.spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(3) input
-    Then the user should see the text in the page      Unable to submit spend profile
-    When the user clicks the button/link               jQuery=.button:contains("Save and return to spend profile overview")
-    Then the user should not see the text in the page  internal server error
-    When the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(3) input    200
-    And the user moves focus to the element            css=.spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(2) input
-    And the user should not see the element            jQuery=.error-summary-list li:contains("This field should be 0 or higher")
-    When the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(3) input    4175
-    And the user moves focus to the element            css=.spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(2) input
-    Then the user should not see the element           jQuery=.error-summary-list li:contains("This field should be 0 or higher")
-    And the user should not see the element            jQuery=.form-group-row:nth-child(1) .cell-error input[id^='row-total-']
-    Then the user clicks the button/link               jQuery=.button:contains("Save and return to spend profile overview")
-
-Lead partner can submit empty cells and this is handled gracefully
-    [Documentation]    INFUND-6146
-    [Tags]
-    When the user enters text to a text field    css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input    ${empty}
-    And the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
+    When the user clicks the button/link       jQuery=.button:contains("Edit spend profile")
+    Then the user should see the element       jQuery=th:contains("Labour") + td input
+    When the user enters text to a text field  jQuery=th:contains("Labour") + td input   520
+    And the user moves focus to the element    jQuery=th:contains("Overheads") + td input
+    Then the user should see the element       jQuery=.error-summary:contains("Unable to submit spend profile.")
+    And the user should see the element        jQuery=.form-group-error th:contains("Labour")
+    And the user should see the element        jQuery=th:contains("Labour") ~ .fix-right.cell-error input[data-calculation-rawvalue="3495"]
+    # Project costs for financial year are instantly reflecting the financial values INFUND-3971, INFUND-6148
+    And the user should see the element        jQuery=.grid-container table tr:nth-child(1) td:nth-child(2):contains("£ 57,019")
+    When the user clicks the button/link       jQuery=.button:contains("Save and return to spend profile overview")
+    Then the user should see the element       jQuery=.error-summary:contains("Your total costs are higher than the eligible project costs.")
+    When the user clicks the button/link       jQuery=.button:contains("Edit spend profile")
+    Then the user enters text to a text field  jQuery=th:contains("Labour") + td input  10
+#    And the user should not see the element   jQuery=.form-group-error th:contains("Labour")  # TODO IFS-1120
+    When the user enters text to a text field  jQuery=th:contains("Overheads") ~ td:nth-child(4) input  -55
+    And the user moves focus to the element    jQuery=th:contains("Overheads") ~ td:nth-child(5)
+    Then the user should see the element       jQuery=.error-summary-list li:contains("This field should be 0 or higher")
+    When the user enters text to a text field  jQuery=th:contains("Overheads") ~ td:nth-child(4) input  35.25
+    And the user moves focus to the element    jQuery=th:contains("Overheads") ~ td:nth-child(5)
+    Then the user should see the element       jQuery=.error-summary-list li:contains("This field can only accept whole numbers")
+    When the user clicks the button/link       jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should not see an error in the page
-    [Teardown]    the user enters text to a text field    css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input    142
+    When the user enters text to a text field  jQuery=th:contains("Overheads") ~ td:nth-child(4) input  0
+    And the user moves focus to the element    css=.spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(2) input
+    And the user should not see the element    css=.error-summary-list
+    When the user enters text to a text field  jQuery=th:contains("Other Funding") ~ td:nth-child(4) input  ${empty}
+    Then the user should see the element       jQuery=.error-summary:contains("This field cannot be left blank.")
+    And the user enters text to a text field   jQuery=th:contains("Other Funding") ~ td:nth-child(4) input  68
 
 Lead partner can edit his spend profile with valid values
     [Documentation]    INFUND-3765
     [Tags]    HappyPath
-    Given the user navigates to the page                ${external_spendprofile_summary}/review
-    When the user clicks the button/link                jQuery=.button:contains("Edit spend profile")
-    And the user should see the element                 css=table [type="number"]    # checking here that the table is not read-only
-    Then the text box should be editable                css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input  # Labour
-    When the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input    140
-    And the user moves focus to the element             css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(2) input
-    Then the field has value                            css=.spend-profile-table tbody .form-group-row:nth-child(1) input[id^='row-total-']    £ 4,620
-    And the user should not see the text in the page    Unable to save spend profile
-    When the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(5) td:nth-of-type(2) input    0  # Subcontracting
-    And the user moves focus to the element             css=.spend-profile-table tbody .form-group-row:nth-child(5) td:nth-of-type(3) input
-    Then the field has value                            css=.spend-profile-table tbody .form-group-row:nth-child(5) input[id^='row-total-']    £ 131,250
-    And the user should not see the text in the page    Unable to save spend profile
-    Then the user clicks the button/link                jQuery=.button:contains("Save and return to spend profile overview")
-    Then the user should not see the text in the page   You cannot submit your spend profile. Your total costs are higher than the eligible project costs.
-
-Lead Partners Spend profile summary gets updated when edited
-    [Documentation]    INFUND-3971, INFUND-6148
-    [Tags]    HappyPath
-    Given the user navigates to the page           ${external_spendprofile_summary}/review
-    Then the user should see the text in the page  Project costs for financial year
-    And the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 81,089
+    Given the user navigates to the page       ${external_spendprofile_summary}/review
+    When the user clicks the button/link       jQuery=.button:contains("Edit spend profile")
+    And the user should see the element        css=table [type="number"]    # checking here that the table is not read-only
+    Then the user should see the element       jQuery=th:contains("Labour") + td input
+    When the user enters text to a text field  jQuery=th:contains("Labour") + td input  14
+    And the user moves focus to the element    jQuery=th:contains("Labour") ~ td:nth-child(4) input
+    Then the user should see the element       jQuery=th:contains("Labour") ~ td.fix-right input[data-calculation-rawvalue="2989"]
+    When the user enters text to a text field  jQuery=th:contains("Subcontracting") ~ td:nth-child(5) input  0
+    And the user moves focus to the element    jQuery=th:contains("Subcontracting") ~ td:nth-child(7) input
+    Then the user should see the element       jQuery=th:contains("Subcontracting") ~ td.fix-right input[data-calculation-rawvalue="90000"]
+    And the user should not see the element    jQuery=.error-summary:contains("Unable to save spend profile")
+    When the user clicks the button/link       jQuery=.button:contains("Save and return to spend profile overview")
+    Then the user should not see the element   jQuery=.error-summary:contains("Your total costs are higher than the eligible project costs.")
 
 Project Manager can see Spend Profile in Progress
     [Documentation]    done during refactoring, no ticket attached
     [Tags]
-    [Setup]    Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
+    [Setup]  Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     Given the user navigates to the page     ${external_spendprofile_summary}
     Then the user should see the element     link=${PS_SP_APPLICATION_LEAD_ORGANISATION_NAME}
     And the user should see the element      jQuery=.task-list li:nth-child(1):contains("In progress")
@@ -238,7 +216,7 @@ Project Manager can see Spend Profile in Progress
 Lead partner marks spend profile as complete
     [Documentation]    INFUND-3765, INFUND-6138
     [Tags]    HappyPath
-    [Setup]    Log in as a different user      ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}    ${short_password}
+    [Setup]  Log in as a different user        ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}    ${short_password}
     Given the user navigates to the page       ${external_spendprofile_summary}/review
     When the user clicks the button/link       jQuery=.button:contains("Mark as complete")
     Then the user should not see the element   jQuery=.success-alert p:contains("Your spend profile is marked as complete. You can still edit this page.")
@@ -775,17 +753,6 @@ the sum of tds equals the total
     \    ${cell} =    convert to integer    ${formatted}
     \    ${sum} =    Evaluate    ${sum}+${cell}
     Should Be Equal As Integers    ${sum}    ${total}
-
-the text box should be editable
-    [Arguments]    ${element}
-    Wait Until Element Is Visible Without Screenshots    ${element}
-    Element Should Be Enabled    ${element}
-
-the field has value
-    [Arguments]    ${field}    ${value}
-    Wait Until Element Is Visible Without Screenshots    ${field}
-    ${var} =    get value    ${field}
-    should be equal as strings    ${var}    ${value}
 
 the user should see all spend profiles as complete
     the user should see the element  jQuery=.task-list li:contains(${Katz_Name}) span:contains("Complete")
