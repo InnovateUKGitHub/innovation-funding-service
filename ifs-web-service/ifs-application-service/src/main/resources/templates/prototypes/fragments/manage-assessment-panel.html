@@ -323,6 +323,28 @@
                 </div>
             </div>
 
+            <div class="grid-row sorting">
+              <div class="column-half select-all">
+                  <div class="multiple-choice">
+                      <input type="checkbox" data-select-all="" id="select-all-check">
+                      <label for="select-all-check">
+                          Select all assessors
+                      </label>
+                  </div>
+                  <span class="form-hint">
+                      <span data-count-selected="" class="applications-selected">0</span> assessors selected
+                  </span>
+              </div>
+              <div class="column-half select-all alignright">
+                <form method="get">
+                  <input type="hidden" name="tab" value="invite">
+                  <button class="button" name="addSelected" data-submit-el="" disabled="disabled" th:formaction="${#httpServletRequest.requestURI}">
+                      Add selected to invite list
+                  </button>
+                </form>
+              </div>
+            </div>
+
             <div class="table-overflow">
               <table>
                 <thead>
@@ -1258,7 +1280,10 @@
         </div>
     </div>
 
-    <div class="table-overflow">
+    <p th:if="${type == 'assigned'}" id="no-applications">There are currently no assessors assigned to the application</p>
+
+
+    <div class="table-overflow" th:id="${type == 'assigned' ? 'application-assigned' : 'applications-available'}">
         <table id="application-list">
             <thead>
             <tr>
@@ -1280,10 +1305,7 @@
             </tr>
             </thead>
             <tbody th:if="${type == 'assigned'}">
-            <tr id="no-applications">
-                <td colspan="6" class="aligncentre"><span class="heading-small">There are currently no assessors assigned to the application</span></td>
-            </tr>
-            <tr id="application-assigned">
+            <tr>
                 <td><a href="#">10001</a></td>
                 <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
                 <td>Information &amp; communications technology (ICT)</td>

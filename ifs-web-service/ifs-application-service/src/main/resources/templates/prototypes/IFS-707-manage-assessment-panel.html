@@ -47,20 +47,24 @@
 
       </ul>
 
-      <h2 class="heading-medium">Panel navigation</h2>
+      <!-- <h2 class="heading-medium">Panel navigation</h2> -->
 
-      <ul class="link-list">
+      <ul class="link-list extra-margin">
         <li><a href="/prototypes/IFS-707-manage-assessors">Manage assessors</a></li>
         <li><a href="/prototypes/IFS-806-manage-applications">Manage applications</a></li>
         <li><a href="/prototypes/IFS-806-coi">Conflict of interest</a></li>
       </ul>
 
-      <h2 class="heading-medium">Changes to panel</h2>
-      <p>Make applications visible on assessor dashboard or confirm changes to panel</p>
+      <p class="extra-margin form-hint">
+        Invite assessors, assign applications and manage conflicts of interest. Once done you need to confirm these actions.
+      </p>
+
+      <h2 class="heading-medium">Confirm panel actions</h2>
+      <p class="form-hint">Show applications on each assessor dashboard or confirm any actions to the panel.</p>
 
       <div class="grid-row">
         <div class="column-quarter">
-          <button class="button width-full" th:disabled="${param.action == null}">Confirm changes</button>
+          <button class="button width-full" th:disabled="${param.action == null}">Confirm actions</button>
         </div>
         <div class="column-quarter">
           <div class="highlight-panel highlight-panel--tall">
@@ -71,7 +75,7 @@
 
     </div>
 
-
+    
   	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <th:block th:insert="fragments/layout :: main-content-end" />
