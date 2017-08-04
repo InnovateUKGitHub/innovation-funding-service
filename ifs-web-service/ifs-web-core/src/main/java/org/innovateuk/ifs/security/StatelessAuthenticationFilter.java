@@ -9,19 +9,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Service
 @Configurable
-public class StatelessAuthenticationFilter extends GenericFilterBean {
+public class StatelessAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
@@ -30,22 +28,19 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
     private String monitoringEndpoint;
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
+    public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
 
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        HttpServletResponse httpResponse = (HttpServletResponse) response;
-
-        if(shouldBeAuthenticated(httpRequest)) {
-            Authentication authentication = userAuthenticationService.getAuthentication(httpRequest);
+        if(shouldBeAuthenticated(request)) {
+            Authentication authentication = userAuthenticationService.getAuthentication(request);
 
             if (authentication != null) {
-                UserResource ur = userAuthenticationService.getAuthenticatedUser(httpRequest);
+                UserResource ur = userAuthenticationService.getAuthenticatedUser(request);
                 if (ur == null)  {
                     // avoid leaking information about auth failures
-                    httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                 } else if (ur.getStatus().equals(UserStatus.INACTIVE)) {
-                    httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User is not activated.");
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User is not activated.");
                 } else {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
