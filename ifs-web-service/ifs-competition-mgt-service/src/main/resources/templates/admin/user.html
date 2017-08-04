@@ -42,19 +42,21 @@
                     <th:block th:insert="fragments/modals :: modal-confirm-reactivate-user" />
                 </form>
             </div>
-            <div class="form-footer__info" th:text="|Deactivated by ${model.user.modifiedBy} on ${#temporals.format(model.user.modifiedOn, 'dd MMMM yyyy')}">
+            <div class="form-footer__info" th:text="|Deactivated by ${model.user.modifiedBy} on ${#temporals.format(model.user.modifiedOn, 'd MMMM yyyy')}">
                 Deactivated by Susan Smith on 23rd March 2017
             </div>
         </div>
     </th:block>
-    <div class="form-footer">
-        <div class="form-footer__actions">
-            <a th:href="@{|/admin/user/${model.user.id}/edit|}">Edit</a>
+    <th:block th:unless="${model.user.status.equals(T(org.innovateuk.ifs.user.resource.UserStatus).INACTIVE)}">
+        <div class="form-footer">
+            <div class="form-footer__actions">
+                <a th:href="@{|/admin/user/${model.user.id}/edit|}">Edit</a>
+            </div>
+            <div class="form-footer__info" th:text="|Created by ${model.user.createdBy} on ${#temporals.format(model.user.createdOn, 'd MMMM yyyy')}|">
+                Created by Susan Smith on 23rd March 2017
+            </div>
         </div>
-        <div class="form-footer__info" th:text="|Created by ${model.user.createdBy} on ${#temporals.format(model.user.createdOn, 'dd MMMM yyyy')}|">
-            Created by Susan Smith on 23rd March 2017
-        </div>
-    </div>
+    </th:block>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
