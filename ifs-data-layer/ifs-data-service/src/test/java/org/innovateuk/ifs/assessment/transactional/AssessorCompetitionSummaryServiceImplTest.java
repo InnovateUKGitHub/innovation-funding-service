@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.domain.AssessmentApplicationAssessorCount;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
 import org.innovateuk.ifs.assessment.resource.AssessorCompetitionSummaryResource;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -17,14 +18,18 @@ import org.mockito.InjectMocks;
 
 import java.util.List;
 
+import static java.util.Optional.of;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentApplicationAssessorCountBuilder.newAssessmentApplicationAssessorCount;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
+import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeBuilder.newAssessmentRejectOutcome;
 import static org.innovateuk.ifs.assessment.builder.AssessorAssessmentResourceBuilder.newAssessorAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorCompetitionSummaryResourceBuilder.newAssessorCompetitionSummaryResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
 import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
+import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.ACCEPTED;
+import static org.innovateuk.ifs.assessment.resource.AssessmentStates.REJECTED;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.SUBMITTED;
 import static org.innovateuk.ifs.assessment.transactional.AssessorCompetitionSummaryServiceImpl.VALID_ASSESSMENT_STATES;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -69,8 +74,8 @@ public class AssessorCompetitionSummaryServiceImplTest extends BaseUnitTestMocks
         when(competitionServiceMock.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competition));
 
         Application[] applications = newApplication()
-                .withName("Test Application 1", "Test Application 2")
-                .buildArray(2, Application.class);
+                .withName("Test Application 1", "Test Application 2", "Test Application 3")
+                .buildArray(3, Application.class);
 
         applications[0].setProcessRoles(
                 newProcessRole()
@@ -84,20 +89,32 @@ public class AssessorCompetitionSummaryServiceImplTest extends BaseUnitTestMocks
                         .withOrganisationId(2L)
                         .build(1)
         );
+        applications[2].setProcessRoles(
+                newProcessRole()
+                        .withRole(UserRoleType.LEADAPPLICANT)
+                        .withOrganisationId(3L)
+                        .build(1)
+        );
+
+        AssessmentRejectOutcome rejectOutcome = newAssessmentRejectOutcome()
+                .withRejectReason(CONFLICT_OF_INTEREST)
+                .withRejectComment("rejection comment")
+                .build();
 
         Assessment[] assessments = newAssessment()
                 .withApplication(applications)
                 .withActivityState(
                         new ActivityState(APPLICATION_ASSESSMENT, ACCEPTED.getBackingState()),
-                        new ActivityState(APPLICATION_ASSESSMENT, SUBMITTED.getBackingState())
-                )
-                .buildArray(2, Assessment.class);
+                        new ActivityState(APPLICATION_ASSESSMENT, SUBMITTED.getBackingState()),
+                        new ActivityState(APPLICATION_ASSESSMENT, REJECTED.getBackingState()))
+                .withRejection(null, null, rejectOutcome)
+                .buildArray(3, Assessment.class);
 
         List<AssessmentApplicationAssessorCount> assessmentCounts = newAssessmentApplicationAssessorCount()
                 .withApplication(applications)
                 .withAssessment(assessments)
-                .withAssessorCount(5, 4)
-                .build(2);
+                .withAssessorCount(5, 4, 3)
+                .build(3);
 
         when(assessmentRepositoryMock.countByParticipantUserIdAndActivityStateStateIn(
                 assessorId,
@@ -112,13 +129,18 @@ public class AssessorCompetitionSummaryServiceImplTest extends BaseUnitTestMocks
         ))
                 .thenReturn(assessmentCounts);
 
+
+        when(assessmentRepositoryMock.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(
+                assessorId, applications[2].getId())).thenReturn(of(assessments[2]));
+
         List<Organisation> leadOrganisations = newOrganisation()
-                .withId(1L, 2L)
-                .withName("Lead Org 1", "Lead Org 2")
-                .build(2);
+                .withId(1L, 2L, 3L)
+                .withName("Lead Org 1", "Lead Org 2", "Lead Org 3")
+                .build(3);
 
         when(organisationRepositoryMock.findOne(applications[0].getLeadOrganisationId())).thenReturn(leadOrganisations.get(0));
         when(organisationRepositoryMock.findOne(applications[1].getLeadOrganisationId())).thenReturn(leadOrganisations.get(1));
+        when(organisationRepositoryMock.findOne(applications[2].getLeadOrganisationId())).thenReturn(leadOrganisations.get(2));
 
         ServiceResult<AssessorCompetitionSummaryResource> result = service.getAssessorSummary(assessorId, competitionId);
         assertTrue(result.isSuccess());
@@ -129,6 +151,8 @@ public class AssessorCompetitionSummaryServiceImplTest extends BaseUnitTestMocks
         verify(assessmentRepositoryMock).getAssessorApplicationAssessmentCountsForStates(competitionId, assessorId, VALID_ASSESSMENT_STATES);
         verify(organisationRepositoryMock).findOne(applications[0].getLeadOrganisationId());
         verify(organisationRepositoryMock).findOne(applications[1].getLeadOrganisationId());
+        verify(organisationRepositoryMock).findOne(applications[2].getLeadOrganisationId());
+        verify(assessmentRepositoryMock).findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessorId, applications[2].getId());
 
         AssessorCompetitionSummaryResource expected = newAssessorCompetitionSummaryResource()
                 .withCompetitionId(competitionId)
@@ -138,12 +162,14 @@ public class AssessorCompetitionSummaryServiceImplTest extends BaseUnitTestMocks
                 .withAssessor(assessor)
                 .withAssignedAssessments(
                         newAssessorAssessmentResource()
-                                .withApplicationId(applications[0].getId(), applications[1].getId())
-                                .withApplicationName(applications[0].getName(), applications[1].getName())
-                                .withLeadOrganisation("Lead Org 1", "Lead Org 2")
-                                .withState(ACCEPTED, SUBMITTED)
-                                .withTotalAssessors(5, 4)
-                                .build(2)
+                                .withApplicationId(applications[0].getId(), applications[1].getId(), applications[2].getId())
+                                .withApplicationName(applications[0].getName(), applications[1].getName(), applications[2].getName())
+                                .withLeadOrganisation("Lead Org 1", "Lead Org 2", "Lead Org 3")
+                                .withState(ACCEPTED, SUBMITTED, REJECTED)
+                                .withTotalAssessors(5, 4, 3)
+                                .withRejectionReason(null, null, rejectOutcome.getRejectReason())
+                                .withRejectionComment(null, null, rejectOutcome.getRejectComment())
+                                .build(3)
                 )
                 .build();
 
