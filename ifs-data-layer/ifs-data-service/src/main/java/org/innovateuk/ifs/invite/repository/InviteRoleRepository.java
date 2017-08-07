@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.invite.repository;
 
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
@@ -17,6 +20,8 @@ public interface InviteRoleRepository extends PagingAndSortingRepository<RoleInv
     List<RoleInvite> findByEmail(String email);
 
     List<RoleInvite> findByRoleIdAndEmail(Long roleId, String email);
+
+    Page<RoleInvite> findByStatus(InviteStatus status, Pageable pageable);
 
     RoleInvite getByHash(String hash);
 }

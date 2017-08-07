@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.controller;
 
+import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -17,7 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeResourceBuilder.newIneligibleOutcomeResource;
@@ -25,9 +28,10 @@ import static org.innovateuk.ifs.commons.security.SecuritySetter.swapOutForUser;
 import static org.junit.Assert.*;
 
 @Rollback
-public class ApplicationControllerIntegrationTest extends ApplicationSubmissionControllerIntegrationTest<ApplicationController> {
+public class ApplicationControllerIntegrationTest extends BaseControllerIntegrationTest<ApplicationController> {
 
     public static final long APPLICATION_ID = 1L;
+    public static final long APPLICATION_SUBMITTABLE_ID = 7L;
 
     @Autowired
     private UserMapper userMapper;
@@ -79,7 +83,7 @@ public class ApplicationControllerIntegrationTest extends ApplicationSubmissionC
     @Test
     public void testFindAll() {
         RestResult<List<ApplicationResource>> all = controller.findAll();
-        assertEquals(5, all.getSuccessObject().size());
+        assertEquals(6, all.getSuccessObject().size());
     }
 
     @Test
@@ -118,12 +122,10 @@ public class ApplicationControllerIntegrationTest extends ApplicationSubmissionC
     @Rollback
     @Test
     public void testUpdateApplicationStateApproved() throws Exception {
-        makeApplicationSubmittable(APPLICATION_ID);
-
-        controller.updateApplicationState(APPLICATION_ID, ApplicationState.OPEN);
-        controller.updateApplicationState(APPLICATION_ID, ApplicationState.SUBMITTED);
-        controller.updateApplicationState(APPLICATION_ID, ApplicationState.APPROVED);
-        assertEquals(ApplicationState.APPROVED, controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationState());
+        controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.OPEN);
+        controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.SUBMITTED);
+        controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.APPROVED);
+        assertEquals(ApplicationState.APPROVED, controller.getApplicationById(APPLICATION_SUBMITTABLE_ID).getSuccessObject().getApplicationState());
     }
 
     @Test
@@ -137,12 +139,10 @@ public class ApplicationControllerIntegrationTest extends ApplicationSubmissionC
     @Rollback
     @Test
     public void testUpdateApplicationStateRejected() throws Exception {
-        makeApplicationSubmittable(APPLICATION_ID);
-
-        controller.updateApplicationState(APPLICATION_ID, ApplicationState.OPEN);
-        controller.updateApplicationState(APPLICATION_ID, ApplicationState.SUBMITTED);
-        controller.updateApplicationState(APPLICATION_ID, ApplicationState.REJECTED);
-        assertEquals(ApplicationState.REJECTED, controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationState());
+        controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.OPEN);
+        controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.SUBMITTED);
+        controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.REJECTED);
+        assertEquals(ApplicationState.REJECTED, controller.getApplicationById(APPLICATION_SUBMITTABLE_ID).getSuccessObject().getApplicationState());
     }
 
     @Test
@@ -154,15 +154,13 @@ public class ApplicationControllerIntegrationTest extends ApplicationSubmissionC
     @Rollback
     @Test
     public void testUpdateApplicationStateSubmitted() throws Exception {
-        ApplicationResource applicationBefore = controller.getApplicationById(APPLICATION_ID).getSuccessObject();
+        ApplicationResource applicationBefore = controller.getApplicationById(APPLICATION_SUBMITTABLE_ID).getSuccessObject();
         assertNull(applicationBefore.getSubmittedDate());
 
-        makeApplicationSubmittable(APPLICATION_ID);
+        controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.SUBMITTED);
+        assertEquals(ApplicationState.SUBMITTED, controller.getApplicationById(APPLICATION_SUBMITTABLE_ID).getSuccessObject().getApplicationState());
 
-        controller.updateApplicationState(APPLICATION_ID, ApplicationState.SUBMITTED);
-        assertEquals(ApplicationState.SUBMITTED, controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationState());
-
-        ApplicationResource applicationAfter = controller.getApplicationById(APPLICATION_ID).getSuccessObject();
+        ApplicationResource applicationAfter = controller.getApplicationById(APPLICATION_SUBMITTABLE_ID).getSuccessObject();
         assertNotNull(applicationAfter.getSubmittedDate());
     }
 
@@ -173,7 +171,7 @@ public class ApplicationControllerIntegrationTest extends ApplicationSubmissionC
         UserRoleType role = UserRoleType.LEADAPPLICANT;
         List<ApplicationResource> applications = controller.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role).getSuccessObject();
 
-        assertEquals(5, applications.size());
+        assertEquals(6, applications.size());
         Optional<ApplicationResource> application = applications.stream().filter(a -> a.getId().equals(APPLICATION_ID)).findAny();
         assertTrue(application.isPresent());
         assertEquals(competitionId, application.get().getCompetition());
@@ -182,17 +180,16 @@ public class ApplicationControllerIntegrationTest extends ApplicationSubmissionC
     @Rollback
     @Test
     public void markAsIneligible() throws Exception {
-        controller.updateApplicationState(APPLICATION_ID, ApplicationState.OPEN);
-        makeApplicationSubmittable(APPLICATION_ID);
-        controller.updateApplicationState(APPLICATION_ID, ApplicationState.SUBMITTED);
+        controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.OPEN);
+        controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.SUBMITTED);
         loginCompAdmin();
 
         IneligibleOutcomeResource reason = newIneligibleOutcomeResource()
                 .withReason("Reason")
                 .build();
 
-        controller.markAsIneligible(APPLICATION_ID, reason);
-        ApplicationResource applicationAfter = controller.getApplicationById(APPLICATION_ID).getSuccessObject();
+        controller.markAsIneligible(APPLICATION_SUBMITTABLE_ID, reason);
+        ApplicationResource applicationAfter = controller.getApplicationById(APPLICATION_SUBMITTABLE_ID).getSuccessObject();
         assertEquals(ApplicationState.INELIGIBLE, applicationAfter.getApplicationState());
         assertEquals(reason.getReason(), applicationAfter.getIneligibleOutcome().getReason());
     }
@@ -200,18 +197,17 @@ public class ApplicationControllerIntegrationTest extends ApplicationSubmissionC
     @Rollback
     @Test
     public void informIneligible() throws Exception {
-        controller.updateApplicationState(APPLICATION_ID, ApplicationState.OPEN);
-        makeApplicationSubmittable(APPLICATION_ID);
-        controller.updateApplicationState(APPLICATION_ID, ApplicationState.SUBMITTED);
+        controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.OPEN);
+        controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.SUBMITTED);
         loginCompAdmin();
-        controller.markAsIneligible(APPLICATION_ID, newIneligibleOutcomeResource().build());
+        controller.markAsIneligible(APPLICATION_SUBMITTABLE_ID, newIneligibleOutcomeResource().build());
         ApplicationIneligibleSendResource applicationIneligibleSendResource =
                 newApplicationIneligibleSendResource()
                         .withSubject("Subject")
                         .withContent("Message")
                         .build();
 
-        RestResult<Void> result = controller.informIneligible(APPLICATION_ID, applicationIneligibleSendResource);
+        RestResult<Void> result = controller.informIneligible(APPLICATION_SUBMITTABLE_ID, applicationIneligibleSendResource);
         assertTrue(result.isSuccess());
     }
 
