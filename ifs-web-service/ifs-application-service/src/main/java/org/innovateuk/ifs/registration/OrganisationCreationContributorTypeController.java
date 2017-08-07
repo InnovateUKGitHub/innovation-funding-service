@@ -34,8 +34,8 @@ import static org.innovateuk.ifs.registration.AbstractAcceptInviteController.ORG
 @Controller
 @RequestMapping("/organisation/create/type/")
 @PreAuthorize("permitAll")
-public class OrganisationTypeCreationController {
-    private static final Log LOG = LogFactory.getLog(OrganisationTypeCreationController.class);
+public class OrganisationCreationContributorTypeController {
+    private static final Log LOG = LogFactory.getLog(OrganisationCreationContributorTypeController.class);
     Validator validator;
     @Autowired
     @Qualifier("mvcValidator")

@@ -24,15 +24,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class OrganisationTypeCreationControllerTest extends BaseControllerMockMVCTest<OrganisationTypeCreationController> {
+public class OrganisationCreationContributorTypeControllerTest extends BaseControllerMockMVCTest<OrganisationCreationContributorTypeController> {
     @Mock
     private Validator validator;
     @Mock
     CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Override
-    protected OrganisationTypeCreationController supplyControllerUnderTest() {
-        return new OrganisationTypeCreationController();
+    protected OrganisationCreationContributorTypeController supplyControllerUnderTest() {
+        return new OrganisationCreationContributorTypeController();
     }
 
     @Before

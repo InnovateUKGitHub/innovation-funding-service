@@ -18,7 +18,10 @@ import static java.util.Arrays.asList;
 @Service
 public class OrganisationCreationSelectTypePopulator {
 
-    private static final List<Long> ALLOWED_LEAD_ORG_TYPES = asList(OrganisationTypeEnum.BUSINESS.getId(), OrganisationTypeEnum.RTO.getId());
+    private static final List<Long> ALLOWED_LEAD_ORG_TYPES = asList(OrganisationTypeEnum.BUSINESS.getId(),
+            OrganisationTypeEnum.RESEARCH.getId(),
+            OrganisationTypeEnum.RTO.getId(),
+            OrganisationTypeEnum.PUBLICSECTOR_OR_CHARITY.getId());
 
     @Autowired
     private OrganisationTypeRestService organisationTypeRestService;
