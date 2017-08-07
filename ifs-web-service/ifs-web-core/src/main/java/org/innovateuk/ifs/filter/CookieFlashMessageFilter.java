@@ -1,5 +1,14 @@
 package org.innovateuk.ifs.filter;
 
+import java.io.IOException;
+
+import javax.annotation.PostConstruct;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.encrypt.Encryptors;
@@ -8,18 +17,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.WebUtils;
-
-import javax.annotation.PostConstruct;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 import static java.util.Arrays.asList;
 
@@ -33,7 +32,7 @@ import static java.util.Arrays.asList;
  */
 @Service
 @Configurable
-public class CookieFlashMessageFilter extends GenericFilterBean {
+public class CookieFlashMessageFilter extends OncePerRequestFilter {
 
     public static final String COOKIE_NAME = "flashMessage";
     private static final Integer COOKIE_LIFETIME = 60;
@@ -96,22 +95,19 @@ public class CookieFlashMessageFilter extends GenericFilterBean {
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        HttpServletResponse httpResponse = (HttpServletResponse) response;
+    public void doFilterInternal(HttpServletRequest httpRequest, HttpServletResponse httpResponse, FilterChain chain) throws IOException, ServletException {
 
         if(!ignoreRequest(httpRequest)) {
             Cookie cookie = WebUtils.getCookie(httpRequest, COOKIE_NAME);
             if(cookie != null && !StringUtils.isEmpty(cookie.getValue())){
-                request.setAttribute(encryptor.decrypt(cookie.getValue()), true);
+                httpRequest.setAttribute(encryptor.decrypt(cookie.getValue()), true);
             }
         }
 
         // reset the flash message.
         removeFlashMessage(httpResponse);
 
-        chain.doFilter(request, response);
+        chain.doFilter(httpRequest, httpResponse);
     }
     public boolean ignoreRequest(HttpServletRequest request) {
         return IGNORED_REQUESTS.matches(request);
