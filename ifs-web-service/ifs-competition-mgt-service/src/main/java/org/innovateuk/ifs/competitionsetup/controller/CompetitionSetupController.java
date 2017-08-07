@@ -334,6 +334,7 @@ public class CompetitionSetupController {
                                        Model model,
                                        UserResource loggedInUser) {
 
+        CompetitionResource competition = competitionService.getById(competitionId);
         List<UserResource> allInnovationLeads = userService.findUserByType(UserRoleType.INNOVATION_LEAD);
 
         List<UserResource> innovationLeadsAssignedToCompetition = competitionService.findInnovationLeads(competitionId);
@@ -343,7 +344,10 @@ public class CompetitionSetupController {
         availableInnovationLeads.addAll(allInnovationLeads);
         availableInnovationLeads.removeAll(innovationLeadsAssignedToCompetition);
 
-        model.addAttribute("model", new ManageInnovationLeadsViewModel(allInnovationLeads, innovationLeadsAssignedToCompetition, availableInnovationLeads));
+        model.addAttribute("model", new ManageInnovationLeadsViewModel(competitionId, competition.getName(),
+                competition.getLeadTechnologistName(), competition.getInnovationSectorName(),
+                competition.getInnovationAreaNames(), allInnovationLeads, innovationLeadsAssignedToCompetition,
+                availableInnovationLeads));
 
         return "competition/manage-innovation-leads";
     }
