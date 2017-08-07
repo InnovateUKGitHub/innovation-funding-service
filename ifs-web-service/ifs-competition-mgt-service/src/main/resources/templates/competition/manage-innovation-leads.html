@@ -64,7 +64,7 @@
                             <tr th:each="(innovationLeadUsers : ${model.availableInnovationLeads})">
                                 <td th:text="${innovationLeadUsers.name}">Alexis Kinney</td>
                                 <td>
-                                    <form method="post" th:action="@{/competition/setup/{competitionId}/add-innovation-lead/{userId}(competitionId=1,userId=${innovationLeadUsers.id})}">
+                                    <form method="post" th:action="@{/competition/setup/{competitionId}/add-innovation-lead/{userId}(competitionId=${model.competitionId},userId=${innovationLeadUsers.id})}">
                                         <button class="button button-secondary no-margin">Add <span class="visuallyhidden"><th:block th:text="${innovationLeadUsers.name}" /> as Innovation Lead</span></button>
                                     </form>
                                 </td>
