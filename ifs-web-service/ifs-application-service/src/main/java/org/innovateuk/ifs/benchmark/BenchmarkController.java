@@ -1,9 +1,5 @@
 package org.innovateuk.ifs.benchmark;
 
-import java.util.List;
-import java.util.Random;
-import java.util.stream.LongStream;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -14,6 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
+import java.util.Random;
+import java.util.stream.LongStream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -39,7 +39,7 @@ public class BenchmarkController extends BaseRestService {
 
         long start = System.currentTimeMillis();
 
-        RestResult<String> dataLayerResponse = getWithRestResultAnonymous("/benchmark/isolated?process_time_millis=" + dataLayerProcessTimeMillis, String.class);
+        RestResult<String> dataLayerResponse = getWithRestResultAnonymous("/monitoring/benchmark/isolated?process_time_millis=" + dataLayerProcessTimeMillis, String.class);
 
         if (dataLayerResponse.isFailure()) {
             return "Error response from data layer whilst processing \"to-data-layer\" benchmarking test - " + dataLayerResponse.getFailure().getErrors();
