@@ -140,7 +140,7 @@ public class ApplicationSubmitController {
 
                 if (collectValidationMessages(markAsCompleteErrors).hasErrors()) {
                     questionService.markAsIncomplete(markQuestionCompleteId, applicationId, processRole.getId());
-                    return "redirect:/application/" + applicationId + "/form/question/edit/" + markQuestionCompleteId;
+                    return "redirect:/application/" + applicationId + "/form/question/edit/" + markQuestionCompleteId + "?mark_as_complete=true";
                 }
             }
         }
