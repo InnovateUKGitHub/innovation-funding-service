@@ -226,8 +226,6 @@ Deactivated user cannot login till he is activated
     Given the user cannot login with their new details  ifs.administrator@innovateuk.test  ${correct_password}
     When Logging in and Error Checking                  &{ifs_admin_user_credentials}
     Then the user navigates to the View internal users details  Edited Admin  inactive
-#    When the user clicks the button/link  link=Edit    # TODO IFS-1136
-#    Then the user should not see an error in the page
     When the user clicks the button/link                link=Reactivate user
     Then the user clicks the button/link                jQuery=button:contains("Yes, reactivate")
     When log in as a different user                     ifs.administrator@innovateuk.test  ${correct_password}
