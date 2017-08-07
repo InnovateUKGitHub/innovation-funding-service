@@ -137,12 +137,15 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         flushAndClearSession();
 
         addOpenDateToCompetition(competition);
+        setPrivateCompetitionToPublic();
         RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.empty(), Optional.empty(), Optional.empty(), 10);
 
         assertTrue(resultOne.isSuccess());
         List<PublicContentItemResource> publicContentItemResourcesOne = resultOne.getSuccessObject().getContent();
 
-        assertEquals(1, resultOne.getSuccessObject().getTotalElements());
+        assertEquals(2, resultOne.getSuccessObject().getTotalElements());
+        assertTrue(publicContentItemResourcesOne.get(0).getCompetitionOpenDate()
+                .isAfter(publicContentItemResourcesOne.get(1).getCompetitionOpenDate()));
         assertEquals(competition.getName(), publicContentItemResourcesOne.get(0).getCompetitionTitle());
     }
 
