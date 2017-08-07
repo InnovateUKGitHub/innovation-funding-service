@@ -78,6 +78,7 @@ User can create a new competition
     And The user should not see the element    link=Assessors
     And The user should not see the element    link=Public content
     And The user should see the element    link=Initial details
+    And The user should see the element    link=Stakeholders
 
 New competition shows in Preparation section
     [Documentation]    INFUND-2980
@@ -180,6 +181,7 @@ User should have access to all the sections
     And The user should see the element    link=Application
     And The user should see the element    link=Assessors
     And The user should see the element    link=Public content
+    And The user should see the element    link=Stakeholders
 
 Internal user can navigate to Public Content without having any issues
     [Documentation]  INFUND-6922

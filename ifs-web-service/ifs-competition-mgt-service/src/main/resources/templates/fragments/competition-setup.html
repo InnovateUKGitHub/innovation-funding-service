@@ -20,6 +20,9 @@
                       class="notification">Last published</div>
                 <div th:if="${section.isComplete(competition) and !competition.isSetupAndLive()}" class="task-status-complete"><span>Complete</span></div>
             </li>
+            <li>
+                <a th:href="@{/stakeholders}">Stakeholders</a>
+            </li>
         </ul>
         <div th:if="${readyToOpen}" class="extra-margin">
             <p>Once you save, this competition will be ready to open but will not be published.</p>
