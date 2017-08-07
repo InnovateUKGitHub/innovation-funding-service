@@ -348,6 +348,31 @@ public class CompetitionSetupController {
         return "competition/manage-innovation-leads";
     }
 
+    @PostMapping("/{competitionId}/add-innovation-lead")
+    public String addInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                    @PathVariable("userId") long userId,
+                                    Model model,
+                                    UserResource loggedInUser) {
+
+        //TODO - Write code here to add innovation lead to competition
+        // For now just ensure that the post request hits this method with all the required details.
+
+        // TODO - Temp view for now. Need to check where it should go.
+        return "competition/manage-innovation-leads";
+    }
+
+    @PostMapping("/{competitionId}/remove-innovation-lead")
+    public String removeInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                       @PathVariable("userId") long userId,
+                                       Model model,
+                                       UserResource loggedInUser) {
+
+        //TODO - Write code here to remove innovation lead to competition
+        // For now just ensure that the post request hits this method with all the required details.
+
+        // TODO - Temp view for now. Need to check where it should go.
+        return "competition/manage-innovation-leads";
+    }
 
 
     /* AJAX Function */
