@@ -213,6 +213,8 @@ Administrator is able to disable internal users
     And the user clicks the button/link   jQuery=button:contains("Yes, deactivate")
     Then the user should see the element  jQuery=.form-footer *:contains("Reactivate user") + *:contains("Deactivated by Arden Pimenta on")
     #TODO Pending due to IFS-1191 add ${today}
+    When the user navigates to the page   ${server}/management/admin/users/inactive
+    Then the user should see the element  jQuery=tr:contains("Edited Admin")  #Checking the user swapped tab
 
 Deactivated user cannot login until he is activated
     [Documentation]  IFS-644
@@ -223,6 +225,8 @@ Deactivated user cannot login until he is activated
     Then the user navigates to the View internal users details  Edited Admin  inactive
     When the user clicks the button/link                link=Reactivate user
     Then the user clicks the button/link                jQuery=button:contains("Yes, reactivate")
+    When the user navigates to the page                 ${server}/management/admin/users/active
+    Then the user should see the element                jQuery=tr:contains("Edited Admin")  #Checking the user swapped tab
     When the re-activated user tries to login
     Then the user should not see an error in the page
 
