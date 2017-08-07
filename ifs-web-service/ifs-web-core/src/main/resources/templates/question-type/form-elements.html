@@ -399,7 +399,7 @@
 
 <th:block th:fragment="form-mark-as-complete-buttons (model)" th:with="formInput=${model.formInput}, question=${model.question}">
     <th:block th:unless="${appIsClosed}">
-        <button th:if="${model.complete}"
+        <button th:if="${model.complete and !model.summary}"
                 type="submit"
                 name="mark_as_incomplete"
                 th:value="${question.getId()}"

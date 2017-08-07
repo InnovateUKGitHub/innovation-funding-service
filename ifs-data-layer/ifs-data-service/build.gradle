@@ -113,6 +113,10 @@ test {
     if (project.hasProperty('excludeTests')) {
         exclude "${project.excludeTests}"
     }
+
+    if (project.hasProperty('testGroups')) {
+        systemProperty 'testGroups', project.getProperty('testGroups')
+    }
 }
 
 
@@ -129,6 +133,19 @@ task dbResetDocker(type: Docker, dependsOn: build) {
         copy {
             from file("${rootProject.projectDir}/setup-files/scripts/docker/ldap-sync-from-ifs-db.sh")
             into stageDir
+        }
+    }
+}
+
+
+task dbAnonymisedDumpDocker(type: Docker, dependsOn: build) {
+    push = false
+    applicationName = 'db-anonymised-data'
+    dockerfile = file('src/main/docker/proxysql/Dockerfile-proxysql')
+    doFirst {
+        copy {
+            from "src/main/docker/proxysql"
+            into "${stageDir}/proxysql"
         }
     }
 }

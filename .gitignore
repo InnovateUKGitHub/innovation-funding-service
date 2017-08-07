@@ -142,3 +142,5 @@ ifs-web-service/ifs-project-setup-service/tomcat/
 ifs-auth-service/ifs-sp-service/src/main/docker/certs/
 ifs-auth-service/ifs-idp-service/src/main/docker/certs/
 ifs-auth-service/ifs-ldap-service/src/main/docker/certs/
+
+setup-files/scripts/docker/newrelic.*

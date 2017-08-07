@@ -151,8 +151,7 @@ ${project_in_setup_details_page}        ${project_in_setup_page}/details
 ${project_in_setup_team_status_page}    ${project_in_setup_page}/team-status
 ${project_start_date_page}              ${project_in_setup_details_page}/start-date
 ${project_address_page}                 ${project_in_setup_details_page}/project-address
-${internal_project_summary}             ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
-
+${internal_competition_status}          ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
 
 
 #Bank details
@@ -175,11 +174,21 @@ project finance submits monitoring officer
 
 partner submits his bank details
     [Arguments]  ${email}  ${project}  ${account_number}  ${sort_code}
+    partner fills in his bank details  ${email}  ${project}  ${account_number}  ${sort_code}
+    the user should see the element    jQuery=dt:contains("Account number") + dd:contains("****")
+    # Have splitted this check from the rest of the keyword, which i now name into 'partner fills in his bank details'
+    # Because this little check adds a bit of extra time and validation that the Bank details are submitted.
+    # However, not all test cases submit the Bank details when the button is pressed, as we also check for validation messages
+    # I am using in those test cases the keyword 'partner fills in his bank details' directly
+
+partner fills in his bank details
+    [Arguments]  ${email}  ${project}  ${account_number}  ${sort_code}
     log in as a different user                       ${email}    ${short_password}
     the user navigates to the page                   ${server}/project-setup/project/${project}/bank-details
     the user enters text to a text field             id=bank-acc-number  ${account_number}
     the user enters text to a text field             id=bank-sort-code  ${sort_code}
     the user clicks the button twice                 css=label[for="address-use-org"]
+    the user sees that the radio button is selected  addressType  REGISTERED  # Added this check to give extra execution time
     the user should see the element                  css=#registeredAddress
     wait until keyword succeeds without screenshots  30  500ms  the user clicks the button/link  jQuery=.button:contains("Submit bank account details")
     wait until keyword succeeds without screenshots  30  500ms  the user clicks the button/link  jQuery=.button[name="submit-app-details"]

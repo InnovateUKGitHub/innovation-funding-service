@@ -26,6 +26,12 @@ Your details: Server-side validations
     And the user selects the checkbox          termsAndConditions
     And the user clicks the button/link        jQuery=button:contains("Create account")
     And the user should see an error           Password is too weak.
+    And the user enters text to a text field   id=firstName   !@£$
+    And the user enters text to a text field   id=lastName    &*(^
+    And the user enters text to a text field   id=password    ${correct_password}
+    And the user clicks the button/link        jQuery=button:contains("Create account")
+    And the user should see an error           Invalid first name.
+    And the user should see an error           Invalid last name.
     When the user enters text to a text field  id=firstName    ${EMPTY}
     And the user enters text to a text field   id=lastName    ${EMPTY}
     And the user enters text to a text field   id=phoneNumber    ${EMPTY}

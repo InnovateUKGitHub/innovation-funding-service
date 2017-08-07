@@ -294,7 +294,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 getInternalRoleResources(roleInvite.getTarget()).andOnSuccess(roleResource -> {
                     internalUserRegistrationResource.setEmail(roleInvite.getEmail());
                     internalUserRegistrationResource.setRoles(roleResource);
-                    return createUser(internalUserRegistrationResource).andOnSuccessReturnVoid();
+                    return createUser(internalUserRegistrationResource)
+                            .andOnSuccess(() -> updateInviteStatus(roleInvite))
+                            .andOnSuccessReturnVoid();
                 }));
     }
 
@@ -322,6 +324,12 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                     return createUserWithUid(user, userResource.getPassword()).
                             andOnSuccess(this::activateUser).andOnSuccessReturnVoid();
                 });
+    }
+
+    private ServiceResult<Void> updateInviteStatus(RoleInvite roleInvite) {
+        roleInvite.open();
+        inviteRoleRepository.save(roleInvite);
+        return serviceSuccess();
     }
 
     private ServiceResult<List<RoleResource>> getIFSAdminRoles(UserRoleType roleType) {
