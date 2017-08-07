@@ -2,13 +2,19 @@ package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.documentation.InviteUserResourceDocs;
+import org.innovateuk.ifs.documentation.PageResourceDocs;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
+import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
-import org.innovateuk.ifs.user.resource.AdminRoleType;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.util.LinkedMultiValueMap;
 
+import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.RoleInviteResourceBuilder.newRoleInviteResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
@@ -42,7 +48,7 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
                 .withEmail("A.D@gmail.com")
                 .build();
 
-        inviteUserResource = new InviteUserResource(invitedUser, AdminRoleType.IFS_ADMINISTRATOR);
+        inviteUserResource = new InviteUserResource(invitedUser, UserRoleType.IFS_ADMINISTRATOR);
     }
 
     @Test
@@ -100,6 +106,27 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
                 ));
 
         verify(inviteUserServiceMock).checkExistingUser("SomeHashString");
+    }
+
+    @Test
+    public void findPendingInternalUserInvites() throws Exception {
+        RoleInvitePageResource roleInvitePageResource = buildRoleInvitePageResource();
+        when(inviteUserServiceMock.findPendingInternalUserInvites(Mockito.any(PageRequest.class))).thenReturn(serviceSuccess(roleInvitePageResource));
+        mockMvc.perform(get(buildPaginationUri("/inviteUser/internal/pending", 0, 5, null, new LinkedMultiValueMap<>()))).andExpect(status().isOk())
+                .andDo(document("inviteUser/internal/pending/{method-name}",
+                        responseFields(PageResourceDocs.pageResourceFields)
+                ));;
+    }
+
+    private RoleInvitePageResource buildRoleInvitePageResource() {
+
+        RoleInvitePageResource pageResource = new RoleInvitePageResource();
+        pageResource.setNumber(5);
+        pageResource.setSize(5);
+        pageResource.setTotalElements(10);
+        pageResource.setTotalPages(2);
+        pageResource.setContent(newRoleInviteResource().withEmail("example@innovateuk.test").build(5));
+        return pageResource;
     }
 }
 

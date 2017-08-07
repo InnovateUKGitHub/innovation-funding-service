@@ -21,10 +21,13 @@ import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
+import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Test;
@@ -40,9 +43,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.AssessorCountSummaryResourceBuilder.newAssessorCountSummaryResource;
-import static org.innovateuk.ifs.application.transactional.AssessorCountSummaryServiceImpl.NOT_ACCEPTED_OR_SUBMITTED_ASSESSMENT_STATES;
-import static org.innovateuk.ifs.application.transactional.AssessorCountSummaryServiceImpl.REJECTED_AND_SUBMITTED_ASSESSMENT_STATES;
-import static org.innovateuk.ifs.application.transactional.AssessorCountSummaryServiceImpl.SUBMITTED_ASSESSMENT_STATES;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -52,6 +52,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.resource.UserRoleType.APPLICANT;
 import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
@@ -60,10 +61,11 @@ import static org.innovateuk.ifs.workflow.resource.State.PENDING;
 import static org.innovateuk.ifs.workflow.resource.State.SUBMITTED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.springframework.data.domain.Sort.Direction.ASC;
 
 public class ApplicationStatisticsRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<ApplicationStatisticsRepository> {
 
-    public static final Collection<State> SUBMITTED_STATUSES = simpleMap(asList(
+    private static final Collection<State> SUBMITTED_STATUSES = simpleMap(asList(
             ApplicationState.APPROVED,
             ApplicationState.REJECTED,
             ApplicationState.SUBMITTED), ApplicationState::getBackingState);
@@ -99,6 +101,12 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     private InnovationSectorRepository innovationSectorRepository;
 
     @Autowired
+    private OrganisationRepository organisationRepository;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
     @Override
     protected void setRepository(ApplicationStatisticsRepository repository) {
         this.repository = repository;
@@ -131,6 +139,44 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         Pageable pageable = new PageRequest(0, 20);
 
         Page<ApplicationStatistics> statisticsPage = repository.findByCompetitionAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_STATUSES,"4", pageable);
+        assertEquals(1, statisticsPage.getTotalElements());
+        assertEquals(20, statisticsPage.getSize());
+        assertEquals(0, statisticsPage.getNumber());
+    }
+
+
+    @Test
+    public void findByCompetitionAndInnovationArea() throws Exception {
+        long competitionId = 1L;
+        long innovationAreaId = 54L;
+        long assessorId = 20L;
+
+        ProcessRole processRole = newProcessRole()
+                .with(id(null))
+                .withRole(APPLICANT)
+                .withUser(userMapper.mapToDomain(getSteveSmith()))
+                .build();
+
+        processRoleRepository.save(processRole);
+
+        Application application = newApplication()
+                .with(id(null))
+                .withApplicationState(ApplicationState.SUBMITTED)
+                .withName("Warp Drive")
+                .withNoInnovationAreaApplicable(false)
+                .withCompetition(competitionRepository.findById(competitionId))
+                .withInnovationArea(innovationAreaRepository.findOne(innovationAreaId))
+                .withProcessRoles(processRole)
+                .build();
+        application.getApplicationProcess().setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED));
+
+        applicationRepository.save(application);
+
+        flushAndClearSession();
+
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, new String[]{"id"}));
+
+        Page<ApplicationStatistics> statisticsPage = repository.findByCompetitionAndInnovationAreaProcessActivityStateStateIn(competitionId, assessorId, SUBMITTED_STATUSES, innovationAreaId, pageable);
         assertEquals(1, statisticsPage.getTotalElements());
         assertEquals(20, statisticsPage.getSize());
         assertEquals(0, statisticsPage.getNumber());

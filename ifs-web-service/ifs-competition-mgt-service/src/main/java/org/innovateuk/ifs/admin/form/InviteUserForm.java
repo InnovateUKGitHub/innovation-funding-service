@@ -8,7 +8,7 @@ import org.innovateuk.ifs.admin.form.validation.Primary;
 import org.innovateuk.ifs.admin.form.validation.Secondary;
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
-import org.innovateuk.ifs.user.resource.AdminRoleType;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 
 import javax.validation.GroupSequence;
 import javax.validation.constraints.Pattern;
@@ -41,7 +41,7 @@ public class InviteUserForm extends BaseBindingResultTarget {
     @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}", groups = Secondary.class)
     private String emailAddress;
 
-    private AdminRoleType role;
+    private UserRoleType role;
 
     // for spring form binding
     public InviteUserForm() {
@@ -71,11 +71,11 @@ public class InviteUserForm extends BaseBindingResultTarget {
         this.emailAddress = emailAddress;
     }
 
-    public AdminRoleType getRole() {
+    public UserRoleType getRole() {
         return role;
     }
 
-    public void setRole(AdminRoleType role) {
+    public void setRole(UserRoleType role) {
         this.role = role;
     }
 

@@ -2,12 +2,15 @@ package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
+import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
-import org.innovateuk.ifs.user.resource.AdminRoleType;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.springframework.data.domain.PageRequest;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
@@ -35,7 +38,7 @@ public class InviteUserControllerTest  extends BaseControllerMockMVCTest<InviteU
                 .withEmail("A.D@gmail.com")
                 .build();
 
-        inviteUserResource = new InviteUserResource(invitedUser, AdminRoleType.IFS_ADMINISTRATOR);
+        inviteUserResource = new InviteUserResource(invitedUser, UserRoleType.IFS_ADMINISTRATOR);
     }
 
     @Test
@@ -70,6 +73,17 @@ public class InviteUserControllerTest  extends BaseControllerMockMVCTest<InviteU
         mockMvc.perform(get("/inviteUser/checkExistingUser/SomeHashString")).andExpect(status().isOk());
 
         verify(inviteUserServiceMock).checkExistingUser("SomeHashString");
+
+    }
+
+    @Test
+    public void findPendingInternalUserInvites() throws Exception {
+
+        when(inviteUserServiceMock.findPendingInternalUserInvites(Mockito.any(PageRequest.class))).thenReturn(serviceSuccess(new RoleInvitePageResource()));
+
+        mockMvc.perform(get("/inviteUser/internal/pending")).andExpect(status().isOk());
+
+        verify(inviteUserServiceMock).findPendingInternalUserInvites(Mockito.any(PageRequest.class));
 
     }
 }

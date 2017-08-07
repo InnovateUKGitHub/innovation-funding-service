@@ -3,28 +3,35 @@ package org.innovateuk.ifs.invite.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.builder.RoleInviteBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
+import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.project.transactional.EmailService;
+import org.innovateuk.ifs.user.builder.RoleBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.Role;
-import org.innovateuk.ifs.user.resource.AdminRoleType;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +87,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
         UserResource invitedUser = UserResourceBuilder.newUserResource().build();
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, AdminRoleType.SUPPORT);
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, UserRoleType.SUPPORT);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(USER_ROLE_INVITE_INVALID));
     }
@@ -94,9 +101,19 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     }
 
     @Test
+    public void saveUserInviteWhenRoleSpecifiedIsNotInternalRole() {
+
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, UserRoleType.COLLABORATOR);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(NOT_AN_INTERNAL_USER_ROLE));
+
+    }
+
+    @Test
     public void saveUserInviteWhenEmailDomainIsIncorrect() throws Exception {
 
-        AdminRoleType adminRoleType = AdminRoleType.SUPPORT;
+        UserRoleType adminRoleType = UserRoleType.SUPPORT;
         invitedUser.setEmail("Astle.Pimenta@gmail.com");
 
         ServiceResult<Void> result = service.saveUserInvite(invitedUser, adminRoleType);
@@ -107,7 +124,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     @Test
     public void saveUserInviteWhenUserAlreadyInvited() throws Exception {
 
-        AdminRoleType adminRoleType = AdminRoleType.SUPPORT;
+        UserRoleType adminRoleType = UserRoleType.SUPPORT;
 
         Role role = new Role(1L, "support");
         RoleInvite roleInvite = new RoleInvite();
@@ -125,7 +142,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     @Test
     public void saveUserInviteWhenUserRoleDoesNotExist() throws Exception {
 
-        AdminRoleType adminRoleType = AdminRoleType.SUPPORT;
+        UserRoleType adminRoleType = UserRoleType.SUPPORT;
 
         when(roleRepositoryMock.findOneByName(adminRoleType.getName())).thenReturn(null);
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
@@ -158,7 +175,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, AdminRoleType.IFS_ADMINISTRATOR);
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, UserRoleType.IFS_ADMINISTRATOR);
 
         verify(inviteRoleRepositoryMock, times(2)).save(roleInviteArgumentCaptor.capture());
         verify(emailService).sendEmail(any(), paramsArgumentCaptor.capture(), any());
@@ -202,7 +219,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         NotificationTarget notificationTarget = new ExternalUserNotificationTarget("Astle Pimenta", "Astle.Pimenta@innovateuk.gov.uk");
         when(emailService.sendEmail(eq(singletonList(notificationTarget)), any(), eq(InviteUserServiceImpl.Notifications.INVITE_INTERNAL_USER))).thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR));
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, AdminRoleType.IFS_ADMINISTRATOR);
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, UserRoleType.IFS_ADMINISTRATOR);
 
         verify(inviteRoleRepositoryMock, times(1)).save(roleInviteArgumentCaptor.capture());
         verify(emailService).sendEmail(any(), paramsArgumentCaptor.capture(), any());
@@ -238,7 +255,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         when(roleMapperMock.mapIdToResource(role.getId())).thenReturn(roleResource);
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, AdminRoleType.IFS_ADMINISTRATOR);
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, UserRoleType.IFS_ADMINISTRATOR);
 
         verify(inviteRoleRepositoryMock, times(1)).save(roleInviteArgumentCaptor.capture());
 
@@ -275,7 +292,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         when(inviteRoleRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.of(newUser().build()));
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, AdminRoleType.IFS_ADMINISTRATOR);
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, UserRoleType.IFS_ADMINISTRATOR);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(USER_ROLE_INVITE_EMAIL_TAKEN));
         verify(inviteRoleRepositoryMock, never()).save(Mockito.any(RoleInvite.class));
@@ -299,5 +316,87 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         ServiceResult<Boolean> result = service.checkExistingUser("SomeInviteHash");
         assertTrue(result.isSuccess());
         assertTrue(result.getSuccessObject());
+    }
+
+    @Test
+    public void findPendingInternalUsers() {
+        Pageable pageable = new PageRequest(0, 5);
+
+        Role role = RoleBuilder.newRole().withName("ifs_administrator").build();
+
+        List<RoleInvite> roleInvites = RoleInviteBuilder.newRoleInvite()
+                .withRole(role)
+                .withName("Arden Pimenta")
+                .withEmail("Arden.Pimenta@innovateuk.test")
+                .build(4);
+        Page<RoleInvite> page = new PageImpl<>(roleInvites, pageable, 4L);
+
+        RoleInviteResource roleInviteResource = new RoleInviteResource();
+        roleInviteResource.setName("Arden Pimenta");
+        roleInviteResource.setEmail("Arden.Pimenta@innovateuk.test");
+        roleInviteResource.setRoleName("ifs_administrator");
+
+        when(inviteRoleRepositoryMock.findByStatus(InviteStatus.SENT, pageable)).thenReturn(page);
+        when(roleInviteMapperMock.mapToResource(Mockito.any(RoleInvite.class))).thenReturn(roleInviteResource);
+
+        ServiceResult<RoleInvitePageResource> result = service.findPendingInternalUserInvites(pageable);
+        assertTrue(result.isSuccess());
+
+        RoleInvitePageResource resultObject = result.getSuccessObject();
+        assertEquals(5, resultObject.getSize());
+        assertEquals(1, resultObject.getTotalPages());
+        assertEquals(4, resultObject.getContent().size());
+        assertEquals(roleInviteResource, resultObject.getContent().get(0));
+
+    }
+
+    @Test
+    public void findPendingInternalUsersEnsureSortedByName() {
+        Pageable pageable = new PageRequest(0, 5);
+
+        Role role = RoleBuilder.newRole().withName("ifs_administrator").build();
+
+        RoleInvite roleInvite1 = RoleInviteBuilder.newRoleInvite()
+                .withId(1L)
+                .withRole(role)
+                .withName("Rianne Almeida")
+                .withEmail("Rianne.Almeida@innovateuk.test")
+                .build();
+
+        RoleInvite roleInvite2 = RoleInviteBuilder.newRoleInvite()
+                .withId(2L)
+                .withRole(role)
+                .withName("Arden Pimenta")
+                .withEmail("Arden.Pimenta@innovateuk.test")
+                .build();
+
+        List<RoleInvite> roleInvites = new ArrayList<>();
+        roleInvites.add(roleInvite1);
+        roleInvites.add(roleInvite2);
+        Page<RoleInvite> page = new PageImpl<>(roleInvites, pageable, 4L);
+
+        RoleInviteResource roleInviteResource1 = new RoleInviteResource();
+        roleInviteResource1.setName("Rianne Almeida");
+        roleInviteResource1.setEmail("Rianne.Almeida@innovateuk.test");
+        roleInviteResource1.setRoleName("ifs_administrator");
+
+        RoleInviteResource roleInviteResource2 = new RoleInviteResource();
+        roleInviteResource2.setName("Arden Pimenta");
+        roleInviteResource2.setEmail("Arden.Pimenta@innovateuk.test");
+        roleInviteResource2.setRoleName("ifs_administrator");
+
+        when(inviteRoleRepositoryMock.findByStatus(InviteStatus.SENT, pageable)).thenReturn(page);
+        when(roleInviteMapperMock.mapToResource(roleInvite1)).thenReturn(roleInviteResource1);
+        when(roleInviteMapperMock.mapToResource(roleInvite2)).thenReturn(roleInviteResource2);
+
+        ServiceResult<RoleInvitePageResource> result = service.findPendingInternalUserInvites(pageable);
+        assertTrue(result.isSuccess());
+
+        RoleInvitePageResource resultObject = result.getSuccessObject();
+
+        // Ensure they are sorted by name
+        assertEquals(roleInviteResource2, resultObject.getContent().get(0));
+        assertEquals(roleInviteResource1, resultObject.getContent().get(1));
+
     }
 }

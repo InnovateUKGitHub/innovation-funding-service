@@ -45,6 +45,7 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.invite.service.InviteUserService;
 import org.innovateuk.ifs.invite.service.RejectionReasonRestService;
 import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
@@ -242,6 +243,8 @@ public class BaseUnitTest {
     protected CookieUtil cookieUtil;
     @Mock
     protected UserRestService userRestServiceMock;
+    @Mock
+    protected InviteUserRestService inviteUserRestServiceMock;
     @Mock
     protected AssessmentRestService assessmentRestService;
     @Mock
@@ -717,7 +720,7 @@ public class BaseUnitTest {
 
     public void setupInvites() {
         when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(emptyList()));
-        InviteOrganisationResource inviteOrganisation = new InviteOrganisationResource(2L, "Invited Organisation Ltd", null, null);
+        InviteOrganisationResource inviteOrganisation = new InviteOrganisationResource(2L, "Invited Organisation Ltd", "Org type", null, null);
 
         invite = new ApplicationInviteResource();
         invite.setStatus(InviteStatus.SENT);

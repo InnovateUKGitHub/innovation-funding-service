@@ -105,9 +105,14 @@
             </div>
             <div>
                 <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.section.parentSection})}"
-                   class="extra-margin"
-                   th:classappend="${model.complete} ? 'button-secondary' : 'button'"
-                   th:text="${model.complete} ? 'Return to finances' : 'Save and return to finances'"></a>
+                   th:if="${model.complete}"
+                   class="extra-margin button-secondary">Return to finances
+                </a>
+                <button type="submit"
+                   th:unless="${model.complete}"
+                   class="extra-margin button">
+                    Save and return to finances
+                </button>
             </div>
         </th:block>
     </th:block>
@@ -223,8 +228,11 @@
                     <div th:replace="finance/finance-summary :: ${formInput.type.nameLower}"/>
                 </th:block>
             </th:block>
+            <h2 class="heading-medium">Funding rules for this competition</h2>
             <th:block th:if="${formInputViewModel.formInput.type.displayableQuestionType}">
-                <th:block th:insert="question-type/types :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})"></th:block>
+                <div class="wysiwyg-styles">
+                    <th:block th:insert="question-type/types :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})"></th:block>
+                </div>
             </th:block>
         </th:block>
         <a th:href="@{/application/{applicationId}(applicationId=${model.application.id})}" class="button-secondary">Return to application overview</a>

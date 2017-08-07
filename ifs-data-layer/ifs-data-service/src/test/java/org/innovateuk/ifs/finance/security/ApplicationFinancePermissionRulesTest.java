@@ -125,11 +125,13 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     public void testAddCosts() {
         assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, leadApplicant));
         assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, collaborator));
-        assertTrue(rules.supportCanAddACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, supportUser()));
+        assertTrue(rules.supportCanAddACostToApplicationFinance(applicationFinance, supportUser()));
+        assertTrue(rules.innovationLeadCanAddACostToApplicationFinance(applicationFinance, innovationLeadUser()));
 
         assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, otherLeadApplicant));
         assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, compAdmin));
-        assertFalse(rules.supportCanAddACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, compAdmin));
+        assertFalse(rules.supportCanAddACostToApplicationFinance(applicationFinance, compAdmin));
+        assertFalse(rules.innovationLeadCanAddACostToApplicationFinance(applicationFinance, compAdmin));
     }
 
     @Test

@@ -54,7 +54,7 @@
                             <td class="numeric" th:text="${app.completed}" th:if="${model.inAssessment}">1</td>
                             <td>
                                 <a class="button-secondary no-margin"
-                                   th:href="@{/competition/{competitionId}/application/{applicationId}/assessors(competitionId=${model.competitionId},applicationId=${app.id})}"
+                                   th:href="@{/assessment/competition/{competitionId}/application/{applicationId}/assessors(competitionId=${model.competitionId},applicationId=${app.id})}"
                                    th:text="${model.inAssessment} ? 'View progress' : 'Assign'"></a>
                             </td>
                         </tr>

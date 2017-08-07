@@ -21,6 +21,11 @@ Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
 Resource          ../../resources/defaultResources.robot
 
+*** Variables ***
+${Molecular_id}        ${application_ids['Molecular tree breeding']}
+${Virtual_Reality_id}  ${application_ids['Living with Virtual Reality']}
+${Paul_Plum_id}        161
+
 *** Test Cases ***
 View the list of the applications
     [Documentation]    INFUND-7042
@@ -44,6 +49,34 @@ Assessor link goes to the assessor profile
     [Tags]
     Given the user clicks the button/link  link=Paul Plum
     Then the user should see the element   jQuery=h1:contains("Assessor profile") ~ p:contains("Paul Plum")
+    [Teardown]    the user clicks the button/link  link=Back
+
+View assessor progress page
+    [Documentation]  IFS-321
+    [Tags]
+    Given the user clicks the button/link  jQuery=td:contains("Paul Plum") ~ td a:contains("View progress")
+    Then The user should see the element   jQuery=h2:contains("Paul Plum")
+    And the user should see the element    jQuery=h4:contains("Innovation area") ~ ul li:contains("Urban living") ~ li:contains("Smart infrastructure")
+    And the user should see the element    jQuery=h4:contains("Type") ~ span:contains("Academic")
+    And the user should see the element    jQuery=h2:contains("Assigned") + div td:contains("${Molecular_id}") + td:contains("Molecular tree breeding") + td:contains("Forest Universe") + td:contains("2")
+    And the user should see the element    jQuery=h2:contains("Assigned") + div td:contains("${Molecular_id}") ~ td:contains("Yes") + td:contains("-") + td:contains("-")
+    And the user should see the element    jQuery=h2:contains("Applications") ~ div td:contains("${Virtual_Reality_id}") + td:contains("Living with Virtual Reality") + td:contains("Caneplus")
+    And the user should see the element    jQuery=h2:contains("Applications") ~ div td:contains("${Virtual_Reality_id}") ~ td:contains("0") + td:contains("0") + td:contains("0")
+
+Selecting Review assessor link shows the assessor page
+    [Documentation]  IFS-1046
+    [Tags]
+    Given the user clicks the button/link  link=Review assessor
+    Then the user should see the element   jQuery=h3:contains("Name") + p:contains("Paul Plum")
+
+Accepting the application changes the Accepted column
+    [Documentation]  IFS-321
+    [Tags]
+    [Setup]  Log in as a different user   &{assessor_credentials}
+    Given the user accepts the application
+    And Log in as a different user        &{Comp_admin1_credentials}
+    When the user navigates to the page   ${server}/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}/assessors/${Paul_Plum_id}
+    Then the user should see the element  jQuery=td:contains("${Molecular_id}") ~ td:contains("Yes") + td:contains("Yes")
 
 Filtering of the applications
     [Documentation]    INFUND-8061
@@ -236,3 +269,9 @@ The key statistics counts should be correct
 
 the assessor list is correct before changes
     the user should see the element  jQuery=td:contains("Paul Plum") ~ td:contains("Town Planning, Construction") ~ td:contains("7") ~ td:contains("7") ~ td:contains("3") ~ td:contains("0")
+
+the user accepts the application
+    the user clicks the button/link  link=${IN_ASSESSMENT_COMPETITION_NAME}
+    the user clicks the button/link  link=Molecular tree breeding
+    the user selects the radio button  assessmentAccept  true
+    the user clicks the button/link  jQuery=button:contains("Confirm")

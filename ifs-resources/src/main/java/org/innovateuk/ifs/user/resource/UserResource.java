@@ -72,9 +72,10 @@ public class UserResource {
                     .append(" ");
         }
 
-        stringBuilder
-                .append(lastName)
-                .toString();
+        if (StringUtils.hasText(lastName)) {
+            stringBuilder
+                    .append(lastName);
+        }
 
         return stringBuilder.toString();
     }

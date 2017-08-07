@@ -57,7 +57,6 @@ public class InviteUserController {
     @PostMapping("/invite-user")
     public String saveUserInvite(@Validated({Default.class, Primary.class}) @ModelAttribute(FORM_ATTR_NAME) InviteUserForm form,
                                @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler) {
-        System.out.println("IN SAVE USER INVITE");
 
         Supplier<String> failureView = () -> "admin/invite-new-user";
 
@@ -68,7 +67,7 @@ public class InviteUserController {
             ServiceResult<Void> saveResult = inviteUserService.saveUserInvite(inviteUserResource);
 
             return validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
-                    failNowOrSucceedWith(failureView, () -> "redirect:/admin/users/active");
+                    failNowOrSucceedWith(failureView, () -> "redirect:/admin/users/pending");
 
         });
     }

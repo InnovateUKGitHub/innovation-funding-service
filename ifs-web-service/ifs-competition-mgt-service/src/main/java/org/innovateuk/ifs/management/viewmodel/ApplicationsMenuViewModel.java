@@ -11,19 +11,22 @@ public class ApplicationsMenuViewModel {
     private long applicationsInProgress;
     private long applicationsSubmitted;
     private long ineligibleApplications;
+    private boolean innovationLeadView;
 
     public ApplicationsMenuViewModel(long competitionId,
                                      String competitionName,
                                      long assessorsInvited,
                                      long applicationsInProgress,
                                      long applicationsSubmitted,
-                                     long ineligibleApplications) {
+                                     long ineligibleApplications,
+                                     boolean innovationLeadView) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.assessorsInvited = assessorsInvited;
         this.applicationsInProgress = applicationsInProgress;
         this.applicationsSubmitted = applicationsSubmitted;
         this.ineligibleApplications = ineligibleApplications;
+        this.innovationLeadView = innovationLeadView;
     }
 
     public long getCompetitionId() {
@@ -48,5 +51,9 @@ public class ApplicationsMenuViewModel {
 
     public long getIneligibleApplications() {
         return ineligibleApplications;
+    }
+
+    public boolean isInnovationLeadView() {
+        return innovationLeadView;
     }
 }

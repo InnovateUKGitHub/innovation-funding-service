@@ -12,13 +12,14 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
-import static org.innovateuk.ifs.invite.builder.InviteResourceBuilder.newInviteResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -46,7 +47,8 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
 
     @Test
     public void postingOrganisationInviteResourceContainingInviteResourcesShouldInitiateSaveCalls() throws Exception {
-        List<ApplicationInviteResource> inviteResources = newInviteResource()
+        long applicationId = 1L;
+        List<ApplicationInviteResource> inviteResources = newApplicationInviteResource()
                 .withApplication(1L)
                 .withName("testname")
                 .withEmail("testemail")
@@ -60,20 +62,22 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
         String organisationResourceString = objectMapper.writeValueAsString(inviteOrganisationResource);
 
         InviteResultsResource inviteResultsResource = new InviteResultsResource();
-        when(inviteService.createApplicationInvites(inviteOrganisationResource)).thenReturn(serviceSuccess(inviteResultsResource));
+        when(inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId))).thenReturn(serviceSuccess(inviteResultsResource));
 
-        mockMvc.perform(post("/invite/createApplicationInvites", "json")
+        mockMvc.perform(post("/invite/createApplicationInvites/" + applicationId, "json")
                 .contentType(APPLICATION_JSON)
                 .content(organisationResourceString))
                 .andExpect(status().isCreated())
-                .andDo(document("invite/createApplicationInvites"));
+                .andDo(document("invite/createApplicationInvites/" + applicationId));
 
-        verify(inviteService, times(1)).createApplicationInvites(inviteOrganisationResource);
+        verify(inviteService, times(1)).createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
     }
 
     @Test
     public void invalidInviteOrganisationResourceShouldReturnErrorMessage() throws Exception {
-        List<ApplicationInviteResource> inviteResources = newInviteResource()
+
+        long applicationId = 1L;
+        List<ApplicationInviteResource> inviteResources = newApplicationInviteResource()
                 .withApplication(1L)
                 .withName("testname")
                 .withEmail("testemail")
@@ -85,9 +89,9 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
 
         String organisationResourceString = objectMapper.writeValueAsString(inviteOrganisationResource);
 
-        when(inviteService.createApplicationInvites(inviteOrganisationResource)).thenReturn(serviceFailure(badRequestError("no invites")));
+        when(inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId))).thenReturn(serviceFailure(badRequestError("no invites")));
 
-        mockMvc.perform(post("/invite/createApplicationInvites", "json")
+        mockMvc.perform(post("/invite/createApplicationInvites/"+applicationId, "json")
                 .contentType(APPLICATION_JSON)
                 .content(organisationResourceString))
                 .andExpect(status().isBadRequest());

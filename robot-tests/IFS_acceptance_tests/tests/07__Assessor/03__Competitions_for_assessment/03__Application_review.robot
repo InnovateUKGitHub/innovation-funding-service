@@ -43,59 +43,59 @@ Project details sections should not be scorable
     And the user clicks the button/link                link=Application details
     And the user should see the text in the page       Project title
     Then the user should not see the text in the page  Question score
-    When the user clicks the button/link               jQuery=span:contains(Next)
+    When the user clicks the button/link               jQuery=span:contains("Next")
     And the user should see the text in the page       This is the applicant response for project summary.
     Then the user should not see the text in the page  Question score
-    When the user clicks the button/link               jQuery=span:contains(Next)
+    When the user clicks the button/link               jQuery=span:contains("Next")
     And the user should see the text in the page       This is the applicant response for public description.
     Then the user should not see the text in the page  Question score
-    And the user clicks the button/link                jQuery=span:contains(Next)
+    And the user clicks the button/link                jQuery=span:contains("Next")
     And the user should see the text in the page       This is the applicant response for how does your project align with the scope of this competition?.
     Then the user should not see the text in the page  Question score
 
 Application questions should be scorable
     [Documentation]    INFUND-3400 INFUND-4264
     [Tags]
-    When the user clicks the button/link          jQuery=span:contains(Next)
+    When the user clicks the button/link          jQuery=span:contains("Next")
     And The user should see the text in the page  What is the business opportunity that your project addresses?
     And the user should see the text in the page  This is the applicant response for what is the business opportunity that your project addresses?.
-    Then The user should see the element          jQuery=label:contains(Question score)
-    When the user clicks the button/link          jQuery=span:contains(Next)
+    Then The user should see the element          jQuery=label:contains("Question score")
+    When the user clicks the button/link          jQuery=span:contains("Next")
     And The user should see the text in the page  What is the size of the potential market for your project
     And the user should see the text in the page  This is the applicant response for what is the size of the potential market for your project?.
-    Then The user should see the element          jQuery=label:contains(Question score)
-    When the user clicks the button/link          jQuery=span:contains(Next)
+    Then The user should see the element          jQuery=label:contains("Question score")
+    When the user clicks the button/link          jQuery=span:contains("Next")
     And The user should see the text in the page  How will you exploit and market your project?
     And the user should see the text in the page  This is the applicant response for how will you exploit and market your project?.
-    Then The user should see the element          jQuery=label:contains(Question score)
-    When the user clicks the button/link          jQuery=span:contains(Next)
+    Then The user should see the element          jQuery=label:contains("Question score")
+    When the user clicks the button/link          jQuery=span:contains("Next")
     And The user should see the text in the page  What economic, social and environmental benefits do you expect
     And the user should see the text in the page  This is the applicant response for what economic, social and environmental benefits do you expect your project to deliver and when?.
-    Then The user should see the element          jQuery=label:contains(Question score)
-    When the user clicks the button/link          jQuery=span:contains(Next)
+    Then The user should see the element          jQuery=label:contains("Question score")
+    When the user clicks the button/link          jQuery=span:contains("Next")
     And The user should see the text in the page  What technical approach will you use and how will you manage your project?
     And the user should see the text in the page  This is the applicant response for what technical approach will you use and how will you manage your project?.
-    Then The user should see the element          jQuery=label:contains(Question score)
-    When the user clicks the button/link          jQuery=span:contains(Next)
+    Then The user should see the element          jQuery=label:contains("Question score")
+    When the user clicks the button/link          jQuery=span:contains("Next")
     And The user should see the text in the page  What is innovative about your project
     And the user should see the text in the page  This is the applicant response for what is innovative about your project?.
-    Then The user should see the element          jQuery=label:contains(Question score)
-    When the user clicks the button/link          jQuery=span:contains(Next)
+    Then The user should see the element          jQuery=label:contains("Question score")
+    When the user clicks the button/link          jQuery=span:contains("Next")
     And The user should see the text in the page  What are the risks
     And the user should see the text in the page  This is the applicant response for what are the risks (technical, commercial and environmental) to your project's success? what is your risk management strategy?.
-    Then The user should see the element          jQuery=label:contains(Question score)
-    When the user clicks the button/link          jQuery=span:contains(Next)
+    Then The user should see the element          jQuery=label:contains("Question score")
+    When the user clicks the button/link          jQuery=span:contains("Next")
     And The user should see the text in the page  Does your project team have the skills,
     And the user should see the text in the page  This is the applicant response for does your project team have the skills, experience and facilities to deliver this project?.
-    Then The user should see the element          jQuery=label:contains(Question score)
-    When the user clicks the button/link          jQuery=span:contains(Next)
+    Then The user should see the element          jQuery=label:contains("Question score")
+    When the user clicks the button/link          jQuery=span:contains("Next")
     And The user should see the text in the page  What will your project cost
     And the user should see the text in the page  This is the applicant response for what will your project cost?.
-    Then The user should see the element          jQuery=label:contains(Question score)
-    When the user clicks the button/link          jQuery=span:contains(Next)
+    Then The user should see the element          jQuery=label:contains("Question score")
+    When the user clicks the button/link          jQuery=span:contains("Next")
     And The user should see the text in the page  How does financial support from Innovate UK
     And the user should see the text in the page  This is the applicant response for how does financial support from innovate uk and its funding partners add value?.
-    Then The user should see the element          jQuery=label:contains(Question score)
+    Then The user should see the element          jQuery=label:contains("Question score")
     [Teardown]  the user clicks the button/link    link=Back to your assessment overview
 
 Appendix can be opened on the question view
@@ -122,7 +122,7 @@ Scope: Status in the overview is updated
     Given the user clicks the button/link                    link=Back to your assessment overview
     And the user clicks the button/link                      link=Scope
     When the user selects the index from the drop-down menu  1    id=research-category
-    And the user clicks the button/link                      jQuery=label:contains(Yes)
+    And the user clicks the button/link                      jQuery=label:contains("Yes")
     And The user enters text to a text field                 css=.editor    Testing feedback field when "Yes" is selected.
     And the user clicks the button/link                      jquery=button:contains("Save and return to assessment overview")
     And the user should see the text in the page             In scope
@@ -244,25 +244,25 @@ the user clicks previous and goes to the page
     the user should see the text in the page  ${page_content}
 
 the finance summary total should be correct
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(2)    £100,452
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(2)    £200,903
     Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(3)    30%
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(4)    £28,901
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(5)    £1,234
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(6)    £70,316
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(2)    £100,452
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(4)    £28,901
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(5)    £1,234
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(6)    £70,316
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(4)    £57,803
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(5)    £2,468
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(6)    £140,632
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(2)    £200,903
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(4)    £57,803
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(5)    £2,468
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(6)    £140,632
 
 the project cost breakdown total should be correct
-    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(2)    £100,452
-    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(3)    £1,541
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(2)    £200,903
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(3)    £3,081
     Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(4)    £0
-    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(5)    £50,100
-    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(6)    £276
-    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(7)    £45,000
-    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(8)    £2,985
-    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(9)    £550
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(5)    £100,200
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(6)    £552
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(7)    £90,000
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(8)    £5,970
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(9)    £1,100
 
 The status of the appllications should be correct
     [Arguments]    ${APPLICATION}    ${STATUS}
