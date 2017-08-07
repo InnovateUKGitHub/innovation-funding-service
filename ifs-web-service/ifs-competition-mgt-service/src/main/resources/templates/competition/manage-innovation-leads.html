@@ -1,296 +1,83 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage innovation leads'" />
-    <style>
-    .prototype-nav {
-        background: #df3034;
-        position: fixed;
-        font-weight: bold;
-        text-align: center;
-        z-index: 1;
-    }
-    .prototype-nav a {
-        color: white;
-        font-size: 0.7em;
-        text-decoration: none;
-        padding: 0 5px;
-    }
-    </style>
-</head>
-<body>
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage innovation leads'" />
+    </head>
+    <body th:with="context='comp-management'" class="competition-management">
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
 
-<th:block th:insert="fragments/manage-innovation-leads-layout :: prototype-nav" />
-<th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+        <main tabindex="-1" id="content">
 
+        <th:block th:insert="fragments/layout :: main-content-start" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage innovation leads',subTitle='Home and industrial efficiency programme', size='heading-xlarge'" />
 
-<main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
-    <!-- HARDCODED PROTOTYPE HTML -->
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage innovation leads',subTitle='Home and industrial efficiency programme', size='heading-xlarge'" />
-
-    <h2 class="heading-medium">Key statistics</h2>
-    <div class="grid-row">
-        <div class="column-quarter">
-            <div class="highlight-panel highlight-panel-padded">
-                <span class="heading-large lead-count">1</span><br>
-                <small>Innovation leads added</small>
+        <h2 class="heading-medium">Key statistics</h2>
+        <div class="grid-row">
+            <div class="column-quarter">
+                <div class="highlight-panel highlight-panel-padded">
+                    <span class="heading-large lead-count">1</span><br>
+                    <small>Innovation leads added</small>
+                </div>
             </div>
         </div>
-    </div>
-    <dl class="standard-definition-list extra-margin">
-        <dt>Innovation sector</dt>
-        <dd>Materials and manufacturing</dd>
-        <dt>Competition Innovation Lead</dt>
-        <dd>Ian Cooper</dd>
-        <dt>Portfolio manager</dt>
-        <dd>John Doe</dd>
-    </dl>
-    <div class="extra-margin">
-        <ul class="inline-nav cf">
-            <li class="selected">
-                <a href="/prototypes/192-manage-innovation-leads-find.html">Find</a>
-            </li>
-            <li>
-                <a href="/prototypes/192-manage-innovation-leads-overview.html">Overview</a>
-            </li>
-        </ul>
+        <dl class="standard-definition-list extra-margin">
+            <dt>Innovation sector</dt>
+            <dd>Materials and manufacturing</dd>
+            <dt>Competition Innovation Lead</dt>
+            <dd>Ian Cooper</dd>
+            <dt>Portfolio manager</dt>
+            <dd>John Doe</dd>
+        </dl>
+        <div class="extra-margin">
+            <ul class="inline-nav cf">
+                <li class="selected">
+                    <a href="/prototypes/192-manage-innovation-leads-find.html">Find</a>
+                </li>
+                <li>
+                    <a href="/prototypes/192-manage-innovation-leads-overview.html">Overview</a>
+                </li>
+            </ul>
 
-        <p>Choose a tab to find, add and see an overview of innovation leads.</p>
-        <p class="heading-small">Find innovation leads and add them to this competition.</p>
+            <p>Choose a tab to find, add and see an overview of innovation leads.</p>
+            <p class="heading-small">Find innovation leads and add them to this competition.</p>
 
-        <!-- filter -->
-        <form class="filter-form extra-margin">
-            <div class="search-filters">
-                <div class="grid-row">
-                    <div class="column-two-thirds">
-                        <label for="filter">Innovation Area</label>
-                        <select id="filter" class="form-control extra-margin-bottom">
-                            <option value="any">Any</option>
-                            <option value="Materials, process and manufacturing design technologies">Materials, process and manufacturing design technologies</option>
-                            <option value="Digital manufacturing">Digital manufacturing</option>
-                            <option value="Creative industries">Creative industries</option>
-                            <option value="Urban living">Urban living</option>
-                        </select>
-                        <a href="/prototypes/192-manage-innovation-leads-find.html">Clear all filters</a>
-                    </div>
-                    <div class="column-third">
-                        <button class="button" id="filter-button">Filter</button>
+                <!-- list -->
+                <div class="grid-row sorting">
+                    <div class="column-half">
+                        <p>
+                            <span class="heading-xlarge total-count"></span>
+                            <span class="heading-small">Innovation leads</span>
+                        </p>
                     </div>
                 </div>
-            </div>
-        </form>
 
-        <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
-            <!-- list -->
-            <div class="grid-row sorting">
-                <div class="column-half">
-                    <p>
-                        <span class="heading-xlarge total-count"></span>
-                        <span class="heading-small">Innovation leads</span>
-                    </p>
+                <div class="table-overflow">
+                    <table class="stakeholder-table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Innovation lead name</th>
+                            <th scope="col"><span class="visuallyhidden">Action</span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="(innovationLeadUsers : ${model.availableInnovationLeads})">
+                                <td th:text="${innovationLeadUsers.name}">Alexis Kinney</td>
+                                <td>
+                                    <form method="post" th:action="@{/competition/setup/{competitionId}/add-innovation-lead/{userId}(competitionId=1,userId=${innovationLeadUsers.id})}">
+                                        <button class="button button-secondary no-margin">Add <span class="visuallyhidden"><th:block th:text="${innovationLeadUsers.name}" /> as Innovation Lead</span></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
-            <div class="table-overflow">
-                <table class="stakeholder-table">
-                    <thead>
-                    <tr>
-                        <th scope="col">Innovation lead name</th>
-                        <th scope="col">Innovation area</th>
-                        <th scope="col"><span class="visuallyhidden">Action</span></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>Alexis Kinney</td>
-                        <td>Digital manufacturing</td>
-                        <td><button class="button button-secondary no-margin">Add</button></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </form>
-    </div>
-    <!-- END OFHARDCODED PROTOTYPE HTML -->
+        </div>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
-
-<!-- don't copy underneath to real codebase -->
-<script>
-
-// <![CDATA[
-jQuery(document).ready(function(){
-
-    var stakeholders = [
-        {
-            name: 'Alexis Kinney',
-            area: 'Digital manufacturing',
-            selected: false
-        },
-        {
-            name: 'Angel Spencer',
-            area: 'Digital manufacturing',
-            selected: false
-        },
-        {
-            name: 'Angel Witt',
-            area: 'Materials, process and manufacturing design technologies',
-            selected: false
-        },
-        {
-            name: 'Angelo Arnold',
-            area: 'Digital manufacturing',
-            selected: false
-        },
-        {
-            name: 'Anita Ruiz',
-            area: 'Digital manufacturing',
-            selected: false
-        },
-        {
-            name: 'Benjamin Nixon',
-            area: 'Materials, process and manufacturing design technologies',
-            selected: false
-        },
-        {
-            name: 'Blake Wood',
-            area: 'Digital manufacturing',
-            selected: false
-        },
-        {
-            name: 'Bob Malone',
-            area: 'Creative industries',
-            selected: false
-        },
-        {
-            name: 'Brandi Mccarthy',
-            area: 'Materials, process and manufacturing design technologies',
-            selected: false
-        },
-        {
-            name: 'Brandon Harper',
-            area: 'Urban living',
-            selected: false
-        },
-        {
-            name: 'Brentley Mcmillan',
-            area: 'Materials, process and manufacturing design technologies',
-            selected: false
-        },
-        {
-            name: 'Bret Alvarez',
-            area: 'Urban living',
-            selected: false
-        },
-        {
-            name: 'Bret John',
-            area: 'Digital manufacturing',
-            selected: false
-        },
-        {
-            name: 'Callum Austin',
-            area: 'Creative industries',
-            selected: false
-        },
-        {
-            name: 'Cameron Guzman',
-            area: 'Digital manufacturing',
-            selected: false
-        },
-        {
-            name: 'Camille Shelton',
-            area: 'Urban Living',
-            selected: false
-        },
-        {
-            name: 'Carmen Marks',
-            area: 'Materials, process and manufacturing design technologies',
-            selected: false
-        },
-        {
-            name: 'Charlie Russell',
-            area: 'Materials, process and manufacturing design technologies',
-            selected: true
-        },
-        {
-            name: 'Clayton Edwards',
-            area: 'Digital manufacturing',
-            selected: true
-        },
-        {
-            name: 'Corey Fraser',
-            area: 'Digital manufacturing',
-            selected: false
-        }
-    ]
-    var cookieExists = typeof(Cookies.get('stakeholders_prototype')) !== "undefined";
-    if(cookieExists){
-       stakeholders = Cookies.getJSON('stakeholders_prototype')
-    }
-
-    function updatecount(){
-        var count = jQuery('.stakeholder-table tbody tr:not([aria-hidden="true"])').length;
-        jQuery('.total-count').text(count);
-    }
-    function updateLeadCount(){
-        var list = stakeholders.filter(function(stakeholder){ return stakeholder.selected; });
-        jQuery('.lead-count').text(list.length);
-    }
-    function lastRow(){
-        if(jQuery('.stakeholder-table tbody tr').length === 0){
-            jQuery('.stakeholder-table tbody').append('<tr><td colspan="3">All innovation leads have been added to this competition.</td></tr>')
-        }
-    }
-
-    var tableRowContainer = jQuery('.stakeholder-table tbody');
-    //doing this for leaving the html copy pasteable
-    tableRowContainer.empty();
-    jQuery.each(stakeholders, function(){
-        if(this.selected === false){
-            var name = this.name;
-            var area = this.area;
-            var html = '<tr><td>' + name + '</td><td>' + area + '</td><td><button type="button" class="button button-secondary no-margin">Add</button></td></tr>';
-            tableRowContainer.append(html);
-        }
-    });
-    updatecount();
-    updateLeadCount();
-    lastRow();
-
-    jQuery(document).on('click','.stakeholder-table button',function(){
-        var button = jQuery(this);
-        var buttonRow = button.closest('tr');
-        var name = buttonRow.find('td:first-of-type').text();
-
-        stakeholders = jQuery.each(stakeholders,function(){
-            if(this.name === name){
-                this.selected = true;
-            }
-        })
-        Cookies.set('stakeholders_prototype',stakeholders);
-        buttonRow.remove()
-        updatecount()
-        updateLeadCount();
-        lastRow();
-    });
-
-    jQuery('.filter-form').submit(function(e) {
-        e.preventDefault()
-        jQuery('.stakeholder-table tbody tr').removeAttr('aria-hidden');
-        var val = jQuery('#filter').val();
-        if(val !== 'any'){
-            jQuery('.stakeholder-table tbody tr:not(:contains('+val+'))').attr('aria-hidden','true')
-        }
-        updatecount()
-    });
-
-});
-    // ]]>
-</script>
 </body>
 </html>

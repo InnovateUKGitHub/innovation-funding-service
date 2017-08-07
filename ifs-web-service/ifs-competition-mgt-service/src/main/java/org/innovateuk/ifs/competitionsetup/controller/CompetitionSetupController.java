@@ -182,6 +182,7 @@ public class CompetitionSetupController {
     }
 
 
+
     /**
      * This method is for supporting ajax saving from the competition setup sections forms.
      */
@@ -348,7 +349,7 @@ public class CompetitionSetupController {
         return "competition/manage-innovation-leads";
     }
 
-    @PostMapping("/{competitionId}/add-innovation-lead")
+    @PostMapping("/{competitionId}/add-innovation-lead/{userId}")
     public String addInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                     @PathVariable("userId") long userId,
                                     Model model,
@@ -361,7 +362,7 @@ public class CompetitionSetupController {
         return "competition/manage-innovation-leads";
     }
 
-    @PostMapping("/{competitionId}/remove-innovation-lead")
+    @PostMapping("/{competitionId}/remove-innovation-lead/{userId}")
     public String removeInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                        @PathVariable("userId") long userId,
                                        Model model,
