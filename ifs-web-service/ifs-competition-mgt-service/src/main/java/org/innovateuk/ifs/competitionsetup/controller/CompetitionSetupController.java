@@ -16,6 +16,7 @@ import org.innovateuk.ifs.competitionsetup.form.*;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm.Unrestricted;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
+import org.innovateuk.ifs.competitionsetup.viewmodel.ManageInnovationLeadsViewModel;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -35,6 +36,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -327,11 +330,20 @@ public class CompetitionSetupController {
     }
 
     @GetMapping("/{competitionId}/manage-innovation-leads")
-    public String manageInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId) {
+    public String manageInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                       Model model,
+                                       UserResource loggedInUser) {
 
         List<UserResource> allInnovationLeads = userService.findUserByType(UserRoleType.INNOVATION_LEAD);
 
         List<UserResource> innovationLeadsAssignedToCompetition = competitionService.findInnovationLeads(competitionId);
+
+        //TODO - Just initial test code. Needs to be altered.
+        List<UserResource> availableInnovationLeads = new ArrayList<>();
+        availableInnovationLeads.addAll(allInnovationLeads);
+        availableInnovationLeads.removeAll(innovationLeadsAssignedToCompetition);
+
+        model.addAttribute("model", new ManageInnovationLeadsViewModel(allInnovationLeads, innovationLeadsAssignedToCompetition, availableInnovationLeads));
 
         return "competition/manage-innovation-leads";
     }

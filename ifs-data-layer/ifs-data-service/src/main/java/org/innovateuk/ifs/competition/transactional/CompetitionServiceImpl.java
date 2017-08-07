@@ -82,15 +82,15 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<List<UserResource>> findInnovationLeads(Long competitionId) {
 
-        return find(competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD),
+        /*return find(competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD),
                 notFoundError(CompetitionParticipant.class, competitionId, CompetitionParticipantRole.INNOVATION_LEAD))
-                .andOnSuccess(competitionParticipants -> serviceSuccess(simpleMap(competitionParticipants, competitionParticipant -> userMapper.mapToResource(competitionParticipant.getUser()))));
+                .andOnSuccess(competitionParticipants -> serviceSuccess(simpleMap(competitionParticipants, competitionParticipant -> userMapper.mapToResource(competitionParticipant.getUser()))));*/
 
-/*        List<CompetitionParticipant> competitionParticipants = competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD);
+        List<CompetitionParticipant> competitionParticipants = competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD);
 
         List<UserResource> innovationLeads = simpleMap(competitionParticipants, competitionParticipant -> userMapper.mapToResource(competitionParticipant.getUser()));
 
-        return serviceSuccess(innovationLeads);*/
+        return serviceSuccess(innovationLeads);
     }
 
     @Override
