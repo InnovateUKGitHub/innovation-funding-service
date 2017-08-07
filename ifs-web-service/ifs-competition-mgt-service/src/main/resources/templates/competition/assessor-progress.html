@@ -31,8 +31,13 @@
         </div>
         <div class="column-half">
             <h4 class="heading-small">Type</h4>
-            <p th:text="${model.businessType}" />
+            <span th:text="${#strings.isEmpty(model.businessType)} ? 'Unknown' : ${model.businessType}" />
         </div>
+    </div>
+
+    <div class="extra-margin">
+        <a th:href="@{/competition/{cid}/assessors/profile/{aid}(cid=${model.competitionId},aid=${model.assessorId})} + ${originQuery}"
+           th:text="'Review assessor'"/>
     </div>
 
     <h2 class="heading-medium" th:text="| Assigned (${#lists.size(model.assigned)}) |"/>
@@ -117,6 +122,9 @@
     <p th:if="${#lists.isEmpty(model.assigned)}">No applications have been assigned to this assessor.</p>
 
     <h2 class="heading-medium">Applications</h2>
+
+    <p>These are rest of the applications for this competition. You can assign more to this assessor.</p>
+
     <form method="GET">
         <div class="grid-row sorting">
             <div class="column-half">

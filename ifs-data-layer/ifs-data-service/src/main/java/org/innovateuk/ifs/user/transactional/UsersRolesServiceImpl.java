@@ -48,7 +48,8 @@ public class UsersRolesServiceImpl extends BaseTransactionalService implements U
 
     @Override
     public ServiceResult<ProcessRoleResource> getProcessRoleByUserIdAndApplicationId(Long userId, Long applicationId) {
-        return find(processRoleRepository.findByUserIdAndApplicationId(userId, applicationId), notFoundError(ProcessRole.class, "User", userId, "Application", applicationId)).andOnSuccessReturn(processRoleMapper::mapToResource);
+        return find(processRoleRepository.findByUserIdAndApplicationId(userId, applicationId), notFoundError(ProcessRole.class, "User", userId, "Application", applicationId))
+                .andOnSuccessReturn(processRoleMapper::mapToResource);
     }
 
     @Override
