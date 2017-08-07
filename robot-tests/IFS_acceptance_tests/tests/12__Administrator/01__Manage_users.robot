@@ -218,7 +218,7 @@ Administrator is able to disable internal users
     Then the user should see the element  jQuery=.form-footer *:contains("Reactivate user") + *:contains("Deactivated by Arden Pimenta on")
     #TODO Pending due to IFS-1191 add ${today}
 
-Deactivated user cannot login till he is activated
+Deactivated user cannot login until he is activated
     [Documentation]  IFS-644
     [Tags]
     [Setup]  the user logs out if they are logged in
