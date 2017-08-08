@@ -52,7 +52,8 @@ Invite existing academic collaborator
     And the user enters text to a text field                     css=input[id="applicants0.email"]  ${collaborator2_credentials["email"]}
     And the user clicks the button/link                          jQuery=button:contains("Add organisation and invite applicants")
     And logout as user
-    Then the correct funding is displayed to academic user       ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}
+    And the user accepts the invite to collaborate               ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  &{collaborator2_credentials}
+    Then the correct funding is displayed to academic user
 
 maximum funding level available for RTO lead
     [Documentation]  IFS-338
@@ -78,10 +79,9 @@ lead RTO applicant invites a Charity member
     And the user fills in the organisation information                         ${Application_name_RTO}  ${SMALL_ORGANISATION_SIZE}
     And the user fills in the project costs                                    ${Application_name_RTO}
     Then the funding displayed is as expected
-#    [Teardown]  logout as user
 
 invite existing academic collaborator for RTO lead
-    [Documentation]  IFS-338
+    [Documentation]  IFS-1050  IFS-1013
     [Tags]
     [Setup]  log in as a different user                           ${lead_rto_email}  ${correct_password}
     When the user clicks the button/link                          link=${Application_name_RTO}
@@ -92,7 +92,23 @@ invite existing academic collaborator for RTO lead
     And the user enters text to a text field                     css=input[id="applicants0.email"]  ${collaborator2_credentials["email"]}
     And the user clicks the button/link                          jQuery=button:contains("Add organisation and invite applicants")
     And logout as user
-    Then the correct funding is displayed to academic user       ${OPEN_COMPETITION_NAME}
+    And the user accepts the invite to collaborate               ${OPEN_COMPETITION_NAME}   &{collaborator2_credentials}
+    Then the correct funding is displayed to academic user
+
+invite existing business user into RTO lead application
+    [Documentation]  IFS-1050  IFS-1013
+    [Tags]
+    [Setup]  log in as a different user                           ${lead_rto_email}  ${correct_password}
+    When the user clicks the button/link                          link=${Application_name_RTO}
+    And the user clicks the button/link                          link=view team members and add collaborators
+    And the user clicks the button/link                          link=Add partner organisation
+    Then the user enters text to a text field                    css=#organisationName  innovate bus
+    And the user enters text to a text field                     css=input[id="applicants0.name"]  oscar
+    And the user enters text to a text field                     css=input[id="applicants0.email"]  ${lead_business_email}
+    And the user clicks the button/link                          jQuery=button:contains("Add organisation and invite applicants")
+    And logout as user
+    Then the user accepts the invite to collaborate              ${OPEN_COMPETITION_NAME}  ${lead_business_email}  ${correct_password}
+    Then the correct funding is displayed to academic user
 
 Rto lead able to mark finances as complete
 
@@ -134,11 +150,6 @@ the user fills the other application details questions
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
     the user clicks the button/link       link=Application overview
 
-#the user fills in the project costs
-#    the user clicks the button/link             link=Your project costs
-#    the user selects the checkbox               agree-state-aid-page
-#    the user clicks the button/link             jQuery=button:contains("Mark as complete")
-
 the user edits the research category
     [Arguments]   ${research_category}
     the user clicks the button/link                          jQuery=a:contains("Your finances")
@@ -167,13 +178,24 @@ the funding displayed is as expected
     the user edits the organisation size                          ${LARGE_ORGANISATION_SIZE}
     the user should see the text in the page                      Enter your funding level (maximum 100%).
 
-the correct funding is displayed to academic user
-    [Arguments]  ${competition_name}
+the user accepts the invite to collaborate
+    [Arguments]  ${competition_name}  ${user_name}  ${password}
     the user reads his email and clicks the link             ${collaborator2_credentials["email"]}  Invitation to collaborate in ${competition_name}  You will be joining as part of the organisation  3
     the user clicks the button/link                          jQuery=a:contains("Continue or sign in")
-    The guest user inserts user email and password           &{collaborator2_credentials}
+    the guest user inserts user email and password           ${user_name}  ${password}
     the guest user clicks the log-in button
     the user clicks the button/link                          jQuery=a:contains("Confirm and accept invitation")
+#    the user clicks the button/link                          link=Your finances
+#    the user should see the element                          jQuery=td:contains("100%")
+#    logout as user
+
+the correct funding is displayed to academic user
+#    [Arguments]  ${competition_name}
+#    the user reads his email and clicks the link             ${collaborator2_credentials["email"]}  Invitation to collaborate in ${competition_name}  You will be joining as part of the organisation  3
+#    the user clicks the button/link                          jQuery=a:contains("Continue or sign in")
+#    The guest user inserts user email and password           &{collaborator2_credentials}
+#    the guest user clicks the log-in button
+#    the user clicks the button/link                          jQuery=a:contains("Confirm and accept invitation")
     the user clicks the button/link                          link=Your finances
     the user should see the element                          jQuery=td:contains("100%")
     logout as user
@@ -184,13 +206,4 @@ the correct funding displayed for lead applicant
     the user edits the organisation size                                    ${org_size}
     the user should see the text in the page                               Enter your funding level (maximum ${funding_amoount}).
 
-#the correct funding is displayed to academic user for RTO lead application
-#    the user reads his email and clicks the link             ${collaborator2_credentials["email"]}  Invitation to collaborate in ${OPEN_COMPETITION}  You will be joining as part of the organisation  3
-#    the user clicks the button/link                          jQuery=a:contains("Continue or sign in")
-#    The guest user inserts user email and password           &{collaborator2_credentials}
-#    the guest user clicks the log-in button
-#    the user clicks the button/link                          jQuery=a:contains("Confirm and accept invitation")
-#    the user clicks the button/link                          link=Your finances
-#    the user should see the element                          jQuery=td:contains("100%")
-#    logout as user
 
