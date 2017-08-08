@@ -38,9 +38,9 @@ items:
               port: 9443
               scheme: HTTPS
             initialDelaySeconds: 60
-            periodSeconds: 30
+            periodSeconds: 5
             timeoutSeconds: 5
-            failureThreshold: 3
+            failureThreshold: 1
           imagePullPolicy: Always
           env:
           - name: IDP_PROXY_CERTIFICATE
