@@ -2,6 +2,8 @@
 Documentation     INFUND-6923 Create new public Competition listings page for Applicants to view open and upcoming competitions
 ...
 ...               INFUND-7946 Sign in page facelift
+...
+...               IFS-247 As an applicant I am able to see the competitions in 'Competition listings' in reverse chronological order
 Suite Setup       The guest user opens the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
@@ -9,13 +11,16 @@ Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Test Cases ***
 Guest user navigates to Front Door
-    [Documentation]    INFUND-6923 INFUND-7946
+    [Documentation]    INFUND-6923 INFUND-7946 IFS-247
     [Tags]
     [Setup]    the user navigates to the front door
     When the user should see the element     jQuery=a:contains("Innovate UK")
     Then the user should see the element     jQuery=h1:contains("Innovation competitions")
     And the user should see the element     css=#keywords
     Then the user should see the element     css=#innovation-area
+    # Guest user can see competitions sorted in reverse chronological order by opening date
+    When verify first date is greater than or equal to second  css=li:nth-child(1) .date-definition-list dd:nth-of-type(1)  css=li:nth-child(2) .date-definition-list dd:nth-of-type(1)
+    Then verify first date is greater than or equal to second  css=li:nth-child(2) .date-definition-list dd:nth-of-type(1)  css=li:nth-child(3) .date-definition-list dd:nth-of-type(1)
     When the user clicks the button/link     link=Contact us
     Then the user should see the element     jQuery=h1:contains("Contact us")
     And the user should not see an error in the page
