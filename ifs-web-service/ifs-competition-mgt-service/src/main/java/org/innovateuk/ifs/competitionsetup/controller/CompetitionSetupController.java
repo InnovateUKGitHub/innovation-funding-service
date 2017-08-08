@@ -16,6 +16,7 @@ import org.innovateuk.ifs.competitionsetup.form.*;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm.Unrestricted;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
+import org.innovateuk.ifs.competitionsetup.service.modelpopulator.ManageInnovationLeadsModelPopulator;
 import org.innovateuk.ifs.competitionsetup.viewmodel.ManageInnovationLeadsViewModel;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -36,8 +37,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -68,10 +67,10 @@ public class CompetitionSetupController {
     private CompetitionSetupService competitionSetupService;
 
     @Autowired
-    private CompetitionSetupMilestoneService competitionSetupMilestoneService;
+    private ManageInnovationLeadsModelPopulator manageInnovationLeadsModelPopulator;
 
     @Autowired
-    private UserService userService;
+    private CompetitionSetupMilestoneService competitionSetupMilestoneService;
 
     private static final String READY_TO_OPEN_KEY = "readyToOpen";
 
@@ -330,27 +329,33 @@ public class CompetitionSetupController {
         return String.format("redirect:/competition/setup/%d", competitionId);
     }
 
-    @GetMapping("/{competitionId}/manage-innovation-leads")
+    @GetMapping("/{competitionId}/manage-innovation-leads/find")
     public String manageInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                        Model model,
                                        UserResource loggedInUser) {
 
-        CompetitionResource competition = competitionService.getById(competitionId);
-        List<UserResource> allInnovationLeads = userService.findUserByType(UserRoleType.INNOVATION_LEAD);
 
-        List<UserResource> innovationLeadsAssignedToCompetition = competitionService.findInnovationLeads(competitionId);
+        manageInnovationLeadsModelPopulator.populateModel(model, competitionId);
 
-        //TODO - Just initial test code. Needs to be altered.
-        List<UserResource> availableInnovationLeads = new ArrayList<>();
+
+
+/*        CompetitionResource competition = competitionService.getById(competitionId);
+        List<UserResource> availableInnovationLeads = userService.findUserByType(UserRoleType.INNOVATION_LEAD);
+
+        List<UserResource> innovationLeadsAssignedToCompetition = competitionService.findInnovationLeads(competitionId);*/
+
+/*        List<UserResource> availableInnovationLeads = new ArrayList<>();
         availableInnovationLeads.addAll(allInnovationLeads);
-        availableInnovationLeads.removeAll(innovationLeadsAssignedToCompetition);
+        availableInnovationLeads.removeAll(innovationLeadsAssignedToCompetition);*/
+
+/*        availableInnovationLeads.removeAll(innovationLeadsAssignedToCompetition);
 
         model.addAttribute("model", new ManageInnovationLeadsViewModel(competitionId, competition.getName(),
                 competition.getLeadTechnologistName(), competition.getInnovationSectorName(),
-                competition.getInnovationAreaNames(), allInnovationLeads, innovationLeadsAssignedToCompetition,
-                availableInnovationLeads));
+                competition.getInnovationAreaNames(), innovationLeadsAssignedToCompetition,
+                availableInnovationLeads));*/
 
-        return "competition/manage-innovation-leads";
+        return "competition/manage-innovation-leads-find";
     }
 
     @PostMapping("/{competitionId}/add-innovation-lead/{userId}")
