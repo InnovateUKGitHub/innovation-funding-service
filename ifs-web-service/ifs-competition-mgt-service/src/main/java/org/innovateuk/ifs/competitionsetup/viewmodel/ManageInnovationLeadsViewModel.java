@@ -26,6 +26,7 @@ public class ManageInnovationLeadsViewModel {
         this.leadTechnologistName = leadTechnologistName;
         this.innovationSectorName = innovationSectorName;
         this.innovationAreaNames = innovationAreaNames;
+
         this.innovationLeadsAssignedToCompetition = innovationLeadsAssignedToCompetition;
         this.availableInnovationLeads = availableInnovationLeads;
     }

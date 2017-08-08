@@ -17,11 +17,8 @@ import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm.Unrestricted;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
 import org.innovateuk.ifs.competitionsetup.service.modelpopulator.ManageInnovationLeadsModelPopulator;
-import org.innovateuk.ifs.competitionsetup.viewmodel.ManageInnovationLeadsViewModel;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -337,25 +334,18 @@ public class CompetitionSetupController {
 
         manageInnovationLeadsModelPopulator.populateModel(model, competitionId);
 
-
-
-/*        CompetitionResource competition = competitionService.getById(competitionId);
-        List<UserResource> availableInnovationLeads = userService.findUserByType(UserRoleType.INNOVATION_LEAD);
-
-        List<UserResource> innovationLeadsAssignedToCompetition = competitionService.findInnovationLeads(competitionId);*/
-
-/*        List<UserResource> availableInnovationLeads = new ArrayList<>();
-        availableInnovationLeads.addAll(allInnovationLeads);
-        availableInnovationLeads.removeAll(innovationLeadsAssignedToCompetition);*/
-
-/*        availableInnovationLeads.removeAll(innovationLeadsAssignedToCompetition);
-
-        model.addAttribute("model", new ManageInnovationLeadsViewModel(competitionId, competition.getName(),
-                competition.getLeadTechnologistName(), competition.getInnovationSectorName(),
-                competition.getInnovationAreaNames(), innovationLeadsAssignedToCompetition,
-                availableInnovationLeads));*/
-
         return "competition/manage-innovation-leads-find";
+    }
+
+    @GetMapping("/{competitionId}/manage-innovation-leads/overview")
+    public String manageInnovationLeadOverview(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                       Model model,
+                                       UserResource loggedInUser) {
+
+
+        manageInnovationLeadsModelPopulator.populateModel(model, competitionId);
+
+        return "competition/manage-innovation-leads-overview";
     }
 
     @PostMapping("/{competitionId}/add-innovation-lead/{userId}")
