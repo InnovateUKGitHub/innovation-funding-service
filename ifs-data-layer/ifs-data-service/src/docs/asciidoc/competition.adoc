@@ -10,7 +10,7 @@ include::{snippets}/competition/find-one/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/competition/find-one/curl-request.adoc[]
 
-=== Retrieve all competition
+=== Retrieve all competitions
 ==== Request
 include::{snippets}/competition/find-all/http-request.adoc[]
 
@@ -21,7 +21,7 @@ include::{snippets}/competition/find-all/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/competition/find-all/curl-request.adoc[]
 
-=== Retrieve all competition for the userId
+=== Retrieve all competitions for the userId
 ==== Request
 include::{snippets}/competition/get-competition-by-id/http-request.adoc[]
 
