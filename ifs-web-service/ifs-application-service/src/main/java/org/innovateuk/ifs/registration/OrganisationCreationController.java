@@ -193,7 +193,7 @@ public class OrganisationCreationController extends AbstractOrganisationCreation
                                    Model model,
                                    HttpServletRequest request, HttpServletResponse response,
                                    @RequestHeader(value = REFERER, required = false) final String referer) {
-        organisationForm = getOrganisationCreationFormFromCookie(request);
+        organisationForm = getOrganisationCreationFormFromCookie(request).get();
 
         organisationForm.setTriedToSave(true);
         addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));

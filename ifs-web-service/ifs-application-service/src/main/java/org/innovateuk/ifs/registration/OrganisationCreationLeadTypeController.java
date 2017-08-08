@@ -4,6 +4,7 @@ import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.populator.OrganisationCreationSelectTypePopulator;
 import org.innovateuk.ifs.registration.viewmodel.OrganisationCreationSelectTypeViewModel;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 @RequestMapping(AbstractOrganisationCreationController.BASE_URL + "/" + AbstractOrganisationCreationController.LEAD_ORGANISATION_TYPE)
@@ -35,12 +37,15 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
                                          HttpServletRequest request) {
         model.addAttribute("model", organisationCreationSelectTypePopulator.populate());
 
-        OrganisationCreationForm organisationCreationForm = getOrganisationCreationFormFromCookie(request);
-        if(organisationCreationForm == null) {
-            organisationCreationForm = new OrganisationCreationForm();
+        Optional<OrganisationCreationForm> organisationCreationFormFromCookie = getOrganisationCreationFormFromCookie(request);
+        if(organisationCreationFormFromCookie.isPresent()) {
+            model.addAttribute(ORGANISATION_FORM, organisationCreationFormFromCookie.get());
+        }
+        else {
+            model.addAttribute(ORGANISATION_FORM, new OrganisationCreationForm());
         }
 
-        model.addAttribute(ORGANISATION_FORM, organisationCreationForm);
+
         return TEMPLATE_PATH + "/" + LEAD_ORGANISATION_TYPE;
     }
 
@@ -53,7 +58,7 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
         OrganisationCreationSelectTypeViewModel selectOrgTypeViewModel = organisationCreationSelectTypePopulator.populate();
         Long organisationTypeId = organisationForm.getOrganisationTypeId();
         if (organisationTypeId != null &&
-                !isValidLeadOrganisationType(selectOrgTypeViewModel, organisationTypeId)) {
+                !isValidLeadOrganisationType(organisationTypeId)) {
             bindingResult.addError(new FieldError(ORGANISATION_FORM, ORGANISATION_TYPE_ID, "Please select an organisation type."));
         }
 
@@ -69,17 +74,22 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
         }
     }
 
-    private boolean isValidLeadOrganisationType(OrganisationCreationSelectTypeViewModel viewModel, Long organisationTypeId) {
-        return viewModel.getTypes()
-                .stream()
-                .anyMatch(validOrganisationType -> organisationTypeId.equals(validOrganisationType.getId()));
+    private boolean isValidLeadOrganisationType(Long organisationTypeId) {
+        return OrganisationTypeEnum.getFromId(organisationTypeId) != null;
     }
 
 
 
     private void saveOrgansationTypeToCreationForm(HttpServletRequest request, HttpServletResponse response, OrganisationTypeForm organisationTypeForm) {
-        OrganisationCreationForm organisationCreationForm = getOrganisationCreationFormFromCookie(request);
-        organisationCreationForm.setOrganisationTypeId(organisationTypeForm.getOrganisationType());
+        OrganisationCreationForm organisationCreationForm = new OrganisationCreationForm();
+
+        Optional<OrganisationCreationForm> organisationCreationFormFromCookie = getOrganisationCreationFormFromCookie(request);
+        if(organisationCreationFormFromCookie.isPresent()) {
+            organisationCreationForm = organisationCreationFormFromCookie.get();
+            organisationCreationForm.setOrganisationTypeId(organisationTypeForm.getOrganisationType());
+
+        }
+
         cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationCreationForm));
     }
 }

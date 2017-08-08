@@ -227,10 +227,10 @@ public class AbstractOrganisationCreationController {
         return null;
     }
 
-    protected OrganisationCreationForm getOrganisationCreationFormFromCookie(HttpServletRequest request) {
+    protected Optional<OrganisationCreationForm> getOrganisationCreationFormFromCookie(HttpServletRequest request) {
         String organisationFormJson = cookieUtil.getCookieValue(request, ORGANISATION_FORM);
         OrganisationCreationForm organisationCreationForm = JsonUtil.getObjectFromJson(organisationFormJson, OrganisationCreationForm.class);
 
-        return organisationCreationForm;
+        return Optional.ofNullable(organisationCreationForm);
     }
 }
