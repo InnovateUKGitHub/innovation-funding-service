@@ -66,7 +66,7 @@ ${landingPage}    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETI
 
 *** Test Cases ***
 User can create a new competition
-    [Documentation]    INFUND-2945, INFUND-2982, INFUND-2983, INFUND-2986, INFUND-3888, INFUND-3002, INFUND-2980, INFUND-4725
+    [Documentation]    INFUND-2945, INFUND-2982, INFUND-2983, INFUND-2986, INFUND-3888, INFUND-3002, INFUND-2980, INFUND-4725, IFS-1104
     [Tags]    HappyPath
     Given the user navigates to the page       ${CA_UpcomingComp}
     When the user clicks the button/link       jQuery=.button:contains("Create competition")
@@ -78,7 +78,7 @@ User can create a new competition
     And The user should not see the element    link=Assessors
     And The user should not see the element    link=Public content
     And The user should see the element    link=Initial details
-    And The user should see the element    link=Stakeholders
+    And The user should not see the element    link=Stakeholders
 
 New competition shows in Preparation section
     [Documentation]    INFUND-2980
@@ -173,7 +173,7 @@ Initial details - should have a green check
     And the user should not see the element    jQuery=.button:contains("Save")
 
 User should have access to all the sections
-    [Documentation]    INFUND-4725
+    [Documentation]    INFUND-4725, IFS-1104
     Given the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Then The user should see the element    link=Funding information
     And The user should see the element    link=Eligibility
