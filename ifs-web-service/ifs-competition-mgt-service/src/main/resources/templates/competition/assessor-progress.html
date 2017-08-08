@@ -172,6 +172,14 @@
                 <td class="numeric" th:text="${app.assessors}">4</td>
                 <td class="numeric" th:text="${app.accepted}" th:if="${model.applicationsView.inAssessment}">2</td>
                 <td class="numeric" th:text="${app.submitted}" th:if="${model.applicationsView.inAssessment}">1</td>
+                <td><form method="post"
+                       th:action="@{/assessment/competition/{competitionid}/assessors/{assessorid}/application/{applicationid}/assign(competitionid=${model.competitionId}, assessorid=${model.assessorId}, applicationid=${app.id})}" >
+                    <button type="submit" class="button-secondary no-margin">Assign</button>
+                </form>
+                </td>
+
+
+
                 <!--/*
                     <td class="alignright">
                     <a class="button-secondary no-margin"

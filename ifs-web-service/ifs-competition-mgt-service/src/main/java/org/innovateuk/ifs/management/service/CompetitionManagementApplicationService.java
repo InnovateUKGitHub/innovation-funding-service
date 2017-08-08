@@ -39,4 +39,6 @@ public interface CompetitionManagementApplicationService {
 
     public String PROJECT_SETUP_MANAGEMENT_SERVICE = "project-setup-management";
 
+    void addAssessorToApplication(long applicationId, long assessorId);
+
 }

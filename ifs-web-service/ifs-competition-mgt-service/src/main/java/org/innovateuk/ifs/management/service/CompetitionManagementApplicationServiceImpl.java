@@ -7,6 +7,8 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.assessment.resource.AssessmentCreateResource;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -49,6 +51,10 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
 
     @Autowired
     private ApplicationService applicationService;
+
+
+    @Autowired
+    private AssessmentRestService assessmentRestService;
 
     @Autowired
     private ApplicationModelPopulator applicationModelPopulator;
@@ -219,5 +225,11 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         public String getBaseOriginUrl() {
             return baseOriginUrl;
         }
+    }
+
+    @Override
+    public void addAssessorToApplication(long applicationId, long assessorId) {
+        AssessmentCreateResource assessment = new AssessmentCreateResource(applicationId, assessorId);
+        assessmentRestService.createAssessment(new AssessmentCreateResource(applicationId, assessorId)).getSuccessObjectOrThrowException();
     }
 }
