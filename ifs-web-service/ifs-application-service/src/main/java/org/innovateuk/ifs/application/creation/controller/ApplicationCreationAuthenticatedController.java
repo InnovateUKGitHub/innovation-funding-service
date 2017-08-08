@@ -54,6 +54,10 @@ public class ApplicationCreationAuthenticatedController {
     public String view(Model model,
                        @PathVariable(COMPETITION_ID) Long competitionId,
                        UserResource user) {
+        if(!isAllowedToLeadApplication(user.getId(), competitionId)) {
+            return format("redirect:/application/create-authenticated/%s/not-eligible", competitionId);
+        }
+
         Boolean userHasApplication = userService.userHasApplicationForCompetition(user.getId(), competitionId);
         if (Boolean.TRUE.equals(userHasApplication)) {
             model.addAttribute(COMPETITION_ID, competitionId);
@@ -63,12 +67,16 @@ public class ApplicationCreationAuthenticatedController {
         }
     }
 
-    @PostMapping(value = "/{competitionId}", params = {FORM_RADIO_NAME})
+    @PostMapping(value = "/{competitionId}")
     public String post(Model model,
                        @PathVariable(COMPETITION_ID) Long competitionId,
                        UserResource user,
                        HttpServletRequest request) {
-        String createNewApplication = request.getParameter(FORM_RADIO_NAME);
+        if(!isAllowedToLeadApplication(user.getId(), competitionId)) {
+            return format("redirect:/application/create-authenticated/%s/not-eligible", competitionId);
+        }
+
+        final String createNewApplication = request.getParameter(FORM_RADIO_NAME);
 
         if (RADIO_TRUE.equals(createNewApplication)) {
             return createApplicationAndShowInvitees(user, competitionId);
@@ -83,7 +91,6 @@ public class ApplicationCreationAuthenticatedController {
 
     @GetMapping(value = "/{competitionId}/not-eligible")
     public String showNotEligiblePage(Model model,
-                                      @PathVariable(COMPETITION_ID) Long competitionId,
                                       UserResource userResource) {
         OrganisationResource organisation = organisationService.getOrganisationForUser(userResource.getId());
 
@@ -92,10 +99,6 @@ public class ApplicationCreationAuthenticatedController {
     }
 
     private String createApplicationAndShowInvitees(UserResource user, Long competitionId) {
-        if(!isAllowedToLeadApplication(user.getId(), competitionId)) {
-            return format("redirect:/application/create-authenticated/%s/not-eligible", competitionId);
-        }
-
         ApplicationResource application = applicationService.createApplication(competitionId, user.getId(), "");
 
         if (application != null) {
