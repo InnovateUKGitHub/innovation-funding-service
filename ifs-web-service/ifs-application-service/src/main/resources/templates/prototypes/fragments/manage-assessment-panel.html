@@ -337,7 +337,6 @@
               </div>
               <div class="column-half select-all alignright">
                 <form method="get">
-                  <input type="hidden" name="tab" value="invite">
                   <button class="button" name="addSelected" data-submit-el="" disabled="disabled" th:formaction="${#httpServletRequest.requestURI}">
                       Add selected to invite list
                   </button>
@@ -831,7 +830,7 @@
                             <th scope="col">Contract and DOI</th>
                             <td scope="col" class="alignright">
                               <button name="removeAll" class="buttonlink alignright">
-                                    Remove  from list
+                                    Remove all from list
                                 </button>
                             </td>
                         </tr>
@@ -918,10 +917,33 @@
         </div>
     </div>
 
+    <div class="grid-row sorting">
+        <div class="column-half select-all">
+            <div class="multiple-choice">
+                <input type="checkbox" data-select-all="" id="select-all-check">
+                <label for="select-all-check">
+                    Select all assessors
+                </label>
+            </div>
+            <span class="form-hint">
+                  <span data-count-selected="" class="applications-selected">0</span> assessors selected
+              </span>
+        </div>
+        <div class="column-half select-all alignright">
+            <form method="get">
+                <input type="hidden" id="status" name="status" value="resendInvites" />
+                <button class="button" name="addSelected" data-submit-el="" disabled="disabled" formaction="/prototypes/IFS-707-review-send">
+                    Resend invites
+                </button>
+            </form>
+        </div>
+    </div>
+
     <div class="table-overflow">
         <table>
             <thead>
                 <tr>
+                    <th scope="col" class="width-small">Resend invites</th>
                     <th scope="col">Assessor name</th>
                     <th scope="col">Type</th>
                     <th scope="col">Innovation area</th>
@@ -932,6 +954,14 @@
             </thead>
             <tbody>
                 <tr>
+                    <td>
+                        <div class="multiple-choice">
+                            <input type="checkbox" id="assessor-row-1" value="205" name="selectedAssessorIds">
+                            <label for="assessor-row-1">
+                                <span class="invisible">Add</span>
+                            </label>
+                        </div>
+                    </td>
                     <td><a href="/prototypes/5229-assessor-profile?name=Jeremy%20Alufson&amp;comp=assessment">Jeremy Alufson</a></td>
                     <td></td>
                     <td>Materials, process and manufacturing design technologies</td>
@@ -940,6 +970,14 @@
                     <td>Invite sent: 09-Feb-2017</td>
                 </tr>
                 <tr>
+                    <td>
+                        <div class="multiple-choice">
+                            <input type="checkbox" id="assessor-row-2" value="205" name="selectedAssessorIds" disabled="disabled">
+                            <label for="assessor-row-2">
+                                <span class="invisible">Add</span>
+                            </label>
+                        </div>
+                    </td>
                     <td><a href="/prototypes/5229-assessor-profile?name=Matt%20Roberts&amp;comp=assessment">Matt Roberts</a></td>
                     <td>Academic</td>
                     <td>Digital manufacturing</td>
@@ -948,6 +986,14 @@
                     <td></td>
                 </tr>
                 <tr>
+                    <td>
+                        <div class="multiple-choice">
+                            <input type="checkbox" id="assessor-row-3" value="205" name="selectedAssessorIds">
+                            <label for="assessor-row-3">
+                                <span class="invisible">Add</span>
+                            </label>
+                        </div>
+                    </td>
                     <td><a href="/prototypes/5229-assessor-profile?name=Richard%20Acton&amp;comp=assessment">Richard Acton</a></td>
                     <td>Business</td>
                     <td>Digital health</td>
@@ -956,6 +1002,14 @@
                     <td>Invite sent: 16-May-2017</td>
                 </tr>
                 <tr>
+                    <td>
+                        <div class="multiple-choice">
+                            <input type="checkbox" id="assessor-row-4" value="205" name="selectedAssessorIds" disabled="disabled">
+                            <label for="assessor-row-4">
+                                <span class="invisible">Add</span>
+                            </label>
+                        </div>
+                    </td>
                     <td><a href="/prototypes/5229-assessor-profile?name=Sarah%20Chung&amp;comp=assessment">Sarah Chung</a></td>
                     <td>Academic</td>
                     <td>Nanotechnology / nanomaterials, Electronics, sensors and photonics</td>
@@ -964,6 +1018,14 @@
                     <td></td>
                 </tr>
                 <tr>
+                    <td>
+                        <div class="multiple-choice">
+                            <input type="checkbox" id="assessor-row-5" value="205" name="selectedAssessorIds" disabled="disabled">
+                            <label for="assessor-row-5">
+                                <span class="invisible">Add</span>
+                            </label>
+                        </div>
+                    </td>
                     <td><a href="/prototypes/5229-assessor-profile?name=Will%20Smith&amp;comp=assessment">Will Smith</a></td>
                     <td>Businessc</td>
                     <td>Nanotechnology / nanomaterials, Precision medicine, Energy systems</td>
@@ -974,7 +1036,6 @@
             </tbody>
         </table>
     </div>
-
 
 </th:block>
 
