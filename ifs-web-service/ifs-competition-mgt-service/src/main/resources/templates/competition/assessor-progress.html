@@ -132,8 +132,8 @@
                     <th scope="col" class="width-small">Application number</th>
                     <th scope="col">Title</th>
                     <th scope="col">Lead organisation</th>
-                    <th scope="col" class="width-small numeric">Assessors</th>
                     <th scope="col">Reason</th>
+                    <th scope="col" class="width-small numeric">Assessors</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -141,14 +141,13 @@
                     <td>
                         <a href="#"
                            th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.applicationId})} + ${originQuery}"
-                           th:text="${app.applicationId}">
-                            1
-                        </a>
+                           th:text="${app.applicationId}">1</a>
                     </td>
                     <td th:text="${app.applicationName}">Application name</td>
                     <td th:text="${app.leadOrganisation}">Lead organisation</td>
+                    <td><label th:text="${app.rejectReason.displayLabel}">Too many assignments</label> <br/>
+                        <th:block th:text="${app.rejectComment}">You have frequently assigned me too may applications</th:block></td>
                     <td th:text="${app.totalAssessors}" class="numeric">3</td>
-                    <td><label th:text="${app.rejectReason.displayLabel}">Too many assignments</label> <br /><th:block th:text="${app.rejectComment}">You have frequently assigned me too may applications</th:block></td>
                 </tr>
                 </tbody>
             </table>
