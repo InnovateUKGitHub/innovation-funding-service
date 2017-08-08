@@ -52,7 +52,7 @@ Invite existing academic collaborator
     And the user enters text to a text field                     css=input[id="applicants0.email"]  ${collaborator2_credentials["email"]}
     And the user clicks the button/link                          jQuery=button:contains("Add organisation and invite applicants")
     And logout as user
-    And the user accepts the invite to collaborate               ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  &{collaborator2_credentials}
+    And the user accepts the invite to collaborate               ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  ${collaborator2_credentials["email"]}  ${collaborator2_credentials["password"]}
     Then the correct funding is displayed to academic user
 
 maximum funding level available for RTO lead
@@ -83,8 +83,8 @@ lead RTO applicant invites a Charity member
 invite existing academic collaborator for RTO lead
     [Documentation]  IFS-1050  IFS-1013
     [Tags]
-    [Setup]  log in as a different user                           ${lead_rto_email}  ${correct_password}
-    When the user clicks the button/link                          link=${Application_name_RTO}
+    [Setup]  log in as a different user                          ${lead_rto_email}  ${correct_password}
+    When the user clicks the button/link                         link=${Application_name_RTO}
     And the user clicks the button/link                          link=view team members and add collaborators
     And the user clicks the button/link                          link=Add partner organisation
     Then the user enters text to a text field                    css=#organisationName  eggs
@@ -92,14 +92,14 @@ invite existing academic collaborator for RTO lead
     And the user enters text to a text field                     css=input[id="applicants0.email"]  ${collaborator2_credentials["email"]}
     And the user clicks the button/link                          jQuery=button:contains("Add organisation and invite applicants")
     And logout as user
-    And the user accepts the invite to collaborate               ${OPEN_COMPETITION_NAME}   &{collaborator2_credentials}
+    And the user accepts the invite to collaborate               ${OPEN_COMPETITION_NAME}  ${collaborator2_credentials["email"]}  ${collaborator2_credentials["password"]}
     Then the correct funding is displayed to academic user
 
 invite existing business user into RTO lead application
     [Documentation]  IFS-1050  IFS-1013
     [Tags]
-    [Setup]  log in as a different user                           ${lead_rto_email}  ${correct_password}
-    When the user clicks the button/link                          link=${Application_name_RTO}
+    [Setup]  log in as a different user                          ${lead_rto_email}  ${correct_password}
+    When the user clicks the button/link                         link=${Application_name_RTO}
     And the user clicks the button/link                          link=view team members and add collaborators
     And the user clicks the button/link                          link=Add partner organisation
     Then the user enters text to a text field                    css=#organisationName  innovate bus
@@ -108,7 +108,6 @@ invite existing business user into RTO lead application
     And the user clicks the button/link                          jQuery=button:contains("Add organisation and invite applicants")
     And logout as user
     Then the user accepts the invite to collaborate              ${OPEN_COMPETITION_NAME}  ${lead_business_email}  ${correct_password}
-    Then the correct funding is displayed to academic user
 
 Rto lead able to mark finances as complete
 
