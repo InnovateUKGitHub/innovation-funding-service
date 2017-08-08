@@ -23,14 +23,14 @@ include::{snippets}/competition/find-all/curl-request.adoc[]
 
 === Retrieve all competitions for the userId
 ==== Request
-include::{snippets}/competition/get-competition-by-id/http-request.adoc[]
+include::{snippets}/competition/get-competition-by-user-id/http-request.adoc[]
 
 ==== Response
-include::{snippets}/competition/get-competition-by-id/http-response.adoc[]
-include::{snippets}/competition/get-competition-by-id/response-fields.adoc[]
+include::{snippets}/competition/get-competition-by-user-id/http-response.adoc[]
+include::{snippets}/competition/get-competition-by-user-id/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/competition/get-competition-by-id/curl-request.adoc[]
+include::{snippets}/competition/get-competition-by-user-id/curl-request.adoc[]
 
 === Mark Competition Setup Section as Complete
 ==== Request
