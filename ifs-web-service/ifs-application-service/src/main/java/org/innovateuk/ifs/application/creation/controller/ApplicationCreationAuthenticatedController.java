@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.creation.controller;
 
+import org.innovateuk.ifs.application.creation.viewmodel.AuthenticatedNotEligibleViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
@@ -53,12 +54,6 @@ public class ApplicationCreationAuthenticatedController {
     public String view(Model model,
                        @PathVariable(COMPETITION_ID) Long competitionId,
                        UserResource user) {
-
-        if(!isAllowedToLeadApplication(user.getId(), competitionId)) {
-            //TODO: if not redirect
-            return "redirect:/not-allowed";
-        }
-
         Boolean userHasApplication = userService.userHasApplicationForCompetition(user.getId(), competitionId);
         if (Boolean.TRUE.equals(userHasApplication)) {
             model.addAttribute(COMPETITION_ID, competitionId);
@@ -73,11 +68,6 @@ public class ApplicationCreationAuthenticatedController {
                        @PathVariable(COMPETITION_ID) Long competitionId,
                        UserResource user,
                        HttpServletRequest request) {
-        if(!isAllowedToLeadApplication(user.getId(), competitionId)) {
-            //TODO: if not redirect
-            return "redirect:/not-allowed";
-        }
-
         String createNewApplication = request.getParameter(FORM_RADIO_NAME);
 
         if (RADIO_TRUE.equals(createNewApplication)) {
@@ -91,7 +81,21 @@ public class ApplicationCreationAuthenticatedController {
         return "redirect:/application/create-authenticated/" + competitionId;
     }
 
+    @GetMapping(value = "/{competitionId}/not-eligible")
+    public String showNotEligiblePage(Model model,
+                                      @PathVariable(COMPETITION_ID) Long competitionId,
+                                      UserResource userResource) {
+        OrganisationResource organisation = organisationService.getOrganisationForUser(userResource.getId());
+
+        model.addAttribute("model", new AuthenticatedNotEligibleViewModel(organisation.getOrganisationTypeName()));
+        return "create-application/authenticated-not-eligible";
+    }
+
     private String createApplicationAndShowInvitees(UserResource user, Long competitionId) {
+        if(!isAllowedToLeadApplication(user.getId(), competitionId)) {
+            return format("redirect:/application/create-authenticated/%s/not-eligible", competitionId);
+        }
+
         ApplicationResource application = applicationService.createApplication(competitionId, user.getId(), "");
 
         if (application != null) {
