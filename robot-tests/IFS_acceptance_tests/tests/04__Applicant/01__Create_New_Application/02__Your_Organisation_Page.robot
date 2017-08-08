@@ -2,7 +2,7 @@
 Documentation     INFUND-887 : As an applicant I want the option to look up my business organisation's details using Companies House lookup so...
 ...
 ...               INFUND-890 : As an applicant I want to use UK postcode lookup function to look up and enter my business address details as they won't necessarily be the same as the address held by Companies House, so ...
-Suite Setup       Applicant goes to the create organisation page
+Suite Setup       Applicant goes to the organisation search page
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
@@ -99,12 +99,14 @@ Manually add the details and pass to the confirmation page
     And the user should see the text in the page    POPPS123
 
 *** Keywords ***
-Applicant goes to the create organisation page
+Applicant goes to the organisation search page
     Given the guest user opens the browser
     the user navigates to the page    ${frontDoor}
     Given the user clicks the button/link    link=Home and industrial efficiency programme
     When the user clicks the button/link    link=Start new application
     And the user clicks the button/link    jQuery=.button:contains("Create account")
+    And the user clicks the button/link    jQuery=span:contains("Business")
+    And the user clicks the button/link    jQuery=button:contains("Save and continue")
 
 the backslash doesnt give errors
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    the user should see the element    id=addressForm.selectedPostcodeIndex
