@@ -97,7 +97,6 @@ public class AssessorCompetitionSummaryControllerIntegrationTest extends BaseCon
         this.controller = controller;
     }
 
-    @Rollback(false)
     @Test
     public void getAssessorSummary() throws Exception {
         loginCompAdmin();
