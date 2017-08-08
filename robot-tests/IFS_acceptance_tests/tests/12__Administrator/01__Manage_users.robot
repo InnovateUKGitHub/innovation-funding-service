@@ -32,7 +32,7 @@ Administrator can see the read only view of internal user profile
     Then the user should see the element  jQuery=h1:contains("View internal user's details")
     And the user should see the element   jQuery=dt:contains("Email") + dd:contains("${Comp_admin1_credentials["email"]}")
     And the user should see the element   jQuery=dt:contains("Job role") + dd:contains("Competition Administrator")
-    And the user should see the element   jQuery=.form-footer__info:contains("Created by IFS System Maintenance User")
+    And the user should see the element   jQuery=.form-footer__info:contains("Created by IFS Web System User")
 
 Project finance user cannot navigate to manage users page
     [Documentation]  INFUND-604
