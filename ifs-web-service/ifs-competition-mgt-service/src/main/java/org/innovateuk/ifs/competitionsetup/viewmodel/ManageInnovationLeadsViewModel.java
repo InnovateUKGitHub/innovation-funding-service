@@ -13,13 +13,12 @@ public class ManageInnovationLeadsViewModel {
     private String innovationSectorName;
     private Set<String> innovationAreaNames;
 
-    private List<UserResource> allInnovationLeads;
     private List<UserResource> innovationLeadsAssignedToCompetition;
     private List<UserResource> availableInnovationLeads;
 
     public ManageInnovationLeadsViewModel(Long competitionId, String competitionName,
                                           String leadTechnologistName, String innovationSectorName,
-                                          Set<String> innovationAreaNames, List<UserResource> allInnovationLeads,
+                                          Set<String> innovationAreaNames,
                                           List<UserResource> innovationLeadsAssignedToCompetition,
                                           List<UserResource> availableInnovationLeads) {
         this.competitionId = competitionId;
@@ -27,7 +26,6 @@ public class ManageInnovationLeadsViewModel {
         this.leadTechnologistName = leadTechnologistName;
         this.innovationSectorName = innovationSectorName;
         this.innovationAreaNames = innovationAreaNames;
-        this.allInnovationLeads = allInnovationLeads;
         this.innovationLeadsAssignedToCompetition = innovationLeadsAssignedToCompetition;
         this.availableInnovationLeads = availableInnovationLeads;
     }
@@ -50,10 +48,6 @@ public class ManageInnovationLeadsViewModel {
 
     public Set<String> getInnovationAreaNames() {
         return innovationAreaNames;
-    }
-
-    public List<UserResource> getAllInnovationLeads() {
-        return allInnovationLeads;
     }
 
     public List<UserResource> getInnovationLeadsAssignedToCompetition() {
