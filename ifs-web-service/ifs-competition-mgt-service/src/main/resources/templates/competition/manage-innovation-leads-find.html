@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage innovation leads'" />
+    </head>
+    <body th:with="context='comp-management'" class="competition-management">
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
+
+        <main tabindex="-1" id="content">
+
+        <th:block th:insert="fragments/layout :: main-content-start" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage innovation leads',subTitle=${model.competitionName}, size='heading-xlarge'" />
+
+        <h2 class="heading-medium">Key statistics</h2>
+        <div class="grid-row">
+            <div class="column-quarter">
+                <div class="highlight-panel highlight-panel-padded">
+                    <span class="heading-large lead-count" th:text="${#lists.size(model.innovationLeadsAssignedToCompetition)}">1</span><br>
+                    <small th:text="${#lists.size(model.innovationLeadsAssignedToCompetition) == 1 ? 'Innovation lead added' : 'Innovation leads added'}">Innovation leads added</small>
+                </div>
+            </div>
+        </div>
+        <dl class="standard-definition-list extra-margin">
+            <dt>Innovation sector</dt>
+            <dd th:text="${model.innovationSectorName}">Materials and manufacturing</dd>
+            <dt>Innovation Area's</dt>
+            <dd>
+                <th:block th:each="innovationArea, iterStat : ${model.innovationAreaNames}">
+                    <th:block th:text="${innovationArea}">Materials and manufacturing</th:block><th:block th:text="${iterStat.last == false} ? ', '">,</th:block>
+                </th:block>
+            </dd>
+            <dt>Competition Innovation Lead</dt>
+            <dd th:text="${model.leadTechnologistName}">Materials and manufacturing</dd>
+
+        </dl>
+        <div class="extra-margin">
+            <ul class="inline-nav cf">
+                <li class="selected">
+                    <a th:href="@{/competition/setup/{competitionId}/manage-innovation-leads/find(competitionId=${model.competitionId})}">Find</a>
+                </li>
+                <li>
+                    <a th:href="@{/competition/setup/{competitionId}/manage-innovation-leads/overview(competitionId=${model.competitionId})}">Overview</a>
+                </li>
+            </ul>
+
+            <p>Choose a tab to find, add and see an overview of innovation leads.</p>
+            <p class="heading-small">Find innovation leads and add them to this competition.</p>
+
+                <!-- list -->
+                <div class="grid-row sorting">
+                    <div class="column-half">
+                        <p>
+                            <span class="heading-xlarge total-count"></span>
+                            <span class="heading-small">Innovation leads</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="table-overflow">
+                    <table class="stakeholder-table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Innovation lead name</th>
+                            <th scope="col" class="alignright"><span class="visuallyhidden">Action</span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="innovationLeadUsers : ${model.availableInnovationLeads}">
+                                <td th:text="${innovationLeadUsers.name}">Alexis Kinney</td>
+                                <td class="alignright">
+                                    <form method="post" th:action="@{/competition/setup/{competitionId}/add-innovation-lead/{userId}(competitionId=${model.competitionId},userId=${innovationLeadUsers.id})}">
+                                        <button class="button button-secondary no-margin">Add <span class="visuallyhidden"><th:block th:text="${innovationLeadUsers.name}" /> as Innovation Lead</span></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+        </div>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>
