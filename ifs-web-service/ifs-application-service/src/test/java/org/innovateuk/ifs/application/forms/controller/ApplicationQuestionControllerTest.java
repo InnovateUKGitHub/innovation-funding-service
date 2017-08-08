@@ -199,8 +199,14 @@ public class ApplicationQuestionControllerTest extends BaseControllerMockMVCTest
         mockMvc.perform(get("/application/1/form/question/21")).andExpect(status().isOk());
         mockMvc.perform(get("/application/1/form/question/edit/1")).andExpect(status().isOk());
         mockMvc.perform(get("/application/1/form/question/edit/1?mark_as_complete=false")).andExpect(status().isOk());
-        mockMvc.perform(get("/application/1/form/question/edit/1?mark_as_complete=true")).andExpect(status().isOk());
         mockMvc.perform(get("/application/1/form/question/edit/1?mark_as_complete=")).andExpect(status().isOk());
+
+        verify(applicationSaver, never()).saveApplicationForm(anyLong(), any(ApplicationForm.class), anyLong(), anyLong(), any(HttpServletRequest.class), any(HttpServletResponse.class), anyBoolean(), any(Optional.class));
+
+        mockMvc.perform(get("/application/1/form/question/edit/1?mark_as_complete=true")).andExpect(status().isOk());
+
+        verify(applicationSaver, times(1)).saveApplicationForm(anyLong(), any(ApplicationForm.class), anyLong(), anyLong(), any(HttpServletRequest.class), any(HttpServletResponse.class), anyBoolean(), any(Optional.class));
+
         mockMvc.perform(get("/application/1/form/question/edit/21")).andExpect(status().isOk());
     }
 
