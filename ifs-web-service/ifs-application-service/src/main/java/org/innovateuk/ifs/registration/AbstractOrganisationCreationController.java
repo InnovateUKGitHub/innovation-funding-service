@@ -75,13 +75,15 @@ public class AbstractOrganisationCreationController {
         this.validator = validator;
     }
 
-    protected void saveToTypeCookie(HttpServletResponse response, Long organisationTypeId) {
+    protected OrganisationTypeForm saveToTypeCookie(HttpServletResponse response, Long organisationTypeId) {
         OrganisationTypeForm organisationTypeForm = new OrganisationTypeForm();
         organisationTypeForm.setOrganisationType(organisationTypeId);
         organisationTypeForm.setLeadApplicant(true);
         String orgTypeForm = JsonUtil.getSerializedObject(organisationTypeForm);
 
         cookieUtil.saveToCookie(response, ORGANISATION_TYPE, orgTypeForm);
+
+        return organisationTypeForm;
     }
 
     protected OrganisationCreationForm getFormDataFromCookie(OrganisationCreationForm organisationForm, Model model, HttpServletRequest request) {
@@ -217,11 +219,18 @@ public class AbstractOrganisationCreationController {
      */
     protected OrganisationSearchResult addSelectedOrganisation(OrganisationCreationForm organisationForm, Model model) {
         if (!organisationForm.isManualEntry() && isNotBlank(organisationForm.getSearchOrganisationId())) {
-            OrganisationSearchResult s = organisationSearchRestService.getOrganisation(organisationForm.getOrganisationType().getId(), organisationForm.getSearchOrganisationId()).getSuccessObject();
-            organisationForm.setOrganisationName(s.getName());
-            model.addAttribute("selectedOrganisation", s);
-            return s;
+            OrganisationSearchResult organisationSearchResult = organisationSearchRestService.getOrganisation(organisationForm.getOrganisationType().getId(), organisationForm.getSearchOrganisationId()).getSuccessObject();
+            organisationForm.setOrganisationName(organisationSearchResult.getName());
+            model.addAttribute("selectedOrganisation", organisationSearchResult);
+            return organisationSearchResult;
         }
         return null;
+    }
+
+    protected OrganisationCreationForm getOrganisationCreationFormFromCookie(HttpServletRequest request) {
+        String organisationFormJson = cookieUtil.getCookieValue(request, ORGANISATION_FORM);
+        OrganisationCreationForm organisationCreationForm = JsonUtil.getObjectFromJson(organisationFormJson, OrganisationCreationForm.class);
+
+        return organisationCreationForm;
     }
 }

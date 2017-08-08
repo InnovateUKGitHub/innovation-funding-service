@@ -7,7 +7,6 @@ import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.viewmodel.OrganisationAddressViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,10 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.innovateuk.ifs.application.creation.controller.ApplicationCreationAuthenticatedController.COMPETITION_ID;
 
 /**
  * This Controller handles the users request to create an organisation. This is done when the users creates a new account. In most cases the user will first
@@ -196,6 +193,8 @@ public class OrganisationCreationController extends AbstractOrganisationCreation
                                    Model model,
                                    HttpServletRequest request, HttpServletResponse response,
                                    @RequestHeader(value = REFERER, required = false) final String referer) {
+        organisationForm = getOrganisationCreationFormFromCookie(request);
+
         organisationForm.setTriedToSave(true);
         addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
         addSelectedOrganisation(organisationForm, model);
@@ -207,18 +206,7 @@ public class OrganisationCreationController extends AbstractOrganisationCreation
 
         if (!bindingResult.hasFieldErrors(ORGANISATION_NAME) && !bindingResult.hasFieldErrors(USE_SEARCH_RESULT_ADDRESS) && !addressBindingResult.hasErrors()) {
             cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
-            boolean isLead = checkOrganisationIsLead(request);
-
-            if (isLead) {
-                Long competitionId = Long.valueOf(cookieUtil.getCookieValue(request, COMPETITION_ID));
-                List<OrganisationTypeResource> allowedOrganisationTypes = competitionService.getOrganisationTypes(competitionId);
-
-                addCompetitionOrganisationTypeToFormCookies(allowedOrganisationTypes, response);
-                return "redirect:" + BASE_URL + "/" + CONFIRM_ORGANISATION;
-            }
-            else {
-                return "redirect:" + BASE_URL + "/" + CONFIRM_ORGANISATION;
-            }
+            return "redirect:" + BASE_URL + "/" + CONFIRM_ORGANISATION;
 
         } else {
             organisationForm.setTriedToSave(true);
@@ -226,9 +214,5 @@ public class OrganisationCreationController extends AbstractOrganisationCreation
             cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
             return getRedirectUrlInvalidSave(organisationForm, referer);
         }
-    }
-
-    private void addCompetitionOrganisationTypeToFormCookies(List<OrganisationTypeResource> organisationTypeResources, HttpServletResponse response) {
-        saveToTypeCookie(response, organisationTypeResources.get(0).getId());
     }
 }
