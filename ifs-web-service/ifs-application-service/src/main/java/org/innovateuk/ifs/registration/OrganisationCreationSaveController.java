@@ -21,12 +21,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.OPERATING;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
-import static org.innovateuk.ifs.registration.AbstractAcceptInviteController.INVITE_HASH;
 
 /**
  * TODO: Add description
@@ -60,7 +59,10 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
     }
 
     @PostMapping("/save-organisation")
-    public String saveOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm, Model model, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public String saveOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
+                                   Model model,
+                                   HttpServletRequest request,
+                                   HttpServletResponse response) throws IOException {
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
         OrganisationSearchResult selectedOrganisation = addSelectedOrganisation(organisationForm, model);
         AddressResource address = organisationForm.getAddressForm().getSelectedPostcode();
@@ -80,7 +82,9 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         if (selectedOrganisation != null && selectedOrganisation.getOrganisationAddress() != null) {
             organisationService.addAddress(organisationResource, selectedOrganisation.getOrganisationAddress(), REGISTERED);
         }
-        cookieUtil.saveToCookie(response, ORGANISATION_ID, String.valueOf(organisationResource.getId()));
+
+        registrationCookieService.saveToOrganisationIdCookie(organisationResource.getId(), response);
+
         return "redirect:" + RegistrationController.BASE_URL;
     }
 
@@ -94,11 +98,11 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
      * If current user is a invitee, then link the organisation that is created, to the InviteOrganisation.
      */
     private void linkOrganisationToInvite(OrganisationResource organisationResource, HttpServletRequest request) {
-        String cookieHash = cookieUtil.getCookieValue(request, INVITE_HASH);
-        if (isNotBlank(cookieHash)) {
+        Optional<String> cookieHash = registrationCookieService.getInviteHashCookieValue(request);
+        if (cookieHash.isPresent()) {
             final OrganisationResource finalOrganisationResource = organisationResource;
 
-            inviteRestService.getInviteByHash(cookieHash).andOnSuccess(
+            inviteRestService.getInviteByHash(cookieHash.get()).andOnSuccess(
                     s ->
                             inviteOrganisationRestService.getByIdForAnonymousUserFlow(s.getInviteOrganisation()).handleSuccessOrFailure(
                                     f -> restFailure(HttpStatus.NOT_FOUND),

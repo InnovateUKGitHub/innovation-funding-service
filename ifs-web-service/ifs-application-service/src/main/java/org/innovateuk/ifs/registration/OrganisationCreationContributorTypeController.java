@@ -7,11 +7,10 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
+import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.registration.viewmodel.OrganisationCreationViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
-import org.innovateuk.ifs.util.CookieUtil;
-import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
@@ -27,9 +26,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static org.innovateuk.ifs.registration.AbstractAcceptInviteController.INVITE_HASH;
-import static org.innovateuk.ifs.registration.AbstractAcceptInviteController.ORGANISATION_TYPE;
 
 @Controller
 @RequestMapping("/organisation/create/type/")
@@ -53,7 +49,7 @@ public class OrganisationCreationContributorTypeController {
     private MessageSource messageSource;
 
     @Autowired
-    private CookieUtil cookieUtil;
+    private RegistrationCookieService registrationCookieService;
 
     @GetMapping("/new-account-organisation-type")
     public String chooseOrganisationType(HttpServletRequest request,
@@ -61,10 +57,10 @@ public class OrganisationCreationContributorTypeController {
                                          @ModelAttribute(name = "form", binding = false) OrganisationTypeForm form,
                                          BindingResult bindingResult,
                                          HttpServletResponse response,
-                                         @RequestParam(value = ORGANISATION_TYPE, required = false) Long organisationTypeId,
+                                         @RequestParam(value = AbstractOrganisationCreationController.ORGANISATION_TYPE, required = false) Long organisationTypeId,
                                          @RequestParam(value = "invalid", required = false) String invalid) {
-        String hash = cookieUtil.getCookieValue(request, INVITE_HASH);
-        cookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
+        String hash = registrationCookieService.getInviteHashCookieValue(request).get();
+        registrationCookieService.deleteOrganisationCreationCookie(response);
         RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(hash);
 
         if (invalid != null) {
@@ -88,13 +84,12 @@ public class OrganisationCreationContributorTypeController {
     public String chooseOrganisationType(HttpServletResponse response,
                                          @ModelAttribute @Valid OrganisationTypeForm organisationTypeForm,
                                          BindingResult bindingResult) {
-        cookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
+        registrationCookieService.deleteOrganisationCreationCookie(response);
         if (bindingResult.hasErrors()) {
             LOG.debug("redirect because validation errors");
             return "redirect:/organisation/create/type/new-account-organisation-type?invalid";
         } else {
-            String orgTypeForm = JsonUtil.getSerializedObject(organisationTypeForm);
-            cookieUtil.saveToCookie(response, ORGANISATION_TYPE, orgTypeForm);
+            registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
             LOG.debug("redirect for organisation creation");
             return "redirect:/organisation/create/find-organisation";
         }

@@ -8,10 +8,9 @@ import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
+import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.service.OrganisationSearchRestService;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
-import org.innovateuk.ifs.util.CookieUtil;
-import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -21,17 +20,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.innovateuk.ifs.registration.AbstractAcceptInviteController.ORGANISATION_TYPE;
 import static org.innovateuk.ifs.util.ExceptionFunctions.getOrRethrow;
-import static org.innovateuk.ifs.util.JsonUtil.getObjectFromJson;
 import static org.springframework.web.util.UriUtils.encodeQueryParam;
 
 /**
@@ -45,8 +40,10 @@ public class AbstractOrganisationCreationController {
     protected static final String FIND_ORGANISATION = "find-organisation";
     protected static final String CONFIRM_ORGANISATION = "confirm-organisation";
 
-    public static final String ORGANISATION_FORM = "organisationForm";
-    public static final String ORGANISATION_ID = "organisationId";
+    protected static final String ORGANISATION_TYPE = "organisationType";
+    protected static final String ORGANISATION_FORM = "organisationForm";
+    protected static final String ORGANISATION_ID = "organisationId";
+
     protected static final String SELECTED_POSTCODE = "selectedPostcode";
     protected static final String USE_SEARCH_RESULT_ADDRESS = "useSearchResultAddress";
     protected static final String MANUAL_ADDRESS = "manual-address";
@@ -56,7 +53,7 @@ public class AbstractOrganisationCreationController {
     private static final String BINDING_RESULT_ORGANISATION_FORM = "org.springframework.validation.BindingResult.organisationForm";
 
     @Autowired
-    protected CookieUtil cookieUtil;
+    protected RegistrationCookieService registrationCookieService;
 
     @Autowired
     private OrganisationTypeRestService organisationTypeRestService;
@@ -75,16 +72,7 @@ public class AbstractOrganisationCreationController {
         this.validator = validator;
     }
 
-    protected OrganisationTypeForm saveToTypeCookie(HttpServletResponse response, Long organisationTypeId) {
-        OrganisationTypeForm organisationTypeForm = new OrganisationTypeForm();
-        organisationTypeForm.setOrganisationType(organisationTypeId);
-        organisationTypeForm.setLeadApplicant(true);
-        String orgTypeForm = JsonUtil.getSerializedObject(organisationTypeForm);
 
-        cookieUtil.saveToCookie(response, ORGANISATION_TYPE, orgTypeForm);
-
-        return organisationTypeForm;
-    }
 
     protected OrganisationCreationForm getFormDataFromCookie(OrganisationCreationForm organisationForm, Model model, HttpServletRequest request) {
         return processedOrganisationCreationFormFromCookie(model, request).
@@ -97,7 +85,7 @@ public class AbstractOrganisationCreationController {
     }
 
     private Optional<OrganisationCreationForm> processedOrganisationCreationFormFromCookie(Model model, HttpServletRequest request) {
-        Optional<OrganisationCreationForm> organisationCreationFormFromCookie = organisationCreationFormFromCookie(request);
+        Optional<OrganisationCreationForm> organisationCreationFormFromCookie = registrationCookieService.getOrganisationCreationCookieValue(request);
         organisationCreationFormFromCookie.ifPresent(organisationCreationForm -> {
 
             populateOrganisationCreationForm(request, organisationCreationForm);
@@ -120,9 +108,10 @@ public class AbstractOrganisationCreationController {
     }
 
     protected Optional<Long> organisationTypeIdFromCookie(HttpServletRequest request) {
-        String organisationTypeJson = cookieUtil.getCookieValue(request, ORGANISATION_TYPE);
-        if (isNotBlank(organisationTypeJson)) {
-            return Optional.ofNullable(getObjectFromJson(organisationTypeJson, OrganisationTypeForm.class).getOrganisationType());
+        Optional<OrganisationTypeForm> organisationTypeForm = registrationCookieService.getOrganisationTypeCookieValue(request);
+
+        if (organisationTypeForm.isPresent()) {
+            return Optional.ofNullable(organisationTypeForm.get().getOrganisationType());
         } else {
             return Optional.empty();
         }
@@ -167,16 +156,6 @@ public class AbstractOrganisationCreationController {
             }
         }
     }
-
-    private Optional<OrganisationCreationForm> organisationCreationFormFromCookie(HttpServletRequest request) {
-        String organisationFormJson = cookieUtil.getCookieValue(request, ORGANISATION_FORM);
-        if (isNotBlank(organisationFormJson)) {
-            return Optional.ofNullable(getObjectFromJson(organisationFormJson, OrganisationCreationForm.class));
-        } else {
-            return Optional.empty();
-        }
-    }
-
     /**
      * Get the list of postcode options, with the entered postcode. Add those results to the form.
      */
@@ -200,12 +179,12 @@ public class AbstractOrganisationCreationController {
     }
 
     protected boolean checkOrganisationIsLead(HttpServletRequest request) {
-        String organisationTypeJson = cookieUtil.getCookieValue(request, ORGANISATION_TYPE);
-        if(isNotBlank(organisationTypeJson)){
-            OrganisationTypeForm organisationTypeForm = JsonUtil.getObjectFromJson(organisationTypeJson, OrganisationTypeForm.class);
-            return organisationTypeForm.isLeadApplicant();
+        Optional<OrganisationTypeForm> organisationTypeForm = registrationCookieService.getOrganisationTypeCookieValue(request);
+        if(organisationTypeForm.isPresent()){
+            return organisationTypeForm.get().isLeadApplicant();
 
         }
+
         return false;
     }
 
@@ -225,12 +204,5 @@ public class AbstractOrganisationCreationController {
             return organisationSearchResult;
         }
         return null;
-    }
-
-    protected Optional<OrganisationCreationForm> getOrganisationCreationFormFromCookie(HttpServletRequest request) {
-        String organisationFormJson = cookieUtil.getCookieValue(request, ORGANISATION_FORM);
-        OrganisationCreationForm organisationCreationForm = JsonUtil.getObjectFromJson(organisationFormJson, OrganisationCreationForm.class);
-
-        return Optional.ofNullable(organisationCreationForm);
     }
 }

@@ -3,7 +3,6 @@ package org.innovateuk.ifs.registration;
 import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
@@ -38,7 +37,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
                                      Model model,
                                      HttpServletRequest request,
                                      HttpServletResponse response) {
-        cookieUtil.removeCookie(response, ORGANISATION_ID);
+        registrationCookieService.deleteOrganisationIdCookie(response);
 
         organisationForm.setOrganisationSearching(false);
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
@@ -47,7 +46,8 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         addAddressOptions(addressForm);
         addSelectedAddress(addressForm);
 
-        cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
+
+        registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
         model.addAttribute(ORGANISATION_FORM, organisationForm);
 
         model.addAttribute("isLeadApplicant", checkOrganisationIsLead(request));
@@ -63,7 +63,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
         organisationForm.setOrganisationSearching(true);
         organisationForm.setManualEntry(false);
-        cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
+        registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
         return "redirect:/organisation/create/" + FIND_ORGANISATION + "?searchTerm=" + escapePathVariable(organisationForm.getOrganisationSearchName());
 
     }
@@ -75,7 +75,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         organisationForm.setOrganisationSearching(false);
         boolean currentManualEntryValue = organisationForm.isManualEntry();
         organisationForm.setManualEntry(!currentManualEntryValue);
-        cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
+        registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
         return "redirect:/organisation/create/" + FIND_ORGANISATION;
     }
 
@@ -86,7 +86,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         organisationForm.getAddressForm().setManualAddress(true);
         organisationForm.setOrganisationSearching(false);
         organisationForm.setManualEntry(true);
-        cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
+        registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
         return "redirect:/organisation/create/" + FIND_ORGANISATION;
     }
 

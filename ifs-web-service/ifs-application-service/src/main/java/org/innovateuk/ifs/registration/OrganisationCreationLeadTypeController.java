@@ -5,7 +5,6 @@ import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.populator.OrganisationCreationSelectTypePopulator;
 import org.innovateuk.ifs.registration.viewmodel.OrganisationCreationSelectTypeViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -37,7 +36,7 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
                                          HttpServletRequest request) {
         model.addAttribute("model", organisationCreationSelectTypePopulator.populate());
 
-        Optional<OrganisationCreationForm> organisationCreationFormFromCookie = getOrganisationCreationFormFromCookie(request);
+        Optional<OrganisationCreationForm> organisationCreationFormFromCookie = registrationCookieService.getOrganisationCreationCookieValue(request);
         if(organisationCreationFormFromCookie.isPresent()) {
             model.addAttribute(ORGANISATION_FORM, organisationCreationFormFromCookie.get());
         }
@@ -63,7 +62,9 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
         }
 
         if (!bindingResult.hasFieldErrors(ORGANISATION_TYPE_ID)) {
-            OrganisationTypeForm organisationTypeForm =  saveToTypeCookie(response, organisationTypeId);
+            OrganisationTypeForm organisationTypeForm =  new OrganisationTypeForm();
+            organisationTypeForm.setOrganisationType(organisationTypeId);
+            registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
             saveOrgansationTypeToCreationForm(request, response, organisationTypeForm);
 
             return "redirect:" + BASE_URL + "/" + FIND_ORGANISATION;
@@ -78,18 +79,13 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
         return OrganisationTypeEnum.getFromId(organisationTypeId) != null;
     }
 
-
-
     private void saveOrgansationTypeToCreationForm(HttpServletRequest request, HttpServletResponse response, OrganisationTypeForm organisationTypeForm) {
-        OrganisationCreationForm organisationCreationForm = new OrganisationCreationForm();
-
-        Optional<OrganisationCreationForm> organisationCreationFormFromCookie = getOrganisationCreationFormFromCookie(request);
+        Optional<OrganisationCreationForm> organisationCreationFormFromCookie = registrationCookieService.getOrganisationCreationCookieValue(request);
         if(organisationCreationFormFromCookie.isPresent()) {
-            organisationCreationForm = organisationCreationFormFromCookie.get();
-            organisationCreationForm.setOrganisationTypeId(organisationTypeForm.getOrganisationType());
-
+            organisationCreationFormFromCookie.get().setOrganisationTypeId(organisationTypeForm.getOrganisationType());
         }
 
-        cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationCreationForm));
+        OrganisationCreationForm newOrganisationCreationForm = organisationCreationFormFromCookie.orElse(new OrganisationCreationForm());
+        registrationCookieService.saveToOrganisationCreationCookie(newOrganisationCreationForm, response);
     }
 }

@@ -1,11 +1,10 @@
 package org.innovateuk.ifs.registration;
 
-import org.innovateuk.ifs.application.creation.controller.ApplicationCreationController;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.exception.InviteAlreadyAcceptedException;
@@ -16,13 +15,12 @@ import org.innovateuk.ifs.invite.service.EthnicityRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
 import org.innovateuk.ifs.registration.form.ResendEmailVerificationForm;
+import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.EthnicityResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CookieUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,8 +42,6 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
 import static org.innovateuk.ifs.login.HomeController.getRedirectUrlForUser;
-import static org.innovateuk.ifs.registration.AbstractAcceptInviteController.INVITE_HASH;
-import static org.innovateuk.ifs.registration.OrganisationCreationController.ORGANISATION_ID;
 
 @Controller
 @RequestMapping("/registration")
@@ -53,15 +49,18 @@ import static org.innovateuk.ifs.registration.OrganisationCreationController.ORG
 public class RegistrationController {
     public static final String BASE_URL = "/registration/register";
 
-    public void setValidator(Validator validator) {
+    private void setValidator(Validator validator) {
         this.validator = validator;
     }
 
     @Autowired
     @Qualifier("mvcValidator")
-    Validator validator;
+    private Validator validator;
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RegistrationCookieService registrationCookieService;
 
     @Autowired
     private CookieUtil cookieUtil;
@@ -84,7 +83,7 @@ public class RegistrationController {
     public String registrationSuccessful(
             @RequestHeader(value = "referer", required = false) final String referer,
             final HttpServletRequest request, HttpServletResponse response) {
-        cookieUtil.removeCookie(response, INVITE_HASH);
+        registrationCookieService.deleteInviteHashCookie(response);
         if (referer == null || !referer.contains(request.getServerName() + "/registration/register")) {
             throw new ObjectNotFoundException("Attempt to access registration page directly...", Collections.emptyList());
         }
@@ -167,9 +166,9 @@ public class RegistrationController {
      * When the current user is a invitee, user the invite email-address in the registration flow.
      */
     private boolean setInviteeEmailAddress(RegistrationForm registrationForm, HttpServletRequest request, Model model) {
-        String inviteHash = cookieUtil.getCookieValue(request, INVITE_HASH);
-        if (StringUtils.hasText(inviteHash)) {
-            RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(inviteHash);
+        Optional<String> inviteHash = registrationCookieService.getInviteHashCookieValue(request);
+        if (inviteHash.isPresent()) {
+            RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(inviteHash.get());
             if (invite.isSuccess() && InviteStatus.SENT.equals(invite.getSuccessObject().getStatus())) {
                 ApplicationInviteResource inviteResource = invite.getSuccessObject();
                 registrationForm.setEmail(inviteResource.getEmail());
@@ -229,7 +228,7 @@ public class RegistrationController {
                         userResource -> {
                             removeCompetitionIdCookie(response);
                             acceptInvite(response, request, userResource); // might want to move this, to after email verifications.
-                            cookieUtil.removeCookie(response, ORGANISATION_ID);
+                            registrationCookieService.deleteOrganisationIdCookie(response);
 
                             return "redirect:/registration/success";
                         }
@@ -256,23 +255,19 @@ public class RegistrationController {
     }
 
     private void removeCompetitionIdCookie(HttpServletResponse response) {
-        cookieUtil.removeCookie(response, ApplicationCreationController.COMPETITION_ID);
+        registrationCookieService.deleteCompetitionIdCookie(response);
     }
 
     private Long getCompetitionId(HttpServletRequest request) {
-        Long competitionId = null;
-        if (StringUtils.hasText(cookieUtil.getCookieValue(request, ApplicationCreationController.COMPETITION_ID))) {
-            competitionId = Long.valueOf(cookieUtil.getCookieValue(request, ApplicationCreationController.COMPETITION_ID));
-        }
-        return competitionId;
+        return registrationCookieService.getCompetitionIdCookieValue(request).orElse(null);
     }
 
     private boolean acceptInvite(HttpServletResponse response, HttpServletRequest request, UserResource userResource) {
-        String inviteHash = cookieUtil.getCookieValue(request, INVITE_HASH);
-        if (StringUtils.hasText(inviteHash)) {
-            RestResult<Void> restResult = inviteRestService.acceptInvite(inviteHash, userResource.getId());
+        Optional<String> inviteHash = registrationCookieService.getInviteHashCookieValue(request);
+        if (inviteHash.isPresent()) {
+            RestResult<Void> restResult = inviteRestService.acceptInvite(inviteHash.get(), userResource.getId());
             if (restResult.isSuccess()) {
-                cookieUtil.removeCookie(response, INVITE_HASH);
+                registrationCookieService.deleteInviteHashCookie(response);
             }
             return restResult.isSuccess();
         }
@@ -310,24 +305,13 @@ public class RegistrationController {
     }
 
     private Long getOrganisationId(HttpServletRequest request) {
-        String organisationParameter = cookieUtil.getCookieValue(request, ORGANISATION_ID);
-        Long organisationId = null;
-
-        try {
-            if (Long.parseLong(organisationParameter) >= 0) {
-                organisationId = Long.parseLong(organisationParameter);
-            }
-        } catch (NumberFormatException e) {
-            LOG.info("Invalid organisationId number format:" + e);
-        }
-
-        return organisationId;
+        return registrationCookieService.getOrganisationIdCookieValue(request).orElse(null);
     }
 
     private void setOrganisationIdCookie(RegistrationForm registrationForm, HttpServletRequest request, HttpServletResponse response) {
         Long organisationId = getOrganisationId(request);
         if (organisationId != null) {
-            cookieUtil.saveToCookie(response, ORGANISATION_ID, Long.toString(organisationId));
+            registrationCookieService.saveToOrganisationIdCookie(organisationId, response);
         }
     }
 

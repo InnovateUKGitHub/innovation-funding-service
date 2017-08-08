@@ -5,51 +5,37 @@ import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
+import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
-
-import static org.innovateuk.ifs.registration.OrganisationCreationController.ORGANISATION_FORM;
-import static org.innovateuk.ifs.registration.OrganisationCreationController.ORGANISATION_ID;
 
 
 public class AbstractAcceptInviteController {
 
     private static final String ALREADY_ACCEPTED_VIEW = "redirect:/login";
-    public static final String ORGANISATION_TYPE = "organisationType";
+
     public static final String INVITE_ALREADY_ACCEPTED = "inviteAlreadyAccepted";
-    public static final String INVITE_HASH = "invite_hash";
 
     @Autowired
     protected CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Autowired
-    protected CookieUtil cookieUtil;
-
+    protected RegistrationCookieService registrationCookieService;
 
     protected static final String LOGGED_IN_WITH_ANOTHER_USER_VIEW = "registration/logged-in-with-another-user-failure";
-
-    protected final String getInviteHashCookie(HttpServletRequest request){
-        return cookieUtil.getCookieValue(request, INVITE_HASH);
-    }
 
     protected final Runnable clearDownInviteFlowCookiesFn(HttpServletResponse response) {
         return () -> clearDownInviteFlowCookies(response);
     }
 
     protected final void clearDownInviteFlowCookies(HttpServletResponse response) {
-        cookieUtil.removeCookie(response, ORGANISATION_FORM);
-        cookieUtil.removeCookie(response, INVITE_HASH);
-        cookieUtil.removeCookie(response, ORGANISATION_ID);
-    }
-
-    protected final void putInviteHashCookie(HttpServletResponse response, String hash) {
-        cookieUtil.saveToCookie(response, INVITE_HASH, hash);
+        registrationCookieService.deleteOrganisationCreationCookie(response);
+        registrationCookieService.deleteOrganisationIdCookie(response);
+        registrationCookieService.deleteInviteHashCookie(response);
     }
 
     protected final String alreadyAcceptedView(HttpServletResponse response) {

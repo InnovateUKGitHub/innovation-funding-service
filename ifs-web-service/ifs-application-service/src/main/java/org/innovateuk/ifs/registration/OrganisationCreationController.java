@@ -7,7 +7,6 @@ import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.viewmodel.OrganisationAddressViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -60,7 +59,8 @@ public class OrganisationCreationController extends AbstractOrganisationCreation
 
         addSelectedOrganisation(organisationForm, model);
 
-        cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
+        registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
+
         model.addAttribute(ORGANISATION_FORM, organisationForm);
         model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationForm.getOrganisationType(), checkOrganisationIsLead(request)));
 
@@ -87,7 +87,8 @@ public class OrganisationCreationController extends AbstractOrganisationCreation
         addAddressOptions(addressForm);
         addSelectedAddress(addressForm);
 
-        cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
+        registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
+
         model.addAttribute(ORGANISATION_FORM, organisationForm);
         model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationForm.getOrganisationType(), checkOrganisationIsLead(request)));
 
@@ -112,7 +113,8 @@ public class OrganisationCreationController extends AbstractOrganisationCreation
         addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
         addAddressOptions(organisationForm.getAddressForm());
 
-        cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
+        registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
+
         model.addAttribute(ORGANISATION_FORM, organisationForm);
         model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationForm.getOrganisationType(), checkOrganisationIsLead(request)));
 
@@ -123,7 +125,7 @@ public class OrganisationCreationController extends AbstractOrganisationCreation
         }
     }
 
-    @PostMapping(value = {"/" + SELECTED_ORGANISATION + "/**", "/" + FIND_ORGANISATION}, params = SEARCH_ADDRESS)
+    @PostMapping(value = {"/" + SELECTED_ORGANISATION + "/**", "/" + FIND_ORGANISATION + "/**"}, params = SEARCH_ADDRESS)
     public String searchAddress(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                 Model model,
                                 HttpServletRequest request,
@@ -133,7 +135,8 @@ public class OrganisationCreationController extends AbstractOrganisationCreation
         addSelectedOrganisation(organisationForm, model);
         organisationForm.getAddressForm().setSelectedPostcodeIndex(null);
         organisationForm.getAddressForm().setTriedToSearch(true);
-        cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
+        registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
+
         return getRedirectUrlInvalidSave(organisationForm, referer);
     }
 
@@ -174,16 +177,20 @@ public class OrganisationCreationController extends AbstractOrganisationCreation
                                 @RequestHeader(value = REFERER, required = false) final String referer) {
         addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
         organisationForm.getAddressForm().setSelectedPostcode(null);
-        cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
+        registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
+
         return getRedirectUrlInvalidSave(organisationForm, referer);
     }
 
-    @PostMapping(value = "/" + SELECTED_ORGANISATION, params = MANUAL_ADDRESS)
+    @PostMapping(value = "/" + SELECTED_ORGANISATION + "/**", params = MANUAL_ADDRESS)
     public String manualAddress(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                HttpServletRequest request, HttpServletResponse response) {
-        organisationForm.setAddressForm(new AddressForm());
-        organisationForm.getAddressForm().setManualAddress(true);
-        cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
+                                HttpServletResponse response, HttpServletRequest request) {
+        OrganisationCreationForm organisationFormFromCookie = registrationCookieService.getOrganisationCreationCookieValue(request).get();
+        organisationFormFromCookie.setAddressForm(new AddressForm());
+        organisationFormFromCookie.getAddressForm().setManualAddress(true);
+
+        registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
+
         return String.format("redirect:%s/%s/%s", BASE_URL, SELECTED_ORGANISATION, organisationForm.getSearchOrganisationId());
     }
 
@@ -193,7 +200,7 @@ public class OrganisationCreationController extends AbstractOrganisationCreation
                                    Model model,
                                    HttpServletRequest request, HttpServletResponse response,
                                    @RequestHeader(value = REFERER, required = false) final String referer) {
-        organisationForm = getOrganisationCreationFormFromCookie(request).get();
+        organisationForm = registrationCookieService.getOrganisationCreationCookieValue(request).get();
 
         organisationForm.setTriedToSave(true);
         addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
@@ -205,13 +212,13 @@ public class OrganisationCreationController extends AbstractOrganisationCreation
         organisationFormAddressFormValidate(organisationForm, bindingResult, addressBindingResult);
 
         if (!bindingResult.hasFieldErrors(ORGANISATION_NAME) && !bindingResult.hasFieldErrors(USE_SEARCH_RESULT_ADDRESS) && !addressBindingResult.hasErrors()) {
-            cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
+            registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
             return "redirect:" + BASE_URL + "/" + CONFIRM_ORGANISATION;
 
         } else {
             organisationForm.setTriedToSave(true);
             organisationForm.getAddressForm().setTriedToSave(true);
-            cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
+            registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
             return getRedirectUrlInvalidSave(organisationForm, referer);
         }
     }
