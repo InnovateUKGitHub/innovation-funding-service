@@ -16,7 +16,7 @@ import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
- * Generates internal users (Comp Admins, Project Finance, Comp Execs and Comp Technologists)
+ * Generates internal users (Comp Admins, Project Finance, Comp Execs and Innovation Leads)
  */
 public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserData, InternalUserDataBuilder> {
 
@@ -24,7 +24,7 @@ public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserDat
 
     @Override
     public InternalUserDataBuilder registerUser(String firstName, String lastName, String emailAddress, String organisationName, String phoneNumber) {
-        return with(data -> doAs(systemRegistrar(), () -> registerUser(firstName, lastName, data.getEmailAddress(), organisationName, phoneNumber, data.getRoles(), data)));
+        return with(data -> doAs(systemRegistrar(), () -> registerUser(firstName, lastName, emailAddress, organisationName, phoneNumber, data.getRoles(), data)));
     }
 
     public static InternalUserDataBuilder newInternalUserData(ServiceLocator serviceLocator) {
