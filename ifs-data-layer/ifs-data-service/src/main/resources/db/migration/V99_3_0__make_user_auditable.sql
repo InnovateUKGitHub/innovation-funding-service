@@ -4,7 +4,7 @@ ALTER TABLE `user` ADD COLUMN created_on DATETIME NULL;
 ALTER TABLE `user` ADD COLUMN modified_by BIGINT(20) NULL;
 ALTER TABLE `user` ADD COLUMN modified_on DATETIME NULL;
 
-SET @sys_user = (SELECT id FROM `user` WHERE email = 'ifs_system_maintenance_user@innovateuk.org');
+SET @sys_user = (SELECT u.id FROM `user` AS u JOIN user_role AS ur ON ur.user_id = u.id JOIN role AS r ON r.id = ur.role_id WHERE r.name = 'system_registrar' LIMIT 1);
 UPDATE `user` SET created_by = @sys_user;
 UPDATE `user` SET created_on = NOW();
 UPDATE `user` SET modified_by = @sys_user;

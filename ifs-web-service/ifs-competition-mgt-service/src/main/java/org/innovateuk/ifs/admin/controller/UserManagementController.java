@@ -167,7 +167,7 @@ public class UserManagementController {
 
     @PreAuthorize("hasPermission(#userId, 'EDIT_INTERNAL_USER')")
     @PostMapping(value = "/user/{userId}/edit", params = "deactivateUser")
-    public String deactivateUserPost(@PathVariable Long userId) {
+    public String deactivateUser(@PathVariable Long userId) {
         return userRestService.retrieveUserById(userId).andOnSuccess( user ->
                 userRestService.deactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccessObjectOrThrowException();
     }
