@@ -79,6 +79,18 @@ lead RTO applicant invites a Charity member
     [Teardown]  logout as user
 
 invite existing academic collaborator for RTO lead
+    [Documentation]  IFS-338
+    [Tags]
+    [Setup]  log in as a different user                           ${lead_rto_email}  ${correct_password}
+    When the user clicks the button/link                          link=${Application_name_business}
+    And the user clicks the button/link                          link=view team members and add collaborators
+    And the user clicks the button/link                          link=Add partner organisation
+    Then the user enters text to a text field                    css=#organisationName  eggs
+    And the user enters text to a text field                     css=input[id="applicants0.name"]  Pete
+    And the user enters text to a text field                     css=input[id="applicants0.email"]  ${collaborator2_credentials["email"]}
+    And the user clicks the button/link                          jQuery=button:contains("Add organisation and invite applicants")
+    And logout as user
+    Then the correct funding is displayed to academic user
 
 Rto lead able to submit finances
 
@@ -169,3 +181,14 @@ the correct funding displayed for lead applicant
     the user edits the research category                                   ${research_cat}
     the user edits the organisation size                                    ${org_size}
     the user should see the text in the page                               Enter your funding level (maximum ${funding_amoount}).
+
+the correct funding is displayed to academic user for RTO lead application
+    the user reads his email and clicks the link             ${collaborator2_credentials["email"]}  Invitation to collaborate in ${OPEN_COMPETITION}  You will be joining as part of the organisation  3
+    the user clicks the button/link                          jQuery=a:contains("Continue or sign in")
+    The guest user inserts user email and password           &{collaborator2_credentials}
+    the guest user clicks the log-in button
+    the user clicks the button/link                          jQuery=a:contains("Confirm and accept invitation")
+    the user clicks the button/link                          link=Your finances
+    the user should see the element                          jQuery=td:contains("100%")
+    logout as user
+
