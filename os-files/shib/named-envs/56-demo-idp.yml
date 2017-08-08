@@ -23,6 +23,24 @@ items:
         containers:
         - image: innovateuk/idp-service:1.0-SNAPSHOT
           name: idp
+          livenessProbe:
+            httpGet:
+              path: /idp/status
+              port: 9443
+              scheme: HTTPS
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /idp/status
+              port: 9443
+              scheme: HTTPS
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
           imagePullPolicy: Always
           env:
           - name: IDP_PROXY_CERTIFICATE
