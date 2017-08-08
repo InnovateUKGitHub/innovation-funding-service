@@ -21,16 +21,16 @@ Login new application invite academic
     ...    AND    Invite and accept the invitation    ${recipient}    ${subject}    ${pattern}
 
 new account complete all but one
-    create new account for submitting  ${test_mailbox_one}+submitbus@gmail.com  ${COMPETITION_OVERVIEW_URL_2}  ${application_bus_name}
+    create new account for submitting  ${submit_bus_email}  ${COMPETITION_OVERVIEW_URL_2}  ${application_bus_name}  radio-1
     the user marks every section but one as complete  ${application_bus_name}
     Logout as user
-    create new account for submitting  ${test_mailbox_one}+submitrto@gmail.com  ${COMPETITION_OVERVIEW_URL}  ${application_rto_name}
+    create new account for submitting  ${submit_rto_email}  ${COMPETITION_OVERVIEW_URL_2}  ${application_rto_name}  radio-3
     the user marks every section but one as complete  ${application_rto_name}
 
 create new account for submitting
-    [Arguments]  ${email}  ${overview}  ${application_name}
+    [Arguments]  ${email}  ${overview}  ${application_name}  ${org}
     the guest user opens the browser
-    the user navigates to the page              ${COMPETITION_OVERVIEW_URL_2}
+    the user navigates to the page              ${overview}
     the user clicks the button/link             jQuery=a:contains("Start new application")
     the user clicks the button/link             jQuery=a:contains("Create account")
     the user enters text to a text field    id=organisationSearchName    Hive IT
@@ -39,7 +39,7 @@ create new account for submitting
     the user selects the checkbox           address-same
     the user clicks the button/link         jQuery=.button:contains("Continue")
     the user clicks the button/link         jQuery=.button:contains("Save and continue")
-    the user selects the radio button       organisationTypeId  radio-1
+    the user selects the radio button       organisationTypeId  ${org}
     the user clicks the button/link         jQuery=.button:contains("Save and continue")
     the user clicks the button/link         jQuery=.button:contains("Save and continue")
     the user enters text to a text field    name=email    ${email}
