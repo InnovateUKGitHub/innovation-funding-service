@@ -91,7 +91,7 @@ Submitted application is read only
     [Documentation]    INFUND-1938, INFUND-9058
     [Tags]    Email    SmokeTest
     Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=${application_bus_name}
+    And the user clicks the button/link     link=${application_bus_name}
     and the user clicks the button/link     link=Return to dashboard
     and the user clicks the button/link     link=${application_bus_name}
     When the user clicks the button/link    link=View application
