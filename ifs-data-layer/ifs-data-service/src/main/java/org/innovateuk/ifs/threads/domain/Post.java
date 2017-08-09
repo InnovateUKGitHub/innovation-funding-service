@@ -33,6 +33,7 @@ public class Post {
     private List<Attachment> attachments;
 
     @CreatedDate
+    @Column(nullable = false, updatable = false)
     private ZonedDateTime createdOn;
 
     public Post(){}
