@@ -31,22 +31,25 @@ public class AssessorAssessmentProgressAssignedRowViewModel {
             AssessmentStates.SUBMITTED
     );
 
-    private final long applicationId;
-    private final String applicationName;
-    private final String leadOrganisation;
-    private final int totalAssessors;
+    private long applicationId;
+    private String applicationName;
+    private String leadOrganisation;
+    private int totalAssessors;
     private AssessmentStates state;
+    private long assessmentId;
 
     public AssessorAssessmentProgressAssignedRowViewModel(long applicationId,
                                                           String applicationName,
                                                           String leadOrganisation,
                                                           int totalAssessors,
-                                                          AssessmentStates state) {
+                                                          AssessmentStates state,
+                                                          long assessmentId) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.leadOrganisation = leadOrganisation;
         this.totalAssessors = totalAssessors;
         this.state = state;
+        this.assessmentId = assessmentId;
     }
 
     public long getApplicationId() {
@@ -67,6 +70,10 @@ public class AssessorAssessmentProgressAssignedRowViewModel {
 
     public AssessmentStates getState() {
         return state;
+    }
+
+    public long getAssessmentId() {
+        return assessmentId;
     }
 
     public boolean isNotified() {

@@ -85,7 +85,8 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
                     count.getApplication().getName(),
                     leadOrganisation.getName(),
                     count.getAssessorCount(),
-                    count.getAssessment().getActivityState()
+                    count.getAssessment().getActivityState(),
+                    count.getAssessment().getId()
             );
         });
     }

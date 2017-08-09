@@ -6,6 +6,7 @@ import org.innovateuk.ifs.management.model.AssessorAssessmentProgressModelPopula
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
 import org.innovateuk.ifs.management.viewmodel.ApplicationAssessmentProgressRemoveViewModel;
+import org.innovateuk.ifs.management.viewmodel.AssessorAssessmentProgressRemoveViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -57,16 +58,14 @@ public class CompetitionManagementAssessmentsAssessorProgressController {
             Model model,
             @PathVariable("competitionId") Long competitionId,
             @PathVariable("assessorId") long assessorId,
-            @PathVariable("applicationId") Long applicationId,
             @PathVariable("assessmentId") Long assessmentId,
-            @RequestParam(value = "sortField", defaultValue = "TITLE") String sortField) {
-        model.addAttribute("model", new ApplicationAssessmentProgressRemoveViewModel(
+            @RequestParam(value = "sortField", defaultValue = "") String sortField) {
+        model.addAttribute("model", new AssessorAssessmentProgressRemoveViewModel(
                 competitionId,
-                applicationId,
+                assessorId,
                 assessmentId,
                 AvailableAssessorsSortFieldType.valueOf(sortField)
         ));
         return "competition/application-progress-remove-confirm";
     }
-
 }

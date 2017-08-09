@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Confirm remove'" />
+    </head>
+
+    <body th:with="context='comp-management'" class="remove-assigned-assessor-confirm">
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
+
+        <main tabindex="-1" id="content">
+            <th:block th:insert="fragments/layout :: main-content-start" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessor progress',linkClass='link-back',linkUrl=@{/competition/{competitionId}/assessors/{assessorId} (competitionId=${model.competitionId},assessorId=${model.assessorId})}" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm remove',size='heading-xlarge'" />
+
+            <form th:action="@{/competition/{competitionId}/assessors/{assessorId}/withdraw/{assessmentId}(
+                  competitionId=${model.competitionId},
+                  assessorId=${model.assessorId},
+                  assessmentId=${model.assessmentId})}"
+                  method="post" novalidate="novalidate">
+                <th:block th:insert="fragments/competition-setup :: comp-setup-remove-assigned-assessor-content" />
+
+                <div class="alignright-button">
+                    <a th:href="@{/competition/{competitionId}/assessors/{assessorId}(
+                        competitionId=${model.competitionId},
+                        assessorId=${model.assessorId})}"
+                       class="buttonlink large">Cancel</a>
+                    <button class="button" type="submit">Remove assessor</button>
+                </div>
+            </form>
+
+            <th:block th:insert="fragments/layout :: main-content-end" />
+        </main>
+
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
+    </body>
+</html>

@@ -16,6 +16,7 @@ public class AssessorAssessmentResource {
     private String leadOrganisation;
     private int totalAssessors;
     private AssessmentStates state;
+    private long assessmentId;
 
     public AssessorAssessmentResource() {
     }
@@ -24,12 +25,14 @@ public class AssessorAssessmentResource {
                                       String applicationName,
                                       String leadOrganisation,
                                       int totalAssessors,
-                                      AssessmentStates state) {
+                                      AssessmentStates state,
+                                      long assessmentId) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.leadOrganisation = leadOrganisation;
         this.totalAssessors = totalAssessors;
         this.state = state;
+        this.assessmentId = assessmentId;
     }
 
     public long getApplicationId() {
@@ -72,6 +75,14 @@ public class AssessorAssessmentResource {
         this.state = state;
     }
 
+    public long getAssessmentId() {
+        return assessmentId;
+    }
+
+    public void setAssessmentId(long assessmentId) {
+        this.assessmentId = assessmentId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -83,6 +94,7 @@ public class AssessorAssessmentResource {
         return new EqualsBuilder()
                 .append(applicationId, that.applicationId)
                 .append(totalAssessors, that.totalAssessors)
+                .append(assessmentId, that.assessmentId)
                 .append(applicationName, that.applicationName)
                 .append(leadOrganisation, that.leadOrganisation)
                 .append(state, that.state)
@@ -97,6 +109,7 @@ public class AssessorAssessmentResource {
                 .append(leadOrganisation)
                 .append(totalAssessors)
                 .append(state)
+                .append(assessmentId)
                 .toHashCode();
     }
 }

@@ -114,9 +114,9 @@
                         <a class="button-secondary no-margin" data-js-modal="remove-assigned-assessor-modal"
                            th:href="${removeActionNonJs}"
                            th:attr="data-modal-form-action=${removeAction}"
-                           th:with="removeAction=@{/assessment/competition/{cId}/assessors/{assessorId}/withdraw/{asId}(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId}, assessorId=${model.assessorId}, filterInnovationArea=${model.filterInnovationArea})},
-                                   removeActionNonJs=@{/assessment/competition/{cId}/application/{apId}/assessors/withdraw/{asId}/confirm(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},filterInnovationArea=${model.filterInnovationArea})}"
-                           th:unless="${assessor.submitted}">Remove</a>
+                           th:with="removeAction=@{/assessment/competition/{cId}/assessors/{assessorId}/withdraw/{asId}(cId=${model.competitionId}, asId=${app.assessmentId}, assessorId=${model.assessorId})},
+                                   removeActionNonJs=@{/assessment/competition/{cId}/assessors/{assessorId}/withdraw/{asId}/confirm(cId=${model.competitionId}, asId=${app.assessmentId})}"
+                           th:unless="${app.submitted}">Remove</a>
                     </td>
                 </tr>
             </tbody>
