@@ -25,7 +25,9 @@ import org.springframework.stereotype.Component;
 import static org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelApplicationInviteEvent.*;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_PANEL_APPICATION_INVITE;
 
-// TODO class comment
+/**
+ * Manages the process for assigning applications to assessors on an assessment panel.
+ */
 @Component
 public class AssessmentPanelApplicationInviteWorkflowHandler extends BaseWorkflowEventHandler<AssessmentPanelApplicationInvite, AssessmentPanelApplicationInviteState, AssessmentPanelApplicationInviteEvent, Application, ProcessRole> {
 

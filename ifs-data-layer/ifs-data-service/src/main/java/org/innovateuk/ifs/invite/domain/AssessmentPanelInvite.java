@@ -8,6 +8,10 @@ import java.io.Serializable;
 
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 
+
+/**
+ * An invitation for an assessor to an assessment panel.
+ */
 @Entity
 @DiscriminatorValue("ASSESSMENT_PANEL")
 public class AssessmentPanelInvite extends Invite<Competition, AssessmentPanelInvite> implements Serializable {
@@ -17,7 +21,6 @@ public class AssessmentPanelInvite extends Invite<Competition, AssessmentPanelIn
     private Competition competition;
 
     public AssessmentPanelInvite() {
-        // no-arg constructor
     }
 
     /**

@@ -5,6 +5,10 @@ import org.innovateuk.ifs.workflow.domain.ProcessOutcome;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
+
+/**
+ * Process outcome for the {@code }AssessmentPanelApplicationInvite}s {@code REJECT} event.
+ */
 @Entity
 @DiscriminatorValue(value = "assessment-panel-application-invite-reject")
 public class AssessmentPanelApplicationInviteRejectOutcome extends ProcessOutcome<AssessmentPanelApplicationInvite> {

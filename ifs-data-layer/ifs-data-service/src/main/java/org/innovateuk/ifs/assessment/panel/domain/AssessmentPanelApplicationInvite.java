@@ -10,7 +10,7 @@ import org.innovateuk.ifs.workflow.domain.Process;
 import javax.persistence.*;
 
 /**
- * TODO class comment
+ * An invitation for an assessor to an assessment panel.
  */
 @Entity
 public class AssessmentPanelApplicationInvite extends Process<ProcessRole, Application, AssessmentPanelApplicationInviteState> {

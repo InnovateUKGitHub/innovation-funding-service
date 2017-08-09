@@ -130,7 +130,6 @@ public class AssessmentPanelApplicationInviteWorkflowHandlerIntegrationTest
 
         assertEquals(expectedState, workflowProcess.getActivityState());
 
-//        verify(getRepositoryMock(), times(2)).findOneByTargetId(workflowProcess.getId());
         verify(activityStateRepositoryMock).findOneByActivityTypeAndState(getActivityType(), expectedState.getBackingState());
         verify(getRepositoryMock()).save(workflowProcess);
 
@@ -140,5 +139,4 @@ public class AssessmentPanelApplicationInviteWorkflowHandlerIntegrationTest
 
         verifyNoMoreInteractionsWithMocks();
     }
-
 }
