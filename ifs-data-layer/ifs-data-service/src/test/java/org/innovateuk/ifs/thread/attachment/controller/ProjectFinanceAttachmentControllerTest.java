@@ -42,7 +42,7 @@ public class ProjectFinanceAttachmentControllerTest extends BaseControllerMockMV
     @Test
     public void testFindOne() throws Exception {
         final Long id = 22L;
-        AttachmentResource attachmentResource = new AttachmentResource(id, "name", "application/pdf", 1234);
+        AttachmentResource attachmentResource = new AttachmentResource(id, "name", "application/pdf", 1234, null);
         when(projectFinanceAttachmentServiceMock.findOne(id)).thenReturn(serviceSuccess(attachmentResource));
 
         mockMvc.perform(get("/project/finance/attachments/{attachmentId}", id))
@@ -66,7 +66,7 @@ public class ProjectFinanceAttachmentControllerTest extends BaseControllerMockMV
     @Test
     public void testDelete() throws Exception {
         final Long id = 22L;
-        AttachmentResource attachmentResource = new AttachmentResource(id, "name", "application/pdf", 1234);
+        AttachmentResource attachmentResource = new AttachmentResource(id, "name", "application/pdf", 1234, null);
         when(projectFinanceAttachmentServiceMock.delete(id)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete("/project/finance/attachments/{attachmentId}", id))
@@ -79,7 +79,7 @@ public class ProjectFinanceAttachmentControllerTest extends BaseControllerMockMV
     public void testUpload() throws Exception {
         final Long id = 22L;
         final Long projectId = 77L;
-        final AttachmentResource attachmentResource = new AttachmentResource(id, "randomFile.pdf", "application/pdf", 1234);
+        final AttachmentResource attachmentResource = new AttachmentResource(id, "randomFile.pdf", "application/pdf", 1234, null);
         when(projectFinanceAttachmentServiceMock.upload(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
                 eq(projectId), any(HttpServletRequest.class))).thenReturn(serviceSuccess(attachmentResource));
 
