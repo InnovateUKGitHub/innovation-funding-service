@@ -81,6 +81,10 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         return competition;
     }
 
+    public void setProcess(Competition process) {
+        this.competition = process;
+    }
+
     @Override
     public CompetitionInvite getInvite() {
         return invite;
@@ -89,6 +93,10 @@ public class CompetitionParticipant extends Participant<Competition, Competition
     @Override
     public CompetitionParticipantRole getRole() {
         return role;
+    }
+
+    public void setRole(CompetitionParticipantRole role) {
+        this.role = role;
     }
 
     @Override

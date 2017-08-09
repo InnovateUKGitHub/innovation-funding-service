@@ -22,6 +22,8 @@ public interface CompetitionsRestService {
     RestResult<CompetitionCountResource> countCompetitions();
     RestResult<CompetitionResource> getCompetitionById(long competitionId);
     RestResult<List<UserResource>> findInnovationLeads(long competitionId);
+    RestResult<Void> addInnovationLead(long competitionId, long innovationLeadUserId);
+    RestResult<Void> removeInnovationLead(long competitionId, long innovationLeadUserId);
     RestResult<CompetitionResource> getPublishedCompetitionById(long competitionId);
     RestResult<List<CompetitionTypeResource>> getCompetitionTypes();
     RestResult<Void> update(CompetitionResource competition);

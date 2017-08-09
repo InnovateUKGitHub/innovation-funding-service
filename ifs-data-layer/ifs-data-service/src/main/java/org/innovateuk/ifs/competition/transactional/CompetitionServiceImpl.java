@@ -17,8 +17,10 @@ import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.OrganisationType;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.OrganisationTypeMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +56,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     private CompetitionRepository competitionRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private CompetitionParticipantRepository competitionParticipantRepository;
 
     @Autowired
@@ -82,15 +87,43 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<List<UserResource>> findInnovationLeads(Long competitionId) {
 
-        /*return find(competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD),
-                notFoundError(CompetitionParticipant.class, competitionId, CompetitionParticipantRole.INNOVATION_LEAD))
-                .andOnSuccess(competitionParticipants -> serviceSuccess(simpleMap(competitionParticipants, competitionParticipant -> userMapper.mapToResource(competitionParticipant.getUser()))));*/
-
         List<CompetitionParticipant> competitionParticipants = competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD);
 
         List<UserResource> innovationLeads = simpleMap(competitionParticipants, competitionParticipant -> userMapper.mapToResource(competitionParticipant.getUser()));
 
         return serviceSuccess(innovationLeads);
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> addInnovationLead(Long competitionId, Long innovationLeadUserId) {
+
+        Competition competition = competitionRepository.findById(competitionId);
+        User innovationLead = userRepository.findOne(innovationLeadUserId);
+
+        CompetitionParticipant competitionParticipant = new CompetitionParticipant();
+        competitionParticipant.setProcess(competition);
+        competitionParticipant.setUser(innovationLead);
+        competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
+
+        competitionParticipantRepository.save(competitionParticipant);
+
+        return serviceSuccess();
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> removeInnovationLead(Long competitionId, Long innovationLeadUserId) {
+
+        return find(competitionParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId ,innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD),
+                notFoundError(CompetitionParticipant.class, competitionId ,innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD))
+                .andOnSuccessReturnVoid(competitionParticipant -> competitionParticipantRepository.delete(competitionParticipant));
+
+        /*CompetitionParticipant competitionParticipant = competitionParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD);
+
+        competitionParticipantRepository.delete(competitionParticipant);
+
+        return serviceSuccess();*/
     }
 
     @Override

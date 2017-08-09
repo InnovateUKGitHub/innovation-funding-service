@@ -348,30 +348,27 @@ public class CompetitionSetupController {
         return "competition/manage-innovation-leads-overview";
     }
 
-    @PostMapping("/{competitionId}/add-innovation-lead/{userId}")
+    @PostMapping("/{competitionId}/add-innovation-lead/{innovationLeadUserId}")
     public String addInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                    @PathVariable("userId") long userId,
+                                    @PathVariable("innovationLeadUserId") long innovationLeadUserId,
                                     Model model,
                                     UserResource loggedInUser) {
 
-        //TODO - Write code here to add innovation lead to competition
-        // For now just ensure that the post request hits this method with all the required details.
 
-        // TODO - Temp view for now. Need to check where it should go.
-        return "competition/manage-innovation-leads";
+        competitionService.addInnovationLead(competitionId, innovationLeadUserId);
+        manageInnovationLeadsModelPopulator.populateModel(model, competitionId);
+        return "competition/manage-innovation-leads-find";
     }
 
-    @PostMapping("/{competitionId}/remove-innovation-lead/{userId}")
+    @PostMapping("/{competitionId}/remove-innovation-lead/{innovationLeadUserId}")
     public String removeInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                       @PathVariable("userId") long userId,
+                                       @PathVariable("innovationLeadUserId") long innovationLeadUserId,
                                        Model model,
                                        UserResource loggedInUser) {
 
-        //TODO - Write code here to remove innovation lead to competition
-        // For now just ensure that the post request hits this method with all the required details.
-
-        // TODO - Temp view for now. Need to check where it should go.
-        return "competition/manage-innovation-leads";
+        competitionService.removeInnovationLead(competitionId, innovationLeadUserId);
+        manageInnovationLeadsModelPopulator.populateModel(model, competitionId);
+        return "competition/manage-innovation-leads-overview";
     }
 
 

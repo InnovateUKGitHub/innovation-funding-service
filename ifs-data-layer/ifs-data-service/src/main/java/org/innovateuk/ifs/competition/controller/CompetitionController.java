@@ -41,6 +41,20 @@ public class CompetitionController {
         return competitionService.findInnovationLeads(competitionId).toGetResponse();
     }
 
+    @PostMapping("/{id}/add-innovation-lead/{innovationLeadUserId}")
+    public RestResult<Void> addInnovationLead(@PathVariable("id") final Long competitionId,
+                                              @PathVariable("innovationLeadUserId") final Long innovationLeadUserId) {
+
+        return competitionService.addInnovationLead(competitionId, innovationLeadUserId).toPostResponse();
+    }
+
+    @PostMapping("/{id}/remove-innovation-lead/{innovationLeadUserId}")
+    public RestResult<Void> removeInnovationLead(@PathVariable("id") final Long competitionId,
+                                              @PathVariable("innovationLeadUserId") final Long innovationLeadUserId) {
+
+        return competitionService.removeInnovationLead(competitionId, innovationLeadUserId).toPostResponse();
+    }
+
     @GetMapping("/{id}/getOrganisationTypes")
     public RestResult<List<OrganisationTypeResource>> getOrganisationTypes(@PathVariable("id") final Long id) {
         return competitionService.getCompetitionOrganisationTypes(id).toGetResponse();

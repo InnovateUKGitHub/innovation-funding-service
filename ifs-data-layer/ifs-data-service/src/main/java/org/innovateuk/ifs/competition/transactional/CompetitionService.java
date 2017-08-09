@@ -24,6 +24,12 @@ public interface CompetitionService {
     //@PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<List<UserResource>> findInnovationLeads(final Long competitionId);
 
+    //@PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<Void> addInnovationLead(final Long competitionId, final Long innovationLeadUserId);
+
+    //@PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<Void> removeInnovationLead(final Long competitionId, final Long innovationLeadUserId);
+
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionResource>> findAll();
 

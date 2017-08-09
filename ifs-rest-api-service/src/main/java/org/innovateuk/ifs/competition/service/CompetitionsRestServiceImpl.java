@@ -74,6 +74,16 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     }
 
     @Override
+    public RestResult<Void> addInnovationLead(long competitionId, long innovationLeadUserId) {
+        return postWithRestResult(competitionsRestURL + "/" + competitionId + "/add-innovation-lead/" + innovationLeadUserId, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> removeInnovationLead(long competitionId, long innovationLeadUserId) {
+        return postWithRestResult(competitionsRestURL + "/" + competitionId + "/remove-innovation-lead/" + innovationLeadUserId, Void.class);
+    }
+
+    @Override
     public RestResult<List<OrganisationTypeResource>> getCompetitionOrganisationType(long competitionId) {
         return getWithRestResultAnonymous(competitionsRestURL + "/" + competitionId + "/getOrganisationTypes", organisationTypeResourceListType());
     }
