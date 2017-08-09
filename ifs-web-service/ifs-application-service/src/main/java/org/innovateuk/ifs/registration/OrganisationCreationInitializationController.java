@@ -19,7 +19,10 @@ public class OrganisationCreationInitializationController extends AbstractOrgani
     @GetMapping
     public String createOrganisationAsLeadApplicant(HttpServletRequest request, HttpServletResponse response) {
         //This is the first endpoint when creating a new account as lead applicant.
+        registrationCookieService.deleteOrganisationCreationCookie(response);
+
         OrganisationTypeForm organisationTypeForm = new OrganisationTypeForm();
+        organisationTypeForm.setLeadApplicant(true);
         registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
         return "redirect:" + BASE_URL + "/" + LEAD_ORGANISATION_TYPE;
     }

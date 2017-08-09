@@ -25,12 +25,8 @@ public class RegistrationCookieService {
     @Autowired
     private CookieUtil cookieUtil;
 
-    public OrganisationTypeForm saveToOrganisationTypeCookie(OrganisationTypeForm organisationTypeForm, HttpServletResponse response) {
-        organisationTypeForm.setLeadApplicant(true);
-
+    public void saveToOrganisationTypeCookie(OrganisationTypeForm organisationTypeForm, HttpServletResponse response) {
         cookieUtil.saveToCookie(response, ORGANISATION_TYPE, JsonUtil.getSerializedObject(organisationTypeForm));
-
-        return organisationTypeForm;
     }
 
     public void saveToOrganisationCreationCookie(OrganisationCreationForm organisationFormForCookie, HttpServletResponse response) {

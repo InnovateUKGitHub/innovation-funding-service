@@ -62,7 +62,7 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
         }
 
         if (!bindingResult.hasFieldErrors(ORGANISATION_TYPE_ID)) {
-            OrganisationTypeForm organisationTypeForm =  new OrganisationTypeForm();
+            OrganisationTypeForm organisationTypeForm = registrationCookieService.getOrganisationTypeCookieValue(request).orElse(new OrganisationTypeForm());
             organisationTypeForm.setOrganisationType(organisationTypeId);
             registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
             saveOrgansationTypeToCreationForm(request, response, organisationTypeForm);
