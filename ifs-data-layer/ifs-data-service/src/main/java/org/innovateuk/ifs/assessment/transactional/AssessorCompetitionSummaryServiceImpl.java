@@ -76,23 +76,20 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
                             competition.getCompetitionStatus(),
                             assessorProfile,
                             allAssessmentCount,
-                            mapCountsToResource(counts, assessorId)
+                            mapCountsToResource(counts)
                     ));
                 })
         );
     }
 
-    private List<AssessorAssessmentResource> mapCountsToResource(List<AssessmentApplicationAssessorCount> counts,
-                                                                 long assessorId){
+    private List<AssessorAssessmentResource> mapCountsToResource(List<AssessmentApplicationAssessorCount> counts) {
         return simpleMap(counts, count -> {
             AssessmentRejectOutcomeValue assessmentRejectOutcomeValue = null;
             String comment = null;
 
             if (count.getAssessment().getActivityState() == REJECTED) {
-                Assessment assessment = assessmentRepository.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(
-                        assessorId, count.getApplication().getId()).get();
-                assessmentRejectOutcomeValue = assessment.getRejection().getRejectReason();
-                comment = assessment.getRejection().getRejectComment();
+                assessmentRejectOutcomeValue = count.getAssessment().getRejection().getRejectReason();
+                comment = count.getAssessment().getRejection().getRejectComment();
             }
 
             Organisation leadOrganisation = organisationRepository.findOne(
