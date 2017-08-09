@@ -120,8 +120,8 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Transactional
     public ServiceResult<Void> removeInnovationLead(Long competitionId, Long innovationLeadUserId) {
 
-        return find(competitionParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId ,innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD),
-                    notFoundError(CompetitionParticipant.class, competitionId ,innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD))
+        return find(competitionParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD),
+                    notFoundError(CompetitionParticipant.class, competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD))
                 .andOnSuccessReturnVoid(competitionParticipant -> competitionParticipantRepository.delete(competitionParticipant));
     }
 

@@ -21,13 +21,13 @@ public interface CompetitionService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<CompetitionResource> getCompetitionById(final Long id);
 
-    //@PostAuthorize("hasPermission(returnObject, 'READ')")
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'MANAGE_INNOVATION_LEADS')")
     ServiceResult<List<UserResource>> findInnovationLeads(final Long competitionId);
 
-    //@PostAuthorize("hasPermission(returnObject, 'READ')")
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'MANAGE_INNOVATION_LEADS')")
     ServiceResult<Void> addInnovationLead(final Long competitionId, final Long innovationLeadUserId);
 
-    //@PostAuthorize("hasPermission(returnObject, 'READ')")
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'MANAGE_INNOVATION_LEADS')")
     ServiceResult<Void> removeInnovationLead(final Long competitionId, final Long innovationLeadUserId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")

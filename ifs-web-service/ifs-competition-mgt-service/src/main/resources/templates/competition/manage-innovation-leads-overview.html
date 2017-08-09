@@ -24,7 +24,7 @@
         <dl class="standard-definition-list extra-margin">
             <dt>Innovation sector</dt>
             <dd th:text="${model.innovationSectorName}">Materials and manufacturing</dd>
-            <dt>Innovation Area's</dt>
+            <dt>Innovation areas</dt>
             <dd>
                 <th:block th:each="innovationArea, iterStat : ${model.innovationAreaNames}">
                     <th:block th:text="${innovationArea}">Materials and manufacturing</th:block><th:block th:text="${iterStat.last == false} ? ', '">,</th:block>
@@ -44,8 +44,8 @@
                 </li>
             </ul>
 
-            <p>Choose a tab to find, add and see an overview of innovation leads.</p>
-            <p class="heading-small">Find innovation leads and add them to this competition.</p>
+            <p class="heading-small">Overview of added innovation leads</p>
+            <p>An overview of innovation leads that have been added to this competition.</p>
 
                 <!-- list -->
                 <div class="grid-row sorting">
