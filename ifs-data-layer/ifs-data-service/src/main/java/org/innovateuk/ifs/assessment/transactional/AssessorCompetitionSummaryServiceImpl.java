@@ -36,10 +36,14 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitionSummaryService {
 
     public static final Set<State> INVALID_ASSESSMENT_STATES = AssessmentStates.getBackingStates(EnumSet.of(
-            AssessmentStates.WITHDRAWN
+            AssessmentStates.WITHDRAWN,
+            AssessmentStates.REJECTED
     ));
 
     public static final Set<State> VALID_ASSESSMENT_STATES = Sets.complementOf(INVALID_ASSESSMENT_STATES);
+
+    public static final Set<State> INCLUDED_ASSESSMENT_STATES = Sets.union(VALID_ASSESSMENT_STATES,
+            AssessmentStates.getBackingStates(EnumSet.of(AssessmentStates.REJECTED)));
 
     @Autowired
     private AssessorService assessorService;
@@ -60,14 +64,14 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
                 competitionService.getCompetitionById(competitionId).andOnSuccess(competition -> {
                     long allAssessmentCount = assessmentRepository.countByParticipantUserIdAndActivityStateStateIn(
                             assessorProfile.getUser().getId(),
-                            VALID_ASSESSMENT_STATES
+                            INCLUDED_ASSESSMENT_STATES
                     );
 
                     List<AssessmentApplicationAssessorCount> counts = assessmentRepository
                             .getAssessorApplicationAssessmentCountsForStates(
                                     competition.getId(),
                                     assessorId,
-                                    VALID_ASSESSMENT_STATES
+                                    INCLUDED_ASSESSMENT_STATES
                             );
 
                     return serviceSuccess(new AssessorCompetitionSummaryResource(
@@ -86,10 +90,12 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
         return simpleMap(counts, count -> {
             AssessmentRejectOutcomeValue assessmentRejectOutcomeValue = null;
             String comment = null;
+            int assessorCount = count.getAssessorCount();
 
             if (count.getAssessment().getActivityState() == REJECTED) {
                 assessmentRejectOutcomeValue = count.getAssessment().getRejection().getRejectReason();
                 comment = count.getAssessment().getRejection().getRejectComment();
+                assessorCount--;
             }
 
             Organisation leadOrganisation = organisationRepository.findOne(
@@ -100,7 +106,7 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
                     count.getApplication().getId(),
                     count.getApplication().getName(),
                     leadOrganisation.getName(),
-                    count.getAssessorCount(),
+                    assessorCount,
                     count.getAssessment().getActivityState(),
                     assessmentRejectOutcomeValue,
                     comment
