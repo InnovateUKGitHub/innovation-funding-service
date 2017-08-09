@@ -66,7 +66,4 @@ public interface PublicContentRepository extends PagingAndSortingRepository<Publ
     Page<Competition> findAllPublishedForOpenCompetition(Pageable pageable);
 
     PublicContent findByCompetitionId(Long id);
-    Page<PublicContent> findByCompetitionIdInAndIdIn(List<Long> competitionIds, Set<Long> publicContentIds, Pageable pageable);
-    Page<PublicContent> findByCompetitionIdIn(List<Long> competitionIds, Pageable pageable);
-    Page<PublicContent> findByIdIn(Set<Long> publicContentIds, Pageable pageable);
 }

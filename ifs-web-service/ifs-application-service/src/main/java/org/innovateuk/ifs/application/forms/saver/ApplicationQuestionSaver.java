@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -58,7 +59,9 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
                                                   Long questionId,
                                                   Long userId,
                                                   HttpServletRequest request,
-                                                  HttpServletResponse response, Boolean hasErrorsInBindingResult) {
+                                                  HttpServletResponse response,
+                                                  Boolean hasErrorsInBindingResult,
+                                                  Optional<Boolean> markAsCompleteRequest) {
         final ApplicationResource application = applicationService.getById(applicationId);
         final List<QuestionResource> questionList = singletonList(questionService.getById(questionId));
         final Map<String, String[]> params = request.getParameterMap();
@@ -77,8 +80,9 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
             applicationService.save(application);
         }
 
-        if (isMarkQuestionRequest(params) && hasNoErrors(errors, hasErrorsInBindingResult)) {
-            errors.addAll(handleApplicationDetailsMarkCompletedRequest(application.getId(), request, response, processRole, errors));
+        if ((markAsCompleteRequest.isPresent() && markAsCompleteRequest.get())
+                || (isMarkQuestionRequest(params) && hasNoErrors(errors, hasErrorsInBindingResult))) {
+            errors.addAll(handleApplicationDetailsMarkCompletedRequest(application.getId(), questionId, processRole.getId(), errors, request));
         }
 
         cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
@@ -86,9 +90,9 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
         return sortValidationMessages(errors);
     }
 
-    private ValidationMessages handleApplicationDetailsMarkCompletedRequest(Long applicationId, HttpServletRequest request, HttpServletResponse response, ProcessRoleResource processRole, ValidationMessages errorsSoFar) {
+    private ValidationMessages handleApplicationDetailsMarkCompletedRequest(Long applicationId, Long questionId, Long processRoleId, ValidationMessages errorsSoFar, HttpServletRequest request) {
         ValidationMessages messages = new ValidationMessages();
-        List<ValidationMessages> applicationMessages = markApplicationQuestions(applicationId, processRole.getId(), request, response, errorsSoFar);
+        List<ValidationMessages> applicationMessages = markApplicationQuestions(applicationId, questionId, processRoleId, errorsSoFar, request);
 
         if (collectValidationMessages(applicationMessages).hasErrors()) {
             messages.addAll(detailsSaver.handleApplicationDetailsValidationMessages(applicationMessages));
@@ -102,25 +106,22 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
     }
 
 
-    private List<ValidationMessages> markApplicationQuestions(Long applicationId, Long processRoleId, HttpServletRequest request,
-                                                              HttpServletResponse response, ValidationMessages errorsSoFar) {
+    private List<ValidationMessages> markApplicationQuestions(Long applicationId, Long questionId, Long processRoleId, ValidationMessages errorsSoFar, HttpServletRequest request) {
 
         if (processRoleId == null) {
             return emptyList();
         }
 
-        if (isMarkQuestionAsCompleteRequest(request.getParameterMap())) {
-            return markQuestionAsComplete(applicationId, processRoleId, request, response, errorsSoFar);
-        } else {
-            Long questionId = Long.valueOf(request.getParameter(MARK_AS_INCOMPLETE));
+        if (isMarkQuestionAsIncompleteRequest(request.getParameterMap())) {
             questionService.markAsIncomplete(questionId, applicationId, processRoleId);
 
             return emptyList();
+        } else {
+            return markQuestionAsComplete(applicationId, questionId, processRoleId, errorsSoFar);
         }
     }
 
-    private List<ValidationMessages> markQuestionAsComplete(Long applicationId, Long processRoleId, HttpServletRequest request, HttpServletResponse response, ValidationMessages errorsSoFar) {
-        Long questionId = Long.valueOf(request.getParameter(MARK_AS_COMPLETE));
+    private List<ValidationMessages> markQuestionAsComplete(Long applicationId, Long questionId, Long processRoleId, ValidationMessages errorsSoFar) {
         List<ValidationMessages> markAsCompleteErrors = questionService.markAsComplete(questionId, applicationId, processRoleId);
 
         if (!markAsCompleteErrors.isEmpty()) {

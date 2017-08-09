@@ -36,6 +36,7 @@ public abstract class Thread {
     private List<Post> posts;
 
     @CreatedDate
+    @Column(nullable = false, updatable = false)
     private ZonedDateTime createdOn;
 
     Thread() {
