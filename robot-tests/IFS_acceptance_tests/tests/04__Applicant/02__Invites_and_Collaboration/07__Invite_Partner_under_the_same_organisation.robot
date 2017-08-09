@@ -21,7 +21,7 @@ Create a new application
     the user clicks the button/link                      jQuery=a:contains("Start new application")
     the user clicks the button/link                      jQuery=Label:contains("Yes, I want to create a new application.")
     the user clicks the button/link                      jQuery=.button:contains("Continue")
-    the user clicks the button/link                      jQuery=a:contains("Update ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}")
+    the user clicks the button/link                      jQuery=a:contains("Update and add contributors from ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}")
     the user clicks the button/link                      jQuery=button:contains("Add another contributor")
     The user enters text to a text field                 name=stagedInvite.name    ${NAME}
     The user enters text to a text field                 name=stagedInvite.email   ${EMAIL}
@@ -35,11 +35,11 @@ Create a new application
 the new application should show the correct partners
     the user navigates to the page    ${DASHBOARD_URL}
     The user clicks the button/link    link=TEST ONE
-    The user clicks the button/link    link=view team members and add collaborators
+    The user clicks the button/link    link=view contributors and add collaborators
     The user should not see the text in the page    Partner two
     The user should see the text in the page    Partner one
     the user navigates to the page    ${DASHBOARD_URL}
     The user clicks the button/link    link=TEST TWO
-    The user clicks the button/link    link=view team members and add collaborators
+    The user clicks the button/link    link=view contributors and add collaborators
     The user should not see the text in the page    Partner one
     The user should see the text in the page    Partner two

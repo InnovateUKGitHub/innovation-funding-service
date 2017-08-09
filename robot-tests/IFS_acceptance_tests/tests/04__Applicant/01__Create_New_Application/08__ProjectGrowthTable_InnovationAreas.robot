@@ -462,8 +462,8 @@ Invite a non-existing collaborator in Application with Growth table
 
 the user fills in the inviting steps
     [Arguments]  ${email}
-    the user clicks the button/link       link=view team members and add collaborators
-    the user clicks the button/link       link=Add partner organisation
+    the user clicks the button/link       link=view contributors and add collaborators
+    the user clicks the button/link       link=Add a collaborator organisation
     the user enters text to a text field  css=#organisationName  New Organisation's Name
     the user enters text to a text field  css=input[id="applicants0.name"]  Partner's name
     the user enters text to a text field  css=input[id="applicants0.email"]  ${email}

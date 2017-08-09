@@ -112,7 +112,7 @@ invite a new academic
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
     the user logs-in in new browser    ${EMAIL_LEAD}  ${correct_password}
     the user clicks the button/link    link=${application_name}
-    the user clicks the button/link    link=view team members and add collaborators
+    the user clicks the button/link    link=view contributors and add collaborators
     the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     the user clicks the button/link    jQuery=.button:contains("Add additional partner organisation")
     the user enters text to a text field    name=organisations[1].organisationName    university of liverpool
