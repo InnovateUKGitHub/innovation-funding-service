@@ -624,8 +624,8 @@ IFS.core.formValidation = (function () {
         }
       }
 
-      if (jQuery('.error-summary-list [data-errorfield="' + name + '"]:contains(' + message + '),.error-summary-list li:not([data-errorfield]):contains("' + message + '")').length === 0) {
-        jQuery('.error-summary-list').append('<li data-errorfield="' + name + '">' + message + '</li>')
+      if (jQuery('.error-summary-list [data-errorfield="' + name + '"] a:contains(' + message + '),.error-summary-list li:not([data-errorfield]) a:contains("' + message + '")').length === 0) {
+        jQuery('.error-summary-list').append('<li data-errorfield="' + name + '"><a href="' + name + '">' + message + '</a></li>')
       }
 
       jQuery('.error-summary:not([data-ignore-errors])').attr('aria-hidden', false)
@@ -644,7 +644,7 @@ IFS.core.formValidation = (function () {
         // client side remove in form group
         formGroup.find('[data-errorfield="' + name + '"]:contains("' + message + '")').remove()
         // server side remove in form group
-        formGroup.find('.error-message:not([data-errorfield]):contains("' + message + '")').first().remove()
+        formGroup.find('.error-message:not([data-errorfield]) a:contains("' + message + '")').first().remove()
 
         // if this was the last error we remove the error styling
         if (formGroup.find('[data-errorfield],.error-message:not([data-errorfield])').length === 0) {
@@ -680,7 +680,7 @@ IFS.core.formValidation = (function () {
       section.find('.error-message').each(function () {
         var errorMessage = jQuery(this)
         var content = errorMessage.text()
-        jQuery('.error-summary-list li:contains(' + content + ')').first().remove()
+        jQuery('.error-summary-list li a:contains(' + content + ')').first().remove()
         errorMessage.remove()
       })
 
