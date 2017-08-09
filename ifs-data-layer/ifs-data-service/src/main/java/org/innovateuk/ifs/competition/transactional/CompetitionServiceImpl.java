@@ -114,21 +114,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                     return serviceSuccess();
                 });
             });
-
-
-
-
-/*        Competition competition = competitionRepository.findById(competitionId);
-        User innovationLead = userRepository.findOne(innovationLeadUserId);
-
-        CompetitionParticipant competitionParticipant = new CompetitionParticipant();
-        competitionParticipant.setProcess(competition);
-        competitionParticipant.setUser(innovationLead);
-        competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
-
-        competitionParticipantRepository.save(competitionParticipant);
-
-        return serviceSuccess();*/
     }
 
     @Override
@@ -138,12 +123,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         return find(competitionParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId ,innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD),
                     notFoundError(CompetitionParticipant.class, competitionId ,innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD))
                 .andOnSuccessReturnVoid(competitionParticipant -> competitionParticipantRepository.delete(competitionParticipant));
-
-        /*CompetitionParticipant competitionParticipant = competitionParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD);
-
-        competitionParticipantRepository.delete(competitionParticipant);
-
-        return serviceSuccess();*/
     }
 
     @Override
