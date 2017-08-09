@@ -20,7 +20,7 @@ public class ProjectFinanceAttachmentRestServiceTest extends BaseRestServiceUnit
 
     @Test
     public void test_find() throws Exception {
-        AttachmentResource expected = new AttachmentResource(199L, "name", "application/pdf", 1235);
+        AttachmentResource expected = new AttachmentResource(199L, "name", "application/pdf", 1235, null);
         setupGetWithRestResultExpectations(baseURL + "/199", AttachmentResource.class, expected, OK);
         final AttachmentResource response = service.find(199L).getSuccessObject();
         assertSame(expected, response);
@@ -35,7 +35,7 @@ public class ProjectFinanceAttachmentRestServiceTest extends BaseRestServiceUnit
         final Long projectId = 77L;
         String url = baseURL + "/" + projectId + "/upload?filename=" + originalFilename;
 
-        AttachmentResource expected = new AttachmentResource(199L, "name", "application/pdf", 1235);
+        AttachmentResource expected = new AttachmentResource(199L, "name", "application/pdf", 1235, null);
 
         setupFileUploadWithRestResultExpectations(url, AttachmentResource.class,
                 fileContentString, contentType, fileContent.length, expected, CREATED);
