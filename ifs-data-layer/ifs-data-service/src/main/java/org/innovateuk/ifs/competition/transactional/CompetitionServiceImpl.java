@@ -98,7 +98,27 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Transactional
     public ServiceResult<Void> addInnovationLead(Long competitionId, Long innovationLeadUserId) {
 
-        Competition competition = competitionRepository.findById(competitionId);
+        return find(competitionRepository.findById(competitionId),
+                    notFoundError(Competition.class, competitionId))
+            .andOnSuccessReturnVoid(competition -> {
+                find(userRepository.findOne(innovationLeadUserId),
+                     notFoundError(User.class, innovationLeadUserId))
+                .andOnSuccess(innovationLead -> {
+                    CompetitionParticipant competitionParticipant = new CompetitionParticipant();
+                    competitionParticipant.setProcess(competition);
+                    competitionParticipant.setUser(innovationLead);
+                    competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
+
+                    competitionParticipantRepository.save(competitionParticipant);
+
+                    return serviceSuccess();
+                });
+            });
+
+
+
+
+/*        Competition competition = competitionRepository.findById(competitionId);
         User innovationLead = userRepository.findOne(innovationLeadUserId);
 
         CompetitionParticipant competitionParticipant = new CompetitionParticipant();
@@ -108,7 +128,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
         competitionParticipantRepository.save(competitionParticipant);
 
-        return serviceSuccess();
+        return serviceSuccess();*/
     }
 
     @Override
@@ -116,7 +136,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<Void> removeInnovationLead(Long competitionId, Long innovationLeadUserId) {
 
         return find(competitionParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId ,innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD),
-                notFoundError(CompetitionParticipant.class, competitionId ,innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD))
+                    notFoundError(CompetitionParticipant.class, competitionId ,innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD))
                 .andOnSuccessReturnVoid(competitionParticipant -> competitionParticipantRepository.delete(competitionParticipant));
 
         /*CompetitionParticipant competitionParticipant = competitionParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD);
