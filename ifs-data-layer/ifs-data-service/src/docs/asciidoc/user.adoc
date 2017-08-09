@@ -101,7 +101,6 @@ include::{snippets}/user/create-internal-user/path-parameters.adoc[]
 
 ==== Response
 include::{snippets}/user/create-internal-user/http-response.adoc[]
-include::{snippets}/user/create-internal-user/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/user/create-internal-user/curl-request.adoc[]

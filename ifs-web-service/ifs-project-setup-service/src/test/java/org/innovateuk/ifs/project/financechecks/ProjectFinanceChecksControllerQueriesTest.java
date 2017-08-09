@@ -116,7 +116,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
 
         UserResource user1 = new UserResource();
         user1.setId(18L);
-        PostResource firstPost = new PostResource(null, user1, "Question", Arrays.asList(new AttachmentResource(23L, "file1.txt", "txt", 1L)), ZonedDateTime.now().plusMinutes(10L));
+        PostResource firstPost = new PostResource(null, user1, "Question", Arrays.asList(new AttachmentResource(23L, "file1.txt", "txt", 1L, null)), ZonedDateTime.now().plusMinutes(10L));
         UserResource user2 = new UserResource();
         user2.setId(55L);
         PostResource firstResponse = new PostResource(null, user2, "Response", new ArrayList<>(), ZonedDateTime.now().plusMinutes(20L));
@@ -446,7 +446,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     public void testSaveNewResponseAttachment() throws Exception {
 
         MockMultipartFile uploadedFile = new MockMultipartFile("attachment", "testFile.pdf", "application/pdf", "My content!".getBytes());
-        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
+        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L, null);
         FileEntryResource fileEntry = new FileEntryResource(1L, "name", "mediaType", 2L);
 
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(newProjectUserResource().withUser(loggedInUser.getId()).withOrganisation(organisationId).withRoleName(UserRoleType.PARTNER.getName()).build(1));
