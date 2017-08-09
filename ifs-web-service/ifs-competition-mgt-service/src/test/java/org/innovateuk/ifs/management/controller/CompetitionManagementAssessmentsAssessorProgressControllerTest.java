@@ -5,18 +5,19 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationCountSummaryRestService;
-import org.innovateuk.ifs.assessment.resource.AssessorAssessmentResource;
-import org.innovateuk.ifs.assessment.resource.AssessorCompetitionSummaryResource;
-import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
+import org.innovateuk.ifs.assessment.resource.*;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorCompetitionSummaryRestService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.model.AssessorAssessmentProgressModelPopulator;
+import org.innovateuk.ifs.management.service.CompetitionManagementApplicationService;
 import org.innovateuk.ifs.management.viewmodel.AssessorAssessmentProgressViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -43,6 +44,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class CompetitionManagementAssessmentsAssessorProgressControllerTest extends BaseControllerMockMVCTest<CompetitionManagementAssessmentsAssessorProgressController> {
@@ -52,6 +54,12 @@ public class CompetitionManagementAssessmentsAssessorProgressControllerTest exte
 
     @Mock
     private ApplicationCountSummaryRestService applicationCountSummaryRestService;
+
+    @Mock
+    private AssessmentRestService assessmentRestService;
+
+    @Mock
+    private CompetitionManagementApplicationService competitionManagementApplicationService;
 
     @InjectMocks
     @Spy
@@ -66,6 +74,7 @@ public class CompetitionManagementAssessmentsAssessorProgressControllerTest exte
     public void assessorProgress() throws Exception {
         long competitionId = 1L;
         long assessorId = 2L;
+        long applicationId = 18L;
 
         AssessorProfileResource assessor = newAssessorProfileResource()
                 .withProfile(
@@ -118,10 +127,15 @@ public class CompetitionManagementAssessmentsAssessorProgressControllerTest exte
                 .withCompetitionStatus(IN_ASSESSMENT)
                 .build();
 
+        AssessmentCreateResource assessmentCreateResource = new AssessmentCreateResource(applicationId, assessorId);
+
         when(assessorCompetitionSummaryRestService.getAssessorSummary(assessorId, competitionId))
                 .thenReturn(restSuccess(assessorCompetitionSummaryResource));
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, assessorId, 0, 20, empty(), "")).thenReturn(restSuccess(expectedPageResource));
+        when(assessmentRestService.createAssessment(assessmentCreateResource)).thenReturn(restSuccess(new AssessmentResource()));
+
+
 
         MvcResult result = mockMvc.perform(get("/assessment/competition/{competitionId}/assessors/{assessorId}", competitionId, assessorId))
                 .andExpect(model().attributeExists("model"))
@@ -154,6 +168,10 @@ public class CompetitionManagementAssessmentsAssessorProgressControllerTest exte
         assertEquals(assignedAssessments.get(1).getLeadOrganisation(), model.getAssigned().get(1).getLeadOrganisation());
         assertEquals(assignedAssessments.get(1).getTotalAssessors(), model.getAssigned().get(1).getTotalAssessors());
         assertEquals(assignedAssessments.get(1).getState(), model.getAssigned().get(1).getState());
+
+        mockMvc.perform(post("/assessment/competition/{competitionId}/assessors/{assessorId}/application/{applicationId}/assign", competitionId, assessorId, applicationId))
+                .andExpect(status().is3xxRedirection())
+                .andReturn();
     }
 
     @Test

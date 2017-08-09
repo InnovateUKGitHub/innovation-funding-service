@@ -230,6 +230,6 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
     @Override
     public void addAssessorToApplication(long applicationId, long assessorId) {
         AssessmentCreateResource assessment = new AssessmentCreateResource(applicationId, assessorId);
-        assessmentRestService.createAssessment(new AssessmentCreateResource(applicationId, assessorId)).getSuccessObjectOrThrowException();
+        assessmentRestService.createAssessment(assessment).getSuccessObjectOrThrowException();
     }
 }
