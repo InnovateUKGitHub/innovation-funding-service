@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.assessment.panel.workflow.configuration;
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.resource.ApplicationOutcome;
 import org.innovateuk.ifs.assessment.panel.domain.AssessmentPanelApplicationInvite;
 import org.innovateuk.ifs.assessment.panel.domain.AssessmentPanelApplicationInviteRejectOutcome;
 import org.innovateuk.ifs.assessment.panel.repository.AssessmentPanelApplicationInviteRepository;
@@ -23,7 +21,7 @@ import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelApplicationInviteEvent.*;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_PANEL_APPICATION_INVITE;
+import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE;
 
 /**
  * Manages the process for assigning applications to assessors on an assessment panel.
@@ -76,7 +74,7 @@ public class AssessmentPanelApplicationInviteWorkflowHandler extends BaseWorkflo
 
     @Override
     protected ActivityType getActivityType() {
-        return ASSESSMENT_PANEL_APPICATION_INVITE;
+        return ASSESSMENT_PANEL_APPLICATION_INVITE;
     }
 
     @Override

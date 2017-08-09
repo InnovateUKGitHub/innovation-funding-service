@@ -35,7 +35,7 @@ public class AssessmentPanelApplicationInviteWorkflowHandlerIntegrationTest
         AssessmentPanelApplicationInviteWorkflowHandler,
         AssessmentPanelApplicationInviteRepository, TestableTransitionWorkflowAction> {
 
-    private static final ActivityType ACTIVITY_TYPE = ActivityType.ASSESSMENT_PANEL_APPICATION_INVITE;
+    private static final ActivityType ACTIVITY_TYPE = ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE;
 
     @Autowired
     private AssessmentPanelApplicationInviteWorkflowHandler workflowHandler;
