@@ -103,12 +103,12 @@
                 <table class="assessors-rejected">
                     <thead>
                         <tr>
-                            <th scope="col">Assessor</th>
-                            <th scope="col">Type</th>
-                            <th scope="col">Innovation area</th>
+                            <th class="width-medium" scope="col">Assessor</th>
+                            <th class="width-small-medium" scope="col">Type</th>
+                            <th class="width-large" scope="col">Innovation area</th>
                             <th scope="col">Reason</th>
-                            <th class="numeric" scope="col">Total applications</th>
-                            <th class="numeric" scope="col">Assigned</th>
+                            <th class="numeric width-small" scope="col">Total applications</th>
+                            <th class="numeric width-small" scope="col">Assigned</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -117,7 +117,11 @@
                                th:text="${assessor.name}">Irving Wolfe</a></td>
                         <td th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Academic</td>
                         <td th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Healthcare, Regenerative medicine</td>
-                        <td><label th:text="${assessor.rejectReason.displayLabel}">Too many assignments</label><br /><th:block th:text="${assessor.rejectComment}">You have frequently assignme me too may applications, I can and have told you previously that will only be able to assign a reduced amount of applications during th summer. I do like reviewing the applications to your competitions but please do not assign so many to me.</th:block></td>
+                        <td><th:block th:text="${assessor.rejectReason.displayLabel}">Too many assignments</th:block><br />
+                            <th:block th:text="${assessor.rejectComment}">You have frequently assignme me too may applications,
+                                I can and have told you previously that will only be able to assign a reduced amount of applications during th summer.
+                                I do like reviewing the applications to your competitions but please do not assign so many to me.</th:block>
+                        </td>
                         <td class="numeric" th:text="${assessor.totalApplicationsCount}">6</td>
                         <td class="numeric" th:text="${assessor.assignedCount}">4</td>
                     </tr>
