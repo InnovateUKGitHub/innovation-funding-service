@@ -221,7 +221,7 @@ public class AssessorCompetitionSummaryControllerIntegrationTest extends BaseCon
                 .withApplicationId(applications.get(0).getId(), applications.get(1).getId(), applications.get(2).getId())
                 .withApplicationName(applications.get(0).getName(), applications.get(1).getName(), applications.get(2).getName())
                 .withLeadOrganisation(organisations.get(0).getName(), organisations.get(1).getName(), organisations.get(2).getName())
-                .withTotalAssessors(2, 2, 1)
+                .withTotalAssessors(1, 2, 1)
                 .withState(REJECTED, SUBMITTED, ACCEPTED)
                 .withRejectionReason(rejectOutcome.getRejectReason(), null, null)
                 .withRejectionComment(rejectOutcome.getRejectComment(), null, null)
