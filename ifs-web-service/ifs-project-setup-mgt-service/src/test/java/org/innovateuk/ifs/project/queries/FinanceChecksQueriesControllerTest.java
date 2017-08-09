@@ -118,7 +118,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
 
         UserResource user1 = new UserResource();
         user1.setId(18L);
-        PostResource firstPost = new PostResource(null, user1, "Question", singletonList(new AttachmentResource(23L, "file1.txt", "txt", 1L)), ZonedDateTime.now().plusMinutes(10L));
+        PostResource firstPost = new PostResource(null, user1, "Question", singletonList(new AttachmentResource(23L, "file1.txt", "txt", 1L, null)), ZonedDateTime.now().plusMinutes(10L));
         UserResource user2 = new UserResource();
         user2.setId(55L);
         PostResource firstResponse = new PostResource(null, user2, "Response", new ArrayList<>(), ZonedDateTime.now().plusMinutes(20L));
@@ -455,7 +455,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     public void testSaveNewResponseAttachment() throws Exception {
 
         MockMultipartFile uploadedFile = new MockMultipartFile("attachment", "testFile.pdf", "application/pdf", "My content!".getBytes());
-        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
+        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L, null);
 
         when(financeCheckServiceMock.uploadFile(projectId, "application/pdf", 11, "testFile.pdf", "My content!".getBytes()))
                 .thenReturn(ServiceResult.serviceSuccess(attachment));
@@ -532,7 +532,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     @Test
     public void testViewNewResponseWithAttachments() throws Exception {
 
-        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
+        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L, null);
 
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
         when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
@@ -616,7 +616,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
 
-        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
+        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L, null);
 
         when(financeCheckServiceMock.getAttachment(1L)).thenReturn(ServiceResult.serviceSuccess(attachment));
 
