@@ -66,7 +66,13 @@ public class RegistrationCookieService {
     }
 
     public Optional<String> getInviteHashCookieValue(HttpServletRequest request) {
-        return Optional.ofNullable(cookieUtil.getCookieValue(request, INVITE_HASH));
+        String inviteHash = cookieUtil.getCookieValue(request, INVITE_HASH);
+
+        if(inviteHash.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(inviteHash);
+        }
     }
 
     public void deleteOrganisationTypeCookie(HttpServletResponse response) {

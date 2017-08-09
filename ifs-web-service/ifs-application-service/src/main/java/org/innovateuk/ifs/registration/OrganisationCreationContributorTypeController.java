@@ -7,18 +7,13 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
-import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.registration.viewmodel.OrganisationCreationViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
-import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.MessageSource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,28 +23,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("/organisation/create/type/")
+@RequestMapping(AbstractOrganisationCreationController.BASE_URL)
 @PreAuthorize("permitAll")
-public class OrganisationCreationContributorTypeController {
+public class OrganisationCreationContributorTypeController extends AbstractOrganisationCreationController {
     private static final Log LOG = LogFactory.getLog(OrganisationCreationContributorTypeController.class);
-    Validator validator;
-    @Autowired
-    @Qualifier("mvcValidator")
-    public void setValidator(Validator validator) {
-        this.validator = validator;
-    }
+
+    private static final String ORGANISATION_TYPE = "organisationType";
 
     @Autowired
     private InviteRestService inviteRestService;
-
-    @Autowired
-    private OrganisationTypeRestService organisationTypeRestService;
-
-    @Autowired
-    private MessageSource messageSource;
-
-    @Autowired
-    private RegistrationCookieService registrationCookieService;
 
     @GetMapping("/new-account-organisation-type")
     public String chooseOrganisationType(HttpServletRequest request,
@@ -57,7 +39,7 @@ public class OrganisationCreationContributorTypeController {
                                          @ModelAttribute(name = "form", binding = false) OrganisationTypeForm form,
                                          BindingResult bindingResult,
                                          HttpServletResponse response,
-                                         @RequestParam(value = AbstractOrganisationCreationController.ORGANISATION_TYPE, required = false) Long organisationTypeId,
+                                         @RequestParam(value = ORGANISATION_TYPE, required = false) Long organisationTypeId,
                                          @RequestParam(value = "invalid", required = false) String invalid) {
         String hash = registrationCookieService.getInviteHashCookieValue(request).get();
         registrationCookieService.deleteOrganisationCreationCookie(response);
@@ -77,7 +59,7 @@ public class OrganisationCreationContributorTypeController {
         } else {
             return "redirect:/login";
         }
-        return "registration/organisation/organisation-type";
+        return TEMPLATE_PATH + "/organisation-type";
     }
 
     @PostMapping("/new-account-organisation-type")
@@ -91,7 +73,7 @@ public class OrganisationCreationContributorTypeController {
         } else {
             registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
             LOG.debug("redirect for organisation creation");
-            return "redirect:/organisation/create/find-organisation";
+            return "redirect:" + BASE_URL + "/" + FIND_ORGANISATION;
         }
     }
 }

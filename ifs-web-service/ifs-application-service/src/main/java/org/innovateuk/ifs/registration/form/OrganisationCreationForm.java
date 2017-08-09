@@ -5,7 +5,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -24,8 +23,6 @@ public class OrganisationCreationForm implements Serializable {
     @NotNull(message = "{validation.standard.organisationtype.required}")
     private Long organisationTypeId;
 
-    @NotNull(message = "{validation.standard.organisationtyperesource.required}")
-    private OrganisationTypeResource organisationType;
     private OrganisationTypeEnum organisationTypeEnum;
     @NotEmpty(message = "{validation.standard.organisationsearchname.required}")
     // on empty value don't check pattern since then there already is a validation message.
@@ -60,19 +57,6 @@ public class OrganisationCreationForm implements Serializable {
 
     public void setOrganisationTypeId(Long organisationTypeId) {
         this.organisationTypeId = organisationTypeId;
-    }
-
-    public OrganisationTypeResource getOrganisationType() {
-        return organisationType;
-    }
-
-    public void setOrganisationType(OrganisationTypeResource organisationType) {
-        this.organisationType = organisationType;
-        if(organisationType != null){
-            this.organisationTypeEnum = OrganisationTypeEnum.getFromId(organisationType.getId());
-        }else{
-            this.organisationTypeEnum = null;
-        }
     }
 
     @JsonIgnore
@@ -157,6 +141,6 @@ public class OrganisationCreationForm implements Serializable {
     }
 
     public OrganisationTypeEnum getOrganisationTypeEnum() {
-        return organisationTypeEnum;
+        return OrganisationTypeEnum.getFromId(organisationTypeId);
     }
 }

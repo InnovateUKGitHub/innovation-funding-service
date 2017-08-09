@@ -55,6 +55,8 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
         addSelectedOrganisation(organisationForm, model);
         model.addAttribute(ORGANISATION_FORM, organisationForm);
+        model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccessObject());
+
         return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION;
     }
 
@@ -69,9 +71,9 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
 
         OrganisationResource organisationResource = new OrganisationResource();
         organisationResource.setName(organisationForm.getOrganisationName());
-        organisationResource.setOrganisationType(organisationForm.getOrganisationType().getId());
+        organisationResource.setOrganisationType(organisationForm.getOrganisationTypeId());
 
-        if (!OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationType().getId())) {
+        if (!OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationTypeId())) {
             organisationResource.setCompanyHouseNumber(organisationForm.getSearchOrganisationId());
         }
 

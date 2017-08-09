@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.registration;
 
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.service.AddressRestService;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.form.AddressForm;
@@ -26,8 +25,6 @@ import java.util.Optional;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.innovateuk.ifs.util.ExceptionFunctions.getOrRethrow;
-import static org.springframework.web.util.UriUtils.encodeQueryParam;
 
 /**
  * Provides a base class for each of the organisation registration controllers.
@@ -40,13 +37,10 @@ public class AbstractOrganisationCreationController {
     protected static final String FIND_ORGANISATION = "find-organisation";
     protected static final String CONFIRM_ORGANISATION = "confirm-organisation";
 
-    protected static final String ORGANISATION_TYPE = "organisationType";
     protected static final String ORGANISATION_FORM = "organisationForm";
-    protected static final String ORGANISATION_ID = "organisationId";
 
     protected static final String SELECTED_POSTCODE = "selectedPostcode";
     protected static final String USE_SEARCH_RESULT_ADDRESS = "useSearchResultAddress";
-    protected static final String MANUAL_ADDRESS = "manual-address";
 
     protected static final String TEMPLATE_PATH = "registration/organisation";
 
@@ -56,7 +50,7 @@ public class AbstractOrganisationCreationController {
     protected RegistrationCookieService registrationCookieService;
 
     @Autowired
-    private OrganisationTypeRestService organisationTypeRestService;
+    protected OrganisationTypeRestService organisationTypeRestService;
 
     @Autowired
     protected OrganisationSearchRestService organisationSearchRestService;
@@ -71,8 +65,6 @@ public class AbstractOrganisationCreationController {
     public void setValidator(Validator validator) {
         this.validator = validator;
     }
-
-
 
     protected OrganisationCreationForm getFormDataFromCookie(OrganisationCreationForm organisationForm, Model model, HttpServletRequest request) {
         return processedOrganisationCreationFormFromCookie(model, request).
@@ -100,11 +92,27 @@ public class AbstractOrganisationCreationController {
         return organisationCreationFormFromCookie;
     }
 
+    private void populateOrganisationCreationForm(HttpServletRequest request, OrganisationCreationForm organisationCreationForm) {
+        searchOrganisation(organisationCreationForm);
+        addOrganisationType(organisationCreationForm, organisationTypeIdFromCookie(request));
+    }
+
     protected void addOrganisationType(OrganisationCreationForm organisationForm, Optional<Long> organisationTypeId) {
         organisationTypeId.ifPresent(id -> {
             organisationTypeRestService.findOne(id).ifSuccessful(organisationType ->
-                    organisationForm.setOrganisationType(organisationType));
+                    organisationForm.setOrganisationTypeId(organisationType.getId()));
         });
+    }
+
+    protected void organisationFormAddressFormValidate(OrganisationCreationForm organisationForm, BindingResult bindingResult, BindingResult addressBindingResult) {
+        if (organisationForm.isTriedToSave() && !organisationForm.isUseSearchResultAddress()) {
+            AddressForm addressForm = organisationForm.getAddressForm();
+            if (addressForm.getSelectedPostcode() != null) {
+                validator.validate(addressForm.getSelectedPostcode(), addressBindingResult);
+            } else if (!addressForm.isManualAddress()) {
+                bindingResult.rejectValue(USE_SEARCH_RESULT_ADDRESS, "NotEmpty", "You should either fill in your address, or use the registered address as your operating address.");
+            }
+        }
     }
 
     protected Optional<Long> organisationTypeIdFromCookie(HttpServletRequest request) {
@@ -115,11 +123,6 @@ public class AbstractOrganisationCreationController {
         } else {
             return Optional.empty();
         }
-    }
-
-    private void populateOrganisationCreationForm(HttpServletRequest request, OrganisationCreationForm organisationCreationForm) {
-        searchOrganisation(organisationCreationForm);
-        addOrganisationType(organisationCreationForm, organisationTypeIdFromCookie(request));
     }
 
     private void organisationFormValidate(OrganisationCreationForm organisationForm, BindingResult bindingResult) {
@@ -134,7 +137,7 @@ public class AbstractOrganisationCreationController {
             if (isNotBlank(organisationForm.getOrganisationSearchName())) {
                 String trimmedSearchString = StringUtils.normalizeSpace(organisationForm.getOrganisationSearchName());
                 List<OrganisationSearchResult> searchResults;
-                searchResults = organisationSearchRestService.searchOrganisation(organisationForm.getOrganisationType().getId(), trimmedSearchString)
+                searchResults = organisationSearchRestService.searchOrganisation(organisationForm.getOrganisationTypeId(), trimmedSearchString)
                         .handleSuccessOrFailure(
                                 f -> new ArrayList<>(),
                                 s -> s
@@ -146,59 +149,12 @@ public class AbstractOrganisationCreationController {
         }
     }
 
-    protected void organisationFormAddressFormValidate(OrganisationCreationForm organisationForm, BindingResult bindingResult, BindingResult addressBindingResult) {
-        if (organisationForm.isTriedToSave() && !organisationForm.isUseSearchResultAddress()) {
-            AddressForm addressForm = organisationForm.getAddressForm();
-            if (addressForm.getSelectedPostcode() != null) {
-                validator.validate(addressForm.getSelectedPostcode(), addressBindingResult);
-            } else if (!addressForm.isManualAddress()) {
-                bindingResult.rejectValue(USE_SEARCH_RESULT_ADDRESS, "NotEmpty", "You should either fill in your address, or use the registered address as your operating address.");
-            }
-        }
-    }
     /**
-     * Get the list of postcode options, with the entered postcode. Add those results to the form.
-     */
-    protected void addAddressOptions(AddressForm addressForm) {
-        if (isNotBlank(addressForm.getPostcodeInput())) {
-            addressForm.setPostcodeOptions(searchPostcode(addressForm.getPostcodeInput()));
-        }
-    }
-
-    /**
-     * If user has selected a address from the dropdown, get it from the list, and set it as selected.
-     */
-    protected void addSelectedAddress(AddressForm addressForm) {
-        if (isNotBlank(addressForm.getSelectedPostcodeIndex()) && addressForm.getSelectedPostcode() == null) {
-            addressForm.setSelectedPostcode(addressForm.getPostcodeOptions().get(Integer.parseInt(addressForm.getSelectedPostcodeIndex())));
-        }
-    }
-
-    private List<AddressResource> searchPostcode(String postcodeInput) {
-        return addressRestService.doLookup(postcodeInput).getOrElse(new ArrayList<>());
-    }
-
-    protected boolean checkOrganisationIsLead(HttpServletRequest request) {
-        Optional<OrganisationTypeForm> organisationTypeForm = registrationCookieService.getOrganisationTypeCookieValue(request);
-        if(organisationTypeForm.isPresent()){
-            return organisationTypeForm.get().isLeadApplicant();
-
-        }
-
-        return false;
-    }
-
-    protected String escapePathVariable(final String input) {
-        return getOrRethrow(() -> encodeQueryParam(input, "UTF-8"));
-    }
-
-    /**
-     * +
      * after user has selected a organisation, get the details and add it to the form and the model.
      */
     protected OrganisationSearchResult addSelectedOrganisation(OrganisationCreationForm organisationForm, Model model) {
         if (!organisationForm.isManualEntry() && isNotBlank(organisationForm.getSearchOrganisationId())) {
-            OrganisationSearchResult organisationSearchResult = organisationSearchRestService.getOrganisation(organisationForm.getOrganisationType().getId(), organisationForm.getSearchOrganisationId()).getSuccessObject();
+            OrganisationSearchResult organisationSearchResult = organisationSearchRestService.getOrganisation(organisationForm.getOrganisationTypeId(), organisationForm.getSearchOrganisationId()).getSuccessObject();
             organisationForm.setOrganisationName(organisationSearchResult.getName());
             model.addAttribute("selectedOrganisation", organisationSearchResult);
             return organisationSearchResult;

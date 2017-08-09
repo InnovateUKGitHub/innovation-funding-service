@@ -18,13 +18,12 @@
         </strong>
     </p>
 
-    <h2 class="heading-medium">Please select your organisation type</h2>
+    <h2 class="heading-medium">Choose your organisation type</h2>
 
     <form th:object="${form}" th:action="@{/organisation/create/type/new-account-organisation-type/}" method="POST">
         <div th:class="${#fields.hasErrors('*{organisationType}')} ? 'form-group form-group-error' : 'form-group'">
             <fieldset>
                 <legend>
-                    <span class="visuallyhidden">Please select your organisation type</span>
                     <th:block th:if="${#fields.hasErrors('*{organisationType}')}">
                         <span class="error-message" th:each="err : ${#fields.errors('organisationType')}" th:text="${err}"></span>
                     </th:block>

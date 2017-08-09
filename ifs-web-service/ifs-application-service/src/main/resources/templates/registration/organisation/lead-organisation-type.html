@@ -32,7 +32,6 @@
         <div th:class="${#fields.hasErrors('*{organisationTypeId}')} ? 'form-block error' : 'form-block'">
             <fieldset>
                 <legend class="extra-margin-bottom">
-                    <span class="heading-medium">What type of organisation are you?</span>
                     <th:block th:if="${#fields.hasErrors('*{organisationTypeId}')}">
                         <span class="error-message"  th:each="err : ${#fields.errors('*{organisationTypeId}')}" th:text="${err}" />
                     </th:block>
