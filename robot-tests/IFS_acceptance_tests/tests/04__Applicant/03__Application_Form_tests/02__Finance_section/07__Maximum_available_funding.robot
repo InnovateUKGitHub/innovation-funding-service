@@ -68,6 +68,7 @@ maximum funding level available for RTO lead
     Then the user should see the text in the page                               Enter your funding level (maximum 100%).
     And the correct funding displayed for lead applicant                        Feasibility studies  ${MEDIUM_ORGANISATION_SIZE}  100%
     And the correct funding displayed for lead applicant                        Industrial research  ${LARGE_ORGANISATION_SIZE}  100%
+    And the user marks your funding section as complete
     And the user clicks the button/link                                         jQuery=a:contains("Your finances")
     [Teardown]  the user clicks the button/link                                 link=Application overview
 
@@ -79,6 +80,7 @@ lead RTO applicant invites a Charity member
     And the user fills in the organisation information                         ${Application_name_RTO}  ${SMALL_ORGANISATION_SIZE}
     And the user fills in the project costs                                    ${Application_name_RTO}
     Then the funding displayed is as expected
+    And the user marks the section as complete
 
 invite existing academic collaborator for RTO lead
     [Documentation]  IFS-1050  IFS-1013
@@ -108,6 +110,10 @@ invite existing business user into RTO lead application
     And the user clicks the button/link                          jQuery=button:contains("Add organisation and invite applicants")
     And logout as user
     Then the user accepts the invite to collaborate              ${OPEN_COMPETITION_NAME}  ${lead_business_email}  ${correct_password}
+
+Business user fills in the project costs
+    When the business user fills in the project costs
+    then the user should see the correct research participation values
 
 Rto lead able to mark finances as complete
 
@@ -148,6 +154,18 @@ the user fills the other application details questions
     The user enters text to a text field  id=application_details-duration  20
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
     the user clicks the button/link       link=Application overview
+
+the business user fills in the project costs
+    the user clicks the button/link             link=Your finances
+    the user clicks the button/link             link=Your project costs
+    the user clicks the button/link             jQuery=button:contains("Materials")
+    the user should see the element             css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
+    the user enters text to a text field        css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
+    the user enters text to a text field        css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    131265
+    the user enters text to a text field        css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
+    the user clicks the button/link             jQuery=button:contains("Materials")
+    the user selects the checkbox               agree-state-aid-page
+    the user clicks the button/link             jQuery=button:contains("Mark as complete")
 
 the user edits the research category
     [Arguments]   ${research_category}
@@ -204,5 +222,18 @@ the correct funding displayed for lead applicant
     the user edits the research category                                   ${research_cat}
     the user edits the organisation size                                    ${org_size}
     the user should see the text in the page                               Enter your funding level (maximum ${funding_amoount}).
+
+the user should see the correct research participation values
+
+
+the user marks your funding section as complete
+    the user enters text to a text field                    id=cost-financegrantclaim    30
+#    the user selects the radio button                        other_funding-otherPublicFunding-526-2668   No
+#    the user clicks the button/link                         name=other_funding-otherPublicFunding-526-2668
+    the user clicks the button/link                         css=input[id$="otherPublicFunding-no"]
+    the user clicks the button/link                         css=input[id$="otherPublicFunding-no"]
+    the user selects the checkbox                           agree-terms-page
+    the user clicks the button/link                         jQuery=button:contains("Mark as complete")
+
 
 
