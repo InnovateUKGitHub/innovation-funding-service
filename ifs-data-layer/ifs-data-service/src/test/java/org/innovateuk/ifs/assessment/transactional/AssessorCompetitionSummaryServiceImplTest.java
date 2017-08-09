@@ -129,10 +129,6 @@ public class AssessorCompetitionSummaryServiceImplTest extends BaseUnitTestMocks
         ))
                 .thenReturn(assessmentCounts);
 
-
-        when(assessmentRepositoryMock.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(
-                assessorId, applications[2].getId())).thenReturn(of(assessments[2]));
-
         List<Organisation> leadOrganisations = newOrganisation()
                 .withId(1L, 2L, 3L)
                 .withName("Lead Org 1", "Lead Org 2", "Lead Org 3")
@@ -152,7 +148,6 @@ public class AssessorCompetitionSummaryServiceImplTest extends BaseUnitTestMocks
         verify(organisationRepositoryMock).findOne(applications[0].getLeadOrganisationId());
         verify(organisationRepositoryMock).findOne(applications[1].getLeadOrganisationId());
         verify(organisationRepositoryMock).findOne(applications[2].getLeadOrganisationId());
-        verify(assessmentRepositoryMock).findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessorId, applications[2].getId());
 
         AssessorCompetitionSummaryResource expected = newAssessorCompetitionSummaryResource()
                 .withCompetitionId(competitionId)
