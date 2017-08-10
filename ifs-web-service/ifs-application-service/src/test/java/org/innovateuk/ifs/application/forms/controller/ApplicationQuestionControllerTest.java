@@ -182,7 +182,7 @@ public class ApplicationQuestionControllerTest extends BaseControllerMockMVCTest
         financeViewModel.setOrganisationGrantClaimPercentage(76);
 
         when(defaultFinanceModelManager.getFinanceViewModel(anyLong(), anyList(), anyLong(), any(Form.class), anyLong())).thenReturn(financeViewModel);
-        when(applicationSaver.saveApplicationForm(anyLong(), any(ApplicationForm.class), anyLong(), anyLong(), any(HttpServletRequest.class), any(HttpServletResponse.class), anyBoolean()))
+        when(applicationSaver.saveApplicationForm(anyLong(), any(ApplicationForm.class), anyLong(), anyLong(), any(HttpServletRequest.class), any(HttpServletResponse.class), anyBoolean(), any(Optional.class)))
                 .thenReturn(new ValidationMessages());
     }
 
@@ -198,6 +198,15 @@ public class ApplicationQuestionControllerTest extends BaseControllerMockMVCTest
         mockMvc.perform(get("/application/1/form/question/10")).andExpect(status().isOk());
         mockMvc.perform(get("/application/1/form/question/21")).andExpect(status().isOk());
         mockMvc.perform(get("/application/1/form/question/edit/1")).andExpect(status().isOk());
+        mockMvc.perform(get("/application/1/form/question/edit/1?mark_as_complete=false")).andExpect(status().isOk());
+        mockMvc.perform(get("/application/1/form/question/edit/1?mark_as_complete=")).andExpect(status().isOk());
+
+        verify(applicationSaver, never()).saveApplicationForm(anyLong(), any(ApplicationForm.class), anyLong(), anyLong(), any(HttpServletRequest.class), any(HttpServletResponse.class), anyBoolean(), any(Optional.class));
+
+        mockMvc.perform(get("/application/1/form/question/edit/1?mark_as_complete=true")).andExpect(status().isOk());
+
+        verify(applicationSaver, times(1)).saveApplicationForm(anyLong(), any(ApplicationForm.class), anyLong(), anyLong(), any(HttpServletRequest.class), any(HttpServletResponse.class), anyBoolean(), any(Optional.class));
+
         mockMvc.perform(get("/application/1/form/question/edit/21")).andExpect(status().isOk());
     }
 
@@ -414,7 +423,7 @@ public class ApplicationQuestionControllerTest extends BaseControllerMockMVCTest
         long fileQuestionId = 31L;
         ValidationMessages validationMessages = new ValidationMessages();
         validationMessages.addError(fieldError("formInput[" + formInputId + "]", new Error(fileError, UNSUPPORTED_MEDIA_TYPE)));
-        when(applicationSaver.saveApplicationForm(anyLong(), any(ApplicationForm.class), anyLong(), anyLong(), any(HttpServletRequest.class), any(HttpServletResponse.class), anyBoolean()))
+        when(applicationSaver.saveApplicationForm(anyLong(), any(ApplicationForm.class), anyLong(), anyLong(), any(HttpServletRequest.class), any(HttpServletResponse.class), anyBoolean(), any(Optional.class)))
                 .thenReturn(validationMessages);
 
         MvcResult result = mockMvc.perform(

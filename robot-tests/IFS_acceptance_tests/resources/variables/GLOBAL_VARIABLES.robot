@@ -33,6 +33,7 @@ ${OPEN_COMPETITION_MAN}    ${SERVER}/management/competition/${OPEN_COMPETITION}
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}    Aerospace technology investment sector
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}    ${competition_ids['${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}']}
 ${OPEN_COMPETITION_NAME_2}    Home and industrial efficiency programme
+${OPEN_COMPETITION_2}    ${competition_ids['${OPEN_COMPETITION_NAME_2}']}
 # Using double quotes below, cause there's an apostrophe in the title
 ${OPEN_COMPETITION_APPLICATION_NAME}      Climate science the history of Greenland\'s ice
 ${OPEN_COMPETITION_APPLICATION_1_NUMBER}  ${application_ids["${OPEN_COMPETITION_APPLICATION_NAME}"]}
@@ -81,6 +82,7 @@ ${SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
 ${APPLICATION_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
 ${assessor_dashboard_url}    ${SERVER}/assessment/assessor/dashboard
 ${COMPETITION_OVERVIEW_URL}     ${SERVER}/competition/${OPEN_COMPETITION}/overview/
+${COMPETITION_OVERVIEW_URL_2}    ${SERVER}/competition/${OPEN_COMPETITION_2}/overview/
 ${PUBLIC_DESCRIPTION_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/question/461
 ${TECHNICAL_APPROACH_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/question/467
 ${YOUR_FINANCES_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/section/202
@@ -106,7 +108,8 @@ ${COMP_ADMINISTRATOR_DASHBOARD}    ${SERVER}/management/dashboard
 ${UNTITLED_APPLICATION_DASHBOARD_LINK}    Untitled application (start here)
 ${UNTITLED_APPLICATION_NAME}    Untitled application
 ${OPEN_COMPETITION_LINK}    ${OPEN_COMPETITION_NAME}
-${application_name}    Submit test application
+${application_bus_name}    Submit business test application
+${application_rto_name}    Submit rto test application
 ${Competition_E2E}    Evolution of the global phosphorus cycle
 ${test_title}     test title
 ${SMALL_ORGANISATION_SIZE}     1
