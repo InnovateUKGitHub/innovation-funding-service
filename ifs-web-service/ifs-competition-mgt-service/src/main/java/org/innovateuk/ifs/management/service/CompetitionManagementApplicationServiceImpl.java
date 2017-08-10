@@ -52,10 +52,6 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
     @Autowired
     private ApplicationService applicationService;
 
-
-    @Autowired
-    private AssessmentRestService assessmentRestService;
-
     @Autowired
     private ApplicationModelPopulator applicationModelPopulator;
 
@@ -225,11 +221,5 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         public String getBaseOriginUrl() {
             return baseOriginUrl;
         }
-    }
-
-    @Override
-    public void addAssessorToApplication(long applicationId, long assessorId) {
-        AssessmentCreateResource assessment = new AssessmentCreateResource(applicationId, assessorId);
-        assessmentRestService.createAssessment(assessment).getSuccessObjectOrThrowException();
     }
 }

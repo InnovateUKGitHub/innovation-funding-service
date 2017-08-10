@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.management.controller;
 
+import org.innovateuk.ifs.assessment.resource.AssessmentCreateResource;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.management.model.AssessorAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationService;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin;
@@ -23,7 +25,7 @@ public class CompetitionManagementAssessmentsAssessorProgressController {
     private AssessorAssessmentProgressModelPopulator assessorAssessmentProgressModelPopulator;
 
     @Autowired
-    private CompetitionManagementApplicationService competitionManagementApplicationService;
+    private AssessmentRestService assessmentRestService;
 
     @GetMapping("/{assessorId}")
     public String assessorProgress(@PathVariable("competitionId") long competitionId,
@@ -46,7 +48,9 @@ public class CompetitionManagementAssessmentsAssessorProgressController {
                                  @PathVariable("assessorId") long assessorId,
                                  @PathVariable("applicationId") long applicationId) {
 
-        competitionManagementApplicationService.addAssessorToApplication(applicationId, assessorId);
+        AssessmentCreateResource assessment = new AssessmentCreateResource(applicationId, assessorId);
+        assessmentRestService.createAssessment(assessment).
+                getSuccessObjectOrThrowException();
 
         return format("redirect:/assessment/competition/%s/assessors/%s", competitionId, assessorId);
     }
