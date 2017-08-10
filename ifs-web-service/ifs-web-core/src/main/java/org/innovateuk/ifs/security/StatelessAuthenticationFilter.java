@@ -28,6 +28,9 @@ public class StatelessAuthenticationFilter extends OncePerRequestFilter {
     @Value("management.contextPath")
     private String monitoringEndpoint;
 
+    @Value("${spring.boot.admin.client.name}")
+    private String clientName;
+
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
@@ -36,14 +39,18 @@ public class StatelessAuthenticationFilter extends OncePerRequestFilter {
             Authentication authentication = userAuthenticationService.getAuthentication(request);
 
             if (authentication != null) {
-                UserResource ur = userAuthenticationService.getAuthenticatedUser(request);
-                if (ur == null)  {
-                    // avoid leaking information about auth failures
-                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-                } else if (ur.getStatus().equals(UserStatus.INACTIVE)) {
-                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User is not activated.");
-                } else {
+                if(clientName.equals("IFS Front Door Service")) {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
+                } else {
+                    UserResource ur = userAuthenticationService.getAuthenticatedUser(request);
+                    if (ur == null) {
+                        // avoid leaking information about auth failures
+                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                    } else if (ur.getStatus().equals(UserStatus.INACTIVE)) {
+                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User is not activated.");
+                    } else {
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    }
                 }
             }
         }
