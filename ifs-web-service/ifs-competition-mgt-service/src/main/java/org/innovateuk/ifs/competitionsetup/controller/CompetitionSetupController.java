@@ -8,10 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competitionsetup.form.*;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm.Unrestricted;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
@@ -64,7 +61,8 @@ public class CompetitionSetupController {
     @Autowired
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;
 
-    private static final String READY_TO_OPEN_KEY = "readyToOpen";
+    public static final String SETUP_READY_KEY = "setupReady";
+    public static final String READY_TO_OPEN_KEY = "isReadyToOpen";
 
     private static final String RESTRICT_INITIAL_DETAILS_EDIT = "restrictInitialDetailsEdit";
 
@@ -81,7 +79,8 @@ public class CompetitionSetupController {
         }
         CompetitionSetupSection section = CompetitionSetupSection.fromPath("home");
         competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
-        model.addAttribute(READY_TO_OPEN_KEY, competitionSetupService.isCompetitionReadyToOpen(competition));
+        model.addAttribute(SETUP_READY_KEY, competitionSetupService.isCompetitionReadyToOpen(competition));
+        model.addAttribute(READY_TO_OPEN_KEY, competition.getCompetitionStatus().equals(CompetitionStatus.READY_TO_OPEN));
         return "competition/setup";
     }
 

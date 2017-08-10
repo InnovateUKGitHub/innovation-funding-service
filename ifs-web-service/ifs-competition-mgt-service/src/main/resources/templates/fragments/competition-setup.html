@@ -21,11 +21,10 @@
                 <div th:if="${section.isComplete(competition) and !competition.isSetupAndLive()}" class="task-status-complete"><span>Complete</span></div>
             </li>
         </ul>
-        //th:if="${readyToOpen}" not completed
-        <div  class="extra-margin">
+        <div th:if="${!isReadyToOpen}" class="extra-margin">
             <p>Once you complete, this competition will be ready to open.</p>
             <a th:href="@{/competition/setup/{competitionId}/ready-to-open(competitionId=${competition.id})}"
-               th:disabled="${!readyToOpen}"
+               th:disabled="${!setupReady}"
                class="button no-margin-right"  id="compCTA">Complete</a>
         </div>
     </th:block>
