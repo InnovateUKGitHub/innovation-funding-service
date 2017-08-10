@@ -225,6 +225,7 @@ public class AssessorCompetitionSummaryControllerIntegrationTest extends BaseCon
                 .withState(REJECTED, SUBMITTED, ACCEPTED)
                 .withRejectionReason(rejectOutcome.getRejectReason(), null, null)
                 .withRejectionComment(rejectOutcome.getRejectComment(), null, null)
+                .withAssessmentId(assessments.get(0).getId(), assessments.get(1).getId(), assessments.get(2).getId())
                 .buildArray(3, AssessorAssessmentResource.class);
 
         assertThat(summaryResource.getAssignedAssessments(), hasItems(expectedAssessorAssessmentResources));

@@ -140,9 +140,9 @@ public class AssessorAssessmentResource {
                 .append(leadOrganisation)
                 .append(totalAssessors)
                 .append(state)
-                .append(assessmentId)
                 .append(rejectReason)
                 .append(rejectComment)
+                .append(assessmentId)
                 .toHashCode();
     }
 }

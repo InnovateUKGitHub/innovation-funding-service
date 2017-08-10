@@ -57,4 +57,8 @@ public class AssessorAssessmentResourceBuilder extends BaseBuilder<AssessorAsses
     public AssessorAssessmentResourceBuilder withRejectionComment(String... rejectComment) {
         return withArraySetFieldByReflection("rejectComment", rejectComment);
     }
+
+    public AssessorAssessmentResourceBuilder withAssessmentId(Long... assessmentIds) {
+        return withArraySetFieldByReflection("assessmentId", assessmentIds);
+    }
 }

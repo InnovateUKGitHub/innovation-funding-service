@@ -165,6 +165,7 @@ public class AssessorCompetitionSummaryServiceImplTest extends BaseUnitTestMocks
                                 .withTotalAssessors(5, 4, 2)
                                 .withRejectionReason(null, null, rejectOutcome.getRejectReason())
                                 .withRejectionComment(null, null, rejectOutcome.getRejectComment())
+                                .withAssessmentId(assessments[0].getId(), assessments[1].getId(), assessments[2].getId())
                                 .build(3)
                 )
                 .build();
