@@ -118,16 +118,25 @@ Applications should not have a check-box when the status is Open
     Then The user should not see the element    css=.assessment-submit-checkbox
 
 Check the comp admin see the assessor has rejected the application
+    [Documentation]  IFS-396
     [Tags]
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=a:contains("Manage assessments")
     And the user clicks the button/link    jQuery=a:contains("Manage applications")
-    And the user should see the element    jQuery=tr:nth-child(1) td:nth-child(2):contains("Park living")
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("View progress")
-    And the user should see the text in the page    Rejected (1)
-    And the user should see the element    jQuery=.assessors-rejected td:nth-child(6):contains("Not my area of expertise")
-    And the user should see the element    jQuery=.assessors-rejected td:nth-child(6):contains("Unable to assess the application as i'm on holiday.")
+    And the user should see the element    jQuery=h2:contains("Rejected (1)")
+    And the user should see the element    jQuery=.assessors-rejected td:contains("Not my area of expertise")
+    And the user should see the element    jQuery=.assessors-rejected td:contains("Unable to assess the application as i'm on holiday.")
+
+Comp admin can see the application is rejected on manage assessment page
+    [Documentation]  IFS-396
+    [Tags]
+    [Setup]  the user navigates to the page  ${server}/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}
+    Given the user clicks the button/link    link=Manage applications
+    When the user clicks the button/link     jQuery=td:contains("Park living") ~ td a:contains("View progress")
+    Then the user should see the element     jQuery=.assessors-rejected td:contains("Not my area of expertise")
+    And the user should see the element      jQuery=.assessors-rejected td:contains("Unable to assess the application as i'm on holiday.")
 
 *** Keywords ***
 the assessor fills all fields with valid inputs
