@@ -55,7 +55,7 @@ public class ApplicationCreationAuthenticatedController {
                        @PathVariable(COMPETITION_ID) Long competitionId,
                        UserResource user) {
         if(!isAllowedToLeadApplication(user.getId(), competitionId)) {
-            return format("redirect:/application/create-authenticated/%s/not-eligible", competitionId);
+            return redirectToNotEligible(competitionId);
         }
 
         Boolean userHasApplication = userService.userHasApplicationForCompetition(user.getId(), competitionId);
@@ -67,13 +67,17 @@ public class ApplicationCreationAuthenticatedController {
         }
     }
 
+    private String redirectToNotEligible(Long competitionId) {
+       return format("redirect:/application/create-authenticated/%s/not-eligible", competitionId);
+    }
+
     @PostMapping(value = "/{competitionId}")
     public String post(Model model,
                        @PathVariable(COMPETITION_ID) Long competitionId,
                        UserResource user,
                        HttpServletRequest request) {
         if(!isAllowedToLeadApplication(user.getId(), competitionId)) {
-            return format("redirect:/application/create-authenticated/%s/not-eligible", competitionId);
+            return redirectToNotEligible(competitionId);
         }
 
         final String createNewApplication = request.getParameter(FORM_RADIO_NAME);
@@ -91,10 +95,11 @@ public class ApplicationCreationAuthenticatedController {
 
     @GetMapping(value = "/{competitionId}/not-eligible")
     public String showNotEligiblePage(Model model,
+                                      @PathVariable(COMPETITION_ID) Long competitionId,
                                       UserResource userResource) {
         OrganisationResource organisation = organisationService.getOrganisationForUser(userResource.getId());
 
-        model.addAttribute("model", new AuthenticatedNotEligibleViewModel(organisation.getOrganisationTypeName()));
+        model.addAttribute("model", new AuthenticatedNotEligibleViewModel(organisation.getOrganisationTypeName(), competitionId));
         return "create-application/authenticated-not-eligible";
     }
 
