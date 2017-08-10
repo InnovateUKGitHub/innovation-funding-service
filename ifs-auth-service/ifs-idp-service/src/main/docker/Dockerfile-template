@@ -1,4 +1,4 @@
-FROM ifshibdev/idp-base:1.1.7
+FROM ifshibdev/idp-base:1.1.11
 
 ENV DEBIAN_FRONTEND=noninteractive \
   HTTPPORT=9080 \
