@@ -16,9 +16,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static java.lang.String.format;
 
@@ -71,18 +71,19 @@ public class ApplicationCreationAuthenticatedController {
     @PostMapping("/{competitionId}")
     public String post(Model model,
                        @PathVariable(COMPETITION_ID) Long competitionId,
-                       @RequestParam(value = FORM_RADIO_NAME, required = false) String createNewApplication,
-                       UserResource user,
-                       HttpServletRequest request) {
+                       @RequestParam(value = FORM_RADIO_NAME, required = false) Optional<String> createNewApplication,
+                       UserResource user) {
         if(!isAllowedToLeadApplication(user.getId(), competitionId)) {
             return redirectToNotEligible(competitionId);
         }
 
-        if (RADIO_TRUE.equals(createNewApplication)) {
-            return createApplicationAndShowInvitees(user, competitionId);
-        } else if (RADIO_FALSE.equals(createNewApplication)) {
-            // redirect to dashboard
-            return "redirect:/";
+        if(createNewApplication.isPresent()) {
+            if (RADIO_TRUE.equals(createNewApplication.get())) {
+                return createApplicationAndShowInvitees(user, competitionId);
+            } else if (RADIO_FALSE.equals(createNewApplication.get())) {
+                // redirect to dashboard
+                return "redirect:/";
+            }
         }
 
         // user did not check one of the radio elements, show page again.
