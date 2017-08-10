@@ -21,14 +21,14 @@
         <p>Innovate UK are reviewing your finances and may contact you with any queries. You can review your application finance details using the link below.</p>
     </th:block>
 
-    <ul>
+    <ul class="list-overview">
         <li th:if="${!model.isAcademic()}">
             <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"
-               class="heading-medium">View finances</a>
+               class>View finances</a>
         </li>
         <li>
             <a th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}"
-               class="heading-medium">Project finance overview</a>
+               class>Project finance overview</a>
         </li>
     </ul>
 
