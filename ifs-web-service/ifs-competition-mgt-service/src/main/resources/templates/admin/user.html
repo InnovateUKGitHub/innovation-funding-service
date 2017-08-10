@@ -31,12 +31,7 @@
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST">
             <div class="form-footer">
                 <div class="form-footer__actions">
-                    <a
-                        th:href="@{/admin/user/{id}/reactivate(id=${model.user.id})}"
-                        data-js-modal="modal-confirm-reactivate-user"
-                        name="reactivateUser">
-                        Reactivate user
-                    </a>
+                    <button class="buttonlink" data-js-modal="modal-confirm-reactivate-user" type="button">Reactivate user</button>
                 </div>
                 <div class="form-footer__info" th:text="|Deactivated by ${model.user.modifiedBy} on ${#temporals.format(model.user.modifiedOn, 'd MMMM yyyy')}">
                     Deactivated by Susan Smith on 23rd March 2017

@@ -77,12 +77,7 @@
         </div>
 
         <th:block th:if="${user.status.equals(T(org.innovateuk.ifs.user.resource.UserStatus).ACTIVE)}">
-            <a
-            th:href="@{/admin/user/{id}/deactivate(id=${user.id})}"
-            data-js-modal="modal-confirm-deactivate-user"
-            name="deactivateUser">
-            Deactivate user
-        </a>
+            <button class="buttonlink" data-js-modal="modal-confirm-deactivate-user" type="button">Deactivate user</button>
             <th:block th:insert="fragments/modals :: modal-confirm-deactivate-user" />
         </th:block>
 
