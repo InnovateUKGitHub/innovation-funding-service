@@ -71,7 +71,7 @@ public class ApplicationCreationAuthenticatedController {
        return format("redirect:/application/create-authenticated/%s/not-eligible", competitionId);
     }
 
-    @PostMapping(value = "/{competitionId}")
+    @PostMapping("/{competitionId}")
     public String post(Model model,
                        @PathVariable(COMPETITION_ID) Long competitionId,
                        UserResource user,
@@ -93,7 +93,7 @@ public class ApplicationCreationAuthenticatedController {
         return "redirect:/application/create-authenticated/" + competitionId;
     }
 
-    @GetMapping(value = "/{competitionId}/not-eligible")
+    @GetMapping("/{competitionId}/not-eligible")
     public String showNotEligiblePage(Model model,
                                       @PathVariable(COMPETITION_ID) Long competitionId,
                                       UserResource userResource) {
