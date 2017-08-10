@@ -1,8 +1,11 @@
 package org.innovateuk.ifs.management.model;
 
+import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationCountSummaryRestService;
+import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
+import org.innovateuk.ifs.assessment.resource.AssessorAssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorCompetitionSummaryResource;
 import org.innovateuk.ifs.assessment.service.AssessorCompetitionSummaryRestService;
 import org.innovateuk.ifs.category.resource.CategoryResource;
@@ -18,6 +21,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.String.format;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -50,17 +55,11 @@ public class AssessorAssessmentProgressModelPopulator {
                 CategoryResource::getName
         );
 
-        List<AssessorAssessmentProgressAssignedRowViewModel> assigned = simpleMap(
-                summaryResource.getAssignedAssessments(),
-                assignedAssessment -> new AssessorAssessmentProgressAssignedRowViewModel(
-                        assignedAssessment.getApplicationId(),
-                        assignedAssessment.getApplicationName(),
-                        assignedAssessment.getLeadOrganisation(),
-                        assignedAssessment.getTotalAssessors(),
-                        assignedAssessment.getState(),
-                        assignedAssessment.getAssessmentId()
-                )
-        );
+        List<AssessorAssessmentProgressAssignedRowViewModel> assigned =
+                getAssignedAssessments(summaryResource.getAssignedAssessments());
+
+        List<AssessorAssessmentProgressRejectedRowViewModel> rejected =
+                getRejectedAssessments(summaryResource.getAssignedAssessments());
 
         ApplicationCountSummaryPageResource applicationCounts = getApplicationCounts(
                 competitionId,
@@ -87,7 +86,45 @@ public class AssessorAssessmentProgressModelPopulator {
                 businessType != null ? businessType.getDisplayName() : "",
                 summaryResource.getTotalApplications(),
                 assigned,
+                rejected,
                 applicationsViewModel
+        );
+    }
+
+
+    private List<AssessorAssessmentProgressAssignedRowViewModel> getAssignedAssessments(List<AssessorAssessmentResource> assessorAssessments) {
+        return assessorAssessments.stream()
+                .filter(AssessorAssessmentResource::isAssigned)
+                .map(this::getAssessorAssessmentProgressAssignedRowViewModel)
+                .collect(toList());
+    }
+
+    private AssessorAssessmentProgressAssignedRowViewModel getAssessorAssessmentProgressAssignedRowViewModel(AssessorAssessmentResource assignedAssessment) {
+        return  new AssessorAssessmentProgressAssignedRowViewModel(
+                assignedAssessment.getApplicationId(),
+                assignedAssessment.getApplicationName(),
+                assignedAssessment.getLeadOrganisation(),
+                assignedAssessment.getTotalAssessors(),
+                assignedAssessment.getState()
+        );
+    }
+
+    private List<AssessorAssessmentProgressRejectedRowViewModel> getRejectedAssessments(List<AssessorAssessmentResource> assessorAssessments) {
+        return assessorAssessments.stream()
+                .filter(AssessorAssessmentResource::isRejected)
+                .map(this::getAssessorAssessmentProgressRejectedRowViewModel)
+                .collect(toList());
+    }
+
+    private AssessorAssessmentProgressRejectedRowViewModel getAssessorAssessmentProgressRejectedRowViewModel(AssessorAssessmentResource assessment) {
+
+        return  new AssessorAssessmentProgressRejectedRowViewModel(
+                assessment.getApplicationId(),
+                assessment.getApplicationName(),
+                assessment.getLeadOrganisation(),
+                assessment.getTotalAssessors(),
+                assessment.getRejectReason(),
+                assessment.getRejectComment()
         );
     }
 

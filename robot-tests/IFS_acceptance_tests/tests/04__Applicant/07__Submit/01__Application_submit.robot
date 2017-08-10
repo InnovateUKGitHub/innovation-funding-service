@@ -16,6 +16,8 @@ Documentation     INFUND-172: As a lead applicant and I am on the application su
 ...               INFUND-9058 Update 'Application submitted' and 'Application status' pages to the same view
 ...
 ...               IFS-942 Information message when application has reached 100% complete
+...
+...               IFS-753 Missing functionality on Mark as complete option in Application summary
 Suite Setup       new account complete all but one
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
@@ -25,18 +27,23 @@ Resource          ../../10__Project_setup/PS_Common.robot
 
 *** Test Cases ***
 Submit button disabled when application is incomplete
-    [Documentation]    INFUND-927, IFS-942
+    [Documentation]    INFUND-927, IFS-942, IFS-753
     [Tags]    Email    HappyPath
-    [Setup]  Log in as a different user               ${submit_bus_email}  ${correct_password}
-    Given the user navigates to the page              ${DASHBOARD_URL}
-    When the user clicks the button/link              link=${application_bus_name}
-    And the user should not see the element           jQuery=.message-alert:contains("Now your application is complete, you need to review and then submit.")
-    And the user clicks the button/link               link=Your finances
-    And the user clicks the button/link               link= Application overview
-    And the user clicks the button/link               jQuery=.button:contains("Review and submit")
+    [Setup]  Log in as a different user                ${submit_bus_email}  ${correct_password}
+    Given the user navigates to the page               ${DASHBOARD_URL}
+    When the user clicks the button/link               link=${application_bus_name}
+    And the user should not see the element            jQuery=.message-alert:contains("Now your application is complete, you need to review and then submit.")
+    And the user clicks the button/link                link=Your finances
+    And the user clicks the button/link                link= Application overview
+    And the user clicks the button/link                jQuery=.button:contains("Review and submit")
     Then the submit button should be disabled
-    When the user clicks the button/link              jQuery= button:contains("Application details")
-    Then the user should see the element              jQuery= div[id="collapsible-0"] button:contains("Mark as complete")+button:contains("Return and edit")
+    When the user clicks the button/link               jQuery= button:contains("Application details")
+    Then the user should see the element               jQuery= div[id="collapsible-0"] button:contains("Mark as complete")+button:contains("Return and edit")
+    When the user clicks the button/link               jQuery=button:contains("Mark as complete")
+    Then the user should see the element               jQuery=h1:contains("Application details")
+    And the user should see a field and summary error  Please enter a future date
+    And the user should see a field and summary error  Please select a research category
+    And the user should see a field and summary error  Please tell us if this application is a resubmission or not
 
 Applicant has read only view on review and submit page
     [Documentation]    INFUND-7405, INFUND-8599
