@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -58,6 +59,18 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
                 assertTrue(rules.internalUserCanViewAllCompetitionSearchResults(newCompetitionSearchResultItem().build(), user));
             } else {
                 assertFalse(rules.internalUserCanViewAllCompetitionSearchResults(newCompetitionSearchResultItem().build(), user));
+            }
+        });
+    }
+
+    @Test
+    public void testInternalAdminCanManageInnovationLeadsForCompetition() {
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (getUserWithRole(UserRoleType.COMP_ADMIN).equals(user) || getUserWithRole(UserRoleType.PROJECT_FINANCE).equals(user)) {
+                assertTrue(rules.internalAdminCanManageInnovationLeadsForCompetition(newCompetitionResource().build(), user));
+            } else {
+                assertFalse(rules.internalAdminCanManageInnovationLeadsForCompetition(newCompetitionResource().build(), user));
             }
         });
     }

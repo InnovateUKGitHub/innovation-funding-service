@@ -76,6 +76,36 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     }
 
     @Test
+    public void findInnovationLeads() {
+        setLoggedInUser(null);
+
+        assertAccessDenied(() -> classUnderTest.findInnovationLeads(1L), () -> {
+            verify(rules).internalAdminCanManageInnovationLeadsForCompetition(isA(CompetitionResource.class), isNull(UserResource.class));
+            verifyNoMoreInteractions(rules);
+        });
+    }
+
+    @Test
+    public void addInnovationLead() {
+        setLoggedInUser(null);
+
+        assertAccessDenied(() -> classUnderTest.addInnovationLead(1L, 2L), () -> {
+            verify(rules).internalAdminCanManageInnovationLeadsForCompetition(isA(CompetitionResource.class), isNull(UserResource.class));
+            verifyNoMoreInteractions(rules);
+        });
+    }
+
+    @Test
+    public void removeInnovationLead() {
+        setLoggedInUser(null);
+
+        assertAccessDenied(() -> classUnderTest.removeInnovationLead(1L, 2L), () -> {
+            verify(rules).internalAdminCanManageInnovationLeadsForCompetition(isA(CompetitionResource.class), isNull(UserResource.class));
+            verifyNoMoreInteractions(rules);
+        });
+    }
+
+    @Test
     public void getCompetitionOrganisationTypesById() {
         runAsRole(SYSTEM_REGISTRATION_USER, () -> classUnderTest.getCompetitionOrganisationTypes(1L));
     }
@@ -173,6 +203,21 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         @Override
         public ServiceResult<CompetitionResource> getCompetitionById(Long id) {
             return serviceSuccess(newCompetitionResource().build());
+        }
+
+        @Override
+        public ServiceResult<List<UserResource>> findInnovationLeads(Long competitionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> addInnovationLead(Long competitionId, Long innovationLeadUserId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> removeInnovationLead(Long competitionId, Long innovationLeadUserId) {
+            return null;
         }
 
         @Override
