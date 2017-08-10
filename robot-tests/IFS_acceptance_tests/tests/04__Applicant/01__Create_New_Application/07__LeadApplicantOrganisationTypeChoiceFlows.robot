@@ -14,26 +14,25 @@ Resource            ../../../resources/defaultResources.robot
 User can choose RTO organisation when both organisation types are allowed
     [Documentation]    INFUND-669 INFUND-1904 INFUND-1785
     [Tags]    HappyPath    SmokeTest
-    Given the user fills out the organisation form for a competition with choice for organisation types
-    And the user submits the organisation details form
+    Given the user starts a competition create account journey with choice for organisation types
     When the user chooses the RTO organisation type
     Then the user should see the text in the element  css=#rto-guidance h2  You can only lead an application as an RTO if both the following rules are met:
     And the user clicks the button/link    jQuery=button:contains("Save and continue")
-    And the user should see the text in the element  css=h2  Confirm your organisation
+    And the user should see the text in the element  css=h1  Your organisation
 
-User organisation type is selected by default when Business is the only allowed type
-    [Documentation]    IFS-47
-    Given the user fills out the organisation form for a competition with default Business organisation type
-    When the user submits the organisation details form
-    Then the user should skip the choice page
-    And the user should see Business automatically selected in the confirm organisation page
+#User organisation type is selected by default when Business is the only allowed type
+#    [Documentation]    IFS-47
+#    Given the user fills out the organisation form for a competition with default Business organisation type
+#    When the user submits the organisation details form
+#    Then the user should skip the choice page
+#    And the user should see Business automatically selected in the confirm organisation page
 
-User organisation type is selected by default when RTO is the only allowed type
-    [Documentation]    IFS-47
-    Given the user fills out the organisation form for a competition with default RTO organisation type
-    When the user submits the organisation details form
-    Then the user should skip the choice page
-    And the user should see RTO automatically selected in the confirm organisation page
+#User organisation type is selected by default when RTO is the only allowed type
+#    [Documentation]    IFS-47
+#    Given the user fills out the organisation form for a competition with default RTO organisation type
+#    When the user submits the organisation details form
+#    Then the user should skip the choice page
+#    And the user should see RTO automatically selected in the confirm organisation page
 
 *** Keywords ***
 the user navigates to the competition overview
@@ -48,14 +47,14 @@ the user should see Business automatically selected in the confirm organisation 
 the user should skip the choice page
     the user should see the text in the element  css=h2  Confirm your organisation details are correct
 
-the user fills out the organisation form for a competition with default RTO organisation type
-    the user opens a competition and fills out the organisation form  Predicting market trends programme
+the user starts a competition create account journey for default RTO organisation type
+    the user starts a competition create account journey  Predicting market trends programme
 
-the user fills out the organisation form for a competition with default Business organisation type
-    the user opens a competition and fills out the organisation form  Aerospace technology investment sector
+the user starts a competition create account journey for default Business organisation type
+    the user starts a competition create account journey  Aerospace technology investment sector
 
-the user fills out the organisation form for a competition with choice for organisation types
-    the user opens a competition and fills out the organisation form  Home and industrial efficiency programme
+the user starts a competition create account journey with choice for organisation types
+    the user starts a competition create account journey  Home and industrial efficiency programme
 
 the user submits the organisation details form
     the user clicks the button/link    jQuery=button:contains("Continue")
@@ -70,13 +69,14 @@ the user chooses the RTO organisation type
 the user confirms the organisation details
     the user clicks the button/link    jQuery=a:contains("Save and continue")
 
-the user opens a competition and fills out the organisation form
+the user starts a competition create account journey
     [Arguments]    ${competition_name}
     the user clicks the button/link    link=${competition_name}
     the user clicks the button/link    link=Start new application
     the user clicks the button/link    jQuery=.button:contains("Create account")
+
+the user fills out the organisation form
     the user enters text to a text field    id=organisationSearchName    Hive IT
     the user clicks the button/link    id=org-search
     the user clicks the button/link    Link=HIVE IT LIMITED
     the user selects the checkbox    address-same
-
