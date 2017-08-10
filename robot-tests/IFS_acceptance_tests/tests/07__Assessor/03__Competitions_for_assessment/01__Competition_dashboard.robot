@@ -118,6 +118,7 @@ Applications should not have a check-box when the status is Open
     Then The user should not see the element    css=.assessment-submit-checkbox
 
 Check the comp admin see the assessor has rejected the application
+    [Documentation]  IFS-396
     [Tags]
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
@@ -128,7 +129,7 @@ Check the comp admin see the assessor has rejected the application
     And the user should see the element    jQuery=.assessors-rejected td:contains("Not my area of expertise")
     And the user should see the element    jQuery=.assessors-rejected td:contains("Unable to assess the application as i'm on holiday.")
 
-Comp admin can see appplication is rejected on manage assessment page
+Comp admin can see the application is rejected on manage assessment page
     [Documentation]  IFS-396
     [Tags]
     [Setup]  the user navigates to the page  ${server}/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}
