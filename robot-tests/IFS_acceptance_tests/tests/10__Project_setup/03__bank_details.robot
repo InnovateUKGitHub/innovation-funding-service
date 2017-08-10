@@ -92,8 +92,8 @@ Bank details client side validations
     And the user should see an error    Please enter a valid account number
     When the user enters text to a text field    name=accountNumber    abcdefgh
     And the user moves focus away from the element    name=accountNumber
-    Then the user should not see the text in the page    Please enter an account number.
-    And the user should see the text in the page    Please enter a valid account number.
+    And the user moves focus away from the element
+    Then the user should see the text in the page    Please enter an account number.
     When the user enters text to a text field    name=accountNumber    12345679
     And the user moves focus away from the element    name=accountNumber
     Then the user should not see the text in the page    Please enter an account number.
@@ -102,8 +102,8 @@ Bank details client side validations
     When the user enters text to a text field    name=sortCode    12345
     And the user moves focus away from the element    name=sortCode
     Then the user should see an error    Please enter a valid sort code.
-    When the user enters text to a text field    name=sortCode    abcde
-    And the user moves focus away from the element    name=sortCode
+    When the user enters text to a text field    name=sortCode    ab1cde
+    And the user moves focus away from the element
     Then the user should see an error    Please enter a valid sort code.
     When the user enters text to a text field    name=sortCode    123456
     And the user moves focus away from the element    name=sortCode
