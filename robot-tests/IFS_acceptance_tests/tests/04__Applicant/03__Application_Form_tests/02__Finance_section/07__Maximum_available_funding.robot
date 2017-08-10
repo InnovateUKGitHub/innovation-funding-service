@@ -69,7 +69,6 @@ maximum funding level available for RTO lead
     And the correct funding displayed for lead applicant                        Feasibility studies  ${MEDIUM_ORGANISATION_SIZE}  100%
     And the correct funding displayed for lead applicant                        Industrial research  ${LARGE_ORGANISATION_SIZE}  100%
     And the user marks your funding section as complete
-    And the user clicks the button/link                                         jQuery=a:contains("Your finances")
     [Teardown]  the user clicks the button/link                                 link=Application overview
 
 lead RTO applicant invites a Charity member
@@ -80,7 +79,7 @@ lead RTO applicant invites a Charity member
     And the user fills in the organisation information                         ${Application_name_RTO}  ${SMALL_ORGANISATION_SIZE}
     And the user fills in the project costs                                    ${Application_name_RTO}
     Then the funding displayed is as expected
-    And the user marks the section as complete
+    And the user marks your funding section as complete
 
 invite existing academic collaborator for RTO lead
     [Documentation]  IFS-1050  IFS-1013
@@ -96,6 +95,7 @@ invite existing academic collaborator for RTO lead
     And logout as user
     And the user accepts the invite to collaborate               ${OPEN_COMPETITION_NAME}  ${collaborator2_credentials["email"]}  ${collaborator2_credentials["password"]}
     Then the correct funding is displayed to academic user
+    And the academic user marks your project costs as complete
 
 invite existing business user into RTO lead application
     [Documentation]  IFS-1050  IFS-1013
@@ -113,6 +113,8 @@ invite existing business user into RTO lead application
 
 Business user fills in the project costs
     When the business user fills in the project costs
+    And the user fills in the organisation information          ${Application_name_RTO}
+    Then the user marks your funding section as complete
     then the user should see the correct research participation values
 
 Rto lead able to mark finances as complete
@@ -215,7 +217,13 @@ the correct funding is displayed to academic user
 #    the user clicks the button/link                          jQuery=a:contains("Confirm and accept invitation")
     the user clicks the button/link                          link=Your finances
     the user should see the element                          jQuery=td:contains("100%")
-    logout as user
+#    logout as user
+
+the academic user marks your project costs as complete
+    the user clicks the button/link                         link=Your project costs
+    the user enters text to a text field                    tsb-ref  academic costs
+    the user uploads the file                               upload_finance_document  ${valid_pdf}
+    the user clicks the button/link                         link=Mark as complete
 
 the correct funding displayed for lead applicant
     [Arguments]   ${research_cat}  ${org_size}  ${funding_amoount}
@@ -228,10 +236,7 @@ the user should see the correct research participation values
 
 the user marks your funding section as complete
     the user enters text to a text field                    id=cost-financegrantclaim    30
-#    the user selects the radio button                        other_funding-otherPublicFunding-526-2668   No
-#    the user clicks the button/link                         name=other_funding-otherPublicFunding-526-2668
-    the user clicks the button/link                         css=input[id$="otherPublicFunding-no"]
-    the user clicks the button/link                         css=input[id$="otherPublicFunding-no"]
+    the user clicks the button/link                         jQuery=label[for$="otherPublicFunding-no"]:contains("No")
     the user selects the checkbox                           agree-terms-page
     the user clicks the button/link                         jQuery=button:contains("Mark as complete")
 
