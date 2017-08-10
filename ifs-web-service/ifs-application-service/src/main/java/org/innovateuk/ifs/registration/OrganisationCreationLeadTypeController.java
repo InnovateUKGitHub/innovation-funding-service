@@ -80,12 +80,8 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
     }
 
     private void saveOrgansationTypeToCreationForm(HttpServletRequest request, HttpServletResponse response, OrganisationTypeForm organisationTypeForm) {
-        Optional<OrganisationCreationForm> organisationCreationFormFromCookie = registrationCookieService.getOrganisationCreationCookieValue(request);
-        if(organisationCreationFormFromCookie.isPresent()) {
-            organisationCreationFormFromCookie.get().setOrganisationTypeId(organisationTypeForm.getOrganisationType());
-        }
-
-        OrganisationCreationForm newOrganisationCreationForm = organisationCreationFormFromCookie.orElse(new OrganisationCreationForm());
+        OrganisationCreationForm newOrganisationCreationForm = new OrganisationCreationForm();
+        newOrganisationCreationForm.setOrganisationTypeId(organisationTypeForm.getOrganisationType());
         registrationCookieService.saveToOrganisationCreationCookie(newOrganisationCreationForm, response);
     }
 }
