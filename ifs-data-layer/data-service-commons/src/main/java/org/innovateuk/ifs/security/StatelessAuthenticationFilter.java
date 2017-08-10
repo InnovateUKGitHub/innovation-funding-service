@@ -31,7 +31,6 @@ public class StatelessAuthenticationFilter extends OncePerRequestFilter {
         if(authentication!=null){
             UserResource ur = userAuthenticationService.getAuthenticatedUser(request);
             if (ur == null)  {
-                // avoid leaking information about auth failures
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             } else if (ur.getStatus().equals(UserStatus.INACTIVE)) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User is not activated.");
