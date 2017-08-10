@@ -615,8 +615,10 @@ IFS.core.formValidation = (function () {
         if (s.html5validationMode) { field[0].setCustomValidity(message) }
         if (visuallyhidden === false) { formGroup.addClass('form-group-error') }
 
+        // link server message to field
+        formGroup.find('.error-message:not([data-errorfield]):contains("' + message + '")').attr('data-errorfield', name)
         // if the message isn't in this formgroup yet we will add it, a form-group can have multiple errors.
-        var errorEl = formGroup.find('[data-errorfield="' + name + '"]:contains("' + message + '"),.error-message:not([data-errorfield]):contains("' + message + '")')
+        var errorEl = formGroup.find('[data-errorfield="' + name + '"]:contains("' + message + '")')
         if (errorEl.length === 0) {
           if (visuallyhidden === false) { field.addClass('form-control-error') }
           var html = '<span data-errorfield="' + name + '" class="error-message' + (visuallyhidden ? ' visuallyhidden' : '') + '">' + message + '</span>'
