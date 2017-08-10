@@ -50,7 +50,7 @@ public class CompetitionController {
 
     @PostMapping("/{id}/remove-innovation-lead/{innovationLeadUserId}")
     public RestResult<Void> removeInnovationLead(@PathVariable("id") final Long competitionId,
-                                              @PathVariable("innovationLeadUserId") final Long innovationLeadUserId) {
+                                                 @PathVariable("innovationLeadUserId") final Long innovationLeadUserId) {
 
         return competitionService.removeInnovationLead(competitionId, innovationLeadUserId).toPostResponse();
     }

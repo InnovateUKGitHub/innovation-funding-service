@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ManageInnovationLeadsModelPopulator {
@@ -31,7 +33,11 @@ public class ManageInnovationLeadsModelPopulator {
 
         model.addAttribute("model", new ManageInnovationLeadsViewModel(competitionId, competition.getName(),
                 competition.getLeadTechnologistName(), competition.getInnovationSectorName(),
-                competition.getInnovationAreaNames(), innovationLeadsAssignedToCompetition,
-                availableInnovationLeads));
+                competition.getInnovationAreaNames(), sortByName(innovationLeadsAssignedToCompetition),
+                sortByName(availableInnovationLeads)));
+    }
+
+    private List<UserResource> sortByName(List<UserResource> userResources) {
+        return userResources.stream().sorted(Comparator.comparing(userResource -> userResource.getName().toUpperCase())).collect(Collectors.toList());
     }
 }
