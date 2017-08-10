@@ -30,8 +30,8 @@ Administrator can see the read only view of internal user profile
     [Tags]
     When the user clicks the button/link  link=John Doe
     Then the user should see the element  jQuery=h1:contains("View internal user's details")
-    And the user should see the element   jQuery=dt:contains("Email") + dd:contains("${Comp_admin1_credentials["email"]}")
-    And the user should see the element   jQuery=dt:contains("Job role") + dd:contains("Competition Administrator")
+    And the user should see the element   jQuery=dt:contains("Email address") + dd:contains("${Comp_admin1_credentials["email"]}")
+    And the user should see the element   jQuery=dt:contains("Role") + dd:contains("Competition Administrator")
     And the user should see the element   jQuery=.form-footer__info:contains("Created by IFS Web System User")
 
 Project finance user cannot navigate to manage users page
@@ -45,8 +45,8 @@ Administrator can invite a new Internal User
     [Tags]  HappyPath
     [Setup]  Log in as a different user   &{ifs_admin_user_credentials}
     Given the user navigates to the page  ${server}/management/admin/users/active
-    And the user clicks the button/link   link=Add a new internal user
-    Then the user should see the element  jQuery=h1:contains("Add a new internal user")
+    And the user clicks the button/link   link=Invite a new internal user
+    Then the user should see the element  jQuery=h1:contains("Invite a new internal user")
     And the user should see the element   jQuery=option:contains("Innovation Lead")
 
 Server side validation for invite new internal user
@@ -123,7 +123,7 @@ New user account is created and verified
     And the user clicks the button/link        jQuery=a:contains("New Administrator")
     Then the user should see the element       jQuery=dt:contains("Full name") + dd:contains("New Administrator")
     And the user should see the element        jQuery=dt:contains("Email") + dd:contains("ifs.administrator@innovateuk")
-    And the user should see the element        jQuery=dt:contains("Job role") + dd:contains("IFS Administrator")
+    And the user should see the element        jQuery=dt:contains("Role") + dd:contains("IFS Administrator")
     When the user clicks the button/link       jQuery=a:contains("Manage users")
     And the user clicks the button/link        jQuery=a:contains("Pending")
     Then the user should see the element       jQuery=span:contains("0") + span:contains("pending internal users")
@@ -157,11 +157,11 @@ Administrator can navigate to edit page to edit the internal user's details
     [Documentation]  IFS-18
     [Tags]
     [Setup]  the user navigates to the View internal users details  New Administrator  active
-    Given the user clicks the button/link  link=Edit
-    And the user should see the element    jQuery=h1:contains("Update internal user's details")
-    And the user should see the element    css=#firstName[value="New"]
-    And the user should see the element    css=#lastName[value="Administrator"]
-    And the user should see the element    jQuery=dt:contains("Email address") ~ dd:contains("ifs.administrator")
+    Given the user clicks the button/link         link=Edit
+    And the user should see the text in the page  Edit internal user's details
+    And the user should see the element           css=#firstName[value="New"]
+    And the user should see the element           css=#lastName[value="Administrator"]
+    And the user should see the element           jQuery=dt:contains("Email address") ~ dd:contains("ifs.administrator")
     And the user should see the dropdown option selected  IFS Administrator  id=role
 
 Server side validation for edit internal user's details

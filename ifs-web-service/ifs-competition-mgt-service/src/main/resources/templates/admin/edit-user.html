@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Update internal user\'s details'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Edit internal user\'s details'" />
 </head>
 <body>
 
@@ -21,13 +21,11 @@
         </ul>
     </div>
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Update internal user\'s details',size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Edit internal user\'s details',size='heading-xlarge'" />
     <form th:object="${form}" novalidate="novalidate" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST">
-        <h2 class="heading-medium">Personal details</h2>
-
         <div class="form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'form-group-error'">
           <label class="form-label" th:for="${#ids.next('firstName')}">
-              <span>First name</span>
+              <span class="form-label-bold">First name</span>
               <th:block th:if="${#fields.hasErrors('firstName')}">
                   <span class="error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
               </th:block>
@@ -45,7 +43,7 @@
         </div>
         <div class="form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'form-group-error'">
           <label class="form-label" th:for="${#ids.next('lastName')}">
-              <span>Last name</span>
+              <span class="form-label-bold">Last name</span>
               <th:block th:if="${#fields.hasErrors('lastName')}">
                   <span class="error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
               </th:block>
@@ -68,11 +66,10 @@
         <p/>
         <div class="form-group" th:classappend="${#fields.hasErrors('role')} ? 'form-group-error'">
             <label class="form-label" th:for="${#ids.next('role')}">
-                <span class="form-label-bold">Job role</span>
+                <span class="form-label-bold">Role</span>
                 <th:block th:if="${#fields.hasErrors('role')}">
                     <span class="error-message" th:each="err : ${#fields.errors('role')}" th:text="${err}"></span>
                 </th:block>
-                <p class="form-hint">Which of the following job roles will the user identify as?</p>
             </label>
             <select name="role" class="form-control" id="role" th:field="*{role}" required="required" data-required-errormessage="Please select a role">
                 <option th:each="adminRole : ${T(org.innovateuk.ifs.user.resource.UserRoleType).internalRoles()}" th:value="${adminRole}" th:text="${adminRole.displayName}"></option>

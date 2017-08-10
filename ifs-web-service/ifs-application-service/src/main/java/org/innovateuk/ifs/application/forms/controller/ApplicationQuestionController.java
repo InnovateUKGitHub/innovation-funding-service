@@ -79,11 +79,21 @@ public class ApplicationQuestionController {
     @GetMapping(value = {QUESTION_URL + "{" + QUESTION_ID + "}", QUESTION_URL + "edit/{" + QUESTION_ID + "}"})
     public String showQuestion(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
                                @SuppressWarnings("unused") BindingResult bindingResult,
-                               @SuppressWarnings("unused") ValidationHandler validationHandler,
+                               ValidationHandler validationHandler,
                                Model model,
                                @PathVariable(APPLICATION_ID) final Long applicationId,
                                @PathVariable(QUESTION_ID) final Long questionId,
-                               UserResource user) {
+                               @RequestParam("mark_as_complete") final Optional<Boolean> markAsComplete,
+                               UserResource user,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+
+        markAsComplete.ifPresent(markAsCompleteSet -> {
+            if(markAsCompleteSet) {
+                ValidationMessages errors = applicationSaver.saveApplicationForm(applicationId, form, questionId, user.getId(), request, response, bindingResult.hasErrors(), Optional.of(Boolean.TRUE));
+                validationHandler.addAnyErrors(errors);
+            }
+        });
 
         populateShowQuestion(user, applicationId, questionId, model, form);
 
@@ -106,7 +116,7 @@ public class ApplicationQuestionController {
 
         // Check if the request is to just open edit view or to save
         if (params.containsKey(EDIT_QUESTION)) {
-            return handleEditQuestion(form, bindingResult, validationHandler, model, applicationId, questionId, user);
+            return handleEditQuestion(form, model, applicationId, questionId, user);
         } else {
             if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
                 questionService.assignQuestion(applicationId, user, request);
@@ -116,7 +126,7 @@ public class ApplicationQuestionController {
             // First check if any errors already exist in bindingResult
             if (isAllowedToUpdateQuestion(questionId, applicationId, user.getId()) || isMarkQuestionRequest(params)) {
                 /* Start save action */
-                errors = applicationSaver.saveApplicationForm(applicationId, form, questionId, user.getId(), request, response, bindingResult.hasErrors());
+                errors = applicationSaver.saveApplicationForm(applicationId, form, questionId, user.getId(), request, response, bindingResult.hasErrors(), Optional.empty());
             }
 
             model.addAttribute("form", form);
@@ -145,7 +155,7 @@ public class ApplicationQuestionController {
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty());
     }
 
-    private String handleEditQuestion(ApplicationForm form, BindingResult bindingResult, ValidationHandler validationHandler, Model model, Long applicationId, Long questionId, UserResource user) {
+    private String handleEditQuestion(ApplicationForm form, Model model, Long applicationId, Long questionId, UserResource user) {
         ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
         if (processRole != null) {
             questionService.markAsIncomplete(questionId, applicationId, processRole.getId());
@@ -153,7 +163,8 @@ public class ApplicationQuestionController {
             LOG.error("Not able to find process role for user " + user.getName() + " for application id " + applicationId);
         }
 
-        return showQuestion(form, bindingResult, validationHandler, model, applicationId, questionId, user);
+        populateShowQuestion(user, applicationId, questionId, model, form);
+        return APPLICATION_FORM;
     }
 
     private Boolean isMarkAsCompleteRequestWithValidationErrors(Map<String, String[]> params, ValidationMessages errors, BindingResult bindingResult) {
