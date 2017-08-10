@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 
 @Controller
@@ -47,6 +48,6 @@ public class CompetitionManagementAssessmentsAssessorProgressController {
 
         competitionManagementApplicationService.addAssessorToApplication(applicationId, assessorId);
 
-        return "redirect:/assessment/competition/" + competitionId + "/assessors/" + assessorId;
+        return format("redirect:/assessment/competition/%s/assessors/%s", competitionId, assessorId);
     }
 }
