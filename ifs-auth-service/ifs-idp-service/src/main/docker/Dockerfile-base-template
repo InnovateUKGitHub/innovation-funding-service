@@ -30,6 +30,9 @@ RUN apt-get update --fix-missing && \
   dpkg -i --force-depends /idp/default-jre-headless-dummy_1.0_all.deb && rm -f /idp/default-jre-headless-dummy_1.0_all.deb && \
 # tomcat for IDP and Regapi \
   apt-get -y install tomcat8 libtcnative-1 tomcat8-common libtomcat8-java libecj-java ucf && \
+# jstl lib for IDP status page
+  curl --connect-timeout 30 -m 120 -s -L --retry 3 -O https://build.shibboleth.net/nexus/service/local/repositories/thirdparty/content/javax/servlet/jstl/1.2/jstl-1.2.jar && \
+  mv jstl-1.2.jar /usr/share/tomcat8/lib/ && \
 # Shibboleth IDP \
   curl --connect-timeout 30 -m 120 -s -L --retry 3 http://shibboleth.net/downloads/identity-provider/$IDPVER/shibboleth-identity-provider-$IDPVER.tar.gz | bsdtar -C /root -xf - && \
   cat /idp/build.xml|tr "3.2.1" "$IDPVER" > /root/shibboleth-identity-provider-$IDPVER/bin/build.xml && rm -f /idp/build.xml && \
