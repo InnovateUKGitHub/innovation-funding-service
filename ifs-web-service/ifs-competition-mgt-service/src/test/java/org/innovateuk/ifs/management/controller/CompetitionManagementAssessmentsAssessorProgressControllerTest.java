@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationCountSummaryRestService;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
+import org.innovateuk.ifs.assessment.service.AssessmentRestServiceImpl;
 import org.innovateuk.ifs.assessment.service.AssessorCompetitionSummaryRestService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -26,6 +27,7 @@ import static java.util.Optional.empty;
 import static org.hamcrest.Matchers.hasItems;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.application.builder.ApplicationCountSummaryResourceBuilder.newApplicationCountSummaryResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorAssessmentResourceBuilder.newAssessorAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorCompetitionSummaryResourceBuilder.newAssessorCompetitionSummaryResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
@@ -41,6 +43,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -54,12 +57,6 @@ public class CompetitionManagementAssessmentsAssessorProgressControllerTest exte
 
     @Mock
     private ApplicationCountSummaryRestService applicationCountSummaryRestService;
-
-    @Mock
-    private AssessmentRestService assessmentRestService;
-
-    @Mock
-    private CompetitionManagementApplicationService competitionManagementApplicationService;
 
     @InjectMocks
     @Spy
@@ -130,12 +127,13 @@ public class CompetitionManagementAssessmentsAssessorProgressControllerTest exte
                 .build();
 
         AssessmentCreateResource assessmentCreateResource = new AssessmentCreateResource(applicationId, assessorId);
+        AssessmentResource assessmentResource = newAssessmentResource().build();
 
         when(assessorCompetitionSummaryRestService.getAssessorSummary(assessorId, competitionId))
                 .thenReturn(restSuccess(assessorCompetitionSummaryResource));
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, assessorId, 0, 20, empty(), "")).thenReturn(restSuccess(expectedPageResource));
-        when(assessmentRestService.createAssessment(assessmentCreateResource)).thenReturn(restSuccess(new AssessmentResource()));
+        when(assessmentRestService.createAssessment(isA(AssessmentCreateResource.class))).thenReturn(restSuccess(assessmentResource));
 
 
 
@@ -183,7 +181,6 @@ public class CompetitionManagementAssessmentsAssessorProgressControllerTest exte
         mockMvc.perform(post("/assessment/competition/{competitionId}/assessors/{assessorId}/application/{applicationId}/assign", competitionId, assessorId, applicationId))
                 .andExpect(status().is3xxRedirection())
                 .andReturn();
-
     }
 
     @Test
