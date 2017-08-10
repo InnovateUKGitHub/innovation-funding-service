@@ -98,10 +98,7 @@ public class AbstractOrganisationCreationController {
     }
 
     protected void addOrganisationType(OrganisationCreationForm organisationForm, Optional<Long> organisationTypeId) {
-        organisationTypeId.ifPresent(id -> {
-            organisationTypeRestService.findOne(id).ifSuccessful(organisationType ->
-                    organisationForm.setOrganisationTypeId(organisationType.getId()));
-        });
+        organisationTypeId.ifPresent(id -> organisationForm.setOrganisationTypeId(id));
     }
 
     protected void organisationFormAddressFormValidate(OrganisationCreationForm organisationForm, BindingResult bindingResult, BindingResult addressBindingResult) {

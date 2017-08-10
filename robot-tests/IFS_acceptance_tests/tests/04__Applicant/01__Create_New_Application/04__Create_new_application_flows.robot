@@ -24,9 +24,9 @@ Non registered users non companies house route
     And the user clicks the button/link            link=Home and industrial efficiency programme
     And the user clicks the button/link            jQuery=a:contains("Start new application")
     And the user clicks the button/link            jQuery=.button:contains("Create account")
-    When the user clicks the Not on company house link
     And the user selects the radio button          organisationTypeId    radio-1
     And the user clicks the button/link            jQuery=.button:contains("Save and continue")
+    When the user clicks the Not on company house link
     And the user clicks the button/link            jQuery=.button:contains("Save and continue")
     Then The user should see the text in the page  Your details
 

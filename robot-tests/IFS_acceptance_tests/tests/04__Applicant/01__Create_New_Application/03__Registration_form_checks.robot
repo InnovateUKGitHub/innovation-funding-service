@@ -108,14 +108,14 @@ Applicant goes to the registration form
     Given the user clicks the button/link      link=Home and industrial efficiency programme
     When the user clicks the button/link       link=Start new application
     And the user clicks the button/link        jQuery=.button:contains("Create account")
+    And the user selects the radio button      organisationTypeId    radio-1
+    And the user clicks the button/link        jQuery=button:contains("Save and continue")
     When the user enters text to a text field  id=organisationSearchName    Hive IT
     And the user clicks the button/link        id=org-search
     And the user clicks the button/link        Link=${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
     And the user selects the checkbox          address-same
     And the user clicks the button/link        jQuery=button:contains("Continue")
-    And the user selects the radio button      organisationTypeId    radio-1
     And the user clicks the button/link        jQuery=button:contains("Save and continue")
-    And the user clicks the button/link        jQuery=a:contains("Save and continue")
 
 the user fills in valid details
     the user enters text to a text field  id=firstName    O'Brian Elliot-Murray    #First and last name containing hyphen, space and aposthrophe check

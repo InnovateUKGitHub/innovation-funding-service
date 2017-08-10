@@ -33,15 +33,15 @@ create new account for submitting
     the user navigates to the page              ${overview}
     the user clicks the button/link             jQuery=a:contains("Start new application")
     the user clicks the button/link             jQuery=a:contains("Create account")
+    the user selects the radio button       organisationTypeId  ${org}
+    the user clicks the button/link         css=input[value="Save and continue"]
     the user enters text to a text field    id=organisationSearchName    Hive IT
     the user clicks the button/link         jQuery=.button:contains("Search")
     the user clicks the button/link         link=${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
     the user selects the checkbox           address-same
     the user clicks the button/link         jQuery=.button:contains("Continue")
-    the user clicks the button/link         jQuery=.button:contains("Save and continue")
-    the user selects the radio button       organisationTypeId  ${org}
-    the user clicks the button/link         jQuery=.button:contains("Save and continue")
-    the user clicks the button/link         jQuery=.button:contains("Save and continue")
+    the user clicks the button/link         css=input[value="Save and continue"]
+    the user clicks the button/link         css=input[value="Save and continue"]
     the user enters text to a text field    name=email    ${email}
     the user fills the create account form    Temur    Ketsbaia
     the user reads his email and clicks the link    ${email}    Please verify your email address    Once verified you can sign into your account
@@ -218,16 +218,15 @@ the user verifies email
 the user follows the flow to register their organisation
     the user clicks the button/link             jQuery=a:contains("Start new application")
     the user clicks the button/link             jQuery=a:contains("Create account")
+    the user should not see the element         jQuery=h3:contains("Organisation type")
+    the user selects the radio button       organisationTypeId  1
+    the user clicks the button/link         jQuery=.button:contains("Save and continue")
     the user enters text to a text field        id=organisationSearchName    Innovate
     the user clicks the button/link             id=org-search
     the user clicks the button/link             link=INNOVATE LTD
     the user selects the checkbox               address-same
-    the user should not see the element         jQuery=h3:contains("Organisation type")
-    the user clicks the button/link             jQuery=.button:contains("Continue")
-#    This is added as the flow differs if comp is setup to have either Business or RTO as lead org type but not both
-    run keyword and ignore error  the user selects the radio button    organisationTypeId   radio-1
-    the user clicks the button/link             jQuery=.button:contains("Save and continue")
-    run keyword and ignore error  the user clicks the button/link             jQuery=.button:contains("Save and continue")
+    the user clicks the button/link         jQuery=.button:contains("Continue")
+    the user clicks the button/link         jQuery=.button:contains("Save and continue")
 
 the user enters the details and clicks the create account
     [Arguments]   ${first_name}  ${last_name}  ${REG_EMAIL}
