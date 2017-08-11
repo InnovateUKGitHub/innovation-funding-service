@@ -30,7 +30,9 @@ import static org.innovateuk.ifs.assessment.builder.AssessorAssessmentResourceBu
 import static org.innovateuk.ifs.assessment.builder.AssessorCompetitionSummaryResourceBuilder.newAssessorCompetitionSummaryResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
 import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
+import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.ACCEPTED;
+import static org.innovateuk.ifs.assessment.resource.AssessmentStates.REJECTED;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.SUBMITTED;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -87,12 +89,14 @@ public class CompetitionManagementAssessmentsAssessorProgressControllerTest exte
                 .build();
 
         List<AssessorAssessmentResource> assignedAssessments = newAssessorAssessmentResource()
-                .withApplicationId(10L, 20L)
-                .withApplicationName("Test App 1", "Test App 2")
-                .withTotalAssessors(5, 7)
-                .withLeadOrganisation("Lead Org 1", "Lead Org 2")
-                .withState(SUBMITTED, ACCEPTED)
-                .build(2);
+                .withApplicationId(10L, 20L, 30L)
+                .withApplicationName("Test App 1", "Test App 2", "Test App 3")
+                .withTotalAssessors(5, 7, 6)
+                .withLeadOrganisation("Lead Org 1", "Lead Org 2", "Lead Org 3")
+                .withState(SUBMITTED, ACCEPTED, REJECTED)
+                .withRejectionReason(null, null, CONFLICT_OF_INTEREST)
+                .withRejectionComment(null, null, "rejection comment")
+                .build(3);
 
         AssessorCompetitionSummaryResource assessorCompetitionSummaryResource = newAssessorCompetitionSummaryResource()
                 .withCompetitionId(competitionId)
@@ -141,7 +145,8 @@ public class CompetitionManagementAssessmentsAssessorProgressControllerTest exte
         assertEquals(20L, model.getTotalApplications());
         assertThat(model.getInnovationAreas(), hasItems("Innovation 1", "Innovation 2"));
 
-        assertEquals(2, assignedAssessments.size());
+        assertEquals(2, model.getAssigned().size());
+        assertEquals(1, model.getRejected().size());
 
         assertEquals(assignedAssessments.get(0).getApplicationId(), model.getAssigned().get(0).getApplicationId());
         assertEquals(assignedAssessments.get(0).getApplicationName(), model.getAssigned().get(0).getApplicationName());
@@ -154,6 +159,13 @@ public class CompetitionManagementAssessmentsAssessorProgressControllerTest exte
         assertEquals(assignedAssessments.get(1).getLeadOrganisation(), model.getAssigned().get(1).getLeadOrganisation());
         assertEquals(assignedAssessments.get(1).getTotalAssessors(), model.getAssigned().get(1).getTotalAssessors());
         assertEquals(assignedAssessments.get(1).getState(), model.getAssigned().get(1).getState());
+
+        assertEquals(assignedAssessments.get(2).getApplicationId(), model.getRejected().get(0).getApplicationId());
+        assertEquals(assignedAssessments.get(2).getApplicationName(), model.getRejected().get(0).getApplicationName());
+        assertEquals(assignedAssessments.get(2).getLeadOrganisation(), model.getRejected().get(0).getLeadOrganisation());
+        assertEquals(assignedAssessments.get(2).getTotalAssessors(), model.getRejected().get(0).getTotalAssessors());
+        assertEquals(assignedAssessments.get(2).getRejectReason(), model.getRejected().get(0).getRejectReason());
+        assertEquals(assignedAssessments.get(2).getRejectComment(), model.getRejected().get(0).getRejectComment());
     }
 
     @Test

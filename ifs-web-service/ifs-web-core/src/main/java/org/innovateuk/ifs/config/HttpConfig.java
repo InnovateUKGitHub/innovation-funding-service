@@ -10,7 +10,6 @@ import org.apache.http.impl.nio.conn.PoolingNHttpClientConnectionManager;
 import org.apache.http.impl.nio.reactor.DefaultConnectingIOReactor;
 import org.apache.http.impl.nio.reactor.IOReactorConfig;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.AsyncClientHttpRequestFactory;
@@ -51,15 +50,19 @@ public class HttpConfig {
     }
 
     @Bean
-    public CloseableHttpClient httpClient() {
+    public PoolingHttpClientConnectionManager connectionManager(){
         PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
         connectionManager.setMaxTotal(connectionsMaxTotal);
         connectionManager.setDefaultMaxPerRoute(connectionsMaxPerRoute);
+        return connectionManager;
+    }
+
+    @Bean
+    public CloseableHttpClient httpClient() {
         RequestConfig config = RequestConfig.custom().setConnectTimeout(connectionsTimeoutMillis).build();
-        CloseableHttpClient defaultHttpClient = HttpClientBuilder.create()
-                .setConnectionManager(connectionManager)
+        return HttpClientBuilder.create()
+                .setConnectionManager(connectionManager())
                 .setDefaultRequestConfig(config).build();
-        return defaultHttpClient;
     }
 
     @Bean(name="asyncClientHttpRequestFactory")

@@ -68,7 +68,7 @@ public class ProjectFinanceAttachmentServiceSecurityTest extends BaseServiceSecu
     public void test_downloadAttachment() throws Exception {
         setLoggedInUser(null);
         when(attachmentLookupStrategy.findById(3L))
-                .thenReturn(new AttachmentResource(3L, "file", "application/pdf", 3456));
+                .thenReturn(new AttachmentResource(3L, "file", "application/pdf", 3456, null));
 
         assertAccessDenied(() -> classUnderTest.attachmentFileAndContents(3L), () -> {
             verify(attachmentPermissionsRules).projectFinanceUsersCanDownloadAnyAttachment(isA(AttachmentResource.class), isNull(UserResource.class));
@@ -82,7 +82,7 @@ public class ProjectFinanceAttachmentServiceSecurityTest extends BaseServiceSecu
     public void test_deleteAttachment() throws Exception {
         setLoggedInUser(null);
         when(attachmentLookupStrategy.findById(3L))
-                .thenReturn(new AttachmentResource(3L, "file", "application/pdf", 3456));
+                .thenReturn(new AttachmentResource(3L, "file", "application/pdf", 3456, null));
 
         assertAccessDenied(() -> classUnderTest.delete(3L), () -> {
             verify(attachmentPermissionsRules).onlyTheUploaderOfAnAttachmentCanDeleteItIfStillOrphan(isA(AttachmentResource.class), isNull(UserResource.class));
@@ -97,13 +97,13 @@ public class ProjectFinanceAttachmentServiceSecurityTest extends BaseServiceSecu
         public ServiceResult<AttachmentResource> upload(String contentType, String contentLength, String originalFilename,
                                                         Long projectId, HttpServletRequest request) {
             return ServiceResult.serviceSuccess(new AttachmentResource(33L, "name",
-                    "application/pdf", 2345));
+                    "application/pdf", 2345, null));
         }
 
         @Override
         public ServiceResult<AttachmentResource> findOne(Long attachmentId) {
             return ServiceResult.serviceSuccess(new AttachmentResource(33L, "name",
-                    "application/pdf", 2345));
+                    "application/pdf", 2345, null));
         }
 
         @Override

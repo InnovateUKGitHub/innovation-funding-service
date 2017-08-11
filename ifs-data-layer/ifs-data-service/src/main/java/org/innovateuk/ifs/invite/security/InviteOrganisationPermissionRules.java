@@ -42,18 +42,23 @@ public class InviteOrganisationPermissionRules {
         return isLeadApplicantForAllApplications(inviteOrganisation, user);
     }
 
-    @PermissionRule(value = "CREATE_APPLICATION_INVITES", description = "Lead applicant can create invites if the application is still editable")
+    @PermissionRule(value = "CREATE_APPLICATION_INVITES", description = "Lead applicant or collaborator can create invites for the specified application if the application is still editable")
     public boolean leadApplicantCanCreateApplicationInvitesIfApplicationEditable(InviteOrganisationResource inviteOrganisation, UserResource user) {
         // This would never happen, unless someone calls REST directly. The Web layer ensures that at least one invite is present.
         if (inviteOrganisation.getInviteResources().isEmpty()) {
             throw new ForbiddenActionException("Missing Invite Resource");
         }
 
-        boolean isLead = isLeadApplicantForAllApplications(inviteOrganisation, user);
+        if (!allInviteApplicationIdsMatch(inviteOrganisation)) {
+            throw new ForbiddenActionException("Not all invite application ids match");
+        }
+
+        boolean isLeadOrContributor = isApplicationCollaboratorOrIsLeadApplicant(inviteOrganisation, user);
+
         // Get the application id from the first invite, as application id is same for all invites.
         Long applicationId = inviteOrganisation.getInviteResources().get(0).getApplication();
         boolean isApplicationEditable = applicationIsEditableById(applicationId);
-        return  isLead && isApplicationEditable;
+        return  isLeadOrContributor && isApplicationEditable;
     }
 
     private boolean applicationIsEditableById(final Long applicationId) {
@@ -129,5 +134,9 @@ public class InviteOrganisationPermissionRules {
 
     private boolean isLeadApplicant(ApplicationInviteResource applicationInviteResource, UserResource userResource) {
         return checkProcessRole(userResource, applicationInviteResource.getApplication(), LEADAPPLICANT, processRoleRepository);
+    }
+
+    private boolean allInviteApplicationIdsMatch(InviteOrganisationResource inviteOrganisation) {
+        return inviteOrganisation.getInviteResources().stream().allMatch(invite -> invite.getApplication().equals(inviteOrganisation.getInviteResources().get(0).getApplication()));
     }
 }
