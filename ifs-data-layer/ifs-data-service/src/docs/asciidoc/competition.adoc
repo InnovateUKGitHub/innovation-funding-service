@@ -84,7 +84,6 @@ include::{snippets}/competition/find-innovation-leads/path-parameters.adoc[]
 
 ==== Response
 include::{snippets}/competition/find-innovation-leads/http-response.adoc[]
-include::{snippets}/competition/find-innovation-leads/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/competition/find-innovation-leads/curl-request.adoc[]
