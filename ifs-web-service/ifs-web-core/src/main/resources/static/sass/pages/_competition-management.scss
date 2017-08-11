@@ -1,12 +1,59 @@
 //comp management admin pages require extra page width to prevent data tables from horizontal scrolling
+
+$wide-page-width: 1400px;
+
 .full-width,
 .competition-management{
-  #content{
-    max-width: 1400px;
-    padding: 0 30px;
 
-    @media (min-width: 1200px){
-      padding: 0;
+  #global-header{
+    .header-wrapper{
+      max-width: $wide-page-width + $gutter;
+    }
+  }
+
+  #content{
+    @include media-down(mobile){
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    @include media(tablet){
+      margin: 0;
+    }
+
+    @media (min-width: $wide-page-width + ($gutter * 2)){
+      padding-left: 0;
+      padding-right: 0;
+      margin: 0 auto;
+    }
+
+    max-width: $wide-page-width;
+    padding-left: $gutter;
+    padding-right: $gutter;
+  }
+
+  .grid-container{
+    &.phase-banner{
+      max-width: $wide-page-width;
+      margin-left: $gutter;
+      margin-right: $gutter;
+
+      @include media-down(mobile){
+        margin-left: $gutter-half;
+        margin-right: $gutter-half;
+      }
+
+      @media (min-width: $wide-page-width + ($gutter * 2)){
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+    }
+  }
+
+  #footer{
+    .footer-wrapper{
+      max-width: $wide-page-width;
     }
   }
 }
