@@ -36,7 +36,7 @@ public class StatelessAuthenticationFilter extends OncePerRequestFilter {
             throws IOException, ServletException {
 
         if(shouldBeAuthenticated(request)) {
-            Authentication authentication = userAuthenticationService.getAuthentication(request);
+            Authentication authentication = userAuthenticationService.getAuthentication(request, true);
 
             if (authentication != null) {
                 UserResource ur = userAuthenticationService.getAuthenticatedUser(request);
