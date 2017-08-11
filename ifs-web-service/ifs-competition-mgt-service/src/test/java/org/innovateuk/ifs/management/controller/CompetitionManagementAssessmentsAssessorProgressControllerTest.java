@@ -6,13 +6,10 @@ import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResour
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationCountSummaryRestService;
 import org.innovateuk.ifs.assessment.resource.*;
-import org.innovateuk.ifs.assessment.service.AssessmentRestService;
-import org.innovateuk.ifs.assessment.service.AssessmentRestServiceImpl;
 import org.innovateuk.ifs.assessment.service.AssessorCompetitionSummaryRestService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.model.AssessorAssessmentProgressModelPopulator;
-import org.innovateuk.ifs.management.service.CompetitionManagementApplicationService;
 import org.innovateuk.ifs.management.viewmodel.AssessorAssessmentProgressViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.junit.Test;
