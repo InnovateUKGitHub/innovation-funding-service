@@ -35,7 +35,6 @@ def postCredentialsAndGetShibbolethParameters(user, password, baseAuthUrl, login
   # Note that python will put quotes around the individual parameters automatically. In particular the authUrl, and with out these the curl command would not work.
   curlCommand = "curl --insecure -L --data j_username=" + urllib.quote(user) + "&j_password=" + urllib.quote(password) + "&_eventId_proceed= " + baseAuthUrl + loginPostUrl
   postLoginPage = shell(curlCommand)
-  print "postLoginPage: " + postLoginPage
   sAMLResponse = re.findall('name="SAMLResponse" value="(.*)"', postLoginPage, re.MULTILINE)[0]
   return sAMLResponse
 
