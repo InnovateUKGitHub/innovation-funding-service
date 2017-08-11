@@ -5,7 +5,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
