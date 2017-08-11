@@ -10,6 +10,8 @@ Documentation  INFUND-6390 As an Applicant I will be invited to add project cost
 ...            INFUND-9151 Update 'Application details' where a single 'Innovation area' set in 'Initial details'
 ...
 ...            IFS-40 As a comp executive I am able to select an 'Innovation area' of 'All' where the 'Innovation sector' is 'Open'
+...
+...            IFS-1015 As a Lead applicant with an existing account I am informed if my Organisation type is NOT eligible to lead
 Suite Setup     Custom Suite Setup
 Suite Teardown  Close browser and delete emails
 Force Tags      Applicant  CompAdmin
@@ -24,6 +26,7 @@ ${applicationWithoutGrowth}  NewApplFromNewComp without GrowthTable
 ${compWithGrowth}            All-Innov-Areas With GrowthTable
 ${applicationWithGrowth}     All-Innov-Areas Application With GrowthTable
 ${newUsersEmail}             liam@innovate.com
+${ineligibleMessage}         Your organisation is not eligible to start an application for this competition.
 
 *** Test Cases ***
 Comp Admin starts a new Competition
@@ -332,12 +335,16 @@ Non-lead can can edit and remark Organisation as Complete
 RTOs are not allowed to apply on Competition where only Businesses are allowed to lead
     [Documentation]  IFS-1015
     [Tags]  HappyPath
-    Given log in as a different user      antonio.jenkins@jabbertype.example.com  ${short_password}
-    When the user clicks the button/link  id=proposition-name
-    Then the user clicks the button/link  link=${compWithoutGrowth}
+    Given the logged in user should not be able to apply in a competition he has not right to  antonio.jenkins@jabbertype.example.com  ${compWithoutGrowth}
+    When the user should see the element           jQuery=h1:contains("Research")
+    Then the user should see the text in the page  ${ineligibleMessage}
+
+Business organisation is not allowed to apply on Comp where only RTOs are allowed to lead
+    [Documentation]  IFS-1015
+    [Tags]  HappyPath
+    Given the logged in user should not be able to apply in a competition he has not right to  theo.simpson@katz.example.com  ${OPEN_COMPETITION_NAME}
     When the user clicks the button/link  link=Start new application
-    Then the user should see the element  jQuery=h1:contains("Research")
-    And the user should see the text in the page  Your organisation is not eligible to start an application for this competition.
+    Then the user should see the text in the page  ${ineligibleMessage}
 
 *** Keywords ***
 Custom Suite Setup
@@ -550,3 +557,10 @@ the user fills in the Application details
     The user clicks the button/link       jQuery=button[name="mark_as_complete"]
     the user clicks the button/link       link=Application overview
     the user should see the element       jQuery=li:contains("Application details") > .task-status-complete
+
+the logged in user should not be able to apply in a competition he has not right to
+    [Arguments]  ${email}  ${competition}
+    log in as a different user       ${email}  ${short_password}
+    the user clicks the button/link  id=proposition-name
+    the user clicks the button/link  link=${competition}
+    the user clicks the button/link  link=Start new application
