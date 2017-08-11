@@ -265,9 +265,8 @@ public class CompetitionManagementAssessmentsAssessorProgressControllerTest exte
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedModel))
                 .andExpect(model().attributeExists("model"))
-                .andExpect(view().name("competition/application-progress-remove-confirm"));
+                .andExpect(view().name("competition/assessor-progress-remove-confirm"));
     }
-
 
     private AddressResource getExpectedAddress() {
         return newAddressResource()
