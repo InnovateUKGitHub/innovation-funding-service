@@ -36,13 +36,12 @@ def postCredentialsAndGetShibbolethParameters(user, password, baseAuthUrl, login
   curlCommand = "curl --insecure -L --data j_username=" + urllib.quote(user) + "&j_password=" + urllib.quote(password) + "&_eventId_proceed= " + baseAuthUrl + loginPostUrl
   postLoginPage = shell(curlCommand)
   sAMLResponse = re.findall('name="SAMLResponse" value="(.*)"', postLoginPage, re.MULTILINE)[0]
-  relayState = re.findall('RelayState" value="(.*?)"', postLoginPage, re.MULTILINE)[0]
-  return sAMLResponse, relayState
+  return sAMLResponse
 
 # Post the SAML credentials and get back a session cookie. The user is now logged in and the session cookie is all that is required going forward.
-def postShibbolethParametersForSession(sAMLResponse, relayState, baseUrl):
+def postShibbolethParametersForSession(sAMLResponse, baseUrl):
   h = HTMLParser()
-  curlCommand = "curl --insecure -L -c - --data SAMLRequest=" + urllib.quote(h.unescape(sAMLResponse)) + "&RelayState=" + urllib.quote(h.unescape(relayState)) + " " + baseUrl + "/Shibboleth.sso/SAML2/POST"
+  curlCommand = "curl --insecure -L -c - --data SAMLRequest=" + urllib.quote(h.unescape(sAMLResponse)) + " " + baseUrl + "/Shibboleth.sso/SAML2/POST"
   exchange = shell(curlCommand)
   session = re.findall('(_shibsession_([^\s-]*))\s*(.*)', exchange, re.MULTILINE)
   shibCookieName = session[0][0]
@@ -75,8 +74,8 @@ def main():
        downloadFileLocation = sys.argv[4] # e.g. /tmp/file.xlsx
        baseUrl = getBaseUrl(downloadUrl)
        loginPostUrl, baseAuthUrl = getBaseAuthUrlAndPortUrl(baseUrl)
-       sAMLResponse, relayState = postCredentialsAndGetShibbolethParameters(user, password, baseAuthUrl, loginPostUrl)
-       shibCookieName, shibCookieValue = postShibbolethParametersForSession(sAMLResponse, relayState, baseUrl)
+       sAMLResponse = postCredentialsAndGetShibbolethParameters(user, password, baseAuthUrl, loginPostUrl)
+       shibCookieName, shibCookieValue = postShibbolethParametersForSession(sAMLResponse, baseUrl)
        downloadFile(shibCookieName, shibCookieValue, downloadUrl, downloadFileLocation)
 
 if __name__ == '__main__':
