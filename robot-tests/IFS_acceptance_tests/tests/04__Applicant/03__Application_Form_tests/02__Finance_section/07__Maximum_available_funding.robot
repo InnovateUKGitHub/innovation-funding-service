@@ -122,7 +122,7 @@ Business user fills in the project costs
 
 Research participation is correct for RTO lead application
    [Documentation]  IFS-1050  IFS-1013
-#    The Open comp used has 50% as maximum research participation.So only business parnter can claim rest of the amount
+#    The Open comp used has 50% as maximum research participation. So only business partner can claim rest of the amount
 #    Research participants include all non-Business participants i.e. Research, RTO and Public sector or charity who claim 50% of the overall project costs
    [Tags]
    [Setup]  log in as a different user                 ${lead_rto_email}  ${correct_password}
