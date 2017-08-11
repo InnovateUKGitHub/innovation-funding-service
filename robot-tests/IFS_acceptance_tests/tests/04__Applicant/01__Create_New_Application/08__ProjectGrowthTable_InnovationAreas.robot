@@ -343,7 +343,7 @@ Business organisation is not allowed to apply on Comp where only RTOs are allowe
     [Documentation]  IFS-1015
     [Tags]  HappyPath
     Given the logged in user should not be able to apply in a competition he has not right to  theo.simpson@katz.example.com  ${OPEN_COMPETITION_NAME}
-    When the user clicks the button/link  link=Start new application
+    When the user should see the element           jQuery=h1:contains("Business")
     Then the user should see the text in the page  ${ineligibleMessage}
 
 *** Keywords ***
