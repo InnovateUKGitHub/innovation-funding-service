@@ -1,5 +1,12 @@
 package org.innovateuk.ifs.security;
 
+import java.io.IOException;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -7,18 +14,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.filter.GenericFilterBean;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @Service
 @Configurable
-public class StatelessAuthenticationFilter extends GenericFilterBean {
+public class StatelessAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
@@ -27,13 +27,11 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
     private String monitoringEndpoint;
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
+    public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
 
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-
-        if(shouldBeAuthenticated(httpRequest)) {
-            Authentication authentication = userAuthenticationService.getAuthentication(httpRequest);
+        if(shouldBeAuthenticated(request)) {
+            Authentication authentication = userAuthenticationService.getAuthentication(request);
 
             if (authentication != null) {
                 SecurityContextHolder.getContext().setAuthentication(authentication);

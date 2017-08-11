@@ -213,6 +213,3 @@ task initDB() {
 task wrapper(type: Wrapper) {
     gradleVersion = '3.0'
 }
-
-// Following is required to override allowed suffix on test environments. See comments on IFS-27.
-ext.internalUserEmailDomain="innovateuk.test"

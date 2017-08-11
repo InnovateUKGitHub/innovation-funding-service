@@ -3,9 +3,6 @@ package org.innovateuk.ifs.thread.attachment.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.project.financechecks.security.AttachmentPermissionsRules;
-
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
-import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.threads.attachments.domain.Attachment;
 import org.innovateuk.ifs.threads.domain.Query;
@@ -22,6 +19,8 @@ import java.time.ZonedDateTime;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.thread.security.ProjectFinanceThreadsTestData.projectFinanceWithUserAsFinanceContact;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
@@ -45,7 +44,7 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
     @Before
     public void setUp() throws Exception {
         projectResource = newProjectResource().withId(77L).build();
-        attachmentResource = new AttachmentResource(9283L, "fileName", "application/json", 1024);
+        attachmentResource = new AttachmentResource(9283L, "fileName", "application/json", 1024, null);
         projectFinanceUser = projectFinanceUser();
         projectPartnerUser = getUserWithRole(PARTNER);
 
@@ -150,7 +149,7 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
 
     private Attachment asDomain(AttachmentResource attachmentResource, Long uploaderId) {
         return new Attachment(attachmentResource.id, newUser().withId(uploaderId).build(),
-                newFileEntry().withFilesizeBytes(attachmentResource.sizeInBytes).withMediaType(attachmentResource.mediaType).build());
+                newFileEntry().withFilesizeBytes(attachmentResource.sizeInBytes).withMediaType(attachmentResource.mediaType).build(), null);
     }
 
 }
