@@ -79,13 +79,13 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
             Optional<SimpleGrantedAuthority> simpleGrantedAuthority = (Optional<SimpleGrantedAuthority>)authentication.getAuthorities().stream().findFirst();
             if(simpleGrantedAuthority.isPresent()) {
                 UserResource user = authentication.getDetails();
-                if (user.hasRoles(ASSESSOR, APPLICANT)) {
-                    String role = cookieUtil.getCookieValue(request, "role");
-                    if (!role.isEmpty()) {
-                        return "/" + user.getRoles().stream().filter(roleResource -> roleResource.getName().equals(role)).findFirst().get().getUrl();
+                String role = cookieUtil.getCookieValue(request, "role");
+                if (!role.isEmpty()) {
+                    String url = user.getRoles().stream().filter(roleResource -> roleResource.getName().equals(role)).findFirst().get().getUrl();
+                    if(url != null) {
+                        return "/" + url;
                     }
                 }
-
                 return "/" + user.getRoles().get(0).getUrl();
             }
         }
