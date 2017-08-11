@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
+import org.innovateuk.ifs.competition.resource.AvailableApplicationsSortFieldType;
 import org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType;
 import org.innovateuk.ifs.management.model.AssessorAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin;
@@ -64,8 +65,8 @@ public class CompetitionManagementAssessmentsAssessorProgressController {
                 competitionId,
                 assessorId,
                 assessmentId,
-                AvailableAssessorsSortFieldType.valueOf(sortField)
+                sortField
         ));
-        return "competition/application-progress-remove-confirm";
+        return "competition/assessor-progress-remove-confirm";
     }
 }

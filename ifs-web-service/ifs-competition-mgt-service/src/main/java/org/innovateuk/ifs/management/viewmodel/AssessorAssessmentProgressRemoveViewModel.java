@@ -2,23 +2,24 @@ package org.innovateuk.ifs.management.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.competition.resource.AvailableApplicationsSortFieldType;
 import org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType;
 
 /**
- * Holder of model attributes for the Application Progress view.
+ * Holder of model attributes for the Assessor Progress view.
  */
 public class AssessorAssessmentProgressRemoveViewModel {
 
     private long competitionId;
     private long assessorId;
     private long assessmentId;
-    private AvailableAssessorsSortFieldType sortField;
+    private String sortField;
 
     public AssessorAssessmentProgressRemoveViewModel(
             long competitionId,
             long assessorId,
             long assessmentId,
-            AvailableAssessorsSortFieldType sortField) {
+            String sortField) {
         this.competitionId = competitionId;
         this.assessorId = assessorId;
         this.assessmentId = assessmentId;
@@ -37,7 +38,7 @@ public class AssessorAssessmentProgressRemoveViewModel {
         return assessmentId;
     }
 
-    public AvailableAssessorsSortFieldType getSortField() {
+    public String getSortField() {
         return sortField;
     }
 
