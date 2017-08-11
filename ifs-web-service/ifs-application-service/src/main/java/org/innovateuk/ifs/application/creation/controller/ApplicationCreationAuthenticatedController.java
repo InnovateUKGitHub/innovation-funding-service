@@ -14,14 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static java.lang.String.format;
 
@@ -71,29 +68,29 @@ public class ApplicationCreationAuthenticatedController {
        return format("redirect:/application/create-authenticated/%s/not-eligible", competitionId);
     }
 
-    @PostMapping(value = "/{competitionId}")
+    @PostMapping("/{competitionId}")
     public String post(Model model,
                        @PathVariable(COMPETITION_ID) Long competitionId,
-                       UserResource user,
-                       HttpServletRequest request) {
+                       @RequestParam(value = FORM_RADIO_NAME, required = false) Optional<String> createNewApplication,
+                       UserResource user) {
         if(!isAllowedToLeadApplication(user.getId(), competitionId)) {
             return redirectToNotEligible(competitionId);
         }
 
-        final String createNewApplication = request.getParameter(FORM_RADIO_NAME);
-
-        if (RADIO_TRUE.equals(createNewApplication)) {
-            return createApplicationAndShowInvitees(user, competitionId);
-        } else if (RADIO_FALSE.equals(createNewApplication)) {
-            // redirect to dashboard
-            return "redirect:/";
+        if(createNewApplication.isPresent()) {
+            if (RADIO_TRUE.equals(createNewApplication.get())) {
+                return createApplicationAndShowInvitees(user, competitionId);
+            } else if (RADIO_FALSE.equals(createNewApplication.get())) {
+                // redirect to dashboard
+                return "redirect:/";
+            }
         }
 
         // user did not check one of the radio elements, show page again.
         return "redirect:/application/create-authenticated/" + competitionId;
     }
 
-    @GetMapping(value = "/{competitionId}/not-eligible")
+    @GetMapping("/{competitionId}/not-eligible")
     public String showNotEligiblePage(Model model,
                                       @PathVariable(COMPETITION_ID) Long competitionId,
                                       UserResource userResource) {
