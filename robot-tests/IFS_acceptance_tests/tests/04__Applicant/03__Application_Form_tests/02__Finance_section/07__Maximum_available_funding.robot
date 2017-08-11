@@ -9,33 +9,33 @@ Resource            ../../Applicant_Commons.robot
 
 ${Application_name_business}           Maximum funding allowed Business
 ${Application_name_RTO}                Maximum funding allowed RTO
-#${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}       Aerospace technology investment sector
-#${OPEN_COMPETITION_NAME}              Predicting market trends programme
+#${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}       Aerospace technology investment sector:This is business only lead org
+#${OPEN_COMPETITION_NAME}              Predicting market trends programme: This is RTO only lead org
 ${lead_business_email}                 oscar@innovateuk.com
 ${lead_rto_email}                      oscarRTO@innovateuk.com
 
 *** Test Cases ***
-maximum funding level available for lead business
+Maximum funding level available for lead business
     [Documentation]    IFS-338
     [Tags]
     Given we create a new user                               ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}  Oscar  business  ${lead_business_email}
     When the user clicks the button/link                     link=Untitled application (start here)
     And the user clicks the button/link                      link=Begin application
     And the applicant completes the application details      Application details  Experimental development
-    And the user fills the organisation details with Project growth table   ${Application_name_business}  ${SMALL_ORGANISATION_SIZE}
+    And the user fills the organisation details with Project growth table     ${Application_name_business}  ${SMALL_ORGANISATION_SIZE}
     When the user fills in the project costs                 ${Application_name_business}
     And the user clicks the button/link                      link=Your funding
     Then the user should see the text in the page             Enter your funding level (maximum 45%).
-    And the correct funding displayed for lead applicant      Feasibility studies   ${MEDIUM_ORGANISATION_SIZE}  60%
-    And the correct funding displayed for lead applicant      Industrial research   ${LARGE_ORGANISATION_SIZE}   50%
+    And the correct funding displayed for lead applicant      Feasibility studies  ${MEDIUM_ORGANISATION_SIZE}  60%
+    And the correct funding displayed for lead applicant      Industrial research  ${LARGE_ORGANISATION_SIZE}  50%
     And the user clicks the button/link                       jQuery=a:contains("Your finances")
     [Teardown]  the user clicks the button/link              link=Application overview
 
-lead applicant invites a Charity member
+Lead applicant invites a Charity member
     [Documentation]    IFS-338
     [Tags]
-    Given Invite a non-existing collaborator                           liamCharity@innovateuk.com  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}
-    When the user clicks the button/link                               link=${Application_name_business}
+    Given Invite a non-existing collaborator                                liamCharity@innovateuk.com  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}
+    When the user clicks the button/link                                    link=${Application_name_business}
     And the user fills the organisation details with Project growth table   ${Application_name_business}  ${SMALL_ORGANISATION_SIZE}
     And the user fills in the project costs                                 ${Application_name_business}
     Then the funding displayed is as expected
@@ -43,8 +43,8 @@ lead applicant invites a Charity member
 Invite existing academic collaborator
     [Documentation]  IFS-338
     [Tags]
-    [Setup]  log in as a different user                           ${lead_business_email}  ${correct_password}
-    When the user clicks the button/link                          link=${Application_name_business}
+    [Setup]  log in as a different user                          ${lead_business_email}  ${correct_password}
+    When the user clicks the button/link                         link=${Application_name_business}
     And the user clicks the button/link                          link=view team members and add collaborators
     And the user clicks the button/link                          link=Add partner organisation
     Then the user enters text to a text field                    css=#organisationName  eggs
@@ -56,7 +56,7 @@ Invite existing academic collaborator
     Then the correct funding is displayed to academic user
     [Teardown]  logout as user
 
-maximum funding level available for RTO lead
+Maximum funding level available for RTO lead
     [Documentation]  IFS-338
     [Tags]
     Given we create a new user                                                  ${OPEN_COMPETITION}  Smith  rto  ${lead_rto_email}
@@ -72,7 +72,7 @@ maximum funding level available for RTO lead
     And the user marks your funding section as complete
     [Teardown]  the user clicks the button/link                                 link=Application overview
 
-lead RTO applicant invites a Charity member
+Lead RTO applicant invites a Charity member
     [Documentation]    IFS-338
     [Tags]
     Given Invite a non-existing collaborator                                   liamRTO@innovateuk.com  ${OPEN_COMPETITION_NAME}
@@ -82,7 +82,7 @@ lead RTO applicant invites a Charity member
     Then the funding displayed is as expected
     And the user marks your funding section as complete
 
-invite existing academic collaborator for RTO lead
+Invite existing academic collaborator for RTO lead
     [Documentation]  IFS-1050  IFS-1013
     [Tags]
     [Setup]  log in as a different user                          ${lead_rto_email}  ${correct_password}
@@ -94,18 +94,18 @@ invite existing academic collaborator for RTO lead
     And the user enters text to a text field                     css=input[id="applicants0.email"]  ${collaborator2_credentials["email"]}
     And the user clicks the button/link                          jQuery=button:contains("Add organisation and invite applicants")
     And logout as user
-    And the user accepts the invite to collaborate               ${OPEN_COMPETITION_NAME}  ${collaborator2_credentials["email"]}  ${collaborator2_credentials["password"]}
+    When the user accepts the invite to collaborate               ${OPEN_COMPETITION_NAME}  ${collaborator2_credentials["email"]}  ${collaborator2_credentials["password"]}
     Then the correct funding is displayed to academic user
     And the academic user marks your project costs as complete
 
-invite existing business user into RTO lead application
+Invite existing business user into RTO lead application
     [Documentation]  IFS-1050  IFS-1013
     [Tags]
     [Setup]  log in as a different user                          ${lead_rto_email}  ${correct_password}
     When the user clicks the button/link                         link=${Application_name_RTO}
     And the user clicks the button/link                          link=view team members and add collaborators
     And the user clicks the button/link                          link=Add partner organisation
-    Then the user enters text to a text field                    css=#organisationName  innovate bus
+    And the user enters text to a text field                     css=#organisationName  innovate bus
     And the user enters text to a text field                     css=input[id="applicants0.name"]  oscar
     And the user enters text to a text field                     css=input[id="applicants0.email"]  ${lead_business_email}
     And the user clicks the button/link                          jQuery=button:contains("Add organisation and invite applicants")
@@ -120,14 +120,16 @@ Business user fills in the project costs
     And the user clicks the button/link                          link=Your funding
     Then the user marks your funding section as complete
 
-Rto lead able to mark finances as complete and Research participation is correct
+Research participation is correct for RTO lead application
    [Documentation]  IFS-1050  IFS-1013
+#    The Open comp used has 50% as maximum research participation.So only business parnter can claim rest of the amount
+#    Research participants include all non-Business participants i.e. Research, RTO and Public sector or charity who claim 50% of the overall project costs
    [Tags]
    [Setup]  log in as a different user                          ${lead_rto_email}  ${correct_password}
     When the user clicks the button/link                        link=${Application_name_RTO}
     And the user clicks the button/link                         link=Finances overview
     Then the user should see the element                        jQuery=.success-alert:contains("The participation levels of this project are within the required range.")
-    and the user should not see an error in the page
+    And the user should not see an error in the page
 
 *** Keywords ***
 the user navigates to the competition overview
@@ -138,14 +140,14 @@ the applicant completes the application details
     the user clicks the button/link              link=${Application_details}
     the user enters text to a text field         id=application_details-title  ${Application_name_business}
     the user clicks the button/link              jQuery=button:contains("Choose your innovation area")
-    the user clicks the button twice              jQuery=label[for^="innovationAreaChoice-22"]:contains("Digital manufacturing")
+    the user clicks the button twice             jQuery=label[for^="innovationAreaChoice-22"]:contains("Digital manufacturing")
     the user clicks the button/link              jQuery=button:contains(Save)
     the user fills the other application details questions   ${Research_category}
 
 the applicant completes the application details for RTO lead appln
     [Arguments]   ${Application_details}   ${Research_category}
     the user clicks the button/link             link=${Application_details}
-    the user enters text to a text field        id=application_details-title   ${Application_name_RTO}
+    the user enters text to a text field        id=application_details-title  ${Application_name_RTO}
     the user fills the other application details questions   ${Research_category}
 
 the user fills the other application details questions
@@ -163,6 +165,7 @@ the user fills the other application details questions
     the user clicks the button/link       link=Application overview
 
 the business user fills in the project costs
+# The project costs are added such that business partner costs are less than 50% of overall project costs
     the user clicks the button/link             link=Your finances
     the user clicks the button/link             link=Your project costs
     the user clicks the button/link             jQuery=button:contains("Materials")
@@ -217,7 +220,7 @@ the correct funding is displayed to academic user
 the academic user marks your project costs as complete
     the user clicks the button/link                         link=Your project costs
     the user enters text to a text field                    tsb-ref  academic costs
-    the user uploads the file                               css=.upload-section input   ${valid_pdf}
+    the user uploads the file                               css=.upload-section input  ${valid_pdf}
     wait for autosave
     the user clicks the button/link                         jQuery=button:contains("Mark as complete")
 
@@ -228,7 +231,7 @@ the correct funding displayed for lead applicant
     the user should see the text in the page                               Enter your funding level (maximum ${funding_amoount}).
 
 the user marks your funding section as complete
-    the user enters text to a text field                    id=cost-financegrantclaim    30
+    the user enters text to a text field                    id=cost-financegrantclaim  30
     the user clicks the button/link                         jQuery=label[for$="otherPublicFunding-no"]:contains("No")
     the user selects the checkbox                           agree-terms-page
     the user clicks the button/link                         jQuery=button:contains("Mark as complete")
