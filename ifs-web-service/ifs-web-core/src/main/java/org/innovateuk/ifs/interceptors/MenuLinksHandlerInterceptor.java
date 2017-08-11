@@ -2,6 +2,7 @@ package org.innovateuk.ifs.interceptors;
 
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
+import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -81,9 +82,12 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
                 UserResource user = authentication.getDetails();
                 String role = cookieUtil.getCookieValue(request, "role");
                 if (!role.isEmpty()) {
-                    String url = user.getRoles().stream().filter(roleResource -> roleResource.getName().equals(role)).findFirst().get().getUrl();
-                    if(url != null) {
-                        return "/" + url;
+                    Optional<RoleResource> r = user.getRoles().stream().filter(roleResource -> roleResource.getName().equals(role)).findFirst();
+                    if(r.isPresent()) {
+                        String url = r.get().getUrl();
+                        if (url != null) {
+                            return "/" + url;
+                        }
                     }
                 }
                 return "/" + user.getRoles().get(0).getUrl();
