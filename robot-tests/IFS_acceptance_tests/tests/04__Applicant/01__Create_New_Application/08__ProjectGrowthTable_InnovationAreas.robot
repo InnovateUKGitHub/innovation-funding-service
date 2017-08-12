@@ -307,7 +307,7 @@ Invite Collaborator in Application with Growth table
     [Setup]
     Given the lead applicant invites an existing user  ${compWithGrowth}  ${collaborator1_credentials["email"]}
     When log in as a different user                    &{collaborator1_credentials}
-    Then the user reads his email and clicks the link  ${collaborator1_credentials["email"]}  Invitation to collaborate in ${compWithGrowth}  You will be joining as part of the organisation  3
+    Then the user reads his email and clicks the link  ${collaborator1_credentials["email"]}  Invitation to collaborate in ${compWithGrowth}  You will be joining as part of the organisation  2
     When the user should see the element               jQuery=h2:contains("We have found an account with the invited email address")
     Then the user clicks the button/link               link=Continue or sign in
     And the user clicks the button/link                link=Confirm and accept invitation
@@ -471,7 +471,7 @@ the user fills in the inviting steps
 
 Newly invited collaborator can create account and sign in
     logout as user
-    the user reads his email and clicks the link  ${newUsersEmail}  Invitation to collaborate in ${compWithGrowth}  You will be joining as part of the organisation  3
+    the user reads his email and clicks the link  ${newUsersEmail}  Invitation to collaborate in ${compWithGrowth}  You will be joining as part of the organisation  2
     the user clicks the button/link               jQuery=a:contains("Yes, accept invitation")
     the user should see the element               jquery=h1:contains("Choose your organisation type")
     the user completes the new account creation
