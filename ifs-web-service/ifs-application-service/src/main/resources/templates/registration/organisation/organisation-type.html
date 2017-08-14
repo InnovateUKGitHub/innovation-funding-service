@@ -20,7 +20,7 @@
 
     <h2 class="heading-medium">Choose your organisation type</h2>
 
-    <form th:object="${form}" th:action="@{/organisation/create/type/new-account-organisation-type/}" method="POST">
+    <form th:object="${form}" th:action="@{/organisation/create/new-account-organisation-type/}" method="POST">
         <div th:class="${#fields.hasErrors('*{organisationType}')} ? 'form-group form-group-error' : 'form-group'">
             <fieldset>
                 <legend>

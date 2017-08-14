@@ -25,6 +25,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Optional;
 
+/**
+ * Provides methods for picking an organisation type as a lead applicant after initialization or the registration process.
+ */
+
 @Controller
 @RequestMapping(AbstractOrganisationCreationController.BASE_URL + "/")
 @PreAuthorize("permitAll")
@@ -73,10 +77,10 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
         }
 
         if (!bindingResult.hasFieldErrors(ORGANISATION_TYPE_ID)) {
-            OrganisationTypeForm organisationTypeForm = new OrganisationTypeForm();
+            OrganisationTypeForm organisationTypeForm = registrationCookieService.getOrganisationTypeCookieValue(request).orElse(new OrganisationTypeForm());
             organisationTypeForm.setOrganisationType(organisationTypeId);
             registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
-            saveOrganisationTypeToCreationForm(request, response, organisationTypeForm);
+            saveOrganisationTypeToCreationForm(response, organisationTypeForm);
 
             if (!isAllowedToLeadApplication(organisationTypeId, request)) {
                 return "redirect:" + BASE_URL + "/" + NOT_ELIGIBLE;
@@ -120,13 +124,9 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
         return OrganisationTypeEnum.getFromId(organisationTypeId) != null;
     }
 
-    private void saveOrganisationTypeToCreationForm(HttpServletRequest request, HttpServletResponse response, OrganisationTypeForm organisationTypeForm) {
-        Optional<OrganisationCreationForm> organisationCreationFormFromCookie = registrationCookieService.getOrganisationCreationCookieValue(request);
-        if (organisationCreationFormFromCookie.isPresent()) {
-            organisationCreationFormFromCookie.get().setOrganisationTypeId(organisationTypeForm.getOrganisationType());
-        }
-
-        OrganisationCreationForm newOrganisationCreationForm = organisationCreationFormFromCookie.orElse(new OrganisationCreationForm());
+    private void saveOrganisationTypeToCreationForm(HttpServletResponse response, OrganisationTypeForm organisationTypeForm) {
+        OrganisationCreationForm newOrganisationCreationForm = new OrganisationCreationForm();
+        newOrganisationCreationForm.setOrganisationTypeId(organisationTypeForm.getOrganisationType());
         registrationCookieService.saveToOrganisationCreationCookie(newOrganisationCreationForm, response);
     }
 }

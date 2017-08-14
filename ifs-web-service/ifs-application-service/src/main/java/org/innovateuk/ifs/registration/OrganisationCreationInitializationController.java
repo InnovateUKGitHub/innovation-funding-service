@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Provides the initialization method and redirect when registering a new organisation.
+ * Provides the initialization method and redirect when registering a new organisation as a lead applicant.
  */
 @Controller
 @RequestMapping(AbstractOrganisationCreationController.BASE_URL + "/initialize")
@@ -19,7 +19,10 @@ public class OrganisationCreationInitializationController extends AbstractOrgani
     @GetMapping
     public String createOrganisationAsLeadApplicant(HttpServletRequest request, HttpServletResponse response) {
         //This is the first endpoint when creating a new account as lead applicant.
+        registrationCookieService.deleteOrganisationCreationCookie(response);
+
         OrganisationTypeForm organisationTypeForm = new OrganisationTypeForm();
+        organisationTypeForm.setLeadApplicant(true);
         registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
         return "redirect:" + BASE_URL + "/" + LEAD_ORGANISATION_TYPE;
     }

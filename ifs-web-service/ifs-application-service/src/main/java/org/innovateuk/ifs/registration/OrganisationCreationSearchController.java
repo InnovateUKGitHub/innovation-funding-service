@@ -29,7 +29,9 @@ import static org.innovateuk.ifs.util.ExceptionFunctions.getOrRethrow;
 import static org.springframework.web.util.UriUtils.encodeQueryParam;
 
 /**
- * TODO: Add description
+ * Provides methods for both:
+ * - Finding your company or research type organisation through Companies House or JES search.
+ * - Verifying or amending the address attached to the organisation.
  */
 @Controller
 @RequestMapping(AbstractOrganisationCreationController.BASE_URL)
@@ -55,7 +57,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     private static final String SEARCH_ORGANISATION = "search-organisation";
     private static final String NOT_IN_COMPANY_HOUSE = "not-in-company-house";
 
-    @GetMapping("/" + FIND_ORGANISATION)
+    @GetMapping(value = {"/" + FIND_ORGANISATION,"/" + FIND_ORGANISATION + "/**"})
     public String createOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                      Model model,
                                      HttpServletRequest request,
@@ -76,6 +78,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         model.addAttribute("isLeadApplicant", checkOrganisationIsLead(request));
         model.addAttribute("searchLabel",getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchLabel",  request.getLocale()));
         model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint",  request.getLocale()));
+        model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccessObject());
 
         return TEMPLATE_PATH + "/" + FIND_ORGANISATION;
     }
@@ -105,11 +108,11 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     @PostMapping(value = "/" + FIND_ORGANISATION + "/**", params = MANUAL_ADDRESS)
     public String manualAddressWithCompanyHouse(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                                 HttpServletRequest request, HttpServletResponse response) {
-        organisationForm.setAddressForm(new AddressForm());
-        organisationForm.getAddressForm().setManualAddress(true);
-        organisationForm.setOrganisationSearching(false);
-        organisationForm.setManualEntry(true);
-        registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
+        OrganisationCreationForm organisationFromCookie = registrationCookieService.getOrganisationCreationCookieValue(request).get();
+        organisationFromCookie.setAddressForm(new AddressForm());
+        organisationFromCookie.getAddressForm().setManualAddress(true);
+
+        registrationCookieService.saveToOrganisationCreationCookie(organisationFromCookie, response);
         return "redirect:/organisation/create/" + FIND_ORGANISATION;
     }
 
@@ -127,6 +130,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
 
         model.addAttribute(ORGANISATION_FORM, organisationForm);
+        model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccessObject());
         model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccessObject(), checkOrganisationIsLead(request)));
 
         if (OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationTypeId())) {
@@ -156,6 +160,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
 
         model.addAttribute(ORGANISATION_FORM, organisationForm);
         model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccessObject(), checkOrganisationIsLead(request)));
+        model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccessObject());
 
         if (OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationTypeId())) {
             return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
@@ -182,6 +187,8 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
 
         model.addAttribute(ORGANISATION_FORM, organisationForm);
         model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccessObject(), checkOrganisationIsLead(request)));
+        model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccessObject());
+
 
         if (OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationTypeId())) {
             return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
@@ -235,18 +242,20 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
                                    HttpServletRequest request, HttpServletResponse response,
                                    @RequestHeader(value = REFERER, required = false) final String referer) {
         OrganisationCreationForm organisationCreationForm = registrationCookieService.getOrganisationCreationCookieValue(request).get();
+        organisationCreationForm.setOrganisationName(organisationForm.getOrganisationName());
         organisationCreationForm.setSearchOrganisationId(organisationForm.getSearchOrganisationId());
         organisationCreationForm.setUseSearchResultAddress(organisationForm.isUseSearchResultAddress());
         organisationCreationForm.setAddressForm(organisationForm.getAddressForm());
+        organisationForm.setTriedToSave(true);
+        organisationForm.getAddressForm().setTriedToSave(true);
 
         addOrganisationType(organisationCreationForm, organisationTypeIdFromCookie(request));
         addSelectedOrganisation(organisationCreationForm, model);
 
-
         bindingResult = new BeanPropertyBindingResult(organisationCreationForm, ORGANISATION_FORM);
         validator.validate(organisationCreationForm, bindingResult);
-        BindingResult addressBindingResult = new BeanPropertyBindingResult(organisationCreationForm.getAddressForm().getSelectedPostcode(), SELECTED_POSTCODE);
-        organisationFormAddressFormValidate(organisationCreationForm, bindingResult, addressBindingResult);
+        BindingResult addressBindingResult = new BeanPropertyBindingResult(organisationForm.getAddressForm().getSelectedPostcode(), SELECTED_POSTCODE);
+        organisationFormAddressFormValidate(organisationForm, bindingResult, addressBindingResult);
 
         if (!bindingResult.hasFieldErrors(ORGANISATION_NAME) && !bindingResult.hasFieldErrors(USE_SEARCH_RESULT_ADDRESS) && !addressBindingResult.hasErrors()) {
             registrationCookieService.saveToOrganisationCreationCookie(organisationCreationForm, response);

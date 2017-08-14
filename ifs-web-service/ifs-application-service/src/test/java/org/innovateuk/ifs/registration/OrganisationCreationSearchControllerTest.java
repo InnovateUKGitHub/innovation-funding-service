@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.populator.OrganisationCreationSelectTypePopulator;
+import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
@@ -50,9 +51,9 @@ import static org.springframework.web.util.UriUtils.encodeQueryParam;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class OrganisationCreationControllerTest extends BaseUnitTest {
+public class OrganisationCreationSearchControllerTest extends BaseUnitTest {
     @InjectMocks
-    private OrganisationCreationController organisationCreationController;
+    private OrganisationCreationSearchController organisationCreationController;
     private ApplicationResource applicationResource;
 
     @Mock
@@ -113,7 +114,7 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
         competitionId = 2L;
         competitionIdCookie = new Cookie("competitionId", encryptor.encrypt(competitionId.toString()));
 
-        inviteHash = new Cookie(AbstractAcceptInviteController.INVITE_HASH, encryptor.encrypt(INVITE_HASH));
+        inviteHash = new Cookie(RegistrationCookieService.INVITE_HASH, encryptor.encrypt(INVITE_HASH));
     }
 
     @Test

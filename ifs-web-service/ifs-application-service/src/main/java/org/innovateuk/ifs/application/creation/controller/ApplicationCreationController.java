@@ -53,9 +53,8 @@ public class ApplicationCreationController {
             return "redirect:/competition/search";
         }
         model.addAttribute(COMPETITION_ID, competitionId);
+        registrationCookieService.deleteAllRegistrationJourneyCookies(response);
         registrationCookieService.saveToCompetitionIdCookie(competitionId, response);
-        registrationCookieService.deleteInviteHashCookie(response);
-        registrationCookieService.deleteOrganisationIdCookie(response);
 
         return "create-application/check-eligibility";
     }

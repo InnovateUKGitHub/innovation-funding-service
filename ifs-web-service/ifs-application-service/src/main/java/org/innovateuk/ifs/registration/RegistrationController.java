@@ -49,7 +49,7 @@ import static org.innovateuk.ifs.login.HomeController.getRedirectUrlForUser;
 public class RegistrationController {
     public static final String BASE_URL = "/registration/register";
 
-    private void setValidator(Validator validator) {
+    public void setValidator(Validator validator) {
         this.validator = validator;
     }
 
