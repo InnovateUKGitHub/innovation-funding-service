@@ -2,6 +2,7 @@ package org.innovateuk.ifs.testdata;
 
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
+import org.junit.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -11,7 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
  */
 @ActiveProfiles({"integration-test,seeding-db"})
 @DirtiesContext
-//@Ignore
+@Ignore
 public class GenerateTestData extends BaseGenerateTestData {
 
     @Autowired
