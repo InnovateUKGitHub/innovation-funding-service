@@ -7,7 +7,7 @@ Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 ${INVITE_LINK}    ${SERVER}/accept-invite/78aa4567-0b70-41da-8310-a0940644d0ba
-${SELECT_ORGANISATION}    ${SERVER}/organisation/create/type/new-account-organisation-type
+${SELECT_ORGANISATION}    ${SERVER}/organisation/create/new-account-organisation-type
 # This file uses the Application: Climate science the history of Greenland's ice    (Lead applcant: Steve.Smith)
 
 *** Test Cases ***
