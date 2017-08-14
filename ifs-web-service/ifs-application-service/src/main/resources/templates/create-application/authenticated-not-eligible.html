@@ -13,7 +13,6 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{/competition/{competitionId}/overview(competitionId=${model.competitionId})}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationTypeName},size='heading-xlarge'" />
 
-
     <p>
         Your organisation is not eligible to start an application for this competition.
     </p>
@@ -23,9 +22,8 @@
     <p>
         If you have further queries you can contact <a href="/info/contact">customer support service</a>.
     </p>
-
     <p>
-        <a href="/dashboard">View your dashboard.</a>
+        <a th:href="@{/}">View your dashboard.</a>
     </p>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
