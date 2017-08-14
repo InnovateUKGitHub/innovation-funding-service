@@ -56,25 +56,11 @@ function shibInit() {
      oc rsh ${SVC_ACCOUNT_CLAUSE} $(oc get pods  ${SVC_ACCOUNT_CLAUSE} | awk '/ldap/ { print $1 }') /usr/local/bin/ldap-sync-from-ifs-db.sh ifs-database
 }
 
-function createProject() {
-    until oc new-project $PROJECT ${SVC_ACCOUNT_CLAUSE}
-    do
-      oc delete project $PROJECT ${SVC_ACCOUNT_CLAUSE} || true
-      sleep 10
-    done
-}
-
 # Entry point
 cleanUp
 cloneConfig
 tailorAppInstance
-if [[ ${TARGET} != "production" && ${TARGET} != "demo" && ${TARGET} != "uat" && ${TARGET} != "sysint" && ${TARGET} != "perf" ]]
-then
-    createProject
-fi
-
 useContainerRegistry
-pushApplicationImages
 deploy
 blockUntilServiceIsUp
 

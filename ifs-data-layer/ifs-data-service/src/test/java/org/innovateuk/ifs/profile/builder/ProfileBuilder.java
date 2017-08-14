@@ -79,6 +79,14 @@ public class ProfileBuilder extends BaseBuilder<Profile, ProfileBuilder> {
         return withArray((createdOn, profile) -> setField("createdOn", createdOn, profile), createdOns);
     }
 
+    public ProfileBuilder withModifiedBy(User... users) {
+        return withArray((user, profile) -> setField("modifiedBy", user, profile), users);
+    }
+
+    public ProfileBuilder withModifiedOn(ZonedDateTime... modifiedOns) {
+        return withArray((modifiedOn, profile) -> setField("modifiedOn", modifiedOn, profile), modifiedOns);
+    }
+
     @Override
     protected Profile createInitial() {
         return createDefault(Profile.class);
