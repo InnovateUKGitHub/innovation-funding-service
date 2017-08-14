@@ -332,30 +332,29 @@ public class CompetitionSetupController {
                                        UserResource loggedInUser) {
 
 
-        manageInnovationLeadsModelPopulator.populateModel(model, competitionId);
+        CompetitionResource competition = competitionService.getById(competitionId);
 
-        if (!initialDetailsComplete(model)) {
+        if (!competition.isInitialDetailsComplete()){
             return "redirect:/competition/setup/" + competitionId;
         }
+
+        manageInnovationLeadsModelPopulator.populateModel(model, competition);
 
         return "competition/manage-innovation-leads-find";
     }
 
-    private boolean initialDetailsComplete(Model model) {
-        return (boolean) model.asMap().get("initialDetailsComplete");
-
-    }
     @GetMapping("/{competitionId}/manage-innovation-leads/overview")
     public String manageInnovationLeadOverview(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                        Model model,
                                        UserResource loggedInUser) {
 
+        CompetitionResource competition = competitionService.getById(competitionId);
 
-        manageInnovationLeadsModelPopulator.populateModel(model, competitionId);
-
-        if (!initialDetailsComplete(model)) {
+        if (!competition.isInitialDetailsComplete()){
             return "redirect:/competition/setup/" + competitionId;
         }
+
+        manageInnovationLeadsModelPopulator.populateModel(model, competition);
 
         return "competition/manage-innovation-leads-overview";
     }
@@ -366,13 +365,14 @@ public class CompetitionSetupController {
                                     Model model,
                                     UserResource loggedInUser) {
 
+        CompetitionResource competition = competitionService.getById(competitionId);
 
-        competitionService.addInnovationLead(competitionId, innovationLeadUserId);
-        manageInnovationLeadsModelPopulator.populateModel(model, competitionId);
-
-        if (!initialDetailsComplete(model)) {
+        if (!competition.isInitialDetailsComplete()){
             return "redirect:/competition/setup/" + competitionId;
         }
+
+        competitionService.addInnovationLead(competitionId, innovationLeadUserId);
+        manageInnovationLeadsModelPopulator.populateModel(model, competition);
 
         return "competition/manage-innovation-leads-find";
     }
@@ -383,12 +383,14 @@ public class CompetitionSetupController {
                                        Model model,
                                        UserResource loggedInUser) {
 
-        competitionService.removeInnovationLead(competitionId, innovationLeadUserId);
-        manageInnovationLeadsModelPopulator.populateModel(model, competitionId);
+        CompetitionResource competition = competitionService.getById(competitionId);
 
-        if (!initialDetailsComplete(model)) {
+        if (!competition.isInitialDetailsComplete()){
             return "redirect:/competition/setup/" + competitionId;
         }
+
+        competitionService.removeInnovationLead(competitionId, innovationLeadUserId);
+        manageInnovationLeadsModelPopulator.populateModel(model, competition);
 
         return "competition/manage-innovation-leads-overview";
     }
