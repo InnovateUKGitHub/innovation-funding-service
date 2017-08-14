@@ -21,7 +21,7 @@
         <p>Innovate UK are reviewing your finances and may contact you with any queries. You can review your application finance details using the link below.</p>
     </th:block>
 
-    <ul class="list-overview">
+    <ul class="task-list">
         <li th:if="${!model.isAcademic()}">
             <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"
                class>View finances</a>
@@ -46,7 +46,6 @@
         </ul>
     </div>
 
-    <hr />
     <ul>
         <li th:each="query : ${model.getQueries()}">
             <h2 class="heading-medium" th:text="${query.title}">Query Thread Title</h2>
