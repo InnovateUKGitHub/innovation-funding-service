@@ -81,6 +81,7 @@ import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResourc
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -90,7 +91,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
 
     public static final String COMP_ADMIN_EMAIL = "john.doe@innovateuk.test";
-    public static final String IFS_SYSTEM_MAINTENANCE_USER_EMAIL = "ifxxxxxxxxxxxxxxxxxxxxxxxxxx15@inxx.example.com";
+    public static final String IFS_SYSTEM_MAINTENANCE_USER_EMAIL = "ifs_system_maintenance_user@innovateuk.org";
     public static final String PROJECT_FINANCE_EMAIL = "lee.bowman@innovateuk.test";
 
     protected ServiceLocator serviceLocator;
@@ -171,6 +172,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     private static Cache<String, UserResource> usersByEmailAddress = CacheBuilder.newBuilder().build();
 
     private static Cache<String, UserResource> usersByEmailAddressInternal = CacheBuilder.newBuilder().build();
+
+    private static Cache<Long, UserResource> usersByIdInternal = CacheBuilder.newBuilder().build();
 
     private static Cache<Long, UserResource> usersById = CacheBuilder.newBuilder().build();
 
@@ -261,7 +264,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     }
 
     protected UserResource systemRegistrar() {
-        return retrieveUserByEmailInternal(IFS_SYSTEM_MAINTENANCE_USER_EMAIL, UserRoleType.SYSTEM_REGISTRATION_USER);
+        return retrieveUserByEmailInternal(IFS_SYSTEM_MAINTENANCE_USER_EMAIL, SYSTEM_REGISTRATION_USER);
     }
 
     protected UserResource projectFinanceUser() {
