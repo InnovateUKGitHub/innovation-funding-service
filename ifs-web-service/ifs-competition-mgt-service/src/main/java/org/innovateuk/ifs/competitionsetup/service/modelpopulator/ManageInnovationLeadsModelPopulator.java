@@ -32,7 +32,7 @@ public class ManageInnovationLeadsModelPopulator {
         availableInnovationLeads.removeAll(innovationLeadsAssignedToCompetition);
 
         model.addAttribute("model", new ManageInnovationLeadsViewModel(competitionId, competition.getName(),
-                competition.getLeadTechnologistName(), competition.getInnovationSectorName(),
+                competition.getLeadTechnologistName(), competition.getExecutiveName(), competition.getInnovationSectorName(),
                 competition.getInnovationAreaNames(), sortByName(innovationLeadsAssignedToCompetition),
                 sortByName(availableInnovationLeads)));
     }

@@ -10,6 +10,7 @@ public class ManageInnovationLeadsViewModel {
     private Long competitionId;
     private String competitionName;
     private String leadTechnologistName;
+    private String executiveName;
     private String innovationSectorName;
     private Set<String> innovationAreaNames;
 
@@ -17,13 +18,14 @@ public class ManageInnovationLeadsViewModel {
     private List<UserResource> availableInnovationLeads;
 
     public ManageInnovationLeadsViewModel(Long competitionId, String competitionName,
-                                          String leadTechnologistName, String innovationSectorName,
-                                          Set<String> innovationAreaNames,
+                                          String leadTechnologistName, String executiveName,
+                                          String innovationSectorName, Set<String> innovationAreaNames,
                                           List<UserResource> innovationLeadsAssignedToCompetition,
                                           List<UserResource> availableInnovationLeads) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.leadTechnologistName = leadTechnologistName;
+        this.executiveName = executiveName;
         this.innovationSectorName = innovationSectorName;
         this.innovationAreaNames = innovationAreaNames;
 
@@ -41,6 +43,10 @@ public class ManageInnovationLeadsViewModel {
 
     public String getLeadTechnologistName() {
         return leadTechnologistName;
+    }
+
+    public String getExecutiveName() {
+        return executiveName;
     }
 
     public String getInnovationSectorName() {
