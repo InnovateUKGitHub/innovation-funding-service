@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application'" />
+</head>
+<body th:with="context='applicant'" class="create-application-eligibility">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{/organisation/create/lead-organisation-type}" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationTypeName},subTitle='Create your account',size='heading-xlarge'" />
+
+    <p>
+        Your organisation is not eligible to start an application for this competition.
+    </p>
+    <p>
+        Please refer back to the eligibility criteria of this competition. The lead partner can invite you to contribute to this application.
+    </p>
+    <p>
+        If you have further queries you can contact <a href="/info/contact">customer support service</a>.
+    </p>
+    <p>
+        <a href="/competition/search">Return to all innovation competitions</a>
+    </p>
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>
