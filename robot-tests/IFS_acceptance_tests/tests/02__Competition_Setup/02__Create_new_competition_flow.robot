@@ -538,23 +538,23 @@ Assessor: Should have a Green Check
 Innovation leads can be added to a competition
     [Documentation]    IFS-192
     [Tags]  HappyPath
-    When the user navigates to the page   ${COMP_MANAGEMENT_COMP_SETUP}/manage-innovation-leads/find
-    Then the user should see the element  jQuery=h1:contains("Manage innovation leads")
-    And the user should see the element   jQuery=span.lead-count:contains("0")  # Lead count from key statistics
-    And the user should see the element   jQuery=.standard-definition-list dd:contains("Open") ~ dd:contains("Biosciences") ~ dd:contains("Ian Cooper")
-    And the user should see the element   jQuery=li.selected a:contains("Find")
-    When the user clicks the button/link  jQuery=td:contains(${peter_freeman}) button:contains("Add")
+    When the user navigates to the page       ${COMP_MANAGEMENT_COMP_SETUP}/manage-innovation-leads/find
+    Then the user should see the element      jQuery=h1:contains("Manage innovation leads")
+    And the user should see the element       jQuery=span.lead-count:contains("0")  # Lead count from key statistics
+    And the user should see the element       jQuery=.standard-definition-list dd:contains("Open") ~ dd:contains("Biosciences") ~ dd:contains("Ian Cooper")
+    And the user should see the element       jQuery=li.selected a:contains("Find")
+    When the user clicks the button/link      jQuery=td:contains(${peter_freeman}) button:contains("Add")
     Then the user should not see the element  jQuery=td:contains(${peter_freeman})
-    And the user should see the element   jQuery=span.lead-count:contains("1")
+    And the user should see the element       jQuery=span.lead-count:contains("1")
     # TODO: Below line will be uncommented once outstanding issue IFS-1287 is resolved
-    # And the user should see the element   jQuery=span.total-count:contains("0")  # Total count from individual tab
-    When the user clicks the button/link  jQuery=a:contains("Overview")
-    Then the user should see the element   jQuery=span.total-count:contains("1")
-    And the user clicks the button/link   jQuery=td:contains(${peter_freeman}) button:contains("Remove")
-    And the user should see the element   jQuery=span.lead-count:contains("0")
-    And the user should see the element   jQuery=span.total-count:contains("0")
-    When the user clicks the button/link  jQuery=.inline-nav a:contains("Find")
-    Then the user should see the element  jQuery=td:contains(${peter_freeman}) button:contains("Add")
+    # And the user should see the element     jQuery=span.total-count:contains("0")  # Total count from individual tab
+    When the user clicks the button/link      jQuery=a:contains("Overview")
+    Then the user should see the element      jQuery=span.total-count:contains("1")
+    And the user clicks the button/link       jQuery=td:contains(${peter_freeman}) button:contains("Remove")
+    And the user should see the element       jQuery=span.lead-count:contains("0")
+    And the user should see the element       jQuery=span.total-count:contains("0")
+    When the user clicks the button/link      jQuery=.inline-nav a:contains("Find")
+    Then the user should see the element      jQuery=td:contains(${peter_freeman}) button:contains("Add")
 
 *** Keywords ***
 the user moves focus and waits for autosave
