@@ -324,6 +324,7 @@ public class CompetitionSetupController {
         return String.format("redirect:/competition/setup/%d", competitionId);
     }
 
+    @PreAuthorize("hasPermission(#competitionId, 'MANAGE_INNOVATION_LEAD')")
     @GetMapping("/{competitionId}/manage-innovation-leads/find")
     public String manageInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                        Model model,
@@ -341,6 +342,7 @@ public class CompetitionSetupController {
         return "competition/manage-innovation-leads-find";
     }
 
+    @PreAuthorize("hasPermission(#competitionId, 'MANAGE_INNOVATION_LEAD')")
     @GetMapping("/{competitionId}/manage-innovation-leads/overview")
     public String manageInnovationLeadOverview(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                        Model model,
@@ -357,6 +359,7 @@ public class CompetitionSetupController {
         return "competition/manage-innovation-leads-overview";
     }
 
+    @PreAuthorize("hasPermission(#competitionId, 'MANAGE_INNOVATION_LEAD')")
     @PostMapping("/{competitionId}/add-innovation-lead/{innovationLeadUserId}")
     public String addInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                     @PathVariable("innovationLeadUserId") long innovationLeadUserId,
@@ -375,6 +378,7 @@ public class CompetitionSetupController {
         return "competition/manage-innovation-leads-find";
     }
 
+    @PreAuthorize("hasPermission(#competitionId, 'MANAGE_INNOVATION_LEAD')")
     @PostMapping("/{competitionId}/remove-innovation-lead/{innovationLeadUserId}")
     public String removeInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                        @PathVariable("innovationLeadUserId") long innovationLeadUserId,
