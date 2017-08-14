@@ -334,9 +334,17 @@ public class CompetitionSetupController {
 
         manageInnovationLeadsModelPopulator.populateModel(model, competitionId);
 
+        if (!initialDetailsComplete(model)) {
+            return "redirect:/competition/setup/" + competitionId;
+        }
+
         return "competition/manage-innovation-leads-find";
     }
 
+    private boolean initialDetailsComplete(Model model) {
+        return (boolean) model.asMap().get("initialDetailsComplete");
+
+    }
     @GetMapping("/{competitionId}/manage-innovation-leads/overview")
     public String manageInnovationLeadOverview(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                        Model model,
@@ -344,6 +352,10 @@ public class CompetitionSetupController {
 
 
         manageInnovationLeadsModelPopulator.populateModel(model, competitionId);
+
+        if (!initialDetailsComplete(model)) {
+            return "redirect:/competition/setup/" + competitionId;
+        }
 
         return "competition/manage-innovation-leads-overview";
     }
@@ -357,6 +369,11 @@ public class CompetitionSetupController {
 
         competitionService.addInnovationLead(competitionId, innovationLeadUserId);
         manageInnovationLeadsModelPopulator.populateModel(model, competitionId);
+
+        if (!initialDetailsComplete(model)) {
+            return "redirect:/competition/setup/" + competitionId;
+        }
+
         return "competition/manage-innovation-leads-find";
     }
 
@@ -368,6 +385,11 @@ public class CompetitionSetupController {
 
         competitionService.removeInnovationLead(competitionId, innovationLeadUserId);
         manageInnovationLeadsModelPopulator.populateModel(model, competitionId);
+
+        if (!initialDetailsComplete(model)) {
+            return "redirect:/competition/setup/" + competitionId;
+        }
+
         return "competition/manage-innovation-leads-overview";
     }
 
