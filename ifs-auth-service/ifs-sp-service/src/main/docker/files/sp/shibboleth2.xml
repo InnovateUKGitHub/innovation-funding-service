@@ -30,7 +30,7 @@
     <ApplicationDefaults entityID="https://ifs.local-dev"
                          REMOTE_USER="uid">
 
-        <Sessions lifetime="28800" timeout="3600" relayState="ss:mc"
+        <Sessions lifetime="28800" timeout="3600" relayState="ss:mem"
                   checkAddress="false" consistentAddress="false" handlerSSL="true" cookieProps="https">
 
             <SSO entityID="https://idp/idp/shibboleth"
