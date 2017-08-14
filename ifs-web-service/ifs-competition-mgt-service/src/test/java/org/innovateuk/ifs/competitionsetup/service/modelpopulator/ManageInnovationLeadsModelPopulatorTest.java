@@ -80,6 +80,7 @@ public class ManageInnovationLeadsModelPopulatorTest {
         Model model = new ExtendedModelMap();
 
         CompetitionResource competitionResource = newCompetitionResource()
+                .withId(competitionId)
                 .withName("comp name")
                 .withLeadTechnologistName("lead technologist name")
                 .withExecutiveName("executive name")
@@ -87,12 +88,10 @@ public class ManageInnovationLeadsModelPopulatorTest {
                 .withInnovationAreaNames(Collections.EMPTY_SET)
                 .build();
 
-
-        when(competitionService.getById(competitionId)).thenReturn(competitionResource);
         when(userService.findUserByType(UserRoleType.INNOVATION_LEAD)).thenReturn(availableInnovationLeads);
         when(competitionService.findInnovationLeads(competitionId)).thenReturn(innovationLeadsAssignedToCompetition);
 
-        populator.populateModel(model, competitionId);
+        populator.populateModel(model, competitionResource);
         ManageInnovationLeadsViewModel returnedModel = (ManageInnovationLeadsViewModel) model.asMap().get("model");
 
         // Only two innovation leads should be available
