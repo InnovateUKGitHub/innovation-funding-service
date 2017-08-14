@@ -116,3 +116,27 @@ include::{snippets}/user/internal/edit/edit-internal-user/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/user/internal/edit/edit-internal-user/curl-request.adoc[]
+
+== Deactivate user
+=== Success case
+=== Request
+include::{snippets}/user/deactivate-user/http-request.adoc[]
+include::{snippets}/user/deactivate-user/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/user/deactivate-user/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/user/deactivate-user/curl-request.adoc[]
+
+== Reactivate user
+=== Success case
+=== Request
+include::{snippets}/user/reactivate-user/http-request.adoc[]
+include::{snippets}/user/reactivate-user/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/user/reactivate-user/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/user/reactivate-user/curl-request.adoc[]

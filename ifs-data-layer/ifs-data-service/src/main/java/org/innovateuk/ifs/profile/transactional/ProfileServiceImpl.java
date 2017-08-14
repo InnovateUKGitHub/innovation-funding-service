@@ -133,6 +133,8 @@ public class ProfileServiceImpl extends BaseTransactionalService implements Prof
                         profileDetails.setAddress(addressMapper.mapToResource(profile.getAddress()));
                         profileDetails.setCreatedBy(profile.getCreatedBy().getName());
                         profileDetails.setCreatedOn(profile.getCreatedOn());
+                        profileDetails.setModifiedBy(profile.getModifiedBy().getName());
+                        profileDetails.setModifiedOn(profile.getModifiedOn());
                     }
                     return serviceSuccess(profileDetails);
                 });

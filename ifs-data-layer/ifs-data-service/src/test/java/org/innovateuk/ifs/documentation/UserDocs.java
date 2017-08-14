@@ -27,7 +27,11 @@ public class UserDocs {
             fieldWithPath("disability").description("disability of the user"),
             fieldWithPath("ethnicity").description("ethnic group of the user"),
             fieldWithPath("profileId").description("profile ID of the user"),
-            fieldWithPath("allowMarketingEmails").description("allow marketing emails")
+            fieldWithPath("allowMarketingEmails").description("allow marketing emails"),
+            fieldWithPath("createdBy").description("user who created this user"),
+            fieldWithPath("createdOn").description("when the user was created"),
+            fieldWithPath("modifiedBy").description("user who modified this user"),
+            fieldWithPath("modifiedOn").description("when the user was modified"),
     };
 
     public static final FieldDescriptor[] internalUserRegistrationResourceFields = {
