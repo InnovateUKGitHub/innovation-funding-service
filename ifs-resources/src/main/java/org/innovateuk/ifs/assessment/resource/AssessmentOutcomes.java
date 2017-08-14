@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.resource;
 
+
 import org.innovateuk.ifs.workflow.resource.OutcomeType;
 
 /**
