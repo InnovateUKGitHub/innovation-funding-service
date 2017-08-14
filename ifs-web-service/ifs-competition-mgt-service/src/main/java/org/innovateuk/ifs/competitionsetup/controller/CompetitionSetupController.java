@@ -177,8 +177,6 @@ public class CompetitionSetupController {
         }
     }
 
-
-
     /**
      * This method is for supporting ajax saving from the competition setup sections forms.
      */

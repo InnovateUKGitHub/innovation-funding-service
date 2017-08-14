@@ -99,6 +99,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         when(userMapperMock.mapToResource(user)).thenReturn(userResource);
         List<UserResource> result = service.findInnovationLeads(competitionId).getSuccessObjectOrThrowException();
 
+        assertEquals(4, result.size());
         assertEquals(userResource, result.get(0));
     }
 

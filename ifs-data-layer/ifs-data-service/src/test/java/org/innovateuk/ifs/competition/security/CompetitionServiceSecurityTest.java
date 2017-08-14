@@ -91,6 +91,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
                 () -> classUnderTest.findInnovationLeads(1L),
                 () -> {
                     verify(rules).internalAdminCanManageInnovationLeadsForCompetition(any(CompetitionResource.class), any(UserResource.class));
+                    verifyNoMoreInteractions(rules);
                 });
     }
 

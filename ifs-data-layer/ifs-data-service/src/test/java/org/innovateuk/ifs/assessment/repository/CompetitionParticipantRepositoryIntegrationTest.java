@@ -401,7 +401,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
                         .withStatus(SENT)
                         .build(3));
 
-        // Now accept two of the invites
+        // Now accept one of the invites
         for (int i = 0; i < 1; i++) {
             CompetitionParticipant competitionParticipantToAccept = savedParticipants.get(i);
             competitionParticipantToAccept.getInvite().open();
