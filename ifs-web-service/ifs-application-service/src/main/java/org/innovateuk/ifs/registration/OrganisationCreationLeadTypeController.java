@@ -30,7 +30,7 @@ import java.util.Optional;
  */
 
 @Controller
-@RequestMapping(AbstractOrganisationCreationController.BASE_URL + "/")
+@RequestMapping(AbstractOrganisationCreationController.BASE_URL + "/" + AbstractOrganisationCreationController.LEAD_ORGANISATION_TYPE)
 @PreAuthorize("permitAll")
 public class OrganisationCreationLeadTypeController extends AbstractOrganisationCreationController {
 
@@ -47,7 +47,7 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
     @Autowired
     private CompetitionService competitionService;
 
-    @GetMapping(AbstractOrganisationCreationController.LEAD_ORGANISATION_TYPE)
+    @GetMapping()
     public String selectOrganisationType(Model model,
                                          HttpServletRequest request) {
         model.addAttribute("model", organisationCreationSelectTypePopulator.populate());
@@ -63,7 +63,7 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
         return TEMPLATE_PATH + "/" + LEAD_ORGANISATION_TYPE;
     }
 
-    @PostMapping(AbstractOrganisationCreationController.LEAD_ORGANISATION_TYPE)
+    @PostMapping()
     public String confirmSelectOrganisationType(Model model,
                                                 @Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                                 BindingResult bindingResult,
@@ -83,7 +83,7 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
             saveOrganisationTypeToCreationForm(response, organisationTypeForm);
 
             if (!isAllowedToLeadApplication(organisationTypeId, request)) {
-                return "redirect:" + BASE_URL + "/" + NOT_ELIGIBLE;
+                return redirectToNotEligibleUrl();
             }
 
             return "redirect:" + BASE_URL + "/" + FIND_ORGANISATION;
@@ -93,6 +93,10 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
             model.addAttribute("model", selectOrgTypeViewModel);
             return TEMPLATE_PATH + "/" + LEAD_ORGANISATION_TYPE;
         }
+    }
+
+    private String redirectToNotEligibleUrl() {
+        return "redirect:" + BASE_URL + "/" + AbstractOrganisationCreationController.LEAD_ORGANISATION_TYPE + "/" + NOT_ELIGIBLE;
     }
 
     @GetMapping(NOT_ELIGIBLE)
