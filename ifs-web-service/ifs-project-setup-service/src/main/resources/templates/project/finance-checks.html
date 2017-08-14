@@ -23,12 +23,10 @@
 
     <ul class="task-list">
         <li th:if="${!model.isAcademic()}">
-            <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"
-               class>View finances</a>
+            <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}">View finances</a>
         </li>
         <li>
-            <a th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}"
-               class>Project finance overview</a>
+            <a th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}">Project finance overview</a>
         </li>
     </ul>
 
