@@ -12,6 +12,7 @@ import org.innovateuk.ifs.competitionsetup.form.AdditionalInfoForm;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
+import org.innovateuk.ifs.competitionsetup.service.modelpopulator.ManageInnovationLeadsModelPopulator;
 import org.innovateuk.ifs.fixtures.CompetitionFundersFixture;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
@@ -73,6 +74,9 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
     @Mock
     private Validator validator;
+
+    @Mock
+    private ManageInnovationLeadsModelPopulator manageInnovationLeadsModelPopulator;
 
     @Override
     protected CompetitionSetupController supplyControllerUnderTest() {
@@ -808,5 +812,43 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(view().name("competition/setup"));
 
         verify(competitionService, never()).update(competition);
+    }
+
+    @Test
+    public void manageInnovationLead() throws Exception {
+
+        mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/manage-innovation-leads/find"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/manage-innovation-leads-find"));
+    }
+
+    @Test
+    public void manageInnovationLeadOverview() throws Exception {
+
+        mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/manage-innovation-leads/overview"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/manage-innovation-leads-overview"));
+    }
+
+    @Test
+    public void addInnovationLead() throws Exception {
+
+        Long innovationLeadUserId = 2L;
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/add-innovation-lead/" + innovationLeadUserId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/manage-innovation-leads-find"));
+
+        verify(competitionService).addInnovationLead(COMPETITION_ID, innovationLeadUserId);
+    }
+
+    @Test
+    public void removeInnovationLead() throws Exception {
+
+        Long innovationLeadUserId = 2L;
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/remove-innovation-lead/" + innovationLeadUserId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/manage-innovation-leads-overview"));
+
+        verify(competitionService).removeInnovationLead(COMPETITION_ID, innovationLeadUserId);
     }
 }
