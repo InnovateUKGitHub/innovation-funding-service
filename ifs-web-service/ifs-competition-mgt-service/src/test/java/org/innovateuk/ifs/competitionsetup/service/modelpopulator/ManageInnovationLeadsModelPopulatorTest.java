@@ -82,6 +82,7 @@ public class ManageInnovationLeadsModelPopulatorTest {
         CompetitionResource competitionResource = newCompetitionResource()
                 .withName("comp name")
                 .withLeadTechnologistName("lead technologist name")
+                .withExecutiveName("executive name")
                 .withInnovationSectorName("innovation sector name")
                 .withInnovationAreaNames(Collections.EMPTY_SET)
                 .build();
@@ -108,6 +109,7 @@ public class ManageInnovationLeadsModelPopulatorTest {
         assertEquals(competitionId, returnedModel.getCompetitionId());
         assertEquals(competitionResource.getName(), returnedModel.getCompetitionName());
         assertEquals(competitionResource.getLeadTechnologistName(), returnedModel.getLeadTechnologistName());
+        assertEquals(competitionResource.getExecutiveName(), returnedModel.getExecutiveName());
         assertEquals(competitionResource.getInnovationSectorName(), returnedModel.getInnovationSectorName());
         assertEquals(competitionResource.getInnovationAreaNames(), returnedModel.getInnovationAreaNames());
     }
