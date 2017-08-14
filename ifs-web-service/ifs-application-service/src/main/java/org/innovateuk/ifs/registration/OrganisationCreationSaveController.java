@@ -28,7 +28,7 @@ import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGIST
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 
 /**
- * TODO: Add description
+ * Provides methods for confirming and saving the organisation as an intermediate step in the registration flow.
  */
 @Controller
 @RequestMapping(AbstractOrganisationCreationController.BASE_URL)

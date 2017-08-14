@@ -21,10 +21,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Optional;
 
+/**
+ * Provides methods for picking an organisation type as a lead applicant after initialization or the registration process.
+ */
+
 @Controller
 @RequestMapping(AbstractOrganisationCreationController.BASE_URL + "/" + AbstractOrganisationCreationController.LEAD_ORGANISATION_TYPE)
 @PreAuthorize("permitAll")
-public class OrganisationCreationLeadTypeController extends AbstractOrganisationCreationController{
+public class OrganisationCreationLeadTypeController extends AbstractOrganisationCreationController {
 
     private static final String ORGANISATION_TYPE_ID = "organisationTypeId";
 

@@ -29,7 +29,9 @@ import static org.innovateuk.ifs.util.ExceptionFunctions.getOrRethrow;
 import static org.springframework.web.util.UriUtils.encodeQueryParam;
 
 /**
- * TODO: Add description
+ * Provides methods for both:
+ * - Finding your company or research type organisation through Companies House or JES search.
+ * - Verifying or amending the address attached to the organisation.
  */
 @Controller
 @RequestMapping(AbstractOrganisationCreationController.BASE_URL)

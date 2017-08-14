@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Provides the initialization method and redirect when registering a new organisation.
+ * Provides the initialization method and redirect when registering a new organisation as a lead applicant.
  */
 @Controller
 @RequestMapping(AbstractOrganisationCreationController.BASE_URL + "/initialize")

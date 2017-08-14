@@ -34,14 +34,13 @@ create new account for submitting
     the user clicks the button/link             jQuery=a:contains("Start new application")
     the user clicks the button/link             jQuery=a:contains("Create account")
     the user selects the radio button       organisationTypeId  ${org}
-    the user clicks the button/link         css=input[value="Save and continue"]
+    the user clicks the button/link         jQuery=.button:contains('Save and continue')
     the user enters text to a text field    id=organisationSearchName    Hive IT
     the user clicks the button/link         jQuery=.button:contains("Search")
     the user clicks the button/link         link=${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
     the user selects the checkbox           address-same
     the user clicks the button/link         jQuery=.button:contains("Continue")
-    the user clicks the button/link         css=input[value="Save and continue"]
-    the user clicks the button/link         css=input[value="Save and continue"]
+    the user clicks the button/link         jQuery=.button:contains('Save and continue')
     the user enters text to a text field    name=email    ${email}
     the user fills the create account form    Temur    Ketsbaia
     the user reads his email and clicks the link    ${email}    Please verify your email address    Once verified you can sign into your account

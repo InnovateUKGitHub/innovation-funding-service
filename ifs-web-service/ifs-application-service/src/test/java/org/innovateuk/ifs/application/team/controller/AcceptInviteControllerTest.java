@@ -2,9 +2,9 @@ package org.innovateuk.ifs.application.team.controller;
 
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.registration.AbstractAcceptInviteController;
 import org.innovateuk.ifs.registration.AcceptInviteController;
 import org.innovateuk.ifs.registration.model.AcceptRejectApplicationInviteModelPopulator;
+import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.registration.service.RegistrationService;
 import org.innovateuk.ifs.registration.viewmodel.AcceptRejectApplicationInviteViewModel;
 import org.innovateuk.ifs.registration.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
@@ -27,7 +27,6 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
-import static org.innovateuk.ifs.registration.OrganisationCreationController.ORGANISATION_ID;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
@@ -77,7 +76,7 @@ public class AcceptInviteControllerTest extends BaseUnitTest {
         when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(null);
         MvcResult result = mockMvc.perform(get(String.format("/accept-invite/%s", INVITE_HASH)))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(cookie().exists(AbstractAcceptInviteController.INVITE_HASH))
+                .andExpect(cookie().exists(RegistrationCookieService.INVITE_HASH))
                 .andExpect(view().name("registration/accept-invite-new-user"))
                 .andReturn();
 
@@ -86,7 +85,7 @@ public class AcceptInviteControllerTest extends BaseUnitTest {
         Object viewModel = result.getModelAndView().getModel().get("model");
 
         assertTrue(viewModel.getClass().equals(AcceptRejectApplicationInviteViewModel.class));
-        assertEquals(INVITE_HASH, getDecryptedCookieValue(result.getResponse().getCookies(), AbstractAcceptInviteController.INVITE_HASH));
+        assertEquals(INVITE_HASH, getDecryptedCookieValue(result.getResponse().getCookies(), RegistrationCookieService.INVITE_HASH));
     }
 
 
@@ -104,7 +103,7 @@ public class AcceptInviteControllerTest extends BaseUnitTest {
 
         MvcResult result = mockMvc.perform(get(String.format("/accept-invite/confirm-invited-organisation")))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(cookie().exists(ORGANISATION_ID))
+                .andExpect(cookie().exists(RegistrationCookieService.ORGANISATION_ID))
                 .andExpect(view().name("registration/confirm-invited-organisation"))
                 .andReturn();
 
@@ -115,13 +114,12 @@ public class AcceptInviteControllerTest extends BaseUnitTest {
         assertTrue(viewModel.getClass().equals(ConfirmOrganisationInviteOrganisationViewModel.class));
     }
 
-
     @Test
     public void testInviteEntryPageInvalid() throws Exception {
         mockMvc.perform(get(String.format("/accept-invite/%s", INVALID_INVITE_HASH)))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(cookie().exists(AbstractAcceptInviteController.INVITE_HASH))
-                .andExpect(cookie().value(AbstractAcceptInviteController.INVITE_HASH, ""))
+                .andExpect(cookie().exists(RegistrationCookieService.INVITE_HASH))
+                .andExpect(cookie().value(RegistrationCookieService.INVITE_HASH, ""))
                 .andExpect(view().name("url-hash-invalid"));
     }
 
@@ -130,8 +128,8 @@ public class AcceptInviteControllerTest extends BaseUnitTest {
         when(inviteRestService.getInviteOrganisationByHash(ACCEPTED_INVITE_HASH)).thenReturn(restSuccess(newInviteOrganisationResource().build()));
         mockMvc.perform(get(String.format("/accept-invite/%s", ACCEPTED_INVITE_HASH)))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(cookie().exists(AbstractAcceptInviteController.INVITE_HASH))
-                .andExpect(cookie().value(AbstractAcceptInviteController.INVITE_HASH, ""))
+                .andExpect(cookie().exists(RegistrationCookieService.INVITE_HASH))
+                .andExpect(cookie().value(RegistrationCookieService.INVITE_HASH, ""))
                 .andExpect(view().name("redirect:/login"));
     }
 }
