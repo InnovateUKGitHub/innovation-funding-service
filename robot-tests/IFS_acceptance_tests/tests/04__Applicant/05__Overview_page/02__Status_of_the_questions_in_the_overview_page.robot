@@ -32,7 +32,7 @@ Re-assign is possible from the overview page
 *** Keywords ***
 Custom Suite Setup
     the guest user opens the browser
-    Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${OPEN_COMPETITION_NAME}  You will be joining as part of the organisation
+    Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${OPEN_COMPETITION_NAME}  You will be joining as part of the organisation   2
 
 the Applicant edits the Project summary
     Clear Element Text                    css=.textarea-wrapped .editor
