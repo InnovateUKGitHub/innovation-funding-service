@@ -83,6 +83,7 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
 
     @Test
     public void getById_userIsCollaborator() throws Exception {
+        loginSteveSmith();
         Application application = applicationRepository.findOne(1L);
         Organisation organisation = setupOrganisation("Quick Sustainability Limited");
         InviteOrganisation inviteOrganisation = setupInviteOrganisation(application, organisation);
@@ -94,6 +95,7 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
 
     @Test
     public void getById_userIsCollaboratorAndOrganisationUnconfirmed() throws Exception {
+        loginSteveSmith();
         Application application = applicationRepository.findOne(1L);
         InviteOrganisation inviteOrganisation = setupInviteOrganisationUnconfirmed(application);
 
@@ -123,6 +125,7 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
 
     @Test
     public void getByOrganisationIdWithInvitesForApplication_userIsCollaborator() throws Exception {
+        loginSteveSmith();
         Application application = applicationRepository.findOne(1L);
         Organisation organisation = setupOrganisation("Quick Sustainability Limited");
         InviteOrganisation inviteOrganisation = setupInviteOrganisation(application, organisation);

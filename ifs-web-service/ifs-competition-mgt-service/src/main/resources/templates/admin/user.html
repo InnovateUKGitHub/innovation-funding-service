@@ -5,6 +5,7 @@
 </head>
 <body class="competition-management">
 
+<th:block th:insert="fragments/modals :: modal-overlay" />
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
@@ -26,14 +27,29 @@
         <dd class="extra-margin-bottom" th:text="${model.user.getRolesString()}">Super admin</dd>
     </dl>
 
-    <div class="form-footer">
-        <div class="form-footer__actions">
-            <a th:href="@{|/admin/user/${model.user.id}/edit|}">Edit</a>
+    <th:block th:if="${model.user.status.equals(T(org.innovateuk.ifs.user.resource.UserStatus).INACTIVE)}">
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST">
+            <div class="form-footer">
+                <div class="form-footer__actions">
+                    <button class="buttonlink" data-js-modal="modal-confirm-reactivate-user" type="button">Reactivate user</button>
+                </div>
+                <div class="form-footer__info" th:text="|Deactivated by ${model.user.modifiedBy} on ${#temporals.format(model.user.modifiedOn, 'd MMMM yyyy')}">
+                    Deactivated by Susan Smith on 23rd March 2017
+                </div>
+            </div>
+            <th:block th:insert="fragments/modals :: modal-confirm-reactivate-user" />
+        </form>
+    </th:block>
+    <th:block th:unless="${model.user.status.equals(T(org.innovateuk.ifs.user.resource.UserStatus).INACTIVE)}">
+        <div class="form-footer">
+            <div class="form-footer__actions">
+                <a th:href="@{|/admin/user/${model.user.id}/edit|}">Edit</a>
+            </div>
+            <div class="form-footer__info" th:text="|Created by ${model.user.createdBy} on ${#temporals.format(model.user.createdOn, 'd MMMM yyyy')}|">
+                Created by Susan Smith on 23rd March 2017
+            </div>
         </div>
-        <div class="form-footer__info" th:text="|Created by ${model.createdByUser} on ${#temporals.format(model.createdOn, 'dd MMMM yyyy')}|">
-            Created by Susan Smith on 23rd March 2017
-        </div>
-    </div>
+    </th:block>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
