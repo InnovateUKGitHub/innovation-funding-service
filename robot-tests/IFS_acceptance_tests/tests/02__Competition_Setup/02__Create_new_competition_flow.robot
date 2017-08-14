@@ -55,6 +55,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-9225 Update 'Eligibility' > 'Lead applicant' to enable single or multi-selection
 ...
 ...               INFUND-9152 Add an 'Innovation sector' of 'Open' where 'Competition type' is 'Sector'
+...
+...               IFS-192 Select additional Innovation Lead stakeholders in Competition Setup
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -63,6 +65,7 @@ Resource          CompAdmin_Commons.robot
 
 *** Variables ***
 ${landingPage}    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/landing-page
+${peter_freeman}  Peter Freeman
 
 *** Test Cases ***
 User can create a new competition
@@ -532,6 +535,26 @@ Assessor: Should have a Green Check
     When the user navigates to the page     ${CA_UpcomingComp}
     Then the user should see the element    h2:contains("In preparation") ~ ul:contains("Test competition")
 
+Innovation leads can be added to a competition
+    [Documentation]    IFS-192
+    [Tags]  HappyPath
+    When the user navigates to the page   ${COMP_MANAGEMENT_COMP_SETUP}/manage-innovation-leads/find
+    Then the user should see the element  jQuery=h1:contains("Manage innovation leads")
+    And the user should see the element   jQuery=span.lead-count:contains("0")  # Lead count from key statistics
+    And the user should see the element   jQuery=.standard-definition-list dd:contains("Open") ~ dd:contains("Biosciences") ~ dd:contains("Ian Cooper")
+    And the user should see the element   jQuery=li.selected a:contains("Find")
+    When the user clicks the button/link  jQuery=td:contains(${peter_freeman}) button:contains("Add")
+    Then the user should not see the element  jQuery=td:contains(${peter_freeman})
+    And the user should see the element   jQuery=span.lead-count:contains("1")
+    # TODO: Below line will be uncommented once outstanding issue IFS-1287 is resolved
+    # And the user should see the element   jQuery=span.total-count:contains("0")  # Total count from individual tab
+    When the user clicks the button/link  jQuery=a:contains("Overview")
+    Then the user should see the element   jQuery=span.total-count:contains("1")
+    And the user clicks the button/link   jQuery=td:contains(${peter_freeman}) button:contains("Remove")
+    And the user should see the element   jQuery=span.lead-count:contains("0")
+    And the user should see the element   jQuery=span.total-count:contains("0")
+    When the user clicks the button/link  jQuery=.inline-nav a:contains("Find")
+    Then the user should see the element  jQuery=td:contains(${peter_freeman}) button:contains("Add")
 
 *** Keywords ***
 the user moves focus and waits for autosave
