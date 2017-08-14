@@ -14,7 +14,7 @@ Documentation  INFUND-6390 As an Applicant I will be invited to add project cost
 ...            IFS-1015 As a Lead applicant with an existing account I am informed if my Organisation type is NOT eligible to lead
 Suite Setup     Custom Suite Setup
 Suite Teardown  Close browser and delete emails
-Force Tags      Applicant  CompAdmin
+Force Tags      Applicant  CompAdmin  HappyPath
 Resource        ../../../resources/defaultResources.robot
 Resource        ../Applicant_Commons.robot
 Resource        ../../10__Project_setup/PS_Common.robot
@@ -31,7 +31,7 @@ ${ineligibleMessage}         Your organisation is not eligible to start an appli
 *** Test Cases ***
 Comp Admin starts a new Competition
     [Documentation]    INFUND-6393
-    [Tags]    HappyPath
+    [Tags]
     [Setup]  the user logs-in in new browser       &{Comp_admin1_credentials}
     # For the testing of the story INFUND-6393, we need to create New Competition in order to apply the new Comp Setup fields
     # Then continue with the applying to this Competition, in order to see the new Fields applied
@@ -58,7 +58,7 @@ Application Finances should not include project growth
 
 Comp admin completes ths competition setup
     [Documentation]    INFUND-6393
-    [Tags]    HappyPath
+    [Tags]
     Given the user should see the element  jQuery=h1:contains("Competition setup")
     Then the user marks the Application as done
     And the user fills in the CS Assessors
@@ -72,27 +72,27 @@ Comp admin completes ths competition setup
 
 Competition is Open to Applications
     [Documentation]    INFUND-6393
-    [Tags]    HappyPath  MySQL
+    [Tags]  MySQL
     The competitions date changes so it is now Open  ${compWithoutGrowth}
 
 Create new Application for this Competition
-    [Tags]    HappyPath  MySQL
+    [Tags]  MySQL
     Lead Applicant applies to the new created competition  ${compWithoutGrowth}
 
 Applicant visits his Finances
     [Documentation]    INFUND-6393
     [Tags]
-    Given the user should see the element          jQuery=h1:contains("Application overview")
-    When the user clicks the button/link           link=Your finances
-    Then the user should see the element           jQuery=li:contains("Your project costs") > .action-required
-    And the user should see the element            jQuery=li:contains("Your organisation") > .action-required
+    Given the user should see the element  jQuery=h1:contains("Application overview")
+    When the user clicks the button/link   link=Your finances
+    Then the user should see the element   jQuery=li:contains("Your project costs") > .action-required
+    And the user should see the element    jQuery=li:contains("Your organisation") > .action-required
     And the the user should see that the funding depends on the research area
     And the user should see his finances empty
-    [Teardown]    the user clicks the button/link  jQuery=a:contains("Return to application overview")
+    [Teardown]  the user clicks the button/link  jQuery=a:contains("Return to application overview")
 
 Applicant fills in the Application Details
     [Documentation]    INFUND-6895  INFUND-9151
-    [Tags]    HappyPath
+    [Tags]
     The user fills in the Application details  ${applicationWithoutGrowth}
 
 Turnover and Staff count fields
@@ -139,7 +139,7 @@ As next step the Applicant cannot see the turnover field
 
 Organisation server side validation when no
     [Documentation]    INFUND-6393
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    log in as a different user           &{lead_applicant_credentials}
     Given the user navigates to Your-finances page  ${applicationWithoutGrowth}
     Then the user clicks the button/link            link=Your organisation
@@ -170,7 +170,7 @@ Organisation client side validation when no
 
 Mark Organisation as complete when no
     [Documentation]    INFUND-6393
-    [Tags]    HappyPath
+    [Tags]
     Given the user enters text to a text field    jQuery=label:contains("employees") + input    42
     And the user enters text to a text field      jQuery=label:contains("Turnover") + input    17506
     And the user selects medium organisation size
@@ -188,7 +188,7 @@ The Lead applicant is able to edit and re-submit when no
 
 Funding subsection opens when Appl details and organisation info are provided
     [Documentation]    INFUND-6895
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page    ${dashboard_url}
     And the user clicks the button/link     link=${applicationWithoutGrowth}
     When the user should see the element    jQuery=li:contains("Application details") > .task-status-complete
@@ -334,14 +334,14 @@ Non-lead can can edit and remark Organisation as Complete
 
 RTOs are not allowed to apply on Competition where only Businesses are allowed to lead
     [Documentation]  IFS-1015
-    [Tags]  HappyPath
+    [Tags]
     Given the logged in user should not be able to apply in a competition he has not right to  antonio.jenkins@jabbertype.example.com  ${compWithoutGrowth}
     When the user should see the element           jQuery=h1:contains("Research")
     Then the user should see the text in the page  ${ineligibleMessage}
 
 Business organisation is not allowed to apply on Comp where only RTOs are allowed to lead
     [Documentation]  IFS-1015
-    [Tags]  HappyPath
+    [Tags]
     Given the logged in user should not be able to apply in a competition he has not right to  theo.simpson@katz.example.com  ${OPEN_COMPETITION_NAME}
     When the user should see the element           jQuery=h1:contains("Business")
     Then the user should see the text in the page  ${ineligibleMessage}
