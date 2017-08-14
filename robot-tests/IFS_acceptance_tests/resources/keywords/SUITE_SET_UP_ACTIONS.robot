@@ -185,7 +185,7 @@ The user marks the academic application finances as incomplete
 invite a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
     the user navigates to the page                           ${COMPETITION_OVERVIEW_URL}
-    the user follows the flow to register their organisation
+    the user follows the flow to register their organisation    ${BUSINESS_TYPE_ID}
     the user verifies email                                    Stuart   Anderson    ${EMAIL_LEAD}
     the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link    jQuery=a:contains("Add partner organisation")
@@ -199,9 +199,9 @@ invite a registered user
     the guest user opens the browser
 
 we create a new user
-    [Arguments]    ${COMPETITION_ID}  ${first_name}  ${last_name}  ${EMAIL_INVITED}
+    [Arguments]    ${COMPETITION_ID}  ${first_name}  ${last_name}  ${EMAIL_INVITED}    ${org_type_id}
     the user navigates to the page                             ${SERVER}/competition/${COMPETITION_ID}/overview/
-    the user follows the flow to register their organisation
+    the user follows the flow to register their organisation    ${org_type_id}
     the user verifies email    ${first_name}   ${last_name}    ${EMAIL_INVITED}
 
 the user verifies email
@@ -215,10 +215,11 @@ the user verifies email
     The guest user clicks the log-in button
 
 the user follows the flow to register their organisation
+    [Arguments]   ${org_type_id}
     the user clicks the button/link             jQuery=a:contains("Start new application")
     the user clicks the button/link             jQuery=a:contains("Create account")
     the user should not see the element         jQuery=h3:contains("Organisation type")
-    the user selects the radio button       organisationTypeId  1
+    the user selects the radio button       organisationTypeId  ${org_type_id}
     the user clicks the button/link         jQuery=.button:contains("Save and continue")
     the user enters text to a text field        id=organisationSearchName    Innovate
     the user clicks the button/link             id=org-search

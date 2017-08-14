@@ -18,7 +18,7 @@ ${lead_rto_email}                      oscarRTO@innovateuk.com
 Maximum funding level available for lead business
     [Documentation]    IFS-338
     [Tags]
-    Given we create a new user                               ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}  Oscar  business  ${lead_business_email}
+    Given we create a new user                               ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}  Oscar  business  ${lead_business_email}  ${BUSINESS_TYPE_ID}
     When the user clicks the button/link                     link=Untitled application (start here)
     And the user clicks the button/link                      link=Begin application
     And the applicant completes the application details      Application details  Experimental development
@@ -59,7 +59,7 @@ Invite existing academic collaborator
 Maximum funding level available for RTO lead
     [Documentation]  IFS-338
     [Tags]
-    Given we create a new user                                              ${OPEN_COMPETITION}  Smith  rto  ${lead_rto_email}
+    Given we create a new user                                              ${OPEN_COMPETITION}  Smith  rto  ${lead_rto_email}    ${ACADEMIC_TYPE_ID}
     When the user clicks the button/link                                    link=Untitled application (start here)
     And the user clicks the button/link                                     link=Begin application
     And the applicant completes the application details for RTO lead appln  Application details  Experimental development

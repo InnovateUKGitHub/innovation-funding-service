@@ -103,7 +103,7 @@ The user can see this new application on their dashboard
 Applicant goes to the registration form
     the user navigates to the page   ${frontDoor}
     the user clicks the button/link  link=Home and industrial efficiency programme
-    And the user follows the flow to register their organisation
+    And the user follows the flow to register their organisation   ${BUSINESS_TYPE_ID}
 
 the user directed to correct dashboard
     [Arguments]    ${Application_name}
