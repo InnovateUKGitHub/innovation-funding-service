@@ -23,13 +23,26 @@
 
     <div class="no-constrain-width justify-left">
 
+    <p class="form-hint">If you make any changes on this page, you must confirm them in order to make them visible on the assessors' dashboards.</p>
+
+    <div class="grid-row">
+        <div class="column-quarter">
+            <button class="button width-full" th:disabled="${param.action == null}">Confirm actions</button>
+        </div>
+        <div class="column-quarter">
+            <div class="highlight-panel highlight-panel--tall">
+                <span class="heading-large" th:text="${param.action != null} ? '5' : '0'">0</span><br /><small>Changes since last confirmation</small>
+            </div>
+        </div>
+    </div>
+
       <h2 class="heading-medium">Key statistics</h2>
 
       <ul class="grid-row">
 
         <li class="column-quarter">
           <div class="highlight-panel highlight-panel--tall">
-            <span class="heading-large">2</span><br /><small>Assessors invited</small>
+            <span class="heading-large">2</span><br /><small>Assessors yet to respond</small>
           </div>
         </li>
 
@@ -49,30 +62,14 @@
 
       <!-- <h2 class="heading-medium">Panel navigation</h2> -->
 
-      <h2 class="heading-medium no-margin-bottom">Assessment panel actions</h2>
-      <p class="form-hint">
-        Invite assessors, assign applications and manage conflicts of interest. <br />Once done you need to confirm these actions.
-      </p>
+      <h2 class="heading-medium no-margin-bottom">Panel navigation</h2>
 
       <ul class="link-list">
-        <li><a href="/prototypes/IFS-707-manage-assessors">Manage assessors</a></li>
-        <li><a href="/prototypes/IFS-806-manage-applications">Manage applications</a></li>
-        <li><a href="/prototypes/IFS-806-coi">Conflict of interest</a></li>
+        <li><a href="/prototypes/IFS-707-manage-assessors">Invite assessors to attend</a></li>
+        <li><a href="/prototypes/IFS-806-manage-applications">Assign applications to panel</a></li>
+        <li><a href="/prototypes/IFS-806-coi">Allocate applications to assesors</a></li>
       </ul>
 
-      <h2 class="heading-medium no-margin-bottom">Confirm panel actions</h2>
-      <p class="form-hint">Show applications on each assessor dashboard or confirm any actions to the panel.</p>
-
-      <div class="grid-row">
-        <div class="column-quarter">
-          <button class="button width-full" th:disabled="${param.action == null}">Confirm actions</button>
-        </div>
-        <div class="column-quarter">
-          <div class="highlight-panel highlight-panel--tall">
-            <span class="heading-large" th:text="${param.action != null} ? '5' : '0'">0</span><br /><small>Changes since last confirmation</small>
-          </div>
-        </div>
-      </div>
 
     </div>
 
