@@ -140,6 +140,8 @@ function tailorAppInstance() {
     sed -i.bak -e $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" -e 's/<<>>/\\n/g' os-files-tmp/shib/*.yml
     sed -i.bak -e $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" -e 's/<<>>/\\n/g' os-files-tmp/shib/named-envs/*.yml
 
+    sed -i.bak "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" os-files-tmp/*.yml
+
     if [[ ${TARGET} == "production" ]]
     then
       sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
@@ -156,11 +158,14 @@ function tailorAppInstance() {
       sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
       sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/named-envs/*.yml
 
+
+
       sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
       sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/db-reset/*.yml
       sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
       sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/named-envs/*.yml
     fi
+
 
     sed -i.bak "s/<<MAIL-ADDRESS>>/mail-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/mail/*.yml
     sed -i.bak "s/<<ADMIN-ADDRESS>>/admin-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/spring-admin/*.yml
@@ -294,4 +299,18 @@ function cleanUp() {
 
 function scaleDataService() {
     oc scale dc data-service --replicas=2 ${SVC_ACCOUNT_CLAUSE}
+}
+
+function createProject() {
+    until oc new-project $PROJECT ${SVC_ACCOUNT_CLAUSE}
+    do
+      oc delete project $PROJECT ${SVC_ACCOUNT_CLAUSE} || true
+      sleep 10
+    done
+}
+
+function createProjectIfNecessaryForNonNamedEnvs() {
+    if ! $(isNamedEnvironment $TARGET); then
+        createProject
+    fi
 }

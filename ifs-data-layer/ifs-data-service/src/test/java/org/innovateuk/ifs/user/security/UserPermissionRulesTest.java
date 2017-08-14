@@ -71,6 +71,20 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
+    public void internalUsersCanViewEveryoneUserPageResource() {
+
+        UserPageResource userPageResource = new UserPageResource();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(ifsAdminUser())) {
+                assertTrue(rules.internalUsersCanViewEveryone(userPageResource, user));
+            } else {
+                assertFalse(rules.internalUsersCanViewEveryone(userPageResource, user));
+            }
+        });
+    }
+
+    @Test
     public void testSystemRegistrationUserCanViewEveryone() {
         allGlobalRoleUsers.forEach(user -> {
             allGlobalRoleUsers.forEach(otherUser -> {
@@ -616,6 +630,34 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
                 assertTrue(rules.ifsAdminCanEditInternalUser(userToEdit, user));
             } else {
                 assertFalse(rules.ifsAdminCanEditInternalUser(userToEdit, user));
+            }
+        });
+    }
+
+    @Test
+    public void testIfsAdminCanDeactivateUser(){
+
+        UserResource userToDeactivate = UserResourceBuilder.newUserResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(ifsAdminUser())) {
+                assertTrue(rules.ifsAdminCanDeactivateUsers(userToDeactivate, user));
+            } else {
+                assertFalse(rules.ifsAdminCanDeactivateUsers(userToDeactivate, user));
+            }
+        });
+    }
+
+    @Test
+    public void testIfsAdminCanReactivateUser(){
+
+        UserResource userToReactivate = UserResourceBuilder.newUserResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(ifsAdminUser())) {
+                assertTrue(rules.ifsAdminCanDeactivateUsers(userToReactivate, user));
+            } else {
+                assertFalse(rules.ifsAdminCanDeactivateUsers(userToReactivate, user));
             }
         });
     }

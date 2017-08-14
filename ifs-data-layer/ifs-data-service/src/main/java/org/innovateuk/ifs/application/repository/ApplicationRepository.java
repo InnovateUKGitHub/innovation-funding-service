@@ -21,10 +21,6 @@ import java.util.List;
 public interface ApplicationRepository extends PagingAndSortingRepository<Application, Long> {
     List<Application> findByName(@Param("name") String name);
 
-	String COMP_FILTER = "SELECT a FROM Application a WHERE " +
-			"a.competition.id = :compId " +
-			"AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
-
 	String COMP_NOT_STATUS_FILTER = "SELECT a FROM Application a WHERE " +
 			"a.competition.id = :compId " +
 			"AND (a.applicationProcess.activityState.state NOT IN :states) " +
@@ -52,13 +48,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
     List<Application> findAll();
     Page<Application> findByCompetitionId(long competitionId, Pageable pageable);
 
-    @Query(COMP_FILTER)
-    Page<Application> findByCompetitionIdAndIdLike(@Param("compId") long competitionId, @Param("filter") String filter, Pageable pageable);
-
     List<Application> findByCompetitionId(long competitionId);
-
-    @Query(COMP_FILTER)
-    List<Application> findByCompetitionIdAndIdLike(@Param("compId") long competitionId, @Param("filter") String filter);
 
 	@Query(COMP_STATUS_FILTER)
 	Page<Application> findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(@Param("compId") long competitionId,

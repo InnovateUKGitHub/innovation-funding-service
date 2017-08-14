@@ -8,8 +8,6 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -17,7 +15,7 @@ import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.notifications.service.senders.email.EmailNotificationSender;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
-import org.innovateuk.ifs.publiccontent.repository.ContentEventRepository;
+import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.sil.experian.resource.AccountDetails;
 import org.innovateuk.ifs.sil.experian.resource.SILBankDetails;
@@ -37,6 +35,7 @@ import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +60,6 @@ import java.util.function.UnaryOperator;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.testdata.CsvUtils.*;
@@ -92,7 +90,7 @@ import static org.mockito.Mockito.when;
  */
 @ActiveProfiles({"integration-test,seeding-db"})
 @DirtiesContext
-//@Ignore
+@Ignore
 public class GenerateTestData extends BaseIntegrationTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(GenerateTestData.class);
@@ -135,12 +133,6 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     @Autowired
     private PublicContentRepository publicContentRepository;
-
-    @Autowired
-    private ContentEventRepository contentEventRepository;
-
-    @Autowired
-    private CompetitionRepository competitionRepository;
 
     @Autowired
     private TestService testService;
@@ -225,7 +217,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     @Before
     public void setup() throws Exception {
-//        freshDb();
+        freshDb();
     }
 
     @BeforeClass
@@ -467,13 +459,8 @@ public class GenerateTestData extends BaseIntegrationTest {
     private void fixUpDatabase() {
         // Remove the public content that is in place for competition one so that generation does not fail with
         // PUBLIC_CONTENT_ALREADY_INITIALISED
-//        PublicContent publicContentForCompetitionOne = publicContentRepository.findByCompetitionId(1L);
-//        publicContentRepository.delete(publicContentForCompetitionOne.getId());
-
-        Competition competition = competitionRepository.findByName("Connected digital additive manufacturing").get(0);
-        competition.setName("Connected digital additive manufacturing PRODUCTION");
-        competitionRepository.save(competition);
-
+        PublicContent publicContentForCompetitionOne = publicContentRepository.findByCompetitionId(1L);
+        publicContentRepository.delete(publicContentForCompetitionOne.getId());
     }
 
     private void createInternalUsers() {
@@ -500,11 +487,11 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private void createCompetitions() {
         competitionLines.forEach(line -> {
-//            if ("Connected digital additive manufacturing".equals(line.name)) {
-//                createCompetitionWithApplications(line, Optional.of(1L));
-//            } else {
+            if ("Connected digital additive manufacturing".equals(line.name)) {
+                createCompetitionWithApplications(line, Optional.of(1L));
+            } else {
                 createCompetitionWithApplications(line, Optional.empty());
-//            }
+            }
         });
     }
 
@@ -611,7 +598,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         });
 
         List<Triple<String, String, OrganisationTypeEnum>> uniqueOrganisations =
-                organisations.stream().filter(triple -> isDuplicateOrganisation(triple, organisations)).collect(toList());
+                organisations.stream().filter(triple -> isUniqueOrFirstDuplicateOrganisation(triple, organisations)).collect(toList());
 
         List<UnaryOperator<ApplicationFinanceDataBuilder>> financeBuilders = simpleMap(uniqueOrganisations, orgDetails -> {
 
@@ -670,7 +657,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         return baseBuilder;
     }
 
-    private boolean isDuplicateOrganisation(Triple<String, String, OrganisationTypeEnum> currentOrganisation, List<Triple<String, String, OrganisationTypeEnum>> organisationList) {
+    private boolean isUniqueOrFirstDuplicateOrganisation(Triple<String, String, OrganisationTypeEnum> currentOrganisation, List<Triple<String, String, OrganisationTypeEnum>> organisationList) {
         return organisationList.stream().filter(triple -> triple.getMiddle().equals(currentOrganisation.getMiddle())).findFirst().get().equals(currentOrganisation);
     }
 
@@ -749,16 +736,16 @@ public class GenerateTestData extends BaseIntegrationTest {
                                 costs -> costs.
                                         withWorkingDaysPerYear(123).
                                         withGrantClaim(30).
-                                        withOtherFunding("Lottery", LocalDate.of(2016, 04, 01), bd("1234")).
-                                        withLabourEntry("Role 1", 100, 200).
-                                        withLabourEntry("Role 2", 200, 300).
-                                        withLabourEntry("Role 3", 300, 365).
+                                        withOtherFunding("Lottery", LocalDate.of(2016, 04, 01), bd("2468")).
+                                        withLabourEntry("Role 1", 200, 200).
+                                        withLabourEntry("Role 2", 400, 300).
+                                        withLabourEntry("Role 3", 600, 365).
                                         withAdministrationSupportCostsNone().
-                                        withMaterials("Generator", bd("5010"), 10).
-                                        withCapitalUsage(12, "Depreciating Stuff", true, bd("1060"), bd("600"), 60).
-                                        withSubcontractingCost("Developers", "UK", "To develop stuff", bd("45000")).
-                                        withTravelAndSubsistence("To visit colleagues", 15, bd("199")).
-                                        withOtherCosts("Some more costs", bd("550")).
+                                        withMaterials("Generator", bd("10020"), 10).
+                                        withCapitalUsage(12, "Depreciating Stuff", true, bd("2120"), bd("1200"), 60).
+                                        withSubcontractingCost("Developers", "UK", "To develop stuff", bd("90000")).
+                                        withTravelAndSubsistence("To visit colleagues", 15, bd("398")).
+                                        withOtherCosts("Some more costs", bd("1100")).
                                         withOrganisationSize(1L))
                         .markAsComplete(markAsComplete);
     }
@@ -769,15 +756,15 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withUser(user).
                 withAcademicCosts(costs -> costs.
                         withTsbReference("My REF").
-                        withDirectlyIncurredStaff(bd("11")).
-                        withDirectlyIncurredTravelAndSubsistence(bd("22")).
-                        withDirectlyIncurredOtherCosts(bd("33")).
-                        withDirectlyAllocatedInvestigators(bd("44")).
-                        withDirectlyAllocatedEstateCosts(bd("55")).
-                        withDirectlyAllocatedOtherCosts(bd("66")).
-                        withIndirectCosts(bd("77")).
-                        withExceptionsStaff(bd("88")).
-                        withExceptionsOtherCosts(bd("99")).
+                        withDirectlyIncurredStaff(bd("22")).
+                        withDirectlyIncurredTravelAndSubsistence(bd("44")).
+                        withDirectlyIncurredOtherCosts(bd("66")).
+                        withDirectlyAllocatedInvestigators(bd("88")).
+                        withDirectlyAllocatedEstateCosts(bd("110")).
+                        withDirectlyAllocatedOtherCosts(bd("132")).
+                        withIndirectCosts(bd("154")).
+                        withExceptionsStaff(bd("176")).
+                        withExceptionsOtherCosts(bd("198")).
                         withUploadedJesForm())
                 .markAsComplete(markAsComplete);
     }

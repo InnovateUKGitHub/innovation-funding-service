@@ -12,7 +12,7 @@ import java.time.ZonedDateTime;
  * the <pre>@EntityListeners(AuditingEntityListener.class)</pre> annotation for auto-populating the createdBy and modifiedBy
  * {@link User}s.
  * <p>
- * Use @{@link AuditableEntity} for a convienience base class with JPA mapping to standard column names.
+ * Use @{@link AuditableEntity} for a convenience base class with JPA mapping to standard column names.
  *
  * @see AuditableEntity
  * @see AuditConfig

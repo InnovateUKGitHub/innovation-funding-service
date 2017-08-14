@@ -7,14 +7,12 @@ import org.innovateuk.ifs.admin.viewmodel.UserListViewModel;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.registration.service.InternalUserService;
 import org.innovateuk.ifs.user.builder.RoleResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
-import org.innovateuk.ifs.user.resource.RoleResource;
-import org.innovateuk.ifs.user.resource.UserPageResource;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,8 +24,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 
-import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -40,6 +38,8 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
 
     private UserPageResource userPageResource;
 
+    private RoleInvitePageResource roleInvitePageResource;
+
     @Mock
     private InternalUserService internalUserServiceMock;
 
@@ -49,9 +49,13 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
 
         userPageResource = new UserPageResource();
 
+        roleInvitePageResource = new RoleInvitePageResource();
+
         when(userRestServiceMock.getActiveInternalUsers(1, 5)).thenReturn(RestResult.restSuccess(userPageResource));
 
         when(userRestServiceMock.getInactiveInternalUsers(1, 5)).thenReturn(RestResult.restSuccess(userPageResource));
+
+        when(inviteUserRestServiceMock.getPendingInternalUserInvites(1, 5)).thenReturn(RestResult.restSuccess(roleInvitePageResource));
     }
 
     @Test
@@ -61,7 +65,9 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
                 .param("size", "5"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/users"))
-                .andExpect(model().attribute("model", new UserListViewModel("active", userPageResource.getContent(), userPageResource.getContent(), userPageResource.getTotalElements(), userPageResource.getTotalElements(), new PaginationViewModel(userPageResource, "active"), new PaginationViewModel(userPageResource, "inactive"))));
+                .andExpect(model().attribute("model", new UserListViewModel("active", userPageResource.getContent(), userPageResource.getContent(), roleInvitePageResource.getContent(),
+                        userPageResource.getTotalElements(), userPageResource.getTotalElements(), roleInvitePageResource.getTotalElements(),
+                        new PaginationViewModel(userPageResource, "active"), new PaginationViewModel(userPageResource, "inactive"), new PaginationViewModel(roleInvitePageResource, "pending"))));
     }
 
     @Test
@@ -71,20 +77,33 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
                 .param("size", "5"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/users"))
-                .andExpect(model().attribute("model", new UserListViewModel("inactive", userPageResource.getContent(), userPageResource.getContent(), userPageResource.getTotalElements(), userPageResource.getTotalElements(), new PaginationViewModel(userPageResource, "active"), new PaginationViewModel(userPageResource, "inactive"))));
+                .andExpect(model().attribute("model", new UserListViewModel("inactive", userPageResource.getContent(), userPageResource.getContent(), roleInvitePageResource.getContent(),
+                        userPageResource.getTotalElements(), userPageResource.getTotalElements(), roleInvitePageResource.getTotalElements(),
+                        new PaginationViewModel(userPageResource, "active"), new PaginationViewModel(userPageResource, "inactive"), new PaginationViewModel(roleInvitePageResource, "pending"))));
+    }
+
+    @Test
+    public void testViewPending() throws Exception {
+        mockMvc.perform(get("/admin/users/pending")
+                .param("page", "1")
+                .param("size", "5"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/users"))
+                .andExpect(model().attribute("model", new UserListViewModel("pending", userPageResource.getContent(), userPageResource.getContent(), roleInvitePageResource.getContent(),
+                        userPageResource.getTotalElements(), userPageResource.getTotalElements(), roleInvitePageResource.getTotalElements(),
+                        new PaginationViewModel(userPageResource, "active"), new PaginationViewModel(userPageResource, "inactive"), new PaginationViewModel(roleInvitePageResource, "pending"))));
     }
 
     @Test
     public void testViewUser() throws Exception {
         ZonedDateTime now = ZonedDateTime.now();
-        UserResource user = newUserResource().build();
+        UserResource user = newUserResource().withCreatedOn(now).withCreatedBy("abc").withModifiedOn(now).withModifiedBy("abc").build();
         when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restSuccess(user));
-        when(profileRestService.getUserProfile(1L)).thenReturn(RestResult.restSuccess(newUserProfileResource().withCreatedBy("abc").withCreatedOn(now).build()));
 
         mockMvc.perform(get("/admin/user/{userId}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/user"))
-                .andExpect(model().attribute("model", new EditUserViewModel("abc", now, user)));
+                .andExpect(model().attribute("model", new EditUserViewModel(user)));
     }
 
     @Test
@@ -140,6 +159,7 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
                 .withLastName("last")
                 .withEmail(email)
                 .withRolesGlobal(Collections.singletonList(role))
+                .withStatus(UserStatus.ACTIVE)
                 .build();
 
         when(userRestServiceMock.retrieveUserById(1L))
@@ -154,7 +174,119 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/user/{userId}/edit", 1L))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/edit-user"))
-                .andExpect(model().attribute("form", expectedForm));
+                .andExpect(model().attribute("form", expectedForm))
+                .andExpect(model().attribute("user", userResource));
+    }
+
+    @Test
+    public void deactivateUserSuccess() throws Exception {
+
+        String email = "asdf@asdf.com";
+        RoleResource role = RoleResourceBuilder.newRoleResource()
+                .withName("ifs_administrator")
+                .build();
+        UserResource userResource = UserResourceBuilder.newUserResource()
+                .withFirstName("first")
+                .withLastName("last")
+                .withEmail(email)
+                .withRolesGlobal(Collections.singletonList(role))
+                .build();
+
+        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restSuccess(userResource));
+        when(userRestServiceMock.deactivateUser(1L)).thenReturn(RestResult.restSuccess());
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/user/{userId}/edit", 1L).
+                    param("deactivateUser", ""))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/user/1"));
+
+        verify(userRestServiceMock).deactivateUser(1L);
+    }
+
+    @Test
+    public void deactivateUserDeactivateFails() throws Exception {
+
+        String email = "asdf@asdf.com";
+        RoleResource role = RoleResourceBuilder.newRoleResource()
+                .withName("ifs_administrator")
+                .build();
+        UserResource userResource = UserResourceBuilder.newUserResource()
+                .withFirstName("first")
+                .withLastName("last")
+                .withEmail(email)
+                .withRolesGlobal(Collections.singletonList(role))
+                .build();
+
+        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restSuccess(userResource));
+        when(userRestServiceMock.deactivateUser(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/user/{userId}/edit", 1L).
+                    param("deactivateUser", ""))
+                .andExpect(status().isNotFound());
+
+        verify(userRestServiceMock).deactivateUser(1L);
+    }
+
+    @Test
+    public void deactivateUserFindUserFails() throws Exception {
+        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_FORBIDDEN));
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/user/{userId}/edit", 1L).
+                    param("deactivateUser", ""))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void reactivateUserSuccess() throws Exception {
+
+        String email = "asdf@asdf.com";
+        RoleResource role = RoleResourceBuilder.newRoleResource()
+                .withName("ifs_administrator")
+                .build();
+        UserResource userResource = UserResourceBuilder.newUserResource()
+                .withFirstName("first")
+                .withLastName("last")
+                .withEmail(email)
+                .withRolesGlobal(Collections.singletonList(role))
+                .build();
+
+        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restSuccess(userResource));
+        when(userRestServiceMock.reactivateUser(1L)).thenReturn(RestResult.restSuccess());
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/user/{userId}", 1L).
+                    param("reactivateUser", ""))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/user/1"));
+
+        verify(userRestServiceMock).reactivateUser(1L);
+    }
+
+    @Test
+    public void reactivateUserReactivateFails() throws Exception {
+
+        String email = "asdf@asdf.com";
+        RoleResource role = RoleResourceBuilder.newRoleResource()
+                .withName("ifs_administrator")
+                .build();
+        UserResource userResource = UserResourceBuilder.newUserResource()
+                .withFirstName("first")
+                .withLastName("last")
+                .withEmail(email)
+                .withRolesGlobal(Collections.singletonList(role))
+                .build();
+
+        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restSuccess(userResource));
+        when(userRestServiceMock.reactivateUser(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/user/{userId}", 1L).
+                    param("reactivateUser", ""))
+                .andExpect(status().isNotFound());
+
+        verify(userRestServiceMock).reactivateUser(1L);
+    }
+
+    @Test
+    public void reactivateUserFindUserFails() throws Exception {
+
+        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_FORBIDDEN));
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/user/{userId}", 1L).
+                    param("reactivateUser", ""))
+                .andExpect(status().isForbidden());
     }
 
     @Override

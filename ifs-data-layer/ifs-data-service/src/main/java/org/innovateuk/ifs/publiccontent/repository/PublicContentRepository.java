@@ -19,28 +19,31 @@ import java.util.Set;
 public interface PublicContentRepository extends PagingAndSortingRepository<PublicContent, Long> {
     @Query("SELECT c FROM Competition c " +
             "INNER JOIN c.milestones closed_milestone ON (closed_milestone.date > CURRENT_TIMESTAMP AND closed_milestone.type='SUBMISSION_DATE') " +
+            "INNER JOIN c.milestones start_milestone ON (start_milestone.type='OPEN_DATE') " +
             "WHERE EXISTS(   SELECT p " +
                             "FROM PublicContent p " +
                             "WHERE p.competitionId = c.id " +
                             "AND p.publishDate < CURRENT_TIMESTAMP " +
                             "AND p.inviteOnly = false)" +
             "AND c.id IN :competitionIds " +
-            "ORDER BY closed_milestone.date ASC")
+            "ORDER BY start_milestone.date DESC")
     Page<Competition> findAllPublishedForOpenCompetitionByInnovationId(@Param(value="competitionIds") List<Long> competitionIds, Pageable pageable);
 
     @Query("SELECT c FROM Competition c " +
             "INNER JOIN c.milestones closed_milestone ON (closed_milestone.date > CURRENT_TIMESTAMP AND closed_milestone.type='SUBMISSION_DATE') " +
+            "INNER JOIN c.milestones start_milestone ON (start_milestone.type='OPEN_DATE') " +
             "WHERE EXISTS(   SELECT p " +
                             "FROM PublicContent p " +
                             "WHERE p.competitionId = c.id " +
                                 "AND p.id IN :filteredPublicContentIds " +
                                 "AND p.publishDate < CURRENT_TIMESTAMP " +
-                                "AND p.inviteOnly = false)" +
-            "ORDER BY closed_milestone.date ASC")
+                                "AND p.inviteOnly = false) " +
+            "ORDER BY start_milestone.date DESC")
     Page<Competition> findAllPublishedForOpenCompetitionByKeywords(@Param(value="filteredPublicContentIds") Set<Long> filteredPublicContentIds, Pageable pageable);
     
     @Query("SELECT c FROM Competition c " +
             "INNER JOIN c.milestones closed_milestone ON (closed_milestone.date > CURRENT_TIMESTAMP AND closed_milestone.type='SUBMISSION_DATE') " +
+            "INNER JOIN c.milestones start_milestone ON (start_milestone.type='OPEN_DATE') " +
             "WHERE EXISTS(   SELECT p " +
                             "FROM PublicContent p " +
                             "WHERE p.competitionId = c.id " +
@@ -48,21 +51,19 @@ public interface PublicContentRepository extends PagingAndSortingRepository<Publ
                                 "AND p.publishDate < CURRENT_TIMESTAMP " +
                                 "AND p.inviteOnly = false)" +
             "AND c.id IN :competitionIds " +
-            "ORDER BY closed_milestone.date ASC")
+            "ORDER BY start_milestone.date DESC")
 
     Page<Competition> findAllPublishedForOpenCompetitionByKeywordsAndInnovationId(@Param(value="filteredPublicContentIds") Set<Long> filteredPublicContentIds, @Param(value="competitionIds") List<Long> competitionIds, Pageable pageable);
     @Query("SELECT c FROM Competition c " +
             "INNER JOIN c.milestones closed_milestone ON (closed_milestone.date > CURRENT_TIMESTAMP AND closed_milestone.type='SUBMISSION_DATE') " +
+            "INNER JOIN c.milestones start_milestone ON (start_milestone.type='OPEN_DATE') " +
             "WHERE EXISTS(   SELECT p " +
                             "FROM PublicContent p " +
                             "WHERE p.competitionId = c.id " +
                             "AND p.publishDate < CURRENT_TIMESTAMP " +
-                            "AND p.inviteOnly = false)" +
-            "ORDER BY closed_milestone.date ASC")
+                            "AND p.inviteOnly = false) " +
+            "ORDER BY start_milestone.date DESC")
     Page<Competition> findAllPublishedForOpenCompetition(Pageable pageable);
 
     PublicContent findByCompetitionId(Long id);
-    Page<PublicContent> findByCompetitionIdInAndIdIn(List<Long> competitionIds, Set<Long> publicContentIds, Pageable pageable);
-    Page<PublicContent> findByCompetitionIdIn(List<Long> competitionIds, Pageable pageable);
-    Page<PublicContent> findByIdIn(Set<Long> publicContentIds, Pageable pageable);
 }

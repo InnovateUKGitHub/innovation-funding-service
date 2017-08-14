@@ -265,7 +265,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     public void testSaveNewQueryAttachment() throws Exception {
 
         MockMultipartFile uploadedFile = new MockMultipartFile("attachment", "testFile.pdf", "application/pdf", "My content!".getBytes());
-        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
+        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L, null);
 
         when(financeCheckServiceMock.uploadFile(projectId, "application/pdf", 11, "testFile.pdf", "My content!".getBytes())).thenReturn(ServiceResult.serviceSuccess(attachment));
         when(financeCheckServiceMock.getAttachment(1L)).thenReturn(ServiceResult.serviceSuccess(attachment));
@@ -362,7 +362,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     @Test
     public void testViewNewQueryWithAttachments() throws Exception {
 
-        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
+        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L, null);
         when(financeCheckServiceMock.getAttachment(1L)).thenReturn(ServiceResult.serviceSuccess(attachment));
 
         List<Long> attachmentIds = new ArrayList<>();
@@ -442,7 +442,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
         List<Long> attachmentIds = new ArrayList<>();
         attachmentIds.add(1L);
         Cookie ck = createAttachmentsCookie(attachmentIds);
-        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
+        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L, null);
 
         when(financeCheckServiceMock.getAttachment(1L)).thenReturn(ServiceResult.serviceSuccess(attachment));
 

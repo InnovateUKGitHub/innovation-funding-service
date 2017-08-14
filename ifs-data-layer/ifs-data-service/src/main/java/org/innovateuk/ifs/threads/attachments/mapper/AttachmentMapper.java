@@ -14,7 +14,7 @@ public abstract class AttachmentMapper extends BaseMapper<Attachment, Attachment
     @Override
     public AttachmentResource mapToResource(Attachment attachment) {
         return new AttachmentResource(attachment.id(), attachment.fileName(),
-                attachment.mediaType(), attachment.sizeInBytes());
+                attachment.mediaType(), attachment.sizeInBytes(), attachment.getCreatedOn());
     }
 
     @Override
