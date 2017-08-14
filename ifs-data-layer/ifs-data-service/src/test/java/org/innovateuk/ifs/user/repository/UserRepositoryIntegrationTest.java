@@ -2,7 +2,6 @@ package org.innovateuk.ifs.user.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
-import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.User;
@@ -10,6 +9,7 @@ import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,9 +45,6 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     @Autowired
     protected InnovationAreaRepository innovationAreaRepository;
 
-    @Autowired
-    protected CompetitionInviteRepository competitionInviteRepository;
-
     @Test
     public void findAll() {
         // Fetch the list of users
@@ -62,9 +59,16 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
 
     @Test
     public void findByEmailAndStatus() {
+        loginSteveSmith();
+        User creator = repository.findOne(getLoggedInUser().getId());
+        repository.findOne(getLoggedInUser().getId());
         final User user = newUser()
                 .withUid("my-uid")
                 .withStatus(INACTIVE)
+                .withCreatedOn(ZonedDateTime.now())
+                .withCreatedBy(creator)
+                .withModifiedOn(ZonedDateTime.now())
+                .withModifiedBy(creator)
                 .build();
 
         final User expected = repository.save(user);

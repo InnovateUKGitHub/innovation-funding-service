@@ -11,24 +11,10 @@ import java.time.ZonedDateTime;
  */
 public class EditUserViewModel {
 
-    private String createdByUser;
-
-    private ZonedDateTime createdOn;
-
     private UserResource user;
 
-    public EditUserViewModel(String createdByUser, ZonedDateTime createdOn, UserResource user) {
-        this.createdByUser = createdByUser;
-        this.createdOn = createdOn;
+    public EditUserViewModel(UserResource user) {
         this.user = user;
-    }
-
-    public String getCreatedByUser() {
-        return createdByUser;
-    }
-
-    public void setCreatedByUser(String createdByUser) {
-        this.createdByUser = createdByUser;
     }
 
     public UserResource getUser() {
@@ -37,14 +23,6 @@ public class EditUserViewModel {
 
     public void setUser(UserResource user) {
         this.user = user;
-    }
-
-    public ZonedDateTime getCreatedOn() {
-        return createdOn;
-    }
-
-    public void setCreatedOn(ZonedDateTime createdOn) {
-        this.createdOn = createdOn;
     }
 
     @Override
@@ -56,8 +34,6 @@ public class EditUserViewModel {
         EditUserViewModel that = (EditUserViewModel) o;
 
         return new EqualsBuilder()
-                .append(createdByUser, that.createdByUser)
-                .append(createdOn, that.createdOn)
                 .append(user, that.user)
                 .isEquals();
     }
@@ -65,8 +41,6 @@ public class EditUserViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(createdByUser)
-                .append(createdOn)
                 .append(user)
                 .toHashCode();
     }

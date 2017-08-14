@@ -15,7 +15,9 @@ public enum ApplicationState implements ProcessStates{
     INELIGIBLE_INFORMED(State.NOT_APPLICABLE_INFORMED),
     APPROVED(State.ACCEPTED),
     REJECTED(State.REJECTED),
-    OPEN(State.OPEN);
+    OPEN(State.OPEN),
+    IN_PANEL(State.IN_PANEL);
+
 
     final State backingState;
 
