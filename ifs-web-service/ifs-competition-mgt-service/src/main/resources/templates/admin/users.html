@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-  <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Users'" />
+  <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage users'" />
 </head>
 <body class="competition-management">
 
@@ -13,12 +13,12 @@
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage users',size='heading-large'" />
 
     <p>You can view the status of all internal users and add new users.</p>
-    <p><a th:href="@{/admin/invite-user}">Add a new internal user</a></p>
+    <p><a th:href="@{/admin/invite-user}">Invite a new internal user</a></p>
 
     <!--/*
      TODO: Uncomment this when search feature is implemented.  Probably after IFS-34.
     <p>You can view, edit and search for internal users here.</p>
-    <p><a href="/">Add a new internal user</a></p>
+    <p><a href="/">Invite a new internal user</a></p>
 
     <div class="search-filters extra-margin">
       <h2 class="heading-medium">Search users</h2>

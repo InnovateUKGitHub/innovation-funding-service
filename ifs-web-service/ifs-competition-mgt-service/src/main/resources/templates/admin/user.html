@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Users'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='View internal user\'s details'" />
 </head>
 <body class="competition-management">
 
@@ -15,8 +15,6 @@
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='View internal user\'s details',size='heading-xlarge'" />
 
-    <h2 class="heading-medium">Personal details</h2>
-
     <dl>
         <dt>Full name</dt>
         <dd class="extra-margin-bottom" th:text="${model.user.name}">Mark Smith</dd>
@@ -24,7 +22,7 @@
         <dt>Email address</dt>
         <dd class="extra-margin-bottom" th:text="${model.user.email}">mark.smith@innovate.gov.uk</dd>
 
-        <dt>Job role</dt>
+        <dt>Role</dt>
         <dd class="extra-margin-bottom" th:text="${model.user.getRolesString()}">Super admin</dd>
     </dl>
 

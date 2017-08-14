@@ -278,7 +278,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     public void testSaveNewNoteAttachment() throws Exception {
 
         MockMultipartFile uploadedFile = new MockMultipartFile("attachment", "testFile.pdf", "application/pdf", "My content!".getBytes());
-        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
+        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L, null);
         Cookie originCookie = createOriginCookie();
 
         when(financeCheckServiceMock.uploadFile(projectId, "application/pdf", 11, "testFile.pdf", "My content!".getBytes())).thenReturn(ServiceResult.serviceSuccess(attachment));
@@ -388,7 +388,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     @Test
     public void testViewNewNoteWithAttachments() throws Exception {
 
-        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
+        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L, null);
         when(financeCheckServiceMock.getAttachment(1L)).thenReturn(ServiceResult.serviceSuccess(attachment));
 
         List<Long> attachmentIds = new ArrayList<>();
@@ -498,7 +498,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
         Cookie ck = createAttachmentsCookie(attachmentIds);
         Cookie originCookie = createOriginCookie();
 
-        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
+        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L, null);
 
         when(financeCheckServiceMock.getAttachment(1L)).thenReturn(ServiceResult.serviceSuccess(attachment));
 

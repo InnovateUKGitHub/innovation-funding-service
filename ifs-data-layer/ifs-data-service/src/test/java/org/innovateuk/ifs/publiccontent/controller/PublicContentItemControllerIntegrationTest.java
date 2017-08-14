@@ -40,6 +40,9 @@ import static org.junit.Assert.assertTrue;
 public class PublicContentItemControllerIntegrationTest extends BaseControllerIntegrationTest<PublicContentItemController> {
     private static final Long COMPETITION_ID = 1L;
     private static final String PRIVATE_OR_PUBLIC_COMP_NAME = "Private Competition";
+    private static final ZonedDateTime YESTERDAY = ZonedDateTime.now().minusDays(1);
+    private static final ZonedDateTime TOMORROW = ZonedDateTime.now().plusDays(1);
+
 
     @Autowired
     private CompetitionRepository competitionRepository;
@@ -82,6 +85,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         long innovationId = 5L;
 
         flushAndClearSession();
+        addOpenDateToCompetition(competition);
 
         RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.of(innovationId), Optional.of("key wor"), Optional.of(0), 20);
 
@@ -130,15 +134,18 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     @Rollback
     public void findFilteredItems_findAllPublicContent() throws Exception {
         Competition competition = competitionRepository.findById(COMPETITION_ID);
-
         flushAndClearSession();
 
+        addOpenDateToCompetition(competition);
+        setPrivateCompetitionToPublic();
         RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.empty(), Optional.empty(), Optional.empty(), 10);
 
         assertTrue(resultOne.isSuccess());
         List<PublicContentItemResource> publicContentItemResourcesOne = resultOne.getSuccessObject().getContent();
 
-        assertEquals(1, resultOne.getSuccessObject().getTotalElements());
+        assertEquals(2, resultOne.getSuccessObject().getTotalElements());
+        assertTrue(publicContentItemResourcesOne.get(0).getCompetitionOpenDate()
+                .isAfter(publicContentItemResourcesOne.get(1).getCompetitionOpenDate()));
         assertEquals(competition.getName(), publicContentItemResourcesOne.get(0).getCompetitionTitle());
     }
 
@@ -150,6 +157,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         Category category = categoryRepository.findOne(innovationId);
 
         flushAndClearSession();
+        addOpenDateToCompetition(competition);
 
         RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.of(innovationId), Optional.empty(), Optional.empty(), 10);
 
@@ -167,6 +175,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         long innovationId = 5L;
 
         flushAndClearSession();
+        addOpenDateToCompetition(competition);
 
         RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.of(innovationId), Optional.of("Nothing key wor"), Optional.empty(), 10);
 
@@ -180,6 +189,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     @Test
     @Rollback
     public void findFilteredItems_openCompetitionsAreFilteredFromResultListAndTotalFound() throws Exception {
+        addOpenDateToCompetition(competitionRepository.findById(COMPETITION_ID));
         RestResult<PublicContentItemPageResource> result = controller.findFilteredItems(Optional.empty(), Optional.of("Nothing key wor"), Optional.of(0), 20);
 
         assertTrue(result.isSuccess());
@@ -319,7 +329,8 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         keywordRepository.save(asList(keywordOne, keywordTwo, keywordThree));
 
         InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
-        Competition competition = competitionRepository.findOne(1L);
+        Competition competition = competitionRepository.findOne(COMPETITION_ID);
+
         competition.setInnovationSector(innovationArea.getSector());
 
         competitionRepository.save(competition);
@@ -331,20 +342,18 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         Competition privateCompetition = competitionRepository.save(newCompetition().withName(PRIVATE_OR_PUBLIC_COMP_NAME).build());
         privateCompetition.setInnovationSector(innovationArea.getSector());
 
-        ZonedDateTime yesterday = ZonedDateTime.now().minusDays(1);
-        ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
+        addOpenDateToCompetition(privateCompetition);
 
         Milestone closedMilestone = newMilestone()
                 .withCompetition(privateCompetition)
                 .withType(MilestoneType.SUBMISSION_DATE)
-                .withDate(tomorrow).build();
-
+                .withDate(TOMORROW).build();
         milestoneRepository.save(closedMilestone);
 
 
         PublicContent publicContentResult = publicContentRepository.save(newPublicContent()
                 .withCompetitionId(privateCompetition.getId())
-                .withPublishDate(yesterday)
+                .withPublishDate(YESTERDAY)
                 .withInviteOnly(true)
                 .build());
 
@@ -354,6 +363,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
 
     private void setPrivateCompetitionToPublic(){
         Competition privateCompetition = competitionRepository.findByName(PRIVATE_OR_PUBLIC_COMP_NAME).get(0);
+
         PublicContent publicContent = publicContentRepository.findByCompetitionId(privateCompetition.getId());
 
         publicContent.setInviteOnly(false);
@@ -368,6 +378,14 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         publicContent.setInviteOnly(true);
 
         publicContentRepository.save(publicContent);
+    }
+
+    private void addOpenDateToCompetition(Competition competition) {
+        Milestone openDateMilestone = newMilestone()
+                .withCompetition(competition)
+                .withType(MilestoneType.OPEN_DATE)
+                .withDate(YESTERDAY).build();
+        milestoneRepository.save(openDateMilestone);
     }
 
     private static Predicate<PublicContentItemPageResource> privateOrgPublicCompetitionIsInPage() {
