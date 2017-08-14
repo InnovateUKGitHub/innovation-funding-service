@@ -69,7 +69,7 @@ public class OrganisationCreationContributorTypeController extends AbstractOrgan
         registrationCookieService.deleteOrganisationCreationCookie(response);
         if (bindingResult.hasErrors()) {
             LOG.debug("redirect because validation errors");
-            return "redirect:/organisation/create/type/new-account-organisation-type?invalid";
+            return "redirect:/organisation/create/new-account-organisation-type?invalid";
         } else {
             registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
             LOG.debug("redirect for organisation creation");
