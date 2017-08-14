@@ -35,6 +35,7 @@ public class ManageInnovationLeadsModelPopulator {
                 competition.getLeadTechnologistName(), competition.getExecutiveName(), competition.getInnovationSectorName(),
                 competition.getInnovationAreaNames(), sortByName(innovationLeadsAssignedToCompetition),
                 sortByName(availableInnovationLeads)));
+        model.addAttribute("initialDetailsComplete", competition.isInitialDetailsComplete());
     }
 
     private List<UserResource> sortByName(List<UserResource> userResources) {
