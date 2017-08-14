@@ -11,7 +11,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 /**
- * Generates web test data based upon csvs in /src/test/resources/testdata using data builders
+ * Generates web test data based upon csvs in /src/test/resources/testdata using data builders and sits it atop existing
+ * production data
  */
 @ActiveProfiles({"integration-test,seeding-db"})
 @DirtiesContext
@@ -39,21 +40,4 @@ public class ApplyTestDataToProductionData extends BaseGenerateTestData {
         systemRegistrar.setEmail(BaseDataBuilder.IFS_SYSTEM_MAINTENANCE_USER_EMAIL);
         userRepository.save(systemRegistrar);
     }
-
-
-
-
-
-
-
-//    private void createCompetitions() {
-//        competitionLines.forEach(line -> {
-////            if ("Connected digital additive manufacturing".equals(line.name)) {
-////                createCompetitionWithApplications(line, Optional.of(1L));
-////            } else {
-//            createCompetitionWithApplications(line, Optional.empty());
-////            }
-//        });
-//    }
-
 }

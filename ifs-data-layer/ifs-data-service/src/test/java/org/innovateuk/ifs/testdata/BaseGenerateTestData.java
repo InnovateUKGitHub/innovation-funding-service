@@ -473,13 +473,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     private void createCompetitions() {
-        competitionLines.forEach(line -> {
-            if ("Connected digital additive manufacturing".equals(line.name)) {
-                createCompetitionWithApplications(line, Optional.of(1L));
-            } else {
-                createCompetitionWithApplications(line, Optional.empty());
-            }
-        });
+        competitionLines.forEach(line -> createCompetitionWithApplications(line, Optional.empty()));
     }
 
     private List<Pair<String, FundingDecision>> createFundingDecisionsFromCsv(String competitionName) {

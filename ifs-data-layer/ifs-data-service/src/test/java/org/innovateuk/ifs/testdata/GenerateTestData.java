@@ -36,21 +36,4 @@ public class GenerateTestData extends BaseGenerateTestData {
         PublicContent publicContentForCompetitionOne = publicContentRepository.findByCompetitionId(1L);
         publicContentRepository.delete(publicContentForCompetitionOne.getId());
     }
-
-
-
-
-
-
-
-//    private void createCompetitions() {
-//        competitionLines.forEach(line -> {
-////            if ("Connected digital additive manufacturing".equals(line.name)) {
-////                createCompetitionWithApplications(line, Optional.of(1L));
-////            } else {
-//            createCompetitionWithApplications(line, Optional.empty());
-////            }
-//        });
-//    }
-
 }
