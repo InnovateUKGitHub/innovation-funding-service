@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.registration;
 
+import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.populator.OrganisationCreationSelectTypePopulator;
@@ -31,6 +33,9 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
     @Autowired
     private OrganisationCreationSelectTypePopulator organisationCreationSelectTypePopulator;
 
+    @Autowired
+    private CompetitionService competitionService;
+
     @GetMapping
     public String selectOrganisationType(Model model,
                                          HttpServletRequest request) {
@@ -54,7 +59,7 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
                                                 BindingResult bindingResult,
                                                 HttpServletRequest request,
                                                 HttpServletResponse response) {
-        OrganisationCreationSelectTypeViewModel selectOrgTypeViewModel = organisationCreationSelectTypePopulator.populate();
+
         Long organisationTypeId = organisationForm.getOrganisationTypeId();
         if (organisationTypeId != null &&
                 !isValidLeadOrganisationType(organisationTypeId)) {
@@ -62,6 +67,10 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
         }
 
         if (!bindingResult.hasFieldErrors(ORGANISATION_TYPE_ID)) {
+            if(!isAllowedToLeadApplication(organisationTypeId, request)) {
+                //redirect to
+            }
+
             OrganisationTypeForm organisationTypeForm =  new OrganisationTypeForm();
             organisationTypeForm.setOrganisationType(organisationTypeId);
             registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
@@ -70,9 +79,21 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
             return "redirect:" + BASE_URL + "/" + FIND_ORGANISATION;
         } else {
             organisationForm.setTriedToSave(true);
+            OrganisationCreationSelectTypeViewModel selectOrgTypeViewModel = organisationCreationSelectTypePopulator.populate();
             model.addAttribute("model", selectOrgTypeViewModel);
             return TEMPLATE_PATH + "/" + LEAD_ORGANISATION_TYPE;
         }
+    }
+
+    private boolean isAllowedToLeadApplication(Long organisationTypeId, HttpServletRequest request) {
+        Optional<Long> competitionIdOpt = registrationCookieService.getCompetitionIdCookieValue(request);
+
+        if(competitionIdOpt.isPresent()) {
+            CompetitionResource competition = competitionService.getById(competitionIdOpt.get());
+            return competition.getLeadApplicantTypes().contains(organisationTypeId);
+        }
+
+        return Boolean.FALSE;
     }
 
     private boolean isValidLeadOrganisationType(Long organisationTypeId) {
