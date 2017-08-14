@@ -173,8 +173,6 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
 
     private static Cache<String, UserResource> usersByEmailAddressInternal = CacheBuilder.newBuilder().build();
 
-    private static Cache<Long, UserResource> usersByIdInternal = CacheBuilder.newBuilder().build();
-
     private static Cache<Long, UserResource> usersById = CacheBuilder.newBuilder().build();
 
     private static Cache<Pair<Long, String>, ProcessRoleResource> applicantsByApplicationIdAndEmail = CacheBuilder.newBuilder().build();
