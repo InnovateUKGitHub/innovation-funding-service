@@ -1,10 +1,14 @@
 package org.innovateuk.ifs.registration;
 
+import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.populator.OrganisationCreationSelectTypePopulator;
+import org.innovateuk.ifs.registration.viewmodel.NotEligibleViewModel;
 import org.innovateuk.ifs.registration.viewmodel.OrganisationCreationSelectTypeViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -32,19 +36,26 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
 
     private static final String ORGANISATION_TYPE_ID = "organisationTypeId";
 
+    protected static final String NOT_ELIGIBLE = "not-eligible";
+
     @Autowired
     private OrganisationCreationSelectTypePopulator organisationCreationSelectTypePopulator;
 
-    @GetMapping
+    @Autowired
+    private OrganisationTypeRestService organisationTypeRestService;
+
+    @Autowired
+    private CompetitionService competitionService;
+
+    @GetMapping()
     public String selectOrganisationType(Model model,
                                          HttpServletRequest request) {
         model.addAttribute("model", organisationCreationSelectTypePopulator.populate());
 
         Optional<OrganisationCreationForm> organisationCreationFormFromCookie = registrationCookieService.getOrganisationCreationCookieValue(request);
-        if(organisationCreationFormFromCookie.isPresent()) {
+        if (organisationCreationFormFromCookie.isPresent()) {
             model.addAttribute(ORGANISATION_FORM, organisationCreationFormFromCookie.get());
-        }
-        else {
+        } else {
             model.addAttribute(ORGANISATION_FORM, new OrganisationCreationForm());
         }
 
@@ -52,13 +63,13 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
         return TEMPLATE_PATH + "/" + LEAD_ORGANISATION_TYPE;
     }
 
-    @PostMapping
+    @PostMapping()
     public String confirmSelectOrganisationType(Model model,
                                                 @Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                                 BindingResult bindingResult,
                                                 HttpServletRequest request,
                                                 HttpServletResponse response) {
-        OrganisationCreationSelectTypeViewModel selectOrgTypeViewModel = organisationCreationSelectTypePopulator.populate();
+
         Long organisationTypeId = organisationForm.getOrganisationTypeId();
         if (organisationTypeId != null &&
                 !isValidLeadOrganisationType(organisationTypeId)) {
@@ -69,21 +80,55 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
             OrganisationTypeForm organisationTypeForm = registrationCookieService.getOrganisationTypeCookieValue(request).orElse(new OrganisationTypeForm());
             organisationTypeForm.setOrganisationType(organisationTypeId);
             registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
-            saveOrgansationTypeToCreationForm(request, response, organisationTypeForm);
+            saveOrganisationTypeToCreationForm(response, organisationTypeForm);
+
+            if (!isAllowedToLeadApplication(organisationTypeId, request)) {
+                return redirectToNotEligibleUrl();
+            }
 
             return "redirect:" + BASE_URL + "/" + FIND_ORGANISATION;
         } else {
             organisationForm.setTriedToSave(true);
+            OrganisationCreationSelectTypeViewModel selectOrgTypeViewModel = organisationCreationSelectTypePopulator.populate();
             model.addAttribute("model", selectOrgTypeViewModel);
             return TEMPLATE_PATH + "/" + LEAD_ORGANISATION_TYPE;
         }
+    }
+
+    private String redirectToNotEligibleUrl() {
+        return "redirect:" + BASE_URL + "/" + AbstractOrganisationCreationController.LEAD_ORGANISATION_TYPE + "/" + NOT_ELIGIBLE;
+    }
+
+    @GetMapping(NOT_ELIGIBLE)
+    public String showNotEligible(Model model,
+                                  HttpServletRequest request) {
+        Optional<OrganisationTypeForm> organisationTypeChosenOpt = registrationCookieService.getOrganisationTypeCookieValue(request);
+
+        organisationTypeChosenOpt.ifPresent(organisationTypeForm ->
+                model.addAttribute("model", new NotEligibleViewModel(
+                        organisationTypeRestService.findOne(organisationTypeForm.getOrganisationType())
+                                .getSuccessObjectOrThrowException()
+                                .getName())));
+
+        return TEMPLATE_PATH + "/" + NOT_ELIGIBLE;
+    }
+
+    private boolean isAllowedToLeadApplication(Long organisationTypeId, HttpServletRequest request) {
+        Optional<Long> competitionIdOpt = registrationCookieService.getCompetitionIdCookieValue(request);
+
+        if (competitionIdOpt.isPresent()) {
+            CompetitionResource competition = competitionService.getPublishedById(competitionIdOpt.get());
+            return competition.getLeadApplicantTypes().contains(organisationTypeId);
+        }
+
+        return Boolean.FALSE;
     }
 
     private boolean isValidLeadOrganisationType(Long organisationTypeId) {
         return OrganisationTypeEnum.getFromId(organisationTypeId) != null;
     }
 
-    private void saveOrgansationTypeToCreationForm(HttpServletRequest request, HttpServletResponse response, OrganisationTypeForm organisationTypeForm) {
+    private void saveOrganisationTypeToCreationForm(HttpServletResponse response, OrganisationTypeForm organisationTypeForm) {
         OrganisationCreationForm newOrganisationCreationForm = new OrganisationCreationForm();
         newOrganisationCreationForm.setOrganisationTypeId(organisationTypeForm.getOrganisationType());
         registrationCookieService.saveToOrganisationCreationCookie(newOrganisationCreationForm, response);
