@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping(AbstractOrganisationCreationController.BASE_URL)
+@RequestMapping(AbstractOrganisationCreationController.BASE_URL + "/type")
 @PreAuthorize("permitAll")
 public class OrganisationCreationContributorTypeController extends AbstractOrganisationCreationController {
     private static final Log LOG = LogFactory.getLog(OrganisationCreationContributorTypeController.class);
