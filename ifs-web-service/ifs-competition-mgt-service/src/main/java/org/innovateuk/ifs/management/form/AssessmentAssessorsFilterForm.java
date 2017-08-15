@@ -6,7 +6,7 @@ import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.innovateuk.ifs.user.resource.BusinessType;
 
 /**
- * TODO class comment
+ * Form for filtering assessors by {@link BusinessType} and {@link org.innovateuk.ifs.category.resource.InnovationSectorResource}.
  */
 public class AssessmentAssessorsFilterForm extends BaseBindingResultTarget {
 
