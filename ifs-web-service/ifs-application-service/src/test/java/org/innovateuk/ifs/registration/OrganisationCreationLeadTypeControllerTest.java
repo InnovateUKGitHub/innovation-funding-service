@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.registration;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
@@ -11,9 +12,11 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -21,7 +24,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-//TODO: Fix tests
 public class OrganisationCreationLeadTypeControllerTest extends BaseControllerMockMVCTest<OrganisationCreationLeadTypeController> {
 
     protected OrganisationCreationLeadTypeController supplyControllerUnderTest() {
@@ -31,18 +33,24 @@ public class OrganisationCreationLeadTypeControllerTest extends BaseControllerMo
     @Mock
     private RegistrationCookieService registrationCookieService;
 
+    @Mock
+    private CompetitionService competitionService;
+
     private OrganisationTypeForm organisationTypeForm;
     private OrganisationCreationForm organisationForm;
 
     @Before
     public void setup(){
         super.setup();
+
+        when(registrationCookieService.getCompetitionIdCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(1L));
+        when(competitionService.getPublishedById(1L)).thenReturn(newCompetitionResource().withId(1L).build());
     }
 
     @Test
     public void testSelectedBusinessSaveLeadBusiness() throws Exception {
-        when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
-        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
+        when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.ofNullable(organisationTypeForm));
+        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.ofNullable(organisationForm));
 
         mockMvc.perform(post("/organisation/create/lead-organisation-type")
                 .param("organisationTypeId", OrganisationTypeEnum.RTO.getId().toString()))
