@@ -10,6 +10,8 @@
         <main tabindex="-1" id="content">
 
         <th:block th:insert="fragments/layout :: main-content-start" />
+        <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition setup',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}/(competitionId=${model.competitionId})}" />
+
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage innovation leads',subTitle=${model.competitionName}, size='heading-xlarge'" />
 
         <h2 class="heading-medium">Key statistics</h2>
@@ -75,6 +77,9 @@
                                         <button class="button button-secondary no-margin">Add <span class="visuallyhidden"><th:block th:text="${innovationLeadUsers.name}" /> as Innovation Lead</span></button>
                                     </form>
                                 </td>
+                            </tr>
+                            <tr th:if="${#lists.size(model.availableInnovationLeads) == 0} ">
+                                <td colspan="3">All innovation leads have been added to this competition.</td>
                             </tr>
                         </tbody>
                     </table>
