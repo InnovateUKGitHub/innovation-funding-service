@@ -14,25 +14,33 @@
 
             <p class="extra-margin">Assign applications to assessors. You will need to confirm assignments before assessors are notified.</p>
 
-            <form method="GET">
+            <form method="GET" th:object="${filterForm}">
                 <div class="search-filters">
                     <legend class="visuallyhidden">Search filters</legend>
                     <div class="grid-row">
                         <div class="column-half">
                            <div class="form-group">
-                               <label for="filterInnovationArea">Innovation sector</label>
-                               <select class="form-control" name="filterType" id="filterType">
-                                   <option selected="selected">---</option>
+                               <label for="innovationSector">Innovation sector</label>
+                               <select class="form-control" name="innovationSector" id="innovationSector">
+                                   <option th:selected="${filterForm.innovationSector?:null} == null" value="">---</option>
+                                   <option th:each="innovationSector : ${model.innovationSectors}"
+                                           th:value="${innovationSector.id}"
+                                           th:text="${innovationSector.name}"
+                                           th:selected="${(innovationSector.id == filterForm.innovationSector)}"
+                                       value="1">Not available</option>
                                </select>
                            </div>
                         </div>
                         <div class="column-half">
                             <div class="form-group">
-                                <label for="filterType">Type</label>
-                                <select class="form-control" name="filterInnovationArea" id="filterInnovationArea">
-                                    <option selected="selected">---</option>
-                                    <option>Academic</option>
-                                    <option>Business</option>
+                                <label for="businessType">Type</label>
+                                <select class="form-control" name="businessType" id="businessType">
+                                    <option value="">---</option>
+                                    <option th:each="type : ${T(org.innovateuk.ifs.user.resource.BusinessType).values()}"
+                                            th:value="${type}"
+                                            th:text="${type.displayName}"
+                                            th:selected="${type == filterForm.businessType}"
+                                            value="1">Not available</option>
                                 </select>
                             </div>
                         </div>

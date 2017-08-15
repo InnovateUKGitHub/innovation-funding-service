@@ -35,9 +35,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -328,7 +330,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         final int pageNumber = 0;
         Pageable pageable = new PageRequest(pageNumber, pageSize);
 
-        Page<AssessorCountSummaryResource> statisticsPage = repository.getAssessorCountSummaryByCompetition(competitionId, innovationSector.getId(), null, pageable);
+        Page<AssessorCountSummaryResource> statisticsPage = repository.getAssessorCountSummaryByCompetition(competitionId, Optional.of(innovationSector.getId()), null, pageable);
 
         assertEquals(1, statisticsPage.getTotalElements());
         assertEquals(1, statisticsPage.getTotalPages());
@@ -399,7 +401,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         final int pageNumber = 0;
         Pageable pageable = new PageRequest(pageNumber, pageSize);
 
-        Page<AssessorCountSummaryResource> statisticsPage = repository.getAssessorCountSummaryByCompetition(competitionId, null, BusinessType.ACADEMIC, pageable);
+        Page<AssessorCountSummaryResource> statisticsPage = repository.getAssessorCountSummaryByCompetition(competitionId, null, Optional.of(BusinessType.ACADEMIC), pageable);
 
         assertEquals(1, statisticsPage.getTotalElements());
         assertEquals(1, statisticsPage.getTotalPages());

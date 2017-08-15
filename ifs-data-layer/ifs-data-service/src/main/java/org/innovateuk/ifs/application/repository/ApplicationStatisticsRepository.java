@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -83,7 +84,7 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "GROUP BY user " +
             "HAVING sum(case when competitionParticipant.competition.id = :compId THEN 1 ELSE 0 END) > 0")
     Page<AssessorCountSummaryResource> getAssessorCountSummaryByCompetition(@Param("compId") long competitionId,
-                                                                            @Param("innovationSectorId") Long innovationSectorId,
-                                                                            @Param("businessType") BusinessType businessType,
+                                                                            @Param("innovationSectorId") Optional<Long> innovationSectorId,
+                                                                            @Param("businessType") Optional<BusinessType> businessType,
                                                                             Pageable pageable);
 }
