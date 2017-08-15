@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.commons.util.AuditableEntity;
 import org.innovateuk.ifs.user.resource.*;
 
 import javax.persistence.*;
@@ -24,7 +25,7 @@ import static javax.persistence.EnumType.STRING;
  */
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class User implements Serializable {
+public class User extends AuditableEntity implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
