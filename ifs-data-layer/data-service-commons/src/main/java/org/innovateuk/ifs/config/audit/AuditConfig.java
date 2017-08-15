@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
- * Configuration to enable Spring Data JPA Auditing. Has an auditorProdivder to give the provide the logged in
+ * Configuration to enable Spring Data JPA Auditing. Has an auditorProvider to give the provide the logged in
  * {@link org.innovateuk.ifs.user.domain.User} as the auditor.
  */
 @Configuration
