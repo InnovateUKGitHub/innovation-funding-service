@@ -40,7 +40,7 @@ IFS.core.formValidation = (function () {
       },
       required: {
         fields: '[required]:not([data-date],[readonly],[name="password"])',
-        messageInvalid: 'This field cannot be left empty.'
+        messageInvalid: 'This field cannot be left blank.'
       },
       minlength: {
         fields: '[minlength]:not([readonly],[name="password"])',
