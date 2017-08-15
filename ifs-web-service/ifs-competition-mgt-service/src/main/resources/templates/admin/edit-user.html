@@ -5,6 +5,7 @@
 </head>
 <body>
 
+<th:block th:insert="fragments/modals :: modal-overlay" />
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
@@ -74,6 +75,12 @@
                 <option th:each="adminRole : ${T(org.innovateuk.ifs.user.resource.UserRoleType).internalRoles()}" th:value="${adminRole}" th:text="${adminRole.displayName}"></option>
             </select>
         </div>
+
+        <th:block th:if="${user.status.equals(T(org.innovateuk.ifs.user.resource.UserStatus).ACTIVE)}">
+            <button class="buttonlink" data-js-modal="modal-confirm-deactivate-user" type="button">Deactivate user</button>
+            <th:block th:insert="fragments/modals :: modal-confirm-deactivate-user" />
+        </th:block>
+
         <div class="form-group extra-margin">
             <button class="button">Save and return</button>
             <a class="button button-clear" th:href="@{/admin/users/active}">Cancel</a>
