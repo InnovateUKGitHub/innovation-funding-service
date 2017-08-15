@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.registration;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.populator.OrganisationCreationSelectTypePopulator;
 import org.innovateuk.ifs.registration.viewmodel.NotEligibleViewModel;
 import org.innovateuk.ifs.registration.viewmodel.OrganisationCreationSelectTypeViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -47,7 +48,7 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
     @Autowired
     private CompetitionService competitionService;
 
-    @GetMapping()
+    @GetMapping
     public String selectOrganisationType(Model model,
                                          HttpServletRequest request) {
         model.addAttribute("model", organisationCreationSelectTypePopulator.populate());
@@ -63,7 +64,7 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
         return TEMPLATE_PATH + "/" + LEAD_ORGANISATION_TYPE;
     }
 
-    @PostMapping()
+    @PostMapping
     public String confirmSelectOrganisationType(Model model,
                                                 @Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                                 BindingResult bindingResult,
@@ -117,8 +118,8 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
         Optional<Long> competitionIdOpt = registrationCookieService.getCompetitionIdCookieValue(request);
 
         if (competitionIdOpt.isPresent()) {
-            CompetitionResource competition = competitionService.getPublishedById(competitionIdOpt.get());
-            return competition.getLeadApplicantTypes().contains(organisationTypeId);
+            List<OrganisationTypeResource> organisationTypesAllowed = competitionService.getOrganisationTypes(competitionIdOpt.get());
+            return organisationTypesAllowed.contains(organisationTypeId);
         }
 
         return Boolean.FALSE;

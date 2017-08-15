@@ -14,6 +14,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 
+import javax.servlet.http.HttpServletResponse;
 import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -71,7 +72,8 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
                 .andExpect(view().name("create-application/check-eligibility"))
                 .andReturn();
 
-        verify(registrationCookieService, times(1)).saveToCompetitionIdCookie(eq(competitionId), any());
+        verify(registrationCookieService, times(1)).deleteAllRegistrationJourneyCookies(any(HttpServletResponse.class));
+        verify(registrationCookieService, times(1)).saveToCompetitionIdCookie(anyLong(), any(HttpServletResponse.class));
     }
 
 
@@ -88,6 +90,9 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
         mockMvc.perform(get("/application/create/check-eligibility/{competitionId}", competitionId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/competition/search"));
+
+        verify(registrationCookieService, never()).deleteAllRegistrationJourneyCookies(any(HttpServletResponse.class));
+        verify(registrationCookieService, never()).saveToCompetitionIdCookie(anyLong(), any(HttpServletResponse.class));
     }
 
 
@@ -104,9 +109,12 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
         mockMvc.perform(get("/application/create/check-eligibility/{competitionId}", competitionId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/competition/search"));
+
+        verify(registrationCookieService, never()).deleteAllRegistrationJourneyCookies(any(HttpServletResponse.class));
+        verify(registrationCookieService, never()).saveToCompetitionIdCookie(anyLong(), any(HttpServletResponse.class));
     }
 
- @Test
+    @Test
     public void checkEligibility_late() throws Exception {
         long competitionId = 1L;
         PublicContentItemResource publicContentItem = newPublicContentItemResource()
@@ -119,5 +127,8 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
         mockMvc.perform(get("/application/create/check-eligibility/{competitionId}", competitionId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/competition/search"));
+
+        verify(registrationCookieService, never()).deleteAllRegistrationJourneyCookies(any(HttpServletResponse.class));
+        verify(registrationCookieService, never()).saveToCompetitionIdCookie(anyLong(), any(HttpServletResponse.class));
     }
 }
