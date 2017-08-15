@@ -10,25 +10,25 @@
         <div class="column-quarter">
             <div class="highlight-panel">
                 <span class="heading-large">5</span><br />
-                <small>invited</small>
+                <small>Invited</small>
             </div>
         </div>
         <div class="column-quarter">
             <div class="highlight-panel">
                 <span class="heading-large">3</span><br />
-                <small>accepted</small>
+                <small>Accepted</small>
             </div>
         </div>
         <div class="column-quarter">
             <div class="highlight-panel">
                 <span class="heading-large">0</span><br />
-                <small>declined</small>
+                <small>Declined</small>
             </div>
         </div>
         <div class="column-quarter">
             <div class="highlight-panel">
                 <span class="heading-large">2</span><br />
-                <small>assessors on invite list</small>
+                <small>Yet to respond</small>
             </div>
         </div>
     </div>
@@ -243,7 +243,7 @@
 
             <div class="grid-row">
                 <div class="column-three-quarters">
-                    <h2 class="heading-small no-margin-top">Find registered assessors and add them to your invite list for this competition</h2>
+                    <h2 class="heading-small no-margin-top">Find registered assessors and add them to your invite list for this competition.</h2>
                 </div>
             </div>
 
@@ -734,7 +734,7 @@
 
             <div class="grid-row">
                 <div class="column-three-quarters">
-                    <h2 class="heading-small no-margin-top extra-margin-bottom">Invite a person to become an assessor for this panel assessment.</h2>
+                    <h2 class="heading-small no-margin-top extra-margin-bottom">Invite one or more people to become an assessor for this panel assessment.</h2>
                 </div>
             </div>
 
@@ -901,9 +901,7 @@
 
                 <div class="column-three-quarters">
 
-                  <h2 class="heading-small no-margin-top">Overview of invited assessors</h2>
-
-                  <p>An overview of assessors that have been invited to the panel assessment.</p>
+                  <h2 class="heading-small no-margin-top extra-margin-bottom">Review invited assessors and resend invites.</h2>
 
                 </div>
 
@@ -952,7 +950,7 @@
                     <th scope="col">Innovation area</th>
                     <th scope="col">Contract and DOI</th>
                     <th scope="col">Status</th>
-                    <th scope="col">Details</th>
+                    <th scope="col" class="width-medium">Details</th>
                 </tr>
             </thead>
             <tbody>
@@ -969,7 +967,7 @@
                     <td></td>
                     <td>Materials, process and manufacturing design technologies</td>
                     <td><span class="no">No</span></td>
-                    <td>Awaiting response</td>
+                    <td>Pending</td>
                     <td>Invite sent: 09-Feb-2017</td>
                 </tr>
                 <tr>
@@ -985,7 +983,7 @@
                     <td>Academic</td>
                     <td>Digital manufacturing</td>
                     <td><span class="no">No</span></td>
-                    <td>Invite accepted</td>
+                    <td>Accepted</td>
                     <td></td>
                 </tr>
                 <tr>
@@ -1001,7 +999,7 @@
                     <td>Business</td>
                     <td>Digital health</td>
                     <td><span class="yes">Yes</span></td>
-                    <td>Awaiting response</td>
+                    <td>Pending</td>
                     <td>Invite sent: 16-May-2017</td>
                 </tr>
                 <tr>
@@ -1017,7 +1015,7 @@
                     <td>Academic</td>
                     <td>Nanotechnology / nanomaterials, Electronics, sensors and photonics</td>
                     <td><span class="yes">Yes</span></td>
-                    <td>Invite accepted</td>
+                    <td>Accepted</td>
                     <td></td>
                 </tr>
                 <tr>
@@ -1033,7 +1031,7 @@
                     <td>Businessc</td>
                     <td>Nanotechnology / nanomaterials, Precision medicine, Energy systems</td>
                     <td><span class="yes">Yes</span></td>
-                    <td>Invite accepted</td>
+                    <td>Rejected</td>
                     <td></td>
                 </tr>
             </tbody>
@@ -1344,7 +1342,7 @@
         </div>
     </div>
 
-    <p th:if="${type == 'assigned'}" id="no-applications">There are currently no assessors assigned to the application</p>
+    <p th:if="${type == 'assigned'}" id="no-applications">There are currently no applications assigned to this panel.</p>
 
 
     <div class="table-overflow" th:id="${type == 'assigned' ? 'application-assigned' : 'applications-available'}">
