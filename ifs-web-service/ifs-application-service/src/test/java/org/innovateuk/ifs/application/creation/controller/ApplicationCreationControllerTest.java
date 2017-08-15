@@ -20,7 +20,9 @@ import java.time.ZonedDateTime;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -29,13 +31,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(locations = "classpath:application.properties")
 public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest<ApplicationCreationController> {
 
+    @Mock
+    private RegistrationCookieService registrationCookieService;
+
     @Override
     protected ApplicationCreationController supplyControllerUnderTest() {
         return new ApplicationCreationController();
     }
-
-    @Mock
-    private RegistrationCookieService registrationCookieService;
 
     private String COMPANY_ID = "08241216";
     private String COMPANY_NAME = "NETWORTHNET LTD";
