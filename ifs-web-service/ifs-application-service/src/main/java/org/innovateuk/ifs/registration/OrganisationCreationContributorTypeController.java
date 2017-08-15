@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping(AbstractOrganisationCreationController.BASE_URL)
+@RequestMapping(AbstractOrganisationCreationController.BASE_URL + "/new-account-organisation-type")
 @PreAuthorize("permitAll")
 public class OrganisationCreationContributorTypeController extends AbstractOrganisationCreationController {
     private static final Log LOG = LogFactory.getLog(OrganisationCreationContributorTypeController.class);
@@ -33,7 +33,7 @@ public class OrganisationCreationContributorTypeController extends AbstractOrgan
     @Autowired
     private InviteRestService inviteRestService;
 
-    @GetMapping("/new-account-organisation-type")
+    @GetMapping
     public String chooseOrganisationType(HttpServletRequest request,
                                          Model model,
                                          @ModelAttribute(name = "form", binding = false) OrganisationTypeForm form,
@@ -62,7 +62,7 @@ public class OrganisationCreationContributorTypeController extends AbstractOrgan
         return TEMPLATE_PATH + "/organisation-type";
     }
 
-    @PostMapping("/new-account-organisation-type")
+    @PostMapping
     public String chooseOrganisationType(HttpServletResponse response,
                                          @ModelAttribute @Valid OrganisationTypeForm organisationTypeForm,
                                          BindingResult bindingResult) {

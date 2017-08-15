@@ -8,7 +8,6 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
-import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.registration.service.InternalUserService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -52,9 +51,6 @@ public class UserManagementController {
 
     @Autowired
     private InviteUserRestService inviteUserRestService;
-
-    @Autowired
-    private ProfileRestService profileRestService;
 
     @Autowired
     private InternalUserService internalUserService;
@@ -105,15 +101,16 @@ public class UserManagementController {
                                 }).getSuccessObjectOrThrowException()).getSuccessObjectOrThrowException()).getSuccessObjectOrThrowException();
     }
 
+    @PreAuthorize("hasPermission(#userId, 'ACCESS_INTERNAL_USER')")
     @GetMapping("/user/{userId}")
     public String viewUser(@PathVariable Long userId, Model model){
-        return userRestService.retrieveUserById(userId).andOnSuccess( user ->
-                profileRestService.getUserProfile(userId).andOnSuccessReturn(profile -> {
-                    model.addAttribute("model", new EditUserViewModel(profile.getCreatedBy(), profile.getCreatedOn(), user));
+        return userRestService.retrieveUserById(userId).andOnSuccessReturn( user -> {
+                    model.addAttribute("model", new EditUserViewModel(user));
                     return "admin/user";
-                })).getSuccessObjectOrThrowException();
+        }).getSuccessObjectOrThrowException();
     }
 
+    @PreAuthorize("hasPermission(#userId, 'EDIT_INTERNAL_USER')")
     @GetMapping("/user/{userId}/edit")
     public String viewEditUser(@PathVariable Long userId,
                                Model model,
@@ -132,11 +129,13 @@ public class UserManagementController {
         form.setRole(UserRoleType.fromDisplayName(userResource.getRolesString()));
         form.setEmailAddress(userResource.getEmail());
         model.addAttribute(FORM_ATTR_NAME, form);
+        model.addAttribute("user", userResource);
 
         return "admin/edit-user";
 
     }
 
+    @PreAuthorize("hasPermission(#userId, 'EDIT_INTERNAL_USER')")
     @PostMapping("/user/{userId}/edit")
     public String updateUser(@PathVariable Long userId,
                              Model model,
@@ -164,5 +163,19 @@ public class UserManagementController {
         EditUserResource editUserResource = new EditUserResource(userId, form.getFirstName(), form.getLastName(), form.getRole());
 
         return editUserResource;
+    }
+
+    @PreAuthorize("hasPermission(#userId, 'EDIT_INTERNAL_USER')")
+    @PostMapping(value = "/user/{userId}/edit", params = "deactivateUser")
+    public String deactivateUser(@PathVariable Long userId) {
+        return userRestService.retrieveUserById(userId).andOnSuccess( user ->
+                userRestService.deactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccessObjectOrThrowException();
+    }
+
+    @PreAuthorize("hasPermission(#userId, 'ACCESS_INTERNAL_USER')")
+    @PostMapping(value = "/user/{userId}", params = "reactivateUser")
+    public String reactivateUser(@PathVariable Long userId) {
+        return userRestService.retrieveUserById(userId).andOnSuccess( user ->
+                userRestService.reactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccessObjectOrThrowException();
     }
 }

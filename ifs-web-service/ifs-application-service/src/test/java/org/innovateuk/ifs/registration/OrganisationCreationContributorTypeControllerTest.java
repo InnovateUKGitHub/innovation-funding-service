@@ -1,12 +1,10 @@
 package org.innovateuk.ifs.registration;
 
-import org.apache.commons.lang3.CharEncoding;
-import org.hamcrest.Matchers;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -16,9 +14,12 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.Validator;
 
 import javax.servlet.http.Cookie;
-import java.net.URLEncoder;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -26,10 +27,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
 public class OrganisationCreationContributorTypeControllerTest extends BaseControllerMockMVCTest<OrganisationCreationContributorTypeController> {
+
     @Mock
     private Validator validator;
+
     @Mock
-    CookieFlashMessageFilter cookieFlashMessageFilter;
+    private CookieFlashMessageFilter cookieFlashMessageFilter;
+
+    @Mock
+    private RegistrationCookieService registrationCookieService;
 
     @Override
     protected OrganisationCreationContributorTypeController supplyControllerUnderTest() {
@@ -47,30 +53,19 @@ public class OrganisationCreationContributorTypeControllerTest extends BaseContr
         this.setupInvites();
         this.setupOrganisationTypes();
         this.setupCookieUtil();
+
+        when(registrationCookieService.getInviteHashCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(INVITE_HASH));
     }
 
     @Test
     public void testChooseOrganisationType() throws Exception {
         mockMvc.perform(
-                get("/organisation/create/type/new-account-organisation-type")
+                get("/organisation/create/new-account-organisation-type")
                         .cookie(new Cookie(RegistrationCookieService.INVITE_HASH, encryptor.encrypt(INVITE_HASH)))
         )
-        .andExpect(status().is2xxSuccessful())
-        .andExpect(view().name("registration/organisation/organisation-type"))
-        .andExpect(model().attributeExists("form", "model"));
-    }
-
-    @Test
-    @Ignore //TODO INFUND-8531 Need to rewrite this test when page is remade
-    public void testChooseOrganisationTypeResearchSelected() throws Exception {
-        mockMvc.perform(
-                get("/organisation/create/type/new-account-organisation-type").param("organisationType", "2")
-                        .cookie(new Cookie(RegistrationCookieService.INVITE_HASH, encryptor.encrypt(INVITE_HASH)))
-        )
-        .andExpect(status().is2xxSuccessful())
-        .andExpect(view().name("registration/organisation/organisation-type"))
-        .andExpect(model().attributeExists("form", "model"))
-        .andExpect(model().attribute("model", Matchers.hasSize(3)));
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("registration/organisation/organisation-type"))
+                .andExpect(model().attributeExists("form", "model"));
     }
 
     /**
@@ -79,17 +74,16 @@ public class OrganisationCreationContributorTypeControllerTest extends BaseContr
     @Test
     public void chooseOrganisationTypePostBusiness() throws Exception {
         MvcResult result = mockMvc.perform(
-                post("/organisation/create/type/new-account-organisation-type")
+                post("/organisation/create/new-account-organisation-type")
                         .cookie(new Cookie(RegistrationCookieService.INVITE_HASH, encryptor.encrypt(INVITE_HASH)))
                         .param("organisationType", "1")
 
         )
-        .andExpect(status().is3xxRedirection())
-        .andExpect(view().name("redirect:/organisation/create/find-organisation"))
-        .andReturn();
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/organisation/create/find-organisation"))
+                .andReturn();
 
-        assertEquals(URLEncoder.encode("{\"organisationType\":1,\"leadApplicant\":false}", CharEncoding.UTF_8), getDecryptedCookieValue(result.getResponse().getCookies(), "organisationType"));
-
+        verify(registrationCookieService, times(1)).saveToOrganisationTypeCookie(any(OrganisationTypeForm.class), any(HttpServletResponse.class));
     }
 
 
@@ -99,7 +93,7 @@ public class OrganisationCreationContributorTypeControllerTest extends BaseContr
     @Test
     public void chooseOrganisationTypePostResearch() throws Exception {
         MvcResult result = mockMvc.perform(
-                post("/organisation/create/type/new-account-organisation-type")
+                post("/organisation/create/new-account-organisation-type")
                         .cookie(new Cookie(RegistrationCookieService.INVITE_HASH, encryptor.encrypt(INVITE_HASH)))
                         .param("organisationType", "2")
 
@@ -108,6 +102,6 @@ public class OrganisationCreationContributorTypeControllerTest extends BaseContr
                 .andExpect(view().name("redirect:/organisation/create/find-organisation"))
                 .andReturn();
 
-        assertEquals(URLEncoder.encode("{\"organisationType\":2,\"leadApplicant\":false}", CharEncoding.UTF_8), getDecryptedCookieValue(result.getResponse().getCookies(), "organisationType"));
+        verify(registrationCookieService, times(1)).saveToOrganisationTypeCookie(any(OrganisationTypeForm.class), any(HttpServletResponse.class));
     }
 }
