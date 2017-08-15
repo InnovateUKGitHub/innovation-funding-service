@@ -239,7 +239,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         final int pageNumber = 0;
         Pageable pageable = new PageRequest(pageNumber, pageSize);
 
-        Page<AssessorCountSummaryResource> statisticsPage = repository.getAssessorCountSummaryByCompetition(competitionId, null, null, pageable);
+        Page<AssessorCountSummaryResource> statisticsPage = repository.getAssessorCountSummaryByCompetition(competitionId, Optional.empty(), Optional.empty(), pageable);
 
         assertEquals(2, statisticsPage.getTotalElements());
         assertEquals(1, statisticsPage.getTotalPages());
@@ -330,7 +330,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         final int pageNumber = 0;
         Pageable pageable = new PageRequest(pageNumber, pageSize);
 
-        Page<AssessorCountSummaryResource> statisticsPage = repository.getAssessorCountSummaryByCompetition(competitionId, Optional.of(innovationSector.getId()), null, pageable);
+        Page<AssessorCountSummaryResource> statisticsPage = repository.getAssessorCountSummaryByCompetition(competitionId, Optional.ofNullable(innovationSector.getId()), Optional.empty(), pageable);
 
         assertEquals(1, statisticsPage.getTotalElements());
         assertEquals(1, statisticsPage.getTotalPages());
@@ -401,7 +401,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         final int pageNumber = 0;
         Pageable pageable = new PageRequest(pageNumber, pageSize);
 
-        Page<AssessorCountSummaryResource> statisticsPage = repository.getAssessorCountSummaryByCompetition(competitionId, null, Optional.of(BusinessType.ACADEMIC), pageable);
+        Page<AssessorCountSummaryResource> statisticsPage = repository.getAssessorCountSummaryByCompetition(competitionId, Optional.empty(), Optional.of(BusinessType.ACADEMIC), pageable);
 
         assertEquals(1, statisticsPage.getTotalElements());
         assertEquals(1, statisticsPage.getTotalPages());
@@ -416,7 +416,6 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
 
         assertEquals(expectedAssessmentCountSummaryResource, assessorCountSummaryResource);
     }
-
 
     @Test
     public void getAssessorCountSummaryByCompetition_accepted() throws Exception {
@@ -473,7 +472,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         final int pageNumber = 0;
         Pageable pageable = new PageRequest(pageNumber, pageSize);
 
-        Page<AssessorCountSummaryResource> statisticsPage = repository.getAssessorCountSummaryByCompetition(competitionId, null, null, pageable);
+        Page<AssessorCountSummaryResource> statisticsPage = repository.getAssessorCountSummaryByCompetition(competitionId, Optional.empty(), Optional.empty(), pageable);
 
         assertEquals(2, statisticsPage.getTotalElements());
         assertEquals(1, statisticsPage.getTotalPages());
@@ -557,7 +556,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         Pageable pageable = new PageRequest(pageNumber, pageSize);
 
         Page<AssessorCountSummaryResource> statisticsPage =
-                repository.getAssessorCountSummaryByCompetition(otherCompetition.getId(), null, null,  pageable);
+                repository.getAssessorCountSummaryByCompetition(otherCompetition.getId(), Optional.empty(), Optional.empty(),  pageable);
 
         assertEquals(2, statisticsPage.getTotalElements());
         assertEquals(1, statisticsPage.getTotalPages());
@@ -629,7 +628,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         Pageable pageable = new PageRequest(pageNumber, pageSize);
 
         Page<AssessorCountSummaryResource> statisticsPage =
-                repository.getAssessorCountSummaryByCompetition(competitionId, null, null, pageable);
+                repository.getAssessorCountSummaryByCompetition(competitionId, Optional.empty(), Optional.empty(), pageable);
 
         assertEquals(2, statisticsPage.getTotalElements());
         assertEquals(1, statisticsPage.getTotalPages());
@@ -661,7 +660,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         Pageable pageable = new PageRequest(pageNumber, pageSize);
 
         Page<AssessorCountSummaryResource> statisticsPage =
-                repository.getAssessorCountSummaryByCompetition(competitionId, null, null, pageable);
+                repository.getAssessorCountSummaryByCompetition(competitionId, Optional.empty(), Optional.empty(), pageable);
 
         assertEquals(0, statisticsPage.getTotalElements());
         assertEquals(0, statisticsPage.getTotalPages());
