@@ -518,6 +518,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
     @Test
     public void getAssessorsByCompetitionAndStatus() throws Exception {
+        loginSteveSmith();
         List<CompetitionInvite> newAssessorInvites = newCompetitionInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
                 .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
@@ -706,6 +707,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
     @Test
     public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant_participantStatus() throws Exception {
+        loginSteveSmith();
         List<CompetitionInvite> newAssessorInvites = newCompetitionInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
                 .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")

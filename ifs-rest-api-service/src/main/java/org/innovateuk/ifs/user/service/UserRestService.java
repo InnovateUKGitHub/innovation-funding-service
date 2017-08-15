@@ -41,4 +41,7 @@ public interface UserRestService {
     RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability, boolean allowMarketingEmails);
     RestResult<Void> createInternalUser(String inviteHash, InternalUserRegistrationResource internalUserRegistrationResource);
     RestResult<Void> editInternalUser(EditUserResource editUserResource);
+
+    RestResult<Void> deactivateUser(Long userId);
+    RestResult<Void> reactivateUser(Long userId);
 }
