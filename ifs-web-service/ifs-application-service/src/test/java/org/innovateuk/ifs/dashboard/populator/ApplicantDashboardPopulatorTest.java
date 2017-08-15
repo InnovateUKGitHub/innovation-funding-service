@@ -37,6 +37,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
     private final static Long APPLICATION_ID_IN_PROGRESS = 1L;
     private final static Long APPLICATION_ID_IN_FINISH = 10L;
+    private final static Long APPLICATION_ID_SUBMITTED = 100L;
     private final static Long PROJECT_ID_IN_PROJECT = 5L;
     private final static Long APPLICATION_ID_IN_PROJECT = 15L;
 
@@ -46,12 +47,12 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
         this.setupCompetition();
 
         List<ApplicationResource> allApplications = newApplicationResource()
-                .withId(APPLICATION_ID_IN_PROGRESS, APPLICATION_ID_IN_FINISH)
-                .withCompetition(competitionResource.getId(), competitionResource.getId())
-                .withApplicationState(ApplicationState.OPEN, ApplicationState.REJECTED)
-                .withCompetitionStatus(CompetitionStatus.OPEN, CompetitionStatus.CLOSED)
+                .withId(APPLICATION_ID_IN_PROGRESS, APPLICATION_ID_IN_FINISH, APPLICATION_ID_SUBMITTED)
+                .withCompetition(competitionResource.getId(), competitionResource.getId(), competitionResource.getId())
+                .withApplicationState(ApplicationState.OPEN, ApplicationState.REJECTED, ApplicationState.SUBMITTED)
+                .withCompetitionStatus(CompetitionStatus.OPEN, CompetitionStatus.CLOSED, CompetitionStatus.CLOSED)
                 .withCompletion(BigDecimal.valueOf(50))
-                .build(2);
+                .build(3);
 
         when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(restSuccess(allApplications));
 
@@ -70,6 +71,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
         when(processRoleService.findProcessRole(loggedInUser.getId(), APPLICATION_ID_IN_PROGRESS)).thenReturn(newProcessRoleResource().withRoleName(UserRoleType.LEADAPPLICANT.getName()).build());
         when(processRoleService.findProcessRole(loggedInUser.getId(), APPLICATION_ID_IN_PROJECT)).thenReturn(newProcessRoleResource().withRoleName(UserRoleType.LEADAPPLICANT.getName()).build());
         when(processRoleService.findProcessRole(loggedInUser.getId(), APPLICATION_ID_IN_FINISH)).thenReturn(newProcessRoleResource().withRoleName(UserRoleType.APPLICANT.getName()).build());
+        when(processRoleService.findProcessRole(loggedInUser.getId(), APPLICATION_ID_SUBMITTED)).thenReturn(newProcessRoleResource().withRoleName(UserRoleType.LEADAPPLICANT.getName()).build());
     }
 
     @Test
@@ -80,7 +82,9 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
         assertTrue(viewModel.getApplicationsInFinishedNotEmpty());
         assertTrue(viewModel.getProjectsInSetupNotEmpty());
 
+        assertEquals(2, viewModel.getApplicationsInProgress().size());
+
         verify(applicationService, times(1)).getById(APPLICATION_ID_IN_PROJECT);
-        assertEquals("Application in progress", viewModel.getApplicationInProgressText());
+        assertEquals("Applications in progress", viewModel.getApplicationInProgressText());
     }
 }
