@@ -13,12 +13,12 @@ log in and create new application for collaboration if there is not one already
     Run Keyword If    '${status}' == 'FAIL'    Create new application with the same user  Invite robot test application
 
 Login new application invite academic
-    [Arguments]    ${recipient}    ${subject}    ${pattern}    ${application_id}
+    [Arguments]    ${recipient}    ${subject}    ${pattern}
     [Tags]    Email
     Given Logging in and Error Checking  &{lead_applicant_credentials}
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    Academic robot test application
     Run Keyword If    '${status}' == 'FAIL'    Run keywords    Create new application with the same user  Academic robot test application
-    ...    AND    Invite and accept the invitation    ${recipient}    ${subject}    ${pattern}    ${application_id}
+    ...    AND    Invite and accept the invitation    ${recipient}    ${subject}    ${pattern}
 
 new account complete all but one
     create new account for submitting  ${submit_bus_email}  ${COMPETITION_OVERVIEW_URL_2}  ${application_bus_name}  radio-1
@@ -125,7 +125,7 @@ create new submit application
     And the user clicks the button/link                 jQuery=button:contains("Save and return")
 
 Invite and accept the invitation
-    [Arguments]    ${recipient}    ${subject}    ${pattern}    ${application_id}
+    [Arguments]    ${recipient}    ${subject}    ${pattern}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user should see the text in the page    view team members and add collaborators
