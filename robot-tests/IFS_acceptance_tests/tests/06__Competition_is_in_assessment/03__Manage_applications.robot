@@ -137,8 +137,7 @@ Remove an assigned user (Not notified)
     [Documentation]    INFUND-7230
     [Tags]
     Given the user clicks the button/link  jQuery=tr:nth-child(9) a:contains("View progress")
-    And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("Remove")
-    And the user clicks the button/link    jQuery=button:contains("Remove assessor")
+    And the user clicks the button/link    jQuery=tr:nth-child(1) button:contains("Remove")
     And the user clicks the button/link    jQuery=.pagination-label:contains("Next")
     And the available assessors information is correct
 
