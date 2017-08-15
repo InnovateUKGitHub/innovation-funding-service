@@ -3,6 +3,7 @@ package org.innovateuk.ifs.user.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.user.resource.*;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -101,5 +102,21 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
 
     public UserResourceBuilder withAllowMarketingEmails(Boolean... allowMarketingEmails) {
         return withArray((allowMarketingEmail, user) -> setField("allowMarketingEmails", allowMarketingEmail, user), allowMarketingEmails);
+    }
+
+    public UserResourceBuilder withCreatedOn(ZonedDateTime... createdOns) {
+        return withArray((createdOn, user) -> setField("createdOn", createdOn, user), createdOns);
+    }
+
+    public UserResourceBuilder withCreatedBy(String... createdBys) {
+        return withArray((createdBy, user) -> setField("createdBy", createdBy, user), createdBys);
+    }
+
+    public UserResourceBuilder withModifiedOn(ZonedDateTime... modifiedOns) {
+        return withArray((modifiedOn, user) -> setField("modifiedOn", modifiedOn, user), modifiedOns);
+    }
+
+    public UserResourceBuilder withModifiedBy(String... modifiedBys) {
+        return withArray((modifiedBy, user) -> setField("modifiedBy", modifiedBy, user), modifiedBys);
     }
 }
