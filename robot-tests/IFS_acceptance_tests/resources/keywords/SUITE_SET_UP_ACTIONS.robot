@@ -105,10 +105,10 @@ the user marks the section as complete
 
 Create new application with the same user
     [Arguments]  ${Application_title}
-    When the user navigates to the page         ${COMPETITION_OVERVIEW_URL}
+    When the user navigates to the page         ${COMPETITION_OVERVIEW_URL_2}
     the user clicks the button/link             jQuery=a:contains("Start new application")
-    And the user clicks the button/link         jQuery=Label:contains("Yes, I want to create a new application.")
-    And the user clicks the button/link         jQuery=.button:contains("Continue")
+#   And the user clicks the button/link         jQuery=Label:contains("Yes, I want to create a new application.")
+#    And the user clicks the button/link         jQuery=.button:contains("Continue")
     And the user clicks the button/link         jQuery=a:contains("Begin application")
     And the user clicks the button/link         link=Application details
     And the user enters text to a text field    id=application_details-title    ${Application_title}
@@ -184,7 +184,7 @@ The user marks the academic application finances as incomplete
 
 invite a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
-    the user navigates to the page                           ${COMPETITION_OVERVIEW_URL}
+    the user navigates to the page                           ${COMPETITION_OVERVIEW_URL_2}
     the user follows the flow to register their organisation    ${BUSINESS_TYPE_ID}
     the user verifies email                                    Stuart   Anderson    ${EMAIL_LEAD}
     the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
