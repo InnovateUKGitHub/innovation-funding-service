@@ -246,6 +246,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         organisationCreationForm.setSearchOrganisationId(organisationForm.getSearchOrganisationId());
         organisationCreationForm.setUseSearchResultAddress(organisationForm.isUseSearchResultAddress());
         organisationCreationForm.setAddressForm(organisationForm.getAddressForm());
+        organisationCreationForm.setTriedToSave(true);
         organisationForm.setTriedToSave(true);
         organisationForm.getAddressForm().setTriedToSave(true);
 
