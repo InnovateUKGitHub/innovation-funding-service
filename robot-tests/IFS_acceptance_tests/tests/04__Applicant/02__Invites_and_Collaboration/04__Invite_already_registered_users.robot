@@ -15,10 +15,10 @@ Resource          ../../../resources/defaultResources.robot
 The invited user should not follow the registration flow again
     [Documentation]    INFUND-1458
     [Tags]    HappyPath
-    Given we create a new user                          ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}  Stuart  Anderson  ${test_mailbox_one}+invitedregistered@gmail.com  ${BUSINESS_TYPE_ID}
+    Given we create a new user                          ${OPEN_COMPETITION}  Stuart   Anderson   ${test_mailbox_one}+invitedregistered@gmail.com    ${BUSINESS_TYPE_ID}
     And logout as user
     Given the lead applicant invites a registered user  ${test_mailbox_one}+invite2@gmail.com    ${test_mailbox_one}+invitedregistered@gmail.com
-    When the user reads his email and clicks the link   ${test_mailbox_one}+invitedregistered@gmail.com    Invitation to collaborate in ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}  You will be joining as part of the organisation    3
+    When the user reads his email and clicks the link   ${test_mailbox_one}+invitedregistered@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation    3
     Then the user should see the text in the page       We have found an account with the invited email address
 
 The user clicks the login link
@@ -55,7 +55,7 @@ Invite a user with the same organisation under the same organisation
     [Documentation]    INFUND-3759
     [Setup]    Log in as a different user                               ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     When Existing user creates a new application and invites a user from the same organisation
-    Then the invited user should get a message to contact the helpdesk  ${test_mailbox_one}+invite2@gmail.com  Invitation to collaborate in ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}  You will be joining as part of the organisation
+    Then the invited user should get a message to contact the helpdesk  ${test_mailbox_one}+invite2@gmail.com  Invitation to collaborate in ${OPEN_COMPETITION_NAME}  You will be joining as part of the organisation
 
 *** Keywords ***
 the user enters profile details

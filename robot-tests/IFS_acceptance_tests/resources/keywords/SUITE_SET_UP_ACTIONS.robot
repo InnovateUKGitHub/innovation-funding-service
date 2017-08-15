@@ -183,18 +183,18 @@ The user marks the academic application finances as incomplete
     wait for autosave
 
 invite a registered user
-    [Arguments]    ${EMAIL_LEAD}  ${EMAIL_INVITED}
-    the user navigates to the page                              ${COMPETITION_OVERVIEW_URL}
-    the user follows the flow to register their organisation    radio-1
-    the user verifies email                                     Stuart   Anderson    ${EMAIL_LEAD}
-    the user clicks the button/link                             link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    the user clicks the button/link                             jQuery=a:contains("Add partner organisation")
-    the user enters text to a text field                        name=organisationName    innovate
-    the user enters text to a text field                        name=applicants[0].name    Partner name
-    the user enters text to a text field                        name=applicants[0].email    ${EMAIL_INVITED}
-    the user clicks the button/link                             jQuery=button:contains("Add organisation and invite applicants")
-    the user clicks the button/link                             jQuery=a:contains("Begin application")
-    the user should see the text in the page                    Application overview
+    [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
+    the user navigates to the page                           ${COMPETITION_OVERVIEW_URL}
+    the user follows the flow to register their organisation    ${BUSINESS_TYPE_ID}
+    the user verifies email                                    Stuart   Anderson    ${EMAIL_LEAD}
+    the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    the user clicks the button/link    jQuery=a:contains("Add partner organisation")
+    the user enters text to a text field    name=organisationName    innovate
+    the user enters text to a text field    name=applicants[0].name    Partner name
+    the user enters text to a text field    name=applicants[0].email    ${EMAIL_INVITED}
+    the user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
+    the user clicks the button/link    jQuery=a:contains("Begin application")
+    the user should see the text in the page    Application overview
     the user closes the browser
     the guest user opens the browser
 
@@ -218,7 +218,7 @@ the user follows the flow to register their organisation
     [Arguments]   ${org_type_id}
     the user clicks the button/link             jQuery=a:contains("Start new application")
     the user clicks the button/link             jQuery=a:contains("Create account")
-    the user should see the element         jQuery=h1:contains("Choose your organisation type")
+    the user should not see the element         jQuery=h3:contains("Organisation type")
     the user selects the radio button       organisationTypeId  ${org_type_id}
     the user clicks the button/link         jQuery=.button:contains("Save and continue")
     the user enters text to a text field        id=organisationSearchName    Innovate

@@ -81,7 +81,7 @@ ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
 ${SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/summary
 ${APPLICATION_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
 ${assessor_dashboard_url}    ${SERVER}/assessment/assessor/dashboard
-${COMPETITION_OVERVIEW_URL}     ${SERVER}/competition/${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}/overview/
+${COMPETITION_OVERVIEW_URL}     ${SERVER}/competition/${OPEN_COMPETITION}/overview/
 ${COMPETITION_OVERVIEW_URL_2}    ${SERVER}/competition/${OPEN_COMPETITION_2}/overview/
 ${PUBLIC_DESCRIPTION_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/question/461
 ${TECHNICAL_APPROACH_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/question/467
@@ -115,8 +115,6 @@ ${test_title}     test title
 ${SMALL_ORGANISATION_SIZE}     1
 ${MEDIUM_ORGANISATION_SIZE}    2
 ${LARGE_ORGANISATION_SIZE}     3
-${BUSINESS_TYPE_ID}   radio-1
-
 # File related variables
 ${UPLOAD_FOLDER}    uploaded_files
 ${DOWNLOAD_FOLDER}    download_files
