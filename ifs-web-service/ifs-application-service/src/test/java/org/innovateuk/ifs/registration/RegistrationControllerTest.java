@@ -27,6 +27,7 @@ import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 import java.util.UUID;
@@ -67,6 +68,9 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     private EthnicityRestService ethnicityRestService;
 
     @Mock
+    private RegistrationCookieService registrationCookieService;
+
+    @Mock
     private Validator validator;
 
     private Cookie inviteHashCookie;
@@ -97,6 +101,11 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         inviteHashCookie = new Cookie(RegistrationCookieService.INVITE_HASH, encryptor.encrypt(INVITE_HASH));
         usedInviteHashCookie = new Cookie(RegistrationCookieService.INVITE_HASH, encryptor.encrypt(ACCEPTED_INVITE_HASH));
         organisationCookie = new Cookie("organisationId", encryptor.encrypt("1"));
+
+        when(registrationCookieService.getOrganisationIdCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(1L));
+        when(registrationCookieService.getInviteHashCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(INVITE_HASH));
+        when(registrationCookieService.getCompetitionIdCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(1L));
+
         logoutCurrentUser();
     }
 
@@ -130,6 +139,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     @Test
     public void onGetRequestRegistrationViewIsReturnedWithUsedInviteEmail() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
+        when(registrationCookieService.getInviteHashCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(ACCEPTED_INVITE_HASH));
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
 
         mockMvc.perform(get("/registration/register")
@@ -246,6 +256,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     public void emptyFormInputsShouldReturnError() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
+        when(registrationCookieService.getInviteHashCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.empty());
 
         mockMvc.perform(post("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -286,6 +297,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     @Test
     public void invalidCharactersInEmailShouldReturnError() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
+        when(registrationCookieService.getInviteHashCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.empty());
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
 
         mockMvc.perform(post("/registration/register")
@@ -305,6 +317,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         logoutCurrentUser();
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
+        when(registrationCookieService.getInviteHashCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.empty());
 
         mockMvc.perform(post("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -351,6 +364,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     @Test
     public void uncheckedTermsAndConditionsCheckboxShouldReturnError() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
+        when(registrationCookieService.getInviteHashCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.empty());
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
 
         mockMvc.perform(post("/registration/register")
@@ -365,6 +379,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     @Test
     public void validRegisterPost() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
+        when(registrationCookieService.getInviteHashCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.empty());
 
         UserResource userResource = newUserResource()
                 .withPassword("password123")
@@ -391,7 +406,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 anyLong(),
                 anyString(),
                 eq(1L),
-                eq(null),
+                eq(1L),
                 anyBoolean())).thenReturn(serviceSuccess(userResource));
         when(userService.findUserByEmail("test@test.test")).thenReturn(Optional.empty());
 
@@ -443,7 +458,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 anyLong(),
                 anyString(),
                 eq(1L),
-                eq(null),
+                eq(1L),
                 anyBoolean())).thenReturn(serviceSuccess(userResource));
         when(userService.findUserByEmail(eq("invited@email.com"))).thenReturn(Optional.empty());
         when(inviteRestService.acceptInvite(eq(INVITE_HASH), anyLong())).thenReturn(restSuccess());
@@ -469,9 +484,12 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     @Test
     public void correctOrganisationNameIsAddedToModel() throws Exception {
         logoutCurrentUser();
+
         OrganisationResource organisation = newOrganisationResource().withId(4L).withName("uniqueOrganisationName").build();
 
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(4L)).thenReturn(organisation);
+        when(registrationCookieService.getInviteHashCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(INVITE_HASH));
+        when(registrationCookieService.getOrganisationIdCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(4L));
 
         organisationCookie = new Cookie("organisationId", encryptor.encrypt("4"));
 
@@ -535,7 +553,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 userResource.getGender() != null ? userResource.getGender().toString() : null,
                 userResource.getEthnicity(),
                 userResource.getDisability() != null ? userResource.getDisability().toString() : null,
-                1L, null, userResource.getAllowMarketingEmails())).thenReturn(serviceFailure(error));
+                1L, 1L, userResource.getAllowMarketingEmails())).thenReturn(serviceFailure(error));
 
         mockMvc.perform(post("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
