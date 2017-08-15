@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,15 +28,25 @@ public class StatelessAuthenticationFilter extends OncePerRequestFilter {
     @Value("management.contextPath")
     private String monitoringEndpoint;
 
+    @Value("${logout.url}")
+    private String logoutUrl;
+
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
 
         if(shouldBeAuthenticated(request)) {
-            Authentication authentication = userAuthenticationService.getAuthentication(request);
+            Authentication authentication = userAuthenticationService.getAuthentication(request, true);
 
             if (authentication != null) {
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                UserResource ur = userAuthenticationService.getAuthenticatedUser(request);
+                if (ur == null) {
+                    response.sendRedirect(logoutUrl);
+                } else if (ur.getStatus().equals(UserStatus.INACTIVE)) {
+                    response.sendRedirect(logoutUrl);
+                } else {
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
             }
         }
         filterChain.doFilter(request, response);

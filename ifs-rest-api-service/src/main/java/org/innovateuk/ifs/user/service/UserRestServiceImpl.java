@@ -226,4 +226,16 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         String url = userRestURL + "/internal/edit";
         return postWithRestResult(url, editUserResource, Void.class);
     }
+
+    @Override
+    public RestResult<Void> deactivateUser(Long userId) {
+        String url = userRestURL + "/id/" + userId + "/deactivate";
+        return getWithRestResult(url, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> reactivateUser(Long userId) {
+        String url = userRestURL + "/id/" + userId + "/reactivate";
+        return getWithRestResult(url, Void.class);
+    }
 }

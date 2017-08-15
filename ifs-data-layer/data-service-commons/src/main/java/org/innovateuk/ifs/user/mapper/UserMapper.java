@@ -2,7 +2,6 @@ package org.innovateuk.ifs.user.mapper;
 
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
-//import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.mapstruct.Mapper;
@@ -25,7 +24,9 @@ public abstract class UserMapper extends BaseMapper<User, UserResource, Long> {
     public abstract User mapToDomain(UserResource resource);
 
     @Mappings({
-            @Mapping(target = "password", ignore = true)    })
+            @Mapping(target = "password", ignore = true),
+            @Mapping(source = "createdBy.name", target = "createdBy"),
+            @Mapping(source = "modifiedBy.name", target = "modifiedBy")})
     @Override
     public abstract UserResource mapToResource(User domain);
 

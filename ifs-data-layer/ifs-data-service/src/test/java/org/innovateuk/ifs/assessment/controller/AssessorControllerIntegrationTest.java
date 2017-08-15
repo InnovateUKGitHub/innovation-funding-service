@@ -10,9 +10,11 @@ import org.innovateuk.ifs.user.mapper.AffiliationMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
@@ -65,10 +67,18 @@ public class AssessorControllerIntegrationTest extends BaseControllerIntegration
                 .build(1);
         user.setProfileId(profile.getId());
         user.setAffiliations(affiliations);
-        userRepository.save(user);
+        user = userRepository.save(user);
+
+        UserResource userRes = userMapper.mapToResource(user);
+
+        flushAndClearSession();
+
+        //copy fields that are set during save
+        userRes.setModifiedOn(user.getModifiedOn());
+        userRes.setModifiedBy(userRepository.findByEmail(getCompAdmin().getEmail()).get().getName());
 
         AssessorProfileResource expectedAssessorProfileResource = newAssessorProfileResource()
-                .withUser(userMapper.mapToResource(user))
+                .withUser(userRes)
                 .withProfile(
                         newProfileResource()
                                 .withAffiliations(affiliationMapper.mapToResource(user.getAffiliations()))
@@ -77,7 +87,8 @@ public class AssessorControllerIntegrationTest extends BaseControllerIntegration
                 )
                 .build();
 
-        flushAndClearSession();
+        // truncate time - saved in DB to seconds resolution
+        expectedAssessorProfileResource.getUser().setModifiedOn(expectedAssessorProfileResource.getUser().getModifiedOn().truncatedTo(ChronoUnit.SECONDS));
 
         AssessorProfileResource actualAssessorProfileResource = controller.getAssessorProfile(3L).getSuccessObjectOrThrowException();
 

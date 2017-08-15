@@ -323,4 +323,18 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         verify(registrationServiceMock).editInternalUser(any(), any());
     }
+
+    @Test
+    public void deactivateUser() throws Exception {
+        when(registrationServiceMock.deactivateUser(123L)).thenReturn(serviceSuccess());
+        mockMvc.perform(get("/user/id/123/deactivate")).andExpect(status().isOk());
+        verify(registrationServiceMock).deactivateUser(123L);
+    }
+
+    @Test
+    public void reactivateUser() throws Exception {
+        when(registrationServiceMock.activateUser(123L)).thenReturn(serviceSuccess());
+        mockMvc.perform(get("/user/id/123/reactivate")).andExpect(status().isOk());
+        verify(registrationServiceMock).activateUser(123L);
+    }
 }

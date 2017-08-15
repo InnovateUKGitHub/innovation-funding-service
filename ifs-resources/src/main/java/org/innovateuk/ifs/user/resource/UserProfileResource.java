@@ -16,6 +16,10 @@ public class UserProfileResource extends UserProfileBaseResource {
 
     private Long user;
 
+    private String modifiedBy;
+
+    private ZonedDateTime modifiedOn;
+
     public UserProfileResource() {
     }
 
@@ -41,6 +45,22 @@ public class UserProfileResource extends UserProfileBaseResource {
 
     public void setCreatedOn(ZonedDateTime createdOn) {
         this.createdOn = createdOn;
+    }
+
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
+
+    public ZonedDateTime getModifiedOn() {
+        return modifiedOn;
+    }
+
+    public void setModifiedOn(ZonedDateTime modifiedOn) {
+        this.modifiedOn = modifiedOn;
     }
 
     @Override
