@@ -53,9 +53,9 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
                                          HttpServletRequest request) {
         model.addAttribute("model", organisationCreationSelectTypePopulator.populate());
 
-        Optional<OrganisationCreationForm> organisationCreationFormFromCookie = registrationCookieService.getOrganisationCreationCookieValue(request);
-        if (organisationCreationFormFromCookie.isPresent()) {
-            model.addAttribute(ORGANISATION_FORM, organisationCreationFormFromCookie.get());
+        Optional<OrganisationCreationForm> organisationCreationFormCookie = registrationCookieService.getOrganisationCreationCookieValue(request);
+        if (organisationCreationFormCookie.isPresent()) {
+            model.addAttribute(ORGANISATION_FORM, organisationCreationFormCookie.get());
         } else {
             model.addAttribute(ORGANISATION_FORM, new OrganisationCreationForm());
         }
@@ -72,7 +72,7 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
                                                 HttpServletResponse response) {
 
         Long organisationTypeId = organisationForm.getOrganisationTypeId();
-        if (organisationTypeId != null &&
+        if (organisationTypeId == null ||
                 !isValidLeadOrganisationType(organisationTypeId)) {
             bindingResult.addError(new FieldError(ORGANISATION_FORM, ORGANISATION_TYPE_ID, "Please select an organisation type."));
         }
@@ -119,7 +119,9 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
 
         if (competitionIdOpt.isPresent()) {
             List<OrganisationTypeResource> organisationTypesAllowed = competitionService.getOrganisationTypes(competitionIdOpt.get());
-            return organisationTypesAllowed.contains(organisationTypeId);
+            return organisationTypesAllowed.stream()
+                    .map(organisationTypeResource -> organisationTypeResource.getId())
+                    .anyMatch(aLong -> aLong.equals(organisationTypeId));
         }
 
         return Boolean.FALSE;
