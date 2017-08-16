@@ -74,27 +74,29 @@ Competition Admin can view file
     Given the user navigates to the page          ${OPEN_COMPETITION_MAN}
     And the user clicks the button/link           link=Applications: All, submitted, ineligible
     And the user clicks the button/link           link=All applications
-    And the user clicks the button/link           jQuery=tr:contains('Academic robot test application') a
-    And the user clicks the button/link           link=5. Technical approach
+    And the user clicks the button/link           jQuery=tr:contains("Academic robot test application") a
+    And the user clicks the button/link           jQuery=button:contains("5. Technical approach")
     And the user should see the text in the page  ${valid_pdf}
     When The user opens the link in new window    ${valid_pdf}
+    [Teardown]    the user closes the browser
 
 Project Finance can view file
     [Documentation]    IFS-1037
     [Tags]     Download
-    [Setup]    Log in as a different user         &{internal_finance_credentials}
+    [Setup]    The user logs-in in new browser    &{internal_finance_credentials}
     Given the user navigates to the page          ${OPEN_COMPETITION_MAN}
     And the user clicks the button/link           link=Applications: All, submitted, ineligible
     And the user clicks the button/link           link=All applications
-    And the user clicks the button/link           jQuery=tr:contains('Academic robot test application') a
-    And the user clicks the button/link           link=5. Technical approach
+    And the user clicks the button/link           jQuery=tr:contains("Academic robot test application") a
+    And the user clicks the button/link           jQuery=button:contains("5. Technical approach")
     And the user should see the text in the page  ${valid_pdf}
     When The user opens the link in new window    ${valid_pdf}
+    [Teardown]    the user closes the browser
 
 Collaborators can view a file
     [Documentation]    INFUND-2306
     [Tags]    HappyPath    SmokeTest
-    [Setup]    Log in as a different user         ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
+    [Setup]    The user logs-in in new browser    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     Given the user navigates to the page          ${DASHBOARD_URL}
     And the user clicks the button/link           link=Academic robot test application
     And the user clicks the button/link           link=5. Technical approach
