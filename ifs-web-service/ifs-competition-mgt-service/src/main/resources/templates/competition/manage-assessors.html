@@ -22,7 +22,7 @@
                            <div class="form-group">
                                <label for="innovationSector">Innovation sector</label>
                                <select class="form-control" name="innovationSector" id="innovationSector">
-                                   <option th:selected="${filterForm.innovationSector?:null} == null" value="">---</option>
+                                   <option th:selected="${filterForm.innovationSector} == null" value="">---</option>
                                    <option th:each="innovationSector : ${model.innovationSectors}"
                                            th:value="${innovationSector.id}"
                                            th:text="${innovationSector.name}"
@@ -35,7 +35,7 @@
                             <div class="form-group">
                                 <label for="businessType">Type</label>
                                 <select class="form-control" name="businessType" id="businessType">
-                                    <option value="">---</option>
+                                    <option th:selected="${filterForm.businessType} == null" value="">---</option>
                                     <option th:each="type : ${T(org.innovateuk.ifs.user.resource.BusinessType).values()}"
                                             th:value="${type}"
                                             th:text="${type.displayName}"
