@@ -1,15 +1,9 @@
 package org.innovateuk.ifs.management.controller;
 
-import org.innovateuk.ifs.assessment.service.AssessmentRestService;
-import org.innovateuk.ifs.competition.resource.AvailableApplicationsSortFieldType;
-import org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType;
 import org.innovateuk.ifs.assessment.resource.AssessmentCreateResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.management.model.AssessorAssessmentProgressModelPopulator;
-import org.innovateuk.ifs.management.service.CompetitionManagementApplicationService;
-import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
-import org.innovateuk.ifs.management.viewmodel.ApplicationAssessmentProgressRemoveViewModel;
 import org.innovateuk.ifs.management.viewmodel.AssessorAssessmentProgressRemoveViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
