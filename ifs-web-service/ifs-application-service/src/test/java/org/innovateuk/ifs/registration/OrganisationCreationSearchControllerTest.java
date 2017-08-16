@@ -32,7 +32,6 @@ import static java.lang.String.format;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.innovateuk.ifs.BaseControllerMockMVCTest.setupMockMvc;
-import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -74,6 +73,7 @@ public class OrganisationCreationSearchControllerTest extends BaseUnitTest {
 
     private OrganisationCreationForm organisationForm;
     private OrganisationTypeForm organisationTypeForm;
+    private OrganisationCreationForm organisationFormUseSearchResult;
 
     @Before
     public void setUp() {
@@ -109,13 +109,20 @@ public class OrganisationCreationSearchControllerTest extends BaseUnitTest {
         organisationForm = new OrganisationCreationForm();
         organisationForm.setAddressForm(addressForm);
         organisationForm.setTriedToSave(true);
-        organisationForm.setOrganisationSearchName(null);
+        organisationForm.setOrganisationSearchName("company name");
+        organisationForm.setOrganisationTypeId(1L);
         organisationForm.setSearchOrganisationId(COMPANY_ID);
         organisationForm.setOrganisationSearching(false);
         organisationForm.setManualEntry(false);
         organisationForm.setUseSearchResultAddress(false);
         organisationForm.setOrganisationSearchResults(Collections.emptyList());
         organisationForm.setOrganisationName("NOMENSA LTD");
+
+
+        organisationFormUseSearchResult = new OrganisationCreationForm();
+        organisationFormUseSearchResult.setOrganisationSearchName("searchname");
+        organisationFormUseSearchResult.setOrganisationName("actualname");
+        organisationFormUseSearchResult.setUseSearchResultAddress(true);
 
         competitionId = 2L;
 
@@ -302,7 +309,8 @@ public class OrganisationCreationSearchControllerTest extends BaseUnitTest {
                 .param("addressForm.selectedPostcode.addressLine1", "a")
                 .param("addressForm.selectedPostcode.locality", "abc")
                 .param("addressForm.selectedPostcode.region", "def")
-                .param("addressForm.selectedPostcode.postalcode", "abcass")
+                .param("addressForm.selectedPostcode.postcode", "abc post")
+                .param("addressForm.selectedPostcode.town", "abc town")
                 .param("save-organisation-details", "")
                 .header("referer", "/organisation/create/find-organisation/"))
                 .andExpect(status().is3xxRedirection())
@@ -346,11 +354,8 @@ public class OrganisationCreationSearchControllerTest extends BaseUnitTest {
 
     @Test
     public void testSearchAddress_setUseSearchResultAddressInCookieShouldResultInSuccessfulSaveOfOrganisationToCookie() throws Exception {
-        OrganisationCreationForm organisationFormCookieValue = new OrganisationCreationForm();
-        organisationFormCookieValue.setUseSearchResultAddress(true);
-
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
-        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationFormCookieValue));
+        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationFormUseSearchResult));
 
         mockMvc.perform(post("/organisation/create/selected-organisation/" + COMPANY_ID)
                 .param("addressForm.postcodeInput", POSTCODE_LOOKUP)
@@ -370,11 +375,8 @@ public class OrganisationCreationSearchControllerTest extends BaseUnitTest {
 
     @Test
     public void testAmendOrganisationAddressPostCode() throws Exception {
-        OrganisationCreationForm organisationFormCookieValue = new OrganisationCreationForm();
-        organisationFormCookieValue.setUseSearchResultAddress(true);
-
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
-        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationFormCookieValue));
+        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationFormUseSearchResult));
         when(addressRestService.doLookup(anyString())).thenReturn(restSuccess(new ArrayList<>()));
         mockMvc.perform(get(format("/organisation/create/selected-organisation/%s/%s", COMPANY_ID, POSTCODE_LOOKUP)))
         .andExpect(status().is2xxSuccessful())
@@ -385,11 +387,8 @@ public class OrganisationCreationSearchControllerTest extends BaseUnitTest {
 
     @Test
     public void testAmendOrganisationAddressPostCode_selectedOrganisationSelectedPostcode() throws Exception {
-        OrganisationCreationForm organisationFormCookieValue = new OrganisationCreationForm();
-        organisationFormCookieValue.setUseSearchResultAddress(true);
-
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
-        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationFormCookieValue));
+        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationFormUseSearchResult));
 
         ArrayList<AddressResource> addresses = new ArrayList<>();
         addresses.add(new AddressResource());
@@ -405,11 +404,8 @@ public class OrganisationCreationSearchControllerTest extends BaseUnitTest {
 
     @Test
     public void testSelectAddress_selectedBusinessSubmitSelectAddress() throws Exception {
-        OrganisationCreationForm organisationFormCookieValue = new OrganisationCreationForm();
-        organisationFormCookieValue.setUseSearchResultAddress(true);
-
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
-        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationFormCookieValue));
+        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationFormUseSearchResult));
 
         mockMvc.perform(post("/organisation/create/selected-organisation/" + COMPANY_ID)
                 .param("addressForm.postcodeInput", POSTCODE_LOOKUP)
