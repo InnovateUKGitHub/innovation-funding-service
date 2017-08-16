@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.resource.AssessmentSubmissionsResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -22,7 +22,7 @@ import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -36,7 +36,7 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
 
     private UserResource assessorUser;
     private UserResource otherUser;
-    private Map<AssessmentStates, AssessmentResource> assessments;
+    private Map<AssessmentState, AssessmentResource> assessments;
 
     @Autowired
     public AssessmentMapper assessmentMapper;
@@ -56,12 +56,12 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
                 .build();
         when(processRoleRepositoryMock.findOne(processRole.getId())).thenReturn(processRole);
 
-        assessments = EnumSet.allOf(AssessmentStates.class).stream().collect(toMap(identity(), state -> setupAssessment(processRole, state)));
+        assessments = EnumSet.allOf(AssessmentState.class).stream().collect(toMap(identity(), state -> setupAssessment(processRole, state)));
     }
 
     @Test
     public void ownersCanReadAssessmentsOnDashboard() {
-        EnumSet<AssessmentStates> allowedStates = EnumSet.of(PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT, SUBMITTED);
+        EnumSet<AssessmentState> allowedStates = EnumSet.of(PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT, SUBMITTED);
 
         allowedStates.forEach(state ->
                 assertTrue("the owner of an assessment should be able to read that assessment on the dashboard",
@@ -74,14 +74,14 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
 
     @Test
     public void otherUsersCanNotReadAssessmentsOnDashboard() {
-        EnumSet.allOf(AssessmentStates.class).forEach(state ->
+        EnumSet.allOf(AssessmentState.class).forEach(state ->
                 assertFalse("other users should not be able to read any assessments",
                         rules.userCanReadAssessmentOnDashboard(assessments.get(state), otherUser)));
     }
 
     @Test
     public void ownersCanReadAssessmentsNonDashboard() {
-        EnumSet<AssessmentStates> allowedStates = EnumSet.of(ACCEPTED, OPEN, READY_TO_SUBMIT);
+        EnumSet<AssessmentState> allowedStates = EnumSet.of(ACCEPTED, OPEN, READY_TO_SUBMIT);
 
         allowedStates.forEach(state ->
                 assertTrue("the owner of an assessment should be able to read that assessment",
@@ -94,14 +94,14 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
 
     @Test
     public void otherUsersCanNotReadAssessmentsNonDashboard() {
-        EnumSet.allOf(AssessmentStates.class).forEach(state ->
+        EnumSet.allOf(AssessmentState.class).forEach(state ->
                 assertFalse("other users should not be able to read any assessments",
                         rules.userCanReadAssessment(assessments.get(state), otherUser)));
     }
 
     @Test
     public void ownersCanReadAssessmentScore() {
-        EnumSet<AssessmentStates> allowedStates = EnumSet.of(ACCEPTED, OPEN, READY_TO_SUBMIT, SUBMITTED);
+        EnumSet<AssessmentState> allowedStates = EnumSet.of(ACCEPTED, OPEN, READY_TO_SUBMIT, SUBMITTED);
 
         allowedStates.forEach(state ->
                 assertTrue("the owner of an assessment should be able to read the assessment score",
@@ -114,14 +114,14 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
 
     @Test
     public void otherUsersCanNotReadAssessmentScore() {
-        EnumSet.allOf(AssessmentStates.class).forEach(state ->
+        EnumSet.allOf(AssessmentState.class).forEach(state ->
                 assertFalse("other users should not be able to read any assessment scores",
                         rules.userCanReadAssessmentScore(assessments.get(state), otherUser)));
     }
 
     @Test
     public void ownersCanReadPendingAssessmentsToRespond() {
-        EnumSet<AssessmentStates> allowedStates = EnumSet.of(PENDING);
+        EnumSet<AssessmentState> allowedStates = EnumSet.of(PENDING);
         allowedStates.forEach(state ->
                 assertTrue("the owner of a pending assessment should be able to read it in order to respond to their" +
                                 " invitation",
@@ -135,13 +135,13 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
 
     @Test
     public void otherUsersCanNotReadPendingAssessmentsToRespond() {
-        EnumSet.allOf(AssessmentStates.class).forEach(state ->
+        EnumSet.allOf(AssessmentState.class).forEach(state ->
             assertFalse("other users should not be able to read assessments in order to respond to invitations",
                     rules.userCanReadToAssign(assessments.get(state), otherUser)));
     }
  @Test
     public void ownersCanReadAssessmentsToReject() {
-        EnumSet<AssessmentStates> allowedStates = EnumSet.of(PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT);
+        EnumSet<AssessmentState> allowedStates = EnumSet.of(PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT);
         allowedStates.forEach(state ->
                 assertTrue("the owner of a pending assessment should be able to read it in order to respond to their" +
                                 " invitation",
@@ -155,14 +155,14 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
 
     @Test
     public void otherUsersCanNotReadAssessmentsToReject() {
-        EnumSet.allOf(AssessmentStates.class).forEach(state ->
+        EnumSet.allOf(AssessmentState.class).forEach(state ->
             assertFalse("other users should not be able to read assessments in order to respond to invitations",
                     rules.userCanReadToReject(assessments.get(state), otherUser)));
     }
 
     @Test
     public void ownersCanUpdateAssessments() {
-        EnumSet<AssessmentStates> updatableStates = EnumSet.of(CREATED, PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT);
+        EnumSet<AssessmentState> updatableStates = EnumSet.of(CREATED, PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT);
 
         updatableStates.forEach(state ->
                 assertTrue("the owner of an assessment should able to update that assessment",
@@ -175,7 +175,7 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
 
     @Test
     public void otherUsersCanNotUpdateAssessments() {
-        EnumSet.allOf(AssessmentStates.class).forEach(state ->
+        EnumSet.allOf(AssessmentState.class).forEach(state ->
                 assertFalse("other users should not able to update assessments",
                         rules.userCanUpdateAssessment(assessments.get(state), otherUser)));
     }
@@ -250,7 +250,7 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
         assertFalse("other users cannot submit assessments", rules.userCanSubmitAssessments(assessmentSubmissionsResource, assessorUser));
     }
 
-    private AssessmentResource setupAssessment(ProcessRole participant, AssessmentStates state) {
+    private AssessmentResource setupAssessment(ProcessRole participant, AssessmentState state) {
         Assessment assessment = newAssessment()
                 .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, state.getBackingState()))
                 .build();

@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.workflow.configuration;
 
-import org.innovateuk.ifs.application.resource.ApplicationOutcome;
+import org.innovateuk.ifs.application.resource.ApplicationEvent;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.workflow.actions.MarkIneligibleAction;
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
@@ -22,65 +22,65 @@ import static java.util.Arrays.asList;
  */
 @Configuration
 @EnableStateMachine(name = "applicationProcessStateMachine")
-public class ApplicationWorkflow extends StateMachineConfigurerAdapter<ApplicationState, ApplicationOutcome> {
+public class ApplicationWorkflow extends StateMachineConfigurerAdapter<ApplicationState, ApplicationEvent> {
 
     @Autowired
     private MarkIneligibleAction markIneligibleAction;
 
     @Override
-    public void configure(StateMachineConfigurationConfigurer<ApplicationState, ApplicationOutcome> config) throws Exception {
+    public void configure(StateMachineConfigurationConfigurer<ApplicationState, ApplicationEvent> config) throws Exception {
         config.withConfiguration().listener(new WorkflowStateMachineListener<>());
     }
 
     @Override
-    public void configure(StateMachineStateConfigurer<ApplicationState, ApplicationOutcome> states) throws Exception {
+    public void configure(StateMachineStateConfigurer<ApplicationState, ApplicationEvent> states) throws Exception {
         states.withStates()
                 .initial(ApplicationState.CREATED)
                 .states(new LinkedHashSet<>(asList(ApplicationState.values())));
     }
 
     @Override
-    public void configure(StateMachineTransitionConfigurer<ApplicationState, ApplicationOutcome> transitions) throws Exception {
+    public void configure(StateMachineTransitionConfigurer<ApplicationState, ApplicationEvent> transitions) throws Exception {
         transitions
                 .withExternal()
                     .source(ApplicationState.CREATED)
-                    .event(ApplicationOutcome.OPENED)
+                    .event(ApplicationEvent.OPENED)
                     .target(ApplicationState.OPEN)
                 .and()
                 .withExternal()
                     .source(ApplicationState.OPEN)
-                    .event(ApplicationOutcome.SUBMITTED)
+                    .event(ApplicationEvent.SUBMITTED)
                     .target(ApplicationState.SUBMITTED)
                 .and()
                 .withExternal()
                     .source(ApplicationState.SUBMITTED)
-                    .event(ApplicationOutcome.MARK_INELIGIBLE)
+                    .event(ApplicationEvent.MARK_INELIGIBLE)
                     .action(markIneligibleAction)
                     .target(ApplicationState.INELIGIBLE)
                 .and()
                 .withExternal()
                     .source(ApplicationState.INELIGIBLE)
-                    .event(ApplicationOutcome.INFORM_INELIGIBLE)
+                    .event(ApplicationEvent.INFORM_INELIGIBLE)
                     .target(ApplicationState.INELIGIBLE_INFORMED)
                 .and()
                 .withExternal()
                     .source(ApplicationState.INELIGIBLE)
-                    .event(ApplicationOutcome.REINSTATE_INELIGIBLE)
+                    .event(ApplicationEvent.REINSTATE_INELIGIBLE)
                     .target(ApplicationState.SUBMITTED)
                 .and()
                 .withExternal()
                     .source(ApplicationState.INELIGIBLE_INFORMED)
-                    .event(ApplicationOutcome.REINSTATE_INELIGIBLE)
+                    .event(ApplicationEvent.REINSTATE_INELIGIBLE)
                     .target(ApplicationState.SUBMITTED)
                 .and()
                 .withExternal()
                     .source(ApplicationState.SUBMITTED)
-                    .event(ApplicationOutcome.APPROVED)
+                    .event(ApplicationEvent.APPROVED)
                     .target(ApplicationState.APPROVED)
                 .and()
                 .withExternal()
                     .source(ApplicationState.SUBMITTED)
-                    .event(ApplicationOutcome.REJECTED)
+                    .event(ApplicationEvent.REJECTED)
                     .target(ApplicationState.REJECTED);
     }
 }

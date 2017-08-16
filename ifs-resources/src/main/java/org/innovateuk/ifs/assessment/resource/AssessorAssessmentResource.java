@@ -3,12 +3,10 @@ package org.innovateuk.ifs.assessment.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.util.Optional;
-
 import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.REJECTED;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.WITHDRAWN;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.REJECTED;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.WITHDRAWN;
 
 /**
  * Resource describing an assessor's assessment of an application.
@@ -22,7 +20,7 @@ public class AssessorAssessmentResource {
     private String applicationName;
     private String leadOrganisation;
     private int totalAssessors;
-    private AssessmentStates state;
+    private AssessmentState state;
     private AssessmentRejectOutcomeValue rejectReason;
     private String rejectComment;
 
@@ -33,7 +31,7 @@ public class AssessorAssessmentResource {
                                       String applicationName,
                                       String leadOrganisation,
                                       int totalAssessors,
-                                      AssessmentStates state,
+                                      AssessmentState state,
                                       AssessmentRejectOutcomeValue rejectReason,
                                       String  rejectComment) {
         this.applicationId = applicationId;
@@ -77,11 +75,11 @@ public class AssessorAssessmentResource {
         this.totalAssessors = totalAssessors;
     }
 
-    public AssessmentStates getState() {
+    public AssessmentState getState() {
         return state;
     }
 
-    public void setState(AssessmentStates state) {
+    public void setState(AssessmentState state) {
         this.state = state;
     }
 
