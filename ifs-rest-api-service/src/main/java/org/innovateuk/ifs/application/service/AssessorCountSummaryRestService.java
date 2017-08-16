@@ -8,5 +8,6 @@ import java.util.Optional;
 
 public interface AssessorCountSummaryRestService {
 
-    RestResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionId(long competitionId, Optional<Long> innovationSectorId, Optional<BusinessType> businessType, Integer pageIndex, Integer pageSize);
+    RestResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionId(
+            long competitionId, Optional<Long> innovationSectorId, Optional<BusinessType> businessType, Integer pageIndex, Integer pageSize);
 }

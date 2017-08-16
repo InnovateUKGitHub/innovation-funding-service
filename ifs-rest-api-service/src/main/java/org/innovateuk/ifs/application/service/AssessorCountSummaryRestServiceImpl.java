@@ -21,7 +21,8 @@ public class AssessorCountSummaryRestServiceImpl extends BaseRestService impleme
     private static final String assessorCountRestUrl = "/assessorCountSummary";
 
     @Override
-    public RestResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionId(long competitionId, Optional<Long> innovationSectorId, Optional<BusinessType> businessType, Integer pageIndex, Integer pageSize) {
+    public RestResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionId(
+            long competitionId, Optional<Long> innovationSectorId, Optional<BusinessType> businessType, Integer pageIndex, Integer pageSize) {
         final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         innovationSectorId.ifPresent(i -> params.add("innovationSector", String.valueOf(i)));
         businessType.ifPresent(b -> params.add("businessType", b.name()));
