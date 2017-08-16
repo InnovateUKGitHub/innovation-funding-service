@@ -58,7 +58,7 @@ items:
           - name: NEW_RELIC_LOG
             value: "STDOUT"
           - name: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
-            value: 100
+            value: "100"
           ports:
           - containerPort: 8080
           resources:
