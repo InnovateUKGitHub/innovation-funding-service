@@ -1,7 +1,6 @@
 #!/bin/bash
 
 set -e
-set -x
 
 PROJECT=$1
 TARGET=$2
@@ -46,9 +45,6 @@ function takeMysqlDump() {
 
     echo "Taking anonymised data dump..."
 
-    oc whoami
-    oc whoami -t
-    oc get pods ${SVC_ACCOUNT_CLAUSE}
     oc rsh ${SVC_ACCOUNT_CLAUSE} db-anonymised-data /dump/make-mysqldump.sh > /dev/null;
     oc rsync ${SVC_ACCOUNT_CLAUSE} db-anonymised-data:/dump/anonymised-dump.sql.gpg /tmp > /dev/null;
     echo "Anonymised data dump taken!"
