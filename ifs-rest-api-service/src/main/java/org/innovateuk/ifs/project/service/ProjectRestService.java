@@ -20,8 +20,6 @@ public interface ProjectRestService {
 
     RestResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId);
 
-    RestResult<Void> addPartner(Long projectId, Long userId, Long organisationId);
-
     RestResult<ProjectUserResource> getProjectManager(Long projectId);
 
     RestResult<PartnerOrganisationResource> getPartnerOrganisation(Long projectId, Long organisationId);
