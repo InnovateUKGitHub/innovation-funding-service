@@ -129,7 +129,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         mockMvc.perform(get(buildPaginationUri("/user/internal/active", 0, 5, null, new LinkedMultiValueMap<>()))).andExpect(status().isOk())
                 .andDo(document("user/{method-name}",
                         responseFields(userPageResourceFields)
-                ));;
+                ));
     }
 
     @Test
@@ -139,7 +139,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         mockMvc.perform(get(buildPaginationUri("/user/internal/inactive", 0, 5, null, new LinkedMultiValueMap<>()))).andExpect(status().isOk())
                 .andDo(document("user/{method-name}",
                         responseFields(userPageResourceFields)
-                ));;
+                ));
     }
 
     private UserPageResource buildUserPageResource(){
@@ -192,5 +192,33 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
                 ));
 
         verify(registrationServiceMock).editInternalUser(any(), any());
+    }
+
+    @Test
+    public void deactivateUser() throws Exception {
+        final Long userId = 9999L;
+
+        when(registrationServiceMock.deactivateUser(userId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(get("/user/id/{userId}/deactivate", userId))
+                .andDo(document("user/{method-name}",
+                        pathParameters(
+                                parameterWithName("userId").description("Identifier of the user being deactivated")
+                        )
+                ));
+    }
+
+    @Test
+    public void reactivateUser() throws Exception {
+        final Long userId = 9999L;
+
+        when(registrationServiceMock.activateUser(userId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(get("/user/id/{userId}/reactivate", userId))
+                .andDo(document("user/{method-name}",
+                        pathParameters(
+                                parameterWithName("userId").description("Identifier of the user being reactivated")
+                        )
+                ));
     }
 }

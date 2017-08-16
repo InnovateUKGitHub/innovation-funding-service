@@ -265,5 +265,5 @@ users upload signed grant offer letter and submit
 grant offer letter is approved
     log in as a different user       &{internal_finance_credentials}
     the user navigates to the page   ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
-    the user clicks the button/link  jQuery=.button:contains("Accept signed grant offer letter")
+    the user clicks the button/link  jQuery=h2:contains("Confirm") ~ .button:contains("Accept signed grant offer letter")  # to differantiate from the modal button
     the user clicks the button/link  jQuery=.modal-accept-signed-gol .button:contains("Accept signed grant offer letter")

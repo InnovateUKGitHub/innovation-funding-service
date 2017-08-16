@@ -12,9 +12,11 @@ import org.innovateuk.ifs.assessment.service.AssessorCompetitionSummaryRestServi
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.model.AssessorAssessmentProgressModelPopulator;
+import org.innovateuk.ifs.management.viewmodel.AssessorAssessmentProgressRemoveViewModel;
 import org.innovateuk.ifs.management.viewmodel.AssessorAssessmentProgressViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -22,6 +24,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 
+import static java.lang.String.format;
 import static java.util.Optional.empty;
 import static org.hamcrest.Matchers.hasItems;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
@@ -30,19 +33,18 @@ import static org.innovateuk.ifs.assessment.builder.AssessorAssessmentResourceBu
 import static org.innovateuk.ifs.assessment.builder.AssessorCompetitionSummaryResourceBuilder.newAssessorCompetitionSummaryResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
 import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.ACCEPTED;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.SUBMITTED;
+import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
+import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class CompetitionManagementAssessmentsAssessorProgressControllerTest extends BaseControllerMockMVCTest<CompetitionManagementAssessmentsAssessorProgressController> {
@@ -87,12 +89,14 @@ public class CompetitionManagementAssessmentsAssessorProgressControllerTest exte
                 .build();
 
         List<AssessorAssessmentResource> assignedAssessments = newAssessorAssessmentResource()
-                .withApplicationId(10L, 20L)
-                .withApplicationName("Test App 1", "Test App 2")
-                .withTotalAssessors(5, 7)
-                .withLeadOrganisation("Lead Org 1", "Lead Org 2")
-                .withState(SUBMITTED, ACCEPTED)
-                .build(2);
+                .withApplicationId(10L, 20L, 30L)
+                .withApplicationName("Test App 1", "Test App 2", "Test App 3")
+                .withTotalAssessors(5, 7, 6)
+                .withLeadOrganisation("Lead Org 1", "Lead Org 2", "Lead Org 3")
+                .withState(SUBMITTED, ACCEPTED, REJECTED)
+                .withRejectionReason(null, null, CONFLICT_OF_INTEREST)
+                .withRejectionComment(null, null, "rejection comment")
+                .build(3);
 
         AssessorCompetitionSummaryResource assessorCompetitionSummaryResource = newAssessorCompetitionSummaryResource()
                 .withCompetitionId(competitionId)
@@ -141,7 +145,8 @@ public class CompetitionManagementAssessmentsAssessorProgressControllerTest exte
         assertEquals(20L, model.getTotalApplications());
         assertThat(model.getInnovationAreas(), hasItems("Innovation 1", "Innovation 2"));
 
-        assertEquals(2, assignedAssessments.size());
+        assertEquals(2, model.getAssigned().size());
+        assertEquals(1, model.getRejected().size());
 
         assertEquals(assignedAssessments.get(0).getApplicationId(), model.getAssigned().get(0).getApplicationId());
         assertEquals(assignedAssessments.get(0).getApplicationName(), model.getAssigned().get(0).getApplicationName());
@@ -154,6 +159,13 @@ public class CompetitionManagementAssessmentsAssessorProgressControllerTest exte
         assertEquals(assignedAssessments.get(1).getLeadOrganisation(), model.getAssigned().get(1).getLeadOrganisation());
         assertEquals(assignedAssessments.get(1).getTotalAssessors(), model.getAssigned().get(1).getTotalAssessors());
         assertEquals(assignedAssessments.get(1).getState(), model.getAssigned().get(1).getState());
+
+        assertEquals(assignedAssessments.get(2).getApplicationId(), model.getRejected().get(0).getApplicationId());
+        assertEquals(assignedAssessments.get(2).getApplicationName(), model.getRejected().get(0).getApplicationName());
+        assertEquals(assignedAssessments.get(2).getLeadOrganisation(), model.getRejected().get(0).getLeadOrganisation());
+        assertEquals(assignedAssessments.get(2).getTotalAssessors(), model.getRejected().get(0).getTotalAssessors());
+        assertEquals(assignedAssessments.get(2).getRejectReason(), model.getRejected().get(0).getRejectReason());
+        assertEquals(assignedAssessments.get(2).getRejectComment(), model.getRejected().get(0).getRejectComment());
     }
 
     @Test
@@ -215,6 +227,45 @@ public class CompetitionManagementAssessmentsAssessorProgressControllerTest exte
         assertEquals("1 to 20", actualPagination.getPageNames().get(0).getTitle());
         assertEquals("21 to 40", actualPagination.getPageNames().get(1).getTitle());
         assertEquals("41 to 41", actualPagination.getPageNames().get(2).getTitle());
+    }
+
+    @Test
+    public void withdrawAssessment() throws Exception {
+        long competitionId = 1L;
+        long assessorId = 2L;
+        long assessmentId = 3L;
+
+        when(assessmentRestService.withdrawAssessment(assessmentId)).thenReturn(restSuccess());
+
+        mockMvc.perform(
+                post("/assessment/competition/{competitionId}/assessors/{assessorId}/withdraw/{assessmentId}", competitionId, assessorId, assessmentId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/assessment/competition/%s/assessors/%s?sortField=", competitionId, assessorId)));
+
+        InOrder inOrder = inOrder(assessmentRestService);
+        inOrder.verify(assessmentRestService).withdrawAssessment(assessmentId);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void withdrawAssessmentConfirm() throws Exception {
+        long competitionId = 1L;
+        long assessorId = 2L;
+        long assessmentId = 3L;
+
+        AssessorAssessmentProgressRemoveViewModel expectedModel = new AssessorAssessmentProgressRemoveViewModel(
+                competitionId,
+                assessorId,
+                assessmentId,
+                ""
+        );
+
+        mockMvc.perform(
+                get("/assessment/competition/{competitionId}/assessors/{assessorId}/withdraw/{assessmentId}/confirm", competitionId, assessorId, assessmentId))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedModel))
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("competition/assessor-progress-remove-confirm"));
     }
 
     private AddressResource getExpectedAddress() {

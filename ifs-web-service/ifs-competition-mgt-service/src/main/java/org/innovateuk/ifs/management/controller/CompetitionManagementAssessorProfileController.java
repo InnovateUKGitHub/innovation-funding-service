@@ -27,7 +27,8 @@ public class CompetitionManagementAssessorProfileController {
         ASSESSOR_FIND("/competition/{competitionId}/assessors/find"),
         ASSESSOR_INVITE("/competition/{competitionId}/assessors/invite"),
         ASSESSOR_OVERVIEW("/competition/{competitionId}/assessors/overview"),
-        MANAGE_ASSESSORS("/assessment/competition/{competitionId}/assessors");
+        MANAGE_ASSESSORS("/assessment/competition/{competitionId}/assessors"),
+        ASSESSOR_PROGRESS("/assessment/competition/{competitionId}/assessors/{assessorId}");
 
         private String baseOriginUrl;
 
@@ -49,12 +50,12 @@ public class CompetitionManagementAssessorProfileController {
                           @RequestParam MultiValueMap<String, String> queryParams) {
 
         model.addAttribute("model", assessorProfileModelPopulator.populateModel(assessorId, competitionId));
-        model.addAttribute("backUrl", buildBackUrl(origin, competitionId, applicationId, queryParams));
+        model.addAttribute("backUrl", buildBackUrl(origin, competitionId, applicationId, assessorId, queryParams));
 
         return "assessors/profile";
     }
 
-    private String buildBackUrl(String origin, Long competitionId, Long applicationId, MultiValueMap<String, String> queryParams) {
+    private String buildBackUrl(String origin, Long competitionId, Long applicationId, Long assessorId, MultiValueMap<String, String> queryParams) {
         String baseUrl = AssessorProfileOrigin.valueOf(origin).getBaseOriginUrl();
         queryParams.remove("origin");
 
@@ -62,9 +63,13 @@ public class CompetitionManagementAssessorProfileController {
             queryParams.remove("applicationId");
         }
 
+        if (queryParams.containsKey("assessorId")) {
+            queryParams.remove("assessorId");
+        }
+
         return UriComponentsBuilder.fromPath(baseUrl)
                 .queryParams(queryParams)
-                .buildAndExpand(asMap("competitionId", competitionId, "applicationId", applicationId ))
+                .buildAndExpand(asMap("competitionId", competitionId, "applicationId", applicationId, "assessorId", assessorId))
                 .encode()
                 .toUriString();
     }

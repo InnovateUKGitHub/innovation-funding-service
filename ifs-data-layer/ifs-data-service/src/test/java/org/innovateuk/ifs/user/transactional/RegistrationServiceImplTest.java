@@ -7,6 +7,7 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.authentication.service.RestIdentityProviderService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
@@ -32,6 +33,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -89,6 +91,8 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     private UserResource userResourceInDB;
 
     private User userInDB;
+
+    private User updatedUserInDB;
 
     private RoleResource roleResource;
 
@@ -607,8 +611,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 .withRoles(roleResources)
                 .build();
 
-        UserResource userResource = internalUserRegistrationResource.toUserResource();
-
         User userToCreate = newUser()
                 .withId((Long) null)
                 .withFirstName("First")
@@ -627,6 +629,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(userRepositoryMock.save(any(User.class))).thenReturn(userToCreate);
         ServiceResult<Void> result = service.createInternalUser("SomeInviteHash", internalUserRegistrationResource);
         assertTrue(result.isSuccess());
+        assertEquals(InviteStatus.OPENED, roleInvite.getStatus());
     }
 
     @Test
@@ -661,8 +664,8 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         setUpUsersForEditInternalUserSuccess();
 
         UserRoleType newRole = UserRoleType.SUPPORT;
-
-        when(baseUserServiceMock.getUserById(userToEdit.getId())).thenReturn(serviceSuccess(userResourceInDB));
+        
+        when(userRepositoryMock.findOne(userToEdit.getId())).thenReturn(userInDB);
         when(roleServiceMock.findByUserRoleType(newRole)).thenReturn(serviceSuccess(roleResource));
         when(roleMapperMock.mapToDomain(roleResource)).thenReturn(role);
         when(userMapperMock.mapToDomain(userResourceInDB)).thenReturn(userInDB);
@@ -675,6 +678,90 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         assertEquals(userInDB.getFirstName(), userToEdit.getFirstName());
         assertEquals(userInDB.getLastName(), userToEdit.getLastName());
 
+    }
+
+    @Test
+    public void deactivateUserSuccess() {
+
+        setUpUsersForEditInternalUserSuccess();
+
+        when(userRepositoryMock.findOne(userToEdit.getId())).thenReturn(userInDB);
+        when(idpServiceMock.deactivateUser(userToEdit.getUid())).thenReturn(ServiceResult.serviceSuccess(""));
+        userInDB.setStatus(UserStatus.INACTIVE);
+        when(userRepositoryMock.save(userInDB)).thenReturn(userInDB);
+
+        ServiceResult<Void> result = service.deactivateUser(userToEdit.getId());
+
+        verify(userRepositoryMock).save(userInDB);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void deactivateUserIdpFails() {
+
+        setUpUsersForEditInternalUserSuccess();
+
+        when(userRepositoryMock.findOne(userToEdit.getId())).thenReturn(userInDB);
+        when(idpServiceMock.deactivateUser(userToEdit.getUid())).thenReturn(ServiceResult.serviceFailure(GENERAL_NOT_FOUND));
+
+        ServiceResult<Void> result = service.deactivateUser(userToEdit.getId());
+
+        assertNull(result.getSuccessObject());
+    }
+
+    @Test
+    public void deactivateUserNoUser() {
+
+        setUpUsersForEditInternalUserSuccess();
+
+        when(userRepositoryMock.findOne(userToEdit.getId())).thenReturn(null);
+
+        ServiceResult<Void> result = service.deactivateUser(userToEdit.getId());
+
+        assertTrue(result.isFailure());
+    }
+
+    @Test
+    public void activateUserSuccess() {
+
+        setUpUsersForEditInternalUserSuccess();
+
+        when(userRepositoryMock.findOne(userToEdit.getId())).thenReturn(userInDB);
+        when(idpServiceMock.activateUser(userToEdit.getUid())).thenReturn(ServiceResult.serviceSuccess(""));
+        userInDB.setStatus(UserStatus.ACTIVE);
+        when(userRepositoryMock.save(userInDB)).thenReturn(updatedUserInDB);
+
+        ServiceResult<Void> result = service.activateUser(userToEdit.getId());
+
+        verify(userRepositoryMock).save(userInDB);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void activateUserIdpFails() {
+
+        setUpUsersForEditInternalUserSuccess();
+
+        when(userRepositoryMock.findOne(userToEdit.getId())).thenReturn(userInDB);
+        when(idpServiceMock.activateUser(userToEdit.getUid())).thenReturn(ServiceResult.serviceFailure(GENERAL_NOT_FOUND));
+
+        ServiceResult<Void> result = service.activateUser(userToEdit.getId());
+
+        assertNull(result.getSuccessObject());
+    }
+
+    @Test
+    public void activateUserNoUser() {
+
+        setUpUsersForEditInternalUserSuccess();
+
+        when(userRepositoryMock.findOne(userToEdit.getId())).thenReturn(null);
+
+        ServiceResult<Void> result = service.activateUser(userToEdit.getId());
+
+        assertTrue(result.isFailure());
     }
 
     private void setUpUsersForEditInternalUserSuccess() {
@@ -692,11 +779,21 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         userInDB = UserBuilder.newUser()
                 .withFirstName("John")
                 .withLastName("Doe")
+                .withCreatedOn(ZonedDateTime.now().minusHours(2))
+                .withModifiedOn(ZonedDateTime.now().minusHours(2))
+                .build();
+
+        updatedUserInDB = UserBuilder.newUser()
+                .withFirstName("John")
+                .withLastName("Doe")
+                .withCreatedOn(ZonedDateTime.now())
+                .withModifiedOn(ZonedDateTime.now())
                 .build();
 
         roleResource = RoleResourceBuilder.newRoleResource()
                 .withName("support")
                 .build();
+
         role = RoleBuilder.newRole()
                 .withName("support")
                 .build();

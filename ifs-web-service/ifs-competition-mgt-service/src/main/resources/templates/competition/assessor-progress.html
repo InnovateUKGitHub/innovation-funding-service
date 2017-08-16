@@ -4,6 +4,8 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assessor progress'" />
 </head>
 <body th:with="context='comp-management'" class="competition-management">
+<th:block th:insert="fragments/modals :: modal-overlay" />
+<th:block th:insert="fragments/competition-setup :: comp-setup-remove-assigned-assessor-modal" />
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
@@ -31,8 +33,13 @@
         </div>
         <div class="column-half">
             <h4 class="heading-small">Type</h4>
-            <p th:text="${model.businessType}" />
+            <span th:text="${#strings.isEmpty(model.businessType)} ? 'Unknown' : ${model.businessType}" />
         </div>
+    </div>
+
+    <div class="extra-margin">
+        <a th:href="@{/competition/{cid}/assessors/profile/{aid}(cid=${model.competitionId},aid=${model.assessorId})} + ${originQuery}"
+           th:text="'Review assessor'"/>
     </div>
 
     <h2 class="heading-medium" th:text="| Assigned (${#lists.size(model.assigned)}) |"/>
@@ -65,13 +72,10 @@
                         th:if="${model.competitionInAssessment}">
                         Submitted
                     </th>
-
-                    <!--/*
                     <th scope="col"
                         class="width-small-medium aligncentre">
                         Remove
                     </th>
-                    */-->
                 </tr>
             </thead>
             <tbody>
@@ -106,9 +110,18 @@
                         th:text="${app.submitted} ? 'Yes' : '-'">
                         Yes
                     </td>
-                    <!--/*
-                    <td class="aligncentre"><button class="button button-secondary no-margin">Remove</button></td>
-                    */-->
+                    <td class="alignright">
+                        <a th:if="${app.notified}" class="button-secondary no-margin" data-js-modal="remove-assigned-assessor-modal"
+                           th:href="${removeActionNonJs}"
+                           th:attr="data-modal-form-action=${removeAction}"
+                           th:with="removeAction=@{/assessment/competition/{cId}/assessors/{assessorId}/withdraw/{asId}(cId=${model.competitionId}, asId=${app.assessmentId}, assessorId=${model.assessorId})},
+                                   removeActionNonJs=@{/assessment/competition/{cId}/assessors/{assessorId}/withdraw/{asId}/confirm(cId=${model.competitionId}, assessorId=${model.assessorId}, asId=${app.assessmentId})}"
+                           th:unless="${app.submitted}">Remove</a>
+                        <form th:unless="${app.notified}" method="post"
+                            th:action="@{/assessment/competition/{cId}/assessors/{assessorId}/withdraw/{asId}(cId=${model.competitionId}, asId=${app.assessmentId}, assessorId=${model.assessorId})}">
+                            <button type="submit" class="button-secondary no-margin">Remove</button>
+                        </form>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -116,7 +129,45 @@
 
     <p th:if="${#lists.isEmpty(model.assigned)}">No applications have been assigned to this assessor.</p>
 
+
+    <div th:if="${model.competitionInAssessment}">
+        <h2 class="heading-medium" th:text="| Rejected (${#lists.size(model.rejected)}) |"/>
+
+        <div class="table-overflow" th:if="${!#lists.isEmpty(model.rejected)}">
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col" class="width-small">Application number</th>
+                    <th scope="col" class="width-large">Title</th>
+                    <th scope="col" class="width-medium'">Lead organisation</th>
+                    <th scope="col">Reason</th>
+                    <th scope="col" class="width-small numeric">Assessors</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="app : ${model.rejected}">
+                    <td>
+                        <a href="#"
+                           th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.applicationId})} + ${originQuery}"
+                           th:text="${app.applicationId}">1</a>
+                    </td>
+                    <td th:text="${app.applicationName}">Application name</td>
+                    <td th:text="${app.leadOrganisation}">Lead organisation</td>
+                    <td><th:block th:text="${app.rejectReason.displayLabel}">Too many assignments</th:block> <br/>
+                        <th:block th:text="${app.rejectComment}">You have frequently assigned me too may applications</th:block></td>
+                    <td th:text="${app.totalAssessors}" class="numeric">3</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p th:if="${#lists.isEmpty(model.rejected)}">No applications have been rejected by this assessor.</p>
+    </div>
+
     <h2 class="heading-medium">Applications</h2>
+
+    <p>These are rest of the applications for this competition. You can assign more to this assessor.</p>
+
     <form method="GET">
         <div class="grid-row sorting">
             <div class="column-half">

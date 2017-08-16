@@ -19,6 +19,9 @@ import java.util.List;
  */
 public interface ApplicationStatisticsRepository extends PagingAndSortingRepository<ApplicationStatistics, Long> {
 
+    String SUBMITTED_STATES_STRING = "(org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
+    String WITHDRAWN_STATES_STRING = "(org.innovateuk.ifs.workflow.resource.State.WITHDRAWN)";
+
     String APPLICATION_FILTER = "SELECT a FROM ApplicationStatistics a WHERE a.competition = :compId " +
             "AND (a.applicationProcess.activityState.state IN :states) " +
             "AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
@@ -27,8 +30,10 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "LEFT JOIN ApplicationInnovationAreaLink innovationArea ON innovationArea.application.id = a.id " +
             "WHERE a.competition = :compId " +
             "AND (a.applicationProcess.activityState.state IN :states) " +
-            "AND (innovationArea.category.id = :innovationArea OR :innovationArea IS NULL)" +
-            "AND NOT EXISTS (SELECT 'found' FROM Assessment b WHERE b.participant.user.id = :assessorId AND b.target.id = a.id)";
+            "AND (innovationArea.category.id = :innovationArea OR :innovationArea IS NULL) " +
+            "AND NOT EXISTS (SELECT 'found' FROM Assessment b WHERE b.participant.user.id = :assessorId AND b.target.id = a.id) " +
+            "OR a.id IN (SELECT b.target.id FROM Assessment b WHERE b.participant.user.id = :assessorId " +
+            "AND b.activityState.state IN " + WITHDRAWN_STATES_STRING + ")";
 
     String REJECTED_AND_SUBMITTED_STATES_STRING =
             "(org.innovateuk.ifs.workflow.resource.State.REJECTED," +
@@ -39,7 +44,6 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "(org.innovateuk.ifs.workflow.resource.State.PENDING,org.innovateuk.ifs.workflow.resource.State.REJECTED," +
                     "org.innovateuk.ifs.workflow.resource.State.WITHDRAWN,org.innovateuk.ifs.workflow.resource.State.CREATED,org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
 
-    String SUBMITTED_STATES_STRING = "(org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
 
     List<ApplicationStatistics> findByCompetitionAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> applicationStates);
 
@@ -55,7 +59,6 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
                                                                                            @Param("states") Collection<State> applicationStates,
                                                                                            @Param("innovationArea") Long innovationArea,
                                                                                            Pageable pageable);
-
     @Query("SELECT NEW org.innovateuk.ifs.application.resource.AssessorCountSummaryResource(" +
             "  user.id, " +
             "  concat(user.firstName, ' ', user.lastName), " +
@@ -66,12 +69,13 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "  sum(case when competitionParticipant.competition.id = :compId AND activityState.state     IN " + SUBMITTED_STATES_STRING    + " THEN 1 ELSE 0 END)  " +  // submitted
             ") " +
             "FROM User user " +
-            "JOIN CompetitionParticipant competitionParticipant ON competitionParticipant.user = user " +
+            "JOIN CompetitionParticipant competitionParticipant ON competitionParticipant.user.id = user.id " +
             "JOIN Profile profile ON profile.id = user.profileId " +
-            "LEFT JOIN Application application ON application.competition = competitionParticipant.competition  " + // AND application.applicationProcess.activityState.state IN :submittedStates " +
-            "LEFT JOIN ProcessRole processRole ON processRole.user = user AND processRole.applicationId = application.id " +
-            "LEFT JOIN Assessment assessment ON assessment.participant = processRole.id AND assessment.target = application " +
-            "LEFT JOIN ActivityState activityState ON assessment.activityState = activityState.id " +
+            // join on all applications for each invited assessor on the system
+            "LEFT JOIN ProcessRole processRole ON processRole.user.id = user.id " +
+            "LEFT JOIN Assessment assessment ON assessment.participant = processRole.id " +
+            "LEFT JOIN Application application ON assessment.target.id = application.id AND application.competition.id = competitionParticipant.competition.id  " +
+            "LEFT JOIN ActivityState activityState ON application.id IS NOT NULL AND assessment.activityState.id = activityState.id " +
             "WHERE " +
             "  competitionParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED AND " +
             "  competitionParticipant.role = 'ASSESSOR' " +

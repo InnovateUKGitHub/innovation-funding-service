@@ -175,8 +175,8 @@ Submission of bank details for academic user
     And the user should see the element            jQuery=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(3)
     And the user clicks the button/link            link=Project setup status
     And the user clicks the button/link            link=Bank details
-    When partner submits his bank details          ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${PS_BD_APPLICATION_PROJECT}  00000123  000004
-    Then wait until element is not visible without screenshots  30  500ms  jQuery=.error-summary-list li:contains("Bank details cannot be validated.")
+    When partner fills in his bank details         ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${PS_BD_APPLICATION_PROJECT}  00000123  000004
+    Then wait until keyword succeeds without screenshots  30 s  500 ms  the user should see the element  jQuery=.error-summary-list li:contains("Bank details cannot be validated.")
     # Added this wait so to give extra execution time
     When the user enters text to a text field      name=accountNumber   ${account_one}
     And the user enters text to a text field       name=sortCode  ${sortCode_one}
@@ -215,13 +215,12 @@ Status updates correctly for internal user's table
 User sees error response for invalid bank details for non-lead partner
     [Documentation]   INFUND-8688
     [Tags]    HappyPath
-    #TODO After completion of INFUND-6090: Update with new Bank account pair
     Given log in as a different user               ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${short_password}
     When the user clicks the button/link           jQuery=.projects-in-setup a:contains("${PS_BD_APPLICATION_TITLE}")
     Then the user clicks the button/link           link=Bank details
-    When partner submits his bank details  ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${PS_BD_APPLICATION_PROJECT}  00000123  000004
+    When partner fills in his bank details         ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${PS_BD_APPLICATION_PROJECT}  00000123  000004
     # Stub is configured to return error response for these values
-    Then wait until element is not visible without screenshots  30  500ms  jQuery=.error-summary-list li:contains("Bank details cannot be validated.")
+    Then wait until keyword succeeds without screenshots  30 s  500 ms  the user should see the element  jQuery=.error-summary-list li:contains("Bank details cannot be validated.")
     # Added this wait so to give extra execution time
 
 Non lead partner submits bank details

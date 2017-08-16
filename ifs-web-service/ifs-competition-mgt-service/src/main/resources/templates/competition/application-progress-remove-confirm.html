@@ -13,7 +13,7 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application progress',linkClass='link-back',linkUrl=@{/competition/{competitionId}/application/{applicationId}/assessors(competitionId=${model.competitionId},applicationId=${model.applicationId},sortField=${model.sortField})}" />
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm remove',size='heading-xlarge'" />
 
-            <form th:action="@{/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}(
+            <form th:action="@{/assessment/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}(
                   competitionId=${model.competitionId},
                   applicationId=${model.applicationId},
                   assessmentId=${model.assessmentId},
@@ -21,7 +21,7 @@
                 <th:block th:insert="fragments/competition-setup :: comp-setup-remove-assigned-assessor-content" />
 
                 <div class="alignright-button">
-                    <a th:href="@{/competition/{competitionId}/application/{applicationId}/assessors(
+                    <a th:href="@{/assessment/competition/{competitionId}/application/{applicationId}/assessors(
                     competitionId=${model.competitionId},
                     applicationId=${model.applicationId},
                     sortField=${model.sortField})}" class="buttonlink large">Cancel</a>
