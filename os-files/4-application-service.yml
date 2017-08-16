@@ -48,13 +48,23 @@ items:
           - name: SPRING_APPLICATION_JSON
             value: '{"logout":{"url": "https://<<SHIB-ADDRESS>>/Logout/"}}'
           - name: JAVA_OPTS
-            value: -Xms600m -Xmx600m -javaagent:/newrelic.jar
+            value: -Xms800m -Xmx800m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
             value: "ifs-application-service"
           - name: NEW_RELIC_LICENSE_KEY
             value: "<<NEWRELIC-LICENCE-KEY>>"
           - name: NEW_RELIC_LOG
             value: "STDOUT"
+          - name: IFS_WEB_REST_CONNECTIONS_MAX_TOTAL
+            value: 1000
+          - name: IFS_WEB_REST_CONNECTIONS_MAX_PER_ROUTE
+            value: 1000
+          - name: IFS_WEB_AJP_CONNECTIONS_MAX_TOTAL
+            value: 700
+          - name: IFS_WEB_AJP_CONNECTIONS_ACCEPT_COUNT
+            value: 700
+          - name: IFS_WEB_AJP_CONNECTIONS_MAX_THREADS
+            value: 300
           ports:
           - containerPort: 8080
           resources:
