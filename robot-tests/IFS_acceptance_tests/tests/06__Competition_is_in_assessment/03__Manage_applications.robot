@@ -78,6 +78,17 @@ Accepting the application changes the Accepted column
     When the user navigates to the page   ${server}/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}/assessors/${Paul_Plum_id}
     Then the user should see the element  jQuery=td:contains("${Molecular_id}") ~ td:contains("Yes") + td:contains("Yes")
 
+Remove an assigned application (Notified)
+    [Documentation]    INFUND-1079
+    [Tags]
+    Given the user clicks the button/link    jQuery=tr:nth-child(1) button:contains("Remove")
+    And the user clicks the button/link           jQuery=.buttonlink:contains("Cancel")
+    And the user should not see the element       jQuery=button:contains("Remove assessor")
+    And the user clicks the button/link           jQuery=tr:nth-child(1) a:contains("Remove")
+    And the user clicks the button/link           jQuery=button:contains("Remove assessor")
+    And the user clicks the button/link    jQuery=.pagination-label:contains("Next")
+    And the available application information is correct
+
 Filtering of the applications
     [Documentation]    INFUND-8061
     [Setup]  the user navigates to the page    ${SERVER}/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}
@@ -224,6 +235,10 @@ the available assessors information is correct
     #the user should see the element    jQuery=.assessors-available td:nth-child(4):contains('4')
     #the user should see the element    jQuery=.assessors-available td:nth-child(5):contains('0')
     #TODO checks disabled due toINFUND-7745
+
+the available application information is correct
+    the user should see the element    jQuery=.applications-available tr:nth-child(1):contains('Park living')
+    the user should see the element    jQuery=.applications-available tr:nth-child(2):contains('Living with Virtual Reality')
 
 the assigned list is correct before notification
     the user should see the element    jQuery=.assessors-assigned td:nth-child(1):contains("Paul Plum")
