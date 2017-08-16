@@ -8,6 +8,8 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
+
 public abstract class UserProfileBaseResourceBuilder<T extends UserProfileBaseResource, S extends UserProfileBaseResourceBuilder> extends BaseBuilder<T, S> {
 
     protected UserProfileBaseResourceBuilder(List<BiConsumer<Integer, T>> newActions) {
@@ -56,5 +58,13 @@ public abstract class UserProfileBaseResourceBuilder<T extends UserProfileBaseRe
 
     public S withCreatedOn(ZonedDateTime... createdOn) {
         return withArraySetFieldByReflection("createdOn", createdOn);
+    }
+
+    public S withModifiedBy(String... users) {
+        return withArray((user, profile) -> setField("modifiedBy", user, profile), users);
+    }
+
+    public S withModifiedOn(ZonedDateTime... modifiedOns) {
+        return withArray((modifiedOn, profile) -> setField("modifiedOn", modifiedOn, profile), modifiedOns);
     }
 }

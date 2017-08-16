@@ -11,7 +11,8 @@ public class AttachmentDocs {
                 fieldWithPath("id").description("Attachment unique id if already created"),
                 fieldWithPath("name").description("The file name of the Attachment"),
                 fieldWithPath("mediaType").description("The Media Type of the Attachment"),
-                fieldWithPath("sizeInBytes").description("The size, in bytes, this attachment takes.")
+                fieldWithPath("sizeInBytes").description("The size, in bytes, this attachment takes."),
+                fieldWithPath("createdOn").description("Date attachment was uploaded.")
         };
     }
 

@@ -95,7 +95,7 @@
                             <th scope="row" th:unless="${model.usingJesFinances}" id="month">Month</th>
                             <th:block th:each="month,stats : ${model.table.getMonths()}">
                                 <th scope="col" th:text="${#temporals.format(month.localDate, 'MMM yyyy')}"
-                                    th:id="${'month'+stats.index}"/>
+                                    th:id="${'month'+stats.index}"></th>
                             </th:block>
                             <th scope="col" class="fix-right">Total</th>
                             <th scope="col" class="fix-right">Eligible project cost</th>
@@ -110,17 +110,17 @@
                                     class="form-group-row"
                                     th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'form-group-error' : ''}">
                                     <th scope="row">
-                                        <span th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"/>
+                                        <span th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"></span>
                                         <span th:if="${model.table.validationMessages.hasFieldErrors(row.key)}"
                                               class="error-message">Your total costs are higher than your eligible costs</span>
                                     </th>
                                     <td th:each="cost : ${row.value}"
-                                        th:text="${#numbers.formatInteger(cost,1,'COMMA')}"/>
+                                        th:text="${#numbers.formatInteger(cost,1,'COMMA')}"></td>
                                     <td class="fix-right"
                                         th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'cell-error' : ''}"
-                                        th:text="${'&pound; '+#numbers.formatInteger(model.categoryToActualTotal.get(row.key),1,'COMMA')}"/>
+                                        th:text="${'&pound; '+#numbers.formatInteger(model.categoryToActualTotal.get(row.key),1,'COMMA')}"></td>
                                     <td class="fix-right"
-                                        th:text="${'&pound; '+#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'COMMA')}"/>
+                                        th:text="${'&pound; '+#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'COMMA')}"></td>
                                 </tr>
                             </th:block>
                             <!--/* edit */-->
@@ -129,14 +129,14 @@
                                     th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) || #fields.hasErrors('table.monthlyCostsPerCategoryMap[__${row.key}__]*') ? 'form-group-error' : ''}">
                                     <th scope="row"
                                         th:id="${#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')}">
-                                        <span th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"/>
+                                        <span th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"></span>
                                         <span th:if="${model.table.validationMessages.hasFieldErrors(row.key)}"
                                               class="error-message">Your total costs are higher than your eligible costs</span>
-                                        <th:block
-                                            th:if="${#fields.hasErrors('table.monthlyCostsPerCategoryMap[__${row.key}__]*')}">
+                                        <th:block th:if="${#fields.hasErrors('table.monthlyCostsPerCategoryMap[__${row.key}__]*')}">
                                             <span class="error-message"
-                                                  th:each="err : ${#fields.errors('table.monthlyCostsPerCategoryMap[__${row.key}__]*')}"
-                                                  th:text="${err}"/>
+                                                  th:each="error : ${#fields.detailedErrors('table.monthlyCostsPerCategoryMap[__${row.key}__]*')}"
+                                                  th:attr="data-errorfield=${error.fieldName}"
+                                                  th:text="${error.message}"></span>
                                         </th:block>
                                     </th>
                                     <td th:each="cost, status : ${row.value}">
@@ -176,31 +176,28 @@
                                     <th:block th:if="${readonly}">
                                         <tr th:each="row : ${rowList}" class="form-group-row"
                                             th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'form-group-error' : ''}">
-                                            <th scope="row" th:text="${iteration.index == 0 ? section.key : ''}"/>
+                                            <th scope="row" th:text="${iteration.index == 0 ? section.key : ''}"></th>
                                             <th scope="row"
                                                 th:id="${#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')}">
-                                                <span
-                                                    th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"/>
+                                                <span th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"></span>
                                                 <span th:if="${model.table.validationMessages.hasFieldErrors(row.key)}"
                                                       class="error-message">Your total costs are higher than your eligible costs</span>
                                             </th>
                                             <td th:each="cost : ${row.value}"
-                                                th:text="${#numbers.formatInteger(cost,1,'COMMA')}"/>
+                                                th:text="${#numbers.formatInteger(cost,1,'COMMA')}"></td>
                                             <td class="fix-right"
                                                 th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'cell-error' : ''}"
-                                                th:text="${'&pound; '+#numbers.formatInteger(model.categoryToActualTotal.get(row.key),1,'COMMA')}"/>
-                                            <td class="total eligible fix-right"
-                                                th:text="${'&pound; '+#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'COMMA')}"/>
+                                                th:text="${'&pound; '+#numbers.formatInteger(model.categoryToActualTotal.get(row.key),1,'COMMA')}"></td>
+                                            <td class="total eligible fix-right"  th:text="${'&pound; '+#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'COMMA')}"></td>
                                         </tr>
                                     </th:block>
                                     <!--/* edit  */-->
                                     <th:block th:unless="${readonly}">
                                         <tr th:each="row : ${rowList}" class="form-group-row"
                                             th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'form-group-error' : ''}">
-                                            <th scope="row" th:text="${iteration.index == 0 ? section.key : ''}"/>
+                                            <th scope="row" th:text="${iteration.index == 0 ? section.key : ''}"></th>
                                             <th scope="row">
-                                                <span
-                                                    th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"/>
+                                                <span th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"></span>
                                                 <span th:if="${model.table.validationMessages.hasFieldErrors(row.key)}"
                                                       class="error-message">Your total costs are higher than your eligible costs</span>
                                             </th>
@@ -241,7 +238,7 @@
                             <th:block th:each="monthTotal,status : ${model.totalForEachMonth}">
                                 <td th:text="${'&pound; '+#numbers.formatInteger(monthTotal,1,'COMMA')}"
                                     th:attr="data-calculation-fields=${'input[class*='+#strings.toLowerCase(#temporals.format(model.table.months[status.index].localDate,'MMM-yyyy'))+']'}"
-                                    data-calculation-operations="+"/>
+                                    data-calculation-operations="+"></td>
                             </th:block>
                             <td class="fix-right">
                                 <input

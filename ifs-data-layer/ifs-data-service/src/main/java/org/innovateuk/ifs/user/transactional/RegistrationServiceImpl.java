@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.repository.InviteRoleRepository;
@@ -44,8 +45,10 @@ import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_UNEXPECTED_ERROR;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOT_AN_INTERNAL_USER_ROLE;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
+import static org.innovateuk.ifs.commons.error.Error.globalError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
@@ -168,6 +171,21 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 .activateUser(user.getUid())
                 .andOnSuccessReturn(() -> {
                     user.setStatus(UserStatus.ACTIVE);
+                    return userRepository.save(user);
+                });
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> deactivateUser(long userId) {
+        return getUser(userId).andOnSuccessReturnVoid(this::deactivateUser);
+    }
+
+    private ServiceResult<User> deactivateUser(User user) {
+        return idpService
+                .deactivateUser(user.getUid())
+                .andOnSuccessReturn(() -> {
+                    user.setStatus(UserStatus.INACTIVE);
                     return userRepository.save(user);
                 });
     }
@@ -365,13 +383,10 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     public ServiceResult<Void> editInternalUser(UserResource userToEdit, UserRoleType userRoleType) {
 
         return validateInternalUserRole(userRoleType)
-                .andOnSuccess(() -> baseUserService.getUserById(userToEdit.getId()))
-                .andOnSuccess(userResource -> getInternalRoleResources(userRoleType)
+                .andOnSuccess(() -> ServiceResult.getNonNullValue(userRepository.findOne(userToEdit.getId()), notFoundError(User.class)))
+                .andOnSuccess(user -> getInternalRoleResources(userRoleType)
                     .andOnSuccess(roleResources -> {
-
                         Set<Role> roleList = CollectionFunctions.simpleMapSet(roleResources, roleResource -> roleMapper.mapToDomain(roleResource));
-
-                        User user = userMapper.mapToDomain(userResource);
                         user.setFirstName(userToEdit.getFirstName());
                         user.setLastName(userToEdit.getLastName());
                         user.setRoles(roleList);

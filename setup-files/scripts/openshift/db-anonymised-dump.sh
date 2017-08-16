@@ -45,9 +45,8 @@ function takeMysqlDump() {
 
     echo "Taking anonymised data dump..."
 
-    podname=$(oc get pods ${SVC_ACCOUNT_CLAUSE} | grep -m 1 db-anonymised-data | awk '{ print $1 }')
-    oc rsh $podname /dump/make-mysqldump.sh > /dev/null;
-    oc rsync $podname:/dump/anonymised-dump.sql.gpg /tmp > /dev/null;
+    oc rsh ${SVC_ACCOUNT_CLAUSE} db-anonymised-data /dump/make-mysqldump.sh > /dev/null;
+    oc rsync ${SVC_ACCOUNT_CLAUSE} db-anonymised-data:/dump/anonymised-dump.sql.gpg /tmp > /dev/null;
     echo "Anonymised data dump taken!"
 }
 
