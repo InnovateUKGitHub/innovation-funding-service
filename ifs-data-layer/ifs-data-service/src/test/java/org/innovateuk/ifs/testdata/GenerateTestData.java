@@ -4,14 +4,10 @@ import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.junit.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
 
 /**
  * Generates web test data based upon csvs in /src/test/resources/testdata using data builders
  */
-@ActiveProfiles({"integration-test,seeding-db"})
-@DirtiesContext
 @Ignore
 public class GenerateTestData extends BaseGenerateTestData {
 

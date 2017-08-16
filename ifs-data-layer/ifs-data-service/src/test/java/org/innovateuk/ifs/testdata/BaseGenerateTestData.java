@@ -1049,8 +1049,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     protected abstract void fixUpDatabase();
 
-//    protected abstract void createCompetitions(List<CompetitionLine> competitionLines);
-
     private BigDecimal bd(String value) {
         return new BigDecimal(value);
     }

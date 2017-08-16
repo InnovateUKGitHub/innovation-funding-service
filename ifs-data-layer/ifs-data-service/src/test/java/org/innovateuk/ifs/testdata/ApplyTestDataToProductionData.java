@@ -7,15 +7,11 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
 
 /**
  * Generates web test data based upon csvs in /src/test/resources/testdata using data builders and sits it atop existing
  * production data
  */
-@ActiveProfiles({"integration-test,seeding-db"})
-@DirtiesContext
 @Ignore
 public class ApplyTestDataToProductionData extends BaseGenerateTestData {
 

@@ -36,10 +36,15 @@
 #                  e.g. 10.10 could be replaced by anything from 8.95 to 11.05, always retaining 2 decimal places
 #
 # EMAIL('x') - replaces a given column's email value with a masked email value that retains the first 2 characters of the start string
-#              and replaces the rest with 'x' up to the '@' symbol, along with an id for uniqueness.  Thereafter the @
-#              portion would be replaced with 'xx.example.com'
+#              and replaces the rest with 'x' up to the '@' symbol.  Thereafter the @ portion would be replaced with 'xx.example.com'
 #
-#              e.g. alison@uni.com with an id of 12 would be replaced by alxxxx12@xx.example.com
+#              e.g. alison@uni.com would be replaced by alxxxx@xx.example.com
+#
+# EMAIL_WITH_ID('x') - replaces a given column's email value with a masked email value that retains the first 2 characters of the start string
+#                      and replaces the rest with 'x' up to the '@' symbol, along with an id for uniqueness.  Thereafter the @
+#                      portion would be replaced with 'xx.example.com'
+#
+#                      e.g. alison@uni.com with an id of 12 would be replaced by alxxxx12@xx.example.com
 #
 # UUID('x') - replaces a UUID with 'x' symbols apat from the first 8 characters and hyphens
 #
@@ -63,6 +68,8 @@ DECIMAL_REPLACEMENT_DEVIATION_EXTRACTOR="s/^DECIMAL(\(.*\),[ ]*\(.*\))$/\1/g"
 DECIMAL_REPLACEMENT_SCALE_EXTRACTOR="s/^DECIMAL(\(.*\),[ ]*\(.*\))$/\2/g"
 
 EMAIL_MASK_TOKEN_EXTRACTOR="s/^EMAIL('\(.*\)')$/\1/g"
+
+EMAIL_WITH_ID_MASK_TOKEN_EXTRACTOR="s/^EMAIL_WITH_ID('\(.*\)')$/\1/g"
 
 UUID_MASK_TOKEN_EXTRACTOR="s/^UUID('\(.*\)')$/\1/g"
 
@@ -148,6 +155,15 @@ function generate_rewrite_from_rule() {
     if [[ "$replace_test" != "$replacement" ]]; then
 
         mask_token=$(echo "$replacement" | sed "$EMAIL_MASK_TOKEN_EXTRACTOR")
+        echo "CONCAT(CONCAT(SUBSTR($column_name, 1, 2), REPEAT('$mask_token', INSTR($column_name, '@') - 2)), CONCAT(SUBSTR($column_name, INSTR($column_name, '@'), 3), '$mask_token$mask_token.example.com'))"
+        exit 0
+    fi
+
+    # this case generates the SQL from a rewrite rule like "EMAIL_WITH_ID('x')"
+    replace_test=$(echo "$replacement" | sed "$EMAIL_WITH_ID_MASK_TOKEN_EXTRACTOR")
+    if [[ "$replace_test" != "$replacement" ]]; then
+
+        mask_token=$(echo "$replacement" | sed "$EMAIL_WITH_ID_MASK_TOKEN_EXTRACTOR")
         echo "CONCAT(CONCAT(SUBSTR($column_name, 1, 2), CONCAT(REPEAT('$mask_token', INSTR($column_name, '@') - 2), id)), CONCAT(SUBSTR($column_name, INSTR($column_name, '@'), 3), '$mask_token$mask_token.example.com'))"
         exit 0
     fi
