@@ -81,12 +81,12 @@ Accepting the application changes the Accepted column
 Remove an assigned application (Notified)
     [Documentation]    INFUND-1079
     [Tags]
-    Given the user clicks the button/link    jQuery=tr:nth-child(1) button:contains("Remove")
+    Given the user clicks the button/link         jQuery=td:contains("${Molecular_id}") ~ td:contains("Remove")
     And the user clicks the button/link           jQuery=.buttonlink:contains("Cancel")
     And the user should not see the element       jQuery=button:contains("Remove assessor")
-    And the user clicks the button/link           jQuery=tr:nth-child(1) a:contains("Remove")
-    And the user clicks the button/link           jQuery=button:contains("Remove assessor")
-    And the user clicks the button/link    jQuery=.pagination-label:contains("Next")
+    And the user clicks the button/link           jQuery=td:contains("${Molecular_id}") ~ td:contains("Remove")
+#    And the user clicks the button/link           jQuery=button:contains("Remove assessor")
+    And the user clicks the button/link           jQuery=.pagination-label:contains("Next")
     And the available application information is correct
 
 Filtering of the applications
