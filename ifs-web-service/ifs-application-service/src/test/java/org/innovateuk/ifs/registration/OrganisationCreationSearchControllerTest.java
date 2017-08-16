@@ -20,7 +20,8 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.validation.Validator;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.servlet.http.Cookie;
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ import static java.lang.String.format;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.innovateuk.ifs.BaseControllerMockMVCTest.setupMockMvc;
+import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -50,8 +52,6 @@ public class OrganisationCreationSearchControllerTest extends BaseUnitTest {
     private OrganisationCreationSearchController organisationCreationController;
     private ApplicationResource applicationResource;
 
-    @Mock
-    private Validator validator;
     @Mock
     private OrganisationSearchRestService organisationSearchRestService;
 
@@ -118,6 +118,10 @@ public class OrganisationCreationSearchControllerTest extends BaseUnitTest {
         organisationForm.setOrganisationName("NOMENSA LTD");
 
         competitionId = 2L;
+
+        LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
+        validator.afterPropertiesSet();
+        ReflectionTestUtils.setField(organisationCreationController, "validator", validator);
     }
 
     @Test
