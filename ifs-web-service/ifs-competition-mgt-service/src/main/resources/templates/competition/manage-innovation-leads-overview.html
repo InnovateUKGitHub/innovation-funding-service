@@ -34,7 +34,7 @@
             </dd>
             <dt>Competition Innovation Lead</dt>
             <dd th:text="${model.leadTechnologistName}">Materials and manufacturing</dd>
-            <dt>Portfolio manager</dt>
+            <dt>Portfolio Manager</dt>
             <dd th:text="${model.executiveName}">Materials and manufacturing</dd>
 
         </dl>
@@ -47,9 +47,6 @@
                     <a th:href="@{/competition/setup/{competitionId}/manage-innovation-leads/overview(competitionId=${model.competitionId})}">Overview</a>
                 </li>
             </ul>
-
-            <p class="heading-small">Overview of added innovation leads</p>
-            <p>An overview of innovation leads that have been added to this competition.</p>
 
                 <!-- list -->
                 <div class="grid-row sorting">
