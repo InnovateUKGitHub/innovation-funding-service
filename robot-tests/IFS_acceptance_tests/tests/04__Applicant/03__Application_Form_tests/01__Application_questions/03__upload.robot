@@ -10,7 +10,6 @@ Resource          ../../../../resources/defaultResources.robot
 # But if you are running pybot manually you will need to add -v UPLOAD_FOLDER:/home/foo/bar/robot-tests/upload_files
 
 *** Variables ***
-${download_link}    ${SERVER}/application/99/form/question/439/forminput/1074/download
 ${virus_scanning_warning}    This file is awaiting virus scanning
 
 *** Test Cases ***
@@ -49,7 +48,6 @@ Non pdf uploads not allowed
     When the user uploads the file        css=.inputfile    ${text_file}
     The user should see an error          ${wrong_filetype_validation_error}
 
-
 Lead applicant can upload a pdf file
     [Documentation]    INFUND-832
     [Tags]    HappyPath    SmokeTest
@@ -68,6 +66,30 @@ Lead applicant can view a file
     When the applicant opens the uploaded file
     Then the user should not see an error in the page
     [Teardown]    The user goes back to the previous page
+
+Competition Admin can view file
+    [Documentation]    IFS-1037
+    [Tags]     Download
+    [Setup]    Log in as a different user         &{Comp_admin1_credentials}
+    Given the user navigates to the page          ${OPEN_COMPETITION_MAN}
+    And the user clicks the button/link           link=Applications: All, submitted, ineligible
+    And the user clicks the button/link           link=All applications
+    And the user clicks the button/link           jQuery=tr:contains('Academic robot test application') a
+    And the user clicks the button/link           link=5. Technical approach
+    And the user should see the text in the page  ${valid_pdf}
+    When The user opens the link in new window    ${valid_pdf}
+
+Project Finance can view file
+    [Documentation]    IFS-1037
+    [Tags]     Download
+    [Setup]    Log in as a different user         &{internal_finance_credentials}
+    Given the user navigates to the page          ${OPEN_COMPETITION_MAN}
+    And the user clicks the button/link           link=Applications: All, submitted, ineligible
+    And the user clicks the button/link           link=All applications
+    And the user clicks the button/link           jQuery=tr:contains('Academic robot test application') a
+    And the user clicks the button/link           link=5. Technical approach
+    And the user should see the text in the page  ${valid_pdf}
+    When The user opens the link in new window    ${valid_pdf}
 
 Collaborators can view a file
     [Documentation]    INFUND-2306

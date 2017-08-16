@@ -146,7 +146,7 @@ public class CompetitionManagementApplicationController {
             @PathVariable("formInputId") final Long formInputId,
             UserResource user) throws ExecutionException, InterruptedException {
         ProcessRoleResource processRole;
-        if (user.hasRole(UserRoleType.COMP_ADMIN)) {
+        if (user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE)) {
             long processRoleId = formInputResponseRestService.getByFormInputIdAndApplication(formInputId, applicationId).getSuccessObjectOrThrowException().get(0).getUpdatedBy();
             processRole = processRoleService.getById(processRoleId).get();
         } else {
