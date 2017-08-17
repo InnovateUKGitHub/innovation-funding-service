@@ -23,8 +23,12 @@ import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormValidator;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
+import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
+import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,6 +64,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private CompetitionTypeMapper competitionTypeMapper;
     @Autowired
     private CompetitionTypeRepository competitionTypeRepository;
+    @Autowired
+    private CompetitionParticipantRepository competitionParticipantRepository;
     @Autowired
     private CompetitionFunderService competitionFunderService;
     @Autowired
@@ -115,12 +121,36 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         Competition competition = competitionMapper.mapToDomain(competitionResource);
 
         saveFunders(competitionResource);
+
+        //TODO - Temp code, to be refactored
+        //Delete the existing innovation lead technologist
+        Competition existingCompetitionInDb = competitionRepository.findById(competition.getId());
+        User existingLeadTechnologist = existingCompetitionInDb.getLeadTechnologist();
+        CompetitionParticipant competitionParticipant =
+                competitionParticipantRepository.getByCompetitionIdAndUserIdAndRole(id,
+                        existingLeadTechnologist.getId(), CompetitionParticipantRole.INNOVATION_LEAD);
+        competitionParticipantRepository.delete(competitionParticipant);
+
         competition = competitionRepository.save(competition);
+        saveLeadTechnologist(competition);
         return serviceSuccess(competitionMapper.mapToResource(competition));
     }
 
     private void saveFunders(CompetitionResource competitionResource) {
         competitionFunderService.reinsertFunders(competitionResource);
+    }
+
+    private void saveLeadTechnologist(Competition competition) {
+
+        User leadTechnologist = competition.getLeadTechnologist();
+
+        CompetitionParticipant competitionParticipant = new CompetitionParticipant();
+        competitionParticipant.setProcess(competition);
+        competitionParticipant.setUser(leadTechnologist);
+        competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
+
+        competitionParticipantRepository.save(competitionParticipant);
+
     }
 
     @Override
