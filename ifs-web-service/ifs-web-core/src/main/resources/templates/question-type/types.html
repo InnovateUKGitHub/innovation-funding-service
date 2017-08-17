@@ -17,7 +17,7 @@
 
     <div th:fragment="textinput(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="form-group " th:classappend="${#fields.hasErrors(validationId)} ? adminclass : userclass">
 
-        <label class="form-label form-label-bold" th:for="${formInput.getId()}">
+        <label class="form-label form-label-bold" th:for="${formInput.id}">
           <span th:if="${question.name}" th:text="question.name" />
           <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
           <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
@@ -29,7 +29,7 @@
 
     <!-- =========================== Form: Textarea =========================== -->
     <!-- === (defaults to the wrapped textarea with wordcount and statusses)=== -->
-    <div th:fragment="textarea(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''">
+    <div th:fragment="textarea(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? form-group-error">
 
         <th:block th:if="${!model.assignButtonsViewModel.currentUserIsLead}">
             <th:block th:unless="${model.complete or model.closed}">
@@ -53,15 +53,15 @@
 
         </div>
 
-        <label class="form-label form-label-bold" th:for="'form-textarea-'+${formInput.getId()}" th:id="'form-label-'+${formInput.getId()}">
+        <label class="form-label form-label-bold" th:for="formInput[__${formInput.id}__]" th:id="'form-label-'+${formInput.id}">
             <th:block th:if="${model.closed}">
                 <span class="heading-medium" th:if="${question.name}" th:text="${question.name}" />
             </th:block>
             <th:block th:unless="${model.closed}">
               <span class="heading-medium" th:if="${question.name}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
-              <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
+              <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
             </th:block>
-            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" />
+            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
         </label>
 
         <th:block th:unless="${model.closed}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
@@ -71,13 +71,13 @@
     <!-- ===========================Form: Date input =========================== -->
 
     <div th:fragment="date(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="form-group">
-        <label class="form-label form-label-bold" th:for="${formInput.getId()}">
+        <label class="form-label form-label-bold" th:for="${formInput.id}">
           <span th:if="${question.getName()}" th:text="${question.name}" />
-          <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
-          <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" />
+          <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
+          <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
         </label>
         <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
-        <th:block th:insert="question-type/form-elements :: form-dateinput (id=${formInput.getId()}, day='', month='', year='')" />
+        <th:block th:insert="question-type/form-elements :: form-dateinput (id=${formInput.id}, day='', month='', year='')" />
     </div>
 
     <!-- ===========================Form: Fileupload =========================== -->
@@ -94,7 +94,7 @@
          removeName='remove_uploaded_file',
          saveName='upload_file'">
 
-        <h3 class="heading-small no-margin" th:text="${formInput.getDescription()}">Project management appendix</h3>
+        <h3 class="heading-small no-margin" th:text="${formInput.description}">Project management appendix</h3>
         <th:block th:if="${viewmode=='edit'}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
         <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename}, ${inputField}, ${validationField}, ${mayRemove}, ${removeName}, ${saveName})" />
     </div>
@@ -151,13 +151,13 @@
     <!-- ===========================Form: Percentage =========================== -->
 
     <div th:fragment="percentage(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="form-group">
-        <label class="form-label" th:for="${formInput.getId()}">
+        <label class="form-label" th:for="${formInput.id}">
           <span th:if="${question.getName()}" th:text="${question.name}" />
-          <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
-          <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" />
+          <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
+          <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
         </label>
         <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
-        <th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${formInput.getId()}, field=${field})" />
+        <th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${formInput.id}, field=${field})" />
         <span>%</span>
     </div>
 
@@ -360,7 +360,7 @@
 
                     <!-- ===========================Form: empty / no question =========================== -->
     <th:block th:fragment="empty(model)" th:with="formInput=${model.formInput}, question=${model.question}">
-        <th:block ifs:utext="${question.getDescription()}" />
+        <th:block ifs:utext="${question.description}" />
         <th:block th:unless="${model.readonly}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
     </th:block>
 

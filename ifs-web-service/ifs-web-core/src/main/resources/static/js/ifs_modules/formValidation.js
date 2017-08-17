@@ -610,7 +610,9 @@ IFS.core.formValidation = (function () {
 
       var formGroup = field.closest('.form-group')
       var formGroupRow = field.closest('.form-group-row')
-      var name = IFS.core.formValidation.getIdentifier(field)
+      var name = IFS.core.formValidation.getName(field)
+      var id = IFS.core.formValidation.getIdentifier(field)
+
       var visuallyhidden = displayValidationMessages === 'visuallyhidden'
 
       if (formGroup.length) {
@@ -634,8 +636,8 @@ IFS.core.formValidation = (function () {
         }
       }
 
-      if (jQuery('.error-summary-list [data-errorfield="' + name + '"]:contains(' + message + '),.error-summary-list li:not([data-errorfield]):contains("' + message + '")').length === 0) {
-        jQuery('.error-summary-list').append('<li data-errorfield="' + name + '">' + message + '</li>')
+      if (jQuery('.error-summary-list [href="#' + id + '"]:contains(' + message + ')').length === 0) {
+        jQuery('.error-summary-list').append('<li><a href="#' + id + '">' + message + '</a></li>')
       }
 
       jQuery('.error-summary:not([data-ignore-errors])').attr('aria-hidden', false)
@@ -649,7 +651,8 @@ IFS.core.formValidation = (function () {
       var formGroup = field.closest('.form-group')
       var formGroupRow = field.closest('.form-group-row')
       var errorSummary = jQuery('.error-summary-list')
-      var name = IFS.core.formValidation.getIdentifier(field)
+      var name = IFS.core.formValidation.getName(field)
+      var id = IFS.core.formValidation.getIdentifier(field)
 
       // if it is a .form-group we assume the basic form structure with just one field per group
       // i.e.
@@ -685,7 +688,6 @@ IFS.core.formValidation = (function () {
       //     <td><input aria-labelledby="rowlabel" type="text" name="field2" class="form-control form-control-error" required /></td>
       // <tr>
       if (formGroupRow.length) {
-        console.log('remove formgrouprow', '[data-errorfield="' + name + '"]:contains(' + message + ')')
         formGroupRow.find('[data-errorfield="' + name + '"]:contains(' + message + ')').remove()
         if (formGroupRow.find('[data-errorfield="' + name + '"]').length === 0) {
           field.removeClass('form-control-error')
@@ -697,13 +699,10 @@ IFS.core.formValidation = (function () {
           formGroupRow.removeClass('form-group-error')
         }
       }
+
       // updating the error summary
       if (errorSummary.length) {
-        // remove clientside in summary
-        errorSummary.find('[data-errorfield="' + name + '"]:contains(' + message + ')').remove()
-        // remove server side in summary
-        errorSummary.find('li:not([data-errorfield]):contains("' + message + '")').first().remove()
-
+        errorSummary.find('[href="#' + id + '"]:contains(' + message + ')').parent().remove()
         if (jQuery('.error-summary-list li:not(.list-header)').length === 0) {
           jQuery('.error-summary:not([data-ignore-errors])').attr('aria-hidden', 'true')
         }
@@ -743,16 +742,23 @@ IFS.core.formValidation = (function () {
         })
       }
     },
-    getIdentifier: function (el) {
+    getName: function (el) {
       if (el.is('[data-date]')) {
         el = el.closest('.date-group').find('input[type="hidden"]')
       }
       if (el.prop('name').length) {
         return el.prop('name')
-      } else if (el.prop('id').length) {
+      }
+      return ''
+    },
+    getIdentifier: function (el) {
+      if (el.is('[data-date]')) {
+        el = el.closest('.date-group').find('input[type="hidden"]')
+      }
+      if (el.prop('id').length) {
         return el.prop('id')
       }
-      return false
+      return ''
     },
     checkHTML5validationMode: function () {
       var testField = jQuery('input')

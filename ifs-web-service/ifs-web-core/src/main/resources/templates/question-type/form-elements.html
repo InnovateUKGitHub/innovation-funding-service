@@ -184,8 +184,8 @@
          th:classappend="${model.complete ? 'marked-as-complete' : ''} + ' ' + ${model.assignButtonsViewModel.assignedToCurrentUser ? 'assigned-to-me' : ''} + ' ' + ${formInput.getWordCount() == 0 ? '' : 'word-count'}"
          th:with="currentUser=${#authentication.getDetails()},validationId='formInput['+${question.getId()}+']'">
 
-        <textarea th:id="'form-textarea-'+${formInput.id}"
-                  th:name="'formInput['+${formInput.id}+']'"
+        <textarea th:id="formInput[__${formInput.id}__]"
+                  th:name="formInput[__${formInput.id}__]"
                   th:field="*{formInput[__${formInput.id}__]}"
                   th:readonly="${model.readonly}"
                   th:attrappend="data-max_words=${formInput.getWordCount()}, data-maxwordslength=${formInput.getWordCount()},data-maxwordslength-errormessage=${'Maximum word count exceeded. Please reduce your word count to '+formInput.getWordCount()+'.'}"

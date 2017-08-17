@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.title != null ? model.title : 'Application Form'}" />
+        <th:block th:with="errorPrefix=${#fields.hasErrors('${form.*}')} ? 'Error: ' : '',
+                           title=${#strings.isEmpty(model.title) ? 'Application Form' : model.title}">
+            <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${errorPrefix+title}" />
+        </th:block>
     </head>
 
     <body th:with="context='applicant'" class="app-form finance">
+
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
@@ -12,12 +16,13 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${model.application},linkTitle=${backTitle},linkClass='link-back',linkUrl=${backURL}" />
 
-            <div class="error-summary" th:attr="aria-hidden=${!#fields.hasErrors('${form.*}')}">
-                <h2 class="heading-medium error-summary-heading">There is a problem on this page</h2>
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">There is a problem on this page</h2>
                 <ul class="error-summary-list">
-                    <th:block th:each="err : ${#fields.errors('${form.*}')}" th:with="markAsCompleteError=#{application.validation.MarkAsCompleteFailed}">
-                        <li th:classappend="${err.equals(markAsCompleteError)} ? 'list-header' : ''" th:text="${err}"></li>
-                    </th:block>
+                    <li th:each="err : ${#fields.detailedErrors('${form.*}')}">
+                        <th:block th:if="${err.global}" th:text="${err.message}">Non-field specific message</th:block>
+                        <a th:if="${err.fieldName}" th:href="|#${err.fieldName}|" th:text="${err.message}">The error message</a>
+                    </li>
                 </ul>
             </div>
 
