@@ -154,6 +154,35 @@
         </div>
 
         <p th:if="${#lists.isEmpty(model.rejected)}">No applications have been rejected by this assessor.</p>
+
+        <h2 class="heading-medium" th:text="| Previously assigned (${#lists.size(model.withdrawn)}) |"/>
+
+        <div class="table-overflow" th:if="${!#lists.isEmpty(model.withdrawn)}">
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col" class="width-small">Application number</th>
+                    <th scope="col" class="width-large">Title</th>
+                    <th scope="col" class="width-medium'">Lead organisation</th>
+                    <th scope="col" class="width-small numeric">Assessors</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="app : ${model.rejected}">
+                    <td>
+                        <a href="#"
+                           th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.applicationId})} + ${originQuery}"
+                           th:text="${app.applicationId}">1</a>
+                    </td>
+                    <td th:text="${app.applicationName}">Application name</td>
+                    <td th:text="${app.leadOrganisation}">Lead organisation</td>
+                    <td th:text="${app.totalAssessors}" class="numeric">3</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p th:if="${#lists.isEmpty(model.rejected)}">No applications have been previously assigned to this assessor.</p>
     </div>
 
     <h2 class="heading-medium">Applications</h2>
