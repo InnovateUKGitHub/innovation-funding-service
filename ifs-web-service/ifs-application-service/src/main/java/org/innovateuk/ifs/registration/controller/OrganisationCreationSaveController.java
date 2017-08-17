@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.registration;
+package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.service.OrganisationService;
@@ -44,11 +44,8 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
     @Autowired
     private InviteOrganisationRestService inviteOrganisationRestService;
 
-    /**
-     * Confirm the company details (user input, not from company-house)
-     */
     @GetMapping("/" + CONFIRM_ORGANISATION)
-    public String confirmCompany(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
+    public String confirmOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                  Model model,
                                  HttpServletRequest request) throws IOException {
         organisationForm = getFormDataFromCookie(organisationForm, model, request);

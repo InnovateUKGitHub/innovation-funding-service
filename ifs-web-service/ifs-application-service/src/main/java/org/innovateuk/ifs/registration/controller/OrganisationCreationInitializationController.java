@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.registration;
+package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.springframework.security.access.prepost.PreAuthorize;

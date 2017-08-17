@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.registration;
+package org.innovateuk.ifs.registration.controller;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.address.service.AddressRestService;

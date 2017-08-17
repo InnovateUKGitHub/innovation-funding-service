@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.registration;
+package org.innovateuk.ifs.registration.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

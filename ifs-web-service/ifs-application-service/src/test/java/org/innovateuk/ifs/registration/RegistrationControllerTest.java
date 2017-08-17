@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.error.exception.RegistrationTokenExpiredExcept
 import org.innovateuk.ifs.exception.ErrorControllerAdvice;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.service.EthnicityRestService;
+import org.innovateuk.ifs.registration.controller.RegistrationController;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.builder.EthnicityResourceBuilder;
 import org.innovateuk.ifs.user.resource.Disability;

@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
-import org.innovateuk.ifs.registration.RegistrationController;
+import org.innovateuk.ifs.registration.controller.RegistrationController;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
