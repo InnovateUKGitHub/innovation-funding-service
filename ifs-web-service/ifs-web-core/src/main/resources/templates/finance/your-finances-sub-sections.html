@@ -5,6 +5,9 @@
     <th:block th:fragment="finance(model)">
         <div class="your-finances">
             <h2 class="heading-medium no-margin-bottom">Finances</h2>
+            <div class="message-alert">
+                <p>Only members from your organisation will be able to see your finances in detail.</p>
+            </div>
             <p>Please complete your project finances.</p>
 
             <details th:unless="${model.canNotRequestFunding || model.allReadOnly}" class="extra-margin-bottom" th:attr="open=${model.notRequestingFunding ? 'open' : null}">
