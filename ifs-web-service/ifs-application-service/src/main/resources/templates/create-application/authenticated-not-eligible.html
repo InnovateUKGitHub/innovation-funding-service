@@ -10,20 +10,14 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{/competition/{competitionId}/overview(competitionId=${model.competitionId})}" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationTypeName},size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='You are not eligible to apply',size='heading-large'" />
 
     <p>
-        Your organisation is not eligible to start an application for this competition.
+        Your organisation type is not eligible to start an application in this competition.
+        <br>Please refer back to the eligibility criteria on the competition page.
     </p>
     <p>
-        Please refer back to the eligibility criteria of this competition. The lead partner can invite you to contribute to this application.
-    </p>
-    <p>
-        If you have further queries you can contact <a href="/info/contact">customer support service</a>.
-    </p>
-    <p>
-        <a th:href="@{/}">View your dashboard.</a>
+        You can <a th:href="@{/}">return to your dashboard</a> or go back to the <a href="https://www.gov.uk/government/organisations/innovate-uk">Innovate UK homepage</a>.
     </p>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
