@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 @PreAuthorize("permitAll")
 public class OrganisationCreationInitializationController extends AbstractOrganisationCreationController {
     @GetMapping
-    public String createOrganisationAsLeadApplicant(HttpServletRequest request, HttpServletResponse response) {
+    public String initializeLeadRegistrationJourney(HttpServletRequest request, HttpServletResponse response) {
         //This is the first endpoint when creating a new account as lead applicant.
         registrationCookieService.deleteOrganisationCreationCookie(response);
 

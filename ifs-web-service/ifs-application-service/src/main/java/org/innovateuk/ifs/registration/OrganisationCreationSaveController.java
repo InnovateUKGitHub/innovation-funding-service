@@ -108,11 +108,11 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
                     s ->
                             inviteOrganisationRestService.getByIdForAnonymousUserFlow(s.getInviteOrganisation()).handleSuccessOrFailure(
                                     f -> restFailure(HttpStatus.NOT_FOUND),
-                                    i -> {
-                                        if (i.getOrganisation() == null) {
-                                            i.setOrganisation(finalOrganisationResource.getId());
+                                    inviteOrganisation -> {
+                                        if (inviteOrganisation.getOrganisation() == null) {
+                                            inviteOrganisation.setOrganisation(finalOrganisationResource.getId());
                                             // Save the created organisation Id, so the next invitee does not have to..
-                                            return inviteOrganisationRestService.put(i);
+                                            return inviteOrganisationRestService.put(inviteOrganisation);
                                         }
                                         return restFailure(HttpStatus.ALREADY_REPORTED);
                                     }
