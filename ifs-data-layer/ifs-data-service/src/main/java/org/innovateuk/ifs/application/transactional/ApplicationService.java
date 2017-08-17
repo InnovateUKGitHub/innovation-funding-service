@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.security.access.method.P;
@@ -38,6 +39,9 @@ public interface ApplicationService {
 
     @PreAuthorize("hasPermission(#fileEntry, 'org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource', 'READ')")
     ServiceResult<FormInputResponseFileAndContents> getFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryId fileEntry);
+
+    @PreAuthorize("hasPermission(#fileEntry, 'org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource', 'READ')")
+    ServiceResult<FormInputResponseFileEntryResource> getFormInputResponseFileEntryResource(FormInputResponseFileEntryId fileEntry, FormInput formInput);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<ApplicationResource> getApplicationById(@P("applicationId") final Long applicationId);
