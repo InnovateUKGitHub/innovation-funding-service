@@ -41,7 +41,7 @@ The type of organisation navigates to the correct page
     And the user clicks the button/link            jQuery=.button:contains("Continue")
     Then the user should see the text in the page  Enter your organisation name or registration number.
     When the user goes back to the previous page
-    And the user should see the element            jQuery=.form-hint:contains("Universities, colleges, organisations registered on Je-S.")
+    And the user should see the element            jQuery=.form-hint:contains("Higher education and organisations registered with Je-S.")
     Given the user selects the radio button        organisationType    2
     And the user clicks the button/link            jQuery=.button:contains("Continue")
     Then the user should see the text in the page  This is the organisation that you work for, this will search all organisations available on Je-S.
