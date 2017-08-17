@@ -57,10 +57,11 @@ public abstract class CategoryLink<T, C extends Category> {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        CategoryLink<?,?> that = (CategoryLink<?,?>) o;
+        CategoryLink<?, ?> that = (CategoryLink<?, ?>) o;
 
         return new EqualsBuilder()
                 .append(category, that.category)
+                .append(className, that.className)
                 .isEquals();
     }
 
@@ -68,6 +69,7 @@ public abstract class CategoryLink<T, C extends Category> {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(category)
+                .append(className)
                 .toHashCode();
     }
 }
