@@ -17,7 +17,7 @@
             ${MEMCACHE_ENDPOINT}
         </Hosts>
     </StorageService>
-     <StorageService type="MEMCACHE" id="mc-ctx" prefix="ifs-sp:" buildMap="1">
+    <StorageService type="MEMCACHE" id="mc-ctx" prefix="ifs-sp:" buildMap="1">
         <Hosts>
             ${MEMCACHE_ENDPOINT}
         </Hosts>
@@ -31,7 +31,7 @@
                          REMOTE_USER="uid">
 
         <Sessions lifetime="28800" timeout="3600" relayState="ss:mem"
-                  checkAddress="false" consistentAddress="false" handlerSSL="true" cookieProps="http">
+                  checkAddress="false" consistentAddress="false" handlerSSL="true" cookieProps="https">
 
             <SSO entityID="https://idp/idp/shibboleth"
                  discoveryProtocol="SAMLDS" discoveryURL="https://ds.example.org/DS/WAYF">
@@ -41,11 +41,8 @@
             <Logout>Local</Logout>
 
             <Handler type="MetadataGenerator" Location="/Metadata" signing="false"/>
-
             <Handler type="Status" Location="/Status" acl="127.0.0.1 ::1"/>
-
             <Handler type="Session" Location="/Session" showAttributeValues="false"/>
-
             <Handler type="DiscoveryFeed" Location="/DiscoFeed"/>
         </Sessions>
 

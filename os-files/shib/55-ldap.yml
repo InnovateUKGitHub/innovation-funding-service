@@ -22,6 +22,38 @@ items:
             value: "8389"
           image: innovateuk/ldap-service:1.0-SNAPSHOT
           name: ldap
+          livenessProbe:
+            exec:
+              command:
+              - ldapsearch
+              - -H
+              - ldaps://localhost:8389
+              - -b
+              - dc=nodomain
+              - -x
+              - -LLL
+              - -s
+              - base
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            exec:
+              command:
+              - ldapsearch
+              - -H
+              - ldaps://localhost:8389
+              - -b
+              - dc=nodomain
+              - -x
+              - -LLL
+              - -s
+              - base
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
           imagePullPolicy: Always
           ports:
           - containerPort: 8389

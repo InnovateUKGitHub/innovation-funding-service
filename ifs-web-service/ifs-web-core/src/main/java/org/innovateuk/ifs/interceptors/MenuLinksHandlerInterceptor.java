@@ -2,6 +2,7 @@ package org.innovateuk.ifs.interceptors;
 
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
+import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -79,13 +80,16 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
             Optional<SimpleGrantedAuthority> simpleGrantedAuthority = (Optional<SimpleGrantedAuthority>)authentication.getAuthorities().stream().findFirst();
             if(simpleGrantedAuthority.isPresent()) {
                 UserResource user = authentication.getDetails();
-                if (user.hasRoles(ASSESSOR, APPLICANT)) {
-                    String role = cookieUtil.getCookieValue(request, "role");
-                    if (!role.isEmpty()) {
-                        return "/" + user.getRoles().stream().filter(roleResource -> roleResource.getName().equals(role)).findFirst().get().getUrl();
+                String role = cookieUtil.getCookieValue(request, "role");
+                if (!role.isEmpty()) {
+                    Optional<RoleResource> r = user.getRoles().stream().filter(roleResource -> roleResource.getName().equals(role)).findFirst();
+                    if(r.isPresent()) {
+                        String url = r.get().getUrl();
+                        if (url != null) {
+                            return "/" + url;
+                        }
                     }
                 }
-
                 return "/" + user.getRoles().get(0).getUrl();
             }
         }

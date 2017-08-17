@@ -121,6 +121,41 @@
 
     <p th:if="${#lists.isEmpty(model.assigned)}">No applications have been assigned to this assessor.</p>
 
+
+    <div th:if="${model.competitionInAssessment}">
+        <h2 class="heading-medium" th:text="| Rejected (${#lists.size(model.rejected)}) |"/>
+
+        <div class="table-overflow" th:if="${!#lists.isEmpty(model.rejected)}">
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col" class="width-small">Application number</th>
+                    <th scope="col" class="width-large">Title</th>
+                    <th scope="col" class="width-medium'">Lead organisation</th>
+                    <th scope="col">Reason</th>
+                    <th scope="col" class="width-small numeric">Assessors</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="app : ${model.rejected}">
+                    <td>
+                        <a href="#"
+                           th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.applicationId})} + ${originQuery}"
+                           th:text="${app.applicationId}">1</a>
+                    </td>
+                    <td th:text="${app.applicationName}">Application name</td>
+                    <td th:text="${app.leadOrganisation}">Lead organisation</td>
+                    <td><th:block th:text="${app.rejectReason.displayLabel}">Too many assignments</th:block> <br/>
+                        <th:block th:text="${app.rejectComment}">You have frequently assigned me too may applications</th:block></td>
+                    <td th:text="${app.totalAssessors}" class="numeric">3</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p th:if="${#lists.isEmpty(model.rejected)}">No applications have been rejected by this assessor.</p>
+    </div>
+
     <h2 class="heading-medium">Applications</h2>
 
     <p>These are rest of the applications for this competition. You can assign more to this assessor.</p>
@@ -172,13 +207,11 @@
                 <td class="numeric" th:text="${app.assessors}">4</td>
                 <td class="numeric" th:text="${app.accepted}" th:if="${model.applicationsView.inAssessment}">2</td>
                 <td class="numeric" th:text="${app.submitted}" th:if="${model.applicationsView.inAssessment}">1</td>
-                <!--/*
-                    <td class="alignright">
-                    <a class="button-secondary no-margin"
-                       th:href="@{/assessment/competition/{competitionId}/application/{applicationId}/assessors(competitionId=${model.competitionId},applicationId=${app.id})}"
-                        >Assign</a>
-                    </td>
-               */-->
+                <td><form method="post"
+                       th:action="@{/assessment/competition/{competitionid}/assessors/{assessorid}/application/{applicationid}/assign(competitionid=${model.competitionId}, assessorid=${model.assessorId}, applicationid=${app.id})}" >
+                    <button type="submit" class="button-secondary no-margin">Assign</button>
+                </form>
+                </td>
             </tr>
             </tbody>
         </table>
