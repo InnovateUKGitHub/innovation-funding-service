@@ -9,10 +9,6 @@ Resource          ../../../../resources/defaultResources.robot
 # If you are using the run_tests_locally shellscript then this will attempt to swap in a valid path automatically
 # But if you are running pybot manually you will need to add -v UPLOAD_FOLDER:/home/foo/bar/robot-tests/upload_files
 
-*** Variables ***
-${download_link}    ${SERVER}/application/99/form/question/439/forminput/1074/download
-${virus_scanning_warning}    This file is awaiting virus scanning
-
 *** Test Cases ***
 Appendices available only for the correct questions
     [Documentation]    INFUND-832
