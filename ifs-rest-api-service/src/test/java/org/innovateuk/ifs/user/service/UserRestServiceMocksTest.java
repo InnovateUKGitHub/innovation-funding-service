@@ -26,7 +26,6 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 
-
 public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestServiceImpl> {
 
     private static final String usersUrl = "/user";
@@ -241,8 +240,6 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         assertTrue(result.isSuccess());
     }
 
-
-
     @Test
     public void userHasApplicationForCompetition() {
         Long userId = 1L;
@@ -309,6 +306,26 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         setupPostWithRestResultExpectations(url, editUserResource, HttpStatus.OK);
 
         RestResult<Void> result = service.editInternalUser(editUserResource);
+        assertTrue(result.isSuccess());
+        assertEquals(OK, result.getStatusCode());
+    }
+
+    @Test
+    public void deactivateUser() throws Exception {
+        String url = usersUrl + "/id/123/deactivate";
+        setupGetWithRestResultExpectations(url, Void.class, null);
+
+        RestResult<Void> result = service.deactivateUser(123L);
+        assertTrue(result.isSuccess());
+        assertEquals(OK, result.getStatusCode());
+    }
+
+    @Test
+    public void reactivateUser() throws Exception {
+        String url = usersUrl + "/id/123/reactivate";
+        setupGetWithRestResultExpectations(url, Void.class, null);
+
+        RestResult<Void> result = service.reactivateUser(123L);
         assertTrue(result.isSuccess());
         assertEquals(OK, result.getStatusCode());
     }

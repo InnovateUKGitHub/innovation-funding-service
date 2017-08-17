@@ -3,6 +3,13 @@ package org.innovateuk.ifs.assessment.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.util.Optional;
+
+import static java.util.EnumSet.complementOf;
+import static java.util.EnumSet.of;
+import static org.innovateuk.ifs.assessment.resource.AssessmentStates.REJECTED;
+import static org.innovateuk.ifs.assessment.resource.AssessmentStates.WITHDRAWN;
+
 /**
  * Resource describing an assessor's assessment of an application.
  *
@@ -16,6 +23,8 @@ public class AssessorAssessmentResource {
     private String leadOrganisation;
     private int totalAssessors;
     private AssessmentStates state;
+    private AssessmentRejectOutcomeValue rejectReason;
+    private String rejectComment;
 
     public AssessorAssessmentResource() {
     }
@@ -24,12 +33,16 @@ public class AssessorAssessmentResource {
                                       String applicationName,
                                       String leadOrganisation,
                                       int totalAssessors,
-                                      AssessmentStates state) {
+                                      AssessmentStates state,
+                                      AssessmentRejectOutcomeValue rejectReason,
+                                      String  rejectComment) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.leadOrganisation = leadOrganisation;
         this.totalAssessors = totalAssessors;
         this.state = state;
+        this.rejectReason = rejectReason;
+        this.rejectComment = rejectComment;
     }
 
     public long getApplicationId() {
@@ -72,6 +85,22 @@ public class AssessorAssessmentResource {
         this.state = state;
     }
 
+    public AssessmentRejectOutcomeValue getRejectReason() {
+        return rejectReason;
+    }
+
+    public String getRejectComment() {
+        return rejectComment;
+    }
+
+    public boolean isAssigned() {
+        return complementOf(of(REJECTED, WITHDRAWN)).contains(state);
+    }
+
+    public boolean isRejected() {
+        return of(REJECTED).contains(state);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -86,6 +115,8 @@ public class AssessorAssessmentResource {
                 .append(applicationName, that.applicationName)
                 .append(leadOrganisation, that.leadOrganisation)
                 .append(state, that.state)
+                .append(rejectReason, that.rejectReason)
+                .append(rejectComment, that.rejectComment)
                 .isEquals();
     }
 
@@ -97,6 +128,8 @@ public class AssessorAssessmentResource {
                 .append(leadOrganisation)
                 .append(totalAssessors)
                 .append(state)
+                .append(rejectReason)
+                .append(rejectComment)
                 .toHashCode();
     }
 }
