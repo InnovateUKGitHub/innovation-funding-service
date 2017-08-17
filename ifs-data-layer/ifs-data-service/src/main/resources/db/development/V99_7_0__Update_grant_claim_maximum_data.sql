@@ -1,3 +1,4 @@
+
 -- Organisation sizes
 SET @small=1;
 SET @medium=2;
@@ -9,14 +10,13 @@ SET @sector=5;
 SET @generic=6;
 
 -- Organisation types
-set @research = 2;
 SET @RTO=3;
 SET @charity=4;
 
 -- Research categories
-SELECT @feasibility := id FROM category WHERE name='Feasibility studies';
-SELECT @industrial  := id FROM category WHERE name='Industrial research';
-SELECT @experimental:= id FROM category WHERE name='Experimental development';
+SET @feasibility = (SELECT id FROM category WHERE name='Feasibility studies');
+SET @industrial = (SELECT id FROM category WHERE name='Industrial research');
+SET @experimental = (SELECT id FROM category WHERE name='Experimental development');
 
 -- Delete old items to avoid duplicates
 DELETE FROM grant_claim_maximum
@@ -25,98 +25,98 @@ AND organisation_type_id IN (@RTO, @charity) AND category_id IN (@feasibility, @
 
 -- Add a new row for each combination to have organisation size id 1 (small)
 -- Feasibility
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @feasibility, @small, @rto, @sector, '100');
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @feasibility, @small, @charity, @sector, '100');
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @feasibility, @small, @rto, @programme, '100');
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @feasibility, @small, @charity, @programme, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@feasibility, @small, @RTO, @sector, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@feasibility, @small, @charity, @sector, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@feasibility, @small, @RTO, @programme, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@feasibility, @small, @charity, @programme, '100');
 
 -- Industrial research
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @industrial, @small, @rto, @sector, '100');
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @industrial, @small, @charity, @sector, '100');
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @industrial, @small, @rto, @programme, '100');
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @industrial, @small, @charity, @programme, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@industrial, @small, @RTO, @sector, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@industrial, @small, @charity, @sector, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@industrial, @small, @RTO, @programme, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@industrial, @small, @charity, @programme, '100');
 
 -- Experimental development
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @experimental, @small, @rto, @sector, '100');
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @experimental, @small, @charity, @sector, '100');
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @experimental, @small, @rto, @programme, '100');
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @experimental, @small, @charity, @programme, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@experimental, @small, @RTO, @sector, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@experimental, @small, @charity, @sector, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@experimental, @small, @RTO, @programme, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@experimental, @small, @charity, @programme, '100');
 
 
 -- Add a new row for each combination to have organisation size id 2 (medium)
 -- Feasibility
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @feasibility, @medium, @rto, @sector, '100');
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @feasibility, @medium, @charity, @sector, '100');
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @feasibility, @medium, @rto, @programme, '100');
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @feasibility, @medium, @charity, @programme, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES ( @feasibility, @medium, @RTO, @sector, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@feasibility, @medium, @charity, @sector, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@feasibility, @medium, @RTO, @programme, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@feasibility, @medium, @charity, @programme, '100');
 
 -- Industrial research
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @industrial, @medium, @rto, @sector, '100');
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @industrial, @medium, @charity, @sector, '100');
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @industrial, @medium, @rto, @programme, '100');
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @industrial, @medium, @charity, @programme, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@industrial, @medium, @RTO, @sector, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@industrial, @medium, @charity, @sector, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@industrial, @medium, @RTO, @programme, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@industrial, @medium, @charity, @programme, '100');
 
 -- Experimental development
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @experimental, @medium, @rto, @sector, '100');
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @experimental, @medium, @charity, @sector, '100');
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @experimental, @medium, @rto, @programme, '100');
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @experimental, @medium, @charity, @programme, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@experimental, @medium, @RTO, @sector, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@experimental, @medium, @charity, @sector, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@experimental, @medium, @RTO, @programme, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@experimental, @medium, @charity, @programme, '100');
 
 
 -- Add a new row for each combination to have organisation size id 3 (large)
 -- Feasibility
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @feasibility, @large, @rto, @sector, '100');
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @feasibility, @large, @charity, @sector, '100');
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @feasibility, @large, @rto, @programme, '100');
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @feasibility, @large, @charity, @programme, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@feasibility, @large, @RTO, @sector, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@feasibility, @large, @charity, @sector, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@feasibility, @large, @RTO, @programme, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@feasibility, @large, @charity, @programme, '100');
 
 -- Industrial research
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @industrial, @large, @rto, @sector, '100');
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @industrial, @large, @charity, @sector, '100');
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @industrial, @large, @rto, @programme, '100');
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @industrial, @large, @charity, @programme, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@industrial, @large, @RTO, @sector, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@industrial, @large, @charity, @sector, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@industrial, @large, @RTO, @programme, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@industrial, @large, @charity, @programme, '100');
 
 -- Experimental development
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @experimental, @large, @rto, @sector, '100');
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @experimental, @large, @charity, @sector, '100');
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @experimental, @large, @rto, @programme, '100');
-INSERT INTO grant_claim_maximum (`id`, `category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (NULL, @experimental, @large, @charity, @programme, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@experimental, @large, @RTO, @sector, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@experimental, @large, @charity, @sector, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@experimental, @large, @RTO, @programme, '100');
+INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
+    VALUES (@experimental, @large, @charity, @programme, '100');
 
 -- Add the right values for the new competition type (same as programme)
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`,`competition_type_id`, `maximum`)
