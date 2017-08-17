@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.transactional;
 
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -17,11 +18,13 @@ import org.innovateuk.ifs.project.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
-import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -29,14 +32,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CANNOT_FIND_ORG_FOR_GIVEN_PROJECT_AND_USER;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -120,15 +127,27 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                     if (project.getOrganisations(o -> organisationId.equals(o.getId())).isEmpty()) {
                         return serviceFailure(badRequestError("project does not contain organisation"));
                     }
-                    List<ProjectUser> partners = project.getProjectUsersWithRole(PROJECT_PARTNER);
-                    Optional<ProjectUser> projectUser = simpleFindFirst(partners, p -> p.getUser().getId().equals(userId));
-                    if (projectUser.isPresent()) {
-                        return serviceSuccess(projectUser.get()); // Already a partner
-                    } else {
-                        ProjectUser pu = new ProjectUser(user, project, PROJECT_PARTNER, organisation);
-                        return serviceSuccess(pu);
-                    }
+                    addProcessRoles(project, user, organisation);
+                    return addProjectPartner(project, user, organisation);
                 });
+    }
+
+    private ServiceResult<ProjectUser> addProjectPartner(Project project, User user, Organisation organisation){
+        List<ProjectUser> partners = project.getProjectUsersWithRole(PROJECT_PARTNER);
+        Optional<ProjectUser> projectUser = simpleFindFirst(partners, p -> p.getUser().getId().equals(user.getId()));
+        if (projectUser.isPresent()) {
+            return serviceSuccess(projectUser.get()); // Already a partner
+        } else {
+            ProjectUser pu = new ProjectUser(user, project, PROJECT_PARTNER, organisation);
+            return serviceSuccess(pu);
+        }
+    }
+
+    private void addProcessRoles(Project project, User user, Organisation organisation) {
+        Application application = project.getApplication();
+        Role role = roleRepository.findOneByName(COLLABORATOR.getName());
+        ProcessRole processRole = new ProcessRole(user, application.getId(), role, organisation.getId());
+        processRoleRepository.save(processRole);
     }
 
     @Override

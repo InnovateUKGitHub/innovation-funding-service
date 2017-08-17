@@ -608,19 +608,29 @@ IFS.core.formValidation = (function () {
         return
       }
 
-      var formGroup = field.closest('.form-group,tr.form-group-row')
+      var formGroup = field.closest('.form-group')
+      var formGroupRow = field.closest('.form-group-row')
       var name = IFS.core.formValidation.getIdentifier(field)
       var visuallyhidden = displayValidationMessages === 'visuallyhidden'
+
       if (formGroup.length) {
         if (s.html5validationMode) { field[0].setCustomValidity(message) }
         if (visuallyhidden === false) { formGroup.addClass('form-group-error') }
-
-        // if the message isn't in this formgroup yet we will add it, a form-group can have multiple errors.
-        var errorEl = formGroup.find('[data-errorfield="' + name + '"]:contains("' + message + '"),.error-message:not([data-errorfield]):contains("' + message + '")')
+        var errorEl = formGroup.find('.error-message:contains("' + message + '")')
         if (errorEl.length === 0) {
           if (visuallyhidden === false) { field.addClass('form-control-error') }
-          var html = '<span data-errorfield="' + name + '" class="error-message' + (visuallyhidden ? ' visuallyhidden' : '') + '">' + message + '</span>'
-          formGroup.find('legend,label,[scope="row"]').first().append(html)
+          formGroup.find('legend,label').first().append('<span class="error-message' + (visuallyhidden ? ' visuallyhidden' : '') + '">' + message + '</span>')
+        }
+      }
+
+      if (formGroupRow.length) {
+        if (s.html5validationMode) { field[0].setCustomValidity(message) }
+        if (visuallyhidden === false) { formGroupRow.addClass('form-group-error') }
+
+        var linkedErrorEl = formGroupRow.find('[data-errorfield="' + name + '"]:contains("' + message + '")')
+        if (linkedErrorEl.length === 0) {
+          if (visuallyhidden === false) { field.addClass('form-control-error') }
+          formGroupRow.find('legend,label,[scope="row"]').first().append('<span data-errorfield="' + name + '" class="error-message' + (visuallyhidden ? ' visuallyhidden' : '') + '">' + message + '</span>')
         }
       }
 
@@ -636,39 +646,69 @@ IFS.core.formValidation = (function () {
       if (validShowMessageValue === false || displayValidationMessages === 'none') {
         return
       }
-      var formGroup = field.closest('.form-group ,tr.form-group-row')
+      var formGroup = field.closest('.form-group')
+      var formGroupRow = field.closest('.form-group-row')
       var errorSummary = jQuery('.error-summary-list')
       var name = IFS.core.formValidation.getIdentifier(field)
 
+      // if it is a .form-group we assume the basic form structure with just one field per group
+      // i.e.
+      // <div class="form-group">
+      //      <label for="field1">
+      //          <span>FieldLabel</span>
+      //          <span class="error-message">This field cannot be empty</span>
+      //      </label>
+      //      <input class="form-control form-control-error" name="field1" id="field1" required />
+      // </div>
       if (formGroup.length) {
-        // client side remove in form group
-        formGroup.find('[data-errorfield="' + name + '"]:contains("' + message + '")').remove()
-        // server side remove in form group
-        formGroup.find('.error-message:not([data-errorfield]):contains("' + message + '")').first().remove()
-
+        formGroup.find('.error-message:contains("' + message + '")').remove()
         // if this was the last error we remove the error styling
-        if (formGroup.find('[data-errorfield],.error-message:not([data-errorfield])').length === 0) {
+        if (formGroup.find('.error-message').length === 0) {
           formGroup.removeClass('form-group-error')
-        }
-        if (formGroup.find('[data-errorfield="' + name + '"]').length === 0) {
           field.removeClass('form-control-error')
+          // set corresponding radios/checkboxes valid
           if (s.html5validationMode) {
-            jQuery('[name="' + name + '"]').each(function () {
-              this.setCustomValidity('')
-            })
+            jQuery('[name="' + name + '"]').each(function () { this.setCustomValidity('') })
           }
         }
       }
-
+      // if it is a .form-group-multiple there can be multiple fields within the group, all having there own validation but reporting to one label
+      // the template has to output server side error messages linked to the field
+      // i.e. a table
+      // <tr class="form-group-row form-group-error">
+      //     <th scope="row" id="rowlabel">
+      //          <span>The label of this row</span>
+      //          <span class="error-message" data-errorfield="field1">This field cannot be empty</span>
+      //          <span class="error-message" data-errorfield="field2">This field cannot be empty</span>
+      //    </th>
+      //     <td><input aria-labelledby="rowlabel" type="text" name="field1" class="form-control form-control-error" required /></td>
+      //     <td><input aria-labelledby="rowlabel" type="text" name="field2" class="form-control form-control-error" required /></td>
+      // <tr>
+      if (formGroupRow.length) {
+        console.log('remove formgrouprow', '[data-errorfield="' + name + '"]:contains(' + message + ')')
+        formGroupRow.find('[data-errorfield="' + name + '"]:contains(' + message + ')').remove()
+        if (formGroupRow.find('[data-errorfield="' + name + '"]').length === 0) {
+          field.removeClass('form-control-error')
+        }
+        if ((formGroupRow.find('[data-errorfield="' + name + '"]').length === 0) && (s.html5validationMode)) {
+          jQuery('[name="' + name + '"]').each(function () { this.setCustomValidity('') })
+        }
+        if (formGroupRow.find('[data-errorfield]').length === 0) {
+          formGroupRow.removeClass('form-group-error')
+        }
+      }
+      // updating the error summary
       if (errorSummary.length) {
         // remove clientside in summary
         errorSummary.find('[data-errorfield="' + name + '"]:contains(' + message + ')').remove()
         // remove server side in summary
         errorSummary.find('li:not([data-errorfield]):contains("' + message + '")').first().remove()
+
+        if (jQuery('.error-summary-list li:not(.list-header)').length === 0) {
+          jQuery('.error-summary:not([data-ignore-errors])').attr('aria-hidden', 'true')
+        }
       }
-      if (jQuery('.error-summary-list li:not(.list-header)').length === 0) {
-        jQuery('.error-summary:not([data-ignore-errors])').attr('aria-hidden', 'true')
-      }
+
       jQuery(window).trigger('updateWysiwygPosition')
     },
     setSectionValid: function (section) {
