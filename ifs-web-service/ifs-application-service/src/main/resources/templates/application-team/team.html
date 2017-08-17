@@ -20,6 +20,12 @@
 
             <p>View and manage your participants in the application. If an individual is 'pending' they have not yet joined the application.</p>
 
+            <p>
+                <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service">
+                    How collaboration in the Innovation Funding Service works
+                </a>.
+            </p>
+
             <p th:unless="${model.applicationCanBegin}">To change the lead applicant please email Innovate UK <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a>.</p>
 
             <div th:if="${model.applicationCanBegin}" class="message-alert">
