@@ -24,6 +24,9 @@ public abstract class CategoryLink<T, C extends Category> {
     @JoinColumn(name="categoryId", referencedColumnName="id")
     private C category;
 
+    @Column(name="class_name", insertable = false, updatable = false)
+    private String className;
+
     CategoryLink() {
     }
 
@@ -40,6 +43,10 @@ public abstract class CategoryLink<T, C extends Category> {
 
     public C getCategory() {
         return category;
+    }
+
+    public String getClassName() {
+        return className;
     }
 
     public abstract T getEntity();
