@@ -28,7 +28,8 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "WHERE a.competition = :compId " +
             "AND (a.applicationProcess.activityState.state IN :states) " +
             "AND (innovationArea.category.id = :innovationArea OR :innovationArea IS NULL)" +
-            "AND NOT EXISTS (SELECT 'found' FROM Assessment b WHERE b.participant.user.id = :assessorId AND b.target.id = a.id)";
+            "AND NOT EXISTS (SELECT 'found' FROM Assessment b WHERE b.participant.user.id = :assessorId AND b.target.id = a.id) " +
+            "AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
 
     String REJECTED_AND_SUBMITTED_STATES_STRING =
             "(org.innovateuk.ifs.workflow.resource.State.REJECTED," +
@@ -53,6 +54,7 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
     Page<ApplicationStatistics> findByCompetitionAndInnovationAreaProcessActivityStateStateIn(@Param("compId") long competitionId,
                                                                                            @Param("assessorId") long assessorId,
                                                                                            @Param("states") Collection<State> applicationStates,
+                                                                                           @Param("filter") String filter,
                                                                                            @Param("innovationArea") Long innovationArea,
                                                                                            Pageable pageable);
     @Query("SELECT NEW org.innovateuk.ifs.application.resource.AssessorCountSummaryResource(" +
