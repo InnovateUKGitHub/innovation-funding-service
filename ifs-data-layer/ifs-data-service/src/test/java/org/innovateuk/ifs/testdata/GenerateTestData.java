@@ -63,6 +63,8 @@ import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.testdata.CsvUtils.*;
 import static org.innovateuk.ifs.testdata.builders.AssessmentDataBuilder.newAssessmentData;
 import static org.innovateuk.ifs.testdata.builders.AssessorDataBuilder.newAssessorData;
@@ -77,9 +79,6 @@ import static org.innovateuk.ifs.testdata.builders.OrganisationDataBuilder.newOr
 import static org.innovateuk.ifs.testdata.builders.ProjectDataBuilder.newProjectData;
 import static org.innovateuk.ifs.testdata.builders.PublicContentDateDataBuilder.newPublicContentDateDataBuilder;
 import static org.innovateuk.ifs.testdata.builders.PublicContentGroupDataBuilder.newPublicContentGroupDataBuilder;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.isA;
@@ -465,6 +464,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private void createInternalUsers() {
+        testService.doWithinTransaction(() -> setDefaultSystemRegistrar());
         testService.doWithinTransaction(() ->
             internalUserLines.forEach(line -> {
 
@@ -481,6 +481,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private void createCompetitions() {
+        testService.doWithinTransaction(() -> setDefaultCompAdmin());
         competitionLines.forEach(line -> {
             if ("Connected digital additive manufacturing".equals(line.name)) {
                 createCompetitionWithApplications(line, Optional.of(1L));
@@ -897,9 +898,22 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     protected UserResource systemRegistrar() {
-        return newUserResource().withRolesGlobal(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build(1)).build();
+        return newUserResource().withRolesGlobal(newRoleResource().withType(UserRoleType.SYSTEM_REGISTRATION_USER).build(1)).build();
     }
 
+    protected void setDefaultSystemRegistrar() {
+        setLoggedInUser(newUserResource().withRolesGlobal(newRoleResource().withType(UserRoleType.SYSTEM_REGISTRATION_USER).build(1)).build());
+        testService.doWithinTransaction(() ->
+            setLoggedInUser(userService.findByEmail(BaseDataBuilder.IFS_SYSTEM_MAINTENANCE_USER_EMAIL).getSuccessObjectOrThrowException())
+        );
+    }
+
+    protected void setDefaultCompAdmin() {
+        setLoggedInUser(newUserResource().withRolesGlobal(newRoleResource().withType(UserRoleType.SYSTEM_REGISTRATION_USER).build(1)).build());
+        testService.doWithinTransaction(() ->
+            setLoggedInUser(userService.findByEmail(BaseDataBuilder.COMP_ADMIN_EMAIL).getSuccessObjectOrThrowException())
+        );
+    }
     private <T> T doAs(UserResource user, Supplier<T> action) {
         UserResource currentUser = setLoggedInUser(user);
         try {

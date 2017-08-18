@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
-import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.repository.InviteRoleRepository;
@@ -40,15 +39,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_UNEXPECTED_ERROR;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOT_AN_INTERNAL_USER_ROLE;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
-import static org.innovateuk.ifs.commons.error.Error.globalError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
@@ -233,7 +231,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     private ServiceResult<User> addRoleToUser(User user, String roleName) {
         return getRole(roleName).andOnSuccessReturn(role -> {
-            user.addRole(role);
+            if (user.getRoles().stream().filter(r -> r.getId() == role.getId()).count() == 0) {
+                user.addRole(role);
+            }
             return user;
         });
 
@@ -257,6 +257,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         newUser.setGender(userResource.getGender());
         newUser.setEthnicity(ethnicityMapper.mapIdToDomain(userResource.getEthnicity()));
         newUser.setAllowMarketingEmails(userResource.getAllowMarketingEmails());
+        newUser.setRoles(userResource.getRoles().stream().map( u -> roleMapper.mapToDomain(u)).collect(Collectors.toSet()));
 
         return newUser;
     }
