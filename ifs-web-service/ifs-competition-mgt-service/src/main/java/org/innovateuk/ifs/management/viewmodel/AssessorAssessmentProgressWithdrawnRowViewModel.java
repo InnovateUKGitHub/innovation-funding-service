@@ -2,24 +2,21 @@ package org.innovateuk.ifs.management.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.user.resource.BusinessType;
-
-import java.util.List;
 
 /**
  * Holder of model attributes for a previously assigned applications in the Assessor Progress view.
  */
-public class AssessorAssessmentProgressPreviouslyAssignedRowViewModel  {
+public class AssessorAssessmentProgressWithdrawnRowViewModel {
 
     private long id;
     private String name;
     private String leadOrganisation;
     private long totalAssessors;
 
-    public AssessorAssessmentProgressPreviouslyAssignedRowViewModel(long id,
-                                                                    String name,
-                                                                    String leadOrganisation,
-                                                                    long totalAssessors) {
+    public AssessorAssessmentProgressWithdrawnRowViewModel(long id,
+                                                           String name,
+                                                           String leadOrganisation,
+                                                           long totalAssessors) {
         this.id = id;
         this.name = name;
         this.leadOrganisation = leadOrganisation;
@@ -48,7 +45,7 @@ public class AssessorAssessmentProgressPreviouslyAssignedRowViewModel  {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        AssessorAssessmentProgressPreviouslyAssignedRowViewModel that = (AssessorAssessmentProgressPreviouslyAssignedRowViewModel) o;
+        AssessorAssessmentProgressWithdrawnRowViewModel that = (AssessorAssessmentProgressWithdrawnRowViewModel) o;
 
         return new EqualsBuilder()
                 .append(id, that.id)

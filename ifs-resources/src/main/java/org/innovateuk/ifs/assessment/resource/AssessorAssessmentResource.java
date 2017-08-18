@@ -101,6 +101,10 @@ public class AssessorAssessmentResource {
         return of(REJECTED).contains(state);
     }
 
+    public boolean isWithdrawn() {
+        return of(WITHDRAWN).contains(state);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

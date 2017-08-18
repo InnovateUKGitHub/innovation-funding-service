@@ -1,10 +1,8 @@
 package org.innovateuk.ifs.management.model;
 
-import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationCountSummaryRestService;
-import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessorAssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorCompetitionSummaryResource;
 import org.innovateuk.ifs.assessment.service.AssessorCompetitionSummaryRestService;
@@ -61,6 +59,9 @@ public class AssessorAssessmentProgressModelPopulator {
         List<AssessorAssessmentProgressRejectedRowViewModel> rejected =
                 getRejectedAssessments(summaryResource.getAssignedAssessments());
 
+        List<AssessorAssessmentProgressWithdrawnRowViewModel> previouslyAssigned =
+                getPreviouslyAssignedAssessments(summaryResource.getAssignedAssessments());
+
         ApplicationCountSummaryPageResource applicationCounts = getApplicationCounts(
                 competitionId,
                 assessorId,
@@ -87,6 +88,7 @@ public class AssessorAssessmentProgressModelPopulator {
                 summaryResource.getTotalApplications(),
                 assigned,
                 rejected,
+                previouslyAssigned,
                 applicationsViewModel
         );
     }
@@ -125,6 +127,23 @@ public class AssessorAssessmentProgressModelPopulator {
                 assessment.getTotalAssessors(),
                 assessment.getRejectReason(),
                 assessment.getRejectComment()
+        );
+    }
+
+    private List<AssessorAssessmentProgressWithdrawnRowViewModel> getPreviouslyAssignedAssessments(List<AssessorAssessmentResource> assessorAssessments) {
+        return assessorAssessments.stream()
+                .filter(AssessorAssessmentResource::isWithdrawn)
+                .map(this::getAssessorAssessmentProgressPreviousAssignedRowViewModel)
+                .collect(toList());
+    }
+
+    private AssessorAssessmentProgressWithdrawnRowViewModel getAssessorAssessmentProgressPreviousAssignedRowViewModel(AssessorAssessmentResource assessment) {
+
+        return  new AssessorAssessmentProgressWithdrawnRowViewModel(
+                assessment.getApplicationId(),
+                assessment.getApplicationName(),
+                assessment.getLeadOrganisation(),
+                assessment.getTotalAssessors()
         );
     }
 
