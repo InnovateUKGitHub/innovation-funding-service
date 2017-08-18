@@ -26,7 +26,7 @@ ${applicationWithoutGrowth}  NewApplFromNewComp without GrowthTable
 ${compWithGrowth}            All-Innov-Areas With GrowthTable
 ${applicationWithGrowth}     All-Innov-Areas Application With GrowthTable
 ${newUsersEmail}             liam@innovate.com
-${ineligibleMessage}         Your organisation is not eligible to start an application for this competition.
+${ineligibleMessage}         Your organisation type is not eligible to start an application in this competition.
 
 *** Test Cases ***
 Comp Admin starts a new Competition
@@ -336,14 +336,14 @@ RTOs are not allowed to apply on Competition where only Businesses are allowed t
     [Documentation]  IFS-1015
     [Tags]
     Given the logged in user should not be able to apply in a competition he has not right to  antonio.jenkins@jabbertype.example.com  ${compWithoutGrowth}
-    When the user should see the element           jQuery=h1:contains("Research")
+    When the user should see the element           jQuery=h1:contains("You are not eligible to apply")
     Then the user should see the text in the page  ${ineligibleMessage}
 
 Business organisation is not allowed to apply on Comp where only RTOs are allowed to lead
     [Documentation]  IFS-1015
     [Tags]
     Given the logged in user should not be able to apply in a competition he has not right to  theo.simpson@katz.example.com  ${OPEN_COMPETITION_NAME}
-    When the user should see the element           jQuery=h1:contains("Business")
+    When the user should see the element           jQuery=h1:contains("You are not eligible to apply")
     Then the user should see the text in the page  ${ineligibleMessage}
 
 *** Keywords ***
