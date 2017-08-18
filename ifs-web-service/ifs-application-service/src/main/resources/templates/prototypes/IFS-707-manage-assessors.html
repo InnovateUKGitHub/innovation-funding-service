@@ -32,6 +32,9 @@
 		<li th:class="${(param.tab != null and param.tab[0] == 'overview' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab != null and param.tab[0] == 'overview' ? 'Item selected' : 'Item not selected' )}">
 			<a th:href="@{'?tab=overview'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}">Overview</a>
 		</li>
+        <li th:class="${(param.tab != null and param.tab[0] == 'accepted' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab != null and param.tab[0] == 'accepted' ? 'Item selected' : 'Item not selected' )}">
+            <a th:href="@{'?tab=accepted'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}">Accepted</a>
+        </li>
 	</ul>
 
 	<th:block th:insert="prototypes/fragments/manage-assessment-panel :: prototype-assessor-main-content" />

@@ -28,7 +28,7 @@
         <div class="column-quarter">
             <div class="highlight-panel">
                 <span class="heading-large">2</span><br />
-                <small>Yet to respond</small>
+                <small>Pending</small>
             </div>
         </div>
     </div>
@@ -973,7 +973,7 @@
                 <tr>
                     <td>
                         <div class="multiple-choice">
-                            <input type="checkbox" id="assessor-row-2" value="205" name="selectedAssessorIds" disabled="disabled">
+                            <input type="checkbox" id="assessor-row-2" value="205" name="selectedAssessorIds">
                             <label for="assessor-row-2">
                                 <span class="invisible">Add</span>
                             </label>
@@ -983,8 +983,8 @@
                     <td>Academic</td>
                     <td>Digital manufacturing</td>
                     <td><span class="no">No</span></td>
-                    <td>Accepted</td>
-                    <td></td>
+                    <td>Declined</td>
+                    <td>Invite sent: 16-May-2017</td>
                 </tr>
                 <tr>
                     <td>
@@ -1005,7 +1005,7 @@
                 <tr>
                     <td>
                         <div class="multiple-choice">
-                            <input type="checkbox" id="assessor-row-4" value="205" name="selectedAssessorIds" disabled="disabled">
+                            <input type="checkbox" id="assessor-row-4" value="205" name="selectedAssessorIds">
                             <label for="assessor-row-4">
                                 <span class="invisible">Add</span>
                             </label>
@@ -1015,13 +1015,13 @@
                     <td>Academic</td>
                     <td>Nanotechnology / nanomaterials, Electronics, sensors and photonics</td>
                     <td><span class="yes">Yes</span></td>
-                    <td>Accepted</td>
-                    <td></td>
+                    <td>Pending</td>
+                    <td>Invite sent: 09-Feb-2017</td>
                 </tr>
                 <tr>
                     <td>
                         <div class="multiple-choice">
-                            <input type="checkbox" id="assessor-row-5" value="205" name="selectedAssessorIds" disabled="disabled">
+                            <input type="checkbox" id="assessor-row-5" value="205" name="selectedAssessorIds">
                             <label for="assessor-row-5">
                                 <span class="invisible">Add</span>
                             </label>
@@ -1031,9 +1031,67 @@
                     <td>Businessc</td>
                     <td>Nanotechnology / nanomaterials, Precision medicine, Energy systems</td>
                     <td><span class="yes">Yes</span></td>
-                    <td>Rejected</td>
-                    <td></td>
+                    <td>Declined</td>
+                    <td>Invite sent: 09-May-2017</td>
                 </tr>
+            </tbody>
+        </table>
+    </div>
+
+</th:block>
+
+<th:block th:if="${param.tab != null and param.tab[0] == 'accepted'}">
+
+    <h3 class="heading-small extra-margin-bottom">View assessors who have accepted to participate in the assessment panel.</h3>
+
+    <div class="grid-row sorting">
+        <div class="column-half">
+            <span class="heading-xlarge no-margin">5</span>
+            <span class="heading-small">assessors</span>
+        </div>
+    </div>
+
+    <div class="table-overflow">
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">Assessor name</th>
+                <th scope="col">Type</th>
+                <th scope="col">Innovation area</th>
+                <th scope="col">Contract and DOI</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><a href="/prototypes/5229-assessor-profile?name=Jeremy%20Alufson&amp;comp=assessment">Jeremy Alufson</a></td>
+                <td></td>
+                <td>Materials, process and manufacturing design technologies</td>
+                <td><span class="yes">Yes</span></td>
+            </tr>
+            <tr>
+                <td><a href="/prototypes/5229-assessor-profile?name=Matt%20Roberts&amp;comp=assessment">Matt Roberts</a></td>
+                <td>Academic</td>
+                <td>Digital manufacturing</td>
+                <td><span class="yes">Yes</span></td>
+            </tr>
+            <tr>
+                <td><a href="/prototypes/5229-assessor-profile?name=Richard%20Acton&amp;comp=assessment">Richard Acton</a></td>
+                <td>Business</td>
+                <td>Digital health</td>
+                <td><span class="yes">Yes</span></td>
+            </tr>
+            <tr>
+                <td><a href="/prototypes/5229-assessor-profile?name=Sarah%20Chung&amp;comp=assessment">Sarah Chung</a></td>
+                <td>Academic</td>
+                <td>Nanotechnology / nanomaterials, Electronics, sensors and photonics</td>
+                <td><span class="yes">Yes</span></td>
+            </tr>
+            <tr>
+                <td><a href="/prototypes/5229-assessor-profile?name=Will%20Smith&amp;comp=assessment">Will Smith</a></td>
+                <td>Businessc</td>
+                <td>Nanotechnology / nanomaterials, Precision medicine, Energy systems</td>
+                <td><span class="yes">Yes</span></td>
+            </tr>
             </tbody>
         </table>
     </div>
