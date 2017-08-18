@@ -103,6 +103,14 @@ public class CompetitionController {
         return competitionSetupService.update(id, competitionResource).toGetResponse();
     }
 
+    @PutMapping("/{id}/update-competition-initial-details")
+    public RestResult<Void> updateCompetitionInitialDetails(@RequestBody CompetitionResource competitionResource,
+                                                           @PathVariable("id") final Long id) {
+
+        CompetitionResource existingCompetitionResource = competitionService.getCompetitionById(id).getSuccessObjectOrThrowException();
+        return competitionSetupService.updateCompetitionInitialDetails(id, competitionResource, existingCompetitionResource.getLeadTechnologist()).toGetResponse();
+    }
+
     @PutMapping("/{id}/close-assessment")
     public RestResult<Void> closeAssessment(@PathVariable("id") final Long id) {
         return competitionService.closeAssessment(id).toPutResponse();
