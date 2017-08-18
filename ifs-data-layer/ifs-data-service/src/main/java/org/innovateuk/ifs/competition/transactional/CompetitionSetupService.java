@@ -16,14 +16,12 @@ public interface CompetitionSetupService {
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     ServiceResult<String> generateCompetitionCode(Long id, ZonedDateTime dateTime);
 
-    //@SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can update competitions")
-    //@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
-    //ServiceResult<Void> deleteExistingLeadTechnologist(Long competitionId);
-
-    //@SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can update competitions")
-    //@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
+    @SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can update competitions")
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     ServiceResult<CompetitionResource> update(Long id, CompetitionResource competitionResource);
 
+    @SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can update competitions")
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     ServiceResult<Void> updateCompetitionInitialDetails(Long competitionId, CompetitionResource competitionResource, Long existingLeadTechnologistId);
 
     @SecuredBySpring(value = "CREATE", description = "Only those with either comp admin or project finance roles can create competitions")

@@ -133,12 +133,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Transactional
     public ServiceResult<Void> updateCompetitionInitialDetails(Long competitionId, CompetitionResource competitionResource, Long existingLeadTechnologistId) {
 
-/*        deleteExistingLeadTechnologist(competitionId, existingLeadTechnologistId);
-        CompetitionResource updatedCompetitionResource = update(competitionId, competitionResource).getSuccessObjectOrThrowException();
-        saveLeadTechnologist(updatedCompetitionResource);
-
-        return serviceSuccess();*/
-
         return deleteExistingLeadTechnologist(competitionId, existingLeadTechnologistId)
                 .andOnSuccess(() -> update(competitionId, competitionResource))
                 .andOnSuccess(updatedCompetitionResource -> saveLeadTechnologist(updatedCompetitionResource));
@@ -164,17 +158,29 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
         Competition competition = competitionMapper.mapToDomain(competitionResource);
 
-        User leadTechnologist = competition.getLeadTechnologist();
+        if (!doesLeadTechnologistAlreadyExist(competition)) {
 
-        CompetitionParticipant competitionParticipant = new CompetitionParticipant();
-        competitionParticipant.setProcess(competition);
-        competitionParticipant.setUser(leadTechnologist);
-        competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
+            User leadTechnologist = competition.getLeadTechnologist();
 
-        competitionParticipantRepository.save(competitionParticipant);
+            CompetitionParticipant competitionParticipant = new CompetitionParticipant();
+            competitionParticipant.setProcess(competition);
+            competitionParticipant.setUser(leadTechnologist);
+            competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
+
+            competitionParticipantRepository.save(competitionParticipant);
+        }
 
         return serviceSuccess();
 
+    }
+
+    private boolean doesLeadTechnologistAlreadyExist(Competition competition) {
+
+        CompetitionParticipant existingCompetitionParticipant =
+                competitionParticipantRepository.getByCompetitionIdAndUserIdAndRole(competition.getId(),
+                        competition.getLeadTechnologist().getId(), CompetitionParticipantRole.INNOVATION_LEAD);
+
+        return existingCompetitionParticipant != null;
     }
 
     @Override
