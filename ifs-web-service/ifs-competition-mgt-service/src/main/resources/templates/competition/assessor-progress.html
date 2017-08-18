@@ -155,9 +155,9 @@
 
         <p th:if="${#lists.isEmpty(model.rejected)}">No applications have been rejected by this assessor.</p>
 
-        <h2 class="heading-medium" th:text="| Previously assigned (${#lists.size(model.withdrawn)}) |"/>
+        <h2 class="heading-medium" th:text="| Previously assigned (${#lists.size(model.previouslyAssigned)}) |"/>
 
-        <div class="table-overflow" th:if="${!#lists.isEmpty(model.withdrawn)}">
+        <div class="table-overflow" th:if="${!#lists.isEmpty(model.previouslyAssigned)}">
             <table>
                 <thead>
                 <tr>
@@ -165,10 +165,11 @@
                     <th scope="col" class="width-large">Title</th>
                     <th scope="col" class="width-medium'">Lead organisation</th>
                     <th scope="col" class="width-small numeric">Assessors</th>
+                    <th scope="col"><span class="visuallyhidden">Action</span></th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="app : ${model.withdrawn}">
+                <tr th:each="app : ${model.previouslyAssigned}">
                     <td>
                         <a href="#"
                            th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.applicationId})} + ${originQuery}"
@@ -177,12 +178,17 @@
                     <td th:text="${app.applicationName}">Application name</td>
                     <td th:text="${app.leadOrganisation}">Lead organisation</td>
                     <td th:text="${app.totalAssessors}" class="numeric">3</td>
+                    <td><form method="post"
+                              th:action="@{/assessment/competition/{competitionId}/assessors/{assessorId}/application/{applicationId}/assign(competitionId=${model.competitionId}, assessorId=${model.assessorId}, applicationId=${app.applicationId})}" >
+                        <button type="submit" class="button-secondary no-margin">Re-assign</button>
+                    </form>
+                    </td>
                 </tr>
                 </tbody>
             </table>
         </div>
 
-        <p th:if="${#lists.isEmpty(model.rejected)}">No applications have been previously assigned to this assessor.</p>
+        <p th:if="${#lists.isEmpty(model.previouslyAssigned)}">No applications have been previously assigned to this assessor.</p>
     </div>
 
     <h2 class="heading-medium">Applications</h2>

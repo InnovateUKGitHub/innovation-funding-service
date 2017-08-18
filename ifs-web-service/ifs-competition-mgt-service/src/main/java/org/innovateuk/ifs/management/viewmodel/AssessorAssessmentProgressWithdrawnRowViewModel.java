@@ -8,27 +8,27 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public class AssessorAssessmentProgressWithdrawnRowViewModel {
 
-    private long id;
-    private String name;
+    private long applicationId;
+    private String applicationName;
     private String leadOrganisation;
     private long totalAssessors;
 
-    public AssessorAssessmentProgressWithdrawnRowViewModel(long id,
-                                                           String name,
+    public AssessorAssessmentProgressWithdrawnRowViewModel(long applicationId,
+                                                           String applicationName,
                                                            String leadOrganisation,
                                                            long totalAssessors) {
-        this.id = id;
-        this.name = name;
+        this.applicationId = applicationId;
+        this.applicationName = applicationName;
         this.leadOrganisation = leadOrganisation;
         this.totalAssessors = totalAssessors;
     }
 
-    public long getId() {
-        return id;
+    public long getApplicationId() {
+        return applicationId;
     }
 
-    public String getName() {
-        return name;
+    public String getApplicationName() {
+        return applicationName;
     }
 
     public String getLeadOrganisation() {
@@ -48,9 +48,9 @@ public class AssessorAssessmentProgressWithdrawnRowViewModel {
         AssessorAssessmentProgressWithdrawnRowViewModel that = (AssessorAssessmentProgressWithdrawnRowViewModel) o;
 
         return new EqualsBuilder()
-                .append(id, that.id)
+                .append(applicationId, that.applicationId)
                 .append(totalAssessors, that.totalAssessors)
-                .append(name, that.name)
+                .append(applicationName, that.applicationName)
                 .append(leadOrganisation, that.leadOrganisation)
                 .isEquals();
     }
@@ -58,8 +58,8 @@ public class AssessorAssessmentProgressWithdrawnRowViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(id)
-                .append(name)
+                .append(applicationId)
+                .append(applicationName)
                 .append(leadOrganisation)
                 .append(totalAssessors)
                 .toHashCode();

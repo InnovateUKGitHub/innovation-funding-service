@@ -29,6 +29,7 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.REJECTED;
+import static org.innovateuk.ifs.assessment.resource.AssessmentStates.WITHDRAWN;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -42,8 +43,7 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
 
     public static final Set<State> VALID_ASSESSMENT_STATES = Sets.complementOf(INVALID_ASSESSMENT_STATES);
 
-    public static final Set<State> INCLUDED_ASSESSMENT_STATES = Sets.union(VALID_ASSESSMENT_STATES,
-            AssessmentStates.getBackingStates(EnumSet.of(AssessmentStates.REJECTED)));
+    public static final Set<State> INCLUDED_ASSESSMENT_STATES = Sets.union(VALID_ASSESSMENT_STATES, INVALID_ASSESSMENT_STATES);
 
     @Autowired
     private AssessorService assessorService;
@@ -92,9 +92,19 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
             String comment = null;
             int assessorCount = count.getAssessorCount();
 
-            if (count.getAssessment().getActivityState() == REJECTED) {
-                assessmentRejectOutcomeValue = count.getAssessment().getRejection().getRejectReason();
-                comment = count.getAssessment().getRejection().getRejectComment();
+//            if (count.getAssessment().getActivityState() == REJECTED) {
+//                assessmentRejectOutcomeValue = count.getAssessment().getRejection().getRejectReason();
+//                comment = count.getAssessment().getRejection().getRejectComment();
+//                assessorCount--;
+//            } else if (count.getAssessment().getActivityState() == WITHDRAWN) {
+//                assessorCount--;
+//            }
+
+            if (INVALID_ASSESSMENT_STATES.contains(count.getAssessment().getActivityState().getBackingState())) {
+                if (count.getAssessment().getActivityState() == REJECTED) {
+                    assessmentRejectOutcomeValue = count.getAssessment().getRejection().getRejectReason();
+                    comment = count.getAssessment().getRejection().getRejectComment();
+                }
                 assessorCount--;
             }
 
