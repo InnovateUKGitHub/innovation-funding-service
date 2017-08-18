@@ -20,7 +20,6 @@ public class ApplicationCountSummaryController {
 
     private static final String DEFAULT_PAGE_SIZE = "20";
 
-
     @GetMapping("/findByCompetitionId/{competitionId}")
     public RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(@PathVariable("competitionId") Long competitionId,
                                                                                                        @RequestParam(value = "page",defaultValue = "0") int pageIndex,

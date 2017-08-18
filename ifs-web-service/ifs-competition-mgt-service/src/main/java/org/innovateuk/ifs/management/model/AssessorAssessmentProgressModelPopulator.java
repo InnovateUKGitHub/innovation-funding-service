@@ -50,9 +50,7 @@ public class AssessorAssessmentProgressModelPopulator {
         AssessorCompetitionSummaryResource summaryResource = assessorCompetitionSummaryRestService
                 .getAssessorSummary(assessorId, competitionId)
                 .getSuccessObjectOrThrowException();
-
-
-
+        
         List<String> innovationAreas = simpleMap(
                 summaryResource.getAssessor().getProfile().getInnovationAreas(),
                 CategoryResource::getName
