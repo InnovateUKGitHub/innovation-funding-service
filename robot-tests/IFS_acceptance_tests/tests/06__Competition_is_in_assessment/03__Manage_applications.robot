@@ -16,6 +16,8 @@ Documentation     INFUND-7042 As a member of the competitions team I can see lis
 ...               INFUND-8061 Filter and pagination on Allocate Applications (Closed competition) and Manage applications (In assessment) dashboards
 ...
 ...               IFS-319 View list of accepted assessors - In assessment state
+...
+...               IFS-1079 Remove an application - Closed and In assessment states
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
@@ -81,16 +83,17 @@ Accepting the application changes the Accepted column
 Remove an assigned application (Notified)
     [Documentation]    INFUND-1079
     [Tags]
-    Given the user clicks the button/link        jQuery=td:contains("${Molecular_id}")~ td:contains("Yes") ~ td:contains("Remove")
-    Then the user clicks the button/link         jQuery=button:contains("Remove assessor")
-    And the user should see the element          jQuery=h2:contains("Applications") ~ div td:contains("${Molecular_id}")+ td:contains("Molecular tree breeding")~ td:contains("Assign")
-    And the user clicks the button/link          jQuery=.pagination-label:contains("Next")
-    [Teardown]  the user clicks the button/link    link=Allocate assessors
+    Given the user clicks the button/link     jQuery=td:contains("${Molecular_id}") ~ td:contains("Yes") ~ td:contains("Remove")
+    When the user clicks the button/link      jQuery=button:contains("Remove assessor")
+    Then the user should not see the element  jQuery=td:contains("${Molecular_id}") ~ td:contains("Yes") ~ td:contains("Remove")
+    And the user should see the element       jQuery=h2:contains("Applications") ~ div td:contains("${Molecular_id}") + td:contains("Molecular tree breeding")~ td:contains("Assign")
+    And the user clicks the button/link       jQuery=.pagination-label:contains("Next")
 
 Assign an application to an assessor
     [Documentation]    IFS-811
     [Tags]
-    Given the user clicks the button/link  jQuery=td:contains("Shaun Bradley") ~ td a:contains("View progress")
+    Given the user clicks the button/link  link=Allocate assessors
+    When the user clicks the button/link   jQuery=td:contains("Shaun Bradley") ~ td a:contains("View progress")
     Then the user should see the element   jQuery=h2:contains("Assigned (0)") + p:contains("No applications have been assigned to this assessor")
     And the user clicks the button/link    jQuery=td:contains("36") ~ td button:contains("Assign")
     Then the user should see the element   jQuery=h2:contains("Assigned (1)") + .table-overflow tr:contains("36")
@@ -241,10 +244,6 @@ the available assessors information is correct
     #the user should see the element    jQuery=.assessors-available td:nth-child(4):contains('4')
     #the user should see the element    jQuery=.assessors-available td:nth-child(5):contains('0')
     #TODO checks disabled due toINFUND-7745
-
-the available application information is correct
-    the user should see the element    jQuery=.applications-available tr:nth-child(1):contains('Park living')
-    the user should see the element    jQuery=.applications-available tr:nth-child(2):contains('Living with Virtual Reality')
 
 the assigned list is correct before notification
     the user should see the element    jQuery=.assessors-assigned td:nth-child(1):contains("Paul Plum")
