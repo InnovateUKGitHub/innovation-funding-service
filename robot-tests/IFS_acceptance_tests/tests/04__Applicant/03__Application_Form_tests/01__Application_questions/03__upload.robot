@@ -105,7 +105,7 @@ Questions can be assigned with appendices
 Collaborators can view a file when the question is assigned
     [Documentation]    INFUND_2720
     [Tags]    SmokeTest
-    [Setup]    Log in as a different user       ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
+    [Setup]    Log in as a different user       ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     Given the user navigates to the page        ${DASHBOARD_URL}
     And the user clicks the button/link         link=Academic robot test application
     And the user clicks the button/link         link=5. Technical approach
@@ -148,7 +148,7 @@ Quarantined files are not returned to the user and the user is informed
 *** Keywords ***
 Custom Suite Setup
     the guest user opens the browser
-    Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${OPEN_COMPETITION_NAME}  You will be joining as part of the organisation
+    Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${OPEN_COMPETITION_NAME_2}  You will be joining as part of the organisation
 
 the user can re-assign the question back to the lead applicant
     the user reloads the page

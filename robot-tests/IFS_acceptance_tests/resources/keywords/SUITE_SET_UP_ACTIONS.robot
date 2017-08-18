@@ -106,14 +106,18 @@ the user marks the section as complete
 
 Create new application with the same user
     [Arguments]  ${Application_title}
-    When the user navigates to the page         ${COMPETITION_OVERVIEW_URL_2}
-    the user clicks the button/link             jQuery=a:contains("Start new application")
-#    And the user clicks the button/link         jQuery=Label:contains("Yes, I want to create a new application.")
-#    And the user clicks the button/link         jQuery=.button:contains("Continue")
-    And the user clicks the button/link         jQuery=a:contains("Begin application")
-    And the user clicks the button/link         link=Application details
-    And the user enters text to a text field    id=application_details-title    ${Application_title}
-    And the user clicks the button/link         jQuery=button:contains("Save and return")
+    the user navigates to the page        ${COMPETITION_OVERVIEW_URL_2}
+    the user clicks the button/link       jQuery=a:contains("Start new application")
+    check if there is an existing application in progress for this competition
+    the user clicks the button/link       jQuery=a:contains("Begin application")
+    the user clicks the button/link       link=Application details
+    the user enters text to a text field  id=application_details-title  ${Application_title}
+    the user clicks the button/link       jQuery=button:contains("Save and return")
+
+check if there is an existing application in progress for this competition
+    ${applicationInProgress} =  run keyword and ignore error without screenshots  Element Should Be Visible  jQuery=label:contains("Yes, I want to create a new application.")
+    run keyword if  ${applicationInProgress} == 'PASS'  the user clicks the button/link  jQuery=Label:contains("Yes, I want to create a new application.")
+    ...                                            AND  the user clicks the button/link  jQuery=.button:contains("Continue")
 
 create new submit application
     [Arguments]  ${overview}  ${email}  ${application_name}
