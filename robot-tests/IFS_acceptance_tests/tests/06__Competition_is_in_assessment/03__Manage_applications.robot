@@ -77,6 +77,14 @@ Accepting the application changes the Accepted column
     And Log in as a different user        &{Comp_admin1_credentials}
     When the user navigates to the page   ${server}/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}/assessors/${Paul_Plum_id}
     Then the user should see the element  jQuery=td:contains("${Molecular_id}") ~ td:contains("Yes") + td:contains("Yes")
+
+Remove an assigned application (Notified)
+    [Documentation]    INFUND-1079
+    [Tags]
+    Given the user clicks the button/link        jQuery=td:contains("${Molecular_id}")~ td:contains("Yes") ~ td:contains("Remove")
+    Then the user clicks the button/link         jQuery=button:contains("Remove assessor")
+    And the user should see the element          jQuery=h2:contains("Applications") ~ div td:contains("${Molecular_id}")+ td:contains("Molecular tree breeding")~ td:contains("Assign")
+    And the user clicks the button/link          jQuery=.pagination-label:contains("Next")
     [Teardown]  the user clicks the button/link    link=Allocate assessors
 
 Assign an application to an assessor
@@ -86,17 +94,6 @@ Assign an application to an assessor
     Then the user should see the element   jQuery=h2:contains("Assigned (0)") + p:contains("No applications have been assigned to this assessor")
     And the user clicks the button/link    jQuery=td:contains("36") ~ td button:contains("Assign")
     Then the user should see the element   jQuery=h2:contains("Assigned (1)") + .table-overflow tr:contains("36")
-
-
-Remove an assigned application (Notified)
-    [Documentation]    INFUND-1079
-    [Tags]
-    Given the user clicks the button/link         jQuery=td:contains("36") ~ td:contains("Remove")
-#    And the user clicks the button/link          Confirm Action
-    Then And the user clicks the button/link           jQuery=button:contains("Remove assessor")
-    And the user should see the element            jQuery=jQuery=h2:contains("Applications") ~ div td:contains("36") + td:contains("Living with Nanotechnology") + td:contains("Duoelectronics") + td:contains("0")~ td:contains("Assign")
-    And the user clicks the button/link           jQuery=.pagination-label:contains("Next")
-    And the available application information is correct
 
 Filtering of the applications
     [Documentation]    INFUND-8061
