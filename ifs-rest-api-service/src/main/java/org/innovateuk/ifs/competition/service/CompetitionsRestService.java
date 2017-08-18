@@ -27,6 +27,7 @@ public interface CompetitionsRestService {
     RestResult<CompetitionResource> getPublishedCompetitionById(long competitionId);
     RestResult<List<CompetitionTypeResource>> getCompetitionTypes();
     RestResult<Void> update(CompetitionResource competition);
+    RestResult<Void> updateCompetitionInitialDetails(CompetitionResource competition);
     RestResult<CompetitionResource> create();
     RestResult<Void> markSectionComplete(long competitionId, CompetitionSetupSection section);
     RestResult<Void> markSectionInComplete(long competitionId, CompetitionSetupSection section);
