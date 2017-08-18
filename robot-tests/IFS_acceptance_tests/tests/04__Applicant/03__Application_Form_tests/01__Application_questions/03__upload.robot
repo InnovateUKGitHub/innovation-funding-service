@@ -68,7 +68,7 @@ Lead applicant can view a file
 Collaborators can view a file
     [Documentation]    INFUND-2306
     [Tags]    HappyPath    SmokeTest
-    [Setup]    Log in as a different user         ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
+    [Setup]    Log in as a different user         ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     Given the user navigates to the page          ${DASHBOARD_URL}
     And the user clicks the button/link           link=Academic robot test application
     And the user clicks the button/link           link=5. Technical approach
