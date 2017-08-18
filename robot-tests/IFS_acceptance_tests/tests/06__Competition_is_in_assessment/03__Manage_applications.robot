@@ -87,14 +87,14 @@ Assign an application to an assessor
     And the user clicks the button/link    jQuery=td:contains("36") ~ td button:contains("Assign")
     Then the user should see the element   jQuery=h2:contains("Assigned (1)") + .table-overflow tr:contains("36")
 
+
 Remove an assigned application (Notified)
     [Documentation]    INFUND-1079
     [Tags]
-    Given the user clicks the button/link         jQuery=td:contains("${Molecular_id}") ~ td:contains("Remove")
-    And the user clicks the button/link           jQuery=.buttonlink:contains("Cancel")
-    And the user should not see the element       jQuery=button:contains("Remove assessor")
-    And the user clicks the button/link           jQuery=td:contains("${Molecular_id}") ~ td:contains("Remove")
-#    And the user clicks the button/link           jQuery=button:contains("Remove assessor")
+    Given the user clicks the button/link         jQuery=td:contains("36") ~ td:contains("Remove")
+#    And the user clicks the button/link          Confirm Action
+    Then And the user clicks the button/link           jQuery=button:contains("Remove assessor")
+    And the user should see the element            jQuery=jQuery=h2:contains("Applications") ~ div td:contains("36") + td:contains("Living with Nanotechnology") + td:contains("Duoelectronics") + td:contains("0")~ td:contains("Assign")
     And the user clicks the button/link           jQuery=.pagination-label:contains("Next")
     And the available application information is correct
 
