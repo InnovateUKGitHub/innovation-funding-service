@@ -76,11 +76,11 @@ Assessor Progress page
     Given the user clicks the button/link        jQuery=td:contains("Madeleine Martin") ~ td a:contains("Assign")
     Then the user should see the element         jQuery=h2:contains("Assigned") + p:contains("No applications have been assigned to this assessor")
     And the user should see the element          jQuery=h2:contains("Applications") ~ div td:contains("${Neural_id}") + td:contains("Neural") + td:contains("Neural Industries") + td:contains("1")
-    [Teardown]  the user clicks the button/link  link=Allocate assessors
 
 Assessor removal
     [Documentation]  IFS-1079
     [Tags]
+    Given the user clicks the button/link     link=Allocate assessors
     When the user clicks the button/link      jQuery=td:contains("Benjamin Nixon") ~ td a:contains("Assign")
     Then the user should see the element      jQuery=div td:contains("${Neural_id}") + td:contains("Neural") + td:contains("Neural Industries") + td:contains("1") + td:contains("Remove")
     When the user clicks the button/link      jQuery=td:contains("${Neural_id}") ~ td:contains("Remove")
