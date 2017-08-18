@@ -81,8 +81,7 @@ Accepting the application changes the Accepted column
 
 Assign an application to an assessor
     [Documentation]    IFS-811
-    [Tags]  Pending
-    # TODO marked as pending due to IFS-1352
+    [Tags]
     Given the user clicks the button/link  jQuery=td:contains("Shaun Bradley") ~ td a:contains("View progress")
     Then the user should see the element   jQuery=h2:contains("Assigned (0)") + p:contains("No applications have been assigned to this assessor")
     And the user clicks the button/link    jQuery=td:contains("36") ~ td button:contains("Assign")
