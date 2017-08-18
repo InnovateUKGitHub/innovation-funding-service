@@ -24,6 +24,9 @@ public abstract class CategoryLink<T, C extends Category> {
     @JoinColumn(name="categoryId", referencedColumnName="id")
     private C category;
 
+    @Column(name="class_name", insertable = false, updatable = false)
+    private String className;
+
     CategoryLink() {
     }
 
@@ -42,6 +45,10 @@ public abstract class CategoryLink<T, C extends Category> {
         return category;
     }
 
+    public String getClassName() {
+        return className;
+    }
+
     public abstract T getEntity();
 
     @Override
@@ -50,10 +57,11 @@ public abstract class CategoryLink<T, C extends Category> {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        CategoryLink<?,?> that = (CategoryLink<?,?>) o;
+        CategoryLink<?, ?> that = (CategoryLink<?, ?>) o;
 
         return new EqualsBuilder()
                 .append(category, that.category)
+                .append(className, that.className)
                 .isEquals();
     }
 
@@ -61,6 +69,7 @@ public abstract class CategoryLink<T, C extends Category> {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(category)
+                .append(className)
                 .toHashCode();
     }
 }
