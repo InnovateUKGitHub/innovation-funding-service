@@ -8,7 +8,7 @@
             <div class="message-alert">
                 <p>Only members from your organisation will be able to see your finances in detail.</p>
             </div>
-            <p>Please complete your project finances.</p>
+            <p class="extra-margin">Please complete your project finances.</p>
 
             <details th:unless="${model.canNotRequestFunding || model.allReadOnly}" class="extra-margin-bottom" th:attr="open=${model.notRequestingFunding ? 'open' : null}">
                 <summary><span class="summary">Not requesting funding</span></summary>
