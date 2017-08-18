@@ -265,7 +265,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                         ));
     }
 
-    public ServiceResult<FormInputResponseFileEntryResource> getFormInputResponseFileEntryResource(FormInputResponseFileEntryId fileEntry, FormInput formInput){
+    private ServiceResult<FormInputResponseFileEntryResource> getFormInputResponseFileEntryResource(FormInputResponseFileEntryId fileEntry, FormInput formInput){
         return getAppropriateFormInputResponse(fileEntry, formInput).andOnSuccess(formInputResponse -> serviceSuccess(formInputResponseFileEntryResource(formInputResponse.getFileEntry(), fileEntry)));
     }
 
