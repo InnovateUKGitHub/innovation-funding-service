@@ -158,7 +158,7 @@
 
     <h2 class="heading-medium">Applications</h2>
 
-    <p>These are rest of the applications for this competition. You can assign more to this assessor.</p>
+    <p>These are the rest of the applications for this competition. You can assign more to this assessor.</p>
 
     <form method="GET">
         <div class="grid-row sorting">
@@ -167,6 +167,23 @@
                     <span class="bold-xlarge" th:text="${model.applicationsView.totalApplications}">2</span>
                     <span class="bold-small">Applications</span>
                 </div>
+            </div>
+
+
+            <div class="search-filters extra-margin">
+                <fieldset>
+                    <legend class="heading-medium">Filter applications</legend>
+                    <div class="grid-row">
+                        <div class="column-two-thirds">
+                            <label class="form-label" for="filterSearch">Search by application number.</label>
+                            <input type="text" class="form-control extra-margin-bottom" id="filterSearch" name="filterSearch" th:value="${model.filter}"/>
+
+                        </div>
+                        <div class="column-third">
+                            <button class="button">Filter</button>
+                        </div>
+                    </div>
+                </fieldset>
             </div>
             <!--/*
                 <div class="column-half alignright">

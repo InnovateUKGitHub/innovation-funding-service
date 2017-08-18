@@ -33,12 +33,13 @@ public class CompetitionManagementAssessmentsAssessorProgressController {
                                    @RequestParam(value = "page", defaultValue = "0") int page,
                                    @RequestParam(value = "innovationArea", required = false) Optional<Long> innovationArea,
                                    @RequestParam(value = "sortField", defaultValue = "") String sortField,
+                                   @RequestParam(value = "filterSearch", required = false) Optional<String> filter,
                                    @RequestParam MultiValueMap<String, String> params,
                                    Model model) {
         params.add("assessorId", String.valueOf(assessorId));
         String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.ASSESSOR_PROGRESS, params);
         model.addAttribute("originQuery", originQuery);
-        model.addAttribute("model", assessorAssessmentProgressModelPopulator.populateModel(competitionId, assessorId, page, innovationArea, sortField, originQuery));
+        model.addAttribute("model", assessorAssessmentProgressModelPopulator.populateModel(competitionId, assessorId, page, innovationArea, sortField, filter.orElse(""), originQuery));
 
         return "competition/assessor-progress";
     }
