@@ -21,10 +21,10 @@ Login new application invite academic
     ...    AND    Invite and accept the invitation    ${recipient}    ${subject}    ${pattern}
 
 new account complete all but one
-    create new account for submitting  ${submit_bus_email}  ${COMPETITION_OVERVIEW_URL_2}  ${application_bus_name}  radio-1
+    create new account for submitting  ${submit_bus_email}  ${openCompetitionBusinessRTO_overview}  ${application_bus_name}  radio-1
     the user marks every section but one as complete  ${application_bus_name}
     Logout as user
-    create new account for submitting  ${submit_rto_email}  ${COMPETITION_OVERVIEW_URL_2}  ${application_rto_name}  radio-3
+    create new account for submitting  ${submit_rto_email}  ${openCompetitionBusinessRTO_overview}  ${application_rto_name}  radio-3
     the user marks every section but one as complete  ${application_rto_name}
 
 create new account for submitting
@@ -106,7 +106,7 @@ the user marks the section as complete
 
 Create new application with the same user
     [Arguments]  ${Application_title}
-    the user navigates to the page        ${COMPETITION_OVERVIEW_URL_2}
+    the user navigates to the page        ${openCompetitionBusinessRTO_overview}
     the user clicks the button/link       jQuery=a:contains("Start new application")
     check if there is an existing application in progress for this competition
     the user clicks the button/link       jQuery=a:contains("Begin application")
@@ -189,7 +189,7 @@ The user marks the academic application finances as incomplete
 
 invite a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
-    the user navigates to the page                           ${COMPETITION_OVERVIEW_URL_2}
+    the user navigates to the page  ${openCompetitionBusinessRTO_overview}
     the user follows the flow to register their organisation
     the user verifies email                                    Stuart   Anderson    ${EMAIL_LEAD}
     the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}

@@ -30,6 +30,9 @@ Resource          ../../../10__Project_setup/PS_Common.robot
 # Application:Planetary science Pluto's telltale heart
 # from the Competition: Predicting market trends programme
 
+*** Variables ***
+${allApplicationsForRTOComp}  ${applicationsForRTOComp}/all
+
 *** Test Cases ***
 Calculations for Lead applicant
     [Documentation]    INFUND-524
@@ -104,7 +107,7 @@ Collaborator marks finances as complete
 Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
     [Tags]    Email  HappyPath
-    Given Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${OPEN_COMPETITION_NAME}  You will be joining as part of the organisation
+    Given Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionRTO_name}  You will be joining as part of the organisation
     When log in as a different user                ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     Then The user navigates to the academic application finances
     And The user clicks the button/link            link=Your project costs
@@ -135,7 +138,7 @@ Support User can see read only summary link for each partner
     [Documentation]  IFS-401
     [Tags]  Support
     [Setup]  log in as a different user     &{support_user_credentials}
-    When the user navigates to the page     ${server}/management/competition/${OPEN_COMPETITION}/applications/all
+    When the user navigates to the page     ${allApplicationsForRTOComp}
     And the user clicks the button/link     link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
     And the user expands the section        Finances summary
     Then the user should see the element    jQuery=.finance-summary tbody tr:nth-of-type(1) th:contains("${EMPIRE_LTD_NAME}"):contains("View finances")
@@ -153,7 +156,7 @@ Support User can see read only summary for collaborator
     [Documentation]  IFS-401
     [Tags]  Support
     [Setup]  log in as a different user           &{support_user_credentials}
-    When the user navigates to the page           ${server}/management/competition/${OPEN_COMPETITION}/applications/all
+    When the user navigates to the page           ${allApplicationsForRTOComp}
     And the user clicks the button/link           link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
     And the user expands the section              Finances summary
     When the user clicks the button/link          jQuery=.finance-summary tbody tr:contains("EGGS") th a
@@ -164,7 +167,7 @@ Support User can see read only view of collaborator Your project costs for Labou
     [Documentation]  IFS-401
     [Tags]  Support  HappyPath
     [Setup]  log in as a different user   &{support_user_credentials}
-    When the user navigates to the page   ${server}/management/competition/${OPEN_COMPETITION}/applications/all
+    When the user navigates to the page   ${allApplicationsForRTOComp}
     And the user clicks the button/link   link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
     And the user expands the section      Finances summary
     When the user clicks the button/link  jQuery=.finance-summary tbody tr:contains("Ludlow") th a
@@ -197,7 +200,7 @@ Innovation lead can see read only summary link for each partner
     [Documentation]  IFS-802
     [Tags]  InnovationLead  HappyPath
     [Setup]  log in as a different user     &{innovation_lead_one}
-    When the user navigates to the page     ${server}/management/competition/${OPEN_COMPETITION}/applications/all
+    When the user navigates to the page     ${allApplicationsForRTOComp}
     And the user clicks the button/link     link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
     And the user expands the section        Finances summary
     Then the user should see the element    jQuery=.finance-summary tbody tr:nth-of-type(1) th:contains("${EMPIRE_LTD_NAME}"):contains("View finances")
@@ -214,7 +217,7 @@ Innovation lead can see read only summary for lead
 Innovation lead can see read only summary for collaborator
     [Documentation]  IFS-802
     [Tags]  InnovationLead
-    When the user navigates to the page     ${server}/management/competition/${OPEN_COMPETITION}/applications/all
+    When the user navigates to the page     ${allApplicationsForRTOComp}
     And the user clicks the button/link     link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
     And the user expands the section        Finances summary
     When the user clicks the button/link    jQuery=.finance-summary tbody tr:contains("EGGS") th a
@@ -224,7 +227,7 @@ Innovation lead can see read only summary for collaborator
 Innovation lead can see read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
     [Documentation]  IFS-802
     [Tags]  InnovationLead  HappyPath
-    When the user navigates to the page       ${server}/management/competition/${OPEN_COMPETITION}/applications/all
+    When the user navigates to the page       ${allApplicationsForRTOComp}
     And the user clicks the button/link       link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
     And the user expands the section          Finances summary
     When the user clicks the button/link      jQuery=.finance-summary tbody tr:contains("Ludlow") th a

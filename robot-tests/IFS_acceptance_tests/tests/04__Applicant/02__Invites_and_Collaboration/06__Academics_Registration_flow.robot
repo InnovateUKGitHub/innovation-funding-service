@@ -9,10 +9,10 @@ Resource          ../../../resources/defaultResources.robot
 Academic organisations search
     [Documentation]    INFUND-1231
     [Tags]    HappyPath    Email    SmokeTest
-    Given we create a new user                          ${OPEN_COMPETITION_2}  Stuart  Downing  ${test_mailbox_one}+invitedacademics${unique_email_number}@gmail.com
+    Given we create a new user                          ${openCompetitionBusinessRTO}  Stuart  Downing  ${test_mailbox_one}+invitedacademics${unique_email_number}@gmail.com
     And logout as user
     Given the lead applicant invites a registered user  ${test_mailbox_one}+academicinvite${unique_email_number}@gmail.com    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com
-    When the user reads his email and clicks the link   ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME_2}    You will be joining as part of the organisation   3
+    When the user reads his email and clicks the link   ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com    Invitation to collaborate in ${openCompetitionBusinessRTO_name}    You will be joining as part of the organisation   3
     And the user clicks the button/link                 jQuery=.button:contains("Yes, accept invitation")
     When the user selects the radio button              organisationType    2
     And the user clicks the button/link                 jQuery=.button:contains("Continue")

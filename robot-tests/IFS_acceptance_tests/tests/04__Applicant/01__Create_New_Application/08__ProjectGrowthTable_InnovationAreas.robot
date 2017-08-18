@@ -342,7 +342,7 @@ RTOs are not allowed to apply on Competition where only Businesses are allowed t
 Business organisation is not allowed to apply on Comp where only RTOs are allowed to lead
     [Documentation]  IFS-1015
     [Tags]
-    Given the logged in user should not be able to apply in a competition he has not right to  theo.simpson@katz.example.com  ${OPEN_COMPETITION_NAME}
+    Given the logged in user should not be able to apply in a competition he has not right to  theo.simpson@katz.example.com  ${openCompetitionRTO_name}
     When the user should see the element           jQuery=h1:contains("You are not eligible to apply")
     Then the user should see the text in the page  ${ineligibleMessage}
 

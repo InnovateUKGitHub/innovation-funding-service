@@ -148,7 +148,7 @@ Quarantined files are not returned to the user and the user is informed
 *** Keywords ***
 Custom Suite Setup
     the guest user opens the browser
-    Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${OPEN_COMPETITION_NAME_2}  You will be joining as part of the organisation
+    Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
 
 the user can re-assign the question back to the lead applicant
     the user reloads the page
