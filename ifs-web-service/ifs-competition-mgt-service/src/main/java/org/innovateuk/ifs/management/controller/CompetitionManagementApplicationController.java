@@ -50,9 +50,9 @@ import static org.innovateuk.ifs.util.HttpUtils.getQueryStringParameters;
 public class CompetitionManagementApplicationController {
 
     @Autowired
-    protected ProcessRoleService processRoleService;
+    private ProcessRoleService processRoleService;
     @Autowired
-    protected ApplicationPrintPopulator applicationPrintPopulator;
+    private ApplicationPrintPopulator applicationPrintPopulator;
     @Autowired
     private ApplicationRestService applicationRestService;
     @Autowired
@@ -194,6 +194,7 @@ public class CompetitionManagementApplicationController {
         return "application/reinstate-ineligible-application-confirm";
     }
 
+    // TODO: review when IFS-1370 is implemented - RB
     private boolean isInternal(UserResource user) {
         return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE) || user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD);
     }
