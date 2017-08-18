@@ -52,7 +52,8 @@ Force Tags        Project Setup  Applicant
 Resource          PS_Common.robot
 
 *** Variables ***
-${project_details_submitted_message}    The project details have been submitted to Innovate UK
+${project_details_submitted_message}  The project details have been submitted to Innovate UK
+${invitedFinanceContact}  ${test_mailbox_one}+invitedfinancecontact@gmail.com
 
 *** Test Cases ***
 Internal users can see Project Details not yet completed
@@ -446,13 +447,12 @@ Inviting finance contact client side validations
     And the user moves focus to the element    jQuery=.button:contains("Save finance contact")
     Then the user should not see the text in the page    Please enter an email address.
     And the user should not see the text in the page    Please enter a valid name.
-    And the user should not see an error in the page
 
 Partner invites a finance contact
     [Documentation]    INFUND-3579
     [Tags]  HappyPath  Email
     When the user enters text to a text field    id=name-finance-contact    John Smith
-    And the user enters text to a text field    id=email-finance-contact    ${test_mailbox_one}+invitedfinancecontact@gmail.com
+    And the user enters text to a text field    id=email-finance-contact  ${invitedFinanceContact}
     And the user clicks the button/link    id=invite-finance-contact
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     [Teardown]    logout as user
@@ -460,18 +460,17 @@ Partner invites a finance contact
 Invited finance contact registration flow
     [Documentation]  INFUND-3524 INFUND-3530
     [Tags]  HappyPath  Email
-    Given the user accepts invitation and signs in  ${test_mailbox_one}+invitedfinancecontact@gmail.com  Finance contact invitation  providing finance details  John  Smith
-    When The guest user inserts user email and password  ${test_mailbox_one}+invitedfinancecontact@gmail.com  ${correct_password}
+    Given the user accepts invitation and signs in  ${invitedFinanceContact}  Finance contact invitation  providing finance details  John  Smith
+    When The guest user inserts user email and password  ${invitedFinanceContact}  ${correct_password}
     And the guest user clicks the log-in button
     Then the user should see the element  jQuery=.progress-list:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
 
 Invited finance contact shows on the finance contact selection screen
     [Documentation]    INFUND-3530
     [Tags]  Email
-    When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_TITLE}
-    And the user clicks the button/link    link=Project details
-    And the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
-    Then the user should see the text in the page    John Smith
+    Given the user navigates to the page  ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details
+    And the user clicks the button/link   link=${EMPIRE_LTD_NAME}
+    Then the user should see the element  jQuery=#finance-contact-section:contains("John Smith")
 
 Lead partner selects a finance contact
     [Documentation]    INFUND-2620, INFUND-5571, INFUND-5898
@@ -548,7 +547,7 @@ Project details submission flow
 Lead partner can see the status update when all Project details are submitted
     [Documentation]    INFUND-5827
     [Tags]  HappyPath
-    [Setup]    Log in as a different user  &{lead_applicant_credentials}
+    [Setup]
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element   jQuery=ul li.complete:nth-child(2)
     And the user should see the element    jQuery=ul li.require-action:nth-child(4)
@@ -616,6 +615,19 @@ Internal user can see the Project details as submitted
     When the user should see the element     jQuery=#project-details-finance
     And the user can see all finance contacts completed
 
+Invited Finance contact is able to see the Finances
+    [Documentation]  IFS-1209
+    [Tags]  HappyPath
+    [Setup]  log in as a different user   ${invitedFinanceContact}  ${correct_password}
+    Given the user navigates to the page  ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-checks
+    When the user clicks the button/link  link=View finances
+    Then the user should see the element  css=.table-overview
+    And the user should not see an error in the page
+    When the user clicks the button/link  link=Finance checks
+    And the user clicks the button/link   link=Project finance overview
+    Then the user should see the element  jQuery=h3:contains("Project cost breakdown")
+    And the user should not see an error in the page
+
 *** Keywords ***
 the user should see a validation error
     [Arguments]    ${ERROR1}
@@ -676,7 +688,8 @@ the user changes the start date back again
     the user clicks the button/link    jQuery=.button:contains("Save")
 
 Mark as complete button should be enabled
-    Then Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Mark as complete")
+
+    Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Mark as complete")
 
 the user should not see duplicated select options
     ${NO_OPTIONs}=    Get Matching Xpath Count    //*[@class="multiple-choice"]

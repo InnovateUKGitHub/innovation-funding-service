@@ -1,13 +1,11 @@
 package org.innovateuk.ifs.management.controller;
 
+import org.innovateuk.ifs.assessment.resource.AssessmentCreateResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
-import org.innovateuk.ifs.competition.resource.AvailableApplicationsSortFieldType;
-import org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType;
 import org.innovateuk.ifs.management.model.AssessorAssessmentProgressModelPopulator;
+import org.innovateuk.ifs.management.service.CompetitionManagementApplicationService;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
-import org.innovateuk.ifs.management.viewmodel.ApplicationAssessmentProgressRemoveViewModel;
-import org.innovateuk.ifs.management.viewmodel.AssessorAssessmentProgressRemoveViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,28 +43,15 @@ public class CompetitionManagementAssessmentsAssessorProgressController {
         return "competition/assessor-progress";
     }
 
-    @PostMapping("/{assessorId}/withdraw/{assessmentId}")
-    public String withdrawAssessment(@PathVariable("competitionId") long competitionId,
-                                     @PathVariable("assessorId") long assessorId,
-                                     @PathVariable("assessmentId") long assessmentId,
-                                     @RequestParam(value = "sortField", defaultValue = "") String sortField) {
-        assessmentRestService.withdrawAssessment(assessmentId).getSuccessObjectOrThrowException();
-        return format("redirect:/assessment/competition/%s/assessors/%s?sortField=%s", competitionId, assessorId, sortField);
-    }
+    @PostMapping("/{assessorId}/application/{applicationId}/assign")
+    public String assessorAssign(@PathVariable("competitionId") long competitionId,
+                                 @PathVariable("assessorId") long assessorId,
+                                 @PathVariable("applicationId") long applicationId) {
 
-    @GetMapping(value = "/{assessorId}/withdraw/{assessmentId}/confirm")
-    public String withdrawAssessmentConfirm(
-            Model model,
-            @PathVariable("competitionId") Long competitionId,
-            @PathVariable("assessorId") long assessorId,
-            @PathVariable("assessmentId") Long assessmentId,
-            @RequestParam(value = "sortField", defaultValue = "") String sortField) {
-        model.addAttribute("model", new AssessorAssessmentProgressRemoveViewModel(
-                competitionId,
-                assessorId,
-                assessmentId,
-                sortField
-        ));
-        return "competition/assessor-progress-remove-confirm";
+        AssessmentCreateResource assessment = new AssessmentCreateResource(applicationId, assessorId);
+        assessmentRestService.createAssessment(assessment).
+                getSuccessObjectOrThrowException();
+
+        return format("redirect:/assessment/competition/%s/assessors/%s", competitionId, assessorId);
     }
 }

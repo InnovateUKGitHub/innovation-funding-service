@@ -19,7 +19,7 @@ Documentation     INFUND-172: As a lead applicant and I am on the application su
 ...
 ...               IFS-753 Missing functionality on Mark as complete option in Application summary
 Suite Setup       new account complete all but one
-Suite Teardown    The user closes the browser
+Suite Teardown    Custom Suite Teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
@@ -192,9 +192,15 @@ the user puts zero project costs
 
 the competition is closed
     Connect to Database    @{database}
-    execute sql string    UPDATE `${database_name}`.`milestone` SET `date`='2017-08-01 11:00:00' WHERE `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';
+    execute sql string    UPDATE `${database_name}`.`milestone` SET `date`='2017-08-01 11:00:00' WHERE `type`='SUBMISSION_DATE' AND `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';
 
 the user should be able to see his application on his dashboard
     [Arguments]  ${user}  ${application}
     log in as a different user       ${user}  ${correct_password}
     the user should see the element  jQuery=.in-progress li:contains("${application}") .msg-deadline-waiting:contains("Awaiting assessment") + .msg-progress:contains("Application submitted")
+
+Custom Suite Teardown
+    The user closes the browser
+    #Is required to return the competition back to its initial status for the following suites to run
+    Connect to Database  @{database}
+    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='2077-09-09 11:00:00' WHERE `type`='SUBMISSION_DATE' AND `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';
