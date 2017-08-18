@@ -186,7 +186,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, new String[]{"id"}));
 
-        Page<ApplicationStatistics> statisticsPage = repository.findByCompetitionAndInnovationAreaProcessActivityStateStateIn(competitionId, assessorId, SUBMITTED_STATUSES, innovationAreaId, pageable);
+        Page<ApplicationStatistics> statisticsPage = repository.findByCompetitionAndInnovationAreaProcessActivityStateStateIn(competitionId, assessorId, SUBMITTED_STATUSES, "", innovationAreaId, pageable);
         assertEquals(1, statisticsPage.getTotalElements());
         assertEquals(20, statisticsPage.getSize());
         assertEquals(0, statisticsPage.getNumber());
