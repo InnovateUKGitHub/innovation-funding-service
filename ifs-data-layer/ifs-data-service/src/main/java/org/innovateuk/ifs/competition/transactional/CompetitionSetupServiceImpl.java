@@ -121,18 +121,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         Competition competition = competitionMapper.mapToDomain(competitionResource);
 
         saveFunders(competitionResource);
-
-        //TODO - Temp code, to be refactored
-        //Delete the existing innovation lead technologist
-        Competition existingCompetitionInDb = competitionRepository.findById(competition.getId());
-        User existingLeadTechnologist = existingCompetitionInDb.getLeadTechnologist();
-        CompetitionParticipant competitionParticipant =
-                competitionParticipantRepository.getByCompetitionIdAndUserIdAndRole(id,
-                        existingLeadTechnologist.getId(), CompetitionParticipantRole.INNOVATION_LEAD);
-        competitionParticipantRepository.delete(competitionParticipant);
-
         competition = competitionRepository.save(competition);
-        saveLeadTechnologist(competition);
         return serviceSuccess(competitionMapper.mapToResource(competition));
     }
 
@@ -140,7 +129,40 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         competitionFunderService.reinsertFunders(competitionResource);
     }
 
-    private void saveLeadTechnologist(Competition competition) {
+    @Override
+    @Transactional
+    public ServiceResult<Void> updateCompetitionInitialDetails(Long competitionId, CompetitionResource competitionResource, Long existingLeadTechnologistId) {
+
+/*        deleteExistingLeadTechnologist(competitionId, existingLeadTechnologistId);
+        CompetitionResource updatedCompetitionResource = update(competitionId, competitionResource).getSuccessObjectOrThrowException();
+        saveLeadTechnologist(updatedCompetitionResource);
+
+        return serviceSuccess();*/
+
+        return deleteExistingLeadTechnologist(competitionId, existingLeadTechnologistId)
+                .andOnSuccess(() -> update(competitionId, competitionResource))
+                .andOnSuccess(updatedCompetitionResource -> saveLeadTechnologist(updatedCompetitionResource));
+    }
+
+    private ServiceResult<Void> deleteExistingLeadTechnologist(Long competitionId, Long existingLeadTechnologistId) {
+
+        if (existingLeadTechnologistId != null) {
+
+            CompetitionParticipant competitionParticipant =
+                    competitionParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId,
+                            existingLeadTechnologistId, CompetitionParticipantRole.INNOVATION_LEAD);
+
+            if (competitionParticipant != null) {
+                competitionParticipantRepository.delete(competitionParticipant);
+            }
+        }
+
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> saveLeadTechnologist(CompetitionResource competitionResource) {
+
+        Competition competition = competitionMapper.mapToDomain(competitionResource);
 
         User leadTechnologist = competition.getLeadTechnologist();
 
@@ -150,6 +172,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
 
         competitionParticipantRepository.save(competitionParticipant);
+
+        return serviceSuccess();
 
     }
 
