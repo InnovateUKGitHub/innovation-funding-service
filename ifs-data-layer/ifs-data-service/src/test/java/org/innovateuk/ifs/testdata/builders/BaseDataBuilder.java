@@ -81,6 +81,7 @@ import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResourc
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -261,7 +262,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     }
 
     protected UserResource systemRegistrar() {
-        return retrieveUserByEmailInternal(IFS_SYSTEM_MAINTENANCE_USER_EMAIL, UserRoleType.SYSTEM_REGISTRATION_USER);
+        return retrieveUserByEmailInternal(IFS_SYSTEM_MAINTENANCE_USER_EMAIL, SYSTEM_REGISTRATION_USER);
     }
 
     protected UserResource projectFinanceUser() {
