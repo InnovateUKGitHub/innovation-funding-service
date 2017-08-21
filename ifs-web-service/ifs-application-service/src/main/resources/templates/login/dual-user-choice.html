@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Dual user choice'" />
+      <th:block th:with="errorPrefix=${#fields.hasErrors('${form.*}')} ? 'Error: ' : ''">
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${errorPrefix}Dual user choice|" />
+      </th:block>
     </head>
 
     <body class="app-overview">
@@ -11,26 +13,29 @@
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
 
-            <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
-                <h2 class="heading-medium error-summary-heading">We were unable to log you in to your account</h2>
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">We were unable to log you in to your account</h2>
                 <ul class="error-summary-list">
-                    <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
+                    <li th:each="err : ${#fields.detailedErrors('${form.*}')}">
+                        <th:block th:if="${err.global}" th:text="${err.message}">Non-field specific message</th:block>
+                        <a th:if="${err.fieldName}" th:href="|#${err.fieldName}|" th:text="${err.message}">The error message</a>
+                    </li>
                 </ul>
             </div>
+
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Sign in successful',size='heading-xlarge'" />
             <p>Thank you for signing into the Innovation Funding Service.</p>
 
-            <form th:action="@{/roleSelection}" method="post" th:object="${form}" class="extra-margin">
+            <form th:action="@{/roleSelection}" method="post" th:object="${form}" class="extra-margin" novalidate="novalidate">
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('selectedRole')}? form-group-error">
+                <div class="form-group" th:classappend="${#fields.hasErrors('selectedRole')} ? form-group-error">
                     <fieldset class="inline">
-                        <legend class="heading-medium">
+                        <legend id="selectedRole">
                             <span class="heading-small">Please choose the role you are signing in as today</span>
                             <th:block th:if="${#fields.hasErrors('selectedRole')}">
                                 <span class="error-message" th:each="err : ${#fields.errors('selectedRole')}" th:text="${err}"/>
                             </th:block>
                         </legend>
-
                         <div class="multiple-choice" th:each="role : ${model.ACCEPTED_ROLES}">
                             <input th:field="*{selectedRole}" th:value="${role}" type="radio" required="required" th:attr="data-required-errormessage=#{validation.standard.role.required}" />
                             <label th:for="${#ids.prev('selectedRole')}" th:text="${role.displayName}"></label>

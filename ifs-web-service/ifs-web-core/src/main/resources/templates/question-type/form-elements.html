@@ -187,6 +187,7 @@
         <textarea th:id="formInput[__${formInput.id}__]"
                   th:name="formInput[__${formInput.id}__]"
                   th:field="*{formInput[__${formInput.id}__]}"
+                  th:errorclass="field-error"
                   th:readonly="${model.readonly}"
                   th:attrappend="data-max_words=${formInput.getWordCount()}, data-maxwordslength=${formInput.getWordCount()},data-maxwordslength-errormessage=${'Maximum word count exceeded. Please reduce your word count to '+formInput.getWordCount()+'.'}"
                   data-editor="md"

@@ -54,7 +54,7 @@
         </div>
     </div>
 
-    <form action="#" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" class="application-overview">
+    <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="post" class="application-overview">
         <th:block th:each="section,iteration : ${model.section.sections.values()}">
             <section th:id="'section-'+${section.id}">
                 <h2 th:text="${section.name}" th:class="${iteration.index == 0} ? 'bold-medium': 'heading-medium no-margin-bottom'"/>

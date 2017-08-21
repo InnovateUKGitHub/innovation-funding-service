@@ -15,7 +15,7 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='You have an application in progress',size='heading-large'" />
         <p>You have already started an application in this competition. Do you want to continue with your existing application or create a new one in the same competition?</p>
 
-        <form method="post" action="#" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+        <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate">
 
             <fieldset>
                 <legend class="visuallyhidden">Create a new application?</legend>

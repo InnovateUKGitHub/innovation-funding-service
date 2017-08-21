@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Add organisation'" />
+        <th:block th:with="errorPrefix=${#fields.hasErrors('${form.*}')} ? 'Error: ' : ''">
+            <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${errorPrefix}Add organisation|" />
+        </th:block>
     </head>
 
     <body class="app-org-invite" th:with="context='applicant'">
@@ -12,10 +14,13 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application team',linkClass='link-back',linkUrl=@{/application/{applicationId}/team(applicationId=${model.applicationId})}" />
 
-            <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
-                <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">We were unable to save your changes</h2>
                 <ul class="error-summary-list">
-                    <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
+                    <li th:each="err : ${#fields.detailedErrors('${form.*}')}">
+                        <th:block th:if="${err.global}" th:text="${err.message}">Non-field specific message</th:block>
+                        <a th:if="${err.fieldName}" th:href="|#${err.fieldName}|" th:text="${err.message}">The error message</a>
+                    </li>
                 </ul>
             </div>
 
@@ -25,12 +30,12 @@
 
             <p>Add organisations to your application team. If you wish to remove a sole member of an organisation, you must add a replacement member first.</p>
 
-            <form th:action="@{/application/{applicationId}/team/addOrganisation(applicationId=${model.applicationId})}" th:object="${form}" method="post">
+            <form th:action="@{/application/{applicationId}/team/addOrganisation(applicationId=${model.applicationId})}" th:object="${form}" novalidate="novalidate" method="post">
                 <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1">save form</button>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('organisationName')} ? 'form-group-error'">
-                    <label class="form-label-bold" for="organisationName">
-                        Organisation name
+                    <label class="form-label-bold" th:for="${#ids.next('organisationName')}">
+                        <span>Organisation name</span>
                         <th:block th:if="${#fields.hasErrors('organisationName')}">
                             <span class="error-message" th:each="err : ${#fields.errors('organisationName')}" th:text="${err}"></span>
                         </th:block>
@@ -54,16 +59,16 @@
                     <tbody>
                         <tr th:each="applicant, applicantStat : *{applicants}" class="repeatable-row">
                             <td class="form-group" th:classappend="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}? 'form-group-error'">
-                                <label th:for="'applicants'+${applicantStat.index}+'.name'">
+                                <label th:for="applicants[__${applicantStat.index}__].name">
                                     <span class="visually-hidden">Applicant name</span>
                                     <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}">
                                         <span th:each="err : ${#fields.errors('applicants[__${applicantStat.index}__].name')}"
                                               th:text="${err}"
-                                              class="error-message"
-                                              th:data-errorfield="'applicants['+${applicantStat.index}+'].name'">Please enter a name.</span>
+                                              class="error-message">Please enter a name.</span>
                                     </th:block>
                                 </label>
                                 <input type="text"
+                                       th:id="applicants[__${applicantStat.index}__].name"
                                        th:field="*{applicants[__${applicantStat.index}__].name}"
                                        class="form-control width-full"
                                        th:errorclass="form-control-error"
@@ -71,16 +76,16 @@
                                        th:attr="data-required-errormessage=#{validation.standard.name.required}" />
                             </td>
                             <td class="form-group" th:classappend="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}? 'form-group-error'">
-                                <label th:for="'applicants'+${applicantStat.index}+'.email'">
+                                <label th:for="applicants[__${applicantStat.index}__].email">
                                     <span class="visually-hidden">Applicant email</span>
                                     <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}">
                                         <span th:each="err : ${#fields.errors('applicants[__${applicantStat.index}__].email')}"
                                               th:text="${err}"
-                                              class="error-message"
-                                              th:data-errorfield="'applicants['+${applicantStat.index}+'].email'"> Please enter an email address.</span>
+                                              class="error-message"> Please enter an email address.</span>
                                     </th:block>
                                 </label>
                                 <input type="email"
+                                       th:id="applicants[__${applicantStat.index}__].email"
                                        th:field="*{applicants[__${applicantStat.index}__].email}"
                                        class="form-control width-full"
                                        th:errorclass="form-control-error"

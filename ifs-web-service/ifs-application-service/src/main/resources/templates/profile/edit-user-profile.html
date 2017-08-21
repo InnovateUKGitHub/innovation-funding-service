@@ -2,7 +2,7 @@
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:with="errorPrefix=${#fields.hasErrors('${userDetailsForm.*}')} ? 'Error: ' : ''">
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${errorPrefix+'Your details'}" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${errorPrefix}Your details|" />
     </th:block>
 </head>
 <body th:with="context='applicant'" class="user-profile-edit">
