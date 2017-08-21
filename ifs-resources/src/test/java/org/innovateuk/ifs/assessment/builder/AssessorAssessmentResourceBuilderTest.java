@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.builder;
 
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.resource.AssessorAssessmentResource;
 import org.junit.Test;
 
@@ -10,7 +10,7 @@ import java.util.List;
 import static org.innovateuk.ifs.assessment.builder.AssessorAssessmentResourceBuilder.newAssessorAssessmentResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.NOT_AREA_OF_EXPERTISE;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.REJECTED;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.REJECTED;
 import static org.junit.Assert.assertEquals;
 
 public class AssessorAssessmentResourceBuilderTest {
@@ -21,7 +21,7 @@ public class AssessorAssessmentResourceBuilderTest {
         String expectedApplicationName = "Test Application";
         String expectedLeadOrganisation = "Test Lead Organisation";
         int expectedTotalAssessors = 10;
-        AssessmentStates expectedState = REJECTED;
+        AssessmentState expectedState = REJECTED;
         AssessmentRejectOutcomeValue expectedAssessmentRejectOutcomeValue = CONFLICT_OF_INTEREST;
         String expectedRejectionComment = "rejection comment";
 
@@ -50,7 +50,7 @@ public class AssessorAssessmentResourceBuilderTest {
         String[] expectedApplicationName = {"Test Application 1", "Test Application 2"};
         String[] expectedLeadOrganisation = {"Test Lead Organisation 1", "Test Lead Organisation 2"};
         Integer[] expectedTotalAssessors = {10, 20};
-        AssessmentStates[] expectedStates = {REJECTED, REJECTED};
+        AssessmentState[] expectedStates = {REJECTED, REJECTED};
         AssessmentRejectOutcomeValue[] expectedAssessmentRejectOutcomeValues = {CONFLICT_OF_INTEREST, NOT_AREA_OF_EXPERTISE};
         String[] expectedRejectionComments = {"rejection comment 1", "rejection comment 2"};
 
