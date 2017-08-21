@@ -2,7 +2,7 @@
 
 <th:block th:fragment="comp-setup-navigation(sections, currentSection, competition, readyToOpen)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:unless="${(param.section != null)}">
-        <div th:if="${competition.isSetupAndLive()}" class="message-alert">
+        <div class="message-alert">
             <p>Setup of this competition has now been completed and will automatically open on the date set. If you need to change anything at this stage please go through the web team.</p>
         </div>
         <ul class="task-list">
