@@ -108,7 +108,7 @@ public class CompetitionController {
                                                            @PathVariable("id") final Long id) {
 
         CompetitionResource existingCompetitionResource = competitionService.getCompetitionById(id).getSuccessObjectOrThrowException();
-        return competitionSetupService.updateCompetitionInitialDetails(id, competitionResource, existingCompetitionResource.getLeadTechnologist()).toGetResponse();
+        return competitionSetupService.updateCompetitionInitialDetails(id, competitionResource, existingCompetitionResource.getLeadTechnologist()).toPutResponse();
     }
 
     @PutMapping("/{id}/close-assessment")
