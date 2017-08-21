@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.project.resource;
 
-import org.innovateuk.ifs.workflow.resource.OutcomeType;
+import org.innovateuk.ifs.workflow.resource.ProcessEvent;
 
-public enum ProjectDetailsOutcomes implements OutcomeType {
+public enum ProjectDetailsEvent implements ProcessEvent {
 
     PROJECT_CREATED("project-created"),
     PROJECT_START_DATE_ADDED("start-date-added"),
@@ -12,7 +12,7 @@ public enum ProjectDetailsOutcomes implements OutcomeType {
 
     String event;
 
-    ProjectDetailsOutcomes(String event) {
+    ProjectDetailsEvent(String event) {
         this.event = event;
     }
 

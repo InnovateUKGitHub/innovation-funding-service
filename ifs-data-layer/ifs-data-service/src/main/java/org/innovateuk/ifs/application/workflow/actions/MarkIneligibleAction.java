@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.workflow.actions;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
-import org.innovateuk.ifs.application.resource.ApplicationOutcome;
+import org.innovateuk.ifs.application.resource.ApplicationEvent;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.springframework.statemachine.StateContext;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,7 @@ public class MarkIneligibleAction extends BaseApplicationAction {
 
     @Override
     protected void doExecute(final Application application,
-                             final StateContext<ApplicationState, ApplicationOutcome> context) {
+                             final StateContext<ApplicationState, ApplicationEvent> context) {
         IneligibleOutcome ineligibleOutcome =
                 (IneligibleOutcome) context.getMessageHeader("ineligible");
 

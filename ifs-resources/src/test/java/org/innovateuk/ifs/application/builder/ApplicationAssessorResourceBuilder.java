@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.user.resource.BusinessType;
 
@@ -73,7 +73,7 @@ public class ApplicationAssessorResourceBuilder extends BaseBuilder<ApplicationA
         return withArraySetFieldByReflection("mostRecentAssessmentId", value);
     }
 
-    public ApplicationAssessorResourceBuilder withMostRecentAssessmentState(AssessmentStates... value) {
+    public ApplicationAssessorResourceBuilder withMostRecentAssessmentState(AssessmentState... value) {
         return withArraySetFieldByReflection("mostRecentAssessmentState", value);
     }
 
