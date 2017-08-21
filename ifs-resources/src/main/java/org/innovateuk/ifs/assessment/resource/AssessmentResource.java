@@ -8,7 +8,7 @@ import java.time.LocalDate;
 public class AssessmentResource {
     private Long id;
     private String event;
-    private AssessmentStates assessmentState;
+    private AssessmentState assessmentState;
     private LocalDate startDate;
     private LocalDate endDate;
     private AssessmentFundingDecisionOutcomeResource fundingDecision;
@@ -35,11 +35,11 @@ public class AssessmentResource {
         this.event = event;
     }
 
-    public AssessmentStates getAssessmentState() {
+    public AssessmentState getAssessmentState() {
         return assessmentState;
     }
 
-    public void setAssessmentState(AssessmentStates assessmentState) {
+    public void setAssessmentState(AssessmentState assessmentState) {
         this.assessmentState = assessmentState;
     }
 

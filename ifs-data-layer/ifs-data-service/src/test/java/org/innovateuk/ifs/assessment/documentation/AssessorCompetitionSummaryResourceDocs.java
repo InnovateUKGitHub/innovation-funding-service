@@ -1,18 +1,14 @@
 package org.innovateuk.ifs.assessment.documentation;
 
 import org.innovateuk.ifs.assessment.builder.AssessorCompetitionSummaryResourceBuilder;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
-import org.innovateuk.ifs.assessment.resource.AssessorCompetitionSummaryResource;
-import org.innovateuk.ifs.documentation.UserProfileResourceDocs;
 import org.springframework.restdocs.payload.FieldDescriptor;
-import org.springframework.restdocs.payload.PayloadDocumentation;
 
 import static org.innovateuk.ifs.assessment.builder.AssessorAssessmentResourceBuilder.newAssessorAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorCompetitionSummaryResourceBuilder.newAssessorCompetitionSummaryResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
 import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.ACCEPTED;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.SUBMITTED;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.ACCEPTED;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;

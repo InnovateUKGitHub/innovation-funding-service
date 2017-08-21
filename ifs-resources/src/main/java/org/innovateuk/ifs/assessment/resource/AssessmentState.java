@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.resource;
 
-import org.innovateuk.ifs.workflow.resource.ProcessStates;
+import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;
 
 import java.util.HashMap;
@@ -10,7 +10,7 @@ import java.util.Set;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
-public enum AssessmentStates implements ProcessStates {
+public enum AssessmentState implements ProcessState {
     // All types of status
     CREATED(State.CREATED),
     PENDING(State.PENDING),
@@ -24,18 +24,18 @@ public enum AssessmentStates implements ProcessStates {
 
     private State backingState;
 
-    private static final Map<String, AssessmentStates> assessmentStatesMap;
+    private static final Map<String, AssessmentState> assessmentStatesMap;
 
     static {
         assessmentStatesMap = new HashMap<>();
 
-        for (AssessmentStates assessmentState : AssessmentStates.values()) {
+        for (AssessmentState assessmentState : AssessmentState.values()) {
             assessmentStatesMap.put(assessmentState.getStateName(), assessmentState);
         }
     }
 
     // creates the enum with the chosen type.
-    AssessmentStates(State backingState) {
+    AssessmentState(State backingState) {
         this.backingState = backingState;
     }
 
@@ -53,19 +53,19 @@ public enum AssessmentStates implements ProcessStates {
         return assessmentStatesMap.keySet();
     }
 
-    public static AssessmentStates getByState(String state) {
+    public static AssessmentState getByState(String state) {
         return assessmentStatesMap.get(state);
     }
 
-    public static AssessmentStates fromState(State state) {
-        return ProcessStates.fromState(AssessmentStates.values(), state);
+    public static AssessmentState fromState(State state) {
+        return ProcessState.fromState(AssessmentState.values(), state);
     }
 
-    public static Set<State> getBackingStates(Set<AssessmentStates> states) {
-        return simpleMapSet(states, AssessmentStates::getBackingState);
+    public static Set<State> getBackingStates(Set<AssessmentState> states) {
+        return simpleMapSet(states, AssessmentState::getBackingState);
     }
 
-    public static Set<State> getBackingStates(List<AssessmentStates> states) {
-        return simpleMapSet(states, AssessmentStates::getBackingState);
+    public static Set<State> getBackingStates(List<AssessmentState> states) {
+        return simpleMapSet(states, AssessmentState::getBackingState);
     }
 }

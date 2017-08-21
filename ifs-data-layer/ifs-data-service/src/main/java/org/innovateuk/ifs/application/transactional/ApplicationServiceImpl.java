@@ -172,7 +172,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             if (existingResponse != null && existingResponse.getFileEntry() != null) {
                 FormInputResponseFileEntryId formInputResponseFileEntryId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId);
                 final ServiceResult<FormInputResponse> deleteResult = deleteFormInputResponseFileUpload(formInputResponseFileEntryId);
-                ;
+
                 if (deleteResult.isFailure()) {
                     return serviceFailure(new Error(FILES_UNABLE_TO_DELETE_FILE, existingResponse.getFileEntry().getId()));
                 }
@@ -231,31 +231,20 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     private ServiceResult<FormInputResponse> deleteFormInputResponseFileUploadonGetApplicationAndSuccess(FormInputResponseFileEntryId fileEntry) {
-
-        ServiceResult<FormInputResponseFileAndContents> existingFileResult =
-                getFormInputResponseFileUpload(fileEntry);
-
-        return existingFileResult.andOnSuccess(existingFile -> {
-
-            FormInputResponseFileEntryResource formInputFileEntryResource = existingFile.getFormInputResponseFileEntry();
-            Long fileEntryId = formInputFileEntryResource.getFileEntryResource().getId();
-
-            FormInput formInput = formInputRepository.findOne(formInputFileEntryResource.getCompoundId().getFormInputId());
-            if (formInput != null) {
-                boolean questionHasMultipleStatuses = questionHasMultipleStatuses(formInput);
-                return fileService.deleteFileIgnoreNotFound(fileEntryId).
-                        andOnSuccess(deletedFile -> {
-                            if (questionHasMultipleStatuses) {
-                                return getFormInputResponse(formInputFileEntryResource.getCompoundId());
-                            } else {
-                                return getFormInputResponseForQuestionAssignee(formInputFileEntryResource.getCompoundId());
-                            }
-                        }).
-                        andOnSuccess(this::unlinkFileEntryFromFormInputResponse);
-            } else {
-                return serviceFailure(notFoundError(FormInput.class, formInputFileEntryResource.getCompoundId().getFormInputId()));
-            }
-        });
+        return find(formInputRepository.findOne(fileEntry.getFormInputId()), notFoundError(FormInput.class, fileEntry.getFormInputId())).andOnSuccess(
+                formInput -> getFormInputResponseFileEntryResource(fileEntry, formInput).
+                        andOnSuccess(formInputResponseFileEntryResource -> {
+                            boolean questionHasMultipleStatuses = questionHasMultipleStatuses(formInput);
+                            return fileService.deleteFileIgnoreNotFound(formInputResponseFileEntryResource.getFileEntryResource().getId()).
+                                    andOnSuccess(deletedFile -> {
+                                        if (questionHasMultipleStatuses) {
+                                            return getFormInputResponse(formInputResponseFileEntryResource.getCompoundId());
+                                        } else {
+                                            return getFormInputResponseForQuestionAssignee(formInputResponseFileEntryResource.getCompoundId());
+                                        }
+                                    }).andOnSuccess(this::unlinkFileEntryFromFormInputResponse);
+                        })
+        );
     }
 
     private boolean questionHasMultipleStatuses(@NotNull FormInput formInput) {
@@ -265,25 +254,29 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<FormInputResponseFileAndContents> getFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntry) {
-        final FormInput formInput = formInputRepository.findOne(fileEntry.getFormInputId());
-        if (formInput == null) {
-            return serviceFailure(notFoundError(FormInput.class, fileEntry.getFormInputId()));
-        }
+        return find(formInputRepository.findOne(fileEntry.getFormInputId()), notFoundError(FormInput.class, fileEntry.getFormInputId())).
+                andOnSuccess(formInput -> getAppropriateFormInputResponse(fileEntry, formInput).
+                        andOnSuccess(formInputResponse ->
+                                fileService.getFileByFileEntryId(formInputResponse.getFileEntry().getId()).
+                                        andOnSuccessReturn(inputStreamSupplier -> {
+                                            FormInputResponseFileEntryResource formInputResponseFileEntry = formInputResponseFileEntryResource(formInputResponse.getFileEntry(), fileEntry);
+                                            return new FormInputResponseFileAndContents(formInputResponseFileEntry, inputStreamSupplier);
+                                        })
+                        ));
+    }
 
+    private ServiceResult<FormInputResponseFileEntryResource> getFormInputResponseFileEntryResource(FormInputResponseFileEntryId fileEntry, FormInput formInput){
+        return getAppropriateFormInputResponse(fileEntry, formInput).andOnSuccess(formInputResponse -> serviceSuccess(formInputResponseFileEntryResource(formInputResponse.getFileEntry(), fileEntry)));
+    }
+
+    private ServiceResult<FormInputResponse> getAppropriateFormInputResponse(FormInputResponseFileEntryId fileEntry, FormInput formInput){
         boolean hasMultipleStatuses = questionHasMultipleStatuses(formInput);
 
-        ServiceResult<FormInputResponse> formInputResponse;
         if (hasMultipleStatuses) {
-            formInputResponse = getFormInputResponse(fileEntry);
+            return getFormInputResponse(fileEntry);
         } else {
-            formInputResponse = getFormInputResponseForQuestionAssignee(fileEntry);
+            return getFormInputResponseForQuestionAssignee(fileEntry);
         }
-        return formInputResponse.
-                andOnSuccess(fir -> fileService.getFileByFileEntryId(fir.getFileEntry().getId()).
-                        andOnSuccessReturn(inputStreamSupplier -> {
-                            FormInputResponseFileEntryResource formInputResponseFileEntry = formInputResponseFileEntryResource(fir.getFileEntry(), fileEntry);
-                            return new FormInputResponseFileAndContents(formInputResponseFileEntry, inputStreamSupplier);
-                        }));
     }
 
     private ServiceResult<FormInputResponse> unlinkFileEntryFromFormInputResponse(FormInputResponse formInputResponse) {
@@ -401,7 +394,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<ApplicationResource> updateApplicationState(final Long id, final ApplicationState state) {
-        if (Arrays.asList(ApplicationState.SUBMITTED).contains(state) && !applicationReadyToSubmit(id)) {
+        if (Collections.singletonList(ApplicationState.SUBMITTED).contains(state) && !applicationReadyToSubmit(id)) {
                 return serviceFailure(CommonFailureKeys.GENERAL_FORBIDDEN);
         }
         return find(application(id)).andOnSuccess((application) -> {
@@ -587,9 +580,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 .filter(p -> p.getRole().getName().equals(LEADAPPLICANT.getName())
                         || p.getRole().getName().equals(UserRoleType.APPLICANT.getName())
                         || p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName()))
-                .map(processRole -> {
-                    return organisationRepository.findOne(processRole.getOrganisationId());
-                }).collect(Collectors.toSet());
+                .map(processRole -> organisationRepository.findOne(processRole.getOrganisationId())).collect(Collectors.toSet());
 
         Long countMultipleStatusQuestionsCompleted = organisations.stream()
                 .mapToLong(org -> questions.stream()
@@ -617,9 +608,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     private boolean applicationBelongsToOpenCompetition(Long applicationId) {
         Application application = applicationRepository.findOne(applicationId);
-        if (application != null && application.getCompetition() != null) {
-            return CompetitionStatus.OPEN.equals(application.getCompetition().getCompetitionStatus());
-        }
-        return true;
+        return !(application != null && application.getCompetition() != null) || CompetitionStatus.OPEN.equals(application.getCompetition().getCompetitionStatus());
     }
 }

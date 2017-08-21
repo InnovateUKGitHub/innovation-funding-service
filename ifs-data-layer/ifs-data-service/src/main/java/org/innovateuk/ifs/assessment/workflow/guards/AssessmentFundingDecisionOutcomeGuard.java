@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.assessment.workflow.guards;
 
 import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
-import org.innovateuk.ifs.assessment.resource.AssessmentOutcomes;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentEvent;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.guard.Guard;
 import org.springframework.stereotype.Component;
@@ -12,10 +12,10 @@ import org.springframework.stereotype.Component;
  * to the next state. This will not happen if the evaluation is failing.
  */
 @Component
-public class AssessmentFundingDecisionOutcomeGuard implements Guard<AssessmentStates, AssessmentOutcomes> {
+public class AssessmentFundingDecisionOutcomeGuard implements Guard<AssessmentState, AssessmentEvent> {
 
     @Override
-    public boolean evaluate(StateContext<AssessmentStates, AssessmentOutcomes> context) {
+    public boolean evaluate(StateContext<AssessmentState, AssessmentEvent> context) {
         Object fundingDecisionObject = context.getMessageHeader("fundingDecision");
         return isAssessmentFundingDecisionOutcome(fundingDecisionObject);
     }
