@@ -101,7 +101,8 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
                     assessorCount,
                     count.getAssessment().getActivityState(),
                     assessmentRejectOutcomeValue,
-                    comment
+                    comment,
+                    count.getAssessment().getId()
             );
         });
     }

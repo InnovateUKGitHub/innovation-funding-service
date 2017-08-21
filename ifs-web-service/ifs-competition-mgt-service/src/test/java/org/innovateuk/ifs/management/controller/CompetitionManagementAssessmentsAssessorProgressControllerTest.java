@@ -10,9 +10,11 @@ import org.innovateuk.ifs.assessment.service.AssessorCompetitionSummaryRestServi
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.model.AssessorAssessmentProgressModelPopulator;
+import org.innovateuk.ifs.management.viewmodel.AssessorAssessmentProgressRemoveViewModel;
 import org.innovateuk.ifs.management.viewmodel.AssessorAssessmentProgressViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -20,6 +22,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 
+import static java.lang.String.format;
 import static java.util.Optional.empty;
 import static org.hamcrest.Matchers.hasItems;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
@@ -35,11 +38,12 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentState.REJECTED;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -239,6 +243,45 @@ public class CompetitionManagementAssessmentsAssessorProgressControllerTest exte
         assertEquals("1 to 20", actualPagination.getPageNames().get(0).getTitle());
         assertEquals("21 to 40", actualPagination.getPageNames().get(1).getTitle());
         assertEquals("41 to 41", actualPagination.getPageNames().get(2).getTitle());
+    }
+
+    @Test
+    public void withdrawAssessment() throws Exception {
+        long competitionId = 1L;
+        long assessorId = 2L;
+        long assessmentId = 3L;
+
+        when(assessmentRestService.withdrawAssessment(assessmentId)).thenReturn(restSuccess());
+
+        mockMvc.perform(
+                post("/assessment/competition/{competitionId}/assessors/{assessorId}/withdraw/{assessmentId}", competitionId, assessorId, assessmentId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/assessment/competition/%s/assessors/%s?sortField=", competitionId, assessorId)));
+
+        InOrder inOrder = inOrder(assessmentRestService);
+        inOrder.verify(assessmentRestService).withdrawAssessment(assessmentId);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void withdrawAssessmentConfirm() throws Exception {
+        long competitionId = 1L;
+        long assessorId = 2L;
+        long assessmentId = 3L;
+
+        AssessorAssessmentProgressRemoveViewModel expectedModel = new AssessorAssessmentProgressRemoveViewModel(
+                competitionId,
+                assessorId,
+                assessmentId,
+                ""
+        );
+
+        mockMvc.perform(
+                get("/assessment/competition/{competitionId}/assessors/{assessorId}/withdraw/{assessmentId}/confirm", competitionId, assessorId, assessmentId))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedModel))
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("competition/assessor-progress-remove-confirm"));
     }
 
     private AddressResource getExpectedAddress() {

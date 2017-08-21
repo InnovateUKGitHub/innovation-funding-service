@@ -23,6 +23,7 @@ public class AssessorAssessmentResource {
     private AssessmentState state;
     private AssessmentRejectOutcomeValue rejectReason;
     private String rejectComment;
+    private long assessmentId;
 
     public AssessorAssessmentResource() {
     }
@@ -33,7 +34,8 @@ public class AssessorAssessmentResource {
                                       int totalAssessors,
                                       AssessmentState state,
                                       AssessmentRejectOutcomeValue rejectReason,
-                                      String  rejectComment) {
+                                      String  rejectComment,
+                                      long assessmentId) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.leadOrganisation = leadOrganisation;
@@ -41,6 +43,7 @@ public class AssessorAssessmentResource {
         this.state = state;
         this.rejectReason = rejectReason;
         this.rejectComment = rejectComment;
+        this.assessmentId = assessmentId;
     }
 
     public long getApplicationId() {
@@ -83,6 +86,14 @@ public class AssessorAssessmentResource {
         this.state = state;
     }
 
+    public long getAssessmentId() {
+        return assessmentId;
+    }
+
+    public void setAssessmentId(long assessmentId) {
+        this.assessmentId = assessmentId;
+    }
+
     public AssessmentRejectOutcomeValue getRejectReason() {
         return rejectReason;
     }
@@ -110,6 +121,7 @@ public class AssessorAssessmentResource {
         return new EqualsBuilder()
                 .append(applicationId, that.applicationId)
                 .append(totalAssessors, that.totalAssessors)
+                .append(assessmentId, that.assessmentId)
                 .append(applicationName, that.applicationName)
                 .append(leadOrganisation, that.leadOrganisation)
                 .append(state, that.state)
@@ -128,6 +140,7 @@ public class AssessorAssessmentResource {
                 .append(state)
                 .append(rejectReason)
                 .append(rejectComment)
+                .append(assessmentId)
                 .toHashCode();
     }
 }
