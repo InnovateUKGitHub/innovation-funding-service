@@ -178,13 +178,11 @@ dockerCompose {
 
     useComposeFiles = ['docker-compose.yml', 'docker-compose-dev.yml']
 
-    def zipkinEnabled = project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false
-    if (zipkinEnabled) {
+    if (project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false) {
         useComposeFiles.add('docker-compose-zipkin.yml')
     }
 
-    def adminEnabled = project.hasProperty('ifs.admin.enabled') ? project.property('ifs.admin.enabled').toBoolean() : false
-    if (adminEnabled) {
+    if (project.hasProperty('ifs.admin.enabled') ? project.property('ifs.admin.enabled').toBoolean() : false) {
         useComposeFiles.add('docker-compose-admin-console.yml')
     }
 
