@@ -67,36 +67,22 @@ Lead applicant can view a file
     Then the user should not see an error in the page
     [Teardown]    The user goes back to the previous page
 
-Competition Admin can view file
+Internal users can view uploaded files
     [Documentation]    IFS-1037
-    [Tags]     Download
-    [Setup]    Log in as a different user         &{Comp_admin1_credentials}
-    Given the user navigates to the page          ${OPEN_COMPETITION_MAN}
-    And the user clicks the button/link           link=Applications: All, submitted, ineligible
-    And the user clicks the button/link           link=All applications
-    And the user clicks the button/link           jQuery=tr:contains("Academic robot test application") a
-    And the user clicks the button/link           jQuery=button:contains("5. Technical approach")
-    And the user should see the text in the page  ${valid_pdf}
-    When The user opens the link in new window    ${valid_pdf}
-    [Teardown]    the user closes the browser
-
-Project Finance can view file
-    [Documentation]    IFS-1037
-    [Tags]     Download
-    [Setup]    The user logs-in in new browser    &{internal_finance_credentials}
-    Given the user navigates to the page          ${OPEN_COMPETITION_MAN}
-    And the user clicks the button/link           link=Applications: All, submitted, ineligible
-    And the user clicks the button/link           link=All applications
-    And the user clicks the button/link           jQuery=tr:contains("Academic robot test application") a
-    And the user clicks the button/link           jQuery=button:contains("5. Technical approach")
-    And the user should see the text in the page  ${valid_pdf}
-    When The user opens the link in new window    ${valid_pdf}
-    [Teardown]    the user closes the browser
+    [Tags]
+    When Log in as a different user               &{Comp_admin1_credentials}
+    Then User verifies if uploaded document can be viewed
+    When Log in as a different user               &{internal_finance_credentials}
+    Then User verifies if uploaded document can be viewed
+    When Log in as a different user               &{ifs_admin_user_credentials}
+    Then User verifies if uploaded document can be viewed
+    When Log in as a different user               &{support_user_credentials}
+    Then User verifies if uploaded document can be viewed
 
 Collaborators can view a file
     [Documentation]    INFUND-2306
     [Tags]    HappyPath    SmokeTest
-    [Setup]    The user logs-in in new browser    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
+    [Setup]    Log in as a different user         ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     Given the user navigates to the page          ${DASHBOARD_URL}
     And the user clicks the button/link           link=Academic robot test application
     And the user clicks the button/link           link=5. Technical approach
@@ -199,3 +185,10 @@ the user can see the option to upload a file on the question
 
 The applicant opens the uploaded file
     When The user opens the link in new window        ${valid_pdf}
+
+User verifies if uploaded document can be viewed
+     the user navigates to the page            ${OPEN_COMPETITION_MAN}/applications/all
+     the user clicks the button/link           jQuery=tr:contains("Academic robot test application") td a
+     the user expands the section              5. Technical approach
+     The user opens the link in new window     ${valid_pdf}
+     the user should not see an error in the page
