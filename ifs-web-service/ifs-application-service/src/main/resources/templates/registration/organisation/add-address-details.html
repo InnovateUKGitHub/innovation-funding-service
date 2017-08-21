@@ -26,7 +26,7 @@
 
     <th:block th:insert="fragments/addresses :: organisation-details-minimal" />
 
-    <form th:action="@{/organisation/create/selected-organisation/{organisationId}/{postcode}/{selectedPostcode}(organisationId=${organisationForm.searchOrganisationId}, postcode=${organisationForm.addressForm.postcodeInput}, selectedPostcode=${organisationForm.addressForm.selectedPostcodeIndex})}" th:object="${organisationForm}" method="POST">
+    <form th:action="@{/organisation/create/selected-organisation/{organisationId}/{postcode}/{selectedPostcode}(organisationId=${organisationForm.searchOrganisationId}, postcode=${organisationForm.addressForm.postcodeInput}, selectedPostcode=${organisationForm.addressForm.selectedPostcodeIndex})}" novalidate="novalidate" th:object="${organisationForm}" method="POST">
         <input type="hidden" th:field="*{searchOrganisationId}" />
         <h2 class="heading-medium no-margin-bottom">Operating address</h2>
         <p>This is the address that your organisation works from</p>
