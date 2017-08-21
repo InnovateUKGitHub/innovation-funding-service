@@ -139,9 +139,7 @@ public class CompetitionManagementApplicationController {
     }
 
     @GetMapping("/{applicationId}/forminput/{formInputId}/download")
-    public
-    @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadQuestionFile(
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadQuestionFile(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("formInputId") final Long formInputId,
             UserResource user) throws ExecutionException, InterruptedException {
@@ -196,6 +194,6 @@ public class CompetitionManagementApplicationController {
 
     // TODO: review when IFS-1370 is implemented - RB
     private boolean isInternal(UserResource user) {
-        return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE) || user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD);
+        return user.hasRole(UserRoleType.IFS_ADMINISTRATOR) || user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE) || user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD);
     }
 }

@@ -26,7 +26,10 @@ import org.innovateuk.ifs.management.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.management.viewmodel.ReinstateIneligibleApplicationViewModel;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.user.builder.RoleResourceBuilder;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -44,6 +47,7 @@ import java.util.*;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -63,9 +67,11 @@ import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEn
 import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
@@ -575,69 +581,44 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     }
 
     @Test
-    public void downLoadAsCompAdmin() throws Exception {
+    public void downloadAsInternalUser() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();
-        UserResource user = newUserResource().withRolesGlobal(Collections.singletonList(RoleResourceBuilder.newRoleResource().withName(UserRoleType.COMP_ADMIN.getName()).build())).build();
-        setLoggedInUser(user);
 
-        Long formInputId = 35L;
-        long processRoleId = 73L;
-        List<FormInputResponseResource> inputResponse = newFormInputResponseResource().withUpdatedBy(processRoleId).build(1);
-        when(formInputResponseRestService.getByFormInputIdAndApplication(formInputId, applications.get(0).getId())).thenReturn(RestResult.restSuccess(inputResponse));
+        UserRoleType.internalRoles().forEach(role -> {
+            try {
+                setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+                Long formInputId = 35L;
+                long processRoleId = role.ordinal(); // mapping role ordinal as process role (just for mocking)
+                List<FormInputResponseResource> inputResponse = newFormInputResponseResource().withUpdatedBy(processRoleId).build(1);
+                when(formInputResponseRestService.getByFormInputIdAndApplication(formInputId, applications.get(0).getId())).thenReturn(RestResult.restSuccess(inputResponse));
 
-        ProcessRoleResource processRoleResource = newProcessRoleResource().withId(processRoleId).build();
-        when(processRoleService.getById(processRoleId)).thenReturn(settable(processRoleResource));
-        ByteArrayResource bar = new ByteArrayResource("File contents".getBytes());
-        when(formInputResponseRestService.getFile(formInputId, applications.get(0).getId(), processRoleId)).thenReturn(restSuccess(bar));
-        FileEntryResource fileEntryResource = newFileEntryResource().with(id(999L)).withName("file1").withMediaType("text/csv").build();
-        FormInputResponseFileEntryResource formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
-        when(formInputResponseRestService.getFileDetails(formInputId, applications.get(0).getId(), processRoleId)).thenReturn(RestResult.restSuccess(formInputResponseFileEntryResource));
+                ProcessRoleResource processRoleResource = newProcessRoleResource().withId(processRoleId).build();
+                when(processRoleService.getById(processRoleId)).thenReturn(settable(processRoleResource));
+                ByteArrayResource bar = new ByteArrayResource("File contents".getBytes());
+                when(formInputResponseRestService.getFile(formInputId, applications.get(0).getId(), processRoleId)).thenReturn(restSuccess(bar));
+                FileEntryResource fileEntryResource = newFileEntryResource().with(id(999L)).withName("file1").withMediaType("text/csv").build();
+                FormInputResponseFileEntryResource formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
+                when(formInputResponseRestService.getFileDetails(formInputId, applications.get(0).getId(), processRoleId)).thenReturn(RestResult.restSuccess(formInputResponseFileEntryResource));
 
-        mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "/forminput/" + formInputId + "/download"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(("text/csv")))
-                .andExpect(header().string("Content-Type", "text/csv"))
-                .andExpect(header().string("Content-disposition", "inline; filename=\"file1\""))
-                .andExpect(content().string("File contents"));
+                mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "/forminput/" + formInputId + "/download"))
+                        .andExpect(status().isOk())
+                        .andExpect(content().contentType(("text/csv")))
+                        .andExpect(header().string("Content-Type", "text/csv"))
+                        .andExpect(header().string("Content-disposition", "inline; filename=\"file1\""))
+                        .andExpect(content().string("File contents"));
 
-        verify(formInputResponseRestService).getFile(formInputId, applications.get(0).getId(), processRoleId);
-        verify(formInputResponseRestService).getFileDetails(formInputId, applications.get(0).getId(), processRoleId);
+                verify(formInputResponseRestService).getFile(formInputId, applications.get(0).getId(), processRoleId);
+                verify(formInputResponseRestService).getFileDetails(formInputId, applications.get(0).getId(), processRoleId);
+
+            } catch (Exception e) {
+                fail();
+            }
+        });
     }
 
     @Test
-    public void downLoadAsProjectFinance() throws Exception {
-        this.setupCompetition();
-        this.setupApplicationWithRoles();
-        UserResource user = newUserResource().withRolesGlobal(Collections.singletonList(RoleResourceBuilder.newRoleResource().withName(UserRoleType.PROJECT_FINANCE.getName()).build())).build();
-        setLoggedInUser(user);
-
-        Long formInputId = 35L;
-        long processRoleId = 73L;
-        List<FormInputResponseResource> inputResponse = newFormInputResponseResource().withUpdatedBy(processRoleId).build(1);
-        when(formInputResponseRestService.getByFormInputIdAndApplication(formInputId, applications.get(0).getId())).thenReturn(RestResult.restSuccess(inputResponse));
-
-        ProcessRoleResource processRoleResource = newProcessRoleResource().withId(processRoleId).build();
-        when(processRoleService.getById(processRoleId)).thenReturn(settable(processRoleResource));
-        ByteArrayResource bar = new ByteArrayResource("File contents".getBytes());
-        when(formInputResponseRestService.getFile(formInputId, applications.get(0).getId(), processRoleId)).thenReturn(restSuccess(bar));
-        FileEntryResource fileEntryResource = newFileEntryResource().with(id(999L)).withName("file1").withMediaType("text/csv").build();
-        FormInputResponseFileEntryResource formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
-        when(formInputResponseRestService.getFileDetails(formInputId, applications.get(0).getId(), processRoleId)).thenReturn(RestResult.restSuccess(formInputResponseFileEntryResource));
-
-        mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "/forminput/" + formInputId + "/download"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(("text/csv")))
-                .andExpect(header().string("Content-Type", "text/csv"))
-                .andExpect(header().string("Content-disposition", "inline; filename=\"file1\""))
-                .andExpect(content().string("File contents"));
-
-        verify(formInputResponseRestService).getFile(formInputId, applications.get(0).getId(), processRoleId);
-        verify(formInputResponseRestService).getFileDetails(formInputId, applications.get(0).getId(), processRoleId);
-    }
-
-    @Test
-    public void downLoadAsPartner() throws Exception {
+    public void downloadAsPartner() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();
         UserResource user = newUserResource().withRolesGlobal(Collections.singletonList(RoleResourceBuilder.newRoleResource().withName(UserRoleType.PARTNER.getName()).build())).build();
@@ -665,7 +646,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     }
 
     @Test
-    public void downLoadAsPartnerFileDetailsNotFound() throws Exception {
+    public void downloadAsPartnerFileDetailsNotFound() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();
         UserResource user = newUserResource().withRolesGlobal(Collections.singletonList(RoleResourceBuilder.newRoleResource().withName(UserRoleType.PARTNER.getName()).build())).build();
@@ -688,7 +669,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     }
 
     @Test
-    public void downLoadAsPartnerFileNotFound() throws Exception {
+    public void downloadAsPartnerFileNotFound() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();
         UserResource user = newUserResource().withRolesGlobal(Collections.singletonList(RoleResourceBuilder.newRoleResource().withName(UserRoleType.PARTNER.getName()).build())).build();
