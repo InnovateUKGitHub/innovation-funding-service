@@ -86,7 +86,7 @@ Remove an assigned application (Notified)
     Given the user clicks the button/link     jQuery=td:contains("${Molecular_id}") ~ td:contains("Yes") ~ td:contains("Remove")
     When the user clicks the button/link      jQuery=button:contains("Remove assessor")
     Then the user should not see the element  jQuery=td:contains("${Molecular_id}") ~ td:contains("Yes") ~ td:contains("Remove")
-    And the user should see the element       jQuery=h2:contains("Applications") ~ div td:contains("${Molecular_id}") + td:contains("Molecular tree breeding")~ td:contains("Assign")
+    And the user should see the element       jQuery=h2:contains("Applications") ~ div td:contains("${Molecular_id}") + td:contains("Molecular tree breeding") ~ td:contains("Assign")
     And the user clicks the button/link       jQuery=.pagination-label:contains("Next")
 
 Assign an application to an assessor
