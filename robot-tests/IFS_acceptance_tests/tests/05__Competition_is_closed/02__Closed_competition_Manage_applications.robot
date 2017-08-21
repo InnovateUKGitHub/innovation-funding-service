@@ -8,6 +8,8 @@ Documentation     INFUND-7734 Competition Management: Assign to application dash
 ...               INFUND-8062 Filter and pagination on Assign to application (Closed competition) and Application progress dashboards
 ...
 ...               IFS-17 View list of accepted assessors - Closed state
+...
+...               IFS-1079 Remove an application - Closed and In assessment states
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -74,6 +76,16 @@ Assessor Progress page
     Given the user clicks the button/link  jQuery=td:contains("Madeleine Martin") ~ td a:contains("Assign")
     Then the user should see the element   jQuery=h2:contains("Assigned") + p:contains("No applications have been assigned to this assessor")
     And the user should see the element    jQuery=h2:contains("Applications") ~ div td:contains("${Neural_id}") + td:contains("Neural") + td:contains("Neural Industries") + td:contains("1")
+
+Assessor removal
+    [Documentation]  IFS-1079
+    [Tags]
+    Given the user clicks the button/link     link=Allocate assessors
+    When the user clicks the button/link      jQuery=td:contains("Benjamin Nixon") ~ td a:contains("Assign")
+    Then the user should see the element      jQuery=div td:contains("${Neural_id}") + td:contains("Neural") + td:contains("Neural Industries") + td:contains("1") + td:contains("Remove")
+    When the user clicks the button/link      jQuery=td:contains("${Neural_id}") ~ td:contains("Remove")
+    Then the user should not see the element  jQuery=td:contains("${Neural_id}") ~ td:contains("Remove")
+    And the user should see the element       jQuery=h2:contains("Applications") ~ div td:contains("${Neural_id}") + td:contains("Neural") + td:contains("Neural Industries") + td:contains("0")
 
 *** Keywords ***
 the assessor list is correct before changes

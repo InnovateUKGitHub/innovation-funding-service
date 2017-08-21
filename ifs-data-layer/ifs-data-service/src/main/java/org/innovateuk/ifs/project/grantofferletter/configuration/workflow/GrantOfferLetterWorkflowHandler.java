@@ -4,7 +4,7 @@ import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.grantofferletter.domain.GOLProcess;
 import org.innovateuk.ifs.project.grantofferletter.repository.GrantOfferLetterProcessRepository;
-import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterOutcomes;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.function.BiFunction;
 
-import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterOutcomes.*;
+import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent.*;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_GRANT_OFFER_LETTER;
 /**
  * {@code GOLWorkflowService} is the entry point for triggering the workflow.
@@ -31,11 +31,11 @@ import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_GRAN
  *
  */
 @Component
-public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GrantOfferLetterState, GrantOfferLetterOutcomes, Project, ProjectUser> {
+public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GrantOfferLetterState, GrantOfferLetterEvent, Project, ProjectUser> {
 
     @Autowired
     @Qualifier("golStateMachine")
-    private StateMachine<GrantOfferLetterState, GrantOfferLetterOutcomes> stateMachine;
+    private StateMachine<GrantOfferLetterState, GrantOfferLetterEvent> stateMachine;
 
     @Autowired
     private GrantOfferLetterProcessRepository grantOfferLetterProcessRepository;
@@ -140,32 +140,32 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
     }
 
     @Override
-    protected StateMachine<GrantOfferLetterState, GrantOfferLetterOutcomes> getStateMachine() {
+    protected StateMachine<GrantOfferLetterState, GrantOfferLetterEvent> getStateMachine() {
         return stateMachine;
     }
 
     @Override
-    protected GOLProcess getOrCreateProcess(Message<GrantOfferLetterOutcomes> message) {
+    protected GOLProcess getOrCreateProcess(Message<GrantOfferLetterEvent> message) {
         return getOrCreateProcessCommonStrategy(message);
     }
 
-    private MessageBuilder<GrantOfferLetterOutcomes> projectCreatedEvent(Project project, ProjectUser originalLeadApplicantProjectUser) {
+    private MessageBuilder<GrantOfferLetterEvent> projectCreatedEvent(Project project, ProjectUser originalLeadApplicantProjectUser) {
         return MessageBuilder
                 .withPayload(PROJECT_CREATED)
                 .setHeader("target", project)
                 .setHeader("participant", originalLeadApplicantProjectUser);
     }
 
-    private MessageBuilder<GrantOfferLetterOutcomes> externalUserEvent(Project project, ProjectUser projectUser,
-                                                                       GrantOfferLetterOutcomes event) {
+    private MessageBuilder<GrantOfferLetterEvent> externalUserEvent(Project project, ProjectUser projectUser,
+                                                                    GrantOfferLetterEvent event) {
         return MessageBuilder
                 .withPayload(event)
                 .setHeader("target", project)
                 .setHeader("participant", projectUser);
     }
 
-    private MessageBuilder<GrantOfferLetterOutcomes> internalUserEvent(Project project, User internalUser,
-                                                          GrantOfferLetterOutcomes event) {
+    private MessageBuilder<GrantOfferLetterEvent> internalUserEvent(Project project, User internalUser,
+                                                                    GrantOfferLetterEvent event) {
         return MessageBuilder
                 .withPayload(event)
                 .setHeader("target", project)

@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
@@ -22,7 +22,7 @@ import static java.util.Collections.emptySet;
 import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
 import static java.util.Optional.ofNullable;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
 @Mapper(config = GlobalMapperConfig.class)
@@ -91,7 +91,7 @@ public abstract class ApplicationAssessorMapper {
         return countAssessmentsByCompetitionParticipantInStates(competitionParticipant, of(SUBMITTED));
     }
 
-    private long countAssessmentsByCompetitionParticipantInStates(CompetitionParticipant competitionParticipant, Set<AssessmentStates> states) {
+    private long countAssessmentsByCompetitionParticipantInStates(CompetitionParticipant competitionParticipant, Set<AssessmentState> states) {
         return assessmentRepository.countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(competitionParticipant.getUser().getId(),
                 competitionParticipant.getProcess().getId(),
                 getBackingStates(states));

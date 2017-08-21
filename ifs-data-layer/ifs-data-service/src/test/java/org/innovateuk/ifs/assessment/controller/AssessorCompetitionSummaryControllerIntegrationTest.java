@@ -29,7 +29,6 @@ import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
 
@@ -41,9 +40,9 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessm
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeBuilder.newAssessmentRejectOutcome;
 import static org.innovateuk.ifs.assessment.builder.AssessorAssessmentResourceBuilder.newAssessorAssessmentResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.ACCEPTED;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.REJECTED;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.SUBMITTED;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.ACCEPTED;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.REJECTED;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
@@ -225,6 +224,7 @@ public class AssessorCompetitionSummaryControllerIntegrationTest extends BaseCon
                 .withState(REJECTED, SUBMITTED, ACCEPTED)
                 .withRejectionReason(rejectOutcome.getRejectReason(), null, null)
                 .withRejectionComment(rejectOutcome.getRejectComment(), null, null)
+                .withAssessmentId(assessments.get(0).getId(), assessments.get(1).getId(), assessments.get(2).getId())
                 .buildArray(3, AssessorAssessmentResource.class);
 
         assertThat(summaryResource.getAssignedAssessments(), hasItems(expectedAssessorAssessmentResources));

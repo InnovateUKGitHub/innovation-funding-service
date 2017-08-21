@@ -6,7 +6,7 @@ import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.projectdetails.repository.ProjectDetailsProcessRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
-import org.innovateuk.ifs.project.resource.ProjectDetailsOutcomes;
+import org.innovateuk.ifs.project.resource.ProjectDetailsEvent;
 import org.innovateuk.ifs.project.resource.ProjectDetailsState;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
@@ -19,7 +19,7 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.project.resource.ProjectDetailsOutcomes.*;
+import static org.innovateuk.ifs.project.resource.ProjectDetailsEvent.*;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_PROJECT_DETAILS;
 
 /**
@@ -28,11 +28,11 @@ import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_PROJ
  * an event.
  */
 @Component
-public class ProjectDetailsWorkflowHandler extends BaseWorkflowEventHandler<ProjectDetailsProcess, ProjectDetailsState, ProjectDetailsOutcomes, Project, ProjectUser> {
+public class ProjectDetailsWorkflowHandler extends BaseWorkflowEventHandler<ProjectDetailsProcess, ProjectDetailsState, ProjectDetailsEvent, Project, ProjectUser> {
 
     @Autowired
     @Qualifier("projectDetailsStateMachine")
-    private StateMachine<ProjectDetailsState, ProjectDetailsOutcomes> stateMachine;
+    private StateMachine<ProjectDetailsState, ProjectDetailsEvent> stateMachine;
 
     @Autowired
     private ProjectDetailsProcessRepository projectDetailsProcessRepository;
@@ -98,31 +98,31 @@ public class ProjectDetailsWorkflowHandler extends BaseWorkflowEventHandler<Proj
     }
 
     @Override
-    protected StateMachine<ProjectDetailsState, ProjectDetailsOutcomes> getStateMachine() {
+    protected StateMachine<ProjectDetailsState, ProjectDetailsEvent> getStateMachine() {
         return stateMachine;
     }
 
     @Override
-    protected ProjectDetailsProcess getOrCreateProcess(Message<ProjectDetailsOutcomes> message) {
+    protected ProjectDetailsProcess getOrCreateProcess(Message<ProjectDetailsEvent> message) {
         return getOrCreateProcessCommonStrategy(message);
     }
 
-    private MessageBuilder<ProjectDetailsOutcomes> projectCreatedEvent(Project project, ProjectUser originalLeadApplicantProjectUser) {
+    private MessageBuilder<ProjectDetailsEvent> projectCreatedEvent(Project project, ProjectUser originalLeadApplicantProjectUser) {
         return MessageBuilder
                 .withPayload(PROJECT_CREATED)
                 .setHeader("target", project)
                 .setHeader("participant", originalLeadApplicantProjectUser);
     }
 
-    private MessageBuilder<ProjectDetailsOutcomes> mandatoryValueAddedEvent(Project project, ProjectUser projectUser,
-                                                                            ProjectDetailsOutcomes event) {
+    private MessageBuilder<ProjectDetailsEvent> mandatoryValueAddedEvent(Project project, ProjectUser projectUser,
+                                                                         ProjectDetailsEvent event) {
         return MessageBuilder
                 .withPayload(event)
                 .setHeader("target", project)
                 .setHeader("participant", projectUser);
     }
 
-    private MessageBuilder<ProjectDetailsOutcomes> submitProjectDetailsMessage(ProjectUser projectUser, Project project) {
+    private MessageBuilder<ProjectDetailsEvent> submitProjectDetailsMessage(ProjectUser projectUser, Project project) {
         return MessageBuilder
                 .withPayload(SUBMIT)
                 .setHeader("target", project)
