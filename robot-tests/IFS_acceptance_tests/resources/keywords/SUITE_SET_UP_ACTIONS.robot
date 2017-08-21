@@ -116,7 +116,7 @@ Create new application with the same user
 
 check if there is an existing application in progress for this competition
     ${applicationInProgress} =  run keyword and ignore error without screenshots  Element Should Be Visible  jQuery=label:contains("Yes, I want to create a new application.")
-    run keyword if  ${applicationInProgress} == 'PASS'  the user clicks the button/link  jQuery=Label:contains("Yes, I want to create a new application.")
+    run keyword if  ${applicationInProgress} == 'PASS'  the user clicks the button/link  jQuery=label:contains("Yes, I want to create a new application.")
     ...                                            AND  the user clicks the button/link  jQuery=.button:contains("Continue")
 
 create new submit application
