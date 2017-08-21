@@ -107,8 +107,13 @@ Create new application with the same user
     [Arguments]  ${Application_title}
     When the user navigates to the page         ${COMPETITION_OVERVIEW_URL_2}
     the user clicks the button/link             jQuery=a:contains("Start new application")
-#   And the user clicks the button/link         jQuery=Label:contains("Yes, I want to create a new application.")
-#    And the user clicks the button/link         jQuery=.button:contains("Continue")
+
+    # Continue through possible "application in progress" prompt
+    wait until page contains element    css=body
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    You have an application in progress
+        Run Keyword If    '${status}' == 'PASS'    Run keywords    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application.")
+        ...    AND    And the user clicks the button/link    jQuery=.button:contains("Continue")
+
     And the user clicks the button/link         jQuery=a:contains("Begin application")
     And the user clicks the button/link         link=Application details
     And the user enters text to a text field    id=application_details-title    ${Application_title}
