@@ -4,7 +4,7 @@ import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.projectdetails.domain.ProjectDetailsProcess;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.projectdetails.repository.ProjectDetailsProcessRepository;
-import org.innovateuk.ifs.project.resource.ProjectDetailsOutcomes;
+import org.innovateuk.ifs.project.resource.ProjectDetailsEvent;
 import org.innovateuk.ifs.project.resource.ProjectDetailsState;
 import org.innovateuk.ifs.project.projectdetails.workflow.actions.BaseProjectDetailsAction;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
@@ -28,7 +28,7 @@ import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FI
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.resource.ProjectDetailsOutcomes.*;
+import static org.innovateuk.ifs.project.resource.ProjectDetailsEvent.*;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_PROJECT_DETAILS;
@@ -284,7 +284,7 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
      * Test that adding one of the mandatory values prior to being able to submit the project details works and keeps the
      * state in pending until ready to submit
      */
-    private void assertAddMandatoryValue(BiFunction<Project, ProjectUser, Boolean> handlerMethod, ProjectDetailsOutcomes expectedEvent) {
+    private void assertAddMandatoryValue(BiFunction<Project, ProjectUser, Boolean> handlerMethod, ProjectDetailsEvent expectedEvent) {
 
         Project project = newProject().build();
         ProjectUser projectUser = newProjectUser().build();
@@ -309,11 +309,11 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
         verifyNoMoreInteractionsWithMocks();
     }
 
-    private void assertAddMandatoryValueAndNowReadyForSubmissionFromPending(BiFunction<Project, ProjectUser, Boolean> handlerFn, ProjectDetailsOutcomes expectedEvent) {
+    private void assertAddMandatoryValueAndNowReadyForSubmissionFromPending(BiFunction<Project, ProjectUser, Boolean> handlerFn, ProjectDetailsEvent expectedEvent) {
         assertAddMandatoryValueAndNowReadyForSubmission(ProjectDetailsState.READY_TO_SUBMIT, handlerFn, expectedEvent);
     }
 
-    private void assertAddMandatoryValueAndNowReadyForSubmissionFromReadyToSubmit(BiFunction<Project, ProjectUser, Boolean> handlerFn, ProjectDetailsOutcomes expectedEvent) {
+    private void assertAddMandatoryValueAndNowReadyForSubmissionFromReadyToSubmit(BiFunction<Project, ProjectUser, Boolean> handlerFn, ProjectDetailsEvent expectedEvent) {
         assertAddMandatoryValueAndNowReadyForSubmission(ProjectDetailsState.PENDING, handlerFn, expectedEvent);
     }
 
@@ -321,7 +321,7 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
          * This asserts that triggering the given handler method with a fully filled in Project will move the process into
          * Ready to Submit because all the mandatory values are now provided
          */
-    private void assertAddMandatoryValueAndNowReadyForSubmission(ProjectDetailsState originalState, BiFunction<Project, ProjectUser, Boolean> handlerFn, ProjectDetailsOutcomes expectedEvent) {
+    private void assertAddMandatoryValueAndNowReadyForSubmission(ProjectDetailsState originalState, BiFunction<Project, ProjectUser, Boolean> handlerFn, ProjectDetailsEvent expectedEvent) {
 
         List<Organisation> partnerOrgs = newOrganisation().build(2);
 
@@ -366,13 +366,13 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
         verifyNoMoreInteractionsWithMocks();
     }
 
-    private ProjectDetailsProcess processExpectations(Long expectedProjectId, Long expectedProjectUserId, ProjectDetailsState expectedState, ProjectDetailsOutcomes expectedEvent) {
+    private ProjectDetailsProcess processExpectations(Long expectedProjectId, Long expectedProjectUserId, ProjectDetailsState expectedState, ProjectDetailsEvent expectedEvent) {
         return createLambdaMatcher(process -> {
             assertProcessState(expectedProjectId, expectedProjectUserId, expectedState, expectedEvent, process);
         });
     }
 
-    private void assertProcessState(Long expectedProjectId, Long expectedProjectUserId, ProjectDetailsState expectedState, ProjectDetailsOutcomes expectedEvent, ProjectDetailsProcess process) {
+    private void assertProcessState(Long expectedProjectId, Long expectedProjectUserId, ProjectDetailsState expectedState, ProjectDetailsEvent expectedEvent, ProjectDetailsProcess process) {
         assertEquals(expectedProjectId, process.getTarget().getId());
         assertEquals(expectedProjectUserId, process.getParticipant().getId());
         assertEquals(expectedState, process.getActivityState());

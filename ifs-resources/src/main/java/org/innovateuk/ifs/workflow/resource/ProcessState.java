@@ -6,7 +6,7 @@ package org.innovateuk.ifs.workflow.resource;
  * Each valid state in this enum implementation is backed by the persistent entity State that will
  * actually be stored in the database.
  */
-public interface ProcessStates {
+public interface ProcessState {
 
     String getStateName();
 
@@ -16,7 +16,7 @@ public interface ProcessStates {
      */
     State getBackingState();
 
-    static <T extends ProcessStates> T fromState(T[] values, State state) {
+    static <T extends ProcessState> T fromState(T[] values, State state) {
         for (T availableState : values) {
             if (availableState.getBackingState().equals(state)) {
                 return availableState;

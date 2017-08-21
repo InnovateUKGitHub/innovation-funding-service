@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.management.model;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
@@ -45,7 +45,7 @@ public class CompetitionInFlightModelPopulator {
         List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competition.getId()).getSuccessObjectOrThrowException();
         CompetitionInFlightStatsViewModel statsViewModel = competitionInFlightStatsModelPopulator.populateStatsViewModel(competition);
 
-        long changesSinceLastNotify = assessmentRestService.countByStateAndCompetition(AssessmentStates.CREATED, competition.getId()).getSuccessObjectOrThrowException();
+        long changesSinceLastNotify = assessmentRestService.countByStateAndCompetition(AssessmentState.CREATED, competition.getId()).getSuccessObjectOrThrowException();
         milestones.sort(Comparator.comparing(MilestoneResource::getType));
         return new CompetitionInFlightViewModel(competition,
                 simpleMap(milestones, MilestonesRowViewModel::new),

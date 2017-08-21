@@ -45,7 +45,7 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     }
 
     @Override
-    public RestResult<Long> countByStateAndCompetition(AssessmentStates state, long competitionId) {
+    public RestResult<Long> countByStateAndCompetition(AssessmentState state, long competitionId) {
         return getWithRestResult(format("%s/state/%s/competition/%s/count", assessmentRestURL, state.getStateName(), competitionId), Long.TYPE);
     }
 
