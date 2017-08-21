@@ -4,7 +4,7 @@ import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.projectdetails.domain.ProjectDetailsProcess;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.projectdetails.repository.ProjectDetailsProcessRepository;
-import org.innovateuk.ifs.project.resource.ProjectDetailsOutcomes;
+import org.innovateuk.ifs.project.resource.ProjectDetailsEvent;
 import org.innovateuk.ifs.project.resource.ProjectDetailsState;
 import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
@@ -21,7 +21,7 @@ import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_PROJ
 /**
  * A base class for Project-related workflow Actions
  */
-public abstract class BaseProjectDetailsAction extends TestableTransitionWorkflowAction<ProjectDetailsState, ProjectDetailsOutcomes> {
+public abstract class BaseProjectDetailsAction extends TestableTransitionWorkflowAction<ProjectDetailsState, ProjectDetailsEvent> {
 
     @Autowired
     private ActivityStateRepository activityStateRepository;
@@ -30,7 +30,7 @@ public abstract class BaseProjectDetailsAction extends TestableTransitionWorkflo
     private ProjectDetailsProcessRepository projectDetailsProcessRepository;
 
     @Override
-    public void doExecute(StateContext<ProjectDetailsState, ProjectDetailsOutcomes> context) {
+    public void doExecute(StateContext<ProjectDetailsState, ProjectDetailsEvent> context) {
 
         ProcessOutcome updatedProcessOutcome = (ProcessOutcome) context.getMessageHeader("processOutcome");
         State newState = context.getTransition().getTarget().getId().getBackingState();
@@ -40,15 +40,15 @@ public abstract class BaseProjectDetailsAction extends TestableTransitionWorkflo
                 newActivityState, Optional.ofNullable(updatedProcessOutcome));
     }
 
-    private Project getProjectFromContext(StateContext<ProjectDetailsState, ProjectDetailsOutcomes> context) {
+    private Project getProjectFromContext(StateContext<ProjectDetailsState, ProjectDetailsEvent> context) {
         return (Project) context.getMessageHeader("project");
     }
 
-    private ProjectDetailsProcess getProjectDetailsFromContext(StateContext<ProjectDetailsState, ProjectDetailsOutcomes> context) {
+    private ProjectDetailsProcess getProjectDetailsFromContext(StateContext<ProjectDetailsState, ProjectDetailsEvent> context) {
         return (ProjectDetailsProcess) context.getMessageHeader("projectDetails");
     }
 
-    private ProjectUser getProjectUserFromContext(StateContext<ProjectDetailsState, ProjectDetailsOutcomes> context) {
+    private ProjectUser getProjectUserFromContext(StateContext<ProjectDetailsState, ProjectDetailsEvent> context) {
         return (ProjectUser) context.getMessageHeader("projectUser");
     }
 

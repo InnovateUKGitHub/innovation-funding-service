@@ -25,7 +25,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationAssessorResource
 import static org.innovateuk.ifs.assessment.builder.AssessmentCreateResourceBuilder.newAssessmentCreateResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.*;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;

@@ -6,7 +6,7 @@ import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
-import org.innovateuk.ifs.project.resource.ProjectOutcomes;
+import org.innovateuk.ifs.project.resource.ProjectEvent;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
@@ -26,11 +26,11 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public class ProjectWorkflowHandler extends BaseWorkflowEventHandler<ProjectProcess, ProjectState, ProjectOutcomes, Project, ProjectUser> {
+public class ProjectWorkflowHandler extends BaseWorkflowEventHandler<ProjectProcess, ProjectState, ProjectEvent, Project, ProjectUser> {
 
     @Autowired
     @Qualifier("projectStateMachine")
-    private StateMachine<ProjectState, ProjectOutcomes> stateMachine;
+    private StateMachine<ProjectState, ProjectEvent> stateMachine;
 
     @Autowired
     private ProjectProcessRepository projectProcessRepository;
@@ -46,7 +46,7 @@ public class ProjectWorkflowHandler extends BaseWorkflowEventHandler<ProjectProc
     }
 
     public boolean grantOfferLetterApproved(Project project, ProjectUser projectUser) {
-        return fireEvent(mandatoryValueAddedEvent(project, projectUser, ProjectOutcomes.GOL_APPROVED), project);
+        return fireEvent(mandatoryValueAddedEvent(project, projectUser, ProjectEvent.GOL_APPROVED), project);
     }
 
     public ProjectState getState(Project project) {
@@ -79,24 +79,24 @@ public class ProjectWorkflowHandler extends BaseWorkflowEventHandler<ProjectProc
     }
 
     @Override
-    protected StateMachine<ProjectState, ProjectOutcomes> getStateMachine() {
+    protected StateMachine<ProjectState, ProjectEvent> getStateMachine() {
         return stateMachine;
     }
 
     @Override
-    protected ProjectProcess getOrCreateProcess(Message<ProjectOutcomes> message) {
+    protected ProjectProcess getOrCreateProcess(Message<ProjectEvent> message) {
         return getOrCreateProcessCommonStrategy(message);
     }
 
-    private MessageBuilder<ProjectOutcomes> projectCreatedEvent(Project project, ProjectUser originalLeadApplicantProjectUser) {
+    private MessageBuilder<ProjectEvent> projectCreatedEvent(Project project, ProjectUser originalLeadApplicantProjectUser) {
         return MessageBuilder
-                .withPayload(ProjectOutcomes.PROJECT_CREATED)
+                .withPayload(ProjectEvent.PROJECT_CREATED)
                 .setHeader("target", project)
                 .setHeader("participant", originalLeadApplicantProjectUser);
     }
 
-    private MessageBuilder<ProjectOutcomes> mandatoryValueAddedEvent(Project project, ProjectUser projectUser,
-                                                                     ProjectOutcomes event) {
+    private MessageBuilder<ProjectEvent> mandatoryValueAddedEvent(Project project, ProjectUser projectUser,
+                                                                  ProjectEvent event) {
         return MessageBuilder
                 .withPayload(event)
                 .setHeader("target", project)

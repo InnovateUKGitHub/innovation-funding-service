@@ -3,7 +3,7 @@ package org.innovateuk.ifs.assessment.transactional;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.mapper.AssessorProfileMapper;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
@@ -145,7 +145,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     public ServiceResult<Void> notifyAssessorsByCompetition(long competitionId) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
             List<Assessment> assessments = assessmentRepository.findByActivityStateStateAndTargetCompetitionId(
-                    AssessmentStates.CREATED.getBackingState(),
+                    AssessmentState.CREATED.getBackingState(),
                     competitionId
             );
 

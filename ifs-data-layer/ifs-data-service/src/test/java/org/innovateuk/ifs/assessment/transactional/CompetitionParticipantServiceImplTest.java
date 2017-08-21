@@ -2,7 +2,7 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.assessment.domain.Assessment;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
@@ -18,8 +18,8 @@ import java.util.List;
 
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.OPEN;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.SUBMITTED;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.OPEN;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.COMPETITION_SETUP;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.READY_TO_OPEN;
@@ -97,7 +97,7 @@ public class CompetitionParticipantServiceImplTest extends BaseUnitTestMocksTest
         List<Assessment> assessments = newAssessment()
                 .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()),
                         new ActivityState(APPLICATION_ASSESSMENT, SUBMITTED.getBackingState()),
-                        new ActivityState(APPLICATION_ASSESSMENT, AssessmentStates.PENDING.getBackingState()))
+                        new ActivityState(APPLICATION_ASSESSMENT, AssessmentState.PENDING.getBackingState()))
                 .build(3);
 
         when(competitionParticipantRepositoryMock.getByUserIdAndRole(userId, ASSESSOR)).thenReturn(competitionParticipants);

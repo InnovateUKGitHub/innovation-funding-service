@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.application.resource;
 
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.junit.Test;
 
 import java.util.EnumSet;
 import java.util.function.Function;
 
 import static java.util.EnumSet.of;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -44,15 +44,15 @@ public class ApplicationAssessorResourceTest {
 
     @Test
     public void isRejected() throws Exception {
-        assertTrueOnlyForMostRecentAssessmentStates(of(AssessmentStates.REJECTED), ApplicationAssessorResource::isRejected);
+        assertTrueOnlyForMostRecentAssessmentStates(of(AssessmentState.REJECTED), ApplicationAssessorResource::isRejected);
     }
 
     @Test
     public void isWithdrawn() throws Exception {
-        assertTrueOnlyForMostRecentAssessmentStates(of(AssessmentStates.WITHDRAWN), ApplicationAssessorResource::isWithdrawn);
+        assertTrueOnlyForMostRecentAssessmentStates(of(AssessmentState.WITHDRAWN), ApplicationAssessorResource::isWithdrawn);
     }
 
-    private void assertTrueOnlyForMostRecentAssessmentStates(EnumSet<AssessmentStates>
+    private void assertTrueOnlyForMostRecentAssessmentStates(EnumSet<AssessmentState>
                                                                      statesExpectedTrue, Function<ApplicationAssessorResource, Boolean> testable) {
         ApplicationAssessorResource applicationAssessorResource = new ApplicationAssessorResource();
         statesExpectedTrue.forEach(state -> {

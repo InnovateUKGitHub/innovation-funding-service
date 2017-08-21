@@ -80,7 +80,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
     public void countByStateAndCompetition() throws Exception {
         Long expected = 2L;
 
-        AssessmentStates state = AssessmentStates.CREATED;
+        AssessmentState state = AssessmentState.CREATED;
         Long competitionId = 2L;
 
         setupGetWithRestResultExpectations(format("%s/state/%s/competition/%s/count", assessmentRestURL, state, competitionId), Long.TYPE, expected);
