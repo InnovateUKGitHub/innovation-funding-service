@@ -116,6 +116,7 @@ public class SetupSectionsPermissionRules {
         return sectionCheckFn.apply(sectionAccessor, user) == ACCESSIBLE;
     }
 
+    // TODO: review when IFS-1370 is implemented - RB
     private boolean isInternal(UserResource user) {
         return user.hasRole(UserRoleType.COMP_ADMIN)
                 || user.hasRole(UserRoleType.PROJECT_FINANCE);
