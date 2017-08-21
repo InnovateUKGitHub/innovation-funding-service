@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.populator.OrganisationCreationSelectTypePopulator;
-import org.innovateuk.ifs.registration.viewmodel.NotEligibleViewModel;
 import org.innovateuk.ifs.registration.viewmodel.OrganisationCreationSelectTypeViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
@@ -101,16 +100,7 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
     }
 
     @GetMapping(NOT_ELIGIBLE)
-    public String showNotEligible(Model model,
-                                  HttpServletRequest request) {
-        Optional<OrganisationTypeForm> organisationTypeChosenOpt = registrationCookieService.getOrganisationTypeCookieValue(request);
-
-        organisationTypeChosenOpt.ifPresent(organisationTypeForm ->
-                model.addAttribute("model", new NotEligibleViewModel(
-                        organisationTypeRestService.findOne(organisationTypeForm.getOrganisationType())
-                                .getSuccessObjectOrThrowException()
-                                .getName())));
-
+    public String showNotEligible(Model model, HttpServletRequest request) {
         return TEMPLATE_PATH + "/" + NOT_ELIGIBLE;
     }
 
