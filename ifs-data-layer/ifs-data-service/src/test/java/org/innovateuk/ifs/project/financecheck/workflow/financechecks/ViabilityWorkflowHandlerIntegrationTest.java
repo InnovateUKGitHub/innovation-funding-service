@@ -5,7 +5,7 @@ import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.financechecks.domain.ViabilityProcess;
 import org.innovateuk.ifs.project.financechecks.repository.ViabilityProcessRepository;
-import org.innovateuk.ifs.project.finance.resource.ViabilityOutcomes;
+import org.innovateuk.ifs.project.finance.resource.ViabilityEvent;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.user.domain.User;
@@ -64,7 +64,7 @@ public class ViabilityWorkflowHandlerIntegrationTest extends
         ViabilityProcess expectedViabilityProcess = new ViabilityProcess(projectUser, partnerOrganisation, expectedActivityState);
 
         // Ensure the correct event was fired by the workflow
-        expectedViabilityProcess.setProcessEvent(ViabilityOutcomes.PROJECT_CREATED.getType());
+        expectedViabilityProcess.setProcessEvent(ViabilityEvent.PROJECT_CREATED.getType());
 
         verify(viabilityProcessRepositoryMock).save(expectedViabilityProcess);
 
@@ -76,7 +76,7 @@ public class ViabilityWorkflowHandlerIntegrationTest extends
         callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> viabilityWorkflowHandler.viabilityApproved(partnerOrganisation, internalUser)),
 
                 // current State, destination State and expected Event to be fired
-                ViabilityState.REVIEW, ViabilityState.APPROVED, ViabilityOutcomes.VIABILITY_APPROVED);
+                ViabilityState.REVIEW, ViabilityState.APPROVED, ViabilityEvent.VIABILITY_APPROVED);
     }
 
     @Test
@@ -85,13 +85,13 @@ public class ViabilityWorkflowHandlerIntegrationTest extends
         callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> viabilityWorkflowHandler.organisationIsAcademic(partnerOrganisation, internalUser)),
 
                 // current State, destination State and expected Event to be fired
-                ViabilityState.REVIEW, ViabilityState.NOT_APPLICABLE, ViabilityOutcomes.ORGANISATION_IS_ACADEMIC);
+                ViabilityState.REVIEW, ViabilityState.NOT_APPLICABLE, ViabilityEvent.ORGANISATION_IS_ACADEMIC);
     }
 
     private void callWorkflowAndCheckTransitionAndEventFired(BiFunction<PartnerOrganisation, User, Boolean> workflowMethodToCall,
                                                              ViabilityState currentViabilityState,
                                                              ViabilityState destinationViabilityState,
-                                                             ViabilityOutcomes expectedEventToBeFired) {
+                                                             ViabilityEvent expectedEventToBeFired) {
 
         PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         User internalUser = newUser().build();

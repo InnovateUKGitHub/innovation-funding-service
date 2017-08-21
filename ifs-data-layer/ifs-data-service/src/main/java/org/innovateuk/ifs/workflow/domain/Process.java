@@ -3,7 +3,7 @@ package org.innovateuk.ifs.workflow.domain;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.workflow.resource.ProcessStates;
+import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
@@ -18,7 +18,7 @@ import java.util.List;
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "process_type", discriminatorType = DiscriminatorType.STRING)
-public abstract class Process<ParticipantType, TargetType, StatesType extends ProcessStates> {
+public abstract class Process<ParticipantType, TargetType, StatesType extends ProcessState> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

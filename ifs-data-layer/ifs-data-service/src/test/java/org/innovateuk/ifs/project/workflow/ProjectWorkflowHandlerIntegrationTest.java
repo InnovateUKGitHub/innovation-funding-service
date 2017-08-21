@@ -4,7 +4,7 @@ import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectProcess;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.repository.ProjectProcessRepository;
-import org.innovateuk.ifs.project.resource.ProjectOutcomes;
+import org.innovateuk.ifs.project.resource.ProjectEvent;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
@@ -61,7 +61,7 @@ public class ProjectWorkflowHandlerIntegrationTest extends
         ProjectProcess expectedProjectProcess = new ProjectProcess(projectUser, project, expectedActivityState);
 
         // Ensure the correct event was fired by the workflow
-        expectedProjectProcess.setProcessEvent(ProjectOutcomes.PROJECT_CREATED.getType());
+        expectedProjectProcess.setProcessEvent(ProjectEvent.PROJECT_CREATED.getType());
 
         verify(projectProcessRepositoryMock).save(expectedProjectProcess);
 
@@ -73,10 +73,10 @@ public class ProjectWorkflowHandlerIntegrationTest extends
         callWorkflowAndCheckTransitionAndEventFired(((project, projectUser) -> projectWorkflowHandler.grantOfferLetterApproved(project, projectUser)),
 
                 // current State, destination State and expected Event to be fired
-                ProjectState.SETUP, ProjectState.LIVE, ProjectOutcomes.GOL_APPROVED);
+                ProjectState.SETUP, ProjectState.LIVE, ProjectEvent.GOL_APPROVED);
     }
 
-    private void callWorkflowAndCheckTransitionAndEventFired(BiFunction<Project, ProjectUser, Boolean> workflowMethodToCall, ProjectState currentProjectState, ProjectState destinationProjectState, ProjectOutcomes expectedEventToBeFired) {
+    private void callWorkflowAndCheckTransitionAndEventFired(BiFunction<Project, ProjectUser, Boolean> workflowMethodToCall, ProjectState currentProjectState, ProjectState destinationProjectState, ProjectEvent expectedEventToBeFired) {
 
         Project project = newProject().build();
         ProjectUser projectUser = newProjectUser().build();
