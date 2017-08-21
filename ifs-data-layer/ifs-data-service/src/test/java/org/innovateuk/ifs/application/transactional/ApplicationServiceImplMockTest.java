@@ -573,6 +573,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         formInputLocal.setQuestion(question);
         question.setFormInputs(singletonList(formInputLocal));
 
+        when(fileServiceMock.deleteFileIgnoreNotFound(999L)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 999L)));
         when(formInputRepositoryMock.findOne(123L)).thenReturn(formInputLocal);
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
         when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(serviceFailure(notFoundError(File.class, 999L)));
@@ -580,7 +581,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<FormInputResponse> result = service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
 
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(notFoundError(File.class, 999L)));
+        assertTrue(result.getFailure().is(notFoundError(FileEntry.class, 999L)));
     }
 
     @Test

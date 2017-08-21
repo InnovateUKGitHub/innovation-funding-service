@@ -21,27 +21,40 @@ Login new application invite academic
     ...    AND    Invite and accept the invitation    ${recipient}    ${subject}    ${pattern}
 
 new account complete all but one
-    Run keyword if    ${smoke_test}!=1    create new account for submitting
-    Run keyword if    ${smoke_test}!=1    create new submit application
-    the user marks every section but one as complete
+    create new account for submitting  ${submit_bus_email}  ${COMPETITION_OVERVIEW_URL_2}  ${application_bus_name}  radio-1
+    the user marks every section but one as complete  ${application_bus_name}
+    Logout as user
+    create new account for submitting  ${submit_rto_email}  ${COMPETITION_OVERVIEW_URL_2}  ${application_rto_name}  radio-3
+    the user marks every section but one as complete  ${application_rto_name}
 
 create new account for submitting
-    Given the guest user opens the browser
-    the user navigates to the page              ${COMPETITION_OVERVIEW_URL}  # This comp forces RTO lead!
+    [Arguments]  ${email}  ${overview}  ${application_name}  ${org}
+    the guest user opens the browser
+    the user navigates to the page              ${overview}
     the user clicks the button/link             jQuery=a:contains("Start new application")
     the user clicks the button/link             jQuery=a:contains("Create account")
-    And the user enters text to a text field    id=organisationSearchName    Hive IT
-    And the user clicks the button/link         jQuery=.button:contains("Search")
-    And the user clicks the button/link         link=${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
-    And the user selects the checkbox           address-same
-    And the user clicks the button/link         jQuery=.button:contains("Continue")
-    And the user clicks the button/link         jQuery=.button:contains("Save and continue")
-    And the user enters text to a text field    name=email    ${test_mailbox_one}+submittest@gmail.com
-    And the user fills the create account form    Temur    Ketsbaia
-    When the user reads his email and clicks the link    ${test_mailbox_one}+submittest@gmail.com    Please verify your email address    Once verified you can sign into your account
-    And the user clicks the button/link        jQuery=.button:contains("Sign in")
+    the user enters text to a text field    id=organisationSearchName    Hive IT
+    the user clicks the button/link         jQuery=.button:contains("Search")
+    the user clicks the button/link         link=${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
+    the user selects the checkbox           address-same
+    the user clicks the button/link         jQuery=.button:contains("Continue")
+    the user clicks the button/link         jQuery=.button:contains("Save and continue")
+    the user selects the radio button       organisationTypeId  ${org}
+    the user clicks the button/link         jQuery=.button:contains("Save and continue")
+    the user clicks the button/link         jQuery=.button:contains("Save and continue")
+    the user enters text to a text field    name=email    ${email}
+    the user fills the create account form    Temur    Ketsbaia
+    the user reads his email and clicks the link    ${email}    Please verify your email address    Once verified you can sign into your account
+    the user clicks the button/link        jQuery=.button:contains("Sign in")
+    Logging in and Error Checking              ${email}   ${correct_password}
+    the user clicks the button/link                 link=Untitled application (start here)
+    the user clicks the button/link                 jQuery=a:contains("Begin application")
+    the user clicks the button/link                 link=Application details
+    the user enters text to a text field            id=application_details-title    ${application_name}
+    the user clicks the button/link                 jQuery=button:contains("Save and return")
 
 the user marks every section but one as complete
+    [Arguments]  ${application_name}
     the user navigates to the page    ${server}
     the user clicks the button/link    link=${application_name}
     the user clicks the button/link    link=Project summary
@@ -103,13 +116,9 @@ Create new application with the same user
     And the user clicks the button/link         jQuery=button:contains("Save and return")
 
 create new submit application
-    When the user navigates to the page                 ${COMPETITION_OVERVIEW_URL}
-    the user clicks the button/link                     jQuery=a:contains("Start new application")
-    And the user clicks the button/link                 jQuery=p ~ a:contains("Sign in")
-    And The guest user inserts user email and password  ${test_mailbox_one}+submittest@gmail.com    Passw0rd123
+    [Arguments]  ${overview}  ${email}  ${application_name}
+    And The guest user inserts user email and password  ${email}   ${correct_password}
     And the guest user clicks the log-in button
-    And the user clicks the button/link                 jQuery=Label:contains("Yes, I want to create a new application.")
-    And the user clicks the button/link                 jQuery=.button:contains("Continue")
     And the user clicks the button/link                 jQuery=a:contains("Begin application")
     And the user clicks the button/link                 link=Application details
     And the user enters text to a text field            id=application_details-title    ${application_name}

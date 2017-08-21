@@ -65,4 +65,7 @@ public interface UserRestService {
     RestResult<Void> createInternalUser(String inviteHash, InternalUserRegistrationResource internalUserRegistrationResource);
 
     RestResult<Void> editInternalUser(EditUserResource editUserResource);
+
+    RestResult<Void> deactivateUser(Long userId);
+    RestResult<Void> reactivateUser(Long userId);
 }

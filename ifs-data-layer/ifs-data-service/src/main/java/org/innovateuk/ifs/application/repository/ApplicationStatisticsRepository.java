@@ -25,6 +25,7 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
 
     String INNOVATION_AREA_FILTER = "SELECT a FROM ApplicationStatistics a " +
             "LEFT JOIN ApplicationInnovationAreaLink innovationArea ON innovationArea.application.id = a.id " +
+            "AND (innovationArea.className = 'org.innovateuk.ifs.application.domain.Application#innovationArea') " +
             "WHERE a.competition = :compId " +
             "AND (a.applicationProcess.activityState.state IN :states) " +
             "AND (innovationArea.category.id = :innovationArea OR :innovationArea IS NULL)" +
@@ -55,7 +56,6 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
                                                                                            @Param("states") Collection<State> applicationStates,
                                                                                            @Param("innovationArea") Long innovationArea,
                                                                                            Pageable pageable);
-
     @Query("SELECT NEW org.innovateuk.ifs.application.resource.AssessorCountSummaryResource(" +
             "  user.id, " +
             "  concat(user.firstName, ' ', user.lastName), " +
@@ -66,12 +66,13 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "  sum(case when competitionParticipant.competition.id = :compId AND activityState.state     IN " + SUBMITTED_STATES_STRING    + " THEN 1 ELSE 0 END)  " +  // submitted
             ") " +
             "FROM User user " +
-            "JOIN CompetitionParticipant competitionParticipant ON competitionParticipant.user = user " +
+            "JOIN CompetitionParticipant competitionParticipant ON competitionParticipant.user.id = user.id " +
             "JOIN Profile profile ON profile.id = user.profileId " +
-            "LEFT JOIN Application application ON application.competition = competitionParticipant.competition  " + // AND application.applicationProcess.activityState.state IN :submittedStates " +
-            "LEFT JOIN ProcessRole processRole ON processRole.user = user AND processRole.applicationId = application.id " +
-            "LEFT JOIN Assessment assessment ON assessment.participant = processRole.id AND assessment.target = application " +
-            "LEFT JOIN ActivityState activityState ON assessment.activityState = activityState.id " +
+            // join on all applications for each invited assessor on the system
+            "LEFT JOIN ProcessRole processRole ON processRole.user.id = user.id " +
+            "LEFT JOIN Assessment assessment ON assessment.participant = processRole.id " +
+            "LEFT JOIN Application application ON assessment.target.id = application.id AND application.competition.id = competitionParticipant.competition.id  " +
+            "LEFT JOIN ActivityState activityState ON application.id IS NOT NULL AND assessment.activityState.id = activityState.id " +
             "WHERE " +
             "  competitionParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED AND " +
             "  competitionParticipant.role = 'ASSESSOR' " +

@@ -57,11 +57,17 @@ View assessor progress page
     Given the user clicks the button/link  jQuery=td:contains("Paul Plum") ~ td a:contains("View progress")
     Then The user should see the element   jQuery=h2:contains("Paul Plum")
     And the user should see the element    jQuery=h4:contains("Innovation area") ~ ul li:contains("Urban living") ~ li:contains("Smart infrastructure")
-    And the user should see the element    jQuery=h4:contains("Type") ~ p:contains("Academic")
+    And the user should see the element    jQuery=h4:contains("Type") ~ span:contains("Academic")
     And the user should see the element    jQuery=h2:contains("Assigned") + div td:contains("${Molecular_id}") + td:contains("Molecular tree breeding") + td:contains("Forest Universe") + td:contains("2")
     And the user should see the element    jQuery=h2:contains("Assigned") + div td:contains("${Molecular_id}") ~ td:contains("Yes") + td:contains("-") + td:contains("-")
     And the user should see the element    jQuery=h2:contains("Applications") ~ div td:contains("${Virtual_Reality_id}") + td:contains("Living with Virtual Reality") + td:contains("Caneplus")
     And the user should see the element    jQuery=h2:contains("Applications") ~ div td:contains("${Virtual_Reality_id}") ~ td:contains("0") + td:contains("0") + td:contains("0")
+
+Selecting Review assessor link shows the assessor page
+    [Documentation]  IFS-1046
+    [Tags]
+    Given the user clicks the button/link  link=Review assessor
+    Then the user should see the element   jQuery=h3:contains("Name") + p:contains("Paul Plum")
 
 Accepting the application changes the Accepted column
     [Documentation]  IFS-321
@@ -71,6 +77,15 @@ Accepting the application changes the Accepted column
     And Log in as a different user        &{Comp_admin1_credentials}
     When the user navigates to the page   ${server}/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}/assessors/${Paul_Plum_id}
     Then the user should see the element  jQuery=td:contains("${Molecular_id}") ~ td:contains("Yes") + td:contains("Yes")
+    [Teardown]  the user clicks the button/link    link=Allocate assessors
+
+Assign an application to an assessor
+    [Documentation]    IFS-811
+    [Tags]
+    Given the user clicks the button/link  jQuery=td:contains("Shaun Bradley") ~ td a:contains("View progress")
+    Then the user should see the element   jQuery=h2:contains("Assigned (0)") + p:contains("No applications have been assigned to this assessor")
+    And the user clicks the button/link    jQuery=td:contains("36") ~ td button:contains("Assign")
+    Then the user should see the element   jQuery=h2:contains("Assigned (1)") + .table-overflow tr:contains("36")
 
 Filtering of the applications
     [Documentation]    INFUND-8061
@@ -117,7 +132,7 @@ View the available assessors
     And the user clicks the button/link   jQuery=.pagination-label:contains("Next")
     And the available assessors information is correct
 
-View the assigned list
+View the application assigned list
     [Documentation]    INFUND-7230 INFUND-7038
     [Tags]
     Given The user should see the element          jQuery=p:contains("No assessors have been assigned to this application.")

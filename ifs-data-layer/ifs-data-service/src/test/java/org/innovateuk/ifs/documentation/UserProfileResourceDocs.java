@@ -26,7 +26,9 @@ public class UserProfileResourceDocs {
             fieldWithPath("address").description("address of the user"),
             fieldWithPath("email").description("email address of the user"),
             fieldWithPath("createdBy").description("name of user who created this user"),
-            fieldWithPath("createdOn").description("date when this user was created")
+            fieldWithPath("createdOn").description("date when this user was created"),
+            fieldWithPath("modifiedBy").description("name of user who modified this user"),
+            fieldWithPath("modifiedOn").description("date when this user was modified")
     };
 
     public static final UserProfileResourceBuilder userProfileResourceBuilder = newUserProfileResource()
