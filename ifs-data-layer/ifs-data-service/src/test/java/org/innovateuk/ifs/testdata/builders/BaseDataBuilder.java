@@ -69,6 +69,7 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.transactional.*;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -81,6 +82,7 @@ import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResourc
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -257,7 +259,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     }
 
     protected UserResource systemRegistrar() {
-        return retrieveUserByEmailInternal(IFS_SYSTEM_MAINTENANCE_USER_EMAIL, UserRoleType.SYSTEM_REGISTRATION_USER);
+        return retrieveUserByEmailInternal(IFS_SYSTEM_MAINTENANCE_USER_EMAIL, SYSTEM_REGISTRATION_USER);
     }
 
     protected UserResource projectFinanceUser() {
@@ -295,7 +297,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     }
 
     protected Competition retrieveCompetitionByName(String competitionName) {
-        return competitionRepository.findByName(competitionName).get(0);
+        //IFS-637 order competitins by descending number of innovation areas (partial duplicate competitions exist)
+        return competitionRepository.findByName(competitionName).stream().sorted(Comparator.comparing(c -> Integer.MAX_VALUE - c.getInnovationAreas().size())).findFirst().get();
     }
 
     protected QuestionResource retrieveQuestionByCompetitionAndName(String questionName, Long competitionId) {
