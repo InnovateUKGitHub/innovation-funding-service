@@ -9,21 +9,20 @@ IFS.application.repeatableOrgApplicantRows = (function () {
 
       jQuery('body').on('click', '[data-repeatable-rowcontainer]', function (e) {
         e.preventDefault()
-
-        IFS.application.repeatableOrgApplicantRows.addRow(this, e)
-        IFS.application.repeatableOrgApplicantRows.hideAddRowButton(this)
+        IFS.application.repeatableOrgApplicantRows.addRow(this)
+        IFS.application.repeatableOrgApplicantRows.showHideAddRowButton(false)
       })
       jQuery('body').on('click', '.remove-another-row', function (e) {
         e.preventDefault()
-
-        IFS.application.repeatableOrgApplicantRows.removeRow(this, e)
-        IFS.application.repeatableOrgApplicantRows.showAddRowButton(this)
+        IFS.application.repeatableOrgApplicantRows.removeRow(this)
+        IFS.application.repeatableOrgApplicantRows.showHideAddRowButton(true)
       })
     },
     addRow: function (el) {
       var newRow
       var target = jQuery(el).attr('data-repeatable-rowcontainer')
       var uniqueRowId = jQuery(target).children('.repeatable-row').length || 0
+
       if (jQuery(el).data('applicant-table') === 'update-org') {
         newRow = jQuery('<tr class="repeatable-row">' +
           '<td class="form-group">' +
@@ -48,16 +47,16 @@ IFS.application.repeatableOrgApplicantRows = (function () {
       } else {
         newRow = jQuery('<tr class="repeatable-row">' +
           '<td class="form-group">' +
-          '<label for="applicants' + uniqueRowId + '.name"><span class="visually-hidden">Applicant name</span></label>' +
+          '<label for="applicants[' + uniqueRowId + '].name"><span class="visually-hidden">Applicant name</span></label>' +
           '<input class="form-control width-full" type="text" ' +
-          'id="applicants' + uniqueRowId + '.name" ' +
+          'id="applicants[' + uniqueRowId + '].name" ' +
           'name="applicants[' + uniqueRowId + '].name" value="" ' +
           'data-required-errormessage="Please enter a name." required="required" />' +
           '</td>' +
           '<td class="form-group">' +
-          '<label for="applicants' + uniqueRowId + '.email"><span class="visually-hidden">Applicant email</span></label>' +
+          '<label for="applicants[' + uniqueRowId + '].email"><span class="visually-hidden">Applicant email</span></label>' +
           '<input class="form-control width-full" type="email" ' +
-          'id="applicants' + uniqueRowId + '.email" ' +
+          'id="applicants[' + uniqueRowId + '].email" ' +
           'name="applicants[' + uniqueRowId + '].email" value="" ' +
           'data-required-errormessage="Please enter an email address." required="required" />' +
           '</td>' +
@@ -71,54 +70,55 @@ IFS.application.repeatableOrgApplicantRows = (function () {
       jQuery(newRow).find('input').first().focus()
     },
     removeRow: function (el) {
-      var $element = jQuery(el)
-      var rowParent = $element.closest('tbody')
-      var rows
+      var element = jQuery(el)
+      var rowParent = element.closest('tbody')
+
+      // remove  the errors in the errorsummary that were linked to the fields that are now being removed
+      rowParent.find('input').each(function () {
+        var id = jQuery(this).attr('id')
+        var errors = jQuery('.error-summary-list [href="#' + id + '"]')
+        if (errors.length) {
+          errors.parent().remove()
+        }
+      })
+      var hasSummaryErrors = jQuery('.error-summary-list li').length > 0
+      if (!hasSummaryErrors) {
+        jQuery('.error-summary').attr('aria-hidden', 'true')
+      }
 
       // must remove row before getting row information to correctly count remaining rows
-      $element.closest('tr').remove()
+      element.closest('tr').remove()
 
-      rows = jQuery(rowParent).children('.repeatable-row')
-
+      var rows = jQuery(rowParent).children('.repeatable-row')
       // re-number rows to ensure no empty/missing data is created server-side
       jQuery(rows).each(function (rowIndex) {
-        var rowsLabels = jQuery(this).find('label')
-        var rowsInputs = jQuery(this).find('input')
+        var el = jQuery(this)
+        var rowsLabels = el.find('label')
+        var rowsInputs = el.find('input')
 
         jQuery(rowsLabels).each(function () {
           // regex will replace 1 or more numbers in the string with the new index value
-          var $rowLabel = jQuery(this)
-          var newFor = $rowLabel.attr('for').replace(/\d+/g, rowIndex)
-
-          $rowLabel.attr('for', newFor)
-
-          // Update the data attribute on the error message if one exists
-          if ($rowLabel.find('[data-errorfield]').length > 0) {
-            var newDataVal = $rowLabel.find('[data-errorfield]').data('errorfield').replace(/\d+/g, rowIndex)
-            $rowLabel.find('[data-errorfield]').attr('data-errorfield', newDataVal)
-          }
+          var rowLabel = jQuery(this)
+          var newFor = rowLabel.attr('for').replace(/\d+/g, rowIndex)
+          rowLabel.attr('for', newFor)
         })
 
         jQuery(rowsInputs).each(function () {
           // regex will replace 1 or more numbers in the string with the new index value
-          var $rowInput = jQuery(this)
-          var newId = $rowInput.attr('id').replace(/\d+/g, rowIndex)
-          var newName = $rowInput.attr('name').replace(/\d+/g, rowIndex)
+          var rowInput = jQuery(this)
+          var newId = rowInput.attr('id').replace(/\d+/g, rowIndex)
+          var newName = rowInput.attr('name').replace(/\d+/g, rowIndex)
 
-          $rowInput.attr({
+          rowInput.attr({
             'id': newId,
             'name': newName
           })
         })
       })
     },
-    showAddRowButton: function () {
+    removeRowButton: function () {
       var addRowButton = jQuery("[name='addStagedInvite']")
-      addRowButton.show()
-    },
-    hideAddRowButton: function () {
-      var addRowButton = jQuery("[name='addStagedInvite']")
-      addRowButton.hide()
+      addRowButton.remove()
     }
   }
 })()

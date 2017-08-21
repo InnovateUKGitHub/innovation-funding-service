@@ -755,8 +755,12 @@ IFS.core.formValidation = (function () {
       if (el.is('[data-date]')) {
         el = el.closest('.date-group').find('input[type="hidden"]')
       }
+      if (el.is(':radio')) {
+        el = el.closest('fieldset').find('legend')
+      }
+
       if (el.prop('id').length) {
-        return el.prop('id')
+        return el.attr('id')
       }
       return ''
     },
