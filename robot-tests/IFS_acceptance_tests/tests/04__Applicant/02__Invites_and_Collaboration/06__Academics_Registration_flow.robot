@@ -17,7 +17,6 @@ Academic organisations search
     When the user selects the radio button              organisationType    2
     And the user clicks the button/link                 jQuery=.button:contains("Continue")
     And The user should see the element                 jQuery=h1:contains("Research") ~ .message-alert:contains("Your organisation must be registered on Je-S ")
-#    And The user should see the element                 jQuery=.message-alert:contains("Your organisation must be registered on Je-S ")
     And the user clicks the button/link                 jQuery=.button:contains("Search")
     Then the user should see an error                   Please enter an organisation name to search.
     When the user enters text to a text field           id=organisationSearchName    abcd
