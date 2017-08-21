@@ -49,7 +49,7 @@ Overhead costs
     # Check for 20% Labour costs option
     When the user clicks the button/link         jQuery=button:contains("Overhead costs")
     then the user chooses 20% overheads option
-    and admin costs total should be correct      jQuery=h4:contains("Total overhead costs") [data-mirror^="#section-total"]  £ 9,600
+    and admin costs total should be correct      jQuery=button:contains("Overhead costs") [data-mirror^="#section-total"]  £ 9,600
     [Teardown]  the user clicks the button/link  jQuery=button:contains("Overhead costs")
 
 Materials
