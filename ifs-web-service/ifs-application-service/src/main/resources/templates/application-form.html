@@ -1,10 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:with="errorPrefix=${#fields.hasErrors('${form.*}')} ? 'Error: ' : '',
-                           title=${#strings.isEmpty(model.title) ? 'Application Form' : model.title}">
-            <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${errorPrefix+title}" />
-        </th:block>
+      <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${#strings.isEmpty(model.title) ? 'Application Form' : model.title},hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
     <body th:with="context='applicant'" class="app-form finance">

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Delete ' + ${model.organisationName}"/>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Delete ' + ${model.organisationName},hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
 </head>
 
 <body class="app-org-invite" th:with="context='applicant'">

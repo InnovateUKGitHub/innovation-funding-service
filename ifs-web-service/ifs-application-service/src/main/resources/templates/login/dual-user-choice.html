@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-      <th:block th:with="errorPrefix=${#fields.hasErrors('${form.*}')} ? 'Error: ' : ''">
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${errorPrefix}Dual user choice|" />
-      </th:block>
+      <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Dual user choice',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
     <body class="app-overview">

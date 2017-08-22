@@ -5,11 +5,11 @@
 <!-- ======== Assessment - research category ======= -->
 <div th:fragment="assessor_research_category (field)">
     <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('${form.formInput[__${field.id}__]}')} ? 'form-group-error'">
-        <label class="form-label" for="research-category">
+        <label class="form-label" th:for="formInput[__${field.id}__]">
             <span class="form-label-bold">Please select the research category for this project</span>
             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${field.id})" />
         </label>
-        <select class="form-control" id="research-category" th:field="*{formInput[__${field.id}__]}">
+        <select class="form-control" th:id="formInput[__${field.id}__]" th:field="*{formInput[__${field.id}__]}">
             <option value="">Please select...</option>
             <option th:each="category : ${model.researchCategories}"
                     th:value="${category.id}"
@@ -23,7 +23,7 @@
 <!-- ======== Assessment - assessor feedback textarea and word count ======= -->
 <div th:fragment="textarea (field)">
     <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[__${field.id}__]}')} ? 'form-group-error'">
-        <label class="form-label form-label-bold" th:for="'form-textarea-'+${field.id}" th:id="'form-label-'+${field.id}">Feedback
+        <label class="form-label form-label-bold" th:for="formInput[__${field.id}__]" th:id="'form-label-'+${field.id}">Feedback
             <span th:if="${field.guidanceTitle == 'Guidance for assessing scope'}" class="form-hint">Please justify your answer by writing 2 or 3 sentences which will be returned to the applicant as feedback.</span>
             <span th:unless="${field.guidanceTitle == 'Guidance for assessing scope'}" class="form-hint">Please justify your score by writing 2 or 3 sentences which will be returned to the applicant as feedback.</span>
             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${field.id})" />
@@ -49,7 +49,7 @@
                       maxlength="5000"
                       th:field="*{formInput[__${field.id}__]}"
                       th:attr="data-max_words=${field.wordCount},data-maxwordslength=${field.wordCount},data-maxwordslength-errormessage=${'Maximum word count exceeded. Please reduce your word count to '+field.wordCount+'.'},data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
-                      th:id="'form-textarea-'+${field.id}"></textarea>
+                      th:id="formInput[__${field.id}__]"></textarea>
             <div class="textarea-footer" th:with="content=*{formInput[__${field.id}__]}">
                 <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${field.wordCount}, currentWordsLeft=${#ifsUtil.wordsRemaining(field.wordCount, content)})" />
             </div>
@@ -61,12 +61,13 @@
 <!-- =================== Assessment feedback score ============================== -->
 <div th:fragment="assessor_score (field)">
     <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[__${field.id}__]}')} ? 'form-group-error'">
-        <label class="form-label form-label-bold" for="assessor-question-score">Question score
+        <label th:for="formInput[__${field.id}__]">
+            <span class="form-label form-label-bold">Question score</span>
             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${field.id})"/>
         </label>
         <select class="form-control width-medium"
                 aria-describedby="info"
-                id="assessor-question-score"
+                th:id="formInput[__${field.id}__]"
                 th:field="*{formInput[__${field.id}__]}">
             <option value="">Set score</option>
             <option th:value="${val}" th:text="${val}" th:each="val : ${#numbers.sequence(1,model.maximumScore)}" />
