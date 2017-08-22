@@ -2,8 +2,10 @@
 
 <th:block th:fragment="comp-setup-navigation(sections, currentSection, competition, readyToOpen)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:unless="${(param.section != null)}">
-        <div th:if="${setupComplete}" class="message-alert">
-            <p>Setup of this competition has now been completed and will automatically open on the date set. If you need to change anything at this stage please go through the web team.</p>
+        <div th:if="${setupComplete}" class="extra-margin-bottom">
+            <div class="message-alert">
+                <p>Setup of this competition has now been completed and will automatically open on the date set. If you need to change anything at this stage please go through the web team.</p>
+            </div>
         </div>
         <ul class="task-list">
             <li th:each="(section, iteration : ${sections})" th:if="${section.toString() != 'HOME'}">
