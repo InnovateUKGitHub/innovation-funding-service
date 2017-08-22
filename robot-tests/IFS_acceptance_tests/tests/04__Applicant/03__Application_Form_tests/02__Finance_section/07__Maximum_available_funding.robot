@@ -146,7 +146,7 @@ the funding displayed is as expected
     the user should see the text in the page                      Enter your funding level (maximum 100%).
 
 the correct funding is displayed to academic user
-    the user reads his email and clicks the link             ${collaborator2_credentials["email"]}  Invitation to collaborate in ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  You will be joining as part of the organisation  3
+    the user reads his email and clicks the link             ${collaborator2_credentials["email"]}  Invitation to collaborate in ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  You will be joining as part of the organisation  2
     the user clicks the button/link                          jQuery=a:contains("Continue or sign in")
     The guest user inserts user email and password           &{collaborator2_credentials}
     the guest user clicks the log-in button
