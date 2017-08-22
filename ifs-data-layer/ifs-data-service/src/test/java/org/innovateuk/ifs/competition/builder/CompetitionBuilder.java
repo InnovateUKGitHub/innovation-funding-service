@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.user.domain.User;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -88,6 +89,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withMilestones(List<Milestone> milestones){
         return with(competition -> competition.setMilestones(milestones));
+    }
+
+    public CompetitionBuilder withLeadTechnologist(User leadTechnologist){
+        return with(competition -> competition.setLeadTechnologist(leadTechnologist));
     }
 
     public CompetitionBuilder withName(String... names) {

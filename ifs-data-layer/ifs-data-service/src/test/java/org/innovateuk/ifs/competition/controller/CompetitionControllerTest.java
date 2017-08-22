@@ -1,10 +1,14 @@
 package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
+import org.springframework.http.MediaType;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -35,6 +39,26 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
 
         verify(competitionServiceMock, only()).notifyAssessors(competitionId);
         verify(assessorServiceMock).notifyAssessorsByCompetition(competitionId);
+    }
+
+    @Test
+    public void updateCompetitionInitialDetails() throws Exception {
+        final Long competitionId = 1L;
+
+        CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource()
+                .withInnovationAreaNames(Collections.emptySet())
+                .build();
+
+        when(competitionServiceMock.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competitionResource));
+        when(competitionSetupServiceMock.updateCompetitionInitialDetails(any(), any(), any())).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/competition/{id}/update-competition-initial-details", competitionId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(competitionResource)))
+                .andExpect(status().isOk());
+
+        verify(competitionServiceMock, only()).getCompetitionById(competitionId);
+        verify(competitionSetupServiceMock, only()).updateCompetitionInitialDetails(any(), any(), any());
     }
 
     @Test
