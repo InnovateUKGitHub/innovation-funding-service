@@ -7,7 +7,7 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.repository.QuestionRepository;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessorFormInputResponse;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -66,7 +66,7 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
 
         ProcessRole processRole = processRoleRepository.findOne(1L);
         Application application = applicationRepository.findOne(1L);
-        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, AssessmentStates.OPEN.getBackingState());
+        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, AssessmentState.OPEN.getBackingState());
 
         Assessment assessment = assessmentRepository.save(
                 newAssessment().
@@ -105,7 +105,7 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
 
         ProcessRole processRole = processRoleRepository.findOne(1L);
         Application application = applicationRepository.findOne(1L);
-        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, AssessmentStates.OPEN.getBackingState());
+        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, AssessmentState.OPEN.getBackingState());
 
         List<Assessment> assessments =
                 newAssessment().
@@ -153,7 +153,7 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
 
         ProcessRole processRole = processRoleRepository.findOne(1L);
         Application application = applicationRepository.findOne(1L);
-        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, AssessmentStates.OPEN.getBackingState());
+        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, AssessmentState.OPEN.getBackingState());
 
         Assessment assessment = assessmentRepository.save(
                 newAssessment().
@@ -198,7 +198,7 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
 
         ProcessRole processRole = processRoleRepository.findOne(1L);
         Application application = applicationRepository.findOne(1L);
-        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, AssessmentStates.OPEN.getBackingState());
+        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, AssessmentState.OPEN.getBackingState());
 
         List<Assessment> assessments =
                 newAssessment().
@@ -246,7 +246,7 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
 
         ProcessRole processRole = processRoleRepository.findOne(1L);
         Application application = applicationRepository.findOne(1L);
-        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, AssessmentStates.OPEN.getBackingState());
+        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, AssessmentState.OPEN.getBackingState());
 
         List<Assessment> assessments =
                 newAssessment().
@@ -290,7 +290,7 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
 
         ProcessRole processRole = processRoleRepository.findOne(1L);
         Application application = applicationRepository.findOne(1L);
-        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, AssessmentStates.OPEN.getBackingState());
+        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, AssessmentState.OPEN.getBackingState());
 
         List<Assessment> assessments =
                 newAssessment().

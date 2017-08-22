@@ -4,7 +4,7 @@ import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.financechecks.domain.EligibilityProcess;
 import org.innovateuk.ifs.project.financechecks.repository.EligibilityProcessRepository;
-import org.innovateuk.ifs.project.finance.resource.EligibilityOutcomes;
+import org.innovateuk.ifs.project.finance.resource.EligibilityEvent;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
@@ -21,9 +21,9 @@ import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Component;
 
 
-import static org.innovateuk.ifs.project.finance.resource.EligibilityOutcomes.NOT_REQUESTING_FUNDING;
-import static org.innovateuk.ifs.project.finance.resource.EligibilityOutcomes.PROJECT_CREATED;
-import static org.innovateuk.ifs.project.finance.resource.EligibilityOutcomes.ELIGIBILITY_APPROVED;
+import static org.innovateuk.ifs.project.finance.resource.EligibilityEvent.NOT_REQUESTING_FUNDING;
+import static org.innovateuk.ifs.project.finance.resource.EligibilityEvent.PROJECT_CREATED;
+import static org.innovateuk.ifs.project.finance.resource.EligibilityEvent.ELIGIBILITY_APPROVED;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_ELIGIBILITY;
 
 
@@ -34,11 +34,11 @@ import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_ELIG
  *
  */
 @Component
-public class EligibilityWorkflowHandler extends BaseWorkflowEventHandler<EligibilityProcess, EligibilityState, EligibilityOutcomes, PartnerOrganisation, ProjectUser> {
+public class EligibilityWorkflowHandler extends BaseWorkflowEventHandler<EligibilityProcess, EligibilityState, EligibilityEvent, PartnerOrganisation, ProjectUser> {
 
     @Autowired
     @Qualifier("eligibilityStateMachine")
-    private StateMachine<EligibilityState, EligibilityOutcomes> stateMachine;
+    private StateMachine<EligibilityState, EligibilityEvent> stateMachine;
 
     @Autowired
     private EligibilityProcessRepository eligibilityProcessRepository;
@@ -96,24 +96,24 @@ public class EligibilityWorkflowHandler extends BaseWorkflowEventHandler<Eligibi
     }
 
     @Override
-    protected StateMachine<EligibilityState, EligibilityOutcomes> getStateMachine() {
+    protected StateMachine<EligibilityState, EligibilityEvent> getStateMachine() {
         return stateMachine;
     }
 
     @Override
-    protected EligibilityProcess getOrCreateProcess(Message<EligibilityOutcomes> message) {
+    protected EligibilityProcess getOrCreateProcess(Message<EligibilityEvent> message) {
         return getOrCreateProcessCommonStrategy(message);
     }
 
-    private MessageBuilder<EligibilityOutcomes> projectCreatedEvent(PartnerOrganisation partnerOrganisation, ProjectUser originalLeadApplicantProjectUser) {
+    private MessageBuilder<EligibilityEvent> projectCreatedEvent(PartnerOrganisation partnerOrganisation, ProjectUser originalLeadApplicantProjectUser) {
         return MessageBuilder
                 .withPayload(PROJECT_CREATED)
                 .setHeader("target", partnerOrganisation)
                 .setHeader("participant", originalLeadApplicantProjectUser);
     }
 
-    private MessageBuilder<EligibilityOutcomes> internalUserEvent(PartnerOrganisation partnerOrganisation, User internalUser,
-                                                                  EligibilityOutcomes event) {
+    private MessageBuilder<EligibilityEvent> internalUserEvent(PartnerOrganisation partnerOrganisation, User internalUser,
+                                                               EligibilityEvent event) {
         return MessageBuilder
                 .withPayload(event)
                 .setHeader("target", partnerOrganisation)

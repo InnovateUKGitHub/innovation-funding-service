@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.user.resource.BusinessType;
 
@@ -11,7 +11,7 @@ import java.util.Set;
 
 import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 
 /**
  * DTO for an assessor that is either allocatable, or previously allocated to an application.
@@ -28,7 +28,7 @@ public class ApplicationAssessorResource {
     private String rejectComment;
     private boolean available;
     private Long mostRecentAssessmentId;
-    private AssessmentStates mostRecentAssessmentState;
+    private AssessmentState mostRecentAssessmentState;
     private long totalApplicationsCount;
     private long assignedCount;
     private long submittedCount;
@@ -46,7 +46,7 @@ public class ApplicationAssessorResource {
                                        String rejectComment,
                                        boolean available,
                                        Long mostRecentAssessmentId,
-                                       AssessmentStates mostRecentAssessmentState,
+                                       AssessmentState mostRecentAssessmentState,
                                        long totalApplicationsCount,
                                        long assignedCount,
                                        long submittedCount) {
@@ -146,11 +146,11 @@ public class ApplicationAssessorResource {
         this.mostRecentAssessmentId = mostRecentAssessmentId;
     }
 
-    public AssessmentStates getMostRecentAssessmentState() {
+    public AssessmentState getMostRecentAssessmentState() {
         return mostRecentAssessmentState;
     }
 
-    public void setMostRecentAssessmentState(AssessmentStates mostRecentAssessmentState) {
+    public void setMostRecentAssessmentState(AssessmentState mostRecentAssessmentState) {
         this.mostRecentAssessmentState = mostRecentAssessmentState;
     }
 
