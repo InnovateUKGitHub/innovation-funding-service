@@ -18,7 +18,7 @@ def setting_wait_until_flag(func):
     try:
       result = func(*args)
     except:
-      capture_large_screenshot()
+      capture_page_screenshot_on_failure()
       raise
     finally:
       currently_waiting_for_keyword_to_succeed = False
