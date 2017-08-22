@@ -136,7 +136,7 @@ Invite and accept the invitation
     And the user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+academictest@gmail.com
     And the user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
     And logout as user
-    When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}    3
+    When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}    2
     And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
     When the user selects the radio button    organisationType    2
     And the user clicks the button/link    jQuery=.button:contains("Continue")

@@ -18,7 +18,7 @@ The invited user should not follow the registration flow again
     Given we create a new user                          ${OPEN_COMPETITION}  Stuart   Anderson   ${test_mailbox_one}+invitedregistered@gmail.com
     And logout as user
     Given the lead applicant invites a registered user  ${test_mailbox_one}+invite2@gmail.com    ${test_mailbox_one}+invitedregistered@gmail.com
-    When the user reads his email and clicks the link   ${test_mailbox_one}+invitedregistered@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation    3
+    When the user reads his email and clicks the link   ${test_mailbox_one}+invitedregistered@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation    2
     Then the user should see the text in the page       We have found an account with the invited email address
 
 The user clicks the login link
@@ -91,7 +91,7 @@ Existing user creates a new application and invites a user from the same organis
 The invited user should get a message to contact the helpdesk
     [Arguments]    ${recipient}  ${subject}  ${pattern}
     Logout as user
-    When the user reads his email and clicks the link   ${recipient}    ${subject}    ${pattern}   3
+    When the user reads his email and clicks the link   ${recipient}    ${subject}    ${pattern}   2
     When the user clicks the button/link                link=Continue or sign in
     And The guest user inserts user email and password  ${recipient}  ${correct_password}
     And the guest user clicks the log-in button
