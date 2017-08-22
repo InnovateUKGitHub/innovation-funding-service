@@ -10,7 +10,7 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${project.id})}" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submit bank details',subTitle=${applicationId},size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submit bank details',subTitle=${project.name},size='heading-xlarge'" />
 
     <form th:object="${form}" th:action="@{/project/{id}/bank-details(id=${project.id})}" method="post">
         <input type="hidden" th:field="*{accountNumber}"/>
@@ -21,7 +21,7 @@
         <hr />
         <div class="grid-row">
             <div class="column-half">
-                <a th:href="@{/project/{id}/bank-details(id=${project.id})}" class="js-close button buttonlink large">Cancel</a>
+                <a th:href="@{/project/{id}/bank-details(id=${project.id})}" class="js-close buttonlink">Cancel</a>
             </div>
             <div class="column-half alignright-button">
                 <button class="button">Submit</button>

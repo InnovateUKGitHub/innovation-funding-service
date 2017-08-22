@@ -342,16 +342,6 @@ the user fills in the funding information with bigger amount
     the user selects the checkbox             agree-terms-page
     the user clicks the button/link           jQuery=button:contains("Mark as complete")
 
-the user expands the section
-    [Arguments]  ${section}
-    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=button:contains("${section}")[aria-expanded="false"]
-    run keyword if  '${status}'=='PASS'  the user clicks the button/link  jQuery=button:contains("${section}")[aria-expanded="false"]
-
-the user collapses the section
-    [Arguments]  ${section}
-    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=button:contains("${section}")[aria-expanded="true"]
-    run keyword if  '${status}'=='PASS'  the user clicks the button/link  jQuery=button:contains("${section}")[aria-expanded="true"]
-
 User verifies captial usage, subcontracting, travel and other costs
     the user expands the section     Capital usage
     the user should see the element  jQuery=#capital-usage-table td:contains("some description") + td:contains("New") + td:contains("10") + td:contains("5000")

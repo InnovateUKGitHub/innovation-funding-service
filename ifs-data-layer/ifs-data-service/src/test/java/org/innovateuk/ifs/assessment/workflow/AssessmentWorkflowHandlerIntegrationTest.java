@@ -4,7 +4,7 @@ import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
 import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.workflow.actions.BaseAssessmentAction;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
@@ -29,7 +29,7 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessm
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeBuilder.newAssessmentFundingDecisionOutcome;
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeBuilder.newAssessmentRejectOutcome;
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
@@ -236,12 +236,12 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
                 .build();
     }
 
-    private void assertWorkflowStateChangeForFeedback(Function<Assessment, Boolean> handlerMethod, Supplier<Assessment> assessmentSupplier, AssessmentStates expectedState) {
+    private void assertWorkflowStateChangeForFeedback(Function<Assessment, Boolean> handlerMethod, Supplier<Assessment> assessmentSupplier, AssessmentState expectedState) {
         assertWorkflowStateChange(handlerMethod, assessmentSupplier, expectedState, (assessment) ->
                 verify(assessmentRepositoryMock).isFeedbackComplete(assessment.getId()));
     }
 
-    private void assertWorkflowStateChangeForFundingDecision(Function<Assessment, Boolean> handlerMethod, Supplier<Assessment> assessmentSupplier, AssessmentStates expectedState) {
+    private void assertWorkflowStateChangeForFundingDecision(Function<Assessment, Boolean> handlerMethod, Supplier<Assessment> assessmentSupplier, AssessmentState expectedState) {
         assertWorkflowStateChange(handlerMethod, assessmentSupplier, expectedState, (assessment) -> {
             verify(assessmentRepositoryMock).isFeedbackComplete(assessment.getId());
             AssessmentFundingDecisionOutcome fundingDecision = assessment.getFundingDecision();
@@ -272,11 +272,11 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
         verifyNoMoreInteractionsWithMocks();
     }
 
-    private void assertWorkflowStateChange(Function<Assessment, Boolean> handlerMethod, Supplier<Assessment> assessmentSupplier, AssessmentStates expectedState) {
+    private void assertWorkflowStateChange(Function<Assessment, Boolean> handlerMethod, Supplier<Assessment> assessmentSupplier, AssessmentState expectedState) {
         assertWorkflowStateChange(handlerMethod, assessmentSupplier, expectedState, null);
     }
 
-    private void assertWorkflowStateChange(Function<Assessment, Boolean> handlerMethod, Supplier<Assessment> assessmentSupplier, AssessmentStates expectedState, Consumer<Assessment> additionalVerifications) {
+    private void assertWorkflowStateChange(Function<Assessment, Boolean> handlerMethod, Supplier<Assessment> assessmentSupplier, AssessmentState expectedState, Consumer<Assessment> additionalVerifications) {
         when(activityStateRepositoryMock.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, expectedState.getBackingState()))
                 .thenReturn(new ActivityState(APPLICATION_ASSESSMENT, expectedState.getBackingState()));
 
@@ -295,7 +295,7 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
         verifyNoMoreInteractionsWithMocks();
     }
 
-    private Assessment createAssessmentExpectations(Assessment assessment, AssessmentStates expectedState) {
+    private Assessment createAssessmentExpectations(Assessment assessment, AssessmentState expectedState) {
         return createLambdaMatcher(actual -> {
             assertEquals(assessment, actual);
             // This is the only sure way of checking that your state transition happened!
@@ -303,13 +303,13 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
         });
     }
 
-    private Supplier<Assessment> setupIncompleteAssessment(AssessmentStates initialState) {
+    private Supplier<Assessment> setupIncompleteAssessment(AssessmentState initialState) {
         return () -> newAssessment()
                 .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, initialState.getBackingState()))
                 .build();
     }
 
-    private Supplier<Assessment> setupCompleteAssessment(AssessmentStates initialState) {
+    private Supplier<Assessment> setupCompleteAssessment(AssessmentState initialState) {
         return () -> {
             Assessment assessment = newAssessment()
                     .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, initialState.getBackingState()))

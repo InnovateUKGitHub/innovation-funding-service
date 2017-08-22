@@ -1,0 +1,38 @@
+version: '3'
+services:
+
+  application-svc:
+    links:
+      - admin
+
+  assessment-svc:
+    links:
+      - admin
+
+  competition-mgt-svc:
+    links:
+      - admin
+
+  project-setup-mgt-svc:
+    links:
+      - admin
+
+  project-setup-svc:
+    links:
+      - admin
+
+  front-door-svc:
+    links:
+      - admin
+
+  data-service:
+    links:
+      - admin
+
+  admin:
+    hostname: admin
+    image: enmobile/docker-spring-boot-admin
+    ports:
+    - "3001:8123"
+    networks:
+      - ifs

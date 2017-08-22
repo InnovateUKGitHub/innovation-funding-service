@@ -182,3 +182,13 @@ The user opens the link in new window
 The user goes back to the previous tab
     the user should not see an error in the page
     Select Window    #this goes back to the initial tab
+
+the user expands the section
+    [Arguments]  ${section}
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=button:contains("${section}")[aria-expanded="false"]
+    run keyword if  '${status}'=='PASS'  the user clicks the button/link  jQuery=button:contains("${section}")[aria-expanded="false"]
+
+the user collapses the section
+    [Arguments]  ${section}
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=button:contains("${section}")[aria-expanded="true"]
+    run keyword if  '${status}'=='PASS'  the user clicks the button/link  jQuery=button:contains("${section}")[aria-expanded="true"]

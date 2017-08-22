@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.assessment.resource;
 
 
-import org.innovateuk.ifs.workflow.resource.OutcomeType;
+import org.innovateuk.ifs.workflow.resource.ProcessEvent;
 
 /**
- * Represents possible assessment events that can happen during the assessment process workflow.
+ * Events that can happen during the assessment process workflow.
  */
-public enum AssessmentOutcomes implements OutcomeType {
+public enum AssessmentEvent implements ProcessEvent {
     NOTIFY("notify"),
     ACCEPT("accept"),
     REJECT("reject"),
@@ -17,7 +17,7 @@ public enum AssessmentOutcomes implements OutcomeType {
 
     String event;
 
-    AssessmentOutcomes(String event) {
+    AssessmentEvent(String event) {
         this.event = event;
     }
 
