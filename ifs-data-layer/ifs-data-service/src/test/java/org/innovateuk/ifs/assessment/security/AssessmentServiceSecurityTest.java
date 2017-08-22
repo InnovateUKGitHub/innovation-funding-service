@@ -95,7 +95,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
 
     @Test
     public void findByStateAndCompetition() {
-        AssessmentStates state = AssessmentStates.CREATED;
+        AssessmentState state = AssessmentState.CREATED;
         long competitionId = 1L;
 
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.findByStateAndCompetition(state, competitionId), COMP_ADMIN, PROJECT_FINANCE);
@@ -103,7 +103,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
 
     @Test
     public void countByStateAndCompetition() {
-        AssessmentStates state = AssessmentStates.CREATED;
+        AssessmentState state = AssessmentState.CREATED;
         long competitionId = 1L;
 
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.countByStateAndCompetition(state, competitionId), COMP_ADMIN, PROJECT_FINANCE, INNOVATION_LEAD);
@@ -220,12 +220,12 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         }
 
         @Override
-        public ServiceResult<List<AssessmentResource>> findByStateAndCompetition(AssessmentStates state, long competitionId) {
+        public ServiceResult<List<AssessmentResource>> findByStateAndCompetition(AssessmentState state, long competitionId) {
             return serviceSuccess(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
 
         @Override
-        public ServiceResult<Integer> countByStateAndCompetition(AssessmentStates state, long competitionId) {
+        public ServiceResult<Integer> countByStateAndCompetition(AssessmentState state, long competitionId) {
             return serviceSuccess(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS).size());
         }
 

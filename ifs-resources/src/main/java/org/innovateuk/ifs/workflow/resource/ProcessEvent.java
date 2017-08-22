@@ -1,8 +1,9 @@
 package org.innovateuk.ifs.workflow.resource;
 
 /**
- * ProcessEvent is a bag of Process Event/Types.
+ * The process events should be represented by a named event.
+ * These are used to progress through the workflow.
  */
-public enum ProcessEvent {
-    ASSESSMENT, ANOTHER_ONE
+public interface ProcessEvent {
+    String getType();
 }

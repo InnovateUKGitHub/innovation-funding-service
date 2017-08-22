@@ -38,7 +38,7 @@ public class CategoryControllerIntegrationTest extends BaseControllerIntegration
         assertTrue(categoriesResult.isSuccess());
         List<InnovationAreaResource> categories = categoriesResult.getSuccessObject();
 
-        assertThat(categories, hasSize(44));
+        assertThat(categories, hasSize(47));
         assertThat(categories, everyItem(hasProperty("sector", notNullValue())));
     }
 
@@ -67,13 +67,15 @@ public class CategoryControllerIntegrationTest extends BaseControllerIntegration
         assertTrue(categoriesResult.isSuccess());
         List<InnovationAreaResource> categories = categoriesResult.getSuccessObject();
 
-        assertThat(categories, hasSize(8));
+        assertThat(categories, hasSize(10));
         assertThat(categories, everyItem(hasProperty("sector", equalTo(1L))));
         assertThat(categories, containsInAnyOrder(asList(
                 hasProperty("name", equalTo("Advanced therapies")),
+                hasProperty("name", equalTo("Agricultural productivity")),
                 hasProperty("name", equalTo("Biosciences")),
                 hasProperty("name", equalTo("Diagnostics, medical technology and devices")),
                 hasProperty("name", equalTo("Digital health")),
+                hasProperty("name", equalTo("Enhancing food quality")),
                 hasProperty("name", equalTo("Independent living and wellbeing")),
                 hasProperty("name", equalTo("Precision medicine")),
                 hasProperty("name", equalTo("Preclinical technologies and drug target discovery")),

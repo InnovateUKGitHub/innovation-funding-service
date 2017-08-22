@@ -9,7 +9,6 @@ import org.innovateuk.ifs.assessment.resource.AssessorCompetitionSummaryResource
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
@@ -18,7 +17,6 @@ import org.mockito.InjectMocks;
 
 import java.util.List;
 
-import static java.util.Optional.of;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentApplicationAssessorCountBuilder.newAssessmentApplicationAssessorCount;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
@@ -28,11 +26,10 @@ import static org.innovateuk.ifs.assessment.builder.AssessorCompetitionSummaryRe
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
 import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.ACCEPTED;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.REJECTED;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.SUBMITTED;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.ACCEPTED;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.REJECTED;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED;
 import static org.innovateuk.ifs.assessment.transactional.AssessorCompetitionSummaryServiceImpl.INCLUDED_ASSESSMENT_STATES;
-import static org.innovateuk.ifs.assessment.transactional.AssessorCompetitionSummaryServiceImpl.VALID_ASSESSMENT_STATES;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
@@ -165,6 +162,7 @@ public class AssessorCompetitionSummaryServiceImplTest extends BaseUnitTestMocks
                                 .withTotalAssessors(5, 4, 2)
                                 .withRejectionReason(null, null, rejectOutcome.getRejectReason())
                                 .withRejectionComment(null, null, rejectOutcome.getRejectComment())
+                                .withAssessmentId(assessments[0].getId(), assessments[1].getId(), assessments[2].getId())
                                 .build(3)
                 )
                 .build();
