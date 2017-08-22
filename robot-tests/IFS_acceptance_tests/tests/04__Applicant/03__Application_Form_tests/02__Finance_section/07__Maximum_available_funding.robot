@@ -59,7 +59,7 @@ Invite existing academic collaborator
 Maximum funding level available for RTO lead
     [Documentation]  IFS-338
     [Tags]
-    Given we create a new user                                              ${OPEN_COMPETITION}  Smith  rto  ${lead_rto_email}    ${ACADEMIC_TYPE_ID}
+    Given we create a new user                                              ${OPEN_COMPETITION}  Smith  rto  ${lead_rto_email}    ${RTO_TYPE_ID}
     When the user clicks the button/link                                    link=Untitled application (start here)
     And the user clicks the button/link                                     link=Begin application
     And the applicant completes the application details for RTO lead appln  Application details  Experimental development
