@@ -134,6 +134,19 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     }
 
     @Test
+    public void updateCompetitionInitialDetails() {
+
+        CompetitionResource competition = new CompetitionResource();
+        competition.setId(1L);
+
+        setupPutWithRestResultExpectations(competitionsRestURL + "/" + competition.getId() + "/update-competition-initial-details", Void.class, competition, null, HttpStatus.OK);
+
+        RestResult<Void> response = service.updateCompetitionInitialDetails(competition);
+        assertTrue(response.isSuccess());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
     public void generateCompetitionCode() {
         ZonedDateTime openingDate = ZonedDateTime.of(2016, 2, 1, 0, 0, 0, 0, ZoneId.systemDefault());
         Long competitionId = Long.MAX_VALUE;
