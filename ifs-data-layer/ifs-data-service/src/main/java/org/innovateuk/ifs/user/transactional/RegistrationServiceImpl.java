@@ -134,12 +134,12 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Override
     @Transactional
     public ServiceResult<UserResource> createOrganisationUser(long organisationId, UserResource userResource) {
-        String roleName = APPLICANT.getName();
+        String applicantRoleName = APPLICANT.getName();
         User newUser = assembleUserFromResource(userResource);
         return validateUser(userResource).
                 andOnSuccess(
                         () -> addUserToOrganisation(newUser, organisationId).
-                                andOnSuccess(user -> addRoleToUser(user, roleName))).
+                                andOnSuccess(user -> userResource.getRoles().size() == 0 ? addRoleToUser(user, applicantRoleName) : ServiceResult.serviceSuccess(user))).
                 andOnSuccess(
                         () -> createUserWithUid(newUser, userResource.getPassword(), null)
                 );

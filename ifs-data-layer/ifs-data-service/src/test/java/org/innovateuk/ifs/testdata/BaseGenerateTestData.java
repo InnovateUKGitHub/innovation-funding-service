@@ -469,7 +469,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private void createCompetitions() {
         testService.doWithinTransaction(() -> setDefaultCompAdmin());
-        competitionLines.forEach(line -> createCompetitionWithApplications(line, Optional.empty()));
+        competitionLines.forEach(line -> createCompetitionWithApplications(line, line.name != null && line.name.equals("Connected digital additive manufacturing") ? Optional.of(1L) : Optional.empty()));
     }
 
     private List<Pair<String, FundingDecision>> createFundingDecisionsFromCsv(String competitionName) {

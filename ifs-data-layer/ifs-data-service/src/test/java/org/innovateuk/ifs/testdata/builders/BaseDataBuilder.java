@@ -69,7 +69,6 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.transactional.*;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -297,8 +296,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     }
 
     protected Competition retrieveCompetitionByName(String competitionName) {
-        //IFS-637 order competitins by descending number of innovation areas (partial duplicate competitions exist)
-        return competitionRepository.findByName(competitionName).stream().sorted(Comparator.comparing(c -> Integer.MAX_VALUE - c.getInnovationAreas().size())).findFirst().get();
+        return competitionRepository.findByName(competitionName).get(0);
     }
 
     protected QuestionResource retrieveQuestionByCompetitionAndName(String questionName, Long competitionId) {
