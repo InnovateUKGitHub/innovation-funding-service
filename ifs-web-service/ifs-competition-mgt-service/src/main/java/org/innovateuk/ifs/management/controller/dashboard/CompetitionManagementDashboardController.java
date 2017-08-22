@@ -45,16 +45,16 @@ public class CompetitionManagementDashboardController {
     public String live(Model model, UserResource user){
         boolean supportView = user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD);
         Map<CompetitionStatus, List<CompetitionSearchResultItem>> liveCompetitions = competitionDashboardSearchService.getLiveCompetitions();
-        model.addAttribute(MODEL_ATTR, new LiveDashboardViewModel(liveCompetitions, getCompetitionCountResource(CompetitionStatus.OPEN, liveCompetitions), supportView));
+        model.addAttribute(MODEL_ATTR, new LiveDashboardViewModel(liveCompetitions, getCompetitionCountResource(liveCompetitions), supportView));
         return TEMPLATE_PATH + "live";
     }
 
     // IFS-191 filtered view can now have different count according to assigned competitions
-    private CompetitionCountResource getCompetitionCountResource(CompetitionStatus competitionStatus, Map<CompetitionStatus, List<CompetitionSearchResultItem>> liveCompetitions){
+    private CompetitionCountResource getCompetitionCountResource(Map<CompetitionStatus, List<CompetitionSearchResultItem>> liveCompetitions){
         CompetitionCountResource competitionCountResource = competitionDashboardSearchService.getCompetitionCounts();
         Long competitionCount = 0L;
-        if(liveCompetitions != null && liveCompetitions.get(competitionStatus) != null){
-            competitionCount = (long)liveCompetitions.size();
+        if(liveCompetitions != null){
+            competitionCount = liveCompetitions.keySet().stream().mapToLong(status -> liveCompetitions.get(status).size()).sum();
         }
         competitionCountResource.setLiveCount(competitionCount);
         return competitionCountResource;
