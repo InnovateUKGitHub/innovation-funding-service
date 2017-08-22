@@ -317,7 +317,7 @@
                             </label>
                         </div>
 
-                        <div class="multiple-choice" data-target="overhead-custom-percentage">
+                        <div class="multiple-choice" data-target="overhead-custom-percentage" th:unless="${overheadCosts?.getUseTotalOption()}">
                             <input th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_2'}"
                                    type="radio"
                                    required="required"
@@ -325,12 +325,12 @@
                                    th:value="${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE}"
                                    th:checked="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)}"
                                    th:disabled="${viewmode == 'readonly'}" />
-                            <label th:unless="${overheadCosts?.getUseTotalOption()}" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_2'}">
+                            <label th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_2'}">
                                 Custom overhead costs
                             </label>
                         </div>
 
-                        <div class="multiple-choice" data-target="overhead-total">
+                        <div class="multiple-choice" data-target="overhead-total" th:if="${overheadCosts?.getUseTotalOption()}" >
                             <input th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_3'}"
                                    type="radio"
                                    required="required"
@@ -338,7 +338,7 @@
                                    th:value="${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).TOTAL}"
                                    th:checked="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).TOTAL)}"
                                    th:disabled="${viewmode == 'readonly'}" />
-                            <label th:if="${overheadCosts?.getUseTotalOption()}" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_3'}">
+                            <label th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_3'}">
                                 Calculate overheads
                             </label>
                         </div>
@@ -414,7 +414,7 @@
                         </div>
                     </div>
                     <div class="form-group alignright inline">
-                        <label th:for="${'section-total-'+subSection.id+'-calculate-formatted'}">
+                        <label th:for="${'cost-overheads-'+overheadCosts?.id+'-calculate'}">
                             <span>Enter the total cost of overheads as calculated in the spreadsheet £</span>
                         </label>
                         <input type="number"
@@ -907,7 +907,7 @@
             </div>
 
             <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-role]}')} ? 'form-group-error' : ''">
-                <label class="form-label" th:for="${'cost-'+ type + '-'+costIdentifier+'-role'}">
+                <label class="form-label" th:for="${'cost-subcontracting-'+costIdentifier+'-role'}">
                   <span>Role of the subcontractor in the project and description of the work they’ll do</span>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-role'})" />
                 </label>

@@ -27,6 +27,7 @@ IFS.projectSetup.loadOrder = {
   common: {
     init: function () {
       IFS.projectSetup.clearInputs.init()
+      IFS.projectSetup.preventInputRegex.init()
     }
   }
 }
