@@ -458,12 +458,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
                 InternalUserDataBuilder baseBuilder = internalUserBuilder.withRoles(roles);
 
-
-                if (line.emailVerified) {
-                    createUser(baseBuilder, line);
-                } else {
-                    baseBuilder.build();
-                }
+                createUser(baseBuilder, line);
             }));
     }
 
@@ -1050,7 +1045,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     protected void setDefaultSystemRegistrar() {
         setLoggedInUser(newUserResource().withRolesGlobal(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build(1)).build());
         testService.doWithinTransaction(() ->
-                setLoggedInUser(userService.findByEmail(BaseDataBuilder.IFS_SYSTEM_MAINTENANCE_USER_EMAIL).getSuccessObjectOrThrowException())
+                setLoggedInUser(userService.findByEmail(BaseDataBuilder.IFS_SYSTEM_REGISTRAR_USER_EMAIL).getSuccessObjectOrThrowException())
         );
     }
 
