@@ -19,7 +19,7 @@ Documentation     INFUND-172: As a lead applicant and I am on the application su
 ...
 ...               IFS-753 Missing functionality on Mark as complete option in Application summary
 Suite Setup       new account complete all but one
-Suite Teardown    The user closes the browser
+Suite Teardown    Custom Suite Teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
@@ -69,7 +69,7 @@ Your Project costs section is read-only once application is marked as complete
 Submit flow business lead (complete application)
     [Documentation]    INFUND-205, INFUND-9058, INFUND-1887, INFUND-3107, INFUND-4010, IFS-942
     [Tags]    HappyPath    Email    SmokeTest
-    Given log in as a different user                        ${submit_bus_email}    ${correct_password}
+    Given log in as a different user                        ${submit_bus_email}  ${correct_password}
     And the user clicks the button/link                     link=${application_bus_name}
     And the user should see the text in the element         css=.message-alert  Now your application is complete, you need to review and then submit.
     When the user clicks the button/link                    link=Review and submit
@@ -91,7 +91,7 @@ Submitted application is read only
     [Documentation]    INFUND-1938, INFUND-9058
     [Tags]    Email    SmokeTest
     Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=${application_bus_name}
+    And the user clicks the button/link     link=${application_bus_name}
     and the user clicks the button/link     link=Return to dashboard
     and the user clicks the button/link     link=${application_bus_name}
     When the user clicks the button/link    link=View application
@@ -101,11 +101,11 @@ Submitted application is read only
 Status of the submitted application
     [Documentation]    INFUND-1137
     [Tags]    Email
-    When the user navigates to the page    ${DASHBOARD_URL}
-    Then the user should see the text in the page    Application submitted
-    And the user clicks the button/link    Link=${application_bus_name}
-    And the user should see the element    Link=View application
-    And the user should see the element    Link=Print application
+    When the user navigates to the page   ${DASHBOARD_URL}
+    Then the user should see the element  jQuery=.in-progress li:contains("${application_bus_name}") .msg-progress:contains("Application submitted")
+    And the user clicks the button/link   link=${application_bus_name}
+    And the user should see the element   link=View application
+    And the user should see the element   link=Print application
 
 RTO lead has read only view after submission
     [Documentation]    INFUND-7405, INFUND-8599
@@ -135,6 +135,13 @@ Submit flow rto lead (complete application)
     Then the user should be redirected to the correct page  submit
     And the user should see the text in the page            Application submitted
     And The user should see the element                     link=Finished
+
+Applications are on Dashboard when Competition is Closed
+    [Documentation]  IFS-1149
+    [Tags]  MySQL
+    Given the competition is closed
+    Then the user should be able to see his application on his dashboard  ${submit_bus_email}  ${application_bus_name}
+    And the user should be able to see his application on his dashboard   ${submit_rto_email}  ${application_rto_name}
 
 *** Keywords ***
 the applicant clicks Yes in the submit modal
@@ -182,3 +189,18 @@ the user puts zero project costs
     the user clicks the button/link  jQuery=button:contains("Mark as complete")
     the user clicks the button/link  link=Your project costs
     the user has read only view once section is marked complete
+
+the competition is closed
+    Connect to Database    @{database}
+    execute sql string    UPDATE `${database_name}`.`milestone` SET `date`='2017-08-01 11:00:00' WHERE `type`='SUBMISSION_DATE' AND `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';
+
+the user should be able to see his application on his dashboard
+    [Arguments]  ${user}  ${application}
+    log in as a different user       ${user}  ${correct_password}
+    the user should see the element  jQuery=.in-progress li:contains("${application}") .msg-deadline-waiting:contains("Awaiting assessment") + .msg-progress:contains("Application submitted")
+
+Custom Suite Teardown
+    The user closes the browser
+    #Is required to return the competition back to its initial status for the following suites to run
+    Connect to Database  @{database}
+    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='2077-09-09 11:00:00' WHERE `type`='SUBMISSION_DATE' AND `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';

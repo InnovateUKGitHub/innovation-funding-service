@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.resource;
 
-import org.innovateuk.ifs.workflow.resource.OutcomeType;
+import org.innovateuk.ifs.workflow.resource.ProcessEvent;
 
-public enum ApplicationOutcome implements OutcomeType {
+public enum ApplicationEvent implements ProcessEvent {
     OPENED("opened"),
     APPROVED("approved"),
     SUBMITTED("submitted"),
@@ -13,7 +13,7 @@ public enum ApplicationOutcome implements OutcomeType {
 
     private final String event;
 
-    ApplicationOutcome(String event) {
+    ApplicationEvent(String event) {
         this.event = event;
     }
 

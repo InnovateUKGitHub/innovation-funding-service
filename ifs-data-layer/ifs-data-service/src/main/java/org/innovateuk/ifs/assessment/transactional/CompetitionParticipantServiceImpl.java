@@ -2,7 +2,7 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.mapper.CompetitionParticipantMapper;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
@@ -77,7 +77,7 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
     }
 
     private Long getTotalAssessmentsAcceptedForCompetitionCount(List<Assessment> assessments) {
-        Set<AssessmentStates> allowedAssessmentStates = EnumSet.of(ACCEPTED, OPEN, READY_TO_SUBMIT, SUBMITTED);
+        Set<AssessmentState> allowedAssessmentStates = EnumSet.of(ACCEPTED, OPEN, READY_TO_SUBMIT, SUBMITTED);
         return assessments.stream().filter(assessment -> allowedAssessmentStates.contains(assessment.getActivityState())).count();
     }
 

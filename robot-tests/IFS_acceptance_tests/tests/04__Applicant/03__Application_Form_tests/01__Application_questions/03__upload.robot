@@ -45,7 +45,6 @@ Non pdf uploads not allowed
     When the user uploads the file        css=.inputfile    ${text_file}
     The user should see an error          ${wrong_filetype_validation_error}
 
-
 Lead applicant can upload a pdf file
     [Documentation]    INFUND-832
     [Tags]    HappyPath    SmokeTest
@@ -64,6 +63,18 @@ Lead applicant can view a file
     When the applicant opens the uploaded file
     Then the user should not see an error in the page
     [Teardown]    The user goes back to the previous page
+
+Internal users can view uploaded files
+    [Documentation]    IFS-1037
+    [Tags]
+    When Log in as a different user               &{Comp_admin1_credentials}
+    Then User verifies if uploaded document can be viewed
+    When Log in as a different user               &{internal_finance_credentials}
+    Then User verifies if uploaded document can be viewed
+    When Log in as a different user               &{ifs_admin_user_credentials}
+    Then User verifies if uploaded document can be viewed
+    When Log in as a different user               &{support_user_credentials}
+    Then User verifies if uploaded document can be viewed
 
 Collaborators can view a file
     [Documentation]    INFUND-2306
@@ -171,3 +182,10 @@ the user can see the option to upload a file on the question
 
 The applicant opens the uploaded file
     When The user opens the link in new window        ${valid_pdf}
+
+User verifies if uploaded document can be viewed
+     the user navigates to the page            ${OPEN_COMPETITION_MAN}/applications/all
+     the user clicks the button/link           jQuery=tr:contains("Academic robot test application") td a
+     the user expands the section              5. Technical approach
+     The user opens the link in new window     ${valid_pdf}
+     the user should not see an error in the page
