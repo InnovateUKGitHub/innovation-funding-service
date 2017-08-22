@@ -19,9 +19,9 @@
 
     <!-- HARDCODED PROTOTYPE HTML -->
 
-    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'68: Technology inspired'}, ${'Manage applications'}, ${'competition closed'})" />
+    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'68: Technology inspired'}, ${'Assign applications to panel'}, ${'competition closed'})" />
 
-    <h2 class="heading-medium">Assign applications to panel (<span id="application-count">0</span>)</h2>
+    <h2 class="heading-medium">Assigned applications (<span id="application-count">0</span>)</h2>
 
     <th:block th:insert="prototypes/fragments/manage-assessment-panel :: prototype-application-list-table" th:with="type='assigned'"/>
 
