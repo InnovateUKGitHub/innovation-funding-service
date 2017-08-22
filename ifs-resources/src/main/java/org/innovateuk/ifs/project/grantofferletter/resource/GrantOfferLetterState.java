@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.grantofferletter.resource;
 
-import org.innovateuk.ifs.workflow.resource.ProcessStates;
+import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 /**
  * Represents the states that can be transitioned during the Grant Offer Letter process.
  */
-public enum GrantOfferLetterState implements ProcessStates {
+public enum GrantOfferLetterState implements ProcessState {
 
     PENDING(State.PENDING),
     SENT(State.ASSIGNED),
@@ -36,10 +36,10 @@ public enum GrantOfferLetterState implements ProcessStates {
     }
 
     public static List<State> getBackingStates() {
-        return simpleMap(GrantOfferLetterState.values(), ProcessStates::getBackingState);
+        return simpleMap(GrantOfferLetterState.values(), ProcessState::getBackingState);
     }
 
     public static GrantOfferLetterState fromState(State state) {
-        return ProcessStates.fromState(GrantOfferLetterState.values(), state);
+        return ProcessState.fromState(GrantOfferLetterState.values(), state);
     }
 }

@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.domain.ApplicationProcess;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.repository.ApplicationProcessRepository;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.resource.ApplicationOutcome;
+import org.innovateuk.ifs.application.resource.ApplicationEvent;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
@@ -27,14 +27,14 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBL
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION;
 
 /**
- * Workflow handler for firing {@link ApplicationOutcome} events.
+ * Workflow handler for firing {@link ApplicationEvent} events.
  */
 @Component
-public class ApplicationWorkflowHandler extends BaseWorkflowEventHandler<ApplicationProcess, ApplicationState, ApplicationOutcome, Application, ProcessRole> {
+public class ApplicationWorkflowHandler extends BaseWorkflowEventHandler<ApplicationProcess, ApplicationState, ApplicationEvent, Application, ProcessRole> {
 
     @Autowired
     @Qualifier("applicationProcessStateMachine")
-    private StateMachine<ApplicationState, ApplicationOutcome> stateMachine;
+    private StateMachine<ApplicationState, ApplicationEvent> stateMachine;
 
     @Autowired
     private ApplicationRepository applicationRepository;
@@ -71,21 +71,21 @@ public class ApplicationWorkflowHandler extends BaseWorkflowEventHandler<Applica
     }
 
     @Override
-    protected StateMachine<ApplicationState, ApplicationOutcome> getStateMachine() {
+    protected StateMachine<ApplicationState, ApplicationEvent> getStateMachine() {
         return stateMachine;
     }
 
     @Override
-    protected ApplicationProcess getOrCreateProcess(Message<ApplicationOutcome> message) {
+    protected ApplicationProcess getOrCreateProcess(Message<ApplicationEvent> message) {
         return getOrCreateProcessCommonStrategy(message);
     }
 
     public boolean open(Application application) {
-        return fireEvent(applicationMessage(application, ApplicationOutcome.OPENED), application);
+        return fireEvent(applicationMessage(application, ApplicationEvent.OPENED), application);
     }
 
     public boolean submit(Application application) {
-        return fireEvent(applicationMessage(application, ApplicationOutcome.SUBMITTED), application);
+        return fireEvent(applicationMessage(application, ApplicationEvent.SUBMITTED), application);
     }
 
     public boolean markIneligible(Application application, IneligibleOutcome ineligibleOutcome) {
@@ -93,19 +93,19 @@ public class ApplicationWorkflowHandler extends BaseWorkflowEventHandler<Applica
     }
 
     public boolean informIneligible(Application application) {
-        return fireEvent(applicationMessage(application, ApplicationOutcome.INFORM_INELIGIBLE), application);
+        return fireEvent(applicationMessage(application, ApplicationEvent.INFORM_INELIGIBLE), application);
     }
 
     public boolean reinstateIneligible(Application application) {
-        return fireEvent(applicationMessage(application, ApplicationOutcome.REINSTATE_INELIGIBLE), application);
+        return fireEvent(applicationMessage(application, ApplicationEvent.REINSTATE_INELIGIBLE), application);
     }
 
     public boolean approve(Application application) {
-        return fireEvent(applicationMessage(application, ApplicationOutcome.APPROVED), application);
+        return fireEvent(applicationMessage(application, ApplicationEvent.APPROVED), application);
     }
 
     public boolean reject(Application application) {
-        return fireEvent(applicationMessage(application, ApplicationOutcome.REJECTED), application);
+        return fireEvent(applicationMessage(application, ApplicationEvent.REJECTED), application);
     }
 
     public boolean notifyFromApplicationState(Application application, ApplicationState applicationState) {
@@ -129,12 +129,12 @@ public class ApplicationWorkflowHandler extends BaseWorkflowEventHandler<Applica
         }
     }
 
-    private static MessageBuilder<ApplicationOutcome> markIneligibleMessage(Application application, IneligibleOutcome ineligibleOutcome) {
-        return applicationMessage(application, ApplicationOutcome.MARK_INELIGIBLE)
+    private static MessageBuilder<ApplicationEvent> markIneligibleMessage(Application application, IneligibleOutcome ineligibleOutcome) {
+        return applicationMessage(application, ApplicationEvent.MARK_INELIGIBLE)
                 .setHeader("ineligible", ineligibleOutcome);
     }
 
-    private static MessageBuilder<ApplicationOutcome> applicationMessage(Application application, ApplicationOutcome event) {
+    private static MessageBuilder<ApplicationEvent> applicationMessage(Application application, ApplicationEvent event) {
         return MessageBuilder
                 .withPayload(event)
                 .setHeader("target", application)
