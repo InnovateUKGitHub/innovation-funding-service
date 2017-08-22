@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.controller.dashboard;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -43,10 +44,20 @@ public class CompetitionManagementDashboardController {
     @GetMapping("/dashboard/live")
     public String live(Model model, UserResource user){
         boolean supportView = user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD);
-        model.addAttribute(MODEL_ATTR, new LiveDashboardViewModel(competitionDashboardSearchService.getLiveCompetitions(),
-                competitionDashboardSearchService.getCompetitionCounts(), supportView));
-
+        Map<CompetitionStatus, List<CompetitionSearchResultItem>> liveCompetitions = competitionDashboardSearchService.getLiveCompetitions();
+        model.addAttribute(MODEL_ATTR, new LiveDashboardViewModel(liveCompetitions, getCompetitionCountResource(CompetitionStatus.OPEN, liveCompetitions), supportView));
         return TEMPLATE_PATH + "live";
+    }
+
+    // IFS-191 filtered view can now have different count according to assigned competitions
+    private CompetitionCountResource getCompetitionCountResource(CompetitionStatus competitionStatus, Map<CompetitionStatus, List<CompetitionSearchResultItem>> liveCompetitions){
+        CompetitionCountResource competitionCountResource = competitionDashboardSearchService.getCompetitionCounts();
+        Long competitionCount = 0L;
+        if(liveCompetitions != null && liveCompetitions.get(competitionStatus) != null){
+            competitionCount = (long)liveCompetitions.size();
+        }
+        competitionCountResource.setLiveCount(competitionCount);
+        return competitionCountResource;
     }
 
     @GetMapping("/dashboard/project-setup")
