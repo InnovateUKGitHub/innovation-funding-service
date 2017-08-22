@@ -168,24 +168,24 @@ the user can re-assign the question back to the lead applicant
 
 the user cannot see the option to upload a file on the question
     [Arguments]    ${QUESTION}
-    Given the user navigates to the page          ${DASHBOARD_URL}
-    And the user clicks the button/link           link=Academic robot test application
-    And the user clicks the button/link           ${QUESTION}
+    the user navigates to the page   ${DASHBOARD_URL}
+    the user clicks the button/link  link=Academic robot test application
+    the user clicks the button/link  ${QUESTION}
     the user should not see the text in the page  Upload
 
 the user can see the option to upload a file on the question
     [Arguments]    ${QUESTION}
-    Given the user navigates to the page      ${DASHBOARD_URL}
-    And the user clicks the button/link       link=Academic robot test application
-    And the user clicks the button/link       ${QUESTION}
+    the user navigates to the page   ${DASHBOARD_URL}
+    the user clicks the button/link  link=Academic robot test application
+    the user clicks the button/link  ${QUESTION}
     the user should see the text in the page  Upload
 
 The applicant opens the uploaded file
-    When The user opens the link in new window        ${valid_pdf}
+    The user opens the link in new window        ${valid_pdf}
 
 User verifies if uploaded document can be viewed
-     the user navigates to the page            ${OPEN_COMPETITION_MAN}/applications/all
-     the user clicks the button/link           jQuery=tr:contains("Academic robot test application") td a
+     ${academic_applicaton_id} =  get application id by name  Academic robot test application
+     the user navigates to the page            ${SERVER}/management/competition/${openCompetitionBusinessRTO}/application/${academic_applicaton_id}
      the user expands the section              5. Technical approach
      The user opens the link in new window     ${valid_pdf}
      the user should not see an error in the page

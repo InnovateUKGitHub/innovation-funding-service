@@ -130,6 +130,14 @@ get comp id from comp title
     Log    ${competitionId}
     [Return]    ${competitionId}
 
+get application id by name
+    [Arguments]   ${name}
+    Connect to Database    @{database}
+    ${result} =    query    SELECT `id` FROM `${database_name}`.`application` WHERE `name`='${name}';
+    ${result} =    get from list    ${result}    0
+    ${applicationId} =    get from list    ${result}    0
+    [Return]    ${applicationId}
+
 # The below keyword gets date from first selector and checks if it is greater than the date from second selector
 # For example 12 February 2018 > 26 January 2017 . Greater in this case means latest.
 verify first date is greater than or equal to second
