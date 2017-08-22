@@ -13,12 +13,12 @@ log in and create new application for collaboration if there is not one already
     Run Keyword If    '${status}' == 'FAIL'    Create new application with the same user  Invite robot test application
 
 Login new application invite academic
-    [Arguments]    ${recipient}    ${subject}    ${pattern}
-    [Tags]    Email
-    Given Logging in and Error Checking  &{lead_applicant_credentials}
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    Academic robot test application
-    Run Keyword If    '${status}' == 'FAIL'    Run keywords    Create new application with the same user  Academic robot test application
-    ...    AND    Invite and accept the invitation    ${recipient}    ${subject}    ${pattern}
+    [Arguments]  ${recipient}  ${subject}  ${pattern}
+    [Tags]  Email
+    Logging in and Error Checking  &{lead_applicant_credentials}
+    ${STATUS}  ${VALUE} =  Run Keyword And Ignore Error Without Screenshots  Page Should Contain  Academic robot test application
+    Run Keyword If  '${status}' == 'FAIL'  Run keywords  Create new application with the same user  Academic robot test application
+    ...                                            AND   Invite and accept the invitation  ${recipient}  ${subject}  ${pattern}
 
 new account complete all but one
     create new account for submitting  ${submit_bus_email}  ${openCompetitionBusinessRTO_overview}  ${application_bus_name}  radio-1
@@ -115,8 +115,9 @@ Create new application with the same user
     the user clicks the button/link       jQuery=button:contains("Save and return")
 
 check if there is an existing application in progress for this competition
-    ${applicationInProgress} =  run keyword and ignore error without screenshots  Element Should Be Visible  css=label[for="new-application-yes"]
-    run keyword if  ${applicationInProgress} == 'PASS'  Run Keywords  the user clicks the button twice  css=label[for="new-application-yes"]  AND  the user clicks the button/link  css=button[type="submit"]
+    ${status}  ${applicationInProgress} =  run keyword and ignore error without screenshots  Element Should Be Visible  jQuery=a:contains("Begin application")
+    run keyword if  '${status}' == 'FAIL'  Run Keywords  The user clicks the button/link  jQuery=[for="new-application-yes"]
+    ...                                    AND  the user clicks the button/link  css=button[type="submit"]
 
 create new submit application
     [Arguments]  ${overview}  ${email}  ${application_name}
