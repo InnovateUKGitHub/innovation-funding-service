@@ -62,7 +62,7 @@ The type of organisation navigates to the correct page
     And the user should see the element            jQuery=.form-hint:contains("A not-for-profit public sector body or charity working on innovation.")
     Given the user selects the radio button        organisationType    4
     And the user clicks the button/link            jQuery=.button:contains("Continue")
-    Then the user should see the text in the page  Public sector organisation or charity
+    Then the user should see the text in the page  Public sector, charity or non Je-S research organisation
     And the user should see the text in the page   Enter your organisation name or registration number.
     And the user goes back to the previous page
 
