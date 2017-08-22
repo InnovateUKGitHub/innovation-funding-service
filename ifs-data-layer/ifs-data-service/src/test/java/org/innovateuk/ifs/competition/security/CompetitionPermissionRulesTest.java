@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
@@ -67,7 +68,6 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
 
     @Test
     public void testInternalAdminCanManageInnovationLeadsForCompetition() {
-
         allGlobalRoleUsers.forEach(user -> {
             if (getUserWithRole(UserRoleType.COMP_ADMIN).equals(user) || getUserWithRole(UserRoleType.PROJECT_FINANCE).equals(user)) {
                 assertTrue(rules.internalAdminCanManageInnovationLeadsForCompetition(newCompetitionResource().build(), user));
@@ -78,18 +78,36 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     }
 
     @Test
-    public void testNonInnovationLeadUsersCanAccessAllCompetitionSearchResults() {
-        allGlobalRoleUsers.forEach(user -> {
-            if (!user.hasRole(UserRoleType.INNOVATION_LEAD) && allInternalUsers.contains(user)) {
-                assertTrue(rules.innovationLeadCanViewCompetitionAssignedToThemInSearchResults(newCompetitionSearchResultItem().build(), user));
-            } else {
-                assertFalse(rules.innovationLeadCanViewCompetitionAssignedToThemInSearchResults(newCompetitionSearchResultItem().build(), user));
-            }
-        });
+    public void testOnlyInnovationLeadUsersAssignedToCompCanAccess() {
+        List<RoleResource> innovationLeadRoles = singletonList(newRoleResource().withType(UserRoleType.INNOVATION_LEAD).build());
+        UserResource innovationLeadAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
+        UserResource innovationLeadNotAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
+        List<CompetitionParticipant> competitionParticipants = newCompetitionParticipant().withUser(newUser().withId(innovationLeadAssignedToCompetition.getId()).build()).build(1);
+        CompetitionSearchResultItem competitionSearchResultItem = newCompetitionSearchResultItem().withId(1L).build();
+
+        when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(1L, CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(competitionParticipants);
+
+        assertTrue(rules.innovationLeadCanViewCompetitionAssignedToThemInSearchResults(competitionSearchResultItem, innovationLeadAssignedToCompetition));
+        assertFalse(rules.innovationLeadCanViewCompetitionAssignedToThemInSearchResults(competitionSearchResultItem, innovationLeadNotAssignedToCompetition));
     }
 
     @Test
-    public void testOnlyInnovationLeadUsersAssignedToCompCanAccess() {
+    public void  testOnlyInnovationLeadUsersAssignedToCompCanAccessComp(){
+        List<RoleResource> innovationLeadRoles = singletonList(newRoleResource().withType(UserRoleType.INNOVATION_LEAD).build());
+        UserResource innovationLeadAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
+        UserResource innovationLeadNotAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
+        List<CompetitionParticipant> competitionParticipants = newCompetitionParticipant().withUser(newUser().withId(innovationLeadAssignedToCompetition.getId()).build()).build(1);
+        CompetitionResource competition= newCompetitionResource().withId(1L).build();
+
+        when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(1L, CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(competitionParticipants);
+
+        assertTrue(rules.innovationLeadCanViewCompetitionAssignedToThem(competition, innovationLeadAssignedToCompetition));
+        assertFalse(rules.innovationLeadCanViewCompetitionAssignedToThem(competition, innovationLeadNotAssignedToCompetition));
+    }
+
+
+    @Test
+    public void testOnlyInnovationLeadUsersAssignedToCompCanAccessCompInSearchResults() {
         List<RoleResource> innovationLeadRoles = singletonList(newRoleResource().withType(UserRoleType.INNOVATION_LEAD).build());
         UserResource innovationLeadAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
         UserResource innovationLeadNotAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();

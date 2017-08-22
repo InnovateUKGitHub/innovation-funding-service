@@ -65,6 +65,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
 
         verify(rules, times(2)).externalUsersCannotViewCompetitionsInSetup(isA(CompetitionResource.class), isNull(UserResource.class));
         verify(rules, times(2)).internalUserCanViewAllCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+        verify(rules, times(2)).innovationLeadCanViewCompetitionAssignedToThem(isA(CompetitionResource.class), isNull(UserResource.class));
         verifyNoMoreInteractions(rules);
     }
 
@@ -75,6 +76,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         assertAccessDenied(() -> classUnderTest.getCompetitionById(1L), () -> {
             verify(rules).externalUsersCannotViewCompetitionsInSetup(isA(CompetitionResource.class), isNull(UserResource.class));
             verify(rules).internalUserCanViewAllCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+            verify(rules).innovationLeadCanViewCompetitionAssignedToThem(isA(CompetitionResource.class), isNull(UserResource.class));
             verifyNoMoreInteractions(rules);
         });
     }

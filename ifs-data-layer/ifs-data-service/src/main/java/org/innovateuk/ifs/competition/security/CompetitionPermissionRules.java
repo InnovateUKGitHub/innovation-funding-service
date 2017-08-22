@@ -37,6 +37,11 @@ public class CompetitionPermissionRules extends BasePermissionRules {
         return isInternal(user) && !isInnovationLead(user);
     }
 
+    @PermissionRule(value = "READ", description = "Internal users can see all competitions")
+    public boolean innovationLeadCanViewCompetitionAssignedToThem(CompetitionResource competition, UserResource user) {
+        return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
+    }
+
     @PermissionRule(value = "READ", description = "Internal users can see all competition search results")
     public boolean internalUserCanViewAllCompetitionSearchResults(CompetitionSearchResultItem competition, UserResource user) {
         return isInternal(user) && !isInnovationLead(user);
@@ -44,7 +49,7 @@ public class CompetitionPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ", description = "Innovation lead users can only see competitions they are assigned in search results")
     public boolean innovationLeadCanViewCompetitionAssignedToThemInSearchResults(CompetitionSearchResultItem competition, UserResource user) {
-        return (isInternal(user) && !isInnovationLead(user)) || userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
+        return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
     }
 
     private boolean userIsInnovationLeadOnCompetition(long competitionId, long loggedInUserId){
