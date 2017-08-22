@@ -144,4 +144,3 @@ ifs-auth-service/ifs-idp-service/src/main/docker/certs/
 ifs-auth-service/ifs-ldap-service/src/main/docker/certs/
 
 setup-files/scripts/docker/newrelic.*
-V99_7_0__Base_webtest_data.sql
