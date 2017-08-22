@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.resource;
 
-import org.innovateuk.ifs.workflow.resource.ProcessStates;
+import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 /**
  * Represents the states that can be transitioned during the Project Setup process.
  */
-public enum ProjectState implements ProcessStates {
+public enum ProjectState implements ProcessState {
 
     SETUP(State.PENDING),
     LIVE(State.ACCEPTED);
@@ -34,11 +34,11 @@ public enum ProjectState implements ProcessStates {
     }
 
     public static List<State> getBackingStates() {
-        return simpleMap(ProjectState.values(), ProcessStates::getBackingState);
+        return simpleMap(ProjectState.values(), ProcessState::getBackingState);
     }
 
     public static ProjectState fromState(State state) {
-        return ProcessStates.fromState(ProjectState.values(), state);
+        return ProcessState.fromState(ProjectState.values(), state);
     }
 }
 

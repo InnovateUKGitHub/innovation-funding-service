@@ -19,6 +19,9 @@ import java.util.List;
  */
 public interface ApplicationStatisticsRepository extends PagingAndSortingRepository<ApplicationStatistics, Long> {
 
+    String SUBMITTED_STATES_STRING = "(org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
+    String WITHDRAWN_STATES_STRING = "(org.innovateuk.ifs.workflow.resource.State.WITHDRAWN)";
+
     String APPLICATION_FILTER = "SELECT a FROM ApplicationStatistics a WHERE a.competition = :compId " +
             "AND (a.applicationProcess.activityState.state IN :states) " +
             "AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
@@ -28,8 +31,10 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "AND (innovationArea.className = 'org.innovateuk.ifs.application.domain.Application#innovationArea') " +
             "WHERE a.competition = :compId " +
             "AND (a.applicationProcess.activityState.state IN :states) " +
-            "AND (innovationArea.category.id = :innovationArea OR :innovationArea IS NULL)" +
-            "AND NOT EXISTS (SELECT 'found' FROM Assessment b WHERE b.participant.user.id = :assessorId AND b.target.id = a.id)";
+            "AND (innovationArea.category.id = :innovationArea OR :innovationArea IS NULL) " +
+            "AND NOT EXISTS (SELECT 'found' FROM Assessment b WHERE b.participant.user.id = :assessorId AND b.target.id = a.id) " +
+            "OR a.id IN (SELECT b.target.id FROM Assessment b WHERE b.participant.user.id = :assessorId " +
+            "AND b.activityState.state IN " + WITHDRAWN_STATES_STRING + ")";
 
     String REJECTED_AND_SUBMITTED_STATES_STRING =
             "(org.innovateuk.ifs.workflow.resource.State.REJECTED," +
@@ -40,7 +45,6 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "(org.innovateuk.ifs.workflow.resource.State.PENDING,org.innovateuk.ifs.workflow.resource.State.REJECTED," +
                     "org.innovateuk.ifs.workflow.resource.State.WITHDRAWN,org.innovateuk.ifs.workflow.resource.State.CREATED,org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
 
-    String SUBMITTED_STATES_STRING = "(org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
 
     List<ApplicationStatistics> findByCompetitionAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> applicationStates);
 

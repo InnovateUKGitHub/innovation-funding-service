@@ -2,8 +2,8 @@ package org.innovateuk.ifs.assessment.workflow.actions;
 
 import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
 import org.innovateuk.ifs.assessment.domain.Assessment;
-import org.innovateuk.ifs.assessment.resource.AssessmentOutcomes;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentEvent;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflow;
 import org.springframework.statemachine.StateContext;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class RejectAction extends BaseAssessmentAction {
 
     @Override
-    protected void doExecute(Assessment assessment, StateContext<AssessmentStates, AssessmentOutcomes> context) {
+    protected void doExecute(Assessment assessment, StateContext<AssessmentState, AssessmentEvent> context) {
         AssessmentRejectOutcome assessmentRejectOutcome = (AssessmentRejectOutcome) context.getMessageHeader("rejection");
         assessment.setRejection(assessmentRejectOutcome);
     }
