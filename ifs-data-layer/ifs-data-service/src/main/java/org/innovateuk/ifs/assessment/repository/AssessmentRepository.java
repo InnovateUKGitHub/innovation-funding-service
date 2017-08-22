@@ -81,15 +81,14 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
 
     List<Assessment> findByActivityStateStateAndTargetCompetitionId(State state, long competitionId);
 
-    @Query("SELECT * FROM(" +
-            "SELECT new org.innovateuk.ifs.assessment.domain.AssessmentApplicationAssessorCount( " +
+    @Query("SELECT new org.innovateuk.ifs.assessment.domain.AssessmentApplicationAssessorCount( " +
             "   assessment, " +
             "   application, " +
             "   CAST((SELECT COUNT(otherAssessment) " +
             "   FROM Assessment otherAssessment " +
             "   JOIN otherAssessment.activityState otherActivityState " +
             "   WHERE otherAssessment.target.id = application.id " +
-            "       AND otherActivityState.state IN :states " +
+            "       AND otherActivityState.state IN :validStates " +
             "   GROUP BY otherAssessment.target " +
             "   ) as int)" +
             ") " +
@@ -100,14 +99,15 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
             "JOIN assessment.participant participant " +
             "WHERE competition.id = :competitionId " +
             "   AND participant.user.id = :assessorId " +
-            "   AND activityState.state IN :states " +
-            "ORDER BY application.id" +
-            ") AS temp GROUP BY temp.target.id")
+            "   AND activityState.state IN :allStates " +
+            "ORDER BY assessment.id DESC")
     List<AssessmentApplicationAssessorCount> getAssessorApplicationAssessmentCountsForStates(
             @Param("competitionId") long competitionId,
             @Param("assessorId") long assessorId,
-            @Param("states") Collection<State> states
+            @Param("validStates") Collection<State> validStates,
+            @Param("allStates") Collection<State> allStates
     );
+
 
     int countByActivityStateStateAndTargetCompetitionId(State state, Long competitionId);
 
