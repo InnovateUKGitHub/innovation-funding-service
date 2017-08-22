@@ -145,15 +145,12 @@ Pending users visible in the assign list but not clickable
     And the user clicks the button/link           link=Project summary
     Then the applicant cannot assign to pending invitees
     And the user should see the text in the page  Adrian Booth (pending)
+    [Teardown]  logout as user
 
 Business organisation (partner accepts invitation)
-    [Documentation]    INFUND-1005
-    ...    INFUND-2286
-    ...    INFUND-1779
-    ...    INFUND-2336
-    [Tags]    HappyPath    Email    SmokeTest
-    [Setup]    Logout as user
-    When the user reads his email and clicks the link  ${invite_email}   Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation    3
+    [Documentation]  INFUND-1005 INFUND-2286 INFUND-1779 INFUND-2336
+    [Tags]  HappyPath  Email  SmokeTest
+    When the user reads his email and clicks the link  ${invite_email}  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation  2
     And the user clicks the button/link                jQuery=.button:contains("Yes, accept invitation")
     And the user selects the radio button              organisationType    1
     And the user clicks the button/link                jQuery=.button:contains("Continue")
@@ -163,8 +160,8 @@ Business organisation (partner accepts invitation)
     And the user selects the checkbox                  address-same
     And the user clicks the button/link                jQuery=.button:contains("Continue")
     And the user clicks the button/link                jQuery=.button:contains("Save and continue")
-    And the user fills the create account form         Adrian    Booth
-    And the user reads his email locally               ${invite_email}   Please verify your email address    Once verified you can sign into your account
+    And the user fills the create account form         Adrian  Booth
+    And the user reads his email locally               ${invite_email}  Please verify your email address    Once verified you can sign into your account
 
 Partner requests new verification email via password reset
     [Documentation]  IFS-52
@@ -241,7 +238,7 @@ Lead applicant invites a non registered user in the same organisation
 Registered partner should not create new org but should follow the create account flow
     [Documentation]    INFUND-1463
     [Tags]    Email
-    When the user reads his email and clicks the link      ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation    3
+    When the user reads his email and clicks the link      ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to collaborate in ${openCompetitionBusinessRTO_name}    You will be joining as part of the organisation    2
     And the user should see the text in the page           Join an application
     And the user clicks the button/link                    jQuery=.button:contains("Yes, accept invitation")
     And the user should see the text in the page           Confirm your organisation
@@ -253,7 +250,7 @@ Registered partner should not create new org but should follow the create accoun
 
 Lead should not see pending status for accepted invite
     [Documentation]    IFS-68
-    [Tags]    HappyPath  Email
+    [Tags]  Email
     [Setup]
     Given the user clicks the button/link       jQuery=a:contains("Sign in")
     Logging in and Error Checking               &{lead_applicant_credentials}
