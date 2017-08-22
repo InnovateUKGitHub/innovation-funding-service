@@ -50,7 +50,7 @@ Comp Admin fills in the Milestone Dates and can see them formatted afterwards
 
 Application Finances should not include project growth
     [Documentation]    INFUND-6393
-    [Tags]
+    [Tags]  HappyPath
     The user decides about the growth table  no    No
 
 Comp admin completes ths competition setup

@@ -253,7 +253,7 @@ Registered partner should not create new org but should follow the create accoun
 
 Lead should not see pending status for accepted invite
     [Documentation]    IFS-68
-    [Tags]    HappyPath  Email
+    [Tags]  Email
     [Setup]
     Given the user clicks the button/link       jQuery=a:contains("Sign in")
     Logging in and Error Checking               &{lead_applicant_credentials}
