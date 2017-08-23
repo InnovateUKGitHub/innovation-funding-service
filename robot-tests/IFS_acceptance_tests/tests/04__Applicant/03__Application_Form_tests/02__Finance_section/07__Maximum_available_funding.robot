@@ -43,14 +43,14 @@ Lead applicant invites a Charity member
 Invite existing academic collaborator
     [Documentation]  IFS-338
     [Tags]
-    [Setup]  log in as a different user                       ${lead_business_email}  ${correct_password}
-    When the user clicks the button/link                      link=${Application_name_business}
-    And the user clicks the button/link                       link=view team members and add collaborators
-    And the user clicks the button/link                       link=Add partner organisation
-    Then the user enters text to a text field                 css=#organisationName  eggs
-    And the user enters text to a text field                  css=input[id="applicants0.name"]  Pete
-    And the user enters text to a text field                  css=input[id="applicants0.email"]  ${collaborator2_credentials["email"]}
-    And the user clicks the button/link                       jQuery=button:contains("Add organisation and invite applicants")
+    [Setup]  log in as a different user                           ${lead_business_email}  ${correct_password}
+    When the user clicks the button/link                          link=${Application_name_business}
+    And the user clicks the button/link                          link=view and manage contributors and collaborators
+    And the user clicks the button/link                          link=Add a collaborator organisation
+    Then the user enters text to a text field                     css=#organisationName  eggs
+    And the user enters text to a text field                     css=input[id="applicants0.name"]  Pete
+    And the user enters text to a text field                     css=input[id="applicants0.email"]  ${collaborator2_credentials["email"]}
+    And the user clicks the button/link                          jQuery=button:contains("Add organisation and invite applicants")
     And logout as user
     And the user accepts the invite to collaborate            ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  ${collaborator2_credentials["email"]}  ${collaborator2_credentials["password"]}
     Then the correct funding is displayed to academic user
