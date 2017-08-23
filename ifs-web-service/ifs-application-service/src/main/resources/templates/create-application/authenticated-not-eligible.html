@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application'" />
+</head>
+<body th:with="context='applicant'" class="create-application-eligibility">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='You are not eligible to apply',size='heading-large'" />
+
+    <p>
+        Your organisation type is not eligible to start an application in this competition.
+        <br>Please refer back to the eligibility criteria on the competition page.
+    </p>
+    <p>
+        You can <a th:href="@{/}">return to your dashboard</a> or go back to the <a href="https://www.gov.uk/government/organisations/innovate-uk">Innovate UK homepage</a>.
+    </p>
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>
