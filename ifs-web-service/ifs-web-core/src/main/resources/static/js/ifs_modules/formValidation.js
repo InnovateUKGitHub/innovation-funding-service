@@ -802,7 +802,7 @@ IFS.core.formValidation = (function () {
         errorSummary.focus()
       } else {
         // Otherwise, set focus to the field with the error
-        jQuery('.form-control-error').frst().focus()
+        jQuery('.form-control-error').first().focus()
       }
     },
     errorSummaryLinksClick: function (el) {
@@ -813,7 +813,7 @@ IFS.core.formValidation = (function () {
       if (!notVisible) {
         jQuery(target).focus()
       } else {
-        jQuery('[aria-labelledby="' + href + '"]').first().focus()
+        jQuery('[aria-labelledby="' + href.replace('#', '') + '"]').first().focus()
       }
     },
     betterMinLengthSupport: function () {
