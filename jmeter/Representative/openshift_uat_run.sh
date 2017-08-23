@@ -6,7 +6,7 @@ read -r -p "Are you happy to run these tests at this time? [y/N]" response
 
 if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]
 then
-    jmeter -Jinvite_user=1 -Japplicant_users=10 -Jregistration_users=1 -popenshift-uat.properties -tload_test_representative.jmx
+    jmeter -Jinvite_user=1 -Japplicant_users=10 -Jregistration_users=1 -Jmicro_pause_deviation=100 -Jshort_pause_deviation=500 -Jnormal_pause_deviation=5000 -Jlong_pause_deviation=10000 -Jlonger_pause_deviation=15000 -popenshift-uat.properties -tload_test_representative.jmx
 else
     echo "No problem.  See you next time!"
 fi
