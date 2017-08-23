@@ -36,4 +36,13 @@ public interface IdentityProviderService {
      */
     @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
     ServiceResult<String> activateUser(String uid);
+
+    /**
+     * Deactivate a user in the Identity Provider
+     *
+     * @param uid
+     * @return
+     */
+    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
+    ServiceResult<String> deactivateUser(String uid);
 }

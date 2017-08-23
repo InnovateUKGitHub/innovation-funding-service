@@ -51,13 +51,6 @@ public class ProjectController {
         return projectService.getOrganisationByProjectAndUser(projectId, userId).toGetResponse();
     }
 
-    @PostMapping("/{projectId}/partners")
-    public RestResult<Void> addPartner(@PathVariable(value = "projectId")Long projectId,
-                                       @RequestParam(value = "userId", required = true) Long userId,
-                                       @RequestParam(value = "organisationId", required = true) Long organisationId) {
-        return projectService.addPartner(projectId, userId, organisationId).toPostResponse();
-    }
-
     @GetMapping("/{projectId}/project-manager")
     public RestResult<ProjectUserResource> getProjectManager(@PathVariable(value = "projectId") Long projectId) {
         return projectService.getProjectManager(projectId).toGetResponse();

@@ -43,7 +43,7 @@ public class AssessmentController {
 
     @GetMapping("/state/{state}/competition/{competitionId}/count")
     public RestResult<Integer> countByStateAndCompetition(
-            @PathVariable("state") AssessmentStates state,
+            @PathVariable("state") AssessmentState state,
             @PathVariable("competitionId") Long competitionId) {
         return assessmentService.countByStateAndCompetition(state, competitionId).toGetResponse();
     }

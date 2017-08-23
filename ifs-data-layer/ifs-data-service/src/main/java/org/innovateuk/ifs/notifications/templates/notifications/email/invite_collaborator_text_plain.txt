@@ -2,8 +2,8 @@
 <@layout.defaultPlainText>
 Dear ${notificationTarget.name},
 
-You are invited by ${sentByName} to participate in an application for grant funding from Innovate UK. You will be joining as part of the organisation ${inviteOrganisationName}. The application is for the competition ${competitionName}.
-${leadApplicant} (${leadApplicantEmail}) is the lead applicant. If you have any queries, please contact them directly.
+You are invited by ${sentByName} to participate in an application for grant funding from Innovate UK. You will be joining as part of the organisation ${inviteOrganisationName}. The application is number ${applicationId} for the competition ${competitionName}.
+${leadApplicant} is the lead applicant. If you have any queries, please contact them directly.
 
 Next steps:
 1) Review the invitation.

@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration;
 
-import org.innovateuk.ifs.project.finance.resource.EligibilityOutcomes;
+import org.innovateuk.ifs.project.finance.resource.EligibilityEvent;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
 import org.springframework.context.annotation.Configuration;
@@ -12,9 +12,9 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 
 import java.util.EnumSet;
 
-import static org.innovateuk.ifs.project.finance.resource.EligibilityOutcomes.ELIGIBILITY_APPROVED;
-import static org.innovateuk.ifs.project.finance.resource.EligibilityOutcomes.NOT_REQUESTING_FUNDING;
-import static org.innovateuk.ifs.project.finance.resource.EligibilityOutcomes.PROJECT_CREATED;
+import static org.innovateuk.ifs.project.finance.resource.EligibilityEvent.ELIGIBILITY_APPROVED;
+import static org.innovateuk.ifs.project.finance.resource.EligibilityEvent.NOT_REQUESTING_FUNDING;
+import static org.innovateuk.ifs.project.finance.resource.EligibilityEvent.PROJECT_CREATED;
 import static org.innovateuk.ifs.project.finance.resource.EligibilityState.REVIEW;
 import static org.innovateuk.ifs.project.finance.resource.EligibilityState.NOT_APPLICABLE;
 import static org.innovateuk.ifs.project.finance.resource.EligibilityState.APPROVED;
@@ -25,16 +25,16 @@ import static org.innovateuk.ifs.project.finance.resource.EligibilityState.APPRO
  */
 @Configuration
 @EnableStateMachine(name = "eligibilityStateMachine")
-public class EligibilityWorkflow extends StateMachineConfigurerAdapter<EligibilityState, EligibilityOutcomes> {
+public class EligibilityWorkflow extends StateMachineConfigurerAdapter<EligibilityState, EligibilityEvent> {
 
     @Override
-    public void configure(StateMachineConfigurationConfigurer<EligibilityState, EligibilityOutcomes> config) throws Exception {
+    public void configure(StateMachineConfigurationConfigurer<EligibilityState, EligibilityEvent> config) throws Exception {
         config.withConfiguration().listener(new WorkflowStateMachineListener<>());
 
     }
 
     @Override
-    public void configure(StateMachineStateConfigurer<EligibilityState, EligibilityOutcomes> states) throws Exception {
+    public void configure(StateMachineStateConfigurer<EligibilityState, EligibilityEvent> states) throws Exception {
         states.withStates()
                 .initial(REVIEW)
                 .states(EnumSet.of(REVIEW, NOT_APPLICABLE, APPROVED))
@@ -42,7 +42,7 @@ public class EligibilityWorkflow extends StateMachineConfigurerAdapter<Eligibili
     }
 
     @Override
-    public void configure(StateMachineTransitionConfigurer<EligibilityState, EligibilityOutcomes> transitions) throws Exception {
+    public void configure(StateMachineTransitionConfigurer<EligibilityState, EligibilityEvent> transitions) throws Exception {
         transitions
                 .withExternal()
                     .source(REVIEW)

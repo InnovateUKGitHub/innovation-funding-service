@@ -4,7 +4,7 @@ import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.financechecks.domain.ViabilityProcess;
 import org.innovateuk.ifs.project.financechecks.repository.ViabilityProcessRepository;
-import org.innovateuk.ifs.project.finance.resource.ViabilityOutcomes;
+import org.innovateuk.ifs.project.finance.resource.ViabilityEvent;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
@@ -20,9 +20,9 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.project.finance.resource.ViabilityOutcomes.ORGANISATION_IS_ACADEMIC;
-import static org.innovateuk.ifs.project.finance.resource.ViabilityOutcomes.PROJECT_CREATED;
-import static org.innovateuk.ifs.project.finance.resource.ViabilityOutcomes.VIABILITY_APPROVED;
+import static org.innovateuk.ifs.project.finance.resource.ViabilityEvent.ORGANISATION_IS_ACADEMIC;
+import static org.innovateuk.ifs.project.finance.resource.ViabilityEvent.PROJECT_CREATED;
+import static org.innovateuk.ifs.project.finance.resource.ViabilityEvent.VIABILITY_APPROVED;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_VIABILITY;
 
 /**
@@ -32,11 +32,11 @@ import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_VIAB
  *
  */
 @Component
-public class ViabilityWorkflowHandler extends BaseWorkflowEventHandler<ViabilityProcess, ViabilityState, ViabilityOutcomes, PartnerOrganisation, ProjectUser> {
+public class ViabilityWorkflowHandler extends BaseWorkflowEventHandler<ViabilityProcess, ViabilityState, ViabilityEvent, PartnerOrganisation, ProjectUser> {
 
     @Autowired
     @Qualifier("viabilityStateMachine")
-    private StateMachine<ViabilityState, ViabilityOutcomes> stateMachine;
+    private StateMachine<ViabilityState, ViabilityEvent> stateMachine;
 
     @Autowired
     private ViabilityProcessRepository viabilityProcessRepository;
@@ -94,24 +94,24 @@ public class ViabilityWorkflowHandler extends BaseWorkflowEventHandler<Viability
     }
 
     @Override
-    protected StateMachine<ViabilityState, ViabilityOutcomes> getStateMachine() {
+    protected StateMachine<ViabilityState, ViabilityEvent> getStateMachine() {
         return stateMachine;
     }
 
     @Override
-    protected ViabilityProcess getOrCreateProcess(Message<ViabilityOutcomes> message) {
+    protected ViabilityProcess getOrCreateProcess(Message<ViabilityEvent> message) {
         return getOrCreateProcessCommonStrategy(message);
     }
 
-    private MessageBuilder<ViabilityOutcomes> projectCreatedEvent(PartnerOrganisation partnerOrganisation, ProjectUser originalLeadApplicantProjectUser) {
+    private MessageBuilder<ViabilityEvent> projectCreatedEvent(PartnerOrganisation partnerOrganisation, ProjectUser originalLeadApplicantProjectUser) {
         return MessageBuilder
                 .withPayload(PROJECT_CREATED)
                 .setHeader("target", partnerOrganisation)
                 .setHeader("participant", originalLeadApplicantProjectUser);
     }
 
-    private MessageBuilder<ViabilityOutcomes> internalUserEvent(PartnerOrganisation partnerOrganisation, User internalUser,
-                                                          ViabilityOutcomes event) {
+    private MessageBuilder<ViabilityEvent> internalUserEvent(PartnerOrganisation partnerOrganisation, User internalUser,
+                                                             ViabilityEvent event) {
         return MessageBuilder
                 .withPayload(event)
                 .setHeader("target", partnerOrganisation)

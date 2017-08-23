@@ -48,7 +48,7 @@
     <ul th:unless="${hidePropositionLinks}" id="proposition-links">
         <th:block th:if="${loggedIn}">
             <li th:unless="${hideDashboardLink}">
-                <a th:href="${userDashboardLink}" th:classappend="${#httpServletRequest.requestURI == userDashboardLink} ? 'active'">Dashboard</a>
+                <a th:href="${userDashboardLink}" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, userDashboardLink)} ? 'active'">Dashboard</a>
             </li>
             <li th:unless="${hideDashboardLink} or ${#strings.isEmpty(userProfileLink)}">
                 <a th:href="${userProfileLink}" th:classappend="${(#httpServletRequest.requestURI == userProfileLink)} ? 'active'">Profile</a>

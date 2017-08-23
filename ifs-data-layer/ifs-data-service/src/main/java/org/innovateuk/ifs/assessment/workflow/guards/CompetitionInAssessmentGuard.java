@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.assessment.workflow.guards;
 
 import org.innovateuk.ifs.assessment.domain.Assessment;
-import org.innovateuk.ifs.assessment.resource.AssessmentOutcomes;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentEvent;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.springframework.statemachine.StateContext;
@@ -14,10 +14,10 @@ import org.springframework.stereotype.Component;
  * and if the current date is within that period, allow the transition to take place.
  */
 @Component
-public class CompetitionInAssessmentGuard implements Guard<AssessmentStates, AssessmentOutcomes> {
+public class CompetitionInAssessmentGuard implements Guard<AssessmentState, AssessmentEvent> {
 
     @Override
-    public boolean evaluate(StateContext<AssessmentStates, AssessmentOutcomes> context) {
+    public boolean evaluate(StateContext<AssessmentState, AssessmentEvent> context) {
         Assessment assessment = (Assessment) context.getMessageHeader("target");
         Competition competition = assessment.getTarget().getCompetition();
 
