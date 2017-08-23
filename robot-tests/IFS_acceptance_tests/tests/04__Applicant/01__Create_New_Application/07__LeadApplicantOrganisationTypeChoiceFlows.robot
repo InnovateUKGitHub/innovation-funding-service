@@ -50,7 +50,7 @@ User cannot choose Public Sector when both Research and Public sector types are 
 
 *** Keywords ***
 the user should see RTO selected in the confirm organisation page
-    the user should see the text in the element  css=h1  Research and technology organisations (RTOs)
+    the user should see the text in the element  css=h1  Research and technology organisations (RTO)
 
 the user should see Business selected in the confirm organisation page
     the user should see the text in the element  css=h1  Business

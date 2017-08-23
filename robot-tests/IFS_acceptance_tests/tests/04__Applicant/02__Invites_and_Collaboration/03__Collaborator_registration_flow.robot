@@ -56,17 +56,17 @@ The type of organisation navigates to the correct page
     Then the user should see the element           jQuery=.form-hint:contains("Organisations which solely promote and conduct collaborative research and innovation.")
     Given the user selects the radio button        organisationType    3
     And the user clicks the button/link            jQuery=.button:contains("Continue")
-    Then the user should see the text in the page  Research and technology organisations (RTOs)
+    Then the user should see the text in the page  Research and technology organisations (RTO)
     And the user should see the text in the page   Enter your organisation name or registration number.
     When the user goes back to the previous page
     And the user should see the element            jQuery=.form-hint:contains("A not-for-profit public sector body or charity working on innovation.")
     Given the user selects the radio button        organisationType    4
     And the user clicks the button/link            jQuery=.button:contains("Continue")
-    Then the user should see the text in the page  Public sector, charity or non Je-S research organisation
+    Then the user should see the text in the page  Public sector, charity or non Je-S registered research organisation
     And the user should see the text in the page   Enter your organisation name or registration number.
     And the user goes back to the previous page
 
-Research and technology organisations (RTOs) search (empty, invalid & valid inputs)
+Research and technology organisations (RTO) search (empty, invalid & valid inputs)
     [Documentation]    INFUND-1230
     [Tags]    HappyPath
     Given the user navigates to the page           ${INVITE_LINK}
@@ -84,7 +84,7 @@ Research and technology organisations (RTOs) search (empty, invalid & valid inpu
     And the user clicks the button/link            jQuery=.button:contains("Use selected address")
     Then the address fields should be filled
 
-Research and technology organisations (RTOs) search (accept invitation flow)
+Research and technology organisations (RTO) search (accept invitation flow)
     [Documentation]    INFUND-1230
     [Tags]    HappyPath
     When the user clicks the button/link           jQuery=.button:contains("Continue")
@@ -94,7 +94,7 @@ Research and technology organisations (RTOs) search (accept invitation flow)
     When the user navigates to the page            ${server}/registration/register
     Then the user fills the create account form    Thierry    Henry
 
-Research and technology organisations (RTOs) search (accept invitation flow with email step)
+Research and technology organisations (RTO) search (accept invitation flow with email step)
     [Documentation]    INFUND-1230
     [Tags]    Email    HappyPath
     Given the user reads his email from the default mailbox and clicks the link  ${test_mailbox_one}+invite1@gmail.com    Please verify your email address    Once verified you can sign into your account
