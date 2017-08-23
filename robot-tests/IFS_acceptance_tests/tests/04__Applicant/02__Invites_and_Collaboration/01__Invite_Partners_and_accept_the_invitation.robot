@@ -150,7 +150,7 @@ Pending users visible in the assign list but not clickable
 Business organisation (partner accepts invitation)
     [Documentation]  INFUND-1005 INFUND-2286 INFUND-1779 INFUND-2336
     [Tags]  HappyPath  Email  SmokeTest
-    When the user reads his email and clicks the link  ${invite_email}  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation  3
+    When the user reads his email and clicks the link  ${invite_email}  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation  2
     And the user clicks the button/link                jQuery=.button:contains("Yes, accept invitation")
     And the user selects the radio button              organisationType    1
     And the user clicks the button/link                jQuery=.button:contains("Continue")
@@ -175,7 +175,7 @@ Partner requests new verification email via password reset
 Complete account verification
     [Documentation]    INFUND-1005  INFUND-2286  INFUND-1779  INFUND-2336
     [Tags]  HappyPath  Email  SmokeTest
-    When the user reads his email and clicks the link       ${invite_email}    Please verify your email address    Once verified you can sign into your account
+    When the user reads his email and clicks the link       ${invite_email}    Please verify your email address    Once verified you can sign into your account  1
     Then the user should be redirected to the correct page  ${REGISTRATION_VERIFIED}
 
 Partner should be able to log-in and see the new company name
@@ -238,7 +238,7 @@ Lead applicant invites a non registered user in the same organisation
 Registered partner should not create new org but should follow the create account flow
     [Documentation]    INFUND-1463
     [Tags]    Email
-    When the user reads his email and clicks the link      ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to collaborate in ${openCompetitionBusinessRTO_name}    You will be joining as part of the organisation    3
+    When the user reads his email and clicks the link      ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to collaborate in ${openCompetitionBusinessRTO_name}    You will be joining as part of the organisation    2
     And the user should see the text in the page           Join an application
     And the user clicks the button/link                    jQuery=.button:contains("Yes, accept invitation")
     And the user should see the text in the page           Confirm your organisation

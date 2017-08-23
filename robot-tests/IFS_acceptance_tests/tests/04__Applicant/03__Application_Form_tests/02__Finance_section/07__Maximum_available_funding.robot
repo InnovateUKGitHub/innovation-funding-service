@@ -94,7 +94,7 @@ Invite existing academic collaborator for RTO lead
     And the user enters text to a text field           css=input[id="applicants0.email"]  ${collaborator2_credentials["email"]}
     And the user clicks the button/link                jQuery=button:contains("Add organisation and invite applicants")
     And logout as user
-    When the user accepts the invite to collaborate    ${OPEN_COMPETITION_NAME}  ${collaborator2_credentials["email"]}  ${collaborator2_credentials["password"]}
+    When the user accepts the invite to collaborate    ${openCompetitionRTO_name}  ${collaborator2_credentials["email"]}  ${collaborator2_credentials["password"]}
     Then the correct funding is displayed to academic user
     And the academic user marks your project costs as complete
 
@@ -110,7 +110,7 @@ Invite existing business user into RTO lead application
     And the user enters text to a text field           css=input[id="applicants0.email"]  ${lead_business_email}
     And the user clicks the button/link                jQuery=button:contains("Add organisation and invite applicants")
     And logout as user
-    Then the user accepts the invite to collaborate    ${OPEN_COMPETITION_NAME}  ${lead_business_email}  ${correct_password}
+    Then the user accepts the invite to collaborate    ${openCompetitionRTO_name}  ${lead_business_email}  ${correct_password}
 
 Business user fills in the project costs
     [Documentation]  IFS-1050  IFS-1013

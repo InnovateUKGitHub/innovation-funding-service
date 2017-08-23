@@ -15,10 +15,10 @@ Resource          ../../../resources/defaultResources.robot
 The invited user should not follow the registration flow again
     [Documentation]    INFUND-1458
     [Tags]    HappyPath
-    Given we create a new user                          ${openCompetitionBusinessRTO}  Stuart  Anderson  ${test_mailbox_one}+invitedregistered@gmail.com
+    Given we create a new user                          ${openCompetitionBusinessRTO}  Stuart  Anderson  ${test_mailbox_one}+invitedregistered@gmail.com  ${BUSINESS_TYPE_ID}
     And logout as user
     Given the lead applicant invites a registered user  ${test_mailbox_one}+invite2@gmail.com    ${test_mailbox_one}+invitedregistered@gmail.com
-    When the user reads his email and clicks the link   ${test_mailbox_one}+invitedregistered@gmail.com    Invitation to collaborate in ${openCompetitionBusinessRTO_name}    You will be joining as part of the organisation    3
+    When the user reads his email and clicks the link   ${test_mailbox_one}+invitedregistered@gmail.com    Invitation to collaborate in ${openCompetitionBusinessRTO_name}    You will be joining as part of the organisation    2
     Then the user should see the text in the page       We have found an account with the invited email address
 
 The user clicks the login link
