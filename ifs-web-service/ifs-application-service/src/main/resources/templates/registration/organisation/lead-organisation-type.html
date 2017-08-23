@@ -37,16 +37,18 @@
                         <span class="error-message"  th:each="err : ${#fields.errors('*{organisationTypeId}')}" th:text="${err}"></span>
                     </th:block>
                 </legend>
-                <div class="multiple-choice" th:each="type : ${model.types}" th:attr="data-target=${T(org.innovateuk.ifs.user.resource.OrganisationTypeEnum).RTO.id == type.id ? 'rto-guidance' : null}">
-                    <input th:id="'radio-'+ ${type.id}" type="radio"
-                           th:field="*{organisationTypeId}"
-                           required="required"
-                           th:attr="data-required-errormessage=#{validation.standard.organisationtype.required}"
-                           th:value="${type.id}" />
-                    <label th:for="'radio-'+ ${type.id}">
-                        <span th:text="${type.name}"></span>
-                        <span class="form-hint" th:text="${type.description}"></span>
-                    </label>
+                <th:block th:each="type : ${model.types}" th:attr="data-target=${T(org.innovateuk.ifs.user.resource.OrganisationTypeEnum).RTO.id == type.id ? 'rto-guidance' : null}">
+                    <div class="multiple-choice">
+                        <input th:id="'radio-'+ ${type.id}" type="radio"
+                               th:field="*{organisationTypeId}"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.standard.organisationtype.required}"
+                               th:value="${type.id}" />
+                        <label th:for="'radio-'+ ${type.id}">
+                            <span th:text="${type.name}"></span>
+                            <span class="form-hint" th:text="${type.description}"></span>
+                        </label>
+                    </div>
                     <div th:if="${T(org.innovateuk.ifs.user.resource.OrganisationTypeEnum).RTO.id == type.id}" id="rto-guidance" class="panel">
                         <h2 class="heading-small">You can only lead an application as an RTO if both the following rules are met:</h2>
                         <ul class="list-bullet">
@@ -54,7 +56,7 @@
                             <li>your project is essential to lay the foundations for the growth of an early stage industry</li>
                         </ul>
                     </div>
-                </div>
+                </th:block>
 
             </fieldset>
         </div>
