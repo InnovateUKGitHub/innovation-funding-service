@@ -2,8 +2,8 @@ package org.innovateuk.ifs.assessment.workflow.guards;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.assessment.domain.Assessment;
-import org.innovateuk.ifs.assessment.resource.AssessmentOutcomes;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentEvent;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.springframework.statemachine.StateContext;
@@ -61,8 +61,8 @@ public class AssessmentCompleteGuardTest extends BaseUnitTestMocksTest {
                 .build();
     }
 
-    private StateContext<AssessmentStates, AssessmentOutcomes> setupContext(Assessment assessment) {
-        StateContext<AssessmentStates, AssessmentOutcomes> context = mock(StateContext.class);
+    private StateContext<AssessmentState, AssessmentEvent> setupContext(Assessment assessment) {
+        StateContext<AssessmentState, AssessmentEvent> context = mock(StateContext.class);
         when(context.getMessageHeader("target")).thenReturn(assessment);
         return context;
     }

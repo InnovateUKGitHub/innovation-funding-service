@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.projectdetails.workflow.guards;
 
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.resource.ProjectDetailsOutcomes;
+import org.innovateuk.ifs.project.resource.ProjectDetailsEvent;
 import org.innovateuk.ifs.project.resource.ProjectDetailsState;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.guard.Guard;
@@ -17,10 +17,10 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
  * This asserts that all mandatory Project Details have been included prior to allowing them to be submitted.
  */
 @Component
-public class AllProjectDetailsSuppliedGuard implements Guard<ProjectDetailsState, ProjectDetailsOutcomes> {
+public class AllProjectDetailsSuppliedGuard implements Guard<ProjectDetailsState, ProjectDetailsEvent> {
 
     @Override
-    public boolean evaluate(StateContext<ProjectDetailsState, ProjectDetailsOutcomes> context) {
+    public boolean evaluate(StateContext<ProjectDetailsState, ProjectDetailsEvent> context) {
 
         Project project = (Project) context.getMessageHeader("target");
 

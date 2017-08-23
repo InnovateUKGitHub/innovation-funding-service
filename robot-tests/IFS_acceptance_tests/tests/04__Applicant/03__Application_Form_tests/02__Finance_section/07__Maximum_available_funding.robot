@@ -10,7 +10,7 @@ Resource            ../../Applicant_Commons.robot
 ${Application_name_business}           Maximum funding allowed Business
 ${Application_name_RTO}                Maximum funding allowed RTO
 #${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}       Aerospace technology investment sector
-#${OPEN_COMPETITION_NAME}              Predicting market trends programme
+#${openCompetitionRTO_name}            Predicting market trends programme
 ${lead_business_email}                 oscar@innovateuk.com
 ${lead_rto_email}                      oscarRTO@innovateuk.com
 
@@ -44,8 +44,8 @@ Invite existing academic collaborator
     [Tags]
     [Setup]  log in as a different user                           ${lead_business_email}  ${correct_password}
     When the user clicks the button/link                          link=${Application_name_business}
-    And the user clicks the button/link                          link=view team members and add collaborators
-    And the user clicks the button/link                          link=Add partner organisation
+    And the user clicks the button/link                          link=view and manage contributors and collaborators
+    And the user clicks the button/link                          link=Add a collaborator organisation
     Then the user enters text to a text field                     css=#organisationName  eggs
     And the user enters text to a text field                     css=input[id="applicants0.name"]  Pete
     And the user enters text to a text field                     css=input[id="applicants0.email"]  ${collaborator2_credentials["email"]}
@@ -56,7 +56,7 @@ Invite existing academic collaborator
 maximum funding level available for RTO lead
     [Documentation]  IFS-338
     [Tags]
-    Given we create a new user                                                  ${OPEN_COMPETITION}  Smith  rto  ${lead_rto_email}
+    Given we create a new user                                                  ${openCompetitionRTO}  Smith  rto  ${lead_rto_email}
     When the user clicks the button/link                                        link=Untitled application (start here)
     And the user clicks the button/link                                         link=Begin application
     And the applicant completes the application details for RTO lead appln      Application details  Experimental development
@@ -72,9 +72,9 @@ maximum funding level available for RTO lead
 lead RTO applicant invites a Charity member
     [Documentation]    IFS-338
     [Tags]
-    Given Invite a non-existing collaborator                                   liamRTO@innovateuk.com  ${OPEN_COMPETITION_NAME}
-    When the user clicks the button/link                                       link=${Application_name_RTO}
-    And the user fills in the organisation information                         ${Application_name_RTO}  ${SMALL_ORGANISATION_SIZE}
+    Given Invite a non-existing collaborator            liamRTO@innovateuk.com  ${openCompetitionRTO_name}
+    When the user clicks the button/link                link=${Application_name_RTO}
+    And the user fills in the organisation information  ${Application_name_RTO}  ${SMALL_ORGANISATION_SIZE}
     Then the funding displayed is as expected
     [Teardown]  logout as user
 
@@ -146,7 +146,7 @@ the funding displayed is as expected
     the user should see the text in the page                      Enter your funding level (maximum 100%).
 
 the correct funding is displayed to academic user
-    the user reads his email and clicks the link             ${collaborator2_credentials["email"]}  Invitation to collaborate in ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  You will be joining as part of the organisation  3
+    the user reads his email and clicks the link             ${collaborator2_credentials["email"]}  Invitation to collaborate in ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  You will be joining as part of the organisation  2
     the user clicks the button/link                          jQuery=a:contains("Continue or sign in")
     The guest user inserts user email and password           &{collaborator2_credentials}
     the guest user clicks the log-in button

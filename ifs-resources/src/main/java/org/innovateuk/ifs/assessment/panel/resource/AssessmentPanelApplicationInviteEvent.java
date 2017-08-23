@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.assessment.panel.resource;
 
-import org.innovateuk.ifs.workflow.resource.OutcomeType;
+import org.innovateuk.ifs.workflow.resource.ProcessEvent;
 
 /**
- * Represents possible events that can happen during the AssessmentPanelApplicationProcess workflow.
+ * Events that can happen during the AssessmentPanelApplicationProcess workflow.
  */
-public enum AssessmentPanelApplicationInviteEvent implements OutcomeType {
+public enum AssessmentPanelApplicationInviteEvent implements ProcessEvent {
     NOTIFY("notify"),
     ACCEPT("accept"),
     REJECT("reject"),

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.workflow.configuration;
 
-import org.innovateuk.ifs.assessment.resource.AssessmentOutcomes;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentEvent;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.workflow.actions.FundingDecisionAction;
 import org.innovateuk.ifs.assessment.workflow.actions.RejectAction;
 import org.innovateuk.ifs.assessment.workflow.actions.WithdrawCreatedAction;
@@ -21,8 +21,8 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 import java.util.LinkedHashSet;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.assessment.resource.AssessmentOutcomes.*;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
+import static org.innovateuk.ifs.assessment.resource.AssessmentEvent.*;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 
 /**
  * Describes the workflow for assessment. This is from accepting a competition to submitting the application.
@@ -30,7 +30,7 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
  */
 @Configuration
 @EnableStateMachine(name = "assessmentStateMachine")
-public class AssessmentWorkflow extends StateMachineConfigurerAdapter<AssessmentStates, AssessmentOutcomes> {
+public class AssessmentWorkflow extends StateMachineConfigurerAdapter<AssessmentState, AssessmentEvent> {
 
     @Autowired
     private RejectAction rejectAction;
@@ -54,20 +54,20 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
     private CompetitionInAssessmentGuard competitionInAssessmentGuard;
 
     @Override
-    public void configure(StateMachineConfigurationConfigurer<AssessmentStates, AssessmentOutcomes> config) throws Exception {
+    public void configure(StateMachineConfigurationConfigurer<AssessmentState, AssessmentEvent> config) throws Exception {
         config.withConfiguration().listener(new WorkflowStateMachineListener<>());
     }
 
     @Override
-    public void configure(StateMachineStateConfigurer<AssessmentStates, AssessmentOutcomes> states) throws Exception {
+    public void configure(StateMachineStateConfigurer<AssessmentState, AssessmentEvent> states) throws Exception {
         states.withStates()
                 .initial(PENDING)
-                .states(new LinkedHashSet<>(asList(AssessmentStates.values())))
+                .states(new LinkedHashSet<>(asList(AssessmentState.values())))
                 .choice(DECIDE_IF_READY_TO_SUBMIT);
     }
 
     @Override
-    public void configure(StateMachineTransitionConfigurer<AssessmentStates, AssessmentOutcomes> transitions) throws Exception {
+    public void configure(StateMachineTransitionConfigurer<AssessmentState, AssessmentEvent> transitions) throws Exception {
         configureNotify(transitions);
         configureAccept(transitions);
         configureReject(transitions);
@@ -78,21 +78,21 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
         configureChoice(transitions);
     }
 
-    private void configureNotify(StateMachineTransitionConfigurer<AssessmentStates, AssessmentOutcomes> transitions) throws Exception {
+    private void configureNotify(StateMachineTransitionConfigurer<AssessmentState, AssessmentEvent> transitions) throws Exception {
         transitions
                 .withExternal()
                 .source(CREATED).target(PENDING)
                 .event(NOTIFY);
     }
 
-    private void configureAccept(StateMachineTransitionConfigurer<AssessmentStates, AssessmentOutcomes> transitions) throws Exception {
+    private void configureAccept(StateMachineTransitionConfigurer<AssessmentState, AssessmentEvent> transitions) throws Exception {
         transitions
                 .withExternal()
                 .source(PENDING).target(ACCEPTED)
                 .event(ACCEPT);
     }
 
-    private void configureReject(StateMachineTransitionConfigurer<AssessmentStates, AssessmentOutcomes> transitions) throws Exception {
+    private void configureReject(StateMachineTransitionConfigurer<AssessmentState, AssessmentEvent> transitions) throws Exception {
         transitions
                 .withExternal()
                 .source(PENDING).target(REJECTED)
@@ -119,7 +119,7 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
                 .guard(assessmentRejectOutcomeGuard);
     }
 
-    private void configureWithdraw(StateMachineTransitionConfigurer<AssessmentStates, AssessmentOutcomes> transitions) throws Exception {
+    private void configureWithdraw(StateMachineTransitionConfigurer<AssessmentState, AssessmentEvent> transitions) throws Exception {
         transitions
                 .withInternal()
                 .source(CREATED)
@@ -143,7 +143,7 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
                 .event(WITHDRAW);
     }
 
-    private void configureFeedback(StateMachineTransitionConfigurer<AssessmentStates, AssessmentOutcomes> transitions) throws Exception {
+    private void configureFeedback(StateMachineTransitionConfigurer<AssessmentState, AssessmentEvent> transitions) throws Exception {
         transitions
                 .withExternal()
                 .source(ACCEPTED).target(DECIDE_IF_READY_TO_SUBMIT)
@@ -158,7 +158,7 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
                 .event(FEEDBACK);
     }
 
-    private void configureFundingDecision(StateMachineTransitionConfigurer<AssessmentStates, AssessmentOutcomes> transitions) throws Exception {
+    private void configureFundingDecision(StateMachineTransitionConfigurer<AssessmentState, AssessmentEvent> transitions) throws Exception {
         transitions
                 .withExternal()
                 .source(ACCEPTED).target(DECIDE_IF_READY_TO_SUBMIT)
@@ -177,7 +177,7 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
                 .action(fundingDecisionAction);
     }
 
-    private void configureSubmit(StateMachineTransitionConfigurer<AssessmentStates, AssessmentOutcomes> transitions) throws Exception {
+    private void configureSubmit(StateMachineTransitionConfigurer<AssessmentState, AssessmentEvent> transitions) throws Exception {
         transitions
                 .withExternal()
                 .source(READY_TO_SUBMIT).target(SUBMITTED)
@@ -185,7 +185,7 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
                 .guard(competitionInAssessmentGuard);
     }
 
-    private void configureChoice(StateMachineTransitionConfigurer<AssessmentStates, AssessmentOutcomes> transitions) throws Exception {
+    private void configureChoice(StateMachineTransitionConfigurer<AssessmentState, AssessmentEvent> transitions) throws Exception {
         transitions
                 .withChoice()
                 .source(DECIDE_IF_READY_TO_SUBMIT)
