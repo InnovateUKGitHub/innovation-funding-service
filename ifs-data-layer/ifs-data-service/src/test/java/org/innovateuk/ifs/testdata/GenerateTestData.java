@@ -1,13 +1,7 @@
 package org.innovateuk.ifs.testdata;
 
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Ignore;
-
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
-import static org.innovateuk.ifs.testdata.builders.BaseDataBuilder.COMP_ADMIN_EMAIL;
 
 /**
  * Generates web test data based upon csvs in /src/test/resources/testdata using data builders
@@ -33,13 +27,5 @@ public class GenerateTestData extends BaseGenerateTestData {
         // PUBLIC_CONTENT_ALREADY_INITIALISED
         PublicContent publicContentForCompetitionOne = publicContentRepository.findByCompetitionId(1L);
         publicContentRepository.delete(publicContentForCompetitionOne.getId());
-    }
-
-    protected UserResource compAdmin() {
-        return retrieveUserByEmail(COMP_ADMIN_EMAIL);
-    }
-
-    protected UserResource systemRegistrar() {
-        return newUserResource().withRolesGlobal(newRoleResource().withType(UserRoleType.SYSTEM_REGISTRATION_USER).build(1)).build();
     }
 }
