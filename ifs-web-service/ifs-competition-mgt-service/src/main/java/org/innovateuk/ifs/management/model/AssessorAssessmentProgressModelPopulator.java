@@ -45,11 +45,12 @@ public class AssessorAssessmentProgressModelPopulator {
                                                              int page,
                                                              Optional<Long> innovationArea,
                                                              String sortField,
+                                                             String filter,
                                                              String origin) {
         AssessorCompetitionSummaryResource summaryResource = assessorCompetitionSummaryRestService
                 .getAssessorSummary(assessorId, competitionId)
                 .getSuccessObjectOrThrowException();
-
+        
         List<String> innovationAreas = simpleMap(
                 summaryResource.getAssessor().getProfile().getInnovationAreas(),
                 CategoryResource::getName
@@ -66,6 +67,7 @@ public class AssessorAssessmentProgressModelPopulator {
                 assessorId,
                 page,
                 innovationArea,
+                filter,
                 sortField);
         AssessorAssessmentProgressApplicationsViewModel applicationsViewModel = getApplicationsViewModel(
                 applicationCounts,
@@ -87,6 +89,7 @@ public class AssessorAssessmentProgressModelPopulator {
                 summaryResource.getTotalApplications(),
                 assigned,
                 rejected,
+                filter,
                 applicationsViewModel
         );
     }
@@ -133,10 +136,17 @@ public class AssessorAssessmentProgressModelPopulator {
                                                                      long assessorId,
                                                                      int page,
                                                                      Optional<Long> innovationArea,
+                                                                     String filter,
                                                                      String sortField) {
         return applicationCountSummaryRestService
                 .getApplicationCountSummariesByCompetitionIdAndInnovationArea(
-                        competitionId, assessorId, page, PAGE_SIZE, innovationArea, sortField)
+                        competitionId,
+                        assessorId,
+                        page,
+                        PAGE_SIZE,
+                        innovationArea,
+                        filter,
+                        sortField)
                 .getSuccessObjectOrThrowException();
     }
 
