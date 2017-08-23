@@ -2,6 +2,8 @@ package org.innovateuk.ifs.competition.resource;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -510,5 +512,109 @@ public class CompetitionResource {
 
     public void setNonIfsUrl(String nonIfsUrl) {
         this.nonIfsUrl = nonIfsUrl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CompetitionResource that = (CompetitionResource) o;
+
+        return new EqualsBuilder()
+                .append(setupComplete, that.setupComplete)
+                .append(useResubmissionQuestion, that.useResubmissionQuestion)
+                .append(nonIfs, that.nonIfs)
+                .append(id, that.id)
+                .append(milestones, that.milestones)
+                .append(funders, that.funders)
+                .append(name, that.name)
+                .append(startDate, that.startDate)
+                .append(endDate, that.endDate)
+                .append(assessorAcceptsDate, that.assessorAcceptsDate)
+                .append(assessorDeadlineDate, that.assessorDeadlineDate)
+                .append(releaseFeedbackDate, that.releaseFeedbackDate)
+                .append(fundersPanelDate, that.fundersPanelDate)
+                .append(fundersPanelEndDate, that.fundersPanelEndDate)
+                .append(assessorFeedbackDate, that.assessorFeedbackDate)
+                .append(assessorBriefingDate, that.assessorBriefingDate)
+                .append(competitionStatus, that.competitionStatus)
+                .append(maxResearchRatio, that.maxResearchRatio)
+                .append(academicGrantPercentage, that.academicGrantPercentage)
+                .append(competitionType, that.competitionType)
+                .append(competitionTypeName, that.competitionTypeName)
+                .append(executive, that.executive)
+                .append(executiveName, that.executiveName)
+                .append(leadTechnologist, that.leadTechnologist)
+                .append(leadTechnologistName, that.leadTechnologistName)
+                .append(innovationSector, that.innovationSector)
+                .append(innovationSectorName, that.innovationSectorName)
+                .append(innovationAreas, that.innovationAreas)
+                .append(innovationAreaNames, that.innovationAreaNames)
+                .append(pafCode, that.pafCode)
+                .append(budgetCode, that.budgetCode)
+                .append(code, that.code)
+                .append(resubmission, that.resubmission)
+                .append(multiStream, that.multiStream)
+                .append(streamName, that.streamName)
+                .append(collaborationLevel, that.collaborationLevel)
+                .append(leadApplicantTypes, that.leadApplicantTypes)
+                .append(researchCategories, that.researchCategories)
+                .append(assessorCount, that.assessorCount)
+                .append(assessorPay, that.assessorPay)
+                .append(sectionSetupStatus, that.sectionSetupStatus)
+                .append(activityCode, that.activityCode)
+                .append(nonIfsUrl, that.nonIfsUrl)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(milestones)
+                .append(funders)
+                .append(name)
+                .append(startDate)
+                .append(endDate)
+                .append(assessorAcceptsDate)
+                .append(assessorDeadlineDate)
+                .append(releaseFeedbackDate)
+                .append(fundersPanelDate)
+                .append(fundersPanelEndDate)
+                .append(assessorFeedbackDate)
+                .append(assessorBriefingDate)
+                .append(competitionStatus)
+                .append(maxResearchRatio)
+                .append(academicGrantPercentage)
+                .append(competitionType)
+                .append(competitionTypeName)
+                .append(executive)
+                .append(executiveName)
+                .append(leadTechnologist)
+                .append(leadTechnologistName)
+                .append(innovationSector)
+                .append(innovationSectorName)
+                .append(innovationAreas)
+                .append(innovationAreaNames)
+                .append(pafCode)
+                .append(budgetCode)
+                .append(code)
+                .append(resubmission)
+                .append(multiStream)
+                .append(streamName)
+                .append(collaborationLevel)
+                .append(leadApplicantTypes)
+                .append(researchCategories)
+                .append(assessorCount)
+                .append(assessorPay)
+                .append(sectionSetupStatus)
+                .append(activityCode)
+                .append(setupComplete)
+                .append(useResubmissionQuestion)
+                .append(nonIfs)
+                .append(nonIfsUrl)
+                .toHashCode();
     }
 }

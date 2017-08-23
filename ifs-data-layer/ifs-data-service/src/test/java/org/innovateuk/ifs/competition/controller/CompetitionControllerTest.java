@@ -44,9 +44,11 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
     @Test
     public void updateCompetitionInitialDetails() throws Exception {
         final Long competitionId = 1L;
+        final Long leadTechnologistUserId = 7L;
 
         CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource()
                 .withInnovationAreaNames(Collections.emptySet())
+                .withLeadTechnologist(leadTechnologistUserId)
                 .build();
 
         when(competitionServiceMock.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competitionResource));
@@ -58,7 +60,7 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
                 .andExpect(status().isOk());
 
         verify(competitionServiceMock, only()).getCompetitionById(competitionId);
-        verify(competitionSetupServiceMock, only()).updateCompetitionInitialDetails(any(), any(), any());
+        verify(competitionSetupServiceMock, only()).updateCompetitionInitialDetails(competitionId, competitionResource, leadTechnologistUserId);
     }
 
     @Test
