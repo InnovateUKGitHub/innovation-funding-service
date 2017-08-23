@@ -118,8 +118,10 @@ INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organis
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
     VALUES (@experimental, @large, @charity, @programme, '100');
 
--- Add the right values for the new competition type (same as programme)
+-- Add the right values for the new generic competition type (same as programme)
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`,`competition_type_id`, `maximum`)
 SELECT `category_id`, `organisation_size_id`, `organisation_type_id`, @generic, `maximum`
 FROM grant_claim_maximum
-WHERE competition_type_id = @programme;
+WHERE competition_type_id = @programme
+    -- only if there are no entries for generic competition type already
+    AND NOT EXISTS (SELECT * from grant_claim_maximum WHERE `competition_type_id` = @generic);
