@@ -23,6 +23,7 @@ public class AssessorAssessmentProgressViewModel {
     private final String businessType;
     private final long totalApplications;
     private final long assessorId;
+    private final String filter;
 
     private final List<AssessorAssessmentProgressAssignedRowViewModel> assigned;
     private final List<AssessorAssessmentProgressRejectedRowViewModel> rejected;
@@ -39,6 +40,7 @@ public class AssessorAssessmentProgressViewModel {
                                                long totalApplications,
                                                List<AssessorAssessmentProgressAssignedRowViewModel> assigned,
                                                List<AssessorAssessmentProgressRejectedRowViewModel> rejected,
+                                               String filter,
                                                List<AssessorAssessmentProgressWithdrawnRowViewModel> previouslyAssigned,
                                                AssessorAssessmentProgressApplicationsViewModel applicationsView) {
 
@@ -52,6 +54,7 @@ public class AssessorAssessmentProgressViewModel {
         this.assessorId = assessorId;
         this.assigned = assigned;
         this.rejected = rejected;
+        this.filter = filter;
         this.previouslyAssigned = previouslyAssigned;
         this.applicationsView = applicationsView;
     }
@@ -97,6 +100,8 @@ public class AssessorAssessmentProgressViewModel {
     public List<AssessorAssessmentProgressWithdrawnRowViewModel> getPreviouslyAssigned() {
         return previouslyAssigned;
     }
+
+    public String getFilter() {return filter; }
 
     public AssessorAssessmentProgressApplicationsViewModel getApplicationsView() {
         return applicationsView;

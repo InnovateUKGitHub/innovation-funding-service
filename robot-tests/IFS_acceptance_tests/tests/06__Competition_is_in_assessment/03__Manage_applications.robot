@@ -18,6 +18,8 @@ Documentation     INFUND-7042 As a member of the competitions team I can see lis
 ...               IFS-319 View list of accepted assessors - In assessment state
 ...
 ...               IFS-1079 Remove an application - Closed and In assessment states
+...
+...               IFS-400 Filter by application number on Assessor progress dashboard - Closed and in assessments state
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
@@ -104,6 +106,15 @@ Assign an application to an assessor
     Then the user should see the element   jQuery=h2:contains("Assigned (0)") + p:contains("No applications have been assigned to this assessor")
     And the user clicks the button/link    jQuery=td:contains("36") ~ td button:contains("Assign")
     Then the user should see the element   jQuery=h2:contains("Assigned (1)") + .table-overflow tr:contains("36")
+
+Filter by application number on the assessor page
+    [Documentation]    IFS-400
+    [Tags]
+    Given the user enters text to a text field    css=#filterSearch    22
+    When the user clicks the button/link    jQuery=button:contains(Filter)
+    Then the user should see the element    jQuery=tr:nth-child(1) td:nth-child(1):contains("22")
+    And the user should not see the element    jQuery=.pagination-label:contains(Next)
+
 
 Filtering of the applications
     [Documentation]    INFUND-8061
