@@ -9,9 +9,6 @@ Resource          ../../../../resources/defaultResources.robot
 # If you are using the run_tests_locally shellscript then this will attempt to swap in a valid path automatically
 # But if you are running pybot manually you will need to add -v UPLOAD_FOLDER:/home/foo/bar/robot-tests/upload_files
 
-*** Variables ***
-${virus_scanning_warning}    This file is awaiting virus scanning
-
 *** Test Cases ***
 Appendices available only for the correct questions
     [Documentation]    INFUND-832
@@ -82,7 +79,7 @@ Internal users can view uploaded files
 Collaborators can view a file
     [Documentation]    INFUND-2306
     [Tags]    HappyPath    SmokeTest
-    [Setup]    Log in as a different user         ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
+    [Setup]    Log in as a different user         ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     Given the user navigates to the page          ${DASHBOARD_URL}
     And the user clicks the button/link           link=Academic robot test application
     And the user clicks the button/link           link=5. Technical approach
@@ -119,7 +116,7 @@ Questions can be assigned with appendices
 Collaborators can view a file when the question is assigned
     [Documentation]    INFUND_2720
     [Tags]    SmokeTest
-    [Setup]    Log in as a different user       ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
+    [Setup]    Log in as a different user       ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     Given the user navigates to the page        ${DASHBOARD_URL}
     And the user clicks the button/link         link=Academic robot test application
     And the user clicks the button/link         link=5. Technical approach
@@ -162,7 +159,7 @@ Quarantined files are not returned to the user and the user is informed
 *** Keywords ***
 Custom Suite Setup
     the guest user opens the browser
-    Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${OPEN_COMPETITION_NAME_2}  You will be joining as part of the organisation
+    Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
 
 the user can re-assign the question back to the lead applicant
     the user reloads the page
@@ -171,24 +168,24 @@ the user can re-assign the question back to the lead applicant
 
 the user cannot see the option to upload a file on the question
     [Arguments]    ${QUESTION}
-    Given the user navigates to the page          ${DASHBOARD_URL}
-    And the user clicks the button/link           link=Academic robot test application
-    And the user clicks the button/link           ${QUESTION}
+    the user navigates to the page   ${DASHBOARD_URL}
+    the user clicks the button/link  link=Academic robot test application
+    the user clicks the button/link  ${QUESTION}
     the user should not see the text in the page  Upload
 
 the user can see the option to upload a file on the question
     [Arguments]    ${QUESTION}
-    Given the user navigates to the page      ${DASHBOARD_URL}
-    And the user clicks the button/link       link=Academic robot test application
-    And the user clicks the button/link       ${QUESTION}
+    the user navigates to the page   ${DASHBOARD_URL}
+    the user clicks the button/link  link=Academic robot test application
+    the user clicks the button/link  ${QUESTION}
     the user should see the text in the page  Upload
 
 The applicant opens the uploaded file
-    When The user opens the link in new window        ${valid_pdf}
+    The user opens the link in new window        ${valid_pdf}
 
 User verifies if uploaded document can be viewed
      ${academic_applicaton_id} =  get application id by name  Academic robot test application
-     the user navigates to the page  ${SERVER}/management/competition/${OPEN_COMPETITION_2}/application/${academic_applicaton_id}
+     the user navigates to the page            ${SERVER}/management/competition/${openCompetitionBusinessRTO}/application/${academic_applicaton_id}
      the user expands the section              5. Technical approach
      The user opens the link in new window     ${valid_pdf}
      the user should not see an error in the page

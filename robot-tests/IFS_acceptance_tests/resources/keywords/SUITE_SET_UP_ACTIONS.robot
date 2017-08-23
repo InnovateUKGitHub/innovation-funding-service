@@ -13,18 +13,18 @@ log in and create new application for collaboration if there is not one already
     Run Keyword If    '${status}' == 'FAIL'    Create new application with the same user  Invite robot test application
 
 Login new application invite academic
-    [Arguments]    ${recipient}    ${subject}    ${pattern}
-    [Tags]    Email
-    Given Logging in and Error Checking  &{lead_applicant_credentials}
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    Academic robot test application
-    Run Keyword If    '${status}' == 'FAIL'    Run keywords    Create new application with the same user  Academic robot test application
-    ...    AND    Invite and accept the invitation    ${recipient}    ${subject}    ${pattern}
+    [Arguments]  ${recipient}  ${subject}  ${pattern}
+    [Tags]  Email
+    Logging in and Error Checking  &{lead_applicant_credentials}
+    ${STATUS}  ${VALUE} =  Run Keyword And Ignore Error Without Screenshots  Page Should Contain  Academic robot test application
+    Run Keyword If  '${status}' == 'FAIL'  Run keywords  Create new application with the same user  Academic robot test application
+    ...                                            AND   Invite and accept the invitation  ${recipient}  ${subject}  ${pattern}
 
 new account complete all but one
-    create new account for submitting  ${submit_bus_email}  ${COMPETITION_OVERVIEW_URL_2}  ${application_bus_name}  radio-1
+    create new account for submitting  ${submit_bus_email}  ${openCompetitionBusinessRTO_overview}  ${application_bus_name}  radio-1
     the user marks every section but one as complete  ${application_bus_name}
     Logout as user
-    create new account for submitting  ${submit_rto_email}  ${COMPETITION_OVERVIEW_URL_2}  ${application_rto_name}  radio-3
+    create new account for submitting  ${submit_rto_email}  ${openCompetitionBusinessRTO_overview}  ${application_rto_name}  radio-3
     the user marks every section but one as complete  ${application_rto_name}
 
 create new account for submitting
@@ -105,19 +105,19 @@ the user marks the section as complete
 
 Create new application with the same user
     [Arguments]  ${Application_title}
-    When the user navigates to the page         ${COMPETITION_OVERVIEW_URL_2}
-    the user clicks the button/link             jQuery=a:contains("Start new application")
+    the user navigates to the page        ${openCompetitionBusinessRTO_overview}
+    the user clicks the button/link       jQuery=a:contains("Start new application")
+    check if there is an existing application in progress for this competition
+    the user clicks the button/link       jQuery=a:contains("Begin application")
+    the user clicks the button/link       link=Application details
+    the user enters text to a text field  id=application_details-title  ${Application_title}
+    the user clicks the button/link       jQuery=button:contains("Save and return")
 
-    # Continue through possible "application in progress" prompt
+check if there is an existing application in progress for this competition
     wait until page contains element    css=body
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    You have an application in progress
-        Run Keyword If    '${status}' == 'PASS'    Run keywords    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application.")
-        ...    AND    And the user clicks the button/link    jQuery=.button:contains("Continue")
-
-    And the user clicks the button/link         jQuery=a:contains("Begin application")
-    And the user clicks the button/link         link=Application details
-    And the user enters text to a text field    id=application_details-title    ${Application_title}
-    And the user clicks the button/link         jQuery=button:contains("Save and return")
+            Run Keyword If    '${status}' == 'PASS'    Run keywords    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application.")
+            ...    AND    And the user clicks the button/link    jQuery=.button:contains("Continue")
 
 create new submit application
     [Arguments]  ${overview}  ${email}  ${application_name}
@@ -140,7 +140,7 @@ Invite and accept the invitation
     And the user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+academictest@gmail.com
     And the user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
     And logout as user
-    When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}    3
+    When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}    2
     And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
     When the user selects the radio button    organisationType    2
     And the user clicks the button/link    jQuery=.button:contains("Continue")
@@ -189,7 +189,7 @@ The user marks the academic application finances as incomplete
 
 invite a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
-    the user navigates to the page                           ${COMPETITION_OVERVIEW_URL_2}
+    the user navigates to the page                           ${openCompetitionBusinessRTO_overview}
     the user follows the flow to register their organisation    ${BUSINESS_TYPE_ID}
     the user verifies email                                    Stuart   Anderson    ${EMAIL_LEAD}
     the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
@@ -204,7 +204,7 @@ invite a registered user
     the guest user opens the browser
 
 we create a new user
-    [Arguments]    ${COMPETITION_ID}  ${first_name}  ${last_name}  ${EMAIL_INVITED}    ${org_type_id}
+    [Arguments]    ${COMPETITION_ID}  ${first_name}  ${last_name}  ${EMAIL_INVITED}  ${org_type_id}
     the user navigates to the page                             ${SERVER}/competition/${COMPETITION_ID}/overview/
     the user follows the flow to register their organisation    ${org_type_id}
     the user verifies email    ${first_name}   ${last_name}    ${EMAIL_INVITED}

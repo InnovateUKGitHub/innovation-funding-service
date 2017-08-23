@@ -94,7 +94,7 @@ the user cannot login with the invalid email
     [Arguments]    ${invalid_email_addy}
     go to                                     ${LOGIN_URL}
     Input Text                                id=username    ${invalid_email_addy}
-    Input Password                            id=password    Passw0rd123
+    Input Password                            id=password  ${correct_password}
     Click Button                              css=button[name="_eventId_proceed"]
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    The user should see the text in the page    Please enter a valid e-mail address
     Run Keyword If    '${status}' == 'FAIL'   The user should see the text in the page    Please enter a valid email address

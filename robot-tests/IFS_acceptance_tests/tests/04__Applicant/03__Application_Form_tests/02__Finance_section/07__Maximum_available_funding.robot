@@ -9,8 +9,8 @@ Resource            ../../Applicant_Commons.robot
 
 ${Application_name_business}           Maximum funding allowed Business
 ${Application_name_RTO}                Maximum funding allowed RTO
-#${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}       Aerospace technology investment sector:This is business only lead org
-#${OPEN_COMPETITION_NAME}              Predicting market trends programme: This is RTO only lead org
+#${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}       Aerospace technology investment sector
+#${openCompetitionRTO_name}            Predicting market trends programme
 ${lead_business_email}                 oscar@innovateuk.com
 ${lead_rto_email}                      oscarRTO@innovateuk.com
 
@@ -59,7 +59,7 @@ Invite existing academic collaborator
 Maximum funding level available for RTO lead
     [Documentation]  IFS-338
     [Tags]
-    Given we create a new user                                              ${OPEN_COMPETITION}  Smith  rto  ${lead_rto_email}    ${RTO_TYPE_ID}
+    Given we create a new user                                              ${openCompetitionRTO}  Smith  rto  ${lead_rto_email}    ${RTO_TYPE_ID}
     When the user clicks the button/link                                    link=Untitled application (start here)
     And the user clicks the button/link                                     link=Begin application
     And the applicant completes the application details for RTO lead appln  Application details  Experimental development
@@ -75,7 +75,7 @@ Maximum funding level available for RTO lead
 Lead RTO applicant invites a Charity member
     [Documentation]    IFS-338
     [Tags]
-    Given Invite a non-existing collaborator            liamRTO@innovateuk.com  ${OPEN_COMPETITION_NAME}
+    Given Invite a non-existing collaborator            liamRTO@innovateuk.com  ${openCompetitionRTO_name}
     When the user clicks the button/link                link=${Application_name_RTO}
     And the user fills in the organisation information  ${Application_name_RTO}  ${SMALL_ORGANISATION_SIZE}
     And the user fills in the project costs             ${Application_name_RTO}
