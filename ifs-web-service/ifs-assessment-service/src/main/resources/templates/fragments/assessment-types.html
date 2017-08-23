@@ -68,7 +68,9 @@
         <select class="form-control width-medium"
                 aria-describedby="info"
                 th:id="formInput[__${field.id}__]"
-                th:field="*{formInput[__${field.id}__]}">
+                th:field="*{formInput[__${field.id}__]}"
+                th:attr="data-required-errormessage=#{validation.assessor.score.notAnInteger}"
+                required="required">
             <option value="">Set score</option>
             <option th:value="${val}" th:text="${val}" th:each="val : ${#numbers.sequence(1,model.maximumScore)}" />
         </select>

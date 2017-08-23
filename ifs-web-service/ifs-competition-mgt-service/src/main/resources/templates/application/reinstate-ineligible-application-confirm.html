@@ -24,7 +24,7 @@
 
 
     <form th:object="${form}"
-        th:action="@{/competition/{competitionId}/application/{applicationId}/reinstateIneligibleApplication(competitionId=${model.competitionId},applicationId=${model.applicationId})}" method="post">
+        th:action="@{/competition/{competitionId}/application/{applicationId}/reinstateIneligibleApplication(competitionId=${model.competitionId},applicationId=${model.applicationId})}" method="post" novalidate="novalidate">
         <p>Are you sure that you wish to reinstate this application?</p>
         <p>It will be added to applications requiring assessment, and will require assessors to be assigned to it.</p>
 

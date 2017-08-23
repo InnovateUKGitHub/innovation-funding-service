@@ -117,6 +117,7 @@
           th:action="@{/competition/{competitionId}/assessors/find/addSelected(competitionId=${model.competitionId})}"
           th:object="${assessorSelectionForm}"
           data-multipage-select=""
+          novalidate="novalidate" 
           th:attr="data-total-checkboxes=${model.pagination.totalCount}">
 
         <div class="grid-row sorting">

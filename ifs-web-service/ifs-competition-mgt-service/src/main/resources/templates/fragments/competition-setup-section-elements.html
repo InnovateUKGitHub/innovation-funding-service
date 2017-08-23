@@ -149,7 +149,7 @@
                         <span class="error-message"  th:each="err : ${#fields.errors('question.guidanceTitle')}" th:text="${err}" ></span>
                     </th:block>
                 </label>
-                <input th:classappend="${#fields.hasErrors('question.guidanceTitle')} ? 'field-control-error'"
+                <input th:classappend="${#fields.hasErrors('question.guidanceTitle')} ? 'form-control-error'"
                        class="form-control width-x-large"
                        type="text"
                        id="question.guidanceTitle"

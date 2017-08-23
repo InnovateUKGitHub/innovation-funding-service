@@ -12,11 +12,14 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
 
-    <div class="error-summary" th:if="${#fields.hasErrors('${organisationForm.organisationTypeId}')}">
-        <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
-        <ul class="error-summary-list">
-            <li th:each="err : ${#fields.errors('${organisationForm.organisationTypeId}')}" th:text="${err}"></li>
-        </ul>
+    <div th:if="${#fields.hasErrors('${organisationForm.organisationTypeId}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+      <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes</h2>
+      <ul class="error-summary-list">
+          <li th:each="err : ${#fields.detailedErrors('${organisationForm.organisationTypeId}')}">
+              <th:block th:if="${err.global}" th:text="${err.message}">Non-field specific message</th:block>
+              <a th:if="${err.fieldName}" th:href="|#${err.fieldName}|" th:text="${err.message}">The error message</a>
+          </li>
+      </ul>
     </div>
 
     <h1 class="heading-xlarge">
@@ -28,10 +31,10 @@
         <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
     </div>
 
-    <form th:object="${organisationForm}" th:action="@{/organisation/create/lead-organisation-type}" method="POST" novalidate="novalidate">
-        <div th:class="${#fields.hasErrors('*{organisationTypeId}')} ? 'form-block error' : 'form-block'">
+    <form th:object="${organisationForm}" th:action="@{/organisation/create/lead-organisation-type}" method="POST" novalidate="novalidate" class="extra-margin">
+        <div class="form-group" th:classappend="${#fields.hasErrors('*{organisationTypeId}')} ? 'form-group-error'">
             <fieldset>
-                <legend class="extra-margin-bottom">
+                <legend class="extra-margin-bottom" id="organisationTypeId">
                     <span class="heading-medium">What type of organisation are you?</span>
                     <th:block th:if="${#fields.hasErrors('*{organisationTypeId}')}">
                         <span class="error-message"  th:each="err : ${#fields.errors('*{organisationTypeId}')}" th:text="${err}" />

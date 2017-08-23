@@ -234,3 +234,13 @@
         </li>
     </ul>
 </th:block>
+
+
+<th:block th:fragment="error-summary-list(form)">
+  <ul class="error-summary-list">
+      <li th:each="err : ${#fields.detailedErrors('${form.*}')}">
+          <th:block th:if="${err.global}" th:text="${err.message}">Non-field specific message</th:block>
+          <a th:if="${err.fieldName}" th:href="|#${err.fieldName}|" th:text="${err.message}">The error message</a>
+      </li>
+  </ul>
+</th:block>
