@@ -5,7 +5,7 @@ import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.financechecks.domain.EligibilityProcess;
 import org.innovateuk.ifs.project.financechecks.repository.EligibilityProcessRepository;
-import org.innovateuk.ifs.project.finance.resource.EligibilityOutcomes;
+import org.innovateuk.ifs.project.finance.resource.EligibilityEvent;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.user.domain.User;
@@ -63,7 +63,7 @@ public class EligibilityWorkflowHandlerIntegrationTest extends
         EligibilityProcess expectedEligibilityProcess = new EligibilityProcess(projectUser, partnerOrganisation, expectedActivityState);
 
         // Ensure the correct event was fired by the workflow
-        expectedEligibilityProcess.setProcessEvent(EligibilityOutcomes.PROJECT_CREATED.getType());
+        expectedEligibilityProcess.setProcessEvent(EligibilityEvent.PROJECT_CREATED.getType());
 
         verify(eligibilityProcessRepositoryMock).save(expectedEligibilityProcess);
 
@@ -75,7 +75,7 @@ public class EligibilityWorkflowHandlerIntegrationTest extends
         callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> eligibilityWorkflowHandler.eligibilityApproved(partnerOrganisation, internalUser)),
 
                 // current State, destination State and expected Event to be fired
-                EligibilityState.REVIEW, EligibilityState.APPROVED, EligibilityOutcomes.ELIGIBILITY_APPROVED);
+                EligibilityState.REVIEW, EligibilityState.APPROVED, EligibilityEvent.ELIGIBILITY_APPROVED);
     }
 
     @Test
@@ -84,13 +84,13 @@ public class EligibilityWorkflowHandlerIntegrationTest extends
         callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> eligibilityWorkflowHandler.notRequestingFunding(partnerOrganisation, internalUser)),
 
                 // current State, destination State and expected Event to be fired
-                EligibilityState.REVIEW, EligibilityState.NOT_APPLICABLE, EligibilityOutcomes.NOT_REQUESTING_FUNDING);
+                EligibilityState.REVIEW, EligibilityState.NOT_APPLICABLE, EligibilityEvent.NOT_REQUESTING_FUNDING);
     }
 
     private void callWorkflowAndCheckTransitionAndEventFired(BiFunction<PartnerOrganisation, User, Boolean> workflowMethodToCall,
                                                              EligibilityState currentEligibilityState,
                                                              EligibilityState destinationEligibilityState,
-                                                             EligibilityOutcomes expectedEventToBeFired) {
+                                                             EligibilityEvent expectedEventToBeFired) {
 
         PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         User internalUser = newUser().build();

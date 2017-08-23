@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.assessment.dashboard.viewmodel;
 
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 
 /**
  * Holder of model attributes for the applications shown on the Assessor Competition Dashboard.
@@ -15,7 +15,7 @@ public class AssessorCompetitionDashboardApplicationViewModel {
     private Long assessmentId;
     private String displayLabel;
     private String leadOrganisation;
-    private AssessmentStates state;
+    private AssessmentState state;
     private int overallScore;
     private Boolean recommended;
 
@@ -23,7 +23,7 @@ public class AssessorCompetitionDashboardApplicationViewModel {
                                                             Long assessmentId,
                                                             String displayLabel,
                                                             String leadOrganisation,
-                                                            AssessmentStates state,
+                                                            AssessmentState state,
                                                             int overallScore,
                                                             Boolean recommended) {
         this.applicationId = applicationId;
@@ -51,7 +51,7 @@ public class AssessorCompetitionDashboardApplicationViewModel {
         return leadOrganisation;
     }
 
-    public AssessmentStates getState() {
+    public AssessmentState getState() {
         return state;
     }
 
@@ -83,7 +83,7 @@ public class AssessorCompetitionDashboardApplicationViewModel {
         return isState(SUBMITTED);
     }
 
-    private boolean isState(AssessmentStates state) {
+    private boolean isState(AssessmentState state) {
         return state == this.state;
     }
 

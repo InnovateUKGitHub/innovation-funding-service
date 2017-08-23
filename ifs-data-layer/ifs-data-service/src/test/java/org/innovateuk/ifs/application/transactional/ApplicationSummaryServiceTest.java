@@ -12,6 +12,7 @@ import org.innovateuk.ifs.application.mapper.ApplicationSummaryPageMapper;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
+import org.innovateuk.ifs.application.resource.ApplicationTeamOrganisationResource;
 import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -550,9 +551,10 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         User partnerOrgLeadUser2 = newUser().withFirstName("Ay").withLastName("Der").withRoles(singletonList(leadRole).stream().collect(Collectors.toSet())).build();
 
         ProcessRole lead = newProcessRole().withRole(UserRoleType.LEADAPPLICANT).withOrganisationId(234L).withUser(leadOrgLeadUser).build();
+        ProcessRole leadOrgCollaborator1 = newProcessRole().withRole(UserRoleType.COLLABORATOR).withOrganisationId(234L).withUser(leadOrgNonLeadUser1).build();
         ProcessRole collaborator1 = newProcessRole().withRole(UserRoleType.COLLABORATOR).withOrganisationId(345L).withUser(partnerOrgLeadUser1).build();
         ProcessRole collaborator2 = newProcessRole().withRole(UserRoleType.COLLABORATOR).withOrganisationId(456L).withUser(partnerOrgLeadUser2).build();
-        Application app = newApplication().withProcessRoles(lead, collaborator1, collaborator2).build();
+        Application app = newApplication().withProcessRoles(lead, leadOrgCollaborator1, collaborator1, collaborator2).build();
 
         AddressType registeredAddressType = newAddressType().withName("REGISTERED").build();
         AddressType operatingAddressType = newAddressType().withName("OPERATING").build();
@@ -634,20 +636,24 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
         ServiceResult<ApplicationTeamResource> result = applicationSummaryService.getApplicationTeamByApplicationId(123L);
         assertTrue(result.isSuccess());
-        assertTrue(result.getSuccessObject().getLeadOrganisation().getOrganisationName().equals("Lead"));
-        assertTrue(result.getSuccessObject().getLeadOrganisation().getRegisteredAddress().getAddress().getAddressLine1().equals("1E"));
-        assertTrue(result.getSuccessObject().getLeadOrganisation().getOperatingAddress().getAddress().getAddressLine1().equals("2E"));
-        assertTrue(result.getSuccessObject().getLeadOrganisation().getUsers().get(0).getName().equals("Lee Der"));
 
-        assertTrue(result.getSuccessObject().getPartnerOrganisations().get(0).getOrganisationName().equals("A"));
-        assertTrue(result.getSuccessObject().getPartnerOrganisations().get(0).getRegisteredAddress().getAddress().getAddressLine1().equals("1E"));
-        assertTrue(result.getSuccessObject().getPartnerOrganisations().get(0).getOperatingAddress() == null);
-        assertTrue(result.getSuccessObject().getPartnerOrganisations().get(0).getUsers().get(0).getName().equals("Ay Der"));
+        ApplicationTeamOrganisationResource leadOrganisation = result.getSuccessObject().getLeadOrganisation();
+        assertTrue(leadOrganisation.getOrganisationName().equals("Lead"));
+        assertTrue(leadOrganisation.getRegisteredAddress().getAddress().getAddressLine1().equals("1E"));
+        assertTrue(leadOrganisation.getOperatingAddress().getAddress().getAddressLine1().equals("2E"));
+        assertTrue(leadOrganisation.getUsers().get(0).getName().equals("Lee Der"));
 
-        assertTrue(result.getSuccessObject().getPartnerOrganisations().get(1).getOrganisationName().equals("B"));
-        assertTrue(result.getSuccessObject().getPartnerOrganisations().get(1).getRegisteredAddress() == null);
-        assertTrue(result.getSuccessObject().getPartnerOrganisations().get(1).getOperatingAddress().getAddress().getAddressLine1().equals("2E"));
-        assertTrue(result.getSuccessObject().getPartnerOrganisations().get(1).getUsers().get(0).getName().equals("Zee Der"));
+        List<ApplicationTeamOrganisationResource> partnerOrganisations = result.getSuccessObject().getPartnerOrganisations();
+        assertEquals(2, partnerOrganisations.size());
+        assertTrue(partnerOrganisations.get(0).getOrganisationName().equals("A"));
+        assertTrue(partnerOrganisations.get(0).getRegisteredAddress().getAddress().getAddressLine1().equals("1E"));
+        assertTrue(partnerOrganisations.get(0).getOperatingAddress() == null);
+        assertTrue(partnerOrganisations.get(0).getUsers().get(0).getName().equals("Ay Der"));
+
+        assertTrue(partnerOrganisations.get(1).getOrganisationName().equals("B"));
+        assertTrue(partnerOrganisations.get(1).getRegisteredAddress() == null);
+        assertTrue(partnerOrganisations.get(1).getOperatingAddress().getAddress().getAddressLine1().equals("2E"));
+        assertTrue(partnerOrganisations.get(1).getUsers().get(0).getName().equals("Zee Der"));
     }
 
     @Test

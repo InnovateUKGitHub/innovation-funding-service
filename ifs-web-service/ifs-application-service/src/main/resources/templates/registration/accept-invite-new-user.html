@@ -9,10 +9,7 @@
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invitation to collaborate',size='heading-xlarge'" />
-            <p>You have been invited to join an application in the competition '
-                <a th:href="@{/competition/{competitionId}/overview(competitionId=${model.competitionId})}" th:text="${model.competitionName}"></a>
-                '.
-            </p>
+            <p>You have been invited to join an application in the competition '<a th:href="@{/competition/{competitionId}/overview(competitionId=${model.competitionId})}" th:text="${model.competitionName}"></a>'.</p>
             <div>
                 <h1 class="heading-large">Application details</h1>
                 <dl class="extra-margin-bottom">
@@ -23,7 +20,7 @@
                     <dd th:text="${model.leadApplicantName}"></dd>
                 </dl>
                 <p>The lead applicant has invited you to participate in this application as part of the following organisation: <strong th:text="${model.inviteOrganisationName}"></strong></p>
-                <p>If this is not the correct organisation, please email the lead applicant at <a th:href="${'mailto:' + model.leadApplicantEmail}" th:text="${model.leadApplicantEmail}"></a></p>
+                <p>If this is not the correct organisation, please email the lead applicant at <a th:href="${'mailto:' + model.leadApplicantEmail}" th:text="${model.leadApplicantEmail}"></a>.</p>
 
                 <h2 class="heading-medium">Are you happy to accept the invitation to participate?</h2>
                 <p>As you are new to the service, you will be taken through the account creation process.</p>

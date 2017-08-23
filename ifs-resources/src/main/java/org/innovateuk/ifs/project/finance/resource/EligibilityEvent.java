@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.project.finance.resource;
 
-import org.innovateuk.ifs.workflow.resource.OutcomeType;
+import org.innovateuk.ifs.workflow.resource.ProcessEvent;
 
 /**
- * Represents the events that can be triggered during the Eligibility process.
+ * Events that can be triggered during the Eligibility process.
  */
-public enum EligibilityOutcomes implements OutcomeType {
+public enum EligibilityEvent implements ProcessEvent {
 
     PROJECT_CREATED("project-created"),
     NOT_REQUESTING_FUNDING("not-requesting-funding"),
@@ -13,7 +13,7 @@ public enum EligibilityOutcomes implements OutcomeType {
 
     String event;
 
-    EligibilityOutcomes(String event) {
+    EligibilityEvent(String event) {
         this.event = event;
     }
 

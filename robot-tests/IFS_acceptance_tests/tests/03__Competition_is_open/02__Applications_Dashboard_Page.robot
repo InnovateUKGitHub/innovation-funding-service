@@ -25,7 +25,7 @@ ${quarantine_warning}    This file has been found to be unsafe
 Application Dashboard
     [Documentation]    INFUND-7369
     [Tags]    HappyPath
-    Given the user clicks the button/link    link=${OPEN_COMPETITION_NAME}
+    Given the user clicks the button/link    link=${openCompetitionRTO_name}
     When the user clicks the button/link    jQuery=a:contains("Applications: All, submitted, ineligible")
     Then The user should see the element    jQuery=a:contains("Submitted applications")
     And The user should see the element    link=All applications
@@ -116,7 +116,7 @@ Comp admin can open the view mode of the application
     When the user can see the option to upload a file on the page        ${technical_approach_url}
     Then the user uploads the file to the 'technical approach' question  ${valid_pdf}
     When log in as a different user                         &{Comp_admin1_credentials}
-    And the user navigates to the page                      ${COMP_MANAGEMENT_APPLICATIONS_LIST}
+    And the user navigates to the page                      ${applicationsForRTOComp}
     #Then the user should see the element  id=sort-by
     #And the user selects the option from the drop-down menu  id  id=sort-by
     And the user clicks the button/link                     link=All applications
@@ -228,7 +228,7 @@ check calculations on both pages
     ${element_page_two}=    Get Webelements    ${list_locator}
     ${length_list_page_two}=    Get Length    ${element_page_two}
     log    ${length_list_page_two}
-    the user navigates to the page    ${comp_management_applications_list}
+    the user navigates to the page    ${applicationsForRTOComp}
     ${element}=    Get Webelements    ${list_locator}
     ${length_list}=    Get Length    ${element}
     log    ${length_list}
@@ -258,7 +258,7 @@ check both pages of applications
     ${row_count_second_page}=    get matching xpath count    //*[td]
     convert to integer    ${row_count_second_page}
     log    ${row_count_second_page}
-    the user navigates to the page    ${comp_management_applications_list}
+    the user navigates to the page    ${applicationsForRTOComp}
     ${row_count_first_page}=    get matching xpath count    //*[td]
     convert to integer    ${row_count_first_page}
     log    ${row_count_first_page}
