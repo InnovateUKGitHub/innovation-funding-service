@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Edit declaration of interest'" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Edit declaration of interest',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
     <body th:with="context='assessment'" class="declaration-form">
@@ -12,11 +12,11 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Declaration of interest',linkClass='link-back',linkUrl=@{/profile/declaration}" />
 
-            <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}" data-ignore-errors="true">
-                <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
-                <p>Please correct the errors in the form below.</p>
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" data-ignore-errors="true" aria-labelledby="error-summary-heading" tabindex="-1">
+              <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             </div>
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Edit your declaration of interest',size='heading-xlarge extra-margin-bottom'" />
+              <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Edit your declaration of interest',size='heading-xlarge extra-margin-bottom'" />
             <p>We need to record if you, or an immediate family member, is connected to a body which has any financial interests.</p>
 
             <p>Please complete the sections below declaring to the best of your knowledge, all active interests currently held.
