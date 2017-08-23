@@ -10,6 +10,8 @@ Documentation     INFUND-7734 Competition Management: Assign to application dash
 ...               IFS-17 View list of accepted assessors - Closed state
 ...
 ...               IFS-1079 Remove an application - Closed and In assessment states
+...
+...               IFS-400 Filter by application number on Assessor progress dashboard - Closed and in assessments state
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -26,10 +28,10 @@ Search for applications
     And the user clicks the button/Link        jQuery=a:contains("Manage assessments")
     And the user clicks the button/link        jQuery=a:contains("Allocate applications")
     When The user enters text to a text field  css=#filterSearch    ${CLOSED_COMPETITION_APPLICATION}
-    and The user clicks the button/link        jQuery=button:contains(Filter)
+    And The user clicks the button/link        jQuery=button:contains(Filter)
     Then the user should see the element       jQuery=tr:nth-child(1) td:nth-child(1):contains("${CLOSED_COMPETITION_APPLICATION}")
     And The user clicks the button/link        link=Clear all filters
-    then the user should not see the element   jQuery=tr:nth-child(1) td:nth-child(1):contains("137")
+    Then the user should not see the element   jQuery=tr:nth-child(1) td:nth-child(1):contains("137")
 
 Filtering the Assessors in the Allocate Applications page
     [Documentation]    INFUND-7042  INFUND-7729  INFUND-8062
@@ -76,6 +78,17 @@ Assessor Progress page
     Given the user clicks the button/link  jQuery=td:contains("Madeleine Martin") ~ td a:contains("Assign")
     Then the user should see the element   jQuery=h2:contains("Assigned") + p:contains("No applications have been assigned to this assessor")
     And the user should see the element    jQuery=h2:contains("Applications") ~ div td:contains("${Neural_id}") + td:contains("Neural") + td:contains("Neural Industries") + td:contains("1")
+
+Filtering applications on the assessor progress page
+    [Documentation]    IFS-400
+    [Tags]
+    When the user enters text to a text field    css=#filterSearch    22
+    And the user clicks the button/link    jQuery=.button:contains(Filter)
+    Then the user should not see the element    jQuery=h2:contains("Applications") ~ div td:contains("${Neural_id}") + td:contains("Neural") + td:contains("Neural Industries") + td:contains("1")
+    When the user enters text to a text field  css=#filterSearch    ${Neural_id}
+    And the user clicks the button/link    jQuery=.button:contains(Filter)
+    Then the user should see the element    jQuery=h2:contains("Applications") ~ div td:contains("${Neural_id}") + td:contains("Neural") + td:contains("Neural Industries") + td:contains("1")
+
 
 Assessor removal
     [Documentation]  IFS-1079
