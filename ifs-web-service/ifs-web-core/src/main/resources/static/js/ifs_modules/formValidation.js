@@ -127,6 +127,11 @@ IFS.core.formValidation = (function () {
         jQuery(this).trigger('change')
       })
       IFS.core.formValidation.betterMinLengthSupport()
+      IFS.core.formValidation.initFocusActions()
+      jQuery('body').on('click', '.error-summary-list a', function (e) {
+        e.preventDefault()
+        IFS.core.formValidation.errorSummaryLinksClick(this)
+      })
     },
     checkPasswordPolicy: function (field, errorStyles) {
       var hasUppercase = IFS.core.formValidation.checkFieldContainsUppercase(field)
@@ -788,6 +793,27 @@ IFS.core.formValidation = (function () {
         return jQuery.trim(val).split(' ')
       } else {
         return false
+      }
+    },
+    initFocusActions: function () {
+      // If there is an error summary, set focus to the summary
+      var errorSummary = jQuery('.error-summary')
+      if (errorSummary.length) {
+        errorSummary.focus()
+      } else {
+        // Otherwise, set focus to the field with the error
+        jQuery('.form-control-error').frst().focus()
+      }
+    },
+    errorSummaryLinksClick: function (el) {
+      var href = jQuery(el).attr('href')
+      var target = jQuery(href)
+      var notVisible = target.is('[aria-hidden="true"]') || target.is(':visible') === false || target.length === 0
+
+      if (!notVisible) {
+        jQuery(target).focus()
+      } else {
+        jQuery('[aria-labelledby="' + href + '"]').first().focus()
       }
     },
     betterMinLengthSupport: function () {
