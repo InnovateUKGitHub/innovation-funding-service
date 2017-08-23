@@ -33,7 +33,7 @@ import static java.util.Collections.nCopies;
 import static java.util.Comparator.comparingLong;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.PENDING;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.PENDING;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REJECTION_FAILED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;

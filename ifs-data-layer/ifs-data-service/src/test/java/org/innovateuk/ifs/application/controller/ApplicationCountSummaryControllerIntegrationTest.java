@@ -127,7 +127,7 @@ public class ApplicationCountSummaryControllerIntegrationTest extends BaseContro
 
         flushAndClearSession();
 
-        ApplicationCountSummaryPageResource counts = controller.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, assessorId, 0, 6, "", ofNullable(innovationAreaId)).getSuccessObject();
+        ApplicationCountSummaryPageResource counts = controller.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, assessorId, 0, 6, "", "", ofNullable(innovationAreaId)).getSuccessObject();
 
         assertEquals(1, counts.getTotalElements());
         assertEquals(0, counts.getNumber());

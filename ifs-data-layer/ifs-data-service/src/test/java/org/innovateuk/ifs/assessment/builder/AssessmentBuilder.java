@@ -7,7 +7,6 @@ import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.resource.ProcessEvent;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -44,10 +43,6 @@ public class AssessmentBuilder extends BaseBuilder<Assessment, AssessmentBuilder
 
     public AssessmentBuilder withId(Long... ids) {
         return withArray((id, assessment) -> setField("id", id, assessment), ids);
-    }
-
-    public AssessmentBuilder withProcessEvent(ProcessEvent... processEvents) {
-        return withArray((processEvent, object) -> setField("event", processEvent.name(), object), processEvents);
     }
 
     public AssessmentBuilder withLastModifiedDate(ZonedDateTime... lastModifiedDates) {

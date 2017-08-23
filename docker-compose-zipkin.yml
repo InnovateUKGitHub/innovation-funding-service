@@ -1,0 +1,38 @@
+version: '3'
+services:
+
+  application-svc:
+    links:
+      - zipkin
+
+  assessment-svc:
+    links:
+      - zipkin
+
+  competition-mgt-svc:
+    links:
+      - zipkin
+
+  project-setup-mgt-svc:
+    links:
+      - zipkin
+
+  project-setup-svc:
+    links:
+      - zipkin
+
+  front-door-svc:
+    links:
+      - zipkin
+
+  data-service:
+    links:
+      - zipkin
+
+  zipkin:
+    hostname: zipkin
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - ifs

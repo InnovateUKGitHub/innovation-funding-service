@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.workflow.configuration;
 
-import org.innovateuk.ifs.project.resource.ProjectOutcomes;
+import org.innovateuk.ifs.project.resource.ProjectEvent;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
 import org.springframework.context.annotation.Configuration;
@@ -10,8 +10,8 @@ import org.springframework.statemachine.config.builders.StateMachineConfiguratio
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
 
-import static org.innovateuk.ifs.project.resource.ProjectOutcomes.GOL_APPROVED;
-import static org.innovateuk.ifs.project.resource.ProjectOutcomes.PROJECT_CREATED;
+import static org.innovateuk.ifs.project.resource.ProjectEvent.GOL_APPROVED;
+import static org.innovateuk.ifs.project.resource.ProjectEvent.PROJECT_CREATED;
 import static org.innovateuk.ifs.project.resource.ProjectState.LIVE;
 import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 
@@ -20,23 +20,23 @@ import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
  */
 @Configuration
 @EnableStateMachine(name = "projectStateMachine")
-public class ProjectWorkflow extends StateMachineConfigurerAdapter<ProjectState, ProjectOutcomes> {
+public class ProjectWorkflow extends StateMachineConfigurerAdapter<ProjectState, ProjectEvent> {
 
     @Override
-    public void configure(StateMachineConfigurationConfigurer<ProjectState, ProjectOutcomes> config) throws Exception {
+    public void configure(StateMachineConfigurationConfigurer<ProjectState, ProjectEvent> config) throws Exception {
         config.withConfiguration().listener(new WorkflowStateMachineListener<>());
 
     }
 
     @Override
-    public void configure(StateMachineStateConfigurer<ProjectState, ProjectOutcomes> states) throws Exception {
+    public void configure(StateMachineStateConfigurer<ProjectState, ProjectEvent> states) throws Exception {
         states.withStates()
                 .initial(SETUP)
                 .end(LIVE);
     }
 
     @Override
-    public void configure(StateMachineTransitionConfigurer<ProjectState, ProjectOutcomes> transitions) throws Exception {
+    public void configure(StateMachineTransitionConfigurer<ProjectState, ProjectEvent> transitions) throws Exception {
         transitions
                 .withExternal()
                 .source(SETUP)

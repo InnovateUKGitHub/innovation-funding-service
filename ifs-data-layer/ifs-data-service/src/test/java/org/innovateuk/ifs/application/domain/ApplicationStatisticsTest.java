@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.domain;
 
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,7 +10,7 @@ import java.util.EnumSet;
 
 import static org.innovateuk.ifs.application.builder.ApplicationStatisticsBuilder.newApplicationStatistics;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.assertEquals;
 
@@ -24,10 +24,10 @@ public class ApplicationStatisticsTest {
                 .withAssessments(
                         newAssessment().withActivityState(
                                 Arrays.stream(
-                                        AssessmentStates.values())
+                                        AssessmentState.values())
                                         .map(x -> new ActivityState(APPLICATION_ASSESSMENT, x.getBackingState()))
                                         .toArray(ActivityState[]::new))
-                                .build(AssessmentStates.values().length))
+                                .build(AssessmentState.values().length))
                 .build();
     }
 

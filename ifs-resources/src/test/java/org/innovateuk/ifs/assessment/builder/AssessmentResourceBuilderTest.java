@@ -3,8 +3,7 @@ package org.innovateuk.ifs.assessment.builder;
 import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionOutcomeResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
-import org.innovateuk.ifs.workflow.resource.ProcessEvent;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -14,8 +13,8 @@ import java.util.List;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResourceBuilder.newAssessmentRejectOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.OPEN;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.READY_TO_SUBMIT;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.OPEN;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.READY_TO_SUBMIT;
 import static org.junit.Assert.*;
 
 public class AssessmentResourceBuilderTest {
@@ -23,8 +22,7 @@ public class AssessmentResourceBuilderTest {
     @Test
     public void buildOne() throws Exception {
         Long expectedId = 1L;
-        ProcessEvent expectedEvent = ProcessEvent.ASSESSMENT;
-        AssessmentStates expectedStatus = OPEN;
+        AssessmentState expectedStatus = OPEN;
         ZonedDateTime expectedLastModifiedDate = ZonedDateTime.now();
         LocalDate expectedStartDate = LocalDate.now().minusDays(2);
         LocalDate expectedEndDate = LocalDate.now().minusDays(1);
@@ -37,7 +35,6 @@ public class AssessmentResourceBuilderTest {
 
         AssessmentResource assessment = newAssessmentResource()
                 .withId(expectedId)
-                .withProcessEvent(expectedEvent)
                 .withActivityState(expectedStatus)
                 .withStartDate(expectedStartDate)
                 .withEndDate(expectedEndDate)
@@ -50,7 +47,6 @@ public class AssessmentResourceBuilderTest {
                 .build();
 
         assertEquals(expectedId, assessment.getId());
-        assertEquals(expectedEvent.name(), assessment.getEvent());
         assertEquals(expectedStatus, assessment.getAssessmentState());
         assertEquals(expectedStartDate, assessment.getStartDate());
         assertEquals(expectedEndDate, assessment.getEndDate());
@@ -65,8 +61,7 @@ public class AssessmentResourceBuilderTest {
     @Test
     public void buildMany() {
         Long[] expectedIds = {1L, 2L};
-        ProcessEvent[] expectedEvents = {ProcessEvent.ASSESSMENT, ProcessEvent.ANOTHER_ONE};
-        AssessmentStates[] expectedStatuss = {OPEN, READY_TO_SUBMIT};
+        AssessmentState[] expectedStatuss = {OPEN, READY_TO_SUBMIT};
         ZonedDateTime[] expectedLastModifiedDates = {ZonedDateTime.now(), ZonedDateTime.now()};
         LocalDate[] expectedStartDates = {LocalDate.now().minusDays(2), LocalDate.now().minusDays(3)};
         LocalDate[] expectedEndDates = {LocalDate.now().minusDays(1), LocalDate.now().minusDays(2)};
@@ -81,7 +76,6 @@ public class AssessmentResourceBuilderTest {
 
         List<AssessmentResource> assessments = newAssessmentResource()
                 .withId(expectedIds)
-                .withProcessEvent(expectedEvents)
                 .withActivityState(expectedStatuss)
                 .withStartDate(expectedStartDates)
                 .withEndDate(expectedEndDates)
@@ -95,7 +89,6 @@ public class AssessmentResourceBuilderTest {
 
         AssessmentResource first = assessments.get(0);
         assertEquals(expectedIds[0], first.getId());
-        assertEquals(expectedEvents[0].name(), first.getEvent());
         assertEquals(expectedStatuss[0], first.getAssessmentState());
         assertEquals(expectedStartDates[0], first.getStartDate());
         assertEquals(expectedEndDates[0], first.getEndDate());
@@ -108,7 +101,6 @@ public class AssessmentResourceBuilderTest {
 
         AssessmentResource second = assessments.get(1);
         assertEquals(expectedIds[1], second.getId());
-        assertEquals(expectedEvents[1].name(), second.getEvent());
         assertEquals(expectedStatuss[1], second.getAssessmentState());
         assertEquals(expectedStartDates[1], second.getStartDate());
         assertEquals(expectedEndDates[1], second.getEndDate());

@@ -3,7 +3,7 @@ package org.innovateuk.ifs.testdata.builders;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.*;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.slf4j.Logger;
@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 
 /**
@@ -29,7 +29,7 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
                                                     String applicationName,
                                                     AssessmentRejectOutcomeValue rejectReason,
                                                     String rejectComment,
-                                                    AssessmentStates state,
+                                                    AssessmentState state,
                                                     String feedback,
                                                     String recommendComment) {
         return with(data -> {
@@ -96,7 +96,7 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
 
     public AssessmentDataBuilder withSubmission(String applicationName,
                                                 String assessorEmail,
-                                                AssessmentStates state) {
+                                                AssessmentState state) {
         return with(data -> {
             if (state != SUBMITTED) {
                 return;
