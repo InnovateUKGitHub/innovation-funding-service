@@ -13,6 +13,7 @@ import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.user.builder.UserBuilder;
@@ -129,6 +130,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         savedCompetitionParticipant.setProcess(competition);
         savedCompetitionParticipant.setUser(innovationLead);
         savedCompetitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
+        savedCompetitionParticipant.setStatus(ParticipantStatus.ACCEPTED);
 
         // Verify that the correct CompetitionParticipant is saved
         verify(competitionParticipantRepositoryMock).save(savedCompetitionParticipant);
