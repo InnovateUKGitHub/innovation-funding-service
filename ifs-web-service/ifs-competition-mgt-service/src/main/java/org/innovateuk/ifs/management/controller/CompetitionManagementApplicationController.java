@@ -50,9 +50,9 @@ import static org.innovateuk.ifs.util.HttpUtils.getQueryStringParameters;
 public class CompetitionManagementApplicationController {
 
     @Autowired
-    protected ProcessRoleService processRoleService;
+    private ProcessRoleService processRoleService;
     @Autowired
-    protected ApplicationPrintPopulator applicationPrintPopulator;
+    private ApplicationPrintPopulator applicationPrintPopulator;
     @Autowired
     private ApplicationRestService applicationRestService;
     @Autowired
@@ -139,14 +139,12 @@ public class CompetitionManagementApplicationController {
     }
 
     @GetMapping("/{applicationId}/forminput/{formInputId}/download")
-    public
-    @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadQuestionFile(
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadQuestionFile(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("formInputId") final Long formInputId,
             UserResource user) throws ExecutionException, InterruptedException {
         ProcessRoleResource processRole;
-        if (user.hasRole(UserRoleType.COMP_ADMIN)) {
+        if (isInternal(user)) {
             long processRoleId = formInputResponseRestService.getByFormInputIdAndApplication(formInputId, applicationId).getSuccessObjectOrThrowException().get(0).getUpdatedBy();
             processRole = processRoleService.getById(processRoleId).get();
         } else {
@@ -192,5 +190,10 @@ public class CompetitionManagementApplicationController {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObjectOrThrowException();
         model.addAttribute("model", reinstateIneligibleApplicationModelPopulator.populateModel(applicationResource));
         return "application/reinstate-ineligible-application-confirm";
+    }
+
+    // TODO: review when IFS-1370 is implemented - RB
+    private boolean isInternal(UserResource user) {
+        return user.hasRole(UserRoleType.IFS_ADMINISTRATOR) || user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE) || user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD);
     }
 }

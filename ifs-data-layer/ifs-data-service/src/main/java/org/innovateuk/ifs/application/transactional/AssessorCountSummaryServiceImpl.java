@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.resource.BusinessType;
@@ -18,7 +18,7 @@ import java.util.EnumSet;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -27,9 +27,9 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 public class AssessorCountSummaryServiceImpl extends BaseTransactionalService implements AssessorCountSummaryService {
 
     public static final Set<State> REJECTED_AND_SUBMITTED_ASSESSMENT_STATES =
-            simpleMapSet(EnumSet.of(REJECTED, WITHDRAWN, SUBMITTED), AssessmentStates::getBackingState);
+            simpleMapSet(EnumSet.of(REJECTED, WITHDRAWN, SUBMITTED), AssessmentState::getBackingState);
     public static final Set<State> NOT_ACCEPTED_OR_SUBMITTED_ASSESSMENT_STATES =
-            simpleMapSet(EnumSet.of(PENDING, REJECTED, WITHDRAWN, CREATED, SUBMITTED), AssessmentStates::getBackingState);
+            simpleMapSet(EnumSet.of(PENDING, REJECTED, WITHDRAWN, CREATED, SUBMITTED), AssessmentState::getBackingState);
     public static final Set<State> SUBMITTED_ASSESSMENT_STATES = EnumSet.of(SUBMITTED.getBackingState());
 
     @Autowired

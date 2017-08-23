@@ -9,10 +9,7 @@
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invitation to collaborate',size='heading-xlarge'" />
-            <p>You have been invited to join an application in the competition '
-                <a th:href="@{/competition/{competitionId}/overview(competitionId=${model.competitionId})}" th:text="${model.competitionName}"></a>
-                '.
-            </p>
+            <p>You have been invited to join an application in the competition '<a th:href="@{/competition/{competitionId}/overview(competitionId=${model.competitionId})}" th:text="${model.competitionName}"></a>'.</p>
             <div>
                 <h1 class="heading-large">Application details</h1>
                 <dl class="extra-margin-bottom">
@@ -22,7 +19,7 @@
                     <dd th:text="${model.leadApplicantName}"></dd>
                 </dl>
                 <p>You have been invited to participate on this application with: <strong th:text="${model.inviteOrganisationName}"></strong></p>
-                <p>If this is not the correct organisation, please email the lead applicant at <a th:href="${'mailto:' + model.leadApplicantEmail}" th:text="${model.leadApplicantEmail}"></a></p>
+                <p>If this is not the correct organisation, please email the lead applicant at <a th:href="${'mailto:' + model.leadApplicantEmail}" th:text="${model.leadApplicantEmail}"></a>.</p>
 
                 <h2 class="heading-medium">We have found an account with the invited email address</h2>
                 <p>Please sign in or continue to accept the invitation.</p>
