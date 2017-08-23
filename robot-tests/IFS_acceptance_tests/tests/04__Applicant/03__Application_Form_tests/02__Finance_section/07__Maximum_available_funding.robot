@@ -44,7 +44,7 @@ Invite existing academic collaborator
     [Tags]
     [Setup]  log in as a different user                           ${lead_business_email}  ${correct_password}
     When the user clicks the button/link                          link=${Application_name_business}
-    And the user clicks the button/link                          link=view contributors and add collaborators
+    And the user clicks the button/link                          link=view and manage contributors and collaborators
     And the user clicks the button/link                          link=Add a collaborator organisation
     Then the user enters text to a text field                     css=#organisationName  eggs
     And the user enters text to a text field                     css=input[id="applicants0.name"]  Pete

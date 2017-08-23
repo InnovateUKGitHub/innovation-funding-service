@@ -52,7 +52,7 @@ Verify the name of the new application
     And the user edits the application title
     Then the user should see the text in the page                 ${test_title}
     And the progress indicator should show 0
-    And the user clicks the button/link                           link=view contributors and add collaborators
+    And the user clicks the button/link                           link=view and manage contributors and collaborators
     And the user should see the text in the page                  Application team
     And the user should see the text in the page                  View and manage your contributors or collaborators in the application.
     And the user can see this new application on their dashboard  ${test_title}

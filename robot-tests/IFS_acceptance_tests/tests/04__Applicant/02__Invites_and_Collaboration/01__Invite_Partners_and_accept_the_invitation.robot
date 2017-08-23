@@ -42,7 +42,7 @@ Application team page
     [Tags]    HappyPath
     [Setup]    The user navigates to the page      ${DASHBOARD_URL}
     Given the user clicks the button/link          link=Invite robot test application
-    When the user clicks the button/link           link=view contributors and add collaborators
+    When the user clicks the button/link           link=view and manage contributors and collaborators
     Then the user should see the text in the page  Application team
     And the user should see the text in the page   View and manage your contributors or collaborators in the application.
     And the lead applicant should have the correct status
@@ -193,7 +193,7 @@ Partner should be able to log-in and see the new company name
 Parner can see the Application team
     [Documentation]    INFUND-7976
     Given the user clicks the button/link    link=Invite robot test application
-    And the user clicks the button/link      link=view contributors and add collaborators
+    And the user clicks the button/link      link=view and manage contributors and collaborators
     Then the user should see the element     jQuery=.table-overflow tr:nth-child(1) td:nth-child(1):contains("Steve Smith")
     And the user should see the element      jQuery=.table-overflow tr:nth-child(1) td:nth-child(2):contains("${lead_applicant}")
     And the user should see the element      jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
@@ -225,7 +225,7 @@ Lead applicant invites a non registered user in the same organisation
     [Tags]
     Given the user navigates to the page           ${DASHBOARD_URL}
     And the user clicks the button/link            link=Invite robot test application
-    When the user clicks the button/link           link=view contributors and add collaborators
+    When the user clicks the button/link           link=view and manage contributors and collaborators
     When the user clicks the button/link           jQuery=a:contains("Update and add contributors from ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}")
     Then the user should see the text in the page  Update ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
     And the user clicks the button/link            jQuery=button:contains("Add another contributor")
@@ -255,7 +255,7 @@ Lead should not see pending status for accepted invite
     Given the user clicks the button/link       jQuery=a:contains("Sign in")
     Logging in and Error Checking               &{lead_applicant_credentials}
     When the user clicks the button/link        link=Invite robot test application
-    And the user clicks the button/link         link=view contributors and add collaborators
+    And the user clicks the button/link         link=view and manage contributors and collaborators
     And the user clicks the button/link         link=Update and add contributors from ${EMPIRE_LTD_NAME}
     Then the user should see the element         jQuery=.table-overflow td:contains("${test_mailbox_one}+inviteorg2@gmail.com") ~ td:contains("Remove")
 
@@ -283,7 +283,7 @@ the user can see the updated company name throughout the application
     And the user should see the element   jQuery=h3:contains("Your funding")
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link   link=${application_name}
-    When the user clicks the button/link  link=view contributors and add collaborators
+    When the user clicks the button/link  link=view and manage contributors and collaborators
     Then the user should see the element  jQuery=h2:contains("NOMENSA LTD")+h3:contains("Organisation type")+p:contains("Business")
 
 the lead applicant cannot be removed

@@ -35,11 +35,11 @@ Create a new application
 the new application should show the correct partners
     the user navigates to the page    ${DASHBOARD_URL}
     The user clicks the button/link    link=TEST ONE
-    The user clicks the button/link    link=view contributors and add collaborators
+    The user clicks the button/link    link=view and manage contributors and collaborators
     The user should not see the text in the page    Partner two
     The user should see the text in the page    Partner one
     the user navigates to the page    ${DASHBOARD_URL}
     The user clicks the button/link    link=TEST TWO
-    The user clicks the button/link    link=view contributors and add collaborators
+    The user clicks the button/link    link=view and manage contributors and collaborators
     The user should not see the text in the page    Partner one
     The user should see the text in the page    Partner two
