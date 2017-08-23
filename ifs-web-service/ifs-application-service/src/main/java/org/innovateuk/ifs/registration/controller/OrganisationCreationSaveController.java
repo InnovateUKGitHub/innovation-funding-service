@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.OPERATING;
@@ -66,24 +69,30 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         OrganisationSearchResult selectedOrganisation = addSelectedOrganisation(organisationForm, model);
         AddressResource address = organisationForm.getAddressForm().getSelectedPostcode();
 
+        OrganisationAddressResource organisationAddressResource = new OrganisationAddressResource();
+
+
+        if (address != null && !organisationForm.isUseSearchResultAddress()) {
+            organisationAddressResource.setAddress(address);
+            organisationAddressResource.setAddressType(new AddressTypeResource(OPERATING.getOrdinal(), OPERATING.name()));
+        }
+        if (selectedOrganisation != null && selectedOrganisation.getOrganisationAddress() != null) {
+            organisationAddressResource.setAddress(selectedOrganisation.getOrganisationAddress());
+            organisationAddressResource.setAddressType(new AddressTypeResource(REGISTERED.getOrdinal(), REGISTERED.name()));
+        }
+
         OrganisationResource organisationResource = new OrganisationResource();
         organisationResource.setName(organisationForm.getOrganisationName());
         organisationResource.setOrganisationType(organisationForm.getOrganisationTypeId());
+        organisationResource.setAddresses(Arrays.asList(organisationAddressResource));
 
         if (!OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationTypeId())) {
             organisationResource.setCompanyHouseNumber(organisationForm.getSearchOrganisationId());
         }
 
         organisationResource = saveNewOrganisation(organisationResource, request);
-        if (address != null && !organisationForm.isUseSearchResultAddress()) {
-            organisationService.addAddress(organisationResource, address, OPERATING);
-        }
-        if (selectedOrganisation != null && selectedOrganisation.getOrganisationAddress() != null) {
-            organisationService.addAddress(organisationResource, selectedOrganisation.getOrganisationAddress(), REGISTERED);
-        }
-
         registrationCookieService.saveToOrganisationIdCookie(organisationResource.getId(), response);
-
+        
         return "redirect:" + RegistrationController.BASE_URL;
     }
 
