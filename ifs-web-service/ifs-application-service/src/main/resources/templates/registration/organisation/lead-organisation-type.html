@@ -37,8 +37,8 @@
                         <span class="error-message"  th:each="err : ${#fields.errors('*{organisationTypeId}')}" th:text="${err}"></span>
                     </th:block>
                 </legend>
-                <th:block th:each="type : ${model.types}" th:attr="data-target=${T(org.innovateuk.ifs.user.resource.OrganisationTypeEnum).RTO.id == type.id ? 'rto-guidance' : null}">
-                    <div class="multiple-choice">
+                <th:block th:each="type : ${model.types}">
+                    <div class="multiple-choice" th:attr="data-target=${T(org.innovateuk.ifs.user.resource.OrganisationTypeEnum).RTO.id == type.id ? 'rto-guidance' : null}">
                         <input th:id="'radio-'+ ${type.id}" type="radio"
                                th:field="*{organisationTypeId}"
                                required="required"
