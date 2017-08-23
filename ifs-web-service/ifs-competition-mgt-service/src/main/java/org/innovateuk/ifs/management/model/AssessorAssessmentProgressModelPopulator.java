@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 
-import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -86,11 +85,11 @@ public class AssessorAssessmentProgressModelPopulator {
                 assessorId,
                 summaryResource.getAssessor().getUser().getName(),
                 innovationAreas,
+                filter,
                 businessType != null ? businessType.getDisplayName() : "",
                 summaryResource.getTotalApplications(),
                 assigned,
                 rejected,
-                filter,
                 previouslyAssigned,
                 applicationsViewModel
         );

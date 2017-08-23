@@ -36,11 +36,11 @@ public class AssessorAssessmentProgressViewModel {
                                                long assessorId,
                                                String assessorName,
                                                List<String> innovationAreas,
+                                               String filter,
                                                String businessType,
                                                long totalApplications,
                                                List<AssessorAssessmentProgressAssignedRowViewModel> assigned,
                                                List<AssessorAssessmentProgressRejectedRowViewModel> rejected,
-                                               String filter,
                                                List<AssessorAssessmentProgressWithdrawnRowViewModel> previouslyAssigned,
                                                AssessorAssessmentProgressApplicationsViewModel applicationsView) {
 
