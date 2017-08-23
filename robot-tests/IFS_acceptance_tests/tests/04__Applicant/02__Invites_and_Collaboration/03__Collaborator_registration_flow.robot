@@ -56,7 +56,7 @@ The type of organisation navigates to the correct page
     Then the user should see the element           jQuery=.form-hint:contains("Organisations which solely promote and conduct collaborative research and innovation.")
     Given the user selects the radio button        organisationType    3
     And the user clicks the button/link            jQuery=.button:contains("Continue")
-    Then the user should see the text in the page  Research and technology organisations (RTO)
+    Then the user should see the text in the page  Research and technology organisation (RTO)
     And the user should see the text in the page   Enter your organisation name or registration number.
     When the user goes back to the previous page
     And the user should see the element            jQuery=.form-hint:contains("A not-for-profit public sector body or charity working on innovation.")
