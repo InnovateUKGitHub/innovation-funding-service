@@ -25,6 +25,7 @@ import org.innovateuk.ifs.form.domain.FormValidator;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -166,6 +167,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
             competitionParticipant.setProcess(competition);
             competitionParticipant.setUser(leadTechnologist);
             competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
+            competitionParticipant.setStatus(ParticipantStatus.ACCEPTED);
 
             competitionParticipantRepository.save(competitionParticipant);
         }
