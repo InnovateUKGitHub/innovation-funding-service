@@ -806,15 +806,30 @@ IFS.core.formValidation = (function () {
       }
     },
     errorSummaryLinksClick: function (el) {
-      var href = jQuery(el).attr('href')
-      var target = jQuery(href)
-      var notVisible = target.is('[aria-hidden="true"]') || target.is(':visible') === false || target.length === 0
+      var id = IFS.core.formValidation.removeHash(jQuery(el).attr('href'))
+      var target = jQuery('[id="' + id + '"]')
+      var targetVisible = IFS.core.formValidation.isVisible(target)
 
-      if (!notVisible) {
-        jQuery(target).focus()
+      if (targetVisible) {
+        target.first().focus()
       } else {
-        jQuery('[aria-labelledby="' + href.replace('#', '') + '"]').first().focus()
+        // if the target is invisible we put focus on an element that has the same label as the target
+        // An example of this usecase is the wysiwyg editor
+        var altTarget = jQuery('[aria-labelledby="' + id + '"]')
+        var altTargetVisible = IFS.core.formValidation.isVisible(altTarget)
+        if (altTargetVisible) {
+          altTargetVisible.first().focus()
+        }
       }
+    },
+    isVisible: function (el) {
+      return !(el.is('[aria-hidden="true"]') || el.is(':visible') === false || el.length === 0)
+    },
+    removeHash: function (href) {
+      if (href.indexOf('#') === 0) {
+        return href.substring(1, href.length)
+      }
+      return href
     },
     betterMinLengthSupport: function () {
       // if the minlenght is not implemented in the browser we use pattern which is more widely supported
