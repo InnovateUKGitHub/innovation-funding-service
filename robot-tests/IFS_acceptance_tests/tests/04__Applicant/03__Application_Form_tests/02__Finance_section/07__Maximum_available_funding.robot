@@ -87,8 +87,8 @@ Invite existing academic collaborator for RTO lead
     [Tags]
     [Setup]  log in as a different user                ${lead_rto_email}  ${correct_password}
     When the user clicks the button/link               link=${Application_name_RTO}
-    And the user clicks the button/link                link=view team members and add collaborators
-    And the user clicks the button/link                link=Add partner organisation
+    And the user clicks the button/link                link=view and manage contributors and collaborators
+    And the user clicks the button/link                link=Add a collaborator organisation
     Then the user enters text to a text field          css=#organisationName  eggs
     And the user enters text to a text field           css=input[id="applicants0.name"]  Pete
     And the user enters text to a text field           css=input[id="applicants0.email"]  ${collaborator2_credentials["email"]}
@@ -103,8 +103,8 @@ Invite existing business user into RTO lead application
     [Tags]
     [Setup]  log in as a different user                ${lead_rto_email}  ${correct_password}
     When the user clicks the button/link               link=${Application_name_RTO}
-    And the user clicks the button/link                link=view team members and add collaborators
-    And the user clicks the button/link                link=Add partner organisation
+    And the user clicks the button/link                link=view and manage contributors and collaborators
+    And the user clicks the button/link                link=Add a collaborator organisation
     And the user enters text to a text field           css=#organisationName  innovate bus
     And the user enters text to a text field           css=input[id="applicants0.name"]  oscar
     And the user enters text to a text field           css=input[id="applicants0.email"]  ${lead_business_email}
@@ -207,7 +207,7 @@ the funding displayed is as expected
 
 the user accepts the invite to collaborate
     [Arguments]  ${competition_name}  ${user_name}  ${password}
-    the user reads his email and clicks the link     ${user_name}  Invitation to collaborate in ${competition_name}  You will be joining as part of the organisation  3
+    the user reads his email and clicks the link     ${user_name}  Invitation to collaborate in ${competition_name}  You will be joining as part of the organisation  2
     the user clicks the button/link                  jQuery=a:contains("Continue or sign in")
     the guest user inserts user email and password   ${user_name}  ${password}
     the guest user clicks the log-in button
