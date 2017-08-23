@@ -29,7 +29,7 @@ the guest logs in as an assessor
     time until element is visible    link=Dashboard    Logging in as assessor
 
 the assessor can visit the competition dashboard
-    click link    ${OPEN_COMPETITION_LINK}
+    click link    ${openCompetitionRTO_name}
 
 the assessor can visit the application details
 
