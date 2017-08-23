@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.project.finance.resource;
 
-import org.innovateuk.ifs.workflow.resource.OutcomeType;
+import org.innovateuk.ifs.workflow.resource.ProcessEvent;
 
 /**
- * Represents the events that can be triggered during the Viability Approval process.
+ * Events that can be triggered during the Viability Approval process.
  */
-public enum ViabilityOutcomes implements OutcomeType {
+public enum ViabilityEvent implements ProcessEvent {
 
     PROJECT_CREATED("project-created"),
     ORGANISATION_IS_ACADEMIC("organisation-is-academic"),
@@ -13,7 +13,7 @@ public enum ViabilityOutcomes implements OutcomeType {
 
     String event;
 
-    ViabilityOutcomes(String event) {
+    ViabilityEvent(String event) {
         this.event = event;
     }
 

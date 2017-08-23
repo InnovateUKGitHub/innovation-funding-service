@@ -6,7 +6,7 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentApplicationAssessorCount;
 import org.innovateuk.ifs.assessment.domain.AssessorFormInputResponse;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -35,7 +35,7 @@ import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseBuilder.newAssessorFormInputResponse;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
@@ -167,7 +167,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         Application application = applicationRepository.findOne(1L);
         List<Assessment> assessments = setUpAssessments(user, application, numOfAssessmentsForEachState);
 
-        Set<State> statesNotToCount = AssessmentStates.getBackingStates(of(CREATED, PENDING));
+        Set<State> statesNotToCount = AssessmentState.getBackingStates(of(CREATED, PENDING));
 
         assertEquals(assessments.size() - statesNotToCount.size() * numOfAssessmentsForEachState, repository
                 .countByParticipantUserIdAndActivityStateStateNotIn(user.getId(), statesNotToCount));
@@ -182,7 +182,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
         Application application = applicationRepository.findOne(1L);
         setUpAssessments(user, application, numOfAssessmentsForEachState);
-        Set<State> states = AssessmentStates.getBackingStates(of(CREATED, PENDING));
+        Set<State> states = AssessmentState.getBackingStates(of(CREATED, PENDING));
 
         assertEquals(
                 states.size() * numOfAssessmentsForEachState,
@@ -201,7 +201,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         Application application = applicationRepository.findOne(1L);
         setUpAssessments(user, application, numOfAssessmentsForEachState);
 
-        Set<State> statesToCount = AssessmentStates.getBackingStates(of(CREATED, PENDING));
+        Set<State> statesToCount = AssessmentState.getBackingStates(of(CREATED, PENDING));
 
         assertEquals(statesToCount.size() * numOfAssessmentsForEachState, repository
                 .countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(user.getId(), application.getCompetition().getId(), statesToCount));
@@ -225,11 +225,11 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
         assertEquals(getAssessmentStatesWithoutDecisions().size() * numOfAssessmentsForEachState, found.size());
 
-        Map<AssessmentStates, List<Assessment>> foundByStateMap = found.stream()
+        Map<AssessmentState, List<Assessment>> foundByStateMap = found.stream()
                 .collect(Collectors.groupingBy(Assessment::getActivityState, LinkedHashMap::new, toList()));
 
         assertEquals("Expected the assessments to ordered by ActivityState in the natural " +
-                "ordering of their equivalent AssessmentStates", getAssessmentStatesWithoutDecisions(), foundByStateMap.keySet());
+                "ordering of their equivalent AssessmentState", getAssessmentStatesWithoutDecisions(), foundByStateMap.keySet());
 
         foundByStateMap.values().forEach(foundByState -> {
             List<Long> ids = getAssessmentIds(foundByState);
@@ -291,7 +291,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         List<AssessmentApplicationAssessorCount> counts = repository.getAssessorApplicationAssessmentCountsForStates(
                 application1.getCompetition().getId(),
                 paulPlum.getId(),
-                AssessmentStates.getBackingStates(complementOf(of(CREATED, REJECTED, WITHDRAWN)))
+                AssessmentState.getBackingStates(complementOf(of(CREATED, REJECTED, WITHDRAWN)))
         );
 
         assertEquals(2, counts.size());
@@ -453,7 +453,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
                 activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, assessmentState.getBackingState())).collect(toList());
     }
 
-    private EnumSet<AssessmentStates> getAssessmentStatesWithoutDecisions() {
-        return complementOf(EnumSet.of(AssessmentStates.DECIDE_IF_READY_TO_SUBMIT));
+    private EnumSet<AssessmentState> getAssessmentStatesWithoutDecisions() {
+        return complementOf(EnumSet.of(AssessmentState.DECIDE_IF_READY_TO_SUBMIT));
     }
 }

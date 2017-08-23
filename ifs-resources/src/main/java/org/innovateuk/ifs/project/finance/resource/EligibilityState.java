@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.finance.resource;
 
-import org.innovateuk.ifs.workflow.resource.ProcessStates;
+import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 /**
  * Represents the states that can be transitioned during the Eligibility process.
  */
-public enum EligibilityState implements ProcessStates {
+public enum EligibilityState implements ProcessState {
 
     REVIEW(State.NOT_VERIFIED),
     NOT_APPLICABLE(State.NOT_APPLICABLE),
@@ -36,10 +36,10 @@ public enum EligibilityState implements ProcessStates {
     }
 
     public static List<State> getBackingStates() {
-        return simpleMap(EligibilityState.values(), ProcessStates::getBackingState);
+        return simpleMap(EligibilityState.values(), ProcessState::getBackingState);
     }
 
     public static EligibilityState fromState(State state) {
-        return ProcessStates.fromState(EligibilityState.values(), state);
+        return ProcessState.fromState(EligibilityState.values(), state);
     }
 }

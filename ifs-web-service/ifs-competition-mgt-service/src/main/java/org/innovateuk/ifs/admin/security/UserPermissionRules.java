@@ -17,14 +17,15 @@ import org.springframework.stereotype.Component;
 public class UserPermissionRules {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @PermissionRule(value = "ACCESS_USER_EDIT", description = "Only active users can be edited")
     public boolean activeUsersCanBeEdited(Long userId, UserResource user) {
         UserResource editUser = userService.findById(userId);
-        return user != null ? UserStatus.ACTIVE.equals(editUser.getStatus()): false;
+        return user != null && UserStatus.ACTIVE.equals(editUser.getStatus());
     }
 
+    // TODO: review when IFS-1370 is implemented - RB
     // IFS-644 ideally use SecurityRuleUtil.isInternal() but this would mean moving a lot of classes into commons
     @PermissionRule(value = "ACCESS_INTERNAL_USER", description = "Only internal users can be accessed")
     public boolean internalUser(Long userId, UserResource user) {
