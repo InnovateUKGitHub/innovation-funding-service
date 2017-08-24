@@ -32,7 +32,15 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
             AssessmentState.REJECTED
     ));
 
-    public static final Set<State> VALID_ASSESSMENT_STATES = Sets.complementOf(INVALID_ASSESSMENT_STATES);
+    public static final Set<State> VALID_ASSESSMENT_STATES = AssessmentState.getBackingStates(EnumSet.of(
+            AssessmentState.CREATED,
+            AssessmentState.OPEN,
+            AssessmentState.PENDING,
+            AssessmentState.ACCEPTED,
+            AssessmentState.DECIDE_IF_READY_TO_SUBMIT,
+            AssessmentState.READY_TO_SUBMIT,
+            AssessmentState.SUBMITTED
+    ));
 
     public static final Set<State> ALL_ASSESSMENT_STATES = Sets.union(VALID_ASSESSMENT_STATES, INVALID_ASSESSMENT_STATES);
 
