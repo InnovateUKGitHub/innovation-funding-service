@@ -64,6 +64,9 @@ items:
           resources:
             limits:
               memory: 1500M
+              cpu: 2000m
+            requests:
+              cpu: 400m
           volumeMounts:
           - mountPath: /mnt/ifs_storage
             name: dir-1
