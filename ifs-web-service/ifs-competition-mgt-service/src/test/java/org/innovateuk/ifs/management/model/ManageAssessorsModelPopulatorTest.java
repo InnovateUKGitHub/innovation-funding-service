@@ -3,6 +3,7 @@ package org.innovateuk.ifs.management.model;
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
+import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.management.viewmodel.ManageAssessorsRowViewModel;
@@ -16,9 +17,12 @@ import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.AssessorCountSummaryPageResourceBuilder.newAssessorCountSummaryPageResource;
 import static org.innovateuk.ifs.application.builder.AssessorCountSummaryResourceBuilder.newAssessorCountSummaryResource;
+import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
 public class ManageAssessorsModelPopulatorTest extends BaseUnitTest {
 
@@ -34,6 +38,7 @@ public class ManageAssessorsModelPopulatorTest extends BaseUnitTest {
         final int pageSize = 11;
         final int pageNumber = 1;
         final String origin = "query";
+        final List<InnovationSectorResource> innovationSectorResources = newInnovationSectorResource().build(2);
 
         final List<AssessorCountSummaryResource> assessorCountSummaryResources = newAssessorCountSummaryResource().build((int) totalElements);
 
@@ -45,6 +50,8 @@ public class ManageAssessorsModelPopulatorTest extends BaseUnitTest {
                 .withContent(assessorCountSummaryResources)
                 .build();
 
+        when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(innovationSectorResources));
+
        ManageAssessorsViewModel manageAssessmentsViewModel =
                manageAssessorsModelPopulator.populateModel(competition, assessorCountSummaryPageResource, origin);
 
@@ -53,6 +60,7 @@ public class ManageAssessorsModelPopulatorTest extends BaseUnitTest {
                 competition.getName(),
                 simpleMap(assessorCountSummaryResources, ManageAssessorsRowViewModel::new),
                 competition.getCompetitionStatus() == CompetitionStatus.IN_ASSESSMENT,
+                innovationSectorResources,
                 new PaginationViewModel(assessorCountSummaryPageResource, origin)
         );
 
