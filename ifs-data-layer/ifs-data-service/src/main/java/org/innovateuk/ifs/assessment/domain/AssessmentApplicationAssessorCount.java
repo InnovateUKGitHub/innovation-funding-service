@@ -10,7 +10,7 @@ public class AssessmentApplicationAssessorCount {
 
     private Assessment assessment;
     private Application application;
-    private Integer assessorCount;
+    private int assessorCount;
 
     public AssessmentApplicationAssessorCount(Assessment assessment, Application application, Integer assessorCount) {
         this.assessment = assessment;
@@ -29,7 +29,7 @@ public class AssessmentApplicationAssessorCount {
         return application;
     }
 
-    public Integer getAssessorCount() {
+    public int getAssessorCount() {
         return assessorCount;
     }
 }
