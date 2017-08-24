@@ -26,97 +26,97 @@ AND organisation_type_id IN (@RTO, @charity) AND category_id IN (@feasibility, @
 -- Add a new row for each combination to have organisation size id 1 (small)
 -- Feasibility
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@feasibility, @small, @RTO, @sector, '100');
+    VALUES (@feasibility, @small, @RTO, @sector, '100') ON DUPLICATE KEY UPDATE id=id;
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@feasibility, @small, @charity, @sector, '100');
+    VALUES (@feasibility, @small, @charity, @sector, '100') ON DUPLICATE KEY UPDATE id=id;
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@feasibility, @small, @RTO, @programme, '100');
+    VALUES (@feasibility, @small, @RTO, @programme, '100') ON DUPLICATE KEY UPDATE id=id;
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@feasibility, @small, @charity, @programme, '100');
+    VALUES (@feasibility, @small, @charity, @programme, '100') ON DUPLICATE KEY UPDATE id=id;
 
 -- Industrial research
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@industrial, @small, @RTO, @sector, '100');
+    VALUES (@industrial, @small, @RTO, @sector, '100') ON DUPLICATE KEY UPDATE id=id;
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@industrial, @small, @charity, @sector, '100');
+    VALUES (@industrial, @small, @charity, @sector, '100') ON DUPLICATE KEY UPDATE id=id;
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@industrial, @small, @RTO, @programme, '100');
+    VALUES (@industrial, @small, @RTO, @programme, '100') ON DUPLICATE KEY UPDATE id=id;
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@industrial, @small, @charity, @programme, '100');
+    VALUES (@industrial, @small, @charity, @programme, '100') ON DUPLICATE KEY UPDATE id=id;
 
 -- Experimental development
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@experimental, @small, @RTO, @sector, '100');
+    VALUES (@experimental, @small, @RTO, @sector, '100') ON DUPLICATE KEY UPDATE id=id;
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@experimental, @small, @charity, @sector, '100');
+    VALUES (@experimental, @small, @charity, @sector, '100') ON DUPLICATE KEY UPDATE id=id;
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@experimental, @small, @RTO, @programme, '100');
+    VALUES (@experimental, @small, @RTO, @programme, '100') ON DUPLICATE KEY UPDATE id=id;
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@experimental, @small, @charity, @programme, '100');
+    VALUES (@experimental, @small, @charity, @programme, '100') ON DUPLICATE KEY UPDATE id=id;
 
 
 -- Add a new row for each combination to have organisation size id 2 (medium)
 -- Feasibility
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES ( @feasibility, @medium, @RTO, @sector, '100');
+    VALUES ( @feasibility, @medium, @RTO, @sector, '100') ON DUPLICATE KEY UPDATE id=id;
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@feasibility, @medium, @charity, @sector, '100');
+    VALUES (@feasibility, @medium, @charity, @sector, '100') ON DUPLICATE KEY UPDATE id=id;
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@feasibility, @medium, @RTO, @programme, '100');
+    VALUES (@feasibility, @medium, @RTO, @programme, '100') ON DUPLICATE KEY UPDATE id=id;
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@feasibility, @medium, @charity, @programme, '100');
+    VALUES (@feasibility, @medium, @charity, @programme, '100') ON DUPLICATE KEY UPDATE id=id;
 
 -- Industrial research
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@industrial, @medium, @RTO, @sector, '100');
+    VALUES (@industrial, @medium, @RTO, @sector, '100') ON DUPLICATE KEY UPDATE id=id;
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@industrial, @medium, @charity, @sector, '100');
+    VALUES (@industrial, @medium, @charity, @sector, '100') ON DUPLICATE KEY UPDATE id=id;
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@industrial, @medium, @RTO, @programme, '100');
+    VALUES (@industrial, @medium, @RTO, @programme, '100') ON DUPLICATE KEY UPDATE id=id;
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@industrial, @medium, @charity, @programme, '100');
+    VALUES (@industrial, @medium, @charity, @programme, '100') ON DUPLICATE KEY UPDATE id=id;
 
 -- Experimental development
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@experimental, @medium, @RTO, @sector, '100');
+    VALUES (@experimental, @medium, @RTO, @sector, '100') ON DUPLICATE KEY UPDATE id=id;
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@experimental, @medium, @charity, @sector, '100');
+    VALUES (@experimental, @medium, @charity, @sector, '100') ON DUPLICATE KEY UPDATE id=id;
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@experimental, @medium, @RTO, @programme, '100');
+    VALUES (@experimental, @medium, @RTO, @programme, '100') ON DUPLICATE KEY UPDATE id=id;
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@experimental, @medium, @charity, @programme, '100');
+    VALUES (@experimental, @medium, @charity, @programme, '100') ON DUPLICATE KEY UPDATE id=id;
 
 
 -- Add a new row for each combination to have organisation size id 3 (large)
 -- Feasibility
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@feasibility, @large, @RTO, @sector, '100');
+    VALUES (@feasibility, @large, @RTO, @sector, '100') ON DUPLICATE KEY UPDATE id=id;
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@feasibility, @large, @charity, @sector, '100');
+    VALUES (@feasibility, @large, @charity, @sector, '100') ON DUPLICATE KEY UPDATE id=id;
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@feasibility, @large, @RTO, @programme, '100');
+    VALUES (@feasibility, @large, @RTO, @programme, '100') ON DUPLICATE KEY UPDATE id=id;
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@feasibility, @large, @charity, @programme, '100');
+    VALUES (@feasibility, @large, @charity, @programme, '100') ON DUPLICATE KEY UPDATE id=id;
 
 -- Industrial research
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@industrial, @large, @RTO, @sector, '100');
+    VALUES (@industrial, @large, @RTO, @sector, '100') ON DUPLICATE KEY UPDATE id=id;
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@industrial, @large, @charity, @sector, '100');
+    VALUES (@industrial, @large, @charity, @sector, '100') ON DUPLICATE KEY UPDATE id=id;
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@industrial, @large, @RTO, @programme, '100');
+    VALUES (@industrial, @large, @RTO, @programme, '100') ON DUPLICATE KEY UPDATE id=id;
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@industrial, @large, @charity, @programme, '100');
+    VALUES (@industrial, @large, @charity, @programme, '100') ON DUPLICATE KEY UPDATE id=id;
 
 -- Experimental development
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@experimental, @large, @RTO, @sector, '100');
+    VALUES (@experimental, @large, @RTO, @sector, '100') ON DUPLICATE KEY UPDATE id=id;
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@experimental, @large, @charity, @sector, '100');
+    VALUES (@experimental, @large, @charity, @sector, '100') ON DUPLICATE KEY UPDATE id=id;
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@experimental, @large, @RTO, @programme, '100');
+    VALUES (@experimental, @large, @RTO, @programme, '100') ON DUPLICATE KEY UPDATE id=id;
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`, `competition_type_id`, `maximum`)
-    VALUES (@experimental, @large, @charity, @programme, '100');
+    VALUES (@experimental, @large, @charity, @programme, '100') ON DUPLICATE KEY UPDATE id=id;
 
 -- Add the right values for the new generic competition type (same as programme)
 INSERT INTO grant_claim_maximum (`category_id`, `organisation_size_id`, `organisation_type_id`,`competition_type_id`, `maximum`)
