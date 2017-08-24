@@ -170,10 +170,10 @@
                 <thead>
                 <tr>
                     <th scope="col" class="width-small">Application number</th>
-                    <th scope="col" class="width-large">Title</th>
-                    <th scope="col" class="width-medium'">Lead organisation</th>
+                    <th scope="col">Title</th>
+                    <th scope="col" class="width-large">Lead organisation</th>
                     <th scope="col" class="width-small numeric">Assessors</th>
-                    <th scope="col"><span class="visuallyhidden">Action</span></th>
+                    <th scope="col" class="width-medium"><span class="visuallyhidden">Action</span></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -186,7 +186,7 @@
                     <td th:text="${app.applicationName}">Application name</td>
                     <td th:text="${app.leadOrganisation}">Lead organisation</td>
                     <td th:text="${app.totalAssessors}" class="numeric">3</td>
-                    <td><form method="post"
+                    <td class="alignright"><form method="post"
                               th:action="@{/assessment/competition/{competitionId}/assessors/{assessorId}/application/{applicationId}/assign(competitionId=${model.competitionId}, assessorId=${model.assessorId}, applicationId=${app.applicationId})}" >
                         <button type="submit" class="button-secondary no-margin">Re-assign</button>
                     </form>
