@@ -165,8 +165,7 @@ the user fills in Capital usage
     the user enters text to a text field  css=.form-finances-capital-usage-npv  5000
     the user enters text to a text field  css=.form-finances-capital-usage-residual-value  25
     the user enters text to a text field  css=.form-finances-capital-usage-utilisation   100
-    focus                                 jQuery=.section-total-summary > [data-mirror="#section-total-207"]
-    the user should see the element       jQuery=.section-total-summary > [data-mirror="#section-total-207"]
+    focus                                 jQuery=.section-total-summary > [data-mirror^="#section-total"]
     textfield should contain              css=#capital_usage .form-row:nth-of-type(1) [readonly]  £ 4,975
     the user clicks the button/link       jQuery=button:contains("Capital usage")
 
@@ -276,8 +275,8 @@ Invite a non-existing collaborator
 
 the user fills in the inviting steps
     [Arguments]  ${email}
-    the user clicks the button/link       link=view team members and add collaborators
-    the user clicks the button/link       link=Add partner organisation
+    the user clicks the button/link       link=view and manage contributors and collaborators
+    the user clicks the button/link       link=Add a collaborator organisation
     the user enters text to a text field  css=#organisationName  New Organisation's Name
     the user enters text to a text field  css=input[id="applicants0.name"]  Partner's name
     the user enters text to a text field  css=input[id="applicants0.email"]  ${email}
@@ -286,7 +285,7 @@ the user fills in the inviting steps
 
 Newly invited collaborator can create account and sign in
     [Arguments]    ${email}  ${competition_name}
-    the user reads his email and clicks the link   ${email}  Invitation to collaborate in ${competition_name}  You will be joining as part of the organisation  3
+    the user reads his email and clicks the link   ${email}  Invitation to collaborate in ${competition_name}  You will be joining as part of the organisation  2
     the user clicks the button/link    jQuery=a:contains("Yes, accept invitation")
     the user should see the element    jquery=h1:contains("Choose your organisation type")
     the user completes the new account creation   ${email}

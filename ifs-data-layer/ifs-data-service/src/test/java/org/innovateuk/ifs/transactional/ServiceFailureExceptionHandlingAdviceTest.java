@@ -4,12 +4,16 @@ import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.ZonedDateTime;
+
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_SERVICE_RESULT_EXCEPTION_THROWN_DURING_PROCESSING;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -28,6 +32,10 @@ public class ServiceFailureExceptionHandlingAdviceTest extends BaseIntegrationTe
 
     @Test
     public void testSuccessfulMethodUpdatesDatabaseSuccessfully() {
+
+        User creator = userRepository.findByEmail("jessica.doe@ludlow.co.uk").get();
+        UserResource loggedInUser = newUserResource().withCreatedBy(creator.getName()).withCreatedOn(ZonedDateTime.now()).build(); // constraints don't allow createdBy of null
+        setLoggedInUser(loggedInUser);
 
         testService.successfulMethod();
         assertEquals("Successful Smith", getUser().getName());
@@ -52,6 +60,10 @@ public class ServiceFailureExceptionHandlingAdviceTest extends BaseIntegrationTe
      */
     @Test
     public void testSuccessfulMethodWithFailingInternalCallUpdatesDatabaseSuccessfully() {
+
+        User creator = userRepository.findByEmail("jessica.doe@ludlow.co.uk").get();
+        UserResource loggedInUser = newUserResource().withCreatedBy(creator.getName()).withCreatedOn(ZonedDateTime.now()).build(); // constraints don't allow createdBy of null
+        setLoggedInUser(loggedInUser);
 
         testService.successfulMethodWithInternalFailingCall();
         assertEquals("Successful Internal Smith", getUser().getName());

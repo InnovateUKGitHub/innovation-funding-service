@@ -46,3 +46,6 @@ ext.ifsWebBaseURL="https://ifs.local-dev"
 
 ext.serverPort=8080
 ext.activeProfile="local"
+
+// Following is required to override allowed suffix on test environments. See comments on IFS-27.
+ext.internalUserEmailDomain="innovateuk.test"

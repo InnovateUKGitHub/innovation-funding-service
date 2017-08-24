@@ -2,14 +2,13 @@ package org.innovateuk.ifs.management.controller;
 
 import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.Matcher;
-import org.innovateuk.ifs.Application;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.LambdaMatcher;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.competition.form.FundingNotificationSelectionCookie;
 import org.innovateuk.ifs.competition.form.FundingNotificationFilterForm;
 import org.innovateuk.ifs.competition.form.FundingNotificationSelectionForm;
@@ -124,7 +123,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
 
         CompetitionFundedKeyStatisticsResource keyStatistics = newCompetitionFundedKeyStatisticsResource().build();
         when(competitionKeyStatisticsRestServiceMock.getFundedKeyStatisticsByCompetition(COMPETITION_ID)).thenReturn(restSuccess(keyStatistics));
-        when(assessmentRestService.countByStateAndCompetition(AssessmentStates.CREATED, COMPETITION_ID)).thenReturn(restSuccess(changesSinceLastNotify));
+        when(assessmentRestService.countByStateAndCompetition(AssessmentState.CREATED, COMPETITION_ID)).thenReturn(restSuccess(changesSinceLastNotify));
 
         // Expected values to match against
         CompetitionInFlightStatsViewModel keyStatisticsModel = competitionInFlightStatsModelPopulator.populateStatsViewModel(competitionResource);

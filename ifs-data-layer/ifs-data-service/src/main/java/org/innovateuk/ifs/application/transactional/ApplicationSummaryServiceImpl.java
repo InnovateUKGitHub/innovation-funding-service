@@ -237,6 +237,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
                             .sorted(Comparator.comparing(Pair::getValue))
                             .map(p -> p.getKey())
                             .collect(toList());
+                    organisationIds.remove(application.getLeadApplicantProcessRole().getOrganisationId()); // Remove the lead organisation
                     organisationIds.forEach(organisationId -> partnerOrganisations.add(getTeamOrganisation(organisationId, application)));
 
                     result.setPartnerOrganisations(partnerOrganisations);

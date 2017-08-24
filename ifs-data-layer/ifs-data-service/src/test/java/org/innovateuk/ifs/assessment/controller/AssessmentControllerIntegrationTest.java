@@ -5,7 +5,7 @@ import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.*;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -28,7 +28,7 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessm
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResourceBuilder.newAssessmentRejectOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -334,7 +334,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
         loginPaulPlum();
         AssessmentResource assessmentResource = controller.findAssignableById(assessmentId).getSuccessObject();
-        assertEquals(AssessmentStates.PENDING, assessmentResource.getAssessmentState());
+        assertEquals(AssessmentState.PENDING, assessmentResource.getAssessmentState());
         assertEquals(processRole, assessmentResource.getProcessRole());
 
         RestResult<Void> result = controller.acceptInvitation(assessmentResource.getId());
@@ -377,7 +377,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
     }
 
-    private Assessment setUpAssessment(UserResource userResource, AssessmentStates state) {
+    private Assessment setUpAssessment(UserResource userResource, AssessmentState state) {
         User user = userRepository.findOne(userResource.getId());
 
         ProcessRole processRole = processRoleRepository.save(newProcessRole()

@@ -191,6 +191,16 @@ public class UserPermissionRules {
         return user.hasRole(UserRoleType.IFS_ADMINISTRATOR);
     }
 
+    @PermissionRule(value = "DEACTIVATE", description = "IFS Administrator can deactivate Users")
+    public boolean ifsAdminCanDeactivateUsers(UserResource userToCreate, UserResource user) {
+        return user.hasRole(UserRoleType.IFS_ADMINISTRATOR);
+    }
+
+    @PermissionRule(value = "ACTIVATE", description = "IFS Administrator can reactivate Users")
+    public boolean ifsAdminCanReactivateUsers(UserResource userToCreate, UserResource user) {
+        return user.hasRole(UserRoleType.IFS_ADMINISTRATOR);
+    }
+
     private List<Application> getApplicationsRelatedToUserByProcessRoles(UserResource user, Predicate<ProcessRole> processRoleFilter) {
         List<ProcessRole> applicableProcessRoles = getFilteredProcessRoles(user, processRoleFilter);
         return simpleMap(applicableProcessRoles, processRole -> applicationRepository.findOne(processRole.getApplicationId()));

@@ -62,7 +62,7 @@
                 <span class="error-message" th:each="err : ${#fields.errors('accountNumber')}" th:text="${err}"></span>
           </th:block>
         </label>
-        <input type="text" th:attr="data-required-errormessage=#{validation.standard.accountnumber.required},data-pattern-errormessage=#{validation.standard.accountnumber.format}" th:errorclass="form-control-error" required="required" pattern="[0-9]{8,}" maxlength="8" id="bank-acc-number" class="form-control width-medium" th:field="*{accountNumber}"/>
+        <input type="text" th:attr="data-required-errormessage=#{validation.standard.accountnumber.required},data-pattern-errormessage=#{validation.standard.accountnumber.format}" th:errorclass="form-control-error" required="required" pattern="[0-9]{8,}" data-prevent-input-regex="[^0-9]" maxlength="8" id="bank-acc-number" class="form-control width-medium" th:field="*{accountNumber}"/>
       </div>
 
       <div class="form-group" th:classappend="${#fields.hasErrors('sortCode')} ? 'form-group-error'">
@@ -73,7 +73,7 @@
                 <span class="error-message" th:each="err : ${#fields.errors('sortCode')}" th:text="${err}"></span>
           </th:block>
         </label>
-        <input type="text" th:attr="data-required-errormessage=#{validation.standard.sortcode.required},data-pattern-errormessage=#{validation.standard.sortcode.format}" th:errorclass="form-control-error" required="required"  pattern="[0-9]{6,}" maxlength="6" id="bank-sort-code" class="form-control width-medium" th:field="*{sortCode}"/>
+        <input type="text" th:attr="data-required-errormessage=#{validation.standard.sortcode.required},data-pattern-errormessage=#{validation.standard.sortcode.format}" th:errorclass="form-control-error" required="required"  pattern="[0-9]{6,}" data-prevent-input-regex="[^0-9]" maxlength="6" id="bank-sort-code" class="form-control width-medium" th:field="*{sortCode}"/>
       </div>
 
       <div class="form-group"  th:classappend="${#fields.hasErrors('*{addressType}')} ? 'form-group-error'">
