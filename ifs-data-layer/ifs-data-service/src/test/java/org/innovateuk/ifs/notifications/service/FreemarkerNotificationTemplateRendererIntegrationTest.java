@@ -42,8 +42,8 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
                 "leadOrganisation", "Empire Ltd",
                 "leadApplicant", "Steve Smith",
                 "leadApplicantTitle","Mr",
-                "leadApplicantEmail", "steve@empire.com",
-                "sentByName", "steve@empire.com"
+                "sentByName", "Steve Smith",
+                "applicationId", "1"
         );
 
         assertRenderedEmailTemplateContainsExpectedLines("invite_collaborator_text_plain.txt", templateArguments);

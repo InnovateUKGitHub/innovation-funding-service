@@ -128,7 +128,7 @@ Compadmin can open the jes-file in applications
     [Documentation]     IFS-102
     [Tags]
     [Setup]  log in as a different user   &{Comp_admin1_credentials}
-    Given the user navigates to the page  ${OPEN_COMPETITION_MAN}
+    Given the user navigates to the page  ${openCompetitionManagementRTO}
     and the user clicks the button/link  link=Applications: All, submitted, ineligible
     and the user clicks the button/link  link=All applications
     and the user clicks the button/link  link=${OPEN_COMPETITION_APPLICATION_5_NUMBER}
@@ -136,7 +136,7 @@ Compadmin can open the jes-file in applications
     And the user should see the text in the page    ${valid_pdf}
     and the user clicks the button/link  link=${valid_pdf} (opens in a new window)
     and the user should not see an error in the page
-    and the user navigates to the page  ${OPEN_COMPETITION_MAN}
+    and the user navigates to the page  ${openCompetitionManagementRTO}
 
 File upload mandatory for Academic partner to mark section as complete
     [Documentation]    INFUND-8469

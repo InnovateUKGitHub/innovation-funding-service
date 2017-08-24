@@ -16,7 +16,7 @@ Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 Competition dashboard Open competition
     [Documentation]    INFUND-7562
     [Tags]
-    When The user clicks the button/link    link=${OPEN_COMPETITION_NAME}
+    When The user clicks the button/link    link=${openCompetitionRTO_name}
     Then the user should see the element    jQuery=span:contains("16: Predicting market trends programme")
     And the user should see the element    jQuery=h1:contains("Open")
     And the user should see the element    jQuery=dt:contains("Competition type") ~ dd:contains("Programme")

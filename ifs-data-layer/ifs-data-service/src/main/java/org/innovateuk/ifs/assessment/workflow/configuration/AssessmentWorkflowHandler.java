@@ -6,8 +6,8 @@ import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
-import org.innovateuk.ifs.assessment.resource.AssessmentOutcomes;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentEvent;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
@@ -21,7 +21,7 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.assessment.resource.AssessmentOutcomes.*;
+import static org.innovateuk.ifs.assessment.resource.AssessmentEvent.*;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 
 /**
@@ -30,11 +30,11 @@ import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESS
  * an event.
  */
 @Component
-public class AssessmentWorkflowHandler extends BaseWorkflowEventHandler<Assessment, AssessmentStates, AssessmentOutcomes, Application, ProcessRole> {
+public class AssessmentWorkflowHandler extends BaseWorkflowEventHandler<Assessment, AssessmentState, AssessmentEvent, Application, ProcessRole> {
 
     @Autowired
     @Qualifier("assessmentStateMachine")
-    private StateMachine<AssessmentStates, AssessmentOutcomes> stateMachine;
+    private StateMachine<AssessmentState, AssessmentEvent> stateMachine;
 
     @Autowired
     private AssessmentRepository assessmentRepository;
@@ -99,26 +99,26 @@ public class AssessmentWorkflowHandler extends BaseWorkflowEventHandler<Assessme
     }
 
     @Override
-    protected StateMachine<AssessmentStates, AssessmentOutcomes> getStateMachine() {
+    protected StateMachine<AssessmentState, AssessmentEvent> getStateMachine() {
         return stateMachine;
     }
 
     @Override
-    protected Assessment getOrCreateProcess(Message<AssessmentOutcomes> message) {
+    protected Assessment getOrCreateProcess(Message<AssessmentEvent> message) {
         return (Assessment) message.getHeaders().get("target");
     }
 
-    private MessageBuilder<AssessmentOutcomes> fundingDecisionMessage(Assessment assessment, AssessmentFundingDecisionOutcome fundingDecision) {
+    private MessageBuilder<AssessmentEvent> fundingDecisionMessage(Assessment assessment, AssessmentFundingDecisionOutcome fundingDecision) {
         return assessmentMessage(assessment, FUNDING_DECISION)
                 .setHeader("fundingDecision", fundingDecision);
     }
 
-    private MessageBuilder<AssessmentOutcomes> rejectMessage(Assessment assessment, AssessmentRejectOutcome rejection) {
+    private MessageBuilder<AssessmentEvent> rejectMessage(Assessment assessment, AssessmentRejectOutcome rejection) {
         return assessmentMessage(assessment, REJECT)
                 .setHeader("rejection", rejection);
     }
 
-    private MessageBuilder<AssessmentOutcomes> assessmentMessage(Assessment assessment, AssessmentOutcomes event) {
+    private MessageBuilder<AssessmentEvent> assessmentMessage(Assessment assessment, AssessmentEvent event) {
         return MessageBuilder
                 .withPayload(event)
                 .setHeader("target", assessment);

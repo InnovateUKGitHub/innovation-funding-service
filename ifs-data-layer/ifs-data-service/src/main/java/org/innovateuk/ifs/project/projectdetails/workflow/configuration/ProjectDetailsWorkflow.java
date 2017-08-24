@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.projectdetails.workflow.configuration;
 
 import org.innovateuk.ifs.project.projectdetails.workflow.guards.AllProjectDetailsSuppliedGuard;
-import org.innovateuk.ifs.project.resource.ProjectDetailsOutcomes;
+import org.innovateuk.ifs.project.resource.ProjectDetailsEvent;
 import org.innovateuk.ifs.project.resource.ProjectDetailsState;
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 
 import java.util.EnumSet;
 
-import static org.innovateuk.ifs.project.resource.ProjectDetailsOutcomes.*;
+import static org.innovateuk.ifs.project.resource.ProjectDetailsEvent.*;
 import static org.innovateuk.ifs.project.resource.ProjectDetailsState.*;
 import static org.innovateuk.ifs.project.resource.ProjectDetailsState.PENDING;
 
@@ -23,19 +23,19 @@ import static org.innovateuk.ifs.project.resource.ProjectDetailsState.PENDING;
  */
 @Configuration
 @EnableStateMachine(name = "projectDetailsStateMachine")
-public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<ProjectDetailsState, ProjectDetailsOutcomes> {
+public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<ProjectDetailsState, ProjectDetailsEvent> {
 
     @Autowired
     private AllProjectDetailsSuppliedGuard allProjectDetailsSuppliedGuard;
 
     @Override
-    public void configure(StateMachineConfigurationConfigurer<ProjectDetailsState, ProjectDetailsOutcomes> config) throws Exception {
+    public void configure(StateMachineConfigurationConfigurer<ProjectDetailsState, ProjectDetailsEvent> config) throws Exception {
         config.withConfiguration().listener(new WorkflowStateMachineListener<>());
 
     }
 
     @Override
-    public void configure(StateMachineStateConfigurer<ProjectDetailsState, ProjectDetailsOutcomes> states) throws Exception {
+    public void configure(StateMachineStateConfigurer<ProjectDetailsState, ProjectDetailsEvent> states) throws Exception {
         states.withStates()
                 .initial(PENDING)
                 .states(EnumSet.of(PENDING, READY_TO_SUBMIT, SUBMITTED))
@@ -44,7 +44,7 @@ public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<Projec
     }
 
     @Override
-    public void configure(StateMachineTransitionConfigurer<ProjectDetailsState, ProjectDetailsOutcomes> transitions) throws Exception {
+    public void configure(StateMachineTransitionConfigurer<ProjectDetailsState, ProjectDetailsEvent> transitions) throws Exception {
         transitions
             .withExternal()
                 .source(PENDING)
