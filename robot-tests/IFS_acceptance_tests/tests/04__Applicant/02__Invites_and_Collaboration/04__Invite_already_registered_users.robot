@@ -92,7 +92,7 @@ Existing user creates a new application and invites a user from the same organis
 The invited user should get a message to contact the helpdesk
     [Arguments]    ${recipient}  ${subject}  ${pattern}
     Logout as user
-    When the user reads his email and clicks the link   ${recipient}    ${subject}    ${pattern}   3
+    When the user reads his email and clicks the link   ${recipient}    ${subject}    ${pattern}   2
     When the user clicks the button/link                link=Continue or sign in
     And The guest user inserts user email and password  ${recipient}  ${correct_password}
     And the guest user clicks the log-in button

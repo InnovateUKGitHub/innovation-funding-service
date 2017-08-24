@@ -12,7 +12,7 @@ Academic organisations search
     Given we create a new user                          ${openCompetitionBusinessRTO}  Stuart  Downing  ${test_mailbox_one}+invitedacademics${unique_email_number}@gmail.com  ${BUSINESS_TYPE_ID}
     And logout as user
     Given the lead applicant invites a registered user  ${test_mailbox_one}+academicinvite${unique_email_number}@gmail.com    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com
-    When the user reads his email and clicks the link   ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com    Invitation to collaborate in ${openCompetitionBusinessRTO_name}    You will be joining as part of the organisation   3
+    When the user reads his email and clicks the link   ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com    Invitation to collaborate in ${openCompetitionBusinessRTO_name}    You will be joining as part of the organisation   2
     And the user clicks the button/link                 jQuery=.button:contains("Yes, accept invitation")
     When the user selects the radio button              organisationType    2
     And the user clicks the button/link                 jQuery=.button:contains("Continue")
@@ -44,7 +44,7 @@ Accept invitation as academic
     And the user clicks the button/link                jQuery=.button:contains("Save and continue")
     And the user fills the create account form         Steven  Gerrard
     And If the user goes to the previous page he should redirect to the login page
-    And the user reads his email and clicks the link   ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com  Please verify your email address  You have recently set up an account
+    And the user reads his email and clicks the link   ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com  Please verify your email address  You have recently set up an account  1
     And the user clicks the button/link                jQuery=.button:contains("Sign in")
     And Logging in and Error Checking                  ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com  ${correct_password}
     When the user clicks the button/link               link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
