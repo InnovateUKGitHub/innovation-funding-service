@@ -818,7 +818,7 @@ IFS.core.formValidation = (function () {
         var altTarget = jQuery('[aria-labelledby="' + id + '"]')
         var altTargetVisible = IFS.core.formValidation.isVisible(altTarget)
         if (altTargetVisible) {
-          altTargetVisible.first().focus()
+          altTarget.first().focus()
         }
       }
     },
