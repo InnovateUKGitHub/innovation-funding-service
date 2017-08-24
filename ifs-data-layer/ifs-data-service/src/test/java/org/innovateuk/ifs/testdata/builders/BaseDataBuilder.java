@@ -81,6 +81,7 @@ import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResourc
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -91,6 +92,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
 
     public static final String COMP_ADMIN_EMAIL = "john.doe@innovateuk.test";
     public static final String IFS_SYSTEM_MAINTENANCE_USER_EMAIL = "ifs_system_maintenance_user@innovateuk.org";
+    public static final String IFS_SYSTEM_REGISTRAR_USER_EMAIL = "ifs_web_user@innovateuk.org";
     public static final String PROJECT_FINANCE_EMAIL = "lee.bowman@innovateuk.test";
 
     protected ServiceLocator serviceLocator;
@@ -118,7 +120,6 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected TokenRepository tokenRepository;
     protected TokenService tokenService;
     protected InviteService inviteService;
-    protected CompAdminEmailRepository compAdminEmailRepository;
     protected MilestoneService milestoneService;
     protected ApplicationService applicationService;
     protected QuestionService questionService;
@@ -131,7 +132,6 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected MonitoringOfficerService monitoringOfficerService;
     protected FinanceRowService financeRowService;
     protected SectionService sectionService;
-    protected ProjectFinanceEmailRepository projectFinanceEmailRepository;
     protected UsersRolesService usersRolesService;
     protected ApplicationInviteRepository applicationInviteRepository;
     protected EthnicityRepository ethnicityRepository;
@@ -199,7 +199,6 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         tokenRepository = serviceLocator.getBean(TokenRepository.class);
         tokenService = serviceLocator.getBean(TokenService.class);
         inviteService = serviceLocator.getBean(InviteService.class);
-        compAdminEmailRepository = serviceLocator.getBean(CompAdminEmailRepository.class);
         milestoneService = serviceLocator.getBean(MilestoneService.class);
         applicationService = serviceLocator.getBean(ApplicationService.class);
         questionService = serviceLocator.getBean(QuestionService.class);
@@ -212,7 +211,6 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         monitoringOfficerService = serviceLocator.getBean(MonitoringOfficerService.class);
         financeRowService = serviceLocator.getBean(FinanceRowService.class);
         sectionService = serviceLocator.getBean(SectionService.class);
-        projectFinanceEmailRepository = serviceLocator.getBean(ProjectFinanceEmailRepository.class);
         usersRolesService = serviceLocator.getBean(UsersRolesService.class);
         applicationInviteRepository = serviceLocator.getBean(ApplicationInviteRepository.class);
         ethnicityRepository = serviceLocator.getBean(EthnicityRepository.class);
@@ -261,7 +259,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     }
 
     protected UserResource systemRegistrar() {
-        return retrieveUserByEmailInternal(IFS_SYSTEM_MAINTENANCE_USER_EMAIL, UserRoleType.SYSTEM_REGISTRATION_USER);
+        return retrieveUserByEmailInternal(IFS_SYSTEM_REGISTRAR_USER_EMAIL, SYSTEM_REGISTRATION_USER);
     }
 
     protected UserResource projectFinanceUser() {

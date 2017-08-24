@@ -102,7 +102,7 @@ Innovation area on assessor profile for invited user
     [Documentation]    INFUND-7960
     [Tags]
     [Setup]    Log in as a different user  &{Comp_admin1_credentials}
-    Given the user clicks the button/link  link=${OPEN_COMPETITION_NAME}
+    Given the user clicks the button/link  link=${openCompetitionRTO_name}
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
     And the user clicks the button/link    jQuery=a:contains("81 to")
     When the user clicks the button/link   link=Thomas Fister

@@ -28,7 +28,7 @@ Innovation Lead should see Submitted and Ineligible Applications
 Innovation lead cannot access CompSetup, Invite Assessors, Manage assessments, Funding decision
     [Documentation]  IFS-984
     [Tags]
-    The user should see permission error on page  ${server}/management/competition/setup/${OPEN_COMPETITION}
+    The user should see permission error on page  ${server}/management/competition/setup/${openCompetitionRTO}
     The user should see permission error on page  ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/assessors/find
     The user should see permission error on page  ${server}/management/assessment/competition/${competition_ids['${CLOSED_COMPETITION_NAME}']}
     The user should see permission error on page  ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/funding

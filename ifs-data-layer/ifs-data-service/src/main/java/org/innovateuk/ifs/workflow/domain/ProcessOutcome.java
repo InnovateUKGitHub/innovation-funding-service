@@ -2,6 +2,7 @@ package org.innovateuk.ifs.workflow.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.commons.util.AuditableEntity;
 
 import javax.persistence.*;
@@ -70,5 +71,16 @@ public abstract class ProcessOutcome<ProcessType extends Process> extends Audita
                 .append(comment)
                 .append(process)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("outcome", outcome)
+                .append("description", description)
+                .append("comment", comment)
+                .append("process", process)
+                .toString();
     }
 }

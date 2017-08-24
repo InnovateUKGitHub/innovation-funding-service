@@ -7,6 +7,7 @@ import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.Title;
 import org.innovateuk.ifs.user.resource.UserStatus;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -100,6 +101,22 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
 
     public UserBuilder withAffiliations(List<Affiliation>... affiliationsList) {
         return withArray((affiliations, user) -> setField("affiliations", affiliations, user), affiliationsList);
+    }
+
+    public UserBuilder withCreatedOn(ZonedDateTime... createdOns) {
+        return withArray((createdOn, user) -> setField("createdOn", createdOn, user), createdOns);
+    }
+
+    public UserBuilder withCreatedBy(User... createdBys) {
+        return withArray((createdBy, user) -> setField("createdBy", createdBy, user), createdBys);
+    }
+
+    public UserBuilder withModifiedOn(ZonedDateTime... modifiedOns) {
+        return withArray((modifiedOn, user) -> setField("modifiedOn", modifiedOn, user), modifiedOns);
+    }
+
+    public UserBuilder withModifiedBy(User... modifiedBys) {
+        return withArray((modifiedBy, user) -> setField("modifiedBy", modifiedBy, user), modifiedBys);
     }
 
     @Override

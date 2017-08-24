@@ -26,14 +26,20 @@ ${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}    202,903
 ${DEFAULT_SUBCONTRACTING_COSTS_WITH_COMMAS_PLUS_2000}    92,000
 ${EMPIRE_LTD_ID}    22
 ${EMPIRE_LTD_NAME}    Empire Ltd
+
 #Competitions and Applications Variables
-${OPEN_COMPETITION_NAME}    Predicting market trends programme
-${OPEN_COMPETITION}    ${competition_ids['${OPEN_COMPETITION_NAME}']}
-${OPEN_COMPETITION_MAN}    ${SERVER}/management/competition/${OPEN_COMPETITION}
+${openCompetitionRTO_name}       Predicting market trends programme
+${openCompetitionRTO}            ${competition_ids['${openCompetitionRTO_name}']}
+${openCompetitionManagementRTO}  ${SERVER}/management/competition/${openCompetitionRTO}
+${applicationsForRTOComp}        ${SERVER}/management/competition/${openCompetitionRTO}/applications
+
+${openCompetitionBusinessRTO_name}      Home and industrial efficiency programme
+${openCompetitionBusinessRTO}           ${competition_ids['${openCompetitionBusinessRTO_name}']}
+${openCompetitionBusinessRTO_overview}  ${SERVER}/competition/${openCompetitionBusinessRTO}/overview/
+
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}    Aerospace technology investment sector
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}    ${competition_ids['${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}']}
-${OPEN_COMPETITION_NAME_2}    Home and industrial efficiency programme
-${OPEN_COMPETITION_2}    ${competition_ids['${OPEN_COMPETITION_NAME_2}']}
+
 # Using double quotes below, cause there's an apostrophe in the title
 ${OPEN_COMPETITION_APPLICATION_NAME}      Climate science the history of Greenland\'s ice
 ${OPEN_COMPETITION_APPLICATION_1_NUMBER}  ${application_ids["${OPEN_COMPETITION_APPLICATION_NAME}"]}
@@ -81,21 +87,20 @@ ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
 ${SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/summary
 ${APPLICATION_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
 ${assessor_dashboard_url}    ${SERVER}/assessment/assessor/dashboard
-${COMPETITION_OVERVIEW_URL}     ${SERVER}/competition/${OPEN_COMPETITION}/overview/
-${COMPETITION_OVERVIEW_URL_2}    ${SERVER}/competition/${OPEN_COMPETITION_2}/overview/
+
 ${PUBLIC_DESCRIPTION_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/question/461
 ${TECHNICAL_APPROACH_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/question/467
 ${YOUR_FINANCES_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/section/202
 ${FINANCES_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/section/213
 ${ACCOUNT_CREATION_FORM_URL}    ${SERVER}/registration/register?organisationId=1
-${ELIGIBILITY_INFO_URL}    ${SERVER}/competition/${OPEN_COMPETITION}/info/eligibility
-${SPEED_BUMP_URL}    ${SERVER}/application/create-authenticated/${OPEN_COMPETITION}
+
+
 ${EDIT_PROFILE_URL}    ${SERVER}/profile/edit
 ${APPLICATION_TEAM_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/team
-${COMP_MANAGEMENT_APPLICATIONS_LIST}    ${SERVER}/management/competition/${OPEN_COMPETITION}/applications
-${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}    ${SERVER}/management/competition/${OPEN_COMPETITION}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
+
+${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}    ${SERVER}/management/competition/${openCompetitionRTO}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
 ${COMP_MANAGEMENT_COMP_SETUP}    ${SERVER}/management/competition/setup/${COMP_SETUP_COMPETITION}
-${COMP_MANAGEMENT_UPDATE_COMP}    ${SERVER}/management/competition/setup/${OPEN_COMPETITION}
+${COMP_MANAGEMENT_UPDATE_COMP}    ${SERVER}/management/competition/setup/${openCompetitionRTO}
 ${COMP_MANAGEMENT_NOT_EDITABLE_COMP}    ${SERVER}/management/competition/setup/${NOT_EDITABLE_COMPETITION}
 ${COMP_MANAGEMENT_READY_TO_OPEN}    ${SERVER}/management/competition/setup/${READY_TO_OPEN_COMPETITION}
 ${COMP_MANAGEMENT_PROJECT_SETUP}    ${SERVER}/management/dashboard/project-setup
@@ -107,7 +112,7 @@ ${POSTCODE_LOOKUP_IMPLEMENTED}    ${EMPTY}
 ${COMP_ADMINISTRATOR_DASHBOARD}    ${SERVER}/management/dashboard
 ${UNTITLED_APPLICATION_DASHBOARD_LINK}    Untitled application (start here)
 ${UNTITLED_APPLICATION_NAME}    Untitled application
-${OPEN_COMPETITION_LINK}    ${OPEN_COMPETITION_NAME}
+
 ${application_bus_name}    Submit business test application
 ${application_rto_name}    Submit rto test application
 ${Competition_E2E}    Evolution of the global phosphorus cycle
@@ -161,3 +166,9 @@ ${CLOSED_COMPETITION_APPLICATION}   ${application_ids["${CLOSED_COMPETITION_APPL
 ${UPCOMING_COMPETITION_TO_ASSESS_NAME}    Home and industrial efficiency programme
 ${UPCOMING_COMPETITION_TO_ASSESS_ID}  ${competition_ids['${UPCOMING_COMPETITION_TO_ASSESS_NAME}']}
 ${CURRENTLY_WAITING_UNTIL}      false
+
+# Organisation type ids
+${BUSINESS_TYPE_ID}       1
+${ACADEMIC_TYPE_ID}       2
+${RTO_TYPE_ID}            3
+${PUBLIC_SECTOR_TYPE_ID}  4

@@ -17,6 +17,10 @@
 #
 #                e.g. "Hello there!" would be replaced by "Hexxxxxxxxxx"
 #
+# MASK_WITH_ID(2, 'x') - as above with MASK, but prefixed with an id
+#
+#                        e.g. "Hello there!" with an id of 12 would be replaced by "12Hexxxxxxxxxx"
+#
 # INTEGER(10) - replaces the given column's integer with another integer that can deviat 10% up or 10% down from the original value
 #
 #               e.g. 10 could be replaced by 9, 10 or 11
@@ -36,6 +40,12 @@
 #
 #              e.g. alison@uni.com would be replaced by alxxxx@xx.example.com
 #
+# EMAIL_WITH_ID('x') - replaces a given column's email value with a masked email value that retains the first 2 characters of the start string
+#                      and replaces the rest with 'x' up to the '@' symbol, along with an id for uniqueness.  Thereafter the @
+#                      portion would be replaced with 'xx.example.com'
+#
+#                      e.g. alison@uni.com with an id of 12 would be replaced by alxxxx12@xx.example.com
+#
 # UUID('x') - replaces a UUID with 'x' symbols apat from the first 8 characters and hyphens
 #
 #             e.g. "12345678-1234-5678-2345-123456789012" would be replaced by "12345678-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
@@ -47,6 +57,9 @@ REPLACE_REPLACEMENT_TOKEN_EXTRACTOR="s/^REPLACE('\(.*\)')$/\1/g"
 MASK_REPLACEMENT_INDEX_EXTRACTOR="s/^MASK(\([0-9]\+\),[ ]*'\(.*\)')$/\1/g"
 MASK_REPLACEMENT_TOKEN_EXTRACTOR="s/^MASK(\([0-9]\+\),[ ]*'\(.*\)')$/\2/g"
 
+MASK_WITH_ID_REPLACEMENT_INDEX_EXTRACTOR="s/^MASK_WITH_ID(\([0-9]\+\),[ ]*'\(.*\)')$/\1/g"
+MASK_WITH_ID_REPLACEMENT_TOKEN_EXTRACTOR="s/^MASK_WITH_ID(\([0-9]\+\),[ ]*'\(.*\)')$/\2/g"
+
 INTEGER_REPLACEMENT_DEVIATION_EXTRACTOR="s/^INTEGER(\(.*\))$/\1/g"
 
 DIFFERENT_IF_NUMBER_REPLACEMENT_DEVIATION_EXTRACTOR="s/^DIFFERENT_IF_NUMBER(\(.*\))$/\1/g"
@@ -55,6 +68,8 @@ DECIMAL_REPLACEMENT_DEVIATION_EXTRACTOR="s/^DECIMAL(\(.*\),[ ]*\(.*\))$/\1/g"
 DECIMAL_REPLACEMENT_SCALE_EXTRACTOR="s/^DECIMAL(\(.*\),[ ]*\(.*\))$/\2/g"
 
 EMAIL_MASK_TOKEN_EXTRACTOR="s/^EMAIL('\(.*\)')$/\1/g"
+
+EMAIL_WITH_ID_MASK_TOKEN_EXTRACTOR="s/^EMAIL_WITH_ID('\(.*\)')$/\1/g"
 
 UUID_MASK_TOKEN_EXTRACTOR="s/^UUID('\(.*\)')$/\1/g"
 
@@ -98,6 +113,15 @@ function generate_rewrite_from_rule() {
         exit 0
     fi
 
+    # this case generates the SQL from a rewrite rule like "MASK_WITH_ID(1, 'X')"
+    replace_test=$(echo "$replacement" | sed "$MASK_WITH_ID_REPLACEMENT_INDEX_EXTRACTOR")
+    if [[ "$replace_test" != "$replacement" ]]; then
+        mask_index=$(echo "$replacement" | sed "$MASK_WITH_ID_REPLACEMENT_INDEX_EXTRACTOR")
+        mask_token=$(echo "$replacement" | sed "$MASK_WITH_ID_REPLACEMENT_TOKEN_EXTRACTOR")
+        echo "CONCAT(CONCAT(id, SUBSTR($column_name, 1, $mask_index)), REPEAT('$mask_token', CHAR_LENGTH($column_name) - $mask_index))"
+        exit 0
+    fi
+
     # this case generates the SQL from a rewrite rule like "INTEGER(0.5)"
     replace_test=$(echo "$replacement" | sed "$INTEGER_REPLACEMENT_DEVIATION_EXTRACTOR")
     if [[ "$replace_test" != "$replacement" ]]; then
@@ -132,6 +156,15 @@ function generate_rewrite_from_rule() {
 
         mask_token=$(echo "$replacement" | sed "$EMAIL_MASK_TOKEN_EXTRACTOR")
         echo "CONCAT(CONCAT(SUBSTR($column_name, 1, 2), REPEAT('$mask_token', INSTR($column_name, '@') - 2)), CONCAT(SUBSTR($column_name, INSTR($column_name, '@'), 3), '$mask_token$mask_token.example.com'))"
+        exit 0
+    fi
+
+    # this case generates the SQL from a rewrite rule like "EMAIL_WITH_ID('x')"
+    replace_test=$(echo "$replacement" | sed "$EMAIL_WITH_ID_MASK_TOKEN_EXTRACTOR")
+    if [[ "$replace_test" != "$replacement" ]]; then
+
+        mask_token=$(echo "$replacement" | sed "$EMAIL_WITH_ID_MASK_TOKEN_EXTRACTOR")
+        echo "CONCAT(CONCAT(SUBSTR($column_name, 1, 2), CONCAT(REPEAT('$mask_token', INSTR($column_name, '@') - 2), id)), CONCAT(SUBSTR($column_name, INSTR($column_name, '@'), 3), '$mask_token$mask_token.example.com'))"
         exit 0
     fi
 

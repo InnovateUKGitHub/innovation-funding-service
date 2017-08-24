@@ -3,7 +3,8 @@ package org.innovateuk.ifs.assessment.transactional;
 import com.google.common.collect.Sets;
 import org.innovateuk.ifs.assessment.domain.AssessmentApplicationAssessorCount;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.resource.AssessorAssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorCompetitionSummaryResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -19,18 +20,22 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.REJECTED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Service
 public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitionSummaryService {
 
-    public static final Set<State> INVALID_ASSESSMENT_STATES = AssessmentStates.getBackingStates(EnumSet.of(
-            AssessmentStates.REJECTED,
-            AssessmentStates.WITHDRAWN
+    public static final Set<State> INVALID_ASSESSMENT_STATES = AssessmentState.getBackingStates(EnumSet.of(
+            AssessmentState.WITHDRAWN,
+            AssessmentState.REJECTED
     ));
 
     public static final Set<State> VALID_ASSESSMENT_STATES = Sets.complementOf(INVALID_ASSESSMENT_STATES);
+
+    public static final Set<State> INCLUDED_ASSESSMENT_STATES = Sets.union(VALID_ASSESSMENT_STATES,
+            AssessmentState.getBackingStates(EnumSet.of(AssessmentState.REJECTED)));
 
     @Autowired
     private AssessorService assessorService;
@@ -51,14 +56,14 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
                 competitionService.getCompetitionById(competitionId).andOnSuccess(competition -> {
                     long allAssessmentCount = assessmentRepository.countByParticipantUserIdAndActivityStateStateIn(
                             assessorProfile.getUser().getId(),
-                            VALID_ASSESSMENT_STATES
+                            INCLUDED_ASSESSMENT_STATES
                     );
 
                     List<AssessmentApplicationAssessorCount> counts = assessmentRepository
                             .getAssessorApplicationAssessmentCountsForStates(
                                     competition.getId(),
                                     assessorId,
-                                    VALID_ASSESSMENT_STATES
+                                    INCLUDED_ASSESSMENT_STATES
                             );
 
                     return serviceSuccess(new AssessorCompetitionSummaryResource(
@@ -75,6 +80,15 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
 
     private List<AssessorAssessmentResource> mapCountsToResource(List<AssessmentApplicationAssessorCount> counts) {
         return simpleMap(counts, count -> {
+            AssessmentRejectOutcomeValue assessmentRejectOutcomeValue = null;
+            String comment = null;
+            int assessorCount = count.getAssessorCount();
+
+            if (count.getAssessment().getActivityState() == REJECTED) {
+                assessmentRejectOutcomeValue = count.getAssessment().getRejection().getRejectReason();
+                comment = count.getAssessment().getRejection().getRejectComment();
+                assessorCount--;
+            }
 
             Organisation leadOrganisation = organisationRepository.findOne(
                     count.getApplication().getLeadOrganisationId()
@@ -84,8 +98,11 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
                     count.getApplication().getId(),
                     count.getApplication().getName(),
                     leadOrganisation.getName(),
-                    count.getAssessorCount(),
-                    count.getAssessment().getActivityState()
+                    assessorCount,
+                    count.getAssessment().getActivityState(),
+                    assessmentRejectOutcomeValue,
+                    comment,
+                    count.getAssessment().getId()
             );
         });
     }
