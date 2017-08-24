@@ -8,7 +8,7 @@ import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.repository.AddressRepository;
 import org.innovateuk.ifs.address.repository.AddressTypeRepository;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.address.resource.AddressTypeEnum;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -149,7 +149,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     @Override
     @Transactional
-    public ServiceResult<Void> updateProjectAddress(Long organisationId, Long projectId, OrganisationAddressType organisationAddressType, AddressResource address) {
+    public ServiceResult<Void> updateProjectAddress(Long organisationId, Long projectId, AddressTypeEnum addressTypeEnum, AddressResource address) {
 
         Project project = projectRepository.findOne(projectId);
         Organisation leadOrganisation = organisationRepository.findOne(organisationId);
@@ -160,7 +160,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         } else {
             Address newAddress = addressMapper.mapToDomain(address);
             if (address.getOrganisations() == null || address.getOrganisations().size() == 0) {
-                AddressType addressType = addressTypeRepository.findOne(organisationAddressType.getOrdinal());
+                AddressType addressType = addressTypeRepository.findOne(addressTypeEnum.getOrdinal());
                 List<OrganisationAddress> existingOrgAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(leadOrganisation.getId(), addressType);
                 existingOrgAddresses.forEach(oA -> organisationAddressRepository.delete(oA));
                 OrganisationAddress organisationAddress = new OrganisationAddress(leadOrganisation, newAddress, addressType);

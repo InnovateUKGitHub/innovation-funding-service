@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.repository.AddressRepository;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.address.resource.AddressTypeEnum;
 import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.repository.OrganisationTypeRepository;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -131,7 +131,7 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
         OrganisationResource organisationResource = createOrganisation();
 
         AddressResource addressResource = new AddressResource("Line1", "Line2",  "Line3", "town", "county", "postcode");
-        controller.addAddress(organisationResource.getId(), OrganisationAddressType.OPERATING, addressResource);
+        controller.addAddress(organisationResource.getId(), AddressTypeEnum.OPERATING, addressResource);
 
         flushAndClearSession();
 

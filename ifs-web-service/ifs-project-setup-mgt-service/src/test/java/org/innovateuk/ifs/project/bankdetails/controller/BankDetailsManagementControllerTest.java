@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
+import static org.innovateuk.ifs.address.resource.AddressTypeEnum.BANK_DETAILS;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;

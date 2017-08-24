@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.projectdetails.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.address.resource.AddressTypeEnum;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -35,9 +35,9 @@ public class ProjectDetailsRestServiceImplTest extends BaseRestServiceUnitTest<P
 
         AddressResource addressResource = new AddressResource();
 
-        setupPostWithRestResultExpectations(projectRestURL + "/123/address?addressType=" + OrganisationAddressType.REGISTERED.name() + "&leadOrganisationId=456", addressResource, OK);
+        setupPostWithRestResultExpectations(projectRestURL + "/123/address?addressType=" + AddressTypeEnum.REGISTERED.name() + "&leadOrganisationId=456", addressResource, OK);
 
-        RestResult<Void> result = service.updateProjectAddress(456L, 123L, OrganisationAddressType.REGISTERED, addressResource);
+        RestResult<Void> result = service.updateProjectAddress(456L, 123L, AddressTypeEnum.REGISTERED, addressResource);
 
         assertTrue(result.isSuccess());
 

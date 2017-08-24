@@ -6,7 +6,7 @@ import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.address.resource.AddressTypeEnum;
 import org.innovateuk.ifs.address.transactional.AddressService;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -95,15 +95,21 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     @Override
     @Transactional
     public ServiceResult<OrganisationResource> update(final OrganisationResource organisationResource) {
-        return organisationMatchingService.findOrganisationMatch(organisationResource)
-                .andOnSuccess(matchingOrganisation -> serviceSuccess(organisationMapper.mapToResource(matchingOrganisation)))
-                .andOnFailure(() -> serviceSuccess(organisationMapper.mapToResource(createNewOrganisation(organisationResource))));
+        Optional<Organisation> existingOrg = organisationMatchingService.findOrganisationMatch(organisationResource);
+
+        if(existingOrg.isPresent()) {
+            return serviceSuccess(organisationMapper.mapToResource(existingOrg.get()));
+        }
+        else {
+            Organisation createdOrganisation = createNewOrganisation(organisationResource);
+            return serviceSuccess(organisationMapper.mapToResource(createdOrganisation));
+        }
     }
 
     private Organisation createNewOrganisation(OrganisationResource organisationResource) {
         Organisation organisation = organisationMapper.mapToDomain(organisationResource);
         Organisation savedOrganisation = organisationRepository.save(organisation);
-        addAddress(organisation.getId(), OrganisationAddressType.valueOf(organisationResource.getAddresses().get(0).getAddressType().getName()), organisationResource.getAddresses().get(0).getAddress());
+        addAddress(organisation.getId(), AddressTypeEnum.valueOf(organisationResource.getAddresses().get(0).getAddressType().getName()), organisationResource.getAddresses().get(0).getAddress());
 
         return savedOrganisation;
     }
@@ -127,10 +133,10 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<OrganisationResource> addAddress(final Long organisationId, final OrganisationAddressType organisationAddressType, AddressResource addressResource) {
+    public ServiceResult<OrganisationResource> addAddress(final Long organisationId, final AddressTypeEnum addressTypeEnum, AddressResource addressResource) {
         return find(organisation(organisationId)).andOnSuccessReturn(organisation -> {
             Address address = addressMapper.mapToDomain(addressResource);
-            AddressType addressType = addressTypeRepository.findOne((long)organisationAddressType.getOrdinal());
+            AddressType addressType = addressTypeRepository.findOne((long) addressTypeEnum.getOrdinal());
             organisation.addAddress(address, addressType);
             Organisation updatedOrganisation = organisationRepository.save(organisation);
             return organisationMapper.mapToResource(updatedOrganisation);

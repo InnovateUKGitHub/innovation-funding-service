@@ -16,7 +16,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.time.LocalDate;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
+import static org.innovateuk.ifs.address.resource.AddressTypeEnum.REGISTERED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;

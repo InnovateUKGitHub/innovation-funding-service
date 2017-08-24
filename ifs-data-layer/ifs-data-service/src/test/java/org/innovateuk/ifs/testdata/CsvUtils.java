@@ -5,7 +5,7 @@ import com.google.common.base.Splitter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.address.resource.AddressTypeEnum;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
@@ -577,7 +577,7 @@ class CsvUtils {
         String town;
         String postcode;
         String county;
-        List<OrganisationAddressType> addressType;
+        List<AddressTypeEnum> addressType;
         String companyRegistrationNumber;
 
         private OrganisationLine(List<String> line) {
@@ -593,7 +593,7 @@ class CsvUtils {
             county = nullable(line.get(i++));
             String addressTypeLine = nullable(line.get(i++));
             addressType = addressTypeLine != null ?
-                    simpleMap(asList(addressTypeLine.split(",")), OrganisationAddressType::valueOf) :
+                    simpleMap(asList(addressTypeLine.split(",")), AddressTypeEnum::valueOf) :
                 emptyList();
             companyRegistrationNumber = nullable(line.get(i++));
         }

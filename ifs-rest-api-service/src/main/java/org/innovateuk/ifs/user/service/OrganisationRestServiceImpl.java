@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.user.service;
 
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.address.resource.AddressTypeEnum;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
@@ -74,7 +74,7 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
     }
 
     @Override
-     public RestResult<OrganisationResource> addAddress(OrganisationResource organisation, AddressResource address, OrganisationAddressType type) {
+     public RestResult<OrganisationResource> addAddress(OrganisationResource organisation, AddressResource address, AddressTypeEnum type) {
         return postWithRestResultAnonymous(organisationRestURL + "/addAddress/"+organisation.getId()+"?addressType="+type.name(), address, OrganisationResource.class);
     }
 }

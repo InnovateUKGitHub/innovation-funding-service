@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.bankdetails;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.address.resource.AddressTypeEnum;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -24,8 +24,8 @@ import java.util.Collections;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.ADD_NEW;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
+import static org.innovateuk.ifs.address.resource.AddressTypeEnum.ADD_NEW;
+import static org.innovateuk.ifs.address.resource.AddressTypeEnum.REGISTERED;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
@@ -84,7 +84,7 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
         ProjectResource projectResource = newProjectResource().withApplication(applicationResource).build();
         OrganisationResource organisationResource = newOrganisationResource().build();
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource()
-                .withAddressType(newAddressTypeResource().withName(OrganisationAddressType.BANK_DETAILS.name()).build())
+                .withAddressType(newAddressTypeResource().withName(AddressTypeEnum.BANK_DETAILS.name()).build())
                 .build();
 
         BankDetailsResource bankDetailsResource = newBankDetailsResource().withOrganiationAddress(organisationAddressResource).build();

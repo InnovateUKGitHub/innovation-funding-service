@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.projectdetails;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.address.resource.AddressTypeEnum;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
@@ -41,7 +41,7 @@ public class ProjectDetailsServiceImpl implements ProjectDetailsService {
     }
 
     @Override
-    public ServiceResult<Void> updateAddress(Long leadOrganisationId, Long projectId, OrganisationAddressType addressType, AddressResource address) {
+    public ServiceResult<Void> updateAddress(Long leadOrganisationId, Long projectId, AddressTypeEnum addressType, AddressResource address) {
         return projectDetailsRestService.updateProjectAddress(leadOrganisationId, projectId, addressType, address).toServiceResult();
     }
 

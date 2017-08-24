@@ -2,7 +2,7 @@ package org.innovateuk.ifs.organisation.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.address.resource.AddressTypeEnum;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
@@ -16,7 +16,7 @@ import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
+import static org.innovateuk.ifs.address.resource.AddressTypeEnum.REGISTERED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.junit.Assert.assertEquals;
@@ -172,7 +172,7 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
         }
 
         @Override
-        public ServiceResult<OrganisationResource> addAddress(Long organisationId, OrganisationAddressType addressType, AddressResource addressResource) {
+        public ServiceResult<OrganisationResource> addAddress(Long organisationId, AddressTypeEnum addressType, AddressResource addressResource) {
             return null;
         }
 

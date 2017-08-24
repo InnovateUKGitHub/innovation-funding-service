@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.address.resource.AddressTypeEnum;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.service.CompanyHouseRestService;
@@ -78,7 +78,7 @@ public class OrganisationServiceImpl implements OrganisationService {
     }
 
     @Override
-    public OrganisationResource addAddress(OrganisationResource organisation, AddressResource address, OrganisationAddressType addressType) {
+    public OrganisationResource addAddress(OrganisationResource organisation, AddressResource address, AddressTypeEnum addressType) {
         return organisationRestService.addAddress(organisation, address, addressType).getSuccessObjectOrThrowException();
     }
 

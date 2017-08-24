@@ -26,8 +26,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.OPERATING;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
+import static org.innovateuk.ifs.address.resource.AddressTypeEnum.OPERATING;
+import static org.innovateuk.ifs.address.resource.AddressTypeEnum.REGISTERED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 
 /**

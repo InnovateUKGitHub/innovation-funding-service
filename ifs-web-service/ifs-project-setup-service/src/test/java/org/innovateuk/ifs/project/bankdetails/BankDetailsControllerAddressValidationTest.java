@@ -18,7 +18,7 @@ import org.springframework.http.MediaType;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.ADD_NEW;
+import static org.innovateuk.ifs.address.resource.AddressTypeEnum.ADD_NEW;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;

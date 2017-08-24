@@ -3,7 +3,7 @@ package org.innovateuk.ifs.testdata;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.flywaydb.core.Flyway;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.address.resource.AddressTypeEnum;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
@@ -1015,7 +1015,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
             OrganisationDataBuilder organisation = organisationBuilder.
                     createOrganisation(line.organisationName, matchingOrganisationDetails.companyRegistrationNumber, lookupOrganisationType(matchingOrganisationDetails.organisationType));
 
-            for (OrganisationAddressType organisationType : matchingOrganisationDetails.addressType) {
+            for (AddressTypeEnum organisationType : matchingOrganisationDetails.addressType) {
                 organisation = organisation.withAddress(organisationType,
                         matchingOrganisationDetails.addressLine1, matchingOrganisationDetails.addressLine2,
                         matchingOrganisationDetails.addressLine3, matchingOrganisationDetails.town,

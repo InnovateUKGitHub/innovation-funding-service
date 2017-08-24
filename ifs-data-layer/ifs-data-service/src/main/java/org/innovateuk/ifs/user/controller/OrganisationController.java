@@ -3,7 +3,7 @@ package org.innovateuk.ifs.user.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.address.resource.AddressTypeEnum;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +55,7 @@ public class OrganisationController {
 
     // TODO DW - INFUND-1555 - do we want to be returning an OrganisationResource from this call?
     @PostMapping("/addAddress/{organisationId}")
-    public RestResult<OrganisationResource> addAddress(@PathVariable("organisationId") final Long organisationId, @RequestParam("addressType") final OrganisationAddressType addressType, @RequestBody AddressResource address) {
+    public RestResult<OrganisationResource> addAddress(@PathVariable("organisationId") final Long organisationId, @RequestParam("addressType") final AddressTypeEnum addressType, @RequestBody AddressResource address) {
         return organisationService.addAddress(organisationId, addressType, address).toPutWithBodyResponse();
     }
 }

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.address.resource.AddressTypeEnum;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryMapper;
@@ -251,9 +251,9 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
         teamOrg.setOrganisationName(organisation.getName());
         teamOrg.setOrganisationTypeName(organisation.getOrganisationType().getName());
-        teamOrg.setRegisteredAddress(getAddressByType(organisation, OrganisationAddressType.REGISTERED));
+        teamOrg.setRegisteredAddress(getAddressByType(organisation, AddressTypeEnum.REGISTERED));
 
-        teamOrg.setOperatingAddress(getAddressByType(organisation, OrganisationAddressType.OPERATING));
+        teamOrg.setOperatingAddress(getAddressByType(organisation, AddressTypeEnum.OPERATING));
 
         // Order users by lead, followed by other users in alphabetic order
         List<ApplicationTeamUserResource> users = application.getProcessRoles()
@@ -281,7 +281,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
         return teamOrg;
     }
 
-    private OrganisationAddressResource getAddressByType(Organisation organisation, OrganisationAddressType addressType) {
+    private OrganisationAddressResource getAddressByType(Organisation organisation, AddressTypeEnum addressType) {
         return organisationAddressMapper.mapToResource(
                 organisation.getAddresses()
                         .stream()

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.projectdetails.transactional;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.address.resource.AddressTypeEnum;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -22,7 +22,7 @@ public interface ProjectDetailsService {
     ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
-    ServiceResult<Void> updateProjectAddress(Long leadOrganisationId, Long projectId, OrganisationAddressType addressType, AddressResource addressResource);
+    ServiceResult<Void> updateProjectAddress(Long leadOrganisationId, Long projectId, AddressTypeEnum addressType, AddressResource addressResource);
 
     @PreAuthorize("hasPermission(#composite, 'UPDATE_FINANCE_CONTACT')")
     ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId);

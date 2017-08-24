@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.projectdetails;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.address.resource.AddressTypeEnum;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -20,7 +20,7 @@ public interface ProjectDetailsService {
 
     ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate);
 
-    ServiceResult<Void> updateAddress(Long leadOrganisationId, Long projectId, OrganisationAddressType addressType, AddressResource address);
+    ServiceResult<Void> updateAddress(Long leadOrganisationId, Long projectId, AddressTypeEnum addressType, AddressResource address);
 
     ServiceResult<Void> setApplicationDetailsSubmitted(Long projectId);
 

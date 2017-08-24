@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.bankdetails.form;
 
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.address.resource.AddressTypeEnum;
 import org.innovateuk.ifs.form.AddressForm;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
+import static org.innovateuk.ifs.address.resource.AddressTypeEnum.BANK_DETAILS;
 
 public class ChangeBankDetailsForm {
 
@@ -27,7 +27,7 @@ public class ChangeBankDetailsForm {
     @Valid
     private AddressForm addressForm = new AddressForm();
 
-    private final OrganisationAddressType addressType = BANK_DETAILS;
+    private final AddressTypeEnum addressType = BANK_DETAILS;
 
     public String getSortCode() {
         return sortCode;
@@ -107,7 +107,7 @@ public class ChangeBankDetailsForm {
                 .toHashCode();
     }
 
-    public OrganisationAddressType getAddressType() {
+    public AddressTypeEnum getAddressType() {
         return addressType;
     }
 }

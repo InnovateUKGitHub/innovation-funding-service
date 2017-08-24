@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.projectdetails.form;
 
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.address.resource.AddressTypeEnum;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.innovateuk.ifs.form.AddressForm;
 
@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
  */
 public class ProjectDetailsAddressForm extends BaseBindingResultTarget {
     @NotNull(message = "{validation.bankdetailsresource.organisationaddress.required}")
-    private OrganisationAddressType addressType;
+    private AddressTypeEnum addressType;
 
     @Valid
     private AddressForm addressForm = new AddressForm();
@@ -25,11 +25,11 @@ public class ProjectDetailsAddressForm extends BaseBindingResultTarget {
         return addressForm;
     }
 
-    public OrganisationAddressType getAddressType() {
+    public AddressTypeEnum getAddressType() {
         return addressType;
     }
 
-    public void setAddressType(OrganisationAddressType addressType) {
+    public void setAddressType(AddressTypeEnum addressType) {
         this.addressType = addressType;
     }
 }

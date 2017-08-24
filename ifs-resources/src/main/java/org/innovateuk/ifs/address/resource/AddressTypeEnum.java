@@ -3,7 +3,7 @@ package org.innovateuk.ifs.address.resource;
 /**
  * This enum represents data in address_type entity.
  */
-public enum OrganisationAddressType {
+public enum AddressTypeEnum {
     ADD_NEW(0L),                                  // Used for signalling a new address will be added.  Not stored in DB.
     REGISTERED(1L), OPERATING(2L), // Used for organisation creation
     PROJECT(3L),                                  // Used for project address (project setup)
@@ -11,7 +11,7 @@ public enum OrganisationAddressType {
 
     private final long ordinal;
 
-    OrganisationAddressType(long ordinal) {
+    AddressTypeEnum(long ordinal) {
         this.ordinal = ordinal;
     }
 

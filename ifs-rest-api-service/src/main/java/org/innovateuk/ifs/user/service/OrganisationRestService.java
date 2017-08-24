@@ -2,8 +2,7 @@ package org.innovateuk.ifs.user.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.finance.resource.OrganisationSizeResource;
+import org.innovateuk.ifs.address.resource.AddressTypeEnum;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 
 import java.util.List;
@@ -21,5 +20,5 @@ public interface OrganisationRestService {
     RestResult<OrganisationResource> update(OrganisationResource organisation);
     RestResult<OrganisationResource> updateNameAndRegistration(OrganisationResource organisation);
     RestResult<OrganisationResource> updateByIdForAnonymousUserFlow(OrganisationResource organisation);
-    RestResult<OrganisationResource> addAddress(OrganisationResource organisation, AddressResource address, OrganisationAddressType type);
+    RestResult<OrganisationResource> addAddress(OrganisationResource organisation, AddressResource address, AddressTypeEnum type);
 }

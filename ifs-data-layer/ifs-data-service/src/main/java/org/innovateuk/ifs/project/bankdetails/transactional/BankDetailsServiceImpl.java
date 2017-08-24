@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
 import static java.lang.Short.parseShort;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
+import static org.innovateuk.ifs.address.resource.AddressTypeEnum.BANK_DETAILS;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.error.Error.globalError;
