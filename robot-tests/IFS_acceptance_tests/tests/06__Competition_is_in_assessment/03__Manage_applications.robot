@@ -55,6 +55,20 @@ Assessor link goes to the assessor profile
     Then the user should see the element   jQuery=h1:contains("Assessor profile") ~ p:contains("Paul Plum")
     [Teardown]    the user clicks the button/link  link=Back
 
+Filter assessors
+    [Documentation]    IFS-399
+    [Tags]
+    Given the user selects the option from the drop-down menu  Materials and manufacturing  id=innovationSector
+    And the user clicks the button/link                        jQuery=.button:contains("Filter")
+    Then the user should not see the element                   jQuery=td:contains("Paul Plum")
+    And the user should see the element                        jQuery=td:contains("Felix Wilson")
+    And the user should see the element                        jQuery=td:contains("Jenna Diaz")
+    Then the user selects the option from the drop-down menu   Academic  id=businessType
+    And the user clicks the button/link                        jQuery=.button:contains("Filter")
+    Then the user should see the element                   jQuery=td:contains("Felix Wilson")
+    And the user should not see the element                        jQuery=td:contains("Jenna Diaz")
+    [Teardown]    the user clicks the button/link  link=Clear all filters
+
 View assessor progress page
     [Documentation]  IFS-321
     [Tags]
