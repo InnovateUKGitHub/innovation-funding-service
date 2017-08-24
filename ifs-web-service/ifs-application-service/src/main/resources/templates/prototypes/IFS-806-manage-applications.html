@@ -90,14 +90,12 @@
 		$('#assign-application').on('click', function(event) {
 			event.preventDefault();
 			$('#application-assigned').show();
-			$('#application-available, #no-applications').hide();
 			$('#application-count').text('1');
 			link.attr('href', link.attr('href') + '?action=update');
 		});
 		$('#remove-application').on('click', function(event) {
 			event.preventDefault();
 			$('#application-assigned').hide();
-			$('#application-available, #no-applications').show();
 			$('#application-count').text('0');
 		});
 	});

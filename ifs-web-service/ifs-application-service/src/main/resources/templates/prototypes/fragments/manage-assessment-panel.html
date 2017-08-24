@@ -1400,9 +1400,6 @@
         </div>
     </div>
 
-    <p th:if="${type == 'assigned'}" id="no-applications">There are currently no applications assigned to this panel.</p>
-
-
     <div class="table-overflow" th:id="${type == 'assigned' ? 'application-assigned' : 'applications-available'}">
         <table id="application-list">
             <thead>
