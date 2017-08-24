@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard',hasFormErrors=${#fields.hasErrors('${competitionSetupForm.*}')}" />
 </head>
 <body th:with="context='comp-management'" class="competition-management competition-setup">
 
@@ -14,6 +14,11 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='All competitions',linkClass='link-back',linkUrl=@{/dashboard},currentApplication=${currentApplication}" th:if="${currentSection.toString() == 'HOME'}" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}/section/application/landing-page(competitionId=${competition.id})}" th:if="${currentSection.toString() != 'HOME'}" />
 
+    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
+    </div>
+
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${editable} ? |Edit '${competitionSetupForm.question.shortTitle}'| : ${competitionSetupForm.question.shortTitle},subTitle=${competitionName},size='heading-xlarge'" />
 
     <p class="extra-margin">
@@ -23,13 +28,13 @@
     <form th:if="${editable}"
           method="post"
           th:object="${competitionSetupForm}"
-          th:action="@{'/competition/setup/{competitionId}/section/application/question/{questionId}/edit'(competitionId=${competition.id}, questionId=${competitionSetupForm.question.questionId})}" novalidate="novalidate"
+          th:action="@{'/competition/setup/{competitionId}/section/application/question/{questionId}/edit'(competitionId=${competition.id}, questionId=${competitionSetupForm.question.questionId})}"
+          novalidate="novalidate"
           data-autosave="compSetup"
           data-th-attr="data-competition=${competition.id},
                         data-objectId=${competitionSetupForm.question.questionId},
                         data-subsection=${competitionSetupForm.question.type == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE ? 'project' : 'question'}"
-          data-section="application"
-          novalidate="novalidate">
+          data-section="application">
 
         <th:block th:insert="fragments/competition-setup-section-elements :: application-question(${competitionSetupForm.question}, ${editable})" />
         <div class="extra-margin">

@@ -15,12 +15,7 @@
 
     <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
         <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to invite this user.</h2>
-        <ul class="error-summary-list">
-            <li th:each="err : ${#fields.detailedErrors('${form.*}')}">
-                <th:block th:if="${err.global}" th:text="${err.message}">Non-field specific message</th:block>
-                <a th:if="${err.fieldName}" th:href="|#${err.fieldName}|" th:text="${err.message}">The error message</a>
-            </li>
-        </ul>
+        <th:block th:insert="fragments/elements :: error-summary-list(form)" />
     </div>
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite a new internal user',size='heading-large'" />

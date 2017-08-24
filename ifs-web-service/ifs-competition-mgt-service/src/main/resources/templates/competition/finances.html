@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard',hasFormErrors=${#fields.hasErrors('${competitionSetupForm.*}')}" />
 </head>
 <body th:with="context='comp-management'" class="competition-management competition-setup">
 
@@ -13,11 +13,9 @@
 
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application',linkClass='link-back',linkUrl=@{/competition/setup/{compId}/section/application/landing-page(compId = ${competitionId})}" />
 
-    <div class="error-summary" th:attr="aria-hidden=${!#fields.hasErrors('${competitionSetupForm.*}')}">
-        <h2 class="heading-medium error-summary-heading">Unable to save section</h2>
-        <ul class="error-summary-list">
-            <li th:each="err : ${#fields.errors('${competitionSetupForm.*}')}" th:text="${err}"></li>
-        </ul>
+    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to save section</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application finances',size='heading-xlarge'" />
@@ -34,7 +32,7 @@
 
         <div class="form-group" th:classappend="${#fields.hasErrors('fullApplicationFinance')}? 'form-group-error'">
             <fieldset class="inline">
-                <legend>
+                <legend id="fullApplicationFinance">
                     <span class="form-label-bold">Finances form</span>
                     <th:block th:if="${#fields.hasErrors('fullApplicationFinance')}">
                         <span class="error-message"  th:each="err : ${#fields.errors('fullApplicationFinance')}" th:text="${err}"></span>
@@ -57,7 +55,7 @@
 
         <div class="form-group" th:classappend="${#fields.hasErrors('includeGrowthTable')} ? 'form-group-error'">
             <fieldset class="inline">
-                <legend>
+                <legend id="includeGrowthTable">
                     <span class="form-label-bold">Include project growth table</span>
                     <th:block th:if="${#fields.hasErrors('includeGrowthTable')}">
 	                    <span class="error-message"  th:each="err : ${#fields.errors('includeGrowthTable')}" th:text="${err}"></span>
@@ -78,30 +76,25 @@
             </fieldset>
         </div>
         <div class="form-group" th:classappend="${#fields.hasErrors('fundingRules')} ? 'form-group-error'">
-            <fieldset class="inline">
-                <legend>
-                    <span class="form-label-bold">Funding rules for this competition</span>
-                    <th:block th:if="${#fields.hasErrors('fundingRules')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('fundingRules')}" th:text="${err}"></span>
-                    </th:block>
-                </legend>
-                <div class="textarea-wrapped ">
-                    <textarea data-editor="html"
-                              class="form-control"
-                              id="fundingRules"
-                              th:classappend="${#fields.hasErrors('fundingRules')} ? 'form-control-error'"
-                              th:field="${competitionSetupForm.fundingRules}"
-                              required="required"
-                              th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
-                              ifs:utext="${competitionSetupForm.fundingRules}">
-                    </textarea>
-                </div>
-            </fieldset>
+              <label for="fundingRules">
+                  <span class="form-label-bold">Funding rules for this competition</span>
+                  <th:block th:if="${#fields.hasErrors('fundingRules')}">
+                      <span class="error-message"  th:each="err : ${#fields.errors('fundingRules')}" th:text="${err}"></span>
+                  </th:block>
+              </label>
+              <div class="textarea-wrapped ">
+                  <textarea data-editor="html"
+                            class="form-control"
+                            id="fundingRules"
+                            th:classappend="${#fields.hasErrors('fundingRules')} ? 'form-control-error'"
+                            th:field="${competitionSetupForm.fundingRules}"
+                            required="required"
+                            th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                            ifs:utext="${competitionSetupForm.fundingRules}">
+                  </textarea>
+              </div>
         </div>
-
-
         <button type="submit" class="button">Save and close</button>
-
 
     </form>
     <th:block th:unless="${editable}">

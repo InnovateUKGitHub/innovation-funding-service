@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Reinstate ineligible application'"/>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Reinstate ineligible application',hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
 </head>
 
 <body th:with="context='assessment'" class="assessment-submit-confirm">
@@ -13,22 +13,17 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId},origin='INELIGIBLE_APPLICATIONS')}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Reinstate application',subTitle=${model.applicationName},size='heading-xlarge'" />
 
-    <div class="error-summary" th:attr="aria-hidden=${!#fields.hasErrors('${form.*}')}">
-        <h2 class="heading-medium error-summary-heading">There is a problem on this page</h2>
-        <ul class="error-summary-list">
-            <th:block th:each="err : ${#fields.errors('${form.*}')}">
-                <li th:text="${err}"></li>
-            </th:block>
-        </ul>
+    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem on this page</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(form)" />
     </div>
-
 
     <form th:object="${form}"
         th:action="@{/competition/{competitionId}/application/{applicationId}/reinstateIneligibleApplication(competitionId=${model.competitionId},applicationId=${model.applicationId})}" method="post" novalidate="novalidate">
         <p>Are you sure that you wish to reinstate this application?</p>
         <p>It will be added to applications requiring assessment, and will require assessors to be assigned to it.</p>
 
-        <hr>
+        <hr/>
 
         <div class="alignright-button">
             <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId},origin='INELIGIBLE_APPLICATIONS')}"
