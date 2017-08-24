@@ -4,7 +4,7 @@
     <th:block th:unless="${(param.section != null)}">
         <div th:if="${setupComplete}" class="extra-margin-bottom">
             <div class="message-alert">
-                <p>Setup of this competition has now been completed and will automatically open on the date set. If you need to change anything at this stage please go through the web team.</p>
+                <p>Setup of this competition has now been completed and will automatically open on the date set. If you need to change anything after publication, contact the IFS Content Team.</p>
             </div>
         </div>
         <ul class="task-list">
@@ -95,7 +95,7 @@
     <div class="complete-modal" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="heading-medium no-margin">Complete competition setup</h2>
-        <p>Setup of competition has now been completed and will automatically open on the date set. If you need to change anything else at this stage please go through the web team.</p>
+        <p>Setup of competition has now been completed and will automatically open on the date set. If you need to change anything after publication, contact the IFS Content Team.</p>
         <hr />
         <div>
             <a th:href="@{/competition/setup/{competitionId}/ready-to-open(competitionId=${competition.id})}"

@@ -495,7 +495,7 @@ User should be able to Save the Competition as Open
     # TODO Pending due to INFUND-7643
     When the user clicks the button/link   jQuery=.button:contains("Complete")
     And the user clicks the button/link    jQuery=button:contains("Done")
-    And the user should see the text in the page    Setup of this competition has now been completed and will automatically open on the date set. If you need to change anything at this stage please go through the web team.
+    And the user should see the text in the page    Setup of this competition has now been completed and will automatically open on the date set. If you need to change anything after publication, contact the IFS Content Team.
     And the user clicks the button/link    link=All competitions
     And the user navigates to the page     ${CA_UpcomingComp}
     Then the competition should show in the correct section  css=section:nth-of-type(2) ul    Test competition
