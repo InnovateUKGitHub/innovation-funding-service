@@ -749,7 +749,7 @@ IFS.core.formValidation = (function () {
     },
     getName: function (el) {
       if (el.is('[data-date]')) {
-        el = el.closest('.date-group').find('input[type="hidden"]')
+        el = el.closest('fieldset').find('input[type="hidden"]')
       }
       if (el.prop('name').length) {
         return el.prop('name')
@@ -757,14 +757,11 @@ IFS.core.formValidation = (function () {
       return ''
     },
     getIdentifier: function (el) {
-      if (el.is('[data-date]')) {
-        el = el.closest('.date-group').find('input[type="hidden"]')
-      }
-      if (el.is(':radio')) {
+      if (el.is(':radio') || el.is('[data-date]')) {
         el = el.closest('fieldset').find('legend')
       }
 
-      if (el.prop('id').length) {
+      if (el.attr('id').length) {
         return el.attr('id')
       }
       return ''
