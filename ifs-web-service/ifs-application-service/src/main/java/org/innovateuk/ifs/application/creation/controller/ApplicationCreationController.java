@@ -4,9 +4,8 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
-import org.innovateuk.ifs.registration.OrganisationCreationController;
-import org.innovateuk.ifs.registration.RegistrationController;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.registration.controller.RegistrationController;
+import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -17,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletResponse;
 import java.time.ZonedDateTime;
-
-import static org.innovateuk.ifs.registration.AbstractAcceptInviteController.INVITE_HASH;
 
 /**
  * This controller will handle all requests that are related to the create of a application.
@@ -44,7 +41,7 @@ public class ApplicationCreationController {
     private CompetitionService competitionService;
 
     @Autowired
-    private CookieUtil cookieUtil;
+    private RegistrationCookieService registrationCookieService;
 
     @GetMapping("/check-eligibility/{competitionId}")
     public String checkEligibility(Model model,
@@ -56,9 +53,8 @@ public class ApplicationCreationController {
             return "redirect:/competition/search";
         }
         model.addAttribute(COMPETITION_ID, competitionId);
-        cookieUtil.saveToCookie(response, COMPETITION_ID, String.valueOf(competitionId));
-        cookieUtil.removeCookie(response, INVITE_HASH);
-        cookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_ID);
+        registrationCookieService.deleteAllRegistrationJourneyCookies(response);
+        registrationCookieService.saveToCompetitionIdCookie(competitionId, response);
 
         return "create-application/check-eligibility";
     }

@@ -62,12 +62,13 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
                                                                                         int pageIndex,
                                                                                         int pageSize,
                                                                                         Optional<Long> innovationArea,
+                                                                                        String filter,
                                                                                         String sortField) {
         Sort sort = getApplicationSummarySortField(sortField);
         Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
 
         Page<ApplicationStatistics> applicationStatistics =
-        applicationStatisticsRepository.findByCompetitionAndInnovationAreaProcessActivityStateStateIn(competitionId, assessorId, SUBMITTED_STATES, innovationArea.orElse(null), pageable);
+        applicationStatisticsRepository.findByCompetitionAndInnovationAreaProcessActivityStateStateIn(competitionId, assessorId, SUBMITTED_STATES, filter, innovationArea.orElse(null), pageable);
 
         return find(applicationStatistics, notFoundError(Page.class)).andOnSuccessReturn(stats -> applicationCountSummaryPageMapper.mapToResource(stats));
     }

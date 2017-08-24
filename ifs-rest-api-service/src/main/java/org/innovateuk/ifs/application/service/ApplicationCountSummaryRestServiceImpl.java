@@ -37,6 +37,7 @@ public class ApplicationCountSummaryRestServiceImpl extends BaseRestService impl
                                                                                                                         int pageIndex,
                                                                                                                         int pageSize,
                                                                                                                         Optional<Long> innovationArea,
+                                                                                                                        String filter,
                                                                                                                         String sortField) {
 
         String baseUrl = format("%s/%s/%s", applicationCountRestUrl, "findByCompetitionIdAndInnovationArea", competitionId);
@@ -45,6 +46,7 @@ public class ApplicationCountSummaryRestServiceImpl extends BaseRestService impl
                 .queryParam("assessorId", assessorId)
                 .queryParam("page", pageIndex)
                 .queryParam("size", pageSize)
+                .queryParam("filter", filter)
                 .queryParam("sortField", sortField);
 
         innovationArea.ifPresent(innovationAreaId -> builder.queryParam("innovationArea", innovationAreaId));

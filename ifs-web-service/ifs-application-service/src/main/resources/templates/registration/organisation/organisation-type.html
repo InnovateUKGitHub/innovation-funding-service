@@ -18,9 +18,9 @@
         </strong>
     </p>
 
-    <h2 class="heading-medium">Please select your organisation type</h2>
+    <h2 class="heading-medium">Choose your organisation type</h2>
 
-    <form th:object="${form}" th:action="@{/organisation/create/type/new-account-organisation-type/}" method="POST">
+    <form th:object="${form}" th:action="@{/organisation/create/new-account-organisation-type/}" method="POST">
         <div th:class="${#fields.hasErrors('*{organisationType}')} ? 'form-group form-group-error' : 'form-group'">
             <fieldset>
                 <legend>
@@ -38,6 +38,9 @@
                 </div>
             </fieldset>
         </div>
+        <p>
+            If your organisation type is not listed contact the <a th:href="@{/info/contact}">customer support service</a>.
+        </p>
         <button class="button button-large extra-margin" name="select-company-type" type="submit">Continue</button>
     </form>
 
