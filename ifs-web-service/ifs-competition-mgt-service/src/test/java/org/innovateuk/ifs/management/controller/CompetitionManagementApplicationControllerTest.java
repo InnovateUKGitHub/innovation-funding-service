@@ -115,7 +115,8 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     private ApplicationTeamModelPopulator applicationTeamModelPopulator;
 
     @Test
-    public void displayApplicationOverview() throws Exception {
+    public void displayApplicationOverviewAsCompAdmin() throws Exception {
+        this.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build());
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
@@ -128,7 +129,8 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition-mgt-application-overview"))
-                .andExpect(model().attribute("readOnly", false));
+                .andExpect(model().attribute("canReinstate", true))
+                .andExpect(model().attribute("canMarkAsIneligible", true));
     }
 
     @Test
@@ -686,6 +688,45 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
                 .andExpect(view().name("404"));
 
         verify(formInputResponseRestService).getFile(formInputId, applications.get(0).getId(), processRoleId);
+    }
+
+    @Test
+    public void displayApplicationOverviewAsSupport() throws Exception {
+        this.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.SUPPORT).build())).build());
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+        this.setupApplicationResponses();
+        this.loginDefaultUser();
+        this.setupInvites();
+        this.setupOrganisationTypes();
+        this.setupResearchCategories();
+        setupApplicantResource();
+
+        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition-mgt-application-overview"))
+                .andExpect(model().attribute("canReinstate", false))
+                .andExpect(model().attribute("canMarkAsIneligible", false));
+    }
+
+    @Test
+    public void displayApplicationOverviewAsInnovationLead() throws Exception {
+        this.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.INNOVATION_LEAD).build())).build());
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+        this.setupApplicationResponses();
+        this.loginDefaultUser();
+        this.setupInvites();
+        this.setupOrganisationTypes();
+        this.setupResearchCategories();
+        this.setupFinances();
+        setupApplicantResource();
+
+        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition-mgt-application-overview"))
+                .andExpect(model().attribute("canReinstate", false))
+                .andExpect(model().attribute("canMarkAsIneligible", true));
     }
 
     private void assertApplicationOverviewWithBackUrl(final String origin, final String expectedBackUrl) throws Exception {

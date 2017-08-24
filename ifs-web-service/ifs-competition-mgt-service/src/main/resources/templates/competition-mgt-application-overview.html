@@ -30,7 +30,7 @@
 
         <h2 class="heading-small">Reason for removal</h2>
         <p th:text="${ineligibility.reasonForRemoval}"></p>
-        <th:block th:unless="${readOnly}">
+        <th:block th:if="${canReinstate}">
             <div class="extra-margin">
                 <a th:href="@{/competition/{competitionId}/application/{applicationId}/reinstateIneligibleApplication/confirm(competitionId=${currentApplication.competition},applicationId=${currentApplication.id})}"
                    class="button button-secondary" data-js-modal="modal-reinstate" role="button" tabindex="0">Reinstate application</a>
@@ -86,7 +86,7 @@
         </th:block>
     </th:block>
 
-    <div th:if="${currentApplication.applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).SUBMITTED && !readOnly}"
+    <div th:if="${currentApplication.applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).SUBMITTED && canMarkAsIneligible}"
          class="extra-margin collapsible collapsible-eligibility collapsible-stateless"
          th:classappend="${#fields.hasErrors('${form.*}')} ? 'collapsible-expanded'">
         <h2>Mark application as ineligible</h2>
