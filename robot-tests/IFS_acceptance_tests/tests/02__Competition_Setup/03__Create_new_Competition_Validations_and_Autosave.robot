@@ -44,7 +44,7 @@ Initial details: server-side validations
     And the user should see an error    Please enter an opening day.
     And the user should see an error    Please enter an opening month.
     And the user should see an error    Please select an Innovation Lead.
-    And the user should see an error    Please select a competition executive.
+    And the user should see an error    Please select a Portfolio Manager.
 
 Initial details: client-side validations
     [Documentation]    INFUND-2982
