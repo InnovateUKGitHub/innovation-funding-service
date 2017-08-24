@@ -116,7 +116,7 @@
             <h3 class="heading-small">Registered name</h3>
             <p th:text="${organisationForm.organisationName}"></p>
 
-            <th:block th:if="${organisationForm.notResearch}">
+            <th:block th:unless="${organisationForm.research}">
                 <th:block th:if="${selectedOrganisation?.organisationSearchId}">
                     <h3 class="heading-small">Registration number</h3>
                     <p th:text="${selectedOrganisation?.organisationSearchId}"></p>
