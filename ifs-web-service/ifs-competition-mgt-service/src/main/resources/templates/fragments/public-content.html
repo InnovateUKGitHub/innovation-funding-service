@@ -18,7 +18,7 @@
     <th:block th:unless="${model.readOnly}">
         <p>This information is used for search results and the opening section of the competition page.</p>
         <div class="form-group" th:classappend="${#fields.hasErrors('shortDescription')} ? 'form-group-error'">
-            <label for="short-description">
+            <label for="shortDescription">
                 <span class="form-label-bold">Short description</span>
                 <span class="form-hint">Appears at the top of the competition page.</span>
                 <th:block th:if="${#fields.hasErrors('shortDescription')}">
@@ -26,7 +26,7 @@
                 </th:block>
             </label>
             <input class="form-control width-full"
-                   id="short-description"
+                   id="shortDescription"
                    type="text"
                    th:errorclass="form-control-error"
                    th:field="${form.shortDescription}"
@@ -35,7 +35,7 @@
                    th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.shortDescription.required}" />
         </div>
         <div class="form-group" th:classappend="${#fields.hasErrors('projectFundingRange')} ? 'form-group-error'">
-            <label for="funding-range">
+            <label for="projectFundingRange">
                 <span class="form-label-bold">Project funding range</span>
                 <span class="form-hint">Appears against the competition search result.</span>
                 <th:block th:if="${#fields.hasErrors('projectFundingRange')}">
@@ -43,7 +43,7 @@
                 </th:block>
             </label>
             <input class="form-control"
-                   id="funding-range"
+                   id="projectFundingRange"
                    type="text"
                    th:errorclass="form-control-error"
                    th:field="${form.projectFundingRange}"
@@ -52,7 +52,7 @@
                    th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.projectFundingRange.required}" />
         </div>
         <div class="form-group" th:classappend="${#fields.hasErrors('eligibilitySummary')} ? 'form-group-error'">
-            <label for="eligibility-summary">
+            <label for="eligibilitySummary">
                 <span class="form-label-bold">Eligibility summary</span>
                 <span class="form-hint">Appears against the competition search result.</span>
                 <th:block th:if="${#fields.hasErrors('eligibilitySummary')}">
@@ -62,7 +62,7 @@
             <div class="textarea-wrapped">
                 <textarea data-editor="html"
                        class="form-control"
-                       id="eligibility-summary"
+                       id="eligibilitySummary"
                        ifs:utext="${form.eligibilitySummary}"
                        th:field="${form.eligibilitySummary}"
                        required="required"
@@ -86,8 +86,9 @@
                    maxlength="255"
                    th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.keywords.required}" />
         </div>
-        <div class="form-group" th:classappend="${#fields.hasErrors('publishSetting')} ? 'error'">
-            <legend>
+        <div class="form-group" th:classappend="${#fields.hasErrors('publishSetting')} ? 'form-group-error'">
+          <fieldset>
+            <legend id="publishSetting">
                 <span class="form-label-bold">Publish setting</span>
                 <span class="form-hint">In this competition:</span>
                 <th:block th:if="${#fields.hasErrors('publishSetting')}">
@@ -118,6 +119,7 @@
                     Invite only
                 </label>
             </div>
+          </fieldset>
         </div>
         <div id="invite-only-guidance" class="panel">
             <p>
