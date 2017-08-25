@@ -112,7 +112,7 @@ invite a new academic
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
     the user logs-in in new browser    ${EMAIL_LEAD}  ${correct_password}
     the user clicks the button/link    link=${application_name}
-    the user clicks the button/link    link=view team members and add collaborators
+    the user clicks the button/link    link=view and manage contributors and collaborators
     the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     the user clicks the button/link    jQuery=.button:contains("Add additional partner organisation")
     the user enters text to a text field    name=organisations[1].organisationName    university of liverpool
@@ -182,3 +182,13 @@ The user opens the link in new window
 The user goes back to the previous tab
     the user should not see an error in the page
     Select Window    #this goes back to the initial tab
+
+the user expands the section
+    [Arguments]  ${section}
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=button:contains("${section}")[aria-expanded="false"]
+    run keyword if  '${status}'=='PASS'  the user clicks the button/link  jQuery=button:contains("${section}")[aria-expanded="false"]
+
+the user collapses the section
+    [Arguments]  ${section}
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=button:contains("${section}")[aria-expanded="true"]
+    run keyword if  '${status}'=='PASS'  the user clicks the button/link  jQuery=button:contains("${section}")[aria-expanded="true"]

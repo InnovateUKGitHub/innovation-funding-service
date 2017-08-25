@@ -1,48 +1,48 @@
 package org.innovateuk.ifs.management.viewmodel;
 
 import com.google.common.collect.Sets;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 
 import java.util.Set;
 
 public class AssessorAssessmentProgressAssignedRowViewModel {
 
-    private static final Set<AssessmentStates> NOTIFIED_STATES = Sets.immutableEnumSet(
-            AssessmentStates.PENDING,
-            AssessmentStates.ACCEPTED,
-            AssessmentStates.OPEN,
-            AssessmentStates.DECIDE_IF_READY_TO_SUBMIT,
-            AssessmentStates.READY_TO_SUBMIT,
-            AssessmentStates.SUBMITTED
+    private static final Set<AssessmentState> NOTIFIED_STATES = Sets.immutableEnumSet(
+            AssessmentState.PENDING,
+            AssessmentState.ACCEPTED,
+            AssessmentState.OPEN,
+            AssessmentState.DECIDE_IF_READY_TO_SUBMIT,
+            AssessmentState.READY_TO_SUBMIT,
+            AssessmentState.SUBMITTED
     );
 
-    private static final Set<AssessmentStates> ACCEPTED_STATES = Sets.immutableEnumSet(
-            AssessmentStates.ACCEPTED,
-            AssessmentStates.OPEN,
-            AssessmentStates.DECIDE_IF_READY_TO_SUBMIT,
-            AssessmentStates.READY_TO_SUBMIT,
-            AssessmentStates.SUBMITTED
+    private static final Set<AssessmentState> ACCEPTED_STATES = Sets.immutableEnumSet(
+            AssessmentState.ACCEPTED,
+            AssessmentState.OPEN,
+            AssessmentState.DECIDE_IF_READY_TO_SUBMIT,
+            AssessmentState.READY_TO_SUBMIT,
+            AssessmentState.SUBMITTED
     );
 
-    private static final Set<AssessmentStates> STARTED_STATES = Sets.immutableEnumSet(
-            AssessmentStates.OPEN,
-            AssessmentStates.DECIDE_IF_READY_TO_SUBMIT,
-            AssessmentStates.READY_TO_SUBMIT,
-            AssessmentStates.SUBMITTED
+    private static final Set<AssessmentState> STARTED_STATES = Sets.immutableEnumSet(
+            AssessmentState.OPEN,
+            AssessmentState.DECIDE_IF_READY_TO_SUBMIT,
+            AssessmentState.READY_TO_SUBMIT,
+            AssessmentState.SUBMITTED
     );
 
     private long applicationId;
     private String applicationName;
     private String leadOrganisation;
     private int totalAssessors;
-    private AssessmentStates state;
+    private AssessmentState state;
     private long assessmentId;
 
     public AssessorAssessmentProgressAssignedRowViewModel(long applicationId,
                                                           String applicationName,
                                                           String leadOrganisation,
                                                           int totalAssessors,
-                                                          AssessmentStates state,
+                                                          AssessmentState state,
                                                           long assessmentId) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
@@ -68,7 +68,7 @@ public class AssessorAssessmentProgressAssignedRowViewModel {
         return totalAssessors;
     }
 
-    public AssessmentStates getState() {
+    public AssessmentState getState() {
         return state;
     }
 
@@ -89,6 +89,6 @@ public class AssessorAssessmentProgressAssignedRowViewModel {
     }
 
     public boolean isSubmitted() {
-        return state == AssessmentStates.SUBMITTED;
+        return state == AssessmentState.SUBMITTED;
     }
 }
