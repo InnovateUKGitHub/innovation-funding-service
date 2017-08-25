@@ -263,7 +263,7 @@ Eligibility: Contain the correct options
     Then the user should see the element    jQuery=label:contains("Single or Collaborative")
     When the user should see the element    jQuery=label:contains("Collaborative")
     And the user should see the element    jQuery=label:contains("Business")
-    And the user should see the element    jQuery=label:contains("Research and technology organisations")
+    And the user should see the element    jQuery=label:contains("Research and technology organisation")
     And the user should see the element    jQuery=div:nth-child(7) label:contains("Yes")
     And the user should see the element    jQuery=div:nth-child(7) label:contains("No")
     And the user should see the element    jQuery=label:contains("Feasibility studies")
