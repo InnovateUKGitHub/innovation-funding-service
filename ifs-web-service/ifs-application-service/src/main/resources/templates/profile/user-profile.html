@@ -42,6 +42,8 @@
     <p th:text="${model.phoneNumber}" />
     <h3 class="heading-small">Email address</h3>
     <p th:text="${model.emailAddress}" />
+    <h3 class="heading-small">Email preferences</h3>
+    <p th:text="${model.allowMarketingEmails ? 'You have asked for updates on Innovate UK competitions by email.' : 'You have asked that we do not keep you updated on Innovate UK competitions by email.'}"></p>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
