@@ -8,6 +8,10 @@ Documentation     INFUND-7734 Competition Management: Assign to application dash
 ...               INFUND-8062 Filter and pagination on Assign to application (Closed competition) and Application progress dashboards
 ...
 ...               IFS-17 View list of accepted assessors - Closed state
+...
+...               IFS-1079 Remove an application - Closed and In assessment states
+...
+...               IFS-400 Filter by application number on Assessor progress dashboard - Closed and in assessments state
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -24,10 +28,10 @@ Search for applications
     And the user clicks the button/Link        jQuery=a:contains("Manage assessments")
     And the user clicks the button/link        jQuery=a:contains("Allocate applications")
     When The user enters text to a text field  css=#filterSearch    ${CLOSED_COMPETITION_APPLICATION}
-    and The user clicks the button/link        jQuery=button:contains(Filter)
+    And The user clicks the button/link        jQuery=button:contains(Filter)
     Then the user should see the element       jQuery=tr:nth-child(1) td:nth-child(1):contains("${CLOSED_COMPETITION_APPLICATION}")
     And The user clicks the button/link        link=Clear all filters
-    then the user should not see the element   jQuery=tr:nth-child(1) td:nth-child(1):contains("137")
+    Then the user should not see the element   jQuery=tr:nth-child(1) td:nth-child(1):contains("137")
 
 Filtering the Assessors in the Allocate Applications page
     [Documentation]    INFUND-7042  INFUND-7729  INFUND-8062
@@ -61,6 +65,17 @@ Manage assessor list is correct
     Given the user clicks the button/link     link=Allocate assessors
     Then the assessor list is correct before changes
 
+Filter assessors
+    [Documentation]    IFS-399
+    [Tags]
+    Given the user selects the option from the drop-down menu  Materials and manufacturing  id=innovationSector
+    And the user clicks the button/link                        jQuery=.button:contains("Filter")
+    Then the assessor list is correct before changes
+    Then the user selects the option from the drop-down menu   Academic  id=businessType
+    And the user clicks the button/link                        jQuery=.button:contains("Filter")
+    And the user should not see the element                    jQuery=td
+    [Teardown]    the user clicks the button/link  link=Clear all filters
+
 Assessor link goes to the assessor profile
     [Documentation]  IFS-17
     [Tags]
@@ -74,6 +89,27 @@ Assessor Progress page
     Given the user clicks the button/link  jQuery=td:contains("Madeleine Martin") ~ td a:contains("Assign")
     Then the user should see the element   jQuery=h2:contains("Assigned") + p:contains("No applications have been assigned to this assessor")
     And the user should see the element    jQuery=h2:contains("Applications") ~ div td:contains("${Neural_id}") + td:contains("Neural") + td:contains("Neural Industries") + td:contains("1")
+
+Filtering applications on the assessor progress page
+    [Documentation]    IFS-400
+    [Tags]
+    When the user enters text to a text field    css=#filterSearch    22
+    And the user clicks the button/link    jQuery=.button:contains(Filter)
+    Then the user should not see the element    jQuery=h2:contains("Applications") ~ div td:contains("${Neural_id}") + td:contains("Neural") + td:contains("Neural Industries") + td:contains("1")
+    When the user enters text to a text field  css=#filterSearch    ${Neural_id}
+    And the user clicks the button/link    jQuery=.button:contains(Filter)
+    Then the user should see the element    jQuery=h2:contains("Applications") ~ div td:contains("${Neural_id}") + td:contains("Neural") + td:contains("Neural Industries") + td:contains("1")
+
+
+Assessor removal
+    [Documentation]  IFS-1079
+    [Tags]
+    Given the user clicks the button/link     link=Allocate assessors
+    When the user clicks the button/link      jQuery=td:contains("Benjamin Nixon") ~ td a:contains("Assign")
+    Then the user should see the element      jQuery=div td:contains("${Neural_id}") + td:contains("Neural") + td:contains("Neural Industries") + td:contains("1") + td:contains("Remove")
+    When the user clicks the button/link      jQuery=td:contains("${Neural_id}") ~ td:contains("Remove")
+    Then the user should not see the element  jQuery=td:contains("${Neural_id}") ~ td:contains("Remove")
+    And the user should see the element       jQuery=h2:contains("Applications") ~ div td:contains("${Neural_id}") + td:contains("Neural") + td:contains("Neural Industries") + td:contains("0")
 
 *** Keywords ***
 the assessor list is correct before changes

@@ -79,6 +79,22 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
     }
 
     @Test
+    public void getCompetitionsByUserId() throws Exception {
+        final Long userId = 4929L;
+        when(competitionService.getCompetitionsByUserId(userId))
+                .thenReturn(serviceSuccess(competitionResourceBuilder.build(2)));
+
+        mockMvc.perform(get("/competition/getCompetitionsByUserId/{userid}", userId))
+                .andExpect(status().isOk())
+                .andDo(document(
+                        "competition/{method-name}",
+                        responseFields(
+                                fieldWithPath("[]").description("list of Competitions the authenticated user has access to")
+                        )
+                ));
+    }
+
+    @Test
     public void markAsComplete() throws Exception {
         Long competitionId = 2L;
         CompetitionSetupSection section = CompetitionSetupSection.INITIAL_DETAILS;

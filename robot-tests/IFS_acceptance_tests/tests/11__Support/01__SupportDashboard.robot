@@ -14,8 +14,8 @@ Support dashboard
 
 Competition links go directly to all applications page
     [Documentation]    IFS-188
-    When The user clicks the button/link    link=${OPEN_COMPETITION_NAME}
-    Then the user should see the element    jQuery=span:contains("${competition_ids['${OPEN_COMPETITION_NAME}']}: ${OPEN_COMPETITION_NAME}")
+    When The user clicks the button/link    link=${openCompetitionRTO_name}
+    Then the user should see the element    jQuery=span:contains("${competition_ids['${openCompetitionRTO_name}']}: ${openCompetitionRTO_name}")
     And the user should see the element     jQuery=h1:contains("All applications")
     And the user should see the element     css=#application-list
 

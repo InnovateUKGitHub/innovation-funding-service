@@ -5,12 +5,9 @@ import org.innovateuk.ifs.Builder;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionOutcomeResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
-import org.innovateuk.ifs.workflow.resource.ProcessEvent;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
-import java.util.Calendar;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -40,10 +37,6 @@ public class AssessmentResourceBuilder extends BaseBuilder<AssessmentResource, A
 
     public AssessmentResourceBuilder withId(Long... value) {
         return withArraySetFieldByReflection("id", value);
-    }
-
-    public AssessmentResourceBuilder withProcessEvent(ProcessEvent... processEvents) {
-        return withArray((processEvent, object) -> setField("event", processEvent.name(), object), processEvents);
     }
 
     public AssessmentResourceBuilder withStartDate(LocalDate... value) {
@@ -86,7 +79,7 @@ public class AssessmentResourceBuilder extends BaseBuilder<AssessmentResource, A
         return withArraySetFieldByReflection("competition", value);
     }
 
-    public AssessmentResourceBuilder withActivityState(AssessmentStates... value) {
+    public AssessmentResourceBuilder withActivityState(AssessmentState... value) {
         return withArraySetFieldByReflection("assessmentState", value);
     }
 }

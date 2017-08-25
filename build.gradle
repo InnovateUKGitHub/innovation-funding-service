@@ -15,12 +15,12 @@ allprojects {
 apply from: "openshift-support.gradle"
 apply from: "zipkin-support.gradle"
 
-if(!project.hasProperty('osTestArgs')) {
+if (!project.hasProperty('osTestArgs')) {
     ext.osTestArgs = ""
 }
 
 build.enabled = false
-jar.enabled=false
+jar.enabled = false
 
 configure(subprojects - project(":ifs-auth-service")) {
     apply plugin: 'org.springframework.boot'
@@ -91,7 +91,7 @@ buildscript {
     ext['thymeleaf.version'] = '3.0.3.RELEASE'
 
     ext {
-        springBootVersion = '1.5.4.RELEASE'
+        springBootVersion = '1.5.6.RELEASE'
         thymeleafVersion = ext['thymeleaf.version']
     }
 
@@ -114,10 +114,10 @@ buildscript {
         classpath 'org.sonarqube.gradle:gradle-sonarqube-plugin:1.1'
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
         classpath 'org.owasp:dependency-check-gradle:1.4.5'
-        classpath "com.avast.gradle:docker-compose-gradle-plugin:0.3.21"
+        classpath "com.avast.gradle:docker-compose-gradle-plugin:0.4.5"
         classpath "se.transmode.gradle:gradle-docker:1.2"
         classpath 'net.researchgate:gradle-release:2.6.0'
-	    classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
+        classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
     }
 
 }
@@ -175,21 +175,29 @@ sonarqube {
 }
 
 dockerCompose {
-    useComposeFiles = ['docker-compose.yml' ,'docker-compose-dev.yml']
+
+    useComposeFiles = ['docker-compose.yml', 'docker-compose-dev.yml']
+
+    if (project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false) {
+        useComposeFiles.add('docker-compose-zipkin.yml')
+    }
+
+    if (project.hasProperty('ifs.admin.enabled') ? project.property('ifs.admin.enabled').toBoolean() : false) {
+        useComposeFiles.add('docker-compose-admin-console.yml')
+    }
+
     removeContainers = false
     removeImages = "Local" // Accepted values are: "All", "Local" and "None"
     removeVolumes = false
 
 }
 
-task dockerTidy(type:Exec) {
+task dockerTidy(type: Exec) {
     executable = 'setup-files/scripts/docker/docker_tidy_up.sh'
     args = [project.version]
 }
 
-import org.apache.tools.ant.filters.*
-
-task happyRobotTests(type:Exec) {
+task happyRobotTests(type: Exec) {
     workingDir 'robot-tests'
     commandLine './micro_run_tests.sh', '-hnw'
 }

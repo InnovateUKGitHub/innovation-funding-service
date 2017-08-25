@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration;
 
-import org.innovateuk.ifs.project.finance.resource.ViabilityOutcomes;
+import org.innovateuk.ifs.project.finance.resource.ViabilityEvent;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
 import org.springframework.context.annotation.Configuration;
@@ -12,9 +12,9 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 
 import java.util.EnumSet;
 
-import static org.innovateuk.ifs.project.finance.resource.ViabilityOutcomes.PROJECT_CREATED;
-import static org.innovateuk.ifs.project.finance.resource.ViabilityOutcomes.ORGANISATION_IS_ACADEMIC;
-import static org.innovateuk.ifs.project.finance.resource.ViabilityOutcomes.VIABILITY_APPROVED;
+import static org.innovateuk.ifs.project.finance.resource.ViabilityEvent.PROJECT_CREATED;
+import static org.innovateuk.ifs.project.finance.resource.ViabilityEvent.ORGANISATION_IS_ACADEMIC;
+import static org.innovateuk.ifs.project.finance.resource.ViabilityEvent.VIABILITY_APPROVED;
 
 import static org.innovateuk.ifs.project.finance.resource.ViabilityState.REVIEW;
 import static org.innovateuk.ifs.project.finance.resource.ViabilityState.NOT_APPLICABLE;
@@ -25,16 +25,16 @@ import static org.innovateuk.ifs.project.finance.resource.ViabilityState.APPROVE
  */
 @Configuration
 @EnableStateMachine(name = "viabilityStateMachine")
-public class ViabilityWorkflow extends StateMachineConfigurerAdapter<ViabilityState, ViabilityOutcomes> {
+public class ViabilityWorkflow extends StateMachineConfigurerAdapter<ViabilityState, ViabilityEvent> {
 
     @Override
-    public void configure(StateMachineConfigurationConfigurer<ViabilityState, ViabilityOutcomes> config) throws Exception {
+    public void configure(StateMachineConfigurationConfigurer<ViabilityState, ViabilityEvent> config) throws Exception {
         config.withConfiguration().listener(new WorkflowStateMachineListener<>());
 
     }
 
     @Override
-    public void configure(StateMachineStateConfigurer<ViabilityState, ViabilityOutcomes> states) throws Exception {
+    public void configure(StateMachineStateConfigurer<ViabilityState, ViabilityEvent> states) throws Exception {
         states.withStates()
                 .initial(REVIEW)
                 .states(EnumSet.of(REVIEW, NOT_APPLICABLE, APPROVED))
@@ -42,7 +42,7 @@ public class ViabilityWorkflow extends StateMachineConfigurerAdapter<ViabilitySt
     }
 
     @Override
-    public void configure(StateMachineTransitionConfigurer<ViabilityState, ViabilityOutcomes> transitions) throws Exception {
+    public void configure(StateMachineTransitionConfigurer<ViabilityState, ViabilityEvent> transitions) throws Exception {
         transitions
                 .withExternal()
                     .source(REVIEW)
