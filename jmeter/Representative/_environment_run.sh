@@ -35,7 +35,7 @@ function run() {
     echo "This will run the performance tests against ${environment}.  In order to run this, you should ensure that a fresh set of webtest data is available on ${environment} (although these tests themselves are rerunnable on a fresh set)."
     echo ""
 
-    if [[ ${start_prompt} -eq 1 ]]; then
+    if [[ ${hide_prompt} -neq 1 ]]; then
 
         echo "You should also ensure that the environment is free to use for this purpose.  Please check the #environment-updates channel to see if it reserved at this time."
         echo ""
@@ -58,7 +58,7 @@ unset properties_file
 unset gui_mode
 unset high_load
 unset include_deviations
-unset start_prompt
+unset hide_prompt
 
 while getopts ":g :l :q :v :e: :p:" opt ; do
     case ${opt} in
@@ -72,7 +72,7 @@ while getopts ":g :l :q :v :e: :p:" opt ; do
             include_deviations=1
         ;;    
         q)
-            start_prompt=0
+            hide_prompt=1
         ;;
         e)
             environment="$OPTARG"
