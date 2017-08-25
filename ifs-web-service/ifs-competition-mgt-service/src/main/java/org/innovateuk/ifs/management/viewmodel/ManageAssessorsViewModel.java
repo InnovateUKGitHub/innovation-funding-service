@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 
 import java.util.List;
 
@@ -13,17 +14,20 @@ public class ManageAssessorsViewModel {
     private final String competitionName;
     private final List<ManageAssessorsRowViewModel> assessors;
     private final boolean inAssessment;
+    private final List<InnovationSectorResource> innovationSectors;
     private final PaginationViewModel pagination;
 
     public ManageAssessorsViewModel(long competitionId,
                                     String competitionName,
                                     List<ManageAssessorsRowViewModel> assessors,
                                     boolean inAssessment,
+                                    List<InnovationSectorResource> innovationSectors,
                                     PaginationViewModel pagination) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.assessors = assessors;
         this.inAssessment = inAssessment;
+        this.innovationSectors = innovationSectors;
         this.pagination = pagination;
     }
 
@@ -47,6 +51,10 @@ public class ManageAssessorsViewModel {
         return pagination;
     }
 
+    public List<InnovationSectorResource> getInnovationSectors() {
+        return innovationSectors;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -60,6 +68,8 @@ public class ManageAssessorsViewModel {
                 .append(inAssessment, that.inAssessment)
                 .append(competitionName, that.competitionName)
                 .append(assessors, that.assessors)
+                .append(assessors, that.assessors)
+                .append(innovationSectors, that.innovationSectors)
                 .append(pagination, that.pagination)
                 .isEquals();
     }
@@ -71,6 +81,7 @@ public class ManageAssessorsViewModel {
                 .append(competitionName)
                 .append(assessors)
                 .append(inAssessment)
+                .append(innovationSectors)
                 .append(pagination)
                 .toHashCode();
     }
