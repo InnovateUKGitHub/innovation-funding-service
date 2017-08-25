@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-./_environment_run.sh "openshift-uat" "openshift-uat.properties"
+./_environment_run.sh -e "openshift-uat" -P "openshift-uat.properties"
