@@ -1,4 +1,7 @@
+set -x
+
 environment=$1
+properties_file=$2
 
 # Get the deviations to apply to the random timers on test steps.  For the Performance environment(s), we want to remove deviation as much as possible to
 # allow us to better perform side-by-side analysis of performance on different branches
@@ -14,7 +17,7 @@ function test_deviations() {
 function perform_tests() {
 
     rm -f /tmp/${environment}-run.jtl
-    jmeter -n -l /tmp/${environment}-run.jtl -Jinvite_user=0 -Japplicant_users=600 -Jregistration_users=0 $(test_deviations) -p${environment}.properties -tload_test_representative.jmx
+    jmeter -n -l /tmp/${environment}-run.jtl -Jinvite_user=0 -Japplicant_users=600 -Jregistration_users=0 $(test_deviations) -p${properties_file} -tload_test_representative.jmx
 }
 
 # the main entry point into this script
