@@ -188,7 +188,7 @@
                     <td th:text="${app.totalAssessors}" class="numeric">3</td>
                     <td class="alignright"><form method="post"
                               th:action="@{/assessment/competition/{competitionId}/assessors/{assessorId}/application/{applicationId}/assign(competitionId=${model.competitionId}, assessorId=${model.assessorId}, applicationId=${app.applicationId})}" >
-                        <button type="submit" class="button-secondary no-margin">Re-assign</button>
+                        <button type="submit" class="button-secondary no-margin">Reassign</button>
                     </form>
                     </td>
                 </tr>
