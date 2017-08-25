@@ -35,7 +35,7 @@ function run() {
     echo "This will run the performance tests against ${environment}.  In order to run this, you should ensure that a fresh set of webtest data is available on ${environment} (although these tests themselves are rerunnable on a fresh set)."
     echo ""
 
-    if [[ ${hide_prompt} -neq 1 ]]; then
+    if [[ ${hide_prompt} != 1 ]]; then
 
         echo "You should also ensure that the environment is free to use for this purpose.  Please check the #environment-updates channel to see if it reserved at this time."
         echo ""
