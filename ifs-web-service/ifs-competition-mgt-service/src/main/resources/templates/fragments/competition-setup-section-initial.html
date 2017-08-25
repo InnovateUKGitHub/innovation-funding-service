@@ -208,7 +208,7 @@
 
             <div class="form-group" th:classappend="${#fields.hasErrors('executiveUserId')} ? 'form-group-error'">
                 <label class="form-label" for="executiveUserId">
-                    <span class="form-label-bold">Portfolio manager</span>
+                    <span class="form-label-bold">Portfolio Manager</span>
                     <th:block th:if="${#fields.hasErrors('executiveUserId')}">
                         <span class="error-message"  th:each="err : ${#fields.errors('executiveUserId')}" th:text="${err}"></span>
                     </th:block>
