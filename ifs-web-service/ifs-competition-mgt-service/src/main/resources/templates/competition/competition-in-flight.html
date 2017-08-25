@@ -108,6 +108,19 @@
                     <li th:unless="${model.readOnly}">
                         <a class="disabled" aria-disabled="true"
                            th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
+                            or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN}">
+                            Manage assessment panel
+                        </a>
+                        <a th:unless="${!model.assessmentPanelEnabled and
+                             (model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
+                            or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN)}"
+                           th:href="@{/assessment/panel/competition/{competitionId}(competitionId=${model.competitionId})}">
+                            Manage assessment panel
+                        </a>
+                    </li>
+                    <li th:unless="${model.readOnly}">
+                        <a class="disabled" aria-disabled="true"
+                           th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
                             or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN
                             or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED
                             or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}">
