@@ -1,5 +1,3 @@
-set -x
-
 environment=$1
 properties_file=$2
 
