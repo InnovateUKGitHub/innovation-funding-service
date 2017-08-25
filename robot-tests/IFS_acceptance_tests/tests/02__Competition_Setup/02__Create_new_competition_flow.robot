@@ -268,7 +268,7 @@ Eligibility: Contain the correct options
     Then the user should see the element    jQuery=label:contains("Single or Collaborative")
     When the user should see the element    jQuery=label:contains("Collaborative")
     And the user should see the element    jQuery=label:contains("Business")
-    And the user should see the element    jQuery=label:contains("Research and technology organisation")
+    And the user should see the element    jQuery=label:contains("Research and technology organisations")
     And the user should see the element    jQuery=div:nth-child(7) label:contains("Yes")
     And the user should see the element    jQuery=div:nth-child(7) label:contains("No")
     And the user should see the element    jQuery=label:contains("Feasibility studies")
@@ -543,16 +543,15 @@ Innovation leads can be added to a competition
     When the user navigates to the page       ${COMP_MANAGEMENT_COMP_SETUP}/manage-innovation-leads/find
     Then the user should see the element      jQuery=h1:contains("Manage innovation leads")
     And the user should see the element       jQuery=span.lead-count:contains("0")  # Lead count from key statistics
-    And the user should see the element       jQuery=.standard-definition-list dd:contains("Open") ~ dd:contains("Biosciences") ~ dd:contains("Ian Cooper") ~ dd:contains("John Doe")
+    And the user should see the element       jQuery=.standard-definition-list dd:contains("Open") ~ dd:contains("Biosciences") ~ dd:contains("Ian Cooper")
     And the user should see the element       jQuery=li.selected a:contains("Find")
     When the user clicks the button/link      jQuery=td:contains(${peter_freeman}) button:contains("Add")
     Then the user should not see the element  jQuery=td:contains(${peter_freeman})
-    And the user should not see the element   jQuery=td:contains("Ian Cooper")
     And the user should see the element       jQuery=span.lead-count:contains("1")
-    And the user should see the element       jQuery=span.total-count:contains("0")  # Total count from individual tab
+    # TODO: Below line will be uncommented once outstanding issue IFS-1287 is resolved
+    # And the user should see the element     jQuery=span.total-count:contains("0")  # Total count from individual tab
     When the user clicks the button/link      jQuery=a:contains("Overview")
     Then the user should see the element      jQuery=span.total-count:contains("1")
-    And the user should not see the element   jQuery=td:contains("Ian Cooper")
     And the user clicks the button/link       jQuery=td:contains(${peter_freeman}) button:contains("Remove")
     And the user should see the element       jQuery=span.lead-count:contains("0")
     And the user should see the element       jQuery=span.total-count:contains("0")

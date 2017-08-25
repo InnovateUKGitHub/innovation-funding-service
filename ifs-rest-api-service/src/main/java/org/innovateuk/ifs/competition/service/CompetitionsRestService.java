@@ -14,9 +14,6 @@ import java.util.List;
  */
 public interface CompetitionsRestService {
     RestResult<List<CompetitionResource>> getAll();
-
-    RestResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId);
-
     RestResult<List<CompetitionSearchResultItem>> findLiveCompetitions();
     RestResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions();
     RestResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions();
@@ -30,7 +27,6 @@ public interface CompetitionsRestService {
     RestResult<CompetitionResource> getPublishedCompetitionById(long competitionId);
     RestResult<List<CompetitionTypeResource>> getCompetitionTypes();
     RestResult<Void> update(CompetitionResource competition);
-    RestResult<Void> updateCompetitionInitialDetails(CompetitionResource competition);
     RestResult<CompetitionResource> create();
     RestResult<Void> markSectionComplete(long competitionId, CompetitionSetupSection section);
     RestResult<Void> markSectionInComplete(long competitionId, CompetitionSetupSection section);

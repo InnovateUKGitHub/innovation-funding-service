@@ -2,8 +2,6 @@ package org.innovateuk.ifs.competition.transactional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -14,7 +12,6 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
-import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
@@ -77,9 +74,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     private ProjectRepository projectRepository;
 
     @Autowired
-    private ApplicationService applicationService;
-
-    @Autowired
     private PublicContentService publicContentService;
 
     @Autowired
@@ -88,19 +82,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(Long id) {
         return find(competitionRepository.findById(id), notFoundError(Competition.class, id)).andOnSuccess(comp -> serviceSuccess(competitionMapper.mapToResource(comp)));
-    }
-
-    @Override
-    public ServiceResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId) {
-        List<ApplicationResource> userApplications = applicationService.findByUserId(userId).getSuccessObjectOrThrowException();
-        List<Long> competitionIdsForUser = userApplications.stream()
-                .map(applicationResource -> applicationResource.getCompetition())
-                .distinct()
-                .collect(Collectors.toList());
-
-        return serviceSuccess((List) competitionMapper.mapToResource(
-                competitionRepository.findByIdIsIn(competitionIdsForUser))
-        );
     }
 
     @Override
@@ -127,7 +108,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                     competitionParticipant.setProcess(competition);
                     competitionParticipant.setUser(innovationLead);
                     competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
-                    competitionParticipant.setStatus(ParticipantStatus.ACCEPTED);
 
                     competitionParticipantRepository.save(competitionParticipant);
 
@@ -258,7 +238,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<Void> manageInformState(long competitionId) {
         CompetitionFundedKeyStatisticsResource keyStatisticsResource =
                 competitionKeyStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)
-                        .getSuccessObjectOrThrowException();
+                .getSuccessObjectOrThrowException();
         if (keyStatisticsResource.isCanReleaseFeedback()) {
             Competition competition = competitionRepository.findById(competitionId);
             competition.setFundersPanelEndDate(ZonedDateTime.now());

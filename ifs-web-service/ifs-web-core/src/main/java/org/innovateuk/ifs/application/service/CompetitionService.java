@@ -42,8 +42,6 @@ public interface CompetitionService {
 
     ServiceResult<Void> update(CompetitionResource competition);
 
-    ServiceResult<Void> updateCompetitionInitialDetails(CompetitionResource competition);
-
     ServiceResult<Void> setSetupSectionMarkedAsComplete(Long competitionId, CompetitionSetupSection section);
 
     ServiceResult<Void> setSetupSectionMarkedAsIncomplete(Long competitionId, CompetitionSetupSection section);

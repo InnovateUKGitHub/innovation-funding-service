@@ -43,7 +43,6 @@ public class ManageInnovationLeadsModelPopulatorTest {
     private UserResource innLead1;
     private UserResource innLead2;
     private UserResource innLead3;
-    private UserResource innLead4;
 
     @Before
     public void setUp() {
@@ -66,17 +65,10 @@ public class ManageInnovationLeadsModelPopulatorTest {
                 .withLastName("James")
                 .build();
 
-        innLead4 = UserResourceBuilder.newUserResource()
-                .withId(4L)
-                .withFirstName("Joshua")
-                .withLastName("Ethan")
-                .build();
-
         availableInnovationLeads = new ArrayList<>();
         availableInnovationLeads.add(innLead1);
         availableInnovationLeads.add(innLead2);
         availableInnovationLeads.add(innLead3);
-        availableInnovationLeads.add(innLead4);
 
         innovationLeadsAssignedToCompetition = new ArrayList<>();
         innovationLeadsAssignedToCompetition.add(innLead2);
@@ -90,7 +82,6 @@ public class ManageInnovationLeadsModelPopulatorTest {
         CompetitionResource competitionResource = newCompetitionResource()
                 .withId(competitionId)
                 .withName("comp name")
-                .withLeadTechnologist(4L)
                 .withLeadTechnologistName("lead technologist name")
                 .withExecutiveName("executive name")
                 .withInnovationSectorName("innovation sector name")
@@ -99,7 +90,6 @@ public class ManageInnovationLeadsModelPopulatorTest {
 
         when(userService.findUserByType(UserRoleType.INNOVATION_LEAD)).thenReturn(availableInnovationLeads);
         when(competitionService.findInnovationLeads(competitionId)).thenReturn(innovationLeadsAssignedToCompetition);
-        when(userService.findById(competitionResource.getLeadTechnologist())).thenReturn(innLead4);
 
         populator.populateModel(model, competitionResource);
         ManageInnovationLeadsViewModel returnedModel = (ManageInnovationLeadsViewModel) model.asMap().get("model");

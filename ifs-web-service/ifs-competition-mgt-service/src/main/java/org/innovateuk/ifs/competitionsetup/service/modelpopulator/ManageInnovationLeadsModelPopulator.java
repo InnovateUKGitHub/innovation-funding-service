@@ -29,10 +29,6 @@ public class ManageInnovationLeadsModelPopulator {
         List<UserResource> innovationLeadsAssignedToCompetition = competitionService.findInnovationLeads(competition.getId());
         availableInnovationLeads.removeAll(innovationLeadsAssignedToCompetition);
 
-        UserResource leadTechnologistAssignedToCompetition = userService.findById(competition.getLeadTechnologist());
-        availableInnovationLeads.remove(leadTechnologistAssignedToCompetition);
-        innovationLeadsAssignedToCompetition.remove(leadTechnologistAssignedToCompetition);
-
         model.addAttribute("model", new ManageInnovationLeadsViewModel(competition.getId(), competition.getName(),
                 competition.getLeadTechnologistName(), competition.getExecutiveName(), competition.getInnovationSectorName(),
                 competition.getInnovationAreaNames(), sortByName(innovationLeadsAssignedToCompetition),
