@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-./_environment_run.sh -g -q -e "docker-compose-local" -P "docker-compose-local.properties"
+./_environment_run.sh -g -q -v -e "docker-compose-local" -p "docker-compose-local.properties"

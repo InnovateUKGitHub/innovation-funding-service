@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-./_environment_run.sh -g -q -e "openshift-local" -P "openshift-local.properties"
+./_environment_run.sh -g -q -v -e "openshift-local" -p "openshift-local.properties"

@@ -10,16 +10,16 @@ function gui_mode_flag() {
 # Get the deviations to apply to the random timers on test steps.  For the Performance environment(s), we want to remove deviation as much as possible to
 # allow us to better perform side-by-side analysis of performance on different branches
 function test_deviations() {
-    if [[ ${performance_mode} -eq 1 ]]; then
-        echo "-Jmicro_pause_deviation=0 -Jshort_pause_deviation=0 -Jnormal_pause_deviation=0 -Jlong_pause_deviation=0 -Jlonger_pause_deviation=0"
-    else
+    if [[ ${include_deviations} -eq 1 ]]; then
         echo "-Jmicro_pause_deviation=100 -Jshort_pause_deviation=500 -Jnormal_pause_deviation=5000 -Jlong_pause_deviation=10000 -Jlonger_pause_deviation=15000"
+    else
+        echo "-Jmicro_pause_deviation=0 -Jshort_pause_deviation=0 -Jnormal_pause_deviation=0 -Jlong_pause_deviation=0 -Jlonger_pause_deviation=0"
     fi
 }
 
 # work out the spread of user journeys to run
 function user_journeys() {
-    if [[ ${performance_mode} -eq 1 ]]; then
+    if [[ ${high_load} -eq 1 ]]; then
         echo "-Jinvite_user=0 -Japplicant_users=600 -Jregistration_users=0"
     else
         echo "-Jinvite_user=1 -Japplicant_users=10 -Jregistration_users=1"
@@ -58,24 +58,28 @@ function run() {
 unset environment
 unset properties_file
 unset gui_mode
-unset performance_mode
+unset high_load
+unset include_deviations
 unset start_prompt
 
-while getopts ":g :p :q :e: :P:" opt ; do
+while getopts ":g :l :q :v :e: :p:" opt ; do
     case ${opt} in
         g)
             gui_mode=1
         ;;
-        p)
-            performance_mode=1
+        l)
+            high_load=1
         ;;
+        v)
+            include_deviations=1
+        ;;    
         q)
             start_prompt=0
         ;;
         e)
             environment="$OPTARG"
         ;;
-        P)
+        p)
             properties_file="$OPTARG"
         ;;
     esac
