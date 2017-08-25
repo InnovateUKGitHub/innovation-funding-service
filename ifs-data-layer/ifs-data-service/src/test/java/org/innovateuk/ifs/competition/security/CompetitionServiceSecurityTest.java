@@ -170,9 +170,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     public void countCompetitions() {
         setLoggedInUser(null);
 
-        assertAccessDenied(() -> classUnderTest.countCompetitions(), () -> {
-            verifyNoMoreInteractions(rules);
-        });
+        assertAccessDenied(() -> classUnderTest.countCompetitions(), () -> verifyNoMoreInteractions(rules));
     }
 
     @Test
@@ -229,6 +227,11 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         }
 
         @Override
+        public ServiceResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId) {
+            return serviceSuccess(newCompetitionResource().build(2));
+        }
+
+        @Override
         public ServiceResult<List<UserResource>> findInnovationLeads(Long competitionId) {
             return null;
         }
@@ -241,10 +244,6 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         @Override
         public ServiceResult<Void> removeInnovationLead(Long competitionId, Long innovationLeadUserId) {
             return null;
-        }
-
-        public ServiceResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId) {
-            return serviceSuccess(newCompetitionResource().build(2));
         }
 
         @Override
