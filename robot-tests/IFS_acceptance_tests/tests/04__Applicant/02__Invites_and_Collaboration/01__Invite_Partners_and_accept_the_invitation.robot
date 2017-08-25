@@ -175,7 +175,7 @@ Partner requests new verification email via password reset
 Complete account verification
     [Documentation]    INFUND-1005  INFUND-2286  INFUND-1779  INFUND-2336
     [Tags]  HappyPath  Email  SmokeTest
-    When the user reads his email and clicks the link       ${invite_email}    Please verify your email address    Once verified you can sign into your account
+    When the user reads his email and clicks the link       ${invite_email}    Please verify your email address    Once verified you can sign into your account  1
     Then the user should be redirected to the correct page  ${REGISTRATION_VERIFIED}
 
 Partner should be able to log-in and see the new company name

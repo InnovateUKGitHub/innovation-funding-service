@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * Represents an Assessors's statistics for Assessments on a Competition.
@@ -105,5 +106,17 @@ public class AssessorCountSummaryResource extends AssessmentCountSummaryResource
                 .append(accepted)
                 .append(submitted)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("name", name)
+                .append("skillAreas", skillAreas)
+                .append("totalAssigned", totalAssigned)
+                .append("assigned", assigned)
+                .append("accepted", accepted)
+                .append("submitted", submitted)
+                .toString();
     }
 }
