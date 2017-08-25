@@ -24,7 +24,9 @@ import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -75,6 +77,22 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         CompetitionResource response = service.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
 
         assertEquals(resource, response);
+    }
+
+    @Test
+    public void getCompetitionsByUserId() throws Exception {
+        List<Competition> competitions = Lists.newArrayList(new Competition());
+        List<CompetitionResource> resources = Lists.newArrayList(new CompetitionResource());
+        List<Long> competitionIds = asList(1L,2L,3L);
+        Long userId = 9421L;
+
+        when(applicationServiceMock.findByUserId(userId)).thenReturn(serviceSuccess(newApplicationResource().withCompetition(1L, 2L, 2L, 3L, 3L, 3L).build(6)));
+        when(competitionRepositoryMock.findByIdIsIn(competitionIds)).thenReturn(competitions);
+        when(competitionMapperMock.mapToResource(competitions)).thenReturn(resources);
+
+        List<CompetitionResource> response = service.getCompetitionsByUserId(userId).getSuccessObjectOrThrowException();
+
+        assertEquals(resources, response);
     }
 
     @Test

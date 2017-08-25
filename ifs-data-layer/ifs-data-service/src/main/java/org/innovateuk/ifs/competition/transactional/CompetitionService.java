@@ -21,6 +21,9 @@ public interface CompetitionService {
     ServiceResult<CompetitionResource> getCompetitionById(final Long id);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
+    ServiceResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId);
+
+    @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionResource>> findAll();
 
     @PostFilter("hasPermission(filterObject, 'READ')")

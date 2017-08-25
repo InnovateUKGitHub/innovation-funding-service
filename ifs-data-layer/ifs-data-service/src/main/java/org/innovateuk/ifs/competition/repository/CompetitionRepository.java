@@ -82,6 +82,8 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     Competition findById(Long id);
 
+    List<Competition> findByIdIsIn(List<Long> ids);
+
     @Override
     List<Competition> findAll();
 
