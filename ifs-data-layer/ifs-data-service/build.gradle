@@ -157,9 +157,8 @@ asciidoctor {
 
     doLast{
         copy {
-            from ("${asciidoctor.outputDir}/html5") {
-                into 'static/docs'
-            }
+            from "build/asciidoc/html5"
+            into 'static/docs'
         }
     }
 
