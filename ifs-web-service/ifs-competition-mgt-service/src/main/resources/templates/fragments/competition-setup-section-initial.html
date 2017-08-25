@@ -261,7 +261,7 @@
                 <dt>Competition Lead</dt>
                 <dd th:each="(innovationLeadTechUser : ${innovationLeadTechUsers})" th:text="${innovationLeadTechUser.name}" th:if="${innovationLeadTechUser.id == competitionSetupForm.innovationLeadUserId}">Innovation Lead</dd>
 
-                <dt>Portfolio manager</dt>
+                <dt>Portfolio Manager</dt>
                 <dd th:each="(competitionExecutiveUser : ${competitionExecutiveUsers})" th:text="${competitionExecutiveUser.name}" th:if="${competitionSetupForm.executiveUserId == competitionExecutiveUser.id}">User</dd>
 
                <dt>State aid</dt>
