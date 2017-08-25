@@ -78,6 +78,7 @@ User can create a new competition
     And The user should not see the element    link=Assessors
     And The user should not see the element    link=Public content
     And The user should see the element    link=Initial details
+    And The user should see the text in the element  css=#content p  Once you complete, this competition will be ready to open.
 
 New competition shows in Preparation section
     [Documentation]    INFUND-2980
