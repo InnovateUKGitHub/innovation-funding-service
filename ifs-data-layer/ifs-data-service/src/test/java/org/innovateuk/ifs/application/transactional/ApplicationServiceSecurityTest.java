@@ -330,6 +330,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
                 () -> {
                     verify(applicationRules).compAdminCanUpdateApplicationState(isA(ApplicationResource.class), isA(UserResource.class));
                     verify(applicationRules).leadApplicantCanUpdateApplicationState(isA(ApplicationResource.class), isA(UserResource.class));
+                    verify(applicationRules).projectFinanceCanUpdateApplicationState(isA(ApplicationResource.class), isA(UserResource.class));
                 }
         );
     }
