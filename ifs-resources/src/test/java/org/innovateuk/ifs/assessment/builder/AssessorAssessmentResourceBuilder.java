@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.assessment.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.resource.AssessorAssessmentResource;
 
 import java.util.List;
@@ -45,7 +46,19 @@ public class AssessorAssessmentResourceBuilder extends BaseBuilder<AssessorAsses
         return withArraySetFieldByReflection("totalAssessors", totalAssessors);
     }
 
-    public AssessorAssessmentResourceBuilder withState(AssessmentStates... states) {
+    public AssessorAssessmentResourceBuilder withState(AssessmentState... states) {
         return withArraySetFieldByReflection("state", states);
+    }
+
+    public AssessorAssessmentResourceBuilder withRejectionReason(AssessmentRejectOutcomeValue... rejectReason) {
+        return withArraySetFieldByReflection("rejectReason", rejectReason);
+    }
+
+    public AssessorAssessmentResourceBuilder withRejectionComment(String... rejectComment) {
+        return withArraySetFieldByReflection("rejectComment", rejectComment);
+    }
+
+    public AssessorAssessmentResourceBuilder withAssessmentId(Long... assessmentIds) {
+        return withArraySetFieldByReflection("assessmentId", assessmentIds);
     }
 }

@@ -3,11 +3,10 @@ package org.innovateuk.ifs.assessment.builder;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
 import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.resource.ProcessEvent;
-import org.innovateuk.ifs.workflow.resource.ProcessStates;
+import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -17,7 +16,7 @@ import java.util.List;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeBuilder.newAssessmentFundingDecisionOutcome;
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeBuilder.newAssessmentRejectOutcome;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.READY_TO_SUBMIT;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.READY_TO_SUBMIT;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.*;
@@ -27,8 +26,7 @@ public class AssessmentBuilderTest {
     @Test
     public void buildOne() throws Exception {
         Long expectedId = 1L;
-        ProcessEvent expectedEvent = ProcessEvent.ASSESSMENT;
-        ProcessStates expectedStatus = AssessmentStates.OPEN;
+        ProcessState expectedStatus = AssessmentState.OPEN;
         ZonedDateTime expectedLastModifiedDate = ZonedDateTime.now();
         LocalDate expectedStartDate = LocalDate.now().minusDays(2);
         LocalDate expectedEndDate = LocalDate.now().minusDays(1);
@@ -38,8 +36,7 @@ public class AssessmentBuilderTest {
 
         Assessment assessment = newAssessment()
                 .withId(expectedId)
-                .withProcessEvent(expectedEvent)
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, AssessmentStates.OPEN.getBackingState()))
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, AssessmentState.OPEN.getBackingState()))
                 .withLastModifiedDate(expectedLastModifiedDate)
                 .withStartDate(expectedStartDate)
                 .withEndDate(expectedEndDate)
@@ -49,7 +46,6 @@ public class AssessmentBuilderTest {
                 .build();
 
         assertEquals(expectedId, assessment.getId());
-        assertEquals(expectedEvent.name(), assessment.getProcessEvent());
         assertEquals(expectedStatus, assessment.getActivityState());
         assertEquals(expectedLastModifiedDate, assessment.getLastModified());
         assertEquals(expectedStartDate, assessment.getStartDate());
@@ -62,8 +58,7 @@ public class AssessmentBuilderTest {
     @Test
     public void buildMany() {
         Long[] expectedIds = {1L, 2L};
-        ProcessEvent[] expectedEvents = {ProcessEvent.ASSESSMENT, ProcessEvent.ANOTHER_ONE};
-        ProcessStates[] expectedStatuss = {AssessmentStates.OPEN, READY_TO_SUBMIT};
+        ProcessState[] expectedStatuss = {AssessmentState.OPEN, READY_TO_SUBMIT};
         ZonedDateTime[] expectedLastModifiedDates = {ZonedDateTime.now(), ZonedDateTime.now()};
         LocalDate[] expectedStartDates = {LocalDate.now().minusDays(2), LocalDate.now().minusDays(3)};
         LocalDate[] expectedEndDates = {LocalDate.now().minusDays(1), LocalDate.now().minusDays(2)};
@@ -75,9 +70,8 @@ public class AssessmentBuilderTest {
 
         List<Assessment> assessments = newAssessment()
                 .withId(expectedIds)
-                .withProcessEvent(expectedEvents)
                 .withActivityState(
-                        new ActivityState(APPLICATION_ASSESSMENT, AssessmentStates.OPEN.getBackingState()),
+                        new ActivityState(APPLICATION_ASSESSMENT, AssessmentState.OPEN.getBackingState()),
                         new ActivityState(APPLICATION_ASSESSMENT, READY_TO_SUBMIT.getBackingState()))
                 .withLastModifiedDate(expectedLastModifiedDates)
                 .withStartDate(expectedStartDates)
@@ -89,7 +83,6 @@ public class AssessmentBuilderTest {
 
         Assessment first = assessments.get(0);
         assertEquals(expectedIds[0], first.getId());
-        assertEquals(expectedEvents[0].name(), first.getProcessEvent());
         assertEquals(expectedStatuss[0], first.getActivityState());
         assertEquals(expectedLastModifiedDates[0], first.getLastModified());
         assertEquals(expectedStartDates[0], first.getStartDate());
@@ -100,7 +93,6 @@ public class AssessmentBuilderTest {
 
         Assessment second = assessments.get(1);
         assertEquals(expectedIds[1], second.getId());
-        assertEquals(expectedEvents[1].name(), second.getProcessEvent());
         assertEquals(expectedStatuss[1], second.getActivityState());
         assertEquals(expectedLastModifiedDates[1], second.getLastModified());
         assertEquals(expectedStartDates[1], second.getStartDate());

@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import org.innovateuk.ifs.assessment.resource.AssessorAssessmentResource;
@@ -36,9 +37,12 @@ import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.isIn;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
+import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeBuilder.newAssessmentRejectOutcome;
 import static org.innovateuk.ifs.assessment.builder.AssessorAssessmentResourceBuilder.newAssessorAssessmentResource;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.ACCEPTED;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.SUBMITTED;
+import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.ACCEPTED;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.REJECTED;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
@@ -166,13 +170,22 @@ public class AssessorCompetitionSummaryControllerIntegrationTest extends BaseCon
 
         ActivityState submittedState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, SUBMITTED.getBackingState());
         ActivityState acceptedState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, ACCEPTED.getBackingState());
+        ActivityState rejectedState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, REJECTED.getBackingState());
+
+        AssessmentRejectOutcome rejectOutcome = newAssessmentRejectOutcome()
+                .withRejectReason(CONFLICT_OF_INTEREST)
+                .withRejectComment("rejection comment")
+                .build();
 
         List<Assessment> assessments = newAssessment()
                 .withId()
                 .withApplication(applications.get(0), applications.get(1), applications.get(2), applications.get(0), applications.get(1))
                 .withParticipant(processRoles.get(0), processRoles.get(1), processRoles.get(2), processRoles.get(3), processRoles.get(4))
-                .withActivityState(submittedState, submittedState, acceptedState, submittedState, submittedState)
+                .withActivityState(rejectedState, submittedState, acceptedState, submittedState, submittedState)
+                .withRejection(rejectOutcome, null, null, null, null)
                 .build(5);
+
+        rejectOutcome.setProcess(assessments.get(0));
 
         assessorFormInputResponseRepository.deleteAll();
         assessmentRepository.deleteAll();
@@ -207,8 +220,11 @@ public class AssessorCompetitionSummaryControllerIntegrationTest extends BaseCon
                 .withApplicationId(applications.get(0).getId(), applications.get(1).getId(), applications.get(2).getId())
                 .withApplicationName(applications.get(0).getName(), applications.get(1).getName(), applications.get(2).getName())
                 .withLeadOrganisation(organisations.get(0).getName(), organisations.get(1).getName(), organisations.get(2).getName())
-                .withTotalAssessors(2, 2, 1)
-                .withState(SUBMITTED, SUBMITTED, ACCEPTED)
+                .withTotalAssessors(1, 2, 1)
+                .withState(REJECTED, SUBMITTED, ACCEPTED)
+                .withRejectionReason(rejectOutcome.getRejectReason(), null, null)
+                .withRejectionComment(rejectOutcome.getRejectComment(), null, null)
+                .withAssessmentId(assessments.get(0).getId(), assessments.get(1).getId(), assessments.get(2).getId())
                 .buildArray(3, AssessorAssessmentResource.class);
 
         assertThat(summaryResource.getAssignedAssessments(), hasItems(expectedAssessorAssessmentResources));

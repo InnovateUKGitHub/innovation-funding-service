@@ -64,9 +64,39 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
 
         assertAccessDenied(() -> classUnderTest.activateUser(123L), () -> {
             verify(rules).systemRegistrationUserCanActivateUsers(userToActivate, getLoggedInUser());
+            verify(rules).ifsAdminCanReactivateUsers(userToActivate, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
     }
+
+    @Test
+    public void testReactivateUser() {
+
+        UserResource userToActivate = newUserResource().build();
+
+        when(lookup.findById(123L)).thenReturn(userToActivate);
+
+        assertAccessDenied(() -> classUnderTest.activateUser(123L), () -> {
+            verify(rules).systemRegistrationUserCanActivateUsers(userToActivate, getLoggedInUser());
+            verify(rules).ifsAdminCanReactivateUsers(userToActivate, getLoggedInUser());
+            verifyNoMoreInteractions(rules);
+        });
+    }
+
+
+    @Test
+    public void testDeactivateUser() {
+
+        UserResource userToActivate = newUserResource().build();
+
+        when(lookup.findById(123L)).thenReturn(userToActivate);
+
+        assertAccessDenied(() -> classUnderTest.deactivateUser(123L), () -> {
+            verify(rules).ifsAdminCanDeactivateUsers(userToActivate, getLoggedInUser());
+            verifyNoMoreInteractions(rules);
+        });
+    }
+
 
     @Test
     public void testSendUserVerificationEmail() throws Exception {
@@ -156,5 +186,8 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
         public ServiceResult<Void> resendUserVerificationEmail(UserResource user) {
             return null;
         }
+
+        @Override
+        public ServiceResult<Void> deactivateUser(long userId) { return null; }
     }
 }

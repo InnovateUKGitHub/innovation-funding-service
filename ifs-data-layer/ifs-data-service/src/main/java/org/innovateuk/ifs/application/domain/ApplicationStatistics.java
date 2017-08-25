@@ -4,14 +4,14 @@ import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.Where;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.Assessment;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 
 import javax.persistence.*;
 import java.util.*;
 
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 
 /**
  * ApplicationStatistics defines a view on the application table for statistical information
@@ -21,9 +21,9 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 @Table(name = "Application")
 public class ApplicationStatistics {
 
-    private static final Set<AssessmentStates> ASSESSOR_STATES = EnumSet.complementOf(EnumSet.of(REJECTED, WITHDRAWN));
+    private static final Set<AssessmentState> ASSESSOR_STATES = EnumSet.complementOf(EnumSet.of(REJECTED, WITHDRAWN));
 
-    private static final Set<AssessmentStates> ACCEPTED_STATES = EnumSet.complementOf(EnumSet.of(PENDING, REJECTED, WITHDRAWN, CREATED));
+    private static final Set<AssessmentState> ACCEPTED_STATES = EnumSet.complementOf(EnumSet.of(PENDING, REJECTED, WITHDRAWN, CREATED));
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

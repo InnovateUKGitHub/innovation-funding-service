@@ -49,10 +49,6 @@ ext {
 ext['spring-restdocs.version']='1.1.2.RELEASE'
 
 jar {
-    dependsOn asciidoctor
-    from ("${asciidoctor.outputDir}/html5") {
-        into 'static/docs'
-    }
     baseName = 'ifs-data-service'
 }
 
@@ -117,6 +113,7 @@ test {
     if (project.hasProperty('testGroups')) {
         systemProperty 'testGroups', project.getProperty('testGroups')
     }
+    finalizedBy asciidoctor
 }
 
 
@@ -152,11 +149,20 @@ task dbAnonymisedDumpDocker(type: Docker, dependsOn: build) {
 
 
 asciidoctor {
-    onlyIf { file(snippetsDir).exists() }
     dependsOn test
     attributes 'snippets': snippetsDir
     backends  'html5'
     inputs.dir snippetsDir
+    outputs.dir file("static/docs")
+
+    doLast{
+        copy {
+            from ("${asciidoctor.outputDir}/html5") {
+                into 'static/docs'
+            }
+        }
+    }
+
 }
 
 task generateMainMapperClasses(type: JavaCompile) {
@@ -213,6 +219,3 @@ task initDB() {
 task wrapper(type: Wrapper) {
     gradleVersion = '3.0'
 }
-
-// Following is required to override allowed suffix on test environments. See comments on IFS-27.
-ext.internalUserEmailDomain="innovateuk.test"
