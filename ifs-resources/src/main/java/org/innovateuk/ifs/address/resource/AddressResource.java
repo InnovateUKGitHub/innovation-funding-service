@@ -16,20 +16,20 @@ import static java.util.Arrays.asList;
 public class AddressResource {
     private Long id;
 
-    @NotBlank (message="{validation.standard.addressline1.required}")
+    @NotBlank(message = "{validation.standard.addressline1.required}")
     private String addressLine1;
     private String addressLine2;
     private String addressLine3;
-    @NotBlank (message="{validation.standard.town.required}")
+    @NotBlank(message = "{validation.standard.town.required}")
     private String town;
     private String county;
-    @NotBlank (message="{validation.standard.postcode.required}")
-    @Length(max = 9, message="{validation.standard.postcode.length}")
+    @NotBlank(message = "{validation.standard.postcode.required}")
+    @Length(max = 9, message = "{validation.standard.postcode.length}")
     private String postcode;
     private List<Long> organisations = new ArrayList<>();
 
     public AddressResource() {
-    	// no-arg constructor
+        // no-arg constructor
     }
 
     public AddressResource(String addressLine1, String addressLine2, String addressLine3, String town, String county, String postcode) {
@@ -90,7 +90,7 @@ public class AddressResource {
     }
 
     @JsonIgnore
-    public String getCombinedString(){
+    public String getCombinedString() {
         String[] location = new String[3];
         location[0] = getPostcode();
         location[1] = getAddressLine1();
@@ -100,8 +100,8 @@ public class AddressResource {
     }
 
     @JsonIgnore
-    public String getAsSingleLine(){
-        if(getAddressLine1() == null && getTown() == null && getPostcode() == null){
+    public String getAsSingleLine() {
+        if (getAddressLine1() == null && getTown() == null && getPostcode() == null) {
             return "";
         }
         String[] location = new String[3];

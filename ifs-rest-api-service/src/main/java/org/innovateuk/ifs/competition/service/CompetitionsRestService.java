@@ -14,6 +14,9 @@ import java.util.List;
  */
 public interface CompetitionsRestService {
     RestResult<List<CompetitionResource>> getAll();
+
+    RestResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId);
+
     RestResult<List<CompetitionSearchResultItem>> findLiveCompetitions();
     RestResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions();
     RestResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions();

@@ -117,7 +117,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private UserRepository userRepository;
 
     @Autowired
-    private OrganisationRepository organisationRepository;
+    protected OrganisationRepository organisationRepository;
 
     @Autowired
     private OrganisationService organisationService;
@@ -129,7 +129,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private BankDetailsService bankDetailsService;
 
     @Autowired
-    private PublicContentRepository publicContentRepository;
+    protected PublicContentRepository publicContentRepository;
 
     @Autowired
     private TestService testService;
@@ -365,7 +365,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private void createExternalUsers() {
         testService.doWithinTransaction(() ->
-            externalUserLines.forEach(line -> createUser(externalUserBuilder, line, true)));
+            externalUserLines.forEach(line -> createUser(externalUserBuilder, line)));
     }
 
     private void createAssessors() {
@@ -426,6 +426,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     private void createPublicContentGroups() {
+        testService.doWithinTransaction(() -> setDefaultCompAdmin());
         testService.doWithinTransaction(() -> publicContentGroupLines.forEach(this::createPublicContentGroup));
     }
 
@@ -449,29 +450,21 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     private void createInternalUsers() {
+        testService.doWithinTransaction(() -> setDefaultSystemRegistrar());
         testService.doWithinTransaction(() ->
             internalUserLines.forEach(line -> {
 
-                List<UserRoleType> roles = simpleMap(line.roles, role -> UserRoleType.fromName(role));
+                List<UserRoleType> roles = simpleMap(line.roles, UserRoleType::fromName);
 
-                InternalUserDataBuilder baseBuilder = internalUserBuilder.
-                        withRoles(roles).
-                        createPreRegistrationEntry(line.emailAddress);
+                InternalUserDataBuilder baseBuilder = internalUserBuilder.withRoles(roles);
 
-                if (line.emailVerified) {
-                    createUser(baseBuilder, line, createViaRegistration(roles));
-                } else {
-                    baseBuilder.build();
-                }
+                createUser(baseBuilder, line);
             }));
     }
 
-    private boolean createViaRegistration(List<UserRoleType> roles) {
-        return roles.stream().noneMatch(role -> asList(INNOVATION_LEAD, SUPPORT, IFS_ADMINISTRATOR).contains(role));
-    }
-
     private void createCompetitions() {
-        competitionLines.forEach(line -> createCompetitionWithApplications(line, Optional.empty()));
+        testService.doWithinTransaction(() -> setDefaultCompAdmin());
+        competitionLines.forEach(line -> createCompetitionWithApplications(line, line.name != null && line.name.equals("Connected digital additive manufacturing") ? Optional.of(1L) : Optional.empty()));
     }
 
     private List<Pair<String, FundingDecision>> createFundingDecisionsFromCsv(String competitionName) {
@@ -1000,7 +993,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 build();
     }
 
-    private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, UserLine line, boolean createViaRegistration) {
+    private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, UserLine line) {
 
         Function<S, S> createOrgIfNecessary = builder -> {
 
@@ -1025,13 +1018,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
             return builder.withNewOrganisation(organisation);
         };
 
-        Function<S, S> registerUserIfNecessary = builder ->
-                createViaRegistration ?
-                        builder.registerUser(line.firstName, line.lastName, line.emailAddress, line.organisationName, line.phoneNumber) :
-                        builder.createUserDirectly(line.firstName, line.lastName, line.emailAddress, line.organisationName, line.phoneNumber, line.emailVerified);
+        Function<S, S> registerUserIfNecessary = builder -> builder.registerUser(line.firstName, line.lastName, line.emailAddress, line.organisationName, line.phoneNumber);
 
-        Function<S, S> verifyEmailIfNecessary = builder ->
-                createViaRegistration && line.emailVerified ? builder.verifyEmail() : builder;
+        Function<S, S> verifyEmailIfNecessary = builder -> line.emailVerified ? builder.verifyEmail() : builder;
 
         createOrgIfNecessary.andThen(registerUserIfNecessary).andThen(verifyEmailIfNecessary).apply(baseBuilder).build();
     }
@@ -1051,5 +1040,19 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private BigDecimal bd(String value) {
         return new BigDecimal(value);
+    }
+
+    protected void setDefaultSystemRegistrar() {
+        setLoggedInUser(newUserResource().withRolesGlobal(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build(1)).build());
+        testService.doWithinTransaction(() ->
+                setLoggedInUser(userService.findByEmail(BaseDataBuilder.IFS_SYSTEM_REGISTRAR_USER_EMAIL).getSuccessObjectOrThrowException())
+        );
+    }
+
+    protected void setDefaultCompAdmin() {
+        setLoggedInUser(newUserResource().withRolesGlobal(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build(1)).build());
+        testService.doWithinTransaction(() ->
+                setLoggedInUser(userService.findByEmail(BaseDataBuilder.COMP_ADMIN_EMAIL).getSuccessObjectOrThrowException())
+        );
     }
 }
