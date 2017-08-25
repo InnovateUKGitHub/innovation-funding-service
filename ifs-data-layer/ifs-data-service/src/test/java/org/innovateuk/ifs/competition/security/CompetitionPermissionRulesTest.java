@@ -43,7 +43,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     }
 
     @Test
-    public void testInternalUserCanViewAllCompetitions() {
+    public void testInternalUsersOtherThanInnoLeadsCanViewAllCompetitions() {
 
         allGlobalRoleUsers.forEach(user -> {
             if (!user.hasRole(UserRoleType.INNOVATION_LEAD) && allInternalUsers.contains(user)) {
@@ -55,7 +55,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     }
 
     @Test
-    public void testInternalUserCanViewAllCompetitionSearchResults() {
+    public void testInternalUsersOtherThanInnoLeadsCanViewAllCompetitionSearchResults() {
 
         allGlobalRoleUsers.forEach(user -> {
             if (!user.hasRole(UserRoleType.INNOVATION_LEAD) && allInternalUsers.contains(user)) {

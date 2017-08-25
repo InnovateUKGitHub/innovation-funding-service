@@ -19,9 +19,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-/**
- * Tests the logic within the individual CompetitionPermissionRules methods that secures basic Competition details
- */
 public class MilestonePermissionRulesTest extends BasePermissionRulesTest<MilestonePermissionRules> {
 
 	@Override

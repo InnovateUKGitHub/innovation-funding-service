@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.security.BasePermissionRules;
@@ -18,16 +17,12 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.*;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 
 @PermissionRules
 @Component
 public class ApplicationPermissionRules extends BasePermissionRules {
-
-    public static final List<CompetitionStatus> ASSESSOR_FEEDBACK_PUBLISHED_STATES = singletonList(PROJECT_SETUP);
 
     @Autowired
     private RoleRepository roleRepository;
@@ -113,12 +108,12 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return userIsConnectedToApplicationResource(application, user);
     }
 
-    @PermissionRule(value = "READ", description = "Internal users can see application resources")
+    @PermissionRule(value = "READ", description = "Internal users other than innovation lead can see all application resources")
     public boolean internalUsersCanViewApplications(final ApplicationResource application, final UserResource user) {
         return !isInnovationLead(user) && isInternal(user);
     }
 
-    @PermissionRule(value = "READ", description = "Internal users can see application resources")
+    @PermissionRule(value = "READ", description = "Innovation leads can see application resources for competitions assigned to them.")
     public boolean innovationLeadAssginedToCompetitionCanViewApplications(final ApplicationResource application, final UserResource user) {
         return application != null && application.getCompetition() != null && userIsInnovationLeadOnCompetition(application.getCompetition(), user.getId());
     }
