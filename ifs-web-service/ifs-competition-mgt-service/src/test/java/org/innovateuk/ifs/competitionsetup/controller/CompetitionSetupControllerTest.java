@@ -12,6 +12,7 @@ import org.innovateuk.ifs.competitionsetup.form.AdditionalInfoForm;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
+import org.innovateuk.ifs.competitionsetup.service.modelpopulator.ManageInnovationLeadsModelPopulator;
 import org.innovateuk.ifs.fixtures.CompetitionFundersFixture;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
@@ -73,6 +74,9 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
     @Mock
     private Validator validator;
+
+    @Mock
+    private ManageInnovationLeadsModelPopulator manageInnovationLeadsModelPopulator;
 
     @Override
     protected CompetitionSetupController supplyControllerUnderTest() {
@@ -810,5 +814,133 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(view().name("competition/setup"));
 
         verify(competitionService, never()).update(competition);
+    }
+
+    @Test
+    public void manageInnovationLeadWhenInitialDetailsNotComplete() throws Exception {
+
+        CompetitionResource competitionResource = newCompetitionResource().build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
+
+        mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/manage-innovation-leads/find"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/competition/setup/" + COMPETITION_ID));
+
+        verify(manageInnovationLeadsModelPopulator, never()).populateModel(any(), any());
+    }
+
+    @Test
+    public void manageInnovationLead() throws Exception {
+
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, Boolean.TRUE))
+                .build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
+
+        mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/manage-innovation-leads/find"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/manage-innovation-leads-find"));
+
+        verify(manageInnovationLeadsModelPopulator).populateModel(any(), any());
+    }
+
+    @Test
+    public void manageInnovationLeadOverviewWhenInitialDetailsNotComplete() throws Exception {
+
+        CompetitionResource competitionResource = newCompetitionResource().build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
+
+        mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/manage-innovation-leads/overview"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/competition/setup/" + COMPETITION_ID));
+
+        verify(manageInnovationLeadsModelPopulator, never()).populateModel(any(), any());
+    }
+
+    @Test
+    public void manageInnovationLeadOverview() throws Exception {
+
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, Boolean.TRUE))
+                .build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
+
+        mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/manage-innovation-leads/overview"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/manage-innovation-leads-overview"));
+
+        verify(manageInnovationLeadsModelPopulator).populateModel(any(), any());
+    }
+
+    @Test
+    public void addInnovationLeadWhenInitialDetailsNotComplete() throws Exception {
+
+        CompetitionResource competitionResource = newCompetitionResource().build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
+
+        Long innovationLeadUserId = 2L;
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/add-innovation-lead/" + innovationLeadUserId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/competition/setup/" + COMPETITION_ID));
+
+        verify(competitionService, never()).addInnovationLead(COMPETITION_ID, innovationLeadUserId);
+        verify(manageInnovationLeadsModelPopulator, never()).populateModel(any(), any());
+    }
+
+    @Test
+    public void addInnovationLead() throws Exception {
+
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, Boolean.TRUE))
+                .build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
+
+        Long innovationLeadUserId = 2L;
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/add-innovation-lead/" + innovationLeadUserId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/manage-innovation-leads-find"));
+
+        verify(competitionService).addInnovationLead(COMPETITION_ID, innovationLeadUserId);
+        verify(manageInnovationLeadsModelPopulator).populateModel(any(), any());
+    }
+
+    @Test
+    public void removeInnovationLeadWhenInitialDetailsNotComplete() throws Exception {
+
+        CompetitionResource competitionResource = newCompetitionResource().build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
+
+        Long innovationLeadUserId = 2L;
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/remove-innovation-lead/" + innovationLeadUserId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/competition/setup/" + COMPETITION_ID));
+
+        verify(competitionService, never()).removeInnovationLead(COMPETITION_ID, innovationLeadUserId);
+        verify(manageInnovationLeadsModelPopulator, never()).populateModel(any(), any());
+    }
+
+    @Test
+    public void removeInnovationLead() throws Exception {
+
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, Boolean.TRUE))
+                .build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
+
+        Long innovationLeadUserId = 2L;
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/remove-innovation-lead/" + innovationLeadUserId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/manage-innovation-leads-overview"));
+
+        verify(competitionService).removeInnovationLead(COMPETITION_ID, innovationLeadUserId);
+        verify(manageInnovationLeadsModelPopulator).populateModel(any(), any());
     }
 }
