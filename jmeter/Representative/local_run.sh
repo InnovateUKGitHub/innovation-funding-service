@@ -1,1 +1,2 @@
-jmeter -Jinvite_user=0 -Japplicant_users=10 -Jregistration_users=0 -Jmicro_pause_deviation=100 -Jshort_pause_deviation=500 -Jnormal_pause_deviation=5000 -Jlong_pause_deviation=10000 -Jlonger_pause_deviation=15000 -plocal.properties -tload_test_representative.jmx
+rm -f /tmp/local-run.jtl
+jmeter -n -l /tmp/local-run.jtl -Jinvite_user=0 -Japplicant_users=600 -Jregistration_users=0 -Jmicro_pause_deviation=100 -Jshort_pause_deviation=500 -Jnormal_pause_deviation=5000 -Jlong_pause_deviation=10000 -Jlonger_pause_deviation=15000 -plocal.properties -tload_test_representative.jmx
