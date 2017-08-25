@@ -2,6 +2,8 @@ package org.innovateuk.ifs.competition.transactional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -74,6 +76,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     private ProjectRepository projectRepository;
 
     @Autowired
+    private ApplicationService applicationService;
+
+    @Autowired
     private PublicContentService publicContentService;
 
     @Autowired
@@ -82,6 +87,19 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(Long id) {
         return find(competitionRepository.findById(id), notFoundError(Competition.class, id)).andOnSuccess(comp -> serviceSuccess(competitionMapper.mapToResource(comp)));
+    }
+
+    @Override
+    public ServiceResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId) {
+        List<ApplicationResource> userApplications = applicationService.findByUserId(userId).getSuccessObjectOrThrowException();
+        List<Long> competitionIdsForUser = userApplications.stream()
+                .map(applicationResource -> applicationResource.getCompetition())
+                .distinct()
+                .collect(Collectors.toList());
+
+        return serviceSuccess((List) competitionMapper.mapToResource(
+                competitionRepository.findByIdIsIn(competitionIdsForUser))
+        );
     }
 
     @Override
@@ -238,7 +256,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<Void> manageInformState(long competitionId) {
         CompetitionFundedKeyStatisticsResource keyStatisticsResource =
                 competitionKeyStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)
-                .getSuccessObjectOrThrowException();
+                        .getSuccessObjectOrThrowException();
         if (keyStatisticsResource.isCanReleaseFeedback()) {
             Competition competition = competitionRepository.findById(competitionId);
             competition.setFundersPanelEndDate(ZonedDateTime.now());
