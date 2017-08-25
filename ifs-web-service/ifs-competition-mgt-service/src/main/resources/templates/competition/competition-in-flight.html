@@ -111,7 +111,7 @@
                             or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN}">
                             Manage assessment panel
                         </a>
-                        <a th:unless="${!model.assessmentPanelEnabled and
+                        <a th:unless="${!model.assessmentPanelEnabled or
                              (model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
                             or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN)}"
                            th:href="@{/assessment/panel/competition/{competitionId}(competitionId=${model.competitionId})}">
