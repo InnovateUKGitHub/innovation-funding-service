@@ -39,6 +39,11 @@ public class CompetitionController {
         return competitionService.getCompetitionOrganisationTypes(id).toGetResponse();
     }
 
+    @GetMapping("/getCompetitionsByUserId/{userId}")
+    public RestResult<List<CompetitionResource>> getCompetitionsByUserId(@PathVariable("userId") final Long userId) {
+        return competitionService.getCompetitionsByUserId(userId).toGetResponse();
+    }
+
     @GetMapping("/findAll")
     public RestResult<List<CompetitionResource>> findAll() {
         return competitionService.findAll().toGetResponse();

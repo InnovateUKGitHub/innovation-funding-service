@@ -9,14 +9,14 @@ Resource          ../../../resources/defaultResources.robot
 Academic organisations search
     [Documentation]    INFUND-1231
     [Tags]    HappyPath    Email    SmokeTest
-    Given we create a new user                          ${OPEN_COMPETITION}  Stuart  Downing  ${test_mailbox_one}+invitedacademics${unique_email_number}@gmail.com
+    Given we create a new user                          ${openCompetitionBusinessRTO}  Stuart  Downing  ${test_mailbox_one}+invitedacademics${unique_email_number}@gmail.com  ${BUSINESS_TYPE_ID}
     And logout as user
     Given the lead applicant invites a registered user  ${test_mailbox_one}+academicinvite${unique_email_number}@gmail.com    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com
-    When the user reads his email and clicks the link   ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation   2
+    When the user reads his email and clicks the link   ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com    Invitation to collaborate in ${openCompetitionBusinessRTO_name}    You will be joining as part of the organisation   2
     And the user clicks the button/link                 jQuery=.button:contains("Yes, accept invitation")
     When the user selects the radio button              organisationType    2
     And the user clicks the button/link                 jQuery=.button:contains("Continue")
-    And The user should see the text in the page        Your organisation must be registered on Je-S before we will consider you to be a research organisation
+    And The user should see the element                 jQuery=h1:contains("Research") ~ .message-alert:contains("Your organisation must be registered on Je-S ")
     And the user clicks the button/link                 jQuery=.button:contains("Search")
     Then the user should see an error                   Please enter an organisation name to search.
     When the user enters text to a text field           id=organisationSearchName    abcd
@@ -33,7 +33,6 @@ Accept invitation as academic
     And the user clicks the button/link                jQuery=.button:contains("Search")
     Then the user should see the text in the page      University of Liverpool
     When the user clicks the button/link               link= University of Liverpool
-    And the user should see the text in the page       Research
     When the user clicks the button/link               jQuery=button:contains("Enter address manually")
     And the user enters text to a text field           id=addressForm.selectedPostcode.addressLine1    The East Wing
     And the user enters text to a text field           id=addressForm.selectedPostcode.addressLine2    Popple Manor
@@ -45,7 +44,7 @@ Accept invitation as academic
     And the user clicks the button/link                jQuery=.button:contains("Save and continue")
     And the user fills the create account form         Steven  Gerrard
     And If the user goes to the previous page he should redirect to the login page
-    And the user reads his email and clicks the link   ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com  Please verify your email address  You have recently set up an account
+    And the user reads his email and clicks the link   ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com  Please verify your email address  You have recently set up an account  1
     And the user clicks the button/link                jQuery=.button:contains("Sign in")
     And Logging in and Error Checking                  ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com  ${correct_password}
     When the user clicks the button/link               link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
@@ -59,5 +58,5 @@ Accept invitation as academic
 
 *** Keywords ***
 If the user goes to the previous page he should redirect to the login page
-    And the user goes back to the previous page
-    Then the user should see the text in the page  Sign in
+    the user goes back to the previous page
+    the user should see the text in the page  Sign in

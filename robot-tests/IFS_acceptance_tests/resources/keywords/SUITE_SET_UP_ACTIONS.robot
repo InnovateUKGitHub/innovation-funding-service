@@ -13,18 +13,18 @@ log in and create new application for collaboration if there is not one already
     Run Keyword If    '${status}' == 'FAIL'    Create new application with the same user  Invite robot test application
 
 Login new application invite academic
-    [Arguments]    ${recipient}    ${subject}    ${pattern}
-    [Tags]    Email
-    Given Logging in and Error Checking  &{lead_applicant_credentials}
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    Academic robot test application
-    Run Keyword If    '${status}' == 'FAIL'    Run keywords    Create new application with the same user  Academic robot test application
-    ...    AND    Invite and accept the invitation    ${recipient}    ${subject}    ${pattern}
+    [Arguments]  ${recipient}  ${subject}  ${pattern}
+    [Tags]  Email
+    Logging in and Error Checking  &{lead_applicant_credentials}
+    ${STATUS}  ${VALUE} =  Run Keyword And Ignore Error Without Screenshots  Page Should Contain  Academic robot test application
+    Run Keyword If  '${status}' == 'FAIL'  Run keywords  Create new application with the same user  Academic robot test application
+    ...                                            AND   Invite and accept the invitation  ${recipient}  ${subject}  ${pattern}
 
 new account complete all but one
-    create new account for submitting  ${submit_bus_email}  ${COMPETITION_OVERVIEW_URL_2}  ${application_bus_name}  radio-1
+    create new account for submitting  ${submit_bus_email}  ${openCompetitionBusinessRTO_overview}  ${application_bus_name}  radio-1
     the user marks every section but one as complete  ${application_bus_name}
     Logout as user
-    create new account for submitting  ${submit_rto_email}  ${COMPETITION_OVERVIEW_URL_2}  ${application_rto_name}  radio-3
+    create new account for submitting  ${submit_rto_email}  ${openCompetitionBusinessRTO_overview}  ${application_rto_name}  radio-3
     the user marks every section but one as complete  ${application_rto_name}
 
 create new account for submitting
@@ -33,15 +33,14 @@ create new account for submitting
     the user navigates to the page              ${overview}
     the user clicks the button/link             jQuery=a:contains("Start new application")
     the user clicks the button/link             jQuery=a:contains("Create account")
+    the user selects the radio button       organisationTypeId  ${org}
+    the user clicks the button/link         jQuery=.button:contains('Save and continue')
     the user enters text to a text field    id=organisationSearchName    Hive IT
     the user clicks the button/link         jQuery=.button:contains("Search")
     the user clicks the button/link         link=${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
     the user selects the checkbox           address-same
     the user clicks the button/link         jQuery=.button:contains("Continue")
-    the user clicks the button/link         jQuery=.button:contains("Save and continue")
-    the user selects the radio button       organisationTypeId  ${org}
-    the user clicks the button/link         jQuery=.button:contains("Save and continue")
-    the user clicks the button/link         jQuery=.button:contains("Save and continue")
+    the user clicks the button/link         jQuery=.button:contains('Save and continue')
     the user enters text to a text field    name=email    ${email}
     the user fills the create account form    Temur    Ketsbaia
     the user reads his email and clicks the link    ${email}    Please verify your email address    Once verified you can sign into your account
@@ -106,14 +105,19 @@ the user marks the section as complete
 
 Create new application with the same user
     [Arguments]  ${Application_title}
-    When the user navigates to the page         ${COMPETITION_OVERVIEW_URL}
-    the user clicks the button/link             jQuery=a:contains("Start new application")
-    And the user clicks the button/link         jQuery=Label:contains("Yes, I want to create a new application.")
-    And the user clicks the button/link         jQuery=.button:contains("Continue")
-    And the user clicks the button/link         jQuery=a:contains("Begin application")
-    And the user clicks the button/link         link=Application details
-    And the user enters text to a text field    id=application_details-title    ${Application_title}
-    And the user clicks the button/link         jQuery=button:contains("Save and return")
+    the user navigates to the page        ${openCompetitionBusinessRTO_overview}
+    the user clicks the button/link       jQuery=a:contains("Start new application")
+    check if there is an existing application in progress for this competition
+    the user clicks the button/link       jQuery=a:contains("Begin application")
+    the user clicks the button/link       link=Application details
+    the user enters text to a text field  id=application_details-title  ${Application_title}
+    the user clicks the button/link       jQuery=button:contains("Save and return")
+
+check if there is an existing application in progress for this competition
+    wait until page contains element    css=body
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    You have an application in progress
+            Run Keyword If    '${status}' == 'PASS'    Run keywords    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application.")
+            ...    AND    And the user clicks the button/link    jQuery=.button:contains("Continue")
 
 create new submit application
     [Arguments]  ${overview}  ${email}  ${application_name}
@@ -128,9 +132,9 @@ Invite and accept the invitation
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
-    And the user should see the text in the page    view team members and add collaborators
-    When the user clicks the button/link    link=view team members and add collaborators
-    And the user clicks the button/link    jQuery=a:contains("Add partner organisation")
+    And the user should see the text in the page    view and manage contributors and collaborators
+    When the user clicks the button/link    link=view and manage contributors and collaborators
+    And the user clicks the button/link    jQuery=a:contains("Add a collaborator organisation")
     And the user enters text to a text field    name=organisationName    Academic Test
     And the user enters text to a text field    name=applicants[0].name    Arsene Wenger
     And the user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+academictest@gmail.com
@@ -185,11 +189,11 @@ The user marks the academic application finances as incomplete
 
 invite a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
-    the user navigates to the page                           ${COMPETITION_OVERVIEW_URL}
-    the user follows the flow to register their organisation
+    the user navigates to the page                           ${openCompetitionBusinessRTO_overview}
+    the user follows the flow to register their organisation    ${BUSINESS_TYPE_ID}
     the user verifies email                                    Stuart   Anderson    ${EMAIL_LEAD}
     the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    the user clicks the button/link    jQuery=a:contains("Add partner organisation")
+    the user clicks the button/link    jQuery=a:contains("Add a collaborator organisation")
     the user enters text to a text field    name=organisationName    innovate
     the user enters text to a text field    name=applicants[0].name    Partner name
     the user enters text to a text field    name=applicants[0].email    ${EMAIL_INVITED}
@@ -200,9 +204,9 @@ invite a registered user
     the guest user opens the browser
 
 we create a new user
-    [Arguments]    ${COMPETITION_ID}  ${first_name}  ${last_name}  ${EMAIL_INVITED}
+    [Arguments]    ${COMPETITION_ID}  ${first_name}  ${last_name}  ${EMAIL_INVITED}  ${org_type_id}
     the user navigates to the page                             ${SERVER}/competition/${COMPETITION_ID}/overview/
-    the user follows the flow to register their organisation
+    the user follows the flow to register their organisation    ${org_type_id}
     the user verifies email    ${first_name}   ${last_name}    ${EMAIL_INVITED}
 
 the user verifies email
@@ -216,18 +220,18 @@ the user verifies email
     The guest user clicks the log-in button
 
 the user follows the flow to register their organisation
+    [Arguments]   ${org_type_id}
     the user clicks the button/link             jQuery=a:contains("Start new application")
     the user clicks the button/link             jQuery=a:contains("Create account")
+    the user should not see the element         jQuery=h3:contains("Organisation type")
+    the user selects the radio button       organisationTypeId  ${org_type_id}
+    the user clicks the button/link         jQuery=.button:contains("Save and continue")
     the user enters text to a text field        id=organisationSearchName    Innovate
     the user clicks the button/link             id=org-search
     the user clicks the button/link             link=INNOVATE LTD
     the user selects the checkbox               address-same
-    the user should not see the element         jQuery=h3:contains("Organisation type")
-    the user clicks the button/link             jQuery=.button:contains("Continue")
-#    This is added as the flow differs if comp is setup to have either Business or RTO as lead org type but not both
-    run keyword and ignore error  the user selects the radio button    organisationTypeId   radio-1
-    the user clicks the button/link             jQuery=.button:contains("Save and continue")
-    run keyword and ignore error  the user clicks the button/link             jQuery=.button:contains("Save and continue")
+    the user clicks the button/link         jQuery=.button:contains("Continue")
+    the user clicks the button/link         jQuery=.button:contains("Save and continue")
 
 the user enters the details and clicks the create account
     [Arguments]   ${first_name}  ${last_name}  ${REG_EMAIL}

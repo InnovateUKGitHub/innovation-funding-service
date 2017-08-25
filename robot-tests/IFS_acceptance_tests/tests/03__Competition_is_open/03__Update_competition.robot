@@ -83,40 +83,43 @@ Assessed Questions are editable (Ready to Open)
 Finances are editable (Ready to Open)
     [Documentation]    INFUND-6941
     [Tags]
-    Given The user clicks the button/link    link=Finances
-    And the user should see the element    jquery=h1:contains("Application finances")
-    When the user clicks the button/link    jQuery=.button:contains("Edit this question")
-    Then the user clicks the button/link    jQuery=.button:contains("Save and close")
-    And the user clicks the button/link     jQuery=button:contains("Done")
-    [Teardown]    the user clicks the button/link    link=Competition setup
+    Given The user clicks the button/link  link=Finances
+    And the user should see the element    jQuery=h1:contains("Application finances")
+    When the user clicks the button/link   jQuery=.button:contains("Edit this question")
+    Then the user clicks the button/link   jQuery=.button:contains("Save and close")
+    And the user should see the element    jQuery=.error-summary:contains("This field cannot be left blank.")
+    When the user enters text to a text field  css=.editor  Funding rules for this competition are now entered.
+    Then the user clicks the button/link   jQuery=.button:contains("Save and close")
+    And the user clicks the button/link    jQuery=.button:contains("Done")
+    [Teardown]  the user clicks the button/link  link=Competition setup
 
 Eligibility is editable (Ready to Open)
     [Documentation]    INFUND-6792
     [Tags]
-    When the user clicks the button/link    link=Eligibility
-    Then the user should see the element    jquery=h1:contains("Eligibility")
+    When the user clicks the button/link   link=Eligibility
+    Then the user should see the element   jquery=h1:contains("Eligibility")
     And The user clicks the button/link    jQuery=button:contains(Edit)
-    And the user selects the radio button    singleOrCollaborative    single
+    And the user selects the radio button  singleOrCollaborative  single
     And The user clicks the button/link    jQuery=button:contains(Done)
 
 Funding Information is editable (Open)
     [Documentation]    INFUND-7083
     [Tags]    HappyPath
-    [Setup]    The user clicks the button/link    jQuery=a:contains(Dashboard)
-    Given the user clicks the button/link    link=${OPEN_COMPETITION_NAME_2}
-    And the user clicks the button/link    jQuery=a:contains(and update competition setup)
-    When the user clicks the button/link    link=Funding information
-    And the user should see the element    jquery=h1:contains("Funding information")
-    And the user clicks the button/link    jQuery=.button:contains("Edit")
-    And The user enters text to a text field    id=funders0.funder    Funders Edit test
-    And the user should see the element    id=0-funderBudget
-    And the user should see the element    id=pafNumber
-    And the user should see the element    id=budgetCode
-    And the user should see the element    id=activityCode
-    And The user clicks the button/link    jQuery=button:contains("Done")
-    Then The user should see the element    jQuery=.button:contains("Edit")
-    And The user should see the text in the page    Funders Edit test
-    [Teardown]    the user clicks the button/link    link=Competition setup
+    [Setup]    The user clicks the button/link  jQuery=a:contains(Dashboard)
+    Given the user clicks the button/link       link=${openCompetitionBusinessRTO_name}
+    And the user clicks the button/link         jQuery=a:contains(and update competition setup)
+    When the user clicks the button/link        link=Funding information
+    And the user should see the element         jquery=h1:contains("Funding information")
+    And the user clicks the button/link         jQuery=.button:contains("Edit")
+    And The user enters text to a text field    id=funders0.funder  Funders Edit test
+    And the user should see the element         id=0-funderBudget
+    And the user should see the element         id=pafNumber
+    And the user should see the element         id=budgetCode
+    And the user should see the element         id=activityCode
+    And The user clicks the button/link         jQuery=.button:contains("Done")
+    Then The user should see the element        jQuery=.button:contains("Edit")
+    And The user should see the text in the page   Funders Edit test
+    [Teardown]    the user clicks the button/link  link=Competition setup
 
 Milestones are editable (Open)
     [Documentation]    INFUND-6694
@@ -287,7 +290,7 @@ Custom suite setup
 
 The user moves the open date to the past
     Connect to Database    @{database}
-    Change the open date of the Competition in the database to one day before  ${OPEN_COMPETITION_NAME_2}
+    Change the open date of the Competition in the database to one day before  ${openCompetitionBusinessRTO_name}
 
 there is a future Notifications date
     [Documentation]    There are no testing data for `milestone`.`type`="NOTIFICATIONS". So i am using MySQL to create a future date

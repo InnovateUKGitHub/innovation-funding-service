@@ -14,8 +14,10 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.AssessorCountSummaryResourceBuilder.newAssessorCountSummaryResource;
+import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
@@ -60,8 +62,10 @@ public class CompetitionManagementAssessmentsAssessorsControllerTest extends Bas
 
         AssessorCountSummaryPageResource expectedPageResource = new AssessorCountSummaryPageResource(41, 3, summaryResources, pageNumber, pageSize);
 
+        when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(newInnovationSectorResource().build(2)));
+
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
-        when(assessorCountSummaryRestService.getAssessorCountSummariesByCompetitionId(competitionResource.getId(), pageNumber, pageSize)).thenReturn(restSuccess(expectedPageResource));
+        when(assessorCountSummaryRestService.getAssessorCountSummariesByCompetitionId(competitionResource.getId(), Optional.empty(), Optional.empty(), pageNumber, pageSize)).thenReturn(restSuccess(expectedPageResource));
 
         ManageAssessorsViewModel model = (ManageAssessorsViewModel) mockMvc.perform(get("/assessment/competition/{competitionId}/assessors?page=1", competitionResource.getId()))
                 .andExpect(status().isOk())
