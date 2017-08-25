@@ -19,9 +19,7 @@
 
     <!-- HARDCODED PROTOTYPE HTML -->
 
-    <h1 class="heading-xlarge">Accept application</h1>
-
-    <p>You are invited to assess the competition <strong>'Technology inspired'</strong>.</p>
+    <h1 class="heading-xlarge">Accept or reject application</h1>
 
     <section class="boxed">
         <div class="grid-row">
@@ -40,14 +38,9 @@
         </div>
     </section>
 
-    <section>
-        <h2 class="heading-small">Review the project summary above to make sure:</h2>
-        <ul class="list list-bullet">
-            <li>you do not have a conflict of interest with this application</li>
-        </ul>
-    </section>
+    <p class="extra-margin">Read the project summary above to make sure you do not have a conflict of interest with this application.</p>
 
-    <h2 class="heading-medium">Select your ability to assess this application</h2>
+    <h2 class="heading-medium">Choose your option</h2>
     <form action="/prototypes/IFS-807-app-readonly">
         <div class="form-group">
             <fieldset>
@@ -55,7 +48,7 @@
                 <div class="multiple-choice">
                     <input id="acceptCompetition" value="true" type="radio" required="required" name="acceptInvitation">
                     <label for="acceptCompetition">
-                        Accept, I am to able to assess this application
+                        Yes, I am able to review this application
                     </label>
                 </div>
 
@@ -66,7 +59,7 @@
                 <div class="multiple-choice" data-target="reject-competition">
                     <input id="rejectCompetition" value="false" type="radio" required="required" name="acceptInvitation">
                     <label for="rejectCompetition">
-                        Reject, I am not to able to assess this application
+                        No, I am not able to review this application
                     </label>
                 </div>
 
