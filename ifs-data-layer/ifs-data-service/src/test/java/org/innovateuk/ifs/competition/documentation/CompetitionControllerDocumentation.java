@@ -3,16 +3,19 @@ package org.innovateuk.ifs.competition.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.controller.CompetitionController;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.documentation.CompetitionCountResourceDocs;
+import org.innovateuk.ifs.documentation.CompetitionResourceDocs;
 import org.innovateuk.ifs.documentation.CompetitionSearchResultDocs;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import java.util.ArrayList;
@@ -23,6 +26,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionSearchResultItem
 import static org.innovateuk.ifs.documentation.CompetitionResourceDocs.competitionResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionResourceDocs.competitionResourceFields;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -32,6 +36,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -77,6 +82,22 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
         when(competitionService.findAll()).thenReturn(serviceSuccess(competitionResourceBuilder.build(2)));
 
         mockMvc.perform(get("/competition/findAll"))
+                .andExpect(status().isOk())
+                .andDo(document(
+                        "competition/{method-name}",
+                        responseFields(
+                                fieldWithPath("[]").description("list of Competitions the authenticated user has access to")
+                        )
+                ));
+    }
+
+    @Test
+    public void getCompetitionsByUserId() throws Exception {
+        final Long userId = 4929L;
+        when(competitionService.getCompetitionsByUserId(userId))
+                .thenReturn(serviceSuccess(competitionResourceBuilder.build(2)));
+
+        mockMvc.perform(get("/competition/getCompetitionsByUserId/{userid}", userId))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -334,5 +355,28 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
 
         verify(competitionService, only()).removeInnovationLead(competitionId, innovationLeadUserId);
 
+    }
+
+    @Test
+    public void updateCompetitionInitialDetails() throws Exception {
+        final Long competitionId = 1L;
+
+        CompetitionResource competitionResource = competitionResourceBuilder.build();
+
+        when(competitionService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competitionResource));
+        when(competitionSetupService.updateCompetitionInitialDetails(any(), any(), any())).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/competition/{id}/update-competition-initial-details", competitionId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(competitionResource)))
+                .andExpect(status().isOk())
+                .andDo(document(
+                        "competition/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("Id of the competition whose initial details are being updated")
+                        ),
+                        requestFields(CompetitionResourceDocs.competitionResourceFields)
+                        )
+                );
     }
 }

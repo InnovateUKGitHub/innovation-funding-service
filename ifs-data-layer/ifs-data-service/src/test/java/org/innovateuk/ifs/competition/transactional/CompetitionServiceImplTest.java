@@ -13,6 +13,7 @@ import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.user.builder.UserBuilder;
@@ -31,7 +32,9 @@ import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -86,6 +89,22 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
+    public void getCompetitionsByUserId() throws Exception {
+        List<Competition> competitions = Lists.newArrayList(new Competition());
+        List<CompetitionResource> resources = Lists.newArrayList(new CompetitionResource());
+        List<Long> competitionIds = asList(1L,2L,3L);
+        Long userId = 9421L;
+
+        when(applicationServiceMock.findByUserId(userId)).thenReturn(serviceSuccess(newApplicationResource().withCompetition(1L, 2L, 2L, 3L, 3L, 3L).build(6)));
+        when(competitionRepositoryMock.findByIdIsIn(competitionIds)).thenReturn(competitions);
+        when(competitionMapperMock.mapToResource(competitions)).thenReturn(resources);
+
+        List<CompetitionResource> response = service.getCompetitionsByUserId(userId).getSuccessObjectOrThrowException();
+
+        assertEquals(resources, response);
+    }
+
+    @Test
     public void findInnovationLeads() throws Exception {
         Long competitionId = 1L;
 
@@ -129,6 +148,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         savedCompetitionParticipant.setProcess(competition);
         savedCompetitionParticipant.setUser(innovationLead);
         savedCompetitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
+        savedCompetitionParticipant.setStatus(ParticipantStatus.ACCEPTED);
 
         // Verify that the correct CompetitionParticipant is saved
         verify(competitionParticipantRepositoryMock).save(savedCompetitionParticipant);

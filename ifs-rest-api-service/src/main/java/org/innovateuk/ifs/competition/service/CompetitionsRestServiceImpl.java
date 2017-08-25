@@ -34,6 +34,11 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     }
 
     @Override
+    public RestResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId) {
+        return getWithRestResult(competitionsRestURL + "/getCompetitionsByUserId/" + userId, competitionResourceListType());
+    }
+
+    @Override
     public RestResult<List<CompetitionSearchResultItem>> findLiveCompetitions() {
         return getWithRestResult(competitionsRestURL + "/live", competitionSearchResultItemListType());
     }
@@ -107,6 +112,11 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     @Override
     public RestResult<Void> update(CompetitionResource competition) {
         return putWithRestResult(competitionsRestURL + "/" + competition.getId(), competition, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> updateCompetitionInitialDetails(CompetitionResource competition) {
+        return putWithRestResult(competitionsRestURL + "/" + competition.getId() + "/update-competition-initial-details", competition, Void.class);
     }
 
     @Override

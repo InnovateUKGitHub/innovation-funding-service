@@ -60,6 +60,11 @@ public class CompetitionController {
         return competitionService.getCompetitionOrganisationTypes(id).toGetResponse();
     }
 
+    @GetMapping("/getCompetitionsByUserId/{userId}")
+    public RestResult<List<CompetitionResource>> getCompetitionsByUserId(@PathVariable("userId") final Long userId) {
+        return competitionService.getCompetitionsByUserId(userId).toGetResponse();
+    }
+
     @GetMapping("/findAll")
     public RestResult<List<CompetitionResource>> findAll() {
         return competitionService.findAll().toGetResponse();
@@ -101,6 +106,14 @@ public class CompetitionController {
     public RestResult<CompetitionResource> saveCompetition(@RequestBody CompetitionResource competitionResource,
                                                            @PathVariable("id") final Long id) {
         return competitionSetupService.update(id, competitionResource).toGetResponse();
+    }
+
+    @PutMapping("/{id}/update-competition-initial-details")
+    public RestResult<Void> updateCompetitionInitialDetails(@RequestBody CompetitionResource competitionResource,
+                                                           @PathVariable("id") final Long id) {
+
+        CompetitionResource existingCompetitionResource = competitionService.getCompetitionById(id).getSuccessObjectOrThrowException();
+        return competitionSetupService.updateCompetitionInitialDetails(id, competitionResource, existingCompetitionResource.getLeadTechnologist()).toPutResponse();
     }
 
     @PutMapping("/{id}/close-assessment")
