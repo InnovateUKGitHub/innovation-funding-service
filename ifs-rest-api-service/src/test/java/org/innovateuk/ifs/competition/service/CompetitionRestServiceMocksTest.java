@@ -30,8 +30,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
 
     @Override
     protected CompetitionsRestServiceImpl registerRestServiceUnderTest() {
-        CompetitionsRestServiceImpl competitionService = new CompetitionsRestServiceImpl();
-        return competitionService;
+        return new CompetitionsRestServiceImpl();
     }
 
     @Test
@@ -86,6 +85,17 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
         RestResult<Void> response = service.removeInnovationLead(123L, 234L);
         assertTrue(response.isSuccess());
         assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    public void getCompetitionsByUserId() {
+        final Long userId = 123L;
+        List<CompetitionResource> returnedResponse = newCompetitionResource().build(2);
+
+        setupGetWithRestResultExpectations(competitionsRestURL + "/getCompetitionsByUserId/" + userId, competitionResourceListType(), returnedResponse);
+
+        List<CompetitionResource> responses = service.getCompetitionsByUserId(userId).getSuccessObject();
+        assertNotNull(responses);
+        assertEquals(returnedResponse, responses);
     }
 
     @Test

@@ -45,4 +45,9 @@ public class ProcessRoleServiceImpl implements ProcessRoleService {
     public List<ProcessRoleResource> getByApplicationId(Long applicationId) {
         return userRestService.findProcessRole(applicationId).getSuccessObjectOrThrowException();
     }
+
+    @Override
+    public List<ProcessRoleResource> getByUserId(Long userId) {
+        return userRestService.findProcessRoleByUserId(userId).getSuccessObjectOrThrowException();
+    }
 }
