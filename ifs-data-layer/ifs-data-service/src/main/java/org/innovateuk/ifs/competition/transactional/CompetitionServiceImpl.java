@@ -12,12 +12,19 @@ import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
+import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.OrganisationType;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.OrganisationTypeMapper;
+import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -51,7 +58,16 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     private CompetitionRepository competitionRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private CompetitionParticipantRepository competitionParticipantRepository;
+
+    @Autowired
     private CompetitionMapper competitionMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Autowired
     private OrganisationTypeMapper organisationTypeMapper;
@@ -84,6 +100,47 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         return serviceSuccess((List) competitionMapper.mapToResource(
                 competitionRepository.findByIdIsIn(competitionIdsForUser))
         );
+    }
+
+    @Override
+    public ServiceResult<List<UserResource>> findInnovationLeads(Long competitionId) {
+
+        List<CompetitionParticipant> competitionParticipants = competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD);
+
+        List<UserResource> innovationLeads = simpleMap(competitionParticipants, competitionParticipant -> userMapper.mapToResource(competitionParticipant.getUser()));
+
+        return serviceSuccess(innovationLeads);
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> addInnovationLead(Long competitionId, Long innovationLeadUserId) {
+
+        return find(competitionRepository.findById(competitionId),
+                    notFoundError(Competition.class, competitionId))
+            .andOnSuccessReturnVoid(competition -> {
+                find(userRepository.findOne(innovationLeadUserId),
+                     notFoundError(User.class, innovationLeadUserId))
+                .andOnSuccess(innovationLead -> {
+                    CompetitionParticipant competitionParticipant = new CompetitionParticipant();
+                    competitionParticipant.setProcess(competition);
+                    competitionParticipant.setUser(innovationLead);
+                    competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
+
+                    competitionParticipantRepository.save(competitionParticipant);
+
+                    return serviceSuccess();
+                });
+            });
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> removeInnovationLead(Long competitionId, Long innovationLeadUserId) {
+
+        return find(competitionParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD),
+                    notFoundError(CompetitionParticipant.class, competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD))
+                .andOnSuccessReturnVoid(competitionParticipant -> competitionParticipantRepository.delete(competitionParticipant));
     }
 
     @Override

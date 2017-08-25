@@ -20,6 +20,16 @@
                       class="notification">Last published</div>
                 <div th:if="${section.isComplete(competition) and !competition.isSetupAndLive()}" class="task-status-complete"><span>Complete</span></div>
             </li>
+            <li>
+                <div class="task">
+                    <h2 class="heading-small">
+                        <th:block th:if="${isInitialComplete}">
+                            <a th:href="@{/competition/setup/{competitionId}/manage-innovation-leads/find(competitionId=${competition.id})}">Stakeholders</a>
+                        </th:block>
+                        <th:block th:unless="${isInitialComplete}">Stakeholders</th:block>
+                    </h2>
+                </div>
+            </li>
         </ul>
         <div th:if="${readyToOpen}" class="extra-margin">
             <p>Once you save, this competition will be ready to open but will not be published.</p>

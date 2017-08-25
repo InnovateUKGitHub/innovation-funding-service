@@ -9,15 +9,22 @@ import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.documentation.CompetitionCountResourceDocs;
 import org.innovateuk.ifs.documentation.CompetitionSearchResultDocs;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionSearchResultItemBuilder.newCompetitionSearchResultItem;
 import static org.innovateuk.ifs.documentation.CompetitionResourceDocs.competitionResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionResourceDocs.competitionResourceFields;
+import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
@@ -26,6 +33,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CompetitionControllerDocumentation extends BaseControllerMockMVCTest<CompetitionController> {
@@ -282,5 +290,65 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
                                 parameterWithName("id").description("id of the competition for the notifications")
                         ))
                 );
+    }
+
+    @Test
+    public void findInnovationLeads() throws Exception {
+        final Long competitionId = 1L;
+
+        List<UserResource> innovationLeads = new ArrayList<>();
+        when(competitionService.findInnovationLeads(competitionId)).thenReturn(serviceSuccess(innovationLeads));
+
+        mockMvc.perform(get("/competition/{id}/innovation-leads", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(innovationLeads)))
+                .andDo(document(
+                        "competition/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("The competition for which innovation leads need to be found")
+                        )
+                ));
+    }
+
+    @Test
+    public void addInnovationLead() throws Exception {
+        final Long competitionId = 1L;
+        final Long innovationLeadUserId = 2L;
+
+        when(competitionService.addInnovationLead(competitionId, innovationLeadUserId )).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competition/{id}/add-innovation-lead/{innovationLeadUserId}", competitionId, innovationLeadUserId))
+                .andExpect(status().isOk())
+                .andDo(document(
+                        "competition/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("The competition for which innovation lead needs to be added"),
+                                parameterWithName("innovationLeadUserId").description("The id of the innovation lead which is being added")
+                        )
+                ));
+
+        verify(competitionService, only()).addInnovationLead(competitionId, innovationLeadUserId);
+
+    }
+
+    @Test
+    public void removeInnovationLead() throws Exception {
+        final Long competitionId = 1L;
+        final Long innovationLeadUserId = 2L;
+
+        when(competitionService.removeInnovationLead(competitionId, innovationLeadUserId )).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competition/{id}/remove-innovation-lead/{innovationLeadUserId}", competitionId, innovationLeadUserId))
+                .andExpect(status().isOk())
+                .andDo(document(
+                        "competition/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("The competition for which innovation lead needs to be deleted"),
+                                parameterWithName("innovationLeadUserId").description("The id of the innovation lead which is being deleted")
+                        )
+                ));
+
+        verify(competitionService, only()).removeInnovationLead(competitionId, innovationLeadUserId);
+
     }
 }

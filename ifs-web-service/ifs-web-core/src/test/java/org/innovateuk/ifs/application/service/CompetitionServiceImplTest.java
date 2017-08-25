@@ -9,6 +9,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.competition.service.AssessorCountOptionsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionsRestService;
 import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -16,6 +17,7 @@ import org.mockito.Mock;
 import java.time.ZonedDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -215,5 +217,36 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         service.releaseFeedback(competitionId);
         verify(competitionsRestService, only()).releaseFeedback(competitionId);
+    }
+
+    @Test
+    public void findInnovationLeads() throws Exception {
+        Long competitionId = 1L;
+        List<UserResource> userResources = Collections.emptyList();
+        when(competitionsRestService.findInnovationLeads(competitionId)).thenReturn(restSuccess(userResources));
+
+        List<UserResource> result = service.findInnovationLeads(competitionId);
+        assertEquals(userResources, result);
+        verify(competitionsRestService, only()).findInnovationLeads(competitionId);
+    }
+
+    @Test
+    public void addInnovationLead() throws Exception {
+        Long competitionId = 1L;
+        Long innovationLeadUserId = 2L;
+        when(competitionsRestService.addInnovationLead(competitionId, innovationLeadUserId)).thenReturn(restSuccess());
+
+        service.addInnovationLead(competitionId, innovationLeadUserId);
+        verify(competitionsRestService, only()).addInnovationLead(competitionId, innovationLeadUserId);
+    }
+
+    @Test
+    public void removeInnovationLead() throws Exception {
+        Long competitionId = 1L;
+        Long innovationLeadUserId = 2L;
+        when(competitionsRestService.removeInnovationLead(competitionId, innovationLeadUserId)).thenReturn(restSuccess());
+
+        service.removeInnovationLead(competitionId, innovationLeadUserId);
+        verify(competitionsRestService, only()).removeInnovationLead(competitionId, innovationLeadUserId);
     }
 }
