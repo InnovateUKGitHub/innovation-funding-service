@@ -11,9 +11,9 @@ function gui_mode_flag() {
 # allow us to better perform side-by-side analysis of performance on different branches
 function test_deviations() {
     if [[ ${include_deviations} -eq 1 ]]; then
-        echo "-Jmicro_pause_deviation=100 -Jshort_pause_deviation=500 -Jnormal_pause_deviation=5000 -Jlong_pause_deviation=10000 -Jlonger_pause_deviation=15000"
+        echo "-Jglobal_pause_deviation=100 -Jmicro_pause_deviation=100 -Jshort_pause_deviation=500 -Jnormal_pause_deviation=5000 -Jlong_pause_deviation=10000 -Jlonger_pause_deviation=15000"
     else
-        echo "-Jmicro_pause_deviation=0 -Jshort_pause_deviation=0 -Jnormal_pause_deviation=0 -Jlong_pause_deviation=0 -Jlonger_pause_deviation=0"
+        echo "-Jglobal_pause_deviation=0 -Jshort_pause_deviation=0 -Jnormal_pause_deviation=0 -Jlong_pause_deviation=0 -Jlonger_pause_deviation=0"
     fi
 }
 

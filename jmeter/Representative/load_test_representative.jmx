@@ -48,6 +48,12 @@
             <stringProp name="Argument.value">${__P(long_pause_deviation)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
+          <elementProp name="global_pause_deviation" elementType="Argument">
+            <stringProp name="Argument.name">global_pause_deviation</stringProp>
+            <stringProp name="Argument.value">${__P(global_pause_deviation)}</stringProp>
+            <stringProp name="Argument.desc">Deviation in the pauses added to every test step globally</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
         </collectionProp>
       </Arguments>
       <hashTree/>
@@ -2353,7 +2359,7 @@ hello world</stringProp>
       <hashTree/>
       <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer" enabled="true">
         <stringProp name="ConstantTimer.delay">1000</stringProp>
-        <stringProp name="RandomTimer.range">${micro_pause_deviation}</stringProp>
+        <stringProp name="RandomTimer.range">${global_pause_deviation}</stringProp>
       </UniformRandomTimer>
       <hashTree/>
       <ResultCollector guiclass="GraphVisualizer" testclass="ResultCollector" testname="Graph Results" enabled="true">
