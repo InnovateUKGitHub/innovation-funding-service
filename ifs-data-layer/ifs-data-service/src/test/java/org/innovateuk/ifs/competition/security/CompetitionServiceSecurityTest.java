@@ -224,6 +224,11 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         }
 
         @Override
+        public ServiceResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId) {
+            return serviceSuccess(newCompetitionResource().build(2));
+        }
+
+        @Override
         public ServiceResult<List<UserResource>> findInnovationLeads(Long competitionId) {
             return null;
         }

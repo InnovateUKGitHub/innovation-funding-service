@@ -57,6 +57,19 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     }
 
     @Test
+    public void getCompetitionsByUserId() {
+        final Long userId = 123L;
+        List<CompetitionResource> returnedResponse = newCompetitionResource().build(2);
+
+        setupGetWithRestResultExpectations(competitionsRestURL + "/getCompetitionsByUserId/" + userId, competitionResourceListType(), returnedResponse);
+
+        List<CompetitionResource> responses = service.getCompetitionsByUserId(userId).getSuccessObject();
+        assertNotNull(responses);
+        assertEquals(returnedResponse, responses);
+    }
+
+
+    @Test
     public void findInnovationLeads() {
 
         List<UserResource> returnedResponse = asList(new UserResource(), new UserResource());

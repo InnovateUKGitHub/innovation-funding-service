@@ -13,6 +13,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -25,6 +26,19 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
     @Override
     protected CompetitionController supplyControllerUnderTest() {
         return new CompetitionController();
+    }
+
+
+    @Test
+    public void getCompetitionsByUserId() throws Exception {
+        final Long userId = 1L;
+
+        when(competitionServiceMock.getCompetitionsByUserId(userId)).thenReturn(serviceSuccess(newCompetitionResource().build(1)));
+
+        mockMvc.perform(get("/competition/getCompetitionsByUserId/{userId}", userId))
+                .andExpect(status().isOk());
+
+        verify(competitionServiceMock, only()).getCompetitionsByUserId(userId);
     }
 
     @Test

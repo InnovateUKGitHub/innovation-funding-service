@@ -206,12 +206,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ProfileRepository profileRepositoryMock;
 
     @Mock
-    protected CompAdminEmailRepository compAdminEmailRepositoryMock;
-
-    @Mock
-    protected ProjectFinanceEmailRepository projectFinanceEmailRepositoryMock;
-
-    @Mock
     protected RoleRepository roleRepositoryMock;
 
     @Mock

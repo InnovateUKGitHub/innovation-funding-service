@@ -31,6 +31,9 @@ public interface CompetitionService {
     ServiceResult<Void> removeInnovationLead(final Long competitionId, final Long innovationLeadUserId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
+    ServiceResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId);
+
+    @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionResource>> findAll();
 
     @PostFilter("hasPermission(filterObject, 'READ')")
