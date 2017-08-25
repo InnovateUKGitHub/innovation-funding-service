@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
@@ -119,7 +120,7 @@ public class AssessorCountSummaryControllerIntegrationTest extends BaseControlle
 
         assessmentRepository.save(assessment);
 
-        AssessorCountSummaryPageResource counts = controller.getAssessorCountSummariesByCompetitionId(competitionId,0,3).getSuccessObject();
+        AssessorCountSummaryPageResource counts = controller.getAssessorCountSummariesByCompetitionId(competitionId, Optional.empty(), Optional.empty(), 0,3).getSuccessObject();
 
         assertEquals(2, counts.getTotalElements());
         assertEquals(0, counts.getNumber());

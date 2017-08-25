@@ -163,7 +163,7 @@ Academic finance overview
 *** Keywords ***
 Custom Suite Setup
     the guest user opens the browser
-    Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionRTO_name}  You will be joining as part of the organisation
+    Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
 
 the academic partner fills the finances
     [Documentation]    INFUND-2399

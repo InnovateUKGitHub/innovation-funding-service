@@ -167,3 +167,9 @@ ${CLOSED_COMPETITION_APPLICATION}   ${application_ids["${CLOSED_COMPETITION_APPL
 ${UPCOMING_COMPETITION_TO_ASSESS_NAME}    Home and industrial efficiency programme
 ${UPCOMING_COMPETITION_TO_ASSESS_ID}  ${competition_ids['${UPCOMING_COMPETITION_TO_ASSESS_NAME}']}
 ${CURRENTLY_WAITING_UNTIL}      false
+
+# Organisation type ids
+${BUSINESS_TYPE_ID}       1
+${ACADEMIC_TYPE_ID}       2
+${RTO_TYPE_ID}            3
+${PUBLIC_SECTOR_TYPE_ID}  4
