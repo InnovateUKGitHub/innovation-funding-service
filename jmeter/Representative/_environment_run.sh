@@ -1,5 +1,3 @@
-set -x
-
 # Run the tests in non-GUI mode when not in development
 function gui_mode_flag() {
     if [[ ${gui_mode} -eq 0 ]]; then
