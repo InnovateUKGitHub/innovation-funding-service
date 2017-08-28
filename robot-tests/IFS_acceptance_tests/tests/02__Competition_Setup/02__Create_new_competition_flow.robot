@@ -483,7 +483,7 @@ Application: Edit again should mark as incomplete
 Ready To Open button is visible when the user re-opens a section
     [Documentation]    INFUND-4468
     [Tags]  Pending
-    # TODO Pending due to INFUND-7643
+    # TODO Pending due to IFS-493
     [Setup]
     Given The user should see the element    jQuery=.button:contains("Save")
     When The user clicks the button/link    link=Initial details
@@ -497,7 +497,7 @@ Ready To Open button is visible when the user re-opens a section
 User should be able to Save the Competition as Open
     [Documentation]    INFUND-4468, INFUND-3002
     [Tags]  Pending
-    # TODO Pending due to INFUND-7643
+    # TODO Pending due to IFS-493
     When the user clicks the button/link   jQuery=.button:contains("Save")
     And the user clicks the button/link    link=All competitions
     And the user navigates to the page     ${CA_UpcomingComp}
