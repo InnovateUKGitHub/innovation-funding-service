@@ -79,15 +79,15 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
     @Test
     public void populate() {
-        ApplicantDashboardViewModel viewModel = populator.populate(loggedInUser);
+        ApplicantDashboardViewModel viewModel = populator.populate(loggedInUser.getId());
 
         assertTrue(viewModel.getApplicationsInProgressNotEmpty());
         assertTrue(viewModel.getApplicationsInFinishedNotEmpty());
         assertTrue(viewModel.getProjectsInSetupNotEmpty());
 
-        assertEquals(2, viewModel.getApplicationsInProgress().size());
+        assertEquals(1, viewModel.getApplicationsInProgress().size());
 
         verify(applicationService, times(1)).getById(APPLICATION_ID_IN_PROJECT);
-        assertEquals("Applications in progress", viewModel.getApplicationInProgressText());
+        assertEquals("Application in progress", viewModel.getApplicationInProgressText());
     }
 }
