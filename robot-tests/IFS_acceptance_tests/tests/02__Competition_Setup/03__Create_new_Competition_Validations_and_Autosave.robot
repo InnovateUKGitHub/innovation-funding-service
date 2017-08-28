@@ -32,9 +32,7 @@ Resource          CompAdmin_Commons.robot
 
 *** Test Cases ***
 Initial details: server-side validations
-    [Documentation]    INFUND-2982
-    ...
-    ...    IFUND-3888
+    [Documentation]  INFUND-2982 IFUND-3888
     [Tags]    HappyPath
     Given the user navigates to the page   ${CA_UpcomingComp}
     And the user clicks the button/link    jQuery=.button:contains("Create competition")
@@ -51,11 +49,8 @@ Initial details: server-side validations
     And the user should see an error    Please select a competition executive.
 
 Initial details: client-side validations
-    [Documentation]    INFUND-2982
-    ...
-    ...    INFUND-3888
-    [Tags]    HappyPath
-    #TODO Remove the comments when the inf-5327 is fixed
+    [Documentation]  INFUND-2982  INFUND-3888
+    [Tags]  HappyPath
     When the user enters text to a text field    id=title    Validations Test
     Then the user should not see the error any more    Please enter a title.
     When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
@@ -79,7 +74,7 @@ Initial details: Autosave
     [Documentation]    INFUND-3001
     [Tags]
     When the user clicks the button/link    link=Competition setup
-    and the user clicks the button/link    link=Initial details
+    And the user clicks the button/link    link=Initial details
     Then the user should see the correct values in the initial details form
 
 Initial details: should not allow dates in the past
@@ -93,11 +88,7 @@ Initial details: should not allow dates in the past
     [Teardown]    #the user enters text to a text field    id=openingDateYear    2017
 
 Initial details: mark as done
-    [Documentation]    INFUND-2982
-    ...
-    ...    INFUND-2983
-    ...
-    ...    INFUND-3888
+    [Documentation]  INFUND-2982 INFUND-2983 INFUND-3888
     [Tags]    HappyPath
     Given The user enters valid data in the initial details
     And the user moves focus and waits for autosave
