@@ -222,7 +222,7 @@ Initial details editable before notify date (Open)
     [Teardown]    the user clicks the button/link    link=Competition setup
 
 Assessors editable before Notifications Date (Open)
-    [Documentation]    INFUND-6695
+    [Documentation]  INFUND-6695 IFS-380
     [Tags]    MySQL    HappyPath
     [Setup]    Connect to Database    @{database}
     Given the user clicks the button/link    link=Assessors
