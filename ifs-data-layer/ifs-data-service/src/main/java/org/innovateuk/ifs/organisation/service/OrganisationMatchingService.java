@@ -1,9 +1,6 @@
 package org.innovateuk.ifs.organisation.service;
 
-import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.resource.AddressTypeEnum;
-import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
-import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -11,6 +8,7 @@ import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,59 +25,28 @@ public class OrganisationMatchingService {
     private OrganisationRepository organisationRepository;
 
     @Autowired
-    private OrganisationAddressMapper organisationAddressMapper;
+    private OrganisationPatternMatcher organisationPatternMatcher;
 
     public Optional<Organisation> findOrganisationMatch(OrganisationResource organisationResource) {
-        List<Organisation> organisations;
-
         if(OrganisationTypeEnum.isResearch(organisationResource.getOrganisationType())) {
-            organisations = findOrganisationMatchByName(organisationResource);
+            return findOrganisationByName(organisationResource).stream()
+                    .filter(foundOrganisation -> organisationPatternMatcher.organisationTypeIsResearch(foundOrganisation))
+                    .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(foundOrganisation, organisationResource, AddressTypeEnum.OPERATING))
+                    .findFirst();
         } else {
-            organisations = findCompaniesHouseIdOrganisationMatch(organisationResource);
+            return findOrganisationByCompaniesHouseId(organisationResource).stream()
+                    .filter(foundOrganisation -> organisationPatternMatcher.organisationTypeMatches(foundOrganisation, organisationResource))
+                    .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(foundOrganisation, organisationResource, AddressTypeEnum.OPERATING))
+                    .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(foundOrganisation, organisationResource, AddressTypeEnum.REGISTERED))
+                    .findFirst();
         }
-
-        return organisations.stream().filter(foundOrganisation -> organisationAddressAndTypeMatch(foundOrganisation, organisationResource)).findFirst();
     }
 
-    private boolean organisationAddressAndTypeMatch(Organisation organisation, OrganisationResource organisationResource) {
-        return organisationOperatingAddressMatches(organisation, organisationResource)
-                && organisationTypeMatches(organisation, organisationResource);
+    private List<Organisation> findOrganisationByName(OrganisationResource organisationResource) {
+        return find(organisationRepository.findByName(organisationResource.getName()), notFoundError(OrganisationResource.class, organisationResource)).getOrElse(Collections.emptyList());
     }
 
-    private boolean organisationOperatingAddressMatches(Organisation organisation, OrganisationResource organisationResource) {
-        Optional<OrganisationAddress> organisationOperatingAddress = organisation.getAddresses().stream()
-                .filter(findAddress -> findAddress.getAddressType().getId().equals(AddressTypeEnum.OPERATING.getOrdinal()))
-                .findFirst();
-        OrganisationAddress submittedOrganisationAddress = organisationAddressMapper.mapToDomain(organisationResource.getAddresses().get(0));
-
-        return organisationOperatingAddress.filter(organisationAddress -> matchAddresses(organisationAddress, submittedOrganisationAddress)).isPresent();
-    }
-
-    private boolean matchAddresses(OrganisationAddress existingOrganisationAddress, OrganisationAddress submittedOrganisationAddress) {
-        Address existingAddress = existingOrganisationAddress.getAddress();
-        Address submittedAddress = submittedOrganisationAddress.getAddress();
-
-        return trimmedLowercaseStringsAreEquals(existingAddress.getAddressLine1(), submittedAddress.getAddressLine1()) &&
-                trimmedLowercaseStringsAreEquals(existingAddress.getAddressLine2(), submittedAddress.getAddressLine2()) &&
-                trimmedLowercaseStringsAreEquals(existingAddress.getAddressLine3(), submittedAddress.getAddressLine3()) &&
-                trimmedLowercaseStringsAreEquals(existingAddress.getTown(), submittedAddress.getTown()) &&
-                trimmedLowercaseStringsAreEquals(existingAddress.getCounty(), submittedAddress.getCounty()) &&
-                trimmedLowercaseStringsAreEquals(existingAddress.getPostcode(), submittedAddress.getPostcode());
-    }
-
-    private boolean trimmedLowercaseStringsAreEquals(String string1, String string2) {
-        return string1.toLowerCase().trim().equals(string2.toLowerCase().trim());
-    }
-
-    private boolean organisationTypeMatches(Organisation organisation, OrganisationResource organisationResource) {
-        return organisation.getOrganisationType().getId().equals(organisationResource.getOrganisationType());
-    }
-
-    private List<Organisation> findOrganisationMatchByName(OrganisationResource organisationResource) {
-        return find(organisationRepository.findByName(organisationResource.getName()), notFoundError(OrganisationResource.class, organisationResource)).getSuccessObject();
-    }
-
-    private List<Organisation> findCompaniesHouseIdOrganisationMatch(OrganisationResource organisationResource) {
-        return find(organisationRepository.findByCompaniesHouseNumber(organisationResource.getCompanyHouseNumber()), notFoundError(OrganisationResource.class, organisationResource)).getSuccessObject();
+    private List<Organisation> findOrganisationByCompaniesHouseId(OrganisationResource organisationResource) {
+        return find(organisationRepository.findByCompanyHouseNumber(organisationResource.getCompanyHouseNumber()), notFoundError(OrganisationResource.class, organisationResource)).getOrElse(Collections.emptyList());
     }
 }
