@@ -2,6 +2,11 @@
 
 <th:block th:fragment="comp-setup-navigation(sections, currentSection, competition, readyToOpen)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:unless="${(param.section != null)}">
+        <div th:if="${setupComplete}" class="extra-margin-bottom">
+            <div class="message-alert">
+                <p>Setup of this competition has now been completed and will automatically open on the date set. If you need to change anything after publication, contact the IFS Content Team.</p>
+            </div>
+        </div>
         <ul class="task-list">
             <li th:each="(section, iteration : ${sections})" th:if="${section.toString() != 'HOME'}">
                 <div class="task">
@@ -32,9 +37,9 @@
             </li>
         </ul>
         <div th:if="${readyToOpen}" class="extra-margin">
-            <p>Once you save, this competition will be ready to open but will not be published.</p>
-            <a th:href="@{/competition/setup/{competitionId}/ready-to-open(competitionId=${competition.id})}"
-               class="button no-margin-right" id="compCTA">Save</a>
+            <p>Once you complete, this competition will be ready to open.</p>
+            <a data-js-modal="complete-modal"
+               class="button no-margin-right" id="compCTA">Complete</a>
         </div>
     </th:block>
 </th:block>
@@ -90,6 +95,21 @@
         <hr />
         <div>
             <button name="send-emails" class="button">Send email to all applicants</button>
+            <button type="button" class="js-close buttonlink">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- ======== Comp admin - complete modal ======= -->
+<div th:fragment="comp-setup-complete-modal">
+    <div class="complete-modal" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <h2 class="heading-medium no-margin">Complete competition setup</h2>
+        <p>Setup of competition has now been completed and will automatically open on the date set. If you need to change anything after publication, contact the IFS Content Team.</p>
+        <hr />
+        <div>
+            <a th:href="@{/competition/setup/{competitionId}/ready-to-open(competitionId=${competition.id})}"
+               class="button">Done</a>
             <button type="button" class="js-close buttonlink">Cancel</button>
         </div>
     </div>
