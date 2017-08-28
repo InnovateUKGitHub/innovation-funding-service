@@ -226,7 +226,9 @@ Assessor: Server-side validation
     Then the user selects the radio button     hasAssessmentPanel  hasAssessmentPanel-0
     And the user selects the radio button      hasInterviewStage  hasInterviewStage-0
     When the user clicks the button/link       jQuery=button:contains("Done")
-    Then the user should see an error          Please enter how much assessors will be paid.
+    Then the user should see a field error     Please enter how much assessors will be paid.
+    And the user should see a field error      Please select an assessment panel option.
+    And the user should see a field error      Please select an interview stage option.
 
 Assessor: Client-side validation
     [Documentation]  INFUND-5641
