@@ -159,7 +159,7 @@ Eligibility is not editable (Open)
     And the user should see the element    jquery=h1:contains("Eligibility")
     Then The user should not see the element    css = input
     And The user should not see the element    jquery=.button:contains("Edit")
-    And The user should not see the element    jquery=.button:contains("Done")
+    And The user should not see the element    jquery=button:contains("Done")
     [Teardown]    The user clicks the button/link    link = Return to setup overview
 
 Public Description is not editable (Open)
@@ -200,7 +200,7 @@ Finances not editable (Open)
     And the user should see the element    jquery=h1:contains("Application finances")
     Then The user should not see the element    css = input
     And The user should not see the element    jquery=.button:contains("Edit")
-    And The user should not see the element    jquery=.button:contains("Done")
+    And The user should not see the element    jquery=button:contains("Done")
     [Teardown]    The user clicks the button/link    link = Return to application questions
 
 Initial details editable before notify date (Open)
@@ -216,7 +216,7 @@ Initial details editable before notify date (Open)
     And the user should see that the element is disabled    id=innovationAreaCategoryId-0
     When the user selects the option from the drop-down menu    Peter Freeman    id=innovationLeadUserId
     And the user selects the option from the drop-down menu    John Doe    id=executiveUserId
-    And the user clicks the button/link    jQuery=.button:contains("Done")
+    And the user clicks the button/link    jQuery=button:contains("Done")
     Then the user should see the element    jQuery=.button:contains("Edit")
     And The user should see the text in the page    Peter Freeman
     And The user should see the text in the page    John Doe
@@ -232,7 +232,7 @@ Assessors editable before Notifications Date (Open)
     When the user clicks the button/link    jQuery=.button:contains("Edit")
     Then the user selects the radio button    assessorCount    5
     And the user should see the element    css=#assessorPay[readonly="readonly"]
-    When the user clicks the button/link    jQuery=.button:contains("Done")
+    When the user clicks the button/link    jQuery=button:contains("Done")
     And the user should see the element    jQuery=dt:contains("How many assessors") + dd:contains("5")
     And the user should see the element    jQuery=.button:contains("Edit")
     [Teardown]    return the database to its previous status
@@ -242,7 +242,7 @@ Initial details not editable after notify date (Open)
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_NOT_EDITABLE_COMP}
     Given the user clicks the button/link    link=Initial details
     Then the user should not see the element    jQuery=.button:contains("Edit")
-    And the user should not see the element    jQuery=.button:contains("Done")
+    And the user should not see the element    jQuery=button:contains("Done")
     [Teardown]    the user clicks the button/link    link=Competition setup
 
 Funding Information not editable after notifications date (Open)
@@ -252,7 +252,7 @@ Funding Information not editable after notifications date (Open)
     And the user should see the element    jquery=h1:contains("Funding information")
     Then The user should not see the element    css = input
     And The user should not see the element    jquery=.button:contains("Edit")
-    And The user should not see the element    jquery=.button:contains("Done")
+    And The user should not see the element    jquery=button:contains("Done")
     [Teardown]    the user clicks the button/link    link=Competition setup
 
 Assessors not editable after Notifications Date (Open)
@@ -260,7 +260,7 @@ Assessors not editable after Notifications Date (Open)
     [Tags]
     When the user clicks the button/link    link=Assessors
     Then the user should not see the element    jQuery=.button:contains("Edit")
-    And the user should not see the element    jQuery=.button:contains("Done")
+    And the user should not see the element    jQuery=button:contains("Done")
 
 *** Keywords ***
 the user can see the open date of the competition belongs to the future
