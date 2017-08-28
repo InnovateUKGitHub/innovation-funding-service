@@ -523,14 +523,14 @@ Assessor: Mark as Done then Edit again
      [Tags]    HappyPath
     When the user selects the checkbox         assessors-62
     Then the user enters text to a text field  id=assessorPay  100
-    When the user clicks the button/link       jQuery=.button:contains("Done")
+    When the user clicks the button/link       jQuery=button:contains("Done")
     Then the user should see the element       jQuery=dt:contains("How many assessors") + dd:contains("5")
     And the user should see the element        jQuery=dt:contains("How much do assessors receive") + dd:contains("100")
     And the user should see the element        jQuery=dt:contains("assessment panel") + dd:contains("No")
     And the user should see the element        jQuery=dt:contains("interview stage") + dd:contains("No")
     When the user clicks the button/link       jQuery=.button:contains("Edit")
     Then the user selects the radio button     hasInterviewStage  hasInterviewStage-0
-    When the user clicks the button/link       jQuery=.button:contains("Done")
+    When the user clicks the button/link       jQuery=button:contains("Done")
     Then the user should see the element       jQuery=dt:contains("interview stage") + dd:contains("Yes")
 
 Assessor: Should have a Green Check
