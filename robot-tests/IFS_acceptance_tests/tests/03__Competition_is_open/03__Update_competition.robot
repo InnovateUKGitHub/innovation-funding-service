@@ -35,9 +35,8 @@ Application details are editable (Ready to Open)
     And the user clicks the button/link    link=${ready_to_open_competition_name}
     And the user clicks the button/link    jQuery=a:contains(and update competition setup)
     And the user clicks the button/link    link=Application
-    And the user should see the element    link=Application details
-    When the user clicks the button/link    link=Application details
-    AND the user should see the element    jQuery=.button:contains("Edit this question")
+    When the user clicks the button/link   link=Application details
+    And the user should see the element    jQuery=.button:contains("Edit this question")
     And the user clicks the button/link    jQuery=.button:contains("Edit this question")
     Then the user is able to change the value of the fields
     [Teardown]    the user clicks the button/link    link=Application
