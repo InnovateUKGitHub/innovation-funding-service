@@ -25,7 +25,7 @@ public class ApplicantController {
     public String dashboard(Model model,
                             UserResource user) {
 
-        model.addAttribute("model", applicantDashboardPopulator.populate(user.getId()));
+        model.addAttribute("model", applicantDashboardPopulator.populate(user));
 
         return "applicant-dashboard";
     }
