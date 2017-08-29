@@ -240,8 +240,10 @@
   <ul class="error-summary-list">
       <li th:each="err : ${#fields.detailedErrors('${__${formName}__.*}')}">
           <th:block th:if="${err.global}" th:text="${err.message}">Non-field specific message</th:block>
-          <th:block th:if="${err.fieldName != null && err.fieldName == ''}" th:text="${err.message}">The error message</th:block>
-          <a th:unless="${#strings.isEmpty(err.fieldName)}" th:href="|#${err.fieldName}|" th:text="${err.message}">The error message</a>
+          <th:block th:unless="${err.global}">
+            <th:block th:if="${err.fieldName != null && err.fieldName == ''}" th:text="${err.message}">The error message</th:block>
+            <a th:unless="${#strings.isEmpty(err.fieldName)}" th:href="|#${err.fieldName}|" th:text="${err.message}">The error message</a>
+          </th:block>
       </li>
   </ul>
 </th:block>

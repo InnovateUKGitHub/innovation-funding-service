@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard'" />
+<head th:with="pageTitle='Competition Management Dashboard'">
+  <th:block th:if="${competitionSetupForm != null}">
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${pageTitle},hasFormErrors=${#fields.hasErrors('${competitionSetupForm.*}')}" />
+  </th:block>
+  <th:block th:unless="${competitionSetupForm != null}">
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${pageTitle}" />
+  </th:block>
 </head>
 <body th:with="context='comp-management'" class="competition-management competition-setup">
 
@@ -13,6 +18,7 @@
 
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='All competitions',linkClass='link-back',linkUrl=@{/dashboard},currentApplication=${currentApplication}" th:if="${currentSection.toString() == 'HOME'}" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition setup',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}/(competitionId=${competition.id})}" th:if="${currentSection.toString() != 'HOME'}" />
+
 
 
     <th:block th:if="${currentSection.toString() == 'HOME'}">

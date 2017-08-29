@@ -641,8 +641,14 @@ IFS.core.formValidation = (function () {
         }
       }
 
-      if (jQuery('.error-summary-list [href="#' + id + '"]:contains(' + message + ')').length === 0) {
-        jQuery('.error-summary-list').append('<li><a href="#' + id + '">' + message + '</a></li>')
+      if (id.length) {
+        if (jQuery('.error-summary-list [href="#' + id + '"]:contains(' + message + ')').length === 0) {
+          jQuery('.error-summary-list').append('<li><a href="#' + id + '">' + message + '</a></li>')
+        }
+      } else {
+        if (jQuery('.error-summary-list li:contains(' + message + ')').length === 0) {
+          jQuery('.error-summary-list').append('<li>' + message + '</li>')
+        }
       }
 
       jQuery('.error-summary:not([data-ignore-errors])').attr('aria-hidden', false)
@@ -707,7 +713,11 @@ IFS.core.formValidation = (function () {
 
       // updating the error summary
       if (errorSummary.length) {
-        errorSummary.find('[href="#' + id + '"]:contains(' + message + ')').parent().remove()
+        if (id.length) {
+          errorSummary.find('[href="#' + id + '"]:contains(' + message + ')').parent().remove()
+        } else {
+          errorSummary.find('li:contains(' + message + ')').remove()
+        }
         if (jQuery('.error-summary-list li:not(.list-header)').length === 0) {
           jQuery('.error-summary:not([data-ignore-errors])').attr('aria-hidden', 'true')
         }
@@ -749,19 +759,26 @@ IFS.core.formValidation = (function () {
     },
     getName: function (el) {
       if (el.is('[data-date]')) {
-        el = el.closest('fieldset').find('input[type="hidden"]')
+        el = el.closest('.date-group,fieldset').find('input[type="hidden"]')
       }
-      if (el.prop('name').length) {
-        return el.prop('name')
+      if (el.attr('name').length) {
+        return el.attr('name')
       }
       return ''
     },
     getIdentifier: function (el) {
-      if (el.is(':radio') || el.is('[data-date]')) {
+      if (el.is(':radio') || el.is(':checkbox')) {
+        // Ifn it is a radio/checkbox group (so more than one)
+        // Then we use the legend as id otherwise just the field id
+        var name = el.attr('name')
+        if (jQuery('[name="' + name + '"]').length > 1) {
+          el = el.closest('fieldset').find('legend')
+        }
+      }
+      if (el.is('[data-date]')) {
         el = el.closest('fieldset').find('legend')
       }
-
-      if (el.attr('id').length) {
+      if (typeof (el.attr('id')) !== 'undefined') {
         return el.attr('id')
       }
       return ''

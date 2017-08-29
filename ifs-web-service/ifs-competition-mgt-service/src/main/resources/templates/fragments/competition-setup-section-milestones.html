@@ -1,12 +1,11 @@
 
 <!-- =================Section: Milestones (4) =========================== -->
 <th:block th:fragment="section-content">
-    <div class="error-summary" th:attr="aria-hidden=${!#fields.hasErrors('${competitionSetupForm.*}')}">
-        <h2 class="heading-medium error-summary-heading">Unable to save section</h2>
-        <ul class="error-summary-list">
-            <li th:each="err : ${#fields.errors('${competitionSetupForm.*}')}" th:text="${err}"></li>
-        </ul>
+    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to save section</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
+
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Milestones',size='heading-xlarge'" />
 
     <div class="panel">
@@ -17,10 +16,7 @@
           th:attrappend="data-autosave=${setupComplete != true}?compSetup"
           th:attr="data-competition=${competition.id}" data-section="milestones"
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
-        <fieldset th:if="${editable}" id="section-4-edit">
-
-
-            <legend class="visuallyhidden">Milestones</legend>
+        <div th:if="${editable}" id="section-4-edit">
 
             <table class="milestones-table">
                 <thead>
@@ -44,14 +40,15 @@
                       <th scope="row" th:id="${'milestone-' + milestoneEntry.key}">
                         <span th:text="${milestoneEntry.value.milestoneType.milestoneDescription}" />
                       </th>
-                      <input type="hidden"
-                             required="required"
-                             th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].milestoneType'"
-                             th:value="${milestoneEntry.key}" />
-                      <input type="hidden"
-                             th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].editable'"
-                             th:value="${milestoneEntry.value.editable}" />
                       <td class="time">
+                        <input type="hidden"
+                               required="required"
+                               th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].milestoneType'"
+                               th:value="${milestoneEntry.key}" />
+                        <input type="hidden"
+                               th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].editable'"
+                               th:value="${milestoneEntry.value.editable}" />
+
                           <select th:if="${milestoneEntry.value.timeOption}"
                                   th:id="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
                                   class="form-control width-large"
@@ -114,7 +111,7 @@
             </table>
             <button class="button extra-margin">Done</button>
 
-        </fieldset>
+        </div>
 
         <th:block th:unless="${editable}">
             <table>
