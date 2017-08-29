@@ -120,7 +120,7 @@ Once Successful and Sent you cannot change your mind
     Then the user should not see the element  jQuery=input[type="checkbox"][value="${FUNDERS_PANEL_APPLICATION_1_NUMBER}"]
     When the user navigates to the page       ${funders_panel_competition_url}/manage-funding-applications
     Then the user should not see the element  jQuery=input[type="checkbox"][value="${FUNDERS_PANEL_APPLICATION_1_NUMBER}"]
-    # TODO Add a check that button is disabled INFUND-9132
+    # TODO Add a check that button is disabled IFS-359
 
 Successful applications are turned into Project
     [Documentation]  INFUND-8624

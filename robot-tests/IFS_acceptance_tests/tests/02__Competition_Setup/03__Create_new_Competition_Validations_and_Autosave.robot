@@ -35,7 +35,7 @@ Initial details: server-side validations
     Given the user navigates to the page   ${CA_UpcomingComp}
     And the user clicks the button/link    jQuery=.button:contains("Create competition")
     And The user clicks the button/link    link=Initial details
-    When the user clicks the button/link   jQuery=.button:contains("Done")
+    When the user clicks the button/link   jQuery=button:contains("Done")
     Then the user should see an error    Please enter a title.
     And the user should see an error    Please select a competition type.
     And the user should see an error    Please select an innovation sector.
@@ -84,7 +84,7 @@ Initial details: should not allow dates in the past
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2015
     And the user moves focus and waits for autosave
-    When the user clicks the button/link    jQuery=.button:contains("Done")
+    When the user clicks the button/link    jQuery=button:contains("Done")
     Then The user should not see the element    jQuery=.button:contains("Edit")
     [Teardown]    #the user enters text to a text field    id=openingDateYear    2017
 
@@ -97,7 +97,7 @@ Initial details: mark as done
     [Tags]    HappyPath
     Given The user enters valid data in the initial details
     And the user moves focus and waits for autosave
-    When the user clicks the button/link    jQuery=.button:contains("Done")
+    When the user clicks the button/link    jQuery=button:contains("Done")
     Then the user should see the element    jQuery=.button:contains("Edit")
 
 Funding information server-side validations
@@ -106,7 +106,7 @@ Funding information server-side validations
     [Setup]    The user navigates to the Validation competition
     Given the user clicks the button/link    link=Funding information
     And the user should see the text in the page    Funding information
-    When the user clicks the button/link    jQuery=.button:contains("Done")
+    When the user clicks the button/link    jQuery=button:contains("Done")
     Then the user should see an error    Please enter a funder name.
     And the user should see an error    Please enter a budget.
     And the user should see an error    Please generate a competition code.
@@ -136,7 +136,7 @@ Eligibility server-side validations
     [Tags]    HappyPath
     [Setup]    The user navigates to the Validation competition
     Given The user clicks the button/link    link=Eligibility
-    When the user clicks the button/link    jQuery=.button:contains("Done")
+    When the user clicks the button/link    jQuery=button:contains("Done")
     Then the user should see the text in the page    Please select at least one research category
     And the user should see the text in the page    Please select a collaboration level
     And the user should see the text in the page    Please select a lead applicant type
@@ -225,7 +225,7 @@ Assessor: Server-side validation
     [Setup]    The user navigates to the Validation competition
     Given the user clicks the button/link    link=Assessors
     And The user enters text to a text field    id=assessorPay    ${EMPTY}
-    When the user clicks the button/link    jQuery=.button:contains("Done")
+    When the user clicks the button/link    jQuery=button:contains("Done")
     Then the user should see an error    Please enter how much assessors will be paid.
 
 Assessor: Client-side validation
@@ -407,7 +407,7 @@ the user should see the correct details in the eligibility form
 The user should not see the error text in the page
     [Arguments]    ${ERROR_TEXT}
     Run Keyword And Ignore Error Without Screenshots    mouse out    css=input
-    Focus    jQuery=.button:contains("Done")
+    Focus    jQuery=button:contains("Done")
     Wait Until Page Does Not Contain Without Screenshots    ${ERROR_TEXT}
 
 the users waits until the page is autosaved
@@ -459,6 +459,6 @@ The user navigates to the Validation competition
 the user should not see the error any more
     [Arguments]    ${ERROR_TEXT}
     Run Keyword And Ignore Error Without Screenshots    mouse out    css=input
-    Focus    jQuery=.button:contains("Done")
+    Focus    jQuery=button:contains("Done")
     Wait for autosave
     Wait Until Element Does Not Contain Without Screenshots    css=.error-message    ${ERROR_TEXT}
