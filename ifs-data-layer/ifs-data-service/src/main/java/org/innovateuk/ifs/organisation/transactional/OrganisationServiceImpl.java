@@ -7,18 +7,15 @@ import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeEnum;
-import org.innovateuk.ifs.address.transactional.AddressService;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.domain.Academic;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.repository.AcademicRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
-import org.innovateuk.ifs.organisation.service.OrganisationMatchingService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.repository.OrganisationTypeRepository;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -48,15 +45,9 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     @Autowired
     private AcademicRepository academicRepository;
     @Autowired
-    private OrganisationTypeRepository organisationTypeRepository;
-    @Autowired
     private OrganisationMapper organisationMapper;
     @Autowired
     private AddressMapper addressMapper;
-    @Autowired
-    private OrganisationMatchingService organisationMatchingService;
-    @Autowired
-    private AddressService addressService;
 
     @Override
     public ServiceResult<Set<OrganisationResource>> findByApplicationId(final Long applicationId) {
@@ -95,15 +86,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     @Override
     @Transactional
     public ServiceResult<OrganisationResource> update(final OrganisationResource organisationResource) {
-        Optional<Organisation> existingOrg = organisationMatchingService.findOrganisationMatch(organisationResource);
-
-        if(existingOrg.isPresent()) {
-            return serviceSuccess(organisationMapper.mapToResource(existingOrg.get()));
-        }
-        else {
-            Organisation createdOrganisation = createNewOrganisation(organisationResource);
-            return serviceSuccess(organisationMapper.mapToResource(createdOrganisation));
-        }
+        return serviceSuccess(organisationMapper.mapToResource(createNewOrganisation(organisationResource)));
     }
 
     private Organisation createNewOrganisation(OrganisationResource organisationResource) {
@@ -136,7 +119,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     public ServiceResult<OrganisationResource> addAddress(final Long organisationId, final AddressTypeEnum addressTypeEnum, AddressResource addressResource) {
         return find(organisation(organisationId)).andOnSuccessReturn(organisation -> {
             Address address = addressMapper.mapToDomain(addressResource);
-            AddressType addressType = addressTypeRepository.findOne((long) addressTypeEnum.getOrdinal());
+            AddressType addressType = addressTypeRepository.findOne(addressTypeEnum.getOrdinal());
             organisation.addAddress(address, addressType);
             Organisation updatedOrganisation = organisationRepository.save(organisation);
             return organisationMapper.mapToResource(updatedOrganisation);

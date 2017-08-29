@@ -78,7 +78,7 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
                         responseFields(organisationResourceFields)
                 ));
     }
-
+/*
     @Test
     public void create() throws Exception {
         OrganisationResource organisationResource = organisationResourceBuilder.build();
@@ -110,7 +110,7 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
                         responseFields(organisationResourceFields)
                 ));
     }
-
+*/
     @Test
     public void updateNameAndRegistration() throws Exception {
         long organisationId = 1L;

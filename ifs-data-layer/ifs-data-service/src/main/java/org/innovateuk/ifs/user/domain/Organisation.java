@@ -36,7 +36,7 @@ public class Organisation {
 
     @OneToMany(mappedBy = "organisation",
             cascade = CascadeType.ALL)
-    private List<OrganisationAddress> addresses = new ArrayList<>();
+    private List<OrganisationAddress> addresses;
 
     @OneToMany(mappedBy="organisation")
     private List<InviteOrganisation> inviteOrganisations = new ArrayList<>();

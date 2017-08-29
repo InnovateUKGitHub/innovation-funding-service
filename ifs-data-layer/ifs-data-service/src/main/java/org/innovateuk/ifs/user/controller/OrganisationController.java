@@ -1,14 +1,16 @@
 package org.innovateuk.ifs.user.controller;
 
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.address.resource.AddressTypeEnum;
+import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.organisation.transactional.OrganisationInitialCreationService;
+import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -23,6 +25,9 @@ public class OrganisationController {
     @Autowired
     private OrganisationService organisationService;
 
+    @Autowired
+    private OrganisationInitialCreationService organisationCreationService;
+
     @GetMapping("/findByApplicationId/{applicationId}")
     public RestResult<Set<OrganisationResource>> findByApplicationId(@PathVariable("applicationId") final Long applicationId) {
         return organisationService.findByApplicationId(applicationId).toGetResponse();
@@ -36,6 +41,17 @@ public class OrganisationController {
     @GetMapping("/getPrimaryForUser/{userId}")
     public RestResult<OrganisationResource> getPrimaryForUser(@PathVariable("userId") final Long userId) {
         return organisationService.getPrimaryForUser(userId).toGetResponse();
+    }
+
+    @PostMapping("/createOrMatch")
+    public RestResult<OrganisationResource> createOrMatch(@RequestBody OrganisationResource organisation) {
+        return organisationCreationService.createOrMatch(organisation).toPostCreateResponse();
+    }
+
+    @PostMapping("/createAndLinkByInvite")
+    public RestResult<OrganisationResource> createAndLinkByInvite(@RequestBody OrganisationResource organisation,
+                                                          @RequestParam("inviteHash") String inviteHash) {
+        return organisationCreationService.createAndLinkByInvite(organisation, inviteHash).toPostCreateResponse();
     }
 
     @PostMapping("/create")

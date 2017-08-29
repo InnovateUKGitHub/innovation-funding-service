@@ -11,7 +11,6 @@ import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,12 +22,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.address.resource.AddressTypeEnum.OPERATING;
 import static org.innovateuk.ifs.address.resource.AddressTypeEnum.REGISTERED;
-import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 
 /**
  * Provides methods for confirming and saving the organisation as an intermediate step in the registration flow.
@@ -69,61 +68,38 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         OrganisationSearchResult selectedOrganisation = addSelectedOrganisation(organisationForm, model);
         AddressResource address = organisationForm.getAddressForm().getSelectedPostcode();
 
-        OrganisationAddressResource organisationAddressResource = new OrganisationAddressResource();
+        List<OrganisationAddressResource> organisationAddressResources = new ArrayList<>();
 
 
         if (address != null && !organisationForm.isUseSearchResultAddress()) {
-            organisationAddressResource.setAddress(address);
-            organisationAddressResource.setAddressType(new AddressTypeResource(OPERATING.getOrdinal(), OPERATING.name()));
+            organisationAddressResources.add(new OrganisationAddressResource(address, new AddressTypeResource(OPERATING.getOrdinal(), OPERATING.name())));
+
         }
         if (selectedOrganisation != null && selectedOrganisation.getOrganisationAddress() != null) {
-            organisationAddressResource.setAddress(selectedOrganisation.getOrganisationAddress());
-            organisationAddressResource.setAddressType(new AddressTypeResource(REGISTERED.getOrdinal(), REGISTERED.name()));
+            organisationAddressResources.add(new OrganisationAddressResource(selectedOrganisation.getOrganisationAddress(), new AddressTypeResource(REGISTERED.getOrdinal(), REGISTERED.name())));
         }
 
         OrganisationResource organisationResource = new OrganisationResource();
         organisationResource.setName(organisationForm.getOrganisationName());
         organisationResource.setOrganisationType(organisationForm.getOrganisationTypeId());
-        organisationResource.setAddresses(Arrays.asList(organisationAddressResource));
+        organisationResource.setAddresses(organisationAddressResources);
 
         if (!OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationTypeId())) {
             organisationResource.setCompanyHouseNumber(organisationForm.getSearchOrganisationId());
         }
 
-        organisationResource = saveNewOrganisation(organisationResource, request);
+        organisationResource = createOrRetrieveOrganisation(organisationResource, request);
         registrationCookieService.saveToOrganisationIdCookie(organisationResource.getId(), response);
         
         return "redirect:" + RegistrationController.BASE_URL;
     }
 
-    private OrganisationResource saveNewOrganisation(OrganisationResource organisationResource, HttpServletRequest request) {
-        organisationResource = organisationService.saveForAnonymousUserFlow(organisationResource);
-        linkOrganisationToInvite(organisationResource, request);
-        return organisationResource;
-    }
-
-    /**
-     * If current user is a invitee, then link the organisation that is created, to the InviteOrganisation.
-     */
-    private void linkOrganisationToInvite(OrganisationResource organisationResource, HttpServletRequest request) {
+    private OrganisationResource createOrRetrieveOrganisation(OrganisationResource organisationResource, HttpServletRequest request) {
         Optional<String> cookieHash = registrationCookieService.getInviteHashCookieValue(request);
-        if (cookieHash.isPresent()) {
-            final OrganisationResource finalOrganisationResource = organisationResource;
-
-            inviteRestService.getInviteByHash(cookieHash.get()).andOnSuccess(
-                    s ->
-                            inviteOrganisationRestService.getByIdForAnonymousUserFlow(s.getInviteOrganisation()).handleSuccessOrFailure(
-                                    f -> restFailure(HttpStatus.NOT_FOUND),
-                                    inviteOrganisation -> {
-                                        if (inviteOrganisation.getOrganisation() == null) {
-                                            inviteOrganisation.setOrganisation(finalOrganisationResource.getId());
-                                            // Save the created organisation Id, so the next invitee does not have to..
-                                            return inviteOrganisationRestService.put(inviteOrganisation);
-                                        }
-                                        return restFailure(HttpStatus.ALREADY_REPORTED);
-                                    }
-                            )
-            );
+        if(cookieHash.isPresent()) {
+            return organisationService.createAndLinkByInvite(organisationResource, cookieHash.get());
         }
+
+        return organisationService.createOrMatch(organisationResource);
     }
 }

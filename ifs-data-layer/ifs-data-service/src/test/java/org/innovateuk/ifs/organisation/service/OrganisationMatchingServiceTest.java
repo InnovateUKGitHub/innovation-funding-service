@@ -34,11 +34,11 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
         return new OrganisationMatchingService();
     }
 
-    String academicName;
-    Organisation matchingResearchOrganisation;
-    OrganisationResource submittedResearchOrganisation;
+    private String academicName;
+    private Organisation matchingResearchOrganisation;
+    private OrganisationResource submittedResearchOrganisation;
 
-    String companiesHouseNumber;
+    private String companiesHouseNumber;
     Organisation matchingBusinessOrganisation;
     OrganisationResource submittedBusinessOrganisation;
 
@@ -65,15 +65,15 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
     public void findOrganisationMatch_academicOrganisationShouldMatchByAddressAndNameAndCallsPatternMatchers() throws Exception {
         when(organisationRepositoryMock.findByName(eq(academicName))).thenReturn(Arrays.asList(matchingResearchOrganisation));
         when(organisationPatternMatcher.organisationTypeIsResearch(any())).thenReturn(true);
-        when(organisationPatternMatcher.organisationAddressMatches(any(), any(), any())).thenReturn(true);
+        when(organisationPatternMatcher.organisationAddressMatches(any(), any(), any(), anyBoolean())).thenReturn(true);
 
         Optional<Organisation> result = service.findOrganisationMatch(submittedResearchOrganisation);
 
         assertTrue(result.isPresent());
 
         verify(organisationPatternMatcher, times(0)).organisationTypeMatches(any(), any());
-        verify(organisationPatternMatcher, times(0)).organisationAddressMatches(any(), any(), eq(AddressTypeEnum.REGISTERED));
-        verify(organisationPatternMatcher, times(1)).organisationAddressMatches(any(), any(), eq(AddressTypeEnum.OPERATING));
+        verify(organisationPatternMatcher, times(0)).organisationAddressMatches(any(), any(), eq(AddressTypeEnum.REGISTERED), anyBoolean());
+        verify(organisationPatternMatcher, times(1)).organisationAddressMatches(any(), any(), eq(AddressTypeEnum.OPERATING), anyBoolean());
         verify(organisationPatternMatcher, times(1)).organisationTypeIsResearch(any());
     }
 
@@ -81,7 +81,7 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
     public void findOrganisationMatch_academicOrganisationShouldNotMatchWhenAddressDiffers() throws Exception {
         when(organisationRepositoryMock.findByName(eq(academicName))).thenReturn(Arrays.asList(matchingResearchOrganisation));
         when(organisationPatternMatcher.organisationTypeIsResearch(any())).thenReturn(true);
-        when(organisationPatternMatcher.organisationAddressMatches(any(), any(), any())).thenReturn(false);
+        when(organisationPatternMatcher.organisationAddressMatches(any(), any(), any(), anyBoolean())).thenReturn(false);
 
         Optional<Organisation> result = service.findOrganisationMatch(submittedResearchOrganisation);
 
@@ -92,7 +92,7 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
     public void findOrganisationMatch_academicOrganisationShouldNotMatchWhenTypeIsNotResearch() throws Exception {
         when(organisationRepositoryMock.findByName(eq(academicName))).thenReturn(Arrays.asList(matchingResearchOrganisation));
         when(organisationPatternMatcher.organisationTypeIsResearch(any())).thenReturn(false);
-        when(organisationPatternMatcher.organisationAddressMatches(any(), any(), any())).thenReturn(true);
+        when(organisationPatternMatcher.organisationAddressMatches(any(), any(), any(), anyBoolean())).thenReturn(true);
 
         Optional<Organisation> result = service.findOrganisationMatch(submittedResearchOrganisation);
 
@@ -103,7 +103,7 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
     public void findOrganisationMatch_academicOrganisationShouldNotMatchWhenBothTypeAndAddressDiffers() throws Exception {
         when(organisationRepositoryMock.findByName(eq(academicName))).thenReturn(Arrays.asList(matchingResearchOrganisation));
         when(organisationPatternMatcher.organisationTypeIsResearch(any())).thenReturn(false);
-        when(organisationPatternMatcher.organisationAddressMatches(any(), any(), any())).thenReturn(false);
+        when(organisationPatternMatcher.organisationAddressMatches(any(), any(), any(), anyBoolean())).thenReturn(false);
 
         Optional<Organisation> result = service.findOrganisationMatch(submittedResearchOrganisation);
 
@@ -114,7 +114,7 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
     public void findOrganisationMatch_academicOrganisationShouldWhenNoOrganisationWithNameIsFound() throws Exception {
         when(organisationRepositoryMock.findByName(eq(academicName))).thenReturn(Collections.emptyList());
         when(organisationPatternMatcher.organisationTypeIsResearch(any())).thenReturn(true);
-        when(organisationPatternMatcher.organisationAddressMatches(any(), any(), any())).thenReturn(true);
+        when(organisationPatternMatcher.organisationAddressMatches(any(), any(), any(), anyBoolean())).thenReturn(true);
 
         Optional<Organisation> result = service.findOrganisationMatch(submittedResearchOrganisation);
 
@@ -124,7 +124,7 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
     @Test
     public void findOrganisationMatch_companiesHouseOrganisationShouldMatchWhenCompaniesHouseNumberAndTypeAndAddressesMatchAndCallsPatternMatchers() throws Exception {
         when(organisationRepositoryMock.findByCompanyHouseNumber(eq(companiesHouseNumber))).thenReturn(Arrays.asList(matchingBusinessOrganisation));
-        when(organisationPatternMatcher.organisationAddressMatches(any(), any(), any())).thenReturn(true);
+        when(organisationPatternMatcher.organisationAddressMatches(any(), any(), any(), anyBoolean())).thenReturn(true);
         when(organisationPatternMatcher.organisationTypeMatches(any(), any())).thenReturn(true);
 
         Optional<Organisation> result = service.findOrganisationMatch(submittedBusinessOrganisation);
@@ -132,15 +132,15 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
         assertTrue(result.isPresent());
 
         verify(organisationPatternMatcher, times(1)).organisationTypeMatches(any(), any());
-        verify(organisationPatternMatcher, times(1)).organisationAddressMatches(any(), any(), eq(AddressTypeEnum.REGISTERED));
-        verify(organisationPatternMatcher, times(1)).organisationAddressMatches(any(), any(), eq(AddressTypeEnum.OPERATING));
+        verify(organisationPatternMatcher, times(1)).organisationAddressMatches(any(), any(), eq(AddressTypeEnum.REGISTERED), anyBoolean());
+        verify(organisationPatternMatcher, times(1)).organisationAddressMatches(any(), any(), eq(AddressTypeEnum.OPERATING), anyBoolean());
         verify(organisationPatternMatcher, times(0)).organisationTypeIsResearch(any());
     }
 
     @Test
     public void findOrganisationMatch_companiesHouseOrganisationShouldNotMatchWhenOrganisationTypeDiffers() throws Exception {
         when(organisationRepositoryMock.findByCompanyHouseNumber(eq(companiesHouseNumber))).thenReturn(Arrays.asList(matchingBusinessOrganisation));
-        when(organisationPatternMatcher.organisationAddressMatches(any(), any(), any())).thenReturn(true);
+        when(organisationPatternMatcher.organisationAddressMatches(any(), any(), any(), anyBoolean())).thenReturn(true);
         when(organisationPatternMatcher.organisationTypeMatches(any(), any())).thenReturn(false);
 
         Optional<Organisation> result = service.findOrganisationMatch(submittedBusinessOrganisation);
@@ -151,8 +151,8 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
     @Test
     public void findOrganisationMatch_companiesHouseOrganisationShouldNotMatchWhenOperatingAddressDiffers() throws Exception {
         when(organisationRepositoryMock.findByCompanyHouseNumber(eq(companiesHouseNumber))).thenReturn(Arrays.asList(matchingBusinessOrganisation));
-        when(organisationPatternMatcher.organisationAddressMatches(any(), any(), eq(AddressTypeEnum.OPERATING))).thenReturn(true);
-        when(organisationPatternMatcher.organisationAddressMatches(any(), any(), eq(AddressTypeEnum.REGISTERED))).thenReturn(false);
+        when(organisationPatternMatcher.organisationAddressMatches(any(), any(), eq(AddressTypeEnum.OPERATING), anyBoolean())).thenReturn(true);
+        when(organisationPatternMatcher.organisationAddressMatches(any(), any(), eq(AddressTypeEnum.REGISTERED), anyBoolean())).thenReturn(false);
         when(organisationPatternMatcher.organisationTypeMatches(any(), any())).thenReturn(false);
 
         Optional<Organisation> result = service.findOrganisationMatch(submittedBusinessOrganisation);
@@ -163,8 +163,8 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
     @Test
     public void findOrganisationMatch_companiesHouseOrganisationShouldNotMatchWhenRegisteredAddressDiffers() throws Exception {
         when(organisationRepositoryMock.findByCompanyHouseNumber(eq(companiesHouseNumber))).thenReturn(Arrays.asList(matchingBusinessOrganisation));
-        when(organisationPatternMatcher.organisationAddressMatches(any(), any(), eq(AddressTypeEnum.OPERATING))).thenReturn(true);
-        when(organisationPatternMatcher.organisationAddressMatches(any(), any(), eq(AddressTypeEnum.REGISTERED))).thenReturn(false);
+        when(organisationPatternMatcher.organisationAddressMatches(any(), any(), eq(AddressTypeEnum.OPERATING), anyBoolean())).thenReturn(true);
+        when(organisationPatternMatcher.organisationAddressMatches(any(), any(), eq(AddressTypeEnum.REGISTERED), anyBoolean())).thenReturn(false);
         when(organisationPatternMatcher.organisationTypeMatches(any(), any())).thenReturn(false);
 
         Optional<Organisation> result = service.findOrganisationMatch(submittedBusinessOrganisation);
@@ -175,8 +175,8 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
     @Test
     public void findOrganisationMatch_companiesHouseOrganisationShouldNotMatchNoMatchingOrganisationIsFound() throws Exception {
         when(organisationRepositoryMock.findByCompanyHouseNumber(eq(companiesHouseNumber))).thenReturn(Collections.emptyList());
-        when(organisationPatternMatcher.organisationAddressMatches(any(), any(), eq(AddressTypeEnum.OPERATING))).thenReturn(true);
-        when(organisationPatternMatcher.organisationAddressMatches(any(), any(), eq(AddressTypeEnum.REGISTERED))).thenReturn(true);
+        when(organisationPatternMatcher.organisationAddressMatches(any(), any(), eq(AddressTypeEnum.OPERATING), anyBoolean())).thenReturn(true);
+        when(organisationPatternMatcher.organisationAddressMatches(any(), any(), eq(AddressTypeEnum.REGISTERED), anyBoolean())).thenReturn(true);
         when(organisationPatternMatcher.organisationTypeMatches(any(), any())).thenReturn(true);
 
         Optional<Organisation> result = service.findOrganisationMatch(submittedBusinessOrganisation);

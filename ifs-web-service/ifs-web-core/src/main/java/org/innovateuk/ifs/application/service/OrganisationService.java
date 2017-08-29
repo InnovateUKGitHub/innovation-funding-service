@@ -26,6 +26,10 @@ public interface OrganisationService {
 
     OrganisationResource save(OrganisationResource organisation);
 
+    OrganisationResource createOrMatch(OrganisationResource organisation);
+
+    OrganisationResource createAndLinkByInvite(OrganisationResource organisation, String inviteHash);
+
     OrganisationResource updateNameAndRegistration(OrganisationResource organisation);
 
     OrganisationSearchResult getCompanyHouseOrganisation(String organisationId);

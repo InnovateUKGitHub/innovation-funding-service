@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.user.service;
 
-import org.innovateuk.ifs.address.resource.AddressTypeEnum;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.address.resource.AddressTypeEnum;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriUtils;
 
@@ -44,6 +44,16 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
     @Override
     public RestResult<OrganisationResource> getOrganisationByUserId(Long userId) {
         return getWithRestResult(organisationRestURL + "/getPrimaryForUser/" + userId, OrganisationResource.class);
+    }
+
+    @Override
+    public RestResult<OrganisationResource> createOrMatch(OrganisationResource organisation) {
+        return postWithRestResultAnonymous(organisationRestURL + "/createOrMatch", organisation, OrganisationResource.class);
+    }
+
+    @Override
+    public RestResult<OrganisationResource> createAndLinkByInvite(OrganisationResource organisation, String inviteHash) {
+        return postWithRestResultAnonymous(organisationRestURL + "/createAndLinkByInvite?name=" + inviteHash, organisation, OrganisationResource.class);
     }
 
     @Override

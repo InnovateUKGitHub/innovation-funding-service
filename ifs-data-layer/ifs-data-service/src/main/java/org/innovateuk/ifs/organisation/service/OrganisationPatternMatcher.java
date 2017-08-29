@@ -17,12 +17,14 @@ import java.util.Optional;
  */
 @Service
 public class OrganisationPatternMatcher {
-    public boolean organisationAddressMatches(Organisation organisation, OrganisationResource organisationResource, AddressTypeEnum addressType) {
+    public boolean organisationAddressMatches(Organisation organisation, OrganisationResource organisationResource, AddressTypeEnum addressType, boolean required) {
         Optional<OrganisationAddress> organisationOperatingAddress = getOrganisationAddressByType(organisation, addressType);
         Optional<OrganisationAddressResource> submittedOrganisationAddress = getOrganisationResourceAddressByType(organisationResource, addressType);
 
         if(organisationOperatingAddress.isPresent() && submittedOrganisationAddress.isPresent()) {
             return addressesMatch(organisationOperatingAddress.get(), submittedOrganisationAddress.get());
+        } else if(!organisationOperatingAddress.isPresent() && !submittedOrganisationAddress.isPresent() && !required) {
+            return true;
         }
 
         return false;
@@ -59,18 +61,34 @@ public class OrganisationPatternMatcher {
     }
 
     private boolean stringsAreEqualWhenTrimmedAndLowercase(String string1, String string2) {
-        return string1.trim().equalsIgnoreCase(string2.trim());
+        if(string1 == null && string2 == null) {
+            return true;
+        }
+
+        try {
+            return string1.trim().equalsIgnoreCase(string2.trim());
+        } catch(Exception e) {
+            return false;
+        }
     }
 
     private Optional<OrganisationAddress> getOrganisationAddressByType(Organisation organisation, AddressTypeEnum addressType) {
-        return organisation.getAddresses().stream()
-                .filter(findAddress -> findAddress.getAddressType().getId().equals(addressType.getOrdinal()))
-                .findFirst();
+        try {
+            return organisation.getAddresses().stream()
+                    .filter(findAddress -> findAddress.getAddressType().getId().equals(addressType.getOrdinal()))
+                    .findFirst();
+        } catch(Exception e) {
+            return Optional.empty();
+        }
     }
 
     private Optional<OrganisationAddressResource> getOrganisationResourceAddressByType(OrganisationResource organisationResource, AddressTypeEnum addressType) {
-        return organisationResource.getAddresses().stream()
+        try {
+            return organisationResource.getAddresses().stream()
                 .filter(findAddress -> findAddress.getAddressType().getId().equals(addressType.getOrdinal()))
                 .findFirst();
+        } catch(Exception e) {
+            return Optional.empty();
+        }
     }
 }

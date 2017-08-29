@@ -63,6 +63,16 @@ public class OrganisationServiceImpl implements OrganisationService {
     }
 
     @Override
+    public OrganisationResource createOrMatch(OrganisationResource organisation) {
+        return organisationRestService.createOrMatch(organisation).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public OrganisationResource createAndLinkByInvite(OrganisationResource organisation, String inviteHash) {
+        return organisationRestService.createAndLinkByInvite(organisation, inviteHash).getSuccessObjectOrThrowException();
+    }
+
+    @Override
     public OrganisationResource save(OrganisationResource organisation) {
         return organisationRestService.update(organisation).getSuccessObjectOrThrowException();
     }

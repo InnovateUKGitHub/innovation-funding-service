@@ -16,7 +16,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
- * Determines if a registering user has to become part of an already existing organisation Companies House or Je-s organisations by specific organisation details.
+ * Determines if a registering user has to become part of an already existing organisation Companies House or Je-s organisations on the basis of specific organisation details.
  */
 @Service
 public class OrganisationMatchingService {
@@ -31,13 +31,13 @@ public class OrganisationMatchingService {
         if(OrganisationTypeEnum.isResearch(organisationResource.getOrganisationType())) {
             return findOrganisationByName(organisationResource).stream()
                     .filter(foundOrganisation -> organisationPatternMatcher.organisationTypeIsResearch(foundOrganisation))
-                    .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(foundOrganisation, organisationResource, AddressTypeEnum.OPERATING))
+                    .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(foundOrganisation, organisationResource, AddressTypeEnum.OPERATING, true))
                     .findFirst();
         } else {
             return findOrganisationByCompaniesHouseId(organisationResource).stream()
                     .filter(foundOrganisation -> organisationPatternMatcher.organisationTypeMatches(foundOrganisation, organisationResource))
-                    .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(foundOrganisation, organisationResource, AddressTypeEnum.OPERATING))
-                    .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(foundOrganisation, organisationResource, AddressTypeEnum.REGISTERED))
+                    .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(foundOrganisation, organisationResource, AddressTypeEnum.OPERATING, false))
+                    .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(foundOrganisation, organisationResource, AddressTypeEnum.REGISTERED, true))
                     .findFirst();
         }
     }
