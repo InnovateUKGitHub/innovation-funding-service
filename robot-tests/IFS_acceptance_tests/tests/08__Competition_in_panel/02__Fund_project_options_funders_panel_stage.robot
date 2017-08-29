@@ -58,9 +58,9 @@ Proj Finance user can send Fund Decision notification
     When the user clicks the button/link     jQuery=summary:contains("Review list of recipients")[aria-expanded="false"]
     Then the user should see the element     jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
     And the user should not see the element  jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_2_TITLE}")
-    When the user clicks the button/link     jQuery=button:contains("Send email to all applicants")
+    When the user clicks the button/link     jQuery=button[data-js-modal="send-to-all-applicants-modal"]
     When the user clicks the button/link     jQuery=.send-to-all-applicants-modal button:contains("Send email to all applicants")
-    Then the server side validation should be triggered
+    Then the user should see a field and summary error  Please enter the email message.
     When the user cancels the process needs to re-select the reciepients
     And the user enters text to a text field   css=.editor  ${onHoldMessage}
     And the user clicks the button/link        jQuery=button:contains("Send email to all applicants")
@@ -120,7 +120,7 @@ Once Successful and Sent you cannot change your mind
     Then the user should not see the element  jQuery=input[type="checkbox"][value="${FUNDERS_PANEL_APPLICATION_1_NUMBER}"]
     When the user navigates to the page       ${funders_panel_competition_url}/manage-funding-applications
     Then the user should not see the element  jQuery=input[type="checkbox"][value="${FUNDERS_PANEL_APPLICATION_1_NUMBER}"]
-    # TODO Add a check that button is disabled INFUND-9132
+    # TODO Add a check that button is disabled IFS-359
 
 Successful applications are turned into Project
     [Documentation]  INFUND-8624
@@ -159,10 +159,6 @@ the user sets the funding decision of application
     [Arguments]    ${checkbox}    ${decision_button}
     the user selects the checkbox    ${checkbox}
     the user clicks the button/link    jQuery=button:contains("${decision_button}")
-
-the server side validation should be triggered
-    the user should see the element  jQuery=.error-message:contains("Please enter the email message.")
-    the user should see the element  jQuery=.error-summary-list:contains("Please enter the email message.")
 
 the user cancels the process needs to re-select the reciepients
     the user clicks the button/link  jQuery=a:contains("Cancel")

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,9 +35,34 @@ public class CompetitionController {
         return competitionService.getCompetitionById(id).toGetResponse();
     }
 
+    @GetMapping("/{id}/innovation-leads")
+    public RestResult<List<UserResource>> findInnovationLeads(@PathVariable("id") final Long competitionId) {
+
+        return competitionService.findInnovationLeads(competitionId).toGetResponse();
+    }
+
+    @PostMapping("/{id}/add-innovation-lead/{innovationLeadUserId}")
+    public RestResult<Void> addInnovationLead(@PathVariable("id") final Long competitionId,
+                                              @PathVariable("innovationLeadUserId") final Long innovationLeadUserId) {
+
+        return competitionService.addInnovationLead(competitionId, innovationLeadUserId).toPostResponse();
+    }
+
+    @PostMapping("/{id}/remove-innovation-lead/{innovationLeadUserId}")
+    public RestResult<Void> removeInnovationLead(@PathVariable("id") final Long competitionId,
+                                                 @PathVariable("innovationLeadUserId") final Long innovationLeadUserId) {
+
+        return competitionService.removeInnovationLead(competitionId, innovationLeadUserId).toPostResponse();
+    }
+
     @GetMapping("/{id}/getOrganisationTypes")
     public RestResult<List<OrganisationTypeResource>> getOrganisationTypes(@PathVariable("id") final Long id) {
         return competitionService.getCompetitionOrganisationTypes(id).toGetResponse();
+    }
+
+    @GetMapping("/getCompetitionsByUserId/{userId}")
+    public RestResult<List<CompetitionResource>> getCompetitionsByUserId(@PathVariable("userId") final Long userId) {
+        return competitionService.getCompetitionsByUserId(userId).toGetResponse();
     }
 
     @GetMapping("/findAll")

@@ -40,7 +40,8 @@ public abstract class CompetitionParticipantMapper extends BaseMapper<Competitio
     public abstract CompetitionParticipantResource mapToResource(CompetitionParticipant domain);
 
     @Mappings({
-            @Mapping(source = "userId", target = "user")
+            @Mapping(source = "userId", target = "user"),
+            @Mapping(source = "competitionId", target = "process")
     })
     @Override
     public abstract CompetitionParticipant mapToDomain(CompetitionParticipantResource resource);
