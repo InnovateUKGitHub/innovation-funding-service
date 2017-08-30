@@ -588,6 +588,8 @@ public class CompetitionResource {
                 .append(assessorPay, that.assessorPay)
                 .append(sectionSetupStatus, that.sectionSetupStatus)
                 .append(activityCode, that.activityCode)
+                .append(hasAssessmentPanel, that.hasAssessmentPanel)
+                .append(hasInterviewStage, that.hasInterviewStage)
                 .append(nonIfsUrl, that.nonIfsUrl)
                 .isEquals();
     }
@@ -636,6 +638,8 @@ public class CompetitionResource {
                 .append(activityCode)
                 .append(setupComplete)
                 .append(useResubmissionQuestion)
+                .append(hasAssessmentPanel)
+                .append(hasInterviewStage)
                 .append(nonIfs)
                 .append(nonIfsUrl)
                 .toHashCode();
