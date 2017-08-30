@@ -90,7 +90,7 @@ Valid login as Comp Admin
 
 Valid login as Support role
     [Documentation]    IFS-188
-    [Tags]     HappyPath    support
+    [Tags]  HappyPath  Support
     Given the user is not logged-in
     When Logging in and Error Checking                        &{support_user_credentials}
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
@@ -98,7 +98,7 @@ Valid login as Support role
 
 Valid login as IFS Admin role
     [Documentation]    IFS-603
-    [Tags]      HappyPath    administrator
+    [Tags]  HappyPath  Administrator
     Given the user is not logged-in
     When Logging in and Error Checking      &{ifs_admin_user_credentials}
     And the user navigates to the page      ${COMP_ADMINISTRATOR_DASHBOARD}
