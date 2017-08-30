@@ -26,7 +26,7 @@ public class CompetitionInFlightViewModel {
     private long changesSinceLastNotify;
     private CompetitionInFlightStatsViewModel keyStatistics;
     private boolean readOnly;
-    private boolean assessmentPanelEnabled = true;
+    private boolean assessmentPanelEnabled;
 
     public CompetitionInFlightViewModel(CompetitionResource competitionResource,
                                         List<MilestonesRowViewModel> milestones,
@@ -46,7 +46,7 @@ public class CompetitionInFlightViewModel {
         this.milestones = milestones;
         this.changesSinceLastNotify = changesSinceLastNotify;
         this.readOnly = readOnly;
-       // this.assessmentPanelEnabled = competitionResource.isHasAssessmentPanel();
+        this.assessmentPanelEnabled = competitionResource.isHasAssessmentPanel();
     }
 
     public Long getCompetitionId() {
