@@ -16,7 +16,9 @@ import org.innovateuk.ifs.competitionsetup.form.*;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm.Unrestricted;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
+import org.innovateuk.ifs.competitionsetup.service.modelpopulator.ManageInnovationLeadsModelPopulator;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -60,6 +62,9 @@ public class CompetitionSetupController {
 
     @Autowired
     private CompetitionSetupService competitionSetupService;
+
+    @Autowired
+    private ManageInnovationLeadsModelPopulator manageInnovationLeadsModelPopulator;
 
     @Autowired
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;
@@ -171,7 +176,6 @@ public class CompetitionSetupController {
             return createJsonObjectNode(false);
         }
     }
-
 
     /**
      * This method is for supporting ajax saving from the competition setup sections forms.
@@ -320,6 +324,78 @@ public class CompetitionSetupController {
         return String.format("redirect:/competition/setup/%d", competitionId);
     }
 
+    @PreAuthorize("hasPermission(#competitionId, 'MANAGE_INNOVATION_LEAD')")
+    @GetMapping("/{competitionId}/manage-innovation-leads/find")
+    public String manageInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                       Model model,
+                                       UserResource loggedInUser) {
+
+
+        CompetitionResource competition = competitionService.getById(competitionId);
+
+        if (!competition.isInitialDetailsComplete()){
+            return "redirect:/competition/setup/" + competitionId;
+        }
+
+        manageInnovationLeadsModelPopulator.populateModel(model, competition);
+
+        return "competition/manage-innovation-leads-find";
+    }
+
+    @PreAuthorize("hasPermission(#competitionId, 'MANAGE_INNOVATION_LEAD')")
+    @GetMapping("/{competitionId}/manage-innovation-leads/overview")
+    public String manageInnovationLeadOverview(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                       Model model,
+                                       UserResource loggedInUser) {
+
+        CompetitionResource competition = competitionService.getById(competitionId);
+
+        if (!competition.isInitialDetailsComplete()){
+            return "redirect:/competition/setup/" + competitionId;
+        }
+
+        manageInnovationLeadsModelPopulator.populateModel(model, competition);
+
+        return "competition/manage-innovation-leads-overview";
+    }
+
+    @PreAuthorize("hasPermission(#competitionId, 'MANAGE_INNOVATION_LEAD')")
+    @PostMapping("/{competitionId}/add-innovation-lead/{innovationLeadUserId}")
+    public String addInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                    @PathVariable("innovationLeadUserId") long innovationLeadUserId,
+                                    Model model,
+                                    UserResource loggedInUser) {
+
+        CompetitionResource competition = competitionService.getById(competitionId);
+
+        if (!competition.isInitialDetailsComplete()){
+            return "redirect:/competition/setup/" + competitionId;
+        }
+
+        competitionService.addInnovationLead(competitionId, innovationLeadUserId);
+        manageInnovationLeadsModelPopulator.populateModel(model, competition);
+
+        return "competition/manage-innovation-leads-find";
+    }
+
+    @PreAuthorize("hasPermission(#competitionId, 'MANAGE_INNOVATION_LEAD')")
+    @PostMapping("/{competitionId}/remove-innovation-lead/{innovationLeadUserId}")
+    public String removeInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                       @PathVariable("innovationLeadUserId") long innovationLeadUserId,
+                                       Model model,
+                                       UserResource loggedInUser) {
+
+        CompetitionResource competition = competitionService.getById(competitionId);
+
+        if (!competition.isInitialDetailsComplete()){
+            return "redirect:/competition/setup/" + competitionId;
+        }
+
+        competitionService.removeInnovationLead(competitionId, innovationLeadUserId);
+        manageInnovationLeadsModelPopulator.populateModel(model, competition);
+
+        return "competition/manage-innovation-leads-overview";
+    }
 
 
     /* AJAX Function */

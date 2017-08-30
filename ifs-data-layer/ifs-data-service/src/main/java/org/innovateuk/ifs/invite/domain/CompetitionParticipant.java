@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.invite.domain;
 
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -81,6 +83,10 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         return competition;
     }
 
+    public void setProcess(Competition process) {
+        this.competition = process;
+    }
+
     @Override
     public CompetitionInvite getInvite() {
         return invite;
@@ -89,6 +95,10 @@ public class CompetitionParticipant extends Participant<Competition, Competition
     @Override
     public CompetitionParticipantRole getRole() {
         return role;
+    }
+
+    public void setRole(CompetitionParticipantRole role) {
+        this.role = role;
     }
 
     @Override
@@ -164,5 +174,37 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         setStatus(REJECTED);
 
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CompetitionParticipant that = (CompetitionParticipant) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(competition, that.competition)
+                .append(user, that.user)
+                .append(invite, that.invite)
+                .append(rejectionReason, that.rejectionReason)
+                .append(rejectionReasonComment, that.rejectionReasonComment)
+                .append(role, that.role)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(competition)
+                .append(user)
+                .append(invite)
+                .append(rejectionReason)
+                .append(rejectionReasonComment)
+                .append(role)
+                .toHashCode();
     }
 }
