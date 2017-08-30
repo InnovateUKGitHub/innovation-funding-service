@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" class="no-js" lang="en">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application',hasFormErrors=${#fields.hasErrors('${organisationForm.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application'" />
 </head>
 <body th:with="context='applicant'" class="create-application-organisation">
 
@@ -12,14 +12,11 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
 
-    <div th:if="${#fields.hasErrors('${organisationForm.organisationTypeId}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-      <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes</h2>
-      <ul class="error-summary-list">
-          <li th:each="err : ${#fields.detailedErrors('${organisationForm.organisationTypeId}')}">
-              <th:block th:if="${err.global}" th:text="${err.message}">Non-field specific message</th:block>
-              <a th:if="${err.fieldName}" th:href="|#${err.fieldName}|" th:text="${err.message}">The error message</a>
-          </li>
-      </ul>
+    <div class="error-summary" th:if="${#fields.hasErrors('${organisationForm.organisationTypeId}')}">
+        <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
+        <ul class="error-summary-list">
+            <li th:each="err : ${#fields.errors('${organisationForm.organisationTypeId}')}" th:text="${err}"></li>
+        </ul>
     </div>
 
     <h1 class="heading-xlarge">
@@ -31,36 +28,43 @@
         <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
     </div>
 
-    <form th:object="${organisationForm}" th:action="@{/organisation/create/lead-organisation-type}" method="POST" novalidate="novalidate" class="extra-margin">
-        <div class="form-group" th:classappend="${#fields.hasErrors('*{organisationTypeId}')} ? 'form-group-error'">
+    <form th:object="${organisationForm}" th:action="@{/organisation/create/lead-organisation-type}" method="POST" novalidate="novalidate">
+        <div th:class="${#fields.hasErrors('*{organisationTypeId}')} ? 'form-block error' : 'form-block'">
             <fieldset>
-                <legend class="extra-margin-bottom" id="organisationTypeId">
-                    <span class="heading-medium">What type of organisation are you?</span>
+                <legend class="extra-margin-bottom">
+                    <span class="visuallyhidden">Please select your organisation type</span>
                     <th:block th:if="${#fields.hasErrors('*{organisationTypeId}')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('*{organisationTypeId}')}" th:text="${err}" />
+                        <span class="error-message"  th:each="err : ${#fields.errors('*{organisationTypeId}')}" th:text="${err}"></span>
                     </th:block>
                 </legend>
-                <div class="multiple-choice" th:each="type : ${model.types}" th:attr="data-target=${T(org.innovateuk.ifs.user.resource.OrganisationTypeEnum).RTO.id == type.id ? 'rto-guidance' : null}">
-                    <input th:id="'radio-'+ ${type.id}" type="radio"
-                           th:field="*{organisationTypeId}"
-                           required="required"
-                           th:attr="data-required-errormessage=#{validation.standard.organisationtype.required}"
-                           th:value="${type.id}" />
-                    <label th:for="'radio-'+ ${type.id}">
-                        <span th:text="${type.name}"></span>
-                        <span class="form-hint" th:text="${type.description}"></span>
-                    </label>
-                </div>
+                <th:block th:each="type : ${model.types}">
+                    <div class="multiple-choice" th:attr="data-target=${T(org.innovateuk.ifs.user.resource.OrganisationTypeEnum).RTO.id == type.id ? 'rto-guidance' : null}">
+                        <input th:id="'radio-'+ ${type.id}" type="radio"
+                               th:field="*{organisationTypeId}"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.standard.organisationtype.required}"
+                               th:value="${type.id}" />
+                        <label th:for="'radio-'+ ${type.id}">
+                            <span th:text="${type.name}"></span>
+                            <span class="form-hint" th:text="${type.description}"></span>
+                        </label>
+                    </div>
+                    <div th:if="${T(org.innovateuk.ifs.user.resource.OrganisationTypeEnum).RTO.id == type.id}" id="rto-guidance" class="panel">
+                        <h2 class="heading-small">You can only lead an application as an RTO if both the following rules are met:</h2>
+                        <ul class="list-bullet">
+                            <li>you must prove within the scope section of your application that you are the best placed consortium partner to lead this project</li>
+                            <li>your project is essential to lay the foundations for the growth of an early stage industry</li>
+                        </ul>
+                    </div>
+                </th:block>
+
             </fieldset>
         </div>
 
-        <div id="rto-guidance" class="panel">
-            <h2 class="heading-small">You can only lead an application as an RTO if both the following rules are met:</h2>
-            <ul class="list-bullet">
-                <li>you must prove within the scope section of your application that you are the best placed consortium partner to lead this project</li>
-                <li>your project is essential to lay the foundations for the growth of an early stage industry</li>
-            </ul>
-        </div>
+
+        <p>
+            If your organisation type is not listed contact the <a th:href="@{/info/contact}">customer support service</a>.
+        </p>
         <button class="button button-large extra-margin" name="select-company-type" type="submit">Save and continue</button>
     </form>
 

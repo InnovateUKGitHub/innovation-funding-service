@@ -19,6 +19,14 @@ public class OrganisationAddressViewModel {
         return OrganisationTypeEnum.RESEARCH.getId().equals(organisationType.getId());
     }
 
+    public OrganisationTypeResource getOrganisationType() {
+        return organisationType;
+    }
+
+    public void setOrganisationType(OrganisationTypeResource organisationType) {
+        this.organisationType = organisationType;
+    }
+
     public String getOrganisationTypeName() {
         return organisationType.getName().toLowerCase();
     }

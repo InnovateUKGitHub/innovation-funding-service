@@ -34,13 +34,13 @@ public class ApplicationCountSummaryServiceSecurityTest extends BaseServiceSecur
     @Test
     public void testGetApplicationCountSummariesByCompetitionIdAndInnovationArea() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build());
-        classUnderTest.getApplicationCountSummariesByCompetitionIdAndInnovationArea(1L, 2L,0, 0, empty(), "");
+        classUnderTest.getApplicationCountSummariesByCompetitionIdAndInnovationArea(1L, 2L,0, 0, empty(), "", "");
     }
 
     @Test(expected = AccessDeniedException.class)
     public void testGetApplicationCountSummariesByCompetitionIdAndInnovationArea_notCompadmin() {
         setLoggedInUser(newUserResource().build());
-        classUnderTest.getApplicationCountSummariesByCompetitionIdAndInnovationArea(1L, 2L,0, 0, empty(), "");
+        classUnderTest.getApplicationCountSummariesByCompetitionIdAndInnovationArea(1L, 2L,0, 0, empty(), "", "");
     }
 
     @Override
@@ -56,7 +56,7 @@ public class ApplicationCountSummaryServiceSecurityTest extends BaseServiceSecur
         }
 
         @Override
-        public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndInnovationArea(long competitionId, long assessorId, int pageIndex, int pageSize, Optional<Long> innovationArea, String sortField) {
+        public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndInnovationArea(long competitionId, long assessorId, int pageIndex, int pageSize, Optional<Long> innovationArea, String filter, String sortField) {
             return null;
         }
     }

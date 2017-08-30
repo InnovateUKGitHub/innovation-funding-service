@@ -26,7 +26,7 @@ Application questions mark as done validations
     [Documentation]    INFUND-6468
     [Tags]
     Given the user clicks the button/link    link=Application
-    And the user clicks the button/link    jQuery=.button:contains("Done")
+    And the user clicks the button/link    jQuery=button:contains("Done")
     And the user should see the text in the page    Unable to mark as complete.
     And the user should see the text in the page    view the application section(s) to resolve the error.
     And The user clicks the button/link    link=No question header entered
@@ -165,5 +165,5 @@ User creates a new competition for Application tests
     And the user enters text to a text field    id=openingDateYear    2017
     And the user selects the option from the drop-down menu    Ian Cooper    id=innovationLeadUserId
     And the user selects the option from the drop-down menu    John Doe    id=executiveUserId
-    And the user clicks the button/link    jQuery=.button:contains("Done")
+    And the user clicks the button/link    jQuery=button:contains("Done")
     And the user clicks the button/link    link=Competition setup
