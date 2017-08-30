@@ -157,19 +157,20 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     private ServiceResult<Void> saveLeadTechnologist(CompetitionResource competitionResource) {
 
-        Competition competition = competitionMapper.mapToDomain(competitionResource);
+        if (competitionResource.getLeadTechnologist() != null) {
+            Competition competition = competitionMapper.mapToDomain(competitionResource);
 
-        if (!doesLeadTechnologistAlreadyExist(competition)) {
+            if (!doesLeadTechnologistAlreadyExist(competition)) {
+                User leadTechnologist = competition.getLeadTechnologist();
 
-            User leadTechnologist = competition.getLeadTechnologist();
+                CompetitionParticipant competitionParticipant = new CompetitionParticipant();
+                competitionParticipant.setProcess(competition);
+                competitionParticipant.setUser(leadTechnologist);
+                competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
+                competitionParticipant.setStatus(ParticipantStatus.ACCEPTED);
 
-            CompetitionParticipant competitionParticipant = new CompetitionParticipant();
-            competitionParticipant.setProcess(competition);
-            competitionParticipant.setUser(leadTechnologist);
-            competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
-            competitionParticipant.setStatus(ParticipantStatus.ACCEPTED);
-
-            competitionParticipantRepository.save(competitionParticipant);
+                competitionParticipantRepository.save(competitionParticipant);
+            }
         }
 
         return serviceSuccess();
