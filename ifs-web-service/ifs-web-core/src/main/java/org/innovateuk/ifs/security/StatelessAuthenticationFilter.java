@@ -61,7 +61,8 @@ public class StatelessAuthenticationFilter extends OncePerRequestFilter {
             uri.startsWith("/images/") ||
             uri.equals("/favicon.ico") ||
             uri.startsWith("/prototypes") ||
-            uri.startsWith("/error")
+            uri.startsWith("/error") ||
+            uri.startsWith("/benchmark/")
         );
     }
 }
