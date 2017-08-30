@@ -51,3 +51,5 @@ ext.ifsWebBaseURL="http://localhost:8080"
 ext.serverPort=""
 ext.activeProfile="environment"
 ext.shibbolethDir=""
+
+ext.internalUserEmailDomain="innovateuk.test"

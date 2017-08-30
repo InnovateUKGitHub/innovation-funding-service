@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.mapper;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
@@ -21,7 +21,7 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessm
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeBuilder.newAssessmentRejectOutcome;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -90,9 +90,9 @@ public class ApplicationAssessorMapperTest extends BaseUnitTestMocksTest {
                             .build();
                 });
 
-        EnumSet<AssessmentStates> assessmentStatesThatAreUnassigned = EnumSet.of(REJECTED, WITHDRAWN);
-        EnumSet<AssessmentStates> assessmentStatesThatAreAssigned = EnumSet.complementOf(assessmentStatesThatAreUnassigned);
-        EnumSet<AssessmentStates> assessmentStatesThatAreSubmitted = EnumSet.of(SUBMITTED);
+        EnumSet<AssessmentState> assessmentStatesThatAreUnassigned = EnumSet.of(REJECTED, WITHDRAWN);
+        EnumSet<AssessmentState> assessmentStatesThatAreAssigned = EnumSet.complementOf(assessmentStatesThatAreUnassigned);
+        EnumSet<AssessmentState> assessmentStatesThatAreSubmitted = EnumSet.of(SUBMITTED);
 
         ApplicationAssessorResource expected = newApplicationAssessorResource()
                 .withUserId(1L)
@@ -152,7 +152,7 @@ public class ApplicationAssessorMapperTest extends BaseUnitTestMocksTest {
 
     }
 
-    private ActivityState buildActivityStateWithState(AssessmentStates state) {
+    private ActivityState buildActivityStateWithState(AssessmentState state) {
         return new ActivityState(APPLICATION_ASSESSMENT, state.getBackingState());
     }
 }

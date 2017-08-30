@@ -51,16 +51,16 @@ Proj Finance user can send Fund Decision notification
     Given the user navigates to the page     ${funders_panel_competition_url}
     When the user clicks the button/link     jQuery=a:contains("Manage funding notifications")
     Then the user should see the element     jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
-    And the user should see the element      jQuery=button.disabled:contains("Write and send email")
+    And the user should see the element      jQuery=button[disabled]:contains("Write and send email")
     When the user selects the checkbox       app-row-${application_ids["${FUNDERS_PANEL_APPLICATION_1_TITLE}"]}
     Then the user clicks the button/link     jQuery=button:contains("Write and send email")
     And the user should see the element      css=#subject[value^="Notification regarding your application"]
     When the user clicks the button/link     jQuery=summary:contains("Review list of recipients")[aria-expanded="false"]
     Then the user should see the element     jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
     And the user should not see the element  jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_2_TITLE}")
-    When the user clicks the button/link     jQuery=button:contains("Send email to all applicants")
+    When the user clicks the button/link     jQuery=button[data-js-modal="send-to-all-applicants-modal"]
     When the user clicks the button/link     jQuery=.send-to-all-applicants-modal button:contains("Send email to all applicants")
-    Then the server side validation should be triggered
+    Then the user should see a field and summary error  Please enter the email message.
     When the user cancels the process needs to re-select the reciepients
     And the user enters text to a text field   css=.editor  ${onHoldMessage}
     And the user clicks the button/link        jQuery=button:contains("Send email to all applicants")
@@ -120,7 +120,7 @@ Once Successful and Sent you cannot change your mind
     Then the user should not see the element  jQuery=input[type="checkbox"][value="${FUNDERS_PANEL_APPLICATION_1_NUMBER}"]
     When the user navigates to the page       ${funders_panel_competition_url}/manage-funding-applications
     Then the user should not see the element  jQuery=input[type="checkbox"][value="${FUNDERS_PANEL_APPLICATION_1_NUMBER}"]
-    # TODO Add a check that button is disabled INFUND-9132
+    # TODO Add a check that button is disabled IFS-359
 
 Successful applications are turned into Project
     [Documentation]  INFUND-8624
@@ -160,13 +160,9 @@ the user sets the funding decision of application
     the user selects the checkbox    ${checkbox}
     the user clicks the button/link    jQuery=button:contains("${decision_button}")
 
-the server side validation should be triggered
-    the user should see the element  jQuery=.error-message:contains("Please enter the email message.")
-    the user should see the element  jQuery=.error-summary-list:contains("Please enter the email message.")
-
 the user cancels the process needs to re-select the reciepients
     the user clicks the button/link  jQuery=a:contains("Cancel")
-    the user should see the element  jQuery=button.disabled:contains("Write and send email")
+    the user should see the element  jQuery=button[disabled]:contains("Write and send email")
     the user selects the checkbox    app-row-${application_ids["${FUNDERS_PANEL_APPLICATION_1_TITLE}"]}
     the user clicks the button/link  jQuery=button:contains("Write and send email")
 
@@ -188,8 +184,8 @@ the internal user sends an email notification
     the user selects the checkbox    app-row-${id}
     the user clicks the button/link  jQuery=button:contains("Write and send email")
     the user enters text to a text field  css=.editor  ${message}
-    the user clicks the button/link       jQuery=button:contains("Send email to all applicants")
-    the user clicks the button/link       jQuery=.send-to-all-applicants-modal button:contains("Send email to all applicants")
+    the user clicks the button/link       jQuery=button:contains("Send email")[data-js-modal="send-to-all-applicants-modal"]
+    the user clicks the button/link       jQuery=.send-to-all-applicants-modal button:contains("Send email")
     the user should see the element       jQuery=td:contains("${application}") ~ td:contains("Sent") ~ td:contains("${today}")
 
 the external user reads his email and can see the correct status

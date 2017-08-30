@@ -24,7 +24,6 @@ public class CompetitionResource {
     private List<CompetitionFunderResource> funders = new ArrayList<>();
 
     private String name;
-    private String description;
     private ZonedDateTime startDate;
     private ZonedDateTime endDate;
     private ZonedDateTime assessorAcceptsDate;
@@ -74,6 +73,8 @@ public class CompetitionResource {
     private boolean setupComplete = false;
 
     private boolean useResubmissionQuestion;
+    private Boolean hasAssessmentPanel;
+    private Boolean hasInterviewStage;
 
     private boolean nonIfs = false;
     private String nonIfsUrl;
@@ -82,18 +83,9 @@ public class CompetitionResource {
         // no-arg constructor
     }
 
-    public CompetitionResource(Long id, List<Long> applications, List<Long> questions, List<Long> sections, String name, String description, ZonedDateTime startDate, ZonedDateTime endDate) {
+    public CompetitionResource(long id, String name, ZonedDateTime startDate, ZonedDateTime endDate) {
         this.id = id;
         this.name = name;
-        this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
-
-    public CompetitionResource(long id, String name, String description, ZonedDateTime startDate, ZonedDateTime endDate) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -101,6 +93,11 @@ public class CompetitionResource {
     @JsonIgnore
     public boolean isOpen() {
         return CompetitionStatus.OPEN.equals(competitionStatus);
+    }
+
+    @JsonIgnore
+    public boolean isAssessmentClosed() {
+        return competitionStatus != null && (competitionStatus.isLaterThan(CompetitionStatus.IN_ASSESSMENT));
     }
 
     @JsonIgnore
@@ -124,14 +121,6 @@ public class CompetitionResource {
 
     public void setCompetitionStatus(CompetitionStatus competitionStatus) {
         this.competitionStatus = competitionStatus;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public Long getId() {
@@ -528,5 +517,21 @@ public class CompetitionResource {
 
     public void setNonIfsUrl(String nonIfsUrl) {
         this.nonIfsUrl = nonIfsUrl;
+    }
+
+    public Boolean isHasAssessmentPanel() {
+        return hasAssessmentPanel;
+    }
+
+    public void setHasAssessmentPanel(Boolean hasAssessmentPanel) {
+        this.hasAssessmentPanel = hasAssessmentPanel;
+    }
+
+    public Boolean isHasInterviewStage(){
+        return hasInterviewStage;
+    }
+
+    public void setHasInterviewStage(Boolean hasInterviewStage){
+        this.hasInterviewStage = hasInterviewStage;
     }
 }

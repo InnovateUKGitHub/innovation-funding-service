@@ -18,6 +18,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ApplicationCountSummaryControllerDocumentation extends BaseControllerMockMVCTest<ApplicationCountSummaryController> {
@@ -35,7 +36,6 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
 
         when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionId(competitionId, 0, 20, empty())).thenReturn(serviceSuccess(pageResource));
 
-
         mockMvc.perform(get("/applicationCountSummary/findByCompetitionId/{competitionId}", competitionId))
                 .andExpect(status().isOk())
                 .andDo(document("applicationCountSummary/{method-name}",
@@ -46,4 +46,33 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
 
         verify(applicationCountSummaryServiceMock).getApplicationCountSummariesByCompetitionId(competitionId, 0, 20, empty());
     }
+
+    @Test
+    public void getApplicationCountSummariesByCompetitionIdAndInnovationArea() throws Exception {
+        long competitionId = 1L;
+        long assessorId = 2L;
+        String sortField = "";
+        String filter = "";
+        ApplicationCountSummaryResource applicationCountSummaryResource = applicationCountSummaryResourceBuilder.build();
+        ApplicationCountSummaryPageResource pageResource = new ApplicationCountSummaryPageResource();
+        pageResource.setContent(singletonList(applicationCountSummaryResource));
+
+        when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, assessorId,0, 20, empty(), "", "")).thenReturn(serviceSuccess(pageResource));
+
+        mockMvc.perform(get("/applicationCountSummary/findByCompetitionIdAndInnovationArea/{competitionId}?assessorId={assessorId}&sortField={sortField}&filter={filter}", competitionId, assessorId, sortField, filter))
+                .andExpect(status().isOk())
+                .andDo(document("applicationCountSummary/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of competition")
+                        ),
+                        requestParameters(
+                                parameterWithName("assessorId").description("Id of assessor to exclude results for"),
+                                parameterWithName("sortField").description("Field to sort by"),
+                                parameterWithName("filter").description("String to filter applications")
+                        ),
+                        responseFields(applicationCountSummaryResourcesFields)));
+
+        verify(applicationCountSummaryServiceMock).getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, assessorId,0, 20, empty(), "", "");
+    }
+
 }

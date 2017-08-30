@@ -6,7 +6,7 @@ import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.category.domain.*;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.invite.domain.ProcessActivity;
+import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -45,9 +45,6 @@ public class Competition implements ProcessActivity {
     private List<Section> sections = new ArrayList<>();
 
     private String name;
-
-    @Column(length = 5000)
-    private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "competitionTypeId", referencedColumnName = "id")
@@ -91,6 +88,8 @@ public class Competition implements ProcessActivity {
 
     private boolean multiStream;
     private Boolean resubmission;
+    private Boolean hasAssessmentPanel;
+    private Boolean hasInterviewStage;
 
     private String streamName;
     @Enumerated(EnumType.STRING)
@@ -123,22 +122,20 @@ public class Competition implements ProcessActivity {
         setupComplete = false;
     }
 
-    public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, String description, ZonedDateTime startDate, ZonedDateTime endDate) {
+    public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, ZonedDateTime startDate, ZonedDateTime endDate) {
         this.id = id;
         this.applications = applications;
         this.questions = questions;
         this.sections = sections;
         this.name = name;
-        this.description = description;
         this.setStartDate(startDate);
         this.setEndDate(endDate);
         this.setupComplete = true;
     }
 
-    public Competition(long id, String name, String description, ZonedDateTime startDate, ZonedDateTime endDate) {
+    public Competition(long id, String name, ZonedDateTime startDate, ZonedDateTime endDate) {
         this.id = id;
         this.name = name;
-        this.description = description;
         this.setStartDate(startDate);
         this.setEndDate(endDate);
         this.setupComplete = true;
@@ -169,11 +166,6 @@ public class Competition implements ProcessActivity {
     public List<Section> getSections() {
         return sections;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
 
     public void addApplication(Application... apps) {
         if (applications == null) {
@@ -238,10 +230,6 @@ public class Competition implements ProcessActivity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public ZonedDateTime getEndDate() {
@@ -642,6 +630,22 @@ public class Competition implements ProcessActivity {
 
     public void setNonIfsUrl(String nonIfsUrl) {
         this.nonIfsUrl = nonIfsUrl;
+    }
+
+    public Boolean isHasAssessmentPanel() {
+        return hasAssessmentPanel;
+    }
+
+    public void setHasAssessmentPanel(Boolean hasAssessmentPanel) {
+        this.hasAssessmentPanel = hasAssessmentPanel;
+    }
+
+    public Boolean isHasInterviewStage(){
+        return hasInterviewStage;
+    }
+
+    public void setHasInterviewStage(Boolean hasInterviewStage) {
+        this.hasInterviewStage = hasInterviewStage;
     }
 }
 

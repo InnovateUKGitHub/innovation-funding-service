@@ -38,18 +38,17 @@ public interface CompetitionInviteRepository extends PagingAndSortingRepository<
             "WHERE invite.competition.id = :competitionId " +
             "AND invite.user IS NOT NULL";
 
-    @Query("SELECT user " +
+    String ASSESSORS_WITH_COMPETITION = "SELECT user " +
             "FROM User user " +
             "JOIN user.roles roles " +
             "WHERE user.id NOT IN (" + USERS_WITH_COMPETITION_INVITE + ") " +
-            "AND roles.name = 'assessor' " +
-            "GROUP BY user.id")
-    Page<User> findAssessorsByCompetition(@Param("competitionId") long competitionId, Pageable pageable);
+            "AND roles.name = 'assessor' "+
+            "GROUP BY user.id ";
 
     /**
      * We have to explicitly join {@link User} and Profile due to the relational mapping
      * on {@link User} being removed. This join was not possible without using a
-     * cartesian product before Hibernate 5.1 (nearly 12 years to implement).
+     * cartesian product before Hibernate 5.1.
      * <p>
      * Unfortunately, due to this explicit join, we cannot leverage Spring JPAs {@link Specification}
      * as we have to use the {@link Query} annotation to create this query.
@@ -59,16 +58,25 @@ public interface CompetitionInviteRepository extends PagingAndSortingRepository<
      * <p>
      * Try to keep any other required filtering parameters in this query.
      */
-    @Query("SELECT user " +
+    String ASSESSORS_WITH_COMPETITION_AND_INNOVATION_AREA = "SELECT user " +
             "FROM User user " +
             "JOIN Profile profile ON profile.id = user.profileId " +
             "JOIN profile.innovationAreas innovationAreas " +
             "JOIN user.roles roles " +
             "WHERE (innovationAreas.category.id = :innovationArea OR :innovationArea IS NULL) " +
             "AND user.id NOT IN (" + USERS_WITH_COMPETITION_INVITE + ") " +
-            "AND roles.name = 'assessor' " +
-            "GROUP BY user.id")
+            "AND roles.name = 'assessor' "+
+            "GROUP BY user.id ";
+
+    @Query(ASSESSORS_WITH_COMPETITION)
+    Page<User> findAssessorsByCompetition(@Param("competitionId") long competitionId, Pageable pageable);
+
+    @Query(ASSESSORS_WITH_COMPETITION)
+    List<User> findAssessorsByCompetition(@Param("competitionId") long competitionId);
+
+    @Query(ASSESSORS_WITH_COMPETITION_AND_INNOVATION_AREA)
     Page<User> findAssessorsByCompetitionAndInnovationArea(@Param("competitionId") long competitionId,
-                                                           @Param("innovationArea") Long innovationArea,
-                                                           Pageable pageable);
+                                                           @Param("innovationArea") Long innovationArea, Pageable pageable);
+    @Query(ASSESSORS_WITH_COMPETITION_AND_INNOVATION_AREA)
+    List<User> findAssessorsByCompetitionAndInnovationArea(@Param("competitionId") long competitionId, @Param("innovationArea") Long innovationArea);
 }

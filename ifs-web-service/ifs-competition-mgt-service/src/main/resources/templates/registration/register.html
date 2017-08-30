@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create account'"/>
+</head>
+<body class="competition-management">
+
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start"/>
+
+    <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
+        <h2 class="heading-medium error-summary-heading">We were unable to create your account</h2>
+        <ul class="error-summary-list">
+            <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
+        </ul>
+    </div>
+
+    <form th:object="${form}" method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Create account',size='heading-large'"/>
+        <h2 class="heading-medium">Your details</h2>
+
+        <div class="form-group" th:classappend="${#fields.hasErrors('*{firstName}')} ? 'form-group-error'">
+            <label class="form-label" th:for="${#ids.next('firstName')}">
+                <span>First name</span>
+                <th:block th:if="${#fields.hasErrors('firstName')}">
+                    <span class="error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
+                </th:block>
+            </label>
+            <input class="form-control"
+                   type="text"
+                   th:errorclass="form-control-error"
+                   th:field="*{firstName}"
+                   required="required"
+                   minlength="2"
+                   maxlength="70"
+                   th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)},
+                                    data-maxlength-errormessage=#{validation.standard.firstname.length.max},
+                                    data-required-errormessage=#{validation.standard.firstname.required}" />
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('*{lastName}')} ? 'form-group-error'">
+            <label class="form-label" th:for="${#ids.next('lastName')}">
+                <span>Last name</span>
+                <th:block th:if="${#fields.hasErrors('lastName')}">
+                    <span class="error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
+                </th:block>
+            </label>
+            <input class="form-control"
+                   type="text"
+                   th:errorclass="form-control-error"
+                   th:field="*{lastName}"
+                   required="required"
+                   minlength="2"
+                   maxlength="70"
+                   th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)},
+                                    data-maxlength-errormessage=#{validation.standard.lastname.length.max},
+                                    data-required-errormessage=#{validation.standard.lastname.required}" />
+        </div>
+
+        <h3 class="heading-small">Role</h3>
+        <p th:text="${model.roleName}">Customer support</p>
+        <h3 class="heading-small">Email</h3>
+        <p>
+            <span class="form-hint">You will need this to sign into your account.</span>
+            <th:block th:text="${model.email}">robertplant@innovateuk.org</th:block>
+        </p>
+
+        <div class="form-group" th:classappend="${#fields.hasErrors('password')} ? 'form-group-error'">
+            <label class="form-label" for="password">
+                <span class="form-label-bold">Create password</span>
+                <th:block th:if="${#fields.hasErrors('password')}">
+                    <span class="error-message visuallyhidden" th:each="err : ${#fields.errors('password')}" th:text="${err}"></span>
+                </th:block>
+            </label>
+            <div class="form-hint" id="password-hint">
+                <p>Your password is case-sensitive and needs to:</p>
+                <ul class="list list-bullet status">
+                    <li data-minlength-validationstatus="">be at least 8 characters long</li>
+                    <li data-containsuppercase-validationstatus="">contain at least 1 capital letter</li>
+                    <li data-containsnumber-validationstatus="">contain at least 1 number</li>
+                </ul>
+                <p class="no-margin-bottom">Your password can include spaces to make a phrase.</p>
+            </div>
+            <div class="password-toggle">
+                <input data-containsnumber-showmessage="visuallyhidden"
+                       data-containsuppercase-showmessage="visuallyhidden"
+                       data-minlength-showmessage="visuallyhidden"
+                       data-required-showmessage="visuallyhidden"
+                       aria-describedby="password-hint"
+                       class="form-control"
+                       type="password"
+                       required="required"
+                       minlength="8"
+                       id="password"
+                       name="password"
+                       th:errorclass="form-control-error"
+                       th:field="*{password}"
+                       th:attr="data-required-errormessage=#{validation.standard.password.required},
+                                data-minlength-errormessage=#{validation.standard.password.length.min(null,null,'8')}"/>
+                <button type="button" role="switch" aria-checked="false" aria-label="Show password">Show</button>
+            </div>
+        </div>
+        <button class="button extra-margin">Create account</button>
+    </form>
+
+    <th:block th:insert="fragments/layout :: main-content-end"/>
+</main>
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+
+</body>
+</html>

@@ -1,0 +1,2 @@
+name|MASK(2, 'x')
+company_house_number|MASK(3, 'x')

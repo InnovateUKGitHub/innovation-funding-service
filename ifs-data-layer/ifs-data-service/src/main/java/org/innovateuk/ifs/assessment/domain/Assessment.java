@@ -3,7 +3,7 @@ package org.innovateuk.ifs.assessment.domain;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.workflow.domain.Process;
 
@@ -16,7 +16,7 @@ import java.util.List;
  * with the assessor responses provided during the assessment.
  */
 @Entity
-public class Assessment extends Process<ProcessRole, Application, AssessmentStates> {
+public class Assessment extends Process<ProcessRole, Application, AssessmentState> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "participant_id", referencedColumnName = "id")
@@ -94,8 +94,8 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
         this.target = target;
     }
 
-    public AssessmentStates getActivityState() {
-        return AssessmentStates.fromState(activityState.getState());
+    public AssessmentState getActivityState() {
+        return AssessmentState.fromState(activityState.getState());
     }
 
     @Override

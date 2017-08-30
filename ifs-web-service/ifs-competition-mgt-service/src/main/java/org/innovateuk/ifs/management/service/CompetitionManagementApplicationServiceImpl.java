@@ -7,17 +7,21 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.assessment.resource.AssessmentCreateResource;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
+import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.management.model.ApplicationOverviewIneligibilityModelPopulator;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -29,6 +33,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -75,7 +80,8 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
                                              String origin,
                                              MultiValueMap<String, String> queryParams,
                                              Model model,
-                                             ApplicationResource application) {
+                                             ApplicationResource application,
+                                             Optional<Long> assessorId) {
         form.setAdminMode(true);
 
         List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccessObjectOrThrowException();
@@ -89,14 +95,25 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), application.getId(), user, model, form, form.getImpersonateOrganisationId());
         addAppendices(application.getId(), responses, model);
 
-        model.addAttribute("isSupportUser", user.hasRole(UserRoleType.SUPPORT));
+        // organisationFinances populated by ApplicationFinanceOverviewModelManager, applicantOrganisationIsAcademic & applicationOrganisations populated by OrganisationDetailsModelPopulator, both above
+        Map<Long, Boolean> isAcademicOrganisation = (Map<Long, Boolean>) model.asMap().get("applicantOrganisationIsAcademic");
+        List<OrganisationResource> organisations = (List<OrganisationResource>) model.asMap().get("applicationOrganisations");
+        Map<Long, BaseFinanceResource> organisationFinances = (Map<Long, BaseFinanceResource>) model.asMap().get("organisationFinances");
+        Map<Long, Boolean> detailedFinanceLink = organisations.stream().collect(Collectors.toMap(o -> o.getId(),
+                o -> (user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD)) &&
+                        ((organisationFinances.containsKey(o.getId()) && organisationFinances.get(o.getId()).getOrganisationSize() != null) ||
+                                isAcademicOrganisation.get(o.getId()))
+                        ? Boolean.TRUE : Boolean.FALSE));
+        model.addAttribute("showDetailedFinanceLink", detailedFinanceLink);
+
+        model.addAttribute("readOnly", user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD));
         model.addAttribute("form", form);
         model.addAttribute("applicationReadyForSubmit", false);
         model.addAttribute("isCompManagementDownload", true);
         model.addAttribute("ineligibility", applicationOverviewIneligibilityModelPopulator.populateModel(application));
         model.addAttribute("showApplicationTeamLink", applicationService.showApplicationTeam(application.getId(), user.getId()));
 
-        model.addAttribute("backUrl", buildBackUrl(origin, application.getId(), competitionId, queryParams));
+        model.addAttribute("backUrl", buildBackUrl(origin, application.getId(), competitionId, assessorId, queryParams));
         String params = UriComponentsBuilder.newInstance()
                 .queryParam("origin", origin)
                 .queryParams(queryParams)
@@ -111,6 +128,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
     @Override
     public String markApplicationAsIneligible(long applicationId,
                                               long competitionId,
+                                              Optional<Long> assessorId,
                                               String origin,
                                               MultiValueMap<String, String> queryParams,
                                               ApplicationForm applicationForm,
@@ -130,7 +148,9 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
                     origin,
                     queryParams,
                     model,
-                    applicationService.getById(applicationId));
+                    applicationService.getById(applicationId),
+                    assessorId
+            );
         }
     }
 
@@ -144,16 +164,25 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         }
     }
 
-    private String buildBackUrl(String origin, Long applicationId, Long competitionId, MultiValueMap<String, String> queryParams) {
+    private String buildBackUrl(String origin,
+                                Long applicationId,
+                                Long competitionId,
+                                Optional<Long> assessorId,
+                                MultiValueMap<String, String> queryParams) {
         String baseUrl = ApplicationOverviewOrigin.valueOf(origin).getBaseOriginUrl();
 
         queryParams.remove("origin");
+
+        if (queryParams.containsKey("assessorId")) {
+            queryParams.remove("assessorId");
+        }
 
         return UriComponentsBuilder.fromPath(baseUrl)
                 .queryParams(queryParams)
                 .buildAndExpand(asMap(
                         "competitionId", competitionId,
-                        "applicationId", applicationId
+                        "applicationId", applicationId,
+                        "assessorId", assessorId.orElse(null)
                 ))
                 .encode()
                 .toUriString();
@@ -176,9 +205,12 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         SUBMITTED_APPLICATIONS("/competition/{competitionId}/applications/submitted"),
         INELIGIBLE_APPLICATIONS("/competition/{competitionId}/applications/ineligible"),
         MANAGE_APPLICATIONS("/assessment/competition/{competitionId}/applications"),
+        MANAGE_ASSESSORS("/assessment/competition/{competitionId}/assessors"),
         FUNDING_APPLICATIONS("/competition/{competitionId}/funding"),
-        APPLICATION_PROGRESS("/competition/{competitionId}/application/{applicationId}/assessors"),
-        MANAGE_ASSESSMENTS("/assessment/competition/{competitionId}");
+        APPLICATION_PROGRESS("/assessment/competition/{competitionId}/application/{applicationId}/assessors"),
+        MANAGE_ASSESSMENTS("/assessment/competition/{competitionId}"),
+        ASSESSOR_PROGRESS("/assessment/competition/{competitionId}/assessors/{assessorId}"),
+        PROJECT_SETUP_MANAGEMENT_STATUS("/project-setup-management/competition/{competitionId}/status");
 
         private String baseOriginUrl;
 

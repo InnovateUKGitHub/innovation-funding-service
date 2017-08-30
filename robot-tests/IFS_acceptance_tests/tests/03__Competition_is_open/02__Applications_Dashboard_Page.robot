@@ -25,7 +25,7 @@ ${quarantine_warning}    This file has been found to be unsafe
 Application Dashboard
     [Documentation]    INFUND-7369
     [Tags]    HappyPath
-    Given the user clicks the button/link    link=${OPEN_COMPETITION_NAME}
+    Given the user clicks the button/link    link=${openCompetitionRTO_name}
     When the user clicks the button/link    jQuery=a:contains("Applications: All, submitted, ineligible")
     Then The user should see the element    jQuery=a:contains("Submitted applications")
     And The user should see the element    link=All applications
@@ -84,25 +84,25 @@ Application has team link and team details
     And the user should see the text in the page  ${OPEN_COMPETITION_APPLICATION_NAME}
     When the user clicks the button/link  link=view application team details
     Then the user should see the text in the page  Application team
-    And the user should see the text in the page  View application participants for both the lead and collaborating organisations.
-    And the user should see the element    jQuery=h2:nth-of-type(1):contains("${EMPIRE_LTD_NAME} (Lead)")
+    And the user should see the text in the page  View team members for both the lead and collaborating organisations.
+    And the user should see the element    jQuery=h2:nth-of-type(1):contains("${EMPIRE_LTD_NAME} (Lead)")+h3:contains("Organisation type")+p:contains("Business")
     And the user should see the element    jQuery=div#applicationTeamOrganisationRegisteredAddress0 span:nth-of-type(1):contains("1")
     And the user should see the element    jQuery=div#applicationTeamOrganisationRegisteredAddress0 span:nth-of-type(2):contains("Empire Road")
     And the user should see the element    jQuery=table#applicationTeamOrganisationUser0 tbody tr:nth-of-type(1) td:contains("Steve Smith (Lead)")
     And the user should see the element    jQuery=table#applicationTeamOrganisationUser0 tbody tr:nth-of-type(1) td:contains("${lead_applicant}")
     And the user should see the element    jQuery=table#applicationTeamOrganisationUser0 tbody tr:nth-of-type(1) td:contains("46439359578")
-    And the user should see the element    jQuery=h2:nth-of-type(2):contains("${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}")
+    And the user should see the element    jQuery=h2:nth-of-type(2):contains("${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}")+h3:contains("Organisation type")+p:contains("Research")
     And the user should see the element    jQuery=div#applicationTeamOrganisationRegisteredAddress1 span:nth-of-type(1):contains("43")
     And the user should see the element    jQuery=div#applicationTeamOrganisationRegisteredAddress1 span:nth-of-type(2):contains("Deer Rise")
     And the user should see the element    jQuery=table#applicationTeamOrganisationUser1 tbody tr:nth-of-type(1) td:contains("Pete Tom")
     And the user should see the element    jQuery=table#applicationTeamOrganisationUser1 tbody tr:nth-of-type(1) td:contains("${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}")
     And the user should see the element    jQuery=table#applicationTeamOrganisationUser1 tbody tr:nth-of-type(1) td:contains("81877706440")
-    And the user should see the element    jQuery=h2:nth-of-type(3):contains("${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}")
+    And the user should see the element    jQuery=h2:nth-of-type(3):contains("${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}")+h3:contains("Organisation type")+p:contains("Business")
     And the user should see the element    jQuery=div#applicationTeamOrganisationRegisteredAddress2 span:nth-of-type(1):contains("Electric Works, Sheffield Digital Campus")
     And the user should see the element    jQuery=table#applicationTeamOrganisationUser2 tbody tr:nth-of-type(1) td:contains("Ewan Cormack")
     And the user should see the element    jQuery=table#applicationTeamOrganisationUser2 tbody tr:nth-of-type(1) td:contains("${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_EMAIL}")
     And the user should see the element    jQuery=table#applicationTeamOrganisationUser2 tbody tr:nth-of-type(1) td:contains("36267829240")
-    And the user should see the element    jQuery=h2:nth-of-type(4):contains("${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}")
+    And the user should see the element    jQuery=h2:nth-of-type(4):contains("${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}")+h3:contains("Organisation type")+p:contains("Business")
     And the user should see the element    jQuery=div#applicationTeamOrganisationRegisteredAddress3 span:nth-of-type(1):contains("20")
     And the user should see the element    jQuery=div#applicationTeamOrganisationRegisteredAddress3 span:nth-of-type(2):contains("Fallow Lane")
     And the user should see the element    jQuery=table#applicationTeamOrganisationUser3 tbody tr:nth-of-type(1) td:contains("Jessica Doe")
@@ -116,7 +116,7 @@ Comp admin can open the view mode of the application
     When the user can see the option to upload a file on the page        ${technical_approach_url}
     Then the user uploads the file to the 'technical approach' question  ${valid_pdf}
     When log in as a different user                         &{Comp_admin1_credentials}
-    And the user navigates to the page                      ${COMP_MANAGEMENT_APPLICATIONS_LIST}
+    And the user navigates to the page                      ${applicationsForRTOComp}
     #Then the user should see the element  id=sort-by
     #And the user selects the option from the drop-down menu  id  id=sort-by
     And the user clicks the button/link                     link=All applications
@@ -151,7 +151,7 @@ Comp admin should be able to view but not edit the finances for every partner
 *** Keywords ***
 the user uploads the file to the 'technical approach' question
     [Arguments]    ${file_name}
-    Choose File    name=formInput[1062]    ${UPLOAD_FOLDER}/${file_name}
+    Choose File    css=input.inputfile   ${UPLOAD_FOLDER}/${file_name}
 
 the user can see the option to upload a file on the page
     [Arguments]    ${url}
@@ -228,7 +228,7 @@ check calculations on both pages
     ${element_page_two}=    Get Webelements    ${list_locator}
     ${length_list_page_two}=    Get Length    ${element_page_two}
     log    ${length_list_page_two}
-    the user navigates to the page    ${comp_management_applications_list}
+    the user navigates to the page    ${applicationsForRTOComp}
     ${element}=    Get Webelements    ${list_locator}
     ${length_list}=    Get Length    ${element}
     log    ${length_list}
@@ -258,7 +258,7 @@ check both pages of applications
     ${row_count_second_page}=    get matching xpath count    //*[td]
     convert to integer    ${row_count_second_page}
     log    ${row_count_second_page}
-    the user navigates to the page    ${comp_management_applications_list}
+    the user navigates to the page    ${applicationsForRTOComp}
     ${row_count_first_page}=    get matching xpath count    //*[td]
     convert to integer    ${row_count_first_page}
     log    ${row_count_first_page}

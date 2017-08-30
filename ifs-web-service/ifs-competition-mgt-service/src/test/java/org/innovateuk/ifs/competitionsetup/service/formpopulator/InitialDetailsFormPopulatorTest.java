@@ -77,7 +77,7 @@ public class InitialDetailsFormPopulatorTest {
 		assertThat(form.getInnovationAreaCategoryIds(), hasItems(6L, 66L));
 		assertThat(form.getInnovationAreaCategoryIds(), hasSize(2));
 		assertEquals("formattedcategories", form.getInnovationAreaNamesFormatted());
-		assertEquals(Long.valueOf(7L), form.getLeadTechnologistUserId());
+		assertEquals(Long.valueOf(7L), form.getInnovationLeadUserId());
 		assertEquals(Integer.valueOf(2), form.getOpeningDateDay());
 		assertEquals(Integer.valueOf(1), form.getOpeningDateMonth());
 		assertEquals(Integer.valueOf(2000), form.getOpeningDateYear());

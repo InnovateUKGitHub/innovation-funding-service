@@ -9,7 +9,28 @@ subprojects {
     // data-service-commons is not a docker project.
     if (it.name != 'data-service-commons') {
 
+        task getNewRelicAgent {
+            if ( !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar").exists() || 
+                 !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml").exists() ) {
+                exec {
+                    executable = 'curl'
+                   args = ['--connect-timeout', '30',
+                            '-o', "${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar",
+                            'https://tools.innovateuk.org/holding/newrelic/newrelic.jar'
+                    ]
+                }
+                 exec {
+                    executable = 'curl'
+                    args = ['--connect-timeout', '30',
+                            '-o', "${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml",
+                            'https://tools.innovateuk.org/holding/newrelic/newrelic.yml'
+                    ]
+                }
+            }
+        }
+
         task prepareDockerFile(type: Copy) {
+            dependsOn getNewRelicAgent
 
             ext.appName = 'default-service-name'
             outputs.upToDateWhen { false }
@@ -26,6 +47,7 @@ subprojects {
             push = false
             applicationName = 'default-service-name'
             dockerfile = file('src/main/docker/Dockerfile')
+            tagVersion = 'latest'
             doFirst {
                 copy {
                     from jar
@@ -37,6 +59,11 @@ subprojects {
                 }
                 copy {
                     from file("${rootProject.projectDir}/setup-files/scripts/docker/coscale-monitoring.sh")
+                    into stageDir
+                }
+                copy {
+                    from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar")
+                    from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml")
                     into stageDir
                 }
             }
@@ -76,4 +103,3 @@ ext {
     javaLanguageLevel = 1.8
     generatedMapperSourcesDir = 'build/classes/main/org/innovateuk/ifs/mappers'
 }
-

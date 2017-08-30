@@ -26,6 +26,12 @@ Your details: Server-side validations
     And the user selects the checkbox          termsAndConditions
     And the user clicks the button/link        jQuery=button:contains("Create account")
     And the user should see an error           Password is too weak.
+    And the user enters text to a text field   id=firstName   !@£$
+    And the user enters text to a text field   id=lastName    &*(^
+    And the user enters text to a text field   id=password    ${correct_password}
+    And the user clicks the button/link        jQuery=button:contains("Create account")
+    And the user should see an error           Invalid first name.
+    And the user should see an error           Invalid last name.
     When the user enters text to a text field  id=firstName    ${EMPTY}
     And the user enters text to a text field   id=lastName    ${EMPTY}
     And the user enters text to a text field   id=phoneNumber    ${EMPTY}
@@ -88,7 +94,7 @@ the user cannot login with the invalid email
     [Arguments]    ${invalid_email_addy}
     go to                                     ${LOGIN_URL}
     Input Text                                id=username    ${invalid_email_addy}
-    Input Password                            id=password    Passw0rd123
+    Input Password                            id=password  ${correct_password}
     Click Button                              css=button[name="_eventId_proceed"]
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    The user should see the text in the page    Please enter a valid e-mail address
     Run Keyword If    '${status}' == 'FAIL'   The user should see the text in the page    Please enter a valid email address
@@ -102,14 +108,14 @@ Applicant goes to the registration form
     Given the user clicks the button/link      link=Home and industrial efficiency programme
     When the user clicks the button/link       link=Start new application
     And the user clicks the button/link        jQuery=.button:contains("Create account")
+    And the user selects the radio button      organisationTypeId    radio-1
+    And the user clicks the button/link        jQuery=button:contains("Save and continue")
     When the user enters text to a text field  id=organisationSearchName    Hive IT
     And the user clicks the button/link        id=org-search
     And the user clicks the button/link        Link=${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
     And the user selects the checkbox          address-same
     And the user clicks the button/link        jQuery=button:contains("Continue")
-    And the user selects the radio button      organisationTypeId    radio-1
     And the user clicks the button/link        jQuery=button:contains("Save and continue")
-    And the user clicks the button/link        jQuery=a:contains("Save and continue")
 
 the user fills in valid details
     the user enters text to a text field  id=firstName    O'Brian Elliot-Murray    #First and last name containing hyphen, space and aposthrophe check

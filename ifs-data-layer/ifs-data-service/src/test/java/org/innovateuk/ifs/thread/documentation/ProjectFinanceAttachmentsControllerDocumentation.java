@@ -14,6 +14,7 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import javax.servlet.http.HttpServletRequest;
 import java.util.function.Function;
 
+import static java.time.ZonedDateTime.now;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -43,7 +44,7 @@ public class ProjectFinanceAttachmentsControllerDocumentation extends BaseContro
     @Test
     public void findOne() throws Exception {
         final Long id = 22L;
-        AttachmentResource attachmentResource = new AttachmentResource(id, "name", "application/pdf", 1234);
+        AttachmentResource attachmentResource = new AttachmentResource(id, "name", "application/pdf", 1234, now());
         when(projectFinanceAttachmentServiceMock.findOne(id)).thenReturn(serviceSuccess(attachmentResource));
 
         mockMvc.perform(get("/project/finance/attachments/{attachmentId}", id))
@@ -71,7 +72,6 @@ public class ProjectFinanceAttachmentsControllerDocumentation extends BaseContro
     @Test
     public void delete() throws Exception {
         final Long id = 22L;
-        AttachmentResource attachmentResource = new AttachmentResource(id, "name", "application/pdf", 1234);
         when(projectFinanceAttachmentServiceMock.delete(id)).thenReturn(serviceSuccess());
 
         mockMvc.perform(RestDocumentationRequestBuilders.delete("/project/finance/attachments/{attachmentId}", id))
@@ -87,7 +87,7 @@ public class ProjectFinanceAttachmentsControllerDocumentation extends BaseContro
     public void upload() throws Exception {
         final Long id = 22L;
         final Long projectId = 77L;
-        final AttachmentResource attachmentResource = new AttachmentResource(id, "randomFile.pdf", "application/pdf", 1234);
+        final AttachmentResource attachmentResource = new AttachmentResource(id, "randomFile.pdf", "application/pdf", 1234, now());
         when(projectFinanceAttachmentServiceMock.upload(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
                 eq(projectId), any(HttpServletRequest.class))).thenReturn(serviceSuccess(attachmentResource));
 
@@ -120,7 +120,7 @@ public class ProjectFinanceAttachmentsControllerDocumentation extends BaseContro
         return null;
     }
 
-    protected HttpHeaders createFileUploadHeader(String contentType, long contentLength) {
+    private HttpHeaders createFileUploadHeader(String contentType, long contentLength) {
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(contentType));
         headers.setContentLength(contentLength);

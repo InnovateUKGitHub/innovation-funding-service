@@ -41,7 +41,6 @@ import static org.innovateuk.ifs.commons.rest.ValidationMessages.collectValidati
 
 @Controller
 @RequestMapping("/application")
-@PreAuthorize("hasAuthority('applicant')")
 public class ApplicationSubmitController {
 
     @Autowired
@@ -90,6 +89,7 @@ public class ApplicationSubmitController {
         return applicationModelPopulator.userIsLeadApplicant(application, user.getId()) && application.isSubmittable();
     }
 
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead')")
     @GetMapping("/{applicationId}/summary")
     public String applicationSummary(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                      UserResource user) {
@@ -121,6 +121,7 @@ public class ApplicationSubmitController {
         }
     }
 
+    @PreAuthorize("hasAuthority('applicant')")
     @PostMapping("/{applicationId}/summary")
     public String applicationSummarySubmit(@PathVariable("applicationId") long applicationId,
                                            UserResource user,
@@ -139,6 +140,7 @@ public class ApplicationSubmitController {
 
                 if (collectValidationMessages(markAsCompleteErrors).hasErrors()) {
                     questionService.markAsIncomplete(markQuestionCompleteId, applicationId, processRole.getId());
+                    return "redirect:/application/" + applicationId + "/form/question/edit/" + markQuestionCompleteId + "?mark_as_complete=true";
                 }
             }
         }
@@ -146,6 +148,7 @@ public class ApplicationSubmitController {
         return "redirect:/application/" + applicationId + "/summary";
     }
 
+    @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/{applicationId}/confirm-submit")
     public String applicationConfirmSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                            UserResource user) {
@@ -156,6 +159,7 @@ public class ApplicationSubmitController {
         return "application-confirm-submit";
     }
 
+    @PreAuthorize("hasAuthority('applicant')")
     @PostMapping("/{applicationId}/submit")
     public String applicationSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                     UserResource user,
@@ -168,20 +172,19 @@ public class ApplicationSubmitController {
         }
 
         applicationRestService.updateApplicationState(applicationId, SUBMITTED).getSuccessObjectOrThrowException();
-        application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, model, form, userApplicationRoles, Optional.empty());
+        applicationModelPopulator.addApplicationWithoutDetails(application, competition, model);
+
         return "application-submitted";
     }
 
+    @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/{applicationId}/track")
-    public String applicationTrack(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
-                                   UserResource user) {
+    public String applicationTrack(Model model,
+                                   @PathVariable("applicationId") long applicationId) {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, model, form, userApplicationRoles, Optional.empty());
+        applicationModelPopulator.addApplicationWithoutDetails(application, competition, model);
         return "application-track";
     }
 

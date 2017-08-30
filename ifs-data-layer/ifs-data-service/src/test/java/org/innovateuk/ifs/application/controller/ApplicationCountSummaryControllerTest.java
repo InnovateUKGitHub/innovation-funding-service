@@ -52,4 +52,44 @@ public class ApplicationCountSummaryControllerTest extends BaseControllerMockMVC
 
         verify(applicationCountSummaryServiceMock, only()).getApplicationCountSummariesByCompetitionId(competitionId, page, pageSize, ofNullable(filter));
     }
+
+    @Test
+    public void applicationCountSummariesByCompetitionIdAndInnovationArea() throws Exception {
+        long competitionId = 1L;
+        long assessorId = 10L;
+        int page = 2;
+        int pageSize = 3;
+        long innovationAreaId = 2L;
+        String filter = "";
+        String sortField = "";
+
+        ApplicationCountSummaryPageResource pageResource = new ApplicationCountSummaryPageResource();
+
+        when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, assessorId, page, pageSize, ofNullable(innovationAreaId), filter, sortField)).thenReturn(serviceSuccess(pageResource));
+
+        mockMvc.perform(get("/applicationCountSummary/findByCompetitionIdAndInnovationArea/{competitionId}?assessorId={assessorId}&page={page}&size={pageSize}&innovationArea={innovationArea}&sortField={sortField}&filter={filter}", competitionId, assessorId, page, pageSize, innovationAreaId, sortField, filter))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(pageResource)));
+
+        verify(applicationCountSummaryServiceMock, only()).getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, assessorId, page, pageSize, ofNullable(innovationAreaId), "", "");
+    }
+
+    @Test
+    public void applicationCountSummariesByCompetitionIdAndInnovationAreaFiltered() throws Exception {
+        long competitionId = 1L;
+        long assessorId = 11L;
+        int page = 1;
+        int pageSize = 4;
+        long innovationAreaId = 9L;
+        String filter = "filter";
+        String sortField = "";
+
+        ApplicationCountSummaryPageResource newPageResource = new ApplicationCountSummaryPageResource();
+
+        when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, assessorId, page, pageSize, ofNullable(innovationAreaId), filter, sortField)).thenReturn(serviceSuccess(newPageResource));
+
+        mockMvc.perform(get("/applicationCountSummary/findByCompetitionIdAndInnovationArea/{competitionId}?assessorId={assessorId}&page={page}&size={pageSize}&innovationArea={innovationArea}&sortField={sortField}&filter={filter}", competitionId, assessorId, page, pageSize, innovationAreaId, sortField, filter))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(newPageResource)));
+    }
 }

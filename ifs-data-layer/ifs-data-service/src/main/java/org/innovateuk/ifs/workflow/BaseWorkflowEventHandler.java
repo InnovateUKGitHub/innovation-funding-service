@@ -2,15 +2,15 @@ package org.innovateuk.ifs.workflow;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.invite.domain.ProcessActivity;
+import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.domain.Process;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
-import org.innovateuk.ifs.workflow.resource.OutcomeType;
-import org.innovateuk.ifs.workflow.resource.ProcessStates;
+import org.innovateuk.ifs.workflow.resource.ProcessEvent;
+import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.messaging.Message;
@@ -29,7 +29,7 @@ import static org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction.testi
  * A superclass for workflow handlers that expose public handler methods for pushing Process subclasses through
  * workflows
  */
-public abstract class BaseWorkflowEventHandler<ProcessType extends Process<ParticipantType, TargetType, StateType>, StateType extends ProcessStates, EventType extends OutcomeType, TargetType extends ProcessActivity, ParticipantType> {
+public abstract class BaseWorkflowEventHandler<ProcessType extends Process<ParticipantType, TargetType, StateType>, StateType extends ProcessState, EventType extends ProcessEvent, TargetType extends ProcessActivity, ParticipantType> {
 
     private static final Log LOG = LogFactory.getLog(BaseWorkflowEventHandler.class);
 

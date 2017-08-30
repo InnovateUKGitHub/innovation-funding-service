@@ -60,10 +60,6 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("name", names);
     }
 
-    public CompetitionResourceBuilder withDescription(String... descriptions) {
-        return withArraySetFieldByReflection("description", descriptions);
-    }
-
     public CompetitionResourceBuilder withAssessorAcceptsDate(ZonedDateTime... assessorAcceptsDates) {
         return withArraySetFieldByReflection("assessorAcceptsDate", assessorAcceptsDates);
     }
@@ -200,7 +196,13 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("nonIfsUrl", nonIfsUrl);
     }
 
+    public CompetitionResourceBuilder withHasAssessmentPanel(Boolean... hasAssessmentPanel) {
+        return withArraySetFieldByReflection("hasAssessmentPanel", hasAssessmentPanel);
+    }
 
+    public CompetitionResourceBuilder withHasInterviewStage(Boolean... hasInterviewStage) {
+        return withArraySetFieldByReflection("hasInterviewStage", hasInterviewStage);
+    }
 
     @Override
     protected CompetitionResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionResource>> actions) {

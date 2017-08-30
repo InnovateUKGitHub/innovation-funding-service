@@ -43,9 +43,7 @@ import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
-import org.innovateuk.ifs.invite.service.InviteRestService;
-import org.innovateuk.ifs.invite.service.RejectionReasonRestService;
+import org.innovateuk.ifs.invite.service.*;
 import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
@@ -59,9 +57,9 @@ import org.innovateuk.ifs.project.otherdocuments.OtherDocumentsService;
 import org.innovateuk.ifs.project.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
-import org.innovateuk.ifs.project.status.service.StatusRestService;
 import org.innovateuk.ifs.project.spendprofile.service.SpendProfileService;
 import org.innovateuk.ifs.project.status.StatusService;
+import org.innovateuk.ifs.project.status.service.StatusRestService;
 import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.service.*;
@@ -212,6 +210,8 @@ public class BaseUnitTest {
     @Mock
     public ProjectDetailsService projectDetailsService;
     @Mock
+    public InviteUserService inviteUserServiceMock;
+    @Mock
     public MonitoringOfficerService monitoringOfficerService;
     @Mock
     public OtherDocumentsService otherDocumentsService;
@@ -234,9 +234,11 @@ public class BaseUnitTest {
     @Mock
     protected StatusRestService statusRestService;
     @Mock
-    private CookieUtil cookieUtil;
+    protected CookieUtil cookieUtil;
     @Mock
     protected UserRestService userRestServiceMock;
+    @Mock
+    protected InviteUserRestService inviteUserRestServiceMock;
     @Mock
     protected AssessmentRestService assessmentRestService;
     @Mock
@@ -255,9 +257,10 @@ public class BaseUnitTest {
     protected OrganisationDetailsRestService organisationDetailsRestService;
     @Mock
     protected ApplicationResearchCategoryRestService applicationResearchCategoryRestService;
-
     @Mock
     public GrantOfferLetterService grantOfferLetterService;
+    @Mock
+    public ApplicationFundingDecisionService applicationFundingDecisionService;
 
     @Spy
     @InjectMocks
@@ -276,7 +279,7 @@ public class BaseUnitTest {
     public Map<Long, FormInputResponseResource> formInputsToFormInputResponses;
     public List<CompetitionResource> competitionResources;
     public CompetitionResource competitionResource;
-    private Long competitionId = 1l;
+    private Long competitionId = 1L;
     public List<UserResource> users;
     public List<OrganisationResource> organisations;
     TreeSet<OrganisationResource> organisationSet;
@@ -321,7 +324,6 @@ public class BaseUnitTest {
 
     @Before
     public void setup() {
-
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
 
@@ -402,8 +404,12 @@ public class BaseUnitTest {
     }
 
     public void setupCompetition() {
-        competitionResource = newCompetitionResource().with(id(competitionId)).with(name("Competition x")).with(description("Description afds")).
-                withStartDate(ZonedDateTime.now().minusDays(2)).withEndDate(ZonedDateTime.now().plusDays(5)).withCompetitionStatus(CompetitionStatus.OPEN)
+        competitionResource = newCompetitionResource()
+                .with(id(competitionId))
+                .with(name("Competition x"))
+                .withStartDate(ZonedDateTime.now().minusDays(2))
+                .withEndDate(ZonedDateTime.now().plusDays(5))
+                .withCompetitionStatus(CompetitionStatus.OPEN)
                 .build();
 
         QuestionResourceBuilder questionResourceBuilder = newQuestionResource().withCompetition(competitionResource.getId());
@@ -707,7 +713,7 @@ public class BaseUnitTest {
 
     public void setupInvites() {
         when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(emptyList()));
-        InviteOrganisationResource inviteOrganisation = new InviteOrganisationResource(2L, "Invited Organisation Ltd", null, null);
+        InviteOrganisationResource inviteOrganisation = new InviteOrganisationResource(2L, "Invited Organisation Ltd", "Org type", null, null);
 
         invite = new ApplicationInviteResource();
         invite.setStatus(InviteStatus.SENT);
@@ -773,8 +779,10 @@ public class BaseUnitTest {
         ReflectionTestUtils.setField(cookieUtil, "encryptor", encryptor);
 
         doCallRealMethod().when(cookieUtil).saveToCookie(any(HttpServletResponse.class), any(String.class), any(String.class));
+        doCallRealMethod().when(cookieUtil).saveToCompressedCookie(any(HttpServletResponse.class), any(String.class), any(String.class));
         doCallRealMethod().when(cookieUtil).getCookie(any(HttpServletRequest.class), any(String.class));
         doCallRealMethod().when(cookieUtil).getCookieValue(any(HttpServletRequest.class), any(String.class));
+        doCallRealMethod().when(cookieUtil).getCompressedCookieValue(any(HttpServletRequest.class), any(String.class));
         doCallRealMethod().when(cookieUtil).removeCookie(any(HttpServletResponse.class), any(String.class));
         doCallRealMethod().when(cookieUtil).getCookieAs(any(HttpServletRequest.class), any(String.class), any());
         doCallRealMethod().when(cookieUtil).getCookieAsList(any(HttpServletRequest.class), any(String.class), any());

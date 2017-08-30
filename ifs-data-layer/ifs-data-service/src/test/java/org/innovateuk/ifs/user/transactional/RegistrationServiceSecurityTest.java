@@ -2,8 +2,11 @@ package org.innovateuk.ifs.user.transactional;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
+import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.security.UserLookupStrategies;
 import org.innovateuk.ifs.user.security.UserPermissionRules;
 import org.junit.Before;
@@ -61,9 +64,39 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
 
         assertAccessDenied(() -> classUnderTest.activateUser(123L), () -> {
             verify(rules).systemRegistrationUserCanActivateUsers(userToActivate, getLoggedInUser());
+            verify(rules).ifsAdminCanReactivateUsers(userToActivate, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
     }
+
+    @Test
+    public void testReactivateUser() {
+
+        UserResource userToActivate = newUserResource().build();
+
+        when(lookup.findById(123L)).thenReturn(userToActivate);
+
+        assertAccessDenied(() -> classUnderTest.activateUser(123L), () -> {
+            verify(rules).systemRegistrationUserCanActivateUsers(userToActivate, getLoggedInUser());
+            verify(rules).ifsAdminCanReactivateUsers(userToActivate, getLoggedInUser());
+            verifyNoMoreInteractions(rules);
+        });
+    }
+
+
+    @Test
+    public void testDeactivateUser() {
+
+        UserResource userToActivate = newUserResource().build();
+
+        when(lookup.findById(123L)).thenReturn(userToActivate);
+
+        assertAccessDenied(() -> classUnderTest.deactivateUser(123L), () -> {
+            verify(rules).ifsAdminCanDeactivateUsers(userToActivate, getLoggedInUser());
+            verifyNoMoreInteractions(rules);
+        });
+    }
+
 
     @Test
     public void testSendUserVerificationEmail() throws Exception {
@@ -85,6 +118,19 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
                 () -> classUnderTest.resendUserVerificationEmail(userToSendVerificationEmail),
                 () -> {
                     verify(rules).systemRegistrationUserCanSendUserVerificationEmail(userToSendVerificationEmail, getLoggedInUser());
+                    verifyNoMoreInteractions(rules);
+                });
+    }
+
+    @Test
+    public void testEditInternalUser() throws Exception {
+        UserResource userToEdit = UserResourceBuilder.newUserResource().build();
+        UserRoleType userRoleType = UserRoleType.SUPPORT;
+
+        assertAccessDenied(
+                () -> classUnderTest.editInternalUser(userToEdit, userRoleType),
+                () -> {
+                    verify(rules).ifsAdminCanEditInternalUser(userToEdit, getLoggedInUser());
                     verifyNoMoreInteractions(rules);
                 });
     }
@@ -122,6 +168,16 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
         }
 
         @Override
+        public ServiceResult<Void> createInternalUser(String inviteHash, InternalUserRegistrationResource userRegistrationResource) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> editInternalUser(UserResource userToEdit, UserRoleType userRoleType) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<Void> sendUserVerificationEmail(UserResource user, Optional<Long> competitionId) {
             return null;
         }
@@ -130,5 +186,8 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
         public ServiceResult<Void> resendUserVerificationEmail(UserResource user) {
             return null;
         }
+
+        @Override
+        public ServiceResult<Void> deactivateUser(long userId) { return null; }
     }
 }

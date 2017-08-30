@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiFunction;
 
 import static org.innovateuk.ifs.project.sections.SectionAccess.ACCESSIBLE;
@@ -85,7 +86,7 @@ public class SetupSectionsPermissionRules {
     @PermissionRule(value = "ACCESS_FINANCE_CHECKS_QUERIES_SECTION_ADD_QUERY", description = "A finance team user cannot add a query until a finance contact has been allocated for the organisation")
     public boolean internalCanAccessFinanceChecksAddQuery(ProjectOrganisationCompositeId target, UserResource user) {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(target.getProjectId());
-        return simpleFindFirst(projectUsers, pu -> pu.isFinanceContact() && pu.getOrganisation() == target.getOrganisationId()).isPresent() && doSectionCheck(target.getProjectId(), user, SetupSectionInternalUser::canAccessFinanceChecksQueriesSection);
+        return simpleFindFirst(projectUsers, pu -> pu.isFinanceContact() && Objects.equals(pu.getOrganisation(), target.getOrganisationId())).isPresent() && doSectionCheck(target.getProjectId(), user, SetupSectionInternalUser::canAccessFinanceChecksQueriesSection);
     }
 
     @PermissionRule(value = "ACCESS_FINANCE_CHECKS_NOTES_SECTION", description = "A finance team can always access the Finance checks notes section")
@@ -115,6 +116,7 @@ public class SetupSectionsPermissionRules {
         return sectionCheckFn.apply(sectionAccessor, user) == ACCESSIBLE;
     }
 
+    // TODO: review when IFS-1370 is implemented - RB
     private boolean isInternal(UserResource user) {
         return user.hasRole(UserRoleType.COMP_ADMIN)
                 || user.hasRole(UserRoleType.PROJECT_FINANCE);

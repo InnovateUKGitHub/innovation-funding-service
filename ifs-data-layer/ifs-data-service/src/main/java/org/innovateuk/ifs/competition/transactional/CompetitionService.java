@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +20,18 @@ import java.util.List;
 public interface CompetitionService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<CompetitionResource> getCompetitionById(final Long id);
+
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'MANAGE_INNOVATION_LEADS')")
+    ServiceResult<List<UserResource>> findInnovationLeads(final Long competitionId);
+
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'MANAGE_INNOVATION_LEADS')")
+    ServiceResult<Void> addInnovationLead(final Long competitionId, final Long innovationLeadUserId);
+
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'MANAGE_INNOVATION_LEADS')")
+    ServiceResult<Void> removeInnovationLead(final Long competitionId, final Long innovationLeadUserId);
+
+    @PostFilter("hasPermission(filterObject, 'READ')")
+    ServiceResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionResource>> findAll();
@@ -36,11 +49,11 @@ public interface CompetitionService {
     ServiceResult<List<CompetitionSearchResultItem>> findNonIfsCompetitions();
 
     @SecuredBySpring(value = "SEARCH", description = "Only internal users can search for competitions")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size);
 
     @SecuredBySpring(value = "COUNT", description = "Only internal users count competitions")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     ServiceResult<CompetitionCountResource> countCompetitions();
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")

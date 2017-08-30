@@ -20,19 +20,22 @@ Force Tags        Experian    Project Setup
 Resource          PS_Common.robot
 
 *** Variables ***
+&{lead_applicant_credentials_ef}  email=${PS_EF_APPLICATION_LEAD_PARTNER_EMAIL}  password=${short_password}
+&{collaborator1_credentials_ef}   email=${PS_EF_APPLICATION_PARTNER_EMAIL}  password=${short_password}
+&{collaborator2_credentials_ef}   email=${PS_EF_APPLICATION_ACADEMIC_EMAIL}  password=${short_password}
 
 *** Test Cases ***
 Project Finance can see Bank details requiring action
     [Documentation]    INFUND-3763, INFUND-4903
     [Tags]    HappyPath
-    [Setup]  log in as a different user            &{internal_finance_credentials}
+    [Setup]  log in as a different user   &{internal_finance_credentials}
     Given the user navigates to the page  ${server}/management/dashboard/project-setup
     When the user clicks the button/link  link=${PS_EF_Competition_Name}
     Then the user should see the element  jQuery=#table-project-status tr:nth-child(1) td:nth-child(2).status.ok
     And the user should see the element   jQuery=#table-project-status tr:nth-child(1) td:nth-child(3).status.action
     And the user should see the element   jQuery=#table-project-status tr:nth-child(1) td:nth-child(4).status.action
     Then the user clicks the button/link  jQuery=#table-project-status tr:nth-child(1) td:nth-child(4).status.action a
-    And the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details
+    And the user should be redirected to the correct page  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details
 
 Project Finance can see the company name with score
     [Documentation]  INFUND-3763
@@ -105,7 +108,6 @@ Bank account number and sort code validations server side
      And the user clicks the button/link           jQuery=.modal-partner-change-bank-details .button:contains("Update bank account details")   #Due to popup
      Then the user should see the text in the page    Please enter a valid account number
      And the user should see the text in the page    Please enter a valid sort code
-
 
 Project Finance cancels bank details changes
     [Documentation]    INFUND-4054,  INFUND-5899
@@ -192,54 +194,22 @@ Project partners cannot access this page
 *** Keywords ***
 the text box should be editable
     [Arguments]    ${text_field}
-    Wait Until Element Is Visible Without Screenshots    ${text_field}
-    Element Should Be Enabled    ${text_field}
+    Wait Until Element Is Visible Without Screenshots  ${text_field}
+    Element Should Be Enabled  ${text_field}
 
 all preliminary steps are completed
     finance contacts are submitted by all users
-    project lead submits project details
+    Log in as a different user  &{lead_applicant_credentials_ef}
+    project lead submits project details  ${PS_EF_APPLICATION_PROJECT}
     eligible partners submit their bank details
 
-
 finance contacts are submitted by all users
-    the guest user opens the browser
-    the user navigates to the page    ${server}
-    user submits his finance contacts  ${PS_EF_APPLICATION_ACADEMIC_EMAIL}  ${Wikivu_Id}
-    logout as user
-    user submits his finance contacts  ${PS_EF_APPLICATION_PARTNER_EMAIL}  ${Jetpulse_Id}
-    logout as user
-    user submits his finance contacts  ${PS_EF_APPLICATION_LEAD_PARTNER_EMAIL}  ${Ntag_Id}
-
-user submits his finance contacts
-    [Arguments]  ${user}  ${id}
-    The guest user inserts user email and password    ${user}    ${short_password}
-    the guest user clicks the log-in button
-    the user navigates to the page     ${server}/project-setup/project/${PS_EF_APPLICATION_PROJECT}/details/finance-contact?organisation=${id}
-    the user selects the radio button  financeContact  financeContact1
-    the user clicks the button/link    jQuery=.button:contains("Save")
-
-project lead submits project details
-    the user navigates to the page     ${server}/project-setup/project/${PS_EF_APPLICATION_PROJECT}/details/project-address
-    the user selects the radio button  addressType  address-use-org
-    the user clicks the button/link    jQuery=.button:contains("Save")
-    the user navigates to the page     ${server}/project-setup/project/${PS_EF_APPLICATION_PROJECT}/details/project-manager
-    the user selects the radio button  projectManager  projectManager2
-    the user clicks the button/link    jQuery=.button:contains("Save")
-    the user navigates to the page     ${server}/project-setup/project/${PS_EF_APPLICATION_PROJECT}/details
-    the user clicks the button/link    jQuery=.button:contains("Mark as complete")
-    the user clicks the button/link    jQuery=.button:contains("Submit")
+    the user logs-in in new browser            &{lead_applicant_credentials_ef}
+    the partner submits their finance contact  ${Ntag_Id}  ${PS_EF_APPLICATION_PROJECT}  &{lead_applicant_credentials_ef}
+    the partner submits their finance contact  ${Jetpulse_Id}  ${PS_EF_APPLICATION_PROJECT}  &{collaborator1_credentials_ef}
+    the partner submits their finance contact  ${Wikivu_Id}  ${PS_EF_APPLICATION_PROJECT}  &{collaborator2_credentials_ef}
 
 eligible partners submit their bank details
-    the user fills in his bank details  ${PS_EF_APPLICATION_ACADEMIC_EMAIL}
-    the user fills in his bank details  ${PS_EF_APPLICATION_PARTNER_EMAIL}
-    the user fills in his bank details  ${PS_EF_APPLICATION_LEAD_PARTNER_EMAIL}
-
-the user fills in his bank details
-    [Arguments]  ${user}
-    log in as a different user            ${user}  ${short_password}
-    the user navigates to the page        ${server}/project-setup/project/${PS_EF_APPLICATION_PROJECT}/bank-details
-    the user enters text to a text field  name=accountNumber  ${account_one}
-    the user enters text to a text field  name=sortCode  ${sortCode_one}
-    the user selects the radio button     addressType  address-use-org
-    the user clicks the button/link       jQuery=.button:contains("Submit bank account details")
-    the user clicks the button/link       jQuery=.button:contains("Submit")
+    partner submits his bank details  ${PS_EF_APPLICATION_LEAD_PARTNER_EMAIL}  ${PS_EF_APPLICATION_PROJECT}  ${account_one}  ${sortCode_one}
+    partner submits his bank details  ${PS_EF_APPLICATION_PARTNER_EMAIL}  ${PS_EF_APPLICATION_PROJECT}  ${account_one}  ${sortCode_one}
+    partner submits his bank details  ${PS_EF_APPLICATION_ACADEMIC_EMAIL}  ${PS_EF_APPLICATION_PROJECT}  ${account_one}  ${sortCode_one}

@@ -5,7 +5,7 @@ Variables  ../../libs/Initialisation.py
 ${docker}         0
 ${smoke_test}     0
 ${BROWSER}        chrome
-${SERVER_BASE}    ifs-local-dev
+${SERVER_BASE}    ifs.local-dev
 ${PROTOCOL}       https://
 ${SERVER}         ${PROTOCOL}${SERVER_BASE}
 ${RUNNING_ON_DEV}    ${EMPTY}
@@ -13,26 +13,33 @@ ${SAUCELABS_RUN}    1
 ${LOGIN_URL}      ${SERVER}/
 ${frontDoor}  ${server}/competition/search
 ${LOGGED_OUT_URL_FRAGMENT}    idp/profile/SAML2/Redirect/SSO
-${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}    100,452
-${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}    70,316
-${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}    28,901
+${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}    200,903
+${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}    140,632
+${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}    57,803
 ${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}    30%
-${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}    495
+${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}    990
 ${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}    0
 ${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}    100%
 ${DEFAULT_ACADEMIC_FUNDING_SOUGHT_WITH_COMMAS}    ${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}
-${DEFAULT_TOTAL_PROJECT_COST_WITH_COMMAS}   100,837
-${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}    102,452
-${DEFAULT_SUBCONTRACTING_COSTS_WITH_COMMAS_PLUS_2000}    47,000
+${DEFAULT_TOTAL_PROJECT_COST_WITH_COMMAS}   200,903
+${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}    202,903
+${DEFAULT_SUBCONTRACTING_COSTS_WITH_COMMAS_PLUS_2000}    92,000
 ${EMPIRE_LTD_ID}    22
 ${EMPIRE_LTD_NAME}    Empire Ltd
+
 #Competitions and Applications Variables
-${OPEN_COMPETITION_NAME}    Predicting market trends programme
-${OPEN_COMPETITION}    ${competition_ids['${OPEN_COMPETITION_NAME}']}
-${OPEN_COMPETITION_MAN}    ${SERVER}/management/competition/${OPEN_COMPETITION}
+${openCompetitionRTO_name}       Predicting market trends programme
+${openCompetitionRTO}            ${competition_ids['${openCompetitionRTO_name}']}
+${openCompetitionManagementRTO}  ${SERVER}/management/competition/${openCompetitionRTO}
+${applicationsForRTOComp}        ${SERVER}/management/competition/${openCompetitionRTO}/applications
+
+${openCompetitionBusinessRTO_name}      Home and industrial efficiency programme
+${openCompetitionBusinessRTO}           ${competition_ids['${openCompetitionBusinessRTO_name}']}
+${openCompetitionBusinessRTO_overview}  ${SERVER}/competition/${openCompetitionBusinessRTO}/overview/
+
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}    Aerospace technology investment sector
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}    ${competition_ids['${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}']}
-${OPEN_COMPETITION_NAME_2}    Home and industrial efficiency programme
+
 # Using double quotes below, cause there's an apostrophe in the title
 ${OPEN_COMPETITION_APPLICATION_NAME}      Climate science the history of Greenland\'s ice
 ${OPEN_COMPETITION_APPLICATION_1_NUMBER}  ${application_ids["${OPEN_COMPETITION_APPLICATION_NAME}"]}
@@ -80,20 +87,20 @@ ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
 ${SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/summary
 ${APPLICATION_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
 ${assessor_dashboard_url}    ${SERVER}/assessment/assessor/dashboard
-${COMPETITION_OVERVIEW_URL}     ${SERVER}/competition/${OPEN_COMPETITION}/overview/
-${PUBLIC_DESCRIPTION_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/question/430
-${TECHNICAL_APPROACH_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/question/436
-${YOUR_FINANCES_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/section/187
-${FINANCES_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/section/198
+
+${PUBLIC_DESCRIPTION_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/question/461
+${TECHNICAL_APPROACH_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/question/467
+${YOUR_FINANCES_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/section/202
+${FINANCES_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/section/213
 ${ACCOUNT_CREATION_FORM_URL}    ${SERVER}/registration/register?organisationId=1
-${ELIGIBILITY_INFO_URL}    ${SERVER}/competition/${OPEN_COMPETITION}/info/eligibility
-${SPEED_BUMP_URL}    ${SERVER}/application/create-authenticated/${OPEN_COMPETITION}
+
+
 ${EDIT_PROFILE_URL}    ${SERVER}/profile/edit
 ${APPLICATION_TEAM_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/team
-${COMP_MANAGEMENT_APPLICATIONS_LIST}    ${SERVER}/management/competition/${OPEN_COMPETITION}/applications
-${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}    ${SERVER}/management/competition/${OPEN_COMPETITION}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
+
+${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}    ${SERVER}/management/competition/${openCompetitionRTO}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
 ${COMP_MANAGEMENT_COMP_SETUP}    ${SERVER}/management/competition/setup/${COMP_SETUP_COMPETITION}
-${COMP_MANAGEMENT_UPDATE_COMP}    ${SERVER}/management/competition/setup/${OPEN_COMPETITION}
+${COMP_MANAGEMENT_UPDATE_COMP}    ${SERVER}/management/competition/setup/${openCompetitionRTO}
 ${COMP_MANAGEMENT_NOT_EDITABLE_COMP}    ${SERVER}/management/competition/setup/${NOT_EDITABLE_COMPETITION}
 ${COMP_MANAGEMENT_READY_TO_OPEN}    ${SERVER}/management/competition/setup/${READY_TO_OPEN_COMPETITION}
 ${COMP_MANAGEMENT_PROJECT_SETUP}    ${SERVER}/management/dashboard/project-setup
@@ -105,8 +112,9 @@ ${POSTCODE_LOOKUP_IMPLEMENTED}    ${EMPTY}
 ${COMP_ADMINISTRATOR_DASHBOARD}    ${SERVER}/management/dashboard
 ${UNTITLED_APPLICATION_DASHBOARD_LINK}    Untitled application (start here)
 ${UNTITLED_APPLICATION_NAME}    Untitled application
-${OPEN_COMPETITION_LINK}    ${OPEN_COMPETITION_NAME}
-${application_name}    Submit test application
+
+${application_bus_name}    Submit business test application
+${application_rto_name}    Submit rto test application
 ${Competition_E2E}    Evolution of the global phosphorus cycle
 ${test_title}     test title
 ${SMALL_ORGANISATION_SIZE}     1
@@ -116,6 +124,7 @@ ${LARGE_ORGANISATION_SIZE}     3
 ${UPLOAD_FOLDER}    uploaded_files
 ${DOWNLOAD_FOLDER}    download_files
 ${valid_pdf}      testing.pdf
+${5mb_pdf}        testing_5MB.pdf
 ${too_large_pdf}    large.pdf
 ${text_file}      testing.txt
 ${excel_file}     testing.xlsx
@@ -156,5 +165,11 @@ ${CLOSED_COMPETITION_NAME}    Machine learning for transport infrastructure
 ${CLOSED_COMPETITION_APPLICATION_TITLE}   Neural networks to optimise freight train routing
 ${CLOSED_COMPETITION_APPLICATION}   ${application_ids["${CLOSED_COMPETITION_APPLICATION_TITLE}"]}
 ${UPCOMING_COMPETITION_TO_ASSESS_NAME}    Home and industrial efficiency programme
-${UPCOMING_COMPETITION_TO_ASSESS_ID}    11
+${UPCOMING_COMPETITION_TO_ASSESS_ID}  ${competition_ids['${UPCOMING_COMPETITION_TO_ASSESS_NAME}']}
 ${CURRENTLY_WAITING_UNTIL}      false
+
+# Organisation type ids
+${BUSINESS_TYPE_ID}       1
+${ACADEMIC_TYPE_ID}       2
+${RTO_TYPE_ID}            3
+${PUBLIC_SECTOR_TYPE_ID}  4

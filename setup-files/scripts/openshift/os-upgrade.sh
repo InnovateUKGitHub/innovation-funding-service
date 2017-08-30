@@ -6,30 +6,17 @@ PROJECT=$1
 TARGET=$2
 VERSION=$3
 
-if [[ (${TARGET} == "local") ]]; then
-  HOST=ifs-local
-  ROUTE_DOMAIN=apps.$HOST
-elif [[ ${TARGET} == "production" ]]; then
-  HOST=apply-for-innovation-funding.service.gov.uk
-  ROUTE_DOMAIN=$HOST
-  PROJECT="production"
-else
-  HOST=prod.ifs-test-clusters.com
-  ROUTE_DOMAIN=apps.$HOST
-fi
+. $(dirname $0)/deploy-functions.sh
+. $(dirname $0)/local-deploy-functions.sh
 
-if [[ ${TARGET} == "demo" ]]; then PROJECT="demo"; fi
-if [[ ${TARGET} == "uat" ]]; then PROJECT="uat"; fi
-if [[ ${TARGET} == "sysint" ]]; then PROJECT="sysint"; fi
-if [[ ${TARGET} == "perf" ]]; then PROJECT="perf"; fi
-
-REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
-INTERNAL_REGISTRY=172.30.80.28:5000
-
-if [ -z "$bamboo_openshift_svc_account_token" ]; then  SVC_ACCOUNT_TOKEN=$(oc whoami -t); else SVC_ACCOUNT_TOKEN=${bamboo_openshift_svc_account_token}; fi
-
-SVC_ACCOUNT_CLAUSE="--namespace=${PROJECT} --token=${SVC_ACCOUNT_TOKEN} --server=https://console.prod.ifs-test-clusters.com:443 --insecure-skip-tls-verify=true"
-REGISTRY_TOKEN=${SVC_ACCOUNT_TOKEN};
+PROJECT=$(getProjectName $PROJECT $TARGET)
+SVC_ACCOUNT_TOKEN=$(getSvcAccountToken)
+HOST=$(getHost $TARGET)
+ROUTE_DOMAIN=$(getRouteDomain $TARGET $HOST)
+REGISTRY=$(getRegistry)
+INTERNAL_REGISTRY=$(getInternalRegistry)
+SVC_ACCOUNT_CLAUSE=$(getSvcAccountClause $TARGET $PROJECT $SVC_ACCOUNT_TOKEN)
+REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 
 function upgradeServices {
     # data-service
@@ -45,8 +32,7 @@ function upgradeServices {
     oc apply -f os-files-tmp/44-project-setup-svc.yml ${SVC_ACCOUNT_CLAUSE}
 
     # shib & idp
-    if [[ ${TARGET} == "production" || ${TARGET} == "demo" || ${TARGET} == "uat" || ${TARGET} == "sysint" || ${TARGET} == "perf" ]]
-    then
+    if $(isNamedEnvironment $TARGET); then
         oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/named-envs/56-${TARGET}-idp.yml
         oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/named-envs/5-${TARGET}-shib.yml
     else
@@ -101,15 +87,11 @@ function rolloutStatus {
     done
 }
 
-. $(dirname $0)/deploy-functions.sh
-
 # Entry point
 cleanUp
 cloneConfig
 tailorAppInstance
-
 useContainerRegistry
-pushApplicationImages
 upgradeServices
 
 if [[ ${bamboo_openshift_force_reload} == "true" ]]

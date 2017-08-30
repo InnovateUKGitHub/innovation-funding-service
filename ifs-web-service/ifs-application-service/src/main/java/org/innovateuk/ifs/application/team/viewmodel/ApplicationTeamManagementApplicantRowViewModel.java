@@ -3,6 +3,9 @@ package org.innovateuk.ifs.application.team.viewmodel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+
 /**
  * Holder of model attributes for an applicant in the Application Team Management view.
  */
@@ -13,19 +16,21 @@ public class ApplicationTeamManagementApplicantRowViewModel {
     private String email;
     private boolean lead;
     private boolean pending;
+    private ZonedDateTime pendingSince;
     private boolean removable;
 
-    public ApplicationTeamManagementApplicantRowViewModel(String name, String email, boolean lead, boolean pending, boolean removable) {
-        this(null, name, email, lead, pending, removable);
+    public ApplicationTeamManagementApplicantRowViewModel(String name, String email, boolean lead, boolean pending, boolean removable, ZonedDateTime pendingSince) {
+        this(null, name, email, lead, pending, removable, pendingSince);
     }
 
-    public ApplicationTeamManagementApplicantRowViewModel(Long applicationInviteId, String name, String email, boolean lead, boolean pending, boolean removable) {
+    public ApplicationTeamManagementApplicantRowViewModel(Long applicationInviteId, String name, String email, boolean lead, boolean pending, boolean removable, ZonedDateTime pendingSince) {
         this.applicationInviteId = applicationInviteId;
         this.name = name;
         this.email = email;
         this.lead = lead;
         this.pending = pending;
         this.removable = removable;
+        this.pendingSince = pendingSince;
     }
 
     public Long getApplicationInviteId() {
@@ -50,6 +55,18 @@ public class ApplicationTeamManagementApplicantRowViewModel {
 
     public boolean isRemovable() {
         return removable;
+    }
+
+    public long getDaysPending() {
+        return ChronoUnit.DAYS.between(pendingSince, ZonedDateTime.now());
+    }
+
+    public ZonedDateTime getPendingSince() {
+        return pendingSince;
+    }
+
+    public void setPendingSince(ZonedDateTime pendingSince) {
+        this.pendingSince = pendingSince;
     }
 
     @Override

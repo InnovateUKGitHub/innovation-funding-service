@@ -31,6 +31,9 @@ Resource          PS_Common.robot
 # is tested in the File 01__project_details.robot
 
 *** Variables ***
+&{lead_applicant_credentials_bd}  email=${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  password=${short_password}
+&{collaborator1_credentials_bd}   email=${PS_BD_APPLICATION_PARTNER_EMAIL}  password=${short_password}
+&{collaborator2_credentials_bd}   email=${PS_BD_APPLICATION_ACADEMIC_EMAIL}  password=${short_password}
 
 *** Test Cases ***
 Links to other sections in Project setup dependent on project details for partners
@@ -89,8 +92,7 @@ Bank details client side validations
     And the user should see an error    Please enter a valid account number
     When the user enters text to a text field    name=accountNumber    abcdefgh
     And the user moves focus away from the element    name=accountNumber
-    Then the user should not see the text in the page    Please enter an account number.
-    And the user should see the text in the page    Please enter a valid account number.
+    Then the user should see the text in the page    Please enter an account number.
     When the user enters text to a text field    name=accountNumber    12345679
     And the user moves focus away from the element    name=accountNumber
     Then the user should not see the text in the page    Please enter an account number.
@@ -99,9 +101,9 @@ Bank details client side validations
     When the user enters text to a text field    name=sortCode    12345
     And the user moves focus away from the element    name=sortCode
     Then the user should see an error    Please enter a valid sort code.
-    When the user enters text to a text field    name=sortCode    abcde
+    When the user enters text to a text field    name=sortCode    abcdef
     And the user moves focus away from the element    name=sortCode
-    Then the user should see an error    Please enter a valid sort code.
+    Then the user should see the text in the page    Please enter a sort code.
     When the user enters text to a text field    name=sortCode    123456
     And the user moves focus away from the element    name=sortCode
     Then the user should not see the text in the page    Please enter a sort code.
@@ -172,8 +174,8 @@ Submission of bank details for academic user
     And the user should see the element            jQuery=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(3)
     And the user clicks the button/link            link=Project setup status
     And the user clicks the button/link            link=Bank details
-    When partner submits his bank details          ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${PS_BD_APPLICATION_PROJECT}  00000123  000004
-    Then wait until element is not visible without screenshots  30  500ms  jQuery=.error-summary-list li:contains("Bank details cannot be validated.")
+    When partner fills in his bank details         ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${PS_BD_APPLICATION_PROJECT}  00000123  000004
+    Then wait until keyword succeeds without screenshots  30 s  500 ms  the user should see the element  jQuery=.error-summary-list li:contains("Bank details cannot be validated.")
     # Added this wait so to give extra execution time
     When the user enters text to a text field      name=accountNumber   ${account_one}
     And the user enters text to a text field       name=sortCode  ${sortCode_one}
@@ -212,13 +214,12 @@ Status updates correctly for internal user's table
 User sees error response for invalid bank details for non-lead partner
     [Documentation]   INFUND-8688
     [Tags]    HappyPath
-    #TODO After completion of INFUND-6090: Update with new Bank account pair
     Given log in as a different user               ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${short_password}
     When the user clicks the button/link           jQuery=.projects-in-setup a:contains("${PS_BD_APPLICATION_TITLE}")
     Then the user clicks the button/link           link=Bank details
-    When partner submits his bank details  ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${PS_BD_APPLICATION_PROJECT}  00000123  000004
+    When partner fills in his bank details         ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${PS_BD_APPLICATION_PROJECT}  00000123  000004
     # Stub is configured to return error response for these values
-    Then wait until element is not visible without screenshots  30  500ms  jQuery=.error-summary-list li:contains("Bank details cannot be validated.")
+    Then wait until keyword succeeds without screenshots  30 s  500 ms  the user should see the element  jQuery=.error-summary-list li:contains("Bank details cannot be validated.")
     # Added this wait so to give extra execution time
 
 Non lead partner submits bank details
@@ -314,28 +315,16 @@ the user moves focus away from the element
 
 the user submits the bank account details
     [Arguments]    ${account_number}    ${sort_code}
-    the user enters text to a text field    name=accountNumber    ${account_number}
-    the user enters text to a text field    name=sortCode    ${sort_code}
-    the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
-    the user clicks the button/link    jQuery=.button:contains("Submit")
+    the user enters text to a text field  name=accountNumber  ${account_number}
+    the user enters text to a text field  name=sortCode  ${sort_code}
+    the user clicks the button/link       jQuery=.button:contains("Submit bank account details")
+    the user clicks the button/link       jQuery=.button:contains("Submit")
 
 finance contacts are submitted by all users
-    the guest user opens the browser
-    the user navigates to the page    ${server}
-    user submits his finance contacts  ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${Armstrong_Butler_Id}
-    logout as user
-    user submits his finance contacts  ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${A_B_Cad_Services_Id}
-    logout as user
-    user submits his finance contacts  ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${Vitruvius_Id}
-
-user submits his finance contacts
-    [Arguments]  ${user}  ${id}
-    The guest user inserts user email and password    ${user}    ${short_password}
-    the guest user clicks the log-in button
-    the user navigates to the page     ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/details/finance-contact?organisation=${id}
-    the user selects the radio button  financeContact  financeContact1
-    the user clicks the button/link    jQuery=.button:contains("Save")
-
+    the user logs-in in new browser            &{lead_applicant_credentials_bd}
+    the partner submits their finance contact  ${Vitruvius_Id}  ${PS_BD_APPLICATION_PROJECT}  &{lead_applicant_credentials_bd}
+    the partner submits their finance contact  ${A_B_Cad_Services_Id}  ${PS_BD_APPLICATION_PROJECT}  &{collaborator1_credentials_bd}
+    the partner submits their finance contact  ${Armstrong_Butler_Id}  ${PS_BD_APPLICATION_PROJECT}  &{collaborator2_credentials_bd}
 
 the project finance user downloads the bank details
     the user downloads the file  ${internal_finance_credentials["email"]}  ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status/bank-details/export  ${DOWNLOAD_FOLDER}/bank_details.csv

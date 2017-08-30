@@ -1,6 +1,6 @@
 title: "A simple secondary button component"
-status: wip
+status: ready
 context:
   text: "Secondary actions"
   citation: "Fractal Docs"
-notes: UXers to provide documentation on rules for using this component
+notes: Secondary CTA range left (falls under primary CTA on mobile)

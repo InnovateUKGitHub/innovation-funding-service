@@ -21,12 +21,14 @@ The user navigates to the page without the usual headers
     [Arguments]    ${TARGET_URL}
     Wait for autosave
     Go To    ${TARGET_URL}
+    Run Keyword And Ignore Error Without Screenshots    Confirm Action
     # Error checking
     the user should not see an error in the page
 
 The user should be redirected to the correct page
     [Arguments]    ${URL}
     Wait Until Keyword Succeeds Without Screenshots    30    200ms    Location Should Contain    ${URL}
+    Run Keyword And Ignore Error Without Screenshots    Confirm Action
     the user should not see an error in the page
     # Header checking (INFUND-1892)
     Wait Until Element Is Visible Without Screenshots    id=global-header
@@ -35,6 +37,7 @@ The user should be redirected to the correct page
 the user should be redirected to the correct page without the usual headers
     [Arguments]    ${URL}
     Wait Until Keyword Succeeds Without Screenshots    30    200ms    Location Should Contain    ${URL}
+    Run Keyword And Ignore Error Without Screenshots    Confirm Action
     the user should not see an error in the page
 
 The user should see the text in the page
@@ -49,7 +52,7 @@ The user goes back to the previous page
 the user reloads the page
     Wait for autosave
     Reload Page
-    Run Keyword And Ignore Error Without Screenshots    confirm action
+    Run Keyword And Ignore Error Without Screenshots    Confirm Action
     # Error checking
     the user should not see an error in the page
     # Header checking (INFUND-1892)

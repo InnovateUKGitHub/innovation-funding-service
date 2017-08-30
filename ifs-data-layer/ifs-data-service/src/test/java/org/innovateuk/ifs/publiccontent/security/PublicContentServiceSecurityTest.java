@@ -15,14 +15,12 @@ import static java.util.EnumSet.complementOf;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
-import static org.innovateuk.ifs.user.resource.UserRoleType.SUPPORT;
+import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 
 public class PublicContentServiceSecurityTest extends BaseServiceSecurityTest<PublicContentService> {
 
     private static final EnumSet<UserRoleType> COMP_ADMIN_ROLES = EnumSet.of(COMP_ADMIN, PROJECT_FINANCE);
-    private static final EnumSet<UserRoleType> ALL_INTERNAL_USERS = EnumSet.of(COMP_ADMIN, PROJECT_FINANCE, SUPPORT);
+    private static final EnumSet<UserRoleType> ALL_INTERNAL_USERS = EnumSet.of(COMP_ADMIN, PROJECT_FINANCE, SUPPORT, INNOVATION_LEAD);
 
 
     @Override

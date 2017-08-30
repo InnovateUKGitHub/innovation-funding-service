@@ -1,33 +1,14 @@
 //support tasks for dealing with Openshift
-
-
 if(project.hasProperty('profile') && profile == 'automated') {
     ext.openshiftEnv = project.properties['openshiftEnv'] ?: "automated"
 }
 
-task osDeployRemote(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-deploy.sh'
-    args = [openshiftEnv, "remote", project.version]
-}
 
-task dbResetSysint(type:Exec) {
-    executable = 'setup-files/scripts/openshift/db-reset.sh'
-    args = [openshiftEnv, "sysint", project.version]
-}
+// Production tasks
 
-task dbResetPerf(type:Exec) {
-    executable = 'setup-files/scripts/openshift/db-reset.sh'
-    args = [openshiftEnv, "perf", project.version]
-}
-
-task dbResetUat(type:Exec) {
-    executable = 'setup-files/scripts/openshift/db-reset.sh'
-    args = [openshiftEnv, "uat", project.version]
-}
-
-task osDeployLocal(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-deploy.sh'
-    args = [openshiftEnv, "local"]
+task osStageProduction(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-stage.sh'
+    args = [openshiftEnv, "production", project.version]
 }
 
 task osDeployProduction(type:Exec) {
@@ -35,34 +16,27 @@ task osDeployProduction(type:Exec) {
     args = [openshiftEnv, "production", project.version]
 }
 
-task osDeployUat(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-deploy.sh'
-    args = [openshiftEnv, "uat", project.version]
-}
-
-task osDeployDemo(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-deploy.sh'
-    args = [openshiftEnv, "demo", project.version]
-}
-
-task osDeploySysint(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-deploy.sh'
-    args = [openshiftEnv, "sysint", project.version]
-}
-
-task osDeployPerf(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-deploy.sh'
-    args = [openshiftEnv, "perf", project.version]
-}
-
-task osUpgradeRemote(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-upgrade.sh'
-    args = [openshiftEnv, "remote", project.version]
-}
-
 task osUpgradeProduction(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "production", project.version]
+}
+
+task dbAnonymisedDumpProduction(type:Exec) {
+    executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
+    args = [openshiftEnv, "production", project.version]
+}
+
+
+// UAT tasks
+
+task osStageUat(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-stage.sh'
+    args = [openshiftEnv, "uat", project.version]
+}
+
+task osDeployUat(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-deploy.sh'
+    args = [openshiftEnv, "uat", project.version]
 }
 
 task osUpgradeUat(type:Exec) {
@@ -70,9 +44,45 @@ task osUpgradeUat(type:Exec) {
     args = [openshiftEnv, "uat", project.version]
 }
 
+task dbResetUat(type:Exec) {
+    executable = 'setup-files/scripts/openshift/db-reset.sh'
+    args = [openshiftEnv, "uat", project.version]
+}
+
+task dbAnonymisedDumpUat(type:Exec) {
+    executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
+    args = [openshiftEnv, "uat", project.version]
+}
+
+
+// Demo tasks
+
+task osStageDemo(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-stage.sh'
+    args = [openshiftEnv, "demo", project.version]
+}
+
+task osDeployDemo(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-deploy.sh'
+    args = [openshiftEnv, "demo", project.version]
+}
+
 task osUpgradeDemo(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "demo", project.version]
+}
+
+
+// Sysint tasks
+
+task osStageSysint(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-stage.sh'
+    args = [openshiftEnv, "sysint", project.version]
+}
+
+task osDeploySysint(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-deploy.sh'
+    args = [openshiftEnv, "sysint", project.version]
 }
 
 task osUpgradeSysint(type:Exec) {
@@ -80,9 +90,88 @@ task osUpgradeSysint(type:Exec) {
     args = [openshiftEnv, "sysint", project.version]
 }
 
+task dbResetSysint(type:Exec) {
+    executable = 'setup-files/scripts/openshift/db-reset.sh'
+    args = [openshiftEnv, "sysint", project.version]
+}
+
+
+// Perf tasks
+
+task osStagePerf(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-stage.sh'
+    args = [openshiftEnv, "perf", project.version]
+}
+
+task osDeployPerf(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-deploy.sh'
+    args = [openshiftEnv, "perf", project.version]
+}
+
 task osUpgradePerf(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "perf", project.version]
+}
+
+task dbResetPerf(type:Exec) {
+    executable = 'setup-files/scripts/openshift/db-reset.sh'
+    args = [openshiftEnv, "perf", project.version]
+}
+
+
+// Local tasks
+
+task osInitClusterLocal(type:Exec) {
+    executable = 'setup-files/scripts/openshift/init-local-cluster.sh'
+    args = [openshiftEnv, "local", project.version]
+}
+
+task osStageLocal(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-stage.sh'
+    args = [openshiftEnv, "local", project.version]
+}
+
+task osDeployLocal(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-deploy.sh'
+    args = [openshiftEnv, "local", project.version]
+}
+
+task osUpgradeLocal(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-upgrade.sh'
+    args = [openshiftEnv, "local", project.version]
+}
+
+task dbResetLocal(type:Exec) {
+    executable = 'setup-files/scripts/openshift/db-reset.sh'
+    args = [openshiftEnv, "local", project.version]
+}
+
+task dbAnonymisedDumpLocal(type:Exec) {
+    executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
+    args = [openshiftEnv, "local", project.version]
+}
+
+
+// Remote tasks
+
+task osStageRemote(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-stage.sh'
+    args = [openshiftEnv, "remote", project.version]
+}
+
+task osDeployRemote(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-deploy.sh'
+    args = [openshiftEnv, "remote", project.version]
+}
+
+task osUpgradeRemote(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-upgrade.sh'
+    args = [openshiftEnv, "remote", project.version]
+}
+
+task dbAnonymisedDumpRemote(type:Exec) {
+    executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
+    args = [openshiftEnv, "remote", project.version]
 }
 
 task robotTestsFilter (type: Copy) {

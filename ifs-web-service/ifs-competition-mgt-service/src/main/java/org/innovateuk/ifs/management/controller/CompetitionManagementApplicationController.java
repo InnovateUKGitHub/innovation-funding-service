@@ -32,6 +32,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
@@ -45,13 +46,13 @@ import static org.innovateuk.ifs.util.HttpUtils.getQueryStringParameters;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/application")
-@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support')")
+@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
 public class CompetitionManagementApplicationController {
 
     @Autowired
-    protected ProcessRoleService processRoleService;
+    private ProcessRoleService processRoleService;
     @Autowired
-    protected ApplicationPrintPopulator applicationPrintPopulator;
+    private ApplicationPrintPopulator applicationPrintPopulator;
     @Autowired
     private ApplicationRestService applicationRestService;
     @Autowired
@@ -72,17 +73,19 @@ public class CompetitionManagementApplicationController {
                                              @ModelAttribute(name = "form", binding = false) ApplicationForm form,
                                              UserResource user,
                                              @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
+                                             @RequestParam(value = "assessorId", required = false) Optional<Long> assessorId,
                                              @RequestParam MultiValueMap<String, String> queryParams,
                                              Model model) {
         return competitionManagementApplicationService
                 .validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> competitionManagementApplicationService
-                        .displayApplicationOverview(user, competitionId, form, origin, queryParams, model, application));
+                        .displayApplicationOverview(user, competitionId, form, origin, queryParams, model, application, assessorId));
     }
 
     @PostMapping(value = "/{applicationId}", params = {"markAsIneligible"})
     public String markAsIneligible(@PathVariable("applicationId") final long applicationId,
                                    @PathVariable("competitionId") final long competitionId,
                                    @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
+                                   @RequestParam(value = "assessorId", required = false) Optional<Long> assessorId,
                                    @ModelAttribute("form") @Valid ApplicationForm applicationForm,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    ValidationHandler validationHandler,
@@ -96,11 +99,12 @@ public class CompetitionManagementApplicationController {
         MultiValueMap<String, String> queryParams = getQueryStringParameters(request);
 
         return validationHandler.failNowOrSucceedWith(
-                () -> displayApplicationOverview(applicationId, competitionId, applicationForm, user, origin, queryParams, model),
+                () -> displayApplicationOverview(applicationId, competitionId, applicationForm, user, origin, assessorId, queryParams, model),
                 () -> competitionManagementApplicationService
                                 .markApplicationAsIneligible(
                                         applicationId,
                                         competitionId,
+                                        assessorId,
                                         origin,
                                         queryParams,
                                         applicationForm,
@@ -135,14 +139,12 @@ public class CompetitionManagementApplicationController {
     }
 
     @GetMapping("/{applicationId}/forminput/{formInputId}/download")
-    public
-    @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadQuestionFile(
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadQuestionFile(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("formInputId") final Long formInputId,
             UserResource user) throws ExecutionException, InterruptedException {
         ProcessRoleResource processRole;
-        if (user.hasRole(UserRoleType.COMP_ADMIN)) {
+        if (isInternal(user)) {
             long processRoleId = formInputResponseRestService.getByFormInputIdAndApplication(formInputId, applicationId).getSuccessObjectOrThrowException().get(0).getUpdatedBy();
             processRole = processRoleService.getById(processRoleId).get();
         } else {
@@ -153,7 +155,6 @@ public class CompetitionManagementApplicationController {
         final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService.getFileDetails(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
         return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
     }
-
 
     /**
      * Printable version of the application
@@ -189,5 +190,10 @@ public class CompetitionManagementApplicationController {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObjectOrThrowException();
         model.addAttribute("model", reinstateIneligibleApplicationModelPopulator.populateModel(applicationResource));
         return "application/reinstate-ineligible-application-confirm";
+    }
+
+    // TODO: review when IFS-1370 is implemented - RB
+    private boolean isInternal(UserResource user) {
+        return user.hasRole(UserRoleType.IFS_ADMINISTRATOR) || user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE) || user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD);
     }
 }

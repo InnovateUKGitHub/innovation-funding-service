@@ -15,6 +15,8 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentFeedbackResource;
+import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -26,6 +28,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 
 import javax.servlet.http.HttpServletRequest;
@@ -209,6 +212,26 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
     }
 
     @Test
+    public void testApplicationSummaryMarkAsCompleteActionWithFailure() throws Exception {
+        ApplicationResource app = applications.get(0);
+        QuestionResource question = questionResources.get(questionResources.keySet().iterator().next());
+        ProcessRoleResource processRole = processRoles.get(0);
+
+        UserResource user = newUserResource().withId(1L).withFirstName("test").withLastName("name").build();
+        when(processRoleService.findProcessRole(user.getId(), app.getId())).thenReturn(processRole);
+        ValidationMessages validationMessages = new ValidationMessages();
+        validationMessages.addError(Error.fieldError("asdf", new Error("as", HttpStatus.BAD_REQUEST)));
+        when(questionService.markAsComplete(question.getId(), app.getId(), user.getId())).thenReturn(asList(validationMessages));
+
+        mockMvc.perform(post("/application/" + app.getId() + "/summary")
+                .param(MARK_AS_COMPLETE, question.getId().toString())
+                .param("formInput[" + question.getId().toString() + "]", "Invalid value"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/application/" + app.getId() + "/form/question/edit/" + question.getId() + "?mark_as_complete=true"));
+        verify(questionService, times(1)).markAsComplete(question.getId(), app.getId(), user.getId());
+    }
+
+    @Test
     public void testApplicationConfirmSubmit() throws Exception {
         ApplicationResource app = applications.get(0);
 
@@ -264,14 +287,13 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void testApplicationTrack() throws Exception {
         ApplicationResource app = applications.get(0);
-
         when(applicationService.getById(app.getId())).thenReturn(app);
-        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+        when(competitionService.getById(anyLong())).thenReturn(competitionResource);
 
         mockMvc.perform(get("/application/1/track"))
                 .andExpect(view().name("application-track"))
                 .andExpect(model().attribute("currentApplication", app))
-                .andExpect(model().attribute("responses", formInputsToFormInputResponses));
+                .andExpect(model().attribute("currentCompetition", competitionResource));
 
     }
 }

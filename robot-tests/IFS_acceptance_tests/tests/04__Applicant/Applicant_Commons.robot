@@ -102,7 +102,7 @@ the user fills in the project costs
     the user fills in Subcontracting costs
     the user fills in Travel and subsistence
     the user fills in Other costs
-    the user selects the checkbox    agree-state-aid-page
+    the user clicks the button/link  css=label[for="agree-state-aid-page"]
     the user clicks the button/link  jQuery=button:contains("Mark as complete")
     the user clicks the button/link  link=Your project costs
     the user has read only view once section is marked complete
@@ -165,8 +165,7 @@ the user fills in Capital usage
     the user enters text to a text field  css=.form-finances-capital-usage-npv  5000
     the user enters text to a text field  css=.form-finances-capital-usage-residual-value  25
     the user enters text to a text field  css=.form-finances-capital-usage-utilisation   100
-    focus                                 jQuery=.section-total-summary > [data-mirror="#section-total-192"]
-    the user should see the element       jQuery=.section-total-summary > [data-mirror="#section-total-192"]
+    focus                                 jQuery=.section-total-summary > [data-mirror^="#section-total"]
     textfield should contain              css=#capital_usage .form-row:nth-of-type(1) [readonly]  £ 4,975
     the user clicks the button/link       jQuery=button:contains("Capital usage")
 
@@ -176,8 +175,6 @@ the user fills in Subcontracting costs
     the user enters text to a text field  jQuery=input.form-control[name^=subcontracting-country]  Netherlands
     the user enters text to a text field  jQuery=textarea.form-control[name^=subcontracting-role]  Quality Assurance
     the user enters text to a text field  jQuery=input.form-control[name^=subcontracting-subcontractingCost]  1000
-    #focus                                 css=#section-total-193[readonly]  # values will differ with runs. INFUND-8152
-    #textfield should contain              css=#section-total-193[readonly]  £ 1,000  # values will differ with runs. INFUND-8152.
     the user clicks the button/link       jQuery=button:contains("Subcontracting costs")
 
 the user fills in Travel and subsistence
@@ -185,8 +182,6 @@ the user fills in Travel and subsistence
     the user enters text to a text field  css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
     the user enters text to a text field  css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
     the user enters text to a text field  css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
-    #focus                                css=#section-total-194[readonly]    # values will differ with runs. INFUND-8152
-    #textfield should contain             css=#section-total-194[readonly]    £ 1,000 # values will differ with runs. INFUND-8152.
     the user clicks the button/link       jQuery=button:contains("Travel and subsistence")
 
 the user fills in Other costs
@@ -280,8 +275,8 @@ Invite a non-existing collaborator
 
 the user fills in the inviting steps
     [Arguments]  ${email}
-    the user clicks the button/link       link=view team members and add collaborators
-    the user clicks the button/link       link=Add partner organisation
+    the user clicks the button/link       link=view and manage contributors and collaborators
+    the user clicks the button/link       link=Add a collaborator organisation
     the user enters text to a text field  css=#organisationName  New Organisation's Name
     the user enters text to a text field  css=input[id="applicants0.name"]  Partner's name
     the user enters text to a text field  css=input[id="applicants0.email"]  ${email}
@@ -290,7 +285,7 @@ the user fills in the inviting steps
 
 Newly invited collaborator can create account and sign in
     [Arguments]    ${email}  ${competition_name}
-    the user reads his email and clicks the link   ${email}  Invitation to collaborate in ${competition_name}  You will be joining as part of the organisation  3
+    the user reads his email and clicks the link   ${email}  Invitation to collaborate in ${competition_name}  You will be joining as part of the organisation  2
     the user clicks the button/link    jQuery=a:contains("Yes, accept invitation")
     the user should see the element    jquery=h1:contains("Choose your organisation type")
     the user completes the new account creation   ${email}
@@ -323,8 +318,8 @@ the user completes the new account creation
     the user clicks the button/link              jQuery=button:contains("Sign in")
 
 the applicant adds some content and marks this section as complete
-    Focus    css=#form-input-1057 .editor
-    Input Text    css=#form-input-1057 .editor    This is some random text
+    Focus    css=.textarea-wrapped .editor
+    Input Text    css=.textarea-wrapped .editor    This is some random text
     the user clicks the button/link    name=mark_as_complete
     the user should see the element    name=mark_as_incomplete
 

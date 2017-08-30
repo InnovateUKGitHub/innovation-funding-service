@@ -189,7 +189,7 @@ public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implem
                 andOnSuccess(this::validateProjectIsInSetup).
                 andOnSuccess(project ->
                 getCollaborationAgreement(project).andOnSuccess(fileEntry ->
-                        fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
+                        fileService.deleteFileIgnoreNotFound(fileEntry.getId()).andOnSuccessReturnVoid(() ->
                                 removeCollaborationAgreementFileFromProject(project))));
     }
 
@@ -255,7 +255,7 @@ public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implem
         return getProject(projectId).
         andOnSuccess(this::validateProjectIsInSetup).andOnSuccess(project ->
                 getExploitationPlan(project).andOnSuccess(fileEntry ->
-                        fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
+                        fileService.deleteFileIgnoreNotFound(fileEntry.getId()).andOnSuccessReturnVoid(() ->
                                 removeExploitationPlanFileFromProject(project))));
     }
 

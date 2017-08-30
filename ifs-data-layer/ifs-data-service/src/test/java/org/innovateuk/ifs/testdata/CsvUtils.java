@@ -8,7 +8,7 @@ import org.apache.commons.lang3.tuple.Triple;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -361,7 +361,7 @@ class CsvUtils {
         String applicationName;
         AssessmentRejectOutcomeValue rejectReason;
         String rejectComment;
-        AssessmentStates state;
+        AssessmentState state;
         String feedback;
         String recommendComment;
 
@@ -373,7 +373,7 @@ class CsvUtils {
             String rejectReasonString = nullable(line.get(i++));
             rejectReason = rejectReasonString != null ? AssessmentRejectOutcomeValue.valueOf(rejectReasonString) : null;
             rejectComment = nullable(line.get(i++));
-            state = AssessmentStates.valueOf(line.get(i++));
+            state = AssessmentState.valueOf(line.get(i++));
             feedback = nullable(line.get(i++));
             recommendComment = nullable(line.get(i++));
         }
@@ -403,7 +403,6 @@ class CsvUtils {
     static class CompetitionLine {
 
         String name;
-        String description;
         String type;
         List<String> innovationAreas;
         String innovationSector;
@@ -438,6 +437,8 @@ class CsvUtils {
         String activityCode;
         Integer assessorCount;
         BigDecimal assessorPay;
+        Boolean hasAssessmentPanel;
+        Boolean hasInterviewStage;
         boolean published;
         String shortDescription;
         String fundingRange;
@@ -446,6 +447,7 @@ class CsvUtils {
         FundingType fundingType;
         String projectSize;
         List<String> keywords;
+        boolean inviteOnly;
         boolean nonIfs;
         String nonIfsUrl;
 
@@ -454,7 +456,6 @@ class CsvUtils {
 
             int i = 0;
             name = nullable(line.get(i++));
-            description = nullable(line.get(i++));
             type = nullable(line.get(i++));
             innovationAreas = nullableSplitOnNewLines(line.get(i++));
             innovationSector = nullable(line.get(i++));
@@ -489,6 +490,8 @@ class CsvUtils {
             code = nullable(line.get(i++));
             assessorCount = nullableInteger(line.get(i++));
             assessorPay = nullableBigDecimal(line.get(i++));
+            hasAssessmentPanel = nullableBoolean(line.get(i++));
+            hasInterviewStage = nullableBoolean(line.get(i++));
             published = nullableBoolean(line.get(i++));
             shortDescription = nullable(line.get(i++));
             fundingRange = nullable(line.get(i++));
@@ -497,6 +500,7 @@ class CsvUtils {
             fundingType = nullableEnum(line.get(i++), FundingType::valueOf);
             projectSize = nullable(line.get(i++));
             keywords = nullableSplittableString(line.get(i++));
+            inviteOnly = nullableBoolean(line.get(i++));
             nonIfs = nullableBoolean(line.get(i++));
             nonIfsUrl = nullable(line.get(i++));
         }

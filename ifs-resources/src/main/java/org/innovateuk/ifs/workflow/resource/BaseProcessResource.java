@@ -1,14 +1,13 @@
 package org.innovateuk.ifs.workflow.resource;
 
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.workflow.resource.ProcessStates;
 
 import java.time.ZonedDateTime;
 
 /**
  * Base class for transferring basic information about a Process
  */
-public abstract class BaseProcessResource<StateType extends ProcessStates, ParticipantType> {
+public abstract class BaseProcessResource<StateType extends ProcessState, ParticipantType> {
 
     private StateType currentState;
     private ParticipantType participant;

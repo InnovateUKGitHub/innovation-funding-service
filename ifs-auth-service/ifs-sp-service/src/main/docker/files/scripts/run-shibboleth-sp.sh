@@ -28,7 +28,8 @@ sed -i "s#\${IDP_ENCRYPTION_CERTIFICATE}#$idp_encryption_certificate#g" /etc/shi
 
 # are we sharing sessions between containers?
 [ ${MEMCACHE_ENDPOINT} ] && sed -i -e '/<!-- ${MEMCACHE_ENDPOINT}/d' -e '/${MEMCACHE_ENDPOINT} -->/d' \
-                                   -e "s/\${MEMCACHE_ENDPOINT}/$MEMCACHE_ENDPOINT/g" /etc/shibboleth/shibboleth2.xml
+                                   -e "s/\${MEMCACHE_ENDPOINT}/$MEMCACHE_ENDPOINT/g" \
+                                   -e 's/\ss:mem/ss:mc/g' /etc/shibboleth/shibboleth2.xml
 
 # Remove any lingering pid files
 for p in /var/run/apache2/apache2.pid /var/run/shibboleth/shibd.pid

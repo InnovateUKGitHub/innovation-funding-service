@@ -702,6 +702,8 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
                 .withSkillsAreas("Skills")
                 .withCreatedBy(createdByUser)
                 .withCreatedOn(ZonedDateTime.now())
+                .withModifiedBy(createdByUser)
+                .withModifiedOn(ZonedDateTime.now())
                 .build();
         User existingUser = newUser()
                 .withProfileId(existingProfile.getId())
@@ -725,6 +727,8 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
                 .withEthnicity(ethnicityResource)
                 .withCreatedBy(createdByUser.getName())
                 .withCreatedOn(ZonedDateTime.now())
+                .withModifiedBy(createdByUser.getName())
+                .withModifiedOn(ZonedDateTime.now())
                 .build();
 
         UserProfileResource response = service.getUserProfile(existingUser.getId()).getSuccessObject();

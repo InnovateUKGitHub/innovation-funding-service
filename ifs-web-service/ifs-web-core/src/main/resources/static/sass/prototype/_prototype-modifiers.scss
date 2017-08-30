@@ -173,6 +173,12 @@ tr.cell-border-right{
   }
 }
 
+td{
+ .multiple-choice{
+    margin-left: 5px;
+  }
+}
+
 /*--- Table overflows for small screens ---*/
 
 .table-overflow{
@@ -315,6 +321,10 @@ table{
     min-height: 80px;
     line-height: 1.1em;
     box-sizing: border-box;
+
+    &--tall{
+     min-height: 100px;
+    }
 
     @include media-down(mobile) {
       min-height: auto;
@@ -513,4 +523,32 @@ ul.underline{
   color: $text-colour;
   padding-left: 60px;
  }
+}
+
+
+.select-all {
+  padding-top: 12px;
+
+  .form-hint {
+    @include media-down(mobile) {
+      display: block;
+      text-align: center;
+    }
+    display:inline-block;
+    margin: 8px 10px 0;
+    text-align: left;
+  }
+}
+
+.column-half{
+  &.select-all{
+    padding-left: 20px;
+  }
+}
+
+.column-one{
+  &.select-all{
+    padding-left: 20px;
+    padding-bottom: 15px;
+  }
 }

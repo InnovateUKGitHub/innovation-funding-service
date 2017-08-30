@@ -34,8 +34,7 @@ task prepareDockerFile(type: Copy) {
     into 'src/main/docker/'
     include 'Dockerfile-template'
     rename 'Dockerfile-template', 'Dockerfile'
-    filter(ReplaceTokens, tokens: [auth_service_trusted_ip: '-R \'127.0.0.1\'',
-                                   auth_sp_proxy_key: spProxyKey,
+    filter(ReplaceTokens, tokens: [auth_sp_proxy_key: spProxyKey,
                                    auth_sp_proxy_certificate: spProxyCertificate,
                                    auth_sp_proxy_cacertificate: spProxyCacertificate,
                                    auth_idp_signing_certificate: idpSigningCertificate,
@@ -48,6 +47,7 @@ task buildDocker(type: Docker) {
     push = false
     applicationName = 'sp-service'
     dockerfile = file('src/main/docker/Dockerfile')
+    tagVersion = 'latest'
     doFirst {
         copy {
             from fileTree('src/main/docker/files')

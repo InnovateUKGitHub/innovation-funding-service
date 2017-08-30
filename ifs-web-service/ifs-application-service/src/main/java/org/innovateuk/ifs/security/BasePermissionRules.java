@@ -30,7 +30,7 @@ public class BasePermissionRules {
 
     public boolean applicationNotYetSubmitted(Long applicationId) {
         ApplicationResource applicationResource = getApplication(applicationId);
-        return !applicationResource.hasBeenSubmitted();
+        return !applicationResource.isSubmitted();
     }
 
     private ApplicationResource getApplication(Long applicationId){

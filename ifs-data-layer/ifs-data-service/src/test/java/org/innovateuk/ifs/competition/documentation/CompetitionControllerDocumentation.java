@@ -9,15 +9,22 @@ import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.documentation.CompetitionCountResourceDocs;
 import org.innovateuk.ifs.documentation.CompetitionSearchResultDocs;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionSearchResultItemBuilder.newCompetitionSearchResultItem;
 import static org.innovateuk.ifs.documentation.CompetitionResourceDocs.competitionResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionResourceDocs.competitionResourceFields;
+import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
@@ -26,6 +33,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CompetitionControllerDocumentation extends BaseControllerMockMVCTest<CompetitionController> {
@@ -54,7 +62,8 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
 
         mockMvc.perform(get("/competition/{id}", competitionId))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document(
+                        "competition/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("id of the competition to be retrieved")
                         ),
@@ -69,7 +78,24 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
 
         mockMvc.perform(get("/competition/findAll"))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document(
+                        "competition/{method-name}",
+                        responseFields(
+                                fieldWithPath("[]").description("list of Competitions the authenticated user has access to")
+                        )
+                ));
+    }
+
+    @Test
+    public void getCompetitionsByUserId() throws Exception {
+        final Long userId = 4929L;
+        when(competitionService.getCompetitionsByUserId(userId))
+                .thenReturn(serviceSuccess(competitionResourceBuilder.build(2)));
+
+        mockMvc.perform(get("/competition/getCompetitionsByUserId/{userid}", userId))
+                .andExpect(status().isOk())
+                .andDo(document(
+                        "competition/{method-name}",
                         responseFields(
                                 fieldWithPath("[]").description("list of Competitions the authenticated user has access to")
                         )
@@ -84,7 +110,8 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
 
         mockMvc.perform(get("/competition/sectionStatus/complete/{competitionId}/{section}", competitionId, section))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document(
+                        "competition/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("id of the competition on what the section should be marked as complete"),
                                 parameterWithName("section").description("the section to mark as complete")
@@ -100,7 +127,8 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
 
         mockMvc.perform(get("/competition/sectionStatus/incomplete/{competitionId}/{section}", competitionId, section))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document(
+                        "competition/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("id of the competition on what the section should be marked as incomplete"),
                                 parameterWithName("section").description("the section to mark as incomplete")
@@ -114,7 +142,8 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
 
         mockMvc.perform(get("/competition/live"))
             .andExpect(status().isOk())
-            .andDo(this.document.snippets(
+            .andDo(document(
+                    "competition/{method-name}",
                 responseFields(
                         fieldWithPath("[]").description("list of live competitions the authenticated user has access to")
                 )
@@ -127,7 +156,8 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
 
         mockMvc.perform(get("/competition/project-setup"))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document(
+                        "competition/{method-name}",
                         responseFields(
                                 fieldWithPath("[]").description("list of competitions in project set up the authenticated user has access to")
                         )
@@ -140,7 +170,8 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
 
         mockMvc.perform(get("/competition/upcoming"))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document(
+                        "competition/{method-name}",
                         responseFields(
                                 fieldWithPath("[]").description("list of upcoming competitions the authenticated user has access to")
                         )
@@ -153,7 +184,8 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
 
         mockMvc.perform(get("/competition/non-ifs"))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document(
+                        "competition/{method-name}",
                         responseFields(
                                 fieldWithPath("[]").description("list of non ifs competitions the authenticated user has access to")
                         )
@@ -167,7 +199,8 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
 
         mockMvc.perform(get("/competition/count"))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document(
+                        "competition/{method-name}",
                         responseFields(CompetitionCountResourceDocs.competitionCountResourceFields)
                 ));
     }
@@ -182,7 +215,8 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
 
         mockMvc.perform(get("/competition/search/{page}/{size}/?searchQuery=" + searchQuery, page, size))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document(
+                        "competition/{method-name}",
                         requestParameters(parameterWithName("searchQuery").description("The search query to lookup")),
                         pathParameters(
                                 parameterWithName("page").description("The page number to be requested"),
@@ -200,7 +234,8 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
 
         mockMvc.perform(post("/competition/{competitionId}/initialise-form/{competitionTypeId}", competitionId, competitionTypeId))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document(
+                        "competition/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("id of the competition in competition setup on which the application form should be initialised"),
                                 parameterWithName("competitionTypeId").description("id of the competitionType that is being chosen on setup")
@@ -215,7 +250,8 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
 
         mockMvc.perform(put("/competition/{id}/close-assessment", competitionId))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document(
+                        "competition/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("id of the competition to close the assessment of")
                         )
@@ -231,7 +267,8 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
 
         mockMvc.perform(put("/competition/{id}/notify-assessors", competitionId))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document(
+                        "competition/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("id of the competition for the notifications")
                         ))
@@ -247,10 +284,71 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
 
         mockMvc.perform(put("/competition/{id}/release-feedback", competitionId))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document(
+                        "competition/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("id of the competition for the notifications")
                         ))
                 );
+    }
+
+    @Test
+    public void findInnovationLeads() throws Exception {
+        final Long competitionId = 1L;
+
+        List<UserResource> innovationLeads = new ArrayList<>();
+        when(competitionService.findInnovationLeads(competitionId)).thenReturn(serviceSuccess(innovationLeads));
+
+        mockMvc.perform(get("/competition/{id}/innovation-leads", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(innovationLeads)))
+                .andDo(document(
+                        "competition/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("The competition for which innovation leads need to be found")
+                        )
+                ));
+    }
+
+    @Test
+    public void addInnovationLead() throws Exception {
+        final Long competitionId = 1L;
+        final Long innovationLeadUserId = 2L;
+
+        when(competitionService.addInnovationLead(competitionId, innovationLeadUserId )).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competition/{id}/add-innovation-lead/{innovationLeadUserId}", competitionId, innovationLeadUserId))
+                .andExpect(status().isOk())
+                .andDo(document(
+                        "competition/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("The competition for which innovation lead needs to be added"),
+                                parameterWithName("innovationLeadUserId").description("The id of the innovation lead which is being added")
+                        )
+                ));
+
+        verify(competitionService, only()).addInnovationLead(competitionId, innovationLeadUserId);
+
+    }
+
+    @Test
+    public void removeInnovationLead() throws Exception {
+        final Long competitionId = 1L;
+        final Long innovationLeadUserId = 2L;
+
+        when(competitionService.removeInnovationLead(competitionId, innovationLeadUserId )).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competition/{id}/remove-innovation-lead/{innovationLeadUserId}", competitionId, innovationLeadUserId))
+                .andExpect(status().isOk())
+                .andDo(document(
+                        "competition/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("The competition for which innovation lead needs to be deleted"),
+                                parameterWithName("innovationLeadUserId").description("The id of the innovation lead which is being deleted")
+                        )
+                ));
+
+        verify(competitionService, only()).removeInnovationLead(competitionId, innovationLeadUserId);
+
     }
 }

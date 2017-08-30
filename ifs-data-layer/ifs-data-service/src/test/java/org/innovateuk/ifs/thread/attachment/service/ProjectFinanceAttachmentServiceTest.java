@@ -32,8 +32,8 @@ public class ProjectFinanceAttachmentServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void test_findOne() throws Exception {
         Long attachmentId = 1L;
-        Attachment attachment = new Attachment(attachmentId, newUser().withId(89L).build(), newFileEntry().build());
-        AttachmentResource attachmentResource = new AttachmentResource(attachmentId, attachment.fileName(), attachment.mediaType(), attachment.sizeInBytes());
+        Attachment attachment = new Attachment(attachmentId, newUser().withId(89L).build(), newFileEntry().build(), null);
+        AttachmentResource attachmentResource = new AttachmentResource(attachmentId, attachment.fileName(), attachment.mediaType(), attachment.sizeInBytes(), null);
         when(attachmentRepositoryMock.findOne(attachmentId)).thenReturn(attachment);
         when(attachmentMapperMock.mapToResource(attachment)).thenReturn(attachmentResource);
 
@@ -47,8 +47,8 @@ public class ProjectFinanceAttachmentServiceTest extends BaseUnitTestMocksTest {
         final Long attachmentId = 1L;
         final Long attachmentsFileEntryId = 101L;
         final FileEntry attachmentsFileEntry = new FileEntry(attachmentsFileEntryId, "name", APPLICATION_JSON,432 );
-        final Attachment attachment = new Attachment(attachmentId, newUser().withId(89L).build(), attachmentsFileEntry);
-        final AttachmentResource attachmentResource = new AttachmentResource(attachmentId, attachment.fileName(), attachment.mediaType(), attachment.sizeInBytes());
+        final Attachment attachment = new Attachment(attachmentId, newUser().withId(89L).build(), attachmentsFileEntry, null);
+        final AttachmentResource attachmentResource = new AttachmentResource(attachmentId, attachment.fileName(), attachment.mediaType(), attachment.sizeInBytes(), null);
 
         when(attachmentRepositoryMock.findOne(attachmentId)).thenReturn(attachment);
         when(attachmentMapperMock.mapToResource(attachment)).thenReturn(attachmentResource);
@@ -86,8 +86,8 @@ public class ProjectFinanceAttachmentServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void test_upload() throws Exception {
         Long attachmentId = 1L;
-        Attachment attachment = new Attachment(attachmentId, newUser().withId(89L).build(), newFileEntry().build());
-        AttachmentResource attachmentResource = new AttachmentResource(attachmentId, attachment.fileName(), attachment.mediaType(), attachment.sizeInBytes());
+        Attachment attachment = new Attachment(attachmentId, newUser().withId(89L).build(), newFileEntry().build(), null);
+        AttachmentResource attachmentResource = new AttachmentResource(attachmentId, attachment.fileName(), attachment.mediaType(), attachment.sizeInBytes(), null);
         when(attachmentRepositoryMock.findOne(attachmentId)).thenReturn(attachment);
         when(attachmentMapperMock.mapToResource(attachment)).thenReturn(attachmentResource);
 
@@ -101,8 +101,8 @@ public class ProjectFinanceAttachmentServiceTest extends BaseUnitTestMocksTest {
         final Long attachmentId = 1L;
         final Long attachmentsFileEntryId = 101L;
         final FileEntry attachmentsFileEntry = new FileEntry(attachmentsFileEntryId, "name", APPLICATION_JSON, 432);
-        when(attachmentMapperMock.mapIdToDomain(attachmentId)).thenReturn(new Attachment(attachmentId, newUser().build(), attachmentsFileEntry));
-        when(fileServiceMock.deleteFile(attachmentsFileEntryId)).thenReturn(ServiceResult.serviceSuccess(attachmentsFileEntry));
+        when(attachmentMapperMock.mapIdToDomain(attachmentId)).thenReturn(new Attachment(attachmentId, newUser().build(), attachmentsFileEntry, null));
+        when(fileServiceMock.deleteFileIgnoreNotFound(attachmentsFileEntryId)).thenReturn(ServiceResult.serviceSuccess(attachmentsFileEntry));
         ServiceResult<Void> response = service.delete(attachmentId);
         assertTrue(response.isSuccess());
     }
@@ -113,8 +113,8 @@ public class ProjectFinanceAttachmentServiceTest extends BaseUnitTestMocksTest {
         final Long attachmentsFileEntryId = 101L;
         final FileEntry attachmentsFileEntry = new FileEntry(attachmentsFileEntryId, "name", APPLICATION_JSON, 432);
         when(attachmentMapperMock.mapIdToDomain(attachmentId))
-                .thenReturn(new Attachment(attachmentId, newUser().build(), attachmentsFileEntry));
-        when(fileServiceMock.deleteFile(attachmentsFileEntryId))
+                .thenReturn(new Attachment(attachmentId, newUser().build(), attachmentsFileEntry, null));
+        when(fileServiceMock.deleteFileIgnoreNotFound(attachmentsFileEntryId))
                 .thenReturn(ServiceResult.serviceFailure(notFoundError(FileEntry.class, attachmentsFileEntryId)));
         ServiceResult<Void> response = service.delete(attachmentId);
         assertTrue(response.isFailure()

@@ -72,7 +72,7 @@
                             <th scope="col">Project title</th>
                             <th scope="col">Lead organisation</th>
                             <th scope="col">Lead applicant</th>
-                            <th scope="col"><span class="hidden">Informed</span></th>
+                            <th scope="col" th:unless="${model.readOnly}"><span class="hidden">Informed</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -85,7 +85,7 @@
                             <td th:text="${row.projectTitle}">Machine learning in robots</td>
                             <td th:text="${row.lead}">PWC</td>
                             <td th:text="${row.leadApplicant}">HVM</td>
-                            <td>
+                            <td th:unless="${model.readOnly}">
                                 <span th:if="${row.informed}">Informed</span>
                                 <a class="button no-margin-right" th:href="@{/competition/application/{applicationId}/ineligible(applicationId=${row.id})}" th:if="${!row.informed}">Inform applicant</a>
                             </td>

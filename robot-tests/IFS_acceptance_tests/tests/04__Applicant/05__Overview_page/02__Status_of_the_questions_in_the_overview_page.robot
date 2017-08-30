@@ -2,7 +2,7 @@
 Documentation     INFUND-39: As an applicant and I am on the application overview, I can select a section of the application, so I can see the status of each subsection in this section
 ...
 ...               INFUND-1072: As an Applicant I want to see the Application overview page redesigned so that they meet the agreed style
-Suite Setup       Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation
+Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Email    Applicant
 Resource          ../../../resources/defaultResources.robot
@@ -30,9 +30,13 @@ Re-assign is possible from the overview page
     And the assign button should say Assigned to you
 
 *** Keywords ***
+Custom Suite Setup
+    the guest user opens the browser
+    Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionRTO_name}  You will be joining as part of the organisation
+
 the Applicant edits the Project summary
-    Clear Element Text                    css=#form-input-1039 .editor
-    The user enters text to a text field  css=#form-input-1039 .editor    Check last updated date@#$
+    Clear Element Text                    css=.textarea-wrapped .editor
+    The user enters text to a text field  css=.textarea-wrapped .editor    Check last updated date@#$
     Focus                                 css=.app-submit-btn
     wait for autosave
 
@@ -50,7 +54,7 @@ the applicant assigns the Project Summary question from the overview page
 
 the applicant assigns the Project Summary
     [Arguments]    ${assignee_name}
-    the user clicks the button/link  css=#form-input-1039 .assign-button button
+    the user clicks the button/link  css=.question .assign-button button
     the user clicks the button/link  jQuery=button:contains("${assignee_name}")
 
 a blue flag should be visible for the Project Summary in overview page

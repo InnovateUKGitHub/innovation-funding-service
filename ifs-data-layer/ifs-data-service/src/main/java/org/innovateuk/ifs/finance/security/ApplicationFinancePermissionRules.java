@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
+import static org.innovateuk.ifs.security.SecurityRuleUtil.isSupport;
+import static org.innovateuk.ifs.security.SecurityRuleUtil.isInnovationLead;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 
 /**
@@ -46,6 +48,16 @@ public class ApplicationFinancePermissionRules {
     @PermissionRule(value = "ADD_COST", description = "The consortium can add a cost to the application finances of their own organisation or if lead applicant")
     public boolean consortiumCanAddACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
         return isAConsortiumMemberOnApplicationOrIsLeadApplicant(applicationFinanceResource, user);
+    }
+
+    @PermissionRule(value = "ADD_COST", description = "The CSS user can add a cost to the application finances")
+    public boolean supportCanAddACostToApplicationFinance(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
+        return isSupport(user);
+    }
+
+    @PermissionRule(value = "ADD_COST", description = "Innovation lead users can add a cost to the application finances")
+    public boolean innovationLeadCanAddACostToApplicationFinance(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
+        return isInnovationLead(user);
     }
 
     @PermissionRule(value = "UPDATE_COST", description = "The consortium can update a cost to the application finances of their own organisation or if lead applicant")

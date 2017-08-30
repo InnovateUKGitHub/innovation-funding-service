@@ -2,6 +2,8 @@
 Documentation     INFUND-6923 Create new public Competition listings page for Applicants to view open and upcoming competitions
 ...
 ...               INFUND-7946 Sign in page facelift
+...
+...               IFS-247 As an applicant I am able to see the competitions in 'Competition listings' in reverse chronological order
 Suite Setup       The guest user opens the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
@@ -9,13 +11,16 @@ Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Test Cases ***
 Guest user navigates to Front Door
-    [Documentation]    INFUND-6923 INFUND-7946
+    [Documentation]    INFUND-6923 INFUND-7946 IFS-247
     [Tags]
     [Setup]    the user navigates to the front door
     When the user should see the element     jQuery=a:contains("Innovate UK")
     Then the user should see the element     jQuery=h1:contains("Innovation competitions")
     And the user should see the element     css=#keywords
     Then the user should see the element     css=#innovation-area
+    # Guest user can see competitions sorted in reverse chronological order by opening date
+    When verify first date is greater than or equal to second  css=li:nth-child(1) .date-definition-list dd:nth-of-type(1)  css=li:nth-child(2) .date-definition-list dd:nth-of-type(1)
+    Then verify first date is greater than or equal to second  css=li:nth-child(2) .date-definition-list dd:nth-of-type(1)  css=li:nth-child(3) .date-definition-list dd:nth-of-type(1)
     When the user clicks the button/link     link=Contact us
     Then the user should see the element     jQuery=h1:contains("Contact us")
     And the user should not see an error in the page
@@ -38,7 +43,7 @@ Guest user can see Competitions and their information
 Guest user can see the opening and closing status of competitions
     [Documentation]  IFS-268
     [Tags]    MySQL
-    [Setup]    Connect to Database    @{database}
+    [Setup]  Connect to Database  @{database}
     Then Change the open date of the Competition in the database to tomorrow   ${READY_TO_OPEN_COMPETITION_NAME}
     Given the user navigates to the page  ${frontDoor}
     Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Opening soon    Opens
@@ -72,8 +77,8 @@ Guest user can see the public information of an unopened competition
     [Documentation]    INFUND-8714
     [Tags]
     [Setup]    the user navigates to the page    ${frontDoor}
-    Given the user clicks the button/link    link=Photonics for health
-    Then the user should see the element    jQuery=h1:contains("Photonics for health")
+    Given the user clicks the button/link    link=${READY_TO_OPEN_COMPETITION_NAME}
+    Then the user should see the element    jQuery=h1:contains("${READY_TO_OPEN_COMPETITION_NAME}")
     And the user should see the element    jQuery=strong:contains("Competition opens") + span:contains("Saturday 24 February 2018")
     And the user should see the element    jQuery=li:contains("Competition closes")
     And the user should see the element    jQuery=li:contains("Friday 16 March 2018")

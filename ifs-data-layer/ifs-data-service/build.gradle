@@ -49,10 +49,6 @@ ext {
 ext['spring-restdocs.version']='1.1.2.RELEASE'
 
 jar {
-    dependsOn asciidoctor
-    from ("${asciidoctor.outputDir}/html5") {
-        into 'static/docs'
-    }
     baseName = 'ifs-data-service'
 }
 
@@ -113,6 +109,11 @@ test {
     if (project.hasProperty('excludeTests')) {
         exclude "${project.excludeTests}"
     }
+
+    if (project.hasProperty('testGroups')) {
+        systemProperty 'testGroups', project.getProperty('testGroups')
+    }
+    finalizedBy asciidoctor
 }
 
 
@@ -134,12 +135,33 @@ task dbResetDocker(type: Docker, dependsOn: build) {
 }
 
 
+task dbAnonymisedDumpDocker(type: Docker, dependsOn: build) {
+    push = false
+    applicationName = 'db-anonymised-data'
+    dockerfile = file('src/main/docker/proxysql/Dockerfile-proxysql')
+    doFirst {
+        copy {
+            from "src/main/docker/proxysql"
+            into "${stageDir}/proxysql"
+        }
+    }
+}
+
+
 asciidoctor {
-    onlyIf { file(snippetsDir).exists() }
     dependsOn test
     attributes 'snippets': snippetsDir
     backends  'html5'
     inputs.dir snippetsDir
+    outputs.dir file("static/docs")
+
+    doLast{
+        copy {
+            from "build/asciidoc/html5"
+            into 'static/docs'
+        }
+    }
+
 }
 
 task generateMainMapperClasses(type: JavaCompile) {

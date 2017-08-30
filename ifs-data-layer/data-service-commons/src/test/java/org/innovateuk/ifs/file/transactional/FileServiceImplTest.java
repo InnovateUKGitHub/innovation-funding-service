@@ -695,4 +695,27 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
     private void verifyNoMoreFileServiceInteractions() {
         verifyNoMoreInteractions(fileEntryRepository, quarantinedFileStorageStrategy, temporaryHoldingFileStorageStrategy, finalFileStorageStrategy, scannedFileStorageStrategy);
     }
+
+    @Test
+    public void testDeleteFileIgnoreNotFound(){
+        FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(30);
+        FileEntry fileEntryToDelete = fileBuilder.with(id(456L)).build();
+
+        when(fileEntryRepository.findOne(456L)).thenReturn(fileEntryToDelete);
+        when(finalFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
+        when(temporaryHoldingFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
+        when(scannedFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
+        when(quarantinedFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
+
+        ServiceResult<FileEntry> result = service.deleteFileIgnoreNotFound(456L);
+        assertNotNull(result);
+        assertTrue(result.isSuccess());
+
+        verify(fileEntryRepository).findOne(456L);
+        verify(finalFileStorageStrategy).getFile(fileEntryToDelete);
+        verify(temporaryHoldingFileStorageStrategy).getFile(fileEntryToDelete);
+        verify(scannedFileStorageStrategy).getFile(fileEntryToDelete);
+        verify(quarantinedFileStorageStrategy).getFile(fileEntryToDelete);
+        verify(fileEntryRepository).delete(fileEntryToDelete);
+    }
 }

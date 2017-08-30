@@ -401,8 +401,8 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
                         .withStatus(SENT)
                         .build(3));
 
-        // Now accept two of the invites
-        for (int i = 0; i < 2; i++) {
+        // Now accept one of the invites
+        for (int i = 0; i < 1; i++) {
             CompetitionParticipant competitionParticipantToAccept = savedParticipants.get(i);
             competitionParticipantToAccept.getInvite().open();
             competitionParticipantToAccept.acceptAndAssignUser(user);
@@ -412,7 +412,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         long count = repository.countByCompetitionIdAndRoleAndStatus(1L, ASSESSOR, ParticipantStatus.ACCEPTED);
 
-        assertEquals(2L, count);
+        assertEquals(1L, count);
     }
 
     @Test
@@ -518,6 +518,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
     @Test
     public void getAssessorsByCompetitionAndStatus() throws Exception {
+        loginSteveSmith();
         List<CompetitionInvite> newAssessorInvites = newCompetitionInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
                 .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
@@ -706,6 +707,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
     @Test
     public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant_participantStatus() throws Exception {
+        loginSteveSmith();
         List<CompetitionInvite> newAssessorInvites = newCompetitionInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
                 .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")

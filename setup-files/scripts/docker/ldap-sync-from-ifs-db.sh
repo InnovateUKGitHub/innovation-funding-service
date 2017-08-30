@@ -40,14 +40,15 @@ echo port:$port
 echo ldap host:$LDAP_HOST
 echo ldap port:$LDAP_PORT
 echo ldap domain:$LDAP_DOMAIN
+echo ldap scheme:$LDAP_SCHEME
 
 wipeLdapUsers() {
   [ -z "$LDAP_PORT" ] && LDAP_PORT=8389
 
-  ldapsearch -H ldap://$LDAP_HOST:$LDAP_PORT/ -b $LDAP_DOMAIN -s sub '(objectClass=person)' -x \
+  ldapsearch -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -b $LDAP_DOMAIN -s sub '(objectClass=person)' -x \
    | grep 'dn: ' \
    | cut -c4- \
-   | xargs ldapdelete -H ldap://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASS
+   | xargs ldapdelete -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASS
 }
 
 executeMySQLCommand() {
@@ -80,5 +81,5 @@ wipeLdapUsers
 IFS=$'\n'
 for u in $(executeMySQLCommand "select uid,email from user where status = 'ACTIVE' and system_user = 0;")
 do
-  addUserToShibboleth $u 
-done | ldapadd -H ldap://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASS
+  addUserToShibboleth $u
+done | ldapadd -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASS

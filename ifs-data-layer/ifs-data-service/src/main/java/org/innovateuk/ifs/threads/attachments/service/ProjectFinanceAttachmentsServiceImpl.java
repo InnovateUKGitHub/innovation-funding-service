@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static java.time.ZonedDateTime.now;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.file.controller.FileControllerUtils.handleFileUpload;
@@ -63,7 +64,7 @@ public class ProjectFinanceAttachmentsServiceImpl implements ProjectFinanceAttac
                                                     Long projectId, HttpServletRequest request) {
         return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request,
                 (fileAttributes, inputStreamSupplier) -> fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
-                        .andOnSuccess(created -> save(new Attachment(loggedInUserSupplier.get(), created.getRight()))
+                        .andOnSuccess(created -> save(new Attachment(loggedInUserSupplier.get(), created.getRight(), now()))
                                 .andOnSuccessReturn(mapper::mapToResource))).toServiceResult();
     }
 
@@ -78,7 +79,7 @@ public class ProjectFinanceAttachmentsServiceImpl implements ProjectFinanceAttac
         return ofNullable(mapper.mapIdToDomain(attachmentId))
                 .map(attachment -> {
                     attachmentsRepository.delete(attachment.id());
-                    return fileService.deleteFile(attachment.fileId()).andOnSuccessReturnVoid();
+                    return fileService.deleteFileIgnoreNotFound(attachment.fileId()).andOnSuccessReturnVoid();
                 }).orElse(ServiceResult.serviceFailure(notFoundError(AttachmentResource.class, attachmentId)));
     }
 

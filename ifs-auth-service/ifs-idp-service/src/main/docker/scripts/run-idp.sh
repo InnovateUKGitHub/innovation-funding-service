@@ -22,6 +22,9 @@ echo "$IDP_SIGNING_CERTIFICATE" > /opt/shibboleth-idp/credentials/idp-signing.cr
 echo "$IDP_ENCRYPTION_KEY" > /opt/shibboleth-idp/credentials/idp-encryption.key && \
 echo "$IDP_ENCRYPTION_CERTIFICATE" > /opt/shibboleth-idp/credentials/idp-encryption.crt
 
+echo "$LDAP_ENCRYPTION_CERTIFICATE" > /opt/shibboleth-idp/credentials/ldap-encryption.crt && \
+$JAVA_HOME/bin/keytool -import -noprompt -trustcacerts -file /opt/shibboleth-idp/credentials/ldap-encryption.crt -keystore $JRE_HOME/lib/security/cacerts -storepass "$JAVA_KEYSTORE_PASSWORD"
+
 # idp configuration
 sed -i "s#\/\/ifs.local-dev#\/\/$SPHOST#g" /etc/shibboleth/*
 

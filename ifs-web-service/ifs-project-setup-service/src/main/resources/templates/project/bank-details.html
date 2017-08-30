@@ -62,7 +62,7 @@
                 <span class="error-message" th:each="err : ${#fields.errors('accountNumber')}" th:text="${err}"></span>
           </th:block>
         </label>
-        <input type="text" th:attr="data-required-errormessage=#{validation.standard.accountnumber.required},data-pattern-errormessage=#{validation.standard.accountnumber.format}" th:errorclass="form-control-error" required="required" pattern="[0-9]{8,}" maxlength="8" id="bank-acc-number" class="form-control width-medium" th:field="*{accountNumber}"/>
+        <input type="text" th:attr="data-required-errormessage=#{validation.standard.accountnumber.required},data-pattern-errormessage=#{validation.standard.accountnumber.format}" th:errorclass="form-control-error" required="required" pattern="[0-9]{8,}" data-prevent-input-regex="[^0-9]" maxlength="8" id="bank-acc-number" class="form-control width-medium" th:field="*{accountNumber}"/>
       </div>
 
       <div class="form-group" th:classappend="${#fields.hasErrors('sortCode')} ? 'form-group-error'">
@@ -73,17 +73,59 @@
                 <span class="error-message" th:each="err : ${#fields.errors('sortCode')}" th:text="${err}"></span>
           </th:block>
         </label>
-        <input type="text" th:attr="data-required-errormessage=#{validation.standard.sortcode.required},data-pattern-errormessage=#{validation.standard.sortcode.format}" th:errorclass="form-control-error" required="required"  pattern="[0-9]{6,}" maxlength="6" id="bank-sort-code" class="form-control width-medium" th:field="*{sortCode}"/>
+        <input type="text" th:attr="data-required-errormessage=#{validation.standard.sortcode.required},data-pattern-errormessage=#{validation.standard.sortcode.format}" th:errorclass="form-control-error" required="required"  pattern="[0-9]{6,}" data-prevent-input-regex="[^0-9]" maxlength="6" id="bank-sort-code" class="form-control width-medium" th:field="*{sortCode}"/>
       </div>
 
-      <div class="form-group">
+      <div class="form-group"  th:classappend="${#fields.hasErrors('*{addressType}')} ? 'form-group-error'">
         <fieldset>
-            <h2 class="heading-medium">Billing address</h2>
             <legend>
-              <span class="visuallyhidden">Billing address</span>
+              <h2 class="heading-medium">Billing address</h2>
+              <th:block th:if="${#fields.hasErrors('*{addressType}')}">
+                  <span class="error-message" th:each="err : ${#fields.errors('addressType')}" th:text="${err}"></span>
+              </th:block>
             </legend>
             <p class="form-hint">This is the billing address connected to this bank account. This is not the address of the bank.</p>
-            <th:block th:insert="project/bank-address-fragment :: select-address" th:with="form=${form}" />
+
+            <th:block th:if="${model.registeredAddress}">
+                <div class="multiple-choice" data-target="registeredAddress">
+                    <input id="address-use-org" type="radio" name="bank-address-group" required="required" th:attr="data-required-errormessage=#{validation.bankdetailsresource.organisationaddress.required}" value="REGISTERED" th:field="*{addressType}" />
+                    <label for="address-use-org">
+                        Use organisation address (<strong th:text="${model.registeredAddress.postcode}">BS1 4NT</strong>)
+                    </label>
+                </div>
+                <div id="registeredAddress" class="panel">
+                    <p>
+                      <th:block th:each="addressLine : ${model.registeredAddress.getNonEmptyLines()}">
+                          <th:block th:text="${addressLine}">An address line</th:block><br />
+                      </th:block>
+                    </p>
+                </div>
+            </th:block>
+            <th:block th:if="${model.operatingAddress}">
+                <div class="multiple-choice" data-target="operatingAddress">
+                    <input id="address-use-operating" type="radio" name="bank-address-group" required="required" th:attr="data-required-errormessage=#{validation.bankdetailsresource.organisationaddress.required}" value="OPERATING" th:field="*{addressType}" />
+                    <label for="address-use-operating">
+                        Use operating address (<strong th:text="${model.operatingAddress?.postcode}">SN1 2UE</strong>)
+                    </label>
+                </div>
+                <div id="operatingAddress" class="panel">
+                    <p>
+                      <th:block th:each="addressLine : ${model.operatingAddress.getNonEmptyLines()}">
+                          <th:block th:text="${addressLine}">An address line</th:block><br />
+                      </th:block>
+                    </p>
+                </div>
+            </th:block>
+
+            <div class="multiple-choice" data-target="custom-postcode">
+                <input id="address-add-bank" type="radio" name="bank-address-group" required="required" th:attr="data-required-errormessage=#{validation.bankdetailsresource.organisationaddress.required}" value="ADD_NEW" th:field="*{addressType}" />
+                <label for="address-add-bank">
+                    Enter an alternative billing address
+                </label>
+            </div>
+            <div id="custom-postcode" class="panel">
+                <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${form}" />
+            </div>
         </fieldset>
       </div>
 

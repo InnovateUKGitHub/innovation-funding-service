@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.inAssessment} ? 'Manage assessors' : 'Allocate assessors'" />
+    </head>
+
+    <body th:with="context='comp-management'" class="competition-management">
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
+
+        <main tabindex="-1" id="content">
+            <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Manage assessments',linkClass='link-back',linkUrl=@{/assessment/competition/{id}(id=${model.competitionId})})" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.inAssessment} ? 'Manage assessors' : 'Allocate assessors',subTitle=|${model.competitionId} : ${model.competitionName}, ${model.inAssessment ? 'in assessment' : 'competition closed'}|, size='heading-xlarge'" />
+
+            <p class="extra-margin">Assign applications to assessors. You will need to confirm assignments before assessors are notified.</p>
+
+            <form method="GET" th:object="${filterForm}">
+                <div class="search-filters">
+                    <legend class="visuallyhidden">Search filters</legend>
+                    <div class="grid-row">
+                        <div class="column-half">
+                           <div class="form-group">
+                               <label for="innovationSector">Innovation sector</label>
+                               <select class="form-control" name="innovationSector" id="innovationSector">
+                                   <option th:selected="${filterForm.innovationSector} == null" value="">---</option>
+                                   <option th:each="innovationSector : ${model.innovationSectors}"
+                                           th:value="${innovationSector.id}"
+                                           th:text="${innovationSector.name}"
+                                           th:selected="${(innovationSector.id == filterForm.innovationSector)}"
+                                       value="1">Not available</option>
+                               </select>
+                           </div>
+                        </div>
+                        <div class="column-half">
+                            <div class="form-group">
+                                <label for="businessType">Type</label>
+                                <select class="form-control" name="businessType" id="businessType">
+                                    <option th:selected="${filterForm.businessType} == null" value="">---</option>
+                                    <option th:each="type : ${T(org.innovateuk.ifs.user.resource.BusinessType).values()}"
+                                            th:value="${type}"
+                                            th:text="${type.displayName}"
+                                            th:selected="${type == filterForm.businessType}"
+                                            value="1">Not available</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid-row">
+                        <div class="column-half">
+                            <a href="?sort">Clear all filters</a>
+                        </div>
+                        <div class="column-half alignright">
+                            <button class="button no-margin">Filter</button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+
+
+            <div class="table-overflow">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="width-medium" scope="col">Assessor</th>
+                            <th scope="col">Skill areas</th>
+                            <th class="numeric width-small-medium" scope="col">Total applications</th>
+                            <th class="numeric width-small-medium" scope="col">Assigned</th>
+                            <th class="numeric width-small-medium" scope="col" th:if="${model.inAssessment}">Accepted</th>
+                            <th class="numeric width-small-medium" scope="col" th:if="${model.inAssessment}">Completed</th>
+                            <th class="width-small" scope="col"><span class="visuallyhidden">Action</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="assessor : ${model.assessors}">
+                            <td><a th:href="@{/competition/{cid}/assessors/profile/{aid}(cid=${model.competitionId},aid=${assessor.id})} + ${originQuery}" th:text="${assessor.name}"/></td>
+                            <td th:text="${assessor.skillAreas}">skill areas</td>
+                            <td class="numeric" th:text="${assessor.total}">4</td>
+                            <td class="numeric" th:text="${assessor.assigned}">4</td>
+                            <td class="numeric" th:text="${assessor.accepted}" th:if="${model.inAssessment}">2</td>
+                            <td class="numeric" th:text="${assessor.submitted}" th:if="${model.inAssessment}">1</td>
+                            <td class="alignright">
+                                <a class="button-secondary no-margin"
+                                   th:href="@{/assessment/competition/{competitionId}/assessors/{assessorId}(competitionId=${model.competitionId}, assessorId=${assessor.id})}"
+                                   th:text="${model.inAssessment} ? 'View progress' : 'Assign'">
+                                    View progress
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
+            <th:block th:insert="fragments/layout :: main-content-end" />
+        </main>
+
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
+    </body>
+</html>

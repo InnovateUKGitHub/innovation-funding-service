@@ -2,12 +2,16 @@ package org.innovateuk.ifs;
 
 
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
+import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
+import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.status.StatusService;
-import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.project.otherdocuments.OtherDocumentsService;
+import org.innovateuk.ifs.project.status.StatusService;
+import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -36,6 +40,18 @@ public abstract class BaseUnitTestMocksTest{
 
     @Mock
     protected UserService userServiceMock;
+
+    @Mock
+    protected InviteRestService inviteRestServiceMock;
+
+    @Mock
+    protected InviteOrganisationRestService inviteOrganisationRestServiceMock;
+
+    @Mock
+    protected ProcessRoleService processRoleServiceMock;
+
+    @Mock
+    protected CompetitionService competitionServiceMock;
 
     @Before
     public void setUp() {

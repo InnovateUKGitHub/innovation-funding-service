@@ -14,7 +14,6 @@ public class CompetitionResourceDocs {
     public static final FieldDescriptor[] competitionResourceFields = {
             fieldWithPath("id").description("Id of the competitionResource"),
             fieldWithPath("name").description("name of the competition"),
-            fieldWithPath("description").description("description of the competition"),
             fieldWithPath("startDate").description("date the competition opens for submissions"),
             fieldWithPath("endDate").description("date the submissions phase of the competition closes"),
             fieldWithPath("assessorAcceptsDate").description("date by which assessors should accept or reject invitations to assess applications"),
@@ -55,13 +54,14 @@ public class CompetitionResourceDocs {
             fieldWithPath("assessorPay").description("How much will assessors be paid per application they assess"),
             fieldWithPath("setupComplete").description("Has the setup been completed and will move to open once past the open date"),
             fieldWithPath("nonIfs").description("Is this competition a non-ifs competition (not managed via IFS)"),
-            fieldWithPath("nonIfsUrl").description("The URL to apply to the competition if it is a non-ifs competition")
+            fieldWithPath("nonIfsUrl").description("The URL to apply to the competition if it is a non-ifs competition"),
+            fieldWithPath("hasAssessmentPanel").description("indicates if the competition will have an assessment panel stage"),
+            fieldWithPath("hasInterviewStage").description("indicates if the competition will have an interview stage")
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()
             .withId(1L)
             .withName("competition name")
-            .withDescription("competition description")
             .withStartDate(ZonedDateTime.now())
             .withEndDate(ZonedDateTime.now().plusDays(30))
             .withAssessorAcceptsDate(ZonedDateTime.now().plusDays(35))
@@ -76,7 +76,7 @@ public class CompetitionResourceDocs {
             .withCompetitionType(1L)
             .withExecutive(1L)
             .withLeadTechnologist(1L)
-            .withLeadTechnologistName("Competition Technologist")
+            .withLeadTechnologistName("Innovation Lead")
             .withInnovationAreas(singleton(1L))
             .withInnovationAreaNames(singleton("Tech"))
             .withInnovationSector(2L)
@@ -87,5 +87,7 @@ public class CompetitionResourceDocs {
             .withActivityCode("Activity-Code")
             .withNonIfs(true)
             .withNonIfsUrl("https://google.co.uk")
-            .withMilestones(asList(1L, 2L, 3L));
+            .withMilestones(asList(1L, 2L, 3L))
+            .withHasAssessmentPanel(false)
+            .withHasInterviewStage(false);
 }

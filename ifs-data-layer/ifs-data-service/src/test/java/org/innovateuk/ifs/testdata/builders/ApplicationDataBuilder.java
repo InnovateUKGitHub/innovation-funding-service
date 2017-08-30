@@ -9,7 +9,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -129,13 +128,9 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         });
     }
 
-    public ApplicationDataBuilder inviteCollaboratorNotYetRegistered(String email, String hash, String name, InviteStatus status, String organisationName) {
+    public ApplicationDataBuilder inviteCollaboratorNotYetRegistered(String email, String hash, String name, String organisationName) {
 
-        return asLeadApplicant(data -> {
-            Organisation organisation = retrieveOrganisationByName(organisationName);
-            Optional<Long> organisationId = organisation != null ? Optional.of(organisation.getId()) : Optional.empty();
-            doInviteCollaborator(data, organisationName, Optional.empty(), email, name, Optional.of(hash));
-        });
+        return asLeadApplicant(data -> doInviteCollaborator(data, organisationName, Optional.empty(), email, name, Optional.of(hash)));
     }
 
     public ApplicationDataBuilder withFinances(UnaryOperator<ApplicationFinanceDataBuilder>... builderFns) {
@@ -188,7 +183,6 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
     }
 
     private ApplicationInviteResource doInviteCollaborator(ApplicationData data, String organisationName, Optional<Long> userId, String email, String name, Optional<String> hash) {
-
         ApplicationInviteResourceBuilder baseApplicationInviteBuilder =
                 userId.map(id -> newApplicationInviteResource().withUsers(id)).orElse(newApplicationInviteResource());
 
@@ -208,7 +202,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         inviteService.createApplicationInvites(newInviteOrganisationResource().
                 withOrganisationName(organisationName).
                 withInviteResources(applicationInvite).
-                build()).getSuccessObjectOrThrowException();
+                build(), Optional.of(data.getApplication().getId())).getSuccessObjectOrThrowException();
 
         testService.flushAndClearSession();
 

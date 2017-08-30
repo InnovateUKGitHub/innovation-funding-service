@@ -96,27 +96,27 @@
 
 <th:block th:fragment="organisation-details-minimal">
     <fieldset>
-        <legend class="visuallyhidden" th:text="${organisationForm.organisationType.name} + ''">? Organisation</legend>
+        <legend class="visuallyhidden" th:text="${selectedOrganisation.name} + ''">? Organisation</legend>
         <div class="form-block">
             <h3 class="heading-small">Organisation name</h3>
-            <p th:text="${organisationForm.organisationName}"></p>
+            <p th:text="${selectedOrganisation.name}"></p>
         </div>
     </fieldset>
 </th:block>
 
 <th:block th:fragment="organisation-details">
     <fieldset>
-        <legend class="visuallyhidden" th:text="${organisationForm.organisationType.name} + ''">? Organisation</legend>
+        <legend class="visuallyhidden" th:text="${organisationType.name} + ''">? Organisation</legend>
         <div class="form-block">
             <th:block th:if="${showOrgType}">
                 <h3 class="heading-small">Organisation type</h3>
-                <p th:text="${organisationForm.organisationType.name}">Businesss</p>
+                <p th:text="${organisationType.name}">Business</p>
             </th:block>
 
             <h3 class="heading-small">Registered name</h3>
             <p th:text="${organisationForm.organisationName}"></p>
 
-            <th:block th:if="${organisationForm.notResearch}">
+            <th:block th:unless="${organisationForm.research}">
                 <th:block th:if="${selectedOrganisation?.organisationSearchId}">
                     <h3 class="heading-small">Registration number</h3>
                     <p th:text="${selectedOrganisation?.organisationSearchId}"></p>

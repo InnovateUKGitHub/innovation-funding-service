@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.service.CompetitionsRestService;
 import org.innovateuk.ifs.dashboard.viewmodel.ApplicantDashboardViewModel;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -34,7 +35,7 @@ public class ApplicantDashboardPopulator {
     private EnumSet<ApplicationState> inProgress = EnumSet.of(ApplicationState.CREATED, ApplicationState.OPEN);
     private EnumSet<ApplicationState> submitted = EnumSet.of(ApplicationState.SUBMITTED, ApplicationState.INELIGIBLE);
     private EnumSet<ApplicationState> finished = EnumSet.of(ApplicationState.APPROVED, ApplicationState.REJECTED, ApplicationState.INELIGIBLE_INFORMED);
-    private EnumSet<CompetitionStatus> fundingNotYetCompete = EnumSet.of(CompetitionStatus.OPEN, CompetitionStatus.IN_ASSESSMENT, CompetitionStatus.FUNDERS_PANEL);
+    private EnumSet<CompetitionStatus> fundingNotYetCompete = EnumSet.of(CompetitionStatus.OPEN, CompetitionStatus.CLOSED, CompetitionStatus.IN_ASSESSMENT, CompetitionStatus.FUNDERS_PANEL);
     private EnumSet<CompetitionStatus> fundingComplete = EnumSet.of(CompetitionStatus.ASSESSOR_FEEDBACK, CompetitionStatus.PROJECT_SETUP);
     private EnumSet<CompetitionStatus> open = EnumSet.of(CompetitionStatus.OPEN);
 
@@ -53,6 +54,9 @@ public class ApplicantDashboardPopulator {
     @Autowired
     private CompetitionService competitionService;
 
+    @Autowired
+    private CompetitionsRestService competitionsRestService;
+
 
     public ApplicantDashboardViewModel populate(UserResource user) {
         List<ApplicationResource> allApplications = applicationRestService
@@ -70,13 +74,19 @@ public class ApplicantDashboardPopulator {
 
         List<ProjectResource> projectsInSetup = projectService.findByUser(user.getId()).getSuccessObjectOrThrowException();
 
+        List<ProcessRoleResource> usersProcessRoles = processRoleService.getByUserId(user.getId());
+
         Map<Long, ProcessRoleResource> inProgressProcessRoles = simpleToMap(inProgress, ApplicationResource::getId,
-                applicationResource -> processRoleService.findProcessRole(user.getId(), applicationResource.getId()));
+                applicationResource -> usersProcessRoles.stream()
+                        .filter(processRoleResource -> processRoleResource.getApplicationId().equals(applicationResource.getId()))
+                        .findFirst()
+                        .orElse(null)
+        );
 
         List<Long> applicationsAssigned = getAssignedApplications(inProgressProcessRoles);
         List<Long> leadApplicantApplications = getLeadApplicantApplications(inProgressProcessRoles);
 
-        Map<Long, CompetitionResource> competitionApplicationMap = createCompetitionMap(inProgress, finished, getApplicationsForProjectsInSetup(projectsInSetup));
+        Map<Long, CompetitionResource> competitionApplicationMap = createCompetitionMap(user.getId(), inProgress, finished, getApplicationsForProjectsInSetup(projectsInSetup));
 
         return new ApplicantDashboardViewModel(applicationProgress, inProgress,
                 applicationsAssigned, finished,
@@ -149,12 +159,17 @@ public class ApplicantDashboardPopulator {
     }
 
     @SafeVarargs
-    private final Map<Long, CompetitionResource> createCompetitionMap(List<ApplicationResource>... resources) {
+    private final Map<Long, CompetitionResource> createCompetitionMap(Long userId, List<ApplicationResource>... resources) {
+        List<CompetitionResource> allUserCompetitions = competitionsRestService.getCompetitionsByUserId(userId).getSuccessObjectOrThrowException();
+
         return combineLists(resources).stream()
                 .collect(
                         Collectors.toMap(
                                 ApplicationResource::getId,
-                                application -> competitionService.getById(application.getCompetition()), (p1, p2) -> p1)
+                                application -> allUserCompetitions.stream()
+                                        .filter(competitionResource -> competitionResource.getId().equals(application.getCompetition()))
+                                        .findFirst()
+                                        .orElse(null), (p1, p2) -> p1)
                 );
     }
 }

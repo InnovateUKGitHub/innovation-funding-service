@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "@frctl/fractal": "^1.1.4",
     "compass-importer": "^0.4.1",
     "files-exist": "^1.0.2",
     "govuk-elements-sass": "^3.0.2",
@@ -19,6 +18,9 @@
     "jshint-stylish": "^2.2.1",
     "resolve": "~1.1.7",
     "simplestatemanager": "^3.4.0"
+  },
+  "devDependencies": {
+    "@frctl/fractal": "^1.1.4"
   },
   "engines": {
     "node": "~6.9.2"

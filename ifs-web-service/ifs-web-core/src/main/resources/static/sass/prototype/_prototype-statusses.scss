@@ -127,7 +127,8 @@ table {
 
 span.yes {
     @extend %icon-tick;
-
+    background-size: auto;
+    background-position: 0 4px; 
     padding-left: 28px;
 }
 

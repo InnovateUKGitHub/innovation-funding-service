@@ -1,6 +1,10 @@
 package org.innovateuk.ifs.user.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.documentation.EditUserResourceDocs;
+import org.innovateuk.ifs.invite.resource.EditUserResource;
+import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
+import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -8,16 +12,24 @@ import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.util.LinkedMultiValueMap;
 
+import java.util.List;
+
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
+import static org.innovateuk.ifs.documentation.UserDocs.internalUserRegistrationResourceFields;
 import static org.innovateuk.ifs.documentation.UserDocs.userPageResourceFields;
 import static org.innovateuk.ifs.documentation.UserDocs.userResourceFields;
+import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
+import static org.innovateuk.ifs.user.resource.UserRoleType.INNOVATION_LEAD;
+import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -75,9 +87,9 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     public void findByRole() throws Exception {
 
         final UserResource userResource = newUserResource().build();
-        when(baseUserServiceMock.findByProcessRole(eq(COMP_TECHNOLOGIST))).thenReturn(serviceSuccess(asList(userResource, userResource)));
+        when(baseUserServiceMock.findByProcessRole(eq(INNOVATION_LEAD))).thenReturn(serviceSuccess(asList(userResource, userResource)));
 
-        mockMvc.perform(get("/user/findByRole/{userRoleName}", COMP_TECHNOLOGIST.getName()))
+        mockMvc.perform(get("/user/findByRole/{userRoleName}", INNOVATION_LEAD.getName()))
                 .andDo(document("user/{method-name}",
                         pathParameters(
                                 parameterWithName("userRoleName").description("The name of the role to get the users by.")
@@ -117,7 +129,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         mockMvc.perform(get(buildPaginationUri("/user/internal/active", 0, 5, null, new LinkedMultiValueMap<>()))).andExpect(status().isOk())
                 .andDo(document("user/{method-name}",
                         responseFields(userPageResourceFields)
-                ));;
+                ));
     }
 
     @Test
@@ -127,7 +139,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         mockMvc.perform(get(buildPaginationUri("/user/internal/inactive", 0, 5, null, new LinkedMultiValueMap<>()))).andExpect(status().isOk())
                 .andDo(document("user/{method-name}",
                         responseFields(userPageResourceFields)
-                ));;
+                ));
     }
 
     private UserPageResource buildUserPageResource(){
@@ -138,5 +150,75 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         pageResource.setTotalPages(2);
         pageResource.setContent(newUserResource().withEmail("example@innovateuk.test").build(5));
         return pageResource;
+    }
+
+    @Test
+    public void createInternalUser() throws Exception {
+
+        List<RoleResource> roleResources = newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build(1);
+        InternalUserRegistrationResource internalUserRegistrationResource = newInternalUserRegistrationResource()
+                .withFirstName("First")
+                .withLastName("Last")
+                .withEmail("email@example.com")
+                .withPassword("Passw0rd123")
+                .withRoles(roleResources)
+                .build();
+
+        when(registrationServiceMock.createInternalUser("SomeHashString", internalUserRegistrationResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/user/internal/create/{inviteHash}", "SomeHashString")
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(internalUserRegistrationResource)))
+                .andDo(document("user/{method-name}",
+                        pathParameters(
+                                parameterWithName("inviteHash").description("Hash from invite to be used for creating new account")
+                        ),
+                        requestFields(internalUserRegistrationResourceFields)
+                ));
+    }
+
+    @Test
+    public void editInternalUser() throws Exception {
+
+        EditUserResource editUserResource = new EditUserResource(1L, "Johnathan", "Dow", UserRoleType.SUPPORT);
+        when(registrationServiceMock.editInternalUser(any(), any())).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/user/internal/edit")
+                .contentType(APPLICATION_JSON)
+                .content(toJson(editUserResource)))
+                .andExpect(status().isOk())
+                .andDo(document("user/internal/edit/{method-name}",
+                        requestFields(EditUserResourceDocs.editUserResourceFields)
+                ));
+
+        verify(registrationServiceMock).editInternalUser(any(), any());
+    }
+
+    @Test
+    public void deactivateUser() throws Exception {
+        final Long userId = 9999L;
+
+        when(registrationServiceMock.deactivateUser(userId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(get("/user/id/{userId}/deactivate", userId))
+                .andDo(document("user/{method-name}",
+                        pathParameters(
+                                parameterWithName("userId").description("Identifier of the user being deactivated")
+                        )
+                ));
+    }
+
+    @Test
+    public void reactivateUser() throws Exception {
+        final Long userId = 9999L;
+
+        when(registrationServiceMock.activateUser(userId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(get("/user/id/{userId}/reactivate", userId))
+                .andDo(document("user/{method-name}",
+                        pathParameters(
+                                parameterWithName("userId").description("Identifier of the user being reactivated")
+                        )
+                ));
     }
 }

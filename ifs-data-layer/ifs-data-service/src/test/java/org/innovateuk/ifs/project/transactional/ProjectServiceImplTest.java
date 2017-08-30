@@ -265,6 +265,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         // Expectations
         assertTrue(shouldFail.isFailure());
         assertTrue(shouldFail.getFailure().is(badRequestError("project does not contain organisation")));
+        verifyZeroInteractions(processRoleRepositoryMock);
     }
 
     @Test
@@ -297,6 +298,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         ServiceResult<ProjectUser> shouldSucceed = service.addPartner(p.getId(), newUser.getId(), o.getId());
         // Expectations
         assertTrue(shouldSucceed.isSuccess());
+        verify(processRoleRepositoryMock).save(any(ProcessRole.class));
     }
 
     private Project createProjectExpectationsFromOriginalApplication() {

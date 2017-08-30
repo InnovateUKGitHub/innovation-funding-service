@@ -6,21 +6,12 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * Represents an application's statistics
  */
-public class ApplicationCountSummaryResource {
-    private Long id;
+public class ApplicationCountSummaryResource extends AssessmentCountSummaryResource {
     private String name;
     private String leadOrganisation;
-    private long assessors;
+    private long assessors; // TODO IFS-319 rename to assigned (or similar) to be consistent with AssessmentCountSummaryResource
     private long accepted;
     private long submitted;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -71,10 +62,10 @@ public class ApplicationCountSummaryResource {
         ApplicationCountSummaryResource that = (ApplicationCountSummaryResource) o;
 
         return new EqualsBuilder()
+                .appendSuper(super.equals(o))
                 .append(assessors, that.assessors)
                 .append(accepted, that.accepted)
                 .append(submitted, that.submitted)
-                .append(id, that.id)
                 .append(name, that.name)
                 .append(leadOrganisation, that.leadOrganisation)
                 .isEquals();
@@ -83,7 +74,7 @@ public class ApplicationCountSummaryResource {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(id)
+                .appendSuper(super.hashCode())
                 .append(name)
                 .append(leadOrganisation)
                 .append(assessors)

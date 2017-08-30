@@ -39,7 +39,7 @@ the user fills in the CS Initial details
     the user enters text to a text field                 css=#openingDateDay  1
     the user enters text to a text field                 css=#openingDateMonth  ${month}
     the user enters text to a text field                 css=#openingDateYear  ${nextyear}
-    the user selects the option from the drop-down menu  Ian Cooper  id=leadTechnologistUserId
+    the user selects the option from the drop-down menu  Ian Cooper  id=innovationLeadUserId
     the user selects the option from the drop-down menu  Robert Johnson  id=executiveUserId
     the user clicks the button/link                      jQuery=button:contains("Done")
     the user clicks the button/link                      link=Competition setup
@@ -65,7 +65,7 @@ the user fills in the CS Eligibility
     the user clicks the button/link  jQuery=label[for="single-or-collaborative-collaborative"]
     the user clicks the button/link  jQuery=label[for="research-categories-33"]
     the user clicks the button/link  jQuery=label[for="research-categories-33"]
-    the user clicks the button twice  jQuery=label[for="lead-applicant-type-3"]
+    the user clicks the button twice  jQuery=label[for="lead-applicant-type-1"]
     the user selects the option from the drop-down menu  1  researchParticipation
     the user clicks the button/link  jQuery=label[for="comp-resubmissions-yes"]
     the user clicks the button/link  jQuery=label[for="comp-resubmissions-yes"]
@@ -128,6 +128,8 @@ the user fills in the CS Assessors
     the user clicks the button/link   link=Assessors
     the user selects the radio button  assessorCount  3
     the user should see the element   css=#assessorPay[value="100"]
+    the user selects the radio button  hasAssessmentPanel  0
+    the user selects the radio button  hasInterviewStage  0
     the user clicks the button/link   jQuery=button:contains("Done")
     the user should see the element   jQuery=dt:contains("How many") + dd:contains("3")
     the user clicks the button/link   link=Competition setup
@@ -238,3 +240,10 @@ The applications should be sorted by column
     ${test_sorting_list}=    Copy List    ${sorted_column_contents}
     Sort List    ${test_sorting_list}
     Lists Should Be Equal    ${sorted_column_contents}    ${test_sorting_list}
+
+the user should see all live competitions
+    the user should see the element  jQuery=h2:contains("Open")
+    the user should see the element  jQuery=h2:contains("Closed")
+    the user should see the element  jQuery=h2:contains("In assessment")
+    the user should see the element  jQuery=h2:contains("Panel")
+    the user should see the element  jQuery=h2:contains("Inform")

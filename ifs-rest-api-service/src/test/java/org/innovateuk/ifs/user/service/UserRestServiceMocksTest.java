@@ -2,10 +2,9 @@ package org.innovateuk.ifs.user.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.user.resource.Disability;
-import org.innovateuk.ifs.user.resource.Gender;
-import org.innovateuk.ifs.user.resource.UserPageResource;
-import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.invite.resource.EditUserResource;
+import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
+import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.LinkedMultiValueMap;
@@ -16,13 +15,17 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.processRoleResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userListType;
+import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
+import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Title.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
-
 
 
 public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestServiceImpl> {
@@ -48,6 +51,18 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         assertEquals(2, users.size());
         assertEquals(user1, users.get(0));
         assertEquals(user2, users.get(1));
+    }
+
+    @Test
+    public void test_findProcessRoleByUserId() {
+        List<ProcessRoleResource> processRoleList = newProcessRoleResource().build(10);
+        Long userId = 249L;
+
+        setupGetWithRestResultExpectations(processRoleRestURL + "/findByUserId/" + userId, processRoleResourceListType(), processRoleList);
+
+        List<ProcessRoleResource> response = service.findProcessRoleByUserId(userId).getSuccessObject();
+        assertEquals(10, response.size());
+        assertEquals(processRoleList, response);
     }
 
     @Test
@@ -239,8 +254,6 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         assertTrue(result.isSuccess());
     }
 
-
-
     @Test
     public void userHasApplicationForCompetition() {
         Long userId = 1L;
@@ -273,5 +286,61 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         UserPageResource result = service.getInactiveInternalUsers(0, 5).getSuccessObjectOrThrowException();
 
         assertEquals(expected, result);
+    }
+
+    @Test
+    public void testCreateInternalUser(){
+        setLoggedInUser(null);
+
+        List<RoleResource> roleResources = newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build(1);
+
+        InternalUserRegistrationResource internalUserRegistrationResource = newInternalUserRegistrationResource()
+                .withFirstName("First")
+                .withLastName("Last")
+                .withEmail("email@example.com")
+                .withPassword("Passw0rd123")
+                .withRoles(roleResources)
+                .build();
+
+        String inviteHash = "hash";
+
+        setupPostWithRestResultAnonymousExpectations(usersUrl + "/internal/create/" + inviteHash, Void.class, internalUserRegistrationResource, null, CREATED);
+
+        RestResult<Void> result = service.createInternalUser(inviteHash, internalUserRegistrationResource);
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(CREATED, result.getStatusCode());
+    }
+
+    @Test
+    public void editInternalUser() throws Exception {
+        EditUserResource editUserResource = new EditUserResource();
+        String url = usersUrl + "/internal/edit";
+        setupPostWithRestResultExpectations(url, editUserResource, HttpStatus.OK);
+
+        RestResult<Void> result = service.editInternalUser(editUserResource);
+        assertTrue(result.isSuccess());
+        assertEquals(OK, result.getStatusCode());
+    }
+
+    @Test
+    public void deactivateUser() throws Exception {
+        String url = usersUrl + "/id/123/deactivate";
+        setupGetWithRestResultExpectations(url, Void.class, null);
+
+        RestResult<Void> result = service.deactivateUser(123L);
+        assertTrue(result.isSuccess());
+        assertEquals(OK, result.getStatusCode());
+    }
+
+    @Test
+    public void reactivateUser() throws Exception {
+        String url = usersUrl + "/id/123/reactivate";
+        setupGetWithRestResultExpectations(url, Void.class, null);
+
+        RestResult<Void> result = service.reactivateUser(123L);
+        assertTrue(result.isSuccess());
+        assertEquals(OK, result.getStatusCode());
     }
 }

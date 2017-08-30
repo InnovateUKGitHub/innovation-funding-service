@@ -20,9 +20,10 @@ import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_OPEN;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_OPEN_OR_LATER;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -79,6 +80,17 @@ public abstract class BaseTransactionalService extends RootTransactionalService 
                         return serviceFailure(COMPETITION_NOT_OPEN);
                     } else {
                         return serviceSuccess(application);
+                    }
+                }
+        );
+    }
+
+    protected final ServiceResult<Application> getOpenOrLaterApplication(long applicationId) {
+        return find(application(applicationId)).andOnSuccess(application -> {
+                    if (application.getCompetition() != null && application.getCompetition().getCompetitionStatus().ordinal() >= OPEN.ordinal()) {
+                        return serviceSuccess(application);
+                    } else {
+                        return serviceFailure(COMPETITION_NOT_OPEN_OR_LATER);
                     }
                 }
         );
