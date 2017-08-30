@@ -76,10 +76,19 @@ task buildDockerBaseImage(type: DockerBuildImage) {
     dependsOn prepareDockerFile
 
     tag = 'ifshibdev/idp-base:latest'
-    inputDir = project.file("$project.buildDir/docker")
-    dockerFile = file('src/main/docker/Dockerfile-base')
+    inputDir = project.file("$project.buildDir/docker-base")
+
+    if (!inputDir.exists()) {
+      inputDir.mkdirs()
+    }
 
     doFirst {
+        copy {
+            from file('src/main/docker/Dockerfile-base')
+            into inputDir
+            rename 'Dockerfile-base', 'Dockerfile'
+        }
+
         copy {
             from file('src/main/docker/idp/default-jre-headless-dummy_1.0_all.deb')
             into "${inputDir}/idp"
