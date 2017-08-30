@@ -1,3 +1,5 @@
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+
 project(':ifs-data-layer').bootRepackage {
     onlyIf{ Task task -> false}
 }
@@ -43,28 +45,36 @@ subprojects {
             }
         }
 
-        task buildDocker(type: Docker, dependsOn: build) {
-            push = false
-            applicationName = 'default-service-name'
-            dockerfile = file('src/main/docker/Dockerfile')
-            tagVersion = 'latest'
+        task buildDocker(type: DockerBuildImage, dependsOn: build) {
+            tag = "innovateuk/" + project.name.replaceAll(/ifs-/,"")+":latest"
+
+            inputDir = project.file("$project.buildDir/docker")
+
+            if (!inputDir.exists()) {
+              inputDir.mkdirs()
+            }
+
             doFirst {
                 copy {
+                    from file('src/main/docker/Dockerfile')
+                    into inputDir
+                }
+                copy {
                     from jar
-                    into stageDir
+                    into inputDir
                 }
                 copy{
                     from file('src/main/docker/certificate')
-                    into stageDir
+                    into inputDir
                 }
                 copy {
                     from file("${rootProject.projectDir}/setup-files/scripts/docker/coscale-monitoring.sh")
-                    into stageDir
+                    into inputDir
                 }
                 copy {
                     from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar")
                     from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml")
-                    into stageDir
+                    into inputDir
                 }
             }
         }

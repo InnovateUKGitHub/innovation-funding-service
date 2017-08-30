@@ -1,3 +1,4 @@
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 def targetBuild = hasProperty('profile') ? profile : 'docker';
 apply from: targetBuild+"-build.gradle";
 
@@ -53,7 +54,6 @@ jar {
 }
 
 prepareDockerFile.appName = jar.baseName
-buildDocker.applicationName=jar.baseName.replaceAll(/ifs-/, "")
 
 configurations {
     mapstruct
@@ -117,32 +117,33 @@ test {
 }
 
 
-task dbResetDocker(type: Docker, dependsOn: build) {
-    push = false
-    applicationName = 'dbreset'
-    dockerfile = file('src/main/docker/Dockerfile-dbreset')
+task dbResetDocker(type: DockerBuildImage, dependsOn: build) {
+    tag = 'innovateuk/dbreset'
+    dockerFile = file('src/main/docker/Dockerfile-dbreset')
+    inputDir = project.file("$project.buildDir/docker-db-reset")
     doFirst {
         copy{
             from file('src/main/resources')
             include 'db/**/*.sql'
-            into stageDir
+            into inputDir
         }
         copy {
             from file("${rootProject.projectDir}/setup-files/scripts/docker/ldap-sync-from-ifs-db.sh")
-            into stageDir
+            into inputDir
         }
     }
 }
 
 
-task dbAnonymisedDumpDocker(type: Docker, dependsOn: build) {
-    push = false
-    applicationName = 'db-anonymised-data'
-    dockerfile = file('src/main/docker/proxysql/Dockerfile-proxysql')
+task dbAnonymisedDumpDocker(type: DockerBuildImage, dependsOn: build) {
+    tag = 'innovateuk/db-anonymised-data'
+    dockerFile = file('src/main/docker/proxysql/Dockerfile-proxysql')
+    inputDir = project.file("$project.buildDir/docker-db-anonymised")
+
     doFirst {
         copy {
             from "src/main/docker/proxysql"
-            into "${stageDir}/proxysql"
+            into "${inputDir}/proxysql"
         }
     }
 }

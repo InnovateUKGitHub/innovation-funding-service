@@ -2,7 +2,7 @@ jar {
     baseName = 'project-setup-management'
 }
 prepareDockerFile.appName = jar.baseName
-buildDocker.applicationName = 'project-setup-management-service'
+buildDocker.tag = 'innovateuk/project-setup-management-service:latest'
 
 
 dependencies {

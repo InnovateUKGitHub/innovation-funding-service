@@ -1,13 +1,5 @@
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import org.apache.tools.ant.filters.ReplaceTokens
-
-apply plugin: 'docker'
-
-buildscript {
-    repositories { mavenCentral() }
-    dependencies {
-        classpath "se.transmode.gradle:gradle-docker:1.2"
-    }
-}
 
 def String spCertsVolume = 'src/main/docker/certs'
 
@@ -41,21 +33,28 @@ task prepareDockerFile(type: Copy) {
                                    auth_idp_encryption_certificate: idpEncryptionCertificate])
 }
 
-task buildDocker(type: Docker) {
+task buildDocker(type: DockerBuildImage) {
     dependsOn prepareDockerFile
 
-    push = false
-    applicationName = 'sp-service'
-    dockerfile = file('src/main/docker/Dockerfile')
-    tagVersion = 'latest'
+    tag = 'innovateuk/sp-service:latest'
+    inputDir = project.file("$project.buildDir/docker")
+
+    if (!inputDir.exists()) {
+      inputDir.mkdirs()
+    }
+
     doFirst {
         copy {
+            from file('src/main/docker/Dockerfile')
+            into inputDir
+        }
+        copy {
             from fileTree('src/main/docker/files')
-            into "${stageDir}/files"
+            into "${inputDir}/files"
         }
         copy {
             from fileTree('src/main/docker/certs')
-            into "${stageDir}/certs"
+            into "${inputDir}/certs"
         }
     }
 }
