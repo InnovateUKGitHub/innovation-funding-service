@@ -26,10 +26,9 @@ import static org.innovateuk.ifs.assessment.builder.AssessorCompetitionSummaryRe
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
 import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
-import static org.innovateuk.ifs.assessment.resource.AssessmentState.ACCEPTED;
-import static org.innovateuk.ifs.assessment.resource.AssessmentState.REJECTED;
-import static org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED;
-import static org.innovateuk.ifs.assessment.transactional.AssessorCompetitionSummaryServiceImpl.INCLUDED_ASSESSMENT_STATES;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
+import static org.innovateuk.ifs.assessment.transactional.AssessorCompetitionSummaryServiceImpl.ALL_ASSESSMENT_STATES;
+import static org.innovateuk.ifs.assessment.transactional.AssessorCompetitionSummaryServiceImpl.VALID_ASSESSMENT_STATES;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
@@ -52,100 +51,55 @@ public class AssessorCompetitionSummaryServiceImplTest extends BaseUnitTestMocks
         long assessorId = 1L;
         long competitionId = 1L;
 
-        AssessorProfileResource assessor = newAssessorProfileResource()
-                .withUser(
-                        newUserResource()
-                                .withId(assessorId)
-                                .build()
-                )
-                .withProfile(newProfileResource().build())
-                .build();
-
-        when(assessorServiceMock.getAssessorProfile(assessorId)).thenReturn(serviceSuccess(assessor));
-
-        CompetitionResource competition = newCompetitionResource()
-                .withId(competitionId)
-                .withName("Test Competition")
-                .withCompetitionStatus(IN_ASSESSMENT)
-                .build();
-
-        when(competitionServiceMock.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competition));
-
-        Application[] applications = newApplication()
-                .withName("Test Application 1", "Test Application 2", "Test Application 3")
-                .buildArray(3, Application.class);
-
-        applications[0].setProcessRoles(
-                newProcessRole()
-                        .withRole(UserRoleType.LEADAPPLICANT)
-                        .withOrganisationId(1L)
-                        .build(1)
-        );
-        applications[1].setProcessRoles(
-                newProcessRole()
-                        .withRole(UserRoleType.LEADAPPLICANT)
-                        .withOrganisationId(2L)
-                        .build(1)
-        );
-        applications[2].setProcessRoles(
-                newProcessRole()
-                        .withRole(UserRoleType.LEADAPPLICANT)
-                        .withOrganisationId(3L)
-                        .build(1)
-        );
+        AssessorProfileResource assessor = setUpAssessor(assessorId);
+        setUpCompetition(competitionId);
+        Application[] applications = setUpApplications();
 
         AssessmentRejectOutcome rejectOutcome = newAssessmentRejectOutcome()
                 .withRejectReason(CONFLICT_OF_INTEREST)
                 .withRejectComment("rejection comment")
                 .build();
 
-        Assessment[] assessments = newAssessment()
-                .withApplication(applications)
-                .withActivityState(
-                        new ActivityState(APPLICATION_ASSESSMENT, ACCEPTED.getBackingState()),
-                        new ActivityState(APPLICATION_ASSESSMENT, SUBMITTED.getBackingState()),
-                        new ActivityState(APPLICATION_ASSESSMENT, REJECTED.getBackingState()))
-                .withRejection(null, null, rejectOutcome)
-                .buildArray(3, Assessment.class);
+        Assessment[] assessments = setUpAssessments(applications, rejectOutcome);
 
         List<AssessmentApplicationAssessorCount> assessmentCounts = newAssessmentApplicationAssessorCount()
                 .withApplication(applications)
                 .withAssessment(assessments)
-                .withAssessorCount(5, 4, 3)
-                .build(3);
+                .withAssessorCount(5, 4, 3, 2)
+                .build(4);
 
         when(assessmentRepositoryMock.countByParticipantUserIdAndActivityStateStateIn(
-                assessorId,
-                INCLUDED_ASSESSMENT_STATES
-        ))
+                assessorId, VALID_ASSESSMENT_STATES))
                 .thenReturn(20L);
 
         when(assessmentRepositoryMock.getAssessorApplicationAssessmentCountsForStates(
                 competitionId,
                 assessorId,
-                INCLUDED_ASSESSMENT_STATES
-        ))
+                VALID_ASSESSMENT_STATES,
+                ALL_ASSESSMENT_STATES))
                 .thenReturn(assessmentCounts);
 
         List<Organisation> leadOrganisations = newOrganisation()
-                .withId(1L, 2L, 3L)
-                .withName("Lead Org 1", "Lead Org 2", "Lead Org 3")
-                .build(3);
+                .withId(1L, 2L, 3L, 4L)
+                .withName("Lead Org 1", "Lead Org 2", "Lead Org 3", "Lead Org 4")
+                .build(4);
 
         when(organisationRepositoryMock.findOne(applications[0].getLeadOrganisationId())).thenReturn(leadOrganisations.get(0));
         when(organisationRepositoryMock.findOne(applications[1].getLeadOrganisationId())).thenReturn(leadOrganisations.get(1));
         when(organisationRepositoryMock.findOne(applications[2].getLeadOrganisationId())).thenReturn(leadOrganisations.get(2));
+        when(organisationRepositoryMock.findOne(applications[3].getLeadOrganisationId())).thenReturn(leadOrganisations.get(3));
 
         ServiceResult<AssessorCompetitionSummaryResource> result = service.getAssessorSummary(assessorId, competitionId);
         assertTrue(result.isSuccess());
 
         verify(competitionServiceMock).getCompetitionById(competitionId);
         verify(assessorServiceMock).getAssessorProfile(assessorId);
-        verify(assessmentRepositoryMock).countByParticipantUserIdAndActivityStateStateIn(assessorId, INCLUDED_ASSESSMENT_STATES);
-        verify(assessmentRepositoryMock).getAssessorApplicationAssessmentCountsForStates(competitionId, assessorId, INCLUDED_ASSESSMENT_STATES);
+        verify(assessmentRepositoryMock).countByParticipantUserIdAndActivityStateStateIn(assessorId, VALID_ASSESSMENT_STATES);
+        verify(assessmentRepositoryMock).getAssessorApplicationAssessmentCountsForStates(competitionId, assessorId, VALID_ASSESSMENT_STATES, ALL_ASSESSMENT_STATES);
         verify(organisationRepositoryMock).findOne(applications[0].getLeadOrganisationId());
         verify(organisationRepositoryMock).findOne(applications[1].getLeadOrganisationId());
         verify(organisationRepositoryMock).findOne(applications[2].getLeadOrganisationId());
+        verify(organisationRepositoryMock).findOne(applications[3].getLeadOrganisationId());
 
         AssessorCompetitionSummaryResource expected = newAssessorCompetitionSummaryResource()
                 .withCompetitionId(competitionId)
@@ -155,20 +109,85 @@ public class AssessorCompetitionSummaryServiceImplTest extends BaseUnitTestMocks
                 .withAssessor(assessor)
                 .withAssignedAssessments(
                         newAssessorAssessmentResource()
-                                .withApplicationId(applications[0].getId(), applications[1].getId(), applications[2].getId())
-                                .withApplicationName(applications[0].getName(), applications[1].getName(), applications[2].getName())
-                                .withLeadOrganisation("Lead Org 1", "Lead Org 2", "Lead Org 3")
-                                .withState(ACCEPTED, SUBMITTED, REJECTED)
-                                .withTotalAssessors(5, 4, 2)
-                                .withRejectionReason(null, null, rejectOutcome.getRejectReason())
-                                .withRejectionComment(null, null, rejectOutcome.getRejectComment())
-                                .withAssessmentId(assessments[0].getId(), assessments[1].getId(), assessments[2].getId())
-                                .build(3)
+                                .withApplicationId(applications[0].getId(), applications[1].getId(), applications[2].getId(), applications[3].getId())
+                                .withApplicationName(applications[0].getName(), applications[1].getName(), applications[2].getName(), applications[3].getName())
+                                .withLeadOrganisation("Lead Org 1", "Lead Org 2", "Lead Org 3", "Lead Org 4")
+                                .withState(ACCEPTED, SUBMITTED, REJECTED, WITHDRAWN)
+                                .withTotalAssessors(5, 4, 3, 2)
+                                .withRejectionReason(null, null, rejectOutcome.getRejectReason(), null)
+                                .withRejectionComment(null, null, rejectOutcome.getRejectComment(), null)
+                                .withAssessmentId(assessments[0].getId(), assessments[1].getId(), assessments[2].getId(), assessments[3].getId())
+                                .build(4)
                 )
                 .build();
 
         AssessorCompetitionSummaryResource actual = result.getSuccessObjectOrThrowException();
 
         assertEquals(expected, actual);
+    }
+
+    private Application[]  setUpApplications() {
+        Application[] applications = newApplication()
+                .withName("Test Application 1", "Test Application 2", "Test Application 3", "Test Application 4")
+                .buildArray(4, Application.class);
+
+        applications[0].setProcessRoles(
+                newProcessRole()
+                        .withRole(UserRoleType.LEADAPPLICANT)
+                        .withOrganisationId(1L)
+                        .build(1));
+        applications[1].setProcessRoles(
+                newProcessRole()
+                        .withRole(UserRoleType.LEADAPPLICANT)
+                        .withOrganisationId(2L)
+                        .build(1));
+        applications[2].setProcessRoles(
+                newProcessRole()
+                        .withRole(UserRoleType.LEADAPPLICANT)
+                        .withOrganisationId(3L)
+                        .build(1));
+        applications[3].setProcessRoles(
+                newProcessRole()
+                        .withRole(UserRoleType.LEADAPPLICANT)
+                        .withOrganisationId(4L)
+                        .build(1));
+
+        return applications;
+    }
+
+    private AssessorProfileResource setUpAssessor(long assessorId) {
+        AssessorProfileResource assessor = newAssessorProfileResource()
+                .withUser(
+                        newUserResource()
+                                .withId(assessorId)
+                                .build())
+                .withProfile(newProfileResource().build())
+                .build();
+
+        when(assessorServiceMock.getAssessorProfile(assessorId)).thenReturn(serviceSuccess(assessor));
+
+        return assessor;
+    }
+
+    private void setUpCompetition(long competitionId) {
+        CompetitionResource competition = newCompetitionResource()
+                .withId(competitionId)
+                .withName("Test Competition")
+                .withCompetitionStatus(IN_ASSESSMENT)
+                .build();
+
+        when(competitionServiceMock.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competition));
+    }
+
+    private Assessment[] setUpAssessments(Application[] applications, AssessmentRejectOutcome rejectOutcome) {
+        return newAssessment()
+                .withApplication(applications)
+                .withActivityState(
+                        new ActivityState(APPLICATION_ASSESSMENT, ACCEPTED.getBackingState()),
+                        new ActivityState(APPLICATION_ASSESSMENT, SUBMITTED.getBackingState()),
+                        new ActivityState(APPLICATION_ASSESSMENT, REJECTED.getBackingState()),
+                        new ActivityState(APPLICATION_ASSESSMENT, WITHDRAWN.getBackingState()))
+                .withRejection(null, null, rejectOutcome, null)
+                .buildArray(4, Assessment.class);
     }
 }
