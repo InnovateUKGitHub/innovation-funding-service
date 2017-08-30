@@ -90,6 +90,11 @@ task buildDockerBaseImage(type: DockerBuildImage) {
         }
 
         copy {
+            from fileTree('src/main/docker/idp')
+            into "${inputDir}/idp"
+        }
+
+        copy {
             from file('src/main/docker/idp/default-jre-headless-dummy_1.0_all.deb')
             into "${inputDir}/idp"
         }
