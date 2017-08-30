@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" class="no-js" lang="en">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application',hasFormErrors=${#fields.hasErrors('${organisationForm.*}')}" />
 </head>
 <body th:with="context='applicant'" class="create-application-organisation">
 
@@ -12,11 +12,9 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
 
-    <div class="error-summary" th:if="${#fields.hasErrors('${organisationForm.organisationTypeId}')}">
-        <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
-        <ul class="error-summary-list">
-            <li th:each="err : ${#fields.errors('${organisationForm.organisationTypeId}')}" th:text="${err}"></li>
-        </ul>
+    <div th:if="${#fields.hasErrors('${organisationForm.organisationTypeId}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+      <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes</h2>
+      <th:block th:insert="fragments/elements :: error-summary-list(form)" />
     </div>
 
     <h1 class="heading-xlarge">
@@ -29,9 +27,9 @@
     </div>
 
     <form th:object="${organisationForm}" th:action="@{/organisation/create/lead-organisation-type}" method="POST" novalidate="novalidate">
-        <div th:class="${#fields.hasErrors('*{organisationTypeId}')} ? 'form-block error' : 'form-block'">
+        <div class="form-group" th:classappend="${#fields.hasErrors('*{organisationTypeId}')} ? 'form-group-error'">
             <fieldset>
-                <legend class="extra-margin-bottom">
+                <legend class="extra-margin-bottom" id="organisationTypeId">
                     <span class="visuallyhidden">Please select your organisation type</span>
                     <th:block th:if="${#fields.hasErrors('*{organisationTypeId}')}">
                         <span class="error-message"  th:each="err : ${#fields.errors('*{organisationTypeId}')}" th:text="${err}"></span>

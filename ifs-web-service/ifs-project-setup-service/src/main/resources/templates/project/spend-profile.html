@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend profile'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend profile',hasFormErrors=${#fields.hasErrors('${form.*}') || !#lists.isEmpty(model.table.validationMessages.errors)}" />
 </head>
 <body th:with="context='project'" class="project spend-profile">
 <th:block th:insert="fragments/layout :: body-start" />
@@ -15,27 +15,26 @@
         <th:block th:insert="fragments/layout :: main-content-start" />
         <th:block th:unless="${model.projectManager}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" />
         <th:block th:if="${model.projectManager}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Spend profile overview',linkClass='link-back',linkUrl=@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile(projectId=${model.projectId},organisationId=${model.organisationId})}" />
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Spend profile',subTitle=${model.projectName},size='heading-xlarge'" />
 
-        <th:block th:if="${form != null}" th:object="${form}">
-            <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
-                <h2 class="heading-medium error-summary-heading">Unable to submit spend profile.</h2>
+        <th:block th:if="${form != null}">
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to submit spend profile.</h2>
                 Please review
-                <ul class="error-summary-list">
-                    <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
-                </ul>
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             </div>
         </th:block>
 
-        <div class="error-summary" th:if="${form == null}"
-             th:unless="${#lists.isEmpty(model.table.validationMessages.errors)}">
-            <h2 class="heading-medium error-summary-heading">You cannot submit your spend profile. Your total costs are higher than the eligible project costs.</h2>
-            Please review
-            <ul class="error-summary-list">
-                <li th:each="err : ${model.table.validationMessages.errors}" th:text="${err.arguments[0]}"></li>
-            </ul>
-        </div>
+        <th:block th:if="${form == null}">
+          <div class="error-summary" th:unless="${#lists.isEmpty(model.table.validationMessages.errors)}">
+              <h2 class="heading-medium error-summary-heading">You cannot submit your spend profile. Your total costs are higher than the eligible project costs.</h2>
+              Please review
+              <ul class="error-summary-list">
+                  <li th:each="err : ${model.table.validationMessages.errors}" th:text="${err.arguments[0]}"></li>
+              </ul>
+          </div>
+        </th:block>
 
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Spend profile',subTitle=${model.projectName},size='heading-xlarge'" />
 
         <th:block
             th:if="${model.markedAsComplete and !model.submitted and !model.leadPartner and form==null}">

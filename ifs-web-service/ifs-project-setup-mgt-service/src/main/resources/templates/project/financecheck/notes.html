@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Notes'" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Notes',hasFormErrors=${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}" />
     </head>
 
     <body class="note-form">
@@ -11,6 +11,16 @@
         <main tabindex="-1" id="content" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null" />
+
+            <div class="error-summary" th:if="${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There was a problem saving your comment.</h2>
+                <p>Please review:</p>
+                <ul class="error-summary-list">
+                    <th:block th:each="err : ${nonFormErrors}">
+                        <li th:each="errMsg : ${err.codes}" th:text="#{${errMsg}}"></li>
+                    </th:block>
+                </ul>
+            </div>
 
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=${model.projectName},size='heading-xlarge',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
             <h2 class="heading-medium">Review notes</h2>
@@ -23,15 +33,7 @@
                 </div>
             </div>
 
-            <div class="error-summary" th:if="${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}">
-                <h2 class="heading-medium error-summary-heading">There was a problem saving your comment.</h2>
-                Please review
-                <ul class="error-summary-list">
-                    <th:block th:each="err : ${nonFormErrors}">
-                        <li th:each="errMsg : ${err.codes}" th:text="#{${errMsg}}"></li>
-                    </th:block>
-                </ul>
-            </div>
+
             <ul>
                 <li th:each="note : ${model.getNotes()}">
                     <hr />
