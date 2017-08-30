@@ -14,6 +14,51 @@
 
             <p class="extra-margin">Assign applications to assessors. You will need to confirm assignments before assessors are notified.</p>
 
+            <form method="GET" th:object="${filterForm}">
+                <div class="search-filters">
+                    <legend class="visuallyhidden">Search filters</legend>
+                    <div class="grid-row">
+                        <div class="column-half">
+                           <div class="form-group">
+                               <label for="innovationSector">Innovation sector</label>
+                               <select class="form-control" name="innovationSector" id="innovationSector">
+                                   <option th:selected="${filterForm.innovationSector} == null" value="">---</option>
+                                   <option th:each="innovationSector : ${model.innovationSectors}"
+                                           th:value="${innovationSector.id}"
+                                           th:text="${innovationSector.name}"
+                                           th:selected="${(innovationSector.id == filterForm.innovationSector)}"
+                                       value="1">Not available</option>
+                               </select>
+                           </div>
+                        </div>
+                        <div class="column-half">
+                            <div class="form-group">
+                                <label for="businessType">Type</label>
+                                <select class="form-control" name="businessType" id="businessType">
+                                    <option th:selected="${filterForm.businessType} == null" value="">---</option>
+                                    <option th:each="type : ${T(org.innovateuk.ifs.user.resource.BusinessType).values()}"
+                                            th:value="${type}"
+                                            th:text="${type.displayName}"
+                                            th:selected="${type == filterForm.businessType}"
+                                            value="1">Not available</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid-row">
+                        <div class="column-half">
+                            <a href="?sort">Clear all filters</a>
+                        </div>
+                        <div class="column-half alignright">
+                            <button class="button no-margin">Filter</button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+
+
             <div class="table-overflow">
                 <table>
                     <thead>

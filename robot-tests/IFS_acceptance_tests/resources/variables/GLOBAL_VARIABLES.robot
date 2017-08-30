@@ -124,6 +124,7 @@ ${LARGE_ORGANISATION_SIZE}     3
 ${UPLOAD_FOLDER}    uploaded_files
 ${DOWNLOAD_FOLDER}    download_files
 ${valid_pdf}      testing.pdf
+${5mb_pdf}        testing_5MB.pdf
 ${too_large_pdf}    large.pdf
 ${text_file}      testing.txt
 ${excel_file}     testing.xlsx
@@ -166,3 +167,9 @@ ${CLOSED_COMPETITION_APPLICATION}   ${application_ids["${CLOSED_COMPETITION_APPL
 ${UPCOMING_COMPETITION_TO_ASSESS_NAME}    Home and industrial efficiency programme
 ${UPCOMING_COMPETITION_TO_ASSESS_ID}  ${competition_ids['${UPCOMING_COMPETITION_TO_ASSESS_NAME}']}
 ${CURRENTLY_WAITING_UNTIL}      false
+
+# Organisation type ids
+${BUSINESS_TYPE_ID}       1
+${ACADEMIC_TYPE_ID}       2
+${RTO_TYPE_ID}            3
+${PUBLIC_SECTOR_TYPE_ID}  4

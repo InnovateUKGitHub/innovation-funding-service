@@ -1,10 +1,8 @@
 package org.innovateuk.ifs.management.model;
 
-import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationCountSummaryRestService;
-import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessorAssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorCompetitionSummaryResource;
 import org.innovateuk.ifs.assessment.service.AssessorCompetitionSummaryRestService;
@@ -21,7 +19,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 
-import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -45,6 +42,7 @@ public class AssessorAssessmentProgressModelPopulator {
                                                              int page,
                                                              Optional<Long> innovationArea,
                                                              String sortField,
+                                                             String filter,
                                                              String origin) {
         AssessorCompetitionSummaryResource summaryResource = assessorCompetitionSummaryRestService
                 .getAssessorSummary(assessorId, competitionId)
@@ -61,11 +59,15 @@ public class AssessorAssessmentProgressModelPopulator {
         List<AssessorAssessmentProgressRejectedRowViewModel> rejected =
                 getRejectedAssessments(summaryResource.getAssignedAssessments());
 
+        List<AssessorAssessmentProgressWithdrawnRowViewModel> previouslyAssigned =
+                getPreviouslyAssignedAssessments(summaryResource.getAssignedAssessments());
+
         ApplicationCountSummaryPageResource applicationCounts = getApplicationCounts(
                 competitionId,
                 assessorId,
                 page,
                 innovationArea,
+                filter,
                 sortField);
         AssessorAssessmentProgressApplicationsViewModel applicationsViewModel = getApplicationsViewModel(
                 applicationCounts,
@@ -83,10 +85,12 @@ public class AssessorAssessmentProgressModelPopulator {
                 assessorId,
                 summaryResource.getAssessor().getUser().getName(),
                 innovationAreas,
+                filter,
                 businessType != null ? businessType.getDisplayName() : "",
                 summaryResource.getTotalApplications(),
                 assigned,
                 rejected,
+                previouslyAssigned,
                 applicationsViewModel
         );
     }
@@ -129,14 +133,38 @@ public class AssessorAssessmentProgressModelPopulator {
         );
     }
 
+    private List<AssessorAssessmentProgressWithdrawnRowViewModel> getPreviouslyAssignedAssessments(List<AssessorAssessmentResource> assessorAssessments) {
+        return assessorAssessments.stream()
+                .filter(AssessorAssessmentResource::isWithdrawn)
+                .map(this::getAssessorAssessmentProgressPreviousAssignedRowViewModel)
+                .collect(toList());
+    }
+
+    private AssessorAssessmentProgressWithdrawnRowViewModel getAssessorAssessmentProgressPreviousAssignedRowViewModel(AssessorAssessmentResource assessment) {
+
+        return  new AssessorAssessmentProgressWithdrawnRowViewModel(
+                assessment.getApplicationId(),
+                assessment.getApplicationName(),
+                assessment.getLeadOrganisation(),
+                assessment.getTotalAssessors()
+        );
+    }
+
     private ApplicationCountSummaryPageResource getApplicationCounts(long competitionId,
                                                                      long assessorId,
                                                                      int page,
                                                                      Optional<Long> innovationArea,
+                                                                     String filter,
                                                                      String sortField) {
         return applicationCountSummaryRestService
                 .getApplicationCountSummariesByCompetitionIdAndInnovationArea(
-                        competitionId, assessorId, page, PAGE_SIZE, innovationArea, sortField)
+                        competitionId,
+                        assessorId,
+                        page,
+                        PAGE_SIZE,
+                        innovationArea,
+                        filter,
+                        sortField)
                 .getSuccessObjectOrThrowException();
     }
 

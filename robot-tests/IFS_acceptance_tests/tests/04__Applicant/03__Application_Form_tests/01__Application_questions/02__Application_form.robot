@@ -184,9 +184,12 @@ Log in and create a new application for the Aerospace competition
     Given the user logs-in in new browser  &{lead_applicant_credentials}
     When the user navigates to the page    ${SERVER}/competition/${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}/overview/
     the user clicks the button/link             jQuery=a:contains("Start new application")
+
     #The following two lines are failing if we don't have any other application for the same competition
-    Run Keyword And Ignore Error    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application.")
-    Run Keyword And Ignore Error    And the user clicks the button/link    jQuery=.button:contains("Continue")
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    You have an application in progress
+            Run Keyword If    '${status}' == 'PASS'    Run keywords    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application.")
+            ...    AND    And the user clicks the button/link    jQuery=.button:contains("Continue")
+
     And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user clicks the button/link    link=Application details
     And the user enters text to a text field    id=application_details-title    Aerospace test application

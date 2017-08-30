@@ -66,7 +66,8 @@ Comp admin completes ths competition setup
     Then the user fills in the Public content and publishes
     And the user clicks the button/link   link=Return to setup overview
     And the user should see the element   jQuery=div:contains("Public content") ~ .task-status-complete
-    When the user clicks the button/link  jQuery=a:contains("Save")
+    When the user clicks the button/link  jQuery=a:contains("Complete")
+    Then the user clicks the button/link  jQuery=a:contains("Done")
     And the user navigates to the page    ${CA_UpcomingComp}
     Then the user should see the element  jQuery=h2:contains("Ready to open") ~ ul a:contains("${compWithoutGrowth}")
 
@@ -122,7 +123,8 @@ Once the project growth table is selected
     Then the user fills in the Public content and publishes
     And the user clicks the button/link                  link=Return to setup overview
     And the user should see the element                  jQuery=div:contains("Public content") ~ .task-status-complete
-    When the user clicks the button/link                 jQuery=a:contains("Save")
+    When the user clicks the button/link                 jQuery=a:contains("Complete")
+    Then the user clicks the button/link                 jQuery=a:contains("Done")
     And the user navigates to the page                   ${CA_UpcomingComp}
     Then the user should see the element                 jQuery=h2:contains("Ready to open") ~ ul a:contains("${compWithGrowth}")
     [Teardown]  The competitions date changes so it is now Open  ${compWithGrowth}
@@ -481,8 +483,8 @@ Invite a non-existing collaborator in Application with Growth table
 
 the user fills in the inviting steps
     [Arguments]  ${email}
-    the user clicks the button/link       link=view team members and add collaborators
-    the user clicks the button/link       link=Add partner organisation
+    the user clicks the button/link       link=view and manage contributors and collaborators
+    the user clicks the button/link       link=Add a collaborator organisation
     the user enters text to a text field  css=#organisationName  New Organisation's Name
     the user enters text to a text field  css=input[id="applicants0.name"]  Partner's name
     the user enters text to a text field  css=input[id="applicants0.email"]  ${email}

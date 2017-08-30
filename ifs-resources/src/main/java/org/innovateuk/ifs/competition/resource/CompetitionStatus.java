@@ -34,4 +34,8 @@ public enum CompetitionStatus {
     public boolean isFeedbackReleased() {
         return feedbackReleased;
     }
+
+    public boolean isLaterThan(CompetitionStatus status) {
+        return this.ordinal() > status.ordinal();
+    }
 }

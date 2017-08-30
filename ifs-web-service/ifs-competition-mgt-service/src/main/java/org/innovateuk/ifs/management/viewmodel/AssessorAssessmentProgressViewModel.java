@@ -23,9 +23,11 @@ public class AssessorAssessmentProgressViewModel {
     private final String businessType;
     private final long totalApplications;
     private final long assessorId;
+    private final String filter;
 
     private final List<AssessorAssessmentProgressAssignedRowViewModel> assigned;
     private final List<AssessorAssessmentProgressRejectedRowViewModel> rejected;
+    private final List<AssessorAssessmentProgressWithdrawnRowViewModel> previouslyAssigned;
     private final AssessorAssessmentProgressApplicationsViewModel applicationsView;
 
     public AssessorAssessmentProgressViewModel(long competitionId,
@@ -34,10 +36,12 @@ public class AssessorAssessmentProgressViewModel {
                                                long assessorId,
                                                String assessorName,
                                                List<String> innovationAreas,
+                                               String filter,
                                                String businessType,
                                                long totalApplications,
                                                List<AssessorAssessmentProgressAssignedRowViewModel> assigned,
                                                List<AssessorAssessmentProgressRejectedRowViewModel> rejected,
+                                               List<AssessorAssessmentProgressWithdrawnRowViewModel> previouslyAssigned,
                                                AssessorAssessmentProgressApplicationsViewModel applicationsView) {
 
         this.competitionId = competitionId;
@@ -50,6 +54,8 @@ public class AssessorAssessmentProgressViewModel {
         this.assessorId = assessorId;
         this.assigned = assigned;
         this.rejected = rejected;
+        this.filter = filter;
+        this.previouslyAssigned = previouslyAssigned;
         this.applicationsView = applicationsView;
     }
 
@@ -90,6 +96,12 @@ public class AssessorAssessmentProgressViewModel {
     public List<AssessorAssessmentProgressRejectedRowViewModel> getRejected() {
         return rejected;
     }
+
+    public List<AssessorAssessmentProgressWithdrawnRowViewModel> getPreviouslyAssigned() {
+        return previouslyAssigned;
+    }
+
+    public String getFilter() {return filter; }
 
     public AssessorAssessmentProgressApplicationsViewModel getApplicationsView() {
         return applicationsView;
