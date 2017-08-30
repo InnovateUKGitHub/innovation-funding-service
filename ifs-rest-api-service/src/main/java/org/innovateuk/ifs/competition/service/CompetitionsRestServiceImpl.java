@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
@@ -30,6 +31,11 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     @Override
     public RestResult<List<CompetitionResource>> getAll() {
         return getWithRestResult(competitionsRestURL + "/findAll", competitionResourceListType());
+    }
+
+    @Override
+    public RestResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId) {
+        return getWithRestResult(competitionsRestURL + "/getCompetitionsByUserId/" + userId, competitionResourceListType());
     }
 
     @Override
@@ -65,6 +71,21 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     @Override
     public RestResult<CompetitionResource> getCompetitionById(long competitionId) {
         return getWithRestResult(competitionsRestURL + "/" + competitionId, CompetitionResource.class);
+    }
+
+    @Override
+    public RestResult<List<UserResource>> findInnovationLeads(long competitionId) {
+        return getWithRestResult(competitionsRestURL + "/" + competitionId + "/innovation-leads", userListType());
+    }
+
+    @Override
+    public RestResult<Void> addInnovationLead(long competitionId, long innovationLeadUserId) {
+        return postWithRestResult(competitionsRestURL + "/" + competitionId + "/add-innovation-lead/" + innovationLeadUserId, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> removeInnovationLead(long competitionId, long innovationLeadUserId) {
+        return postWithRestResult(competitionsRestURL + "/" + competitionId + "/remove-innovation-lead/" + innovationLeadUserId, Void.class);
     }
 
     @Override

@@ -19,4 +19,5 @@ public interface ProcessRoleService {
 
     List<ProcessRoleResource> getByApplicationId(Long applicationId);
 
+    List<ProcessRoleResource> getByUserId(Long userId);
 }

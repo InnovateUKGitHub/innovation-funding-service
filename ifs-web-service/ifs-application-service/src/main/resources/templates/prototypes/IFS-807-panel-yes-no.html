@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Allocate applications'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-assessor-header" th:with="status='loggedIn'" />
+
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+
+    <!-- HARDCODED PROTOTYPE HTML -->
+
+    <h1 class="heading-xlarge">Invitation to panel assessment on 'Technology inspired'</h1>
+
+    <p>You are invited to assess the competition <strong>'Technology inspired'</strong>.</p>
+
+    <section class="boxed">
+        <h2 class="heading-medium no-margin">27 July 2017: Assessment panel</h2>
+        <p>Text has to be provided and reviewed</p>
+    </section>
+
+    <section>
+        <h2 class="heading-medium">Competition details: Technology inspired</h2>
+        <p>Innovate UK is to invest up to &pound;9 million in Technology inspired</p>
+        <p><a href="#">See competition brief</a></p>
+
+        <h3 class="heading-small">You should reject this invitation if:</h3>
+
+        <ul class="list list-bullet">
+            <li>you are unavailable for the panel assessment date</li>
+        </ul>
+    </section>
+
+    <h2 class="heading-medium">Select your ability to attend the panel assessment</h2>
+    <form action="/prototypes/IFS-807-assessor-dashboard">
+        <div class="form-group">
+            <fieldset>
+                <legend class="visuallyhidden">Select your ability to attend the panel assessment</legend>
+                <div class="multiple-choice">
+                    <input id="acceptCompetition" value="true" type="radio" required="required" name="acceptInvitation">
+                    <label for="acceptCompetition">
+                        Yes, I am able to attend the panel assessment
+                    </label>
+                </div>
+
+                <div class="multiple-choice" data-target="reject-competition">
+                    <input id="rejectCompetition" value="false" type="radio" required="required" name="acceptInvitation">
+                    <label for="rejectCompetition">
+                        No, I am not able to attend the panel assessment
+                    </label>
+                </div>
+            </fieldset>
+        </div>
+        <button class="button" type="submit">Confirm</button>
+    </form>
+
+
+    <!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script type="text/javascript">
+	// <![CDATA[
+
+	// ]]>
+</script>
+</body>
+</html>

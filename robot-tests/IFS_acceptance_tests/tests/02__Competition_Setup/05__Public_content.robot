@@ -477,8 +477,8 @@ the user enters valid data in How-to-apply details
 the user can add and remove multiple content groups
     When the user enters text to a text field  id=heading-0    Heading 1
     And the user enters text to a text field   jQuery=.editor:eq(0)     Content 1
-    And the user uploads the file              id=contentGroups-0.attachment  ${valid_pdf}
-    Then the user should see the element       jQuery=.uploaded-file:contains("testing.pdf")
+    And the user uploads the file              id=contentGroups-0.attachment  ${5mb_pdf}
+    Then the user should see the element       jQuery=.uploaded-file:contains("testing_5MB.pdf")
     And the user clicks the button/link        jQuery=button:contains("Remove")
     And the user clicks the button/link        jQuery=button:contains("+ add new section")
     And the user enters text to a text field   id=heading-1    Heading 2
