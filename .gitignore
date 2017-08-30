@@ -144,3 +144,4 @@ ifs-auth-service/ifs-idp-service/src/main/docker/certs/
 ifs-auth-service/ifs-ldap-service/src/main/docker/certs/
 
 setup-files/scripts/docker/newrelic.*
+ifs-data-layer/ifs-data-service/static/
