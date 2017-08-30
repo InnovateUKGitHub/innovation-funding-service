@@ -24,8 +24,7 @@ Force Tags        CompAdmin    MySQL
 Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 
-*** Variables ***
-@{database}       pymysql    ${database_name}    ${database_user}    ${database_password}    ${database_host}    ${database_port}
+# ${ready_to_open_competition_name} is the 'Photonics for health'
 
 *** Test Cases ***
 Application details are editable (Ready to Open)
@@ -80,16 +79,16 @@ Assessed Questions are editable (Ready to Open)
     And the user clicks the button/link    link = Return to application questions
 
 Finances are editable (Ready to Open)
-    [Documentation]    INFUND-6941
+    [Documentation]  INFUND-6941
+    # This test case fails when running the complete chunk vs suite, due to the finances textearea
+    # being empty or not. I add the ${empty} in order to have empty textarea in both scenarios and check the validation messages
     [Tags]
-    Given The user clicks the button/link  link=Finances
-    And the user should see the element    jQuery=h1:contains("Application finances")
-    When the user clicks the button/link   jQuery=.button:contains("Edit this question")
-    Then the user clicks the button/link   jQuery=.button:contains("Save and close")
-    And the user should see the element    jQuery=.error-summary:contains("This field cannot be left blank.")
-    When the user enters text to a text field  css=.editor  Funding rules for this competition are now entered.
-    Then the user clicks the button/link   jQuery=.button:contains("Save and close")
-    And the user clicks the button/link    jQuery=.button:contains("Done")
+    Given The user clicks the button/link        link=Finances
+    And the user should see the element          jQuery=h1:contains("Application finances")
+    When the user clicks the button/link         jQuery=a:contains("Edit this question")
+    Then if textarea is empty the proper validation messages are shown
+    When the user clicks the button/link         jQuery=.button:contains("Save and close")
+    And the user clicks the button/link          jQuery=button:contains("Done")
     [Teardown]  the user clicks the button/link  link=Competition setup
 
 Eligibility is editable (Ready to Open)
@@ -115,7 +114,7 @@ Funding Information is editable (Open)
     And the user should see the element         id=pafNumber
     And the user should see the element         id=budgetCode
     And the user should see the element         id=activityCode
-    And The user clicks the button/link         jQuery=.button:contains("Done")
+    And The user clicks the button/link         jQuery=button:contains("Done")
     Then The user should see the element        jQuery=.button:contains("Edit")
     And The user should see the text in the page   Funders Edit test
     [Teardown]    the user clicks the button/link  link=Competition setup
@@ -375,6 +374,15 @@ the user resets the milestone data
     The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].day    20
     The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].month    7
     The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].year    2068
+
+if textarea is empty the proper validation messages are shown
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the text in the element  css=.editor  Funding rules for this competition are now entered.
+    run keyword if  '${status}'=='FAIL'  Run keywords  the user moves focus to the element  css=.editor
+    ...                                           AND  the user moves focus to the element  css=.button[type="submit"]
+    ...                                           AND  the user should see a field error  This field cannot be left blank
+    ...                                           AND  the user clicks the button/link  css=.button[type="submit"]
+    ...                                           AND  the user should see a field and summary error  This field cannot be left blank
+    ...                                           AND  the user enters text to a text field  css=.editor  Funding rules for this competition are now entered.
 
 Custom suite teardown
     the user moves the competition back again
