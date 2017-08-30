@@ -28,6 +28,7 @@ public interface ApplicationCountSummaryService {
                                                                                     int pageIndex,
                                                                                     int pageSize,
                                                                                     Optional<Long> innovationArea,
+                                                                                    String filter,
                                                                                     String sortField);
 }
 

@@ -73,6 +73,8 @@ public class CompetitionResource {
     private boolean setupComplete = false;
 
     private boolean useResubmissionQuestion;
+    private Boolean hasAssessmentPanel;
+    private Boolean hasInterviewStage;
 
     private boolean nonIfs = false;
     private String nonIfsUrl;
@@ -91,6 +93,11 @@ public class CompetitionResource {
     @JsonIgnore
     public boolean isOpen() {
         return CompetitionStatus.OPEN.equals(competitionStatus);
+    }
+
+    @JsonIgnore
+    public boolean isAssessmentClosed() {
+        return competitionStatus != null && (competitionStatus.isLaterThan(CompetitionStatus.IN_ASSESSMENT));
     }
 
     @JsonIgnore
@@ -510,5 +517,21 @@ public class CompetitionResource {
 
     public void setNonIfsUrl(String nonIfsUrl) {
         this.nonIfsUrl = nonIfsUrl;
+    }
+
+    public Boolean isHasAssessmentPanel() {
+        return hasAssessmentPanel;
+    }
+
+    public void setHasAssessmentPanel(Boolean hasAssessmentPanel) {
+        this.hasAssessmentPanel = hasAssessmentPanel;
+    }
+
+    public Boolean isHasInterviewStage(){
+        return hasInterviewStage;
+    }
+
+    public void setHasInterviewStage(Boolean hasInterviewStage){
+        this.hasInterviewStage = hasInterviewStage;
     }
 }

@@ -32,4 +32,9 @@ public class CompetitionPermissionRules extends BasePermissionRules {
     public boolean internalUserCanViewAllCompetitionSearchResults(CompetitionSearchResultItem competition, UserResource user) {
         return isInternal(user);
     }
+
+    @PermissionRule(value = "MANAGE_INNOVATION_LEADS", description = "Competition Admin and Project Finance can add, remove and view innovation leads for a competition")
+    public boolean internalAdminCanManageInnovationLeadsForCompetition(CompetitionResource competition, UserResource user) {
+        return isInternalAdmin(user);
+    }
 }

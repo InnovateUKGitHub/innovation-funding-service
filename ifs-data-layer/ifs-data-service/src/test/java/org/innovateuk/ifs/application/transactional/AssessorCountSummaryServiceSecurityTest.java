@@ -3,9 +3,12 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
+
+import java.util.Optional;
 
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -25,13 +28,13 @@ public class AssessorCountSummaryServiceSecurityTest extends BaseServiceSecurity
                                         .build(1))
                         .build()
         );
-        classUnderTest.getAssessorCountSummariesByCompetitionId(1L, 0, 0);
+        classUnderTest.getAssessorCountSummariesByCompetitionId(1L,  Optional.empty(), Optional.empty(),0, 0);
     }
 
     @Test(expected = AccessDeniedException.class)
     public void testGetAssessorCountSummariesByCompetitionId_notCompadmin() {
         setLoggedInUser(newUserResource().build());
-        classUnderTest.getAssessorCountSummariesByCompetitionId(1L, 0, 0);
+        classUnderTest.getAssessorCountSummariesByCompetitionId(1L, Optional.empty(), Optional.empty(),0, 0);
     }
 
     @Override
@@ -42,7 +45,7 @@ public class AssessorCountSummaryServiceSecurityTest extends BaseServiceSecurity
     public static class TestAssessorCountSummaryService implements AssessorCountSummaryService {
 
         @Override
-        public ServiceResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionId(long competitionId, int pageIndex, int pageSize) {
+        public ServiceResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionId(long competitionId, Optional<Long> innovationSector, Optional<BusinessType> businessType, int pageIndex, int pageSize) {
             return null;
         }
     }

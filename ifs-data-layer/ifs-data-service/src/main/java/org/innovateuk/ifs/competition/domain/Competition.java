@@ -88,6 +88,8 @@ public class Competition implements ProcessActivity {
 
     private boolean multiStream;
     private Boolean resubmission;
+    private Boolean hasAssessmentPanel;
+    private Boolean hasInterviewStage;
 
     private String streamName;
     @Enumerated(EnumType.STRING)
@@ -628,6 +630,22 @@ public class Competition implements ProcessActivity {
 
     public void setNonIfsUrl(String nonIfsUrl) {
         this.nonIfsUrl = nonIfsUrl;
+    }
+
+    public Boolean isHasAssessmentPanel() {
+        return hasAssessmentPanel;
+    }
+
+    public void setHasAssessmentPanel(Boolean hasAssessmentPanel) {
+        this.hasAssessmentPanel = hasAssessmentPanel;
+    }
+
+    public Boolean isHasInterviewStage(){
+        return hasInterviewStage;
+    }
+
+    public void setHasInterviewStage(Boolean hasInterviewStage) {
+        this.hasInterviewStage = hasInterviewStage;
     }
 }
 

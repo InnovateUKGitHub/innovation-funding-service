@@ -401,8 +401,8 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
                         .withStatus(SENT)
                         .build(3));
 
-        // Now accept two of the invites
-        for (int i = 0; i < 2; i++) {
+        // Now accept one of the invites
+        for (int i = 0; i < 1; i++) {
             CompetitionParticipant competitionParticipantToAccept = savedParticipants.get(i);
             competitionParticipantToAccept.getInvite().open();
             competitionParticipantToAccept.acceptAndAssignUser(user);
@@ -412,7 +412,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         long count = repository.countByCompetitionIdAndRoleAndStatus(1L, ASSESSOR, ParticipantStatus.ACCEPTED);
 
-        assertEquals(2L, count);
+        assertEquals(1L, count);
     }
 
     @Test
