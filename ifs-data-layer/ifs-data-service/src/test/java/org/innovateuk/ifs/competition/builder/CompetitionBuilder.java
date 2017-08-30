@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.user.domain.User;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -199,4 +200,7 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withAcademicGrantPercentage(Integer... percentages) { return withArray((percentage, competition) -> competition.setAcademicGrantPercentage(percentage), percentages); }
 
+    public CompetitionBuilder withLeadTechnologist(User... leadTechnologists) {
+        return withArray((competition, leadTechnologist) -> setField("leadTechnologist", competition, leadTechnologist), leadTechnologists);
+    }
 }

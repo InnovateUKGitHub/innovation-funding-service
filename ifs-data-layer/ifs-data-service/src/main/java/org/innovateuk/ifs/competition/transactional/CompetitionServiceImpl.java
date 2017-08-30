@@ -90,19 +90,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId) {
-        List<ApplicationResource> userApplications = applicationService.findByUserId(userId).getSuccessObjectOrThrowException();
-        List<Long> competitionIdsForUser = userApplications.stream()
-                .map(applicationResource -> applicationResource.getCompetition())
-                .distinct()
-                .collect(Collectors.toList());
-
-        return serviceSuccess((List) competitionMapper.mapToResource(
-                competitionRepository.findByIdIsIn(competitionIdsForUser))
-        );
-    }
-
-    @Override
     public ServiceResult<List<UserResource>> findInnovationLeads(Long competitionId) {
 
         List<CompetitionParticipant> competitionParticipants = competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD);
@@ -141,6 +128,19 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         return find(competitionParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD),
                     notFoundError(CompetitionParticipant.class, competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD))
                 .andOnSuccessReturnVoid(competitionParticipant -> competitionParticipantRepository.delete(competitionParticipant));
+    }
+
+    @Override
+    public ServiceResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId) {
+        List<ApplicationResource> userApplications = applicationService.findByUserId(userId).getSuccessObjectOrThrowException();
+        List<Long> competitionIdsForUser = userApplications.stream()
+                .map(applicationResource -> applicationResource.getCompetition())
+                .distinct()
+                .collect(Collectors.toList());
+
+        return serviceSuccess((List) competitionMapper.mapToResource(
+                competitionRepository.findByIdIsIn(competitionIdsForUser))
+        );
     }
 
     @Override

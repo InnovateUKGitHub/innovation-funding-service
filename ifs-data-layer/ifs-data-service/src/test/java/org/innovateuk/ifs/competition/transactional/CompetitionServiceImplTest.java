@@ -88,22 +88,6 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void getCompetitionsByUserId() throws Exception {
-        List<Competition> competitions = Lists.newArrayList(new Competition());
-        List<CompetitionResource> resources = Lists.newArrayList(new CompetitionResource());
-        List<Long> competitionIds = asList(1L,2L,3L);
-        Long userId = 9421L;
-
-        when(applicationServiceMock.findByUserId(userId)).thenReturn(serviceSuccess(newApplicationResource().withCompetition(1L, 2L, 2L, 3L, 3L, 3L).build(6)));
-        when(competitionRepositoryMock.findByIdIsIn(competitionIds)).thenReturn(competitions);
-        when(competitionMapperMock.mapToResource(competitions)).thenReturn(resources);
-
-        List<CompetitionResource> response = service.getCompetitionsByUserId(userId).getSuccessObjectOrThrowException();
-
-        assertEquals(resources, response);
-    }
-
-    @Test
     public void findInnovationLeads() throws Exception {
         Long competitionId = 1L;
 
@@ -178,6 +162,21 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         //Verify that the entity is deleted
         verify(competitionParticipantRepositoryMock).delete(competitionParticipant);
+    }
+
+    public void getCompetitionsByUserId() throws Exception {
+        List<Competition> competitions = Lists.newArrayList(new Competition());
+        List<CompetitionResource> resources = Lists.newArrayList(new CompetitionResource());
+        List<Long> competitionIds = asList(1L,2L,3L);
+        Long userId = 9421L;
+
+        when(applicationServiceMock.findByUserId(userId)).thenReturn(serviceSuccess(newApplicationResource().withCompetition(1L, 2L, 2L, 3L, 3L, 3L).build(6)));
+        when(competitionRepositoryMock.findByIdIsIn(competitionIds)).thenReturn(competitions);
+        when(competitionMapperMock.mapToResource(competitions)).thenReturn(resources);
+
+        List<CompetitionResource> response = service.getCompetitionsByUserId(userId).getSuccessObjectOrThrowException();
+
+        assertEquals(resources, response);
     }
 
     @Test

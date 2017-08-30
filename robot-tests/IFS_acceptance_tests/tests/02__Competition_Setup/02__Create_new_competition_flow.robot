@@ -57,6 +57,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-9152 Add an 'Innovation sector' of 'Open' where 'Competition type' is 'Sector'
 ...
 ...               IFS-192 Select additional Innovation Lead stakeholders in Competition Setup
+...
+...               IFS-1104 Add Stakeholder link to Competition Setup
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -545,7 +547,7 @@ Assessor: Should have a Green Check
     Then the user should see the element    h2:contains("In preparation") ~ ul:contains("Test competition")
 
 Innovation leads can be added to a competition
-    [Documentation]    IFS-192
+    [Documentation]    IFS-192, IFS-1104
     [Tags]  HappyPath
     When the user navigates to the page       ${COMP_MANAGEMENT_COMP_SETUP}/manage-innovation-leads/find
     Then the user should see the element      jQuery=h1:contains("Manage innovation leads")
