@@ -30,8 +30,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
 
     @Override
     protected CompetitionsRestServiceImpl registerRestServiceUnderTest() {
-        CompetitionsRestServiceImpl competitionService = new CompetitionsRestServiceImpl();
-        return competitionService;
+        return new CompetitionsRestServiceImpl();
     }
 
     @Test
@@ -55,19 +54,6 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
         assertNotNull(response);
         Assert.assertEquals(returnedResponse, response);
     }
-
-    @Test
-    public void getCompetitionsByUserId() {
-        final Long userId = 123L;
-        List<CompetitionResource> returnedResponse = newCompetitionResource().build(2);
-
-        setupGetWithRestResultExpectations(competitionsRestURL + "/getCompetitionsByUserId/" + userId, competitionResourceListType(), returnedResponse);
-
-        List<CompetitionResource> responses = service.getCompetitionsByUserId(userId).getSuccessObject();
-        assertNotNull(responses);
-        assertEquals(returnedResponse, responses);
-    }
-
 
     @Test
     public void findInnovationLeads() {
@@ -99,6 +85,17 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
         RestResult<Void> response = service.removeInnovationLead(123L, 234L);
         assertTrue(response.isSuccess());
         assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    public void getCompetitionsByUserId() {
+        final Long userId = 123L;
+        List<CompetitionResource> returnedResponse = newCompetitionResource().build(2);
+
+        setupGetWithRestResultExpectations(competitionsRestURL + "/getCompetitionsByUserId/" + userId, competitionResourceListType(), returnedResponse);
+
+        List<CompetitionResource> responses = service.getCompetitionsByUserId(userId).getSuccessObject();
+        assertNotNull(responses);
+        assertEquals(returnedResponse, responses);
     }
 
     @Test
@@ -144,6 +141,19 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
         setupPutWithRestResultExpectations(competitionsRestURL + "/" + competition.getId(), Void.class, competition, null, HttpStatus.OK);
 
         service.update(competition).getSuccessObject();
+    }
+
+    @Test
+    public void updateCompetitionInitialDetails() {
+
+        CompetitionResource competition = new CompetitionResource();
+        competition.setId(1L);
+
+        setupPutWithRestResultExpectations(competitionsRestURL + "/" + competition.getId() + "/update-competition-initial-details", Void.class, competition, null, HttpStatus.OK);
+
+        RestResult<Void> response = service.updateCompetitionInitialDetails(competition);
+        assertTrue(response.isSuccess());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test

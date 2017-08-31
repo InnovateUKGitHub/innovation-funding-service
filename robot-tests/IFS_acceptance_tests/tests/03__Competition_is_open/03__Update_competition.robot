@@ -302,7 +302,8 @@ return the database to its previous status
 
 the user moves the competition back again
     the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}
-    Run Keyword And Ignore Error    the user clicks the button/link    jQuery=.button:contains("Save")
+    the user clicks the button/link    jQuery=.button:contains("Complete")
+    the user clicks the button/link    jQuery=.button:contains("Done")
     the user closes the browser
 
 the user fills in the milestone data with valid information
