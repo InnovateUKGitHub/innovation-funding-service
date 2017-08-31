@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html  class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Unsuccessful applications - CompetitionName|" />
+    </head>
+
+    <body>
+        <th:block th:insert="fragments/layout :: body-start" />
+       <th:block th:insert="fragments/layout :: global-header" />
+
+        <main tabindex="-1" id="content">
+            <th:block th:insert="fragments/layout :: main-content-start" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='All competitions',linkClass='link-back',linkUrl='#'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Unsuccessful applications',subTitle=|1: CompetitionName|,size='heading-xlarge'" />
+
+
+            <div class="grid-row sorting">
+              <div class="column-full">
+                  <span class="heading-xlarge no-margin">22</span>
+                  <span class="heading-small">applications</span>
+              </div>
+            </div>
+            <div class="table-overflow">
+                <table id="application-list">
+                    <thead>
+                        <tr>
+                            <th scope="col">Application number</th>
+                            <th scope="col">Project title</th>
+                            <th scope="col">Lead organisation</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <a href="#">123</a>
+                            </td>
+                            <td>Machine learning in robotics</td>
+                            <td>PWC</td>
+                            <td>Ineligible</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a href="#">124</a>
+                            </td>
+                            <td>Automated Project Title generator</td>
+                            <td>B.Systems</td>
+                            <td>Not funded</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a href="#">125</a>
+                            </td>
+                            <td>Automated Project Title generator</td>
+                            <td>B.Systems</td>
+                            <td>Ineligible</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!--/* <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" /> */-->
+
+            <th:block th:insert="fragments/layout :: main-content-end" />
+        </main>
+
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
+    </body>
+</html>
