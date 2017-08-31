@@ -8,32 +8,22 @@ def String ldapEncryptionCertificateFile = "${ldapCertsVolume}/ldap-encryption.c
 
 def String ldapPassword = project.properties['auth.ldap.password'] ?:"default"
 
-task prepareDockerFile(type: Copy) {
-    outputs.upToDateWhen { false }
+task prepareDockerFile {
+    def inputDir = file("${project.buildDir}/docker")
 
     def String ldapEncryptionKey = file(ldapEncryptionKeyFile).text.trim().replace('\n', '\\n')
     def String ldapEncryptionCertificate = file(ldapEncryptionCertificateFile).text.trim().replace('\n', '\\n')
 
-    from 'src/main/docker/'
-    into 'src/main/docker/'
-    include 'Dockerfile-template'
-    rename 'Dockerfile-template', 'Dockerfile'
-    filter(ReplaceTokens, tokens: [auth_ldap_password: ldapPassword,
-                                   auth_ldap_encryption_key: ldapEncryptionKey,
-                                   auth_ldap_encryption_certificate: ldapEncryptionCertificate])
-}
-
-task buildDocker(type: DockerBuildImage) {
-    dependsOn prepareDockerFile
-
-    tag = 'innovateuk/ldap-service:latest'
-    inputDir = file("${project.buildDir}/docker")
-
-    if (!inputDir.exists()) {
-      inputDir.mkdirs()
-    }
-
     doFirst {
+        copy {
+            from 'src/main/docker/'
+            into 'src/main/docker/'
+            include 'Dockerfile-template'
+            rename 'Dockerfile-template', 'Dockerfile'
+            filter(ReplaceTokens, tokens: [auth_ldap_password: ldapPassword,
+                                           auth_ldap_encryption_key: ldapEncryptionKey,
+                                           auth_ldap_encryption_certificate: ldapEncryptionCertificate])
+        }
         copy {
           from file('src/main/docker/Dockerfile')
           into inputDir
@@ -43,4 +33,11 @@ task buildDocker(type: DockerBuildImage) {
             into "${inputDir}/scripts"
         }
     }
+}
+
+task buildDocker(type: DockerBuildImage) {
+    dependsOn prepareDockerFile
+
+    tag = 'innovateuk/ldap-service:latest'
+    inputDir = file("${project.buildDir}/docker")
 }
