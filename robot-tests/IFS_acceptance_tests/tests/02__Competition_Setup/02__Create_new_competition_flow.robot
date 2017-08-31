@@ -485,7 +485,7 @@ Application: Edit again should mark as incomplete
 Ready To Open button is visible when the user re-opens a section
     [Documentation]    INFUND-4468
     [Tags]  Pending
-    # TODO Pending due to INFUND-7643
+    # TODO Pending due to IFS-493
     [Setup]
     Given The user should see the element    jQuery=.button:contains("Complete")
     When The user clicks the button/link    link=Initial details
@@ -499,11 +499,11 @@ Ready To Open button is visible when the user re-opens a section
 User should be able to Save the Competition as Open
     [Documentation]    INFUND-4468, INFUND-3002
     [Tags]  Pending
-    # TODO Pending due to INFUND-7643
+    # TODO Pending due to IFS-493
     When the user clicks the button/link   jQuery=.button:contains("Complete")
-    And the user clicks the button/link    jQuery=button:contains("Done")
-    And the user should see the text in the page    Setup of this competition has now been completed and will automatically open on the date set. If you need to change anything after publication, contact the IFS Content Team.
-    And the user clicks the button/link    link=All competitions
+    Then the user clicks the button/link   jQuery=button:contains("Done")
+    And the user should see the text in the page  Setup of this competition has now been completed and will automatically open on the date set.
+    When the user clicks the button/link   link=All competitions
     And the user navigates to the page     ${CA_UpcomingComp}
     Then the competition should show in the correct section  css=section:nth-of-type(2) ul    Test competition
     # The above line checks that the section 'Ready to Open' there is a competition named Test competition
@@ -521,20 +521,24 @@ Assessor: Contain the correct options
     And the user should see the element    id=assessorPay
 
 Assessor: Mark as Done then Edit again
-     [Documentation]    INFUND-5641
+     [Documentation]    INFUND-5641 IFS-380
      [Tags]    HappyPath
-    When the user selects the checkbox    assessors-62
-    And the user enters text to a text field    id=assessorPay    100
-    And the user clicks the button/link    jQuery=button:contains("Done")
-    Then the user should see the text in the page    3
-    And the user should see the text in the page    100
-    When the user clicks the button/link    jQuery=button:contains("Edit")
-    Then the user clicks the button/link    jQuery=button:contains("Done")
+    When the user selects the checkbox         assessors-62
+    Then the user enters text to a text field  id=assessorPay  100
+    When the user clicks the button/link       jQuery=button:contains("Done")
+    Then the user should see the element       jQuery=dt:contains("How many assessors") + dd:contains("5")
+    And the user should see the element        jQuery=dt:contains("How much do assessors receive") + dd:contains("100")
+    And the user should see the element        jQuery=dt:contains("assessment panel") + dd:contains("No")
+    And the user should see the element        jQuery=dt:contains("interview stage") + dd:contains("No")
+    When the user clicks the button/link       jQuery=.button:contains("Edit")
+    Then the user selects the radio button     hasInterviewStage  hasInterviewStage-0
+    When the user clicks the button/link       jQuery=button:contains("Done")
+    Then the user should see the element       jQuery=dt:contains("interview stage") + dd:contains("Yes")
 
 Assessor: Should have a Green Check
-    [Documentation]    INFUND-5641
+    [Documentation]  INFUND-5641
     [Tags]  HappyPath  Pending
-    # TODO Pending due to INFUND-7643
+    # TODO Pending due to IFS-493
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    jQuery=li:contains("Assessors") > img[alt$="section is done"]
     And the user clicks the button/link     jQuery=.button:contains("Complete")
@@ -548,15 +552,15 @@ Innovation leads can be added to a competition
     When the user navigates to the page       ${COMP_MANAGEMENT_COMP_SETUP}/manage-innovation-leads/find
     Then the user should see the element      jQuery=h1:contains("Manage innovation leads")
     And the user should see the element       jQuery=span.lead-count:contains("0")  # Lead count from key statistics
-    And the user should see the element       jQuery=.standard-definition-list dd:contains("Open") ~ dd:contains("Biosciences") ~ dd:contains("Ian Cooper")
+    And the user should see the element       jQuery=.standard-definition-list dd:contains("Open") ~ dd:contains("Biosciences") ~ dd:contains("Ian Cooper") ~ dd:contains("John Doe")
     And the user should see the element       jQuery=li.selected a:contains("Find")
     When the user clicks the button/link      jQuery=td:contains(${peter_freeman}) button:contains("Add")
     Then the user should not see the element  jQuery=td:contains(${peter_freeman})
+    And the user should not see the element   jQuery=td:contains("Ian Cooper")
     And the user should see the element       jQuery=span.lead-count:contains("1")
-    # TODO: Below line will be uncommented once outstanding issue IFS-1287 is resolved
-    # And the user should see the element     jQuery=span.total-count:contains("0")  # Total count from individual tab
     When the user clicks the button/link      jQuery=a:contains("Overview")
     Then the user should see the element      jQuery=span.total-count:contains("1")
+    And the user should not see the element   jQuery=td:contains("Ian Cooper")
     And the user clicks the button/link       jQuery=td:contains(${peter_freeman}) button:contains("Remove")
     And the user should see the element       jQuery=span.lead-count:contains("0")
     And the user should see the element       jQuery=span.total-count:contains("0")

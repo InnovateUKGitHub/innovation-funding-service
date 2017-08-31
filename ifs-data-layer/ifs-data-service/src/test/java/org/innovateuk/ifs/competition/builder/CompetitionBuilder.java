@@ -91,6 +91,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return with(competition -> competition.setMilestones(milestones));
     }
 
+    public CompetitionBuilder withLeadTechnologist(User leadTechnologist){
+        return with(competition -> competition.setLeadTechnologist(leadTechnologist));
+    }
+
     public CompetitionBuilder withName(String... names) {
         return withArray((competition, name) -> setField("name", competition, name), names);
     }

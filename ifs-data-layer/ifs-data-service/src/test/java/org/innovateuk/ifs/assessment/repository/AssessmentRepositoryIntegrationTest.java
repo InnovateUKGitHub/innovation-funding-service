@@ -36,6 +36,8 @@ import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseBuilder.newAssessorFormInputResponse;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
+import static org.innovateuk.ifs.assessment.transactional.AssessorCompetitionSummaryServiceImpl.ALL_ASSESSMENT_STATES;
+import static org.innovateuk.ifs.assessment.transactional.AssessorCompetitionSummaryServiceImpl.VALID_ASSESSMENT_STATES;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
@@ -291,14 +293,15 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         List<AssessmentApplicationAssessorCount> counts = repository.getAssessorApplicationAssessmentCountsForStates(
                 application1.getCompetition().getId(),
                 paulPlum.getId(),
-                AssessmentState.getBackingStates(complementOf(of(CREATED, REJECTED, WITHDRAWN)))
+                VALID_ASSESSMENT_STATES,
+                ALL_ASSESSMENT_STATES
         );
 
         assertEquals(2, counts.size());
-        assertEquals(application1.getId(), counts.get(0).getApplication().getId());
-        assertEquals(2, counts.get(0).getAssessorCount());
-        assertEquals(application2.getId(), counts.get(1).getApplication().getId());
-        assertEquals(1, counts.get(1).getAssessorCount());
+        assertEquals(application1.getId(), counts.get(1).getApplication().getId());
+        assertEquals(2, counts.get(1).getAssessorCount());
+        assertEquals(application2.getId(), counts.get(0).getApplication().getId());
+        assertEquals(1, counts.get(0).getAssessorCount());
         assertEquals(paulPlum, counts.get(0).getAssessment().getParticipant().getUser());
         assertEquals(paulPlum, counts.get(1).getAssessment().getParticipant().getUser());
     }
