@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
  * Form field model for the project address content
  */
 public class ProjectDetailsAddressForm extends BaseBindingResultTarget {
-    @NotNull(message = "{validation.bankdetailsresource.organisationaddress.required}")
+    @NotNull(message = "{validation.projectdetailsaddressviewmodelform.organisationaddresstype.required}")
     private OrganisationAddressType addressType;
 
     @Valid

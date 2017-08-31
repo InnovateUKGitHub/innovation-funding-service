@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project address'" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project address',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
     <body th:with="context='project'" class="project-details project-address">
@@ -15,9 +15,9 @@
 
             <p>We will assign a Monitoring Officer who will visit your project at this address.</p>
 
-            <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" >
+            <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" novalidate="novalidate">
                 <div class="form-group" th:classappend="${#fields.hasErrors('*{addressType}')}? 'form-group-error'">
-                    <fieldset>
+                    <fieldset id="addressType">
                         <legend>
                             <span class="heading-medium">Project address</span>
                             <th:block th:if="${#fields.hasErrors('*{addressType}')}">
