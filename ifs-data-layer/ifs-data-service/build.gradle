@@ -53,8 +53,6 @@ jar {
     baseName = 'ifs-data-service'
 }
 
-prepareDockerFile.appName = jar.baseName
-
 configurations {
     mapstruct
 }
