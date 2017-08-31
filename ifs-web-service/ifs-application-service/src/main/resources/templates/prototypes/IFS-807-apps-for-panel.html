@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Allocate applications'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-assessor-header" th:with="status='loggedIn'" />
+
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Assessor dashboard'}, ${'/prototypes/IFS-807-assessor-dashboard'})" />
+
+    <!-- HARDCODED PROTOTYPE HTML -->
+
+    <h1 class="heading-xlarge">Technology inspired</h1>
+
+    <div class="grid-row">
+        <div class="column-half">
+            <dl class="font-xsmall">
+                <dt>Competition:</dt>
+                <dd>Technology inspired</dd>
+                <dt>Innovation Lead:</dt>
+                <dd>Peter Freeman</dd>
+                <dt>Panel date:</dt>
+                <dd>9:00am Thursday 14 September 2017</dd>
+            </dl>
+        </div>
+        <div class="column-half alignright">
+            <a href="#">View competition brief (opens in a new window)</a>
+        </div>
+    </div>
+
+    <div class="my-applications">
+
+        <div class="progress-list">
+            <h2 class="heading-medium no-margin-top" th:text="${param.status != null and param.status[0] == 'noApplications' ? 'Applications for panel (0)' : 'Applications for panel (3)'}">Applications for panel (3)</h2>
+            <ul>
+                <th:block th:unless="${param.status != null and param.status[0] == 'noApplications'}">
+                    <li class="status-2-col">
+                        <div class="task">
+                            <h3 class="heading-small"><a href="#">The potential for glucose based contact lens monitoring in the management of type 2 diabetes</a></h3>
+                            <p>Wessex University</p>
+                        </div>
+                        <div class="status">
+                            <div class="status-msg msg-deadline-waiting">Pending</div>
+                            <div class="status-msg msg-progress"><a href="/prototypes/IFS-807-app-yes-no">Accept or reject</a></div>
+                        </div>
+                    </li>
+                    <li class="status-2-col">
+                        <div class="task">
+                            <h3 class="heading-small"><a href="#">Mobility problems and the potential for internet enabled zimmer frame</a></h3>
+                            <p>Plymouth University</p>
+                        </div>
+                        <div class="status">
+                            <div class="status-msg msg-deadline-waiting">Pending</div>
+                            <div class="status-msg msg-progress"><a href="#">Accept or reject</a></div>
+                        </div>
+                    </li>
+                    <li class="status-2-col">
+                        <div class="task">
+                            <h3 class="heading-small"><a href="#">Modifying internal domestic plumbing systems to enhance fire prevention in the home</a></h3>
+                            <p>Horizon Ltd</p>
+                        </div>
+                        <div class="status">
+                            <div class="status-msg msg-deadline-waiting">Pending</div>
+                            <div class="status-msg msg-progress"><a href="#">Accept or reject</a></div>
+                        </div>
+                    </li>
+                </th:block>
+                <th:block th:if="${param.status != null and param.status[0] == 'noApplications'}">
+                    <li class="status-2-col">
+                        <div class="task">
+                            <h3 class="heading-small">No application have been assigned to this panel</h3>
+                            <p>Applications to this panel assessment will be added soon</p>
+                        </div>
+                    </li>
+                </th:block>
+            </ul>
+        </div>
+
+
+    </div>
+
+    <p class="extra-margin form-hint">
+        Please complete your review of the applications before the panel date. You cannot edit or add feedback to applications at this stage.
+    </p>
+
+    <p class="extra-margin-top">
+        <a href="/prototypes/IFS-807-assessor-dashboard" class="button-secondary">Return to dashboard</a>
+    </p>
+
+
+
+    <!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script type="text/javascript">
+	// <![CDATA[
+
+	// ]]>
+</script>
+</body>
+</html>

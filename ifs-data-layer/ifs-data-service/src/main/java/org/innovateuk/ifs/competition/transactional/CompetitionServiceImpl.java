@@ -2,6 +2,8 @@ package org.innovateuk.ifs.competition.transactional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -10,12 +12,20 @@ import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
+import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.OrganisationType;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.OrganisationTypeMapper;
+import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -49,13 +59,25 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     private CompetitionRepository competitionRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private CompetitionParticipantRepository competitionParticipantRepository;
+
+    @Autowired
     private CompetitionMapper competitionMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Autowired
     private OrganisationTypeMapper organisationTypeMapper;
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private ApplicationService applicationService;
 
     @Autowired
     private PublicContentService publicContentService;
@@ -66,6 +88,61 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(Long id) {
         return find(competitionRepository.findById(id), notFoundError(Competition.class, id)).andOnSuccess(comp -> serviceSuccess(competitionMapper.mapToResource(comp)));
+    }
+
+    @Override
+    public ServiceResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId) {
+        List<ApplicationResource> userApplications = applicationService.findByUserId(userId).getSuccessObjectOrThrowException();
+        List<Long> competitionIdsForUser = userApplications.stream()
+                .map(applicationResource -> applicationResource.getCompetition())
+                .distinct()
+                .collect(Collectors.toList());
+
+        return serviceSuccess((List) competitionMapper.mapToResource(
+                competitionRepository.findByIdIsIn(competitionIdsForUser))
+        );
+    }
+
+    @Override
+    public ServiceResult<List<UserResource>> findInnovationLeads(Long competitionId) {
+
+        List<CompetitionParticipant> competitionParticipants = competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD);
+
+        List<UserResource> innovationLeads = simpleMap(competitionParticipants, competitionParticipant -> userMapper.mapToResource(competitionParticipant.getUser()));
+
+        return serviceSuccess(innovationLeads);
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> addInnovationLead(Long competitionId, Long innovationLeadUserId) {
+
+        return find(competitionRepository.findById(competitionId),
+                    notFoundError(Competition.class, competitionId))
+            .andOnSuccessReturnVoid(competition -> {
+                find(userRepository.findOne(innovationLeadUserId),
+                     notFoundError(User.class, innovationLeadUserId))
+                .andOnSuccess(innovationLead -> {
+                    CompetitionParticipant competitionParticipant = new CompetitionParticipant();
+                    competitionParticipant.setProcess(competition);
+                    competitionParticipant.setUser(innovationLead);
+                    competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
+                    competitionParticipant.setStatus(ParticipantStatus.ACCEPTED);
+
+                    competitionParticipantRepository.save(competitionParticipant);
+
+                    return serviceSuccess();
+                });
+            });
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> removeInnovationLead(Long competitionId, Long innovationLeadUserId) {
+
+        return find(competitionParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD),
+                    notFoundError(CompetitionParticipant.class, competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD))
+                .andOnSuccessReturnVoid(competitionParticipant -> competitionParticipantRepository.delete(competitionParticipant));
     }
 
     @Override
@@ -181,7 +258,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<Void> manageInformState(long competitionId) {
         CompetitionFundedKeyStatisticsResource keyStatisticsResource =
                 competitionKeyStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)
-                .getSuccessObjectOrThrowException();
+                        .getSuccessObjectOrThrowException();
         if (keyStatisticsResource.isCanReleaseFeedback()) {
             Competition competition = competitionRepository.findById(competitionId);
             competition.setFundersPanelEndDate(ZonedDateTime.now());

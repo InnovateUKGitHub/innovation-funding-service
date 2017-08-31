@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,12 @@ import java.util.List;
 @Service
 public interface CompetitionService {
     CompetitionResource getById(Long id);
+
+    List<UserResource> findInnovationLeads(Long competitionId);
+
+    void addInnovationLead(Long competitionId, Long innovationLeadUserId);
+
+    void removeInnovationLead(Long competitionId, Long innovationLeadUserId);
 
     CompetitionResource getPublishedById(Long id);
 
@@ -34,6 +41,8 @@ public interface CompetitionService {
     List<OrganisationTypeResource> getOrganisationTypes(long id);
 
     ServiceResult<Void> update(CompetitionResource competition);
+
+    ServiceResult<Void> updateCompetitionInitialDetails(CompetitionResource competition);
 
     ServiceResult<Void> setSetupSectionMarkedAsComplete(Long competitionId, CompetitionSetupSection section);
 
