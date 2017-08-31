@@ -66,7 +66,8 @@ Comp admin completes ths competition setup
     Then the user fills in the Public content and publishes
     And the user clicks the button/link   link=Return to setup overview
     And the user should see the element   jQuery=div:contains("Public content") ~ .task-status-complete
-    When the user clicks the button/link  jQuery=a:contains("Save")
+    When the user clicks the button/link  jQuery=a:contains("Complete")
+    Then the user clicks the button/link  jQuery=a:contains("Done")
     And the user navigates to the page    ${CA_UpcomingComp}
     Then the user should see the element  jQuery=h2:contains("Ready to open") ~ ul a:contains("${compWithoutGrowth}")
 
@@ -122,7 +123,8 @@ Once the project growth table is selected
     Then the user fills in the Public content and publishes
     And the user clicks the button/link                  link=Return to setup overview
     And the user should see the element                  jQuery=div:contains("Public content") ~ .task-status-complete
-    When the user clicks the button/link                 jQuery=a:contains("Save")
+    When the user clicks the button/link                 jQuery=a:contains("Complete")
+    Then the user clicks the button/link                 jQuery=a:contains("Done")
     And the user navigates to the page                   ${CA_UpcomingComp}
     Then the user should see the element                 jQuery=h2:contains("Ready to open") ~ ul a:contains("${compWithGrowth}")
     [Teardown]  The competitions date changes so it is now Open  ${compWithGrowth}

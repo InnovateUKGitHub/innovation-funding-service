@@ -81,7 +81,7 @@ Calculation of the Upcoming competitions and Invitations to assess should be cor
 Existing assessor: Reject invitation from Dashboard
     [Documentation]    INFUND-4631  INFUND-5157  INFUND-6455
     [Tags]    HappyPath
-    Given the user clicks the button/link                   link=Photonics for health
+    Given the user clicks the button/link                   link=${READY_TO_OPEN_COMPETITION_NAME}
     And the user should see the element                     jQuery=h1:contains("Invitation to assess '${READY_TO_OPEN_COMPETITION_NAME}'")
     And the user should not see the element                 id=rejectComment
     And the user selects the radio button                   acceptInvitation  false
@@ -121,7 +121,7 @@ Existing assessor: Accept invitation from the invite link
 Accepted and Rejected invites are not visible
     [Documentation]    INFUND-6455
     [Tags]
-    Then the user should not see the element          link=Photonics for health
+    Then the user should not see the element          link=${READY_TO_OPEN_COMPETITION_NAME}
     And The user should not see the text in the page  Invitations to assess
 
 Upcoming competition should be visible

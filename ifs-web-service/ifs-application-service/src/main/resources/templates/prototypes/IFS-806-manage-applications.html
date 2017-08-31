@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Allocate applications'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-assessor-header" th:with="status='loggedIn'" />
+
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Manage assessment panel'}, ${'/prototypes/IFS-707-manage-assessment-panel'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')})" />
+
+    <!-- HARDCODED PROTOTYPE HTML -->
+
+    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'68: Technology inspired'}, ${'Assign applications to panel'}, ${'competition closed'})" />
+
+    <h2 class="heading-medium">Assigned applications (<span id="application-count">0</span>)</h2>
+
+    <th:block th:insert="prototypes/fragments/manage-assessment-panel :: prototype-application-list-table" th:with="type='assigned'"/>
+
+    <!-- <h2 class="heading-medium">Available applications</h2> -->
+
+    <div class="search-filters extra-margin">
+        <fieldset>
+            <legend class="visuallyhidden">Filter applications</legend>
+            <div class="grid-row">
+                <div class="column-two-thirds">
+                    <label class="form-label" for="filterSearch">Application number</label>
+                    <input class="form-control extra-margin-bottom" id="filterSearch" name="filterSearch" value="" type="text">
+                    <a href="?sort=">Clear all filters</a>
+                </div>
+                <div class="column-third">
+                    <button class="button">Filter</button>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <th:block th:insert="prototypes/fragments/manage-assessment-panel :: prototype-application-list-table" th:with="type='available'"/>
+
+    <ul class="pagination">
+
+        <li class="prev">
+            <a href="#" rel="prev" title="Navigate to previous part">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title">0 to 20</span>
+            </a>
+        </li>
+        <li class="next">
+            <a href="#" rel="next" title="Navigate to next part">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title">21 to 40</span>
+            </a>
+        </li>
+
+    </ul>
+
+    <div class="aligncentre">
+        <a href="#" class="extra-margin-right">0 to 20</a>
+        <a href="#" class="extra-margin-right">21 to 40</a>
+        <a href="#" class="extra-margin-right">41 to 60</a>
+        <a href="#" class="extra-margin-right">61 to 80</a>
+        <a href="#" class="extra-margin-right">81 to 100</a>
+    </div>
+
+    <!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script type="text/javascript">
+	// <![CDATA[
+	$(document).ready(function() {
+
+	    $('#application-assigned').hide();
+
+	    var link = $('.link-back');
+
+		$('#assign-application').on('click', function(event) {
+			event.preventDefault();
+			$('#application-assigned').show();
+			$('#application-count').text('1');
+			link.attr('href', link.attr('href') + '?action=update');
+		});
+		$('#remove-application').on('click', function(event) {
+			event.preventDefault();
+			$('#application-assigned').hide();
+			$('#application-count').text('0');
+		});
+	});
+	// ]]>
+</script>
+</body>
+</html>

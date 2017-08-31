@@ -89,7 +89,7 @@
         <div class="form-group" th:classappend="${#fields.hasErrors('publishSetting')} ? 'error'">
             <legend>
                 <span class="form-label-bold">Publish setting</span>
-                <span class="form-hint">In this competition:</span>
+                <span class="form-hint">Is this competition:</span>
                 <th:block th:if="${#fields.hasErrors('publishSetting')}">
                     <span class="error-message" th:each="err : ${#fields.errors('publishSetting')}" th:text="${err}" />
                 </th:block>

@@ -765,7 +765,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 .createNonIfsCompetition()
                 .withBasicData(line.name, null, line.innovationAreas,
                         line.innovationSector, null, null, null,
-                        null, null, null, null, null, null, null,
+                        null, null, null, null, null, null, null, null, null,
                         null, emptyList(), null, null, line.nonIfsUrl)
                 .withOpenDate(line.openDate)
                 .withSubmissionDate(line.submissionDate)
@@ -780,7 +780,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 withExistingCompetition(1L).
                 withBasicData(line.name, line.type, line.innovationAreas,
                         line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
-                        line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
+                        line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay, line.hasAssessmentPanel, line.hasInterviewStage,
                         line.multiStream, line.collaborationLevel, line.leadApplicantTypes, line.researchRatio, line.resubmission, null).
                 withNewMilestones().
                 withFundersPanelEndDate(line.fundersPanelEndDate).
@@ -793,7 +793,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 createCompetition().
                 withBasicData(line.name, line.type, line.innovationAreas,
                         line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
-                        line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
+                        line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay, line.hasAssessmentPanel, line.hasInterviewStage,
                         line.multiStream, line.collaborationLevel, line.leadApplicantTypes, line.researchRatio, line.resubmission, null).
                 withApplicationFormFromTemplate().
                 withNewMilestones()).

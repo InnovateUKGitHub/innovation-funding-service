@@ -120,7 +120,7 @@ Once Successful and Sent you cannot change your mind
     Then the user should not see the element  jQuery=input[type="checkbox"][value="${FUNDERS_PANEL_APPLICATION_1_NUMBER}"]
     When the user navigates to the page       ${funders_panel_competition_url}/manage-funding-applications
     Then the user should not see the element  jQuery=input[type="checkbox"][value="${FUNDERS_PANEL_APPLICATION_1_NUMBER}"]
-    # TODO Add a check that button is disabled INFUND-9132
+    # TODO Add a check that button is disabled IFS-359
 
 Successful applications are turned into Project
     [Documentation]  INFUND-8624
@@ -184,8 +184,8 @@ the internal user sends an email notification
     the user selects the checkbox    app-row-${id}
     the user clicks the button/link  jQuery=button:contains("Write and send email")
     the user enters text to a text field  css=.editor  ${message}
-    the user clicks the button/link       jQuery=button:contains("Send email to all applicants")
-    the user clicks the button/link       jQuery=.send-to-all-applicants-modal button:contains("Send email to all applicants")
+    the user clicks the button/link       jQuery=button:contains("Send email")[data-js-modal="send-to-all-applicants-modal"]
+    the user clicks the button/link       jQuery=.send-to-all-applicants-modal button:contains("Send email")
     the user should see the element       jQuery=td:contains("${application}") ~ td:contains("Sent") ~ td:contains("${today}")
 
 the external user reads his email and can see the correct status
