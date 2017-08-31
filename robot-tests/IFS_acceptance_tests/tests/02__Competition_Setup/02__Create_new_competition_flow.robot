@@ -73,16 +73,16 @@ User can create a new competition
     [Tags]    HappyPath
     Given the user navigates to the page       ${CA_UpcomingComp}
     When the user clicks the button/link       jQuery=.button:contains("Create competition")
-    And The user should not see the element    jQuery('.button:contains("Complete")
+    And The user should not see the element    jQuery= button:contains("Complete")
     And The user should not see the element    link=Funding information
     And The user should not see the element    link=Eligibility
     And The user should not see the element    link=Milestones
     And The user should not see the element    link=Application
     And The user should not see the element    link=Assessors
     And The user should not see the element    link=Public content
-    And The user should see the element    link=Initial details
+    And The user should see the element        link=Initial details
     And The user should not see the element    link=Stakeholders
-    And The user should see the text in the element  css=#content p  Once you complete, this competition will be ready to open.
+    And The user should see the element        jQuery=p:contains("Once you complete, this competition will be ready to open.")
 
 New competition shows in Preparation section
     [Documentation]    INFUND-2980
@@ -565,6 +565,23 @@ Innovation leads can be added to a competition
     And the user should see the element       jQuery=span.total-count:contains("0")
     When the user clicks the button/link      jQuery=.inline-nav a:contains("Find")
     Then the user should see the element      jQuery=td:contains(${peter_freeman}) button:contains("Add")
+
+Complete button disabled when sections are edited
+    [Documentation]  IFs-648
+    [Tags]  Pending
+    # TODO Pending due to IFS-1489
+    Given the user navigates to the page                   ${CA_UpcomingComp}
+    And the user clicks the button/link                    ${READY_TO_OPEN_COMPETITION_NAME}
+    When the user clicks the button/link                   link=Assessors
+    And the user clicks the button/link                    link=Edit
+    And the user clicks the button/link                    link=Competition setup
+    Then the user should see that the element is disabled  jQuery=button:contains("Complete")
+    When the user clicks the button/link                   link=Assessors
+    And the user clicks the button/link                    jQuery=button:contains("Done")
+    And the user clicks the button/link                    link=Competition setup
+#    The following steps will move the comp from "In preparation" to "Ready to Open" state
+    Then the user clicks the button/link                   jQuery=button:contains("Complete")
+    And the user clicks the button/link                    jQuery=button:contains("Done")
 
 *** Keywords ***
 the user moves focus and waits for autosave
