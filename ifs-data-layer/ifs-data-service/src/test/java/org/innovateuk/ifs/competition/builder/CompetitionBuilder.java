@@ -204,4 +204,7 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withAcademicGrantPercentage(Integer... percentages) { return withArray((percentage, competition) -> competition.setAcademicGrantPercentage(percentage), percentages); }
 
+    public CompetitionBuilder withLeadTechnologist(User... leadTechnologists) {
+        return withArray((competition, leadTechnologist) -> setField("leadTechnologist", competition, leadTechnologist), leadTechnologists);
+    }
 }
