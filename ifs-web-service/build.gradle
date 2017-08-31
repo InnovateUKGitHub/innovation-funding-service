@@ -43,7 +43,7 @@ subprojects {
          */
         task prepareDockerInput {
             dependsOn getNewRelicAgent
-            dependsOn build
+            dependsOn bootRepackage
             def inputDir = project.file("$project.buildDir/docker")
 
             doFirst {
@@ -89,7 +89,12 @@ subprojects {
 
         bootRepackage {
             mainClass = 'org.innovateuk.ifs.Application'
-            //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
+            classifier = "autostart"
+        //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
+
+            // By explicitly adding the inputs and outputs to this task, we can utilize the `incremental build' feature.
+            inputs.files(jar.outputs)
+            outputs.file file(jar.archiveName.toString().replace(".jar", "-autostart.jar"))
         }
     }
 }

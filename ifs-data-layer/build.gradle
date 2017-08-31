@@ -1,9 +1,5 @@
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 
-project(':ifs-data-layer').bootRepackage {
-    onlyIf{ Task task -> false}
-}
-
 subprojects {
 
     ext.ifsWebSystemUserId="8394d970-b250-4b15-9621-3534325691b4"
@@ -39,7 +35,7 @@ subprojects {
          */
         task prepareDockerInput {
             dependsOn getNewRelicAgent
-            dependsOn build
+            dependsOn bootRepackage
 
             def inputDir = project.file("$project.buildDir/docker")
 
@@ -85,7 +81,12 @@ subprojects {
 
         bootRepackage {
             mainClass = 'org.innovateuk.ifs.Application'
-            //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
+            classifier = "autostart"
+        //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
+
+            // By explicitly adding the inputs and outputs to this task, we can utilize the `incremental build' feature.
+            inputs.files(jar.outputs)
+            outputs.file file(jar.archiveName.toString().replace(".jar", "-autostart.jar"))
         }
     }
 
