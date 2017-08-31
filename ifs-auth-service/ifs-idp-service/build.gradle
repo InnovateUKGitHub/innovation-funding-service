@@ -25,68 +25,16 @@ def String authIdpRegapiKey = project.properties['auth.idp.regapikey'] ?:"123456
 def String javaKeystorePassword = project.properties['java.keystore.password'] ?:"changeit"
 
 
-task prepareDockerFile {
-    dependsOn ':ifs-auth-service:prepareSecrets'
-
-    outputs.upToDateWhen { false }
-
-    def String idpProxyKey = file(idpProxyKeyFile).text.trim().replace('\n', '\\n')
-    def String idpProxyCertificate = file(idpProxyCertificateFile).text.trim().replace('\n', '\\n')
-    def String idpProxyCacertificate = file(idpProxyCacertificateFile).text.trim().replace('\n', '\\n')
-
-    def String spProxyCertificate = file(spProxyCertificateFile).text.trim().replace('\n', '\\n')
-
-    def String idpSigningKey = file(idpSigningKeyFile).text.trim().replace('\n', '\\n')
-    def String idpSigningCertificate = file(idpSigningCertificateFile).text.trim().replace('\n', '\\n')
-    def String idpEncryptionKey = file(idpEncryptionKeyFile).text.trim().replace('\n', '\\n')
-    def String idpEncryptionCertificate = file(idpEncryptionCertificateFile).text.trim().replace('\n', '\\n')
-
-    def String ldapEncryptionCertificate = file(ldapEncryptionCertificateFile).text.trim().replace('\n', '\\n')
-
-    copy {
-        from 'src/main/docker/'
-        into 'src/main/docker/'
-        include 'Dockerfile-base-template'
-        rename 'Dockerfile-base-template', 'Dockerfile-base'
-        filter(ReplaceTokens, tokens: [oracle_jdk_domain: oracleJdkDomain])
-    }
-
-    copy {
-        from 'src/main/docker/'
-        into 'src/main/docker/'
-        include 'Dockerfile-template'
-        rename 'Dockerfile-template', 'Dockerfile'
-        filter(ReplaceTokens, tokens: [auth_idp_regapikey: authIdpRegapiKey,
-                                       auth_idp_proxy_key: idpProxyKey,
-                                       auth_idp_proxy_certificate: idpProxyCertificate,
-                                       auth_idp_proxy_cacertificate: idpProxyCacertificate,
-                                       auth_sp_proxy_certificate: spProxyCertificate,
-                                       auth_idp_signing_key: idpSigningKey,
-                                       auth_idp_signing_certificate: idpSigningCertificate,
-                                       auth_idp_encryption_key: idpEncryptionKey,
-                                       auth_idp_encryption_certificate: idpEncryptionCertificate,
-                                       auth_ldap_encryption_certificate: ldapEncryptionCertificate,
-                                       java_keystore_password: javaKeystorePassword,
-                                       version: project.properties['version']])
-   }
-}
-
-task buildDockerBaseImage(type: DockerBuildImage) {
-    dependsOn ':ifs-auth-service:ifs-registration-service:build'
-    dependsOn prepareDockerFile
-
-    tag = 'ifshibdev/idp-base:latest'
-    inputDir = project.file("$project.buildDir/docker-base")
-
-    if (!inputDir.exists()) {
-      inputDir.mkdirs()
-    }
+task prepareDockerFileBase {
+    def inputDir = project.file("$project.buildDir/docker-base")
 
     doFirst {
         copy {
-            from file('src/main/docker/Dockerfile-base')
+            from 'src/main/docker/'
             into inputDir
-            rename 'Dockerfile-base', 'Dockerfile'
+            include 'Dockerfile-base-template'
+            rename 'Dockerfile-base-template', 'Dockerfile'
+            filter(ReplaceTokens, tokens: [oracle_jdk_domain: oracleJdkDomain])
         }
 
         copy {
@@ -101,46 +49,83 @@ task buildDockerBaseImage(type: DockerBuildImage) {
     }
 }
 
-task buildDocker(type: DockerBuildImage) {
+task buildDockerBaseImage(type: DockerBuildImage) {
     dependsOn ':ifs-auth-service:ifs-registration-service:build'
-    dependsOn prepareDockerFile
+    dependsOn prepareDockerFileBase
 
-    inputDir = project.file("$project.buildDir/docker")
-    tag = 'innovateuk/idp-service:latest'
+    tag = 'ifshibdev/idp-base:latest'
+    inputDir = project.file("$project.buildDir/docker-base")
+}
 
-    if (!inputDir.exists()) {
-      inputDir.mkdirs()
-    }
+task prepareDockerFile {
+    dependsOn ':ifs-auth-service:prepareSecrets'
+    dependsOn ':ifs-auth-service:ifs-registration-service:build'
+
+    def String idpProxyKey = file(idpProxyKeyFile).text.trim().replace('\n', '\\n')
+    def String idpProxyCertificate = file(idpProxyCertificateFile).text.trim().replace('\n', '\\n')
+    def String idpProxyCacertificate = file(idpProxyCacertificateFile).text.trim().replace('\n', '\\n')
+
+    def String spProxyCertificate = file(spProxyCertificateFile).text.trim().replace('\n', '\\n')
+
+    def String idpSigningKey = file(idpSigningKeyFile).text.trim().replace('\n', '\\n')
+    def String idpSigningCertificate = file(idpSigningCertificateFile).text.trim().replace('\n', '\\n')
+    def String idpEncryptionKey = file(idpEncryptionKeyFile).text.trim().replace('\n', '\\n')
+    def String idpEncryptionCertificate = file(idpEncryptionCertificateFile).text.trim().replace('\n', '\\n')
+
+    def String ldapEncryptionCertificate = file(ldapEncryptionCertificateFile).text.trim().replace('\n', '\\n')
+
+    def inputDir = project.file("$project.buildDir/docker")
 
     doFirst {
         copy {
-            from file('src/main/docker/Dockerfile')
-            into inputDir
+             from 'src/main/docker/'
+             into inputDir
+             include 'Dockerfile-template'
+             rename 'Dockerfile-template', 'Dockerfile'
+             filter(ReplaceTokens, tokens: [auth_idp_regapikey: authIdpRegapiKey,
+                                            auth_idp_proxy_key: idpProxyKey,
+                                            auth_idp_proxy_certificate: idpProxyCertificate,
+                                            auth_idp_proxy_cacertificate: idpProxyCacertificate,
+                                            auth_sp_proxy_certificate: spProxyCertificate,
+                                            auth_idp_signing_key: idpSigningKey,
+                                            auth_idp_signing_certificate: idpSigningCertificate,
+                                            auth_idp_encryption_key: idpEncryptionKey,
+                                            auth_idp_encryption_certificate: idpEncryptionCertificate,
+                                            auth_ldap_encryption_certificate: ldapEncryptionCertificate,
+                                            java_keystore_password: javaKeystorePassword,
+                                            version: project.properties['version']])
         }
+
         copy {
             from fileTree('src/main/docker/apache')
             into "${inputDir}/apache"
         }
+
         copy {
             from fileTree('src/main/docker/idp')
             into "${inputDir}/idp"
         }
+
         copy {
             from fileTree('src/main/docker/scripts')
             into "${inputDir}/scripts"
         }
+
         copy {
             from fileTree('src/main/docker/pages')
             into "${inputDir}/pages"
         }
+
         copy {
             from file('src/main/docker/default-jre-headless-dummy_1.0_all.deb')
             into inputDir
         }
+
         copy {
             from fileTree('src/main/docker/certs')
             into "${inputDir}/certs"
         }
+
         configurations.runtime.setTransitive(false).resolvedConfiguration.resolvedArtifacts
                 .each { artifact ->
             project.copy {
@@ -149,4 +134,10 @@ task buildDocker(type: DockerBuildImage) {
             }
         }
     }
+}
+
+task buildDocker(type: DockerBuildImage, dependsOn: prepareDockerFile) {
+
+    inputDir = project.file("$project.buildDir/docker")
+    tag = 'innovateuk/idp-service:latest'
 }
