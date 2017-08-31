@@ -104,7 +104,7 @@ public class InitialDetailsSectionSaverTest {
         when(categoryRestService.getInnovationAreas()).thenReturn(restSuccess(asList(innovationArea)));
         when(categoryRestService.getInnovationAreasBySector(innovationSectorId)).thenReturn(restSuccess(singletonList(innovationArea)));
         when(competitionService.initApplicationFormByCompetitionType(competition.getId(), competitionSetupForm.getCompetitionTypeId())).thenReturn(serviceSuccess());
-        when(competitionService.update(competition)).thenReturn(serviceSuccess());
+        when(competitionService.updateCompetitionInitialDetails(competition)).thenReturn(serviceSuccess());
         when(competitionSetupMilestoneService.createMilestonesForCompetition(anyLong())).thenReturn(serviceSuccess(milestones));
         when(competitionSetupMilestoneService.updateMilestonesForCompetition(anyList(), anyMap(), anyLong())).thenReturn(serviceSuccess());
         when(userService.existsAndHasRole(executiveUserId, COMP_ADMIN)).thenReturn(true);
@@ -125,7 +125,7 @@ public class InitialDetailsSectionSaverTest {
         assertEquals(competition.getCompetitionType(), competitionTypeId);
         assertEquals(innovationSectorId, competition.getInnovationSector());
 
-        verify(competitionService).update(competition);
+        verify(competitionService).updateCompetitionInitialDetails(competition);
         verify(competitionService).initApplicationFormByCompetitionType(competition.getId(), competitionSetupForm.getCompetitionTypeId());
         verify(userService).existsAndHasRole(executiveUserId, COMP_ADMIN);
         verify(userService).existsAndHasRole(leadTechnologistId, INNOVATION_LEAD);
@@ -198,7 +198,7 @@ public class InitialDetailsSectionSaverTest {
 
         when(userService.existsAndHasRole(newExec, COMP_ADMIN)).thenReturn(true);
         when(userService.existsAndHasRole(leadTechnologistId, INNOVATION_LEAD)).thenReturn(true);
-        when(competitionService.update(competition)).thenReturn(serviceSuccess());
+        when(competitionService.updateCompetitionInitialDetails(competition)).thenReturn(serviceSuccess());
 
         service.saveSection(competition, form);
 
