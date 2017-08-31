@@ -1,7 +1,6 @@
 jar {
     baseName = 'project-setup'
 }
-prepareDockerFile.appName = jar.baseName
 
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')

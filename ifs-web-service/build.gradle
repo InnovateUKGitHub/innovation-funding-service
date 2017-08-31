@@ -35,32 +35,20 @@ subprojects {
             }
         }
 
-        task prepareDockerFile(type: Copy) {
+        task prepareDockerFile {
             dependsOn getNewRelicAgent
-
-            ext.appName = 'default-service-name'
-            outputs.upToDateWhen { false }
-            from '../docker/'
-            into 'src/main/docker/'
-            include 'Dockerfile-template'
-            rename 'Dockerfile-template', 'Dockerfile'
-            filter {
-                it.replaceAll('@version@', project.properties['version']).replaceAll('@app_name@', appName)
-            }
-        }
-
-        task buildDocker(type: DockerBuildImage, dependsOn: build) {
-            tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
-
-            inputDir = project.file("$project.buildDir/docker")
-            if (!inputDir.exists()) {
-              inputDir.mkdirs()
-            }
+            dependsOn build
+            def inputDir = project.file("$project.buildDir/docker")
 
             doFirst {
                 copy {
-                    from file('src/main/docker/Dockerfile')
+                    from '../docker/'
                     into inputDir
+                    include 'Dockerfile-template'
+                    rename 'Dockerfile-template', 'Dockerfile'
+                    filter {
+                        it.replaceAll('@version@', project.properties['version']).replaceAll('@app_name@', jar.baseName)
+                    }
                 }
                 copy {
                     from jar
@@ -78,7 +66,12 @@ subprojects {
             }
         }
 
-        buildDocker.dependsOn prepareDockerFile
+        task buildDocker(type: DockerBuildImage) {
+          dependsOn prepareDockerFile
+            tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
+            inputDir = project.file("$project.buildDir/docker")
+        }
+
 
         // Workaround for https://github.com/spring-projects/spring-boot/issues/8308
         // Can reinstate excludeDevtools in the bootRepackage task in next release

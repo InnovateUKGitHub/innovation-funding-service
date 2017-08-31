@@ -10,7 +10,6 @@ configurations {
 jar {
     baseName = 'ifs-front-door-service'
 }
-prepareDockerFile.appName = jar.baseName
 
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
