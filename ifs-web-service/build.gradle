@@ -57,7 +57,7 @@ subprojects {
                     }
                 }
                 copy {
-                    from jar
+                    from bootRepackage.outputs
                     into inputDir
                 }
                 copy {
@@ -73,7 +73,7 @@ subprojects {
         }
 
         task buildDocker(type: DockerBuildImage) {
-            dependsOn ":docker:oracle-jre:buildDocker"
+            dependsOn ":docker:app-base-image:buildDocker"
             dependsOn prepareDockerInput
 
             tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
