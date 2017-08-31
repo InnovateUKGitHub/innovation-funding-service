@@ -189,7 +189,7 @@
                                         <a th:href="${(param.status != null ? '/prototypes/5052-manage-assessments?comp=' + param.status[0] : '/prototypes/5052-manage-assessments')}" class="" th:classappend="${(param.status == null or param.status[0] == 'Open' or param.status != null and param.status[0] == 'ready' ? 'disabled' : '')}">Assessor management: Assignments</a>
                                       </li>
                                       <li>
-                                        <a th:href="${(param.status != null ? '?comp=' + param.status[0] : '')}" class="" th:classappend="${(param.status == null or param.status[0] == 'Open' or param.status != null and param.status[0] == 'Closed' or param.status != null and param.status[0] == 'ready' ? 'disabled' : '')}">Download panel sheet</a>
+                                        <a th:href="${(param.status != null ? '/prototypes/IFS-707-manage-assessment-panel?comp=' + param.status[0] : '/prototypes/IFS-707-manage-assessment-panel')}" class="" th:classappend="${(param.status == null or param.status[0] == 'Open' or param.status != null and param.status[0] == 'ready' ? 'disabled' : '')}">Manage assessment panel</a>
                                       </li>
                                       <li>
                                         <a th:href="${(param.status != null ? '/prototypes/5062-submitted-applications?status=decision&#38;comp=' + param.status[0] : '')}" class="" th:classappend="${(param.status == null or param.status[0] == 'Open' or param.status != null and param.status[0] == 'Closed' or param.status != null and param.status[0] == 'assessment' or param.status != null and param.status[0] == 'ready' ? 'disabled' : '')}">Input and review funding decision</a>

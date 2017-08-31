@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Allocate applications'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-assessor-header" th:with="status='loggedIn'" />
+
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Manage assessment panel'}, ${'/prototypes/IFS-707-manage-assessment-panel'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')})" />
+
+    <!-- HARDCODED PROTOTYPE HTML -->
+
+    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'68: Technology inspired'}, ${'Conflict of interest'}, ${'competition closed'})" />
+
+    <h2 class="heading-medium">Panel assessors</h2>
+
+    <dl class="standard-definition-list">
+        <dt>Innovation sector</dt>
+        <dd>Health and life sciences</dd>
+        <dt>Innovation area</dt>
+        <dd>Agriculture and food</dd>
+    </dl>
+
+    <p class="extra-margin-top">Click on the edit button to access individual assessor conflict of interest information</p>
+
+    <div class="grid-row sorting">
+        <div class="column-two-thirds">
+            <h2>
+                <span class="heading-xlarge">5</span>
+                <span class="heading-small">Applications</span>
+            </h2>
+        </div>
+    </div>
+
+    <div class="table-overflow">
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col" class="width-large">Assessor name</th>
+                    <th scope="col" class="width-small">Type</th>
+                    <th scope="col">Innovation area</th>
+                    <th scope="col" class="width-small">Contract and DOI</th>
+                    <th scope="col" class="width-small">Status</th>
+                    <th scope="col" th:class="${param.status != null and param.status[0] == 'edit' ? 'width-small-medium' : 'width-medium'}"><span class="visuallyhidden">Add</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="/prototypes/5229-assessor-profile?name=John%20Barnes&amp;comp=assessment">John Barnes</a></td>
+                    <td>Industry</td>
+                    <td>Electronics, sensors &amp; photonics, Materials</td>
+                    <td><span class="no">No</span></td>
+                    <td>Invite accepted</td>
+                    <td>
+                        <a href="/prototypes/IFS-806-review-coi?name=John%20Barnes" class="button-secondary no-margin" th:text="${param.status != null and param.status[0] == 'edit' ? 'Edit COI' : 'Review COI'}">COI CTA</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="/prototypes/5229-assessor-profile?name=Oliver%20Romero&amp;comp=assessment">Oliver Romero</a></td>
+                    <td>Academic</td>
+                    <td>Healthcare, Regenerative medicine, Stratified medicine</td>
+                    <td><span class="no">No</span></td>
+                    <td>Invite accepted</td>
+                    <td>
+                        <a href="/prototypes/IFS-806-review-coi?name=Oliver%20Romero" class="button-secondary no-margin" th:text="${param.status != null and param.status[0] == 'edit' ? 'Edit COI' : 'Review COI'}">COI CTA</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="/prototypes/5229-assessor-profile?name=Jeffrey%20Carlson&amp;comp=assessment">Jeffrey Carlson</a></td>
+                    <td>Academic</td>
+                    <td>Healthcare, Analytical science</td>
+                    <td><span class="yes">Yes</span></td>
+                    <td>Invite accepted</td>
+                    <td>
+                        <a href="/prototypes/IFS-806-review-coi?name=Jeffrey%20Carlson" class="button-secondary no-margin" th:text="${param.status != null and param.status[0] == 'edit' ? 'Edit COI' : 'Review COI'}">COI CTA</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="/prototypes/5229-assessor-profile?name=Bill%20Limp&amp;comp=assessment">Bill Limp</a></td>
+                    <td>Industry</td>
+                    <td>Architectures and operating systems</td>
+                    <td><span class="yes">Yes</span></td>
+                    <td>Invite accepted</td>
+                    <td>
+                        <a href="/prototypes/IFS-806-review-coi?name=Bill%20Limp" class="button-secondary no-margin" th:text="${param.status != null and param.status[0] == 'edit' ? 'Edit COI' : 'Review COI'}">COI CTA</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="/prototypes/5229-assessor-profile?name=Dave%20Smith&amp;comp=assessment">Dave Smith</a></td>
+                    <td>Industry</td>
+                    <td>Electronics, sensors &#38; photonics, Materials</td>
+                    <td><span class="yes">Yes</span></td>
+                    <td>Invite accepted</td>
+                    <td>
+                        <a href="/prototypes/IFS-806-review-coi?name=Dave%20Smith" class="button-secondary no-margin" th:text="${param.status != null and param.status[0] == 'edit' ? 'Edit COI' : 'Review COI'}">COI CTA</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script type="text/javascript">
+	// <![CDATA[
+
+	// ]]>
+</script>
+</body>
+</html>

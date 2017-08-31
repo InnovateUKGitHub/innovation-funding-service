@@ -76,12 +76,12 @@ New assessor has no assements
 
 CompAdmin should see Assessor's profile and Innovation Area
     [Documentation]    INFUND-8092
-    [Setup]    Log in as a different user         &{Comp_admin1_credentials}
-    Given the user clicks the button/link         link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user clicks the button/link           jQuery=a:contains("Invite assessors to assess the competition")
-    And the user clicks the button/link           link=Overview
-    When the user clicks the button/link          link=E2E
-    And the user should see the text in the page  Emerging technology
+    [Setup]    Log in as a different user  &{Comp_admin1_credentials}
+    Given the user clicks the button/link  link=${IN_ASSESSMENT_COMPETITION_NAME}
+    And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
+    And the user clicks the button/link    link=Overview
+    When the user clicks the button/link   link=E2E
+    And the user should see the element    jQuery=.heading-small:contains("Innovation areas") + ul:contains("Emerging technology")
 
 CompAdmin Invites assessor to assess an application
     [Setup]    The user clicks the button/link  link=Dashboard
