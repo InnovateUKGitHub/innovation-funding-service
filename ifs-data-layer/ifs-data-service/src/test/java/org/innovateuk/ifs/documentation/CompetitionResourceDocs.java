@@ -54,7 +54,9 @@ public class CompetitionResourceDocs {
             fieldWithPath("assessorPay").description("How much will assessors be paid per application they assess"),
             fieldWithPath("setupComplete").description("Has the setup been completed and will move to open once past the open date"),
             fieldWithPath("nonIfs").description("Is this competition a non-ifs competition (not managed via IFS)"),
-            fieldWithPath("nonIfsUrl").description("The URL to apply to the competition if it is a non-ifs competition")
+            fieldWithPath("nonIfsUrl").description("The URL to apply to the competition if it is a non-ifs competition"),
+            fieldWithPath("hasAssessmentPanel").description("indicates if the competition will have an assessment panel stage"),
+            fieldWithPath("hasInterviewStage").description("indicates if the competition will have an interview stage")
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()
@@ -85,5 +87,7 @@ public class CompetitionResourceDocs {
             .withActivityCode("Activity-Code")
             .withNonIfs(true)
             .withNonIfsUrl("https://google.co.uk")
-            .withMilestones(asList(1L, 2L, 3L));
+            .withMilestones(asList(1L, 2L, 3L))
+            .withHasAssessmentPanel(false)
+            .withHasInterviewStage(false);
 }
