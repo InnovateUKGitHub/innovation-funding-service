@@ -186,6 +186,10 @@ dockerCompose {
         useComposeFiles.add('docker-compose-admin-console.yml')
     }
 
+    if (project.hasProperty('ifs.fractal.enabled') ? project.property('ifs.fractal.enabled').toBoolean() : false) {
+        useComposeFiles.add('docker-compose-fractal.yml')
+    }
+
     removeContainers = false
     removeImages = "Local" // Accepted values are: "All", "Local" and "None"
     removeVolumes = false
