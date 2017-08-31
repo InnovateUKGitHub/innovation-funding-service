@@ -141,9 +141,13 @@ public class CompetitionParticipant extends Participant<Competition, Competition
             throw new IllegalStateException("CompetitionParticipant has already been accepted");
         }
 
-        setStatus(ACCEPTED);
+        super.setStatus(ACCEPTED);
 
         return this;
+    }
+
+    public void setStatus(ParticipantStatus status) {
+        super.setStatus(status);
     }
 
     public CompetitionParticipant acceptAndAssignUser(User user) {
@@ -192,6 +196,7 @@ public class CompetitionParticipant extends Participant<Competition, Competition
                 .append(rejectionReason, that.rejectionReason)
                 .append(rejectionReasonComment, that.rejectionReasonComment)
                 .append(role, that.role)
+                .append(getStatus(), that.getStatus())
                 .isEquals();
     }
 
@@ -205,6 +210,7 @@ public class CompetitionParticipant extends Participant<Competition, Competition
                 .append(rejectionReason)
                 .append(rejectionReasonComment)
                 .append(role)
+                .append(getStatus())
                 .toHashCode();
     }
 }

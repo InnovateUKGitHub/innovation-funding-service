@@ -81,7 +81,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                 return serviceFailure(errors);
             }
 
-            return competitionService.update(competition).andOnSuccess(() -> {
+            return competitionService.updateCompetitionInitialDetails(competition).andOnSuccess(() -> {
                 if (initialDetailsForm.isMarkAsCompleteAction() && Boolean.FALSE.equals(competition.getSetupComplete())) {
                     return competitionService.initApplicationFormByCompetitionType(competition.getId(), initialDetailsForm.getCompetitionTypeId());
                 } else {

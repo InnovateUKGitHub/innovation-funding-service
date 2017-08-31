@@ -12,10 +12,10 @@ public class AssessmentApplicationAssessorCount {
     private Application application;
     private int assessorCount;
 
-    public AssessmentApplicationAssessorCount(Assessment assessment, Application application, int assessorCount) {
+    public AssessmentApplicationAssessorCount(Assessment assessment, Application application, Integer assessorCount) {
         this.assessment = assessment;
         this.application = application;
-        this.assessorCount = assessorCount;
+        this.assessorCount = assessorCount != null ? assessorCount : 0;
     }
 
     public AssessmentApplicationAssessorCount() {

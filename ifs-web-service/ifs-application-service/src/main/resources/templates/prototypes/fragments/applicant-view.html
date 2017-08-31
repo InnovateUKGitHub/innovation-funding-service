@@ -706,7 +706,8 @@
 
 <!-- ========Applicant view - readonly application view======= -->
 <div th:fragment="prototype-readonly-application">
-    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-application-details-panel" />
+
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-application-details-panel" th:unless="${action=='hideDetails'}"/>
 
     <div th:if="${param.status != null} and ${param.status[0] == 'fundingPanel'} or ${param.status != null} and ${param.status[0] == 'assessorFeedback'}" th:remove="tag">
 

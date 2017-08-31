@@ -1,19 +1,23 @@
 package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
+import org.springframework.http.MediaType;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -49,6 +53,28 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
 
         verify(competitionServiceMock, only()).notifyAssessors(competitionId);
         verify(assessorServiceMock).notifyAssessorsByCompetition(competitionId);
+    }
+
+    @Test
+    public void updateCompetitionInitialDetails() throws Exception {
+        final Long competitionId = 1L;
+        final Long leadTechnologistUserId = 7L;
+
+        CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource()
+                .withInnovationAreaNames(Collections.emptySet())
+                .withLeadTechnologist(leadTechnologistUserId)
+                .build();
+
+        when(competitionServiceMock.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competitionResource));
+        when(competitionSetupServiceMock.updateCompetitionInitialDetails(any(), any(), any())).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/competition/{id}/update-competition-initial-details", competitionId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(competitionResource)))
+                .andExpect(status().isOk());
+
+        verify(competitionServiceMock, only()).getCompetitionById(competitionId);
+        verify(competitionSetupServiceMock, only()).updateCompetitionInitialDetails(competitionId, competitionResource, leadTechnologistUserId);
     }
 
     @Test
