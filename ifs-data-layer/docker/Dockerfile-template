@@ -1,5 +1,4 @@
-FROM davidcaste/alpine-java-unlimited-jce:jdk8
-MAINTAINER David Soff <dsoff@worth.systems>
+FROM innovateuk/oracle-jre
 EXPOSE 8080
 EXPOSE 8090
 EXPOSE 8081

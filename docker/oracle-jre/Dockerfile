@@ -44,3 +44,6 @@ FROM ubuntu:xenial
 COPY --from=JRE_DOWNLOADER /usr/local/java /usr/local/java
 RUN update-alternatives --install "/usr/bin/java" "java" /usr/local/java/bin/java 1
 ENV JAVA_HOME=/usr/local/java/
+
+# Needed for docker-compose health checks
+RUN apt-get update && apt-get install -yq curl
