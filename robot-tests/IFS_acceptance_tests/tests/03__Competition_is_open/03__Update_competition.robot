@@ -93,8 +93,9 @@ Finances are editable (Ready to Open)
 
 Eligibility is editable (Ready to Open)
     [Documentation]    INFUND-6792
-    [Tags]
-    When the user clicks the button/link   link=Eligibility
+    [Tags]  HappyPath
+    When the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}
+    And the user clicks the button/link    link=Eligibility
     Then the user should see the element   jquery=h1:contains("Eligibility")
     And The user clicks the button/link    jQuery=button:contains(Edit)
     And the user selects the radio button  singleOrCollaborative  single
