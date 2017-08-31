@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.security;
 
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
+import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
+import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
@@ -32,6 +35,9 @@ public abstract class BasePermissionRules extends RootPermissionRules {
 
     @Autowired
     protected AssessmentRepository assessmentRepository;
+
+    @Autowired
+    private CompetitionParticipantRepository competitionParticipantRepository;
 
     protected boolean isPartner(long projectId, long userId) {
         List<ProjectUser> partnerProjectUser = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_PARTNER);
@@ -69,5 +75,10 @@ public abstract class BasePermissionRules extends RootPermissionRules {
 
     protected boolean isFinanceContact(long projectId, long userId) {
         return !projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_FINANCE_CONTACT).isEmpty();
+    }
+
+    protected boolean userIsInnovationLeadOnCompetition(long competitionId, long loggedInUserId){
+        List<CompetitionParticipant> competitionParticipants = competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD);
+        return competitionParticipants.stream().anyMatch(cp -> cp.getUser().getId().equals(loggedInUserId));
     }
 }
