@@ -34,9 +34,8 @@ Application details are editable (Ready to Open)
     And the user clicks the button/link    link=${ready_to_open_competition_name}
     And the user clicks the button/link    jQuery=a:contains(and update competition setup)
     And the user clicks the button/link    link=Application
-    And the user should see the element    link=Application details
-    When the user clicks the button/link    link=Application details
-    AND the user should see the element    jQuery=.button:contains("Edit this question")
+    When the user clicks the button/link   link=Application details
+    And the user should see the element    jQuery=.button:contains("Edit this question")
     And the user clicks the button/link    jQuery=.button:contains("Edit this question")
     Then the user is able to change the value of the fields
     [Teardown]    the user clicks the button/link    link=Application
@@ -222,7 +221,7 @@ Initial details editable before notify date (Open)
     [Teardown]    the user clicks the button/link    link=Competition setup
 
 Assessors editable before Notifications Date (Open)
-    [Documentation]    INFUND-6695
+    [Documentation]  INFUND-6695 IFS-380
     [Tags]    MySQL    HappyPath
     [Setup]    Connect to Database    @{database}
     Given the user clicks the button/link    link=Assessors
@@ -230,6 +229,8 @@ Assessors editable before Notifications Date (Open)
     And the user should see the element    jQuery=dt:contains("How many assessors") + dd:contains("1")
     When the user clicks the button/link    jQuery=.button:contains("Edit")
     Then the user selects the radio button    assessorCount    5
+    And the user selects the radio button     hasAssessmentPanel    0
+    And the user selects the radio button     hasInterviewStage    0
     And the user should see the element    css=#assessorPay[readonly="readonly"]
     When the user clicks the button/link    jQuery=button:contains("Done")
     And the user should see the element    jQuery=dt:contains("How many assessors") + dd:contains("5")
@@ -301,7 +302,8 @@ return the database to its previous status
 
 the user moves the competition back again
     the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}
-    Run Keyword And Ignore Error    the user clicks the button/link    jQuery=.button:contains("Save")
+    the user clicks the button/link    jQuery=.button:contains("Complete")
+    the user clicks the button/link    jQuery=.button:contains("Done")
     the user closes the browser
 
 the user fills in the milestone data with valid information

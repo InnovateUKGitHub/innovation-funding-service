@@ -59,6 +59,9 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
             assertAccessDenied(() -> classUnderTest.create(), () -> {
                 verifyNoMoreInteractions(rules);
             });
+            assertAccessDenied(() -> classUnderTest.updateCompetitionInitialDetails(competitionId, new CompetitionResource(), 7L), () -> {
+                verifyNoMoreInteractions(rules);
+            });
             assertAccessDenied(() -> classUnderTest.createNonIfs(), () -> {
                 verifyNoMoreInteractions(rules);
             });
@@ -81,6 +84,7 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
         classUnderTest.findAllTypes();
         Long competitionId = 2L;
         classUnderTest.create();
+        classUnderTest.updateCompetitionInitialDetails(competitionId, new CompetitionResource(), 7L);
         classUnderTest.createNonIfs();
         Long sectionId = 3L;
         classUnderTest.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
@@ -93,6 +97,7 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
         classUnderTest.findAllTypes();
         Long competitionId = 2L;
         classUnderTest.create();
+        classUnderTest.updateCompetitionInitialDetails(competitionId, new CompetitionResource(), 7L);
         classUnderTest.createNonIfs();
         Long sectionId = 3L;
         classUnderTest.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
@@ -112,6 +117,11 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
 
         @Override
         public ServiceResult<CompetitionResource> update(Long id, CompetitionResource competitionResource) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> updateCompetitionInitialDetails(Long competitionId, CompetitionResource competitionResource, Long existingLeadTechnologistId) {
             return null;
         }
 
