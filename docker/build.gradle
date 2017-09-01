@@ -5,4 +5,13 @@ subprojects {
     tag = "innovateuk/${project.name}"
     inputDir = project.projectDir
   }
+
+  // Required, because of how the java/spring plugins are applied to the root project.
+  build.enabled = false
+  bootRepackage.enabled = false
 }
+
+
+// Required, because of how the java/spring plugins are applied to the root project.
+build.enabled = false
+bootRepackage.enabled = false
