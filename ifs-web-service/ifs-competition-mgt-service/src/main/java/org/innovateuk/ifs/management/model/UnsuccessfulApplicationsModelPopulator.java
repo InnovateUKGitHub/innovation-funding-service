@@ -19,12 +19,8 @@ public class UnsuccessfulApplicationsModelPopulator {
 
     public UnsuccessfulApplicationsViewModel populateModel(long competitionId) {
 
-
-
         List<ApplicationResource> applicationResourceList = competitionService.findUnsuccessfulApplications(competitionId);
 
-        return new UnsuccessfulApplicationsViewModel(
-                9L
-        );
+        return new UnsuccessfulApplicationsViewModel(applicationResourceList);
     }
 }
