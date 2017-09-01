@@ -19,7 +19,7 @@ public class BenchmarkingEndpoint {
 
     @GetMapping("/isolated")
     public @ResponseBody
-    String isolated(@RequestParam("process_time_millis") long processTimeMillis) {
+    String isolated(@RequestParam(name = "process_time_millis", defaultValue = "100") long processTimeMillis) {
 
         return processForMillis(processTimeMillis, () -> Math.tanh(Math.random()), "isolated regapi benchmarking test");
     }

@@ -1,5 +1,9 @@
 package org.innovateuk.ifs.benchmark;
 
+import java.util.List;
+import java.util.Random;
+import java.util.stream.LongStream;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -10,10 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.List;
-import java.util.Random;
-import java.util.stream.LongStream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -29,13 +29,13 @@ public class BenchmarkController extends BaseRestService {
     private static final Random r = new Random();
 
     @GetMapping("/isolated")
-    public @ResponseBody String isolated(@RequestParam("process_time_millis") long processTimeMillis) {
+    public @ResponseBody String isolated(@RequestParam(name = "process_time_millis", defaultValue = "100") long processTimeMillis) {
         return processForMillis(processTimeMillis, () -> Math.tanh(Math.random()),"isolated web layer benchmarking test");
     }
 
     @GetMapping("/to-data-layer")
-    public @ResponseBody String toDataLayer(@RequestParam("process_time_millis") long processTimeMillis,
-                                            @RequestParam("data_layer_process_time_millis") long dataLayerProcessTimeMillis) {
+    public @ResponseBody String toDataLayer(@RequestParam(name = "process_time_millis", defaultValue = "100") long processTimeMillis,
+                                            @RequestParam(name = "data_layer_process_time_millis", defaultValue = "100") long dataLayerProcessTimeMillis) {
 
         long start = System.currentTimeMillis();
 
@@ -54,8 +54,8 @@ public class BenchmarkController extends BaseRestService {
     }
 
     @GetMapping("/to-data-layer-with-database")
-    public @ResponseBody String toDataLayerWithDatabase(@RequestParam("process_time_millis") long processTimeMillis,
-                                            @RequestParam("data_layer_process_time_millis") long dataLayerProcessTimeMillis) {
+    public @ResponseBody String toDataLayerWithDatabase(@RequestParam(name = "process_time_millis", defaultValue = "100") long processTimeMillis,
+                                            @RequestParam(name = "data_layer_process_time_millis", defaultValue = "100") long dataLayerProcessTimeMillis) {
 
         long start = System.currentTimeMillis();
 
@@ -74,8 +74,8 @@ public class BenchmarkController extends BaseRestService {
     }
 
     @GetMapping("/thymeleaf")
-    public String isolatedThymeleaf(@RequestParam("rows") long rows,
-        @RequestParam("cols") long cols,
+    public String isolatedThymeleaf(@RequestParam(name = "rows", defaultValue = "100") long rows,
+        @RequestParam(name = "cols", defaultValue = "100") long cols,
         Model model){
 
         model.addAttribute("table", generateTable(rows, cols));
