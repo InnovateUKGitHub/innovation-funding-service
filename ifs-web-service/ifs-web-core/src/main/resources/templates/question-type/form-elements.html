@@ -398,7 +398,7 @@
 <!-- ========================= Mark as complete buttons =========================== -->
 
 <th:block th:fragment="form-mark-as-complete-buttons (model)" th:with="formInput=${model.formInput}, question=${model.question}">
-    <th:block th:unless="${(appIsClosed or !currentCompetition.isOpen())}">
+    <th:block th:unless="${appIsClosed or !model.assignButtonsViewModel.currentCompetitionIsOpen}">
         <button th:if="${model.complete and !model.summary}"
                 type="submit"
                 name="mark_as_incomplete"
@@ -443,7 +443,7 @@
     <button class="buttonlink"
             type="submit"
             name="edit_question"
-            th:unless="${(appIsClosed or !currentCompetition.isOpen())}"
+            th:unless="${appIsClosed or !model.assignButtonsViewModel.currentCompetitionIsOpen}"
             th:value="${question.id}"
             th:attrappend="formaction='/application/'+${model.application.id}+'/form/question/edit/'+${question.id}"
             th:text="${model.summary ? 'Return and edit' : 'Edit'}" />
