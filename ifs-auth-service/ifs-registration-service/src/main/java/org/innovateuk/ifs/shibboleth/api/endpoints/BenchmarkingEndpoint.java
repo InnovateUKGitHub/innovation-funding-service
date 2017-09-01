@@ -12,11 +12,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * An endpoint that can be used for load testing purposes
  */
 @Controller
-@RequestMapping("/benchmark")
+@RequestMapping("/monitoring/benchmark")
 public class BenchmarkingEndpoint {
 
     private static final Log LOG = LogFactory.getLog(BenchmarkingEndpoint.class);
-
 
     @GetMapping("/isolated")
     public @ResponseBody
