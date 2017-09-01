@@ -80,7 +80,7 @@ Calculation of the Upcoming competitions and Invitations to assess should be cor
 
 Existing assessor: Reject invitation from Dashboard
     [Documentation]    INFUND-4631  INFUND-5157  INFUND-6455
-    [Tags]    HappyPath  Failing
+    [Tags]    HappyPath
     Given the user clicks the button/link                   link=${READY_TO_OPEN_COMPETITION_NAME}
     And the user should see the element                     jQuery=h1:contains("Invitation to assess '${READY_TO_OPEN_COMPETITION_NAME}'")
     And the user should not see the element                 id=rejectComment
@@ -169,7 +169,7 @@ Registered user should not allowed to accept other assessor invite
 
 The user should not be able to accept or reject the same applications
     [Documentation]    INFUND-5165
-    [Tags]  Failing
+    [Tags]
     Then the assessor shouldn't be able to accept the rejected competition
     And the assessor shouldn't be able to reject the rejected competition
     Then the assessor shouldn't be able to accept the accepted competition

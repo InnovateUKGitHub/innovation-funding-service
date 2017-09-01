@@ -82,8 +82,9 @@ Finances are editable (Ready to Open)
     [Documentation]  INFUND-6941
     # This test case fails when running the complete chunk vs suite, due to the finances textearea
     # being empty or not. I add the ${empty} in order to have empty textarea in both scenarios and check the validation messages
-    [Tags]
-    Given The user clicks the button/link        link=Finances
+    [Tags]  HappyPath
+    Given the user navigates to the page         ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/landing-page
+    When The user clicks the button/link         link=Finances
     And the user should see the element          jQuery=h1:contains("Application finances")
     When the user clicks the button/link         jQuery=a:contains("Edit this question")
     Then if textarea is empty the proper validation messages are shown
@@ -93,8 +94,8 @@ Finances are editable (Ready to Open)
 
 Eligibility is editable (Ready to Open)
     [Documentation]    INFUND-6792
-    [Tags]
-    When the user clicks the button/link   link=Eligibility
+    [Tags]  HappyPath
+    When the user clicks the button/link    link=Eligibility
     Then the user should see the element   jquery=h1:contains("Eligibility")
     And The user clicks the button/link    jQuery=button:contains(Edit)
     And the user selects the radio button  singleOrCollaborative  single
@@ -302,7 +303,8 @@ return the database to its previous status
 
 the user moves the competition back again
     the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}
-    Run Keyword And Ignore Error    the user clicks the button/link    jQuery=.button:contains("Save")
+    the user clicks the button/link    jQuery=.button:contains("Complete")
+    the user clicks the button/link    jQuery=.button:contains("Done")
     the user closes the browser
 
 the user fills in the milestone data with valid information
