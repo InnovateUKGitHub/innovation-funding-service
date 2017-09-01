@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.transactional;
 
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
@@ -47,6 +48,10 @@ public interface CompetitionService {
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionSearchResultItem>> findNonIfsCompetitions();
+
+    //@PostFilter("hasPermission(filterObject, 'READ')")
+    //TODO - Add security later
+    ServiceResult<List<ApplicationResource>> findUnsuccessfulApplications(Long competitionId);
 
     @SecuredBySpring(value = "SEARCH", description = "Only internal users can search for competitions")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")

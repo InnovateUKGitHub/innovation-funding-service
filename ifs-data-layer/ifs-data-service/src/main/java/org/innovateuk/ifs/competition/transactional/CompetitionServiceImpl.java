@@ -2,7 +2,11 @@ package org.innovateuk.ifs.competition.transactional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.mapper.ApplicationMapper;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.commons.error.Error;
@@ -19,6 +23,7 @@ import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.OrganisationTypeMapper;
@@ -26,6 +31,7 @@ import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,16 +41,21 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
+import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE_INFORMED;
+import static org.innovateuk.ifs.application.resource.ApplicationState.REJECTED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isSupport;
+import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -65,6 +76,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     private CompetitionParticipantRepository competitionParticipantRepository;
 
     @Autowired
+    private ApplicationRepository applicationRepository;
+
+    @Autowired
     private CompetitionMapper competitionMapper;
 
     @Autowired
@@ -72,6 +86,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private OrganisationTypeMapper organisationTypeMapper;
+
+    @Autowired
+    private ApplicationMapper applicationMapper;
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -179,6 +196,27 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<List<CompetitionSearchResultItem>> findNonIfsCompetitions() {
         List<Competition> competitions = competitionRepository.findNonIfs();
         return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
+    }
+
+    @Override
+    public ServiceResult<List<ApplicationResource>> findUnsuccessfulApplications(Long competitionId) {
+
+        Set<State> unsuccessfulStates = simpleMapSet(asLinkedSet(
+                ApplicationState.INELIGIBLE,
+                INELIGIBLE_INFORMED,
+                REJECTED), ApplicationState::getBackingState);
+
+        List<Application> unsuccessfulApplications = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, unsuccessfulStates);
+
+        return serviceSuccess(simpleMap(unsuccessfulApplications, application -> convertToApplicationResource(application)));
+    }
+
+    private ApplicationResource convertToApplicationResource(Application application) {
+
+        ApplicationResource applicationResource = applicationMapper.mapToResource(application);
+        Organisation leadOrganisation = organisationRepository.findOne(application.getLeadOrganisationId());
+        applicationResource.setLeadOrganisationName(leadOrganisation.getName());
+        return applicationResource;
     }
 
     @Override
