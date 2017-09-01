@@ -36,6 +36,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
   IDP_ENCRYPTION_KEY="@auth_idp_encryption_key@" \
   IDP_ENCRYPTION_CERTIFICATE="@auth_idp_encryption_certificate@" \
   LDAP_ENCRYPTION_CERTIFICATE="@auth_ldap_encryption_certificate@" \
+  JAVA_OPTS="-Xms384M -Xmx768M" \
   MEMCACHE_ENDPOINT=
 
 ENV JAVA_HOME=/usr/lib/jvm/java-${JAVAVER}-oracle
@@ -66,7 +67,6 @@ RUN mv /idp/idpproxy.conf /etc/apache2/sites-available/ && \
 # directory for certificates, added in entrypoint \
   mkdir /etc/tomcat8/certs && \
   mv /idp/server.xml /etc/tomcat8/ && \
-  mv /idp/tomcat8 /etc/default/tomcat8 && \
   mv /idp/ifs-registration-service-@version@.war /var/lib/tomcat8/webapps/shibboleth-api.war && \
   sed -i -e 's#%{idp.signing.key}#/opt/shibboleth-idp/credentials/idp-signing.key#g' \
          -e 's#%{idp.signing.cert}#/opt/shibboleth-idp/credentials/idp-signing.crt#g' \
@@ -82,9 +82,9 @@ RUN mv /idp/idpproxy.conf /etc/apache2/sites-available/ && \
   mkdir /var/log/shibboleth && rm -rf /opt/shibboleth-idp/logs && ln -s /var/log/shibboleth /opt/shibboleth-idp/logs && \
   mkdir -p /var/run/tomcat8 && \
   chown -R www-data:0 /etc/shibboleth /etc/apache2 /opt/shibboleth-idp /var/run/tomcat8 /usr/local/bin \
-                      /etc/tomcat8 /var/log/tomcat8 /var/lib/tomcat8 /usr/share/tomcat8 /var/cache/tomcat8 && \
+                      /etc/tomcat8 /var/log/tomcat8 /var/lib/tomcat8 /usr/share/tomcat8 /var/cache/tomcat8 "$JRE_HOME"/lib/security/cacerts && \
   chmod -R u=rwX,g=rwX,o= /etc/shibboleth /etc/apache2 /opt/shibboleth-idp /var/run/tomcat8 /usr/local/bin \
-                          /etc/tomcat8 /var/log/tomcat8 /var/lib/tomcat8 /usr/share/tomcat8 /var/cache/tomcat8 && \
+                          /etc/tomcat8 /var/log/tomcat8 /var/lib/tomcat8 /usr/share/tomcat8 /var/cache/tomcat8 "$JRE_HOME"/lib/security/cacerts && \
 
   rm -rf /idp /tmp/* /var/tmp/*
 
