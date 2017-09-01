@@ -5,6 +5,7 @@ import org.innovateuk.ifs.management.model.AllApplicationsPageModelPopulator;
 import org.innovateuk.ifs.management.model.ApplicationsMenuModelPopulator;
 import org.innovateuk.ifs.management.model.IneligibleApplicationsModelPopulator;
 import org.innovateuk.ifs.management.model.SubmittedApplicationsModelPopulator;
+import org.innovateuk.ifs.management.model.UnsuccessfulApplicationsModelPopulator;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,9 @@ public class CompetitionManagementApplicationsController {
 
     @Autowired
     private IneligibleApplicationsModelPopulator ineligibleApplicationsModelPopulator;
+
+    @Autowired
+    private UnsuccessfulApplicationsModelPopulator unsuccessfulApplicationsModelPopulator;
 
     @GetMapping
     public String applicationsMenu(Model model, @PathVariable("competitionId") long competitionId, UserResource user) {
@@ -90,5 +94,14 @@ public class CompetitionManagementApplicationsController {
         model.addAttribute("originQuery", originQuery);
 
         return "competition/ineligible-applications";
+    }
+
+    @GetMapping("/unsuccessful")
+    public String unsuccessfulApplications(Model model,
+                                           @PathVariable("competitionId") long competitionId,
+                                           UserResource loggedInUser) {
+
+        model.addAttribute("model", unsuccessfulApplicationsModelPopulator.populateModel(competitionId));
+        return "competition/unsuccessful-applications";
     }
 }
