@@ -1,3 +1,0 @@
-TOMCAT8_USER=tomcat8
-TOMCAT8_GROUP=tomcat8
-JAVA_OPTS="-Djava.awt.headless=true -Xms384M -Xmx768M -server -XX:+UseConcMarkSweepGC -Dspring.config.location=/etc/tomcat8/regapi.properties  -Djava.library.path=/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib:/usr/lib/x86_64-linux-gnu/"

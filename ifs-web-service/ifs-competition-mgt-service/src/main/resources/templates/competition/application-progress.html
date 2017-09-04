@@ -178,7 +178,7 @@
                 <form action="#" method="GET">
                     <fieldset>
                         <div class="grid-row">
-                            <div class="column-half">
+                            <div class="column-two-thirds">
                                 <div class="form-group">
                                     <label class="form-label" for="filterInnovationArea">Innovation area</label>
                                     <select th:field="${model.filterInnovationArea}"
@@ -195,16 +195,10 @@
                                         </optgroup>
                                     </select>
                                 </div>
+                                <a href="?">Clear all filters</a>
                             </div>
-                            <div class="column-half">
-                                <div class="column-half extra-margin">
-                                    <a href="?">Clear all filters</a>
-                                </div>
-                                <div class="column-half">
-                                    <div class="alignright">
-                                        <button class="button no-margin">Filter</button>
-                                    </div>
-                                </div>
+                            <div class="column-third">
+                                <button class="button">Filter</button>
                             </div>
                         </div>
                     </fieldset>
