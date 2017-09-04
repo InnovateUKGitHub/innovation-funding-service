@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelKeyStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.management.model.AssessmentPanelModelPopulator;
+import org.innovateuk.ifs.management.service.CompetitionAssessmentPanelService;
 import org.innovateuk.ifs.management.viewmodel.AssessmentPanelViewModel;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -27,6 +30,12 @@ public class CompetitionManagementAssessmentPanelControllerTest extends BaseCont
     @InjectMocks
     private AssessmentPanelModelPopulator assessmentPanelModelPopulator;
 
+    @Mock
+    private CompetitionAssessmentPanelService competitionAssessmentPanelService;
+
+    @Mock
+    private AssessmentPanelKeyStatisticsResource assessmentPanelKeyStatisticsResource;
+
     @Override
     protected CompetitionManagementAssessmentPanelController supplyControllerUnderTest() {
         return new CompetitionManagementAssessmentPanelController();
@@ -44,7 +53,13 @@ public class CompetitionManagementAssessmentPanelControllerTest extends BaseCont
                 .withCompetitionStatus(competitionStatus)
                 .build();
 
+        assessmentPanelKeyStatisticsResource.setApplicationsInPanel(1L);
+        assessmentPanelKeyStatisticsResource.setAssessorsInvited(2L);
+        assessmentPanelKeyStatisticsResource.setAssessorsAccepted(1L);
+
+
         when(competitionService.getById(competitionId)).thenReturn(competitionResource);
+        when(competitionAssessmentPanelService.getAssessmentPanelKeyStatistics(competitionId)).thenReturn(assessmentPanelKeyStatisticsResource);
 
         MvcResult result = mockMvc.perform(get("/assessment/panel/competition/{competitionId}", competitionId))
                 .andExpect(status().isOk())
