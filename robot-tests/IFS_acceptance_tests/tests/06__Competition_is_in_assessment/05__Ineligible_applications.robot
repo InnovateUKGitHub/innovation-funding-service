@@ -107,7 +107,7 @@ Inform a user their application is ineligible
     And the user enters text to a text field  id=subject  This is ineligible
     And the user enters text to a text field  id=message  Thank you for your application but this is ineligible
     And the user clicks the button/link       jQuery=button:contains("Send")
-    Then the user should see the element      jQuery=td:contains("${ineligibleApplication") ~ td span:contains("Informed")
+    Then the user should see the element      jQuery=td:contains("${ineligibleApplication}") ~ td span:contains("Informed")
 
 Applicant is informed that his application is not eligible
     [Documentation]  INFUND-7374
