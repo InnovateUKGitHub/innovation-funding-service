@@ -43,9 +43,9 @@ public class OrganisationInitialCreationServiceImpl extends BaseTransactionalSer
     @Transactional
     public ServiceResult<OrganisationResource> createOrMatch(final OrganisationResource organisationToCreate) {
         Optional<Organisation> matchedOrganisation = organisationMatchingService.findOrganisationMatch(organisationToCreate);
-        Organisation resultingOrganisation = null;
+        Organisation resultingOrganisation;
 
-        if(matchedOrganisation.isPresent()) {
+        if (matchedOrganisation.isPresent()) {
             resultingOrganisation = matchedOrganisation.get();
         } else {
             resultingOrganisation = createNewOrganisation(organisationToCreate);
@@ -62,7 +62,7 @@ public class OrganisationInitialCreationServiceImpl extends BaseTransactionalSer
         InviteOrganisation foundInviteOrganisation = invite.getInviteOrganisation();
         Organisation linkedOrganisation = invite.getInviteOrganisation().getOrganisation();
 
-        if(linkedOrganisation == null) {
+        if (linkedOrganisation == null) {
             linkedOrganisation = createOrganisationAndLinkToInviteOrganisation(organisationToCreate, foundInviteOrganisation);
         }
 
@@ -84,18 +84,6 @@ public class OrganisationInitialCreationServiceImpl extends BaseTransactionalSer
         //Add organisation to addresses to persist reference
         mappedOrganisation.getAddresses().stream().forEach(address -> address.setOrganisation(mappedOrganisation));
 
-        Organisation createdOrganisation = organisationRepository.save(mappedOrganisation);
-
-
-        //addInitialAddressesToOrganisation(organisationResource.getAddresses(), createdOrganisation);
-
-        return createdOrganisation;
+        return organisationRepository.save(mappedOrganisation);
     }
-
-    //private void addInitialAddressesToOrganisation(List<OrganisationAddressResource> addresses, Organisation organisation) {
-    //    addresses.stream()
-    //            .filter(address -> address.getAddressType().equals(AddressTypeEnum.OPERATING) ||
-    //                    address.getAddressType().equals(AddressTypeEnum.REGISTERED))
-    //            .forEach(address -> addAddress(organisation.getId(), AddressTypeEnum.valueOf(address.getAddressType().getName()), address.getAddress()));
-    //}
 }
