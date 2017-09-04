@@ -210,7 +210,8 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         APPLICATION_PROGRESS("/assessment/competition/{competitionId}/application/{applicationId}/assessors"),
         MANAGE_ASSESSMENTS("/assessment/competition/{competitionId}"),
         ASSESSOR_PROGRESS("/assessment/competition/{competitionId}/assessors/{assessorId}"),
-        PROJECT_SETUP_MANAGEMENT_STATUS("/project-setup-management/competition/{competitionId}/status");
+        PROJECT_SETUP_MANAGEMENT_STATUS("/project-setup-management/competition/{competitionId}/status"),
+        UNSUCCESSFUL_APPLICATIONS("/competition/{competitionId}/applications/unsuccessful");
 
         private String baseOriginUrl;
 
