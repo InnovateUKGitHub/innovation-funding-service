@@ -39,8 +39,8 @@ public class AssessmentPanelKeyStatisticsResourceBuilder
         return withArraySetFieldByReflection("assessorsAccepted", assessorsAccepted);
     }
 
-    public AssessmentPanelKeyStatisticsResourceBuilder withAssessorsInvited(Long ...assessorsInvited) {
-        return withArraySetFieldByReflection("assessorsInvited", assessorsInvited);
+    public AssessmentPanelKeyStatisticsResourceBuilder withAssessorsPending(Long ...assessorsPending) {
+        return withArraySetFieldByReflection("assessorsPending", assessorsPending);
     }
 
 }

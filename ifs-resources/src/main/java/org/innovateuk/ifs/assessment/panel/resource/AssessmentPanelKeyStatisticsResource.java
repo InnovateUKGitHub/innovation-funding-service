@@ -8,12 +8,12 @@ public class AssessmentPanelKeyStatisticsResource {
 
     private Long applicationsInPanel;
     private Long assessorsAccepted;
-    private Long assessorsInvited;
+    private Long assessorsPending;
 
-    public AssessmentPanelKeyStatisticsResource(Long applicationsInPanel, Long assessorsAccepted, Long assessorsInvited) {
+    public AssessmentPanelKeyStatisticsResource(Long applicationsInPanel, Long assessorsAccepted, Long assessorsPending) {
         this.applicationsInPanel = applicationsInPanel;
         this.assessorsAccepted = assessorsAccepted;
-        this.assessorsInvited = assessorsInvited;
+        this.assessorsPending = assessorsPending;
     }
 
     public AssessmentPanelKeyStatisticsResource() {
@@ -36,13 +36,11 @@ public class AssessmentPanelKeyStatisticsResource {
         this.assessorsAccepted = assessorsAccepted;
     }
 
-    public Long getAssessorsInvited() {
-        return assessorsInvited;
+    public Long getAssessorsPending() {
+        return assessorsPending;
     }
 
-    public void setAssessorsInvited(Long assessorsInvited) {
-        this.assessorsInvited = assessorsInvited;
-    }
+    public void setAssessorsPending(Long assessorsPending) { this.assessorsPending = assessorsPending; }
 
 
     @Override
@@ -56,14 +54,15 @@ public class AssessmentPanelKeyStatisticsResource {
             return false;
         if (assessorsAccepted != null ? !assessorsAccepted.equals(that.assessorsAccepted) : that.assessorsAccepted != null)
             return false;
-        return assessorsInvited != null ? assessorsInvited.equals(that.assessorsInvited) : that.assessorsInvited == null;
+        return assessorsPending != null ? assessorsPending.equals(that.assessorsPending) : that.assessorsPending == null;
     }
 
     @Override
     public int hashCode() {
         int result = applicationsInPanel != null ? applicationsInPanel.hashCode() : 0;
         result = 31 * result + (assessorsAccepted != null ? assessorsAccepted.hashCode() : 0);
-        result = 31 * result + (assessorsInvited != null ? assessorsInvited.hashCode() : 0);
+        result = 31 * result + (assessorsPending != null ? assessorsPending.hashCode() : 0);
         return result;
     }
 }
+

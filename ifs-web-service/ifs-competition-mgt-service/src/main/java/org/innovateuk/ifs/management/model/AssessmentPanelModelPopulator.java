@@ -31,7 +31,7 @@ public class AssessmentPanelModelPopulator {
                 competition.getName(),
                 competition.getCompetitionStatus(),
                 keyStatistics.getApplicationsInPanel(),
-                keyStatistics.getAssessorsInvited(),
+                keyStatistics.getAssessorsPending(),
                 keyStatistics.getAssessorsAccepted());
     }
 }
