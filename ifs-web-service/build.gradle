@@ -35,7 +35,13 @@ subprojects {
             }
         }
 
-        task prepareDockerFile {
+        /**
+         * This task creates a `docker` directory in the $BUILD/docker` directory of the project,
+         * where it will write all the necessary files to build a docker container.
+         * In other words, after this task is executed, one could manually run `docker build .`
+         * in the output directory.
+         */
+        task prepareDockerInput {
             dependsOn getNewRelicAgent
             dependsOn build
             def inputDir = project.file("$project.buildDir/docker")
@@ -67,7 +73,7 @@ subprojects {
         }
 
         task buildDocker(type: DockerBuildImage) {
-          dependsOn prepareDockerFile
+            dependsOn prepareDockerInput
             tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
             inputDir = project.file("$project.buildDir/docker")
         }
