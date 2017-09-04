@@ -87,7 +87,7 @@
     </h2>
     <div class="question">
         <div class="form-group">
-            <p th:text="${question.feedback}" />
+            <p data-md-to-html="" class="wysiwyg-styles" th:text="${question.feedback}" />
             <p><a th:href="@{/{id}/question/{quid}(id=${assessmentId}, quid=${question.questionId})}">Return to this question in the application</a></p>
             <p th:unless="${question.applicationInScope == null}" class="assessor-score alignright">
               <span class="score">In scope: <strong th:text="${question.applicationInScope} ? 'Yes' : 'No'" /></span>

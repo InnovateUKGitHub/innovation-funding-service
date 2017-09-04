@@ -45,6 +45,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.AssessorCountSummaryResourceBuilder.newAssessorCountSummaryResource;
+import static org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository.SORT_BY_FIRSTNAME;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -291,6 +292,78 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
 
         final AssessorCountSummaryResource expectedAssessmentCountSummaryResource = new AssessorCountSummaryResource(
                 users.get(0).getId(), users.get(0).getName(), profiles.get(0).getSkillsAreas(), 1L,1L, 0L, 0L);
+
+        assertEquals(expectedAssessmentCountSummaryResource, assessorCountSummaryResource);
+    }
+
+    @Test
+    public void getAssessorCountSummaryByCompetition_sortByFirstName() throws Exception {
+        long competitionId = 1L;
+
+        loginCompAdmin();
+        Competition competition = competitionRepository.findById(competitionId);
+
+        List<Profile> profiles = newProfile().with(id(null)).withSkillsAreas("Java Development").build(2);
+        profileRepository.save(profiles);
+
+        List<User> users = newUser()
+                .with(id(null))
+                .withFirstName("Tom", "Cari")
+                .withLastName("Baldwin", "Morton")
+                .withProfileId(profiles.stream().map(Profile::getId).toArray(Long[]::new))
+                .withUid("f6b9ddeb-f169-4ac4-b606-90cb877ce8c8")
+                .build(2);
+        userRepository.save(users);
+
+        List<CompetitionParticipant> competitionParticipants = newCompetitionParticipant()
+                .with(id(null))
+                .withUser(users.toArray(new User[users.size()]))
+                .withCompetition(competition)
+                .withStatus(ParticipantStatus.ACCEPTED)
+                .withRole(CompetitionParticipantRole.ASSESSOR)
+                .build(2);
+        competitionParticipantRepository.save(competitionParticipants);
+
+        Application application = newApplication().withCompetition(competition).with(id(null)).build();
+        applicationRepository.save(application);
+
+        ProcessRole processRole = newProcessRole()
+                .with(id(null))
+                .withRole(ASSESSOR)
+                .withApplication(application)
+                .withUser(users.get(0))
+                .build();
+
+        processRoleRepository.save(processRole);
+
+        Assessment assessment = newAssessment()
+                .with(id(null))
+                .withApplication(application)
+                .withParticipant(processRole)
+                .withActivityState(assessmentState(PENDING))
+                .build();
+
+        assessmentRepository.save(assessment);
+
+        flushAndClearSession();
+
+        final int pageSize = 10;
+        final int pageNumber = 0;
+        Pageable pageable = new PageRequest(pageNumber, pageSize, SORT_BY_FIRSTNAME);
+
+        Page<AssessorCountSummaryResource> statisticsPage =
+                repository.getAssessorCountSummaryByCompetition(competitionId, Optional.empty(), Optional.empty(), pageable);
+
+        assertEquals(2, statisticsPage.getTotalElements());
+        assertEquals(1, statisticsPage.getTotalPages());
+        assertEquals(pageSize, statisticsPage.getSize());
+        assertEquals(pageNumber, statisticsPage.getNumber());
+        assertEquals(2, statisticsPage.getNumberOfElements());
+
+        final AssessorCountSummaryResource assessorCountSummaryResource = statisticsPage.getContent().get(0);
+
+        final AssessorCountSummaryResource expectedAssessmentCountSummaryResource = new AssessorCountSummaryResource(
+                users.get(1).getId(), users.get(1).getName(), profiles.get(1).getSkillsAreas(), 0L,0L, 0L, 0L);
 
         assertEquals(expectedAssessmentCountSummaryResource, assessorCountSummaryResource);
     }

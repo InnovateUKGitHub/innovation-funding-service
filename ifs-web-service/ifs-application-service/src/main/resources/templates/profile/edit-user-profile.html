@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-  <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your details',hasFormErrors=${#fields.hasErrors('${userDetailsForm.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your details'" />
 </head>
 <body th:with="context='applicant'" class="user-profile-edit">
 
@@ -13,82 +13,89 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Profile',linkClass='link-back',linkUrl=@{/profile/view}" />
 
-    <div th:if="${#fields.hasErrors('${userDetailsForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes</h2>
-        <th:block th:insert="fragments/elements :: error-summary-list(userDetailsForm)" />
+    <div class="error-summary" th:if="${#fields.hasErrors('${userDetailsForm.*}')}">
+        <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
+        <ul class="error-summary-list">
+            <li th:each="err : ${#fields.errors('${userDetailsForm.*}')}" th:text="${err}"></li>
+        </ul>
     </div>
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your details',size='heading-xlarge'" />
-
-    <form th:action="${userDetailsForm.getActionUrl()}" method="post" th:object="${userDetailsForm}" novalidate="novalidate">
-        <div class="form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'form-group-error'">
-            <label class="form-label" for="firstName">
-                <span class="form-label-bold">First name</span>
-                <th:block th:if="${#fields.hasErrors('firstName')}">
-                      <span class="error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
-                </th:block>
-            </label>
-            <input class="form-control"
-                   th:errorclass="form-control-error"
-                   type="text"
-                   th:field="*{firstName}"
-                   required="required"
-                   minlength="2"
-                   maxlength="70"
-                   th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)},
-                            data-maxlength-errormessage=#{validation.standard.firstname.length.max},
-                            data-required-errormessage=#{validation.standard.firstname.required},
-                            data-invalid-errormessage=#{validation.standard.firstname.invalid}" />
-        </div>
-        <div class="form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'form-group-error'">
-            <label class="form-label" for="lastName">
-                <span class="form-label-bold">Last name</span>
-                <th:block th:if="${#fields.hasErrors('lastName')}">
-                      <span class="error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
-                </th:block>
-            </label>
-            <input class="form-control"
-                   th:errorclass="form-control-error"
-                   type="text"
-                   th:field="*{lastName}"
-                   required="required"
-                   minlength="2"
-                   maxlength="70"
-                   th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)},
-                            data-maxlength-errormessage=#{validation.standard.lastname.length.max},
-                            data-required-errormessage=#{validation.standard.lastname.required},
-                            data-invalid-errormessage=#{validation.standard.lastname.invalid}" />
-        </div>
-        <div class="form-group" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'form-group-error'">
-            <label class="form-label" for="phoneNumber">
-                <span class="form-label-bold">Phone number</span>
-                <span class="form-hint">We may use this to contact you about the application</span>
-                <th:block th:if="${#fields.hasErrors('phoneNumber')}">
-                    <span class="error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
-                </th:block>
-            </label>
-            <input class="form-control"
-                   type="tel"
-                   th:errorclass="form-control-error"
-                   th:field="*{phoneNumber}"
-                   minlength="8"
-                   maxlength="20"
-                   required="required"
-                   th:attr="data-minlength-errormessage=#{validation.standard.phonenumber.length.min(null,null,8)},
-                            data-maxlength-errormessage=#{validation.standard.phonenumber.length.max(20)},
-                            data-required-errormessage=#{validation.standard.phonenumber.required}" />
-        </div>
-        <div class="form-group">
-            <h3 class="heading-small">Email</h3>
-            <p class="form-hint">Your email address cannot be changed in the system <br /><strong th:text="*{email}" /></p>
-        </div>
-        <p>To change your email address please contact Innovate UK by emailing <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a></p>
-        <div class="form-group" th:classappend="${#fields.hasErrors('allowMarketingEmails')} ? 'form-group-error'">
-            <div class="multiple-choice">
-                <input th:field="*{allowMarketingEmails}" type="checkbox" value="yes"/>
-                <label th:for="${#ids.prev('allowMarketingEmails')}">Email me competition updates, events, deadlines and announcements.</label>
+    <form th:action="${userDetailsForm.getActionUrl()}" method="post" th:object="${userDetailsForm}">
+        <fieldset>
+            <legend class="visuallyhidden">Your details</legend>
+            <div class="form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'form-group-error'">
+                <label class="form-label" for="firstName">
+                    <span class="form-label-bold">First name</span>
+                    <th:block th:if="${#fields.hasErrors('firstName')}">
+                          <span class="error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
+                    </th:block>
+                </label>
+                <input class="form-control"
+                       id="firstName"
+                       th:errorclass="form-control-error"
+                       type="text"
+                       th:field="*{firstName}"
+                       required="required"
+                       minlength="2"
+                       maxlength="70"
+                       th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)},
+                                data-maxlength-errormessage=#{validation.standard.firstname.length.max},
+                                data-required-errormessage=#{validation.standard.firstname.required},
+                                data-invalid-errormessage=#{validation.standard.firstname.invalid}" />
             </div>
-        </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'form-group-error'">
+                <label class="form-label" for="lastName">
+                    <span class="form-label-bold">Last name</span>
+                    <th:block th:if="${#fields.hasErrors('lastName')}">
+                          <span class="error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
+                    </th:block>
+                </label>
+                <input class="form-control"
+                       id="lastName"
+                       th:errorclass="form-control-error"
+                       type="text"
+                       th:field="*{lastName}"
+                       required="required"
+                       minlength="2"
+                       maxlength="70"
+                       th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)},
+                                data-maxlength-errormessage=#{validation.standard.lastname.length.max},
+                                data-required-errormessage=#{validation.standard.lastname.required},
+                                data-invalid-errormessage=#{validation.standard.lastname.invalid}" />
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'form-group-error'">
+                <label class="form-label" for="phoneNumber">
+                    <span class="form-label-bold">Phone number</span>
+                    <span class="form-hint">We may use this to contact you about the application</span>
+                    <th:block th:if="${#fields.hasErrors('phoneNumber')}">
+                        <span class="error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
+                    </th:block>
+                </label>
+                <input class="form-control"
+                       id="phoneNumber"
+                       type="tel"
+                       th:errorclass="form-control-error"
+                       th:field="*{phoneNumber}"
+                       minlength="8"
+                       maxlength="20"
+                       required="required"
+                       th:attr="data-minlength-errormessage=#{validation.standard.phonenumber.length.min(null,null,8)},
+                                data-maxlength-errormessage=#{validation.standard.phonenumber.length.max(20)},
+                                data-required-errormessage=#{validation.standard.phonenumber.required}" />
+            </div>
+            <div class="form-group">
+                <h3 class="heading-small">Email</h3>
+                <p class="form-hint">Your email address cannot be changed in the system <br /><strong th:text="*{email}" /></p>
+            </div>
+            <p>To change your email address please contact Innovate UK by emailing <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a></p>
+            <div class="form-group" th:classappend="${#fields.hasErrors('allowMarketingEmails')} ? 'form-group-error'">
+                <div class="multiple-choice">
+                    <input id="allow-marketing-emails" th:field="*{allowMarketingEmails}" type="checkbox" value="yes"/>
+                    <label for="allow-marketing-emails">Email me competition updates, events, deadlines and announcements.</label>
+                </div>
+            </div>
+        </fieldset>
         <button class="button button-large extra-margin" name="create-account" type="submit">Save changes</button>
     </form>
     <th:block th:insert="fragments/layout :: main-content-end" />
