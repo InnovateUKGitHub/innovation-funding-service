@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.junit.Test;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -47,7 +48,7 @@ public class AssessorCountSummaryServiceImplTest extends BaseServiceUnitTest<Ass
         when(page.getSize()).thenReturn(pageSize);
 
         when(applicationStatisticsRepositoryMock.getAssessorCountSummaryByCompetition(
-                eq(competitionId), eq(innovationSectorId), eq(businessType), argThat(new PageableMatcher(pageNumber, pageSize)))
+                eq(competitionId), eq(innovationSectorId), eq(businessType), argThat(new PageableMatcher(pageNumber, pageSize, PageableMatcher.srt("firstName", Sort.Direction.ASC))))
         ).thenReturn(page);
 
         final AssessorCountSummaryPageResource expectedPageResource =
