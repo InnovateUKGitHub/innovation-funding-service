@@ -37,7 +37,7 @@
                 </td>
                 <td th:text="${row.name}">Automated Project Title generator</td>
                 <td th:text="${row.leadOrganisationName}">B.Systems</td>
-                <td th:text="${row.applicationState.getStateName()}">Not funded</td>
+                <td th:text="${#messages.msg('ifs.application.unsuccessful.' + row.applicationState.getStateName())}">Not funded</td>
             </tr>
             </tbody>
         </table>
