@@ -1,5 +1,9 @@
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 
+// This is necessary because the java plugin is also applied to
+// the ifs-data-layer project, which does _not_ build a jar.
+bootRepackage.enabled = false
+
 subprojects {
 
     ext.ifsWebSystemUserId="8394d970-b250-4b15-9621-3534325691b4"
