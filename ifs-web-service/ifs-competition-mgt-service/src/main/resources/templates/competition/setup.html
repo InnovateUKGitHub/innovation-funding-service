@@ -5,6 +5,8 @@
 </head>
 <body th:with="context='comp-management'" class="competition-management competition-setup">
 
+<th:block th:insert="fragments/modals :: modal-overlay" />
+<th:block th:insert="fragments/competition-setup :: comp-setup-complete-modal" />
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 

@@ -1,4 +1,4 @@
-=== Retrieve application by id
+=== Retrieve competition by id
 ==== Request
 include::{snippets}/competition/find-one/http-request.adoc[]
 include::{snippets}/competition/find-one/path-parameters.adoc[]
@@ -10,7 +10,7 @@ include::{snippets}/competition/find-one/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/competition/find-one/curl-request.adoc[]
 
-=== Retrieve all applications
+=== Retrieve all competitions
 ==== Request
 include::{snippets}/competition/find-all/http-request.adoc[]
 
@@ -20,6 +20,17 @@ include::{snippets}/competition/find-all/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/competition/find-all/curl-request.adoc[]
+
+=== Retrieve all competitions for the userId
+==== Request
+include::{snippets}/competition/get-competitions-by-user-id/http-request.adoc[]
+
+==== Response
+include::{snippets}/competition/get-competitions-by-user-id/http-response.adoc[]
+include::{snippets}/competition/get-competitions-by-user-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/get-competitions-by-user-id/curl-request.adoc[]
 
 === Mark Competition Setup Section as Complete
 ==== Request
@@ -66,6 +77,18 @@ include::{snippets}/competition/close-assessment/http-response.adoc[]
 ==== Curl Example
 include::{snippets}/competition/close-assessment/curl-request.adoc[]
 
+=== Update Competition Initial Details
+==== Request
+include::{snippets}/competition/update-competition-initial-details/http-request.adoc[]
+include::{snippets}/competition/update-competition-initial-details/path-parameters.adoc[]
+include::{snippets}/competition/update-competition-initial-details/request-fields.adoc[]
+
+==== Response
+include::{snippets}/competition/update-competition-initial-details/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/update-competition-initial-details/curl-request.adoc[]
+
 === Notify applicants of feedback released
 ==== Request
 include::{snippets}/competition/release-feedback/http-request.adoc[]
@@ -76,3 +99,36 @@ include::{snippets}/competition/release-feedback/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/competition/release-feedback/curl-request.adoc[]
+
+=== Find innovation leads
+==== Request
+include::{snippets}/competition/find-innovation-leads/http-request.adoc[]
+include::{snippets}/competition/find-innovation-leads/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition/find-innovation-leads/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/find-innovation-leads/curl-request.adoc[]
+
+=== Add Innovation Lead
+==== Request
+include::{snippets}/competition/add-innovation-lead/http-request.adoc[]
+include::{snippets}/competition/add-innovation-lead/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition/add-innovation-lead/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/add-innovation-lead/curl-request.adoc[]
+
+=== Remove Innovation Lead
+==== Request
+include::{snippets}/competition/remove-innovation-lead/http-request.adoc[]
+include::{snippets}/competition/remove-innovation-lead/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition/remove-innovation-lead/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/remove-innovation-lead/curl-request.adoc[]

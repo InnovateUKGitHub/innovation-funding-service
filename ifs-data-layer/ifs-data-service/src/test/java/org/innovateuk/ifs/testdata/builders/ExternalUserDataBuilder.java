@@ -22,11 +22,6 @@ public class ExternalUserDataBuilder extends BaseUserDataBuilder<ExternalUserDat
         return with(data -> registerUser(firstName, lastName, emailAddress, organisationName, phoneNumber, singletonList(UserRoleType.APPLICANT), data));
     }
 
-    @Override
-    public ExternalUserDataBuilder createUserDirectly(String firstName, String lastName, String emailAddress, String organisationName, String phoneNumber, boolean emailVerified) {
-        throw new UnsupportedOperationException("Unable to currently get external users directly onto the system");
-    }
-
     public static ExternalUserDataBuilder newExternalUserData(ServiceLocator serviceLocator) {
         return new ExternalUserDataBuilder(emptyList(), serviceLocator);
     }

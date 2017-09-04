@@ -14,10 +14,11 @@
 <main id="content">
   <th:block th:insert="fragments/layout :: main-content-start" />
 
-  <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Invite to panel'}, ${'/prototypes/IFS-707-manage-assessors?tab=invite'})" />
+  <th:block th:unless="${param.status != null and param.status[0] == 'resendInvites'}" th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Invite assessors to attend'}, ${'/prototypes/IFS-707-manage-assessors?tab=invite'})" />
+  <th:block th:if="${param.status != null and param.status[0] == 'resendInvites'}" th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Overview of invited assessors'}, ${'/prototypes/IFS-707-manage-assessors?tab=overview'})" />
 
 
-	<!-- HARDCODED PROTOTYPE HTML -->
+    <!-- HARDCODED PROTOTYPE HTML -->
 
   <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'68: Technology inspired, competition closed'}, ${'Invite assessors to panel'}, ${null})" />
 
@@ -36,8 +37,6 @@ Dear [recipient name]
 We are inviting you to the assessment panel for the competition 'Technology inspired'.
 
 We recognise your expertise and would greatly appreciate your comments on the scientific / business merit of the applications assigned to the panel assessment.
-
-Assessment period: 1 September 2016 to 1 October 2019
 
 Please visit our online Innovation Funding Service to respond to this request: [invite URL]
 

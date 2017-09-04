@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,8 +15,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.EnumSet;
+import java.util.Optional;
 import java.util.Set;
 
+import static org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository.SORT_BY_FIRSTNAME;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
@@ -34,11 +37,11 @@ public class AssessorCountSummaryServiceImpl extends BaseTransactionalService im
     private ApplicationStatisticsRepository applicationStatisticsRepository;
 
     @Override
-    public ServiceResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionId(long competitionId, int pageIndex, int pageSize) {
+    public ServiceResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionId(long competitionId, Optional<Long> innovationSector, Optional<BusinessType> businessType, int pageIndex, int pageSize) {
 
-        Pageable pageable = new PageRequest(pageIndex, pageSize);
+        Pageable pageable = new PageRequest(pageIndex, pageSize, SORT_BY_FIRSTNAME);
         Page<AssessorCountSummaryResource> assessorStatistics =
-                applicationStatisticsRepository.getAssessorCountSummaryByCompetition(competitionId, pageable);
+                applicationStatisticsRepository.getAssessorCountSummaryByCompetition(competitionId, innovationSector, businessType, pageable);
 
         return find(assessorStatistics, notFoundError(Page.class)).andOnSuccessReturn(stats -> new AssessorCountSummaryPageResource(
                 assessorStatistics.getTotalElements(),

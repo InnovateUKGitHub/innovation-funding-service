@@ -1,18 +1,13 @@
 package org.innovateuk.ifs.testdata;
 
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
-import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.junit.Ignore;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Generates web test data based upon csvs in /src/test/resources/testdata using data builders
  */
 @Ignore
 public class GenerateTestData extends BaseGenerateTestData {
-
-    @Autowired
-    private PublicContentRepository publicContentRepository;
 
     @Override
     protected boolean cleanDbFirst() {

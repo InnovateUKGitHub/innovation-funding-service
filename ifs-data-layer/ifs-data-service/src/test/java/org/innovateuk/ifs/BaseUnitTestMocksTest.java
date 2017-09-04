@@ -37,6 +37,7 @@ import org.innovateuk.ifs.competition.repository.CompetitionFunderRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.transactional.CompetitionKeyStatisticsService;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
+import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
@@ -201,12 +202,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ProfileRepository profileRepositoryMock;
 
     @Mock
-    protected CompAdminEmailRepository compAdminEmailRepositoryMock;
-
-    @Mock
-    protected ProjectFinanceEmailRepository projectFinanceEmailRepositoryMock;
-
-    @Mock
     protected RoleRepository roleRepositoryMock;
 
     @Mock
@@ -223,6 +218,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected CompetitionService competitionServiceMock;
+
+    @Mock
+    protected CompetitionSetupService competitionSetupServiceMock;
 
     @Mock
     protected CompetitionKeyStatisticsService competitionKeyStatisticsServiceMock;
