@@ -3,13 +3,21 @@ package org.innovateuk.ifs.competition.transactional;
 import com.google.common.collect.Lists;
 import org.assertj.core.util.Sets;
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder;
+import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
+import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
+import org.innovateuk.ifs.user.builder.UserBuilder;
+import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
@@ -46,6 +54,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionServiceImpl> {
@@ -80,6 +89,83 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
+    public void findInnovationLeads() throws Exception {
+        Long competitionId = 1L;
+
+        User user = UserBuilder.newUser().build();
+        UserResource userResource = UserResourceBuilder.newUserResource().build();
+        List<CompetitionParticipant> competitionParticipants = CompetitionParticipantBuilder.newCompetitionParticipant()
+                .withUser(user)
+                .build(4);
+
+        when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(competitionParticipants);
+        when(userMapperMock.mapToResource(user)).thenReturn(userResource);
+        List<UserResource> result = service.findInnovationLeads(competitionId).getSuccessObjectOrThrowException();
+
+        assertEquals(4, result.size());
+        assertEquals(userResource, result.get(0));
+    }
+
+    @Test
+    public void addInnovationLeadWhenCompetitionNotFound() throws Exception {
+        Long competitionId = 1L;
+        Long innovationLeadUserId = 2L;
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(null);
+        ServiceResult<Void> result = service.addInnovationLead(competitionId, innovationLeadUserId);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonErrors.notFoundError(Competition.class, competitionId)));
+    }
+
+    @Test
+    public void addInnovationLead() throws Exception {
+        Long competitionId = 1L;
+        Long innovationLeadUserId = 2L;
+
+        Competition competition = CompetitionBuilder.newCompetition().build();
+        User innovationLead = UserBuilder.newUser().build();
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
+        when(userRepositoryMock.findOne(innovationLeadUserId)).thenReturn(innovationLead);
+        ServiceResult<Void> result = service.addInnovationLead(competitionId, innovationLeadUserId);
+        assertTrue(result.isSuccess());
+
+        CompetitionParticipant savedCompetitionParticipant = new CompetitionParticipant();
+        savedCompetitionParticipant.setProcess(competition);
+        savedCompetitionParticipant.setUser(innovationLead);
+        savedCompetitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
+        savedCompetitionParticipant.setStatus(ParticipantStatus.ACCEPTED);
+
+        // Verify that the correct CompetitionParticipant is saved
+        verify(competitionParticipantRepositoryMock).save(savedCompetitionParticipant);
+    }
+
+    @Test
+    public void removeInnovationLeadWhenCompetitionParticipantNotFound() throws Exception {
+        Long competitionId = 1L;
+        Long innovationLeadUserId = 2L;
+
+        when(competitionParticipantRepositoryMock.getByCompetitionIdAndUserIdAndRole(competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD))
+                .thenReturn(null);
+        ServiceResult<Void> result = service.removeInnovationLead(competitionId, innovationLeadUserId);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonErrors.notFoundError(CompetitionParticipant.class, competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD)));
+    }
+
+    @Test
+    public void removeInnovationLead() throws Exception {
+        Long competitionId = 1L;
+        Long innovationLeadUserId = 2L;
+
+        CompetitionParticipant competitionParticipant = CompetitionParticipantBuilder.newCompetitionParticipant().build();
+        when(competitionParticipantRepositoryMock.getByCompetitionIdAndUserIdAndRole(competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD))
+                .thenReturn(competitionParticipant);
+
+        ServiceResult<Void> result = service.removeInnovationLead(competitionId, innovationLeadUserId);
+        assertTrue(result.isSuccess());
+
+        //Verify that the entity is deleted
+        verify(competitionParticipantRepositoryMock).delete(competitionParticipant);
+    }
+
     public void getCompetitionsByUserId() throws Exception {
         List<Competition> competitions = Lists.newArrayList(new Competition());
         List<CompetitionResource> resources = Lists.newArrayList(new CompetitionResource());

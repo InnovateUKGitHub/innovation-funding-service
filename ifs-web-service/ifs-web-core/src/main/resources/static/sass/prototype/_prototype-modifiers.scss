@@ -545,3 +545,10 @@ ul.underline{
     padding-left: 20px;
   }
 }
+
+.column-one{
+  &.select-all{
+    padding-left: 20px;
+    padding-bottom: 15px;
+  }
+}

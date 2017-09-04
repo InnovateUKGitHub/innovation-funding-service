@@ -43,7 +43,7 @@ Guest user can see Competitions and their information
 Guest user can see the opening and closing status of competitions
     [Documentation]  IFS-268
     [Tags]    MySQL
-    [Setup]    Connect to Database    @{database}
+    [Setup]  Connect to Database  @{database}
     Then Change the open date of the Competition in the database to tomorrow   ${READY_TO_OPEN_COMPETITION_NAME}
     Given the user navigates to the page  ${frontDoor}
     Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Opening soon    Opens
@@ -77,8 +77,8 @@ Guest user can see the public information of an unopened competition
     [Documentation]    INFUND-8714
     [Tags]
     [Setup]    the user navigates to the page    ${frontDoor}
-    Given the user clicks the button/link    link=Photonics for health
-    Then the user should see the element    jQuery=h1:contains("Photonics for health")
+    Given the user clicks the button/link    link=${READY_TO_OPEN_COMPETITION_NAME}
+    Then the user should see the element    jQuery=h1:contains("${READY_TO_OPEN_COMPETITION_NAME}")
     And the user should see the element    jQuery=strong:contains("Competition opens") + span:contains("Saturday 24 February 2018")
     And the user should see the element    jQuery=li:contains("Competition closes")
     And the user should see the element    jQuery=li:contains("Friday 16 March 2018")

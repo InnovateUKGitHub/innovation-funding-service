@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competition.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -23,9 +24,13 @@ public interface CompetitionsRestService {
     RestResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size);
     RestResult<CompetitionCountResource> countCompetitions();
     RestResult<CompetitionResource> getCompetitionById(long competitionId);
+    RestResult<List<UserResource>> findInnovationLeads(long competitionId);
+    RestResult<Void> addInnovationLead(long competitionId, long innovationLeadUserId);
+    RestResult<Void> removeInnovationLead(long competitionId, long innovationLeadUserId);
     RestResult<CompetitionResource> getPublishedCompetitionById(long competitionId);
     RestResult<List<CompetitionTypeResource>> getCompetitionTypes();
     RestResult<Void> update(CompetitionResource competition);
+    RestResult<Void> updateCompetitionInitialDetails(CompetitionResource competition);
     RestResult<CompetitionResource> create();
     RestResult<Void> markSectionComplete(long competitionId, CompetitionSetupSection section);
     RestResult<Void> markSectionInComplete(long competitionId, CompetitionSetupSection section);

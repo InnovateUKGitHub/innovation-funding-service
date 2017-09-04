@@ -4,6 +4,7 @@ package org.innovateuk.ifs.competition.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -29,8 +30,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
 
     @Override
     protected CompetitionsRestServiceImpl registerRestServiceUnderTest() {
-        CompetitionsRestServiceImpl competitionService = new CompetitionsRestServiceImpl();
-        return competitionService;
+        return new CompetitionsRestServiceImpl();
     }
 
     @Test
@@ -56,6 +56,37 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     }
 
     @Test
+    public void findInnovationLeads() {
+
+        List<UserResource> returnedResponse = asList(new UserResource(), new UserResource());
+
+        setupGetWithRestResultExpectations(competitionsRestURL + "/123" + "/innovation-leads", userListType(), returnedResponse);
+
+        List<UserResource> response = service.findInnovationLeads(123L).getSuccessObject();
+        assertNotNull(response);
+        Assert.assertEquals(returnedResponse, response);
+    }
+
+    @Test
+    public void addInnovationLead() {
+
+        setupPostWithRestResultExpectations(competitionsRestURL + "/123" + "/add-innovation-lead" + "/234", HttpStatus.OK);
+
+        RestResult<Void> response = service.addInnovationLead(123L, 234L);
+        assertTrue(response.isSuccess());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void removeInnovationLead() {
+
+        setupPostWithRestResultExpectations(competitionsRestURL + "/123" + "/remove-innovation-lead" + "/234", HttpStatus.OK);
+
+        RestResult<Void> response = service.removeInnovationLead(123L, 234L);
+        assertTrue(response.isSuccess());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
     public void getCompetitionsByUserId() {
         final Long userId = 123L;
         List<CompetitionResource> returnedResponse = newCompetitionResource().build(2);
@@ -66,7 +97,6 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
         assertNotNull(responses);
         assertEquals(returnedResponse, responses);
     }
-
 
     @Test
     public void getCompetitionTypes() {
@@ -111,6 +141,19 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
         setupPutWithRestResultExpectations(competitionsRestURL + "/" + competition.getId(), Void.class, competition, null, HttpStatus.OK);
 
         service.update(competition).getSuccessObject();
+    }
+
+    @Test
+    public void updateCompetitionInitialDetails() {
+
+        CompetitionResource competition = new CompetitionResource();
+        competition.setId(1L);
+
+        setupPutWithRestResultExpectations(competitionsRestURL + "/" + competition.getId() + "/update-competition-initial-details", Void.class, competition, null, HttpStatus.OK);
+
+        RestResult<Void> response = service.updateCompetitionInitialDetails(competition);
+        assertTrue(response.isSuccess());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
