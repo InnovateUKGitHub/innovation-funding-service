@@ -3,6 +3,10 @@ package org.innovateuk.ifs.competition.transactional;
 import com.google.common.collect.Lists;
 import org.assertj.core.util.Sets;
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.application.builder.ApplicationBuilder;
+import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.Error;
@@ -16,9 +20,13 @@ import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
+import org.innovateuk.ifs.user.builder.OrganisationBuilder;
+import org.innovateuk.ifs.user.builder.ProcessRoleBuilder;
 import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
+import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.OrganisationType;
+import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -29,10 +37,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
@@ -48,11 +58,13 @@ import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResourc
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.user.resource.UserRoleType.SUPPORT;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -235,6 +247,68 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         List<CompetitionSearchResultItem> response = service.findNonIfsCompetitions().getSuccessObjectOrThrowException();
 
         assertCompetitionSearchResultsEqualToCompetitions(competitions, response);
+    }
+
+    @Test
+    public void findUnsuccessfulApplicationsWhenNoneFound() throws Exception {
+
+        Long competitionId = 1L;
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateIn(eq(competitionId), any())).thenReturn(emptyList());
+
+        ServiceResult<List<ApplicationResource>> result = service.findUnsuccessfulApplications(competitionId);
+        assertTrue(result.isSuccess());
+
+        List<ApplicationResource> unsuccessfulApplications = result.getSuccessObjectOrThrowException();
+        assertTrue(unsuccessfulApplications.isEmpty());
+
+    }
+
+    @Test
+    public void findUnsuccessfulApplications() throws Exception {
+
+        Long competitionId = 1L;
+
+        Long leadOrganisationId = 7L;
+        String leadOrganisationName = "lead Organisation name";
+        Organisation leadOrganisation = OrganisationBuilder.newOrganisation()
+                .withId(leadOrganisationId)
+                .withName(leadOrganisationName)
+                .build();
+
+        ProcessRole leadProcessRole = ProcessRoleBuilder.newProcessRole()
+                .withRole(LEADAPPLICANT)
+                .withOrganisationId(leadOrganisationId)
+                .build();
+
+        Application application1 = ApplicationBuilder.newApplication()
+                .withId(11L)
+                .withProcessRoles(leadProcessRole)
+                .build();
+        Application application2 = ApplicationBuilder.newApplication()
+                .withId(12L)
+                .withProcessRoles(leadProcessRole)
+                .build();
+
+        List<Application> unsuccessfulApplications = new ArrayList<>();
+        unsuccessfulApplications.add(application1);
+        unsuccessfulApplications.add(application2);
+
+        ApplicationResource applicationResource1 = ApplicationResourceBuilder.newApplicationResource().build();
+        ApplicationResource applicationResource2 = ApplicationResourceBuilder.newApplicationResource().build();
+
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateIn(eq(competitionId), any())).thenReturn(unsuccessfulApplications);
+        when(applicationMapperMock.mapToResource(application1)).thenReturn(applicationResource1);
+        when(applicationMapperMock.mapToResource(application2)).thenReturn(applicationResource2);
+        when(organisationRepositoryMock.findOne(leadOrganisationId)).thenReturn(leadOrganisation);
+
+        ServiceResult<List<ApplicationResource>> result = service.findUnsuccessfulApplications(competitionId);
+        assertTrue(result.isSuccess());
+
+        List<ApplicationResource> unsuccessfulApplicationsResult = result.getSuccessObjectOrThrowException();
+        assertTrue(unsuccessfulApplicationsResult.size() == 2);
+        assertEquals(applicationResource1, unsuccessfulApplicationsResult.get(0));
+        assertEquals(applicationResource2, unsuccessfulApplicationsResult.get(1));
+        assertEquals(leadOrganisationName, unsuccessfulApplicationsResult.get(0).getLeadOrganisationName());
     }
 
     @Test
