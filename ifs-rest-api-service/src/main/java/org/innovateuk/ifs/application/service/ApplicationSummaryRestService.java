@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.*;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelKeyStatisticsResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.core.io.ByteArrayResource;
 
@@ -31,8 +30,7 @@ public interface ApplicationSummaryRestService {
                                                                            int pageNumber,
                                                                            int pageSize,
                                                                            Optional<String> filter);
-
-
+    
     RestResult<CompetitionSummaryResource> getCompetitionSummary(long competitionId);
 
     RestResult<ByteArrayResource> downloadByCompetition(long competitionId);

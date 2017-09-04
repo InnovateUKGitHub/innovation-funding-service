@@ -26,5 +26,4 @@ public interface AssessorService {
             value = "NOTIFY_ASSESSORS",
             description = "Comp admins and execs can notify all assessors of their assignments for a competition")
     ServiceResult<Void> notifyAssessorsByCompetition(long competitionId);
-
 }

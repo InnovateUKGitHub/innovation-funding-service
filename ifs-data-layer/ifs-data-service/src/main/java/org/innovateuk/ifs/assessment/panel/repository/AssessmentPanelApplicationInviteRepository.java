@@ -1,11 +1,8 @@
 package org.innovateuk.ifs.assessment.panel.repository;
 
 import org.innovateuk.ifs.assessment.panel.domain.AssessmentPanelApplicationInvite;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelApplicationInviteState;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
 import org.innovateuk.ifs.workflow.resource.State;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.Collection;
