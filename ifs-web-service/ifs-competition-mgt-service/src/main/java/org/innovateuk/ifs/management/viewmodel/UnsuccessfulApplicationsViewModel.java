@@ -11,7 +11,34 @@ import java.util.List;
  */
 public class UnsuccessfulApplicationsViewModel {
 
+    private Long competitionId;
+    private String competitionName;
     private List<ApplicationResource> unsuccessfulApplications;
+    private int unsuccessfulApplicationsSize;
+
+    public UnsuccessfulApplicationsViewModel(Long competitionId, String competitionName, List<ApplicationResource> unsuccessfulApplications, int unsuccessfulApplicationsSize) {
+        this.competitionId = competitionId;
+        this.competitionName = competitionName;
+        this.unsuccessfulApplications = unsuccessfulApplications;
+        this.unsuccessfulApplicationsSize = unsuccessfulApplicationsSize;
+    }
+
+    public Long getCompetitionId() {
+        return competitionId;
+    }
+
+    public void setCompetitionId(Long competitionId) {
+        this.competitionId = competitionId;
+    }
+
+    public String getCompetitionName() {
+        return competitionName;
+    }
+
+    public void setCompetitionName(String competitionName) {
+        this.competitionName = competitionName;
+    }
+
 
     public List<ApplicationResource> getUnsuccessfulApplications() {
         return unsuccessfulApplications;
@@ -21,8 +48,12 @@ public class UnsuccessfulApplicationsViewModel {
         this.unsuccessfulApplications = unsuccessfulApplications;
     }
 
-    public UnsuccessfulApplicationsViewModel(List<ApplicationResource> unsuccessfulApplications) {
-        this.unsuccessfulApplications = unsuccessfulApplications;
+    public int getUnsuccessfulApplicationsSize() {
+        return unsuccessfulApplicationsSize;
+    }
+
+    public void setUnsuccessfulApplicationsSize(int unsuccessfulApplicationsSize) {
+        this.unsuccessfulApplicationsSize = unsuccessfulApplicationsSize;
     }
 
     @Override
@@ -34,6 +65,9 @@ public class UnsuccessfulApplicationsViewModel {
         UnsuccessfulApplicationsViewModel that = (UnsuccessfulApplicationsViewModel) o;
 
         return new EqualsBuilder()
+                .append(unsuccessfulApplicationsSize, that.unsuccessfulApplicationsSize)
+                .append(competitionId, that.competitionId)
+                .append(competitionName, that.competitionName)
                 .append(unsuccessfulApplications, that.unsuccessfulApplications)
                 .isEquals();
     }
@@ -41,7 +75,10 @@ public class UnsuccessfulApplicationsViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(competitionId)
+                .append(competitionName)
                 .append(unsuccessfulApplications)
+                .append(unsuccessfulApplicationsSize)
                 .toHashCode();
     }
 }
