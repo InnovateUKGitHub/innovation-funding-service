@@ -1,7 +1,12 @@
 package org.innovateuk.ifs.management.service;
 
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelKeyStatisticsResource;
+
 /**
- * Created by ecormack on 01/09/17.
+ * Service for managing assessment panel requests
  */
-public class CompetitionAssessmentPanelService {
+
+public interface CompetitionAssessmentPanelService {
+    AssessmentPanelKeyStatisticsResource getAssessmentPanelKeyStatistics(Long competitionId);
+
 }
