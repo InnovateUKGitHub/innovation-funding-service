@@ -6,6 +6,8 @@ import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
 import org.innovateuk.ifs.assessment.mapper.AssessmentFundingDecisionOutcomeMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessmentRejectOutcomeMapper;
+import org.innovateuk.ifs.assessment.panel.repository.AssessmentPanelApplicationInviteRepository;
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelKeyStatisticsResource;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
@@ -19,6 +21,7 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,8 +35,10 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
+import static org.innovateuk.ifs.workflow.resource.State.*;
 
 /**
  * Transactional and secured service providing operations around {@link org.innovateuk.ifs.assessment.domain.Assessment} data.
@@ -58,6 +63,9 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Autowired
     private ActivityStateRepository activityStateRepository;
+
+    @Autowired
+    private AssessmentPanelApplicationInviteRepository assessmentPanelApplicationInviteRepository;
 
     @Override
     public ServiceResult<AssessmentResource> findById(long id) {
@@ -125,6 +133,21 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
                                     .map(AssessmentFundingDecisionOutcome::getFeedback)
                                     .collect(Collectors.toList())
                 )
+        );
+    }
+
+    @Override
+    public ServiceResult<AssessmentPanelKeyStatisticsResource> getAssessmentPanelKeyStatistics(long competitionId) {
+        Set<State> ALL_ASSESSMENT_PANEL_INVITES = asLinkedSet(
+                CREATED,
+                PENDING,
+                ACCEPTED,
+                REJECTED,
+                CONFLICT_OF_INTEREST);
+        return serviceSuccess(new AssessmentPanelKeyStatisticsResource(
+                (long)applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateState(competitionId, IN_PANEL),
+                (long) assessmentPanelApplicationInviteRepository.findByActivityStateState(ACCEPTED).size(),
+                (long) assessmentPanelApplicationInviteRepository.findByActivityStateStateIn(ALL_ASSESSMENT_PANEL_INVITES).size())
         );
     }
 
@@ -206,6 +229,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
                         )
                 );
     }
+
 
     private ServiceResult<AssessmentResource> createAssessment(User assessor, Application application, Role role, ActivityState activityState) {
 
