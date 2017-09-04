@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.repository;
 
+import com.google.common.collect.ImmutableSortedSet;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
@@ -32,11 +33,13 @@ import org.springframework.data.domain.Sort;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.EnumSet.of;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.invite.builder.CompetitionInviteBuilder.newCompetitionInviteWithoutId;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -47,6 +50,8 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -60,6 +65,8 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     private Competition competition;
     private InnovationArea innovationArea;
     private User user;
+
+    private static final Set<ParticipantStatus> defaultStatuses = ImmutableSortedSet.of(REJECTED, PENDING);
 
     @Autowired
     private UserRepository userRepository;
@@ -551,7 +558,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndStatus(
                 competition.getId(),
-                ACCEPTED,
+                of (ACCEPTED),
                 pageable
         );
 
@@ -651,7 +658,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
                 competition.getId(),
                 innovationArea.getId(),
-                ACCEPTED,
+                of(ACCEPTED),
                 TRUE,
                 pageable
         );
@@ -689,7 +696,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
                 competition.getId(),
                 innovationArea.getId(),
-                null,
+                defaultStatuses,
                 null,
                 pageable
         );
@@ -741,7 +748,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
                 competition.getId(),
                 null,
-                ACCEPTED,
+                of(ACCEPTED),
                 null,
                 pageable
         );
@@ -818,7 +825,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
                 competition.getId(),
                 null,
-                null,
+                defaultStatuses,
                 TRUE,
                 pageable
         );
@@ -895,7 +902,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
                 competition.getId(),
                 null,
-                null,
+                defaultStatuses,
                 FALSE,
                 pageable
         );
@@ -933,7 +940,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
                 competition.getId(),
                 null,
-                null,
+                defaultStatuses,
                 null,
                 pageable
         );

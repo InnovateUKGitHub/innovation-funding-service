@@ -43,6 +43,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static com.google.common.collect.ImmutableSortedSet.of;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ofPattern;
@@ -75,6 +76,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     private static final String WEB_CONTEXT = "/assessment";
     private static final DateTimeFormatter inviteFormatter = ofPattern("d MMMM yyyy");
     private static final DateTimeFormatter detailsFormatter = ofPattern("dd MMM yyyy");
+    private static final Set<ParticipantStatus> defaultStatuses = of(REJECTED, PENDING);
 
     @Autowired
     private CompetitionInviteRepository competitionInviteRepository;
@@ -312,20 +314,21 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                                                                                    Optional<ParticipantStatus> status,
                                                                                    Optional<Boolean> compliant) {
         Page<CompetitionParticipant> pagedResult;
+        Set<ParticipantStatus> filterStatuses = status.isPresent() ? of(status.get()) : defaultStatuses;
 
         if (innovationArea.isPresent() || compliant.isPresent()) {
             // We want to avoid performing the potentially expensive join on Profile if possible
             pagedResult = competitionParticipantRepository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
                     competitionId,
                     innovationArea.orElse(null),
-                    status.orElse(null),
+                    filterStatuses,
                     compliant.orElse(null),
                     pageable
             );
         } else {
             pagedResult = competitionParticipantRepository.getAssessorsByCompetitionAndStatus(
                     competitionId,
-                    status.orElse(null),
+                    filterStatuses,
                     pageable
             );
         }

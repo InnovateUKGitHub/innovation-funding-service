@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -22,14 +23,14 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
             "FROM CompetitionParticipant competitionParticipant " +
             "WHERE competitionParticipant.competition.id = :competitionId " +
             "AND competitionParticipant.role = 'ASSESSOR' " +
-            "AND (:status IS NULL OR competitionParticipant.status = :status)";
+            "AND competitionParticipant.status in :statuses";
 
     String BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT = "SELECT competitionParticipant " +
             "FROM CompetitionParticipant competitionParticipant " +
             "LEFT JOIN Profile profile ON profile.id = competitionParticipant.user.profileId " +
             "WHERE competitionParticipant.competition.id = :competitionId " +
             "AND competitionParticipant.role = 'ASSESSOR' " +
-            "AND (:status IS NULL OR competitionParticipant.status = :status) " +
+            "AND competitionParticipant.status in :statuses " +
             "AND (:innovationAreaId IS NULL " +
             "   OR EXISTS(" +
             "       SELECT profile.id " +
@@ -90,13 +91,13 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
 
     @Query(BY_COMP_AND_STATUS)
     Page<CompetitionParticipant> getAssessorsByCompetitionAndStatus(@Param("competitionId") long competitionId,
-                                                                    @Param("status") ParticipantStatus status,
+                                                                    @Param("statuses") Collection<ParticipantStatus> statuses,
                                                                     Pageable pageable);
 
     @Query(BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT)
     Page<CompetitionParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(@Param("competitionId") long competitionId,
                                                                                                  @Param("innovationAreaId") Long innovationAreaId,
-                                                                                                 @Param("status") ParticipantStatus status,
+                                                                                                 @Param("statuses") Collection<ParticipantStatus> statuses,
                                                                                                  @Param("isCompliant") Boolean isCompliant,
                                                                                                  Pageable pageable);
 
