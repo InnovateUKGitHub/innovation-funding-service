@@ -3,10 +3,12 @@ package org.innovateuk.ifs.competition.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.populator.CompetitionOverviewPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.viewmodel.CompetitionOverviewViewModel;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -53,5 +55,15 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name("competition/overview"));
+    }
+
+    @Test
+    public void termsAndConditions() throws Exception {
+        final CompetitionResource competitionResource = newCompetitionResource().build();
+        when(competitionService.getPublishedById(competitionResource.getId())).thenReturn(competitionResource);
+
+        mockMvc.perform(get("/competition/{id}/info/terms-and-conditions", competitionResource.getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/info/terms-and-conditions"));
     }
 }

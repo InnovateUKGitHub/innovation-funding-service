@@ -47,4 +47,9 @@ public class CompetitionController {
         final FileEntryResource fileDetails = competitionService.getPublicContentFileDetails(contentGroupId);
         return getFileResponseEntity(resource, fileDetails);
     }
+
+    @GetMapping("info/terms-and-conditions")
+    public String termsAndConditions(@PathVariable("competitionId") final long competitionId) {
+        return "competition/info/terms-and-conditions";
+    }
 }
