@@ -10,7 +10,7 @@
   }
 
   .boxed-list {
-    li {
+    > li {
       &:last-child {
         background-color: $highlight-colour;
       }
