@@ -104,6 +104,7 @@ public class ApplicantDashboardPopulator {
 
     private boolean hasAnApplicantRole(ProcessRoleResource processRoleResource) {
         return processRoleResource.getRoleName().equals(UserRoleType.APPLICANT.getName()) ||
+                processRoleResource.getRoleName().equals(UserRoleType.LEADAPPLICANT.getName()) ||
                 processRoleResource.getRoleName().equals(UserRoleType.COLLABORATOR.getName());
     }
 
