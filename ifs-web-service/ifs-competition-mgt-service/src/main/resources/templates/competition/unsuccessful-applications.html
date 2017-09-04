@@ -10,13 +10,13 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='All competitions',linkClass='link-back',linkUrl='#'" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Unsuccessful applications',subTitle=|1: CompetitionName|,size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: header-sub" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Unsuccessful applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
 
 
     <div class="grid-row sorting">
         <div class="column-full">
-            <span class="heading-xlarge no-margin">6</span>
+            <span class="heading-xlarge no-margin" th:text="${model.unsuccessfulApplicationsSize}">6</span>
             <span class="heading-small">applications</span>
         </div>
     </div>
