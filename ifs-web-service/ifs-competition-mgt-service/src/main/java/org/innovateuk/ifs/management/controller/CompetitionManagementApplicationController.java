@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
@@ -38,6 +39,7 @@ import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.util.HttpUtils.getQueryStringParameters;
 
@@ -97,6 +99,8 @@ public class CompetitionManagementApplicationController {
         // (causing issues with back links).
         // TODO: IFS-253 bind query parameters to maps properly
         MultiValueMap<String, String> queryParams = getQueryStringParameters(request);
+
+        validateIfTryingToMarkAsIneligible(applicationForm.getIneligibleReason(), validationHandler);
 
         return validationHandler.failNowOrSucceedWith(
                 () -> displayApplicationOverview(applicationId, competitionId, applicationForm, user, origin, assessorId, queryParams, model),
@@ -195,5 +199,12 @@ public class CompetitionManagementApplicationController {
     // TODO: review when IFS-1370 is implemented - RB
     private boolean isInternal(UserResource user) {
         return user.hasRole(UserRoleType.IFS_ADMINISTRATOR) || user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE) || user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD);
+    }
+
+    private void validateIfTryingToMarkAsIneligible(String ineligibleReason,
+                                                    ValidationHandler validationHandler) {
+        if (ineligibleReason == null || ineligibleReason.isEmpty()) {
+            validationHandler.addAnyErrors(ServiceResult.serviceFailure(CommonFailureKeys.APPLICATION_INELIGIBLE_REASON_MUST_BE_SET), toField("ineligibleReason"));
+        }
     }
 }
