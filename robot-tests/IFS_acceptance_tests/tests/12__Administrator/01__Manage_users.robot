@@ -187,23 +187,33 @@ Client side validations for edit internal user's details
 
 Administrator can successfully edit internal user's details
     [Documentation]  IFS-18
-    [Tags]  HappyPath
+    [Tags]  HappyPath  InnovationLead
     [Setup]  log in as a different user                      &{ifs_admin_user_credentials}
     Given the user navigates to the View internal users details  New Administrator  active
     And the user clicks the button/link                      link=Edit
     When the user enters text to a text field                id=firstName  Edited
     Then the user enters text to a text field                id=lastName  Admin
-    And the user selects the option from the drop-down menu  IFS Support User  id=role
+    # Has to be an Innovation Lead for the next test
+    And the user selects the option from the drop-down menu  Innovation Lead  id=role
     And the user clicks the button/link                      jQuery=.button:contains("Save and return")
     Then the user cannot see a validation error in the page
     When the user should see the element                     jQuery=h1:contains("Manage users")
     #The Admin is redirected to the Manage Users page on Success
     And the user should see the element                      jQuery=.selected:contains("Active")
-    And the user should see the element                      jQuery=td:contains("Edited Admin") + td:contains("IFS Support User")
+    And the user should see the element                      jQuery=td:contains("Edited Admin") + td:contains("Innovation Lead")
+
+The internal user can login with his new role and sees no competitions assigned
+    [Documentation]  IFS-1305
+    [Tags]  InnovationLead
+    [Setup]  the user logs out if they are logged in
+    the invited user logs in
+    Then the user should see the element  jQuery=p:contains("There are no competitions assigned to you.")
+    And the user should not see the element  css=.form-search
 
 Administrator is able to disable internal users
     [Documentation]  IFS-644
     [Tags]  HappyPath
+    [Setup]  log in as a different user                      &{ifs_admin_user_credentials}
     Given the user navigates to the View internal users details  Edited Admin  active
     And the user clicks the button/link   link=Edit
     Then the user should see the element  css=.form-group input
@@ -280,4 +290,3 @@ the re-activated user tries to login
     run keyword if  ${docker}==1  log in as a different user  ${localEmailInvtedUser}  ${correct_password}
     # On production the accepted domain is innovateuk.gov.uk
     run keyword if  ${docker}!=1  log in as a different user  ${remoteEmailInvtedUser}  ${correct_password}
-
