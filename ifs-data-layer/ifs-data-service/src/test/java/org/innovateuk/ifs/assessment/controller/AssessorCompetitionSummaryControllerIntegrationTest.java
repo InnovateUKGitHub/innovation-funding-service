@@ -202,7 +202,7 @@ public class AssessorCompetitionSummaryControllerIntegrationTest extends BaseCon
         assertEquals(competition.getId().longValue(), summaryResource.getCompetitionId());
         assertEquals(competition.getName(), summaryResource.getCompetitionName());
         assertEquals(competition.getCompetitionStatus(), summaryResource.getCompetitionStatus());
-        assertEquals(3, summaryResource.getTotalApplications());
+        assertEquals(2, summaryResource.getTotalApplications());
         assertEquals(getPaulPlum(), summaryResource.getAssessor().getUser());
         assertEquals(ACADEMIC, summaryResource.getAssessor().getProfile().getBusinessType());
 

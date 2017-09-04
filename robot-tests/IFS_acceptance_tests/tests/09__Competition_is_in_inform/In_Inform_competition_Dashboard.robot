@@ -112,8 +112,8 @@ User can see feedback to individual questions
     [Documentation]    INFUND-8005
     [Tags]
     Given the user clicks the button/link    jQuery=a:contains("6. Innovation")
-    Then the user should see the element    jQuery=h3:contains("Your answer") ~ p:contains("This is the applicant response for what is innovative about your project?.")
-    And the user should see the element    jQuery=h4:contains("Assessor 1") ~ p:contains("This is the innovation feedback")
+    Then the user should see the element    jQuery=h3:contains("Your answer") ~ div[data-md-to-html] p:contains("This is the applicant response for what is innovative about your project?.")
+    And the user should see the element    jQuery=h4:contains("Assessor 1") ~ div[data-md-to-html] p:contains("This is the innovation feedback")
     [Teardown]    the user clicks the button/link    jQuery=.link-back:contains("Feedback overview")
 
 The finance details are shown
