@@ -18,9 +18,6 @@ public interface OrganisationRestService {
     RestResult<OrganisationResource> getOrganisationByUserId(Long userId);
     RestResult<OrganisationResource> createOrMatch(OrganisationResource organisation);
     RestResult<OrganisationResource> createAndLinkByInvite(OrganisationResource organisation, String inviteHash);
-    RestResult<OrganisationResource> create(OrganisationResource organisation);
-    RestResult<OrganisationResource> update(OrganisationResource organisation);
     RestResult<OrganisationResource> updateNameAndRegistration(OrganisationResource organisation);
-    RestResult<OrganisationResource> updateByIdForAnonymousUserFlow(OrganisationResource organisation);
     RestResult<OrganisationResource> addAddress(OrganisationResource organisation, AddressResource address, AddressTypeEnum type);
 }

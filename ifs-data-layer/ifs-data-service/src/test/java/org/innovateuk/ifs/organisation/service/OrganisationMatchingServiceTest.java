@@ -24,14 +24,14 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<OrganisationMatchingService> {
+public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<OrganisationMatchingServiceImpl> {
 
     @Mock
     private OrganisationPatternMatcher organisationPatternMatcher;
 
     @Override
-    protected OrganisationMatchingService supplyServiceUnderTest() {
-        return new OrganisationMatchingService();
+    protected OrganisationMatchingServiceImpl supplyServiceUnderTest() {
+        return new OrganisationMatchingServiceImpl();
     }
 
     private String academicName;

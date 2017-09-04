@@ -73,18 +73,8 @@ public class OrganisationServiceImpl implements OrganisationService {
     }
 
     @Override
-    public OrganisationResource save(OrganisationResource organisation) {
-        return organisationRestService.update(organisation).getSuccessObjectOrThrowException();
-    }
-
-    @Override
     public OrganisationResource updateNameAndRegistration(OrganisationResource organisation){
         return organisationRestService.updateNameAndRegistration(organisation).getSuccessObjectOrThrowException();
-    }
-
-    @Override
-    public OrganisationResource saveForAnonymousUserFlow(OrganisationResource organisation) {
-        return organisationRestService.updateByIdForAnonymousUserFlow(organisation).getSuccessObjectOrThrowException();
     }
 
     @Override

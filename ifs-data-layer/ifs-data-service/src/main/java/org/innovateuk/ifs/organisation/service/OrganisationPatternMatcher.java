@@ -3,6 +3,7 @@ package org.innovateuk.ifs.organisation.service;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeEnum;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -13,10 +14,11 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 /**
- * Contains static matching logic used in @{OrganisationMatchingService}.
+ * Contains static matching logic used in @{OrganisationMatchingServiceImpl}.
  */
 @Service
 public class OrganisationPatternMatcher {
+    @NotSecured(value = "Is a 'static' comparison function", mustBeSecuredByOtherServices = false)
     public boolean organisationAddressMatches(Organisation organisation, OrganisationResource organisationResource, AddressTypeEnum addressType, boolean required) {
         Optional<OrganisationAddress> organisationOperatingAddress = getOrganisationAddressByType(organisation, addressType);
         Optional<OrganisationAddressResource> submittedOrganisationAddress = getOrganisationResourceAddressByType(organisationResource, addressType);
@@ -30,6 +32,7 @@ public class OrganisationPatternMatcher {
         return false;
     }
 
+    @NotSecured(value = "Is a 'static' comparison function", mustBeSecuredByOtherServices = false)
     public boolean organisationTypeMatches(Organisation organisation, OrganisationResource organisationResource) {
         try {
             return organisation.getOrganisationType().getId().equals(organisationResource.getOrganisationType());
@@ -39,6 +42,7 @@ public class OrganisationPatternMatcher {
         }
     }
 
+    @NotSecured(value = "Is a 'static' comparison function", mustBeSecuredByOtherServices = false)
     public boolean organisationTypeIsResearch(Organisation organisation) {
         try {
             return OrganisationTypeEnum.isResearch(organisation.getOrganisationType().getId());

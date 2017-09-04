@@ -78,23 +78,25 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
     }
 
     @Test
-    public void testSaveForAnonymousUserFlow() throws Exception {
+    public void testCreateOrMatch() throws Exception {
         OrganisationResource resourceToSave = new OrganisationResource();
         OrganisationResource organisation = new OrganisationResource();
-        when(organisationRestService.updateByIdForAnonymousUserFlow(resourceToSave)).thenReturn(restSuccess(organisation));
+        when(organisationRestService.createOrMatch(resourceToSave)).thenReturn(restSuccess(organisation));
 
-        OrganisationResource returnedOrganisation = service.saveForAnonymousUserFlow(resourceToSave);
+        OrganisationResource returnedOrganisation = service.createOrMatch(resourceToSave);
 
         assertEquals(organisation, returnedOrganisation);
     }
 
     @Test
-    public void testSave() throws Exception {
+    public void testCreateAndLinkByInvite() throws Exception {
+        String inviteHash = "123abc";
+
         OrganisationResource resourceToSave = new OrganisationResource();
         OrganisationResource organisation = new OrganisationResource();
-        when(organisationRestService.update(resourceToSave)).thenReturn(restSuccess(organisation));
+        when(organisationRestService.createAndLinkByInvite(resourceToSave, inviteHash)).thenReturn(restSuccess(organisation));
 
-        OrganisationResource returnedOrganisation = service.save(resourceToSave);
+        OrganisationResource returnedOrganisation = service.createAndLinkByInvite(resourceToSave, inviteHash);
 
         assertEquals(organisation, returnedOrganisation);
     }

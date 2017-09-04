@@ -6,7 +6,7 @@ import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.invite.transactional.InviteService;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
-import org.innovateuk.ifs.organisation.service.OrganisationMatchingService;
+import org.innovateuk.ifs.organisation.service.OrganisationMatchingServiceImpl;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
@@ -28,7 +28,7 @@ public class OrganisationInitialCreationServiceImpl extends BaseTransactionalSer
     private OrganisationMapper organisationMapper;
 
     @Autowired
-    private OrganisationMatchingService organisationMatchingService;
+    private OrganisationMatchingServiceImpl organisationMatchingService;
 
     @Autowired
     private InviteService inviteService;

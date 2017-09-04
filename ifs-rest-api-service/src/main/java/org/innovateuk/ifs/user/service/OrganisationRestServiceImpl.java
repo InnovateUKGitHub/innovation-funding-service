@@ -57,16 +57,6 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
     }
 
     @Override
-    public RestResult<OrganisationResource> create(OrganisationResource organisation) {
-        return postWithRestResultAnonymous(organisationRestURL + "/create", organisation, OrganisationResource.class);
-    }
-
-    @Override
-    public RestResult<OrganisationResource> update(OrganisationResource organisation) {
-        return putWithRestResult(organisationRestURL + "/update", organisation, OrganisationResource.class);
-    }
-
-    @Override
     public RestResult<OrganisationResource> updateNameAndRegistration(OrganisationResource organisation) {
         String organisationName;
         try {
@@ -78,11 +68,7 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
         return postWithRestResult(organisationRestURL + "/updateNameAndRegistration/" +  organisation.getId() + "?name=" + organisationName + "&registration=" + organisation.getCompanyHouseNumber(), OrganisationResource.class);
     }
 
-    @Override
-    public RestResult<OrganisationResource> updateByIdForAnonymousUserFlow(OrganisationResource organisation) {
-        return putWithRestResultAnonymous(organisationRestURL + "/update", organisation, OrganisationResource.class);
-    }
-
+    //TODO: Check is anonymous call should be allowed here?
     @Override
      public RestResult<OrganisationResource> addAddress(OrganisationResource organisation, AddressResource address, AddressTypeEnum type) {
         return postWithRestResultAnonymous(organisationRestURL + "/addAddress/"+organisation.getId()+"?addressType="+type.name(), address, OrganisationResource.class);

@@ -3,9 +3,10 @@ package org.innovateuk.ifs.organisation.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
-import org.innovateuk.ifs.organisation.service.OrganisationMatchingService;
+import org.innovateuk.ifs.organisation.service.OrganisationMatchingServiceImpl;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -23,10 +24,22 @@ import static org.mockito.Mockito.*;
 public class OrganisationInitialCreationServiceImplTest extends BaseServiceUnitTest<OrganisationInitialCreationService> {
 
     @Mock
-    private OrganisationMatchingService organisationMatchingService;
+    private OrganisationMatchingServiceImpl organisationMatchingService;
 
     protected OrganisationInitialCreationService supplyServiceUnderTest() {
         return new OrganisationInitialCreationServiceImpl();
+    }
+
+    OrganisationResource organisationResource;
+    Organisation organisation;
+
+    @Before
+    public void setUp() {
+        organisationResource = newOrganisationResource().build();
+        organisation = newOrganisation().build();
+
+        when(organisationMapperMock.mapToResource(any(Organisation.class))).thenReturn(organisationResource);
+        when(organisationMapperMock.mapToDomain(any(OrganisationResource.class))).thenReturn(organisation);
     }
 
     @Test
@@ -36,7 +49,6 @@ public class OrganisationInitialCreationServiceImplTest extends BaseServiceUnitT
 
         when(organisationMatchingService.findOrganisationMatch(any())).thenReturn(Optional.empty());
         when(organisationRepositoryMock.save(any(Organisation.class))).thenReturn(createdOrganisation);
-        when(organisationMapperMock.mapToResource(any(Organisation.class))).thenReturn(organisationResource);
 
         ServiceResult<OrganisationResource> result = service.createOrMatch(organisationResource);
 
@@ -52,23 +64,25 @@ public class OrganisationInitialCreationServiceImplTest extends BaseServiceUnitT
 
         when(organisationMatchingService.findOrganisationMatch(any())).thenReturn(Optional.of(newOrganisation().build()));
         when(organisationRepositoryMock.save(any(Organisation.class))).thenReturn(createdOrganisation);
-        when(organisationMapperMock.mapToResource(any(Organisation.class))).thenReturn(organisationResource);
 
         ServiceResult<OrganisationResource> result = service.createOrMatch(organisationResource);
 
         assertTrue(result.isSuccess());
 
-        verify(organisationRepositoryMock,times(1)).save(any(Organisation.class));
+        verify(organisationRepositoryMock,times(0)).save(any(Organisation.class));
     }
 
     @Test
     public void createAndLinkByInvite_organisationLinkedShouldResultInNoSaveCall() throws Exception {
         String inviteHash = "hashabc123";
         OrganisationResource organisationResource = newOrganisationResource().build();
-        ApplicationInvite invite = newApplicationInvite().withInviteOrganisation(newInviteOrganisation().build()).build();
 
-        when(inviteServiceMock.findOneByHash(inviteHash)).thenReturn(serviceSuccess(invite));
-        when(organisationMapperMock.mapToResource(any(Organisation.class))).thenReturn(organisationResource);
+
+        ApplicationInvite inviteWithExistingOrganisation = newApplicationInvite().withInviteOrganisation(
+                newInviteOrganisation().withOrganisation(
+                        newOrganisation().build()).build()).build();
+
+        when(inviteServiceMock.findOneByHash(inviteHash)).thenReturn(serviceSuccess(inviteWithExistingOrganisation));
 
         service.createAndLinkByInvite(organisationResource, inviteHash);
 
@@ -78,11 +92,9 @@ public class OrganisationInitialCreationServiceImplTest extends BaseServiceUnitT
     @Test
     public void createAndLinkByInvite_organisationNotLinkedShouldResultInSaveCall() throws Exception {
         String inviteHash = "hashabc123";
-        OrganisationResource organisationResource = newOrganisationResource().build();
         ApplicationInvite invite = newApplicationInvite().withInviteOrganisation(newInviteOrganisation().build()).build();
 
         when(inviteServiceMock.findOneByHash(inviteHash)).thenReturn(serviceSuccess(invite));
-        when(organisationMapperMock.mapToResource(any(Organisation.class))).thenReturn(organisationResource);
 
         service.createAndLinkByInvite(organisationResource, inviteHash);
 

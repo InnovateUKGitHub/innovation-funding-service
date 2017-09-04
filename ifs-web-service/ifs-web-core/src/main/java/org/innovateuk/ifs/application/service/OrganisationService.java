@@ -22,10 +22,6 @@ public interface OrganisationService {
 
     OrganisationResource getOrganisationByIdForAnonymousUserFlow(Long organisationId);
 
-    OrganisationResource saveForAnonymousUserFlow(OrganisationResource organisation);
-
-    OrganisationResource save(OrganisationResource organisation);
-
     OrganisationResource createOrMatch(OrganisationResource organisation);
 
     OrganisationResource createAndLinkByInvite(OrganisationResource organisation, String inviteHash);

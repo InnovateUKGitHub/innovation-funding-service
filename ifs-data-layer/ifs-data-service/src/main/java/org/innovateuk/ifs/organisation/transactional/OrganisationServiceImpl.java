@@ -92,7 +92,6 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     private Organisation createNewOrganisation(OrganisationResource organisationResource) {
         Organisation organisation = organisationMapper.mapToDomain(organisationResource);
         Organisation savedOrganisation = organisationRepository.save(organisation);
-        addAddress(organisation.getId(), AddressTypeEnum.valueOf(organisationResource.getAddresses().get(0).getAddressType().getName()), organisationResource.getAddresses().get(0).getAddress());
 
         return savedOrganisation;
     }
