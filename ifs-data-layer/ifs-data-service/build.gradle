@@ -142,17 +142,28 @@ task dbResetDocker(type: DockerBuildImage) {
     inputDir = project.file("$project.buildDir/docker-db-reset")
 }
 
-task dbAnonymisedDumpDocker(type: DockerBuildImage, dependsOn: build) {
-    tag = 'innovateuk/db-anonymised-data'
-    dockerFile = file('src/main/docker/proxysql/Dockerfile-proxysql')
-    inputDir = project.file("$project.buildDir/docker-db-anonymised")
+task dbAnonymisedDumpDockerEnv {
+    dependsOn "build"
+    def inputDir = project.file("$project.buildDir/docker-db-anonymised")
 
     doFirst {
+        copy {
+            from file('src/main/docker/proxysql/Dockerfile-proxysql')
+            rename 'Dockerfile-proxysql', 'Dockerfile'
+            into inputDir
+        }
         copy {
             from "src/main/docker/proxysql"
             into "${inputDir}/proxysql"
         }
     }
+}
+
+
+task dbAnonymisedDumpDocker(type: DockerBuildImage, dependsOn: build) {
+    dependsOn "dbAnonymisedDumpDockerEnv"
+    tag = 'innovateuk/db-anonymised-data'
+    inputDir = project.file("$project.buildDir/docker-db-anonymised")
 }
 
 
