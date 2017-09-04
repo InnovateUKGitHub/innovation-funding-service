@@ -6,6 +6,8 @@ Documentation     INFUND-1042 : As an applicant I want to be able to edit my use
 ...               INFUND-9245 Add marketing email option tick box to the 'Your profile' > 'Your details' page
 ...
 ...               IFS-951  Display 'Organisation type' against user
+...
+...               IFS-41 Add read only view of marketing email option selected in 'Your profile' > 'Your details' page
 Suite Setup       the user logs-in in new browser  &{lead_applicant_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
@@ -26,7 +28,7 @@ View and edit profile link redirects to the Your profile page
     Then the user should see the element  link=Edit your details
 
 Edit the profile and verify if the changes are saved
-    [Documentation]    INFUND-1042, INFUND-6387, INFUND-9245
+    [Documentation]    INFUND-1042, INFUND-6387, INFUND-9245, IFS-41
     [Tags]    HappyPath    SmokeTest
 
     Given the user navigates to the page                   ${DASHBOARD_URL}
@@ -38,7 +40,8 @@ Edit the profile and verify if the changes are saved
     And the user should see the text in the page           0123456789
     When the user clicks the button/link                   link=Edit your details
     And the user should see that the checkbox is selected  allowMarketingEmails
-    And the user can change their details back again
+    When the user can change their details back again
+    Then the user should see the element  jQuery=h3:contains("Email preferences") + p:contains("You have asked for updates on Innovate UK competitions by email.")
 
 Verify that the applicant's name has been changed on other parts of the site
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
@@ -133,7 +136,6 @@ the user can change their details back again
     The user enters text to a text field  id=firstName    Steve
     The user enters text to a text field  id=lastName    Smith
     The user enters text to a text field  id=phoneNumber    +-0123456789
-    the user unselects the checkbox       allowMarketingEmails
     the user clicks the button/link       css=[name="create-account"]
 
 other contributors should see the applicant's updated name for the assignation options
