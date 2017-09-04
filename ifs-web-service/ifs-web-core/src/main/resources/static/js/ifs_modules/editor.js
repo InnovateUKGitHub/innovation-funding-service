@@ -46,7 +46,7 @@ IFS.core.editor = (function () {
 
         if (el.attr('readonly')) {
           // don't add the editor but do render the html on page load
-          el.before('<div class="readonly"></div>')
+          el.before('<div class="readonly" aria-readonly="true" role="textbox"></div>')
         } else {
           el.before('<div data-editor="' + editorType + '" class="editor" spellcheck="true" aria-multiline="true" tabindex="0" ' + labelledby + ' role="textbox"></div>')
         }
