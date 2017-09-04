@@ -26,29 +26,29 @@
                 </div>
             </div>
         </div>
+                */-->
 
         <h2 class="heading-medium">Key statistics</h2>
 
         <ul class="grid-row">
             <li class="column-quarter">
                 <div class="highlight-panel highlight-panel--tall">
-                    <span class="heading-large">2</span><br /><small>Assessors pending</small>
+                    <span class="heading-large" th:text="${model.assessorsInvited}"></span><br /><small>Assessors pending</small>
                 </div>
             </li>
 
             <li class="column-quarter">
                 <div class="highlight-panel highlight-panel--tall">
-                    <span class="heading-large">3</span><br /><small>Assessors accepted</small>
+                    <span class="heading-large" th:text="${model.assessorsAccepted}"></span><br /><small>Assessors accepted</small>
                 </div>
             </li>
 
             <li class="column-quarter">
                 <div class="highlight-panel highlight-panel--tall">
-                    <span class="heading-large">7</span><br /><small>Applications assigned to panel</small>
+                    <span class="heading-large" th:text="${model.applicationsInPanel}"></span><br /><small>Applications assigned to panel</small>
                 </div>
             </li>
         </ul>
-        */-->
 
         <h2 class="heading-medium no-margin-bottom">Panel navigation</h2>
 
