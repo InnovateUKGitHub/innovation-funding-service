@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html  class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Unsuccessful applications - CompetitionName|" />
@@ -31,53 +31,13 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
+            <tr th:each="row, iterStat : ${model.unsuccessfulApplications}">
                 <td>
-                    <a href="#">123</a>
+                    <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${row.competition},applicationId=${row.id})}" th:text="${row.id}">124</a>
                 </td>
-                <td>Machine learning in robotics</td>
-                <td>PWC</td>
-                <td>Ineligible</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="#">124</a>
-                </td>
-                <td>Automated Project Title generator</td>
-                <td>B.Systems</td>
-                <td>Not funded</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="#">125</a>
-                </td>
-                <td>A look into creating a better Innovation Funding Service</td>
-                <td>Competition systems ltd.</td>
-                <td>Ineligible</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="#">127</a>
-                </td>
-                <td>Machine learning in robotics</td>
-                <td>PWC</td>
-                <td>Ineligible</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="#">130</a>
-                </td>
-                <td>Automated Project Title generator</td>
-                <td>B.Systems</td>
-                <td>Not funded</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="#">133</a>
-                </td>
-                <td>A look into creating a better Innovation Funding Service</td>
-                <td>Competition systems ltd.</td>
-                <td>Ineligible</td>
+                <td th:text="${row.name}">Automated Project Title generator</td>
+                <td th:text="${row.leadOrganisationName}">B.Systems</td>
+                <td th:text="${row.applicationState.getStateName()}">Not funded</td>
             </tr>
             </tbody>
         </table>
