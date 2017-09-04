@@ -30,6 +30,7 @@ public class UserDetailsViewModel {
     private String ethnicity;
     private String gender;
     private String disability;
+    private boolean allowMarketingEmails;
 
     public UserDetailsViewModel(final UserResource user, final OrganisationResource organisation, final List<EthnicityResource> ethnicityResourceList) {
         if(organisation != null) {
@@ -65,6 +66,7 @@ public class UserDetailsViewModel {
         if(user.getDisability() != null) {
             this.disability = user.getDisability().getDisplayName();
         }
+        this.allowMarketingEmails = user.getAllowMarketingEmails();
     }
 
     private void setEthnicityName(final Long ethnicityId, final List<EthnicityResource> ethnicityResourceList) {
@@ -131,6 +133,10 @@ public class UserDetailsViewModel {
 
     public String getOrganisationTypeName() {
         return organisationTypeName;
+    }
+
+    public boolean getAllowMarketingEmails() {
+        return allowMarketingEmails;
     }
 
     private String ifEmptyReturnAText(String string) {

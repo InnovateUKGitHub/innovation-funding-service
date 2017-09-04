@@ -14,6 +14,7 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
@@ -90,19 +91,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId) {
-        List<ApplicationResource> userApplications = applicationService.findByUserId(userId).getSuccessObjectOrThrowException();
-        List<Long> competitionIdsForUser = userApplications.stream()
-                .map(applicationResource -> applicationResource.getCompetition())
-                .distinct()
-                .collect(Collectors.toList());
-
-        return serviceSuccess((List) competitionMapper.mapToResource(
-                competitionRepository.findByIdIsIn(competitionIdsForUser))
-        );
-    }
-
-    @Override
     public ServiceResult<List<UserResource>> findInnovationLeads(Long competitionId) {
 
         List<CompetitionParticipant> competitionParticipants = competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD);
@@ -126,6 +114,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                     competitionParticipant.setProcess(competition);
                     competitionParticipant.setUser(innovationLead);
                     competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
+                    competitionParticipant.setStatus(ParticipantStatus.ACCEPTED);
 
                     competitionParticipantRepository.save(competitionParticipant);
 
@@ -141,6 +130,19 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         return find(competitionParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD),
                     notFoundError(CompetitionParticipant.class, competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD))
                 .andOnSuccessReturnVoid(competitionParticipant -> competitionParticipantRepository.delete(competitionParticipant));
+    }
+
+    @Override
+    public ServiceResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId) {
+        List<ApplicationResource> userApplications = applicationService.findByUserId(userId).getSuccessObjectOrThrowException();
+        List<Long> competitionIdsForUser = userApplications.stream()
+                .map(applicationResource -> applicationResource.getCompetition())
+                .distinct()
+                .collect(Collectors.toList());
+
+        return serviceSuccess((List) competitionMapper.mapToResource(
+                competitionRepository.findByIdIsIn(competitionIdsForUser))
+        );
     }
 
     @Override
