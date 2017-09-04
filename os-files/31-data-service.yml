@@ -52,7 +52,7 @@ items:
           - name: JAVA_OPTS
             value: -Xms1000m -Xmx1000m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
-            value: "ifs-data-service"
+            value: "ifs-data-service (<<NEWRELIC-ENVIRONMENT>>)"
           - name: NEW_RELIC_LICENSE_KEY
             value: "<<NEWRELIC-LICENCE-KEY>>"
           - name: NEW_RELIC_LOG

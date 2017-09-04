@@ -108,9 +108,14 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return userIsConnectedToApplicationResource(application, user);
     }
 
-    @PermissionRule(value = "READ", description = "Internal users can see application resources")
+    @PermissionRule(value = "READ", description = "Internal users other than innovation lead can see all application resources")
     public boolean internalUsersCanViewApplications(final ApplicationResource application, final UserResource user) {
-        return isInternal(user);
+        return !isInnovationLead(user) && isInternal(user);
+    }
+
+    @PermissionRule(value = "READ", description = "Innovation leads can see application resources for competitions assigned to them.")
+    public boolean innovationLeadAssginedToCompetitionCanViewApplications(final ApplicationResource application, final UserResource user) {
+        return application != null && application.getCompetition() != null && userIsInnovationLeadOnCompetition(application.getCompetition(), user.getId());
     }
 
     @PermissionRule(value = "READ", description = "Project Partners can see applications that are linked to their Projects")

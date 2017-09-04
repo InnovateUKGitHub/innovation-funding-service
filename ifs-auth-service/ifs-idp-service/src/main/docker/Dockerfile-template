@@ -82,9 +82,9 @@ RUN mv /idp/idpproxy.conf /etc/apache2/sites-available/ && \
   mkdir /var/log/shibboleth && rm -rf /opt/shibboleth-idp/logs && ln -s /var/log/shibboleth /opt/shibboleth-idp/logs && \
   mkdir -p /var/run/tomcat8 && \
   chown -R www-data:0 /etc/shibboleth /etc/apache2 /opt/shibboleth-idp /var/run/tomcat8 /usr/local/bin \
-                      /etc/tomcat8 /var/log/tomcat8 /var/lib/tomcat8 /usr/share/tomcat8 /var/cache/tomcat8 && \
+                      /etc/tomcat8 /var/log/tomcat8 /var/lib/tomcat8 /usr/share/tomcat8 /var/cache/tomcat8 "$JRE_HOME"/lib/security/cacerts && \
   chmod -R u=rwX,g=rwX,o= /etc/shibboleth /etc/apache2 /opt/shibboleth-idp /var/run/tomcat8 /usr/local/bin \
-                          /etc/tomcat8 /var/log/tomcat8 /var/lib/tomcat8 /usr/share/tomcat8 /var/cache/tomcat8 && \
+                          /etc/tomcat8 /var/log/tomcat8 /var/lib/tomcat8 /usr/share/tomcat8 /var/cache/tomcat8 "$JRE_HOME"/lib/security/cacerts && \
 
   rm -rf /idp /tmp/* /var/tmp/*
 
