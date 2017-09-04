@@ -114,13 +114,17 @@ test {
     finalizedBy asciidoctor
 }
 
+task dbResetDockerEnv {
+    dependsOn "build"
 
-task dbResetDocker(type: DockerBuildImage, dependsOn: build) {
-    tag = 'innovateuk/dbreset'
-    dockerFile = file('src/main/docker/Dockerfile-dbreset')
-    inputDir = project.file("$project.buildDir/docker-db-reset")
+    def inputDir = project.file("$project.buildDir/docker-db-reset")
     doFirst {
-        copy{
+        copy {
+            from file('src/main/docker/Dockerfile-dbreset')
+            rename 'Dockerfile-dbreset', 'Dockerfile'
+            into inputDir
+        }
+        copy {
             from file('src/main/resources')
             include 'db/**/*.sql'
             into inputDir
@@ -132,6 +136,11 @@ task dbResetDocker(type: DockerBuildImage, dependsOn: build) {
     }
 }
 
+task dbResetDocker(type: DockerBuildImage) {
+    dependsOn "dbResetDockerEnv"
+    tag = 'innovateuk/dbreset'
+    inputDir = project.file("$project.buildDir/docker-db-reset")
+}
 
 task dbAnonymisedDumpDocker(type: DockerBuildImage, dependsOn: build) {
     tag = 'innovateuk/db-anonymised-data'
