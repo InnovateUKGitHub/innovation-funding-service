@@ -86,7 +86,7 @@
         </th:block>
     </th:block>
 
-    <div th:if="${currentApplication.applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).SUBMITTED && canMarkAsIneligible}"
+    <div th:if="${currentApplication.applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).SUBMITTED && !readOnly}"
          class="extra-margin collapsible collapsible-eligibility collapsible-stateless"
          th:classappend="${#fields.hasErrors('${form.*}')} ? 'collapsible-expanded'">
         <h2>Mark application as ineligible</h2>
@@ -106,7 +106,8 @@
                               maxlength="5000"
                               data-max_words="400"
                               data-maxwordslength="400"
-                              th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5,000')}, data-maxwordslength-errormessage=#{validation.field.max.word.count(null, '400')}"
+                              required="required"
+                              th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5,000')}, data-maxwordslength-errormessage=#{validation.field.max.word.count(null, '400')}, data-required-errormessage=#{validation.application.mark.ineligible.reason.required}"
                               th:errorclass="form-control-error"
                               rows="10"
                               th:field="*{ineligibleReason}"></textarea>

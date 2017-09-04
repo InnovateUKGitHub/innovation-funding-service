@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResourc
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
@@ -22,6 +23,7 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -33,6 +35,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
@@ -204,7 +207,7 @@ public class CompetitionManagementApplicationController {
     private void validateIfTryingToMarkAsIneligible(String ineligibleReason,
                                                     ValidationHandler validationHandler) {
         if (ineligibleReason == null || ineligibleReason.isEmpty()) {
-            validationHandler.addAnyErrors(ServiceResult.serviceFailure(CommonFailureKeys.APPLICATION_INELIGIBLE_REASON_MUST_BE_SET), toField("ineligibleReason"));
+            validationHandler.addAnyErrors(ServiceResult.serviceFailure(Arrays.asList(new Error("validation.application.mark.ineligible.reason.required", HttpStatus.BAD_REQUEST))), toField("ineligibleReason"));
         }
     }
 }

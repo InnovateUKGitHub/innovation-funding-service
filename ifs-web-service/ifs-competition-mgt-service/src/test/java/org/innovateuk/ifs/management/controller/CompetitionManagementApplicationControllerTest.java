@@ -58,7 +58,6 @@ import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_INELIGIBLE_REASON_MUST_BE_SET;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
@@ -130,8 +129,8 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition-mgt-application-overview"))
-                .andExpect(model().attribute("canReinstate", true))
-                .andExpect(model().attribute("canMarkAsIneligible", true));
+                .andExpect(model().attribute("readOnly", false))
+                .andExpect(model().attribute("canReinstate", true));
     }
 
     @Test
@@ -490,7 +489,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("ineligibleReason"));
-        assertEquals(APPLICATION_INELIGIBLE_REASON_MUST_BE_SET.name(), bindingResult.getFieldError("ineligibleReason").getCode());
+        assertEquals("validation.application.mark.ineligible.reason.required", bindingResult.getFieldError("ineligibleReason").getCode());
 
     }
 
@@ -742,8 +741,8 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition-mgt-application-overview"))
-                .andExpect(model().attribute("canReinstate", false))
-                .andExpect(model().attribute("canMarkAsIneligible", false));
+                .andExpect(model().attribute("readOnly", true))
+                .andExpect(model().attribute("canReinstate", false));
     }
 
     @Test
@@ -762,8 +761,8 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition-mgt-application-overview"))
-                .andExpect(model().attribute("canReinstate", false))
-                .andExpect(model().attribute("canMarkAsIneligible", true));
+                .andExpect(model().attribute("readOnly", false))
+                .andExpect(model().attribute("canReinstate", false));
     }
 
     private void assertApplicationOverviewWithBackUrl(final String origin, final String expectedBackUrl) throws Exception {
