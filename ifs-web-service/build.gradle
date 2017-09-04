@@ -37,6 +37,7 @@ subprojects {
 
         task prepareDockerFile {
             dependsOn getNewRelicAgent
+            dependsOn build
             def inputDir = project.file("$project.buildDir/docker")
 
             doFirst {
