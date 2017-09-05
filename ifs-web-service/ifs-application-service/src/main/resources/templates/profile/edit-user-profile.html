@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your details'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your details',hasFormErrors=${#fields.hasErrors('${userDetailsForm.*}')}" />
 </head>
 <body th:with="context='applicant'" class="user-profile-edit">
 
