@@ -272,7 +272,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(10, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("executiveUserId"));
-        assertEquals("Please select a competition executive.", bindingResult.getFieldError("executiveUserId").getDefaultMessage());
+        assertEquals("Please select a Portfolio Manager.", bindingResult.getFieldError("executiveUserId").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("title"));
         assertEquals("Please enter a title.", bindingResult.getFieldError("title").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("innovationLeadUserId"));
@@ -324,7 +324,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(8, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("executiveUserId"));
-        assertEquals("Please select a competition executive.", bindingResult.getFieldError("executiveUserId").getDefaultMessage());
+        assertEquals("Please select a Portfolio Manager.", bindingResult.getFieldError("executiveUserId").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("title"));
         assertEquals("Please enter a title.", bindingResult.getFieldError("title").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("innovationLeadUserId"));
