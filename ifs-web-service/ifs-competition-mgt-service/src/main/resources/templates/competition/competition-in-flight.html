@@ -34,14 +34,15 @@
                         <dt>Innovation Lead</dt>
                         <dd th:text="${model.lead}">Mark Daily</dd>
 
-                        <dt>Competition Executive</dt>
+                        <dt>Portfolio Manager</dt>
                         <dd th:text="${model.executive}">Paul Ray</dd>
                     </dl>
 
                     <p th:unless="${model.readOnly}"
                        th:if="${(model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN or
                        model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN or
-                       model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED)}">
+                       model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED or
+                       model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT)}">
                        <a th:href="@{/competition/setup/{competitionId}(competitionId=${model.competitionId})}">View and update competition setup</a>
                     </p>
                 </div>

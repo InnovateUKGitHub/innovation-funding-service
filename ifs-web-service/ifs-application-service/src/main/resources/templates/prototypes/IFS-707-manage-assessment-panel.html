@@ -14,7 +14,7 @@
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
-    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition'}, ${'/prototypes/5721-dashboard'} + ${(param.comp != null ? '?status=' + param.comp[0] : '')})" />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition'}, ${'/prototypes/5721-dashboard'} + ${(param.comp != null ? '?status=' + param.comp[0] : '?status=Closed')})" />
 
 
   	<!-- HARDCODED PROTOTYPE HTML -->
@@ -23,13 +23,26 @@
 
     <div class="no-constrain-width justify-left">
 
+    <p class="form-hint">If you make any changes on this page, you must confirm them in order to make them visible on the assessors' dashboards.</p>
+
+    <div class="grid-row">
+        <div class="column-quarter">
+            <button class="button width-full" th:disabled="${param.action == null}">Confirm actions</button>
+        </div>
+        <div class="column-quarter">
+            <div class="highlight-panel highlight-panel--tall">
+                <span class="heading-large" th:text="${param.action != null} ? '5' : '0'">0</span><br /><small>Changes since last confirmation</small>
+            </div>
+        </div>
+    </div>
+
       <h2 class="heading-medium">Key statistics</h2>
 
       <ul class="grid-row">
 
         <li class="column-quarter">
           <div class="highlight-panel highlight-panel--tall">
-            <span class="heading-large">2</span><br /><small>Assessors invited</small>
+            <span class="heading-large">2</span><br /><small>Assessors pending</small>
           </div>
         </li>
 
@@ -47,27 +60,16 @@
 
       </ul>
 
-      <h2 class="heading-medium">Panel navigation</h2>
+      <!-- <h2 class="heading-medium">Panel navigation</h2> -->
+
+      <h2 class="heading-medium no-margin-bottom">Panel navigation</h2>
 
       <ul class="link-list">
-        <li><a href="/prototypes/IFS-707-manage-assessors">Manage assesors</a></li>
-        <li><a href="#">Manage applications</a></li>
-        <li><a href="#">Conflict of interest</a></li>
+        <li><a href="/prototypes/IFS-707-manage-assessors">Invite assessors to attend</a></li>
+        <li><a href="/prototypes/IFS-806-manage-applications">Assign applications to panel</a></li>
+        <li><a href="/prototypes/IFS-806-assign-applications">Allocate applications to assesors</a></li>
       </ul>
 
-      <h2 class="heading-medium">Changes to panel</h2>
-      <p>Make applcations visible on assessor dashboard or confirm changes to panel</p>
-
-      <div class="grid-row">
-        <div class="column-quarter">
-          <button class="button width-full" th:disabled="${param.action == null}">Confirm changes</button>
-        </div>
-        <div class="column-quarter">
-          <div class="highlight-panel highlight-panel--tall">
-            <span class="heading-large" th:text="${param.action != null} ? '5' : '0'">0</span><br /><small>Changes since last confirmation</small>
-          </div>
-        </div>
-      </div>
 
     </div>
 

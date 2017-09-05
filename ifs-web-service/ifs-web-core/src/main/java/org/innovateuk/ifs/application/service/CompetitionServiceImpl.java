@@ -101,6 +101,11 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
+    public ServiceResult<Void> updateCompetitionInitialDetails(CompetitionResource competition) {
+        return competitionsRestService.updateCompetitionInitialDetails(competition).toServiceResult();
+    }
+
+    @Override
     public ServiceResult<Void> setSetupSectionMarkedAsComplete(Long competitionId, CompetitionSetupSection section) {
         return competitionsRestService.markSectionComplete(competitionId, section).toServiceResult();
     }

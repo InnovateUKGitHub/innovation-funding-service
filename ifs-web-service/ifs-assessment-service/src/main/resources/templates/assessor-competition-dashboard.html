@@ -24,7 +24,7 @@
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionTitle},size='heading-xlarge'" />
 
             <div class="grid-row">
-                <div class="column-two-thirds competition details">
+                <div class="column-one-half competition details">
                     <dl class="font-xsmall">
                         <dt>Competition:</dt>
                         <dd th:text="${model.competitionTitle}"></dd>
@@ -37,7 +37,7 @@
                     </dl>
                 </div>
 
-                <div class="column-one-third">
+                <div class="column-one-half">
                     <p><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">View competition brief (opens in a new window)</a></p>
                 </div>
             </div>

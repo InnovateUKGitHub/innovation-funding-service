@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.context.TestPropertySource;
 
-import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -38,7 +38,7 @@ public class ApplicantControllerTest extends BaseControllerMockMVCTest<Applicant
     @Test
     public void testDashboard() throws Exception {
         ApplicantDashboardViewModel viewModel = new ApplicantDashboardViewModel();
-        when(populator.populate(anyLong())).thenReturn(viewModel);
+        when(populator.populate(any(UserResource.class))).thenReturn(viewModel);
 
         mockMvc.perform(get("/applicant/dashboard"))
                 .andExpect(status().isOk())
@@ -54,7 +54,7 @@ public class ApplicantControllerTest extends BaseControllerMockMVCTest<Applicant
         setLoggedInUser(applicant);
 
         ApplicantDashboardViewModel viewModel = new ApplicantDashboardViewModel();
-        when(populator.populate(applicant.getId())).thenReturn(viewModel);
+        when(populator.populate(applicant)).thenReturn(viewModel);
 
 
         mockMvc.perform(get("/applicant/dashboard"))
@@ -72,7 +72,7 @@ public class ApplicantControllerTest extends BaseControllerMockMVCTest<Applicant
         setLoggedInUser(collabUsers);
 
         ApplicantDashboardViewModel viewModel = new ApplicantDashboardViewModel();
-        when(populator.populate(collabUsers.getId())).thenReturn(viewModel);
+        when(populator.populate(collabUsers)).thenReturn(viewModel);
 
         mockMvc.perform(get("/applicant/dashboard"))
                 .andExpect(status().isOk())
