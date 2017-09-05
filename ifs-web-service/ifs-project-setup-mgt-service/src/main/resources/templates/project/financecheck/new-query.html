@@ -42,7 +42,7 @@
                        type="text"
                        class="form-control width-full"
                        required="required"
-                       th:errorclass="field-group-error"
+                       th:errorclass="form-control-error"
                        th:field="*{queryTitle}"
                        th:attr="maxlength=${model.maxTitleCharacters},
                                 data-required-errormessage=#{validation.field.must.not.be.blank},
