@@ -66,14 +66,15 @@ the Application details are completed
     Run Keyword If  '${status}' == 'FAIL'  the applicant completes the application details
 
 the applicant completes the application details
-    [Arguments]   ${Application_details}
-    the user clicks the button/link       link=${Application_details}
+    [Arguments]  ${applicationTitle}
+    the user clicks the button/link  link=${applicationTitle}
+    the user fills in the application details
+
+the user fills in the application details
     the user clicks the button/link       jQuery=button:contains("research category")
-    the user clicks the button/link       jQuery=label[for^="researchCategoryChoice"]:contains("Experimental development")
-    the user clicks the button/link       jQuery=label[for^="researchCategoryChoice"]:contains("Experimental development")
-    the user clicks the button/link       jQuery=button:contains(Save)
-    the user clicks the button/link       jQuery=label[for="application.resubmission-no"]
-    the user clicks the button/link       jQuery=label[for="application.resubmission-no"]
+    the user clicks the button twice      jQuery=label[for^="researchCategoryChoice"]:contains("Experimental development")
+    the user clicks the button/link       jQuery=button:contains("Save")
+    the user clicks the button twice      jQuery=label[for="application.resubmission-no"]
     # those Radio buttons need to be clicked twice.
     The user enters text to a text field  id=application_details-startdate_day  18
     The user enters text to a text field  id=application_details-startdate_year  2018
@@ -81,7 +82,7 @@ the applicant completes the application details
     The user enters text to a text field  id=application_details-duration  20
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
     the user should see the element       jQuery=button:contains("Edit")
-    the user should not see the element     css=input
+    the user should not see the element   css=input
 
 the user marks the finances as complete
     [Arguments]  ${Application}
@@ -124,7 +125,7 @@ the user fills in Labour
 
 the user fills in Overhead costs
     [Arguments]  ${Application_name}
-    ${STATUS}  ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  Should Be Equal As Strings  Evolution of the global phosphorus cycle  ${Application_name}
+    ${STATUS}  ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  Should Be Equal As Strings  ${OPEN_COMPETITION_APPLICATION_5_NAME}  ${Application_name}
     run keyword if  '${status}'=='PASS'  the user chooses Calculate overheads option
     run keyword if  '${status}'=='FAIL'  the user chooses 20% overheads option
 

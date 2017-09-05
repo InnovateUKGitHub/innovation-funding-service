@@ -18,19 +18,23 @@ Suite Setup       Log in and create a new application for the Aerospace competit
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
+Resource          ../../Applicant_Commons.robot
+
+*** Variables ***
+${aeroApplication}  Aerospace test application
 
 *** Test Cases ***
 Application details: Previous submission
     [Documentation]    INFUND-4694
-    Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Aerospace test application
-    And the user clicks the button/link    link=Application details
-    When the user clicks the button/link    jQuery=label:contains(Yes)
-    Then the user should see the text in the page    Please provide the details of this previous application
-    And the user should see the text in the page    Previous application number
-    And the user should see the text in the page    Previous application title
-    When the user clicks the button/link    jQuery=label:contains(No)
-    Then The user should not see the element    id=application_details-previousapplicationnumber
+    Given the user navigates to the page           ${DASHBOARD_URL}
+    And the user clicks the button/link            link=${aeroApplication}
+    And the user clicks the button/link            link=Application details
+    When the user clicks the button/link           jQuery=label:contains("Yes")
+    Then the user should see the text in the page  Please provide the details of this previous application
+    And the user should see the text in the page   Previous application number
+    And the user should see the text in the page   Previous application title
+    When the user clicks the button/link           jQuery=label:contains("No")
+    Then The user should not see the element       id=application_details-previousapplicationnumber
 
 Application details: Research category
     [Documentation]    INFUND-6823
@@ -48,7 +52,7 @@ Application details: Research category
 Research Category : Autosave not applicable
     [Documentation]    INFUND-6823, INFUND-8251
     When the user clicks the button/link    jQuery=button:contains("Change your research category")
-    #    TODO commented due to INFUND-9212
+    #    TODO commented due to IFS-1511
     # and the user should see the text in the page    Changing the research category will reset the funding level for all business participants.
     And the user should see the element    jQuery=label:contains("Industrial research")
     And the user clicks the button twice    jQuery=label[for^="researchCategoryChoice"]:contains("Industrial research")
@@ -57,9 +61,7 @@ Research Category : Autosave not applicable
     And the finance summary page should show a warning
 
 Application details: Innovation area section is visible
-    [Documentation]    INFUND-8115
-    ...
-    ...    INFUND-9154
+    [Documentation]  INFUND-8115 INFUND-9154
     [Tags]
     Given the user clicks the button/link    link=Application overview
     And the user clicks the button/link    link=Application details
@@ -68,10 +70,10 @@ Application details: Innovation area section is visible
     Then the user should see the element    jQuery=label:contains("Digital manufacturing"):contains("Process analysis and control technologies including digital, sensor technology and metrology.")
     And the user should see the element    jQuery=label:contains("My innovation area is not listed")
     And the user should see the element    jQuery=a:contains("Cancel")
-    and the user clicks the button/link    jQuery=button:contains(Save)
+    and the user clicks the button/link    jQuery=button:contains("Save")
     Then the user should see an error    This field cannot be left blank
     and the user clicks the button/link    jQuery=label:contains("Digital manufacturing")
-    and the user clicks the button/link    jQuery=button:contains(Save)
+    and the user clicks the button/link    jQuery=button:contains("Save")
     Then the user should see the element    jQuery=button:contains("Change your innovation area")
 
 Autosave in the form questions
@@ -79,7 +81,7 @@ Autosave in the form questions
     [Tags]    HappyPath
     [Setup]
     Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Aerospace test application
+    And the user clicks the button/link    link=${aeroApplication}
     When the user clicks the button/link    link=Application details
     then the application details need to be autosaved
     and the user clicks the button/link    link=Application overview
@@ -110,8 +112,7 @@ Marking a question as complete
     And the question should be marked as complete on the application overview page
 
 Mark a question as incomplete
-    [Documentation]    INFUND-210,
-    ...    INFUND-202
+    [Documentation]  INFUND-210, INFUND-202
     [Tags]    HappyPath
     Given the user clicks the button/link    link=Project summary
     When the user clicks the button/link    jQuery=button:contains("Edit")
@@ -120,12 +121,24 @@ Mark a question as incomplete
     And the question should not be marked as complete on the application overview page
 
 Review and submit button
+    [Documentation]  IFS-751
     [Tags]
-    Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Aerospace test application
-    When the user clicks the button/link    jQuery=.button:contains("Review and submit")
-    Then the user should see the text in the page    Application summary
-    And the user should see the text in the page    Please review your application before final submission
+    Given the user navigates to the page  ${DASHBOARD_URL}
+    And the user clicks the button/link   link=${aeroApplication}
+    When the user clicks the button/link  jQuery=.button:contains("Review and submit")
+    Then the user should see the element  jQuery=h1:contains("Application summary")
+    And the user should see the text in the page  Please review your application before final submission
+
+Incomplete sections contain mark as complete link
+    [Documentation]  IFS-751
+    [Tags]  MySQL
+    Given the user should see the element  jQuery=button:contains("Application details") .section-incomplete
+    When the user expands the section      Application details
+    Then the user should see the element   jQuery=.collapsible:contains("Application details") button:contains("Mark as complete")
+    And the user should see the element    jQuery=.collapsible:contains("Application details") button:contains("Return and edit")
+    When the user clicks the button/link   jQuery=.collapsible:contains("Application details") button:contains("Mark as complete")
+    And the user fills in the application details
+    Then the user should no longer see the Mark-as-complete-link
 
 Collaborator: read only view of Application details
     [Documentation]    INFUND-8251 , INFUND-8260
@@ -192,5 +205,11 @@ Log in and create a new application for the Aerospace competition
 
     And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user clicks the button/link    link=Application details
-    And the user enters text to a text field    id=application_details-title    Aerospace test application
+    And the user enters text to a text field    id=application_details-title  ${aeroApplication}
     And the user clicks the button/link    jQuery=button:contains("Save and return")
+
+the user should no longer see the Mark-as-complete-link
+    ${appId} =  get application id by name  ${aeroApplication}
+    the user navigates to the page       ${server}/application/${appId}/summary
+    the user should see the element      jQuery=.collapsible:contains("Application details") button:contains("Return and edit")
+    the user should not see the element  jQuery=.collapsible:contains("Application details") button:contains("Mark as complete")
