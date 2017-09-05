@@ -51,11 +51,8 @@ Application details: Research category
 
 Research Category : Autosave not applicable
     [Documentation]    INFUND-6823, INFUND-8251
-    When the user clicks the button/link    jQuery=button:contains("Change your research category")
-    #    TODO commented due to IFS-1511
-    # and the user should see the text in the page    Changing the research category will reset the funding level for all business participants.
-    And the user should see the element    jQuery=label:contains("Industrial research")
-    And the user clicks the button twice    jQuery=label[for^="researchCategoryChoice"]:contains("Industrial research")
+    When the user clicks the button/link   jQuery=button:contains("Change your research category")
+    Then the user clicks the button twice  jQuery=label[for^="researchCategoryChoice"]:contains("Industrial research")
     And the user clicks the button/link    jQuery=a:contains("Application details")
     And the user should see the element    jQuery=div:contains("Chosen research category: Feasibility studies")
     And the finance summary page should show a warning
