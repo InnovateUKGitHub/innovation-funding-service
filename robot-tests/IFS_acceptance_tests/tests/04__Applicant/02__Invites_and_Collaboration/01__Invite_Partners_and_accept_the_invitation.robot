@@ -127,7 +127,7 @@ Partner organisation Client-side validations
 
 Valid invitation submit
     [Documentation]    INFUND-901
-    [Tags]    HappyPath  SmokeTest
+    [Tags]  HappyPath  SmokeTest
     When The user clicks the button/link  jQuery=button:contains("Add organisation and invite applicants")
     Then the user should see the element  jQuery=.table-overflow tr:contains("Steve Smith") td:nth-child(3):contains("Lead")
     And the user should see the element   jQuery=.table-overflow tr:contains("Adrian Booth") td:nth-child(3):contains("Invite pending")
@@ -139,7 +139,7 @@ The Lead's inputs should not be visible in other application invites
 
 Pending users visible in the assign list but not clickable
     [Documentation]    INFUND-928  INFUND-1962
-    [Tags]
+    [Tags]  HappyPath
     Given the user navigates to the page          ${DASHBOARD_URL}
     And the user clicks the button/link           link=Invite robot test application
     And the user clicks the button/link           link=Project summary
@@ -175,7 +175,7 @@ Partner requests new verification email via password reset
 Complete account verification
     [Documentation]    INFUND-1005  INFUND-2286  INFUND-1779  INFUND-2336
     [Tags]  HappyPath  Email  SmokeTest
-    When the user reads his email and clicks the link       ${invite_email}    Please verify your email address    Once verified you can sign into your account
+    When the user reads his email and clicks the link       ${invite_email}    Please verify your email address    Once verified you can sign into your account  1
     Then the user should be redirected to the correct page  ${REGISTRATION_VERIFIED}
 
 Partner should be able to log-in and see the new company name

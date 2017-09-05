@@ -22,7 +22,10 @@ import org.innovateuk.ifs.user.builder.RoleBuilder;
 import org.innovateuk.ifs.user.builder.RoleResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
-import org.innovateuk.ifs.user.domain.*;
+import org.innovateuk.ifs.user.domain.Ethnicity;
+import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,11 +60,9 @@ import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
-import static org.innovateuk.ifs.user.builder.CompAdminEmailBuilder.newCompAdminEmail;
 import static org.innovateuk.ifs.user.builder.EthnicityBuilder.newEthnicity;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static org.innovateuk.ifs.user.builder.ProjectFinanceEmailBuilder.newProjectFinanceEmail;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -69,7 +70,8 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.Disability.NO;
 import static org.innovateuk.ifs.user.resource.Gender.NOT_STATED;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.UserRoleType.APPLICANT;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
@@ -264,7 +266,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         });
 
         when(tokenRepositoryMock.save(expectedToken)).thenReturn(expectedToken);
-        when(compAdminEmailRepositoryMock.findOneByEmail(userToCreate.getEmail())).thenReturn(null);
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
         when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
 
@@ -286,7 +287,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 build();
 
         when(organisationRepositoryMock.findOne(123L)).thenReturn(null);
-        when(compAdminEmailRepositoryMock.findOneByEmail(userToCreate.getEmail())).thenReturn(null);
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
         when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
 
@@ -311,7 +311,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
         when(roleRepositoryMock.findOneByName(APPLICANT.getName())).thenReturn(null);
-        when(compAdminEmailRepositoryMock.findOneByEmail(userToCreate.getEmail())).thenReturn(null);
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
         when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
 
@@ -338,7 +337,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
         when(roleRepositoryMock.findOneByName(APPLICANT.getName())).thenReturn(applicantRole);
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
-        when(compAdminEmailRepositoryMock.findOneByEmail(userToCreate.getEmail())).thenReturn(null);
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
         when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
 
@@ -357,173 +355,12 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
     when(roleRepositoryMock.findOneByName(APPLICANT.getName())).thenReturn(applicantRole);
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
-        when(compAdminEmailRepositoryMock.findOneByEmail(userToCreate.getEmail())).thenReturn(null);
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
         when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceFailure(badRequestError("bad password")));
 
         ServiceResult<UserResource> result = service.createOrganisationUser(123L, userToCreate);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(Error.fieldError("password", null, "bad password")));
-    }
-
-    @Test
-    public void testCreateCompAdminUserForOrganisation() {
-        UserResource userToCreate = newUserResource().
-                withFirstName("First").
-                withLastName("Last").
-                withEmail("email@example.com").
-                withPhoneNumber("01234 567890").
-                withPassword("thepassword").
-                withTitle(Mr).
-                build();
-
-        Organisation selectedOrganisation = newOrganisation().build();
-        Role compAdminRole = newRole().build();
-
-        when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
-        when(organisationRepositoryMock.findByUsersId(anyLong())).thenReturn(singletonList(selectedOrganisation));
-        when(roleRepositoryMock.findOneByName(COMP_ADMIN.getName())).thenReturn(compAdminRole);
-        when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
-
-        Profile expectedProfile = newProfile().withId(7L).build();
-        when(profileRepositoryMock.save(any(Profile.class))).thenReturn(expectedProfile);
-
-        User expectedCreatedUser = createLambdaMatcher(user -> {
-
-            assertNull(user.getId());
-            assertEquals("First Last", user.getName());
-            assertEquals("First", user.getFirstName());
-            assertEquals("Last", user.getLastName());
-
-            assertEquals("email@example.com", user.getEmail());
-            assertEquals("01234 567890", user.getPhoneNumber());
-            assertEquals(Mr, user.getTitle());
-            assertEquals("new-uid", user.getUid());
-            assertEquals(1, user.getRoles().size());
-            assertTrue(user.getRoles().contains(compAdminRole));
-            List<Organisation> orgs = organisationRepositoryMock.findByUsersId(user.getId());
-            assertEquals(1, orgs.size());
-            assertEquals(selectedOrganisation, orgs.get(0));
-            assertEquals(expectedProfile.getId(), user.getProfileId());
-
-            return true;
-        });
-
-        User savedUser = newUser().with(id(999L)).build();
-
-        when(userRepositoryMock.save(expectedCreatedUser)).thenReturn(savedUser);
-
-        Token expectedToken = createLambdaMatcher(token -> {
-            assertEquals(TokenType.VERIFY_EMAIL_ADDRESS, token.getType());
-            assertEquals(User.class.getName(), token.getClassName());
-            assertEquals(savedUser.getId(), token.getClassPk());
-            assertFalse(token.getHash().isEmpty());
-            return true;
-        });
-
-        CompAdminEmail compAdminEmail = newCompAdminEmail().withEmail("email@example.com").build();
-
-        when(tokenRepositoryMock.save(expectedToken)).thenReturn(expectedToken);
-        when(compAdminEmailRepositoryMock.findOneByEmail(userToCreate.getEmail())).thenReturn(compAdminEmail);
-        when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
-        when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
-
-        ServiceResult<UserResource> result = service.createOrganisationUser(123L, userToCreate);
-        assertTrue(result.isSuccess());
-        assertEquals(userToCreate, result.getSuccessObject());
-    }
-
-    @Test
-    public void testCreateCompAdminUserForOrganisationButRoleNotFound() {
-
-        UserResource userToCreate = newUserResource().
-                withFirstName("First").
-                withLastName("Last").
-                withEmail("email@example.com").
-                withPhoneNumber("01234 567890").
-                withPassword("thepassword").
-                withTitle(Mr).
-                build();
-
-        Organisation selectedOrganisation = newOrganisation().build();
-        CompAdminEmail compAdminEmail = newCompAdminEmail().withEmail("email@example.com").build();
-
-        when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
-        when(roleRepositoryMock.findOneByName(COMP_ADMIN.getName())).thenReturn(null);
-        when(compAdminEmailRepositoryMock.findOneByEmail(userToCreate.getEmail())).thenReturn(compAdminEmail);
-        when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
-        when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
-
-        ServiceResult<UserResource> result = service.createOrganisationUser(123L, userToCreate);
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(notFoundError(Role.class, COMP_ADMIN.getName())));
-    }
-
-    @Test
-    public void testCreateProjectFinanceUserForOrganisation() {
-        UserResource userToCreate = newUserResource().
-                withFirstName("First").
-                withLastName("Last").
-                withEmail("email@example.com").
-                withPhoneNumber("01234 567890").
-                withPassword("thepassword").
-                withTitle(Mr).
-                build();
-
-        Organisation selectedOrganisation = newOrganisation().build();
-        Role projectFinanceRole = newRole().build();
-
-        when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
-        when(organisationRepositoryMock.findByUsersId(anyLong())).thenReturn(singletonList(selectedOrganisation));
-        when(roleRepositoryMock.findOneByName(PROJECT_FINANCE.getName())).thenReturn(projectFinanceRole);
-        when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
-
-        Profile expectedProfile = newProfile().withId(7L).build();
-        when(profileRepositoryMock.save(any(Profile.class))).thenReturn(expectedProfile);
-
-        User expectedCreatedUser = createLambdaMatcher(user -> {
-
-            assertNull(user.getId());
-            assertEquals("First Last", user.getName());
-            assertEquals("First", user.getFirstName());
-            assertEquals("Last", user.getLastName());
-
-            assertEquals("email@example.com", user.getEmail());
-            assertEquals("01234 567890", user.getPhoneNumber());
-            assertEquals(Mr, user.getTitle());
-            assertEquals("new-uid", user.getUid());
-            assertEquals(1, user.getRoles().size());
-            assertTrue(user.getRoles().contains(projectFinanceRole));
-            List<Organisation> orgs = organisationRepositoryMock.findByUsersId(user.getId());
-            assertEquals(1, orgs.size());
-            assertEquals(selectedOrganisation, orgs.get(0));
-            assertEquals(expectedProfile.getId(), user.getProfileId());
-
-            return true;
-        });
-
-        User savedUser = newUser().with(id(999L)).build();
-
-        when(userRepositoryMock.save(expectedCreatedUser)).thenReturn(savedUser);
-
-        Token expectedToken = createLambdaMatcher(token -> {
-            assertEquals(TokenType.VERIFY_EMAIL_ADDRESS, token.getType());
-            assertEquals(User.class.getName(), token.getClassName());
-            assertEquals(savedUser.getId(), token.getClassPk());
-            assertFalse(token.getHash().isEmpty());
-            return true;
-        });
-
-        ProjectFinanceEmail projectFinanceEmail = newProjectFinanceEmail().withEmail("email@example.com").build();
-
-        when(tokenRepositoryMock.save(expectedToken)).thenReturn(expectedToken);
-        when(projectFinanceEmailRepositoryMock.findOneByEmail(userToCreate.getEmail())).thenReturn(projectFinanceEmail);
-        when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
-        when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
-
-        ServiceResult<UserResource> result = service.createOrganisationUser(123L, userToCreate);
-        assertTrue(result.isSuccess());
-        assertEquals(userToCreate, result.getSuccessObject());
     }
 
     @Test
@@ -762,6 +599,81 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         ServiceResult<Void> result = service.activateUser(userToEdit.getId());
 
         assertTrue(result.isFailure());
+    }
+
+    @Test
+    public void testCreateCompAdminOrganisationUser() {
+
+        RoleResource roleResource = newRoleResource().withType(COMP_ADMIN).withName(COMP_ADMIN.getName()).withUrl("dummyUrl").build();
+        UserResource userToCreate = newUserResource().
+                withFirstName("First").
+                withLastName("Last").
+                withEmail("email@example.com").
+                withPhoneNumber("01234 567890").
+                withPassword("thepassword").
+                withTitle(Mr).
+                withDisability(Disability.YES).
+                withGender(Gender.MALE).
+                withEthnicity(2L).
+                withRolesGlobal(singletonList(roleResource)).
+                build();
+
+        Organisation selectedOrganisation = newOrganisation().withId(123L).build();
+        Role compAdminRole = newRole().withName(COMP_ADMIN.getName()).build();
+
+        when(ethnicityMapperMock.mapIdToDomain(2L)).thenReturn(newEthnicity().withId(2L).build());
+        when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
+        when(organisationRepositoryMock.findByUsersId(anyLong())).thenReturn(singletonList(selectedOrganisation));
+        when(roleRepositoryMock.findOneByName(COMP_ADMIN.getName())).thenReturn(compAdminRole);
+        when(roleMapperMock.mapToDomain(roleResource)).thenReturn(compAdminRole);
+        when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
+
+        Profile expectedProfile = newProfile().withId(7L).build();
+        when(profileRepositoryMock.save(any(Profile.class))).thenReturn(expectedProfile);
+
+        User expectedCreatedUser = createLambdaMatcher(user -> {
+
+            assertNull(user.getId());
+            assertEquals("First Last", user.getName());
+            assertEquals("First", user.getFirstName());
+            assertEquals("Last", user.getLastName());
+
+            assertEquals("email@example.com", user.getEmail());
+            assertEquals("01234 567890", user.getPhoneNumber());
+            assertEquals(Mr, user.getTitle());
+            assertEquals("new-uid", user.getUid());
+            assertEquals(Gender.MALE, user.getGender());
+            assertEquals(Disability.YES, user.getDisability());
+            assertEquals(Long.valueOf(2), user.getEthnicity().getId());
+            assertEquals(1, user.getRoles().size());
+            assertTrue(user.getRoles().contains(compAdminRole));
+            List<Organisation> orgs = organisationRepositoryMock.findByUsersId(user.getId());
+            assertEquals(1, orgs.size());
+            assertEquals(selectedOrganisation, orgs.get(0));
+            assertEquals(expectedProfile.getId(), user.getProfileId());
+
+            return true;
+        });
+
+        User savedUser = newUser().with(id(999L)).build();
+
+        when(userRepositoryMock.save(expectedCreatedUser)).thenReturn(savedUser);
+
+        Token expectedToken = createLambdaMatcher(token -> {
+            assertEquals(TokenType.VERIFY_EMAIL_ADDRESS, token.getType());
+            assertEquals(User.class.getName(), token.getClassName());
+            assertEquals(savedUser.getId(), token.getClassPk());
+            assertFalse(token.getHash().isEmpty());
+            return true;
+        });
+
+        when(tokenRepositoryMock.save(expectedToken)).thenReturn(expectedToken);
+        when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
+        when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
+
+        UserResource result = service.createOrganisationUser(123L, userToCreate).getSuccessObjectOrThrowException();
+
+        assertEquals(userToCreate, result);
     }
 
     private void setUpUsersForEditInternalUserSuccess() {

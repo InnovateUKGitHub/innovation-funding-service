@@ -2,15 +2,18 @@ package org.innovateuk.ifs.application.repository;
 
 import org.innovateuk.ifs.application.domain.ApplicationStatistics;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
+import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -19,8 +22,9 @@ import java.util.List;
  */
 public interface ApplicationStatisticsRepository extends PagingAndSortingRepository<ApplicationStatistics, Long> {
 
+    Sort SORT_BY_FIRSTNAME = new Sort("firstName");
+
     String SUBMITTED_STATES_STRING = "(org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
-    String WITHDRAWN_STATES_STRING = "(org.innovateuk.ifs.workflow.resource.State.WITHDRAWN)";
 
     String APPLICATION_FILTER = "SELECT a FROM ApplicationStatistics a WHERE a.competition = :compId " +
             "AND (a.applicationProcess.activityState.state IN :states) " +
@@ -29,14 +33,11 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
     String INNOVATION_AREA_FILTER = "SELECT a FROM ApplicationStatistics a " +
             "LEFT JOIN ApplicationInnovationAreaLink innovationArea ON innovationArea.application.id = a.id " +
             "AND (innovationArea.className = 'org.innovateuk.ifs.application.domain.Application#innovationArea') " +
-            "WHERE (a.competition = :compId " +
+            "WHERE a.competition = :compId " +
             "AND (a.applicationProcess.activityState.state IN :states) " +
             "AND (innovationArea.category.id = :innovationArea OR :innovationArea IS NULL) " +
             "AND NOT EXISTS (SELECT 'found' FROM Assessment b WHERE b.participant.user.id = :assessorId AND b.target.id = a.id) " +
-            " OR a.id IN (SELECT b.target.id FROM Assessment b WHERE b.participant.user.id = :assessorId " +
-            "AND b.activityState.state IN " + WITHDRAWN_STATES_STRING + ")) " +
             "AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
-
 
     String REJECTED_AND_SUBMITTED_STATES_STRING =
             "(org.innovateuk.ifs.workflow.resource.State.REJECTED," +
@@ -82,9 +83,15 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "LEFT JOIN ActivityState activityState ON application.id IS NOT NULL AND assessment.activityState.id = activityState.id " +
             "WHERE " +
             "  competitionParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED AND " +
-            "  competitionParticipant.role = 'ASSESSOR' " +
+            "  competitionParticipant.role = 'ASSESSOR' AND " +
+            " (:innovationSectorId IS NULL OR :innovationSectorId IN (SELECT innovationAreaLink.category.sector.id " +
+            "                                             FROM ProfileInnovationAreaLink innovationAreaLink" +
+            "                                             WHERE innovationAreaLink.profile = profile)) AND " +
+            "  (:businessType IS NULL OR profile.businessType = :businessType) " +
             "GROUP BY user " +
             "HAVING sum(case when competitionParticipant.competition.id = :compId THEN 1 ELSE 0 END) > 0")
     Page<AssessorCountSummaryResource> getAssessorCountSummaryByCompetition(@Param("compId") long competitionId,
+                                                                            @Param("innovationSectorId") Optional<Long> innovationSectorId,
+                                                                            @Param("businessType") Optional<BusinessType> businessType,
                                                                             Pageable pageable);
 }

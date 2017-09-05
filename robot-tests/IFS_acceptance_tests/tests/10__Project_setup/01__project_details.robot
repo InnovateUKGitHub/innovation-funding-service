@@ -379,7 +379,7 @@ Invited Fin Contact for non lead partner
     Then the invitee is able to assign himself as Finance Contact  ${test_mailbox_one}+ludlowfincont@gmail.com  Finance contact invitation  providing finance details  Ludlow's  FinContact
     Given log in as a different user     &{collaborator1_credentials}
     Then the user navigates to the page  ${project_in_setup_page}/details
-    And the matching status checkbox is updated differently  project-details-finance  3  Yes
+    And the matching status checkbox is updated  project-details-finance  3  yes
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element   jQuery=li.complete:nth-of-type(2)
     When the user clicks the button/link    link=status of my partners
@@ -485,7 +485,7 @@ Lead partner selects a finance contact
     And the user selects the radio button    financeContact    financeContact2
     And the user clicks the button/link    jQuery=.button:contains("Save finance contact")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
-    And the matching status checkbox is updated differently   project-details-finance    1    Yes
+    And the matching status checkbox is updated  project-details-finance  1  yes
     And the user should see the text in the page    Elmo Chenault
     And the user should see the element    link=${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
 
@@ -523,7 +523,7 @@ Academic Partner nominates Finance contact
     And the user selects the radio button          financeContact    financeContact1
     And the user clicks the button/link            jQuery=.button:contains("Save finance contact")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
-    And the matching status checkbox is updated differently    project-details-finance    2    Yes
+    And the matching status checkbox is updated  project-details-finance  2  yes
     And the user should see the element     link=${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
     When the user navigates to the page     ${project_in_setup_page}
     Then the user should see the element    jQuery=li.complete:nth-of-type(2)
@@ -640,11 +640,6 @@ the matching status checkbox is updated
     the user should see the element    ${table_id}
     the user should see the element    jQuery=#${table_id} tr:nth-of-type(${ROW}) .${STATUS}
 
-the matching status checkbox is updated differently
-    [Arguments]    ${table_id}    ${ROW}    ${STATUS}
-    the user should see the element    ${table_id}
-    the user should see the element    jQuery=#${table_id} tr:nth-of-type(${ROW}):contains("${STATUS}")
-
 the duration should be visible
     Element Should Contain    xpath=//*[@id="content"]/form/p/strong    36 months
 
@@ -675,12 +670,12 @@ the applicant clicks the submit button in the modal
     the user clicks the button/link    jQuery=button:contains("Submit")
 
 all the fields are completed
-    the matching status checkbox is updated    project-details    1    yes
-    the matching status checkbox is updated    project-details    2    yes
-    the matching status checkbox is updated    project-details    3    yes
-    the matching status checkbox is updated differently    project-details-finance    1    Yes
-    the matching status checkbox is updated differently  project-details-finance    2    Yes
-    the matching status checkbox is updated differently   project-details-finance    3    Yes
+    the matching status checkbox is updated  project-details  1  yes
+    the matching status checkbox is updated  project-details  2  yes
+    the matching status checkbox is updated  project-details  3  yes
+    the matching status checkbox is updated  project-details-finance  1  yes
+    the matching status checkbox is updated  project-details-finance  2  yes
+    the matching status checkbox is updated  project-details-finance  3  yes
 
 the user changes the start date back again
     the user clicks the button/link    link=Target start date
