@@ -204,7 +204,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         Set<State> unsuccessfulStates = simpleMapSet(asLinkedSet(
                 ApplicationState.INELIGIBLE,
                 INELIGIBLE_INFORMED,
-                REJECTED), ApplicationState::getBackingState);
+                REJECTED), applicationState -> applicationState.getBackingState());
 
         List<Application> unsuccessfulApplications = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, unsuccessfulStates);
 
