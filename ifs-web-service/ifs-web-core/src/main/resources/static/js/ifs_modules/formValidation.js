@@ -761,10 +761,11 @@ IFS.core.formValidation = (function () {
       if (el.is('[data-date]')) {
         el = el.closest('.date-group,fieldset').find('input[type="hidden"]')
       }
-      if (el.attr('name').length) {
+      if (typeof (el.attr('name')) !== 'undefined') {
         return el.attr('name')
+      } else {
+        return IFS.core.formValidation.getIdentifier(el)
       }
-      return ''
     },
     getIdentifier: function (el) {
       if (el.is(':radio') || el.is(':checkbox')) {
