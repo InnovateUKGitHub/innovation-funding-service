@@ -78,39 +78,7 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
                         responseFields(organisationResourceFields)
                 ));
     }
-/*
-    @Test
-    public void create() throws Exception {
-        OrganisationResource organisationResource = organisationResourceBuilder.build();
 
-        when(organisationServiceMock.create(organisationResource)).thenReturn(serviceSuccess(organisationResource));
-
-        mockMvc.perform(post("/organisation/create")
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(organisationResource)))
-                .andExpect(status().isCreated())
-                .andDo(document("organisation/{method-name}",
-                        requestFields(organisationResourceFields),
-                        responseFields(organisationResourceFields)
-                ));
-    }
-
-    @Test
-    public void saveResource() throws Exception {
-        OrganisationResource organisationResource = organisationResourceBuilder.build();
-
-        when(organisationServiceMock.update(organisationResource)).thenReturn(serviceSuccess(organisationResource));
-
-        mockMvc.perform(put("/organisation/update")
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(organisationResource)))
-                .andExpect(status().isOk())
-                .andDo(document("organisation/{method-name}",
-                        requestFields(organisationResourceFields),
-                        responseFields(organisationResourceFields)
-                ));
-    }
-*/
     @Test
     public void updateNameAndRegistration() throws Exception {
         long organisationId = 1L;
