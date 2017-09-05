@@ -34,7 +34,7 @@ public class CompetitionManagementAssessmentPanelControllerTest extends BaseCont
 
     @Test
     public void assessmentPanel() throws Exception {
-        long competitionId = 1;
+        Long competitionId = 1L;
         String competitionName = "Competition x";
         CompetitionStatus competitionStatus = CLOSED;
 
@@ -55,7 +55,7 @@ public class CompetitionManagementAssessmentPanelControllerTest extends BaseCont
 
         verify(competitionService, only()).getById(competitionId);
 
-        assertEquals(competitionId, (long) model.getCompetitionId());
+        assertEquals(competitionId, model.getCompetitionId());
         assertEquals(competitionName, model.getCompetitionName());
         assertEquals(competitionStatus, model.getCompetitionStatus());
     }
