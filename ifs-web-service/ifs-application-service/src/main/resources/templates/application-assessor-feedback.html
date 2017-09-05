@@ -23,7 +23,7 @@
     <h3 class="heading-medium">Your answer:</h3>
     <th:block th:each="item : ${model.responses}">
         <th:block th:unless="${item.fileEntry}">
-            <p th:text="${item.value}" />
+            <div th:text="${item.value}" data-md-to-html="" class="wysiwyg-styles"></div>
         </th:block>
         <th:block th:if="${item.fileEntry}">
             <h3 class="heading-small no-margin">View appendix:</h3>
@@ -37,7 +37,7 @@
     <ul class="boxed-list">
         <li th:each="item, iterStat : ${model.aggregateResource.feedback}">
             <h4 class="heading-small" th:text="|Assessor ${iterStat.count}|">Assessor 1</h4>
-            <p th:text="${item}">Feedback text</p>
+            <div th:text="${item}" data-md-to-html="" class="wysiwyg-styles">Feedback text</div>
         </li>
     </ul>
 
