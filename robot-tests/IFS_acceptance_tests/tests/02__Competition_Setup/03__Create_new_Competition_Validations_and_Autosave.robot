@@ -46,7 +46,7 @@ Initial details: server-side validations
     And the user should see an error    Please enter an opening day.
     And the user should see an error    Please enter an opening month.
     And the user should see an error    Please select an Innovation Lead.
-    And the user should see an error    Please select a competition executive.
+    And the user should see an error    Please select a Portfolio Manager.
 
 Initial details: client-side validations
     [Documentation]  INFUND-2982  INFUND-3888
@@ -68,7 +68,7 @@ Initial details: client-side validations
     When the user selects the option from the drop-down menu    Ian Cooper    id=innovationLeadUserId
     Then the user should not see the error any more    Please select an Innovation Lead.
     When the user selects the option from the drop-down menu    John Doe     id=executiveUserId
-    Then The user should not see the text in the page    Please select a competition executive.    #Couldn't use this keyword : "Then the user should not see the error any more" . Because there is not any error in the page
+    Then The user should not see the text in the page    Please select a Portfolio manager.    #Couldn't use this keyword : "Then the user should not see the error any more" . Because there is not any error in the page
 
 Initial details: Autosave
     [Documentation]    INFUND-3001
