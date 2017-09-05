@@ -33,7 +33,8 @@ public class ApplicationDocs {
             fieldWithPath("researchCategory").description("Research category"),
             fieldWithPath("innovationArea").description("applicable Innovation Area"),
             fieldWithPath("noInnovationAreaApplicable").description("Flag indicating no Innovation Area is applicable"),
-            fieldWithPath("ineligibleOutcome").description("Outcome describing why the application has been marked as ineligible")
+            fieldWithPath("ineligibleOutcome").description("Outcome describing why the application has been marked as ineligible"),
+            fieldWithPath("leadOrganisationName").description("Lead organisation name")
     };
 
     public static final ApplicationResourceBuilder applicationResourceBuilder = newApplicationResource()
