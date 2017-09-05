@@ -19,9 +19,9 @@ import java.util.Optional;
 @Service
 public class OrganisationPatternMatcher {
     @NotSecured(value = "Is a 'static' comparison function", mustBeSecuredByOtherServices = false)
-    public boolean organisationAddressMatches(Organisation organisation, OrganisationResource organisationResource, OrganisationAddressType addressType, boolean required) {
-        Optional<OrganisationAddress> organisationOperatingAddress = getOrganisationAddressByType(organisation, addressType);
-        Optional<OrganisationAddressResource> submittedOrganisationAddress = getOrganisationResourceAddressByType(organisationResource, addressType);
+    public boolean organisationAddressMatches(Organisation existingOrganisation, OrganisationResource submittedOrganisation, OrganisationAddressType addressType, boolean required) {
+        Optional<OrganisationAddress> organisationOperatingAddress = getOrganisationAddressByType(existingOrganisation, addressType);
+        Optional<OrganisationAddressResource> submittedOrganisationAddress = getOrganisationResourceAddressByType(submittedOrganisation, addressType);
 
         if(organisationOperatingAddress.isPresent() && submittedOrganisationAddress.isPresent()) {
             return addressesMatch(organisationOperatingAddress.get(), submittedOrganisationAddress.get());
@@ -37,7 +37,7 @@ public class OrganisationPatternMatcher {
         try {
             return organisation.getOrganisationType().getId().equals(organisationResource.getOrganisationType());
         }
-        catch(Exception e) {
+        catch(NullPointerException e) {
             return false;
         }
     }
@@ -47,7 +47,7 @@ public class OrganisationPatternMatcher {
         try {
             return OrganisationTypeEnum.isResearch(organisation.getOrganisationType().getId());
         }
-        catch(Exception e) {
+        catch(NullPointerException e) {
             return false;
         }
     }
@@ -71,7 +71,7 @@ public class OrganisationPatternMatcher {
 
         try {
             return string1.trim().equalsIgnoreCase(string2.trim());
-        } catch(Exception e) {
+        } catch(NullPointerException e) {
             return false;
         }
     }
@@ -80,8 +80,8 @@ public class OrganisationPatternMatcher {
         try {
             return organisation.getAddresses().stream()
                     .filter(findAddress -> findAddress.getAddressType().getId().equals(addressType.getOrdinal()))
-                    .findFirst();
-        } catch(Exception e) {
+                    .findAny();
+        } catch(NullPointerException e) {
             return Optional.empty();
         }
     }
@@ -90,8 +90,8 @@ public class OrganisationPatternMatcher {
         try {
             return organisationResource.getAddresses().stream()
                 .filter(findAddress -> findAddress.getAddressType().getId().equals(addressType.getOrdinal()))
-                .findFirst();
-        } catch(Exception e) {
+                .findAny();
+        } catch(NullPointerException e) {
             return Optional.empty();
         }
     }

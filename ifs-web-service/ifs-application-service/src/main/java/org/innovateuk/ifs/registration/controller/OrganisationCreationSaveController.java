@@ -72,10 +72,12 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
 
 
         if (address != null && !organisationForm.isUseSearchResultAddress()) {
-            organisationAddressResources.add(new OrganisationAddressResource(address, new AddressTypeResource(OPERATING.getOrdinal(), OPERATING.name())));
+            organisationAddressResources.add(new OrganisationAddressResource(address,
+                    new AddressTypeResource(OPERATING.getOrdinal(), OPERATING.name())));
         }
         if (selectedOrganisation != null && selectedOrganisation.getOrganisationAddress() != null) {
-            organisationAddressResources.add(new OrganisationAddressResource(selectedOrganisation.getOrganisationAddress(), new AddressTypeResource(REGISTERED.getOrdinal(), REGISTERED.name())));
+            organisationAddressResources.add(new OrganisationAddressResource(selectedOrganisation.getOrganisationAddress(),
+                    new AddressTypeResource(REGISTERED.getOrdinal(), REGISTERED.name())));
         }
 
         OrganisationResource organisationResource = new OrganisationResource();

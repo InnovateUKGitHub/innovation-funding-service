@@ -8,12 +8,8 @@ import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
-import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * Determines if a registering user has to become part of an already existing organisation Companies House or Je-s organisations on the basis of specific organisation details.
@@ -27,26 +23,34 @@ public class OrganisationMatchingServiceImpl implements OrganisationMatchingServ
     @Autowired
     private OrganisationPatternMatcher organisationPatternMatcher;
 
-    public Optional<Organisation> findOrganisationMatch(OrganisationResource organisationResource) {
-        if(OrganisationTypeEnum.isResearch(organisationResource.getOrganisationType())) {
-            return findOrganisationByName(organisationResource).stream()
-                    .filter(foundOrganisation -> organisationPatternMatcher.organisationTypeIsResearch(foundOrganisation))
-                    .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(foundOrganisation, organisationResource, OrganisationAddressType.OPERATING, true))
-                    .findFirst();
+    public Optional<Organisation> findOrganisationMatch(OrganisationResource submittedOrganisationResource) {
+        if(OrganisationTypeEnum.isResearch(submittedOrganisationResource.getOrganisationType())) {
+            return findFirstCompaniesHouseMatch(submittedOrganisationResource);
         } else {
-            return findOrganisationByCompaniesHouseId(organisationResource).stream()
-                    .filter(foundOrganisation -> organisationPatternMatcher.organisationTypeMatches(foundOrganisation, organisationResource))
-                    .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(foundOrganisation, organisationResource, OrganisationAddressType.OPERATING, false))
-                    .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(foundOrganisation, organisationResource, OrganisationAddressType.REGISTERED, true))
-                    .findFirst();
+            return findFirstResearchMatch(submittedOrganisationResource);
         }
     }
 
+    private Optional<Organisation> findFirstResearchMatch(OrganisationResource submittedOrganisationResource) {
+        return findOrganisationByCompaniesHouseId(submittedOrganisationResource).stream()
+                .filter(foundOrganisation -> organisationPatternMatcher.organisationTypeMatches(foundOrganisation, submittedOrganisationResource))
+                .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(foundOrganisation, submittedOrganisationResource, OrganisationAddressType.OPERATING, false))
+                .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(foundOrganisation, submittedOrganisationResource, OrganisationAddressType.REGISTERED, true))
+                .findFirst();
+    }
+
+    private Optional<Organisation> findFirstCompaniesHouseMatch(OrganisationResource submittedOrganisationResource) {
+        return findOrganisationByName(submittedOrganisationResource).stream()
+                .filter(foundOrganisation -> organisationPatternMatcher.organisationTypeIsResearch(foundOrganisation))
+                .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(foundOrganisation, submittedOrganisationResource, OrganisationAddressType.OPERATING, true))
+                .findFirst();
+    }
+
     private List<Organisation> findOrganisationByName(OrganisationResource organisationResource) {
-        return find(organisationRepository.findByName(organisationResource.getName()), notFoundError(OrganisationResource.class, organisationResource)).getOrElse(Collections.emptyList());
+        return organisationRepository.findByNameOrderById(organisationResource.getName());
     }
 
     private List<Organisation> findOrganisationByCompaniesHouseId(OrganisationResource organisationResource) {
-        return find(organisationRepository.findByCompanyHouseNumber(organisationResource.getCompanyHouseNumber()), notFoundError(OrganisationResource.class, organisationResource)).getOrElse(Collections.emptyList());
+        return organisationRepository.findByCompanyHouseNumberOrderById(organisationResource.getCompanyHouseNumber());
     }
 }
