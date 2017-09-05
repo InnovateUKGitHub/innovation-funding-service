@@ -19,9 +19,6 @@
 
     <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
         <h2 class="heading-medium error-summary-heading">Unable to mark this application as ineligible</h2>
-        <ul class="error-summary-list">
-            <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
-        </ul>
     </div>
 
     <th:block th:if="${ineligibility.ineligible}">
@@ -107,7 +104,7 @@
                               data-max_words="400"
                               data-maxwordslength="400"
                               required="required"
-                              th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5,000')}, data-maxwordslength-errormessage=#{validation.field.max.word.count(null, '400')}, data-required-errormessage=#{validation.application.mark.ineligible.reason.required}"
+                              th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5,000')}, data-maxwordslength-errormessage=#{validation.field.max.word.count(null, '400')}, data-required-errormessage=#{validation.field.must.not.be.blank}"
                               th:errorclass="form-control-error"
                               rows="10"
                               th:field="*{ineligibleReason}"></textarea>

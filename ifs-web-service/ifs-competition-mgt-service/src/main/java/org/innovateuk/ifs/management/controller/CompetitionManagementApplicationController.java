@@ -207,7 +207,7 @@ public class CompetitionManagementApplicationController {
     private void validateIfTryingToMarkAsIneligible(String ineligibleReason,
                                                     ValidationHandler validationHandler) {
         if (ineligibleReason == null || ineligibleReason.isEmpty()) {
-            validationHandler.addAnyErrors(ServiceResult.serviceFailure(Arrays.asList(new Error("validation.application.mark.ineligible.reason.required", HttpStatus.BAD_REQUEST))), toField("ineligibleReason"));
+            validationHandler.addAnyErrors(ServiceResult.serviceFailure(Arrays.asList(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST))), toField("ineligibleReason"));
         }
     }
 }

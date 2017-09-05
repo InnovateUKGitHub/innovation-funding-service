@@ -489,7 +489,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("ineligibleReason"));
-        assertEquals("validation.application.mark.ineligible.reason.required", bindingResult.getFieldError("ineligibleReason").getCode());
+        assertEquals("validation.field.must.not.be.blank", bindingResult.getFieldError("ineligibleReason").getCode());
 
     }
 
