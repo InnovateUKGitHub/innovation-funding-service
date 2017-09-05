@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.AddressTypeEnum;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
@@ -61,7 +61,7 @@ public class AbstractAcceptInviteController {
         if (organisation.getAddresses().size() == 1) {
             address = organisation.getAddresses().get(0).getAddress();
         } else if (!organisation.getAddresses().isEmpty()) {
-            Optional<OrganisationAddressResource> addressOptional = organisation.getAddresses().stream().filter(a -> AddressTypeEnum.OPERATING.equals(AddressTypeEnum.valueOf(a.getAddressType().getName()))).findAny();
+            Optional<OrganisationAddressResource> addressOptional = organisation.getAddresses().stream().filter(a -> OrganisationAddressType.OPERATING.equals(OrganisationAddressType.valueOf(a.getAddressType().getName()))).findAny();
             if (addressOptional.isPresent()) {
                 address = addressOptional.get().getAddress();
             } else {

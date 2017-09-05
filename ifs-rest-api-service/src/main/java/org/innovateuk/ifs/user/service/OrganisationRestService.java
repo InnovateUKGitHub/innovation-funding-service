@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.user.service;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.AddressTypeEnum;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 
@@ -19,5 +19,5 @@ public interface OrganisationRestService {
     RestResult<OrganisationResource> createOrMatch(OrganisationResource organisation);
     RestResult<OrganisationResource> createAndLinkByInvite(OrganisationResource organisation, String inviteHash);
     RestResult<OrganisationResource> updateNameAndRegistration(OrganisationResource organisation);
-    RestResult<OrganisationResource> addAddress(OrganisationResource organisation, AddressResource address, AddressTypeEnum type);
+    RestResult<OrganisationResource> addAddress(OrganisationResource organisation, AddressResource address, OrganisationAddressType type);
 }

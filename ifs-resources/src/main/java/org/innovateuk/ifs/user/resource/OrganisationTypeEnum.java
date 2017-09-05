@@ -18,7 +18,7 @@ public enum OrganisationTypeEnum {
             lookup.put(d.getId(), d);
         }
     }
-
+    
     private static final EnumSet<OrganisationTypeEnum> researchParticipationTypes = EnumSet.of(RESEARCH, RTO, PUBLICSECTOR_OR_CHARITY);
 
     private final Long organisationTypeId;

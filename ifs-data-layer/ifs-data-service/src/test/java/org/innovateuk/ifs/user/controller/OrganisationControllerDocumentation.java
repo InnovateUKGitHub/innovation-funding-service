@@ -2,13 +2,13 @@ package org.innovateuk.ifs.user.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.AddressTypeEnum;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
 
 import java.util.Set;
 
-import static org.innovateuk.ifs.address.resource.AddressTypeEnum.REGISTERED;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.AddressDocs.addressResourceBuilder;
 import static org.innovateuk.ifs.documentation.AddressDocs.addressResourceFields;
@@ -139,7 +139,7 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
     @Test
     public void addAddress() throws Exception {
         long organisationId = 1L;
-        AddressTypeEnum addressType = REGISTERED;
+        OrganisationAddressType addressType = REGISTERED;
         AddressResource addressResource = addressResourceBuilder.build();
         OrganisationResource organisationResource = organisationResourceBuilder.build();
 

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.AddressTypeEnum;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
@@ -52,7 +52,7 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
-import static org.innovateuk.ifs.address.resource.AddressTypeEnum.*;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
@@ -336,7 +336,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         if(project.getAddress() != null && project.getAddress().getId() != null && project.getAddress().getOrganisations().size() > 0) {
             RestResult<OrganisationAddressResource> result = organisationAddressRestService.findOne(project.getAddress().getOrganisations().get(0));
             if (result.isSuccess()) {
-                form.setAddressType(AddressTypeEnum.valueOf(result.getSuccessObject().getAddressType().getName()));
+                form.setAddressType(OrganisationAddressType.valueOf(result.getSuccessObject().getAddressType().getName()));
             }
         }
         model.addAttribute("model", projectDetailsAddressViewModel);
@@ -360,7 +360,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectResource.getId());
 
         AddressResource newAddressResource = null;
-        AddressTypeEnum addressType = null;
+        OrganisationAddressType addressType = null;
         switch (form.getAddressType()) {
             case REGISTERED:
             case OPERATING:
@@ -410,7 +410,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         }
         form.getAddressForm().setSelectedPostcodeIndex(null);
         form.getAddressForm().setTriedToSearch(true);
-        form.setAddressType(AddressTypeEnum.valueOf(form.getAddressType().name()));
+        form.setAddressType(OrganisationAddressType.valueOf(form.getAddressType().name()));
         ProjectResource project = projectService.getById(projectId);
         return viewCurrentAddressForm(model, form, project);
     }

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.AddressTypeEnum;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
@@ -64,7 +64,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
             Long leadApplicantId = data.getLeadApplicant().getId();
             OrganisationResource leadOrganisation = organisationService.getPrimaryForUser(leadApplicantId).getSuccessObjectOrThrowException();
             AddressResource address = leadOrganisation.getAddresses().get(0).getAddress();
-            projectDetailsService.updateProjectAddress(leadOrganisation.getId(), data.getProject().getId(), AddressTypeEnum.PROJECT, address).getSuccessObjectOrThrowException();
+            projectDetailsService.updateProjectAddress(leadOrganisation.getId(), data.getProject().getId(), OrganisationAddressType.PROJECT, address).getSuccessObjectOrThrowException();
         }));
     }
 

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
-import org.innovateuk.ifs.address.resource.AddressTypeEnum;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.address.service.AddressRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.address.resource.AddressTypeEnum.ADD_NEW;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.ADD_NEW;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_ADDRESS_SEARCH_OR_TYPE_MANUALLY;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 
@@ -44,14 +44,14 @@ public class AddressLookupBaseController {
         addSelectedAddress(form);
     }
 
-    protected Optional<OrganisationAddressResource> getAddress(final OrganisationResource organisation, final AddressTypeEnum addressType) {
-        return organisation.getAddresses().stream().filter(a -> AddressTypeEnum.valueOf(a.getAddressType().getName()).equals(addressType)).findFirst();
+    protected Optional<OrganisationAddressResource> getAddress(final OrganisationResource organisation, final OrganisationAddressType addressType) {
+        return organisation.getAddresses().stream().filter(a -> OrganisationAddressType.valueOf(a.getAddressType().getName()).equals(addressType)).findFirst();
     }
 
     protected OrganisationAddressResource getOrganisationAddressResourceOrNull(
             ProjectDetailsAddressForm form,
             OrganisationResource organisationResource,
-            AddressTypeEnum addressTypeToUseForNewAddress){
+            OrganisationAddressType addressTypeToUseForNewAddress){
         OrganisationAddressResource organisationAddressResource = null;
         if(existingAddressSelected(form.getAddressType())){
             Optional<OrganisationAddressResource> organisationAddress = getAddress(organisationResource, form.getAddressType());
@@ -94,8 +94,8 @@ public class AddressLookupBaseController {
                 addresses -> addresses);
     }
 
-    private boolean existingAddressSelected(AddressTypeEnum addressTypeEnum){
-        return addressTypeEnum != null && addressTypeEnum != ADD_NEW;
+    private boolean existingAddressSelected(OrganisationAddressType organisationAddressType){
+        return organisationAddressType != null && organisationAddressType != ADD_NEW;
     }
 
     protected FieldError createPostcodeSearchFieldError() {

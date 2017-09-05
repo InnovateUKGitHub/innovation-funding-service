@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.bankdetails.controller;
 
-import org.innovateuk.ifs.address.resource.AddressTypeEnum;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -28,7 +28,7 @@ import javax.validation.Valid;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.address.resource.AddressTypeEnum.*;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.*;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 
 /**
@@ -144,7 +144,7 @@ public class BankDetailsController extends AddressLookupBaseController {
         }
         form.getAddressForm().setSelectedPostcodeIndex(null);
         form.getAddressForm().setTriedToSearch(true);
-        form.setAddressType(AddressTypeEnum.valueOf(form.getAddressType().name()));
+        form.setAddressType(OrganisationAddressType.valueOf(form.getAddressType().name()));
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
         RestResult<BankDetailsResource> bankDetailsResourceRestResult = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
@@ -184,7 +184,7 @@ public class BankDetailsController extends AddressLookupBaseController {
                 || StringUtils.isEmpty(form.getAddressForm().getSelectedPostcode().getAddressLine1())
                 || StringUtils.isEmpty(form.getAddressForm().getSelectedPostcode().getPostcode())
                 || StringUtils.isEmpty(form.getAddressForm().getSelectedPostcode().getTown())
-        ) && AddressTypeEnum.ADD_NEW.name().equals(form.getAddressType().name()));
+        ) && OrganisationAddressType.ADD_NEW.name().equals(form.getAddressType().name()));
     }
 
     private String doViewBankDetails(Model model, BankDetailsForm form, ProjectResource projectResource,
@@ -243,7 +243,7 @@ public class BankDetailsController extends AddressLookupBaseController {
 
     private void populateExitingBankDetailsInForm(BankDetailsResource bankDetails, BankDetailsForm bankDetailsForm){
         OrganisationAddressResource organisationAddressResource = organisationAddressRestService.findOne(bankDetails.getOrganisationAddress().getId()).getSuccessObjectOrThrowException();
-        bankDetailsForm.setAddressType(AddressTypeEnum.valueOf(organisationAddressResource.getAddressType().getName()));
+        bankDetailsForm.setAddressType(OrganisationAddressType.valueOf(organisationAddressResource.getAddressType().getName()));
         bankDetailsForm.setSortCode(bankDetails.getSortCode());
         bankDetailsForm.setAccountNumber(bankDetails.getAccountNumber());
     }

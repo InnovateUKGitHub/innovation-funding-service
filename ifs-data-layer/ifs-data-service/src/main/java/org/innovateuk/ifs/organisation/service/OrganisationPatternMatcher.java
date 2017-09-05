@@ -2,7 +2,7 @@ package org.innovateuk.ifs.organisation.service;
 
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.AddressTypeEnum;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
@@ -19,7 +19,7 @@ import java.util.Optional;
 @Service
 public class OrganisationPatternMatcher {
     @NotSecured(value = "Is a 'static' comparison function", mustBeSecuredByOtherServices = false)
-    public boolean organisationAddressMatches(Organisation organisation, OrganisationResource organisationResource, AddressTypeEnum addressType, boolean required) {
+    public boolean organisationAddressMatches(Organisation organisation, OrganisationResource organisationResource, OrganisationAddressType addressType, boolean required) {
         Optional<OrganisationAddress> organisationOperatingAddress = getOrganisationAddressByType(organisation, addressType);
         Optional<OrganisationAddressResource> submittedOrganisationAddress = getOrganisationResourceAddressByType(organisationResource, addressType);
 
@@ -76,7 +76,7 @@ public class OrganisationPatternMatcher {
         }
     }
 
-    private Optional<OrganisationAddress> getOrganisationAddressByType(Organisation organisation, AddressTypeEnum addressType) {
+    private Optional<OrganisationAddress> getOrganisationAddressByType(Organisation organisation, OrganisationAddressType addressType) {
         try {
             return organisation.getAddresses().stream()
                     .filter(findAddress -> findAddress.getAddressType().getId().equals(addressType.getOrdinal()))
@@ -86,7 +86,7 @@ public class OrganisationPatternMatcher {
         }
     }
 
-    private Optional<OrganisationAddressResource> getOrganisationResourceAddressByType(OrganisationResource organisationResource, AddressTypeEnum addressType) {
+    private Optional<OrganisationAddressResource> getOrganisationResourceAddressByType(OrganisationResource organisationResource, OrganisationAddressType addressType) {
         try {
             return organisationResource.getAddresses().stream()
                 .filter(findAddress -> findAddress.getAddressType().getId().equals(addressType.getOrdinal()))

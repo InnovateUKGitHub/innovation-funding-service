@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.organisation.service;
 
-import org.innovateuk.ifs.address.resource.AddressTypeEnum;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -31,13 +31,13 @@ public class OrganisationMatchingServiceImpl implements OrganisationMatchingServ
         if(OrganisationTypeEnum.isResearch(organisationResource.getOrganisationType())) {
             return findOrganisationByName(organisationResource).stream()
                     .filter(foundOrganisation -> organisationPatternMatcher.organisationTypeIsResearch(foundOrganisation))
-                    .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(foundOrganisation, organisationResource, AddressTypeEnum.OPERATING, true))
+                    .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(foundOrganisation, organisationResource, OrganisationAddressType.OPERATING, true))
                     .findFirst();
         } else {
             return findOrganisationByCompaniesHouseId(organisationResource).stream()
                     .filter(foundOrganisation -> organisationPatternMatcher.organisationTypeMatches(foundOrganisation, organisationResource))
-                    .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(foundOrganisation, organisationResource, AddressTypeEnum.OPERATING, false))
-                    .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(foundOrganisation, organisationResource, AddressTypeEnum.REGISTERED, true))
+                    .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(foundOrganisation, organisationResource, OrganisationAddressType.OPERATING, false))
+                    .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(foundOrganisation, organisationResource, OrganisationAddressType.REGISTERED, true))
                     .findFirst();
         }
     }

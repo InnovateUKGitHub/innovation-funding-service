@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.service;
 import com.google.common.collect.Lists;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.AddressTypeEnum;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.service.CompanyHouseRestService;
@@ -115,7 +115,7 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
     public void testAddAddress() throws Exception {
         OrganisationResource organisation = new OrganisationResource();
         AddressResource address = new AddressResource();
-        AddressTypeEnum type  = AddressTypeEnum.ADD_NEW;
+        OrganisationAddressType type  = OrganisationAddressType.ADD_NEW;
         when(organisationRestService.addAddress(organisation, address, type)).thenReturn(restSuccess(organisation));
 
         OrganisationResource returnedOrganisation = service.addAddress(organisation, address, type);

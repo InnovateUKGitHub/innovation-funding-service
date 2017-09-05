@@ -6,7 +6,7 @@ import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.AddressTypeEnum;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.domain.Academic;
@@ -115,10 +115,10 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<OrganisationResource> addAddress(final Long organisationId, final AddressTypeEnum addressTypeEnum, AddressResource addressResource) {
+    public ServiceResult<OrganisationResource> addAddress(final Long organisationId, final OrganisationAddressType organisationAddressType, AddressResource addressResource) {
         return find(organisation(organisationId)).andOnSuccessReturn(organisation -> {
             Address address = addressMapper.mapToDomain(addressResource);
-            AddressType addressType = addressTypeRepository.findOne(addressTypeEnum.getOrdinal());
+            AddressType addressType = addressTypeRepository.findOne(organisationAddressType.getOrdinal());
             organisation.addAddress(address, addressType);
             Organisation updatedOrganisation = organisationRepository.save(organisation);
             return organisationMapper.mapToResource(updatedOrganisation);

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.projectdetails.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.AddressTypeEnum;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
@@ -55,7 +55,7 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
 
         when(projectLookupStrategy.getProjectResource(456L)).thenReturn(project);
 
-        assertAccessDenied(() -> classUnderTest.updateProjectAddress(123L, 456L, AddressTypeEnum.ADD_NEW, newAddressResource().build()), () -> {
+        assertAccessDenied(() -> classUnderTest.updateProjectAddress(123L, 456L, OrganisationAddressType.ADD_NEW, newAddressResource().build()), () -> {
             verify(projectDetailsPermissionRules).leadPartnersCanUpdateTheBasicProjectDetails(project, getLoggedInUser());
             verifyNoMoreInteractions(projectDetailsPermissionRules);
         });
@@ -106,7 +106,7 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
         }
 
         @Override
-        public ServiceResult<Void> updateProjectAddress(Long leadOrganisationId, Long projectId, AddressTypeEnum addressType, AddressResource projectAddress) {
+        public ServiceResult<Void> updateProjectAddress(Long leadOrganisationId, Long projectId, OrganisationAddressType addressType, AddressResource projectAddress) {
             return null;
         }
 

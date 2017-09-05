@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.AddressTypeEnum;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -30,7 +30,7 @@ public interface OrganisationService {
 
     OrganisationSearchResult getCompanyHouseOrganisation(String organisationId);
 
-    OrganisationResource addAddress(OrganisationResource organisation, AddressResource address, AddressTypeEnum type);
+    OrganisationResource addAddress(OrganisationResource organisation, AddressResource address, OrganisationAddressType type);
 
     Long getOrganisationType(Long userId, Long applicationId);
 

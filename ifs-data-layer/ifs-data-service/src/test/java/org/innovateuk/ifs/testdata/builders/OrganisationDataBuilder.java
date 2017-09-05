@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.AddressTypeEnum;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.testdata.builders.data.OrganisationData;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
@@ -42,7 +42,7 @@ public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, O
         });
     }
 
-    public OrganisationDataBuilder withAddress(AddressTypeEnum addressType, String addressLine1,
+    public OrganisationDataBuilder withAddress(OrganisationAddressType addressType, String addressLine1,
                                                String addressLine2, String addressLine3, String town,
                                                String postcode, String county) {
 

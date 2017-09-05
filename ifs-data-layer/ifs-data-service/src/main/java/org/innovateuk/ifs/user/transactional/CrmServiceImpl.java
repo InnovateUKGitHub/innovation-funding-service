@@ -3,7 +3,7 @@ package org.innovateuk.ifs.user.transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.domain.Address;
-import org.innovateuk.ifs.address.resource.AddressTypeEnum;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.sil.crm.resource.SilAddress;
@@ -79,7 +79,7 @@ public class CrmServiceImpl implements CrmService {
 
     private SilAddress silRegisteredAddress(Organisation organisation) {
         return organisation.getAddresses().stream()
-                .filter(organisationAddress -> Arrays.asList(AddressTypeEnum.OPERATING.getOrdinal(), AddressTypeEnum.REGISTERED.getOrdinal())
+                .filter(organisationAddress -> Arrays.asList(OrganisationAddressType.OPERATING.getOrdinal(), OrganisationAddressType.REGISTERED.getOrdinal())
                         .contains(organisationAddress.getAddressType().getId()))
                 .findAny()
                 .map(organisationAddress -> {

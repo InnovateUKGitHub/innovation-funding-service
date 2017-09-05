@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.AddressTypeEnum;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
@@ -46,7 +46,7 @@ public class ProjectDetailsController {
                                                  @RequestParam("leadOrganisationId") final Long leadOrganisationId,
                                                  @RequestParam("addressType") final String addressType,
                                                  @RequestBody AddressResource addressResource) {
-        return projectDetailsService.updateProjectAddress(leadOrganisationId, projectId, AddressTypeEnum.valueOf(addressType), addressResource).toPostResponse();
+        return projectDetailsService.updateProjectAddress(leadOrganisationId, projectId, OrganisationAddressType.valueOf(addressType), addressResource).toPostResponse();
     }
 
     @PostMapping("/{projectId}/organisation/{organisation}/finance-contact")

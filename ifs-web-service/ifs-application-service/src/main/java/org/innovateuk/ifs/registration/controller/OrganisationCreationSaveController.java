@@ -26,8 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.address.resource.AddressTypeEnum.OPERATING;
-import static org.innovateuk.ifs.address.resource.AddressTypeEnum.REGISTERED;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.OPERATING;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
 
 /**
  * Provides methods for confirming and saving the organisation as an intermediate step in the registration flow.

@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.projectdetails.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
-import org.innovateuk.ifs.address.resource.AddressTypeEnum;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -38,7 +38,7 @@ import static java.util.stream.Collectors.toList;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
-import static org.innovateuk.ifs.address.resource.AddressTypeEnum.*;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.*;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -594,7 +594,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertNull(viewModel.getProjectAddress());
 
         ProjectDetailsAddressForm form = (ProjectDetailsAddressForm) model.get(FORM_ATTR_NAME);
-        assertEquals(AddressTypeEnum.valueOf(organisationAddressResource.getAddressType().getName()), form.getAddressType());
+        assertEquals(OrganisationAddressType.valueOf(organisationAddressResource.getAddressType().getName()), form.getAddressType());
     }
 
     @Test

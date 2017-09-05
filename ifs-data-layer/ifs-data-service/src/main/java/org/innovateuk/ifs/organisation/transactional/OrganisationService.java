@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.organisation.transactional;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.AddressTypeEnum;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -37,7 +37,7 @@ public interface OrganisationService {
     public ServiceResult<OrganisationResource> updateOrganisationNameAndRegistration(final Long organisationId, final String organisationName, final String registrationNumber);
 
     @PreAuthorize("hasPermission(#organisationId, 'org.innovateuk.ifs.user.resource.OrganisationResource', 'UPDATE')")
-    ServiceResult<OrganisationResource> addAddress(@P("organisationId") Long organisationId, AddressTypeEnum addressType, AddressResource addressResource);
+    ServiceResult<OrganisationResource> addAddress(@P("organisationId") Long organisationId, OrganisationAddressType addressType, AddressResource addressResource);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<OrganisationSearchResult>> searchAcademic(String organisationName, int maxItems);

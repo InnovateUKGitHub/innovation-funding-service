@@ -3,7 +3,7 @@ package org.innovateuk.ifs.profile;
 import org.hamcrest.Matchers;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
-import org.innovateuk.ifs.address.resource.AddressTypeEnum;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.service.EthnicityRestService;
@@ -23,8 +23,8 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
-import static org.innovateuk.ifs.address.resource.AddressTypeEnum.OPERATING;
-import static org.innovateuk.ifs.address.resource.AddressTypeEnum.REGISTERED;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.OPERATING;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
@@ -82,7 +82,7 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
         when(organisationService.getOrganisationForUser(user.getId())).thenReturn(organisation);
     }
 
-    private OrganisationAddressResource organisationAddress(AddressTypeEnum addressType) {
+    private OrganisationAddressResource organisationAddress(OrganisationAddressType addressType) {
         AddressTypeResource addressTypeResource = newAddressTypeResource().withId((long)addressType.getOrdinal()).withName(addressType.name()).build();
         return newOrganisationAddressResource()
                 .withAddressType(addressTypeResource)

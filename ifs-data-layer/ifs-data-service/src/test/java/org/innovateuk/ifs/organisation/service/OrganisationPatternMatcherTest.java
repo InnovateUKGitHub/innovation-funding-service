@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.AddressTypeEnum;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
@@ -40,7 +40,7 @@ public class OrganisationPatternMatcherTest extends BaseServiceUnitTest<Organisa
 
     @Before
     public void setUp() {
-        AddressType operatingAddressType = newAddressType().withId(AddressTypeEnum.REGISTERED.getOrdinal()).build();
+        AddressType operatingAddressType = newAddressType().withId(OrganisationAddressType.REGISTERED.getOrdinal()).build();
 
         Address registeredAddress = newAddress()
                 .withAddressLine1("registeredabc")
@@ -54,7 +54,7 @@ public class OrganisationPatternMatcherTest extends BaseServiceUnitTest<Organisa
                 .withAddress(registeredAddress)
                 .withAddressType(operatingAddressType).build();
 
-        AddressTypeResource submittedRegisteredAddressType = newAddressTypeResource().withId(AddressTypeEnum.REGISTERED.getOrdinal()).build();
+        AddressTypeResource submittedRegisteredAddressType = newAddressTypeResource().withId(OrganisationAddressType.REGISTERED.getOrdinal()).build();
 
         AddressResource submittedRegisteredAddress = newAddressResource()
                 .withAddressLine1("registeredabc")
@@ -88,7 +88,7 @@ public class OrganisationPatternMatcherTest extends BaseServiceUnitTest<Organisa
         Organisation organisation = newOrganisation().withAddress(Arrays.asList(matchingOrganisationRegisteredAddress)).build();
         OrganisationResource organisationResource = newOrganisationResource().withAddress(Arrays.asList(submittedOrganisationRegisteredAddress)).build();
 
-        boolean result = service.organisationAddressMatches(organisation, organisationResource, AddressTypeEnum.REGISTERED, true);
+        boolean result = service.organisationAddressMatches(organisation, organisationResource, OrganisationAddressType.REGISTERED, true);
         assertTrue(result);
     }
 
@@ -97,7 +97,7 @@ public class OrganisationPatternMatcherTest extends BaseServiceUnitTest<Organisa
         Organisation organisation = newOrganisation().withAddress(Arrays.asList(matchingOrganisationRegisteredAddress)).build();
         OrganisationResource organisationResource = newOrganisationResource().withAddress(Arrays.asList(submittedOrganisationRegisteredAddress)).build();
 
-        boolean result = service.organisationAddressMatches(organisation, organisationResource, AddressTypeEnum.OPERATING, true);
+        boolean result = service.organisationAddressMatches(organisation, organisationResource, OrganisationAddressType.OPERATING, true);
         assertFalse(result);
     }
 
@@ -106,7 +106,7 @@ public class OrganisationPatternMatcherTest extends BaseServiceUnitTest<Organisa
         Organisation organisation = newOrganisation().build();
         OrganisationResource organisationResource = newOrganisationResource().withAddress(Arrays.asList(submittedOrganisationRegisteredAddress)).build();
 
-        boolean result = service.organisationAddressMatches(organisation, organisationResource, AddressTypeEnum.OPERATING, true);
+        boolean result = service.organisationAddressMatches(organisation, organisationResource, OrganisationAddressType.OPERATING, true);
         assertFalse(result);
     }
 
@@ -115,7 +115,7 @@ public class OrganisationPatternMatcherTest extends BaseServiceUnitTest<Organisa
         Organisation organisation = newOrganisation().withAddress(Arrays.asList(matchingOrganisationRegisteredAddress)).build();
         OrganisationResource organisationResource = newOrganisationResource().build();
 
-        boolean result = service.organisationAddressMatches(organisation, organisationResource, AddressTypeEnum.OPERATING, true);
+        boolean result = service.organisationAddressMatches(organisation, organisationResource, OrganisationAddressType.OPERATING, true);
         assertFalse(result);
     }
 
@@ -124,7 +124,7 @@ public class OrganisationPatternMatcherTest extends BaseServiceUnitTest<Organisa
         Organisation organisation = newOrganisation().withAddress(Arrays.asList(matchingOrganisationRegisteredAddress)).build();
         OrganisationResource organisationResource = newOrganisationResource().withAddress(Arrays.asList(slightlyMismatchingOrganisationAddress)).build();
 
-        boolean result = service.organisationAddressMatches(organisation, organisationResource, AddressTypeEnum.REGISTERED, true);
+        boolean result = service.organisationAddressMatches(organisation, organisationResource, OrganisationAddressType.REGISTERED, true);
         assertTrue(result);
     }
 
@@ -133,7 +133,7 @@ public class OrganisationPatternMatcherTest extends BaseServiceUnitTest<Organisa
         Organisation organisation = newOrganisation().build();
         OrganisationResource organisationResource = newOrganisationResource().build();
 
-        boolean result = service.organisationAddressMatches(organisation, organisationResource, AddressTypeEnum.REGISTERED, false);
+        boolean result = service.organisationAddressMatches(organisation, organisationResource, OrganisationAddressType.REGISTERED, false);
         assertTrue(result);
     }
 
@@ -142,7 +142,7 @@ public class OrganisationPatternMatcherTest extends BaseServiceUnitTest<Organisa
         Organisation organisation = newOrganisation().build();
         OrganisationResource organisationResource = newOrganisationResource().withAddress(Arrays.asList(submittedOrganisationRegisteredAddress)).build();
 
-        boolean result = service.organisationAddressMatches(organisation, organisationResource, AddressTypeEnum.REGISTERED, false);
+        boolean result = service.organisationAddressMatches(organisation, organisationResource, OrganisationAddressType.REGISTERED, false);
         assertFalse(result);
     }
 
@@ -151,7 +151,7 @@ public class OrganisationPatternMatcherTest extends BaseServiceUnitTest<Organisa
         Organisation organisation = newOrganisation().withAddress(Arrays.asList(matchingOrganisationRegisteredAddress)).build();
         OrganisationResource organisationResource = newOrganisationResource().build();
 
-        boolean result = service.organisationAddressMatches(organisation, organisationResource, AddressTypeEnum.REGISTERED, false);
+        boolean result = service.organisationAddressMatches(organisation, organisationResource, OrganisationAddressType.REGISTERED, false);
         assertFalse(result);
     }
 
@@ -160,7 +160,7 @@ public class OrganisationPatternMatcherTest extends BaseServiceUnitTest<Organisa
         Organisation organisation = newOrganisation().withAddress(newOrganisationAddress().build(1)).build();
         OrganisationResource organisationResource = newOrganisationResource().withAddress(newOrganisationAddressResource().build(1)).build();
 
-        boolean result = service.organisationAddressMatches(organisation, organisationResource, AddressTypeEnum.REGISTERED, false);
+        boolean result = service.organisationAddressMatches(organisation, organisationResource, OrganisationAddressType.REGISTERED, false);
         assertTrue(result);
     }
 
