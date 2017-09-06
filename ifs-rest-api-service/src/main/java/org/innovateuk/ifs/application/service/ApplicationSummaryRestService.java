@@ -30,7 +30,7 @@ public interface ApplicationSummaryRestService {
                                                                            int pageNumber,
                                                                            int pageSize,
                                                                            Optional<String> filter);
-    
+
     RestResult<CompetitionSummaryResource> getCompetitionSummary(long competitionId);
 
     RestResult<ByteArrayResource> downloadByCompetition(long competitionId);
