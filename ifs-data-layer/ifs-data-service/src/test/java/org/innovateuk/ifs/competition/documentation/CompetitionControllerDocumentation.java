@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.competition.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.controller.CompetitionController;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -8,6 +10,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
+import org.innovateuk.ifs.documentation.ApplicationDocs;
 import org.innovateuk.ifs.documentation.CompetitionCountResourceDocs;
 import org.innovateuk.ifs.documentation.CompetitionResourceDocs;
 import org.innovateuk.ifs.documentation.CompetitionSearchResultDocs;
@@ -195,6 +198,28 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
                                 fieldWithPath("[]").description("list of non ifs competitions the authenticated user has access to")
                         )
                 ));
+    }
+
+    @Test
+    public void findUnsuccessfulApplications() throws Exception {
+        final Long competitionId = 1L;
+
+        List<ApplicationResource> unsuccessfulApplications = ApplicationResourceBuilder.newApplicationResource().build(2);
+
+        when(competitionService.findUnsuccessfulApplications(competitionId)).thenReturn(serviceSuccess(unsuccessfulApplications));
+
+        mockMvc.perform(get("/competition/{id}/unsuccessful-applications", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(unsuccessfulApplications)))
+                .andDo(document(
+                        "competition/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("The competition for which unsuccessful applications need to be found")
+                        )
+                ));
+
+        verify(competitionService, only()).findUnsuccessfulApplications(competitionId);
+
     }
 
     @Test

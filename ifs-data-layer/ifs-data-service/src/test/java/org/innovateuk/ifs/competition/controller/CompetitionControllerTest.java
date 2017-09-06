@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -131,6 +133,22 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
                 .andExpect(status().isOk());
 
         verify(competitionServiceMock, only()).removeInnovationLead(competitionId, innovationLeadUserId);
+
+    }
+
+    @Test
+    public void findUnsuccessfulApplications() throws Exception {
+        final Long competitionId = 1L;
+
+        List<ApplicationResource> unsuccessfulApplications = ApplicationResourceBuilder.newApplicationResource().build(2);
+
+        when(competitionServiceMock.findUnsuccessfulApplications(competitionId)).thenReturn(serviceSuccess(unsuccessfulApplications));
+
+        mockMvc.perform(get("/competition/{id}/unsuccessful-applications", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(unsuccessfulApplications)));
+
+        verify(competitionServiceMock, only()).findUnsuccessfulApplications(competitionId);
 
     }
 
