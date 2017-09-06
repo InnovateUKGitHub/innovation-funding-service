@@ -2,6 +2,8 @@
 package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
+import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -217,6 +219,18 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
         List<CompetitionSearchResultItem> responses = service.findNonIfsCompetitions().getSuccessObject();
         assertNotNull(responses);
         assertEquals(returnedResponse, responses);
+    }
+
+    @Test
+    public void findUnsuccessfulApplications() {
+
+        List<ApplicationResource> unsuccessfulApplications = ApplicationResourceBuilder.newApplicationResource().build(2);
+
+        setupGetWithRestResultExpectations(competitionsRestURL + "/123" + "/unsuccessful-applications", applicationResourceListType(), unsuccessfulApplications);
+
+        List<ApplicationResource> result = service.findUnsuccessfulApplications(123L).getSuccessObject();
+        assertNotNull(result);
+        Assert.assertEquals(unsuccessfulApplications, result);
     }
 
     @Test
