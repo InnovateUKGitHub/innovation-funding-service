@@ -8,7 +8,6 @@ import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -51,7 +50,6 @@ import static org.innovateuk.ifs.util.HttpUtils.getQueryStringParameters;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/application")
-@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
 public class CompetitionManagementApplicationController {
 
     @Autowired
@@ -72,6 +70,7 @@ public class CompetitionManagementApplicationController {
     @Autowired
     private ReinstateIneligibleApplicationModelPopulator reinstateIneligibleApplicationModelPopulator;
 
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
     @GetMapping("/{applicationId}")
     public String displayApplicationOverview(@PathVariable("applicationId") final Long applicationId,
                                              @PathVariable("competitionId") final Long competitionId,
@@ -86,6 +85,7 @@ public class CompetitionManagementApplicationController {
                         .displayApplicationOverview(user, competitionId, form, origin, queryParams, model, application, assessorId));
     }
 
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'innovation_lead')")
     @PostMapping(value = "/{applicationId}", params = {"markAsIneligible"})
     public String markAsIneligible(@PathVariable("applicationId") final long applicationId,
                                    @PathVariable("competitionId") final long competitionId,
@@ -120,6 +120,7 @@ public class CompetitionManagementApplicationController {
         );
     }
 
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     @PostMapping(value = "/{applicationId}/reinstateIneligibleApplication")
     public String reinstateIneligibleApplication(Model model,
                                                  @PathVariable("competitionId") final long competitionId,
@@ -138,6 +139,7 @@ public class CompetitionManagementApplicationController {
         });
     }
 
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     @GetMapping(value = "/{applicationId}/reinstateIneligibleApplication/confirm")
     public String reinstateIneligibleApplicationConfirm(final Model model,
                                                         @ModelAttribute("form") final ReinstateIneligibleApplicationForm form,
@@ -145,6 +147,7 @@ public class CompetitionManagementApplicationController {
         return doReinstateIneligibleApplicationConfirm(model, applicationId);
     }
 
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
     @GetMapping("/{applicationId}/forminput/{formInputId}/download")
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadQuestionFile(
             @PathVariable("applicationId") final Long applicationId,
@@ -166,6 +169,7 @@ public class CompetitionManagementApplicationController {
     /**
      * Printable version of the application
      */
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
     @GetMapping(value = "/{applicationId}/print")
     public String printManagementApplication(@PathVariable("applicationId") Long applicationId,
                                              @PathVariable("competitionId") Long competitionId,
@@ -175,6 +179,7 @@ public class CompetitionManagementApplicationController {
                 .validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> applicationPrintPopulator.print(applicationId, model, user));
     }
 
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
     @GetMapping("/{applicationId}/team")
     public String displayApplicationTeam(@PathVariable("applicationId") final Long applicationId,
                                          @PathVariable("competitionId") final Long competitionId,
