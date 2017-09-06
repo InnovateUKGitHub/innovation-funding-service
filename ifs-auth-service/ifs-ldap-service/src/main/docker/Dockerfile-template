@@ -41,6 +41,7 @@ RUN apt-get update --fix-missing && \
   echo "TLS_REQCERT allow" >> /etc/ldap/ldap.conf && \
 
 # run openldap as its own user \
+  ldapmodify -Y EXTERNAL -H ldapi:/// -f openldap_user_access.ldif && \
   chown -R openldap:0 /etc/ldap /var/lib/ldap /var/run/slapd && \
   chmod -R g+rw /etc/ldap /var/lib/ldap /var/run/slapd
 
@@ -51,5 +52,5 @@ RUN apt-get update --fix-missing && \
   /usr/sbin/slapadd -c -l testentries.ldif && \
   rm -f ppolicy*.ldif
 
-#USER openldap
+USER openldap
 ENTRYPOINT [ "run-openldap.sh" ]

@@ -18,6 +18,7 @@ import java.util.EnumSet;
 import java.util.Optional;
 import java.util.Set;
 
+import static org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository.SORT_BY_FIRSTNAME;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
@@ -38,7 +39,7 @@ public class AssessorCountSummaryServiceImpl extends BaseTransactionalService im
     @Override
     public ServiceResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionId(long competitionId, Optional<Long> innovationSector, Optional<BusinessType> businessType, int pageIndex, int pageSize) {
 
-        Pageable pageable = new PageRequest(pageIndex, pageSize);
+        Pageable pageable = new PageRequest(pageIndex, pageSize, SORT_BY_FIRSTNAME);
         Page<AssessorCountSummaryResource> assessorStatistics =
                 applicationStatisticsRepository.getAssessorCountSummaryByCompetition(competitionId, innovationSector, businessType, pageable);
 

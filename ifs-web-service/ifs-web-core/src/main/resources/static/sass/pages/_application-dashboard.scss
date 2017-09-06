@@ -193,7 +193,7 @@
 
   .submitted {
     .boxed-list {
-      li {
+      > li {
         background: #e8e9eb;
       }
     }
