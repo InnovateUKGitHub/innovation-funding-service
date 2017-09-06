@@ -48,11 +48,6 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             ApplicationState.REJECTED,
             ApplicationState.SUBMITTED);
 
-    public static final Set<ApplicationState> FUNDING_DECISION_MADE_STATES = asLinkedSet(
-            ApplicationState.APPROVED,
-            ApplicationState.REJECTED);
-
-
     public static final Set<State> SUBMITTED_STATES = SUBMITTED_APPLICATION_STATES
             .stream().map(ApplicationState::getBackingState).collect(toSet());
 
