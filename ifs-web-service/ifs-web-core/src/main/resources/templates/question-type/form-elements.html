@@ -210,7 +210,7 @@
                 <th:block th:insert="question-type/form-elements :: ready-for-review" th:unless="${model.assignButtonsViewModel.currentUserIsLead}" th:with="displayBlock=${true}, model=${model.assignButtonsViewModel}" />
             </div>
 
-            <div class="form-footer__info">
+            <div class="form-footer__info" aria-live="polite" aria-atomic="true" role="status">
 
                 <span class="textarea-footer"></span>
                 <th:block th:if="${model.hasResponse}">
