@@ -220,22 +220,22 @@ IFS.competitionManagement.repeater = (function () {
       var html = '<tr id="guidance-' + idCount + '">'
       if (isAssessed) {
         html += '<td class="form-group">' +
-                '<label class="form-label" for="guidancerow-' + idCount + '-scorefrom"><span class="visuallyhidden">Score from</span></label>' +
-                '<input required="required" type="number" min="0" class="form-control width-small" data-required-errormessage="Please enter a from score." data-min-errormessage="Please enter a valid number." id="guidancerow-' + idCount + '-scorefrom" name="guidanceRows[' + count + '].scoreFrom" value="">' +
+                '<label class="form-label" for="guidanceRows[' + idCount + '].scoreFrom"><span class="visuallyhidden">Score from</span></label>' +
+                '<input required="required" type="number" min="0" class="form-control width-small" data-required-errormessage="Please enter a from score." data-min-errormessage="Please enter a valid number." id="guidanceRows[' + idCount + '].scoreFrom" name="guidanceRows[' + count + '].scoreFrom" value="">' +
               '</td>' +
               '<td class="form-group">' +
-                '<label class="form-label" for="guidancerow-' + idCount + '-scoreto"><span class="visuallyhidden">Score to</span></label>' +
-                '<input required="required" type="number" min="0" class="form-control width-small" value="" data-required-errormessage="Please enter a to score." data-min-errormessage="Please enter a valid number." id="guidancerow-' + idCount + '-scoreto" name="guidanceRows[' + count + '].scoreTo" value="">' +
+                '<label class="form-label" for="guidanceRows[' + idCount + '].scoreTo"><span class="visuallyhidden">Score to</span></label>' +
+                '<input required="required" type="number" min="0" class="form-control width-small" value="" data-required-errormessage="Please enter a to score." data-min-errormessage="Please enter a valid number." id="guidanceRows[' + idCount + '].scoreTo" name="guidanceRows[' + count + '].scoreTo" value="">' +
               '</td>'
       } else {
         html += '<td class="form-group">' +
-                '<label class="form-label" for="guidancerow-' + idCount + '-subject"><span class="visuallyhidden">Subject</span></label>' +
-                '<input required="required" class="form-control width-small" data-maxlength-errormessage="Subject has a maximum length of 255 characters." data-required-errormessage="Please enter a subject." id="guidancerow-' + idCount + '-subject" name="question.guidanceRows[' + count + '].subject" value="">' +
+                '<label class="form-label" for="guidanceRows[' + idCount + '].subject"><span class="visuallyhidden">Subject</span></label>' +
+                '<input required="required" class="form-control width-small" data-maxlength-errormessage="Subject has a maximum length of 255 characters." data-required-errormessage="Please enter a subject." id="guidanceRows[' + idCount + '].subject" name="question.guidanceRows[' + count + '].subject" value="">' +
               '</td>'
       }
       html += '<td class="form-group">' +
-              '<label class="form-label" for="guidancerow-' + idCount + '-justification"><span class="visuallyhidden">Justification</span></label>' +
-              '<textarea required="required" rows="3" class="form-control width-full" data-maxlength-errormessage="Justification has a maximum length of 255 characters." data-required-errormessage="Please enter a justification." id="guidancerow-' + count + '-justification" name="' + (isAssessed ? '' : 'question.') + 'guidanceRows[' + count + '].justification"></textarea>' +
+              '<label class="form-label" for="guidanceRows[' + idCount + '].justification"><span class="visuallyhidden">Justification</span></label>' +
+              '<textarea required="required" rows="3" class="form-control width-full" data-maxlength-errormessage="Justification has a maximum length of 255 characters." data-required-errormessage="Please enter a justification." id="guidanceRows[' + idCount + '].justification" name="' + (isAssessed ? '' : 'question.') + 'guidanceRows[' + count + '].justification"></textarea>' +
             '</td>' +
             '<td><button class="buttonlink alignright remove-guidance-row" name="remove-guidance-row" data-remove-row="guidance" value="' + count + '">Remove</button></td>'
       html += '</tr>'

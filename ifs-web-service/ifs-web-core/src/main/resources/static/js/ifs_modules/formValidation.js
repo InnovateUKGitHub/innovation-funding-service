@@ -817,7 +817,7 @@ IFS.core.formValidation = (function () {
         errorSummary.focus()
       } else {
         // Otherwise, set focus to the field with the error
-        jQuery('.form-control-error').first().focus()
+        jQuery('.form-group-error input:not([type="hidden"])').first().focus()
       }
     },
     errorSummaryLinksClick: function (el) {
