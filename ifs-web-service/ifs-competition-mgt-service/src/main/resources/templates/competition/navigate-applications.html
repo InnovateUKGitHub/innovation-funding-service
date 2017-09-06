@@ -14,9 +14,12 @@
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Navigate applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
 
     <h2 class="heading-medium">Navigation</h2>
-    <hr />
-    <a th:href="@{/competition/{competitionId}/applications/unsuccessful(competitionId=${model.competitionId})}">Unsuccessful applications</a>
-    <hr />
+    <ul class="link-list">
+        <li>
+            <a th:href="@{/competition/{competitionId}/applications/unsuccessful(competitionId=${model.competitionId})}">Unsuccessful applications</a>
+        </li>
+    </ul>
+
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
