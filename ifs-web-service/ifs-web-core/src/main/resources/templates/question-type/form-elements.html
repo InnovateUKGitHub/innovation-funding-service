@@ -397,7 +397,7 @@
 
 <!-- ========================= Mark as complete buttons =========================== -->
 
-<th:block th:fragment="form-mark-as-complete-buttons (model)" th:with="formInput=${model.formInput}, question=${model.question}, compIsClosed=${!model.assignButtonsViewModel.currentCompetitionIsOpen}">
+<th:block th:fragment="form-mark-as-complete-buttons (model)" th:with="formInput=${model.formInput}, question=${model.question}, compIsClosed=${model.assignButtonsViewModel.currentCompetitionIsClosed}">
     <th:block th:unless="${appIsClosed or compIsClosed}">
         <button th:if="${model.complete and !model.summary}"
                 type="submit"
@@ -439,7 +439,7 @@
 
 <!-- ========================= edit link =========================== -->
 
-<th:block th:fragment="form-edit-question-button (model)" th:with="formInput=${model.formInput}, question=${model.question}, compIsClosed=${!model.assignButtonsViewModel.currentCompetitionIsOpen}">
+<th:block th:fragment="form-edit-question-button (model)" th:with="formInput=${model.formInput}, question=${model.question}, compIsClosed=${model.assignButtonsViewModel.currentCompetitionIsClosed}">
     <button class="buttonlink"
             type="submit"
             name="edit_question"

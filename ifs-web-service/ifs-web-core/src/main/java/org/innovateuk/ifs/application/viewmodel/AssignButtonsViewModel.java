@@ -15,7 +15,7 @@ public class AssignButtonsViewModel {
     private List<ApplicantResource> assignableApplicants;
     private List<ApplicationInviteResource> pendingAssignableUsers;
     private boolean hideAssignButtons;
-    private boolean currentCompetitionIsOpen;
+    private boolean currentCompetitionIsClosed;
 
     public ApplicantResource getAssignedBy() {
         return assignedBy;
@@ -110,10 +110,10 @@ public class AssignButtonsViewModel {
     public boolean isAssignedToLead() { return assignee.isLead(); }
 
     public boolean isCurrentCompetitionIsOpen() {
-        return currentCompetitionIsOpen;
+        return currentCompetitionIsClosed;
     }
 
-    public void setCurrentCompetitionIsOpen(boolean currentCompetitionIsOpen) {
-        this.currentCompetitionIsOpen = currentCompetitionIsOpen;
+    public void setCurrentCompetitionIsClosed(boolean currentCompetitionIsClosed) {
+        this.currentCompetitionIsClosed = currentCompetitionIsClosed;
     }
 }
