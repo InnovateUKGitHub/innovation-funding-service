@@ -118,8 +118,8 @@
                   </th:block>
                 </td>
                 <td>
-                  <div th:unless="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}" class="yes">Yes</div>
-                  <div th:if="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}" class="no">No</div>
+                  <span th:unless="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}" class="yes">Yes</span>
+                  <span th:if="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}" class="no">No</span>
                 </td>
             </tr>
         </tbody>
