@@ -78,6 +78,19 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     }
 
     @Test
+    public void testInternalAdminAndIFSAdminCanViewUnsuccessfulApplications() {
+        allGlobalRoleUsers.forEach(user -> {
+            if (getUserWithRole(UserRoleType.COMP_ADMIN).equals(user)
+                    || getUserWithRole(UserRoleType.PROJECT_FINANCE).equals(user)
+                    || getUserWithRole(UserRoleType.IFS_ADMINISTRATOR).equals(user)) {
+                assertTrue(rules.internalAdminAndIFSAdminCanViewUnsuccessfulApplications(newCompetitionResource().build(), user));
+            } else {
+                assertFalse(rules.internalAdminAndIFSAdminCanViewUnsuccessfulApplications(newCompetitionResource().build(), user));
+            }
+        });
+    }
+
+    @Test
     public void testOnlyInnovationLeadUsersAssignedToCompCanAccess() {
         List<RoleResource> innovationLeadRoles = singletonList(newRoleResource().withType(UserRoleType.INNOVATION_LEAD).build());
         UserResource innovationLeadAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
