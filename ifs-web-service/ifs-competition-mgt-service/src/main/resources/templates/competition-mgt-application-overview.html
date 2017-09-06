@@ -110,7 +110,7 @@
                               th:errorclass="form-control-error"
                               rows="10"
                               th:field="*{ineligibleReason}"></textarea>
-                    <div class="textarea-footer" th:with="content=*{ineligibleReason}">
+                    <div class="textarea-footer" th:with="content=*{ineligibleReason}" aria-live="polite" aria-atomic="true" role="status">
                         <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=400, currentWordsLeft=${#ifsUtil.wordsRemaining(400, content)})" />
                     </div>
                 </div>
