@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.WITHDRAWN;
@@ -148,25 +149,22 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
                 applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateState(competitionId, IN_PANEL)
         );
 
-        List<ParticipantStatus> assessmentPanelStatuses = assessmentPanelInviteRepository.getByCompetitionId(competitionId)
+        Stream<ParticipantStatus> assessmentPanelStatuses = assessmentPanelInviteRepository.getByCompetitionId(competitionId)
                 .stream()
                 .map(Invite::getId)
                 .map(id -> competitionParticipantRepository
                         .getByInviteId(id)
-                        .getStatus())
-                .collect(toList());
+                        .getStatus());
 
 
         assessmentPanelKeyStatisticsResource.setAssessorsAccepted(
                 (int) assessmentPanelStatuses
-                        .stream()
                         .filter(status -> status.equals(ParticipantStatus.PENDING))
                         .count()
         );
 
         assessmentPanelKeyStatisticsResource.setAssessorsPending(
                 (int) assessmentPanelStatuses
-                        .stream()
                         .filter(status -> status.equals(ParticipantStatus.ACCEPTED))
                         .count()
         );

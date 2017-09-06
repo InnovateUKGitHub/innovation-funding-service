@@ -10,7 +10,7 @@ import java.util.function.BiConsumer;
  */
 
 public class AssessmentPanelKeyStatisticsResourceBuilder
-    extends BaseBuilder<AssessmentPanelKeyStatisticsResource, AssessmentPanelKeyStatisticsResourceBuilder> {
+        extends BaseBuilder<AssessmentPanelKeyStatisticsResource, AssessmentPanelKeyStatisticsResourceBuilder> {
 
     protected AssessmentPanelKeyStatisticsResourceBuilder() {
         super();
