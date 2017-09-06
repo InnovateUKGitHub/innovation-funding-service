@@ -149,22 +149,25 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
                 applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateState(competitionId, IN_PANEL)
         );
 
-        Stream<ParticipantStatus> assessmentPanelStatuses = assessmentPanelInviteRepository.getByCompetitionId(competitionId)
+        List<ParticipantStatus> assessmentPanelStatuses = assessmentPanelInviteRepository.getByCompetitionId(competitionId)
                 .stream()
                 .map(Invite::getId)
                 .map(id -> competitionParticipantRepository
                         .getByInviteId(id)
-                        .getStatus());
+                        .getStatus())
+                .collect(toList());
 
 
         assessmentPanelKeyStatisticsResource.setAssessorsAccepted(
                 (int) assessmentPanelStatuses
+                        .stream()
                         .filter(status -> status.equals(ParticipantStatus.PENDING))
                         .count()
         );
 
         assessmentPanelKeyStatisticsResource.setAssessorsPending(
                 (int) assessmentPanelStatuses
+                        .stream()
                         .filter(status -> status.equals(ParticipantStatus.ACCEPTED))
                         .count()
         );
