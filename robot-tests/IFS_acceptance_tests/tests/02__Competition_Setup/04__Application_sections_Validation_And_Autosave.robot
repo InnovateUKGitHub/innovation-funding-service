@@ -109,11 +109,11 @@ the user leaves all the question field empty
     the user moves focus and waits for autosave
 
 The user leaves all the assessment questions empty
-    The user enters text to a text field    id=guidanceRow-0-scorefrom    ${EMPTY}
+    The user enters text to a text field    id=guidanceRows[0].scoreFrom    ${EMPTY}
     the user moves focus and waits for autosave
-    The user enters text to a text field    id=guidanceRow-0-scoreto    ${EMPTY}
+    The user enters text to a text field    id=guidanceRows[0].scoreTo    ${EMPTY}
     the user moves focus and waits for autosave
-    the user enters text to a text field    id=guidanceRow-0-justification    ${EMPTY}
+    the user enters text to a text field    id=guidanceRows[0].justification    ${EMPTY}
     the user moves focus and waits for autosave
 
 the validation error above the question should be visible
@@ -145,11 +145,11 @@ the user should see the correct inputs in the Applications questions form
     Should Be Equal    ${input_value}    150
 
 The user should see the correct inputs in assessment questions
-    ${input_value} =    Get Value    id=guidanceRow-0-scorefrom
+    ${input_value} =    Get Value    id=guidanceRows[0].scoreFrom
     Should Be Equal    ${input_value}    30
-    ${input_value} =    Get Value    id=guidanceRow-0-scoreto
+    ${input_value} =    Get Value    id=guidanceRows[0].scoreTo
     Should Be Equal    ${input_value}    35
-    ${input_value} =    Get Value    id=guidanceRow-0-justification
+    ${input_value} =    Get Value    id=guidanceRows[0].justification
     Should Be Equal    ${input_value}    This is a justification
 
 User creates a new competition for Application tests

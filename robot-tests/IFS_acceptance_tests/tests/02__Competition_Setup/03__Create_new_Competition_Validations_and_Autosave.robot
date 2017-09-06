@@ -111,9 +111,9 @@ Funding information client-side validations
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Generate code")
     Then the user should not see the error any more    Please generate a competition code.
-    When the user enters text to a text field    id=funders0.funder    FunderName
+    When the user enters text to a text field    id=funders[0].funder    FunderName
     Then the user should not see the error any more    Please enter a funder name.
-    And the user enters text to a text field    id=0-funderBudget    20000
+    And the user enters text to a text field    id=funders[0].funderBudget    20000
     And the user enters text to a text field    id=pafNumber    2016
     And the user enters text to a text field    id=budgetCode    2004
     And the user enters text to a text field    id=activityCode    4242
@@ -387,9 +387,9 @@ the user should see the correct values in the initial details form
     page should contain    John Doe
 
 the user should see the correct details in the funding information form
-    ${input_value} =    Get Value    id=funders0.funder
+    ${input_value} =    Get Value    id=funders[0].funder
     Should Be Equal    ${input_value}    FunderName
-    ${input_value} =    Get Value    id=0-funderBudget
+    ${input_value} =    Get Value    id=funders[0].funderBudget
     Should Be Equal As Strings    ${input_value}    20000
     ${input_value} =    Get Value    id=pafNumber
     Should Be Equal As Strings    ${input_value}    2016

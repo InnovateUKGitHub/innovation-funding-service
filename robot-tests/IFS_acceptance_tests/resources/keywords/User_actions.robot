@@ -142,11 +142,11 @@ The user fills the empty question fields
 The user fills the empty assessment fields
     The user enters text to a text field    id=question.assessmentGuidance    Business opportunity guidance
     the user moves focus and waits for autosave
-    The user enters text to a text field    id=guidanceRow-0-scorefrom    30
+    The user enters text to a text field    id=guidanceRows[0].scoreFrom    30
     the user moves focus and waits for autosave
-    The user enters text to a text field    id=guidanceRow-0-scoreto    35
+    The user enters text to a text field    id=guidanceRows[0].scoreTo    35
     the user moves focus and waits for autosave
-    The user enters text to a text field    id=guidanceRow-0-justification    This is a justification
+    The user enters text to a text field    id=guidanceRows[0].justification    This is a justification
     the user moves focus and waits for autosave
 
 The user checks the question fields

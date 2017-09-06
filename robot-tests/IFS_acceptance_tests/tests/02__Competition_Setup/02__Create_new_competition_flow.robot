@@ -218,16 +218,16 @@ Funding information: calculations
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link    link=Funding information
     And the user clicks the button/link    jQuery=.button:contains("Generate code")
-    And the user enters text to a text field    id=funders0.funder    FunderName
-    And the user enters text to a text field    id=0-funderBudget    20000
+    And the user enters text to a text field    id=funders[0].funder    FunderName
+    And the user enters text to a text field    id=funders[0].funderBudget    20000
     And the user enters text to a text field    id=pafNumber    2016
     And the user enters text to a text field    id=budgetCode    2004
     And the user enters text to a text field    id=activityCode    4242
     When the user clicks the button/link    jQuery=Button:contains("+Add co-funder")
     and the user should see the element    jQuery=Button:contains("+Add co-funder")
     And the user should see the element    jQuery=Button:contains("Remove")
-    And the user enters text to a text field    id=funders1.funder    FunderName2
-    And the user enters text to a text field    id=1-funderBudget    1000
+    And the user enters text to a text field    id=funders[1].funder    FunderName2
+    And the user enters text to a text field    id=funders[1].funderBudget    1000
     Then the total should be correct    £ 21,000
     When the user clicks the button/link    jQuery=Button:contains("Remove")
     Then the total should be correct    £ 20,000
@@ -249,7 +249,7 @@ Funding information: can be edited
     [Documentation]    INFUND-3002
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Edit")
-    And the user enters text to a text field    id=funders0.funder    testFunder
+    And the user enters text to a text field    id=funders[0].funder    testFunder
     And the user moves focus and waits for autosave
     When the user clicks the button/link    jQuery=button:contains("Done")
     Then the user should see the text in the page    testFunder
@@ -670,8 +670,8 @@ The competition should show in the correct section
 
 the user fills the scope assessment questions
     The user clicks the button/link    jQuery=Button:contains("+Add guidance row")
-    The user enters text to a text field    id=guidancerow-2-subject    New subject
-    The user enters text to a text field    id=guidancerow-2-justification    This is a justification
+    The user enters text to a text field    id=guidanceRows[2].subject    New subject
+    The user enters text to a text field    id=guidanceRows[2].justification    This is a justification
     The user enters text to a text field    id=question.assessmentGuidance    Guidance for assessing scope section
     The user clicks the button/link    id=remove-guidance-row-1
 
@@ -687,8 +687,8 @@ the user checks the scope assessment questions
 the user should not be able to edit the scope feedback
     the user should not see the element    id=question.assessmentGuidanceTitle
     the user should not see the element    id=question.assessmentGuidance
-    the user should not see the element    id=guidanceRow-0-subject
-    the user should not see the element    id=guidanceRow-0-justification
+    the user should not see the element    id=guidanceRows[0].subject
+    the user should not see the element    id=guidanceRows[0].justification
     the user should not see the element    jQuery=Button:contains("+Add guidance row")
 
 the user should not see the scope feedback
@@ -699,9 +699,9 @@ the user should not see the scope feedback
 the user should not be able to edit the assessed question feedback
     the user should not see the element    id=question.assessmentGuidanceTitle
     the user should not see the element    id=question.assessmentGuidance
-    the user should not see the element    id=guidanceRow-0-scorefrom
-    the user should not see the element    id=guidanceRow-0-scoreto
-    the user should not see the element    id=guidanceRow-0-justification
+    the user should not see the element    id=guidanceRows[0].scoreFrom
+    the user should not see the element    id=guidanceRows[0].scoreTo
+    the user should not see the element    id=guidanceRows[0].justification
     the user should not see the element    jQuery=Button:contains("+Add guidance row")
     the user should not see the element    id=question.scoreTotal
 
