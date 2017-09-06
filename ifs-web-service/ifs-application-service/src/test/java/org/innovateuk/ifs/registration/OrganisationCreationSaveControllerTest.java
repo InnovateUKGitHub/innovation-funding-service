@@ -104,7 +104,6 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
         when(organisationService.createOrMatch(any())).thenReturn(newOrganisationResource().withId(2L).build());
 
-
         mockMvc.perform(post("/organisation/create/save-organisation"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/registration/register"));
@@ -120,7 +119,6 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
         when(organisationService.createAndLinkByInvite(any(), any())).thenReturn(newOrganisationResource().withId(2L).build());
-
 
         mockMvc.perform(post("/organisation/create/save-organisation")
                 .param("searchOrganisationId", "123"))

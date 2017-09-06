@@ -67,10 +67,4 @@ public class OrganisationController {
     public RestResult<OrganisationResource> updateNameAndRegistration(@PathVariable("organisationId") Long organisationId, @RequestParam(value = "name") String name, @RequestParam(value = "registration") String registration) {
         return organisationService.updateOrganisationNameAndRegistration(organisationId, name, registration).toPostCreateResponse();
     }
-
-    // TODO DW - INFUND-1555 - do we want to be returning an OrganisationResource from this call?
-    @PostMapping("/addAddress/{organisationId}")
-    public RestResult<OrganisationResource> addAddress(@PathVariable("organisationId") final Long organisationId, @RequestParam("addressType") final OrganisationAddressType addressType, @RequestBody AddressResource address) {
-        return organisationService.addAddress(organisationId, addressType, address).toPutWithBodyResponse();
-    }
 }

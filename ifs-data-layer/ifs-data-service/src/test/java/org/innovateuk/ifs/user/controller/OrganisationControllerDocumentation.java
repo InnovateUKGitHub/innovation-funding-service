@@ -1,23 +1,19 @@
 package org.innovateuk.ifs.user.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
 
 import java.util.Set;
 
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.AddressDocs.addressResourceBuilder;
-import static org.innovateuk.ifs.documentation.AddressDocs.addressResourceFields;
 import static org.innovateuk.ifs.documentation.OrganisationDocs.organisationResourceBuilder;
 import static org.innovateuk.ifs.documentation.OrganisationDocs.organisationResourceFields;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -80,6 +76,43 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
     }
 
     @Test
+    public void createOrMatch() throws Exception {
+        OrganisationResource organisationResource = organisationResourceBuilder.build();
+
+        when(organisationInitialCreationServiceMock.createOrMatch(organisationResource)).thenReturn(serviceSuccess(organisationResource));
+
+        mockMvc.perform(post("/organisation/createOrMatch")
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(organisationResource)))
+                .andExpect(status().isCreated())
+                .andDo(document("organisation/{method-name}",
+                        requestFields(organisationResourceFields),
+                        responseFields(organisationResourceFields)
+                ));
+    }
+
+    @Test
+    public void createAndLinkByInvite() throws Exception {
+        String inviteHash = "123abc";
+        OrganisationResource organisationResource = organisationResourceBuilder.build();
+
+        when(organisationInitialCreationServiceMock.createAndLinkByInvite(organisationResource, inviteHash)).thenReturn(serviceSuccess(organisationResource));
+
+        mockMvc.perform(post("/organisation/createAndLinkByInvite")
+                .param("inviteHash", inviteHash)
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(organisationResource)))
+                .andExpect(status().isCreated())
+                .andDo(document("organisation/{method-name}",
+                        requestParameters(
+                                parameterWithName("inviteHash").description("The hash for the invite that the found or created organisation has to be linked to")
+                        ),
+                        requestFields(organisationResourceFields),
+                        responseFields(organisationResourceFields)
+                ));
+    }
+
+    @Test
     public void updateNameAndRegistration() throws Exception {
         long organisationId = 1L;
         String name = "name";
@@ -100,32 +133,6 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
                                 parameterWithName("name").description("The name of the organisation"),
                                 parameterWithName("registration").description("The companies house number")
                         ),
-                        responseFields(organisationResourceFields)
-                ));
-    }
-
-    @Test
-    public void addAddress() throws Exception {
-        long organisationId = 1L;
-        OrganisationAddressType addressType = REGISTERED;
-        AddressResource addressResource = addressResourceBuilder.build();
-        OrganisationResource organisationResource = organisationResourceBuilder.build();
-
-        when(organisationServiceMock.addAddress(organisationId, addressType, addressResource)).thenReturn(serviceSuccess(organisationResource));
-
-        mockMvc.perform(post("/organisation/addAddress/{organisationId}", organisationId)
-                .param("addressType", addressType.toString())
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(addressResource)))
-                .andExpect(status().isOk())
-                .andDo(document("organisation/{method-name}",
-                        pathParameters(
-                                parameterWithName("organisationId").description("The identifier of the organisation the address is being added to")
-                        ),
-                        requestParameters(
-                                parameterWithName("addressType").description("The type of the address being added")
-                        ),
-                        requestFields(addressResourceFields),
                         responseFields(organisationResourceFields)
                 ));
     }

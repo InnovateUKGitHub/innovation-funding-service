@@ -67,10 +67,4 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
         }
         return postWithRestResult(organisationRestURL + "/updateNameAndRegistration/" +  organisation.getId() + "?name=" + organisationName + "&registration=" + organisation.getCompanyHouseNumber(), OrganisationResource.class);
     }
-
-    //TODO: Check is anonymous call should be allowed here?
-    @Override
-     public RestResult<OrganisationResource> addAddress(OrganisationResource organisation, AddressResource address, OrganisationAddressType type) {
-        return postWithRestResultAnonymous(organisationRestURL + "/addAddress/"+organisation.getId()+"?addressType="+type.name(), address, OrganisationResource.class);
-    }
 }

@@ -65,6 +65,7 @@ import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
+import org.innovateuk.ifs.organisation.transactional.OrganisationInitialCreationService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.profile.transactional.ProfileService;
@@ -683,6 +684,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected InviteService inviteServiceMock;
+
+    @Mock
+    protected OrganisationInitialCreationService organisationInitialCreationServiceMock;
 
     @Before
     public void setupMockInjection() {
