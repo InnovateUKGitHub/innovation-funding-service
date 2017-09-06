@@ -109,7 +109,7 @@ public class AssignButtonsViewModel {
 
     public boolean isAssignedToLead() { return assignee.isLead(); }
 
-    public boolean isCurrentCompetitionIsOpen() {
+    public boolean isCurrentCompetitionIsClosed() {
         return currentCompetitionIsClosed;
     }
 
