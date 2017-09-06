@@ -53,6 +53,7 @@ Competition dashboard ready to Open competition
     And the user should see the element    jQuery=dt:contains("Innovation sector") ~ dd:contains("Materials and manufacturing")
     And the user should see the element    jQuery=dt:contains("Innovation area") ~ dd:contains("Digital manufacturing")
     And the user should see the element    link=View and update competition setup
+    And The user should not see the text in the element  css=#content p  Once you complete, this competition will be ready to open.
     And the user should see the element    jQuery=a:contains("Invite assessors to assess the competition")
     #The following checks test if the correct buttons are disabled
     And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("Input and review funding decision")
