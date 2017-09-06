@@ -10,16 +10,16 @@ public class AssessmentPanelViewModel {
     private Long competitionId;
     private String competitionName;
     private CompetitionStatus competitionStatus;
-    private Long applicationsInPanel;
-    private Long assessorsInvited;
-    private Long assessorsAccepted;
+    private int applicationsInPanel;
+    private int assessorsInvited;
+    private int assessorsAccepted;
 
     public AssessmentPanelViewModel(Long competitionId,
                                     String competitionName,
                                     CompetitionStatus competitionStatus,
-                                    Long applicationsInPanel,
-                                    Long assessorsInvited,
-                                    Long assessorsAccepted) {
+                                    int applicationsInPanel,
+                                    int assessorsInvited,
+                                    int assessorsAccepted) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.competitionStatus = competitionStatus;
@@ -32,11 +32,11 @@ public class AssessmentPanelViewModel {
         return competitionId;
     }
 
-    public Long getApplicationsInPanel() { return applicationsInPanel; }
+    public int getApplicationsInPanel() { return applicationsInPanel; }
 
-    public Long getAssessorsInvited() { return assessorsInvited; }
+    public int getAssessorsInvited() { return assessorsInvited; }
 
-    public Long getAssessorsAccepted() { return assessorsAccepted; }
+    public int getAssessorsAccepted() { return assessorsAccepted; }
 
     public String getCompetitionName() {
         return competitionName;

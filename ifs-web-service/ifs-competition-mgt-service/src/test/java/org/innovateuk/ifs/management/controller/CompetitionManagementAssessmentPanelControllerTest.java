@@ -53,9 +53,9 @@ public class CompetitionManagementAssessmentPanelControllerTest extends BaseCont
                 .withCompetitionStatus(competitionStatus)
                 .build();
 
-        assessmentPanelKeyStatisticsResource.setApplicationsInPanel(1L);
-        assessmentPanelKeyStatisticsResource.setAssessorsInvited(2L);
-        assessmentPanelKeyStatisticsResource.setAssessorsAccepted(1L);
+        assessmentPanelKeyStatisticsResource.setApplicationsInPanel(1);
+        assessmentPanelKeyStatisticsResource.setAssessorsPending(2);
+        assessmentPanelKeyStatisticsResource.setAssessorsAccepted(1);
 
 
         when(competitionService.getById(competitionId)).thenReturn(competitionResource);

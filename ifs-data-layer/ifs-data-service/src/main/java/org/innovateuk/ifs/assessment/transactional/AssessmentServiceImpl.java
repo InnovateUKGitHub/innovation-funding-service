@@ -6,13 +6,18 @@ import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
 import org.innovateuk.ifs.assessment.mapper.AssessmentFundingDecisionOutcomeMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessmentRejectOutcomeMapper;
-import org.innovateuk.ifs.assessment.panel.repository.AssessmentPanelApplicationInviteRepository;
 import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelKeyStatisticsResource;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.invite.domain.AssessmentPanelInvite;
+import org.innovateuk.ifs.invite.domain.Invite;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
+import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
@@ -35,6 +40,10 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
+import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -65,7 +74,11 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     private ActivityStateRepository activityStateRepository;
 
     @Autowired
-    private AssessmentPanelApplicationInviteRepository assessmentPanelApplicationInviteRepository;
+    private AssessmentPanelInviteRepository assessmentPanelInviteRepository;
+
+    @Autowired
+    private CompetitionParticipantRepository competitionParticipantRepository;
+
 
     @Override
     public ServiceResult<AssessmentResource> findById(long id) {
@@ -138,17 +151,37 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Override
     public ServiceResult<AssessmentPanelKeyStatisticsResource> getAssessmentPanelKeyStatistics(long competitionId) {
-        Set<State> ALL_ASSESSMENT_PANEL_INVITES = asLinkedSet(
-                CREATED,
-                PENDING,
-                ACCEPTED,
-                REJECTED,
-                CONFLICT_OF_INTEREST);
-        return serviceSuccess(new AssessmentPanelKeyStatisticsResource(
-                (long)applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateState(competitionId, IN_PANEL),
-                (long) assessmentPanelApplicationInviteRepository.findByActivityStateState(ACCEPTED).size(),
-                (long) assessmentPanelApplicationInviteRepository.findByActivityStateStateIn(ALL_ASSESSMENT_PANEL_INVITES).size())
+        AssessmentPanelKeyStatisticsResource assessmentPanelKeyStatisticsResource = new AssessmentPanelKeyStatisticsResource();
+        assessmentPanelKeyStatisticsResource.setApplicationsInPanel(
+                applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateState(competitionId, IN_PANEL)
         );
+
+        List<ParticipantStatus> assessmentPanelStatuses = assessmentPanelInviteRepository.getByCompetitionId(competitionId)
+                .stream()
+                .map(Invite::getId)
+                .map(id -> competitionParticipantRepository
+                        .getByInviteId(id)
+                        .getStatus())
+                .collect(toList());
+
+
+        assessmentPanelKeyStatisticsResource.setAssessorsAccepted(
+                (int) assessmentPanelStatuses
+                        .stream()
+                        .filter(status -> status.equals(ParticipantStatus.PENDING))
+                        .count()
+        );
+
+        assessmentPanelKeyStatisticsResource.setAssessorsPending(
+                (int) assessmentPanelStatuses
+                        .stream()
+                        .filter(status -> status.equals(ParticipantStatus.ACCEPTED))
+                        .count()
+        );
+
+
+        return serviceSuccess(assessmentPanelKeyStatisticsResource);
+
     }
 
     @Override
