@@ -19,67 +19,49 @@ Two lead applicants users signing up as a Business organisation with the same de
     And the user logs out if they are logged in
     And the user reads his email and clicks the link  businesscollab@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You are invited by  2
 
-    Then the user is able to confirm the invite
+    Then the user is able to confirm the invite  businesscollab@gmail.com
     And sees the application he was invited for on his dashboard
-
-New Research user applies to Competition and starts application
-    [Documentation]  IFS-1325
-    [Tags]
-    Given the user creates new account and organisation  radio-2  ${openCompetitionRTO}
-    When the user inserts the address of his research organisation  p.o. box 42  coventry  cv4 7al
-    Then the user enters text to a text field    email  bob@minions.com
-    And the user fills the create account form  Bob  Minion
-    And the user verifies account and starts his application  bob@minions.com
     [Teardown]  logout as user
-
-Another Research user applies to Competition and starts application
-    [Documentation]  IFS-1325
-    [Tags]
-    Given the user creates new account and organisation  radio-2  ${openCompetitionRTO}
-    When the user inserts the address of his research organisation  P.O. BOX 42  Coventry  CV4 7AL
-    Then the user enters text to a text field    email  stuart@minions.com
-    And the user fills the create account form  Stuart  Minion
-    And the user verifies account and starts his application  stuart@minions.com
 
 Researcher invites other researcher from same organisation in his application and the latter is able to accept
     [Documentation]  IFS-1325
     [Tags]
-    Given the user navigates to the Application Team Page  stuart@minions.com
-    Then the user updates his organisation inviting the user  Bob  bob@minions.com
-    When log in as a different user
-    Then the user reads his email and clicks the link  ${invite_email}  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation  2
+    Given New Research user applies to Competition and starts application
+    And Another Research user applies to Competition and starts application
+    Then the latter researcher is able to invite the first one to his application
 
 #CV4 7AL
 
 *** Keywords ***
 the user invites collaborator by email address
     [Arguments]    ${COLLAB_USER_EMAIL}
-    the user clicks the button/link         link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    the user clicks the button/link         jQuery=a:contains("Update and add contributors from INNOVATE LTD")
-    the user clicks the button/link         jQuery=button:contains("Add another contributor")
-    The user enters text to a text field    name=stagedInvite.name    research collab
-    The user enters text to a text field    name=stagedInvite.email    ${COLLAB_USER_EMAIL}
-    the user clicks the button/link         jQuery=button:contains("Invite")
+    the user clicks the button/link       link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    the user clicks the button/link       jQuery=a:contains("Update and add contributors from INNOVATE LTD")
+    the user clicks the button/link       jQuery=button:contains("Add another contributor")
+    The user enters text to a text field  name=stagedInvite.name  research collab
+    The user enters text to a text field  name=stagedInvite.email  ${COLLAB_USER_EMAIL}
+    the user clicks the button/link       jQuery=button:contains("Invite")
 
 the user is able to confirm the invite
-    the user clicks the button/link                    jQuery=.button:contains("Continue or sign in")
-    The guest user inserts user email and password     businesscollab@gmail.com  Passw0rd123
+    [Arguments]  ${email}
+    the user clicks the button/link                 jQuery=.button:contains("Continue or sign in")
+    The guest user inserts user email and password  ${email}  ${correct_password}
     The guest user clicks the log-in button
-    the user should see the text in the page           Confirm your organisation
-    the user should see the element                    link=email the lead applicant
-    the user clicks the button/link                    jQuery=.button:contains("Confirm and accept invitation")
+    the user should see the text in the page        Confirm your organisation
+    the user should see the element                 link=email the lead applicant
+    the user clicks the button/link                 jQuery=.button:contains("Confirm and accept invitation")
 
 the user changes the application name
     [Arguments]    ${application_name}
     the user navigates to the page          ${DASHBOARD_URL}
     the user clicks the button/link         link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    the user clicks the button/link         jQuery=a:contains('Begin application')
-    the user clicks the button/link         jQuery=a:contains('Application details')
+    the user clicks the button/link         jQuery=a:contains("Begin application")
+    the user clicks the button/link         jQuery=a:contains("Application details")
     the user enters text to a text field    id=application_details-title  ${application_name}
-    the user clicks the button/link         jQuery=button:contains('Save and return to application overview')
+    the user clicks the button/link         jQuery=button:contains("Save and return to application overview")
 
 sees the application he was invited for on his dashboard
-    the user should see the text in the page  businesscollab application
+    the user should see the element  jQuery=h1:contains("businesscollab application")
 
 the user creates new account and organisation
     [Arguments]  ${organisationType}  ${compId}
@@ -92,8 +74,9 @@ the user creates new account and organisation
 the user inserts the address of his research organisation
     [Arguments]  ${streetOne}  ${city}  ${postcode}
     the user enters text to a text field  organisationSearchName  Warwick
+    the user clicks the button/link       css=[id="org-search"]
     the user clicks the button/link       link=University of Warwick
-    the user clicks the button/link       link=Enter address manually
+    the user clicks the button/link       button:contains("Enter address manually")
     the user enters text to a text field  addressForm.selectedPostcode.addressLine1  ${streetOne}
     the user enters text to a text field  addressForm.selectedPostcode.town  ${city}
     the user enters text to a text field  addressForm.selectedPostcode.postcode  ${postcode}
@@ -124,3 +107,28 @@ the user updates his organisation inviting the user
     the user enters text to a text field  stagedInvite.name  ${name}
     the user enters text to a text field  stagedInvite.email  ${email}
     the user clicks the button/link       css=button[name="executeStagedInvite"]
+
+# I am on purpose not making the following lines one keyword.
+# That is because i want to insert too many custom inputs, that would lead to too many arguments
+New Research user applies to Competition and starts application
+    the user creates new account and organisation  radio-2  ${openCompetitionRTO}
+    the user inserts the address of his research organisation  p.o. box 42  coventry  cv4 7al
+    the user enters text to a text field    email  bob@minions.com
+    the user fills the create account form  Bob  Minion
+    the user verifies account and starts his application  bob@minions.com
+    logout as user
+
+Another Research user applies to Competition and starts application
+    the user creates new account and organisation  radio-2  ${openCompetitionRTO}
+    the user inserts the address of his research organisation  P.O. BOX 42  Coventry  CV4 7AL
+    the user enters text to a text field    email  stuart@minions.com
+    the user fills the create account form  Stuart  Minion
+    the user verifies account and starts his application  stuart@minions.com
+
+The latter researcher is able to invite the first one to his application
+    the user navigates to the Application Team Page  stuart@minions.com
+    the user updates his organisation inviting the user  Bob  bob@minions.com
+    log in as a different user
+    the user reads his email and clicks the link  bob@minions.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation  2
+    the user is able to confirm the invite  bob@minions.com
+
