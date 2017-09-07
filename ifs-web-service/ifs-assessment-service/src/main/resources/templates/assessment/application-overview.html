@@ -95,7 +95,7 @@
                                       th:errorclass="form-control-error"
                                       rows="4"
                                       th:field="*{rejectComment}"></textarea>
-                            <div class="textarea-footer" th:with="rejectComment=*{rejectComment}">
+                            <div class="textarea-footer" th:with="rejectComment=*{rejectComment}" aria-live="polite" aria-atomic="true" role="status">
                                 <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" />
                             </div>
                         </div>

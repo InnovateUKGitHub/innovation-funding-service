@@ -117,7 +117,7 @@
                                        data-maxlength-errormessage=#{validation.field.too.many.characters(null, ${model.maxQueryCharacters})},
                                        data-required-errormessage=#{validation.field.must.not.be.blank}"
                               th:errorclass="field-group-error"></textarea>
-                            <div class="textarea-footer" th:with="response=*{response}">
+                            <div class="textarea-footer" th:with="response=*{response}" aria-live="polite" aria-atomic="true" role="status">
                                 <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxQueryWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxQueryWords, content)})"/>
                             </div>
                         </div>

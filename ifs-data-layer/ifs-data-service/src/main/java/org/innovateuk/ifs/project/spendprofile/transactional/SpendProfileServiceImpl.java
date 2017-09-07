@@ -518,7 +518,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private void updateSpendProfileCostsForCategory(Long category, List<BigDecimal> monthlyCosts, SpendProfile spendProfile) {
 
         List<Cost> filteredAndSortedCostsToUpdate = spendProfile.getSpendProfileFigures().getCosts().stream()
-                .filter(cost -> cost.getCostCategory().getId() == category)
+                .filter(cost -> Objects.equals(cost.getCostCategory().getId(), category))
                 .sorted(Comparator.comparing(cost -> cost.getCostTimePeriod().getOffsetAmount()))
                 .collect(Collectors.toList());
 
