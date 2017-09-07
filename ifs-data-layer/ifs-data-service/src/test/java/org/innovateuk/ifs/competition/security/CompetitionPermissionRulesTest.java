@@ -78,14 +78,13 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     }
 
     @Test
-    public void testInternalAdminAndIFSAdminCanViewUnsuccessfulApplications() {
+    public void testInternalUsersAndIFSAdminCanViewUnsuccessfulApplications() {
         allGlobalRoleUsers.forEach(user -> {
-            if (getUserWithRole(UserRoleType.COMP_ADMIN).equals(user)
-                    || getUserWithRole(UserRoleType.PROJECT_FINANCE).equals(user)
+            if (allInternalUsers.contains(user)
                     || getUserWithRole(UserRoleType.IFS_ADMINISTRATOR).equals(user)) {
-                assertTrue(rules.internalAdminAndIFSAdminCanViewUnsuccessfulApplications(newCompetitionResource().build(), user));
+                assertTrue(rules.internalUsersAndIFSAdminCanViewUnsuccessfulApplications(newCompetitionResource().build(), user));
             } else {
-                assertFalse(rules.internalAdminAndIFSAdminCanViewUnsuccessfulApplications(newCompetitionResource().build(), user));
+                assertFalse(rules.internalUsersAndIFSAdminCanViewUnsuccessfulApplications(newCompetitionResource().build(), user));
             }
         });
     }

@@ -48,8 +48,8 @@ public class CompetitionPermissionRules extends BasePermissionRules {
         return isInternalAdmin(user);
     }
 
-    @PermissionRule(value = "VIEW_UNSUCCESSFUL_APPLICATIONS", description = "Competition Admin, Project Finance and IFS Admin can view unsuccessful applications")
-    public boolean internalAdminAndIFSAdminCanViewUnsuccessfulApplications(CompetitionResource competition, UserResource user) {
-        return isInternalAdmin(user) || isIFSAdmin(user);
+    @PermissionRule(value = "VIEW_UNSUCCESSFUL_APPLICATIONS", description = "Internal users and IFS Admin can view unsuccessful applications")
+    public boolean internalUsersAndIFSAdminCanViewUnsuccessfulApplications(CompetitionResource competition, UserResource user) {
+        return isInternal(user) || isIFSAdmin(user);
     }
 }
