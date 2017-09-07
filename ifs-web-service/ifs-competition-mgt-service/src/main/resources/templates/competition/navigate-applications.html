@@ -1,7 +1,7 @@
  <!DOCTYPE html>
 <html  class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Manage previous applications - CompetitionName|" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Previous applications - ${model.competitionName}|" />
 </head>
 
 <body>
@@ -11,7 +11,9 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='All competitions',linkClass='link-back',linkUrl=@{/dashboard}" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage previous applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Previous applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
+
+    <h2 class="heading-medium">Menu</h2>
 
     <ul class="link-list">
         <li>
