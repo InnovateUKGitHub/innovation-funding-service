@@ -19,12 +19,15 @@ items:
           deploymentconfig: mail
       spec:
         containers:
-        - image: davidrums/local-webmail-sink
+        - image: davidrums/local-webmail-sink:preview
           name: mail
           imagePullPolicy: IfNotPresent
+          env:
+          - name: FQDN
+            value: <<MAIL-ADDRESS>>
           ports:
           - containerPort: 8025
-          - containerPort: 8080
+          - containerPort: 443
           - containerPort: 8143
           resources:
             limits:
@@ -43,9 +46,9 @@ items:
     - name: 8025-tcp
       port: 8025
       targetPort: 8025
-    - name: 8080-tcp
-      port: 8080
-      targetPort: 8080
+    - name: 443-tcp
+      port: 443
+      targetPort: 443
     - name: 8143-tcp
       port: 8143
       targetPort: 8143
@@ -60,7 +63,10 @@ items:
   spec:
     host: <<MAIL-ADDRESS>>
     port:
-      targetPort: 8080-tcp
+      targetPort: 443-tcp
+    tls:
+      termination: passthrough
+      insecureEdgeTerminationPolicy: Redirect
     to:
       kind: Service
       name: mail
