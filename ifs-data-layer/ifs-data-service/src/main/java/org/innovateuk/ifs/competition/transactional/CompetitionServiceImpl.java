@@ -46,6 +46,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
+import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;
 import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE_INFORMED;
 import static org.innovateuk.ifs.application.resource.ApplicationState.REJECTED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -202,7 +203,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<List<ApplicationResource>> findUnsuccessfulApplications(Long competitionId) {
 
         Set<State> unsuccessfulStates = simpleMapSet(asLinkedSet(
-                ApplicationState.INELIGIBLE,
+                INELIGIBLE,
                 INELIGIBLE_INFORMED,
                 REJECTED), applicationState -> applicationState.getBackingState());
 

@@ -98,7 +98,7 @@ public class CompetitionManagementApplicationsController {
         return "competition/ineligible-applications";
     }
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_admin')")
     @GetMapping("/unsuccessful")
     public String unsuccessfulApplications(Model model,
                                            @PathVariable("competitionId") long competitionId,
