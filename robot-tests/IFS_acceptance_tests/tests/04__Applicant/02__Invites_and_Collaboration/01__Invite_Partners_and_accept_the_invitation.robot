@@ -161,7 +161,7 @@ Business organisation (partner accepts invitation)
     And the user clicks the button/link                jQuery=.button:contains("Continue")
     And the user clicks the button/link                jQuery=.button:contains("Save and continue")
     And the user fills the create account form         Adrian  Booth
-    And the user reads his email locally               ${invite_email}  Please verify your email address    Once verified you can sign into your account
+    And the user reads his email and clicks the link   ${invite_email}  Please verify your email address  Once verified you can sign into your account
 
 Partner requests new verification email via password reset
     [Documentation]  IFS-52

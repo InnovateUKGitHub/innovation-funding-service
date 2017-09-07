@@ -253,6 +253,7 @@ the user fills the create account form
     Input Text    id=phoneNumber    0612121212
     Input Password    id=password    ${correct_password}
     the user selects the checkbox    termsAndConditions
+    the user selects the checkbox    allowMarketing
     the user clicks the button/link    jQuery=.button:contains("Create account")
 
 the user clicks the forgot psw link
