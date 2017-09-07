@@ -47,8 +47,11 @@ public class CompetitionInFlightModelPopulator {
 
         long changesSinceLastNotify = assessmentRestService.countByStateAndCompetition(AssessmentState.CREATED, competition.getId()).getSuccessObjectOrThrowException();
         milestones.sort(Comparator.comparing(MilestoneResource::getType));
-        return new CompetitionInFlightViewModel(competition,
+        return new CompetitionInFlightViewModel(
+                competition,
                 simpleMap(milestones, MilestonesRowViewModel::new),
-                changesSinceLastNotify, statsViewModel, user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD));
+                changesSinceLastNotify,
+                statsViewModel,
+                user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD));
     }
 }

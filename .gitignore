@@ -20,8 +20,8 @@ bin/
 
 
 #Ignore generated docker files
-**/Dockerfile
-**/Dockerfile-base
+ifs-**/Dockerfile
+ifs-**/Dockerfile-base
 
 
 # ignore properties
