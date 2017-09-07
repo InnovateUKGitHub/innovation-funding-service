@@ -1020,9 +1020,11 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         Function<S, S> registerUserIfNecessary = builder -> builder.registerUser(line.firstName, line.lastName, line.emailAddress, line.organisationName, line.phoneNumber);
 
-        Function<S, S> verifyEmailIfNecessary = builder -> line.emailVerified ? builder.verifyEmail() : builder;
+        Function<S, S> verifyEmail= builder -> builder.verifyEmail();
 
-        createOrgIfNecessary.andThen(registerUserIfNecessary).andThen(verifyEmailIfNecessary).apply(baseBuilder).build();
+        Function<S, S> inactivateUserIfNecessary = builder -> !(line.emailVerified) ? builder.inactivateUser() : builder;
+
+        createOrgIfNecessary.andThen(registerUserIfNecessary).andThen(verifyEmail).andThen(inactivateUserIfNecessary).apply(baseBuilder).build();
     }
 
     private OrganisationTypeEnum lookupOrganisationType(String organisationType) {
