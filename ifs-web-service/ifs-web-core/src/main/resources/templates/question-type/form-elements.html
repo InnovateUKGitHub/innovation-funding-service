@@ -210,7 +210,7 @@
                 <th:block th:insert="question-type/form-elements :: ready-for-review" th:unless="${model.assignButtonsViewModel.currentUserIsLead}" th:with="displayBlock=${true}, model=${model.assignButtonsViewModel}" />
             </div>
 
-            <div class="form-footer__info">
+            <div class="form-footer__info" aria-live="polite" aria-atomic="true" role="status">
 
                 <span class="textarea-footer"></span>
                 <th:block th:if="${model.hasResponse}">
@@ -454,8 +454,8 @@
 <th:block th:fragment="form-word-count (maxWords, currentWordsLeft)">
     <th:block th:unless="${maxWords == 0}">
         <span class="count-label">
-            <span class="count-down" aria-live="polite" th:unless="${currentWordsLeft == null}" th:classappend="${currentWordsLeft &lt; 0}? negative : positive">Words remaining: <th:block th:text="${currentWordsLeft}" /> </span>
-            <span class="count-down" aria-live="polite" th:if="${currentWordsLeft == null}" th:classappend="${maxWords &lt; 0}? negative : positive" >Words remaining: <th:block th:text="${maxWords}" /> </span>
+            <span class="count-down" th:unless="${currentWordsLeft == null}" th:classappend="${currentWordsLeft &lt; 0}? negative : positive">Words remaining: <th:block th:text="${currentWordsLeft}" /> </span>
+            <span class="count-down" th:if="${currentWordsLeft == null}" th:classappend="${maxWords &lt; 0}? negative : positive" >Words remaining: <th:block th:text="${maxWords}" /> </span>
         </span>
     </th:block>
 </th:block>

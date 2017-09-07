@@ -72,7 +72,7 @@
                             th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null, 100)}"
                             th:errorclass="field-error"
                             th:field="*{professionalAffiliations}"></textarea>
-                        <div class="textarea-footer" th:with="professionalAffiliations=*{professionalAffiliations}">
+                        <div class="textarea-footer" th:with="professionalAffiliations=*{professionalAffiliations}" aria-live="polite" aria-atomic="true" role="status">
                             <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, professionalAffiliations)})" />
                         </div>
                     </div>
@@ -210,7 +210,7 @@
                                 th:errorclass="form-control-error"
                                 th:field="*{financialInterests}"
                                 th:required="*{hasFinancialInterests}"></textarea>
-                            <div class="textarea-footer" th:with="financialInterests=*{financialInterests}">
+                            <div class="textarea-footer" th:with="financialInterests=*{financialInterests}" aria-live="polite" aria-atomic="true" role="status">
                                 <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, financialInterests)})" />
                             </div>
                         </div>
@@ -362,7 +362,7 @@
                                 th:errorclass="form-control-error"
                                 th:field="*{familyFinancialInterests}"
                                 th:required="*{hasFamilyFinancialInterests}"></textarea>
-                            <div class="textarea-footer" th:with="familyFinancialInterests=*{familyFinancialInterests}">
+                            <div class="textarea-footer" th:with="familyFinancialInterests=*{familyFinancialInterests}" aria-live="polite" aria-atomic="true" role="status">
                                 <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, familyFinancialInterests)})" />
                             </div>
                         </div>
