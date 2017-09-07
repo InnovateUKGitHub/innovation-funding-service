@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
@@ -8,12 +10,14 @@ import org.innovateuk.ifs.management.model.AllApplicationsPageModelPopulator;
 import org.innovateuk.ifs.management.model.ApplicationsMenuModelPopulator;
 import org.innovateuk.ifs.management.model.IneligibleApplicationsModelPopulator;
 import org.innovateuk.ifs.management.model.SubmittedApplicationsModelPopulator;
+import org.innovateuk.ifs.management.model.UnsuccessfulApplicationsModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.*;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -57,6 +61,9 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
     @InjectMocks
     @Spy
     private IneligibleApplicationsModelPopulator ineligibleApplicationsModelPopulator;
+
+    @Mock
+    private UnsuccessfulApplicationsModelPopulator unsuccessfulApplicationsModelPopulator;
 
     @Override
     protected CompetitionManagementApplicationsController supplyControllerUnderTest() {
@@ -519,6 +526,25 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
 
         verify(applicationSummaryRestService).getIneligibleApplications(COMPETITION_ID, "", 0, 20, Optional.of(""), empty());
         verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
+    }
+
+    @Test
+    public void unsuccessfulApplications() throws Exception {
+
+        Long competitionId = 1L;
+        String competitionName = "Competition One";
+        List<ApplicationResource> unsuccessfulApplications = ApplicationResourceBuilder.newApplicationResource().build(2);
+        UnsuccessfulApplicationsViewModel viewModel = new UnsuccessfulApplicationsViewModel(competitionId,
+                competitionName, unsuccessfulApplications, unsuccessfulApplications.size());
+
+        when(unsuccessfulApplicationsModelPopulator.populateModel(competitionId))
+                .thenReturn(viewModel);
+
+        mockMvc.perform(get("/competition/{competitionId}/applications/unsuccessful", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/unsuccessful-applications"))
+                .andExpect(model().attribute("model", viewModel))
+                .andReturn();
     }
 
     @Test
