@@ -142,7 +142,7 @@ Internal user can see navigation page
     [Documentation]  IFS-1458
     [Tags]
     [Setup]  log in as a different user   &{internal_finance_credentials}
-    Given the user navigates to the page  ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/applications/navigate
+    Given the user navigates to the page  ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/applications/manage
     Then the user should see the element  jQuery=a:contains("Unsuccessful applications")
 
 Internal user can go to unsuccessful application page
