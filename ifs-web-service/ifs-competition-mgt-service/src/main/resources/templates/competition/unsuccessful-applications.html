@@ -10,7 +10,7 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage previous applications',linkClass='link-back',linkUrl=@{/competition/{competitionId}/applications/navigate(competitionId=${model.competitionId})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Previous applications',linkClass='link-back',linkUrl=@{/competition/{competitionId}/applications/navigate(competitionId=${model.competitionId})}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Unsuccessful applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
 
 
