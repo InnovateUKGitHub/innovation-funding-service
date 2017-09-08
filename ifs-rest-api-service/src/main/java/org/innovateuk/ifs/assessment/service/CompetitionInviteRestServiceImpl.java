@@ -105,24 +105,10 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
         innovationArea.ifPresent(innovationAreaId -> builder.queryParam("innovationArea", innovationAreaId));
         String convertedStatusesList = CollectionFunctions.simpleJoiner(participantStatuses, ",");
         builder.queryParam("statuses", convertedStatusesList);
-        // participantStatus.ifPresent(status -> builder.queryParam("status", status.toString()));
         compliant.ifPresent(hasContract -> builder.queryParam("compliant", hasContract));
 
         return getWithRestResult(builder.toUriString(), AssessorInviteOverviewPageResource.class);
     }
-
-//    public RestResult<AssessorInviteOverviewPageResource> getInvitationOverviewWithMultipleStatuses(long competitionId,
-//                                                                                             int page,
-//                                                                                             Optional<Long> innovationArea,
-//                                                                                             Set<ParticipantStatusResource> participantStatuses,
-//                                                                                             Optional<Boolean> compliant) {
-//        String baseUrl = format("%s%s%s", competitionInviteRestUrl, "getInvitationOverview", competitionId);
-//
-//        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
-//                .queryParam("page", page);
-//
-//        innovationArea.ifPresent(innovationAreaId -> builder.)
-//  }
 
     @Override
     public RestResult<CompetitionInviteStatisticsResource> getInviteStatistics(long competitionId) {

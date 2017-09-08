@@ -38,12 +38,6 @@ public interface CompetitionInviteRestService {
                                                                          List<ParticipantStatusResource> participantStatus,
                                                                          Optional<Boolean> compliant);
 
-//    RestResult<AssessorInviteOverviewPageResource> getInvitationOverviewWithMultipleStatuses(long competitionId,
-//                                                                                             int page,
-//                                                                                             Optional<Long> innovationArea,
-//                                                                                             Set<ParticipantStatusResource> participantStatuses,
-//                                                                                             Optional<Boolean> compliant);
-
     RestResult<CompetitionInviteStatisticsResource> getInviteStatistics(long competitionId);
 
     RestResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource existingUserStagedInvite);
