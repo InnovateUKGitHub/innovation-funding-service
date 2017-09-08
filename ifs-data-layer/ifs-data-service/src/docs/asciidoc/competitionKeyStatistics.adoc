@@ -44,11 +44,11 @@ include::{snippets}/competitionStatistics/get-in-assessment-key-statistics/curl-
 
 === Assessment Panel Key Statistics
 ==== Request
-include::{snippets}/competitionStatistics/get-assessment-panel-key-statistics/http-request.adoc[]
-include::{snippets}/competitionStatistics/get-assessment-panel-key-statistics/path-parameters.adoc[]
+include::{snippets}/competitionStatistics/get-in-assessment-panel-key-statistics/http-request.adoc[]
+include::{snippets}/competitionStatistics/get-in-assessment-panel-key-statistics/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/competitionStatistics/get-assessment-panel-key-statistics/http-response.adoc[]
+include::{snippets}/competitionStatistics/get-in-assessment-panel-key-statistics/http-response.adoc[]
 
 ==== Curl Example
-include::{snippets}/competitionStatistics/get-assessment-panel-key-statistics/curl-request.adoc[]
+include::{snippets}/competitionStatistics/get-in-assessment-panel-key-statistics/curl-request.adoc[]
