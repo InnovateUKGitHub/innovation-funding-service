@@ -33,6 +33,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -1123,7 +1124,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         flushAndClearSession();
 
         Optional<Long> innovationAreaId = of(innovationArea.getId());
-        Optional<ParticipantStatus> status = of(PENDING);
+        List<ParticipantStatus> status = Collections.singletonList(PENDING);
         Optional<Boolean> hasContract = of(TRUE);
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 

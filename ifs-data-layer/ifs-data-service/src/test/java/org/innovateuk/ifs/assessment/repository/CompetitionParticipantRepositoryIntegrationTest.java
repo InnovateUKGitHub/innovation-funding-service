@@ -30,6 +30,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +48,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -549,9 +551,9 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
-        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndStatus(
+        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndStatusContains(
                 competition.getId(),
-                ACCEPTED,
+                Collections.singletonList(ACCEPTED),
                 pageable
         );
 
@@ -648,10 +650,10 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
-        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competition.getId(),
                 innovationArea.getId(),
-                ACCEPTED,
+                Collections.singletonList(ACCEPTED),
                 TRUE,
                 pageable
         );
@@ -686,10 +688,10 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
-        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competition.getId(),
                 innovationArea.getId(),
-                null,
+                Arrays.asList(ACCEPTED, PENDING),
                 null,
                 pageable
         );
@@ -738,10 +740,10 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
-        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competition.getId(),
                 null,
-                ACCEPTED,
+                Collections.singletonList(ACCEPTED),
                 null,
                 pageable
         );
@@ -815,10 +817,10 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
-        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competition.getId(),
                 null,
-                null,
+                Collections.singletonList(ACCEPTED),
                 TRUE,
                 pageable
         );
@@ -892,10 +894,10 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
-        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competition.getId(),
                 null,
-                null,
+                Collections.singletonList(ACCEPTED),
                 FALSE,
                 pageable
         );
@@ -930,10 +932,10 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
-        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competition.getId(),
                 null,
-                null,
+                Collections.singletonList(ACCEPTED),
                 null,
                 pageable
         );

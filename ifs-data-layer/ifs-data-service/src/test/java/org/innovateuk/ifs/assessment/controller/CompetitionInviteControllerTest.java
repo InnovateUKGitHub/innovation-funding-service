@@ -16,6 +16,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +47,8 @@ import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceB
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.fromJson;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
@@ -506,7 +510,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         int page = 2;
         int size = 10;
         Optional<Long> innovationArea = of(3L);
-        Optional<ParticipantStatus> status = of(ACCEPTED);
+        List<ParticipantStatus> status = Collections.singletonList(ACCEPTED);
         Optional<Boolean> compliant = of(TRUE);
 
         AssessorInviteOverviewPageResource expectedPageResource = newAssessorInviteOverviewPageResource()
@@ -537,7 +541,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         int page = 0;
         int size = 20;
         Optional<Long> innovationArea = empty();
-        Optional<ParticipantStatus> status = empty();
+        List<ParticipantStatus> status = Arrays.asList(ACCEPTED, PENDING, REJECTED);
         Optional<Boolean> compliant = empty();
 
         Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.ASC, "invite.name"));

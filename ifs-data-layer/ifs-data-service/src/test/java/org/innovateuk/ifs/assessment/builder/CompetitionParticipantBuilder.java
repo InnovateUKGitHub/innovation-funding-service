@@ -50,7 +50,7 @@ public class CompetitionParticipantBuilder extends BaseBuilder<CompetitionPartic
         return withArray((id, i) -> setField("id", id, i), ids);
     }
 
-    public CompetitionParticipantBuilder withStatus(ParticipantStatus... states) {
+    public CompetitionParticipantBuilder withStatus(List<ParticipantStatus>... states) {
         return withArray((status, s) -> setField("status", status, s), states);
     }
 

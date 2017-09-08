@@ -1911,7 +1911,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         Page<CompetitionParticipant> pageResult = new PageImpl<>(expectedParticipants, pageable, 10);
 
-        when(competitionParticipantRepositoryMock.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+        when(competitionParticipantRepositoryMock.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competitionId,
                 innovationArea,
                 status,

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -249,7 +250,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
     public void getInvitationOverview() throws Exception {
         long competitionId = 1L;
         Optional<Long> innovationArea = of(10L);
-        Optional<ParticipantStatus> status = of(ACCEPTED);
+        List<ParticipantStatus> status = Collections.singletonList(ACCEPTED);
         Optional<Boolean> compliant = of(TRUE);
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
