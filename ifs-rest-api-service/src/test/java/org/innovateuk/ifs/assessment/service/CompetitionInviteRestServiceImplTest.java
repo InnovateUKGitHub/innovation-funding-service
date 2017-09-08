@@ -53,6 +53,20 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
 
         setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getAllInvitesToSend", competitionId), AssessorInvitesToSendResource.class, expected);
         AssessorInvitesToSendResource actual = service.getAllInvitesToSend(competitionId).getSuccessObject();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getAllInvitesToResend() throws Exception {
+        long competitionId = 1L;
+
+        AssessorInvitesToSendResource expected = newAssessorInvitesToSendResource()
+                .withRecipients(asList("James", "John"))
+                .build();
+
+        setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getAllInvitesToSend", competitionId), AssessorInvitesToSendResource.class, expected);
+        AssessorInvitesToSendResource actual = service.getAllInvitesToSend(competitionId).getSuccessObject();
+        assertEquals(expected, actual);
     }
 
     @Test

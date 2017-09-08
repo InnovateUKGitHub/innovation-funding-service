@@ -166,7 +166,6 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
 
     private void populateResendInviteFormWithExistingValues(ResendInviteForm form, AssessorInvitesToSendResource assessorInviteToSendResource) {
         form.setSubject(format("Invitation to assess '%s'", assessorInviteToSendResource.getCompetitionName()));
-        //form.setContent(assessorInviteToSendResource.getContent());
     }
 
     private void populateGroupInviteFormWithExistingValues(SendInviteForm form, AssessorInvitesToSendResource assessorInviteToSendResource) {
