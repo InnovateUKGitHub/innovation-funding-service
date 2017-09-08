@@ -5,7 +5,9 @@ Suite Teardown    Close browser and delete emails
 Force Tags        Applicant  Email
 Resource          ../../../resources/defaultResources.robot
 
-# In those test cases we add Operating address as well. So we don't click the checkbox = use same address
+*** Variables ***
+${bob}     bob@minions.com
+${stuart}  stuart@minions.com
 
 *** Test Cases ***
 Two lead applicants users signing up as a Business organisation with the same details can succesfully invite eachother
@@ -23,14 +25,13 @@ Two lead applicants users signing up as a Business organisation with the same de
     And sees the application he was invited for on his dashboard
     [Teardown]  logout as user
 
+# In those test cases we add Operating address as well. So we don't click the checkbox = use same address
 Researcher invites other researcher from same organisation in his application and the latter is able to accept
     [Documentation]  IFS-1325
     [Tags]
     Given New Research user applies to Competition and starts application
     And Another Research user applies to Competition and starts application
     Then the latter researcher is able to invite the first one to his application
-
-#CV4 7AL
 
 *** Keywords ***
 the user invites collaborator by email address
@@ -76,7 +77,7 @@ the user inserts the address of his research organisation
     the user enters text to a text field  organisationSearchName  Warwick
     the user clicks the button/link       css=[id="org-search"]
     the user clicks the button/link       link=University of Warwick
-    the user clicks the button/link       button:contains("Enter address manually")
+    the user clicks the button/link       jQuery=button:contains("Enter address manually")
     the user enters text to a text field  addressForm.selectedPostcode.addressLine1  ${streetOne}
     the user enters text to a text field  addressForm.selectedPostcode.town  ${city}
     the user enters text to a text field  addressForm.selectedPostcode.postcode  ${postcode}
@@ -97,13 +98,13 @@ the user verifies account and starts his application
 the user navigates to the Application Team Page
     [Arguments]  ${email}
     the user navigates to the page   ${dashboard_url}
-    the user clicks the button/link  ${email}'s Application
+    the user clicks the button/link  link=${email}'s Application
     the user clicks the button/link  link=view and manage contributors and collaborators
 
 the user updates his organisation inviting the user
     [Arguments]  ${name}  ${email}
     the user clicks the button/link       link=Update and add contributors from University of Warwick
-    the user clicks the button/link       link=Add another contributor
+    the user clicks the button/link       jQuery=.buttonlink:contains("Add another contributor")
     the user enters text to a text field  stagedInvite.name  ${name}
     the user enters text to a text field  stagedInvite.email  ${email}
     the user clicks the button/link       css=button[name="executeStagedInvite"]
@@ -113,22 +114,21 @@ the user updates his organisation inviting the user
 New Research user applies to Competition and starts application
     the user creates new account and organisation  radio-2  ${openCompetitionRTO}
     the user inserts the address of his research organisation  p.o. box 42  coventry  cv4 7al
-    the user enters text to a text field    email  bob@minions.com
+    the user enters text to a text field    email  ${bob}
     the user fills the create account form  Bob  Minion
-    the user verifies account and starts his application  bob@minions.com
+    the user verifies account and starts his application  ${bob}
     logout as user
 
 Another Research user applies to Competition and starts application
     the user creates new account and organisation  radio-2  ${openCompetitionRTO}
     the user inserts the address of his research organisation  P.O. BOX 42  Coventry  CV4 7AL
-    the user enters text to a text field    email  stuart@minions.com
+    the user enters text to a text field    email  ${stuart}
     the user fills the create account form  Stuart  Minion
-    the user verifies account and starts his application  stuart@minions.com
+    the user verifies account and starts his application  ${stuart}
 
 The latter researcher is able to invite the first one to his application
-    the user navigates to the Application Team Page  stuart@minions.com
-    the user updates his organisation inviting the user  Bob  bob@minions.com
-    log in as a different user
-    the user reads his email and clicks the link  bob@minions.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation  2
-    the user is able to confirm the invite  bob@minions.com
-
+    the user navigates to the Application Team Page  ${stuart}
+    the user updates his organisation inviting the user  Bob  ${bob}
+    logout as user
+    the user reads his email and clicks the link  ${bob}  Invitation to collaborate in ${openCompetitionRTO_name}  You will be joining as part of the organisation  2
+    the user is able to confirm the invite  ${bob}
