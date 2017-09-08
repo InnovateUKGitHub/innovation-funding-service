@@ -96,49 +96,6 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
         });
     }
 
-
-//    @GetMapping("/{inviteId}/resend")
-//    public String getInviteToResend(Model model,
-//                                    @PathVariable("inviteId") long inviteId,
-//                                    @ModelAttribute(name = "form", binding = false) SendInviteForm form,
-//                                    BindingResult bindingResult) {
-//        AssessorInvitesToSendResource invite = competitionInviteRestService.getInviteToSend(inviteId).getSuccessObjectOrThrowException();
-//        model.addAttribute("model", new SendInviteViewModel(
-//                invite.getCompetitionId(),
-//                inviteId,
-//                invite.getCompetitionName(),
-//                invite.getRecipients().get(0),
-//                invite.getContent())
-//        );
-//
-//        if (!bindingResult.hasErrors()) {
-//            populateFormWithExistingValues(form, invite);
-//        }
-//
-//        return "assessors/resend-invite";
-//    }
-
-
-
-//    @PostMapping("/{inviteId}/resend")
-//    public String resendInvite (Model model,
-//                                @PathVariable("inviteId") long inviteId,
-//                                @ModelAttribute("form") @Valid SendInviteForm form,
-//                                BindingResult bindingResult,
-//                                ValidationHandler validationHandler){
-//        AssessorInvitesToSendResource invite = competitionInviteRestService.getInviteToSend(inviteId).getSuccessObjectOrThrowException();
-//
-//        Supplier<String> failureView = () -> getInvitesToResend(model, inviteId, form, bindingResult);
-//
-//        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-//            ServiceResult<Void> sendResult = competitionInviteRestService.resendInvite(inviteId, new AssessorInviteSendResource(
-//                    form.getSubject(), form.getContent())).toServiceResult();
-//            return validationHandler.addAnyErrors(sendResult, fieldErrorsToFieldErrors(), asGlobalErrors())
-//                    .failNowOrSucceedWith(failureView, () -> format("redirect:/competition/%s/assessors/overview", invite.getCompetitionId()));
-//        });
-//    }
-
-
     @PostMapping("/reviewResend")
     public String getInvitesToResend(Model model,
                                      @PathVariable("competitionId") long competitionId,
@@ -165,7 +122,7 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
                     invites.getContent()
             ));
             inviteform.setInviteIds(selectionForm.getSelectedAssessorIds());
-            populateGroupInviteFormWithExistingValues(inviteform, invites);
+            populateResendInviteFormWithExistingValues(inviteform, invites);
             return "assessors/resend-invites";
         });
     }
@@ -207,9 +164,9 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
         return format("redirect:/competition/%s/assessors/invite", competitionId);
     }
 
-    private void populateFormWithExistingValues(SendInviteForm form, AssessorInvitesToSendResource assessorInviteToSendResource) {
+    private void populateResendInviteFormWithExistingValues(ResendInviteForm form, AssessorInvitesToSendResource assessorInviteToSendResource) {
         form.setSubject(format("Invitation to assess '%s'", assessorInviteToSendResource.getCompetitionName()));
-        form.setContent(assessorInviteToSendResource.getContent());
+        //form.setContent(assessorInviteToSendResource.getContent());
     }
 
     private void populateGroupInviteFormWithExistingValues(SendInviteForm form, AssessorInvitesToSendResource assessorInviteToSendResource) {

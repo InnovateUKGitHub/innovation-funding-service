@@ -552,25 +552,20 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Override
     public ServiceResult<Void> resendInvites(List<Long> inviteIds, AssessorInviteSendResource assessorInviteSendResource) {
+
         String customTextPlain = stripHtml(assessorInviteSendResource.getContent());
         String customTextHtml = plainTextToHtml(customTextPlain);
 
         return ServiceResult.processAnyFailuresOrSucceed(simpleMap(
                 competitionInviteRepository.getByIdIn(inviteIds),
-                invite -> {
-                    competitionParticipantRepository.save(
-                            new CompetitionParticipant(invite.send(loggedInUserSupplier.get(), ZonedDateTime.now()))
-                    );
-
-                    return sendInviteNotification(
-                            assessorInviteSendResource.getSubject(),
-                            inviteFormatter,
-                            customTextPlain,
-                            customTextHtml,
-                            invite,
-                            Notifications.INVITE_ASSESSOR_GROUP
-                    );
-                }
+                invite -> sendInviteNotification(
+                        assessorInviteSendResource.getSubject(),
+                        inviteFormatter,
+                        customTextPlain,
+                        customTextHtml,
+                        invite.sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now()),
+                        Notifications.INVITE_ASSESSOR_GROUP
+                )
         ));
     }
 
