@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -102,7 +103,8 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
                 .queryParam("page", page);
 
         innovationArea.ifPresent(innovationAreaId -> builder.queryParam("innovationArea", innovationAreaId));
-        builder.queryParam(participantStatuses.toString());
+        String convertedStatusesList = CollectionFunctions.simpleJoiner(participantStatuses, ",");
+        builder.queryParam("statuses", convertedStatusesList);
         // participantStatus.ifPresent(status -> builder.queryParam("status", status.toString()));
         compliant.ifPresent(hasContract -> builder.queryParam("compliant", hasContract));
 

@@ -22,14 +22,14 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
             "FROM CompetitionParticipant competitionParticipant " +
             "WHERE competitionParticipant.competition.id = :competitionId " +
             "AND competitionParticipant.role = 'ASSESSOR' " +
-            "AND (:status IS NULL OR competitionParticipant.status = :status)";
+            "AND competitionParticipant.status IN :status";
 
     String BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT = "SELECT competitionParticipant " +
             "FROM CompetitionParticipant competitionParticipant " +
             "LEFT JOIN Profile profile ON profile.id = competitionParticipant.user.profileId " +
             "WHERE competitionParticipant.competition.id = :competitionId " +
             "AND competitionParticipant.role = 'ASSESSOR' " +
-            "AND (:status IS NULL OR competitionParticipant.status = :status) " +
+            "AND competitionParticipant.status IN :status " +
             "AND (:innovationAreaId IS NULL " +
             "   OR EXISTS(" +
             "       SELECT profile.id " +
