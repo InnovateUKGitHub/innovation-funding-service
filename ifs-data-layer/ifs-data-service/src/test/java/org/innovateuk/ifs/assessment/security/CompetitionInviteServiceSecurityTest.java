@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.method.P;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +24,7 @@ import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBu
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
@@ -137,6 +139,16 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     @Test
+    public void getResendInvites() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAllInvitesToResend(1L, singletonList(2L)), COMP_ADMIN, PROJECT_FINANCE);
+    }
+
+    @Test
+    public void resendInvites() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.resendInvites(singletonList(2L), newAssessorInviteSendResource().build()), COMP_ADMIN, PROJECT_FINANCE);
+    }
+
+    @Test
     public void getInvitationOverview() {
         Pageable pageable = new PageRequest(0, 20);
         Optional<Long> innovationArea = of(1L);
@@ -144,6 +156,15 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
         Optional<Boolean> compliant = of(TRUE);
 
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInvitationOverview(1L, pageable, innovationArea, status, compliant), COMP_ADMIN,PROJECT_FINANCE);
+    }
+
+    @Test
+    public void getAssessorInviteIds() {
+        Optional<Long> innovationArea = of(1L);
+        Optional<ParticipantStatus> status = of(PENDING);
+        Optional<Boolean> compliant = of(TRUE);
+
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAssessorsNotAcceptedInviteIds(1L, innovationArea, status, compliant), COMP_ADMIN,PROJECT_FINANCE);
     }
 
     @Test
@@ -208,6 +229,11 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
         }
 
         @Override
+        public ServiceResult<AssessorInvitesToSendResource> getAllInvitesToResend(long competitionId, List<Long> inviteIds) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<AssessorInvitesToSendResource> getInviteToSend(long inviteId) {
             return null;
         }
@@ -263,6 +289,14 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
         }
 
         @Override
+        public ServiceResult<List<Long>> getAssessorsNotAcceptedInviteIds(long competitionId,
+                                                                          Optional<Long> innovationArea,
+                                                                          Optional<ParticipantStatus> status,
+                                                                          Optional<Boolean> compliant) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<CompetitionInviteStatisticsResource> getInviteStatistics(long competitionId) {
             return null;
         }
@@ -294,6 +328,11 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
 
         @Override
         public ServiceResult<Void> resendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> resendInvites(List<Long> inviteIds, AssessorInviteSendResource assessorInviteSendResource) {
             return null;
         }
 

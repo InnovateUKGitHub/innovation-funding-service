@@ -55,8 +55,7 @@ public class InviteAssessorsOverviewModelPopulator extends InviteAssessorsModelP
                 page,
                 innovationArea,
                 status,
-                compliant
-        )
+                compliant)
                 .getSuccessObjectOrThrowException();
 
         List<OverviewAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);

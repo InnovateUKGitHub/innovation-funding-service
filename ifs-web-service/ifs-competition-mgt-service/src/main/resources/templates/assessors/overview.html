@@ -113,8 +113,9 @@
                    </fieldset>
 
                     <div class="grid-row">
+                        <input type="hidden" name="filterChanged" value="1"/>
                         <div class="column-half">
-                            <a href="?page=0" class="button button-clear no-margin">Clear filters</a>
+                            <a href="?page=0?filterChanged=1" class="button button-clear no-margin">Clear filters</a>
                         </div>
 
                         <div class="column-half alignright">
@@ -136,8 +137,8 @@
             </div>
 
             <form method="POST"
-                  th:action="@{/competition/{competitionId}/assessors/find/addSelected(competitionId=${model.competitionId})}"
-                  th:object="${assessorSelectionForm}"
+                  th:action="@{/competition/{competitionId}/assessors/invite/reviewResend(competitionId=${model.competitionId})}"
+                  th:object="${overviewSelectionForm}"
                   data-multipage-select=""
                   th:attr="data-total-checkboxes=${model.pagination.totalCount}">
 
@@ -147,18 +148,18 @@
                             <input type="checkbox"
                                    data-select-all=""
                                    id="select-all-check"
-                                   th:checked="${assessorSelectionForm.getAllSelected()}"
+                                   th:checked="${overviewSelectionForm.getAllSelected()}"
                                    th:disabled="${model.selectAllDisabled || model.pagination.totalCount == 0}"/>
                             <label for="select-all-check">
                                 Select all assessors
                             </label>
                         </div>
                         <span class="form-hint">
-                        <span data-count-selected="" th:text="${#lists.size(assessorSelectionForm.selectedAssessorIds)}"></span> assessors selected</span>
+                        <span data-count-selected="" th:text="${#lists.size(overviewSelectionForm.selectedAssessorIds)}"></span> assessors selected</span>
                     </div>
                     <div class="column-half select-all alignright">
-                        <button class="button" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(assessorSelectionForm.selectedAssessorIds)}">
-                            Add selected to invite list
+                        <button class="button" name="resendInvites" data-submit-el="" th:attr="disabled=${#lists.isEmpty(overviewSelectionForm.selectedAssessorIds)}">
+                            Resend invites
                         </button>
                     </div>
                 </div>
@@ -167,6 +168,7 @@
                     <table>
                         <thead>
                         <tr>
+                            <th scope="col">Select assessor</th>
                             <th scope="col">Assessor name</th>
                             <th scope="col">Type</th>
                             <th scope="col">Innovation area</th>
@@ -182,7 +184,7 @@
                                     <input type="checkbox"
                                            th:id="|assessor-row-${index.count}|"
                                            th:field="*{selectedAssessorIds}"
-                                           th:value="${assessor.id}"/>
+                                           th:value="${assessor.inviteId}"/>
                                     <label th:for="|assessor-row-${index.count}|">
                                         <span class="invisible">Add</span>
                                     </label>

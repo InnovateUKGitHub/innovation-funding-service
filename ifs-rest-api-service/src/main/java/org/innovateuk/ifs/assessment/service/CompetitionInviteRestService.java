@@ -15,6 +15,8 @@ public interface CompetitionInviteRestService {
 
     RestResult<AssessorInvitesToSendResource> getInviteToSend(long inviteId);
 
+    RestResult<AssessorInvitesToSendResource> getAllInvitesToResend(long competitionId, List<Long> inviteIds);
+
     RestResult<CompetitionInviteResource> getInvite(String inviteHash);
 
     RestResult<CompetitionInviteResource> openInvite(String inviteHash);
@@ -28,6 +30,11 @@ public interface CompetitionInviteRestService {
     RestResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, int page, Optional<Long> innovationArea);
 
     RestResult<List<Long>> getAvailableAssessorIds(long competitionId, Optional<Long> innovationArea);
+
+    RestResult<List<Long>> getAssessorsNotAcceptedInviteIds(long competitionId,
+                                                            Optional<Long> innovationArea,
+                                                            Optional<ParticipantStatusResource> participantStatus,
+                                                            Optional<Boolean> compliant);
 
     RestResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, int page);
 
@@ -52,4 +59,7 @@ public interface CompetitionInviteRestService {
     RestResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource);
 
     RestResult<Void> resendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource);
+
+    RestResult<Void> resendInvites(List<Long> inviteIds, AssessorInviteSendResource assessorInviteSendResource);
+
 }

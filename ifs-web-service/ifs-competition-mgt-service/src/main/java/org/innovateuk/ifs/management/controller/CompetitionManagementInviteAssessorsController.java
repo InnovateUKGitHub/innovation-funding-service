@@ -60,7 +60,7 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
     private InviteAssessorsOverviewModelPopulator inviteAssessorsOverviewModelPopulator;
 
     protected String getCookieName() {
-        return "assessorSelectionForm";
+        return SELECTION_FORM;
     }
 
     protected Class<AssessorSelectionForm> getFormType() {
@@ -330,27 +330,6 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
                 .queryParam("page", page)
                 .buildAndExpand(asMap("competitionId", competitionId))
                 .toUriString();
-    }
-
-    @GetMapping("/overview")
-    public String overview(Model model,
-                           @Valid @ModelAttribute(FILTER_FORM_ATTR_NAME) OverviewAssessorsFilterForm filterForm,
-                           @PathVariable("competitionId") long competitionId,
-                           @RequestParam(defaultValue = "0") int page,
-                           @RequestParam MultiValueMap<String, String> queryParams) {
-        String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_OVERVIEW, queryParams);
-
-        model.addAttribute("model", inviteAssessorsOverviewModelPopulator.populateModel(
-                competitionId,
-                page,
-                filterForm.getInnovationArea(),
-                filterForm.getStatus(),
-                filterForm.getCompliant(),
-                originQuery
-        ));
-        model.addAttribute("originQuery", originQuery);
-
-        return "assessors/overview";
     }
 
     private ServiceResult<Void> deleteInvite(String email, long competitionId) {
