@@ -80,7 +80,7 @@ public interface CompetitionInviteService {
     ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
                                                                             Pageable pageable,
                                                                             Optional<Long> innovationArea,
-                                                                            Optional<ParticipantStatus> status,
+                                                                            List<ParticipantStatus> statuses,
                                                                             Optional<Boolean> compliant);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")

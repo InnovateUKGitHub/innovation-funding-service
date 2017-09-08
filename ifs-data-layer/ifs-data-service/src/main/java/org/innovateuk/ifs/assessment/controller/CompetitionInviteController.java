@@ -94,7 +94,7 @@ public class CompetitionInviteController {
             @PathVariable long competitionId,
             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "invite.name", direction = Sort.Direction.ASC) Pageable pageable,
             @RequestParam Optional<Long> innovationArea,
-            @RequestParam Optional<ParticipantStatus> status,
+            @RequestParam List<ParticipantStatus> status,
             @RequestParam Optional<Boolean> compliant
     ) {
         return competitionInviteService.getInvitationOverview(competitionId, pageable, innovationArea, status, compliant).toGetResponse();

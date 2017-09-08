@@ -89,14 +89,14 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
     CompetitionParticipant getByCompetitionIdAndUserIdAndRole(Long competitionId, Long userId, CompetitionParticipantRole role);
 
     @Query(BY_COMP_AND_STATUS)
-    Page<CompetitionParticipant> getAssessorsByCompetitionAndStatus(@Param("competitionId") long competitionId,
-                                                                    @Param("status") ParticipantStatus status,
+    Page<CompetitionParticipant> getAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
+                                                                    @Param("status") List<ParticipantStatus> status,
                                                                     Pageable pageable);
 
     @Query(BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT)
-    Page<CompetitionParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(@Param("competitionId") long competitionId,
+    Page<CompetitionParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(@Param("competitionId") long competitionId,
                                                                                                  @Param("innovationAreaId") Long innovationAreaId,
-                                                                                                 @Param("status") ParticipantStatus status,
+                                                                                                 @Param("status") List<ParticipantStatus> status,
                                                                                                  @Param("isCompliant") Boolean isCompliant,
                                                                                                  Pageable pageable);
 

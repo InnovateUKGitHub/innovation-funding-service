@@ -309,23 +309,23 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     public ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
                                                                                    Pageable pageable,
                                                                                    Optional<Long> innovationArea,
-                                                                                   Optional<ParticipantStatus> status,
+                                                                                   List<ParticipantStatus> statuses,
                                                                                    Optional<Boolean> compliant) {
         Page<CompetitionParticipant> pagedResult;
 
         if (innovationArea.isPresent() || compliant.isPresent()) {
             // We want to avoid performing the potentially expensive join on Profile if possible
-            pagedResult = competitionParticipantRepository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+            pagedResult = competitionParticipantRepository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                     competitionId,
                     innovationArea.orElse(null),
-                    status.orElse(null),
+                    statuses,
                     compliant.orElse(null),
                     pageable
             );
         } else {
-            pagedResult = competitionParticipantRepository.getAssessorsByCompetitionAndStatus(
+            pagedResult = competitionParticipantRepository.getAssessorsByCompetitionAndStatusContains(
                     competitionId,
-                    status.orElse(null),
+                    statuses,
                     pageable
             );
         }

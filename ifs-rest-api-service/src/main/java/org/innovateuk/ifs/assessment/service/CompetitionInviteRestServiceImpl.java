@@ -9,6 +9,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static java.lang.String.format;
 
@@ -93,7 +94,7 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     public RestResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
                                                                                 int page,
                                                                                 Optional<Long> innovationArea,
-                                                                                Optional<ParticipantStatusResource> participantStatus,
+                                                                                List<ParticipantStatusResource> participantStatuses,
                                                                                 Optional<Boolean> compliant) {
         String baseUrl = format("%s/%s/%s", competitionInviteRestUrl, "getInvitationOverview", competitionId);
 
@@ -101,11 +102,25 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
                 .queryParam("page", page);
 
         innovationArea.ifPresent(innovationAreaId -> builder.queryParam("innovationArea", innovationAreaId));
-        participantStatus.ifPresent(status -> builder.queryParam("status", status.toString()));
+        builder.queryParam(participantStatuses.toString());
+        // participantStatus.ifPresent(status -> builder.queryParam("status", status.toString()));
         compliant.ifPresent(hasContract -> builder.queryParam("compliant", hasContract));
 
         return getWithRestResult(builder.toUriString(), AssessorInviteOverviewPageResource.class);
     }
+
+//    public RestResult<AssessorInviteOverviewPageResource> getInvitationOverviewWithMultipleStatuses(long competitionId,
+//                                                                                             int page,
+//                                                                                             Optional<Long> innovationArea,
+//                                                                                             Set<ParticipantStatusResource> participantStatuses,
+//                                                                                             Optional<Boolean> compliant) {
+//        String baseUrl = format("%s%s%s", competitionInviteRestUrl, "getInvitationOverview", competitionId);
+//
+//        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
+//                .queryParam("page", page);
+//
+//        innovationArea.ifPresent(innovationAreaId -> builder.)
+//  }
 
     @Override
     public RestResult<CompetitionInviteStatisticsResource> getInviteStatistics(long competitionId) {

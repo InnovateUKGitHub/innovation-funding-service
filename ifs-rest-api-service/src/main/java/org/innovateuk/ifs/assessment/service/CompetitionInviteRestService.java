@@ -5,6 +5,7 @@ import org.innovateuk.ifs.invite.resource.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * REST service for managing {@link org.innovateuk.ifs.invite.resource.InviteResource} to {@link org.innovateuk.ifs.competition.resource.CompetitionResource }
@@ -34,8 +35,14 @@ public interface CompetitionInviteRestService {
     RestResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
                                                                          int page,
                                                                          Optional<Long> innovationArea,
-                                                                         Optional<ParticipantStatusResource> participantStatus,
+                                                                         List<ParticipantStatusResource> participantStatus,
                                                                          Optional<Boolean> compliant);
+
+//    RestResult<AssessorInviteOverviewPageResource> getInvitationOverviewWithMultipleStatuses(long competitionId,
+//                                                                                             int page,
+//                                                                                             Optional<Long> innovationArea,
+//                                                                                             Set<ParticipantStatusResource> participantStatuses,
+//                                                                                             Optional<Boolean> compliant);
 
     RestResult<CompetitionInviteStatisticsResource> getInviteStatistics(long competitionId);
 
