@@ -2,9 +2,10 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelKeyStatisticsResource;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
 import org.innovateuk.ifs.management.model.AssessmentPanelModelPopulator;
-import org.innovateuk.ifs.management.service.CompetitionAssessmentPanelService;
 import org.innovateuk.ifs.management.viewmodel.AssessmentPanelViewModel;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -15,6 +16,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.builder.AssessmentPanelKeyStatisticsResourceBuilder.newAssessmentPanelKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.only;
@@ -31,7 +33,7 @@ public class CompetitionManagementAssessmentPanelControllerTest extends BaseCont
     private AssessmentPanelModelPopulator assessmentPanelModelPopulator;
 
     @Mock
-    private CompetitionAssessmentPanelService competitionAssessmentPanelService;
+    private CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;
 
     @Mock
     private AssessmentPanelKeyStatisticsResource assessmentPanelKeyStatisticsResource;
@@ -53,13 +55,16 @@ public class CompetitionManagementAssessmentPanelControllerTest extends BaseCont
                 .withCompetitionStatus(competitionStatus)
                 .build();
 
-        assessmentPanelKeyStatisticsResource.setApplicationsInPanel(1);
-        assessmentPanelKeyStatisticsResource.setAssessorsPending(2);
-        assessmentPanelKeyStatisticsResource.setAssessorsAccepted(1);
+        assessmentPanelKeyStatisticsResource = newAssessmentPanelKeyStatisticsResource()
+                .withApplicationsInPanel(5)
+                .withAssessorsAccepted(2)
+                .withAssessorsPending(3)
+                .build();
 
 
         when(competitionService.getById(competitionId)).thenReturn(competitionResource);
-        when(competitionAssessmentPanelService.getAssessmentPanelKeyStatistics(competitionId)).thenReturn(assessmentPanelKeyStatisticsResource);
+        when(competitionKeyStatisticsRestService.getAssessmentPanelKeyStatisticsByCompetition(competitionId))
+                .thenReturn(RestResult.toGetResponse(assessmentPanelKeyStatisticsResource));
 
         MvcResult result = mockMvc.perform(get("/assessment/panel/competition/{competitionId}", competitionId))
                 .andExpect(status().isOk())

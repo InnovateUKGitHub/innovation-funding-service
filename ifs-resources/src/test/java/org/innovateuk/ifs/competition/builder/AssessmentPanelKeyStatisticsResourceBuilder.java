@@ -34,15 +34,15 @@ public class AssessmentPanelKeyStatisticsResourceBuilder
         return new AssessmentPanelKeyStatisticsResource();
     }
 
-    public AssessmentPanelKeyStatisticsResourceBuilder withApplicationsInPanel(Long ...applicationsInPanel) {
+    public AssessmentPanelKeyStatisticsResourceBuilder withApplicationsInPanel(Integer ...applicationsInPanel) {
         return withArraySetFieldByReflection("applicationsInPanel", applicationsInPanel);
     }
 
-    public AssessmentPanelKeyStatisticsResourceBuilder withAssessorsAccepted(Long ...assessorsAccepted) {
+    public AssessmentPanelKeyStatisticsResourceBuilder withAssessorsAccepted(Integer ...assessorsAccepted) {
         return withArraySetFieldByReflection("assessorsAccepted", assessorsAccepted);
     }
 
-    public AssessmentPanelKeyStatisticsResourceBuilder withAssessorsPending(Long ...assessorsPending) {
+    public AssessmentPanelKeyStatisticsResourceBuilder withAssessorsPending(Integer ...assessorsPending) {
         return withArraySetFieldByReflection("assessorsPending", assessorsPending);
     }
 

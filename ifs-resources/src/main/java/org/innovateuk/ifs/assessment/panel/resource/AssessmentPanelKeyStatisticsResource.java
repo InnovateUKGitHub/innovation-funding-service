@@ -5,7 +5,6 @@ package org.innovateuk.ifs.assessment.panel.resource;
  */
 public class AssessmentPanelKeyStatisticsResource {
 
-
     private int applicationsInPanel;
     private int assessorsAccepted;
     private int assessorsPending;
@@ -41,9 +40,5 @@ public class AssessmentPanelKeyStatisticsResource {
     }
 
     public void setAssessorsPending(int assessorsPending) { this.assessorsPending = assessorsPending; }
-
-
-
-
 }
 
