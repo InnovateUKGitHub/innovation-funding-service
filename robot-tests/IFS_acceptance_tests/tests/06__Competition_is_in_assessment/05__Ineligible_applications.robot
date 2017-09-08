@@ -114,13 +114,16 @@ Applicant is informed that his application is not eligible
     When the applicant can see his application in the right section  Previous applications
     Then the user reads his email  ${Ineligible_user["email"]}  This is ineligible  Thank you for your application but this is ineligible
 
-Reinstate an application
+Innovation Lead is not able to reinstate an application
     [Documentation]  INFUND-8941 IFS-986
     [Tags]  HappyPath  InnovationLead
-    # Innovation Lead is not able to reinstate an application
     Given log in as a different user          &{innovation_lead_one}
     When the user navigates to the page       ${ineligibleApplicationOverview}
     Then the user should not see the element  jQuery=a[role="button"]:contains("Reinstate application")
+
+Reinstate an application
+    [Documentation]  INFUND-8941 IFS-986
+    [Tags]  HappyPath
     Given Log in as a different user          &{Comp_admin1_credentials}
     When the user navigates to the page       ${ineligibleApplicationOverview}
     And the user clicks the button/link       jQuery=a:contains("Reinstate application")
