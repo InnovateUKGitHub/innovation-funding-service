@@ -248,6 +248,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         when(idpServiceMock.createUserRecordWithUid(isA(String.class), isA(String.class))).thenAnswer(
                 user -> serviceSuccess(UUID.randomUUID().toString()));
         when(idpServiceMock.activateUser(isA(String.class))).thenAnswer(uuid -> serviceSuccess(uuid));
+        when(idpServiceMock.deactivateUser(isA(String.class))).thenAnswer(uuid -> serviceSuccess(uuid));
 
         when(emailServiceMock.sendEmail(isA(EmailAddress.class), isA(List.class), isA(String.class), isA(String.class), isA(String.class))).
                 thenReturn(serviceSuccess(emptyList()));
@@ -1020,9 +1021,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         Function<S, S> registerUserIfNecessary = builder -> builder.registerUser(line.firstName, line.lastName, line.emailAddress, line.organisationName, line.phoneNumber);
 
-        Function<S, S> verifyEmail= builder -> builder.verifyEmail();
+        Function<S, S> verifyEmail = builder -> builder.verifyEmail();
 
-        Function<S, S> inactivateUserIfNecessary = builder -> !(line.emailVerified) ? builder.inactivateUser() : builder;
+        Function<S, S> inactivateUserIfNecessary = builder -> !(line.emailVerified) ? builder.deactivateUser() : builder;
 
         createOrgIfNecessary.andThen(registerUserIfNecessary).andThen(verifyEmail).andThen(inactivateUserIfNecessary).apply(baseBuilder).build();
     }
