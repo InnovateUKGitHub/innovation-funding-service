@@ -18,8 +18,8 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 /**
  * Rules defining who is allowed to upload files as part of an Application Form response to a Question
