@@ -11,6 +11,7 @@ ${bob}     bob@minions.com
 ${stuart}  stuart@minions.com
 # business partners
 ${bCollaborator}  businesscollab@gmail.com
+${bLead}          businesslead@gmail.com
 
 *** Test Cases ***
 Two lead applicants users signing up as a Business organisation with the same details can succesfully invite eachother
@@ -19,13 +20,11 @@ Two lead applicants users signing up as a Business organisation with the same de
     # TODO would be nice to try with custom address insertion instead of clicking checkbox same-address IFS-1550
     Given we create a new user  ${openCompetitionBusinessRTO}  Business  collab  ${bCollaborator}  ${BUSINESS_TYPE_ID}
     And the user logs out if they are logged in
-    And we create a new user  ${openCompetitionBusinessRTO}  Business  lead  businesslead@gmail.com  ${BUSINESS_TYPE_ID}
-
+    And we create a new user  ${openCompetitionBusinessRTO}  Business  lead  ${bLead}  ${BUSINESS_TYPE_ID}
     When the user invites collaborator by email address  ${bCollaborator}
     And the user changes the application name  ${bCollaborator}'s Application
     And the user logs out if they are logged in
     And the user reads his email and clicks the link  ${bCollaborator}  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You are invited by  2
-
     Then the user is able to confirm the invite  ${bCollaborator}
     And the user sees the application he was invited for on his dashboard  ${bCollaborator}'s Application
     [Teardown]  logout as user
