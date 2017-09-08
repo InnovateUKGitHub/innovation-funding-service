@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.viewmodel;
 
-
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
@@ -16,6 +15,7 @@ public class AssignButtonsViewModel {
     private List<ApplicantResource> assignableApplicants;
     private List<ApplicationInviteResource> pendingAssignableUsers;
     private boolean hideAssignButtons;
+    private boolean currentCompetitionIsClosed;
 
     public ApplicantResource getAssignedBy() {
         return assignedBy;
@@ -90,7 +90,6 @@ public class AssignButtonsViewModel {
         return (isNotAssigned() && applicant.isLead()) || (isAssigned() && assignee.isSameUser(applicant));
     }
 
-
     public boolean isNotAssigned() {
         return !isAssigned();
     }
@@ -110,4 +109,11 @@ public class AssignButtonsViewModel {
 
     public boolean isAssignedToLead() { return assignee.isLead(); }
 
+    public boolean isCurrentCompetitionIsClosed() {
+        return currentCompetitionIsClosed;
+    }
+
+    public void setCurrentCompetitionIsClosed(boolean currentCompetitionIsClosed) {
+        this.currentCompetitionIsClosed = currentCompetitionIsClosed;
+    }
 }
