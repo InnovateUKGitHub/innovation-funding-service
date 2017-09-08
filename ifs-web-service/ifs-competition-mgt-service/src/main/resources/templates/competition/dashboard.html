@@ -7,7 +7,7 @@
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='All competitions',size='heading-large'" />
         </div>
         <div class="column-half alignright">
-            <div class="form-search">
+            <div class="form-search" th:if="${showSearch == null || showSearch == true}">
                 <label class="visuallyhidden" for="searchQuery">Search for:</label>
                 <input type="search" th:value="${searchQuery}" name="searchQuery" id="searchQuery" class="search-query"
                        placeholder="Search competitions"/>
