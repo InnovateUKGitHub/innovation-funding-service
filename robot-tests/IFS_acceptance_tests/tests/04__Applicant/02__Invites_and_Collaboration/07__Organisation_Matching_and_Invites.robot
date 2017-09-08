@@ -14,7 +14,7 @@ ${bCollaborator}  businesscollab@gmail.com
 ${bLead}          businesslead@gmail.com
 
 *** Test Cases ***
-Two lead applicants users signing up as a Business organisation with the same details can succesfully invite eachother
+Business invites other business from same organisation in his application and the latter is able to accept
     [Documentation]  IFS-1324
     [Tags]
     # TODO would be nice to try with custom address insertion instead of clicking checkbox same-address IFS-1550
