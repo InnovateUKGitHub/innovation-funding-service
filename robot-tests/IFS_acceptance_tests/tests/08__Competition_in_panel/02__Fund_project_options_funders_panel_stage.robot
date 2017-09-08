@@ -87,7 +87,7 @@ Internal user can view ineligible applications in unsuccessful list
 Internal user does not see eligible applications in unsuccessful list
     [Documentation]  IFS-1458 IFS-1459
     [Tags]
-    When the user navigates to the page        ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/application/${FUNDERS_PANEL_APPLICATION_2_NUMBER}
+    Given the user navigates to the page        ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/application/${FUNDERS_PANEL_APPLICATION_2_NUMBER}
     Then the user clicks the button/link       jQuery=a:contains("Reinstate application")
     And the user clicks the button/link        jQuery=button:contains("Reinstate application")
     When the user navigates to the page        ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/applications/unsuccessful
