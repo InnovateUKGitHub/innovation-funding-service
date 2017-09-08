@@ -6,23 +6,28 @@ Force Tags        Applicant  Email
 Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
+# research partners
 ${bob}     bob@minions.com
 ${stuart}  stuart@minions.com
+# business partners
+${bCollaborator}  businesscollab@gmail.com
 
 *** Test Cases ***
 Two lead applicants users signing up as a Business organisation with the same details can succesfully invite eachother
     [Documentation]  IFS-1324
-    Given we create a new user  ${openCompetitionBusinessRTO}  Business  collab  businesscollab@gmail.com  ${BUSINESS_TYPE_ID}
+    [Tags]
+    # TODO would be nice to try with custom address insertion instead of clicking checkbox same-address IFS-1550
+    Given we create a new user  ${openCompetitionBusinessRTO}  Business  collab  ${bCollaborator}  ${BUSINESS_TYPE_ID}
     And the user logs out if they are logged in
     And we create a new user  ${openCompetitionBusinessRTO}  Business  lead  businesslead@gmail.com  ${BUSINESS_TYPE_ID}
 
-    When the user invites collaborator by email address  businesscollab@gmail.com
-    And the user changes the application name  businesscollab application
+    When the user invites collaborator by email address  ${bCollaborator}
+    And the user changes the application name  ${bCollaborator}'s Application
     And the user logs out if they are logged in
-    And the user reads his email and clicks the link  businesscollab@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You are invited by  2
+    And the user reads his email and clicks the link  ${bCollaborator}  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You are invited by  2
 
-    Then the user is able to confirm the invite  businesscollab@gmail.com
-    And sees the application he was invited for on his dashboard
+    Then the user is able to confirm the invite  ${bCollaborator}
+    And the user sees the application he was invited for on his dashboard  ${bCollaborator}'s Application
     [Teardown]  logout as user
 
 # In those test cases we add Operating address as well. So we don't click the checkbox = use same address
@@ -61,8 +66,10 @@ the user changes the application name
     the user enters text to a text field    id=application_details-title  ${application_name}
     the user clicks the button/link         jQuery=button:contains("Save and return to application overview")
 
-sees the application he was invited for on his dashboard
-    the user should see the element  jQuery=h1:contains("businesscollab application")
+the user sees the application he was invited for on his dashboard
+    [Arguments]  ${application}
+    the user navigates to the page   ${dashboard_url}
+    the user should see the element  jQuery=.in-progress li:contains("${application}")
 
 the user creates new account and organisation
     [Arguments]  ${organisationType}  ${compId}
@@ -132,3 +139,4 @@ The latter researcher is able to invite the first one to his application
     logout as user
     the user reads his email and clicks the link  ${bob}  Invitation to collaborate in ${openCompetitionRTO_name}  You will be joining as part of the organisation  2
     the user is able to confirm the invite  ${bob}
+    the user sees the application he was invited for on his dashboard  ${bob}'s Application
