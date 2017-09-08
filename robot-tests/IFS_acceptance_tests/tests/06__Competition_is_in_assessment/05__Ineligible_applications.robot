@@ -44,10 +44,14 @@ Ineligigle button is shown on submitted applications
 Clicking the ineligible button
     [Documentation]  INFUND-7370 IFS-986
     [Tags]  HappyPath  InnovationLead
-    [Setup]  log in as a different user   &{innovation_lead_one}
-    Given the user navigates to the page  ${ineligibleApplicationOverview}
-    When the user clicks the button/link  jQuery=h2 button:contains("Mark application as ineligible")  #There are 2 buttons with the same name so we need to be careful
-    Then the user should see the element  css=[aria-hidden="false"] [id="ineligibleReason"]
+    [Setup]  log in as a different user     &{innovation_lead_one}
+    Given the user navigates to the page    ${ineligibleApplicationOverview}
+    When the user clicks the button/link    jQuery=h2 button:contains("Mark application as ineligible")
+    #There are 2 buttons with the same name so we need to be careful
+    Then the user should see the element    css=[aria-hidden="false"] [id="ineligibleReason"]
+    And browser validations have been disabled
+    When the user clicks the button/link    jQuery=button[name="markAsIneligible"]
+    Then the user should see a field and summary error  This field cannot be left blank.
 
 Cancel marking the application as ineligible
     [Documentation]  INFUND-7370 IFS-986
@@ -61,13 +65,8 @@ Client side validation - mark an application as ineligible
     Given the user clicks the button/link                   jQuery=h2 button:contains("Mark application as ineligible")
     And the user enters multiple strings into a text field  id=ineligibleReason  a${SPACE}  402
     Then the user should see an error                       Maximum word count exceeded. Please reduce your word count to 400.
+    When the user enters text to a text field               id=ineligibleReason  This is the reason of ineligibility.
     [Teardown]  the user clicks the button/link             jQuery=h2 button:contains("Mark application as ineligible")
-    # TODO IFS-1417 we need to check that the textarea is not empty before pressing submit
-
-Server side validation - mark an application as ineligible
-    [Documentation]  IFS-986
-    [Tags]  Pending  InnovationLead
-    # TODO IFS-1417 we need to check that the textarea is not empty before pressing submit
 
 Marking an application as ineligible moves it to the ineligible view
     [Documentation]  INFUND-7370 IFS-986
@@ -118,6 +117,7 @@ Applicant is informed that his application is not eligible
 Reinstate an application
     [Documentation]  INFUND-8941 IFS-986
     [Tags]  HappyPath  InnovationLead
+    # Innovation Lead is not able to reinstate an application
     Given log in as a different user          &{innovation_lead_one}
     When the user navigates to the page       ${ineligibleApplicationOverview}
     Then the user should not see the element  jQuery=a[role="button"]:contains("Reinstate application")
