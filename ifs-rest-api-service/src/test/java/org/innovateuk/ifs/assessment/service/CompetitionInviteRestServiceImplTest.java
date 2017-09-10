@@ -59,13 +59,14 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     @Test
     public void getAllInvitesToResend() throws Exception {
         long competitionId = 1L;
+        List<Long> inviteIds = asList(1L, 2L);
 
         AssessorInvitesToSendResource expected = newAssessorInvitesToSendResource()
                 .withRecipients(asList("James", "John"))
                 .build();
 
-        setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getAllInvitesToSend", competitionId), AssessorInvitesToSendResource.class, expected);
-        AssessorInvitesToSendResource actual = service.getAllInvitesToSend(competitionId).getSuccessObject();
+        setupGetWithRestResultExpectations(format("%s/%s/%s%s", restUrl, "getAllInvitesToResend", competitionId, "?inviteIds=1,2"), AssessorInvitesToSendResource.class, expected);
+        AssessorInvitesToSendResource actual = service.getAllInvitesToResend(competitionId, inviteIds).getSuccessObject();
         assertEquals(expected, actual);
     }
 
@@ -241,6 +242,21 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     }
 
     @Test
+    public void getAssessorsNotAcceptedInviteIds() throws Exception {
+        long competitionId = 1L;
+        List<Long> expected = asList(1L, 2L);
+
+        String expectedUrl = format("%s/%s/%s", restUrl, "getAssessorsNotAcceptedInviteIds", competitionId);
+
+        setupGetWithRestResultExpectations(expectedUrl, ParameterizedTypeReferences.longsListType(), expected);
+
+        List<Long> actual = service.getAssessorsNotAcceptedInviteIds(competitionId, empty(), empty(), empty())
+                .getSuccessObject();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
     public void getInviteStatistics() throws Exception {
         long competitionId = 1L;
         CompetitionInviteStatisticsResource expected = newCompetitionInviteStatisticsResource().build();
@@ -346,4 +362,18 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
 
         assertTrue(service.resendInvite(inviteId, assessorInviteSendResource).isSuccess());
     }
+
+    @Test
+    public void resendInvites() {
+        List<Long> inviteIds = asList(1L, 2L);
+        AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
+                .withSubject("subject")
+                .withContent("content")
+                .build();
+
+        setupPostWithRestResultExpectations(format("%s/%s%s", restUrl, "resendInvites", "?inviteIds=1,2"), assessorInviteSendResource, OK);
+
+        assertTrue(service.resendInvites(inviteIds, assessorInviteSendResource).isSuccess());
+    }
+
 }
