@@ -21,9 +21,6 @@ items:
           ports:
           - containerPort: 4444
           - containerPort: 3000
-          resources:
-            limits:
-              memory: 1000M
           env:
           - name: GRID_BROWSER_TIMEOUT
             value: "90000"
