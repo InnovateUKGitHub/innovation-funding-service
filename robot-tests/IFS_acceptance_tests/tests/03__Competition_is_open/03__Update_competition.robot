@@ -46,7 +46,7 @@ Project summary is editable (Ready to Open)
     When The user clicks the button/link    link=Project summary
     And the user should see the element    jquery=h1:contains("Project summary")
     When the user clicks the button/link    jQuery=.button:contains("Edit this question")
-    Then The user enters text to a text field    id= question.maxWords    100
+    Then The user enters text to a text field    id=question.maxWords    100
     And the user clicks the button/link    css=input.button.button-large
 
 Public description should be editable (Ready to Open)
@@ -80,8 +80,6 @@ Assessed Questions are editable (Ready to Open)
 
 Finances are editable (Ready to Open)
     [Documentation]  INFUND-6941
-    # This test case fails when running the complete chunk vs suite, due to the finances textearea
-    # being empty or not. I add the ${empty} in order to have empty textarea in both scenarios and check the validation messages
     [Tags]  HappyPath
     Given the user navigates to the page         ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/landing-page
     When The user clicks the button/link         link=Finances
