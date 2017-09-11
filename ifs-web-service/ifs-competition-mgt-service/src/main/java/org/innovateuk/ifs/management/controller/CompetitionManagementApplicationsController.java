@@ -11,7 +11,9 @@ import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
@@ -23,6 +25,11 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 @Controller
 @RequestMapping("/competition/{competitionId}/applications")
 public class CompetitionManagementApplicationsController {
+
+    private static final String DEFAULT_PAGE_NUMBER = "0";
+
+    //TODO - Change this to 40 after testing
+    private static final String DEFAULT_PAGE_SIZE = "20";
 
     private static final String FILTER_FORM_ATTR_NAME = "filterForm";
 
@@ -101,10 +108,13 @@ public class CompetitionManagementApplicationsController {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'ifs_admin')")
     @GetMapping("/unsuccessful")
     public String unsuccessfulApplications(Model model,
+                                           HttpServletRequest request,
                                            @PathVariable("competitionId") long competitionId,
+                                           @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
+                                           @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size,
                                            UserResource loggedInUser) {
 
-        model.addAttribute("model", unsuccessfulApplicationsModelPopulator.populateModel(competitionId));
+        model.addAttribute("model", unsuccessfulApplicationsModelPopulator.populateModel(competitionId, page, size, Objects.toString(request.getQueryString(), "")));
         return "competition/unsuccessful-applications";
     }
 
