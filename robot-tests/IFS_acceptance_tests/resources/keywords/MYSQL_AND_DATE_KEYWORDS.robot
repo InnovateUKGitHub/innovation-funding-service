@@ -79,6 +79,11 @@ get today
     # This format is like: 4 February 2017
     [Return]    ${today}
 
+get today part month
+    ${today} =    Get Current Date  UTC   result_format=%-d %b %Y    exclude_millis=true
+    # This format is like: 4 Feb 2017
+    [Return]    ${today}
+
 get tomorrow
     ${today} =    Get Time
     ${tomorrow} =     Add time To Date    ${today}    1 day
