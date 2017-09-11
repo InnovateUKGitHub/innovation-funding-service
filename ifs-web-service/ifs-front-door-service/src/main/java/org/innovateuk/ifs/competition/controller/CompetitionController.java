@@ -48,30 +48,8 @@ public class CompetitionController {
         return getFileResponseEntity(resource, fileDetails);
     }
 
-    @GetMapping("info/before-you-apply")
-    public String beforeYouApply(final Model model, @PathVariable("competitionId") final long competitionId) {
-        addCompetitionToModel(model, competitionId);
-        return "competition/info/before-you-apply";
-    }
-
-    @GetMapping("info/eligibility")
-    public String eligibility(final Model model, @PathVariable("competitionId") final long competitionId) {
-        addCompetitionToModel(model, competitionId);
-        return "competition/info/eligibility";
-    }
-
     @GetMapping("info/terms-and-conditions")
     public String termsAndConditions(@PathVariable("competitionId") final long competitionId) {
         return "competition/info/terms-and-conditions";
-    }
-
-    @GetMapping("info/what-we-ask-you")
-    public String whatWeAskYou(final Model model, @PathVariable("competitionId") final long competitionId) {
-        addCompetitionToModel(model, competitionId);
-        return "competition/info/what-we-ask-you";
-    }
-
-    private void addCompetitionToModel(final Model model, final long competitionId) {
-        model.addAttribute("currentCompetition", competitionService.getPublishedById(competitionId));
     }
 }
