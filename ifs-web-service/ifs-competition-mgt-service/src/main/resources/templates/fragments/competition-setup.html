@@ -36,10 +36,11 @@
                 </div>
             </li>
         </ul>
-        <div th:if="${readyToOpen}" class="extra-margin">
+        <div th:if="${!isReadyToOpen}" class="extra-margin">
             <p>Once you complete, this competition will be ready to open.</p>
             <a data-js-modal="complete-modal"
-               class="button no-margin-right" id="compCTA">Complete</a>
+               th:disabled="${!setupReady}"
+               class="button no-margin-right"  id="compCTA">Complete</a>
         </div>
     </th:block>
 </th:block>

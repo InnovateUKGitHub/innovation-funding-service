@@ -10,88 +10,94 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
+
     <form role="search" method="get" id="searchform" th:action="@{'/dashboard/search'}">
-        <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})" />
+        <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})" th:with="showSearch=${model.counts.liveCount > 0}" />
     </form>
     <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'live'}, counts=${model.counts}, supportView=${model.supportView})" />
 
-    <section th:with="openComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN)}">
-        <h2 class="heading-medium"
-            th:text="'Open ('+${openComps == null ? '0' : openComps.size()}+')'"></h2>
-        <ul class="list-overview">
-            <li class="grid-row section" th:each="competition : ${openComps}">
-                <th:block
-                    th:insert="competition/dashboard :: dashboard-row"
-                    th:with="competition=${competition},
-                        innovationAreas=competition.innovationAreaNames,
-                        cell4=${competition.numberOfApplications + ' applicants'},
-                        supportView=${model.supportView}"/>
-            </li>
-        </ul>
-    </section>
+    <th:block th:if="${model.counts.liveCount == 0}">
+      <p>There are no competitions assigned to you.</p>
+    </th:block>
 
-    <section th:with="closedComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED)}">
-        <h2 class="heading-medium"
-            th:text="'Closed ('+${closedComps == null ? '0' : closedComps.size()}+')'"></h2>
-        <ul class="list-overview">
-            <li class="grid-row section" th:each="competition : ${closedComps}">
-                <th:block
-                    th:insert="competition/dashboard :: dashboard-row"
-                    th:with="competition=${competition},
-                        innovationAreas=competition.innovationAreaNames,
-                        cell4=${competition.numberOfApplications + ' applicants'},
-                        supportView=${model.supportView}"/>
-            </li>
-        </ul>
-    </section>
+    <th:block th:if="${model.counts.liveCount > 0}">
+      <section th:with="openComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN)}">
+          <h2 class="heading-medium"
+              th:text="'Open ('+${openComps == null ? '0' : openComps.size()}+')'"></h2>
+          <ul class="list-overview">
+              <li class="grid-row section" th:each="competition : ${openComps}">
+                  <th:block
+                      th:insert="competition/dashboard :: dashboard-row"
+                      th:with="competition=${competition},
+                          innovationAreas=competition.innovationAreaNames,
+                          cell4=${competition.numberOfApplications + ' applicants'},
+                          supportView=${model.supportView}"/>
+              </li>
+          </ul>
+      </section>
 
-    <section th:with="inAssesmentComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT)}">
-        <h2 class="heading-medium"
-            th:text="'In assessment ('+${inAssesmentComps == null ? '0' : inAssesmentComps.size()}+')'"></h2>
-        <ul class="list-overview">
-            <li class="grid-row section" th:each="competition : ${inAssesmentComps}">
-                <th:block
-                    th:insert="competition/dashboard :: dashboard-row"
-                    th:with="competition=${competition},
-                        innovationAreas=competition.innovationAreaNames,
-                        cell4=${competition.numberOfApplications + ' applicants'},
-                        supportView=${model.supportView}"/>
-            </li>
-        </ul>
-    </section>
+      <section th:with="closedComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED)}">
+          <h2 class="heading-medium"
+              th:text="'Closed ('+${closedComps == null ? '0' : closedComps.size()}+')'"></h2>
+          <ul class="list-overview">
+              <li class="grid-row section" th:each="competition : ${closedComps}">
+                  <th:block
+                      th:insert="competition/dashboard :: dashboard-row"
+                      th:with="competition=${competition},
+                          innovationAreas=competition.innovationAreaNames,
+                          cell4=${competition.numberOfApplications + ' applicants'},
+                          supportView=${model.supportView}"/>
+              </li>
+          </ul>
+      </section>
 
-
-    <section th:with="panelComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL)}">
-        <h2 class="heading-medium"
-            th:text="'Panel ('+${panelComps == null ? '0' : panelComps.size()}+')'"></h2>
-        <ul class="list-overview">
-            <li class="grid-row section" th:each="competition : ${panelComps}">
-                <th:block
-                    th:insert="competition/dashboard :: dashboard-row"
-                    th:with="competition=${competition},
-                        innovationAreas=competition.innovationAreaNames,
-                        cell4=${competition.numberOfApplications + ' applicants'},
-                        supportView=${model.supportView}"/>
-            </li>
-        </ul>
-    </section>
+      <section th:with="inAssesmentComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT)}">
+          <h2 class="heading-medium"
+              th:text="'In assessment ('+${inAssesmentComps == null ? '0' : inAssesmentComps.size()}+')'"></h2>
+          <ul class="list-overview">
+              <li class="grid-row section" th:each="competition : ${inAssesmentComps}">
+                  <th:block
+                      th:insert="competition/dashboard :: dashboard-row"
+                      th:with="competition=${competition},
+                          innovationAreas=competition.innovationAreaNames,
+                          cell4=${competition.numberOfApplications + ' applicants'},
+                          supportView=${model.supportView}"/>
+              </li>
+          </ul>
+      </section>
 
 
-    <section th:with="informComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).ASSESSOR_FEEDBACK)}">
-        <h2 class="heading-medium"
-            th:text="'Inform ('+${informComps == null ? '0' : informComps.size()}+')'"></h2>
-        <ul class="list-overview">
-            <li class="grid-row section" th:each="competition : ${informComps}">
-                <th:block
-                    th:insert="competition/dashboard :: dashboard-row"
-                    th:with="competition=${competition},
-                        innovationAreas=competition.innovationAreaNames,
-                        cell4=${competition.numberOfApplications + ' applicants'},
-                        supportView=${model.supportView}"/>
-            </li>
-        </ul>
-    </section>
+      <section th:with="panelComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL)}">
+          <h2 class="heading-medium"
+              th:text="'Panel ('+${panelComps == null ? '0' : panelComps.size()}+')'"></h2>
+          <ul class="list-overview">
+              <li class="grid-row section" th:each="competition : ${panelComps}">
+                  <th:block
+                      th:insert="competition/dashboard :: dashboard-row"
+                      th:with="competition=${competition},
+                          innovationAreas=competition.innovationAreaNames,
+                          cell4=${competition.numberOfApplications + ' applicants'},
+                          supportView=${model.supportView}"/>
+              </li>
+          </ul>
+      </section>
 
+
+      <section th:with="informComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).ASSESSOR_FEEDBACK)}">
+          <h2 class="heading-medium"
+              th:text="'Inform ('+${informComps == null ? '0' : informComps.size()}+')'"></h2>
+          <ul class="list-overview">
+              <li class="grid-row section" th:each="competition : ${informComps}">
+                  <th:block
+                      th:insert="competition/dashboard :: dashboard-row"
+                      th:with="competition=${competition},
+                          innovationAreas=competition.innovationAreaNames,
+                          cell4=${competition.numberOfApplications + ' applicants'},
+                          supportView=${model.supportView}"/>
+              </li>
+          </ul>
+      </section>
+    </th:block>
 
 
     <th:block th:insert="fragments/layout :: main-content-end" />

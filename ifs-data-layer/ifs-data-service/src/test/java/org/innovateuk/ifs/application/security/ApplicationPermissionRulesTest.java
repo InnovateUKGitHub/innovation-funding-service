@@ -68,6 +68,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     private UserResource user3;
     private UserResource assessor;
     private UserResource compAdmin;
+    private UserResource projectFinance;
 
     private RoleResource innovationLeadRole = newRoleResource().withType(INNOVATION_LEAD).build();
     private Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
@@ -88,6 +89,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         user3 = newUserResource().build();
         compAdmin = compAdminUser();
         assessor = assessorUser();
+        projectFinance = projectFinanceUser();
 
         processRole1 = newProcessRole().withRole(leadApplicantRole).build();
         processRole2 = newProcessRole().withRole(applicantRole).build();
@@ -465,6 +467,14 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         assertTrue(rules.compAdminCanUpdateApplicationState(applicationResource1, compAdmin));
         assertFalse(rules.compAdminCanUpdateApplicationState(applicationResource1, leadOnApplication1));
         assertFalse(rules.compAdminCanUpdateApplicationState(applicationResource1, user2));
+    }
+
+    @Test
+    public void testProjectFinanceCanUpdateApplicationState() throws Exception {
+        assertTrue(rules.projectFinanceCanUpdateApplicationState(applicationResource1, projectFinance));
+        assertFalse(rules.projectFinanceCanUpdateApplicationState(applicationResource1, compAdmin));
+        assertFalse(rules.projectFinanceCanUpdateApplicationState(applicationResource1, leadOnApplication1));
+        assertFalse(rules.projectFinanceCanUpdateApplicationState(applicationResource1, user2));
     }
 
     @Test
