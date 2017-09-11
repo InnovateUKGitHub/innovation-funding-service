@@ -24,9 +24,6 @@ items:
           resources:
             limits:
               memory: 1000M
-              cpu: 4000m
-            requests:
-              cpu: 1000m
           env:
           - name: GRID_BROWSER_TIMEOUT
             value: "90000"

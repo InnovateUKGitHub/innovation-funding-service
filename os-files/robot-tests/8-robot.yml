@@ -30,12 +30,7 @@ items:
                     echo "$SHIB_PORT_443_TCP_ADDR <<SHIB-ADDRESS>>" >> /etc/hosts &&
                     echo "$IDP_PORT_443_TCP_ADDR auth-<<SHIB-ADDRESS>>" >> /etc/hosts
           ports: {}
-          resources:
-            limits:
-              memory: 1000M
-              cpu: 2000m
-            requests:
-              cpu: 800m
+          resources: {}
           restartPolicy:
             never: {}
     test: false

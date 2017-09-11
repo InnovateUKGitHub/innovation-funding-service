@@ -62,7 +62,7 @@ items:
               memory: 1G
               cpu: 1000m
             requests:
-              cpu: 400m
+              cpu: 100m
     test: false
     triggers:
     - type: ConfigChange
