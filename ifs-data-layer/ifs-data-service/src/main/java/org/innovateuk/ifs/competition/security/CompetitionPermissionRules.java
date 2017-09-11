@@ -47,4 +47,10 @@ public class CompetitionPermissionRules extends BasePermissionRules {
     public boolean internalAdminCanManageInnovationLeadsForCompetition(CompetitionResource competition, UserResource user) {
         return isInternalAdmin(user);
     }
+
+    @PermissionRule(value = "VIEW_INFORMED_NOT_IN_PROJECT_SETUP_APPLICATIONS", description = "Internal users and IFS Admin can view informed, but not in project setup, applications")
+    public boolean internalAndIFSAdminCanViewInformedNotInProjectSetupApplications(CompetitionResource competition, UserResource user) {
+        return isInternal(user) || isIFSAdmin(user);
+    }
+
 }

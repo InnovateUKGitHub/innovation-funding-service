@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.service;
 
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
@@ -43,4 +44,5 @@ public interface CompetitionsRestService {
     RestResult<Void> releaseFeedback(long competitionId);
     RestResult<CompetitionResource> createNonIfs();
     RestResult<List<OrganisationTypeResource>> getCompetitionOrganisationType(long id);
+    RestResult<List<ApplicationResource>> findInformedNotInProjectSetup(Long competitionId);
 }

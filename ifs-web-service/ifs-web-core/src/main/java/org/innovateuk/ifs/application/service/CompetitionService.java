@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.service;
 
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.AssessorCountOptionResource;
@@ -71,4 +72,6 @@ public interface CompetitionService {
     FileEntryResource getPublicContentFileDetails(Long contentGroupId);
 
     CompetitionResource createNonIfs();
+
+    List<ApplicationResource> findInformedNotInProjectSetup(Long competitionId);
 }

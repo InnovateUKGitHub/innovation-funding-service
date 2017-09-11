@@ -2,6 +2,8 @@
 package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
+import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -287,5 +289,16 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
 
         RestResult<Void> result = service.releaseFeedback(competitionId);
         assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void getNonProjectSetupCompetitions() {
+        long competitionId = 1L;
+        List<ApplicationResource> nonProjectSetupApplications = ApplicationResourceBuilder.newApplicationResource().build(2);
+
+        setupGetWithRestResultExpectations(competitionsRestURL + "/" + competitionId + "/not-in-project-setup-applications", applicationResourceListType(), nonProjectSetupApplications);
+        List<ApplicationResource> responses = service.findInformedNotInProjectSetup(competitionId).getSuccessObject();
+        assertNotNull(responses);
+        Assert.assertEquals(nonProjectSetupApplications, responses);
     }
 }

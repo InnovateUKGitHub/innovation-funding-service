@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
@@ -202,6 +203,20 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.manageInformState(1L), PROJECT_FINANCE, COMP_ADMIN);
     }
 
+    @Test
+    public void findUnsuccessfulApplications() {
+        Long competitionId = 1L;
+        CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
+
+        when(competitionLookupStrategy.getCompetititionResource(competitionId)).thenReturn(competitionResource);
+
+        assertAccessDenied(() -> classUnderTest.findInformedNotInProjectSetupApplications(competitionId), () -> {
+            verify(rules).internalAndIFSAdminCanViewInformedNotInProjectSetupApplications(any(CompetitionResource.class), any(UserResource.class));
+            verifyNoMoreInteractions(rules);
+        });
+    }
+
+
     private void runAsRole(UserRoleType roleType, Runnable serviceCall) {
         setLoggedInUser(
                 newUserResource()
@@ -305,5 +320,8 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         public ServiceResult<Void> manageInformState(long competitionId) {
             return null;
         }
+
+        @Override
+        public ServiceResult<List<ApplicationResource>> findInformedNotInProjectSetupApplications(Long competitionId) { return null; }
     }
 }

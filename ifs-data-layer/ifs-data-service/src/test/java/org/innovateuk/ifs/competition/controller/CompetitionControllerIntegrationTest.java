@@ -556,7 +556,6 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
 
     }
 
-
     @Test
     public void initApplicationFormByType() throws Exception {
         Long competitionId = 7L;

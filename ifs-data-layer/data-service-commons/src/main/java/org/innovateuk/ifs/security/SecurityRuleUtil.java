@@ -49,6 +49,10 @@ public class SecurityRuleUtil {
         return user.hasRole(ASSESSOR);
     }
 
+    public static boolean isIFSAdmin(UserResource user) {
+        return user.hasRole(IFS_ADMINISTRATOR);
+    }
+
     public static boolean isSupport(UserResource user) { return user.hasRole(SUPPORT); }
 
     public static boolean isSupport(User user) { return user.hasRole(SUPPORT); }

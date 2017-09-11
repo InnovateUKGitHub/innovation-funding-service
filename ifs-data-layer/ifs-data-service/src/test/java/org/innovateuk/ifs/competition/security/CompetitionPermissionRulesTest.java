@@ -119,4 +119,15 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
         assertTrue(rules.innovationLeadCanViewCompetitionAssignedToThemInSearchResults(competitionSearchResultItem, innovationLeadAssignedToCompetition));
         assertFalse(rules.innovationLeadCanViewCompetitionAssignedToThemInSearchResults(competitionSearchResultItem, innovationLeadNotAssignedToCompetition));
     }
+
+    @Test
+    public void testInternalAndIFSAdminCanViewInformedNotInProjectSetupApplications() {
+        allGlobalRoleUsers.forEach(user -> {
+            if (getUserWithRole(UserRoleType.COMP_ADMIN).equals(user) || getUserWithRole(UserRoleType.PROJECT_FINANCE).equals(user) || getUserWithRole(UserRoleType.INNOVATION_LEAD).equals(user) || getUserWithRole(UserRoleType.SUPPORT).equals(user) || getUserWithRole(UserRoleType.IFS_ADMINISTRATOR).equals(user)) {
+                assertTrue(rules.internalAndIFSAdminCanViewInformedNotInProjectSetupApplications(newCompetitionResource().build(), user));
+            } else {
+                assertFalse(rules.internalAndIFSAdminCanViewInformedNotInProjectSetupApplications(newCompetitionResource().build(), user));
+            }
+        });
+    }
 }

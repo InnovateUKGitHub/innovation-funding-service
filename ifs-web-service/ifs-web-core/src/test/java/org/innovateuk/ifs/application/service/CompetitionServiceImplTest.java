@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
@@ -25,6 +26,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.AssessorCountOptionResourceBuilder.newAssessorCountOptionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -263,5 +265,15 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         service.removeInnovationLead(competitionId, innovationLeadUserId);
         verify(competitionsRestService, only()).removeInnovationLead(competitionId, innovationLeadUserId);
+    }
+
+    @Test
+    public void findNonProjectSetupCompetitions() throws Exception {
+        List<ApplicationResource> nonProjectSetupCompetitions = Collections.singletonList(newApplicationResource().withId(1L).build());
+
+        when(competitionsRestService.findInformedNotInProjectSetup(1L)).thenReturn(restSuccess(nonProjectSetupCompetitions));
+
+        final List<ApplicationResource> found = service.findInformedNotInProjectSetup(1L);
+        assertEquals(1L, found.size());
     }
 }

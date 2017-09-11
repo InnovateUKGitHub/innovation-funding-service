@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.competition.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.controller.CompetitionController;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -379,4 +381,27 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
                         )
                 );
     }
+
+    @Test
+    public void findNotInProjectSetupApplications() throws Exception {
+        final Long competitionId = 1L;
+
+        List<ApplicationResource> notInProjectSetupApplications = ApplicationResourceBuilder.newApplicationResource().build(2);
+
+        when(competitionService.findInformedNotInProjectSetupApplications(competitionId)).thenReturn(serviceSuccess(notInProjectSetupApplications));
+
+        mockMvc.perform(get("/competition/{id}/not-in-project-setup-applications", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(notInProjectSetupApplications)))
+                .andDo(document(
+                        "competition/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("The competition for which not in project setup applications need to be found")
+                        )
+                ));
+
+        verify(competitionService, only()).findInformedNotInProjectSetupApplications(competitionId);
+
+    }
+
 }
