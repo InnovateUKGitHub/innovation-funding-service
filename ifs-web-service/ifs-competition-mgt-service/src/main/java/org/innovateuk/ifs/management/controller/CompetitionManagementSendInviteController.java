@@ -121,7 +121,7 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
                     invites.getRecipients(),
                     invites.getContent()
             ));
-            inviteform.setInviteIds(selectionForm.getSelectedInviteIds());
+            inviteform.setInviteIds(submittedSelectionForm.getSelectedInviteIds());
             populateResendInviteFormWithExistingValues(inviteform, invites);
             return "assessors/resend-invites";
         });
