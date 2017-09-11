@@ -46,7 +46,7 @@ function clearDownFileRepository() {
     docker exec innovationfundingservice_data-service_1  rm -rf ${virusScanScannedFolder}
 }
 
-function addTestFiles() { 
+function addTestFiles() {
     section "=> RESETTING FILE STORAGE STATE"
 
     clearDownFileRepository
@@ -61,10 +61,10 @@ function addTestFiles() {
     echo "***********Adding standard file upload location ***********"
     docker exec innovationfundingservice_data-service_1 mkdir -p ${storedFileFolder}/000000000_999999999/000000_999999/000_999
 
-    echo "***********Creating file entry for each db entry***********" 
+    echo "***********Creating file entry for each db entry***********"
     max_file_entry_id=$(mysql ifs -uroot -ppassword -hifs-database -s -e 'select max(id) from file_entry;')
     for i in `seq 1 ${max_file_entry_id}`;
-    do 
+    do
       if [ "${i}" != "8" ]
       then
         docker exec innovationfundingservice_data-service_1 cp /tmp/testing.pdf ${storedFileFolder}/000000000_999999999/000000_999999/000_999/${i}
@@ -256,6 +256,20 @@ function getZAPReport() {
     wget -qO - ifs.local-dev:9000/OTHER/core/other/htmlreport/ > target/${targetDir}/ZAPReport.html
 }
 
+function saveResultsToCompressedFolder() {
+  # compresses the results as a tar using the current branch name
+  branchName=$(git rev-parse --abbrev-ref HEAD)
+  replace=""
+  removeFeature="${branchName/feature\//$replace}"
+  removeBugfix="${removeFeature/bugfix\//$replace}"
+  removeHotfix="${removeBugfix/hotfix\//$replace}"
+  branchName=${removeHotfix}
+  dt=$(date '+%d-%m-%Y_%Hh%Mm');
+  mkdir -p results
+  tar -zcf "results/"${branchName}"-"${dt}.tar.gz "target/"${targetDir}
+}
+
+
 # ====================================
 # The actual start point of our script
 # ====================================
@@ -321,9 +335,10 @@ parallel=0
 stopGrid=0
 noDeploy=0
 showZapReport=0
+compress=0
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":p :q :h :t :r :c :n :w :z :d: :I: :E:" opt ; do
+while getopts ":p :q :h :t :r :c :n :w :z :d: :x :I: :E:" opt ; do
     case ${opt} in
         p)
             parallel=1
@@ -366,6 +381,9 @@ while getopts ":p :q :h :t :r :c :n :w :z :d: :I: :E:" opt ; do
         ;;
         w)
           vnc=1
+        ;;
+        x)
+          compress=1
         ;;
         \?)
             coloredEcho "=> Invalid option: -$OPTARG" red >&2
@@ -439,4 +457,9 @@ else
     then
         open "file://${wd}/${logs}/ZAPReport.html"
     fi
+fi
+
+if [[ ${compress} -eq 1 ]]
+then
+  saveResultsToCompressedFolder
 fi

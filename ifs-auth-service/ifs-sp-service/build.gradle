@@ -1,13 +1,5 @@
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import org.apache.tools.ant.filters.ReplaceTokens
-
-apply plugin: 'docker'
-
-buildscript {
-    repositories { mavenCentral() }
-    dependencies {
-        classpath "se.transmode.gradle:gradle-docker:1.2"
-    }
-}
 
 def String spCertsVolume = 'src/main/docker/certs'
 
@@ -18,10 +10,10 @@ def String spProxyCacertificateFile = "${spCertsVolume}/sp_proxy_cacertificate.p
 def String idpSigningCertificateFile = "${spCertsVolume}/idp-signing.crt"
 def String idpEncryptionCertificateFile = "${spCertsVolume}/idp-encryption.crt"
 
-task prepareDockerFile(type: Copy) {
+task prepareDockerFile {
     dependsOn ':ifs-auth-service:prepareSecrets'
 
-    outputs.upToDateWhen { false }
+    def inputDir = project.file("$project.buildDir/docker")
 
     def String spProxyKey = file(spProxyKeyFile).text.trim().replace('\n', '\\n')
     def String spProxyCertificate = file(spProxyCertificateFile).text.trim().replace('\n', '\\n')
@@ -30,32 +22,36 @@ task prepareDockerFile(type: Copy) {
     def String idpSigningCertificate = file(idpSigningCertificateFile).text.trim().replace('\n', '\\n')
     def String idpEncryptionCertificate = file(idpEncryptionCertificateFile).text.trim().replace('\n', '\\n')
 
-    from 'src/main/docker/'
-    into 'src/main/docker/'
-    include 'Dockerfile-template'
-    rename 'Dockerfile-template', 'Dockerfile'
-    filter(ReplaceTokens, tokens: [auth_sp_proxy_key: spProxyKey,
-                                   auth_sp_proxy_certificate: spProxyCertificate,
-                                   auth_sp_proxy_cacertificate: spProxyCacertificate,
-                                   auth_idp_signing_certificate: idpSigningCertificate,
-                                   auth_idp_encryption_certificate: idpEncryptionCertificate])
-}
-
-task buildDocker(type: Docker) {
-    dependsOn prepareDockerFile
-
-    push = false
-    applicationName = 'sp-service'
-    dockerfile = file('src/main/docker/Dockerfile')
-    tagVersion = 'latest'
     doFirst {
         copy {
+            from 'src/main/docker/'
+            into 'src/main/docker/'
+            include 'Dockerfile-template'
+            rename 'Dockerfile-template', 'Dockerfile'
+            filter(ReplaceTokens, tokens: [auth_sp_proxy_key: spProxyKey,
+                                           auth_sp_proxy_certificate: spProxyCertificate,
+                                           auth_sp_proxy_cacertificate: spProxyCacertificate,
+                                           auth_idp_signing_certificate: idpSigningCertificate,
+                                           auth_idp_encryption_certificate: idpEncryptionCertificate])
+        }
+        copy {
+            from file('src/main/docker/Dockerfile')
+            into inputDir
+        }
+        copy {
             from fileTree('src/main/docker/files')
-            into "${stageDir}/files"
+            into "${inputDir}/files"
         }
         copy {
             from fileTree('src/main/docker/certs')
-            into "${stageDir}/certs"
+            into "${inputDir}/certs"
         }
     }
+}
+
+task buildDocker(type: DockerBuildImage) {
+    dependsOn prepareDockerFile
+
+    tag = 'innovateuk/sp-service:latest'
+    inputDir = project.file("$project.buildDir/docker")
 }
