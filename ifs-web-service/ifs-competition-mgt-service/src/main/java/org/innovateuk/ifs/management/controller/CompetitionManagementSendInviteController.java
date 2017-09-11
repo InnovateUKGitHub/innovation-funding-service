@@ -107,21 +107,21 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
                                      HttpServletRequest request) {
 
         OverviewSelectionForm submittedSelectionForm = getSelectionFormFromCookie(request, competitionId)
-                .filter(form -> !form.getSelectedAssessorIds().isEmpty())
+                .filter(form -> !form.getSelectedInviteIds().isEmpty())
                 .orElse(selectionForm);
         Supplier<String> failureView = () -> redirectToOverview(competitionId, page);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             AssessorInvitesToSendResource invites = competitionInviteRestService.getAllInvitesToResend(
                     competitionId,
-                    submittedSelectionForm.getSelectedAssessorIds()).getSuccessObjectOrThrowException();
+                    submittedSelectionForm.getSelectedInviteIds()).getSuccessObjectOrThrowException();
             model.addAttribute("model", new SendInvitesViewModel(
                     invites.getCompetitionId(),
                     invites.getCompetitionName(),
                     invites.getRecipients(),
                     invites.getContent()
             ));
-            inviteform.setInviteIds(selectionForm.getSelectedAssessorIds());
+            inviteform.setInviteIds(selectionForm.getSelectedInviteIds());
             populateResendInviteFormWithExistingValues(inviteform, invites);
             return "assessors/resend-invites";
         });

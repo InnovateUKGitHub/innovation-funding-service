@@ -117,7 +117,7 @@ public class CompetitionManagementInviteAssessorsOverviewController extends Comp
                 filterForm.getStatus(),
                 filterForm.getCompliant(),
                 competitionId);
-        selectionForm.setSelectedAssessorIds(trimmedOverviewForm.getSelectedAssessorIds());
+        selectionForm.setSelectedInviteIds(trimmedOverviewForm.getSelectedInviteIds());
         selectionForm.setAllSelected(trimmedOverviewForm.getAllSelected());
         selectionForm.setSelectedInnovationArea(filterForm.getInnovationArea().orElse(null));
         selectionForm.setSelectedStatus(filterForm.getStatus().orElse(null));
@@ -145,10 +145,10 @@ public class CompetitionManagementInviteAssessorsOverviewController extends Comp
         List<Long> filteredResults = getAllInviteIds(competitionId, innovationArea, status, compliant);
         OverviewSelectionForm updatedSelectionForm = new OverviewSelectionForm();
 
-        selectionForm.getSelectedAssessorIds().retainAll(filteredResults);
-        updatedSelectionForm.setSelectedAssessorIds(selectionForm.getSelectedAssessorIds());
+        selectionForm.getSelectedInviteIds().retainAll(filteredResults);
+        updatedSelectionForm.setSelectedInviteIds(selectionForm.getSelectedInviteIds());
 
-        if (updatedSelectionForm.getSelectedAssessorIds().equals(filteredResults)  && !updatedSelectionForm.getSelectedAssessorIds().isEmpty()) {
+        if (updatedSelectionForm.getSelectedInviteIds().equals(filteredResults)  && !updatedSelectionForm.getSelectedInviteIds().isEmpty()) {
             updatedSelectionForm.setAllSelected(true);
         } else {
             updatedSelectionForm.setAllSelected(false);
@@ -170,24 +170,24 @@ public class CompetitionManagementInviteAssessorsOverviewController extends Comp
 
         boolean limitExceeded = false;
         try {
-            List<Long> assessorIds = getAllInviteIds(competitionId, innovationArea, status, compliant);
+            List<Long> InviteIds = getAllInviteIds(competitionId, innovationArea, status, compliant);
             OverviewSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new OverviewSelectionForm());
             if (isSelected) {
-                int predictedSize = selectionForm.getSelectedAssessorIds().size() + 1;
+                int predictedSize = selectionForm.getSelectedInviteIds().size() + 1;
                 if(limitIsExceeded(predictedSize)){
                     limitExceeded = true;
                 } else {
-                    selectionForm.getSelectedAssessorIds().add(assessorId);
-                    if (selectionForm.getSelectedAssessorIds().containsAll(assessorIds)) {
+                    selectionForm.getSelectedInviteIds().add(assessorId);
+                    if (selectionForm.getSelectedInviteIds().containsAll(InviteIds)) {
                         selectionForm.setAllSelected(true);
                     }
                 }
             } else {
-                selectionForm.getSelectedAssessorIds().remove(assessorId);
+                selectionForm.getSelectedInviteIds().remove(assessorId);
                 selectionForm.setAllSelected(false);
             }
             saveFormToCookie(response, competitionId, selectionForm);
-            return createJsonObjectNode(selectionForm.getSelectedAssessorIds().size(), selectionForm.getAllSelected(), limitExceeded);
+            return createJsonObjectNode(selectionForm.getSelectedInviteIds().size(), selectionForm.getAllSelected(), limitExceeded);
         } catch (Exception e) {
             return createFailureResponse();
         }
@@ -207,71 +207,19 @@ public class CompetitionManagementInviteAssessorsOverviewController extends Comp
             OverviewSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new OverviewSelectionForm());
 
             if (addAll) {
-                selectionForm.setSelectedAssessorIds(getAllInviteIds(competitionId, innovationArea, status, compliant));
+                selectionForm.setSelectedInviteIds(getAllInviteIds(competitionId, innovationArea, status, compliant));
                 selectionForm.setAllSelected(true);
             } else {
-                selectionForm.getSelectedAssessorIds().clear();
+                selectionForm.getSelectedInviteIds().clear();
                 selectionForm.setAllSelected(false);
             }
 
             saveFormToCookie(response, competitionId, selectionForm);
 
-            return createSuccessfulResponseWithSelectionStatus(selectionForm.getSelectedAssessorIds().size(), selectionForm.getAllSelected(), false);
+            return createSuccessfulResponseWithSelectionStatus(selectionForm.getSelectedInviteIds().size(), selectionForm.getAllSelected(), false);
         } catch (Exception e) {
             return createFailureResponse();
         }
-    }
-
-    @PostMapping(value = "/overview/submitSelected")
-    public String addSelectedAssessorsToInviteList(Model model,
-                                                   @PathVariable("competitionId") long competitionId,
-                                                   @RequestParam(defaultValue = "0") int page,
-                                                   @RequestParam Optional<Long> innovationArea,
-                                                   @ModelAttribute(SELECTION_FORM) OverviewSelectionForm selectionForm,
-                                                   @ModelAttribute(name = "form", binding = false) SendInviteForm inviteform,
-                                                   ValidationHandler validationHandler,
-                                                   HttpServletRequest request,
-                                                   HttpServletResponse response) {
-
-        OverviewSelectionForm submittedSelectionForm = getSelectionFormFromCookie(request, competitionId)
-                .filter(form -> !form.getSelectedAssessorIds().isEmpty())
-                .orElse(selectionForm);
-        Supplier<String> failureView = () -> redirectToOverview(competitionId, page, innovationArea);
-
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            AssessorInvitesToSendResource invites = competitionInviteRestService.getAllInvitesToSend(competitionId).getSuccessObjectOrThrowException();
-            model.addAttribute("model", new SendInvitesViewModel(
-                    invites.getCompetitionId(),
-                    invites.getCompetitionName(),
-                    invites.getRecipients(),
-                    invites.getContent()
-            ));
-            populateGroupInviteFormWithExistingValues(inviteform, invites);
-                        // removeCookie(response, competitionId);
-                       // return redirectToResend(competitionId);
-            return "assessors/resend-invites";
-        });
-    }
-
-    private void populateGroupInviteFormWithExistingValues(SendInviteForm form, AssessorInvitesToSendResource assessorInviteToSendResource) {
-        form.setSubject(format("Invitation to assess '%s'", assessorInviteToSendResource.getCompetitionName()));
-    }
-
-    private String redirectToOverview(long competitionId, int page, Optional<Long> innovationArea) {
-        UriComponentsBuilder builder = UriComponentsBuilder
-                .fromPath("/competition/{competitionId}/assessors/overview")
-                .queryParam("page", page);
-
-        innovationArea.ifPresent(innovationAreaId -> builder.queryParam("innovationArea", innovationAreaId));
-
-        return "redirect:" + builder.buildAndExpand(asMap("competitionId", competitionId))
-                .toUriString();
-    }
-
-    private String redirectToResend(long competitionId) {
-        return "redirect:" + UriComponentsBuilder.fromPath("/competition/{competitionId}/assessors/invite/resend-invites")
-                .buildAndExpand(asMap("competitionId", competitionId))
-                .toUriString();
     }
 
     private List<Long> getAllInviteIds(long competitionId,
@@ -279,10 +227,5 @@ public class CompetitionManagementInviteAssessorsOverviewController extends Comp
                                        Optional<ParticipantStatusResource> status,
                                        Optional<Boolean> compliant) {
         return competitionInviteRestService.getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, status, compliant).getSuccessObjectOrThrowException();
-    }
-
-    private ExistingUserStagedInviteListResource newSelectionFormToResource(OverviewSelectionForm form, long competitionId) {
-        return new ExistingUserStagedInviteListResource(simpleMap(
-                form.getSelectedAssessorIds(), id -> new ExistingUserStagedInviteResource(id, competitionId)));
     }
 }

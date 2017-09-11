@@ -14,13 +14,13 @@ import java.util.List;
 public class OverviewSelectionForm extends BaseBindingResultTarget {
 
     private boolean allSelected;
-    private List<Long> selectedAssessorIds;
+    private List<Long> selectedInviteIds;
     private Long selectedInnovationArea;
     private ParticipantStatusResource selectedStatus;
     private Boolean compliant;
 
     public OverviewSelectionForm() {
-        this.selectedAssessorIds = new ArrayList<>();
+        this.selectedInviteIds = new ArrayList<>();
     }
 
     public boolean getAllSelected() {
@@ -31,12 +31,12 @@ public class OverviewSelectionForm extends BaseBindingResultTarget {
         this.allSelected = allSelected;
     }
 
-    public List<Long> getSelectedAssessorIds() {
-        return selectedAssessorIds;
+    public List<Long> getSelectedInviteIds() {
+        return selectedInviteIds;
     }
 
-    public void setSelectedAssessorIds(List<Long> selectedAssessorIds) {
-        this.selectedAssessorIds = selectedAssessorIds;
+    public void setSelectedInviteIds(List<Long> selectedInviteIds) {
+        this.selectedInviteIds = selectedInviteIds;
     }
 
     public Long getSelectedInnovationArea() {
@@ -68,7 +68,7 @@ public class OverviewSelectionForm extends BaseBindingResultTarget {
     }
 
     public boolean anySelectionIsMade() {
-        return this.allSelected || this.selectedAssessorIds.size() > 0;
+        return this.allSelected || this.selectedInviteIds.size() > 0;
     }
 
     @Override
@@ -81,7 +81,7 @@ public class OverviewSelectionForm extends BaseBindingResultTarget {
 
         return new EqualsBuilder()
                 .append(allSelected, that.allSelected)
-                .append(selectedAssessorIds, that.selectedAssessorIds)
+                .append(selectedInviteIds, that.selectedInviteIds)
                 .append(selectedInnovationArea, that.selectedInnovationArea)
                 .append(selectedStatus, that.selectedStatus)
                 .append(compliant, that.compliant)
@@ -92,7 +92,7 @@ public class OverviewSelectionForm extends BaseBindingResultTarget {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(allSelected)
-                .append(selectedAssessorIds)
+                .append(selectedInviteIds)
                 .append(selectedInnovationArea)
                 .append(selectedStatus)
                 .append(compliant)

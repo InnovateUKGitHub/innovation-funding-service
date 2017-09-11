@@ -115,7 +115,7 @@
                     <div class="grid-row">
                         <input type="hidden" name="filterChanged" value="1"/>
                         <div class="column-half">
-                            <a href="?page=0?filterChanged=1" class="button button-clear no-margin">Clear filters</a>
+                            <a href="?page=0&filterChanged=1" class="button button-clear no-margin">Clear filters</a>
                         </div>
 
                         <div class="column-half alignright">
@@ -155,10 +155,10 @@
                             </label>
                         </div>
                         <span class="form-hint">
-                        <span data-count-selected="" th:text="${#lists.size(overviewSelectionForm.selectedAssessorIds)}"></span> assessors selected</span>
+                        <span data-count-selected="" th:text="${#lists.size(overviewSelectionForm.selectedInviteIds)}"></span> assessors selected</span>
                     </div>
                     <div class="column-half select-all alignright">
-                        <button class="button" name="resendInvites" data-submit-el="" th:attr="disabled=${#lists.isEmpty(overviewSelectionForm.selectedAssessorIds)}">
+                        <button class="button" name="resendInvites" data-submit-el="" th:attr="disabled=${#lists.isEmpty(overviewSelectionForm.selectedInviteIds)}">
                             Resend invites
                         </button>
                     </div>
@@ -183,7 +183,7 @@
                                 <div class="multiple-choice">
                                     <input type="checkbox"
                                            th:id="|assessor-row-${index.count}|"
-                                           th:field="*{selectedAssessorIds}"
+                                           th:field="*{selectedInviteIds}"
                                            th:value="${assessor.inviteId}"/>
                                     <label th:for="|assessor-row-${index.count}|">
                                         <span class="invisible">Add</span>
