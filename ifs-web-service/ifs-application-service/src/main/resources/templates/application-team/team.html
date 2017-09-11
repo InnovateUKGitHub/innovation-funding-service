@@ -18,7 +18,9 @@
               <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application team',subTitle=${applicationName},size='heading-xlarge'" />
             </th:block>
 
-            <p>View and manage your participants in the application. If an individual is 'pending' they have not yet joined the application.</p>
+            <p>View and manage your contributors or collaborators in the application. If an individual is 'pending' they have not yet joined the application.</p>
+
+            <p>Read the guidance on <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service" target="_blank">how collaboration in the Innovation Funding Service works</a> (this link will open in a new window).</p>
 
             <p th:unless="${model.applicationCanBegin}">To change the lead applicant please email Innovate UK <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a>.</p>
 
@@ -35,6 +37,7 @@
                 <h2 class="heading-medium">
                     <th:block th:text="${organisation.name}">Organisation name</th:block>
                     <th:block th:if="${organisation.lead}"> (Lead)</th:block>
+                    <th:block th:unless="${organisation.lead}"> (Collaborator)</th:block>
                 </h2>
 
                 <h3 class="heading-small">Organisation type</h3>
@@ -60,15 +63,15 @@
                 <p th:if="${organisation.editable}">
                     <!--/* Prefer linking by the InviteOrganisation id over the Organisation id except where there is no InviteOrganisation. */-->
                     <a th:unless="${organisation.organisationExists}" th:href="@{/application/{applicationId}/team/update/invited/{organisationId}(applicationId=${model.applicationId}, organisationId=${organisation.inviteOrganisationId})}"
-                       th:text="|Update ${organisation.name}|">Update Empire Ltd</a>
+                       th:text="|Update and add contributors from ${organisation.name}|">Update and add contributors from Empire Ltd</a>
                     <a th:if="${organisation.organisationExists}" th:href="@{/application/{applicationId}/team/update/existing/{organisationId}(applicationId=${model.applicationId},organisationId=${organisation.organisationId})}"
-                       th:text="|Update ${organisation.name}|">Update Empire Ltd</a>
+                       th:text="|Update and add contributors from ${organisation.name}|">Update and add contributors from Empire Ltd</a>
                 </p>
             </th:block>
 
             <th:block th:if="${model.userLeadApplicant}">
                 <p class="extra-margin">Add any organisations participating with you on this project. They are responsible for creating their own account and submitting their finances.</p>
-                <p><a th:href="@{/application/{applicationId}/team/addOrganisation(applicationId=${model.applicationId})}">Add partner organisation</a></p>
+                <p><a th:href="@{/application/{applicationId}/team/addOrganisation(applicationId=${model.applicationId})}">Add a collaborator organisation</a></p>
             </th:block>
 
             <p class="extra-margin">

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Allocate applications'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-assessor-header" th:with="status='loggedIn'" />
+
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+
+    <!-- HARDCODED PROTOTYPE HTML -->
+
+    <h1 class="heading-xlarge">Assessor dashboard</h1>
+
+    <div class="my-applications">
+        <div class="progress-list">
+            <h2 class="heading-medium no-margin-top">Competitions for assessment (1)</h2>
+            <ul>
+                <li>
+                    <div class="task">
+                        <h3 class="heading-small"><a href="#">Sustainable living models for the future</a></h3>
+                        <div class="action-required">
+                            <strong>
+                                <span class="pending-applications">3</span> applications awaiting acceptance |
+                                <span class="accepted-applications">3</span> applications to assess
+                            </strong>
+                        </div>
+                    </div>
+                    <div class="status">
+                        <div class="status-msg msg-deadline">
+                            <strong class="bold-medium days-remaining">10</strong><br /> days left<br /> Deadline <span class="day">28</span>
+                            <span class="month">July</span>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="progress-list">
+            <h2 class="heading-medium no-margin-top">Attend panel (1)</h2>
+            <ul>
+                <li th:unless="${param.status != null and param.status[0] == 'noApplications'}">
+                    <div class="task">
+                        <h3 class="heading-small"><a href="/prototypes/IFS-807-apps-for-panel">Technology inspired</a></h3>
+                        <div class="action-required">
+                            <strong>
+                                <span class="pending-applications">3</span> applications awaiting review
+                            </strong>
+                        </div>
+                    </div>
+                    <div class="status">
+                        <div class="status-msg msg-deadline">
+                            <strong class="bold-medium days-remaining">30</strong><br /> days left<br /> Deadline <span class="day">28</span>
+                            <span class="month">August</span>
+                        </div>
+                    </div>
+                </li>
+                <li th:if="${param.status != null and param.status[0] == 'noApplications'}">
+                    <div class="task">
+                        <h3 class="heading-small"><a href="/prototypes/IFS-807-apps-for-panel?status=noApplications">Technology inspired</a></h3>
+                        <div class="action-required">
+                            <strong>
+                                <span class="pending-applications">0</span> applications awaiting review  |
+                                Applications to be added soon
+                            </strong>
+                        </div>
+                    </div>
+                    <div class="status">
+                        <div class="status-msg msg-deadline">
+                            <strong class="bold-medium days-remaining">30</strong><br /> days left<br /> Deadline <span class="day">28</span>
+                            <span class="month">August</span>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="progress-list" th:unless="${param.status != null and param.status[0] == 'noApplications'}">
+        <h2 class="heading-medium no-margin-top">Invitations to attend panel (1)</h2>
+        <ul>
+            <li>
+                <div class="task">
+                    <h3 class="heading-small"><a href="#">Photonics for health</a></h3>
+                    <p>You have been asked to assess this competition. Please respond.</p>
+                </div>
+                <div class="status">
+                    <div class="status-msg msg-deadline">
+                        <strong class="bold-medium days-remaining">10</strong><br /> days left<br /> Deadline <span class="day">28</span>
+                        <span class="month">July</span>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <h2 class="heading-medium">Your assessor details</h2>
+
+    <ul class="list list-bullet">
+        <li><a href="#">your skills</a></li>
+        <li><a href="#">your declaration of interest</a></li>
+        <li><a href="#">your assessor agreement</a></li>
+        <li><a href="#">travel and subsistence rates</a></li>
+        <li><a href="#">your details</a></li>
+    </ul>
+
+    <!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script type="text/javascript">
+	// <![CDATA[
+
+	// ]]>
+</script>
+</body>
+</html>

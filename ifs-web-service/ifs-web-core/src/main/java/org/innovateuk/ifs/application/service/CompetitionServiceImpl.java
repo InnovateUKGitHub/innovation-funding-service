@@ -9,6 +9,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.publiccontent.service.ContentGroupRestService;
 import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,21 @@ public class CompetitionServiceImpl implements CompetitionService {
     @Override
     public CompetitionResource getById(Long competitionId){
         return competitionsRestService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public List<UserResource> findInnovationLeads(Long competitionId){
+        return competitionsRestService.findInnovationLeads(competitionId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public void addInnovationLead(Long competitionId, Long innovationLeadUserId){
+        competitionsRestService.addInnovationLead(competitionId, innovationLeadUserId);
+    }
+
+    @Override
+    public void removeInnovationLead(Long competitionId, Long innovationLeadUserId){
+        competitionsRestService.removeInnovationLead(competitionId, innovationLeadUserId);
     }
 
     @Override
@@ -82,6 +98,11 @@ public class CompetitionServiceImpl implements CompetitionService {
     @Override
     public ServiceResult<Void> update(CompetitionResource competition) {
         return competitionsRestService.update(competition).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> updateCompetitionInitialDetails(CompetitionResource competition) {
+        return competitionsRestService.updateCompetitionInitialDetails(competition).toServiceResult();
     }
 
     @Override

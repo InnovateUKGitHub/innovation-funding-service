@@ -39,7 +39,7 @@
                 </div>
 
                 <h3 class="heading-small no-margin">Project summary:</h3>
-                <p th:text="${model.projectSummary}" data-md-to-html="">This is the applicant response for project summary.</p>
+                <p th:text="${model.projectSummary}" data-md-to-html="" class="wysiwyg-styles">This is the applicant response for project summary.</p>
             </div>
 
             <p class="heading-small">Review the project summary above to make sure:</p>
@@ -106,7 +106,7 @@
                                           th:errorclass="form-control-error"
                                           rows="4"
                                           th:field="*{rejectComment}"></textarea>
-                                <div class="textarea-footer" th:with="rejectComment=*{rejectComment}">
+                                <div class="textarea-footer" th:with="rejectComment=*{rejectComment}" aria-live="polite" aria-atomic="true" role="status">
                                     <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" />
                                 </div>
                             </div>

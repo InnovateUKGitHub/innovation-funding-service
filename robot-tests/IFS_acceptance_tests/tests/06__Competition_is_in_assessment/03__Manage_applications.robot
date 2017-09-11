@@ -18,6 +18,8 @@ Documentation     INFUND-7042 As a member of the competitions team I can see lis
 ...               IFS-319 View list of accepted assessors - In assessment state
 ...
 ...               IFS-1079 Remove an application - Closed and In assessment states
+...
+...               IFS-400 Filter by application number on Assessor progress dashboard - Closed and in assessments state
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
@@ -26,7 +28,7 @@ Resource          ../../resources/defaultResources.robot
 *** Variables ***
 ${Molecular_id}        ${application_ids['Molecular tree breeding']}
 ${Virtual_Reality_id}  ${application_ids['Living with Virtual Reality']}
-${Paul_Plum_id}        161
+${Paul_Plum_id}        169
 
 *** Test Cases ***
 View the list of the applications
@@ -53,9 +55,24 @@ Assessor link goes to the assessor profile
     Then the user should see the element   jQuery=h1:contains("Assessor profile") ~ p:contains("Paul Plum")
     [Teardown]    the user clicks the button/link  link=Back
 
+Filter assessors
+    [Documentation]    IFS-399
+    [Tags]
+    Given the user selects the option from the drop-down menu  Materials and manufacturing  id=innovationSector
+    And the user clicks the button/link                        jQuery=.button:contains("Filter")
+    Then the user should not see the element                   jQuery=td:contains("Paul Plum")
+    And the user should see the element                        jQuery=td:contains("Felix Wilson")
+    And the user should see the element                        jQuery=td:contains("Jenna Diaz")
+    Then the user selects the option from the drop-down menu   Academic  id=businessType
+    And the user clicks the button/link                        jQuery=.button:contains("Filter")
+    Then the user should see the element                   jQuery=td:contains("Felix Wilson")
+    And the user should not see the element                        jQuery=td:contains("Jenna Diaz")
+    [Teardown]    the user clicks the button/link  link=Clear all filters
+
 View assessor progress page
     [Documentation]  IFS-321
     [Tags]
+    [Setup]  the user clicks the button/link  jQuery=a:contains("21 to 40")
     Given the user clicks the button/link  jQuery=td:contains("Paul Plum") ~ td a:contains("View progress")
     Then The user should see the element   jQuery=h2:contains("Paul Plum")
     And the user should see the element    jQuery=h4:contains("Innovation area") ~ ul li:contains("Urban living") ~ li:contains("Smart infrastructure")
@@ -86,17 +103,34 @@ Remove an assigned application (Notified)
     Given the user clicks the button/link     jQuery=td:contains("${Molecular_id}") ~ td:contains("Yes") ~ td:contains("Remove")
     When the user clicks the button/link      jQuery=button:contains("Remove assessor")
     Then the user should not see the element  jQuery=td:contains("${Molecular_id}") ~ td:contains("Yes") ~ td:contains("Remove")
-    And the user should see the element       jQuery=h2:contains("Applications") ~ div td:contains("${Molecular_id}") + td:contains("Molecular tree breeding") ~ td:contains("Assign")
+    And the user should see the element       jQuery=h2:contains("Previously assigned") ~ div td:contains("${Molecular_id}") + td:contains("Molecular tree breeding") ~ td:contains("Reassign")
     And the user clicks the button/link       jQuery=.pagination-label:contains("Next")
+
+Reassign a removed application
+    [Documentation]    INFUND-398
+    [Tags]
+    Given the user clicks the button/link      jQuery=button:contains("Reassign")
+    Then the user should not see the element   jQuery=h2:contains("Previously assigned") ~ div td:contains("${Molecular_id}") + td:contains("Molecular tree breeding") ~ td:contains("Reassign")
+    And the user should see the element        jQuery=h2:contains("Assigned") ~ div td:contains("${Molecular_id}") + td:contains("Molecular tree breeding") ~ td:contains("Remove")
 
 Assign an application to an assessor
     [Documentation]    IFS-811
     [Tags]
     Given the user clicks the button/link  link=Allocate assessors
+    And the user clicks the button/link    jQuery=a:contains("41 to")
     When the user clicks the button/link   jQuery=td:contains("Shaun Bradley") ~ td a:contains("View progress")
     Then the user should see the element   jQuery=h2:contains("Assigned (0)") + p:contains("No applications have been assigned to this assessor")
     And the user clicks the button/link    jQuery=td:contains("36") ~ td button:contains("Assign")
     Then the user should see the element   jQuery=h2:contains("Assigned (1)") + .table-overflow tr:contains("36")
+
+Filter by application number on the assessor page
+    [Documentation]    IFS-400
+    [Tags]
+    Given the user enters text to a text field    css=#filterSearch    22
+    When the user clicks the button/link    jQuery=button:contains(Filter)
+    Then the user should see the element    jQuery=tr:nth-child(1) td:nth-child(1):contains("22")
+    And the user should not see the element    jQuery=.pagination-label:contains(Next)
+
 
 Filtering of the applications
     [Documentation]    INFUND-8061
@@ -287,6 +321,7 @@ The key statistics counts should be correct
     Should Be Equal As Integers    ${SUBMITTED}    1
 
 the assessor list is correct before changes
+    the user clicks the button/link  jQuery=a:contains("21 to 40")
     the user should see the element  jQuery=td:contains("Paul Plum") ~ td:contains("Town Planning, Construction") ~ td:contains("7") ~ td:contains("7") ~ td:contains("3") ~ td:contains("0")
 
 the user accepts the application

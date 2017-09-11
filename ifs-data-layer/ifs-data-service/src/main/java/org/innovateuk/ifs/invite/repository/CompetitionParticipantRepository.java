@@ -86,6 +86,8 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
 
     List<CompetitionParticipant> getByCompetitionIdAndRole(Long competitionId, CompetitionParticipantRole role);
 
+    CompetitionParticipant getByCompetitionIdAndUserIdAndRole(Long competitionId, Long userId, CompetitionParticipantRole role);
+
     @Query(BY_COMP_AND_STATUS)
     Page<CompetitionParticipant> getAssessorsByCompetitionAndStatus(@Param("competitionId") long competitionId,
                                                                     @Param("status") ParticipantStatus status,

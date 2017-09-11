@@ -5,9 +5,6 @@ configurations {
 jar {
     baseName = 'assessment'
 }
-prepareDockerFile.appName = jar.baseName
-buildDocker.applicationName = 'assessment-service'
-
 
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')

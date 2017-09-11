@@ -22,6 +22,7 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -66,17 +67,19 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
                 .withApplicationState(ApplicationState.SUBMITTED)
                 .withCompetition(competitionResource.getId()).build());
 
-        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionsByUserId(loggedInUser.getId())).thenReturn(restSuccess(competitionResources));
 
-        when(processRoleService.findProcessRole(loggedInUser.getId(), APPLICATION_ID_IN_PROGRESS)).thenReturn(newProcessRoleResource().withRoleName(UserRoleType.LEADAPPLICANT.getName()).build());
-        when(processRoleService.findProcessRole(loggedInUser.getId(), APPLICATION_ID_IN_PROJECT)).thenReturn(newProcessRoleResource().withRoleName(UserRoleType.LEADAPPLICANT.getName()).build());
-        when(processRoleService.findProcessRole(loggedInUser.getId(), APPLICATION_ID_IN_FINISH)).thenReturn(newProcessRoleResource().withRoleName(UserRoleType.APPLICANT.getName()).build());
-        when(processRoleService.findProcessRole(loggedInUser.getId(), APPLICATION_ID_SUBMITTED)).thenReturn(newProcessRoleResource().withRoleName(UserRoleType.LEADAPPLICANT.getName()).build());
+        when(applicationRestService.getAssignedQuestionsCount(anyLong(), anyLong())).thenReturn(restSuccess(2));  
+
+        when(processRoleService.getByUserId(loggedInUser.getId())).thenReturn(newProcessRoleResource()
+                .withApplication(APPLICATION_ID_IN_PROGRESS, APPLICATION_ID_IN_PROJECT, APPLICATION_ID_IN_FINISH, APPLICATION_ID_SUBMITTED)
+                .withRoleName(UserRoleType.LEADAPPLICANT.getName(),UserRoleType.LEADAPPLICANT.getName(), UserRoleType.APPLICANT.getName(), UserRoleType.APPLICANT.getName())
+                .build(4));
     }
 
     @Test
     public void populate() {
-        ApplicantDashboardViewModel viewModel = populator.populate(loggedInUser);
+        ApplicantDashboardViewModel viewModel = populator.populate(loggedInUser.getId());
 
         assertTrue(viewModel.getApplicationsInProgressNotEmpty());
         assertTrue(viewModel.getApplicationsInFinishedNotEmpty());

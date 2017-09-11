@@ -1,3 +1,4 @@
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 def targetBuild = hasProperty('profile') ? profile : 'docker';
 apply from: targetBuild+"-build.gradle";
 
@@ -49,15 +50,8 @@ ext {
 ext['spring-restdocs.version']='1.1.2.RELEASE'
 
 jar {
-    dependsOn asciidoctor
-    from ("${asciidoctor.outputDir}/html5") {
-        into 'static/docs'
-    }
     baseName = 'ifs-data-service'
 }
-
-prepareDockerFile.appName = jar.baseName
-buildDocker.applicationName=jar.baseName.replaceAll(/ifs-/, "")
 
 configurations {
     mapstruct
@@ -117,46 +111,76 @@ test {
     if (project.hasProperty('testGroups')) {
         systemProperty 'testGroups', project.getProperty('testGroups')
     }
+    finalizedBy asciidoctor
 }
 
+task dbResetDockerEnv {
+    dependsOn "build"
 
-task dbResetDocker(type: Docker, dependsOn: build) {
-    push = false
-    applicationName = 'dbreset'
-    dockerfile = file('src/main/docker/Dockerfile-dbreset')
+    def inputDir = project.file("$project.buildDir/docker-db-reset")
     doFirst {
-        copy{
+        copy {
+            from file('src/main/docker/Dockerfile-dbreset')
+            rename 'Dockerfile-dbreset', 'Dockerfile'
+            into inputDir
+        }
+        copy {
             from file('src/main/resources')
             include 'db/**/*.sql'
-            into stageDir
+            into inputDir
         }
         copy {
             from file("${rootProject.projectDir}/setup-files/scripts/docker/ldap-sync-from-ifs-db.sh")
-            into stageDir
+            into inputDir
+        }
+    }
+}
+
+task dbResetDocker(type: DockerBuildImage) {
+    dependsOn "dbResetDockerEnv"
+    tag = 'innovateuk/dbreset'
+    inputDir = project.file("$project.buildDir/docker-db-reset")
+}
+
+task dbAnonymisedDumpDockerEnv {
+    dependsOn "build"
+    def inputDir = project.file("$project.buildDir/docker-db-anonymised")
+
+    doFirst {
+        copy {
+            from file('src/main/docker/proxysql/Dockerfile-proxysql')
+            rename 'Dockerfile-proxysql', 'Dockerfile'
+            into inputDir
+        }
+        copy {
+            from "src/main/docker/proxysql"
+            into "${inputDir}/proxysql"
         }
     }
 }
 
 
-task dbAnonymisedDumpDocker(type: Docker, dependsOn: build) {
-    push = false
-    applicationName = 'db-anonymised-data'
-    dockerfile = file('src/main/docker/proxysql/Dockerfile-proxysql')
-    doFirst {
-        copy {
-            from "src/main/docker/proxysql"
-            into "${stageDir}/proxysql"
-        }
-    }
+task dbAnonymisedDumpDocker(type: DockerBuildImage, dependsOn: build) {
+    dependsOn "dbAnonymisedDumpDockerEnv"
+    tag = 'innovateuk/db-anonymised-data'
+    inputDir = project.file("$project.buildDir/docker-db-anonymised")
 }
 
 
 asciidoctor {
-    onlyIf { file(snippetsDir).exists() }
     dependsOn test
     attributes 'snippets': snippetsDir
     backends  'html5'
     inputs.dir snippetsDir
+    outputs.dir file("static/docs")
+
+    doLast{
+        copy {
+            from "build/asciidoc/html5"
+            into 'static/docs'
+        }
+    }
+
 }
 
 task generateMainMapperClasses(type: JavaCompile) {

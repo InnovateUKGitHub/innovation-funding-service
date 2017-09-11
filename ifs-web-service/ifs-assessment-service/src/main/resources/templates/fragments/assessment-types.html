@@ -50,7 +50,7 @@
                       th:field="*{formInput[__${field.id}__]}"
                       th:attr="data-max_words=${field.wordCount},data-maxwordslength=${field.wordCount},data-maxwordslength-errormessage=${'Maximum word count exceeded. Please reduce your word count to '+field.wordCount+'.'},data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
                       th:id="'form-textarea-'+${field.id}"></textarea>
-            <div class="textarea-footer" th:with="content=*{formInput[__${field.id}__]}">
+            <div class="textarea-footer" th:with="content=*{formInput[__${field.id}__]}" aria-live="polite" aria-atomic="true" role="status">
                 <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${field.wordCount}, currentWordsLeft=${#ifsUtil.wordsRemaining(field.wordCount, content)})" />
             </div>
         </div>

@@ -20,8 +20,8 @@ bin/
 
 
 #Ignore generated docker files
-**/Dockerfile
-**/Dockerfile-base
+ifs-**/Dockerfile
+ifs-**/Dockerfile-base
 
 
 # ignore properties
@@ -99,6 +99,7 @@ ifs-data-service.ipr
 ifs-data-service.iws
 ifs-web-service.ipr
 robot-tests/target
+robot-tests/results
 robot-tests/test_counting
 robot-tests/benchmarking_report.txt
 robot-tests/ubuntu-vm-headless/logs
@@ -144,3 +145,4 @@ ifs-auth-service/ifs-idp-service/src/main/docker/certs/
 ifs-auth-service/ifs-ldap-service/src/main/docker/certs/
 
 setup-files/scripts/docker/newrelic.*
+ifs-data-layer/ifs-data-service/static/
