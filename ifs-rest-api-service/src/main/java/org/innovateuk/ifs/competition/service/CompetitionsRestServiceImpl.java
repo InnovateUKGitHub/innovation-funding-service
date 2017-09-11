@@ -2,13 +2,15 @@ package org.innovateuk.ifs.competition.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -59,9 +61,16 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
         return getWithRestResult(competitionsRestURL + "/non-ifs", competitionSearchResultItemListType());
     }
 
-    @Override
+/*    @Override
     public RestResult<List<ApplicationResource>> findUnsuccessfulApplications(Long competitionId) {
         return getWithRestResult(competitionsRestURL +  "/" + competitionId + "/unsuccessful-applications", applicationResourceListType());
+    }*/
+
+    @Override
+    public RestResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize) {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        String uriWithParams = buildPaginationUri(competitionsRestURL +  "/" + competitionId + "/unsuccessful-applications", pageNumber, pageSize, null, params);
+        return getWithRestResult(uriWithParams, ApplicationPageResource.class);
     }
 
     @Override
