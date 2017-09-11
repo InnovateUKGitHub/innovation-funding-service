@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
@@ -35,6 +36,7 @@ import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -199,7 +201,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
     }
 
-    @Override
+/*    @Override
     public ServiceResult<List<ApplicationResource>> findUnsuccessfulApplications(Long competitionId) {
 
         Set<State> unsuccessfulStates = simpleMapSet(asLinkedSet(
@@ -210,6 +212,22 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         List<Application> unsuccessfulApplications = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, unsuccessfulStates);
 
         return serviceSuccess(simpleMap(unsuccessfulApplications, application -> convertToApplicationResource(application)));
+    }*/
+
+    @Override
+    public ServiceResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, Pageable pageable) {
+
+        Set<State> unsuccessfulStates = simpleMapSet(asLinkedSet(
+                ApplicationState.INELIGIBLE,
+                INELIGIBLE_INFORMED,
+                REJECTED), applicationState -> applicationState.getBackingState());
+
+        Page<Application> pagedResult = applicationRepository.findByApplicationProcessActivityStateStateInAndCompetitionId(unsuccessfulStates, competitionId, pageable);
+        List<ApplicationResource> unsuccessfulApplications = simpleMap(pagedResult.getContent(), application -> convertToApplicationResource(application));
+
+        return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), unsuccessfulApplications, pagedResult.getNumber(), pagedResult.getSize()));
+
+        //return serviceSuccess(simpleMap(unsuccessfulApplications, application -> convertToApplicationResource(application)));
     }
 
     private ApplicationResource convertToApplicationResource(Application application) {

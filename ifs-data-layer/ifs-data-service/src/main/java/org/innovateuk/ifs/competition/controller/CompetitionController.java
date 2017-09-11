@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.competition.controller;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.assessment.transactional.AssessorService;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -10,6 +10,7 @@ import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
@@ -21,6 +22,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/competition")
 public class CompetitionController {
+
+    private static final String DEFAULT_PAGE_NUMBER = "0";
+
+    //TODO - Change this to 40 after testing
+    private static final String DEFAULT_PAGE_SIZE = "20";
 
     @Autowired
     private CompetitionService competitionService;
@@ -92,9 +98,11 @@ public class CompetitionController {
     }
 
     @GetMapping("/{competitionId}/unsuccessful-applications")
-    public RestResult<List<ApplicationResource>> findUnsuccessfulApplications(@PathVariable("competitionId") final Long competitionId) {
+    public RestResult<ApplicationPageResource> findUnsuccessfulApplications(@PathVariable("competitionId") final Long competitionId,
+                                                                            @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
+                                                                            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
 
-        return competitionService.findUnsuccessfulApplications(competitionId).toGetResponse();
+        return competitionService.findUnsuccessfulApplications(competitionId, new PageRequest(pageIndex, pageSize)).toGetResponse();
     }
 
     @GetMapping("/search/{page}/{size}")
