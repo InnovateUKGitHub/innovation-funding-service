@@ -58,28 +58,6 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
     }
 
     @Test
-    public void beforeYouApply() throws Exception {
-        final CompetitionResource competitionResource = newCompetitionResource().build();
-        when(competitionService.getPublishedById(competitionResource.getId())).thenReturn(competitionResource);
-
-        mockMvc.perform(get("/competition/{id}/info/before-you-apply", competitionResource.getId()))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("currentCompetition", competitionResource))
-                .andExpect(view().name("competition/info/before-you-apply"));
-    }
-
-    @Test
-    public void eligibility() throws Exception {
-        final CompetitionResource competitionResource = newCompetitionResource().build();
-        when(competitionService.getPublishedById(competitionResource.getId())).thenReturn(competitionResource);
-
-        mockMvc.perform(get("/competition/{id}/info/eligibility", competitionResource.getId()))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("currentCompetition", competitionResource))
-                .andExpect(view().name("competition/info/eligibility"));
-    }
-
-    @Test
     public void termsAndConditions() throws Exception {
         final CompetitionResource competitionResource = newCompetitionResource().build();
         when(competitionService.getPublishedById(competitionResource.getId())).thenReturn(competitionResource);
@@ -87,16 +65,5 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
         mockMvc.perform(get("/competition/{id}/info/terms-and-conditions", competitionResource.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/info/terms-and-conditions"));
-    }
-
-    @Test
-    public void whatWeAskYou() throws Exception {
-        final CompetitionResource competitionResource = newCompetitionResource().build();
-        when(competitionService.getPublishedById(competitionResource.getId())).thenReturn(competitionResource);
-
-        mockMvc.perform(get("/competition/{id}/info/what-we-ask-you", competitionResource.getId()))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("currentCompetition", competitionResource))
-                .andExpect(view().name("competition/info/what-we-ask-you"));
     }
 }

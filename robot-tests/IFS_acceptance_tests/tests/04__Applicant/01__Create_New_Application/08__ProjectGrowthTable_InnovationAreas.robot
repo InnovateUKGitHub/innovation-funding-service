@@ -519,7 +519,6 @@ the user completes the new account creation
     the user enters text to a text field                 jQuery=input[id="password"]    ${correct_password}
     the user selects the checkbox                        termsAndConditions
     the user clicks the button/link                      jQuery=button:contains("Create account")
-    the user should see the text in the page             Please verify your email address
     the user reads his email and clicks the link         ${newUsersEmail}  Please verify your email address  Once verified you can sign into your account.
     the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     the user clicks the button/link                      link=Sign in
