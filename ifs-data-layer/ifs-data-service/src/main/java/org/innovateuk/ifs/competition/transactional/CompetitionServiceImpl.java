@@ -222,12 +222,10 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                 INELIGIBLE_INFORMED,
                 REJECTED), applicationState -> applicationState.getBackingState());
 
-        Page<Application> pagedResult = applicationRepository.findByApplicationProcessActivityStateStateInAndCompetitionId(unsuccessfulStates, competitionId, pageable);
+        Page<Application> pagedResult = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, unsuccessfulStates, pageable);
         List<ApplicationResource> unsuccessfulApplications = simpleMap(pagedResult.getContent(), application -> convertToApplicationResource(application));
 
         return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), unsuccessfulApplications, pagedResult.getNumber(), pagedResult.getSize()));
-
-        //return serviceSuccess(simpleMap(unsuccessfulApplications, application -> convertToApplicationResource(application)));
     }
 
     private ApplicationResource convertToApplicationResource(Application application) {

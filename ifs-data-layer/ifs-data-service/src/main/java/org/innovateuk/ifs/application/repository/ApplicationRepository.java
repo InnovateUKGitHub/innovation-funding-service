@@ -71,8 +71,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
 	List<Application> findByCompetitionIdAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> applicationStates);
 
-	//TODO - Reverse the order
-	Page<Application> findByApplicationProcessActivityStateStateInAndCompetitionId(Collection<State> applicationStates, long competitionId, Pageable pageable);
+	Page<Application> findByCompetitionIdAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> applicationStates, Pageable pageable);
 
 	@Query(COMP_NOT_STATUS_FILTER)
 	List<Application> findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(@Param("compId") long competitionId,
