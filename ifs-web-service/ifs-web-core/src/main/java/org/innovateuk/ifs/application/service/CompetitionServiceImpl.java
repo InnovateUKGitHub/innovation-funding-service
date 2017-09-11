@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.service;
 
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
@@ -86,8 +87,8 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
-    public List<ApplicationResource> findUnsuccessfulApplications(Long competitionId) {
-        return competitionsRestService.findUnsuccessfulApplications(competitionId).getSuccessObjectOrThrowException();
+    public ApplicationPageResource findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize) {
+        return competitionsRestService.findUnsuccessfulApplications(competitionId, pageNumber, pageSize).getSuccessObjectOrThrowException();
     }
 
     @Override
