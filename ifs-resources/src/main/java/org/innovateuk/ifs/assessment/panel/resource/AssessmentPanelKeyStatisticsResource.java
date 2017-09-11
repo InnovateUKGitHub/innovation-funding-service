@@ -39,6 +39,8 @@ public class AssessmentPanelKeyStatisticsResource {
         return assessorsPending;
     }
 
-    public void setAssessorsPending(int assessorsPending) { this.assessorsPending = assessorsPending; }
+    public void setAssessorsPending(int assessorsPending) {
+        this.assessorsPending = assessorsPending;
+    }
 }
 

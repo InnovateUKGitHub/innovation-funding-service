@@ -233,7 +233,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
 
         @Override
         public ServiceResult<AssessmentPanelKeyStatisticsResource> getAssessmentPanelKeyStatistics(long competitionId) {
-            return serviceSuccess(newAssessmentPanelKeyStatisticsResource().build());
+            return null;
         }
 
         @Override

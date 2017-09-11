@@ -48,6 +48,9 @@ public class CompetitionManagementAssessmentPanelControllerTest extends BaseCont
         Long competitionId = 1L;
         String competitionName = "Competition x";
         CompetitionStatus competitionStatus = CLOSED;
+        int applicationsInPanel = 5;
+        int assessorsAccepted = 2;
+        int assessorsPending = 3;
 
         competitionResource = newCompetitionResource()
                 .with(id(competitionId))
@@ -56,9 +59,9 @@ public class CompetitionManagementAssessmentPanelControllerTest extends BaseCont
                 .build();
 
         assessmentPanelKeyStatisticsResource = newAssessmentPanelKeyStatisticsResource()
-                .withApplicationsInPanel(5)
-                .withAssessorsAccepted(2)
-                .withAssessorsPending(3)
+                .withApplicationsInPanel(applicationsInPanel)
+                .withAssessorsAccepted(assessorsAccepted)
+                .withAssessorsPending(assessorsPending)
                 .build();
 
 
@@ -78,5 +81,8 @@ public class CompetitionManagementAssessmentPanelControllerTest extends BaseCont
         assertEquals(competitionId, model.getCompetitionId());
         assertEquals(competitionName, model.getCompetitionName());
         assertEquals(competitionStatus, model.getCompetitionStatus());
+        assertEquals(applicationsInPanel, model.getApplicationsInPanel());
+        assertEquals(assessorsAccepted, model.getAssessorsAccepted());
+        assertEquals(assessorsPending, model.getAssessorsInvited());
     }
 }
