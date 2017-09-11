@@ -58,17 +58,14 @@ import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.invite.mapper.*;
 import org.innovateuk.ifs.invite.repository.*;
-import org.innovateuk.ifs.invite.transactional.EthnicityService;
-import org.innovateuk.ifs.invite.transactional.InviteOrganisationService;
-import org.innovateuk.ifs.invite.transactional.InviteProjectService;
-import org.innovateuk.ifs.invite.transactional.InviteUserService;
-import org.innovateuk.ifs.invite.transactional.RejectionReasonService;
+import org.innovateuk.ifs.invite.transactional.*;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
+import org.innovateuk.ifs.organisation.transactional.OrganisationInitialCreationService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.profile.transactional.ProfileService;
@@ -98,9 +95,9 @@ import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
+import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.innovateuk.ifs.project.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
-import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.innovateuk.ifs.project.users.ProjectUsersHelper;
 import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
@@ -687,6 +684,12 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected RoleInviteMapper roleInviteMapperMock;
+
+    @Mock
+    protected InviteService inviteServiceMock;
+
+    @Mock
+    protected OrganisationInitialCreationService organisationInitialCreationServiceMock;
 
     @Before
     public void setupMockInjection() {

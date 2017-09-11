@@ -28,7 +28,7 @@ public class CompetitionPermissionRules extends BasePermissionRules {
         return isInternal(user) && !isInnovationLead(user);
     }
 
-    @PermissionRule(value = "READ", description = "Innovation leads can see all competitions assgned to them")
+    @PermissionRule(value = "READ", description = "Innovation leads can see all competitions assigned to them")
     public boolean innovationLeadCanViewCompetitionAssignedToThem(CompetitionResource competition, UserResource user) {
         return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
     }
