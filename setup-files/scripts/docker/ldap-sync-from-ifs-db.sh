@@ -79,7 +79,7 @@ addUserToShibboleth() {
 wipeLdapUsers
 
 IFS=$'\n'
-for u in $(executeMySQLCommand "select uid,email from user where status = 'ACTIVE' and system_user = 0;")
+for u in $(executeMySQLCommand "select uid,email from user where system_user = 0;")
 do
   addUserToShibboleth $u
 done | ldapadd -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASS
