@@ -2,7 +2,6 @@ package org.innovateuk.ifs.profile;
 
 import org.hamcrest.Matchers;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.error.Error;
@@ -15,16 +14,13 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.ResultActions;
 
 import javax.servlet.http.HttpServletRequest;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.BaseControllerMockMVCTest.setupMockMvc;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.OPERATING;
