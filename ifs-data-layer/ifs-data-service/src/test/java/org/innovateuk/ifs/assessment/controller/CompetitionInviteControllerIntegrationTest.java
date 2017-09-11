@@ -177,11 +177,10 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                         .withInnovationArea(innovationArea)
                         .build(2)
         ).iterator()), CompetitionInvite::getId);
-        Long[] inviteIdArray = inviteIds.toArray(new Long[0]);
 
         loginCompAdmin();
 
-        RestResult<AssessorInvitesToSendResource> serviceResult = controller.getAllInvitesToResend(competition.getId(), inviteIdArray);
+        RestResult<AssessorInvitesToSendResource> serviceResult = controller.getAllInvitesToResend(competition.getId(), inviteIds);
         assertTrue(serviceResult.isSuccess());
 
         AssessorInvitesToSendResource inviteResource = serviceResult.getSuccessObjectOrThrowException();
@@ -799,7 +798,6 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         List<Long> inviteIds =  simpleMap(IteratorUtils.toList(competitionInviteRepository.save(invitesToResend)
                 .iterator()), CompetitionInvite::getId);
-        Long[] inviteIdArray = inviteIds.toArray(new Long[0]);
 
         AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
                 .withSubject("subject")
@@ -808,7 +806,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         loginCompAdmin();
 
-        RestResult<Void> serviceResult = controller.resendInvites(inviteIdArray, assessorInviteSendResource);
+        RestResult<Void> serviceResult = controller.resendInvites(inviteIds, assessorInviteSendResource);
         assertTrue(serviceResult.isSuccess());
     }
 
