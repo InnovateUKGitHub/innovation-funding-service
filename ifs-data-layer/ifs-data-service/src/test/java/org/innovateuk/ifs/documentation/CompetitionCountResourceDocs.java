@@ -9,7 +9,7 @@ public class CompetitionCountResourceDocs {
             fieldWithPath("liveCount").description("The number of live competitions"),
             fieldWithPath("projectSetupCount").description("The number of competitions in project set up"),
             fieldWithPath("upcomingCount").description("The number of upcoming competitions"),
-            fieldWithPath("completedCount").description("The number of completed competitions"),
+            fieldWithPath("previousCount").description("The number of previous competitions"),
             fieldWithPath("nonIfsCount").description("The number of non-IFS competitions")
     };
 }

@@ -28,7 +28,7 @@ public class CompetitionPermissionRules extends BasePermissionRules {
         return isInternal(user) && !isInnovationLead(user);
     }
 
-    @PermissionRule(value = "READ", description = "Innovation leads can see all competitions assgned to them")
+    @PermissionRule(value = "READ", description = "Innovation leads can see all competitions assigned to them")
     public boolean innovationLeadCanViewCompetitionAssignedToThem(CompetitionResource competition, UserResource user) {
         return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
     }
@@ -46,11 +46,6 @@ public class CompetitionPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "MANAGE_INNOVATION_LEADS", description = "Competition Admin and Project Finance can add, remove and view innovation leads for a competition")
     public boolean internalAdminCanManageInnovationLeadsForCompetition(CompetitionResource competition, UserResource user) {
         return isInternalAdmin(user);
-    }
-
-    @PermissionRule(value = "VIEW_INFORMED_NOT_IN_PROJECT_SETUP_APPLICATIONS", description = "Internal users and IFS Admin can view informed, but not in project setup, applications")
-    public boolean internalAndIFSAdminCanViewInformedNotInProjectSetupApplications(CompetitionResource competition, UserResource user) {
-        return isInternal(user) || isIFSAdmin(user);
     }
 
 }

@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.competition.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.controller.CompetitionController;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -383,25 +381,17 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
     }
 
     @Test
-    public void findNotInProjectSetupApplications() throws Exception {
-        final Long competitionId = 1L;
+    public void previous() throws Exception {
+        when(competitionService.findPreviousCompetitions()).thenReturn(serviceSuccess(newCompetitionSearchResultItem().build(2)));
 
-        List<ApplicationResource> notInProjectSetupApplications = ApplicationResourceBuilder.newApplicationResource().build(2);
-
-        when(competitionService.findInformedNotInProjectSetupApplications(competitionId)).thenReturn(serviceSuccess(notInProjectSetupApplications));
-
-        mockMvc.perform(get("/competition/{id}/not-in-project-setup-applications", competitionId))
+        mockMvc.perform(get("/competition/previous"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(notInProjectSetupApplications)))
                 .andDo(document(
                         "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("The competition for which not in project setup applications need to be found")
+                        responseFields(
+                                fieldWithPath("[]").description("list of previous competitions the authenticated user has access to")
                         )
                 ));
-
-        verify(competitionService, only()).findInformedNotInProjectSetupApplications(competitionId);
-
     }
 
 }

@@ -18,7 +18,7 @@
 
     <section th:with="inPrepComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP)}">
         <h2 class="heading-medium"
-            th:text="'In preparation ('+${inPrepComps == null ? '0' : inPrepComps.size()}+')'"></h2>
+            th:text="'In preparation ('+${model.counts.upcomingCount}+')'"></h2>
         <ul class="list-overview">
             <li class="grid-row section" th:each="competition : ${inPrepComps}">
                 <th:block

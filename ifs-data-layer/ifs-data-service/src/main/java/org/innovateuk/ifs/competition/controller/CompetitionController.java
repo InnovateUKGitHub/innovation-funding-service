@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.controller;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.assessment.transactional.AssessorService;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -182,10 +181,9 @@ public class CompetitionController {
                 .toPutResponse();
     }
 
-    @GetMapping("/{competitionId}/not-in-project-setup-applications")
-    public RestResult<List<ApplicationResource>> findNonProjectSetupApplications(@PathVariable("competitionId") final Long competitionId) {
-
-        return competitionService.findInformedNotInProjectSetupApplications(competitionId).toGetResponse();
+    @GetMapping("/previous")
+    public RestResult<List<CompetitionSearchResultItem>> previous() {
+        return competitionService.findPreviousCompetitions().toGetResponse();
     }
 
 }

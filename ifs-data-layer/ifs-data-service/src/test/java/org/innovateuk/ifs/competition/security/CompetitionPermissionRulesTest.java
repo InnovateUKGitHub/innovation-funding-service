@@ -105,7 +105,6 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
         assertFalse(rules.innovationLeadCanViewCompetitionAssignedToThem(competition, innovationLeadNotAssignedToCompetition));
     }
 
-
     @Test
     public void testOnlyInnovationLeadUsersAssignedToCompCanAccessCompInSearchResults() {
         List<RoleResource> innovationLeadRoles = singletonList(newRoleResource().withType(UserRoleType.INNOVATION_LEAD).build());
@@ -120,14 +119,4 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
         assertFalse(rules.innovationLeadCanViewCompetitionAssignedToThemInSearchResults(competitionSearchResultItem, innovationLeadNotAssignedToCompetition));
     }
 
-    @Test
-    public void testInternalAndIFSAdminCanViewInformedNotInProjectSetupApplications() {
-        allGlobalRoleUsers.forEach(user -> {
-            if (getUserWithRole(UserRoleType.COMP_ADMIN).equals(user) || getUserWithRole(UserRoleType.PROJECT_FINANCE).equals(user) || getUserWithRole(UserRoleType.INNOVATION_LEAD).equals(user) || getUserWithRole(UserRoleType.SUPPORT).equals(user) || getUserWithRole(UserRoleType.IFS_ADMINISTRATOR).equals(user)) {
-                assertTrue(rules.internalAndIFSAdminCanViewInformedNotInProjectSetupApplications(newCompetitionResource().build(), user));
-            } else {
-                assertFalse(rules.internalAndIFSAdminCanViewInformedNotInProjectSetupApplications(newCompetitionResource().build(), user));
-            }
-        });
-    }
 }

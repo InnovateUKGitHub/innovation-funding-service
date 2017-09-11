@@ -123,7 +123,6 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         checkExistingCompetition(competition);
     }
 
-
     @Test
     public void createCompetition() throws Exception {
         checkCompetitionCount(2);
@@ -312,7 +311,6 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         retrievedCompetition.getCompetitionStatus();
     }
 
-
     @Test
     public void updateCompetitionCoFunders() throws Exception {
         checkCompetitionCount(2);
@@ -465,6 +463,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         CompetitionResource comp = controller.create().getSuccessObjectOrThrowException();
         comp.setName(specialChar);
         controller.saveCompetition(comp, comp.getId()).getSuccessObjectOrThrowException();
+        milestoneRepository.save(createNewMilestones(comp, oneDayAhead, twoDaysAhead, threeDaysAhead, fourDaysAhead, fiveDaysAhead, sixDaysAhead, sevenDaysAhead));
 
         CompetitionSearchResult pageOneResult = controller.search(specialChar, pageOne, size).getSuccessObjectOrThrowException();
         assertThat(pageOneResult.getNumber(), equalTo(pageOne));
@@ -552,6 +551,21 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
                 assertTrue(upcomingCompetitionIds.contains(competitionResource.getId()));
                 assertFalse(notUpcomingCompetitionIds.contains(competitionResource.getId()));
             }
+        });
+
+        List<CompetitionSearchResultItem> previousCompetitions = controller.previous().getSuccessObjectOrThrowException();
+
+        Set<Long> previousCompetitionIds = newHashSet(projectSetup.getId());
+        Set<Long> notPreviousCompetitionIds = newHashSet(notStartedCompetition.getId(), openCompetition.getId(),
+                closedCompetition.getId(), inAssessmentCompetition.getId(), inPanelCompetition.getId(),
+                assessorFeedbackCompetition.getId());
+
+        assertThat(previousCompetitions.size(), equalTo(previousCompetitionIds.size()));
+        assertThat(counts.getProjectSetupCount(), equalTo((long) previousCompetitionIds.size()));
+
+        previousCompetitions.forEach(competitionResource -> {
+            assertTrue(previousCompetitionIds.contains(competitionResource.getId()));
+            assertFalse(notPreviousCompetitionIds.contains(competitionResource.getId()));
         });
 
     }

@@ -14,10 +14,21 @@
     <form role="search" method="get" id="searchform" th:action="@{'/dashboard/search'}">
         <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})" />
     </form>
-    <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'complete'}, counts=${model.counts}, supportView=false)" />
+    <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'previous'}, counts=${model.counts}, supportView=false)" />
 
-    <section>
-        <h2 class="heading-medium">Complete (0)</h2>
+    <section th:with="previousComps=${model.competitions}">
+        <h2 class="heading-medium"
+            th:text="'Previous ('+${model.counts.previousCount}+')'"></h2>
+        <ul class="list-overview">
+            <li class="grid-row" th:each="competition : ${previousComps}">
+                <th:block
+                    th:insert="competition/dashboard :: dashboard-row"
+                    th:with="competition=${competition},
+                        innovationAreas=competition.innovationAreaNames,
+                        cell4=${competition.openDate != null ? #temporals.format(competition.openDate, 'd/M/yyyy') : ''},
+                        customLink='/competition/'+${competition.id}+'/applications/manage'"/>
+            </li>
+        </ul>
     </section>
 
     <th:block th:insert="fragments/layout :: main-content-end" />

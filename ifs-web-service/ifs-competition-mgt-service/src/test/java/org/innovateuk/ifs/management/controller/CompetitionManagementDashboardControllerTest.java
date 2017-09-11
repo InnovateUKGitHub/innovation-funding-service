@@ -9,10 +9,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.management.controller.dashboard.CompetitionManagementDashboardController;
 import org.innovateuk.ifs.management.service.CompetitionDashboardSearchService;
-import org.innovateuk.ifs.management.viewmodel.dashboard.LiveDashboardViewModel;
-import org.innovateuk.ifs.management.viewmodel.dashboard.NonIFSDashboardViewModel;
-import org.innovateuk.ifs.management.viewmodel.dashboard.ProjectSetupDashboardViewModel;
-import org.innovateuk.ifs.management.viewmodel.dashboard.UpcomingDashboardViewModel;
+import org.innovateuk.ifs.management.viewmodel.dashboard.*;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +22,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.ZonedDateTime;
 import java.util.*;
 
 import static java.util.Arrays.asList;
@@ -159,6 +157,31 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
 
         NonIFSDashboardViewModel viewModel = (NonIFSDashboardViewModel) model;
         assertEquals(competitions, viewModel.getCompetitions());
+        assertEquals(counts, viewModel.getCounts());
+    }
+
+    @Test
+    public void previousDashboard() throws Exception {
+
+        List<CompetitionSearchResultItem> competitions = new ArrayList<>();
+        competitions.add(newCompetitionSearchResultItem().withId(111L).withOpenDate(ZonedDateTime.now()).build());
+        competitions.add(newCompetitionSearchResultItem().withId(222L).withOpenDate(ZonedDateTime.now().plusMinutes(10L)).build());
+        CompetitionCountResource counts = new CompetitionCountResource();
+
+        Mockito.when(competitionDashboardSearchService.getPreviousCompetitions()).thenReturn(competitions);
+        Mockito.when(competitionDashboardSearchService.getCompetitionCounts()).thenReturn(counts);
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/previous"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("dashboard/previous"))
+                .andReturn();
+
+        Object model = result.getModelAndView().getModelMap().get("model");
+        assertTrue(model.getClass().equals(PreviousDashboardViewModel.class));
+
+        PreviousDashboardViewModel viewModel = (PreviousDashboardViewModel) model;
+        assertEquals(competitions.get(1), viewModel.getCompetitions().get(0));
+        assertEquals(competitions.get(0), viewModel.getCompetitions().get(1));
         assertEquals(counts, viewModel.getCounts());
     }
 

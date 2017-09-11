@@ -171,7 +171,7 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     }
 
     @Override
-    public RestResult<List<ApplicationResource>> findInformedNotInProjectSetup(Long competitionId) {
-        return getWithRestResult(competitionsRestURL +  "/" + competitionId + "/not-in-project-setup-applications", applicationResourceListType());
+    public RestResult<List<CompetitionSearchResultItem>> findPreviousCompetitions() {
+        return getWithRestResult(competitionsRestURL +  "/previous", competitionSearchResultItemListType());
     }
 }

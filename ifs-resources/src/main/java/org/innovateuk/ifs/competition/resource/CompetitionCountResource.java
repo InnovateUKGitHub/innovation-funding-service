@@ -6,7 +6,7 @@ public class CompetitionCountResource {
     private Long liveCount;
     private Long projectSetupCount;
     private Long upcomingCount;
-    private Long completedCount;
+    private Long previousCount;
     private Long nonIfsCount;
 
 
@@ -14,11 +14,11 @@ public class CompetitionCountResource {
 
     }
 
-    public CompetitionCountResource(Long liveCount, Long projectSetupCount, Long upcomingCount, Long completedCount, Long nonIfsCount) {
+    public CompetitionCountResource(Long liveCount, Long projectSetupCount, Long upcomingCount, Long previousCount, Long nonIfsCount) {
         this.liveCount = liveCount;
         this.projectSetupCount = projectSetupCount;
         this.upcomingCount = upcomingCount;
-        this.completedCount = completedCount;
+        this.previousCount = previousCount;
         this.nonIfsCount = nonIfsCount;
     }
 
@@ -34,10 +34,10 @@ public class CompetitionCountResource {
         return upcomingCount;
     }
     public void setUpcomingCount(Long upcomingCount) { this.upcomingCount = upcomingCount; }
-    public Long getCompletedCount() {
-        return completedCount;
+    public Long getPreviousCount() {
+        return previousCount;
     }
-    public void setCompletedCount(Long completedCount) { this.completedCount = completedCount; }
+    public void setPreviousCount(Long completedCount) { this.previousCount = completedCount; }
     public Long getNonIfsCount() {
         return nonIfsCount;
     }

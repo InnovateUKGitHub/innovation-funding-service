@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competition.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
@@ -204,16 +203,15 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     }
 
     @Test
-    public void findUnsuccessfulApplications() {
-        Long competitionId = 1L;
-        CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
+    public void findPreviousCompetitions() {
+        setLoggedInUser(null);
 
-        when(competitionLookupStrategy.getCompetititionResource(competitionId)).thenReturn(competitionResource);
+        ServiceResult<List<CompetitionSearchResultItem>> results = classUnderTest.findPreviousCompetitions();
+        assertEquals(0, results.getSuccessObject().size());
 
-        assertAccessDenied(() -> classUnderTest.findInformedNotInProjectSetupApplications(competitionId), () -> {
-            verify(rules).internalAndIFSAdminCanViewInformedNotInProjectSetupApplications(any(CompetitionResource.class), any(UserResource.class));
-            verifyNoMoreInteractions(rules);
-        });
+        verify(rules, times(2)).internalUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
+        verify(rules, times(2)).innovationLeadCanViewCompetitionAssignedToThemInSearchResults(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
+        verifyNoMoreInteractions(rules);
     }
 
 
@@ -322,6 +320,8 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         }
 
         @Override
-        public ServiceResult<List<ApplicationResource>> findInformedNotInProjectSetupApplications(Long competitionId) { return null; }
+        public ServiceResult<List<CompetitionSearchResultItem>> findPreviousCompetitions() {
+            return serviceSuccess(newCompetitionSearchResultItem().build(2));
+        }
     }
 }

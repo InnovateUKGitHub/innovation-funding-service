@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.commons.error.Error;
@@ -31,7 +30,6 @@ import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,7 +39,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
@@ -51,9 +48,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CAN
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isSupport;
-import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -88,7 +83,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private ApplicationMapper applicationMapper;
 
-
     @Autowired
     private ProjectRepository projectRepository;
 
@@ -100,6 +94,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private CompetitionKeyStatisticsService competitionKeyStatisticsService;
+
+    @Autowired
+    private MilestoneService milestoneService;
 
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(Long id) {
@@ -198,14 +195,10 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<List<ApplicationResource>> findInformedNotInProjectSetupApplications(Long competitionId) {
+    public ServiceResult<List<CompetitionSearchResultItem>> findPreviousCompetitions() {
 
-        Set<State> informedNotInProjectSetup = simpleMapSet(asLinkedSet(
-                ApplicationState.REJECTED), ApplicationState::getBackingState);
-
-        List<org.innovateuk.ifs.application.domain.Application> unsuccessfulApplications = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, informedNotInProjectSetup);
-
-        return serviceSuccess(simpleMap(unsuccessfulApplications, application -> convertToApplicationResource(application)));
+        List<Competition> competitions = competitionRepository.findPrevious();
+        return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
     }
 
     private ApplicationResource convertToApplicationResource(Application application) {
@@ -234,6 +227,14 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     private CompetitionSearchResultItem searchResultFromCompetition(Competition c) {
+
+        List<MilestoneResource> milestonesByCompetition = milestoneService.getAllMilestonesByCompetitionId(c.getId()).getSuccessObjectOrThrowException();
+        ZonedDateTime openDate;
+        if (milestonesByCompetition.isEmpty() || milestonesByCompetition.stream().filter(m -> m.getType().equals(MilestoneType.OPEN_DATE)).count() > 0) {
+            openDate = milestonesByCompetition.stream().filter(m -> m.getType().equals(MilestoneType.OPEN_DATE)).findFirst().get().getDate();
+        } else {
+            openDate = null;
+        }
         return getCurrentlyLoggedInUser().andOnSuccess(currentUser -> serviceSuccess(new CompetitionSearchResultItem(c.getId(),
                 c.getName(),
                 ofNullable(c.getInnovationAreas()).orElseGet(Collections::emptySet)
@@ -246,7 +247,8 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                 ofNullable(c.getCompetitionType()).map(CompetitionType::getName).orElse(null),
                 projectRepository.findByApplicationCompetitionId(c.getId()).size(),
                 publicContentService.findByCompetitionId(c.getId()).getSuccessObjectOrThrowException().getPublishDate(),
-                isSupport(currentUser) ? "/competition/" + c.getId() + "/applications/all" : "/competition/" + c.getId()
+                isSupport(currentUser) ? "/competition/" + c.getId() + "/applications/all" : "/competition/" + c.getId(),
+                openDate
         ))).getSuccessObjectOrThrowException();
     }
 
@@ -254,7 +256,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<CompetitionCountResource> countCompetitions() {
         //TODO INFUND-3833 populate complete count
         return serviceSuccess(new CompetitionCountResource(competitionRepository.countLive(), competitionRepository.countProjectSetup(),
-                competitionRepository.countUpcoming(), 0L, competitionRepository.countNonIfs()));
+                competitionRepository.countUpcoming(), competitionRepository.countPrevious(), competitionRepository.countNonIfs()));
     }
 
     @Override

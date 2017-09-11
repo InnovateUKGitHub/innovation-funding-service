@@ -133,13 +133,13 @@ include::{snippets}/competition/remove-innovation-lead/http-response.adoc[]
 ==== Curl Example
 include::{snippets}/competition/remove-innovation-lead/curl-request.adoc[]
 
-=== Find Not In Project Setup Applications
+=== Retrieve previous competitions
 ==== Request
-include::{snippets}/competition/find-not-in-project-setup-applications/http-request.adoc[]
-include::{snippets}/competition/find-not-in-project-setup-applications/path-parameters.adoc[]
+include::{snippets}/competition/previous/http-request.adoc[]
 
 ==== Response
-include::{snippets}/competition/find-not-in-project-setup-applications/http-response.adoc[]
+include::{snippets}/competition/previous/http-response.adoc[]
+include::{snippets}/competition/previous/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/competition/find-not-in-project-setup-applications/curl-request.adoc[]
+include::{snippets}/competition/previous/curl-request.adoc[]

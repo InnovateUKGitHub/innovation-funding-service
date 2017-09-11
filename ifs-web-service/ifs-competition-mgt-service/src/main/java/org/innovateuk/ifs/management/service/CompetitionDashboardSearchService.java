@@ -25,4 +25,6 @@ public interface CompetitionDashboardSearchService {
 
     CompetitionCountResource getCompetitionCounts();
 
+    List<CompetitionSearchResultItem> getPreviousCompetitions();
+
 }

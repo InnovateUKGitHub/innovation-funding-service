@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.service;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.*;
@@ -174,11 +173,6 @@ public class CompetitionServiceImpl implements CompetitionService {
     @Override
     public CompetitionResource createNonIfs() {
         return competitionsRestService.createNonIfs().getSuccessObjectOrThrowException();
-    }
-
-    @Override
-    public List<ApplicationResource> findInformedNotInProjectSetup(Long competitionId) {
-        return competitionsRestService.findInformedNotInProjectSetup(competitionId).getSuccessObjectOrThrowException();
     }
 
 }
