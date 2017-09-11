@@ -30,6 +30,8 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...               INFUND-6453 Filter and pagination on 'Overview' tab of Invite assessors dashboard
 ...
 ...               IFS-33 As a comp exec I can select and add multiple assessors to the invite list
+...
+...               IFS-1146 Assessor management - Resending invite emails in bulk
 Suite Setup       Custom suite setup
 Suite Teardown    Custom teardown
 Force Tags        CompAdmin  Assessor
@@ -205,7 +207,7 @@ Select to add all assessors to invite list
     And the user clicks the button/link       link=Find
     Then the user should see the element      jQuery=td:contains("No available assessors found.")
 
-Bulk resend button
+Bulk resend button is disabled until user selects an assessor
     [Documentation]  IFS-1146
     [Tags]
     [Setup]  the user clicks the button/link  link=Overview
@@ -214,16 +216,16 @@ Bulk resend button
     And the user clicks the button/link       jQuery=button:contains("Resend invites")
     Then the user should see the element      css=input[id="subject"][value="Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'"]
 
-Bulk resend email
+Bulk resend email updates the invite sent date
     [Documentation]  IFS-1146
     [Tags]
     Given the user clicks the button/link  jQuery=button:contains("Send invite")
-    And the user should see the element    jQuery=td:contains("David Peters") ~ td:contains("Invite sent: ${today}")
+    Then the user should see the element    jQuery=td:contains("David Peters") ~ td:contains("Invite sent: ${today}")
 
 *** Keywords ***
 Custom Suite Setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
-    ${today}  get today part month
+    ${today}  get today short month
     set suite variable  ${today}
 
 The key statistics are calculated
