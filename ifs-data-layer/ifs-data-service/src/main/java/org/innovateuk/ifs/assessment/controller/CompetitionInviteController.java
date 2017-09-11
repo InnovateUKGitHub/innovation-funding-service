@@ -38,8 +38,8 @@ public class CompetitionInviteController {
     @GetMapping("/getAllInvitesToResend/{competitionId}")
     public RestResult<AssessorInvitesToSendResource> getAllInvitesToResend(
             @PathVariable long competitionId,
-            @RequestParam Long[] inviteIds) {
-        return competitionInviteService.getAllInvitesToResend(competitionId, asList(inviteIds)).toGetResponse();
+            @RequestParam List<Long> inviteIds) {
+        return competitionInviteService.getAllInvitesToResend(competitionId, inviteIds).toGetResponse();
     }
 
     @GetMapping("/getInviteToSend/{inviteId}")
@@ -166,8 +166,8 @@ public class CompetitionInviteController {
     }
 
     @PostMapping("/resendInvites")
-    public RestResult<Void> resendInvites(@RequestParam Long[] inviteIds, @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
-        return competitionInviteService.resendInvites(asList(inviteIds), assessorInviteSendResource).toPostWithBodyResponse();
+    public RestResult<Void> resendInvites(@RequestParam List<Long> inviteIds, @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
+        return competitionInviteService.resendInvites(inviteIds, assessorInviteSendResource).toPostWithBodyResponse();
     }
 
 }
