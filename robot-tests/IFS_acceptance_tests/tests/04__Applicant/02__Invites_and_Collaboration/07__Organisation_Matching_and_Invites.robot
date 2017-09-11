@@ -118,7 +118,7 @@ the user updates his organisation inviting the user
 # I am on purpose not making the following lines one keyword.
 # That is because i want to insert too many custom inputs, that would lead to too many arguments
 New Research user applies to Competition and starts application
-    the user creates new account and organisation  radio-2  ${openCompetitionRTO}
+    the user creates new account and organisation  radio-2  ${openCompetitionResearch}
     the user inserts the address of his research organisation  p.o. box 42  coventry  cv4 7al
     the user enters text to a text field    email  ${bob}
     the user fills the create account form  Bob  Minion
@@ -126,7 +126,7 @@ New Research user applies to Competition and starts application
     logout as user
 
 Another Research user applies to Competition and starts application
-    the user creates new account and organisation  radio-2  ${openCompetitionRTO}
+    the user creates new account and organisation  radio-2  ${openCompetitionResearch}
     the user inserts the address of his research organisation  P.O. BOX 42  Coventry  CV4 7AL
     the user enters text to a text field    email  ${stuart}
     the user fills the create account form  Stuart  Minion
@@ -136,6 +136,6 @@ The latter researcher is able to invite the first one to his application
     the user navigates to the Application Team Page  ${stuart}
     the user updates his organisation inviting the user  Bob  ${bob}
     logout as user
-    the user reads his email and clicks the link  ${bob}  Invitation to collaborate in ${openCompetitionRTO_name}  You will be joining as part of the organisation  2
+    the user reads his email and clicks the link  ${bob}  Invitation to collaborate in ${openCompetitionResearch_name}  You will be joining as part of the organisation  2
     the user is able to confirm the invite  ${bob}
     the user sees the application he was invited for on his dashboard  ${bob}'s Application
