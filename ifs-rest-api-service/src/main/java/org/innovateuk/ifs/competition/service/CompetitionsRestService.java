@@ -22,7 +22,7 @@ public interface CompetitionsRestService {
     RestResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions();
     RestResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions();
     RestResult<List<CompetitionSearchResultItem>> findNonIfsCompetitions();
-    RestResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize);
+    RestResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize, String sortField);
     RestResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size);
     RestResult<CompetitionCountResource> countCompetitions();
     RestResult<CompetitionResource> getCompetitionById(long competitionId);

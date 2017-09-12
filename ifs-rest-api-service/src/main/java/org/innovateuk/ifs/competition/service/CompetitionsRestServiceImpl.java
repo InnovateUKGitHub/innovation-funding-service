@@ -67,9 +67,9 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     }*/
 
     @Override
-    public RestResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize) {
+    public RestResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize, String sortField) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        String uriWithParams = buildPaginationUri(competitionsRestURL +  "/" + competitionId + "/unsuccessful-applications", pageNumber, pageSize, null, params);
+        String uriWithParams = buildPaginationUri(competitionsRestURL +  "/" + competitionId + "/unsuccessful-applications", pageNumber, pageSize, sortField, params);
         return getWithRestResult(uriWithParams, ApplicationPageResource.class);
     }
 
