@@ -114,12 +114,12 @@ IFS.competitionManagement.repeater = (function () {
 
       var html = '<div class="contentGroup" id="contentGroup-row-' + idCount + '">' +
                     '<div class="form-group">' +
-                      '<label class="form-label-bold" for="heading-' + idCount + '">Heading</label>' +
-                      '<input class="form-control" id="heading-' + idCount + '" type="text" name="contentGroups[' + count + '].heading" data-required-errormessage="' + headerRequiredErrorMessage + '" required="required" />' +
+                      '<label class="form-label-bold" for="contentGroups[' + idCount + '].heading">Heading</label>' +
+                      '<input class="form-control" id="contentGroups[' + idCount + '].heading" type="text" name="contentGroups[' + count + '].heading" data-required-errormessage="' + headerRequiredErrorMessage + '" required="required" />' +
                     '</div>' +
                     '<div class="form-group textarea-wrapped">' +
-                      '<label class="form-label-bold" for="content-' + idCount + '">Content</label>' +
-                          '<textarea id="content-' + idCount + '" cols="30" rows="10" class="width-full form-control" data-editor="html" name="contentGroups[' + count + '].content" data-required-errormessage="' + contentRequiredErrorMessage + '" required="required"></textarea>' +
+                      '<label class="form-label-bold" for="contentGroups[' + idCount + '].content">Content</label>' +
+                          '<textarea id="contentGroups[' + idCount + '].content" cols="30" rows="10" class="width-full form-control" data-editor="html" name="contentGroups[' + count + '].content" data-required-errormessage="' + contentRequiredErrorMessage + '" required="required"></textarea>' +
                       '</div>' +
                     '<div class="form-group upload-section">' +
                         '<input type="file" id="contentGroups-' + idCount + '.attachment" class="inputfile" name="contentGroups[' + count + '].attachment" />' +
@@ -134,7 +134,7 @@ IFS.competitionManagement.repeater = (function () {
       } else {
         jQuery(buttonEl).parent().before(html)
       }
-      IFS.competitionManagement.repeater.initEditor('#content-' + idCount)
+      IFS.competitionManagement.repeater.initEditor('[id="contentGroups[' + idCount + '].content"]')
     },
     addDateContentGroup: function (buttonEl) {
       var rows = jQuery('[id^="contentDateGroup-row-"]')
@@ -154,24 +154,24 @@ IFS.competitionManagement.repeater = (function () {
                     '<div class="date-group">' +
                         '<input type="hidden" disabled name="dates[' + count + '].combined" />' +
                         '<div class="day">' +
-                            '<label class="form-label" for="dates-' + idCount + '-day">Day</label>' +
-                            '<input class="form-control width-extra-small" placeholder="DD" type="number" id="dates-' + idCount + '-day" name="dates[' + count + '].day" min="1" max="31" required="required"  data-required-errormessage="' + validDateErrorMessage + '">' +
+                            '<label class="form-label" for="dates[' + idCount + '].day">Day</label>' +
+                            '<input class="form-control width-extra-small" placeholder="DD" type="number" id="dates[' + idCount + '].day" name="dates[' + count + '].day" min="1" max="31" required="required"  data-required-errormessage="' + validDateErrorMessage + '">' +
                         '</div>' +
                         '<div class="month">' +
-                            '<label class="form-label" for="dates-' + idCount + '-month">Month</label>' +
-                            '<input class="form-control width-extra-small" placeholder="MM" type="number" id="dates-' + idCount + '-month" name="dates[' + count + '].month" min="1" max="12" required="required" data-required-errormessage="' + validDateErrorMessage + '" />' +
+                            '<label class="form-label" for="dates[' + idCount + '].month">Month</label>' +
+                            '<input class="form-control width-extra-small" placeholder="MM" type="number" id="dates[' + idCount + '].month" name="dates[' + count + '].month" min="1" max="12" required="required" data-required-errormessage="' + validDateErrorMessage + '" />' +
                         '</div>' +
                         '<div class="year">' +
-                            '<label class="form-label" for="dates-' + idCount + '-year">Year</label>' +
-                            '<input class="form-control width-extra-small" placeholder="YYYY" type="number" id="dates-' + idCount + '-year" name="dates[' + count + '].year" min="1" required="required" data-required-errormessage="' + validDateErrorMessage + '" />' +
+                            '<label class="form-label" for="dates[' + idCount + '].year">Year</label>' +
+                            '<input class="form-control width-extra-small" placeholder="YYYY" type="number" id="dates[' + idCount + '].year" name="dates[' + count + '].year" min="1" required="required" data-required-errormessage="' + validDateErrorMessage + '" />' +
                         '</div>' +
                     '</div>' +
                 '</fieldset></div>' +
                 '<div class="form-group textarea-wrapped">' +
-                    '<label class="form-label" for="dates-' + idCount + '-content">' +
+                    '<label class="form-label" for="dates[' + idCount + '].content">' +
                         '<span class="form-label-bold">Content</span>' +
                     '</label>' +
-                    '<textarea cols="30" rows="5" id="dates-' + idCount + '-content" name="dates[' + count + '].content" data-editor="html" class="width-full form-control-error" required="required" th:attr="data-required-errormessage=#{validation.publiccontent.datesform.content.required}"></textarea>' +
+                    '<textarea cols="30" rows="5" id="dates[' + idCount + '].content" name="dates[' + count + '].content" data-editor="html" class="width-full form-control-error" required="required" th:attr="data-required-errormessage=#{validation.publiccontent.datesform.content.required}"></textarea>' +
                 '</div>' +
                 '<div class="form-group"><button class="buttonlink" type="button" data-remove-row="dateContentGroup">Remove event</button></div>' +
             '</div>'
@@ -180,7 +180,7 @@ IFS.competitionManagement.repeater = (function () {
       } else {
         jQuery(buttonEl).parent().before(html)
       }
-      IFS.competitionManagement.repeater.initEditor('#dates-' + idCount + '-content')
+      IFS.competitionManagement.repeater.initEditor('[id="dates[' + idCount + '].content"]')
     },
     addCoFunder: function () {
       var count = 0

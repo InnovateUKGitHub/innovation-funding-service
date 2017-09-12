@@ -48,8 +48,8 @@ Invite existing academic collaborator
     And the user clicks the button/link                          link=view and manage contributors and collaborators
     And the user clicks the button/link                          link=Add a collaborator organisation
     Then the user enters text to a text field                     css=#organisationName  eggs
-    And the user enters text to a text field                     css=input[id="applicants0.name"]  Pete
-    And the user enters text to a text field                     css=input[id="applicants0.email"]  ${collaborator2_credentials["email"]}
+    And the user enters text to a text field                     css=input[id="applicants[0].name"]  Pete
+    And the user enters text to a text field                     css=input[id="applicants[0].email"]  ${collaborator2_credentials["email"]}
     And the user clicks the button/link                          jQuery=button:contains("Add organisation and invite applicants")
     And logout as user
     And the user accepts the invite to collaborate            ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  ${collaborator2_credentials["email"]}  ${collaborator2_credentials["password"]}
@@ -90,8 +90,8 @@ Invite existing academic collaborator for RTO lead
     And the user clicks the button/link                link=view and manage contributors and collaborators
     And the user clicks the button/link                link=Add a collaborator organisation
     Then the user enters text to a text field          css=#organisationName  eggs
-    And the user enters text to a text field           css=input[id="applicants0.name"]  Pete
-    And the user enters text to a text field           css=input[id="applicants0.email"]  ${collaborator2_credentials["email"]}
+    And the user enters text to a text field           css=input[id="applicants[0].name"]  Pete
+    And the user enters text to a text field           css=input[id="applicants[0].email"]  ${collaborator2_credentials["email"]}
     And the user clicks the button/link                jQuery=button:contains("Add organisation and invite applicants")
     And logout as user
     When the user accepts the invite to collaborate    ${openCompetitionRTO_name}  ${collaborator2_credentials["email"]}  ${collaborator2_credentials["password"]}
@@ -106,8 +106,8 @@ Invite existing business user into RTO lead application
     And the user clicks the button/link                link=view and manage contributors and collaborators
     And the user clicks the button/link                link=Add a collaborator organisation
     And the user enters text to a text field           css=#organisationName  innovate bus
-    And the user enters text to a text field           css=input[id="applicants0.name"]  oscar
-    And the user enters text to a text field           css=input[id="applicants0.email"]  ${lead_business_email}
+    And the user enters text to a text field           css=input[id="applicants[0].name"]  oscar
+    And the user enters text to a text field           css=input[id="applicants[0].email"]  ${lead_business_email}
     And the user clicks the button/link                jQuery=button:contains("Add organisation and invite applicants")
     And logout as user
     Then the user accepts the invite to collaborate    ${openCompetitionRTO_name}  ${lead_business_email}  ${correct_password}
@@ -235,6 +235,3 @@ the user marks your funding section as complete
     the user clicks the button/link       jQuery=label[for$="otherPublicFunding-no"]:contains("No")
     the user selects the checkbox         agree-terms-page
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
-
-
-

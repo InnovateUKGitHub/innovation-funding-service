@@ -47,8 +47,8 @@ the user fills in the CS Initial details
 
 the user fills in the CS Funding Information
     the user clicks the button/link       link=Funding information
-    the user enters text to a text field  id=funders0.funder  FunderName FamilyName
-    the user enters text to a text field  id=0-funderBudget  142424242
+    the user enters text to a text field  id=funders[0].funder  FunderName FamilyName
+    the user enters text to a text field  id=funders[0].funderBudget  142424242
     the user enters text to a text field  id=pafNumber  2424
     the user enters text to a text field  id=budgetCode  Ch0col@73
     the user enters text to a text field  id=activityCode  133t
@@ -138,9 +138,9 @@ the user fills in the CS Assessors
 the user fills in the Public content and publishes
     # Fill in the Competition information and search
     the user clicks the button/link         link=Competition information and search
-    the user enters text to a text field    id=short-description  Short public description
-    the user enters text to a text field    id=funding-range  Up to £1million
-    the user enters text to a text field    css=[labelledby="eligibility-summary"]  Summary of eligiblity
+    the user enters text to a text field    id=shortDescription  Short public description
+    the user enters text to a text field    id=projectFundingRange  Up to £1million
+    the user enters text to a text field    css=[aria-labelledby="eligibilitySummary"]  Summary of eligiblity
     the user selects the radio button       publishSetting  public
     the user enters text to a text field    id=keywords  Search, Testing, Robot
     the user clicks the button/link         jQuery=button:contains("Save and review")
@@ -150,20 +150,20 @@ the user fills in the Public content and publishes
     the user clicks the button/link         link=Summary
     the user enters text to a text field    css=.editor  This is a Summary description
     the user selects the radio button       fundingType  Grant
-    the user enters text to a text field    id=project-size   10 millions
+    the user enters text to a text field    id=projectSize   10 millions
     the user clicks the button/link         jQuery=button:contains("Save and review")
     the user clicks the button/link         jQuery=.button:contains("Return to public content")
     the user should see the element         jQuery=div:contains("Summary") ~ .task-status-complete
     # Fill in the Eligibility
     the user clicks the button/link         link=Eligibility
-    the user enters text to a text field    id=heading-0  Heading 1
+    the user enters text to a text field    id=contentGroups[0].heading  Heading 1
     the user enters text to a text field    jQuery=div.editor:first-of-type  Content 1
     the user clicks the button/link         jQuery=button:contains("Save and review")
     the user clicks the button/link         jQuery=.button:contains("Return to public content")
     the user should see the element         jQuery=div:contains("Eligibility") ~ .task-status-complete
     # Fill in the Scope
     the user clicks the button/link         link=Scope
-    the user enters text to a text field    id=heading-0  Heading 1
+    the user enters text to a text field    id=contentGroups[0].heading  Heading 1
     the user enters text to a text field    jQuery=div.editor:first-of-type  Content 1
     the user clicks the button/link         jQuery=button:contains("Save and review")
     the user clicks the button/link         jQuery=.button:contains("Return to public content")
@@ -175,14 +175,14 @@ the user fills in the Public content and publishes
     the user should see the element  jQuery=div:contains("Dates") ~ .task-status-complete
     # Fill in the How to apply
     the user clicks the button/link         link=How to apply
-    the user enters text to a text field    id=heading-0    Heading 1
+    the user enters text to a text field    id=contentGroups[0].heading    Heading 1
     the user enters text to a text field    jQuery=div.editor:first-of-type  Content 1
     the user clicks the button/link         jQuery=button:contains("Save and review")
     the user clicks the button/link         jQuery=.button:contains("Return to public content")
     the user should see the element         jQuery=div:contains("How to apply") ~ .task-status-complete
     # Fill in the Supporting information
     the user clicks the button/link         link=Supporting information
-    the user enters text to a text field    id=heading-0    Heading 1
+    the user enters text to a text field    id=contentGroups[0].heading    Heading 1
     the user enters text to a text field    jQuery=div.editor:first-of-type  Content 1
     the user clicks the button/link         jQuery=button:contains("Save and review")
     the user clicks the button/link         jQuery=.button:contains("Return to public content")

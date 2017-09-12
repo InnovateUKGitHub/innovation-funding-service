@@ -110,8 +110,8 @@ Funding Information is editable (Open)
     When the user clicks the button/link        link=Funding information
     And the user should see the element         jquery=h1:contains("Funding information")
     And the user clicks the button/link         jQuery=.button:contains("Edit")
-    And The user enters text to a text field    id=funders0.funder  Funders Edit test
-    And the user should see the element         id=0-funderBudget
+    And The user enters text to a text field    id=funders[0].funder  Funders Edit test
+    And the user should see the element         id=funders[0].funderBudget
     And the user should see the element         id=pafNumber
     And the user should see the element         id=budgetCode
     And the user should see the element         id=activityCode
