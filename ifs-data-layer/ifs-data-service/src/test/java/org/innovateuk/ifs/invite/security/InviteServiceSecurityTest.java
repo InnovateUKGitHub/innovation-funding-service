@@ -128,6 +128,11 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
         }
 
         @Override
+        public ServiceResult<ApplicationInvite> findOneByHash(String hash) {
+            return serviceSuccess(newApplicationInvite().build());
+        }
+
+        @Override
         public ServiceResult<InviteResultsResource> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource, Optional<Long> applicationId) {
             return null;
         }

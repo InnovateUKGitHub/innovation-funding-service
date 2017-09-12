@@ -1026,12 +1026,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     private OrganisationTypeEnum lookupOrganisationType(String organisationType) {
-        switch (organisationType) {
-            case "Research":
-                return OrganisationTypeEnum.RESEARCH;
-            default:
-                return OrganisationTypeEnum.valueOf(organisationType.toUpperCase().replace(" ", "_"));
-        }
+        return OrganisationTypeEnum.valueOf(organisationType.toUpperCase().replace(" ", "_"));
     }
 
     protected abstract boolean cleanDbFirst();
