@@ -33,14 +33,14 @@ create new account for submitting
     the user navigates to the page              ${overview}
     the user clicks the button/link             jQuery=a:contains("Start new application")
     the user clicks the button/link             jQuery=a:contains("Create account")
-    the user selects the radio button       organisationTypeId  ${org}
-    the user clicks the button/link         jQuery=.button:contains('Save and continue')
-    the user enters text to a text field    id=organisationSearchName    Hive IT
-    the user clicks the button/link         jQuery=.button:contains("Search")
-    the user clicks the button/link         link=${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
-    the user selects the checkbox           address-same
-    the user clicks the button/link         jQuery=.button:contains("Continue")
-    the user clicks the button/link         jQuery=.button:contains('Save and continue')
+    the user selects the radio button           organisationTypeId  ${org}
+    the user clicks the button/link             jQuery=.button:contains('Save and continue')
+    the user enters text to a text field        id=organisationSearchName    Hive IT
+    the user clicks the button/link             jQuery=.button:contains("Search")
+    the user clicks the button/link             link=${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
+    the user selects the checkbox               address-same
+    the user clicks the button/link            jQuery=.button:contains("Continue")
+    the user clicks the button/link            jQuery=.button:contains('Save and continue')
     the user enters text to a text field    name=email    ${email}
     the user fills the create account form    Temur    Ketsbaia
     the user reads his email and clicks the link    ${email}    Please verify your email address    Once verified you can sign into your account
@@ -132,7 +132,7 @@ Invite and accept the invitation
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
-    And the user should see the text in the page    view and manage contributors and collaborators
+#    And the user should see the text in the page    view and manage contributors and collaborators
     When the user clicks the button/link    link=view and manage contributors and collaborators
     And the user clicks the button/link    jQuery=a:contains("Add a collaborator organisation")
     And the user enters text to a text field    name=organisationName    Academic Test
@@ -211,7 +211,7 @@ we create a new user
 
 the user verifies email
     [Arguments]    ${first_name}  ${last_name}  ${EMAIL_INVITED}
-    The user enters the details and clicks the create account  ${first_name}  ${last_name}  ${EMAIL_INVITED}
+    The user enters the details and clicks the create account  ${first_name}  ${last_name}  ${EMAIL_INVITED}  ${correct_password}
     The user should be redirected to the correct page          ${REGISTRATION_SUCCESS}
     the user reads his email and clicks the link               ${EMAIL_INVITED}  Please verify your email address  Once verified you can sign into your account
     The user should be redirected to the correct page          ${REGISTRATION_VERIFIED}
@@ -234,14 +234,15 @@ the user follows the flow to register their organisation
     the user clicks the button/link         jQuery=.button:contains("Save and continue")
 
 the user enters the details and clicks the create account
-    [Arguments]   ${first_name}  ${last_name}  ${REG_EMAIL}
+    [Arguments]   ${first_name}  ${last_name}  ${REG_EMAIL}  ${password}
     Wait Until Page Contains Element Without Screenshots    link=terms and conditions
-    Page Should Contain Element    xpath=//a[contains(@href, '/info/terms-and-conditions')]
-    Input Text    id=firstName      ${first_name}
-    Input Text    id=lastName       ${last_name}
-    Input Text    id=phoneNumber    23232323
-    Input Text    id=email          ${REG_EMAIL}
-    Input Password    id=password    ${correct_password}
+#    Do we need to have this check
+#    Page Should Contain Element    xpath=//a[contains(@href, '/info/terms-and-conditions')]
+    Input Text                     id=firstName  ${first_name}
+    Input Text                     id=lastName  ${last_name}
+    Input Text                     id=phoneNumber  23232323
+    Input Text                     id=email  ${REG_EMAIL}
+    Input Password                 id=password  ${password}
     the user selects the checkbox    termsAndConditions
     the user selects the checkbox    allowMarketingEmails
     Submit Form

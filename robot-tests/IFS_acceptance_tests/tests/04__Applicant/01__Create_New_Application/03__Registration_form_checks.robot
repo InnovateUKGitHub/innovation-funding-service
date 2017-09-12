@@ -21,17 +21,20 @@ Your details: Server-side validations
     [Documentation]    -INFUND-885
     [Tags]    HappyPath
     [Setup]    Applicant goes to the registration form
-    Given the user fills in valid details
-    And the user enters text to a text field   id=password    ${blacklisted_password}
-    And the user selects the checkbox          termsAndConditions
-    And the user clicks the button/link        jQuery=button:contains("Create account")
+#    Given the user fills in valid details
+#    And the user enters text to a text field   id=password    ${blacklisted_password}
+#    And the user selects the checkbox          termsAndConditions
+#    And the user clicks the button/link        jQuery=button:contains("Create account")
+    When the user enters the details and clicks the create account   O'Brian Elliot-Murray   O'Brian Elliot-Murray  ${valid_email}  ${correct_password}
     And the user should see an error           Password is too weak.
-    And the user enters text to a text field   id=firstName   !@£$
-    And the user enters text to a text field   id=lastName    &*(^
-    And the user enters text to a text field   id=password    ${correct_password}
-    And the user clicks the button/link        jQuery=button:contains("Create account")
-    And the user should see an error           Invalid first name.
-    And the user should see an error           Invalid last name.
+    When the user enters the details and clicks the create account  !@£$  &*(^  ${valid_email}  ${correct_password}
+#    And the user enters text to a text field   id=firstName   !@£$
+#    And the user enters text to a text field   id=lastName    &*(^
+#    And the user enters text to a text field   id=password    ${correct_password}
+#    And the user clicks the button/link        jQuery=button:contains("Create account")
+    Then the user should see an error           Invalid first name.
+    And the user should see an error            Invalid last name.
+#    When the user enters the details and clicks the create account  ${EMPTY}  ${EMPTY}  ${invalid_email_no_at}  ${EMPTY}
     When the user enters text to a text field  id=firstName    ${EMPTY}
     And the user enters text to a text field   id=lastName    ${EMPTY}
     And the user enters text to a text field   id=phoneNumber    ${EMPTY}
@@ -63,12 +66,13 @@ Your details: client-side validation
     [Documentation]    -INFUND-885
     [Tags]    HappyPath
     Given the user navigates to the page                 ${ACCOUNT_CREATION_FORM_URL}
-    When the user fills in valid details
-    Then The user should not see the text in the page  Please enter a first name.
-    And The user should not see the text in the page   Please enter a last name.
-    And The user should not see the text in the page   Please enter a phone number.
-    And The user should not see the text in the page   Please enter a valid email address.
-    And The user should not see the text in the page   Please enter your password.
+    When the user enters the details and clicks the create account  O'Brian Elliot-Murray   O'Brian Elliot-Murray  ${valid_email}  Inn0vat3
+    Then the user should not see an error in the page
+#    Then The user should not see the text in the page  Please enter a first name.
+#    And The user should not see the text in the page   Please enter a last name.
+#    And The user should not see the text in the page   Please enter a phone number.
+#    And The user should not see the text in the page   Please enter a valid email address.
+#    And The user should not see the text in the page   Please enter your password.
     And The user should not see the text in the page   In order to register an account you have to agree to the Terms and Conditions.
     And the user submits their information
 
@@ -81,12 +85,13 @@ Email duplication check
     [Documentation]    INFUND-886
     [Tags]
     Given Applicant goes to the registration form
-    When the user enters text to a text field  id=firstName    John
-    And the user enters text to a text field   id=lastName    Smith
-    And the user enters text to a text field   id=phoneNumber    01141234567
-    And the user enters text to a text field   id=email    ${lead_applicant}
-    And the user enters text to a text field   id=password    ${correct_password}
-    And the user submits their information
+    When the user enters the details and clicks the create account  John  Smith  ${lead_applicant}  ${correct_password}
+#    When the user enters text to a text field  id=firstName    John
+#    And the user enters text to a text field   id=lastName    Smith
+#    And the user enters text to a text field   id=phoneNumber    01141234567
+#    And the user enters text to a text field   id=email    ${lead_applicant}
+#    And the user enters text to a text field   id=password    ${correct_password}
+#    And the user submits their information
     Then the user should see an error          The email address is already registered with us. Please sign into your account
 
 *** Keywords ***
@@ -117,10 +122,10 @@ Applicant goes to the registration form
     And the user clicks the button/link        jQuery=button:contains("Continue")
     And the user clicks the button/link        jQuery=button:contains("Save and continue")
 
-the user fills in valid details
-    the user enters text to a text field  id=firstName    O'Brian Elliot-Murray    #First and last name containing hyphen, space and aposthrophe check
-    the user enters text to a text field  id=lastName    O'Brian Elliot-Murray
-    the user enters text to a text field  id=phoneNumber    01141234567
-    the user enters text to a text field  id=email    ${valid_email}
-    the user enters text to a text field  id=password    ${correct_password}
+#the user fills in valid details
+#    the user enters text to a text field  id=firstName    O'Brian Elliot-Murray    #First and last name containing hyphen, space and aposthrophe check
+#    the user enters text to a text field  id=lastName    O'Brian Elliot-Murray
+#    the user enters text to a text field  id=phoneNumber    01141234567
+#    the user enters text to a text field  id=email    ${valid_email}
+#    the user enters text to a text field  id=password    ${correct_password}
 
