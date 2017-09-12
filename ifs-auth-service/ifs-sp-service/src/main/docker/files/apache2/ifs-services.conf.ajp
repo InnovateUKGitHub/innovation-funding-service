@@ -45,6 +45,10 @@ ShibCompatValidUser On
     Require local
   </Location>
 
+  <Location ~ "^/monitoring/benchmark/.*">
+    Require local
+  </Location>
+
   # Errors & holding pages
   <Location /holding>
     ProxyPass !
@@ -187,7 +191,6 @@ ShibCompatValidUser On
     ShibRequestSetting applicationId default
     require shibboleth
   </Location>
-
 
   # if that becomes a bigger requirement we might have to rethink it (using glusterfs?)
   <Location /files>
