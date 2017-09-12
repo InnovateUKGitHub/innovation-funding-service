@@ -43,10 +43,12 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
     @Autowired
     private CompetitionInviteRestService competitionInviteRestService;
 
+    @Override
     protected String getCookieName() {
         return SELECTION_FORM;
     }
 
+    @Override
     protected Class<OverviewSelectionForm> getFormType() {
         return OverviewSelectionForm.class;
     }

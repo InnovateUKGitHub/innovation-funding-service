@@ -34,6 +34,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -785,6 +786,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
     @Test
     public void resendInvites() throws Exception {
+        ZonedDateTime initialInviteDate = ZonedDateTime.now();
         List<CompetitionInvite> invitesToResend = newCompetitionInvite()
                 .with(id(null))
                 .withName("tom poly", "cari poly")
@@ -793,6 +795,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .withHash("hash1", "hash2")
                 .withCompetition(competition, competition)
                 .withStatus(SENT, SENT)
+                .withSentOn(initialInviteDate)
                 .build(2);
         competitionInviteRepository.save(invitesToResend);
 
@@ -808,6 +811,14 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         RestResult<Void> serviceResult = controller.resendInvites(inviteIds, assessorInviteSendResource);
         assertTrue(serviceResult.isSuccess());
+
+        CompetitionInvite inviteOne = competitionInviteRepository.findOne(inviteIds.get(0));
+        ZonedDateTime inviteOneResendDate = inviteOne.getSentOn();
+        CompetitionInvite inviteTwo = competitionInviteRepository.findOne(inviteIds.get(1));
+        ZonedDateTime inviteTwoResendDate = inviteTwo.getSentOn();
+
+        assertTrue(inviteOneResendDate.isAfter(initialInviteDate));
+        assertTrue(inviteTwoResendDate.isAfter(initialInviteDate));
     }
 
     @Test
@@ -1118,6 +1129,10 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
         InnovationArea otherInnovationArea = innovationAreaRepository.findOne(10L);
 
+        Optional<Long> innovationAreaId = of(innovationArea.getId());
+        Optional<ParticipantStatus> status = of(PENDING);
+        Optional<Boolean> hasContract = of(TRUE);
+
         Agreement agreement = agreementRepository.findOne(1L);
 
         Profile profile1 = profileRepository.findOne(paulPlum.getProfileId());
@@ -1134,6 +1149,15 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         profile2.setAgreement(agreement);
         profile2.setAgreementSignedDate(now().minusDays(10));
         profile2.addInnovationArea(innovationArea);
+
+        List<Long> inviteIds = controller.getAssessorsNotAcceptedInviteIds(
+                competition.getId(),
+                innovationAreaId,
+                status,
+                hasContract
+        ).getSuccessObjectOrThrowException();
+
+        assertTrue(inviteIds.isEmpty());
 
         profileRepository.save(asList(profile1, profile2));
 
@@ -1181,17 +1205,12 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         competitionParticipantRepository.save(competitionParticipants);
         flushAndClearSession();
 
-        Optional<Long> innovationAreaId = of(innovationArea.getId());
-        Optional<ParticipantStatus> status = of(PENDING);
-        Optional<Boolean> hasContract = of(TRUE);
-
-        List<Long> inviteIds = controller.getAssessorsNotAcceptedInviteIds(
+        inviteIds = controller.getAssessorsNotAcceptedInviteIds(
                 competition.getId(),
                 innovationAreaId,
                 status,
                 hasContract
         ).getSuccessObjectOrThrowException();
-
 
         assertEquals(2, inviteIds.size());
     }

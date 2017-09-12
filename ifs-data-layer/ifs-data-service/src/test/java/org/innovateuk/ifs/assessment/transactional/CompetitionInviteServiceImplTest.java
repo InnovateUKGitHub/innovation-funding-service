@@ -2248,15 +2248,16 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
     @Test
     public void getAssessorsNotAcceptedInviteIds() throws Exception {
         long competitionId = 1L;
+
+        List<CompetitionInvite> invites = newCompetitionInvite()
+                .withName("Name 1", "Name 2", "Name 3", "Name 4", "Name 5")
+                .withSentOn(now())
+                .withStatus(SENT)
+                .withInnovationArea(newInnovationArea().build())
+                .build(5);
+
         List<CompetitionParticipant> expectedParticipants = newCompetitionParticipant()
-                .withInvite(
-                        newCompetitionInvite()
-                                .withName("Name 1", "Name 2", "Name 3", "Name 4", "Name 5")
-                                .withSentOn(now())
-                                .withStatus(SENT)
-                                .withInnovationArea(newInnovationArea().build())
-                                .buildArray(5, CompetitionInvite.class)
-                )
+                .withInvite(invites.get(0), invites.get(1), invites.get(2), invites.get(3),invites.get(4))
                 .withStatus(PENDING, PENDING, PENDING, PENDING, REJECTED)
                 .build(5);
 
@@ -2268,8 +2269,13 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         verify(competitionParticipantRepositoryMock).getAssessorsByCompetitionAndStatus(competitionId, EnumSet.of(PENDING, REJECTED));
 
         assertTrue(result.isSuccess());
-        List<Long> inviteIds = result.getSuccessObject();
+        List<Long> returnedInviteIds = result.getSuccessObject();
 
-        assertEquals(5, inviteIds.size());
+        assertEquals(5, returnedInviteIds.size());
+        assertEquals(invites.get(0).getId(), returnedInviteIds.get(0));
+        assertEquals(invites.get(1).getId(), returnedInviteIds.get(1));
+        assertEquals(invites.get(2).getId(), returnedInviteIds.get(2));
+        assertEquals(invites.get(3).getId(), returnedInviteIds.get(3));
+        assertEquals(invites.get(4).getId(), returnedInviteIds.get(4));
     }
 }

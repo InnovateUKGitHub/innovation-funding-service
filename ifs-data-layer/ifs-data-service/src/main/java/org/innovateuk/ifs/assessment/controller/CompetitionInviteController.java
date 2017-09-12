@@ -16,7 +16,6 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Arrays.asList;
 
 /**
  * Controller for managing Invites to Competitions.

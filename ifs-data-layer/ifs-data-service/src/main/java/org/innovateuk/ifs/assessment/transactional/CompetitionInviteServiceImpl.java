@@ -256,8 +256,8 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Override
     public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId, Optional<Long> innovationArea) {
-        final List<User> result;
-        result = innovationArea.map(innovationAreaId -> competitionInviteRepository.findAssessorsByCompetitionAndInnovationArea(
+
+        List<User> result = innovationArea.map(innovationAreaId -> competitionInviteRepository.findAssessorsByCompetitionAndInnovationArea(
                 competitionId, innovationAreaId
         )).orElseGet(() -> competitionInviteRepository.findAssessorsByCompetition(competitionId));
 

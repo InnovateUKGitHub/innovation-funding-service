@@ -60,10 +60,12 @@ public class CompetitionManagementInviteAssessorsOverviewController extends Comp
     @Autowired
     private InviteAssessorsOverviewModelPopulator inviteAssessorsOverviewModelPopulator;
 
+    @Override
     protected String getCookieName() {
         return SELECTION_FORM;
     }
 
+    @Override
     protected Class<OverviewSelectionForm> getFormType() {
         return OverviewSelectionForm.class;
     }

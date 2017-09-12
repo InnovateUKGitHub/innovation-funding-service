@@ -127,12 +127,12 @@ public interface CompetitionInviteService {
     ServiceResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInvitesToSendResource);
 
     @SecuredBySpring(value = "RESEND_INVITE",
-            description = "The Competition Admin user, or the Competition Executive user can send a competition invite")
+            description = "The Competition Admin Admins and Project Finance users can send a competition invite")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<Void> resendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource);
 
     @SecuredBySpring(value = "RESEND_INVITES",
-            description = "The Competition Admin user, or the Competition Executive user can send a competition invite")
+            description = "The Competition Admin Admins and Project Finance users can send a competition invite")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<Void> resendInvites(List<Long> inviteIds, AssessorInviteSendResource assessorInviteSendResource);
 

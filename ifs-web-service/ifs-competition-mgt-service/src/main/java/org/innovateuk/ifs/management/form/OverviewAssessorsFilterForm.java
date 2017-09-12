@@ -39,7 +39,7 @@ public class OverviewAssessorsFilterForm extends BaseBindingResultTarget {
     }
 
     public boolean anyFilterIsActive() {
-        return (this.innovationArea.isPresent() && !this.innovationArea.equals(0L)) ||
+        return (this.innovationArea.isPresent() && !this.innovationArea.get().equals(0L)) ||
                 this.status.isPresent() || this.compliant.isPresent();
     }
 }
