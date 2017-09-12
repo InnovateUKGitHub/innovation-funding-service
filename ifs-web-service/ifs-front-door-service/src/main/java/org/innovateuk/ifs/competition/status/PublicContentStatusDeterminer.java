@@ -13,6 +13,7 @@ public class PublicContentStatusDeterminer {
     public PublicContentStatusText getApplicablePublicContentStatusText(PublicContentItemResource publicContentItemResource) {
         return Arrays.stream(PublicContentStatusText.values())
                 .filter(indicator -> indicator.getPredicate().test(publicContentItemResource))
-                .findFirst().get();
+                .findFirst()
+                .orElse(PublicContentStatusText.OPENING_SOON);
     }
 }
