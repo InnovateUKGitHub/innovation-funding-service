@@ -17,10 +17,10 @@ public class UnsuccessfulApplicationsModelPopulator {
     @Autowired
     private CompetitionService competitionService;
 
-    public UnsuccessfulApplicationsViewModel populateModel(long competitionId, int pageNumber, int pageSize, String existingQueryString) {
+    public UnsuccessfulApplicationsViewModel populateModel(long competitionId, int pageNumber, int pageSize, String sortField, String existingQueryString) {
 
         CompetitionResource competition = competitionService.getById(competitionId);
-        ApplicationPageResource unsuccessfulApplicationsPagedResult = competitionService.findUnsuccessfulApplications(competitionId, pageNumber, pageSize);
+        ApplicationPageResource unsuccessfulApplicationsPagedResult = competitionService.findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField);
 
         return new UnsuccessfulApplicationsViewModel(competitionId, competition.getName(),
                 unsuccessfulApplicationsPagedResult.getContent(),

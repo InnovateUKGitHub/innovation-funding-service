@@ -31,6 +31,8 @@ public class CompetitionManagementApplicationsController {
     //TODO - Change this to 40 after testing
     private static final String DEFAULT_PAGE_SIZE = "20";
 
+    private static final String DEFAULT_SORT_BY = "";
+
     private static final String FILTER_FORM_ATTR_NAME = "filterForm";
 
     @Autowired
@@ -112,9 +114,10 @@ public class CompetitionManagementApplicationsController {
                                            @PathVariable("competitionId") long competitionId,
                                            @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
                                            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size,
+                                           @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortBy,
                                            UserResource loggedInUser) {
 
-        model.addAttribute("model", unsuccessfulApplicationsModelPopulator.populateModel(competitionId, page, size, Objects.toString(request.getQueryString(), "")));
+        model.addAttribute("model", unsuccessfulApplicationsModelPopulator.populateModel(competitionId, page, size, sortBy, Objects.toString(request.getQueryString(), "")));
         return "competition/unsuccessful-applications";
     }
 
