@@ -87,8 +87,8 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
-    public ApplicationPageResource findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize) {
-        return competitionsRestService.findUnsuccessfulApplications(competitionId, pageNumber, pageSize).getSuccessObjectOrThrowException();
+    public ApplicationPageResource findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize, String sortField) {
+        return competitionsRestService.findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField).getSuccessObjectOrThrowException();
     }
 
     @Override

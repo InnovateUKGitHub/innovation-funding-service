@@ -38,7 +38,7 @@ public interface CompetitionService {
 
     List<CompetitionResource> getAllCompetitionsNotInSetup();
 
-    ApplicationPageResource findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize);
+    ApplicationPageResource findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize, String sortField);
 
     List<CompetitionTypeResource> getAllCompetitionTypes();
 
