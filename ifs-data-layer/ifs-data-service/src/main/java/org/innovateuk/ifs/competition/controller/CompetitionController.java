@@ -28,6 +28,8 @@ public class CompetitionController {
     //TODO - Change this to 40 after testing
     private static final String DEFAULT_PAGE_SIZE = "20";
 
+    private static final String DEFAULT_SORT_BY = "";
+
     @Autowired
     private CompetitionService competitionService;
     @Autowired
@@ -100,9 +102,10 @@ public class CompetitionController {
     @GetMapping("/{competitionId}/unsuccessful-applications")
     public RestResult<ApplicationPageResource> findUnsuccessfulApplications(@PathVariable("competitionId") final Long competitionId,
                                                                             @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
-                                                                            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
+                                                                            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
+                                                                            @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortField) {
 
-        return competitionService.findUnsuccessfulApplications(competitionId, new PageRequest(pageIndex, pageSize)).toGetResponse();
+        return competitionService.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField).toGetResponse();
     }
 
     @GetMapping("/search/{page}/{size}")

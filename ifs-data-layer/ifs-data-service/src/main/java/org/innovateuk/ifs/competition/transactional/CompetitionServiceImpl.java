@@ -37,12 +37,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -60,6 +63,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
+import static org.springframework.data.domain.Sort.Direction.ASC;
 
 /**
  * Service for operations around the usage and processing of Competitions
@@ -104,6 +108,11 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private CompetitionKeyStatisticsService competitionKeyStatisticsService;
+
+    private static final Map<String, Sort> APPLICATION_SORT_FIELD_MAP = new HashMap<String, Sort>() {{
+        put("id", new Sort(ASC, "id"));
+        put("name", new Sort(ASC, "name", "id"));
+    }};
 
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(Long id) {
@@ -215,17 +224,28 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }*/
 
     @Override
-    public ServiceResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, Pageable pageable) {
+    public ServiceResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId,
+                                                                               int pageIndex,
+                                                                               int pageSize,
+                                                                               String sortField) {
 
         Set<State> unsuccessfulStates = simpleMapSet(asLinkedSet(
                 ApplicationState.INELIGIBLE,
                 INELIGIBLE_INFORMED,
                 REJECTED), applicationState -> applicationState.getBackingState());
 
+        Sort sort = getApplicationSortField(sortField);
+        Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
+
         Page<Application> pagedResult = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, unsuccessfulStates, pageable);
         List<ApplicationResource> unsuccessfulApplications = simpleMap(pagedResult.getContent(), application -> convertToApplicationResource(application));
 
         return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), unsuccessfulApplications, pagedResult.getNumber(), pagedResult.getSize()));
+    }
+
+    private Sort getApplicationSortField(String sortBy) {
+        Sort result = APPLICATION_SORT_FIELD_MAP.get(sortBy);
+        return result != null ? result : APPLICATION_SORT_FIELD_MAP.get("id");
     }
 
     private ApplicationResource convertToApplicationResource(Application application) {

@@ -52,7 +52,7 @@ public interface CompetitionService {
     ServiceResult<List<CompetitionSearchResultItem>> findNonIfsCompetitions();
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'VIEW_UNSUCCESSFUL_APPLICATIONS')")
-    ServiceResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, Pageable pageable);
+    ServiceResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, int pageIndex, int pageSize, String sortField);
 
     @SecuredBySpring(value = "SEARCH", description = "Only internal users can search for competitions")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
