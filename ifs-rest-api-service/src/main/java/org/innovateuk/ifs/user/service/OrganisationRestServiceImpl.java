@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.user.service;
 
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriUtils;
 
@@ -47,13 +47,13 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
     }
 
     @Override
-    public RestResult<OrganisationResource> create(OrganisationResource organisation) {
-        return postWithRestResultAnonymous(organisationRestURL + "/create", organisation, OrganisationResource.class);
+    public RestResult<OrganisationResource> createOrMatch(OrganisationResource organisation) {
+        return postWithRestResultAnonymous(organisationRestURL + "/createOrMatch", organisation, OrganisationResource.class);
     }
 
     @Override
-    public RestResult<OrganisationResource> update(OrganisationResource organisation) {
-        return putWithRestResult(organisationRestURL + "/update", organisation, OrganisationResource.class);
+    public RestResult<OrganisationResource> createAndLinkByInvite(OrganisationResource organisation, String inviteHash) {
+        return postWithRestResultAnonymous(organisationRestURL + "/createAndLinkByInvite?inviteHash=" + inviteHash, organisation, OrganisationResource.class);
     }
 
     @Override
@@ -66,15 +66,5 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
             organisationName = organisation.getName();
         }
         return postWithRestResult(organisationRestURL + "/updateNameAndRegistration/" +  organisation.getId() + "?name=" + organisationName + "&registration=" + organisation.getCompanyHouseNumber(), OrganisationResource.class);
-    }
-
-    @Override
-    public RestResult<OrganisationResource> updateByIdForAnonymousUserFlow(OrganisationResource organisation) {
-        return putWithRestResultAnonymous(organisationRestURL + "/update", organisation, OrganisationResource.class);
-    }
-
-    @Override
-     public RestResult<OrganisationResource> addAddress(OrganisationResource organisation, AddressResource address, OrganisationAddressType type) {
-        return postWithRestResultAnonymous(organisationRestURL + "/addAddress/"+organisation.getId()+"?addressType="+type.name(), address, OrganisationResource.class);
     }
 }
