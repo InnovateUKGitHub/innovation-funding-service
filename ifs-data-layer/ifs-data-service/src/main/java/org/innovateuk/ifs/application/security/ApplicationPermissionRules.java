@@ -162,6 +162,11 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return isCompAdmin(user);
     }
 
+    @PermissionRule(value = "UPDATE_APPLICATION_STATE", description = "A project finance user can update the state of an application")
+    public boolean projectFinanceCanUpdateApplicationState(final ApplicationResource applicationResource, final UserResource user) {
+        return isProjectFinanceUser(user);
+    }
+
     @PermissionRule(
             value = "UPLOAD_ASSESSOR_FEEDBACK",
             description = "An Internal user can upload Assessor Feedback documentation for an Application whilst " +
