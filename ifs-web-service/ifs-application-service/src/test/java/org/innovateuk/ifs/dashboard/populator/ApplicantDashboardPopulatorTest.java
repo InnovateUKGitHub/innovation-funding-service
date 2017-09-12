@@ -79,7 +79,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
     @Test
     public void populate() {
-        ApplicantDashboardViewModel viewModel = populator.populate(loggedInUser);
+        ApplicantDashboardViewModel viewModel = populator.populate(loggedInUser.getId());
 
         assertTrue(viewModel.getApplicationsInProgressNotEmpty());
         assertTrue(viewModel.getApplicationsInFinishedNotEmpty());
