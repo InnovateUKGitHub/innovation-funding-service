@@ -6,17 +6,17 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionsRestService;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewPageResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
-import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.innovateuk.ifs.management.viewmodel.InviteAssessorsAcceptedViewModel;
 import org.innovateuk.ifs.management.viewmodel.OverviewAssessorRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
+import static java.util.Collections.singletonList;
+import static java.util.Optional.empty;
+import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -46,9 +46,9 @@ public class InviteAssessorsAcceptedModelPopulator extends InviteAssessorsModelP
         AssessorInviteOverviewPageResource pageResource = competitionInviteRestService.getInvitationOverview(
                 competition.getId(),
                 page,
-                Optional.empty(),
-                Collections.singletonList(ParticipantStatusResource.ACCEPTED),
-                Optional.empty()
+                empty(),
+                singletonList(ACCEPTED),
+                empty()
         )
                 .getSuccessObjectOrThrowException();
 
@@ -59,8 +59,6 @@ public class InviteAssessorsAcceptedModelPopulator extends InviteAssessorsModelP
 
         return model;
     }
-
-
 
     private OverviewAssessorRowViewModel getRowViewModel(AssessorInviteOverviewResource assessorInviteOverviewResource) {
         return new OverviewAssessorRowViewModel(

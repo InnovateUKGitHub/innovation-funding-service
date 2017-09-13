@@ -527,7 +527,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .param("size", "10")
                 .param("sort", "invite.email")
                 .param("innovationArea", "3")
-                .param("status", "ACCEPTED")
+                .param("statuses", "ACCEPTED")
                 .param("compliant", "1"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedPageResource)));
@@ -541,7 +541,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         int page = 0;
         int size = 20;
         Optional<Long> innovationArea = empty();
-        List<ParticipantStatus> status = Arrays.asList(ACCEPTED, PENDING, REJECTED);
+        List<ParticipantStatus> statuses = Arrays.asList(PENDING, REJECTED);
         Optional<Boolean> compliant = empty();
 
         Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.ASC, "invite.name"));
@@ -550,14 +550,15 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .withContent(newAssessorInviteOverviewResource().build(2))
                 .build();
 
-        when(competitionInviteServiceMock.getInvitationOverview(competitionId, pageable, innovationArea, status, compliant))
+        when(competitionInviteServiceMock.getInvitationOverview(competitionId, pageable, innovationArea, statuses, compliant))
                 .thenReturn(serviceSuccess(expectedPageResource));
 
-        mockMvc.perform(get("/competitioninvite/getInvitationOverview/{competitionId}", competitionId))
+        mockMvc.perform(get("/competitioninvite/getInvitationOverview/{competitionId}", competitionId)
+                .param("statuses", "PENDING, REJECTED"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedPageResource)));
 
-        verify(competitionInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, innovationArea, status, compliant);
+        verify(competitionInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, innovationArea, statuses, compliant);
     }
 
     @Test

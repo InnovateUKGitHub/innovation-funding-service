@@ -13,8 +13,14 @@ import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
-import org.innovateuk.ifs.user.domain.*;
-import org.innovateuk.ifs.user.repository.*;
+import org.innovateuk.ifs.user.domain.Agreement;
+import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.AgreementRepository;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.RoleRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.AffiliationType;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
@@ -39,18 +45,18 @@ import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.invite.builder.CompetitionInviteBuilder.newCompetitionInviteWithoutId;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.invite.builder.CompetitionInviteBuilder.newCompetitionInviteWithoutId;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
-import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
+import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElement;
 import static org.innovateuk.ifs.util.CollectionFunctions.zip;
@@ -306,7 +312,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
                         .build(3));
 
         // Now accept all of the invites
-        savedParticipants.stream().forEach(
+        savedParticipants.forEach(
                 participant -> {
                     participant.getInvite().open();
                     participant.acceptAndAssignUser(participant.getInvite().getUser());
@@ -357,7 +363,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
                         .build(3));
 
         // Now accept all of the invites
-        savedParticipants.stream().forEach(
+        savedParticipants.forEach(
                 participant -> {
                     participant.getInvite().open();
                     participant.acceptAndAssignUser(participant.getInvite().getUser());
@@ -553,7 +559,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndStatusContains(
                 competition.getId(),
-                Collections.singletonList(ACCEPTED),
+                singletonList(ACCEPTED),
                 pageable
         );
 
@@ -653,7 +659,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competition.getId(),
                 innovationArea.getId(),
-                Collections.singletonList(ACCEPTED),
+                singletonList(ACCEPTED),
                 TRUE,
                 pageable
         );
@@ -691,7 +697,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competition.getId(),
                 innovationArea.getId(),
-                Arrays.asList(ACCEPTED, PENDING),
+                asList(ACCEPTED, PENDING),
                 null,
                 pageable
         );
@@ -820,7 +826,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competition.getId(),
                 null,
-                Collections.singletonList(ACCEPTED),
+                singletonList(PENDING),
                 TRUE,
                 pageable
         );
@@ -897,7 +903,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competition.getId(),
                 null,
-                Collections.singletonList(ACCEPTED),
+                singletonList(PENDING),
                 FALSE,
                 pageable
         );
@@ -935,7 +941,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competition.getId(),
                 null,
-                Collections.singletonList(ACCEPTED),
+                singletonList(PENDING),
                 null,
                 pageable
         );

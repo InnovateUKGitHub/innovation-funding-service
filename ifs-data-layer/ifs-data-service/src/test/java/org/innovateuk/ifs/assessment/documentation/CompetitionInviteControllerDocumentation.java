@@ -268,7 +268,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
                 .param("page", "0")
                 .param("sort", "invite.name,asc")
                 .param("innovationArea", "10")
-                .param("status", "ACCEPTED")
+                .param("statuses", "ACCEPTED")
                 .param("compliant", "1"))
                 .andExpect(status().isOk())
                 .andDo(document("competitioninvite/{method-name}",
@@ -284,8 +284,8 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
                                         .description("The property to sort the elements on. For example `sort=invite.name,asc`. Defaults to `invite.name,asc`"),
                                 parameterWithName("innovationArea").optional()
                                         .description("Innovation area ID to filter assessors by."),
-                                parameterWithName("status").optional()
-                                        .description("Participant status to filter assessors by. Can only be 'ACCEPTED', 'REJECTED' or 'PENDING'."),
+                                parameterWithName("statuses").optional()
+                                        .description("Participant statuses to filter assessors by. Can only be 'ACCEPTED', 'REJECTED' or 'PENDING'."),
                                 parameterWithName("compliant").optional()
                                         .description("Flag to filter assessors by their compliance.")
 

@@ -359,7 +359,6 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
 
     @GetMapping("/accepted")
     public String accepted(Model model,
-                           @Valid @ModelAttribute(FILTER_FORM_ATTR_NAME) AcceptedAssessorsFilterForm filterForm,
                            @PathVariable("competitionId") long competitionId,
                            @RequestParam(defaultValue = "0") int page,
                            @RequestParam MultiValueMap<String, String> queryParams) {

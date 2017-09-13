@@ -49,7 +49,8 @@ public class InviteAssessorsOverviewModelPopulator extends InviteAssessorsModelP
         List<InnovationAreaResource> innovationAreasOptions = categoryRestService.getInnovationAreas()
                 .getSuccessObjectOrThrowException();
 
-        List<ParticipantStatusResource> statuses = status.map(Collections::singletonList).orElseGet(() -> Arrays.asList(REJECTED, PENDING));
+        List<ParticipantStatusResource> statuses = status.map(Collections::singletonList)
+                .orElseGet(() -> Arrays.asList(REJECTED, PENDING));
 
         AssessorInviteOverviewPageResource pageResource = competitionInviteRestService.getInvitationOverview(
                 competition.getId(),
