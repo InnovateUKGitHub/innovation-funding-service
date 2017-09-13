@@ -21,12 +21,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.joining;
@@ -100,11 +103,12 @@ public class CompetitionManagementInviteAssessorsOverviewControllerTest extends 
                 .build();
 
         List<Long> inviteIds = asList(1L, 2L);
+        List<ParticipantStatusResource> statuses = Arrays.asList(REJECTED, PENDING);
 
         when(categoryRestServiceMock.getInnovationAreas()).thenReturn(restSuccess(newInnovationAreaResource().build(4)));
-        when(competitionInviteRestService.getInvitationOverview(competition.getId(), 0, empty(), empty(), empty()))
+        when(competitionInviteRestService.getInvitationOverview(competition.getId(), 0, empty(), statuses, empty()))
                 .thenReturn(restSuccess(pageResource));
-        when(competitionInviteRestService.getAssessorsNotAcceptedInviteIds(competition.getId(), empty(), empty(), empty())).thenReturn(restSuccess(inviteIds));
+        when(competitionInviteRestService.getAssessorsNotAcceptedInviteIds(competition.getId(), empty(), statuses, empty())).thenReturn(restSuccess(inviteIds));
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/overview", competition.getId()))
                 .andExpect(status().isOk())
@@ -122,10 +126,10 @@ public class CompetitionManagementInviteAssessorsOverviewControllerTest extends 
         assertInviteOverviews(assessorInviteOverviewResources, result);
 
         InOrder inOrder = inOrder(competitionRestService, categoryRestServiceMock, competitionInviteRestService);
-        inOrder.verify(competitionInviteRestService).getAssessorsNotAcceptedInviteIds(competition.getId(), empty(), empty(), empty());
+        inOrder.verify(competitionInviteRestService).getAssessorsNotAcceptedInviteIds(competition.getId(), empty(), statuses, empty());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(categoryRestServiceMock).getInnovationAreas();
-        inOrder.verify(competitionInviteRestService).getInvitationOverview(competition.getId(), 0, empty(), empty(), empty());
+        inOrder.verify(competitionInviteRestService).getInvitationOverview(competition.getId(), 0, empty(), statuses, empty());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -135,6 +139,7 @@ public class CompetitionManagementInviteAssessorsOverviewControllerTest extends 
         Optional<Long> innovationArea = of(10L);
         Optional<Boolean> compliant = of(TRUE);
         List<Long> inviteIds = asList(1L, 2L);
+        List<ParticipantStatusResource> status = singletonList(PENDING);
 
         List<AssessorInviteOverviewResource> assessorInviteOverviewResources = setUpAssessorInviteOverviewResources();
 
@@ -143,12 +148,13 @@ public class CompetitionManagementInviteAssessorsOverviewControllerTest extends 
                 .build();
 
         when(categoryRestServiceMock.getInnovationAreas()).thenReturn(restSuccess(newInnovationAreaResource().build(4)));
-        when(competitionInviteRestService.getInvitationOverview(competition.getId(), page, innovationArea, empty(), compliant))
+        when(competitionInviteRestService.getInvitationOverview(competition.getId(), page, innovationArea, status, compliant))
                 .thenReturn(restSuccess(pageResource));
-        when(competitionInviteRestService.getAssessorsNotAcceptedInviteIds(competition.getId(),innovationArea, empty(),compliant)).thenReturn(restSuccess(inviteIds));
+        when(competitionInviteRestService.getAssessorsNotAcceptedInviteIds(competition.getId(),innovationArea, status,compliant)).thenReturn(restSuccess(inviteIds));
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/overview", competition.getId())
                 .param("page", "1")
+                .param("status", "PENDING")
                 .param("innovationArea", "10")
                 .param("compliant", "TRUE"))
                 .andExpect(status().isOk())
@@ -158,6 +164,7 @@ public class CompetitionManagementInviteAssessorsOverviewControllerTest extends 
 
         OverviewAssessorsFilterForm filterForm = (OverviewAssessorsFilterForm) result.getModelAndView().getModel().get("filterForm");
 
+        assertEquals(of(PENDING), filterForm.getStatus());
         assertEquals(of(TRUE), filterForm.getCompliant());
         assertEquals(of(10L), filterForm.getInnovationArea());
 
@@ -165,10 +172,10 @@ public class CompetitionManagementInviteAssessorsOverviewControllerTest extends 
         assertInviteOverviews(assessorInviteOverviewResources, result);
 
         InOrder inOrder = inOrder(competitionRestService, categoryRestServiceMock, competitionInviteRestService);
-        inOrder.verify(competitionInviteRestService).getAssessorsNotAcceptedInviteIds(competition.getId(), innovationArea, empty(), compliant);
+        inOrder.verify(competitionInviteRestService).getAssessorsNotAcceptedInviteIds(competition.getId(), innovationArea, status, compliant);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(categoryRestServiceMock).getInnovationAreas();
-        inOrder.verify(competitionInviteRestService).getInvitationOverview(competition.getId(), page, innovationArea, empty(), compliant);
+        inOrder.verify(competitionInviteRestService).getInvitationOverview(competition.getId(), page, innovationArea, status, compliant);
         inOrder.verifyNoMoreInteractions();
     }
 

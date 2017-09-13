@@ -93,7 +93,7 @@ public interface CompetitionInviteService {
             description = "Competition Admins and Project Finance users can retrieve invited assessor invite ids by competition")
     ServiceResult<List<Long>> getAssessorsNotAcceptedInviteIds(long competitionId,
                                                                Optional<Long> innovationArea,
-                                                               Optional<ParticipantStatus> status,
+                                                               List<ParticipantStatus> status,
                                                                Optional<Boolean> compliant);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")

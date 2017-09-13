@@ -379,22 +379,21 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     @Override
     public ServiceResult<List<Long>> getAssessorsNotAcceptedInviteIds(long competitionId,
                                                                       Optional<Long> innovationArea,
-                                                                      Optional<ParticipantStatus> status,
+                                                                      List<ParticipantStatus> statuses,
                                                                       Optional<Boolean> compliant) {
         List<CompetitionParticipant> participants;
-        Set<ParticipantStatus> filterStatuses = status.isPresent() ? of(status.get()) : notAcceptedStatuses;
 
         if (innovationArea.isPresent() || compliant.isPresent()) {
             // We want to avoid performing the potentially expensive join on Profile if possible
-            participants = competitionParticipantRepository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+            participants = competitionParticipantRepository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                     competitionId,
                     innovationArea.orElse(null),
-                    filterStatuses,
+                    statuses,
                     compliant.orElse(null));
         } else {
-            participants = competitionParticipantRepository.getAssessorsByCompetitionAndStatus(
+            participants = competitionParticipantRepository.getAssessorsByCompetitionAndStatusContains(
                     competitionId,
-                    filterStatuses);
+                    statuses);
         }
 
         return serviceSuccess(simpleMap(participants, participant -> participant.getInvite().getId()));

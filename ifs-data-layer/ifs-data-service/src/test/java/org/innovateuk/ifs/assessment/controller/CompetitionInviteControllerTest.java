@@ -16,10 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.google.common.primitives.Longs.asList;
 import static java.lang.Boolean.TRUE;
@@ -580,19 +577,20 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     public void getAssessorsNotAcceptedInviteIds() throws Exception {
         long competitionId = 1L;
         Optional<Long> innovationArea = empty();
-        Optional<ParticipantStatus> status = empty();
+        List<ParticipantStatus> statuses = Arrays.asList(PENDING, REJECTED);
         Optional<Boolean> compliant = empty();
 
         List<Long> expectedInviteIds = asList(1L, 2L);
 
-        when(competitionInviteServiceMock.getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, status, compliant))
+        when(competitionInviteServiceMock.getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, statuses, compliant))
                 .thenReturn(serviceSuccess(expectedInviteIds));
 
-        mockMvc.perform(get("/competitioninvite/getAssessorsNotAcceptedInviteIds/{competitionId}", competitionId))
+        mockMvc.perform(get("/competitioninvite/getAssessorsNotAcceptedInviteIds/{competitionId}", competitionId)
+                .param("statuses", "PENDING, REJECTED"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedInviteIds)));
 
-        verify(competitionInviteServiceMock, only()).getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, status, compliant);
+        verify(competitionInviteServiceMock, only()).getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, statuses, compliant);
     }
 
     @Test

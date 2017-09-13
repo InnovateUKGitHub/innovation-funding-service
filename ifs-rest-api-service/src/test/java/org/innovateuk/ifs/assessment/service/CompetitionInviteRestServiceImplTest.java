@@ -28,6 +28,7 @@ import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceB
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
+import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.REJECTED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -245,12 +246,13 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     public void getAssessorsNotAcceptedInviteIds() throws Exception {
         long competitionId = 1L;
         List<Long> expected = asList(1L, 2L);
+        List<ParticipantStatusResource> statuses = Arrays.asList(PENDING, REJECTED);
 
-        String expectedUrl = format("%s/%s/%s", restUrl, "getAssessorsNotAcceptedInviteIds", competitionId);
+        String expectedUrl = format("%s/%s/%s?statuses=%s", restUrl, "getAssessorsNotAcceptedInviteIds", competitionId, "PENDING,REJECTED");
 
         setupGetWithRestResultExpectations(expectedUrl, ParameterizedTypeReferences.longsListType(), expected);
 
-        List<Long> actual = service.getAssessorsNotAcceptedInviteIds(competitionId, empty(), empty(), empty())
+        List<Long> actual = service.getAssessorsNotAcceptedInviteIds(competitionId, empty(), statuses, empty())
                 .getSuccessObject();
 
         assertEquals(expected, actual);

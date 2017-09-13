@@ -93,12 +93,21 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
                                                                     @Param("status") List<ParticipantStatus> status,
                                                                     Pageable pageable);
 
+    @Query(BY_COMP_AND_STATUS)
+    List<CompetitionParticipant> getAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
+                                                                            @Param("status") List<ParticipantStatus> status);
+
     @Query(BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT)
     Page<CompetitionParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(@Param("competitionId") long competitionId,
                                                                                                  @Param("innovationAreaId") Long innovationAreaId,
                                                                                                  @Param("status") List<ParticipantStatus> status,
                                                                                                  @Param("isCompliant") Boolean isCompliant,
                                                                                                  Pageable pageable);
+    @Query(BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT)
+    List<CompetitionParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(@Param("competitionId") long competitionId,
+                                                                                                         @Param("innovationAreaId") Long innovationAreaId,
+                                                                                                         @Param("status") List<ParticipantStatus> status,
+                                                                                                         @Param("isCompliant") Boolean isCompliant);
 
     List<CompetitionParticipant> getByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
 

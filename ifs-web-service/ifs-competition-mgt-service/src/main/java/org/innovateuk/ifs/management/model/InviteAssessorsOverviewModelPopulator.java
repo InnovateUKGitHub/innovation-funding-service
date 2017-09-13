@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.REJECTED;
 import static org.innovateuk.ifs.management.controller.CompetitionManagementCookieController.SELECTION_LIMIT;
@@ -52,7 +53,7 @@ public class InviteAssessorsOverviewModelPopulator extends InviteAssessorsModelP
                 .getSuccessObjectOrThrowException();
 
         List<ParticipantStatusResource> statuses = status.map(Collections::singletonList)
-                .orElseGet(() -> Arrays.asList(REJECTED, PENDING));
+                .orElseGet(() -> asList(REJECTED, PENDING));
 
         AssessorInviteOverviewPageResource pageResource = competitionInviteRestService.getInvitationOverview(
                 competition.getId(),

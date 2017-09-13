@@ -17,6 +17,7 @@ import java.util.Optional;
 
 import static com.google.common.primitives.Longs.asList;
 import static java.lang.Boolean.TRUE;
+import static java.util.Collections.singletonList;
 import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -278,7 +279,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
     public void getInvitationOverview() throws Exception {
         long competitionId = 1L;
         Optional<Long> innovationArea = of(10L);
-        List<ParticipantStatus> status = Collections.singletonList(ACCEPTED);
+        List<ParticipantStatus> status = singletonList(ACCEPTED);
         Optional<Boolean> compliant = of(TRUE);
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
@@ -328,7 +329,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
     public void getAssessorsNotAcceptedInviteIds() throws Exception {
         long competitionId = 1L;
         Optional<Long> innovationArea = of(10L);
-        Optional<ParticipantStatus> status = of(PENDING);
+        List<ParticipantStatus> status = singletonList(PENDING);
         Optional<Boolean> compliant = of(TRUE);
 
         List<Long> expectedInviteIds = asList(1L, 2L);
@@ -338,7 +339,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
 
         mockMvc.perform(get("/competitioninvite/getAssessorsNotAcceptedInviteIds/{competitionId}", 1L)
                 .param("innovationArea", "10")
-                .param("status", "PENDING")
+                .param("statuses", "PENDING")
                 .param("compliant", "1"))
                 .andExpect(status().isOk())
                 .andDo(document("competitioninvite/{method-name}",
@@ -348,8 +349,8 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
                         requestParameters(
                                 parameterWithName("innovationArea").optional()
                                         .description("Innovation area ID to filter assessors by."),
-                                parameterWithName("status").optional()
-                                        .description("Participant status to filter assessors by. Can only be 'REJECTED' or 'PENDING'."),
+                                parameterWithName("statuses")
+                                        .description("Participant statuses to filter assessors by. Can only be 'REJECTED', 'PENDING' or both."),
                                 parameterWithName("compliant").optional()
                                         .description("Flag to filter assessors by their compliance.")
                         ),

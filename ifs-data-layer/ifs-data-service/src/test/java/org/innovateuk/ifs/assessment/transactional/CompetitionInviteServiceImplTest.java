@@ -2261,12 +2261,12 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withStatus(PENDING, PENDING, PENDING, PENDING, REJECTED)
                 .build(5);
 
-        when(competitionParticipantRepositoryMock.getAssessorsByCompetitionAndStatus(competitionId, EnumSet.of(PENDING, REJECTED)))
+        when(competitionParticipantRepositoryMock.getAssessorsByCompetitionAndStatusContains(competitionId, asList(PENDING, REJECTED)))
                 .thenReturn(expectedParticipants);
 
-        ServiceResult<List<Long>> result = service.getAssessorsNotAcceptedInviteIds(competitionId, empty(), empty(), empty());
+        ServiceResult<List<Long>> result = service.getAssessorsNotAcceptedInviteIds(competitionId, empty(), asList(PENDING, REJECTED), empty());
 
-        verify(competitionParticipantRepositoryMock).getAssessorsByCompetitionAndStatus(competitionId, EnumSet.of(PENDING, REJECTED));
+        verify(competitionParticipantRepositoryMock).getAssessorsByCompetitionAndStatusContains(competitionId, asList(PENDING, REJECTED));
 
         assertTrue(result.isSuccess());
         List<Long> returnedInviteIds = result.getSuccessObject();

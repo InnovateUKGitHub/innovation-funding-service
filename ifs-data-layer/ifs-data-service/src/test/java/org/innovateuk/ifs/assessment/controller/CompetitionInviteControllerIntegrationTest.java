@@ -1131,7 +1131,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         InnovationArea otherInnovationArea = innovationAreaRepository.findOne(10L);
 
         Optional<Long> innovationAreaId = of(innovationArea.getId());
-        Optional<ParticipantStatus> status = of(PENDING);
+        List<ParticipantStatus> status = singletonList(PENDING);
         Optional<Boolean> hasContract = of(TRUE);
 
         Agreement agreement = agreementRepository.findOne(1L);
