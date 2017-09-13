@@ -146,6 +146,7 @@ Comp Admin user uploads new grant offer letter
     And the user should not see the element   jQuery=button:contains("Remove")
     When the user navigates to the page      ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
     Then the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.waiting   # GOL
+    And the user reads his email             ${PS_GOL_APPLICATION_LEAD_PARTNER_EMAIL}  Your grant offer letter is available  We are pleased to inform you that your grant offer letter is now ready for you to sign
 
 PM can view the grant offer letter page
     [Documentation]    INFUND-4848, INFUND-6091

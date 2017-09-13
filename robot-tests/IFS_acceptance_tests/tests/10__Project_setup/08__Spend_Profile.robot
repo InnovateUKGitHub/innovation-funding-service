@@ -101,6 +101,7 @@ Project Finance generates the Spend Profile
     Then the user should see the element    jQuery=.success-alert p:contains("The finance checks have been approved and profiles generated.")
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(4).ok
+    And the user reads his email            ${PS_SP_APPLICATION_PM_EMAIL}  Your spend profile is available  The finance checks for all partners in the project have now been completed
 
 Lead partner can view spend profile page
     [Documentation]    INFUND-3970, INFUND-6138, INFUND-5899, INFUND-7685
