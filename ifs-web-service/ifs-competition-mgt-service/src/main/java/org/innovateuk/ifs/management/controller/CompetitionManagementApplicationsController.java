@@ -29,7 +29,7 @@ public class CompetitionManagementApplicationsController {
 
     private static final String DEFAULT_PAGE_SIZE = "20";
 
-    private static final String DEFAULT_SORT_BY = "";
+    private static final String DEFAULT_SORT_BY = "id";
 
     private static final String FILTER_FORM_ATTR_NAME = "filterForm";
 
