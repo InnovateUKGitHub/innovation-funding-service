@@ -112,12 +112,16 @@ public class CompetitionManagementApplicationsController {
     public String unsuccessfulApplications(Model model,
                                            HttpServletRequest request,
                                            @PathVariable("competitionId") long competitionId,
+                                           @RequestParam MultiValueMap<String, String> queryParams,
                                            @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
                                            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size,
                                            @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortBy,
                                            UserResource loggedInUser) {
 
-        model.addAttribute("model", unsuccessfulApplicationsModelPopulator.populateModel(competitionId, page, size, sortBy, Objects.toString(request.getQueryString(), "")));
+        String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.UNSUCCESSFUL_APPLICATIONS, queryParams);
+        model.addAttribute("model", unsuccessfulApplicationsModelPopulator.populateModel(competitionId, page, size, sortBy, originQuery));
+        model.addAttribute("originQuery", originQuery);
+
         return "competition/unsuccessful-applications";
     }
 
