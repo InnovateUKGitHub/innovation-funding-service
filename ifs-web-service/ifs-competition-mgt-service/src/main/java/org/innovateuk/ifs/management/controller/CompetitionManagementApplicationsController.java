@@ -27,7 +27,6 @@ public class CompetitionManagementApplicationsController {
 
     private static final String DEFAULT_PAGE_NUMBER = "0";
 
-    //TODO - Change this to 40 after testing
     private static final String DEFAULT_PAGE_SIZE = "20";
 
     private static final String DEFAULT_SORT_BY = "";
