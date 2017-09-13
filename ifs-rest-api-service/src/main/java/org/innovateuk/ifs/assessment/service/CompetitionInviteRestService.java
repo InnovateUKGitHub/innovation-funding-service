@@ -5,7 +5,6 @@ import org.innovateuk.ifs.invite.resource.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * REST service for managing {@link org.innovateuk.ifs.invite.resource.InviteResource} to {@link org.innovateuk.ifs.competition.resource.CompetitionResource }

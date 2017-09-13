@@ -278,7 +278,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
     public void getInvitationOverview() throws Exception {
         long competitionId = 1L;
         Optional<Long> innovationArea = of(10L);
-        List<ParticipantStatus> status = singletonList(ACCEPTED);
+        List<ParticipantStatus> status = singletonList(PENDING);
         Optional<Boolean> compliant = of(TRUE);
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
@@ -296,7 +296,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
                 .param("page", "0")
                 .param("sort", "invite.name,asc")
                 .param("innovationArea", "10")
-                .param("statuses", "ACCEPTED")
+                .param("statuses", "PENDING")
                 .param("compliant", "1"))
                 .andExpect(status().isOk())
                 .andDo(document("competitioninvite/{method-name}",
@@ -313,7 +313,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
                                 parameterWithName("innovationArea").optional()
                                         .description("Innovation area ID to filter assessors by."),
                                 parameterWithName("statuses")
-                                        .description("Participant statuses to filter assessors by. Can only be 'ACCEPTED', 'REJECTED' or 'PENDING'."),
+                                        .description("Participant statuses to filter assessors by. Can only be 'REJECTED', 'PENDING' or both."),
                                 parameterWithName("compliant").optional()
                                         .description("Flag to filter assessors by their compliance.")
                         ),
@@ -338,7 +338,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
 
         mockMvc.perform(get("/competitioninvite/getAssessorsNotAcceptedInviteIds/{competitionId}", 1L)
                 .param("innovationArea", "10")
-                .param("statuses", "PENDING,REJECTED")
+                .param("statuses[]", "PENDING,REJECTED")
                 .param("compliant", "1"))
                 .andExpect(status().isOk())
                 .andDo(document("competitioninvite/{method-name}",
@@ -348,7 +348,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
                         requestParameters(
                                 parameterWithName("innovationArea").optional()
                                         .description("Innovation area ID to filter assessors by."),
-                                parameterWithName("statuses")
+                                parameterWithName("statuses[]")
                                         .description("Participant statuses to filter assessors by. Can only be 'REJECTED', 'PENDING' or both."),
                                 parameterWithName("compliant").optional()
                                         .description("Flag to filter assessors by their compliance.")
