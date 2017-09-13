@@ -313,7 +313,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
                                 parameterWithName("innovationArea").optional()
                                         .description("Innovation area ID to filter assessors by."),
                                 parameterWithName("statuses")
-                                        .description("Participant statuses to filter assessors by. Can be a single status or a combination of 'REJECTED', 'PENDING' or 'REJECTED'"),
+                                        .description("Participant statuses to filter assessors by. Can be a single status or a combination of 'ACCEPTED', 'PENDING' or 'REJECTED'"),
                                 parameterWithName("compliant").optional()
                                         .description("Flag to filter assessors by their compliance.")
                         ),
