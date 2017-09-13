@@ -61,11 +61,6 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
         return getWithRestResult(competitionsRestURL + "/non-ifs", competitionSearchResultItemListType());
     }
 
-/*    @Override
-    public RestResult<List<ApplicationResource>> findUnsuccessfulApplications(Long competitionId) {
-        return getWithRestResult(competitionsRestURL +  "/" + competitionId + "/unsuccessful-applications", applicationResourceListType());
-    }*/
-
     @Override
     public RestResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize, String sortField) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();

@@ -10,7 +10,6 @@ import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
@@ -25,10 +24,9 @@ public class CompetitionController {
 
     private static final String DEFAULT_PAGE_NUMBER = "0";
 
-    //TODO - Change this to 40 after testing
     private static final String DEFAULT_PAGE_SIZE = "20";
 
-    private static final String DEFAULT_SORT_BY = "";
+    private static final String DEFAULT_SORT_BY = "id";
 
     @Autowired
     private CompetitionService competitionService;

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Objects;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;

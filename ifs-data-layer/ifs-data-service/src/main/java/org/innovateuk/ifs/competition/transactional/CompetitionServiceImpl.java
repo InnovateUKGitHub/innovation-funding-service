@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.commons.error.Error;
@@ -210,19 +209,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
     }
 
-/*    @Override
-    public ServiceResult<List<ApplicationResource>> findUnsuccessfulApplications(Long competitionId) {
-
-        Set<State> unsuccessfulStates = simpleMapSet(asLinkedSet(
-                INELIGIBLE,
-                INELIGIBLE_INFORMED,
-                REJECTED), applicationState -> applicationState.getBackingState());
-
-        List<Application> unsuccessfulApplications = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, unsuccessfulStates);
-
-        return serviceSuccess(simpleMap(unsuccessfulApplications, application -> convertToApplicationResource(application)));
-    }*/
-
     @Override
     public ServiceResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId,
                                                                                int pageIndex,
@@ -230,7 +216,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                                                                                String sortField) {
 
         Set<State> unsuccessfulStates = simpleMapSet(asLinkedSet(
-                ApplicationState.INELIGIBLE,
+                INELIGIBLE,
                 INELIGIBLE_INFORMED,
                 REJECTED), applicationState -> applicationState.getBackingState());
 
