@@ -61,7 +61,7 @@ The question is enabled for the assignee
     And the user clicks the button/link   link= Public description
     And the user should see the element   css=.textarea-wrapped .editor
 
-Collaborator should see the terms and conditions from the overview page
+Collaborator should see the terms an1d conditions from the overview page
     [Documentation]  INFUND-2417
     ...  This test depends on the previous test suite to run first
     [Tags]  Email

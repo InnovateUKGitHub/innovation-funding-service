@@ -3,14 +3,10 @@ Resource          ../defaultResources.robot
 
 *** Keywords ***
 log in and create new application if there is not one already
+    [Arguments]  ${application_name}
     Given the user logs-in in new browser  &{lead_applicant_credentials}
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    Robot test application
-    Run Keyword If    '${status}' == 'FAIL'    Create new application with the same user  Robot test application
-
-log in and create new application for collaboration if there is not one already
-    Given the user logs-in in new browser  &{lead_applicant_credentials}
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    Invite robot test application
-    Run Keyword If    '${status}' == 'FAIL'    Create new application with the same user  Invite robot test application
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain  ${application_name}
+    Run Keyword If    '${status}' == 'FAIL'    Create new application with the same user  ${application_name}
 
 Login new application invite academic
     [Arguments]  ${recipient}  ${subject}  ${pattern}
@@ -21,36 +17,23 @@ Login new application invite academic
     ...                                            AND   Invite and accept the invitation  ${recipient}  ${subject}  ${pattern}
 
 new account complete all but one
-    create new account for submitting  ${submit_bus_email}  ${openCompetitionBusinessRTO_overview}  ${application_bus_name}  radio-1
+    the guest user opens the browser
+    we create a new user                              ${openCompetitionBusinessRTO}  sam  business  ${submit_bus_email}  radio-1
+    create new account for submitting                 ${application_bus_name}
     the user marks every section but one as complete  ${application_bus_name}
     Logout as user
-    create new account for submitting  ${submit_rto_email}  ${openCompetitionBusinessRTO_overview}  ${application_rto_name}  radio-3
+    we create a new user                              ${openCompetitionBusinessRTO}  liam  rto  ${submit_rto_email}  radio-3
+    create new account for submitting                 ${application_rto_name}
     the user marks every section but one as complete  ${application_rto_name}
 
 create new account for submitting
-    [Arguments]  ${email}  ${overview}  ${application_name}  ${org}
-    the guest user opens the browser
-    the user navigates to the page              ${overview}
-    the user clicks the button/link             jQuery=a:contains("Start new application")
-    the user clicks the button/link             jQuery=a:contains("Create account")
-    the user selects the radio button           organisationTypeId  ${org}
-    the user clicks the button/link             jQuery=.button:contains('Save and continue')
-    the user enters text to a text field        id=organisationSearchName    Hive IT
-    the user clicks the button/link             jQuery=.button:contains("Search")
-    the user clicks the button/link             link=${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
-    the user selects the checkbox               address-same
-    the user clicks the button/link            jQuery=.button:contains("Continue")
-    the user clicks the button/link            jQuery=.button:contains('Save and continue')
-    the user enters text to a text field    name=email    ${email}
-    the user fills the create account form    Temur    Ketsbaia
-    the user reads his email and clicks the link    ${email}    Please verify your email address    Once verified you can sign into your account
-    the user clicks the button/link        jQuery=.button:contains("Sign in")
-    Logging in and Error Checking              ${email}   ${correct_password}
-    the user clicks the button/link                 link=Untitled application (start here)
-    the user clicks the button/link                 jQuery=a:contains("Begin application")
-    the user clicks the button/link                 link=Application details
-    the user enters text to a text field            id=application_details-title    ${application_name}
-    the user clicks the button/link                 jQuery=button:contains("Save and return")
+    [Arguments]  ${application_name}
+#    the guest user opens the browser
+    the user clicks the button/link       link=Untitled application (start here)
+    the user clicks the button/link       jQuery=a:contains("Begin application")
+    the user clicks the button/link       link=Application details
+    the user enters text to a text field  id=application_details-title    ${application_name}
+    the user clicks the button/link       jQuery=button:contains("Save and return")
 
 the user marks every section but one as complete
     [Arguments]  ${application_name}
