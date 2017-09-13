@@ -22,6 +22,11 @@ public interface CompetitionInviteService {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId);
 
+    @SecuredBySpring(value = "GET_ALL_INVITES_TO_RESEND",
+            description = "Competition Admins and Project Finance users can get all invites to be resent for a competition")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    ServiceResult<AssessorInvitesToSendResource> getAllInvitesToResend(long competitionId, List<Long> inviteIds);
+
     @SecuredBySpring(value = "GET_INVITE",
             description = "The Competition Admin user, or the Competition Executive user can get a competition invite that has been created")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
@@ -85,6 +90,14 @@ public interface CompetitionInviteService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_INVITE_OVERVIEW_BY_COMPETITION",
+            description = "Competition Admins and Project Finance users can retrieve invited assessor invite ids by competition")
+    ServiceResult<List<Long>> getAssessorsNotAcceptedInviteIds(long competitionId,
+                                                               Optional<Long> innovationArea,
+                                                               Optional<ParticipantStatus> status,
+                                                               Optional<Boolean> compliant);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "READ_INVITE_OVERVIEW_BY_COMPETITION",
             description = "Competition Admins and Project Finance users can retrieve invitation statistics by competition")
     ServiceResult<CompetitionInviteStatisticsResource> getInviteStatistics(long competitionId);
 
@@ -114,9 +127,14 @@ public interface CompetitionInviteService {
     ServiceResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInvitesToSendResource);
 
     @SecuredBySpring(value = "RESEND_INVITE",
-            description = "The Competition Admin user, or the Competition Executive user can send a competition invite")
+            description = "The Competition Admin Admins and Project Finance users can send a competition invite")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<Void> resendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource);
+
+    @SecuredBySpring(value = "RESEND_INVITES",
+            description = "The Competition Admin Admins and Project Finance users can send a competition invite")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    ServiceResult<Void> resendInvites(List<Long> inviteIds, AssessorInviteSendResource assessorInviteSendResource);
 
     @SecuredBySpring(value = "DELETE_INVITE",
             description = "The Competition Admins and Project Finance users can delete a competition invite")

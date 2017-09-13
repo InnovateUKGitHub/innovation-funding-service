@@ -30,7 +30,9 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...               INFUND-6453 Filter and pagination on 'Overview' tab of Invite assessors dashboard
 ...
 ...               IFS-33 As a comp exec I can select and add multiple assessors to the invite list
-Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
+...
+...               IFS-1146 Assessor management - Resending invite emails in bulk
+Suite Setup       Custom suite setup
 Suite Teardown    Custom teardown
 Force Tags        CompAdmin  Assessor
 Resource          ../../resources/defaultResources.robot
@@ -56,13 +58,13 @@ Filtering in the Invite Overview page
     Then the user should see the element     jQuery=td:contains("Josephine")
     And the user should not see the element  jQuery=td:contains("No")
     And the user clicks the button/link      jQuery=a:contains("Clear filters")
-    And the user should not see the element  jQuery=td:contains("Josephine")
+    And the user should see the element      jQuery=td:contains("David")
 
 The User can Add and Remove Assessors
     [Documentation]    INFUND-6602 INFUND-6604 INFUND-6392 INFUND-6412 INFUND-6388
     [Tags]
     Given The user clicks the button/link          link=Find
-    And the user clicks the button/link            jQuery=a:contains(41 to)
+    And the user clicks the button/link            jQuery=a:contains("41 to")
     When the user selects the checkbox             assessor-row-10
     And the user should see the element            jQuery=.form-hint:contains("1 assessors selected")
     And the user clicks the button/link            jQuery=button:contains("Add selected to invite list")
@@ -102,8 +104,8 @@ Filter on innovation area
 Next/Previous pagination on Find tab
     [Documentation]    INFUND-6403
     [Tags]
-    When the user clicks the button/link     jQuery=.pagination-label:contains(Next)
-    Then the user should see the element     jQuery=.pagination-part-title:contains(1 to 20)
+    When the user clicks the button/link     jQuery=.pagination-label:contains("Next")
+    Then the user should see the element     jQuery=.pagination-part-title:contains("1 to 20")
     And the user should see the element      jQuery=.pagination-part-title:contains(41 to)
     And the user clicks the button/link      jQuery=.pagination-label:contains(Previous)
     And the user should not see the element  jQuery=.pagination-label:contains(Previous)
@@ -180,7 +182,8 @@ Invite non-registered users
 
 Assessor overview information
     [Documentation]    INFUND-6450 INFUND-6449
-    [Tags]
+    [Tags]  Pending
+    #TODO IFS-1445 (this will be merged in before these changes are merged into dev)
     Given The user clicks the button/link  link=Overview
     And the user clicks the button/link    jQuery=.pagination-label:contains("Next")
     And the user clicks the button/link    jQuery=.pagination-label:contains("Next")
@@ -204,7 +207,27 @@ Select to add all assessors to invite list
     And the user clicks the button/link       link=Find
     Then the user should see the element      jQuery=td:contains("No available assessors found.")
 
+Bulk resend button is disabled until user selects an assessor
+    [Documentation]  IFS-1146
+    [Tags]
+    [Setup]  the user clicks the button/link  link=Overview
+    Given the element should be disabled      jQuery=button:contains("Resend invites")
+    When the user selects the checkbox        select-all-check
+    And the user clicks the button/link       jQuery=button:contains("Resend invites")
+    Then the user should see the element      css=input[id="subject"][value="Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'"]
+
+Bulk resend email updates the invite sent date
+    [Documentation]  IFS-1146
+    [Tags]
+    Given the user clicks the button/link  jQuery=button:contains("Send invite")
+    Then the user should see the element    jQuery=td:contains("David Peters") ~ td:contains("Invite sent: ${today}")
+
 *** Keywords ***
+Custom Suite Setup
+    The user logs-in in new browser  &{Comp_admin1_credentials}
+    ${today}  get today short month
+    set suite variable  ${today}
+
 The key statistics are calculated
     #Calculation of the Invited Assessors
     ${INVITED_ASSESSORS}=    Get matching xpath count    //table/tbody/tr

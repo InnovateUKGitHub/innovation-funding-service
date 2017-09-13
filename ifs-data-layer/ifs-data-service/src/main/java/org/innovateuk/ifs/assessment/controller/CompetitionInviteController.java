@@ -16,6 +16,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
+
 /**
  * Controller for managing Invites to Competitions.
  */
@@ -31,6 +32,13 @@ public class CompetitionInviteController {
     @GetMapping("/getAllInvitesToSend/{competitionId}")
     public RestResult<AssessorInvitesToSendResource> getAllInvitesToSend(@PathVariable long competitionId) {
         return competitionInviteService.getAllInvitesToSend(competitionId).toGetResponse();
+    }
+
+    @GetMapping("/getAllInvitesToResend/{competitionId}")
+    public RestResult<AssessorInvitesToSendResource> getAllInvitesToResend(
+            @PathVariable long competitionId,
+            @RequestParam List<Long> inviteIds) {
+        return competitionInviteService.getAllInvitesToResend(competitionId, inviteIds).toGetResponse();
     }
 
     @GetMapping("/getInviteToSend/{inviteId}")
@@ -79,6 +87,15 @@ public class CompetitionInviteController {
             @RequestParam Optional<Long> innovationArea
     ) {
         return competitionInviteService.getAvailableAssessorIds(competitionId, innovationArea).toGetResponse();
+    }
+
+    @GetMapping(value = "/getAssessorsNotAcceptedInviteIds/{competitionId}")
+    public RestResult<List<Long>> getAssessorsNotAcceptedInviteIds(
+            @PathVariable long competitionId,
+            @RequestParam Optional<Long> innovationArea,
+            @RequestParam Optional<ParticipantStatus> status,
+            @RequestParam Optional<Boolean> compliant) {
+        return competitionInviteService.getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, status, compliant).toGetResponse();
     }
 
     @GetMapping("/getCreatedInvites/{competitionId}")
@@ -146,4 +163,10 @@ public class CompetitionInviteController {
     public RestResult<Void> resendInvite(@PathVariable long inviteId, @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
         return competitionInviteService.resendInvite(inviteId, assessorInviteSendResource).toPostWithBodyResponse();
     }
+
+    @PostMapping("/resendInvites")
+    public RestResult<Void> resendInvites(@RequestParam List<Long> inviteIds, @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
+        return competitionInviteService.resendInvites(inviteIds, assessorInviteSendResource).toPostWithBodyResponse();
+    }
+
 }

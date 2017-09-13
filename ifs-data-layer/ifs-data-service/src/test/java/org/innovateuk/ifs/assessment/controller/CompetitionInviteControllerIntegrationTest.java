@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.controller;
 
 import com.google.common.collect.Lists;
+import org.apache.commons.collections.IteratorUtils;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
@@ -33,7 +34,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.util.Collections;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +45,7 @@ import static java.lang.Boolean.TRUE;
 import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
+import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.invite.builder.CompetitionInviteBuilder.newCompetitionInvite;
@@ -150,6 +152,37 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         loginCompAdmin();
 
         RestResult<AssessorInvitesToSendResource> serviceResult = controller.getAllInvitesToSend(competition.getId());
+        assertTrue(serviceResult.isSuccess());
+
+        AssessorInvitesToSendResource inviteResource = serviceResult.getSuccessObjectOrThrowException();
+        assertEquals(1L, inviteResource.getCompetitionId());
+        assertEquals("Connected digital additive manufacturing", inviteResource.getCompetitionName());
+        assertEquals(2, inviteResource.getRecipients().size());
+        assertEquals("James Smith", inviteResource.getRecipients().get(0));
+        assertEquals("Peter Mason", inviteResource.getRecipients().get(1));
+        assertTrue(inviteResource.getContent().startsWith("Dear [recipient name]\n\nWe are inviting you to assess "));
+    }
+
+    @Test
+    public void getAllInvitesToResend() {
+        InnovationArea innovationArea = newInnovationArea().withName("innovation area").build();
+
+        List<Long> inviteIds =  simpleMap(IteratorUtils.toList(competitionInviteRepository.save(
+                newCompetitionInvite()
+                        .with(id(null))
+                        .withName("James Smith", "Peter Mason")
+                        .withEmail("james@email.com", "peter@email.com")
+                        .withUser()
+                        .withHash("hash1", "hash2")
+                        .withCompetition(competition)
+                        .withStatus(SENT)
+                        .withInnovationArea(innovationArea)
+                        .build(2)
+        ).iterator()), CompetitionInvite::getId);
+
+        loginCompAdmin();
+
+        RestResult<AssessorInvitesToSendResource> serviceResult = controller.getAllInvitesToResend(competition.getId(), inviteIds);
         assertTrue(serviceResult.isSuccess());
 
         AssessorInvitesToSendResource inviteResource = serviceResult.getSuccessObjectOrThrowException();
@@ -753,6 +786,43 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
+    public void resendInvites() throws Exception {
+        ZonedDateTime initialInviteDate = ZonedDateTime.now();
+        List<CompetitionInvite> invitesToResend = newCompetitionInvite()
+                .with(id(null))
+                .withName("tom poly", "cari poly")
+                .withEmail("tom@poly.io", "cari@poly.io")
+                .withUser()
+                .withHash("hash1", "hash2")
+                .withCompetition(competition, competition)
+                .withStatus(SENT, SENT)
+                .withSentOn(initialInviteDate)
+                .build(2);
+        competitionInviteRepository.save(invitesToResend);
+
+        List<Long> inviteIds =  simpleMap(IteratorUtils.toList(competitionInviteRepository.save(invitesToResend)
+                .iterator()), CompetitionInvite::getId);
+
+        AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
+                .withSubject("subject")
+                .withContent("content")
+                .build();
+
+        loginCompAdmin();
+
+        RestResult<Void> serviceResult = controller.resendInvites(inviteIds, assessorInviteSendResource);
+        assertTrue(serviceResult.isSuccess());
+
+        CompetitionInvite inviteOne = competitionInviteRepository.findOne(inviteIds.get(0));
+        ZonedDateTime inviteOneResendDate = inviteOne.getSentOn();
+        CompetitionInvite inviteTwo = competitionInviteRepository.findOne(inviteIds.get(1));
+        ZonedDateTime inviteTwoResendDate = inviteTwo.getSentOn();
+
+        assertTrue(inviteOneResendDate.isAfter(initialInviteDate));
+        assertTrue(inviteTwoResendDate.isAfter(initialInviteDate));
+    }
+
+    @Test
     public void sendAllInvites_toExistingApplicant() throws Exception {
         final UserResource applicantUser = getSteveSmith();
 
@@ -1054,6 +1124,99 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
+    public void getAssessorsNotAcceptedInviteIds() throws Exception {
+        loginCompAdmin();
+
+        InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
+        InnovationArea otherInnovationArea = innovationAreaRepository.findOne(10L);
+
+        Optional<Long> innovationAreaId = of(innovationArea.getId());
+        Optional<ParticipantStatus> status = of(PENDING);
+        Optional<Boolean> hasContract = of(TRUE);
+
+        Agreement agreement = agreementRepository.findOne(1L);
+
+        Profile profile1 = profileRepository.findOne(paulPlum.getProfileId());
+        Profile profile2 = profileRepository.findOne(felixWilson.getProfileId());
+
+        profile1.setBusinessType(ACADEMIC);
+        profile1.setSkillsAreas("Skill area 1");
+        profile1.setAgreement(agreement);
+        profile1.setAgreementSignedDate(now().minusDays(5));
+        profile1.addInnovationArea(innovationArea);
+
+        profile2.setBusinessType(BUSINESS);
+        profile2.setSkillsAreas("Skill area 2");
+        profile2.setAgreement(agreement);
+        profile2.setAgreementSignedDate(now().minusDays(10));
+        profile2.addInnovationArea(innovationArea);
+
+        List<Long> inviteIds = controller.getAssessorsNotAcceptedInviteIds(
+                competition.getId(),
+                innovationAreaId,
+                status,
+                hasContract
+        ).getSuccessObjectOrThrowException();
+
+        assertTrue(inviteIds.isEmpty());
+
+        profileRepository.save(asList(profile1, profile2));
+
+        paulPlum.setAffiliations(
+                newAffiliation()
+                        .withId()
+                        .withUser(paulPlum)
+                        .withExists(TRUE)
+                        .withDescription("Affiliation 1")
+                        .withAffiliationType(PROFESSIONAL)
+                        .build(2)
+        );
+
+        felixWilson.setAffiliations(
+                newAffiliation()
+                        .withId()
+                        .withUser(felixWilson)
+                        .withExists(FALSE)
+                        .withDescription("Affiliation 1")
+                        .withAffiliationType(PROFESSIONAL)
+                        .build(2)
+        );
+
+        userRepository.save(asList(paulPlum, felixWilson));
+
+        List<CompetitionParticipant> competitionParticipants = newCompetitionParticipant()
+                .withId()
+                .withUser(null, null, null, null, paulPlum, felixWilson)
+                .withInvite(
+                        newCompetitionInvite()
+                                .withId()
+                                .withName("Will Smith", "Bill Gates", "Serena Williams", "Angela Merkel", paulPlum.getName(), felixWilson.getName())
+                                .withEmail("ws@test.com", "bg@test.com", "sw@test.com", "am@test.com", paulPlum.getEmail(), felixWilson.getEmail())
+                                .withInnovationArea(innovationArea, otherInnovationArea, innovationArea, otherInnovationArea, null, null)
+                                .withCompetition(competition)
+                                .withStatus(SENT)
+                                .withSentOn(now().minusDays(1))
+                                .buildArray(6, CompetitionInvite.class)
+                )
+                .withCompetition(competition)
+                .withStatus(PENDING)
+                .withRole(ASSESSOR)
+                .build(6);
+
+        competitionParticipantRepository.save(competitionParticipants);
+        flushAndClearSession();
+
+        inviteIds = controller.getAssessorsNotAcceptedInviteIds(
+                competition.getId(),
+                innovationAreaId,
+                status,
+                hasContract
+        ).getSuccessObjectOrThrowException();
+
+        assertEquals(2, inviteIds.size());
+    }
+
+    @Test
     public void getInvitationOverview() throws Exception {
         loginCompAdmin();
 
@@ -1124,7 +1287,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         flushAndClearSession();
 
         Optional<Long> innovationAreaId = of(innovationArea.getId());
-        List<ParticipantStatus> status = Collections.singletonList(PENDING);
+        List<ParticipantStatus> status = singletonList(PENDING);
         Optional<Boolean> hasContract = of(TRUE);
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 

@@ -18,7 +18,9 @@ import java.util.*;
 
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.REJECTED;
+import static org.innovateuk.ifs.management.controller.CompetitionManagementCookieController.SELECTION_LIMIT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+
 /**
  * Build the model for the Invite assessors 'Overview' view.
  */
@@ -66,6 +68,7 @@ public class InviteAssessorsOverviewModelPopulator extends InviteAssessorsModelP
         model.setAssessors(assessors);
         model.setInnovationAreaOptions(innovationAreasOptions);
         model.setPagination(new PaginationViewModel(pageResource, originQuery));
+        model.setSelectAllDisabled(pageResource.getTotalElements() > SELECTION_LIMIT);
 
         return model;
     }

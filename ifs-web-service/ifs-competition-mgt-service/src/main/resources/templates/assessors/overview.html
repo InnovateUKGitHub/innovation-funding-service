@@ -97,7 +97,6 @@
                                      <label class="form-label" for="filterStatus">Status</label>
                                      <select name="status" id="filterStatus" class="form-control" th:field="*{status}">
                                          <option value="">All</option>
-                                         <option value="ACCEPTED">Invite accepted</option>
                                          <option value="PENDING">Invite sent</option>
                                          <option value="REJECTED">Invite declined</option>
                                      </select>
@@ -117,8 +116,9 @@
                    </fieldset>
 
                     <div class="grid-row">
+                        <input type="hidden" name="filterChanged" value="1"/>
                         <div class="column-half">
-                            <a href="?page=0" class="button button-clear no-margin">Clear filters</a>
+                            <a href="?page=0&filterChanged=1" class="button button-clear no-margin">Clear filters</a>
                         </div>
 
                         <div class="column-half alignright">
@@ -128,65 +128,93 @@
                 </div>
             </form>
 
+            <div class="warning-alert extra-margin-bottom" th:if="${model.selectAllDisabled}">
+                <p th:text="#{competition.management.limit.warning}"></p>
+            </div>
+            <div data-selection-limit-exceeded-block=""></div>
+
             <div class="grid-row sorting">
                 <div class="column-half">
                     <span class="heading-large" th:text="${model.pagination.totalCount}">20</span> assessors
                 </div>
-
-                <!--/*
-                <div class="column-half alignright">
-                    <form>
-                        <label for="sort">Sort by
-                            <select class="form-control" id="sort" name="sort">
-                                <option value="">All</option>
-                            </select>
-                        </label>
-                        <button class="button button-secondary button-small" type="submit">Sort</button>
-                    </form>
-                </div>
-                */-->
             </div>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th scope="col">Assessor name</th>
-                        <th scope="col">Type</th>
-                        <th scope="col">Innovation area</th>
-                        <th scope="col">Contract and DOI</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Details</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="assessor : ${model.assessors}">
-                        <td>
-                            <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${originQuery}" th:if="${assessor.id}"
-                               th:text="${assessor.name}">John Barnes
-                            </a>
-                            <span th:text="${assessor.name}" th:if="${assessor.id == null}">John Barnes</span>
-                        </td>
-                        <td th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Business</td>
-                        <td th:text="${assessor.innovationAreas}">Electronics, sensors &amp; photonics, Materials</td>
-                        <td>
-                            <span class="yes" th:if="${assessor.compliant}">Yes</span>
-                            <span class="no" th:unless="${assessor.compliant}">No</span>
-                        </td>
-                        <td th:text="${assessor.status.displayName}">Invite accepted</td>
-                        <td>
-                            <span th:if="${assessor.status == T(org.innovateuk.ifs.invite.resource.ParticipantStatusResource).PENDING}" th:remove="tag">
-                                <span th:text="${assessor.details}">Invite sent: 22-May-2017</span>
-                                <br />
-                                <a th:href="@{/competition/{competitionId}/assessors/invite/{inviteId}/resend(competitionId=${model.competitionId}, inviteId=${assessor.inviteId})}">Resend invite</a>
-                            </span>
-                            <span th:unless="${assessor.status == T(org.innovateuk.ifs.invite.resource.ParticipantStatusResource).PENDING}" th:text="${assessor.details}">Invite declined as person is too busy</span>
-                        </td>
-                    </tr>
-                    <tr th:if="${#lists.isEmpty(model.assessors)}">
-                        <td colspan="6">There are no assessors invited to this competition.</td>
-                    </tr>
-                </tbody>
-            </table>
+            <form method="POST"
+                  th:action="@{/competition/{competitionId}/assessors/invite/reviewResend(competitionId=${model.competitionId})}"
+                  th:object="${overviewSelectionForm}"
+                  data-multipage-select=""
+                  th:attr="data-total-checkboxes=${model.pagination.totalCount}">
+
+                <div class="grid-row sorting">
+                    <div class="column-half select-all">
+                        <div class="multiple-choice">
+                            <input type="checkbox"
+                                   data-select-all=""
+                                   id="select-all-check"
+                                   th:checked="${overviewSelectionForm.getAllSelected()}"
+                                   th:disabled="${model.selectAllDisabled || model.pagination.totalCount == 0}"/>
+                            <label for="select-all-check">
+                                Select all assessors
+                            </label>
+                        </div>
+                        <span class="form-hint">
+                        <span data-count-selected="" th:text="${#lists.size(overviewSelectionForm.selectedInviteIds)}"></span> assessors selected</span>
+                    </div>
+                    <div class="column-half select-all alignright">
+                        <button class="button" name="resendInvites" data-submit-el="" th:attr="disabled=${#lists.isEmpty(overviewSelectionForm.selectedInviteIds)}">
+                            Resend invites
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-overflow">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th scope="col">Select assessor</th>
+                            <th scope="col">Assessor name</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Innovation area</th>
+                            <th scope="col">Contract and DOI</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Details</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="assessor, index : ${model.assessors}">
+                            <td>
+                                <div class="multiple-choice">
+                                    <input type="checkbox"
+                                           th:id="|assessor-row-${index.count}|"
+                                           th:field="*{selectedInviteIds}"
+                                           th:value="${assessor.inviteId}"/>
+                                    <label th:for="|assessor-row-${index.count}|">
+                                        <span class="invisible">Add</span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${originQuery}" th:if="${assessor.id}"
+                                   th:text="${assessor.name}">John Barnes
+                                </a>
+                                <span th:text="${assessor.name}" th:if="${assessor.id == null}">John Barnes</span>
+                            </td>
+                            <td th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Business</td>
+                            <td th:text="${assessor.innovationAreas}">Electronics, sensors &amp; photonics, Materials</td>
+                            <td>
+                                <span class="yes" th:if="${assessor.compliant}">Yes</span>
+                                <span class="no" th:unless="${assessor.compliant}">No</span>
+                            </td>
+                            <td th:text="${assessor.status.displayName}">Invite accepted</td>
+                            <td th:text="${assessor.details}">assessor details</td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(model.assessors)}">
+                            <td colspan="6">There are no assessors invited to this competition.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
             <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
             <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
