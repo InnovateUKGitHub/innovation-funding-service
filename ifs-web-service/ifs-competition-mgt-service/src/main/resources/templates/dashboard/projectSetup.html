@@ -18,7 +18,7 @@
 
     <section th:with="projectSetupComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PROJECT_SETUP)}">
         <h2 class="heading-medium"
-            th:text="'Project setup ('+${model.counts.projectSetupCount}+')'"></h2>
+            th:text="'Project setup ('+${projectSetupComps == null ? '0' : projectSetupComps.size()}+')'"></h2>
         <ul class="list-overview">
             <li class="grid-row" th:each="competition : ${projectSetupComps}">
                 <th:block
