@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.competition.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
+import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
@@ -167,6 +169,19 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     }
 
     @Test
+    public void findUnsuccessfulApplications() {
+        Long competitionId = 1L;
+        CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
+
+        when(competitionLookupStrategy.getCompetititionResource(competitionId)).thenReturn(competitionResource);
+
+        assertAccessDenied(() -> classUnderTest.findUnsuccessfulApplications(competitionId), () -> {
+            verify(rules).internalUsersAndIFSAdminCanViewUnsuccessfulApplications(any(CompetitionResource.class), any(UserResource.class));
+            verifyNoMoreInteractions(rules);
+        });
+    }
+
+    @Test
     public void countCompetitions() {
         setLoggedInUser(null);
 
@@ -287,6 +302,11 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         @Override
         public ServiceResult<List<CompetitionSearchResultItem>> findNonIfsCompetitions() {
             return serviceSuccess(newCompetitionSearchResultItem().build(2));
+        }
+
+        @Override
+        public ServiceResult<List<ApplicationResource>> findUnsuccessfulApplications(Long competitionId) {
+            return serviceSuccess(ApplicationResourceBuilder.newApplicationResource().build(2));
         }
 
         @Override

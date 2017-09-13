@@ -52,6 +52,9 @@ public interface CompetitionService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionSearchResultItem>> findPreviousCompetitions();
 
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'VIEW_UNSUCCESSFUL_APPLICATIONS')")
+    ServiceResult<List<ApplicationResource>> findUnsuccessfulApplications(Long competitionId);
+
     @SecuredBySpring(value = "SEARCH", description = "Only internal users can search for competitions")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size);

@@ -43,7 +43,6 @@ public abstract class ApplicationMapper extends BaseMapper<Application, Applicat
             @Mapping(source = "applicationProcess.activityState", target = "applicationState"),
             @Mapping(source = "applicationProcess.ineligibleOutcomes", target = "ineligibleOutcome"),
             @Mapping(target = "leadOrganisationName", ignore = true)
-
     })
     @Override
     public abstract ApplicationResource mapToResource(Application domain);

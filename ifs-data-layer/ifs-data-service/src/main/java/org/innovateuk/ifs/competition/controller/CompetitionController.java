@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.controller;
 
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.assessment.transactional.AssessorService;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -88,6 +89,12 @@ public class CompetitionController {
     @GetMapping("/non-ifs")
     public RestResult<List<CompetitionSearchResultItem>> nonIfs() {
         return competitionService.findNonIfsCompetitions().toGetResponse();
+    }
+
+    @GetMapping("/{competitionId}/unsuccessful-applications")
+    public RestResult<List<ApplicationResource>> findUnsuccessfulApplications(@PathVariable("competitionId") final Long competitionId) {
+
+        return competitionService.findUnsuccessfulApplications(competitionId).toGetResponse();
     }
 
     @GetMapping("/search/{page}/{size}")

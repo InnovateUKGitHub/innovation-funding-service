@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.service;
 
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.*;
@@ -82,6 +83,11 @@ public class CompetitionServiceImpl implements CompetitionService {
                 .stream()
                 .filter(competition -> competition.getCompetitionStatus() == null || !competition.getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ApplicationResource> findUnsuccessfulApplications(Long competitionId) {
+        return competitionsRestService.findUnsuccessfulApplications(competitionId).getSuccessObjectOrThrowException();
     }
 
     @Override

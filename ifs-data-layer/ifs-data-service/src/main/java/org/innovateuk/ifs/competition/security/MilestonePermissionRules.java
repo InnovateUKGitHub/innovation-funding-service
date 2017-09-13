@@ -17,7 +17,7 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 public class MilestonePermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "VIEW_MILESTONE", description = "Innovation lead users can view milestones on competitions assigned to them.")
-    public boolean innovationLeadsCanViewMilestonesOnAssginedComps(Long competitionId, UserResource user) {
+    public boolean innovationLeadsCanViewMilestonesOnAssignedComps(Long competitionId, UserResource user) {
         return userIsInnovationLeadOnCompetition(competitionId, user.getId());
     }
 

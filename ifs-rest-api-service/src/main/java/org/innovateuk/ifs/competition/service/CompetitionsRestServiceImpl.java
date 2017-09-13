@@ -60,6 +60,11 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     }
 
     @Override
+    public RestResult<List<ApplicationResource>> findUnsuccessfulApplications(Long competitionId) {
+        return getWithRestResult(competitionsRestURL +  "/" + competitionId + "/unsuccessful-applications", applicationResourceListType());
+    }
+
+    @Override
     public RestResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size) {
         return getWithRestResult(competitionsRestURL + "/search/" + page + "/" + size + "?searchQuery=" + searchQuery, CompetitionSearchResult.class);
     }

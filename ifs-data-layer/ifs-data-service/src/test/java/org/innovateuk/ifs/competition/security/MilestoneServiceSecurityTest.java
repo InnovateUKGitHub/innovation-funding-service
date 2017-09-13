@@ -35,7 +35,7 @@ public class MilestoneServiceSecurityTest extends BaseServiceSecurityTest<Milest
 
         assertAccessDenied(() -> classUnderTest.getAllMilestonesByCompetitionId(1L), () -> {
             verify(rules).allInternalUsersCanViewCompetitionMilestonesOtherThanInnovationLeads(anyLong(), isNull(UserResource.class));
-            verify(rules).innovationLeadsCanViewMilestonesOnAssginedComps(anyLong(), isNull(UserResource.class));
+            verify(rules).innovationLeadsCanViewMilestonesOnAssignedComps(anyLong(), isNull(UserResource.class));
             verifyNoMoreInteractions(rules);
         });
     }

@@ -222,6 +222,18 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     }
 
     @Test
+    public void findUnsuccessfulApplications() {
+
+        List<ApplicationResource> unsuccessfulApplications = ApplicationResourceBuilder.newApplicationResource().build(2);
+
+        setupGetWithRestResultExpectations(competitionsRestURL + "/123" + "/unsuccessful-applications", applicationResourceListType(), unsuccessfulApplications);
+
+        List<ApplicationResource> result = service.findUnsuccessfulApplications(123L).getSuccessObject();
+        assertNotNull(result);
+        Assert.assertEquals(unsuccessfulApplications, result);
+    }
+
+    @Test
     public void countCompetitions() {
         CompetitionCountResource returnedResponse = new CompetitionCountResource();
 
