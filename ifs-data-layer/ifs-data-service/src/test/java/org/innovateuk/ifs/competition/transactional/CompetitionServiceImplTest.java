@@ -50,6 +50,7 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserRoleType.SUPPORT;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -232,6 +233,21 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         List<CompetitionSearchResultItem> response = service.findPreviousCompetitions().getSuccessObjectOrThrowException();
 
         assertCompetitionSearchResultsEqualToCompetitions(competitions, response);
+    }
+
+    @Test
+    public void findPreviousCompetitions_NoOpenDate() throws Exception {
+        List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId).build());
+        when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(PublicContentResourceBuilder.newPublicContentResource().build()));
+        when(competitionRepositoryMock.findPrevious()).thenReturn(competitions);
+
+        List<MilestoneResource> milestones = singletonList(newMilestoneResource().withType(MilestoneType.ALLOCATE_ASSESSORS).withDate(ZonedDateTime.now()).build());
+        when(milestoneService.getAllMilestonesByCompetitionId(competitionId)).thenReturn(serviceSuccess(milestones));
+
+        List<CompetitionSearchResultItem> response = service.findPreviousCompetitions().getSuccessObjectOrThrowException();
+
+        assertCompetitionSearchResultsEqualToCompetitions(competitions, response);
+        assertNull(response.get(0).getOpenDate());
     }
 
     @Test
