@@ -11,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,8 +34,7 @@ import static org.innovateuk.ifs.documentation.CompetitionInviteStatisticsResour
 import static org.innovateuk.ifs.documentation.CompetitionInviteStatisticsResourceDocs.competitionInviteStatisticsResourceFields;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewPageResourceBuilder.newAssessorInviteOverviewPageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
-import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
-import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
@@ -313,7 +312,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
                                         .description("The property to sort the elements on. For example `sort=invite.name,asc`. Defaults to `invite.name,asc`"),
                                 parameterWithName("innovationArea").optional()
                                         .description("Innovation area ID to filter assessors by."),
-                                parameterWithName("statuses").optional()
+                                parameterWithName("statuses")
                                         .description("Participant statuses to filter assessors by. Can only be 'ACCEPTED', 'REJECTED' or 'PENDING'."),
                                 parameterWithName("compliant").optional()
                                         .description("Flag to filter assessors by their compliance.")
@@ -329,17 +328,17 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
     public void getAssessorsNotAcceptedInviteIds() throws Exception {
         long competitionId = 1L;
         Optional<Long> innovationArea = of(10L);
-        List<ParticipantStatus> status = singletonList(PENDING);
+        List<ParticipantStatus> statuses = Arrays.asList(PENDING, REJECTED);
         Optional<Boolean> compliant = of(TRUE);
 
         List<Long> expectedInviteIds = asList(1L, 2L);
 
-        when(competitionInviteServiceMock.getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, status, compliant))
+        when(competitionInviteServiceMock.getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, statuses, compliant))
                 .thenReturn(serviceSuccess(expectedInviteIds));
 
         mockMvc.perform(get("/competitioninvite/getAssessorsNotAcceptedInviteIds/{competitionId}", 1L)
                 .param("innovationArea", "10")
-                .param("statuses", "PENDING")
+                .param("statuses", "PENDING,REJECTED")
                 .param("compliant", "1"))
                 .andExpect(status().isOk())
                 .andDo(document("competitioninvite/{method-name}",
@@ -357,7 +356,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
                         responseFields(fieldWithPath("[]").description("List of invite ids of Assessors who have not accepted for a competition"))
                 ));
 
-        verify(competitionInviteServiceMock, only()).getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, status, compliant);
+        verify(competitionInviteServiceMock, only()).getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, statuses, compliant);
     }
 
     @Test

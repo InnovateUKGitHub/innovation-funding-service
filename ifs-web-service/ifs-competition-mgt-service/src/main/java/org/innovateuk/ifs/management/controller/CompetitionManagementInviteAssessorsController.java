@@ -341,7 +341,7 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
                            @PathVariable("competitionId") long competitionId,
                            @RequestParam(defaultValue = "0") int page,
                            @RequestParam MultiValueMap<String, String> queryParams) {
-        String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_OVERVIEW, queryParams);
+        String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_ACCEPTED, queryParams);
 
         model.addAttribute("model", inviteAssessorsAcceptedModelPopulator.populateModel(
                 competitionId,
