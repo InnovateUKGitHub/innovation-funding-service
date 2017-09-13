@@ -132,7 +132,6 @@ Invite and accept the invitation
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
-#    And the user should see the text in the page    view and manage contributors and collaborators
     When the user clicks the button/link    link=view and manage contributors and collaborators
     And the user clicks the button/link    jQuery=a:contains("Add a collaborator organisation")
     And the user enters text to a text field    name=organisationName    Academic Test
@@ -221,23 +220,21 @@ the user verifies email
 
 the user follows the flow to register their organisation
     [Arguments]   ${org_type_id}
-    the user clicks the button/link             jQuery=a:contains("Start new application")
-    the user clicks the button/link             jQuery=a:contains("Create account")
-    the user should not see the element         jQuery=h3:contains("Organisation type")
+    the user clicks the button/link         jQuery=a:contains("Start new application")
+    the user clicks the button/link         jQuery=a:contains("Create account")
+    the user should not see the element     jQuery=h3:contains("Organisation type")
     the user selects the radio button       organisationTypeId  ${org_type_id}
     the user clicks the button/link         jQuery=.button:contains("Save and continue")
-    the user enters text to a text field        id=organisationSearchName    Innovate
-    the user clicks the button/link             id=org-search
-    the user clicks the button/link             link=INNOVATE LTD
-    the user selects the checkbox               address-same
+    the user enters text to a text field    id=organisationSearchName    Innovate
+    the user clicks the button/link         id=org-search
+    the user clicks the button/link         link=INNOVATE LTD
+    the user selects the checkbox           address-same
     the user clicks the button/link         jQuery=.button:contains("Continue")
     the user clicks the button/link         jQuery=.button:contains("Save and continue")
 
 the user enters the details and clicks the create account
     [Arguments]   ${first_name}  ${last_name}  ${REG_EMAIL}  ${password}
     Wait Until Page Contains Element Without Screenshots    link=terms and conditions
-#    Do we need to have this check
-#    Page Should Contain Element    xpath=//a[contains(@href, '/info/terms-and-conditions')]
     Input Text                     id=firstName  ${first_name}
     Input Text                     id=lastName  ${last_name}
     Input Text                     id=phoneNumber  23232323

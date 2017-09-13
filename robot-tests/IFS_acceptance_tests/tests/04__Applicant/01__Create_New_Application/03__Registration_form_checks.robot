@@ -21,24 +21,24 @@ Your details: Server-side validations
     [Documentation]    -INFUND-885
     [Tags]    HappyPath
     [Setup]    Applicant goes to the registration form
-    When the user enters the details and clicks the create account   O'Brian Elliot-Murray  O'Brian Elliot-Murray  ${valid_email}  ${blacklisted_password}
-    Then the user should see an error           Password is too weak.
+    When the user enters the details and clicks the create account  O'Brian Elliot-Murray  O'Brian Elliot-Murray  ${valid_email}  ${blacklisted_password}
+    Then the user should see an error                               Password is too weak.
     When the user enters the details and clicks the create account  !@£$  &*(^  ${valid_email}  ${correct_password}
-    Then the user should see an error           Invalid first name.
-    And the user should see an error            Invalid last name.
-    When the user enters text to a text field  id=firstName    ${EMPTY}
-    And the user enters text to a text field   id=lastName    ${EMPTY}
-    And the user enters text to a text field   id=phoneNumber    ${EMPTY}
-    And the user enters text to a text field   id=email    ${invalid_email_no_at}
-    And the user enters text to a text field   id=password    ${EMPTY}
+    Then the user should see an error                               Invalid first name.
+    And the user should see an error                                Invalid last name.
+    When the user enters text to a text field                       id=firstName    ${EMPTY}
+    And the user enters text to a text field                        id=lastName    ${EMPTY}
+    And the user enters text to a text field                        id=phoneNumber    ${EMPTY}
+    And the user enters text to a text field                        id=email    ${invalid_email_no_at}
+    And the user enters text to a text field                        id=password    ${EMPTY}
     And browser validations have been disabled
-    And the user clicks the button/link        css=[name="create-account"]
-    Then the user should see an error          Please enter a first name.
-    And the user should see an error           We were unable to create your account
-    And the user should see an error           Please enter a last name.
-    And the user should see an error           Please enter a phone number.
-    And the user should see an error           Please enter a valid email address.
-    And the user should see an error           Please enter your password.
+    And the user clicks the button/link                             css=[name="create-account"]
+    Then the user should see an error                               Please enter a first name.
+    And the user should see an error                                We were unable to create your account
+    And the user should see an error                                Please enter a last name.
+    And the user should see an error                                Please enter a phone number.
+    And the user should see an error                                Please enter a valid email address.
+    And the user should see an error                                Please enter your password.
 
 Your details: client-side password hint validation
     [Documentation]    -INFUND-9293
@@ -79,7 +79,7 @@ the user cannot login with the invalid email
     Input Text                                id=username    ${invalid_email_addy}
     Input Password                            id=password  ${correct_password}
     Click Button                              css=button[name="_eventId_proceed"]
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    The user should see the text in the page    Please enter a valid e-mail address
+    ${STATUS}    ${VALUE}=    Run Ke yword And Ignore Error Without Screenshots    The user should see the text in the page    Please enter a valid e-mail address
     Run Keyword If    '${status}' == 'FAIL'   The user should see the text in the page    Please enter a valid email address
     Execute Javascript                        jQuery('form').attr('novalidate','novalidate');
     Click Button                              css=button[name="_eventId_proceed"]
@@ -87,17 +87,7 @@ the user cannot login with the invalid email
     The user should see the text in the page  Your email/password combination doesn't seem to work.
 
 Applicant goes to the registration form
-    the user navigates to the page             ${frontDoor}
-    Given the user clicks the button/link      link=Home and industrial efficiency programme
-    When the user clicks the button/link       link=Start new application
-    And the user clicks the button/link        jQuery=.button:contains("Create account")
-    And the user selects the radio button      organisationTypeId    radio-1
-    And the user clicks the button/link        jQuery=button:contains("Save and continue")
-    When the user enters text to a text field  id=organisationSearchName    Hive IT
-    And the user clicks the button/link        id=org-search
-    And the user clicks the button/link        Link=${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
-    And the user selects the checkbox          address-same
-    And the user clicks the button/link        jQuery=button:contains("Continue")
-    And the user clicks the button/link        jQuery=button:contains("Save and continue")
-
+    the user navigates to the page                            ${frontDoor}
+    the user clicks the button/link                           link=Home and industrial efficiency programme
+    the user follows the flow to register their organisation  radio-1
 
