@@ -16,9 +16,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
-import static org.innovateuk.ifs.security.SecurityRuleUtil.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 /**
  * Permission Rules determining who can perform which actions upon an Organisation
