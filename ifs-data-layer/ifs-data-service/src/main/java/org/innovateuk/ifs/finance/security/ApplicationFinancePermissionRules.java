@@ -10,10 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isSupport;
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isInnovationLead;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isSupport;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInnovationLead;
 
 /**
  * ApplicationFinancePermissionRules are applying rules for seeing / updating the application

@@ -69,6 +69,7 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.transactional.*;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -264,6 +265,10 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
 
     protected UserResource projectFinanceUser() {
         return retrieveUserByEmail(PROJECT_FINANCE_EMAIL);
+    }
+
+    protected UserResource ifsAdmin() {
+        return newUserResource().withRolesGlobal(Collections.singletonList(newRoleResource().withType(UserRoleType.IFS_ADMINISTRATOR).build())).build();
     }
 
     protected UserResource retrieveUserByEmail(String emailAddress) {
