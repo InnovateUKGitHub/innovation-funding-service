@@ -60,6 +60,9 @@ items:
           resources:
             limits:
               memory: 1G
+              cpu: 1000m
+            requests:
+              cpu: 100m
     test: false
     triggers:
     - type: ConfigChange

@@ -44,6 +44,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.a
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.util.HttpUtils.getQueryStringParameters;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 /**
  * Handles the Competition Management Application overview page (and associated actions).
@@ -154,7 +155,7 @@ public class CompetitionManagementApplicationController {
             @PathVariable("formInputId") final Long formInputId,
             UserResource user) throws ExecutionException, InterruptedException {
         ProcessRoleResource processRole;
-        if (isInternal(user)) {
+        if (isInternalUser(user)) {
             long processRoleId = formInputResponseRestService.getByFormInputIdAndApplication(formInputId, applicationId).getSuccessObjectOrThrowException().get(0).getUpdatedBy();
             processRole = processRoleService.getById(processRoleId).get();
         } else {
@@ -204,9 +205,8 @@ public class CompetitionManagementApplicationController {
         return "application/reinstate-ineligible-application-confirm";
     }
 
-    // TODO: review when IFS-1370 is implemented - RB
-    private boolean isInternal(UserResource user) {
-        return user.hasRole(UserRoleType.IFS_ADMINISTRATOR) || user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE) || user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD);
+    private boolean isInternalUser(UserResource user) {
+        return user.hasRole(UserRoleType.IFS_ADMINISTRATOR) || isInternal(user);
     }
 
     private void validateIfTryingToMarkAsIneligible(String ineligibleReason,
