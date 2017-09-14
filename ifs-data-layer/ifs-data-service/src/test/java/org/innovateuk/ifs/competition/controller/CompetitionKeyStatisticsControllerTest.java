@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelKeyStatisticsResource;
 import org.innovateuk.ifs.competition.resource.*;
 import org.junit.Test;
 
@@ -10,6 +11,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionFundedKeyStatist
 import static org.innovateuk.ifs.competition.builder.CompetitionInAssessmentKeyStatisticsResourceBuilder.newCompetitionInAssessmentKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionOpenKeyStatisticsResourceBuilder.newCompetitionOpenKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionReadyToOpenKeyStatisticsResourceBuilder.newCompetitionReadyToOpenKeyStatisticsResource;
+import static org.innovateuk.ifs.competition.builder.AssessmentPanelKeyStatisticsResourceBuilder.newAssessmentPanelKeyStatisticsResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -83,5 +85,17 @@ public class CompetitionKeyStatisticsControllerTest extends BaseControllerMockMV
         mockMvc.perform(get("/competitionStatistics/{id}/funded", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(keyStatisticsResource)));
+    }
+
+    @Test
+    public void getAssessmentPanelKeyStatistics() throws Exception {
+        final long competitionId = 1L;
+
+        AssessmentPanelKeyStatisticsResource assessmentPanelKeyStatisticsResource = newAssessmentPanelKeyStatisticsResource().build();
+        when(assessmentServiceMock.getAssessmentPanelKeyStatistics(competitionId)).thenReturn(serviceSuccess(assessmentPanelKeyStatisticsResource));
+
+        mockMvc.perform(get("/competitionStatistics/{id}/panel", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(assessmentPanelKeyStatisticsResource)));
     }
 }
