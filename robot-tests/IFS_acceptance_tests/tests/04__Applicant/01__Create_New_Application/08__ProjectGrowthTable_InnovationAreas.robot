@@ -498,7 +498,7 @@ Newly invited collaborator can create account and sign in
     the user completes the new account creation
 
 the user completes the new account creation
-    the user selects the radio button                  organisationType    radio-4
+    the user selects the radio button                  organisationTypeId  ${PUBLIC_SECTOR_TYPE_ID}
     the user clicks the button/link                    jQuery=button:contains("Continue")
     the user should see the element                    jQuery=span:contains("Create your account")
     the user enters text to a text field               id=organisationSearchName    innovate
@@ -517,7 +517,6 @@ the user completes the new account creation
     the user reads his email and clicks the link       ${newUsersEmail}  Please verify your email address  Once verified you can sign into your account.
     the user should be redirected to the correct page  ${REGISTRATION_VERIFIED}
     the user clicks the button/link                    link=Sign in
-    the user should see the text in the page           Sign in
     the user enters text to a text field               jQuery=input[id="username"]  ${newUsersEmail}
     the user enters text to a text field               jQuery=input[id="password"]  ${correct_password}
     the user clicks the button/link                    jQuery=button:contains("Sign in")
