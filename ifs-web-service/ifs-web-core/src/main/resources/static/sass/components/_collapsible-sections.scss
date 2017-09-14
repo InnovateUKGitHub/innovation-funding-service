@@ -32,24 +32,30 @@
         border: 0;
       }
 
-      &[aria-expanded="true"] {
-        margin-bottom:0;
-
-        &:after {
-          content: '\25b2\0020';
-        }
-      }
-
       &[aria-expanded]  {
         display: block;
         width: 100%;
 
         &:after {
-          content: '\25bc\0020';
-          position:absolute; //absolute position for ie8
-          right:15px;
-          top:15px;
+          content: '';
+          position: absolute; //absolute position for ie8
+          right: 15px;
+          top: 15px;
           line-height: 1;
+          background: url(../images/icons/icons-plus-minus.png) 0 100%;
+          width: 16px;
+          height: 16px;
+        }
+      }
+
+      &[aria-expanded="true"] {
+        margin-bottom:0;
+
+        &:after {
+          content: '';
+          background: url(../images/icons/icons-plus-minus.png);
+          width: 16px;
+          height: 16px;
         }
       }
     }
