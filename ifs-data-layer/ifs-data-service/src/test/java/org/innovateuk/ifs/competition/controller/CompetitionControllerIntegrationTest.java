@@ -553,7 +553,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
             }
         });
 
-        List<CompetitionSearchResultItem> previousCompetitions = controller.previous().getSuccessObjectOrThrowException();
+        List<CompetitionSearchResultItem> previousCompetitions = controller.feedbackReleased().getSuccessObjectOrThrowException();
 
         Set<Long> previousCompetitionIds = newHashSet(projectSetup.getId());
         Set<Long> notPreviousCompetitionIds = newHashSet(notStartedCompetition.getId(), openCompetition.getId(),

@@ -36,7 +36,7 @@
         </li>
 
         <li id="section-5" th:class="${selectedTab == 'previous' ? 'selected' : ''}" th:unless="${supportView}">
-            <a th:href="@{'/dashboard/previous'}" th:text="'Previous ('+${counts.previousCount}+')'"></a>
+            <a th:href="@{'/dashboard/previous'}" th:text="'Previous ('+${counts.feedbackReleasedCount}+')'"></a>
         </li>
     </ul>
 </div>

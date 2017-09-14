@@ -240,9 +240,9 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void findPreviousCompetitions() throws Exception {
         List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId).build());
         when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(PublicContentResourceBuilder.newPublicContentResource().build()));
-        when(competitionRepositoryMock.findPrevious()).thenReturn(competitions);
+        when(competitionRepositoryMock.findFeedbackReleased()).thenReturn(competitions);
 
-        List<CompetitionSearchResultItem> response = service.findPreviousCompetitions().getSuccessObjectOrThrowException();
+        List<CompetitionSearchResultItem> response = service.findFeedbackReleasedCompetitions().getSuccessObjectOrThrowException();
 
         assertCompetitionSearchResultsEqualToCompetitions(competitions, response);
     }
@@ -251,12 +251,12 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void findPreviousCompetitions_NoOpenDate() throws Exception {
         List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId).build());
         when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(PublicContentResourceBuilder.newPublicContentResource().build()));
-        when(competitionRepositoryMock.findPrevious()).thenReturn(competitions);
+        when(competitionRepositoryMock.findFeedbackReleased()).thenReturn(competitions);
 
         List<MilestoneResource> milestones = singletonList(newMilestoneResource().withType(MilestoneType.ALLOCATE_ASSESSORS).withDate(ZonedDateTime.now()).build());
         when(milestoneService.getAllMilestonesByCompetitionId(competitionId)).thenReturn(serviceSuccess(milestones));
 
-        List<CompetitionSearchResultItem> response = service.findPreviousCompetitions().getSuccessObjectOrThrowException();
+        List<CompetitionSearchResultItem> response = service.findFeedbackReleasedCompetitions().getSuccessObjectOrThrowException();
 
         assertCompetitionSearchResultsEqualToCompetitions(competitions, response);
         assertNull(response.get(0).getOpenDate());
@@ -329,18 +329,18 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Long countLive = 1L;
         Long countProjectSetup = 2L;
         Long countUpcoming = 3L;
-        Long countPrevious = 4l;
+        Long countFeedbackReleased = 4l;
         when(competitionRepositoryMock.countLive()).thenReturn(countLive);
         when(competitionRepositoryMock.countProjectSetup()).thenReturn(countProjectSetup);
         when(competitionRepositoryMock.countUpcoming()).thenReturn(countUpcoming);
-        when(competitionRepositoryMock.countPrevious()).thenReturn(countPrevious);
+        when(competitionRepositoryMock.countFeedbackReleased()).thenReturn(countFeedbackReleased);
 
         CompetitionCountResource response = service.countCompetitions().getSuccessObjectOrThrowException();
 
         assertEquals(countLive, response.getLiveCount());
         assertEquals(countProjectSetup, response.getProjectSetupCount());
         assertEquals(countUpcoming, response.getUpcomingCount());
-        assertEquals(countPrevious, response.getPreviousCount());
+        assertEquals(countFeedbackReleased, response.getFeedbackReleasedCount());
     }
 
     @Test

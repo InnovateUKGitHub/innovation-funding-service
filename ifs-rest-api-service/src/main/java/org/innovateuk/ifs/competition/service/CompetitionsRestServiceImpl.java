@@ -176,7 +176,7 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     }
 
     @Override
-    public RestResult<List<CompetitionSearchResultItem>> findPreviousCompetitions() {
-        return getWithRestResult(competitionsRestURL +  "/previous", competitionSearchResultItemListType());
+    public RestResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions() {
+        return getWithRestResult(competitionsRestURL +  "/feedback-released", competitionSearchResultItemListType());
     }
 }

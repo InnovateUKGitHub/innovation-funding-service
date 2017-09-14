@@ -18,7 +18,7 @@
 
     <section th:with="previousComps=${model.competitions}">
         <h2 class="heading-medium"
-            th:text="'Previous ('+${model.counts.previousCount}+')'"></h2>
+            th:text="'Previous ('+${model.counts.feedbackReleasedCount}+')'"></h2>
         <ul class="list-overview">
             <li class="grid-row" th:each="competition : ${previousComps}">
                 <th:block

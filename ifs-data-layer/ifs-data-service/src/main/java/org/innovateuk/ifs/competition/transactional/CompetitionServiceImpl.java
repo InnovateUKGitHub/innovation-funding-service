@@ -202,9 +202,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<List<CompetitionSearchResultItem>> findPreviousCompetitions() {
+    public ServiceResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions() {
 
-        List<Competition> competitions = competitionRepository.findPrevious();
+        List<Competition> competitions = competitionRepository.findFeedbackReleased();
         return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
     }
 
@@ -277,7 +277,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<CompetitionCountResource> countCompetitions() {
         //TODO INFUND-3833 populate complete count
         return serviceSuccess(new CompetitionCountResource(competitionRepository.countLive(), competitionRepository.countProjectSetup(),
-                competitionRepository.countUpcoming(), competitionRepository.countPrevious(), competitionRepository.countNonIfs()));
+                competitionRepository.countUpcoming(), competitionRepository.countFeedbackReleased(), competitionRepository.countNonIfs()));
     }
 
     @Override

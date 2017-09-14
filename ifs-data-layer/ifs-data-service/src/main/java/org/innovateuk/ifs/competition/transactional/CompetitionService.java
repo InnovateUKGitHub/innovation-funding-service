@@ -50,7 +50,7 @@ public interface CompetitionService {
     ServiceResult<List<CompetitionSearchResultItem>> findNonIfsCompetitions();
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<CompetitionSearchResultItem>> findPreviousCompetitions();
+    ServiceResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions();
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'VIEW_UNSUCCESSFUL_APPLICATIONS')")
     ServiceResult<List<ApplicationResource>> findUnsuccessfulApplications(Long competitionId);

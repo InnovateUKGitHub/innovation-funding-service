@@ -10,7 +10,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
-import org.innovateuk.ifs.documentation.ApplicationDocs;
 import org.innovateuk.ifs.documentation.CompetitionCountResourceDocs;
 import org.innovateuk.ifs.documentation.CompetitionResourceDocs;
 import org.innovateuk.ifs.documentation.CompetitionSearchResultDocs;
@@ -406,15 +405,15 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
     }
 
     @Test
-    public void previous() throws Exception {
-        when(competitionService.findPreviousCompetitions()).thenReturn(serviceSuccess(newCompetitionSearchResultItem().build(2)));
+    public void feedbackReleased() throws Exception {
+        when(competitionService.findFeedbackReleasedCompetitions()).thenReturn(serviceSuccess(newCompetitionSearchResultItem().build(2)));
 
-        mockMvc.perform(get("/competition/previous"))
+        mockMvc.perform(get("/competition/feedback-released"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
                         responseFields(
-                                fieldWithPath("[]").description("list of previous competitions the authenticated user has access to")
+                                fieldWithPath("[]").description("list of competitions, which have had feedback released, that the authenticated user has access to")
                         )
                 ));
     }

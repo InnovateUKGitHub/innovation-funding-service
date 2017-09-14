@@ -44,7 +44,7 @@ public class CompetitionDashboardSearchServiceImpl implements CompetitionDashboa
 
     @Override
     public List<CompetitionSearchResultItem> getPreviousCompetitions() {
-        return competitionsRestService.findPreviousCompetitions().getSuccessObjectOrThrowException();
+        return competitionsRestService.findFeedbackReleasedCompetitions().getSuccessObjectOrThrowException();
     }
 
     @Override

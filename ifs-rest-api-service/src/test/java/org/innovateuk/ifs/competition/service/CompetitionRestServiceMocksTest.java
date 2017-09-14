@@ -304,14 +304,14 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     }
 
     @Test
-    public void findPreviousCompetitions() {
+    public void findFeedbackReleasedCompetitions() {
 
         List<CompetitionSearchResultItem> returnedResponse =
                 singletonList(new CompetitionSearchResultItem(1L, "Name", Collections.EMPTY_SET, 0, "", CompetitionStatus.OPEN, "Comp Type", 0, null, null, null));
 
-        setupGetWithRestResultExpectations(competitionsRestURL + "/previous", competitionSearchResultItemListType(), returnedResponse);
+        setupGetWithRestResultExpectations(competitionsRestURL + "/feedback-released", competitionSearchResultItemListType(), returnedResponse);
 
-        List<CompetitionSearchResultItem> responses = service.findPreviousCompetitions().getSuccessObject();
+        List<CompetitionSearchResultItem> responses = service.findFeedbackReleasedCompetitions().getSuccessObject();
         assertNotNull(responses);
         assertEquals(returnedResponse, responses);
     }

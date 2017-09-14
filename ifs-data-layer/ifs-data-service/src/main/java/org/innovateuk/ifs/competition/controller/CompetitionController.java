@@ -188,9 +188,9 @@ public class CompetitionController {
                 .toPutResponse();
     }
 
-    @GetMapping("/previous")
-    public RestResult<List<CompetitionSearchResultItem>> previous() {
-        return competitionService.findPreviousCompetitions().toGetResponse();
+    @GetMapping("/feedback-released")
+    public RestResult<List<CompetitionSearchResultItem>> feedbackReleased() {
+        return competitionService.findFeedbackReleasedCompetitions().toGetResponse();
     }
 
 }

@@ -221,7 +221,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     public void findPreviousCompetitions() {
         setLoggedInUser(null);
 
-        ServiceResult<List<CompetitionSearchResultItem>> results = classUnderTest.findPreviousCompetitions();
+        ServiceResult<List<CompetitionSearchResultItem>> results = classUnderTest.findFeedbackReleasedCompetitions();
         assertEquals(0, results.getSuccessObject().size());
 
         verify(rules, times(2)).internalUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
@@ -340,7 +340,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         }
 
         @Override
-        public ServiceResult<List<CompetitionSearchResultItem>> findPreviousCompetitions() {
+        public ServiceResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions() {
             return serviceSuccess(newCompetitionSearchResultItem().build(2));
         }
     }
