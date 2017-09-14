@@ -37,7 +37,7 @@ Comp Admin starts a new Competition
     # Then continue with the applying to this Competition, in order to see the new Fields applied
     Given the user navigates to the page           ${CA_UpcomingComp}
     When the user clicks the button/link           jQuery=.button:contains("Create competition")
-    Then the user fills in the CS Initial details  ${compWithoutGrowth}  ${month}  ${nextyear}
+    Then the user fills in the CS Initial details  ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}  ${compType_Generic}
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility
     And the user fills in the CS Milestones        ${month}  ${nextMonth}  ${nextyear}

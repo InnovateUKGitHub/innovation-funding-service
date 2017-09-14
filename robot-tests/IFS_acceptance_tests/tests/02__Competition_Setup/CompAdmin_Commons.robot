@@ -5,6 +5,10 @@ Resource    ../../resources/defaultResources.robot
 #CA = Competition Administration
 ${CA_UpcomingComp}   ${server}/management/dashboard/upcoming
 ${CA_Live}           ${server}/management/dashboard/live
+${compType_Programme}  Programme
+${compType_Sector}     Sector
+${compType_Generic}    Generic
+
 
 *** Keywords ***
 the user edits the assessed question information
@@ -30,10 +34,10 @@ the user sees the correct assessed question information
     the user should not see the text in the page    The business opportunity is plausible
 
 the user fills in the CS Initial details
-    [Arguments]  ${compTitle}  ${month}  ${nextyear}
+    [Arguments]  ${compTitle}  ${month}  ${nextyear}  ${compType}
     the user clicks the button/link                      link=Initial details
     the user enters text to a text field                 css=#title  ${compTitle}
-    the user selects the option from the drop-down menu  Programme  id=competitionTypeId
+    the user selects the option from the drop-down menu  ${compType}  id=competitionTypeId
     the user selects the option from the drop-down menu  Emerging and enabling  id=innovationSectorCategoryId
     the user selects the option from the drop-down menu  Robotics and autonomous systems  css=select[id^=innovationAreaCategory]
     the user enters text to a text field                 css=#openingDateDay  1
@@ -44,6 +48,7 @@ the user fills in the CS Initial details
     the user clicks the button/link                      jQuery=button:contains("Done")
     the user clicks the button/link                      link=Competition setup
     the user should see the element                      jQuery=div:contains("Initial details") ~ .task-status-complete
+
 
 the user fills in the CS Funding Information
     the user clicks the button/link       link=Funding information
