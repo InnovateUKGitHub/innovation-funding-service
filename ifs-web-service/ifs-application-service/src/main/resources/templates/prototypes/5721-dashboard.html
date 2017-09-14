@@ -4,10 +4,10 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
     </head>
-    <body class="dashboard-internal">
+    <body class="competition-management">
       <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
         <th:block th:insert="fragments/layout :: body-start" />
-          <th:block th:insert="fragments/layout :: global-header" />
+          <th:block th:insert="prototypes/fragments/layout :: prototype-comp-admin-header" th:with="status='loggedIn'" />
             <main id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
               <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'All competitions'}, ${(param.status != null ? '/prototypes/3115-comp-dashboard?status=' + param.status[0] :'/prototypes/3115-comp-dashboard')})" th:unless="${param.status != null and param.status[0] == 'ready'}" />
