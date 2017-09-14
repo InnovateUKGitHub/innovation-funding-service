@@ -26,7 +26,7 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...               INFUND-8590 Lead applicant can Delete a partner Organisation
 ...
 ...               IFS-951  Display 'Organisation type' against user
-Suite Setup       log in and create new application for collaboration if there is not one already
+Suite Setup       log in and create new application if there is not one already  Invite robot test application
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot

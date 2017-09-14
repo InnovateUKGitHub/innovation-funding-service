@@ -95,7 +95,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
     int countByCompetitionId(long competitionId);
 
-	int countByCompetitionIdAndApplicationProcessActivityStateState(long competitionId, State applicationStates);
+	int countByCompetitionIdAndApplicationProcessActivityStateState(long competitionId, State applicationState);
 
 	int countByCompetitionIdAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> submittedStates);
 
