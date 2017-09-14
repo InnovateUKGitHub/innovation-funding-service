@@ -20,20 +20,18 @@ new account complete all but one
     the guest user opens the browser
     we create a new user                              ${openCompetitionBusinessRTO}  sam  business  ${submit_bus_email}  radio-1
     create new account for submitting                 ${application_bus_name}
-    the user marks every section but one as complete  ${application_bus_name}
     Logout as user
     we create a new user                              ${openCompetitionBusinessRTO}  liam  rto  ${submit_rto_email}  radio-3
     create new account for submitting                 ${application_rto_name}
-    the user marks every section but one as complete  ${application_rto_name}
 
 create new account for submitting
     [Arguments]  ${application_name}
-#    the guest user opens the browser
-    the user clicks the button/link       link=Untitled application (start here)
-    the user clicks the button/link       jQuery=a:contains("Begin application")
-    the user clicks the button/link       link=Application details
-    the user enters text to a text field  id=application_details-title    ${application_name}
-    the user clicks the button/link       jQuery=button:contains("Save and return")
+    the user clicks the button/link                   link=Untitled application (start here)
+    the user clicks the button/link                   jQuery=a:contains("Begin application")
+    the user clicks the button/link                   link=Application details
+    the user enters text to a text field              id=application_details-title    ${application_name}
+    the user clicks the button/link                   jQuery=button:contains("Save and return")
+    the user marks every section but one as complete  ${application_name}
 
 the user marks every section but one as complete
     [Arguments]  ${application_name}

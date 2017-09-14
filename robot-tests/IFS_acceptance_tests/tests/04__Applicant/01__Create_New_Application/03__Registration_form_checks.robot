@@ -21,7 +21,7 @@ Your details: Server-side validations
     [Documentation]    -INFUND-885
     [Tags]    HappyPath
     [Setup]    Applicant goes to the registration form
-    When the user enters the details and clicks the create account  O'Brian Elliot-Murray  O'Brian Elliot-Murray  ${valid_email}  ${blacklisted_password}
+    When the user enters the details and clicks the create account  O'Brian Elliot-Murray  O'Dean Elliot-Manor  ${valid_email}  ${blacklisted_password}
     Then the user should see an error                               Password is too weak.
     When the user enters the details and clicks the create account  !@£$  &*(^  ${valid_email}  ${correct_password}
     Then the user should see an error                               Invalid first name.
@@ -79,7 +79,7 @@ the user cannot login with the invalid email
     Input Text                                id=username    ${invalid_email_addy}
     Input Password                            id=password  ${correct_password}
     Click Button                              css=button[name="_eventId_proceed"]
-    ${STATUS}    ${VALUE}=    Run Ke yword And Ignore Error Without Screenshots    The user should see the text in the page    Please enter a valid e-mail address
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    The user should see the text in the page    Please enter a valid e-mail address
     Run Keyword If    '${status}' == 'FAIL'   The user should see the text in the page    Please enter a valid email address
     Execute Javascript                        jQuery('form').attr('novalidate','novalidate');
     Click Button                              css=button[name="_eventId_proceed"]
