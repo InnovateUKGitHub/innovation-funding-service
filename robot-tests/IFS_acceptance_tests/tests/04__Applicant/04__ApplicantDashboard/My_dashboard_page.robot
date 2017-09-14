@@ -2,7 +2,7 @@
 Documentation     INFUND-37 As an applicant and I am on the application overview, I can view the status of this application, so I know what actions I need to take
 ...
 ...               INFUND-8614 Application dashboard - hours left
-Suite Setup       log in and create new application if there is not one already
+Suite Setup       log in and create new application if there is not one already  Robot test application
 Suite Teardown    the user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
