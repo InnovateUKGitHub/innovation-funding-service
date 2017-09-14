@@ -210,7 +210,7 @@
                 <th:block th:insert="question-type/form-elements :: ready-for-review" th:unless="${model.assignButtonsViewModel.currentUserIsLead}" th:with="displayBlock=${true}, model=${model.assignButtonsViewModel}" />
             </div>
 
-            <div class="form-footer__info">
+            <div class="form-footer__info" aria-live="polite" aria-atomic="true" role="status">
 
                 <span class="textarea-footer"></span>
                 <th:block th:if="${model.hasResponse}">
@@ -397,8 +397,8 @@
 
 <!-- ========================= Mark as complete buttons =========================== -->
 
-<th:block th:fragment="form-mark-as-complete-buttons (model)" th:with="formInput=${model.formInput}, question=${model.question}">
-    <th:block th:unless="${appIsClosed}">
+<th:block th:fragment="form-mark-as-complete-buttons (model)" th:with="formInput=${model.formInput}, question=${model.question}, compIsClosed=${model.assignButtonsViewModel.currentCompetitionIsClosed}">
+    <th:block th:unless="${appIsClosed or compIsClosed}">
         <button th:if="${model.complete and !model.summary}"
                 type="submit"
                 name="mark_as_incomplete"
@@ -439,11 +439,11 @@
 
 <!-- ========================= edit link =========================== -->
 
-<th:block th:fragment="form-edit-question-button (model)" th:with="formInput=${model.formInput}, question=${model.question}">
+<th:block th:fragment="form-edit-question-button (model)" th:with="formInput=${model.formInput}, question=${model.question}, compIsClosed=${model.assignButtonsViewModel.currentCompetitionIsClosed}">
     <button class="buttonlink"
             type="submit"
             name="edit_question"
-            th:unless="${appIsClosed}"
+            th:unless="${appIsClosed or compIsClosed}"
             th:value="${question.id}"
             th:attrappend="formaction='/application/'+${model.application.id}+'/form/question/edit/'+${question.id}"
             th:text="${model.summary ? 'Return and edit' : 'Edit'}" />
@@ -454,8 +454,8 @@
 <th:block th:fragment="form-word-count (maxWords, currentWordsLeft)">
     <th:block th:unless="${maxWords == 0}">
         <span class="count-label">
-            <span class="count-down" aria-live="polite" th:unless="${currentWordsLeft == null}" th:classappend="${currentWordsLeft &lt; 0}? negative : positive">Words remaining: <th:block th:text="${currentWordsLeft}" /> </span>
-            <span class="count-down" aria-live="polite" th:if="${currentWordsLeft == null}" th:classappend="${maxWords &lt; 0}? negative : positive" >Words remaining: <th:block th:text="${maxWords}" /> </span>
+            <span class="count-down" th:unless="${currentWordsLeft == null}" th:classappend="${currentWordsLeft &lt; 0}? negative : positive">Words remaining: <th:block th:text="${currentWordsLeft}" /> </span>
+            <span class="count-down" th:if="${currentWordsLeft == null}" th:classappend="${maxWords &lt; 0}? negative : positive" >Words remaining: <th:block th:text="${maxWords}" /> </span>
         </span>
     </th:block>
 </th:block>

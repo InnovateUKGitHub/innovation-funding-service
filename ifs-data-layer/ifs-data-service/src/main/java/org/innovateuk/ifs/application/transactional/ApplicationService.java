@@ -95,8 +95,8 @@ public interface ApplicationService {
     ServiceResult<Void> notifyApplicantsByCompetition(Long competitionId);
 
     @SecuredBySpring(value = "MARK_AS_INELIGIBLE",
-            description = "Comp admins and project finance users can mark applications as ineligible")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+            description = "Comp admins, project finance and innovation lead users can mark applications as ineligible")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'innovation_lead')")
     ServiceResult<Void> markAsIneligible(long applicationId, IneligibleOutcome reason);
 
     @SecuredBySpring(value = "INFORM_APPLICATION_IS_INELIGIBLE",

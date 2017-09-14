@@ -17,8 +17,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.security.SecurityRuleUtil.*;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 @PermissionRules
 @Component
@@ -160,6 +160,11 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "UPDATE_APPLICATION_STATE", description = "A comp admin can update the state of an application")
     public boolean compAdminCanUpdateApplicationState(final ApplicationResource applicationResource, final UserResource user) {
         return isCompAdmin(user);
+    }
+
+    @PermissionRule(value = "UPDATE_APPLICATION_STATE", description = "A project finance user can update the state of an application")
+    public boolean projectFinanceCanUpdateApplicationState(final ApplicationResource applicationResource, final UserResource user) {
+        return isProjectFinanceUser(user);
     }
 
     @PermissionRule(

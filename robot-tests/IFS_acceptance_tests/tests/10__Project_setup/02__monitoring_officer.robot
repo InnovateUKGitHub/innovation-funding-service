@@ -244,8 +244,6 @@ Custom suite setup
     Set suite variable  ${nextyear}
     the lead partner fills in project details if they are not already filled in
 
-
-
 the lead partner fills in project details if they are not already filled in
     The user logs-in in new browser   &{lead_applicant_credentials}
     the user navigates to the page    ${project_in_setup_page}
@@ -253,13 +251,11 @@ the lead partner fills in project details if they are not already filled in
     ${project_details_not_completed}  ${value} =  run keyword and ignore error without screenshots  the user should not see the element  css=#project-address-status.yes
     run keyword if  '${project_details_not_completed}' == 'PASS'  the users fill in project details
 
-
 the users fill in project details
     the lead partner fills in project details
     internal user can see that MO can be assigned
     the academic partner fills in their finance contact
     the industrial partner fills in their finance contact
-
 
 the lead partner fills in project details
     the user clicks the button/link    link=Target start date
@@ -270,12 +266,12 @@ the lead partner fills in project details
     the user selects the radio button    addressType    REGISTERED
     the user clicks the button/link    jQuery=.button:contains("Save")
     the user clicks the button/link    link=Project Manager
-    the user selects the radio button    projectManager    60
+    the user selects the radio button    projectManager  projectManager2
     the user clicks the button/link    jQuery=.button:contains("Save")
     the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     the user clicks the button/link    jQuery=.button:contains("Submit")
     the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
-    the user selects the radio button    financeContact    55
+    the user selects the radio button    financeContact  financeContact2
     the user clicks the button/link    jQuery=.button:contains("Save")
 
 internal user can see that MO can be assigned
@@ -289,7 +285,7 @@ the academic partner fills in their finance contact
     the user navigates to the page    ${project_in_setup_page}
     the user clicks the button/link   link=Project details
     the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
-    the user selects the radio button    financeContact    57
+    the user selects the radio button    financeContact  financeContact2
     the user clicks the button/link    jQuery=.button:contains("Save")
 
 
@@ -298,5 +294,5 @@ the industrial partner fills in their finance contact
     the user navigates to the page    ${project_in_setup_page}
     the user clicks the button/link   link=Project details
     the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
-    the user selects the radio button    financeContact    56
+    the user selects the radio button    financeContact  financeContact1
     the user clicks the button/link    jQuery=.button:contains("Save")

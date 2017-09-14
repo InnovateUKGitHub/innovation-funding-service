@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Dashboard'" />
+</head>
+
+<body th:with="context='applicant'" class="app-dashboard">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+
+    <div class="my-applications">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Thymeleaf test page',size='heading-large'" />
+        <section class="table">
+                <h2 class="heading-medium">big table</h2>
+                <table>
+                    <tr th:each="row : ${table}">
+                        <th:block th:each="item : ${row}">
+                            <td th:text="${item}"></td>
+                        </th:block>
+                    </tr>
+                </table>
+        </section>
+
+        <section class="terms-and-conditions">
+            <p>Read the <a href="/info/terms-and-conditions" target="_blank">terms and conditions</a> (this link will open in a new window)</p>
+        </section>
+    </div>
+
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+
+</html>

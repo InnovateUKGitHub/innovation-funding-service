@@ -6,11 +6,16 @@ import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
 import org.innovateuk.ifs.assessment.mapper.AssessmentFundingDecisionOutcomeMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessmentRejectOutcomeMapper;
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelKeyStatisticsResource;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.domain.Invite;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
+import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
@@ -25,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.WITHDRAWN;
@@ -34,6 +40,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
+import static org.innovateuk.ifs.workflow.resource.State.*;
 
 /**
  * Transactional and secured service providing operations around {@link org.innovateuk.ifs.assessment.domain.Assessment} data.
@@ -58,6 +65,13 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Autowired
     private ActivityStateRepository activityStateRepository;
+
+    @Autowired
+    private AssessmentPanelInviteRepository assessmentPanelInviteRepository;
+
+    @Autowired
+    private CompetitionParticipantRepository competitionParticipantRepository;
+
 
     @Override
     public ServiceResult<AssessmentResource> findById(long id) {
@@ -126,6 +140,34 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
                                     .collect(Collectors.toList())
                 )
         );
+    }
+
+    @Override
+    public ServiceResult<AssessmentPanelKeyStatisticsResource> getAssessmentPanelKeyStatistics(long competitionId) {
+        AssessmentPanelKeyStatisticsResource assessmentPanelKeyStatisticsResource = new AssessmentPanelKeyStatisticsResource();
+        assessmentPanelKeyStatisticsResource.setApplicationsInPanel(
+                applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateState(competitionId, IN_PANEL)
+        );
+        List<ParticipantStatus> assessmentPanelStatuses = assessmentPanelInviteRepository.getByCompetitionId(competitionId)
+                .stream()
+                .map(Invite::getId)
+                .map(id -> competitionParticipantRepository
+                        .getByInviteId(id)
+                        .getStatus())
+                .collect(toList());
+        assessmentPanelKeyStatisticsResource.setAssessorsAccepted(
+                (int) assessmentPanelStatuses
+                        .stream()
+                        .filter(status -> status.equals(ParticipantStatus.PENDING))
+                        .count()
+        );
+        assessmentPanelKeyStatisticsResource.setAssessorsPending(
+                (int) assessmentPanelStatuses
+                        .stream()
+                        .filter(status -> status.equals(ParticipantStatus.ACCEPTED))
+                        .count()
+        );
+        return serviceSuccess(assessmentPanelKeyStatisticsResource);
     }
 
     @Override
@@ -206,6 +248,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
                         )
                 );
     }
+
 
     private ServiceResult<AssessmentResource> createAssessment(User assessor, Application application, Role role, ActivityState activityState) {
 

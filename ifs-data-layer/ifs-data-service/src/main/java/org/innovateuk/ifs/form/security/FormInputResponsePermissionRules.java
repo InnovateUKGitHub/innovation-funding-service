@@ -19,8 +19,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 @PermissionRules
 @Component

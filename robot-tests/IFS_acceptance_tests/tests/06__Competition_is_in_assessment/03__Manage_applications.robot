@@ -28,7 +28,7 @@ Resource          ../../resources/defaultResources.robot
 *** Variables ***
 ${Molecular_id}        ${application_ids['Molecular tree breeding']}
 ${Virtual_Reality_id}  ${application_ids['Living with Virtual Reality']}
-${Paul_Plum_id}        169
+${Paul_Plum_id}        171
 
 *** Test Cases ***
 View the list of the applications
@@ -72,6 +72,7 @@ Filter assessors
 View assessor progress page
     [Documentation]  IFS-321
     [Tags]
+    [Setup]  the user clicks the button/link  jQuery=a:contains("21 to 40")
     Given the user clicks the button/link  jQuery=td:contains("Paul Plum") ~ td a:contains("View progress")
     Then The user should see the element   jQuery=h2:contains("Paul Plum")
     And the user should see the element    jQuery=h4:contains("Innovation area") ~ ul li:contains("Urban living") ~ li:contains("Smart infrastructure")
@@ -116,6 +117,7 @@ Assign an application to an assessor
     [Documentation]    IFS-811
     [Tags]
     Given the user clicks the button/link  link=Allocate assessors
+    And the user clicks the button/link    jQuery=a:contains("41 to")
     When the user clicks the button/link   jQuery=td:contains("Shaun Bradley") ~ td a:contains("View progress")
     Then the user should see the element   jQuery=h2:contains("Assigned (0)") + p:contains("No applications have been assigned to this assessor")
     And the user clicks the button/link    jQuery=td:contains("36") ~ td button:contains("Assign")
@@ -319,6 +321,7 @@ The key statistics counts should be correct
     Should Be Equal As Integers    ${SUBMITTED}    1
 
 the assessor list is correct before changes
+    the user clicks the button/link  jQuery=a:contains("21 to 40")
     the user should see the element  jQuery=td:contains("Paul Plum") ~ td:contains("Town Planning, Construction") ~ td:contains("7") ~ td:contains("7") ~ td:contains("3") ~ td:contains("0")
 
 the user accepts the application

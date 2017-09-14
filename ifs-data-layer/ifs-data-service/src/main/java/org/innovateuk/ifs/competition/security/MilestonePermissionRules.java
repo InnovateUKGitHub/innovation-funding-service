@@ -7,7 +7,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isInnovationLead;
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 /**
  * Provides the permissions around CRUD for Milestones

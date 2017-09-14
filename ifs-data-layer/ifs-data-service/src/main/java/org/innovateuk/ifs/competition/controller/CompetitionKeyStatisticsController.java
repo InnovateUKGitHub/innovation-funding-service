@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.competition.controller;
 
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelKeyStatisticsResource;
+import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.*;
@@ -20,6 +22,9 @@ public class CompetitionKeyStatisticsController {
     @Autowired
     private CompetitionKeyStatisticsService competitionKeyStatisticsService;
 
+    @Autowired
+    private AssessmentService assessmentService;
+
     @GetMapping("/readyToOpen")
     public RestResult<CompetitionReadyToOpenKeyStatisticsResource> getReadyToOpenKeyStatistics(@PathVariable("id") long id) {
         return competitionKeyStatisticsService.getReadyToOpenKeyStatisticsByCompetition(id).toGetResponse();
@@ -39,5 +44,10 @@ public class CompetitionKeyStatisticsController {
     @GetMapping("/funded")
     public RestResult<CompetitionFundedKeyStatisticsResource> getFundedKeyStatistics(@PathVariable("id") long id) {
         return competitionKeyStatisticsService.getFundedKeyStatisticsByCompetition(id).toGetResponse();
+    }
+
+    @GetMapping("/panel")
+    public RestResult<AssessmentPanelKeyStatisticsResource> getInAssessmentPanelKeyStatistics(@PathVariable("id") long id) {
+        return assessmentService.getAssessmentPanelKeyStatistics(id).toGetResponse();
     }
 }
