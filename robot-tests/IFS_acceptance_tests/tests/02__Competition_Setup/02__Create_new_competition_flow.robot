@@ -262,7 +262,7 @@ Funding information: should have a green check
     And the user should not see the element    jQuery=button:contains("Complete")
 
 Eligibility: Contain the correct options
-    [Documentation]    INFUND-2989 INFUND-2990 INFUND-9225
+    [Documentation]  INFUND-2989 INFUND-2990 INFUND-9225 IFS
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link    link=Eligibility
@@ -270,7 +270,9 @@ Eligibility: Contain the correct options
     Then the user should see the element    jQuery=label:contains("Single or Collaborative")
     When the user should see the element    jQuery=label:contains("Collaborative")
     And the user should see the element    jQuery=label:contains("Business")
+    And the user should see the element    jQuery=label[for="lead-applicant-type-2"]:contains("Research")
     And the user should see the element    jQuery=label:contains("Research and technology organisation")
+    And the user should see the element    jQuery=label:contains("Public sector")
     And the user should see the element    jQuery=div:nth-child(7) label:contains("Yes")
     And the user should see the element    jQuery=div:nth-child(7) label:contains("No")
     And the user should see the element    jQuery=label:contains("Feasibility studies")
