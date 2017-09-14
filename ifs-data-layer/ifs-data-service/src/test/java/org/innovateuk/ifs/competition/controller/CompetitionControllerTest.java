@@ -146,7 +146,7 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
 
         when(competitionServiceMock.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField)).thenReturn(serviceSuccess(applicationPage));
 
-        mockMvc.perform(get("/competition/{id}/unsuccessful-applications?page={page}&size={pageSize}&filter={filter}", competitionId, pageIndex, pageSize, sortField))
+        mockMvc.perform(get("/competition/{id}/unsuccessful-applications?page={page}&size={pageSize}&sort={sortField}", competitionId, pageIndex, pageSize, sortField))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(applicationPage)));
 
