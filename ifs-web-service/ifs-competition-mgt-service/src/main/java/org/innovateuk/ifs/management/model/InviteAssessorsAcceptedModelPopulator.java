@@ -56,6 +56,7 @@ public class InviteAssessorsAcceptedModelPopulator extends InviteAssessorsModelP
 
         model.setAssessors(assessors);
         model.setPagination(new PaginationViewModel(pageResource, originQuery));
+        model.setOriginQuery(originQuery);
 
         return model;
     }

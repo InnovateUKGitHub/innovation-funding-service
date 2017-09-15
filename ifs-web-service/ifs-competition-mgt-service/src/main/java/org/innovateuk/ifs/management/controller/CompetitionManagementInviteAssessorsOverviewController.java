@@ -97,7 +97,6 @@ public class CompetitionManagementInviteAssessorsOverviewController extends Comp
                 filterForm.getCompliant(),
                 originQuery
         ));
-        model.addAttribute("originQuery", originQuery);
 
         return "assessors/overview";
     }

@@ -70,6 +70,7 @@ public class InviteAssessorsOverviewModelPopulator extends InviteAssessorsModelP
         model.setInnovationAreaOptions(innovationAreasOptions);
         model.setPagination(new PaginationViewModel(pageResource, originQuery));
         model.setSelectAllDisabled(pageResource.getTotalElements() > SELECTION_LIMIT);
+        model.setOriginQuery(originQuery);
 
         return model;
     }

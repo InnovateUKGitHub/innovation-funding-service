@@ -209,7 +209,7 @@
                         <tbody>
                         <tr th:each="assessor : ${model.assessors}">
                             <td>
-                                <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${originQuery}"
+                                <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${model.originQuery}"
                                    th:if="${assessor.id}"
                                    th:text="${assessor.name}">John Barnes
                                 </a>

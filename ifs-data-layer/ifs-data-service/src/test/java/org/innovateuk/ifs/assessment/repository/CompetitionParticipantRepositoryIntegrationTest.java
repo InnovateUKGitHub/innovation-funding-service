@@ -37,12 +37,12 @@ import org.springframework.data.domain.Sort;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
@@ -210,7 +210,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         );
 
         RejectionReason reason = rejectionReasonRepository.findAll().get(0);
-        savedParticipant.reject(reason, of("too busy"));
+        savedParticipant.reject(reason, Optional.of("too busy"));
         flushAndClearSession();
 
         long id = savedParticipant.getId();
@@ -931,8 +931,8 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         List<CompetitionParticipant> participants = saveNewCompetitionParticipants(newAssessorInvites);
         RejectionReason reason = rejectionReasonRepository.findAll().get(0);
-        participants.get(2).reject(reason, of("too busy"));
-        participants.get(3).reject(reason, of("not well"));
+        participants.get(2).reject(reason, Optional.of("too busy"));
+        participants.get(3).reject(reason, Optional.of("not well"));
 
         flushAndClearSession();
 

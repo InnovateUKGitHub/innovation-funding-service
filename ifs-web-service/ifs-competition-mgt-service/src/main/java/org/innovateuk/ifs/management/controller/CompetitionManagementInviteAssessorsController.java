@@ -93,7 +93,6 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
         InviteAssessorsFindViewModel inviteAssessorsFindViewModel = inviteAssessorsFindModelPopulator.populateModel(competitionId, page, filterForm.getInnovationArea(), originQuery);
 
         model.addAttribute("model", inviteAssessorsFindViewModel);
-        model.addAttribute("originQuery", originQuery);
 
         return "assessors/find";
     }
@@ -252,9 +251,7 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
         }
 
         String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_INVITE, queryParams);
-
         model.addAttribute("model", inviteAssessorsInviteModelPopulator.populateModel(competitionId, page, originQuery));
-        model.addAttribute("originQuery", originQuery);
 
         return "assessors/invite";
     }
@@ -348,7 +345,6 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
                 page,
                 originQuery
         ));
-        model.addAttribute("originQuery", originQuery);
 
         return "assessors/accepted";
     }
