@@ -95,6 +95,11 @@ task dbResetSysint(type:Exec) {
     args = [openshiftEnv, "sysint", project.version]
 }
 
+task fractalPushSysint(type:Exec) {
+    executable = 'setup-files/scripts/openshift/fractal-push.sh'
+    args = [openshiftEnv, "sysint", project.version]
+}
+
 
 // Perf tasks
 
