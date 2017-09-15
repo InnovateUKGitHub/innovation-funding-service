@@ -279,7 +279,7 @@ function pushApplicationImages() {
 }
 
 function pushDBResetImages() {
-    docker tag innovateuk/dbreset:${VERSION} \
+    docker tag innovateuk/dbreset:latest \
         ${REGISTRY}/${PROJECT}/dbreset:${VERSION}
 
     docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
