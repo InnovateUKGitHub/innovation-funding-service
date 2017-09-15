@@ -33,7 +33,7 @@
             <tbody>
             <tr th:each="row, iterStat : ${model.unsuccessfulApplications}">
                 <td>
-                    <a th:href="@{/competition/{competitionId}/application/{applicationId}/{originQuery}(competitionId=${row.competition},applicationId=${row.id},originQuery=${originQuery})}" th:text="${row.id}">124</a>
+                    <a th:href="@{'/competition/' + ${row.competition} + '/application/' + ${row.id} + ${originQuery}}" th:text="${row.id}">124</a>
                 </td>
                 <td th:text="${row.name}">Automated Project Title generator</td>
                 <td th:text="${row.leadOrganisationName}">B.Systems</td>
