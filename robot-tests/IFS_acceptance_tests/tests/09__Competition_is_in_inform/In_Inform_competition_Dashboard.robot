@@ -20,6 +20,12 @@ Documentation     INFUND-7365 Inflight competition dashboards: Inform dashboard
 ...               INFUND-8876 No back navigation on applicant feedback view
 ...
 ...               INFUND-8066 Filter on 'Manage funding notifications' dashboard
+...
+...               IFS-1458 View unsuccessful applications after Inform state: initial navigation
+...
+...               IFS-1459 View unsuccessful applications after Inform state: list
+...
+...               IFS-1517 Internal user: competitions listing in Previous tab
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    Close browser and delete emails
 Force Tags        CompAdmin
@@ -86,6 +92,26 @@ Unsuccessful applicant sees unsuccessful alert
     Given the user should see the element    jQuery=.status:contains("Unsuccessful")
     When the user clicks the button/link    jQuery=a:contains("Electric Drive")
     And the user should see the element    jQuery=.warning-alert:contains("Your application has not been successful in this competition")
+
+Internal user can view ineligible and unsuccessful applications in previous tab
+    [Documentation]  IFS-1458 IFS-1459 IFS-1517
+    [Tags]  HappyPath
+    Given log in as a different user         &{Comp_admin1_credentials}
+    When the user clicks the button/link     jQuery=a:contains("Previous")
+    And the user clicks the button/link      jQuery=a:contains("${NOT_EDITABLE_COMPETITION_NAME}")
+    And the user clicks the button/link      jQuery=a:contains("Unsuccessful applications")
+    Then the user should see the element     jQuery=td:contains("${application_ids['Electric Drive']}") + td:contains("Electric Drive")
+    And the user should see the element      jQuery=td:contains("${application_ids['Electric Drive']}") ~ td:contains("Unsuccessful")
+    And the user should not see the element  jQuery=td:contains("${application_ids['Climate control solution']}")
+    And the user should not see the element  jQuery=td:contains("${application_ids['High Performance Gasoline Stratified']}")
+    When the user navigates to the page      ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/unsuccessful
+    Then the user should see the element     jQuery=td:contains("${application_ids['Application with ineligible']}") + td:contains("Application with ineligible")
+    And the user should see the element      jQuery=td:contains("${application_ids['Application with ineligible']}") ~ td:contains("Ineligible")
+    When the user clicks the button/link     jQuery=a:contains("${application_ids['Application with ineligible']}")
+    # TODO To uncomment below line once IFS-1654 is resolved
+    # Then the user should not see the element   jQuery=a.button:contains("Reinstate application")
+    And the user clicks the button/link      jQuery=a:contains("Back")
+    Then the user should see the element     jQuery=h1:contains("Unsuccessful applications")
 
 Successful applicant see successful alert
     [Documentation]    INFUND-7861

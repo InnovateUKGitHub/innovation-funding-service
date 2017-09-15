@@ -10,10 +10,6 @@ Documentation     INFUND-2601 As a competition administrator I want a view of al
 ...               INFUND-8624 Successful applications moved to 'Project setup' upon receiving funding decision notification email
 ...
 ...               INFUND-8854 Set competition state to Inform when ALL applications either set to Successful or Unsuccessful and final decision email sent
-...
-...               IFS-1458 View unsuccessful applications after Inform state: initial navigation
-...
-...               IFS-1459 View unsuccessful applications after Inform state: list
 Suite Setup       Custom Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin  Applicant
@@ -70,29 +66,6 @@ Proj Finance user can send Fund Decision notification
     And the user clicks the button/link        jQuery=button:contains("Send email to all applicants")
     When the user clicks the button/link       jQuery=.send-to-all-applicants-modal button:contains("Send email to all applicants")
     Then the user should see the element       jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("Sent") ~ td:contains("${today}")
-
-Internal user can view ineligible applications in unsuccessful list
-    [Documentation]  IFS-1458 IFS-1459
-    [Tags]
-    Given log in as a different user           &{Comp_admin1_credentials}
-    And the user navigates to the page         ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/application/${FUNDERS_PANEL_APPLICATION_2_NUMBER}
-    Then the user clicks the button/link       jQuery=button:contains("Mark application as ineligible")
-    And the user enters text to a text field   id=ineligibleReason  This is the reason of why this application is ineligible
-    When the user clicks the button/link       jQuery=.button:contains("Mark application as ineligible")
-    Then the user should see the element       jQuery=td:contains(${FUNDERS_PANEL_APPLICATION_2_TITLE})
-    When the user navigates to the page        ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/applications/unsuccessful
-    Then the user should see the element       jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_2_NUMBER}") + td:contains(${FUNDERS_PANEL_APPLICATION_2_TITLE})
-    And the user should see the element        jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_2_NUMBER}") ~ td:contains("Ineligible")
-
-Internal user does not see eligible applications in unsuccessful list
-    [Documentation]  IFS-1458 IFS-1459
-    [Tags]
-    Given the user navigates to the page        ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/application/${FUNDERS_PANEL_APPLICATION_2_NUMBER}
-    Then the user clicks the button/link       jQuery=a:contains("Reinstate application")
-    And the user clicks the button/link        jQuery=button:contains("Reinstate application")
-    When the user navigates to the page        ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/applications/unsuccessful
-    Then the user should not see the element   jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_2_NUMBER}") + td:contains(${FUNDERS_PANEL_APPLICATION_2_TITLE})
-    And the user should not see the element    jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_2_NUMBER}") ~ td:contains("Ineligible")
 
 Internal user can filter notified applications
     [Documentation]  INFUND-7376 INFUND-8065
@@ -237,11 +210,3 @@ verify the user has received the on hold email
     Given the external user reads his email and can see the correct status  Awaiting  ${application1Subject}  ${onholdmessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  ${email_user}
     Then the user should not see the element  jQuery=div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("Unsuccessful")
     And the user should not see the element   jQuery=div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("Successful")
-
-internal user can view unsuccessful applications
-    the user navigates to the page   ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/applications/manage
-    the user clicks the button/link  jQuery=a:contains("Unsuccessful applications")
-    the user should see the element  jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_2_NUMBER}") + td:contains(${FUNDERS_PANEL_APPLICATION_2_TITLE})
-    the user should see the element  jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_2_NUMBER}") ~ td:contains("Unsuccessful")
-    # TODO To uncomment below line once IFS-1581 is fixed
-    # the user should not see the element  jQuery=a:contains("${FUNDERS_PANEL_APPLICATION_1_NUMBER}")
