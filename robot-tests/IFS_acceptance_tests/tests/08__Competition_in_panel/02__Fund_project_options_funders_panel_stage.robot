@@ -70,7 +70,6 @@ Proj Finance user can send Fund Decision notification
 Internal user can filter notified applications
     [Documentation]  INFUND-7376 INFUND-8065
     [Tags]
-    [Setup]  log in as a different user        &{internal_finance_credentials}
     Given the user navigates to the page       ${funders_panel_competition_url}/manage-funding-applications
     When the user enters text to a text field  css=#stringFilter  ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
     And the user clicks the button/link        jQuery=button:contains("Filter")
@@ -138,16 +137,6 @@ Once all final decisions have been made and emails are sent Comp moves to Inform
     Given log in as a different user      &{Comp_admin1_credentials}
     When the user navigates to the page   ${CA_Live}
     Then the user should see the element  jQuery=section:contains("Inform") > ul:contains("${FUNDERS_PANEL_COMPETITION_NAME}")
-
-Internal users can see unsuccessful applications
-    [Documentation]  IFS-1458 IFS-1459
-    [Tags]
-    Given log in as a different user   &{internal_finance_credentials}
-    Then internal user can view unsuccessful applications
-    When log in as a different user   &{support_user_credentials}
-    Then internal user can view unsuccessful applications
-    When log in as a different user   &{innovation_lead_two}
-    Then internal user can view unsuccessful applications
 
 *** Keywords ***
 Custom Suite Setup
