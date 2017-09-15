@@ -498,7 +498,7 @@ Newly invited collaborator can create account and sign in
     the user completes the new account creation
 
 the user completes the new account creation
-    the user selects the radio button                  organisationTypeId  ${PUBLIC_SECTOR_TYPE_ID}
+    the user selects the radio button                  organisationType  radio-4
     the user clicks the button/link                    jQuery=button:contains("Continue")
     the user should see the element                    jQuery=span:contains("Create your account")
     the user enters text to a text field               id=organisationSearchName    innovate
