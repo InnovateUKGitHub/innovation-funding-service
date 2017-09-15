@@ -37,9 +37,9 @@ Comp Admin starts a new Competition
     # Then continue with the applying to this Competition, in order to see the new Fields applied
     Given the user navigates to the page           ${CA_UpcomingComp}
     When the user clicks the button/link           jQuery=.button:contains("Create competition")
-    Then the user fills in the CS Initial details  ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}  ${compType_Generic}
+    Then the user fills in the CS Initial details  ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}
     And the user fills in the CS Funding Information
-    And the user fills in the CS Eligibility
+    And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}
     And the user fills in the CS Milestones        ${month}  ${nextMonth}  ${nextyear}
 
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
@@ -51,19 +51,14 @@ Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     And the user should see the dates in full format
     Then the user clicks the button/link   link=Competition setup
 
-Application Finances should not include project growth
-    [Documentation]    INFUND-6393
-    [Tags]  HappyPath
-    The user decides about the growth table  no  No
-
 Comp admin completes ths competition setup
     [Documentation]    INFUND-6393
-    [Tags]
+    [Tags]  HappyPath
     Given the user should see the element  jQuery=h1:contains("Competition setup")
-    Then the user marks the Application as done
+    Then the user marks the Application as done  no
     And the user fills in the CS Assessors
     When the user clicks the button/link  link=Public content
-    Then the user fills in the Public content and publishes
+    Then the user fills in the Public content and publishes  NoGrowthTable
     And the user clicks the button/link   link=Return to setup overview
     And the user should see the element   jQuery=div:contains("Public content") ~ .task-status-complete
     When the user clicks the button/link  jQuery=a:contains("Complete")
@@ -114,13 +109,12 @@ Once the project growth table is selected
     # For the testing of story IFS-40, turning this competition into Sector with All innovation areas
     Then the user fills in the Open-All Initial details  ${compWithGrowth}  ${month}  ${nextyear}
     And the user fills in the CS Funding Information
-    And the user fills in the CS Eligibility
+    And the user fills in the CS Eligibility             ${BUSINESS_TYPE_ID}
     And the user fills in the CS Milestones              ${month}  ${nextMonth}  ${nextyear}
-    When the user decides about the growth table         yes    Yes
-    Then the user marks the Application as done
+    Then the user marks the Application as done          yes
     And the user fills in the CS Assessors
     When the user clicks the button/link                 link=Public content
-    Then the user fills in the Public content and publishes
+    Then the user fills in the Public content and publishes  GrowthTable
     And the user clicks the button/link                  link=Return to setup overview
     And the user should see the element                  jQuery=div:contains("Public content") ~ .task-status-complete
     When the user clicks the button/link                 jQuery=a:contains("Complete")
@@ -377,14 +371,10 @@ the user selects feasibility studies and no to resubmission
     the user clicks the button twice  jQuery=label[for="application.resubmission-no"]
 
 the user decides about the growth table
-    [Arguments]    ${edit}    ${read}
+    [Arguments]  ${edit}  ${read}
     the user should see the element   jQuery=h1:contains("Competition setup")
     the user clicks the button/link   link=Application
-    the user clicks the button/link   link=Finances
-    the user clicks the button/link   jQuery=a:contains("Edit this question")
-    the user clicks the button twice  jQuery=label[for="include-growth-table-${edit}"]
-    the user enters text to a text field  css=.editor  Funding rules for the competition added
-    the user clicks the button/link   jQuery=button:contains("Save and close")
+    the user fills in the Finances questions  ${edit}
     the user clicks the button/link   link=Finances
     the user should see the element   jQuery=dt:contains("Include project growth table") + dd:contains("${read}")
     the user clicks the button/link   link=Application

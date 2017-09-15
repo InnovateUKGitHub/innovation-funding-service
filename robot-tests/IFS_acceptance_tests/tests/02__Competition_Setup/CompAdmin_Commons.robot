@@ -65,12 +65,11 @@ the user fills in the CS Funding Information
     the user should see the element       jQuery=div:contains("Funding information") ~ .task-status-complete
 
 the user fills in the CS Eligibility
-    the user clicks the button/link  link=Eligibility
-    the user clicks the button/link  jQuery=label[for="single-or-collaborative-collaborative"]
-    the user clicks the button/link  jQuery=label[for="single-or-collaborative-collaborative"]
-    the user clicks the button/link  jQuery=label[for="research-categories-33"]
-    the user clicks the button/link  jQuery=label[for="research-categories-33"]
-    the user clicks the button twice  jQuery=label[for="lead-applicant-type-1"]
+    [Arguments]  ${organisationType}
+    the user clicks the button/link   link=Eligibility
+    the user clicks the button twice  jQuery=label[for="single-or-collaborative-collaborative"]
+    the user clicks the button twice  jQuery=label[for="research-categories-33"]
+    the user clicks the button twice  jQuery=label[for="lead-applicant-type-${organisationType}"]
     the user selects the option from the drop-down menu  1  researchParticipation
     the user clicks the button/link  jQuery=label[for="comp-resubmissions-yes"]
     the user clicks the button/link  jQuery=label[for="comp-resubmissions-yes"]
@@ -124,30 +123,42 @@ the user fills in the CS Milestones
     the user should see the element       jQuery=div:contains("Milestones") ~ .task-status-complete
 
 the user marks the Application as done
+    [Arguments]  ${growthTable}
     the user clicks the button/link  link=Application
+    the user fills in the Finances questions  ${growthTable}
     the user clicks the button/link  jQuery=button:contains("Done")
     the user clicks the button/link  link=Competition setup
     the user should see the element  jQuery=div:contains("Application") ~ .task-status-complete
 
+the user fills in the Finances questions
+    [Arguments]  ${growthTable}
+    the user clicks the button/link       link=Finances
+    the user clicks the button/link       jQuery=.button:contains("Edit this question")
+    the user selects the radio button     includeGrowthTable  include-growth-table-${growthTable}
+    the user enters text to a text field  css=.editor  Those are the rules that apply to Finances
+    the user clicks the button/link       css=button[type="submit"]
+
 the user fills in the CS Assessors
     the user clicks the button/link   link=Assessors
-    the user selects the radio button  assessorCount  3
+    the user clicks the button twice  jQuery=label[for^="assessors"]:contains("3")
     the user should see the element   css=#assessorPay[value="100"]
     the user selects the radio button  hasAssessmentPanel  0
     the user selects the radio button  hasInterviewStage  0
     the user clicks the button/link   jQuery=button:contains("Done")
-    the user should see the element   jQuery=dt:contains("How many") + dd:contains("3")
+#    the user should see the element   jQuery=dt:contains("How many") + dd:contains("3")
+# Plz uncomment this line TODO due to IFS-1527
     the user clicks the button/link   link=Competition setup
     the user should see the element   jQuery=div:contains("Assessors") ~ .task-status-complete
 
 the user fills in the Public content and publishes
+    [Arguments]  ${extraKeyword}
     # Fill in the Competition information and search
     the user clicks the button/link         link=Competition information and search
     the user enters text to a text field    id=short-description  Short public description
     the user enters text to a text field    id=funding-range  Up to £1million
     the user enters text to a text field    css=[labelledby="eligibility-summary"]  Summary of eligiblity
     the user selects the radio button       publishSetting  public
-    the user enters text to a text field    id=keywords  Search, Testing, Robot
+    the user enters text to a text field    id=keywords  Search, Testing, Robot, ${extraKeyword}
     the user clicks the button/link         jQuery=button:contains("Save and review")
     the user clicks the button/link         jQuery=.button:contains("Return to public content")
     the user should see the element         jQuery=div:contains("Competition information and search") ~ .task-status-complete
