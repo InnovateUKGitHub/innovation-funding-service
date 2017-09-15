@@ -165,7 +165,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
     }
     private static ZonedDateTime compareCompetitionFundingInformDates(Competition c1) {
-        return c1.getApplications().stream().max(Comparator.comparing(a -> a.getManageFundingEmailDate())).get().getManageFundingEmailDate();
+        return c1.getApplications().stream().filter(a -> a.getManageFundingEmailDate() != null).max(Comparator.comparing(a -> a.getManageFundingEmailDate())).get().getManageFundingEmailDate();
     }
 
     @Override
