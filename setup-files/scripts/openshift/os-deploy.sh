@@ -32,8 +32,8 @@ function deploy() {
         oc create -f os-files-tmp/shib/named-envs/56-${TARGET}-idp.yml ${SVC_ACCOUNT_CLAUSE}
 
      if [[${TARGET} == "sysint" ]]
-        then
-            oc create -f os-files-tmp/fractal/ ${SVC_ACCOUNT_CLAUSE}
+     then
+        oc create -f os-files-tmp/fractal/ ${SVC_ACCOUNT_CLAUSE}
       fi
 
     else
@@ -46,9 +46,6 @@ function deploy() {
         oc create -f os-files-tmp/ ${SVC_ACCOUNT_CLAUSE}
 
     fi
-
-
-
 
 }
 

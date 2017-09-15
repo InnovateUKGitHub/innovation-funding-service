@@ -151,18 +151,6 @@ build.finalizedBy endpointDocumentation
                 into inputDir
             }
             copy {
-                from file("gulpfile.js")
-                into inputDir
-            }
-            copy {
-                from file("package.json")
-                into inputDir
-            }
-            copy {
-                from file("yarn.lock")
-                into inputDir
-            }
-            copy {
                 from file("fractal")
                 into inputDir
             }
