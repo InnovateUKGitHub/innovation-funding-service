@@ -28,7 +28,9 @@ public class CompetitionManagementAssessorProfileController {
         ASSESSOR_INVITE("/competition/{competitionId}/assessors/invite"),
         ASSESSOR_OVERVIEW("/competition/{competitionId}/assessors/overview"),
         MANAGE_ASSESSORS("/assessment/competition/{competitionId}/assessors"),
-        ASSESSOR_PROGRESS("/assessment/competition/{competitionId}/assessors/{assessorId}");
+        ASSESSOR_PROGRESS("/assessment/competition/{competitionId}/assessors/{assessorId}"),
+        PANEL_FIND("/assessment/panel/competition/{competitionId}/assessors/find"),
+        PANEL_INVITE("/assessment/panel/competition/{competitionId}/assessors/find");
 
         private String baseOriginUrl;
 
