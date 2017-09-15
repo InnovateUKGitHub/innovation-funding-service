@@ -21,30 +21,24 @@ Your details: Server-side validations
     [Documentation]    -INFUND-885
     [Tags]    HappyPath
     [Setup]    Applicant goes to the registration form
-    Given the user fills in valid details
-    And the user enters text to a text field   id=password    ${blacklisted_password}
-    And the user selects the checkbox          termsAndConditions
-    And the user clicks the button/link        jQuery=button:contains("Create account")
-    And the user should see an error           Password is too weak.
-    And the user enters text to a text field   id=firstName   !@£$
-    And the user enters text to a text field   id=lastName    &*(^
-    And the user enters text to a text field   id=password    ${correct_password}
-    And the user clicks the button/link        jQuery=button:contains("Create account")
-    And the user should see an error           Invalid first name.
-    And the user should see an error           Invalid last name.
-    When the user enters text to a text field  id=firstName    ${EMPTY}
-    And the user enters text to a text field   id=lastName    ${EMPTY}
-    And the user enters text to a text field   id=phoneNumber    ${EMPTY}
-    And the user enters text to a text field   id=email    ${invalid_email_no_at}
-    And the user enters text to a text field   id=password    ${EMPTY}
+    When the user enters the details and clicks the create account  O'Brian Elliot-Murray  O'Dean Elliot-Manor  ${valid_email}  ${blacklisted_password}
+    Then the user should see an error                               Password is too weak.
+    When the user enters the details and clicks the create account  !@£$  &*(^  ${valid_email}  ${correct_password}
+    Then the user should see an error                               Invalid first name.
+    And the user should see an error                                Invalid last name.
+    When the user enters text to a text field                       id=firstName    ${EMPTY}
+    And the user enters text to a text field                        id=lastName    ${EMPTY}
+    And the user enters text to a text field                        id=phoneNumber    ${EMPTY}
+    And the user enters text to a text field                        id=email    ${invalid_email_no_at}
+    And the user enters text to a text field                        id=password    ${EMPTY}
     And browser validations have been disabled
-    And the user clicks the button/link        css=[name="create-account"]
-    Then the user should see an error          Please enter a first name.
-    And the user should see an error           We were unable to create your account
-    And the user should see an error           Please enter a last name.
-    And the user should see an error           Please enter a phone number.
-    And the user should see an error           Please enter a valid email address.
-    And the user should see an error           Please enter your password.
+    And the user clicks the button/link                             css=[name="create-account"]
+    Then the user should see an error                               Please enter a first name.
+    And the user should see an error                                We were unable to create your account
+    And the user should see an error                                Please enter a last name.
+    And the user should see an error                                Please enter a phone number.
+    And the user should see an error                                Please enter a valid email address.
+    And the user should see an error                                Please enter your password.
 
 Your details: client-side password hint validation
     [Documentation]    -INFUND-9293
@@ -63,14 +57,8 @@ Your details: client-side validation
     [Documentation]    -INFUND-885
     [Tags]    HappyPath
     Given the user navigates to the page                 ${ACCOUNT_CREATION_FORM_URL}
-    When the user fills in valid details
-    Then The user should not see the text in the page  Please enter a first name.
-    And The user should not see the text in the page   Please enter a last name.
-    And The user should not see the text in the page   Please enter a phone number.
-    And The user should not see the text in the page   Please enter a valid email address.
-    And The user should not see the text in the page   Please enter your password.
-    And The user should not see the text in the page   In order to register an account you have to agree to the Terms and Conditions.
-    And the user submits their information
+    When the user enters the details and clicks the create account  O'Brian Elliot-Murray   O'Brian Elliot-Murray  ${valid_email}  Inn0vat3
+    Then the user should not see an error in the page
 
 User can not login with the invalid email
     [Tags]
@@ -81,12 +69,7 @@ Email duplication check
     [Documentation]    INFUND-886
     [Tags]
     Given Applicant goes to the registration form
-    When the user enters text to a text field  id=firstName    John
-    And the user enters text to a text field   id=lastName    Smith
-    And the user enters text to a text field   id=phoneNumber    01141234567
-    And the user enters text to a text field   id=email    ${lead_applicant}
-    And the user enters text to a text field   id=password    ${correct_password}
-    And the user submits their information
+    When the user enters the details and clicks the create account  John  Smith  ${lead_applicant}  ${correct_password}
     Then the user should see an error          The email address is already registered with us. Please sign into your account
 
 *** Keywords ***
@@ -104,23 +87,7 @@ the user cannot login with the invalid email
     The user should see the text in the page  Your email/password combination doesn't seem to work.
 
 Applicant goes to the registration form
-    the user navigates to the page             ${frontDoor}
-    Given the user clicks the button/link      link=Home and industrial efficiency programme
-    When the user clicks the button/link       link=Start new application
-    And the user clicks the button/link        jQuery=.button:contains("Create account")
-    And the user selects the radio button      organisationTypeId    radio-1
-    And the user clicks the button/link        jQuery=button:contains("Save and continue")
-    When the user enters text to a text field  id=organisationSearchName    Hive IT
-    And the user clicks the button/link        id=org-search
-    And the user clicks the button/link        Link=${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
-    And the user selects the checkbox          address-same
-    And the user clicks the button/link        jQuery=button:contains("Continue")
-    And the user clicks the button/link        jQuery=button:contains("Save and continue")
-
-the user fills in valid details
-    the user enters text to a text field  id=firstName    O'Brian Elliot-Murray    #First and last name containing hyphen, space and aposthrophe check
-    the user enters text to a text field  id=lastName    O'Brian Elliot-Murray
-    the user enters text to a text field  id=phoneNumber    01141234567
-    the user enters text to a text field  id=email    ${valid_email}
-    the user enters text to a text field  id=password    ${correct_password}
+    the user navigates to the page                            ${frontDoor}
+    the user clicks the button/link                           link=Home and industrial efficiency programme
+    the user follows the flow to register their organisation  radio-1
 

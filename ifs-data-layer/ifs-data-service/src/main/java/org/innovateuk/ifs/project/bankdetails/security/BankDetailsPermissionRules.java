@@ -7,7 +7,7 @@ import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isProjectFinanceUser;
 
 @Component
 @PermissionRules

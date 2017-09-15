@@ -66,6 +66,10 @@ ShibCompatValidUser On
     Require env TrustedIP
   </Location>
 
+  <Location ~ "^/monitoring/benchmark/.*">
+    Require local
+  </Location>
+
   # Errors & holding pages
   <Location /holding/.*>
     ProxyPass !

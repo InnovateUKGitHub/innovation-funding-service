@@ -11,7 +11,6 @@ import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +22,7 @@ import java.util.function.BiFunction;
 
 import static org.innovateuk.ifs.project.sections.SectionAccess.ACCESSIBLE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
 
 /**
  * Permission checker around the access to various sections within the Project Setup process
@@ -97,7 +97,7 @@ public class SetupSectionsPermissionRules {
     private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<SetupSectionInternalUser, UserResource, SectionAccess> sectionCheckFn) {
         ProjectStatusResource projectStatusResource;
 
-        if (!isInternal(user)) {
+        if (!isInternalAdmin(user)) {
             return false;
         }
 
@@ -116,9 +116,4 @@ public class SetupSectionsPermissionRules {
         return sectionCheckFn.apply(sectionAccessor, user) == ACCESSIBLE;
     }
 
-    // TODO: review when IFS-1370 is implemented - RB
-    private boolean isInternal(UserResource user) {
-        return user.hasRole(UserRoleType.COMP_ADMIN)
-                || user.hasRole(UserRoleType.PROJECT_FINANCE);
-    }
 }
