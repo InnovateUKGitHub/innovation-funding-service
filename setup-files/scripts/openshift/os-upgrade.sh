@@ -31,6 +31,11 @@ function upgradeServices {
     oc apply -f os-files-tmp/43-project-setup-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f os-files-tmp/44-project-setup-svc.yml ${SVC_ACCOUNT_CLAUSE}
 
+    if [[ ${TARGET} == "sysint"  ]]
+    then
+     oc apply -f os-files-tmp/fractal/9-fractal.yml ${SVC_ACCOUNT_CLAUSE}
+    fi
+
     # shib & idp
     if $(isNamedEnvironment $TARGET); then
         oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/named-envs/56-${TARGET}-idp.yml
@@ -56,6 +61,11 @@ function forceReload {
     oc rollout latest dc/idp ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/shib ${SVC_ACCOUNT_CLAUSE}
 
+    if [[ ${TARGET} == "sysint"  ]]
+    then
+     oc rollout latest dc/fractal ${SVC_ACCOUNT_CLAUSE}
+    fi
+
     watchStatus
 }
 
@@ -68,6 +78,11 @@ function watchStatus {
     rolloutStatus project-setup-svc
     rolloutStatus idp
     rolloutStatus shib
+    if [[ ${TARGET} == "sysint"  ]]
+    then
+     rolloutStatus fractal
+    fi
+
 }
 
 function rolloutStatus {

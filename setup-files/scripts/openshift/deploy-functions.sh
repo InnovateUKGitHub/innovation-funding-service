@@ -287,6 +287,15 @@ function pushDBResetImages() {
     docker push ${REGISTRY}/${PROJECT}/dbreset:${VERSION}
 }
 
+function pushFractalImages() {
+    docker tag innovateuk/fractal:latest \
+        ${REGISTRY}/${PROJECT}/fractal:${VERSION}
+
+    docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
+
+    docker push ${REGISTRY}/${PROJECT}/fractal:${VERSION}
+}
+
 function pushAnonymisedDatabaseDumpImages() {
     docker tag innovateuk/db-anonymised-data:${VERSION} \
         ${REGISTRY}/${PROJECT}/db-anonymised-data:${VERSION}
