@@ -260,8 +260,14 @@ function pushApplicationImages() {
         ${REGISTRY}/${PROJECT}/idp-service:${VERSION}
     docker tag innovateuk/ldap-service:latest \
         ${REGISTRY}/${PROJECT}/ldap-service:${VERSION}
-    docker tag innovateuk/fractal:latest \
+
+
+    if [[ ${FRACTAL_ENABLED} == "true" ]]
+    then
+        docker tag innovateuk/fractal:latest \
         ${REGISTRY}/${PROJECT}/fractal:${VERSION}
+    fi
+
 
     docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
 
@@ -275,7 +281,12 @@ function pushApplicationImages() {
     docker push ${REGISTRY}/${PROJECT}/sp-service:${VERSION}
     docker push ${REGISTRY}/${PROJECT}/idp-service:${VERSION}
     docker push ${REGISTRY}/${PROJECT}/ldap-service:${VERSION}
-    docker push ${REGISTRY}/${PROJECT}/fractal:${VERSION}
+
+    if [[ ${FRACTAL_ENABLED} == "true" ]]
+    then
+        docker push ${REGISTRY}/${PROJECT}/fractal:${VERSION}
+    fi
+
 }
 
 function pushDBResetImages() {

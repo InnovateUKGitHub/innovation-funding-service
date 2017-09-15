@@ -161,12 +161,12 @@ task dbAnonymisedDumpLocal(type:Exec) {
 
 task osStageRemote(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-stage.sh'
-    args = [openshiftEnv, "remote", project.version]
+    args = [openshiftEnv, "remote", project.version, project['ifs.fractal.enabled']]
 }
 
 task osDeployRemote(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
-    args = [openshiftEnv, "remote", project.version]
+    args = [openshiftEnv, "remote", project.version, project['ifs.fractal.enabled']]
 }
 
 task osUpgradeRemote(type:Exec) {

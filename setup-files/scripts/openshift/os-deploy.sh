@@ -5,6 +5,7 @@ set -e
 PROJECT=$1
 TARGET=$2
 VERSION=$3
+FRACTAL_ENABLED=$4
 
 . $(dirname $0)/deploy-functions.sh
 . $(dirname $0)/local-deploy-functions.sh
@@ -42,8 +43,12 @@ function deploy() {
         oc create -f os-files-tmp/shib/ ${SVC_ACCOUNT_CLAUSE}
         oc create -f os-files-tmp/gluster/ ${SVC_ACCOUNT_CLAUSE}
         oc create -f os-files-tmp/spring-admin/ ${SVC_ACCOUNT_CLAUSE}
-        oc create -f os-files-tmp/fractal/ ${SVC_ACCOUNT_CLAUSE}
         oc create -f os-files-tmp/ ${SVC_ACCOUNT_CLAUSE}
+
+    if [[ ${FRACTAL_ENABLED} == "true" ]]
+    then
+        oc create -f os-files-tmp/fractal/ ${SVC_ACCOUNT_CLAUSE}
+    fi
 
     fi
 
