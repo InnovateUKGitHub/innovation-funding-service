@@ -5,7 +5,6 @@ set -e
 PROJECT=$1
 TARGET=$2
 VERSION=$3
-FRACTAL_ENABLED=$4
 
 . $(dirname $0)/deploy-functions.sh
 . $(dirname $0)/local-deploy-functions.sh
@@ -31,12 +30,6 @@ function deploy() {
         oc create -f os-files-tmp/ ${SVC_ACCOUNT_CLAUSE}
         oc create -f os-files-tmp/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
         oc create -f os-files-tmp/shib/named-envs/56-${TARGET}-idp.yml ${SVC_ACCOUNT_CLAUSE}
-
-     if [[${TARGET} == "sysint" ]]
-     then
-        oc create -f os-files-tmp/fractal/ ${SVC_ACCOUNT_CLAUSE}
-      fi
-
     else
         oc create -f os-files-tmp/mail/ ${SVC_ACCOUNT_CLAUSE}
         oc create -f os-files-tmp/mysql/ ${SVC_ACCOUNT_CLAUSE}
@@ -44,12 +37,6 @@ function deploy() {
         oc create -f os-files-tmp/gluster/ ${SVC_ACCOUNT_CLAUSE}
         oc create -f os-files-tmp/spring-admin/ ${SVC_ACCOUNT_CLAUSE}
         oc create -f os-files-tmp/ ${SVC_ACCOUNT_CLAUSE}
-
-    if [[ ${FRACTAL_ENABLED} == "true" ]]
-    then
-        oc create -f os-files-tmp/fractal/ ${SVC_ACCOUNT_CLAUSE}
-    fi
-
     fi
 
 }
