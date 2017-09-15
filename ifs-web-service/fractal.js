@@ -27,14 +27,6 @@ fractal.components.set('ext', '.html');
 /* Status to apply to all components unless overridden */
 fractal.components.set('default.status', 'wip');
 
-/* Fractal docs
------------------------------------------------------------------------------ */
-
-/* Tell Fractal where the documentation pages will live */
-fractal.docs.set('path', __dirname + '/docs');
-
-/* Set the file extension for documentation files */
-fractal.docs.set('ext', '.md')
 
 /* Fractal web UI
 ----------------------------------------------------------------------------- */

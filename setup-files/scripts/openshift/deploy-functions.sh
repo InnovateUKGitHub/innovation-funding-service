@@ -261,14 +261,6 @@ function pushApplicationImages() {
     docker tag innovateuk/ldap-service:latest \
         ${REGISTRY}/${PROJECT}/ldap-service:${VERSION}
 
-
-    if [[ ${FRACTAL_ENABLED} == "true" ]]
-    then
-        docker tag innovateuk/fractal:latest \
-        ${REGISTRY}/${PROJECT}/fractal:${VERSION}
-    fi
-
-
     docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
 
     docker push ${REGISTRY}/${PROJECT}/data-service:${VERSION}
@@ -282,10 +274,6 @@ function pushApplicationImages() {
     docker push ${REGISTRY}/${PROJECT}/idp-service:${VERSION}
     docker push ${REGISTRY}/${PROJECT}/ldap-service:${VERSION}
 
-    if [[ ${FRACTAL_ENABLED} == "true" ]]
-    then
-        docker push ${REGISTRY}/${PROJECT}/fractal:${VERSION}
-    fi
 
 }
 
@@ -307,6 +295,7 @@ function pushFractalImages() {
     docker push ${REGISTRY}/${PROJECT}/fractal:${VERSION}
 }
 
+
 function pushAnonymisedDatabaseDumpImages() {
     docker tag innovateuk/db-anonymised-data:${VERSION} \
         ${REGISTRY}/${PROJECT}/db-anonymised-data:${VERSION}
@@ -314,6 +303,18 @@ function pushAnonymisedDatabaseDumpImages() {
     docker login -p ${REGISTRY_TOKEN} -e unused -u unused ${REGISTRY}
 
     docker push ${REGISTRY}/${PROJECT}/db-anonymised-data:${VERSION}
+}
+
+function blockUntilServiceIsUp() {
+    UNREADY_PODS=1
+    while [ ${UNREADY_PODS} -ne "0" ]
+    do
+        UNREADY_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} -o custom-columns='NAME:{.metadata.name},READY:{.status.conditions[?(@.type=="Ready")].status}' | grep -v True | sed 1d | wc -l)
+        oc get pods ${SVC_ACCOUNT_CLAUSE}
+        echo "$UNREADY_PODS pods still not ready"
+        sleep 5s
+    done
+    oc get routes ${SVC_ACCOUNT_CLAUSE}
 }
 
 function cloneConfig() {

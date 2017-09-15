@@ -1,4 +1,4 @@
-FROM node
+FROM mhart/alpine-node:8.5
 RUN npm install --save @frctl/fractal
 RUN npm i -g @frctl/fractal
 ADD fractal-components/ fractal-components/
