@@ -26,6 +26,7 @@ import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -162,11 +164,16 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         List<Competition> competitions = competitionRepository.findLive();
         return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
     }
+    private static ZonedDateTime compareCompetitionFundingInformDates(Competition c1) {
+        return c1.getApplications().stream().max(Comparator.comparing(a -> a.getManageFundingEmailDate())).get().getManageFundingEmailDate();
+    }
 
     @Override
     public ServiceResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions() {
         List<Competition> competitions = competitionRepository.findProjectSetup();
-        return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
+        // IFS-1620 assumes only competitions with at least one funded and informed application are considered as in project setup
+
+        return serviceSuccess(simpleMap(CollectionFunctions.reverse(competitions.stream().sorted(Comparator.comparing(c -> compareCompetitionFundingInformDates(c))).collect(Collectors.toList())), this::searchResultFromCompetition));
     }
 
     @Override
