@@ -326,3 +326,16 @@ the applicant adds some content and marks this section as complete
 the applicant edits the "economic benefit" question
     the user clicks the button/link    name=mark_as_incomplete
     the user should see the element    name=mark_as_complete
+
+logged in user applies to competition
+    [Arguments]  ${competition}
+    the user navigates to the page  ${frontDoor}
+    navigate to next page if not found  ${competition}
+    the user clicks the button/link  link=${competition}
+    the user clicks the button/link  link=Start new application
+    the user clicks the button/link  link=Begin application
+
+navigate to next page if not found
+    [Arguments]  ${competition}
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  link=${competition}
+    Run Keyword If    '${status}' == 'FAIL'    the user clicks the button/link  jQuery=a:contains("Next")
