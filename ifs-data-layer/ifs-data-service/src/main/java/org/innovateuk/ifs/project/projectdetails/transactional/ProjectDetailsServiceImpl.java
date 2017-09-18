@@ -27,6 +27,7 @@ import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectD
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.transactional.EmailService;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
@@ -57,6 +58,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_F
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_START_DATE_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
@@ -132,9 +134,28 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     @Transactional
     public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
         return validateProjectStartDate(projectStartDate).
+                andOnSuccess(() -> validateIfStartDateCanBeChanged(projectId)).
                 andOnSuccess(() -> getProject(projectId)).
-                andOnSuccess(this::validateIfProjectAlreadySubmitted).
+                //andOnSuccess((project1) -> validateIfProjectAlreadySubmitted(project1)).
                 andOnSuccessReturnVoid(project -> project.setTargetStartDate(projectStartDate));
+    }
+
+    private ServiceResult<Void> validateIfStartDateCanBeChanged(Long projectId) {
+
+        if (isSpendProfileIsGenerated(projectId)) {
+            return serviceFailure(PROJECT_SETUP_START_DATE_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED);
+        }
+
+        return serviceSuccess();
+    }
+
+    private boolean isSpendProfileIsGenerated(Long projectId) {
+        List<SpendProfile> spendProfiles = getSpendProfileByProjectId(projectId);
+        return !spendProfiles.isEmpty();
+    }
+
+    private List<SpendProfile> getSpendProfileByProjectId(Long projectId) {
+        return spendProfileRepository.findByProjectId(projectId);
     }
 
     @Override

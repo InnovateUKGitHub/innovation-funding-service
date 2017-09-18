@@ -35,8 +35,10 @@
         <tbody>
             <tr>
                 <td>
-                    <a th:if="${model.userLeadPartner and !model.projectDetailsSubmitted}" th:href="@{/project/{id}/details/start-date(id=${model.project.getId()})}">Target start date</a>
-                    <th:block th:unless="${model.userLeadPartner and !model.projectDetailsSubmitted}">Target start date</th:block>
+                    <a th:if="${model.userLeadPartner}" th:href="@{/project/{id}/details/start-date(id=${model.project.getId()})}">Target start date</a>
+                    <th:block th:unless="${model.userLeadPartner}">Target start date</th:block>
+<!--                    <a th:if="${model.userLeadPartner and !model.projectDetailsSubmitted}" th:href="@{/project/{id}/details/start-date(id=${model.project.getId()})}">Target start date</a>
+                    <th:block th:unless="${model.userLeadPartner and !model.projectDetailsSubmitted}">Target start date</th:block>-->
                 </td>
                 <td id="start-date">
                     <th:block th:if="${model.project.targetStartDate == null}">-</th:block>
@@ -77,11 +79,11 @@
         </tbody>
     </table>
 
-    <a th:if="${model.submitProjectDetailsAllowed}" th:href="@{/project/{id}/confirm-project-details(id=${model.project.getId()})}" class="button extra-margin" data-js-modal="modal-project-details">Mark as complete</a>
+<!--    <a th:if="${model.submitProjectDetailsAllowed}" th:href="@{/project/{id}/confirm-project-details(id=${model.project.getId()})}" class="button extra-margin" data-js-modal="modal-project-details">Mark as complete</a>
     <div class="extra-margin" th:if="${model.anySectionIncomplete}">
         <p>You are not able to submit until all sections above are marked as complete.</p>
         <button disabled="disabled" class="button">Mark as complete</button>
-    </div>
+    </div>-->
 
     <h2 class="heading-medium">Finance contacts</h2>
     <p>Each partner must provide a finance contact. We will contact them with any finance queries.</p>

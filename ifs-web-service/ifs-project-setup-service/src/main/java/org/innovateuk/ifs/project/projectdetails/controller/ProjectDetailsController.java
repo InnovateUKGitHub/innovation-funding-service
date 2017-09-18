@@ -147,6 +147,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
     @GetMapping("/{projectId}/confirm-project-details")
+    //TODO - This call can be deleted
     public String projectDetailConfirmSubmit(@PathVariable("projectId") final Long projectId, Model model,
                                 UserResource loggedInUser) {
 
@@ -437,6 +438,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
     @PostMapping("/{projectId}/details/submit")
+    //TODO - This call and all calls down the line can be deleted
     public String submitProjectDetails(@PathVariable("projectId") Long projectId) {
         projectDetailsService.setApplicationDetailsSubmitted(projectId).getSuccessObjectOrThrowException();
         return redirectToProjectDetails(projectId);

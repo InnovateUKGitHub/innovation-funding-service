@@ -73,7 +73,7 @@ public class SetupSectionAccessibilityHelper {
         return !isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
                 "Unable to access until Companies House details are complete for Organisation")
 
-                || setupProgressChecker.isProjectDetailsSubmitted()
+                //|| setupProgressChecker.isProjectDetailsSubmitted()
                 || !setupProgressChecker.isLeadPartnerOrganisation(organisation);
 
     }
