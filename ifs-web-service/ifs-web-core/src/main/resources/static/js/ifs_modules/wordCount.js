@@ -9,6 +9,8 @@ IFS.core.wordCount = (function () {
     },
     init: function () {
       s = this.settings
+      // update the word count when the page loads
+      IFS.core.wordCount.updateWordCount(s.wordcountEl)
       jQuery('body').on('change keyup', s.wordcountEl, function (e) {
         if (e.type === 'keyup') {
           clearTimeout(typeTimeout)
