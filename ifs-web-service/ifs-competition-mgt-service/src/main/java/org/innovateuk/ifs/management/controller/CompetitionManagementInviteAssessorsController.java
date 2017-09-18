@@ -349,7 +349,6 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
         return "assessors/accepted";
     }
 
-
     private ServiceResult<Void> deleteInvite(String email, long competitionId) {
         return competitionInviteRestService.deleteInvite(email, competitionId).toServiceResult();
     }

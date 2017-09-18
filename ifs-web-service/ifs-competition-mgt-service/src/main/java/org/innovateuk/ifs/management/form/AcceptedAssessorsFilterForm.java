@@ -13,7 +13,7 @@ import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEP
 public class AcceptedAssessorsFilterForm extends BaseBindingResultTarget {
 
     private Optional<Long> innovationArea = Optional.empty();
-    private final ParticipantStatusResource status = ACCEPTED;
+    private static final ParticipantStatusResource status = ACCEPTED;
     private Optional<Boolean> compliant = Optional.empty();
 
     public Optional<Long> getInnovationArea() {
