@@ -155,8 +155,8 @@ the user fills the other application details questions
     the user clicks the button/link       jQuery=button:contains("research category")
     the user clicks the button twice      jQuery=label[for^="researchCategoryChoice"]:contains("${Research_category}")
     the user clicks the button/link       jQuery=button:contains(Save)
-    the user clicks the button/link       jQuery=label[for="application.resubmission-no"]
-    the user clicks the button/link       jQuery=label[for="application.resubmission-no"]
+    the user clicks the button/link       css=label[for="application.resubmission-no"]
+    the user clicks the button/link       css=label[for="application.resubmission-no"]
     The user enters text to a text field  id=application_details-startdate_day  18
     The user enters text to a text field  id=application_details-startdate_year  2018
     The user enters text to a text field  id=application_details-startdate_month  11

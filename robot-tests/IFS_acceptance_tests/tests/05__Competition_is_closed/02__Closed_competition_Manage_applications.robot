@@ -73,7 +73,7 @@ Filter assessors
     Then the assessor list is correct before changes
     Then the user selects the option from the drop-down menu   Academic  id=businessType
     And the user clicks the button/link                        jQuery=.button:contains("Filter")
-    And the user should not see the element                    jQuery=td
+    And the user should not see the element                    css=td
     [Teardown]    the user clicks the button/link  link=Clear all filters
 
 Assessor link goes to the assessor profile
