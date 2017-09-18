@@ -8,6 +8,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
 import org.innovateuk.ifs.management.form.*;
+import org.innovateuk.ifs.management.model.InviteAssessorsAcceptedModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsOverviewModelPopulator;
@@ -59,6 +60,9 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
     @Autowired
     private InviteAssessorsOverviewModelPopulator inviteAssessorsOverviewModelPopulator;
 
+    @Autowired
+    private InviteAssessorsAcceptedModelPopulator inviteAssessorsAcceptedModelPopulator;
+
     protected String getCookieName() {
         return SELECTION_FORM;
     }
@@ -89,7 +93,6 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
         InviteAssessorsFindViewModel inviteAssessorsFindViewModel = inviteAssessorsFindModelPopulator.populateModel(competitionId, page, filterForm.getInnovationArea(), originQuery);
 
         model.addAttribute("model", inviteAssessorsFindViewModel);
-        model.addAttribute("originQuery", originQuery);
 
         return "assessors/find";
     }
@@ -248,9 +251,7 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
         }
 
         String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_INVITE, queryParams);
-
         model.addAttribute("model", inviteAssessorsInviteModelPopulator.populateModel(competitionId, page, originQuery));
-        model.addAttribute("originQuery", originQuery);
 
         return "assessors/invite";
     }
@@ -330,6 +331,22 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
                 .queryParam("page", page)
                 .buildAndExpand(asMap("competitionId", competitionId))
                 .toUriString();
+    }
+
+    @GetMapping("/accepted")
+    public String accepted(Model model,
+                           @PathVariable("competitionId") long competitionId,
+                           @RequestParam(defaultValue = "0") int page,
+                           @RequestParam MultiValueMap<String, String> queryParams) {
+        String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_ACCEPTED, queryParams);
+
+        model.addAttribute("model", inviteAssessorsAcceptedModelPopulator.populateModel(
+                competitionId,
+                page,
+                originQuery
+        ));
+
+        return "assessors/accepted";
     }
 
     private ServiceResult<Void> deleteInvite(String email, long competitionId) {

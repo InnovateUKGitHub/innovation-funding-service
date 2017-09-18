@@ -48,7 +48,6 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.hamcrest.Matchers.containsString;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
-import static org.innovateuk.ifs.invite.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
 import static org.innovateuk.ifs.assessment.transactional.CompetitionInviteServiceImpl.Notifications.INVITE_ASSESSOR_GROUP;
@@ -65,6 +64,7 @@ import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilde
 import static org.innovateuk.ifs.invite.builder.AssessorInvitesToSendResourceBuilder.newAssessorInvitesToSendResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBuilder.newAvailableAssessorPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
+import static org.innovateuk.ifs.invite.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
@@ -2039,10 +2039,10 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         Page<CompetitionParticipant> pageResult = new PageImpl<>(expectedParticipants, pageable, 10);
 
-        when(competitionParticipantRepositoryMock.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+        when(competitionParticipantRepositoryMock.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competitionId,
                 innovationArea,
-                EnumSet.of(status),
+                singletonList(status),
                 compliant,
                 pageable
         ))
@@ -2053,14 +2053,14 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 competitionId,
                 pageable,
                 of(innovationArea),
-                of(status),
+                singletonList(status),
                 of(compliant)
         );
 
-        verify(competitionParticipantRepositoryMock).getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+        verify(competitionParticipantRepositoryMock).getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competitionId,
                 innovationArea,
-                EnumSet.of(status),
+                singletonList(status),
                 compliant,
                 pageable
         );
@@ -2132,10 +2132,10 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         Page<CompetitionParticipant> pageResult = new PageImpl<>(expectedParticipants, pageable, 6);
 
-        when(competitionParticipantRepositoryMock.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+        when(competitionParticipantRepositoryMock.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competitionId,
                 innovationArea,
-                EnumSet.of(status),
+                singletonList(status),
                 compliant,
                 pageable
         ))
@@ -2150,14 +2150,14 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 competitionId,
                 pageable,
                 of(innovationArea),
-                of(status),
+                singletonList(status),
                 of(compliant)
         );
 
-        verify(competitionParticipantRepositoryMock).getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+        verify(competitionParticipantRepositoryMock).getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competitionId,
                 innovationArea,
-                EnumSet.of(status),
+                singletonList(status),
                 compliant,
                 pageable
         );
@@ -2211,13 +2211,13 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         Page<CompetitionParticipant> pageResult = new PageImpl<>(expectedParticipants, pageable, 10);
 
-        when(competitionParticipantRepositoryMock.getAssessorsByCompetitionAndStatus(competitionId, EnumSet.of(PENDING, REJECTED), pageable))
+        when(competitionParticipantRepositoryMock.getAssessorsByCompetitionAndStatusContains(competitionId, singletonList(PENDING), pageable))
                 .thenReturn(pageResult);
         when(participantStatusMapperMock.mapToResource(PENDING)).thenReturn(ParticipantStatusResource.PENDING);
 
-        ServiceResult<AssessorInviteOverviewPageResource> result = service.getInvitationOverview(competitionId, pageable, empty(), empty(), empty());
+        ServiceResult<AssessorInviteOverviewPageResource> result = service.getInvitationOverview(competitionId, pageable, empty(), singletonList(PENDING), empty());
 
-        verify(competitionParticipantRepositoryMock).getAssessorsByCompetitionAndStatus(competitionId, EnumSet.of(PENDING, REJECTED), pageable);
+        verify(competitionParticipantRepositoryMock).getAssessorsByCompetitionAndStatusContains(competitionId, singletonList(PENDING), pageable);
         verify(participantStatusMapperMock, times(5)).mapToResource(PENDING);
 
         assertTrue(result.isSuccess());
@@ -2261,12 +2261,12 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withStatus(PENDING, PENDING, PENDING, PENDING, REJECTED)
                 .build(5);
 
-        when(competitionParticipantRepositoryMock.getAssessorsByCompetitionAndStatus(competitionId, EnumSet.of(PENDING, REJECTED)))
+        when(competitionParticipantRepositoryMock.getAssessorsByCompetitionAndStatusContains(competitionId, asList(PENDING, REJECTED)))
                 .thenReturn(expectedParticipants);
 
-        ServiceResult<List<Long>> result = service.getAssessorsNotAcceptedInviteIds(competitionId, empty(), empty(), empty());
+        ServiceResult<List<Long>> result = service.getAssessorsNotAcceptedInviteIds(competitionId, empty(), asList(PENDING, REJECTED), empty());
 
-        verify(competitionParticipantRepositoryMock).getAssessorsByCompetitionAndStatus(competitionId, EnumSet.of(PENDING, REJECTED));
+        verify(competitionParticipantRepositoryMock).getAssessorsByCompetitionAndStatusContains(competitionId, asList(PENDING, REJECTED));
 
         assertTrue(result.isSuccess());
         List<Long> returnedInviteIds = result.getSuccessObject();

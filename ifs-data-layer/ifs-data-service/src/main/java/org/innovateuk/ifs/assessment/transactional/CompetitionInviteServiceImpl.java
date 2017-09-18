@@ -43,7 +43,6 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static com.google.common.collect.ImmutableSortedSet.of;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ofPattern;
@@ -76,7 +75,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     private static final String WEB_CONTEXT = "/assessment";
     private static final DateTimeFormatter inviteFormatter = ofPattern("d MMMM yyyy");
     private static final DateTimeFormatter detailsFormatter = ofPattern("dd MMM yyyy");
-    private static final Set<ParticipantStatus> notAcceptedStatuses = of(REJECTED, PENDING);
 
     @Autowired
     private CompetitionInviteRepository competitionInviteRepository;
@@ -323,24 +321,23 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     public ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
                                                                                    Pageable pageable,
                                                                                    Optional<Long> innovationArea,
-                                                                                   Optional<ParticipantStatus> status,
+                                                                                   List<ParticipantStatus> statuses,
                                                                                    Optional<Boolean> compliant) {
         Page<CompetitionParticipant> pagedResult;
-        Set<ParticipantStatus> filterStatuses = status.isPresent() ? of(status.get()) : notAcceptedStatuses;
 
         if (innovationArea.isPresent() || compliant.isPresent()) {
             // We want to avoid performing the potentially expensive join on Profile if possible
-            pagedResult = competitionParticipantRepository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+            pagedResult = competitionParticipantRepository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                     competitionId,
                     innovationArea.orElse(null),
-                    filterStatuses,
+                    statuses,
                     compliant.orElse(null),
                     pageable
             );
         } else {
-            pagedResult = competitionParticipantRepository.getAssessorsByCompetitionAndStatus(
+            pagedResult = competitionParticipantRepository.getAssessorsByCompetitionAndStatusContains(
                     competitionId,
-                    filterStatuses,
+                    statuses,
                     pageable
             );
         }
@@ -382,22 +379,21 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     @Override
     public ServiceResult<List<Long>> getAssessorsNotAcceptedInviteIds(long competitionId,
                                                                       Optional<Long> innovationArea,
-                                                                      Optional<ParticipantStatus> status,
+                                                                      List<ParticipantStatus> statuses,
                                                                       Optional<Boolean> compliant) {
         List<CompetitionParticipant> participants;
-        Set<ParticipantStatus> filterStatuses = status.isPresent() ? of(status.get()) : notAcceptedStatuses;
 
         if (innovationArea.isPresent() || compliant.isPresent()) {
             // We want to avoid performing the potentially expensive join on Profile if possible
-            participants = competitionParticipantRepository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+            participants = competitionParticipantRepository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                     competitionId,
                     innovationArea.orElse(null),
-                    filterStatuses,
+                    statuses,
                     compliant.orElse(null));
         } else {
-            participants = competitionParticipantRepository.getAssessorsByCompetitionAndStatus(
+            participants = competitionParticipantRepository.getAssessorsByCompetitionAndStatusContains(
                     competitionId,
-                    filterStatuses);
+                    statuses);
         }
 
         return serviceSuccess(simpleMap(participants, participant -> participant.getInvite().getId()));

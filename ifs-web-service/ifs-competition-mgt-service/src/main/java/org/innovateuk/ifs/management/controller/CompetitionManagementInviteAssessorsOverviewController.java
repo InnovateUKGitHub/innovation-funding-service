@@ -25,14 +25,18 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
+import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.REJECTED;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -93,7 +97,6 @@ public class CompetitionManagementInviteAssessorsOverviewController extends Comp
                 filterForm.getCompliant(),
                 originQuery
         ));
-        model.addAttribute("originQuery", originQuery);
 
         return "assessors/overview";
     }
@@ -228,6 +231,8 @@ public class CompetitionManagementInviteAssessorsOverviewController extends Comp
                                        Optional<Long> innovationArea,
                                        Optional<ParticipantStatusResource> status,
                                        Optional<Boolean> compliant) {
-        return competitionInviteRestService.getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, status, compliant).getSuccessObjectOrThrowException();
+        List<ParticipantStatusResource> statuses = status.map(Collections::singletonList)
+                .orElseGet(() -> asList(REJECTED, PENDING));
+        return competitionInviteRestService.getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, statuses, compliant).getSuccessObjectOrThrowException();
     }
 }

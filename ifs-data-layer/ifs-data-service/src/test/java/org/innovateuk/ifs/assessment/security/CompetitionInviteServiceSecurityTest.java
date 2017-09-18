@@ -152,7 +152,7 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
     public void getInvitationOverview() {
         Pageable pageable = new PageRequest(0, 20);
         Optional<Long> innovationArea = of(1L);
-        Optional<ParticipantStatus> status = of(ACCEPTED);
+        List<ParticipantStatus> status = singletonList(ACCEPTED);
         Optional<Boolean> compliant = of(TRUE);
 
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInvitationOverview(1L, pageable, innovationArea, status, compliant), COMP_ADMIN,PROJECT_FINANCE);
@@ -161,7 +161,7 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
     @Test
     public void getAssessorInviteIds() {
         Optional<Long> innovationArea = of(1L);
-        Optional<ParticipantStatus> status = of(PENDING);
+        List<ParticipantStatus> status = singletonList(PENDING);
         Optional<Boolean> compliant = of(TRUE);
 
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAssessorsNotAcceptedInviteIds(1L, innovationArea, status, compliant), COMP_ADMIN,PROJECT_FINANCE);
@@ -283,7 +283,7 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
         public ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
                                                                                        Pageable pageable,
                                                                                        Optional<Long> innovationArea,
-                                                                                       Optional<ParticipantStatus> status,
+                                                                                       List<ParticipantStatus> statuses,
                                                                                        Optional<Boolean> compliant) {
             return null;
         }
@@ -291,7 +291,7 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
         @Override
         public ServiceResult<List<Long>> getAssessorsNotAcceptedInviteIds(long competitionId,
                                                                           Optional<Long> innovationArea,
-                                                                          Optional<ParticipantStatus> status,
+                                                                          List<ParticipantStatus> status,
                                                                           Optional<Boolean> compliant) {
             return null;
         }

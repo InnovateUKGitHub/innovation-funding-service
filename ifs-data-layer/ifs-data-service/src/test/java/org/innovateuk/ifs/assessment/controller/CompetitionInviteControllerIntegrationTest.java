@@ -45,6 +45,7 @@ import static java.lang.Boolean.TRUE;
 import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
+import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.invite.builder.CompetitionInviteBuilder.newCompetitionInvite;
@@ -1130,7 +1131,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         InnovationArea otherInnovationArea = innovationAreaRepository.findOne(10L);
 
         Optional<Long> innovationAreaId = of(innovationArea.getId());
-        Optional<ParticipantStatus> status = of(PENDING);
+        List<ParticipantStatus> status = singletonList(PENDING);
         Optional<Boolean> hasContract = of(TRUE);
 
         Agreement agreement = agreementRepository.findOne(1L);
@@ -1286,7 +1287,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         flushAndClearSession();
 
         Optional<Long> innovationAreaId = of(innovationArea.getId());
-        Optional<ParticipantStatus> status = of(PENDING);
+        List<ParticipantStatus> status = singletonList(PENDING);
         Optional<Boolean> hasContract = of(TRUE);
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
