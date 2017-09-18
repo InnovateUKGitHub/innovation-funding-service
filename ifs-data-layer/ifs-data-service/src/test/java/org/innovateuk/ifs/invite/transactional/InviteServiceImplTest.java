@@ -100,6 +100,18 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
     }
 
+    @Test
+    public void findOneByHash() {
+        String hash = "123abc";
+        ApplicationInvite applicationInvite = newApplicationInvite().build();
+
+        when(applicationInviteRepositoryMock.getByHash(hash)).thenReturn(applicationInvite);
+
+        ServiceResult<ApplicationInvite> result = inviteService.findOneByHash(hash);
+
+        assertEquals(applicationInvite, result.getSuccessObjectOrThrowException());
+    }
+
 
     @Test
     public void validatorEmpty() {

@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
@@ -21,6 +22,7 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -32,21 +34,23 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.util.HttpUtils.getQueryStringParameters;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 /**
  * Handles the Competition Management Application overview page (and associated actions).
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/application")
-@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
 public class CompetitionManagementApplicationController {
 
     @Autowired
@@ -67,6 +71,7 @@ public class CompetitionManagementApplicationController {
     @Autowired
     private ReinstateIneligibleApplicationModelPopulator reinstateIneligibleApplicationModelPopulator;
 
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
     @GetMapping("/{applicationId}")
     public String displayApplicationOverview(@PathVariable("applicationId") final Long applicationId,
                                              @PathVariable("competitionId") final Long competitionId,
@@ -81,6 +86,7 @@ public class CompetitionManagementApplicationController {
                         .displayApplicationOverview(user, competitionId, form, origin, queryParams, model, application, assessorId));
     }
 
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'innovation_lead')")
     @PostMapping(value = "/{applicationId}", params = {"markAsIneligible"})
     public String markAsIneligible(@PathVariable("applicationId") final long applicationId,
                                    @PathVariable("competitionId") final long competitionId,
@@ -98,6 +104,8 @@ public class CompetitionManagementApplicationController {
         // TODO: IFS-253 bind query parameters to maps properly
         MultiValueMap<String, String> queryParams = getQueryStringParameters(request);
 
+        validateIfTryingToMarkAsIneligible(applicationForm.getIneligibleReason(), validationHandler);
+
         return validationHandler.failNowOrSucceedWith(
                 () -> displayApplicationOverview(applicationId, competitionId, applicationForm, user, origin, assessorId, queryParams, model),
                 () -> competitionManagementApplicationService
@@ -113,6 +121,7 @@ public class CompetitionManagementApplicationController {
         );
     }
 
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     @PostMapping(value = "/{applicationId}/reinstateIneligibleApplication")
     public String reinstateIneligibleApplication(Model model,
                                                  @PathVariable("competitionId") final long competitionId,
@@ -131,6 +140,7 @@ public class CompetitionManagementApplicationController {
         });
     }
 
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     @GetMapping(value = "/{applicationId}/reinstateIneligibleApplication/confirm")
     public String reinstateIneligibleApplicationConfirm(final Model model,
                                                         @ModelAttribute("form") final ReinstateIneligibleApplicationForm form,
@@ -138,13 +148,14 @@ public class CompetitionManagementApplicationController {
         return doReinstateIneligibleApplicationConfirm(model, applicationId);
     }
 
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
     @GetMapping("/{applicationId}/forminput/{formInputId}/download")
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadQuestionFile(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("formInputId") final Long formInputId,
             UserResource user) throws ExecutionException, InterruptedException {
         ProcessRoleResource processRole;
-        if (isInternal(user)) {
+        if (isInternalUser(user)) {
             long processRoleId = formInputResponseRestService.getByFormInputIdAndApplication(formInputId, applicationId).getSuccessObjectOrThrowException().get(0).getUpdatedBy();
             processRole = processRoleService.getById(processRoleId).get();
         } else {
@@ -159,6 +170,7 @@ public class CompetitionManagementApplicationController {
     /**
      * Printable version of the application
      */
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
     @GetMapping(value = "/{applicationId}/print")
     public String printManagementApplication(@PathVariable("applicationId") Long applicationId,
                                              @PathVariable("competitionId") Long competitionId,
@@ -168,6 +180,7 @@ public class CompetitionManagementApplicationController {
                 .validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> applicationPrintPopulator.print(applicationId, model, user));
     }
 
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
     @GetMapping("/{applicationId}/team")
     public String displayApplicationTeam(@PathVariable("applicationId") final Long applicationId,
                                          @PathVariable("competitionId") final Long competitionId,
@@ -192,8 +205,14 @@ public class CompetitionManagementApplicationController {
         return "application/reinstate-ineligible-application-confirm";
     }
 
-    // TODO: review when IFS-1370 is implemented - RB
-    private boolean isInternal(UserResource user) {
-        return user.hasRole(UserRoleType.IFS_ADMINISTRATOR) || user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE) || user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD);
+    private boolean isInternalUser(UserResource user) {
+        return user.hasRole(UserRoleType.IFS_ADMINISTRATOR) || isInternal(user);
+    }
+
+    private void validateIfTryingToMarkAsIneligible(String ineligibleReason,
+                                                    ValidationHandler validationHandler) {
+        if (ineligibleReason == null || ineligibleReason.isEmpty()) {
+            validationHandler.addAnyErrors(ServiceResult.serviceFailure(Arrays.asList(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST))), toField("ineligibleReason"));
+        }
     }
 }

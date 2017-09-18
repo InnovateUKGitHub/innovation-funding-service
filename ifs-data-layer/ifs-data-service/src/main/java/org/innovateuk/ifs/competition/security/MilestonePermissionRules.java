@@ -6,8 +6,8 @@ import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isInnovationLead;
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInnovationLead;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 /**
  * Provides the permissions around CRUD for Milestones
@@ -17,7 +17,7 @@ import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
 public class MilestonePermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "VIEW_MILESTONE", description = "Innovation lead users can view milestones on competitions assigned to them.")
-    public boolean innovationLeadsCanViewMilestonesOnAssginedComps(Long competitionId, UserResource user) {
+    public boolean innovationLeadsCanViewMilestonesOnAssignedComps(Long competitionId, UserResource user) {
         return userIsInnovationLeadOnCompetition(competitionId, user.getId());
     }
 

@@ -9,7 +9,7 @@ import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.security.SecurityRuleUtil.*;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 /**
  * Provides the permissions around CRUD for Competitions
@@ -28,7 +28,7 @@ public class CompetitionPermissionRules extends BasePermissionRules {
         return isInternal(user) && !isInnovationLead(user);
     }
 
-    @PermissionRule(value = "READ", description = "Innovation leads can see all competitions assgned to them")
+    @PermissionRule(value = "READ", description = "Innovation leads can see all competitions assigned to them")
     public boolean innovationLeadCanViewCompetitionAssignedToThem(CompetitionResource competition, UserResource user) {
         return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
     }
