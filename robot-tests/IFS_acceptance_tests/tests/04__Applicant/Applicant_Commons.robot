@@ -307,7 +307,7 @@ the user completes the new account creation
     then the user should not see an error in the page
     the user clicks the button/link             jQuery=.button:contains("Save and continue")
     the user should be redirected to the correct page    ${SERVER}/registration/register
-    the user fills the create account form       liam  smithson
+    the invited user fills the create account form       liam  smithson
     the user should see the text in the page     Please verify your email address
     the user reads his email and clicks the link   ${email}  Please verify your email address  Once verified you can sign into your account.
     the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}

@@ -29,20 +29,22 @@ Academic organisations search
 Accept invitation as academic
     [Documentation]    INFUND-1166, INFUND-917, INFUND-2450, INFUND-2256
     [Tags]    HappyPath    Email    SmokeTest
-    When the user enters text to a text field          id=organisationSearchName  Liv
-    And the user clicks the button/link                jQuery=.button:contains("Search")
-    Then the user should see the text in the page      University of Liverpool
-    When the user clicks the button/link               link= University of Liverpool
-    When the user clicks the button/link               jQuery=button:contains("Enter address manually")
-    And the user enters text to a text field           id=addressForm.selectedPostcode.addressLine1    The East Wing
-    And the user enters text to a text field           id=addressForm.selectedPostcode.addressLine2    Popple Manor
-    And the user enters text to a text field           id=addressForm.selectedPostcode.addressLine3    1, Popple Boulevard
-    And the user enters text to a text field           id=addressForm.selectedPostcode.town    Poppleton
-    And the user enters text to a text field           id=addressForm.selectedPostcode.county    Poppleshire
-    And the user enters text to a text field           id=addressForm.selectedPostcode.postcode    POPPS123
-    And the user clicks the button/link                jQuery=.button:contains("Save organisation and continue")
-    And the user clicks the button/link                jQuery=.button:contains("Save and continue")
-    And the user fills the create account form         Steven  Gerrard
+#    The search results are specific to Research Organisation type
+    When the research user finds org in company house
+#    When the user enters text to a text field          id=organisationSearchName  Liv
+#    And the user clicks the button/link                jQuery=.button:contains("Search")
+#    Then the user should see the text in the page      University of Liverpool
+#    When the user clicks the button/link               link= University of Liverpool
+#    When the user clicks the button/link               jQuery=button:contains("Enter address manually")
+#    And the user enters text to a text field           id=addressForm.selectedPostcode.addressLine1    The East Wing
+#    And the user enters text to a text field           id=addressForm.selectedPostcode.addressLine2    Popple Manor
+#    And the user enters text to a text field           id=addressForm.selectedPostcode.addressLine3    1, Popple Boulevard
+#    And the user enters text to a text field           id=addressForm.selectedPostcode.town    Poppleton
+#    And the user enters text to a text field           id=addressForm.selectedPostcode.county    Poppleshire
+#    And the user enters text to a text field           id=addressForm.selectedPostcode.postcode    POPPS123
+#    And the user clicks the button/link                jQuery=.button:contains("Save organisation and continue")
+#    And the user clicks the button/link                jQuery=.button:contains("Save and continue")
+    And the invited user fills the create account form         Steven  Gerrard
     And If the user goes to the previous page he should redirect to the login page
     And the user reads his email and clicks the link   ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com  Please verify your email address  You have recently set up an account  1
     And the user clicks the button/link                jQuery=.button:contains("Sign in")
