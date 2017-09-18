@@ -10,7 +10,7 @@ Documentation     -INFUND-408: As an applicant, and I am on the application over
 ...               -INFUND-1072: As an Applicant I want to see the Application overview page redesigned so that they meet the agreed style
 ...
 ...               -INFUND-1162: As an applicant I want the ability to have a printable version of my application for review, so I can print and download it for offline use.
-Suite Setup       log in and create new application if there is not one already
+Suite Setup       log in and create new application if there is not one already  Robot test application
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Default Tags

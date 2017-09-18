@@ -54,6 +54,15 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
         });
     }
 
+    public S deactivateUser() {
+        return with(data -> {
+            doAs(ifsAdmin(), () -> {
+                UserResource user = data.getUser();
+                registrationService.deactivateUser(user.getId());
+            });
+        });
+    }
+
     private void updateUserInUserData(T data, Long userId) {
         UserResource user = baseUserService.getUserById(userId).getSuccessObjectOrThrowException();
         data.setUser(user);

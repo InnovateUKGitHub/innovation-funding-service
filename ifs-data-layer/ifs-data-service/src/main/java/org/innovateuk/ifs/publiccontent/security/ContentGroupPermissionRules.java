@@ -9,7 +9,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.security.SecurityRuleUtil.*;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 /**
  * Provides the permissions around file downloads for content groups.

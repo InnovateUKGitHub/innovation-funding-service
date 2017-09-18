@@ -59,13 +59,13 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.util.MathFunctions.percentage;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.util.StringFunctions.plainTextToHtml;
 import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
 
@@ -543,7 +543,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<Boolean> showApplicationTeam(Long applicationId, Long userId) {
-        return find(userRepository.findOne(userId), notFoundError(User.class, userId)).andOnSuccess((user) -> serviceSuccess(isInternal(user)));
+        return find(userRepository.findOne(userId), notFoundError(User.class, userId)).andOnSuccess((user) -> serviceSuccess(org.innovateuk.ifs.security.SecurityRuleUtil.isInternal(user)));
     }
 
     private ServiceResult<List<EmailAddress>> sendNotification(ProcessRole processRole) {
