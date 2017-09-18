@@ -126,6 +126,7 @@ Invite and accept the invitation
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
     And Logging in and Error Checking      ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
 
+# The search results are specific to Research Organisation type
 the research user finds org in company house
     the user enters text to a text field  id=organisationSearchName  Liv
     the user clicks the button/link       jQuery=.button:contains("Search")
@@ -142,7 +143,6 @@ the research user finds org in company house
 
 the user fills in the inviting steps
     [Arguments]  ${email}
-#    the user clicks the button/link       link=view and manage contributors and collaborators
     the user clicks the button/link       link=Add a collaborator organisation
     the user enters text to a text field  css=#organisationName  New Organisation's Name
     the user enters text to a text field  css=input[id="applicants0.name"]  Partner's name
