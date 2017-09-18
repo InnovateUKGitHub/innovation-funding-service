@@ -27,6 +27,11 @@
       cursor: pointer;
       position: relative;
 
+      &:hover,
+      &:focus{
+        background: $highlight-colour;
+      }
+
       &::-moz-focus-inner {
         padding: 0;
         border: 0;
@@ -40,7 +45,7 @@
           content: '';
           position: absolute; //absolute position for ie8
           right: 15px;
-          top: 15px;
+          top: 13px;
           line-height: 1;
           background: url(../images/icons/icons-plus-minus.png) 0 100%;
           width: 16px;
