@@ -113,12 +113,13 @@ Invite and accept the invitation
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
-    When the user clicks the button/link    link=view and manage contributors and collaborators
-    And the user clicks the button/link    jQuery=a:contains("Add a collaborator organisation")
-    And the user enters text to a text field    name=organisationName    Academic Test
-    And the user enters text to a text field    name=applicants[0].name    Arsene Wenger
-    And the user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+academictest@gmail.com
-    And the user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
+    the user fills in the inviting steps   ${test_mailbox_one}+academictest@gmail.com
+#    When the user clicks the button/link    link=view and manage contributors and collaborators
+#    And the user clicks the button/link    jQuery=a:contains("Add a collaborator organisation")
+#    And the user enters text to a text field    name=organisationName    Academic Test
+#    And the user enters text to a text field    name=applicants[0].name    Arsene Wenger
+#    And the user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+academictest@gmail.com
+#    And the user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
     And logout as user
     When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}    2
     And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
@@ -140,6 +141,15 @@ Invite and accept the invitation
     And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    We now need you to verify your email address
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
     And Logging in and Error Checking      ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
+
+the user fills in the inviting steps
+    [Arguments]  ${email}
+    the user clicks the button/link       link=view and manage contributors and collaborators
+    the user clicks the button/link       link=Add a collaborator organisation
+    the user enters text to a text field  css=#organisationName  New Organisation's Name
+    the user enters text to a text field  css=input[id="applicants0.name"]  Partner's name
+    the user enters text to a text field  css=input[id="applicants0.email"]  ${email}
+    the user clicks the button/link       jQuery=button:contains("Add organisation and invite applicants")
 
 The user navigates to the summary page of the Robot test application
     Given the user navigates to the page    ${DASHBOARD_URL}
