@@ -31,6 +31,7 @@ Accept invitation as academic
     [Tags]    HappyPath    Email    SmokeTest
 #    The search results are specific to Research Organisation type
     Given the research user finds org in company house
+    And the user fills the create account form         Steven  Gerrard
     And If the user goes to the previous page he should redirect to the login page
     And the user reads his email and clicks the link   ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com  Please verify your email address  You have recently set up an account  1
     And the user clicks the button/link                jQuery=.button:contains("Sign in")

@@ -471,6 +471,7 @@ the lead applicant invites an existing user
     the user clicks the button/link       jquery=.in-progress a:contains("${applicationWithGrowth}")
     the user clicks the button/link       link=view and manage contributors and collaborators
     the user fills in the inviting steps  ${EMAIL_INVITED}
+    logout as user
 
 the user navigates to the growth table finances
     the user navigates to the page   ${DASHBOARD_URL}
