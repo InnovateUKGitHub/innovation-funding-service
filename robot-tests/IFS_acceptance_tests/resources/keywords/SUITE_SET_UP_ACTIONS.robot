@@ -113,9 +113,7 @@ Invite and accept the invitation
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
-    the user clicks the button/link       link=view and manage contributors and collaborators
     the user fills in the inviting steps   ${test_mailbox_one}+academictest@gmail.com
-    And logout as user
     When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}    2
     And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
     When the user selects the radio button    organisationType    2
@@ -143,11 +141,13 @@ the research user finds org in company house
 
 the user fills in the inviting steps
     [Arguments]  ${email}
+    the user clicks the button/link       link=view and manage contributors and collaborators
     the user clicks the button/link       link=Add a collaborator organisation
     the user enters text to a text field  css=#organisationName  New Organisation's Name
     the user enters text to a text field  css=input[id="applicants0.name"]  Partner's name
     the user enters text to a text field  css=input[id="applicants0.email"]  ${email}
     the user clicks the button/link       jQuery=button:contains("Add organisation and invite applicants")
+    logout as user
 
 The user navigates to the summary page of the Robot test application
     Given the user navigates to the page    ${DASHBOARD_URL}
@@ -181,7 +181,11 @@ invite a registered user
     the user follows the flow to register their organisation   ${BUSINESS_TYPE_ID}
     the user verifies email                                    Stuart   Anderson    ${EMAIL_LEAD}
     the user clicks the button/link                            link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    the user fills in the inviting steps                       ${EMAIL_INVITED}
+    the user clicks the button/link                            link=Add a collaborator organisation
+    the user enters text to a text field                       css=#organisationName  New Organisation's Name
+    the user enters text to a text field                       css=input[id="applicants0.name"]  Partner's name
+    the user enters text to a text field                       css=input[id="applicants0.email"]  ${email}
+    the user clicks the button/link                            jQuery=button:contains("Add organisation and invite applicants")
     the user clicks the button/link                            jQuery=a:contains("Begin application")
     the user should see the text in the page                   Application overview
     the user closes the browser
