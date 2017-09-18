@@ -274,16 +274,6 @@ Invite a non-existing collaborator
     logout as user
     newly invited collaborator can create account and sign in   ${email}  ${competition_name}
 
-#the user fills in the inviting steps
-#    [Arguments]  ${email}
-#    the user clicks the button/link       link=view and manage contributors and collaborators
-#    the user clicks the button/link       link=Add a collaborator organisation
-#    the user enters text to a text field  css=#organisationName  New Organisation's Name
-#    the user enters text to a text field  css=input[id="applicants0.name"]  Partner's name
-#    the user enters text to a text field  css=input[id="applicants0.email"]  ${email}
-#    the user clicks the button/link       jQuery=button:contains("Add organisation and invite applicants")
-#    logout as user
-
 Newly invited collaborator can create account and sign in
     [Arguments]    ${email}  ${competition_name}
     the user reads his email and clicks the link   ${email}  Invitation to collaborate in ${competition_name}  You will be joining as part of the organisation  2
