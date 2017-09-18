@@ -28,6 +28,7 @@ public class ProjectDetailsViewModel {
     private ApplicationResource app;
     private CompetitionResource competition;
     private boolean projectDetailsSubmitted;
+    private boolean spendProfileGenerated;
     private ProjectUserResource projectManager;
     private boolean submissionAllowed;
     private boolean isFinanceContactSubmitted;
@@ -47,6 +48,7 @@ public class ProjectDetailsViewModel {
                                    boolean projectDetailsSubmitted,
                                    ProjectUserResource projectManager,
                                    boolean submissionAllowed,
+                                   boolean spendProfileGenerated,
                                    boolean readOnlyView) {
         this.project = project;
         this.currentUser = currentUser;
@@ -56,6 +58,7 @@ public class ProjectDetailsViewModel {
         this.app = app;
         this.competition = competition;
         this.projectDetailsSubmitted = projectDetailsSubmitted;
+        this.spendProfileGenerated = spendProfileGenerated;
         this.projectManager = projectManager;
         this.submissionAllowed = submissionAllowed;
         this.readOnlyView = readOnlyView;
@@ -114,6 +117,10 @@ public class ProjectDetailsViewModel {
 
     public boolean isProjectDetailsSubmitted() {
         return projectDetailsSubmitted;
+    }
+
+    public boolean isSpendProfileGenerated() {
+        return spendProfileGenerated;
     }
 
     public ProjectUserResource getProjectManager() {

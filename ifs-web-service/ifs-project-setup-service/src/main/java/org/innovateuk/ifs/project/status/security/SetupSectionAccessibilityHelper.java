@@ -188,6 +188,10 @@ public class SetupSectionAccessibilityHelper {
         return setupProgressChecker.isProjectDetailsSubmitted();
     }
 
+    public boolean isSpendProfileGenerated() {
+        return setupProgressChecker.isSpendProfileGenerated();
+    }
+
     public boolean isFinanceContactSubmitted(OrganisationResource organisationResource) {
         return setupProgressChecker.isFinanceContactSubmitted(organisationResource);
     }

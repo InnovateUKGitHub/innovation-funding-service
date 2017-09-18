@@ -35,8 +35,8 @@
         <tbody>
             <tr>
                 <td>
-                    <a th:if="${model.userLeadPartner}" th:href="@{/project/{id}/details/start-date(id=${model.project.getId()})}">Target start date</a>
-                    <th:block th:unless="${model.userLeadPartner}">Target start date</th:block>
+                    <a th:if="${model.userLeadPartner and !model.spendProfileGenerated}" th:href="@{/project/{id}/details/start-date(id=${model.project.getId()})}">Target start date</a>
+                    <th:block th:unless="${model.userLeadPartner and !model.spendProfileGenerated}">Target start date</th:block>
 <!--                    <a th:if="${model.userLeadPartner and !model.projectDetailsSubmitted}" th:href="@{/project/{id}/details/start-date(id=${model.project.getId()})}">Target start date</a>
                     <th:block th:unless="${model.userLeadPartner and !model.projectDetailsSubmitted}">Target start date</th:block>-->
                 </td>
