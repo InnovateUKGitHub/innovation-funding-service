@@ -4,14 +4,16 @@ IFS.core.wordCount = (function () {
   var typeTimeout
   return {
     settings: {
-      wordcountEl: '.word-count textarea',
+      wordCountEl: '.word-count textarea',
       typeTimeout: 500
     },
     init: function () {
       s = this.settings
       // update the word count when the page loads
-      IFS.core.wordCount.updateWordCount(s.wordcountEl)
-      jQuery('body').on('change keyup', s.wordcountEl, function (e) {
+      if (jQuery(s.wordCountEl).length) {
+        IFS.core.wordCount.updateWordCount(s.wordCountEl)
+      }
+      jQuery('body').on('change keyup', s.wordCountEl, function (e) {
         if (e.type === 'keyup') {
           clearTimeout(typeTimeout)
           typeTimeout = setTimeout(function () { IFS.core.wordCount.updateWordCount(e.target) }, s.typeTimeout)
