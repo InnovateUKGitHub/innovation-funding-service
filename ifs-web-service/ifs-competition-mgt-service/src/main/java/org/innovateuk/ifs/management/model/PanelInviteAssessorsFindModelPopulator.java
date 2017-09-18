@@ -5,18 +5,20 @@ import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionsRestService;
+import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewPageResource;
+import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorPageResource;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
-import org.innovateuk.ifs.management.viewmodel.AvailableAssessorRowViewModel;
-import org.innovateuk.ifs.management.viewmodel.InviteAssessorsFindViewModel;
-import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
-import org.innovateuk.ifs.management.viewmodel.PanelInviteAssessorsFindViewModel;
+import org.innovateuk.ifs.management.viewmodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
+import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
 import static org.innovateuk.ifs.management.controller.CompetitionManagementCookieController.SELECTION_LIMIT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -24,7 +26,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * Build the model for the Invite assessors for Assessment Panel 'Find' view.
  */
 @Component
-public class PanelInviteAssessorsFindModelPopulator extends InviteAssessorsModelPopulator<PanelInviteAssessorsFindViewModel> {
+public class PanelInviteAssessorsFindModelPopulator extends PanelInviteAssessorsModelPopulator<PanelInviteAssessorsFindViewModel> {
 
     @Autowired
     private CompetitionInviteRestService competitionInviteRestService;
@@ -34,7 +36,6 @@ public class PanelInviteAssessorsFindModelPopulator extends InviteAssessorsModel
 
     public PanelInviteAssessorsFindViewModel populateModel(long competitionId,
                                                            int page,
-                                                           Optional<Long> innovationArea,
                                                            String originQuery) {
         CompetitionResource competition = competitionsRestService
                 .getCompetitionById(competitionId)
@@ -42,10 +43,16 @@ public class PanelInviteAssessorsFindModelPopulator extends InviteAssessorsModel
 
         PanelInviteAssessorsFindViewModel model = super.populateModel(competition);
 
-        AvailableAssessorPageResource pageResource = competitionInviteRestService.getAvailableAssessors(competition.getId(), page, innovationArea)
+        AssessorInviteOverviewPageResource pageResource = competitionInviteRestService.getInvitationOverview(
+                competition.getId(),
+                page,
+                empty(),
+                of(ACCEPTED),
+                empty()
+        )
                 .getSuccessObjectOrThrowException();
 
-        List<AvailableAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
+        List<PanelAvailableAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
 
         model.setAssessors(assessors);
         model.setPagination(new PaginationViewModel(pageResource, originQuery));
@@ -54,14 +61,14 @@ public class PanelInviteAssessorsFindModelPopulator extends InviteAssessorsModel
         return model;
     }
 
-    private AvailableAssessorRowViewModel getRowViewModel(AvailableAssessorResource availableAssessorResource) {
-        return new AvailableAssessorRowViewModel(
-                availableAssessorResource.getId(),
-                availableAssessorResource.getName(),
-                availableAssessorResource.getInnovationAreas(),
-                availableAssessorResource.isCompliant(),
-                availableAssessorResource.getEmail(),
-                availableAssessorResource.getBusinessType()
+    private PanelAvailableAssessorRowViewModel getRowViewModel(AssessorInviteOverviewResource assessorInviteOverviewResource) {
+        return new PanelAvailableAssessorRowViewModel(
+                assessorInviteOverviewResource.getId(),
+                assessorInviteOverviewResource.getName(),
+                assessorInviteOverviewResource.getInnovationAreas(),
+                assessorInviteOverviewResource.isCompliant(),
+                "email",
+                assessorInviteOverviewResource.getBusinessType()
         );
     }
 

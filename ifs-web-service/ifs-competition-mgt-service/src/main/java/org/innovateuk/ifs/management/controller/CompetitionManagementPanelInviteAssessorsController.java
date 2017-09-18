@@ -46,8 +46,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
 public class CompetitionManagementPanelInviteAssessorsController extends CompetitionManagementCookieController<AssessorPanelSelectionForm> {
 
-    private static final String FORM_ATTR_NAME = "form";
-    private static final String SELECTION_FORM = "assessorSelectionForm";
+    private static final String SELECTION_FORM = "assessorPanelSelectionForm";
 
     @Autowired
     private CompetitionInviteRestService competitionInviteRestService;
@@ -83,12 +82,12 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
 
         String originQuery = buildOriginQueryString(AssessorProfileOrigin.PANEL_FIND, queryParams);
         updateSelectionForm(request, response, competitionId, selectionForm);
-        PanelInviteAssessorsFindViewModel panelInviteAssessorsFindViewModel = panelInviteAssessorsFindModelPopulator.populateModel(competitionId, page, empty(), originQuery);
+        PanelInviteAssessorsFindViewModel panelInviteAssessorsFindViewModel = panelInviteAssessorsFindModelPopulator.populateModel(competitionId, page, originQuery);
 
         model.addAttribute("model", panelInviteAssessorsFindViewModel);
         model.addAttribute("originQuery", originQuery);
 
-        return "assessors/find";
+        return "assessors/panel-find";
     }
 
     private void updateSelectionForm(HttpServletRequest request,

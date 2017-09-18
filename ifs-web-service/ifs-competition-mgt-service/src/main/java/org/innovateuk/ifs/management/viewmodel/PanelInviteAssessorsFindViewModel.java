@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Holder of model attributes for the Invite assessors for Assessment Panel 'Find' view.
  */
-public class PanelInviteAssessorsFindViewModel extends InviteAssessorsViewModel<AvailableAssessorRowViewModel> {
+public class PanelInviteAssessorsFindViewModel extends PanelInviteAssessorsViewModel<PanelAvailableAssessorRowViewModel> {
 
     private boolean selectAllDisabled;
 
