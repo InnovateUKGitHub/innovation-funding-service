@@ -134,8 +134,8 @@ Internal user can see the comp in Project Setup once applicant is notified
     [Documentation]  IFS-1620
     [Tags]
     Given log in as a different user                       &{Comp_admin1_credentials}
-    When the user clicks the button/link                   jQuery=a:contains("Project Setup")
-    And the user should see the element                    jQuery=h2:contains("Project Setup")
+    When the user clicks the button/link                   jQuery=a:contains("Project setup")
+    And the user should see the element                    jQuery=h2:contains("Project setup")
     Then the user clicks the button/link                   link=${FUNDERS_PANEL_APPLICATION_1_TITLE}
     And the user should be redirected to the correct page  ${notified_application_competition_status}
 
