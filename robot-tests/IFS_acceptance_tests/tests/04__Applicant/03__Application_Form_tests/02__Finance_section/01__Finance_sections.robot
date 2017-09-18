@@ -168,7 +168,7 @@ Applicant chooses Calculate overheads option
 
 *** Keywords ***
 Custom Suite Setup
-    log in and create new application if there is not one already
+    log in and create new application if there is not one already  Robot test application
     Applicant navigates to the finances of the Robot application
 
 the user adds three material rows
