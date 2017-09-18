@@ -83,24 +83,24 @@ Project Finance user generates the Spend Profile
     Then the user should see the element    jQuery=a.eligibility-0:contains("Approved")
     And the user should see the element     jQuery=a.eligibility-1:contains("Approved")
     And the user should see the element     jQuery=a.eligibility-2:contains("Approved")
-    Then the user should see the element    jQuery=.generate-spend-profile-main-button
+    Then the user should see the element    css=.generate-spend-profile-main-button
 
 
 Project Finance cancels the generation of the Spend Profile
     [Documentation]    INFUND-5194
     [Tags]
-    When the user clicks the button/link    jQuery=.generate-spend-profile-main-button
+    When the user clicks the button/link    css=.generate-spend-profile-main-button
     Then the user should see the text in the page    This will generate a flat spend profile for all project partners.
     When the user clicks the button/link    jQuery=button:contains("Cancel")
 
 Project Finance generates the Spend Profile
     [Documentation]    INFUND-5194, INFUND-5987
     [Tags]    HappyPath
-    When the user clicks the button/link    jQuery=.generate-spend-profile-main-button
-    And the user clicks the button/link     jQuery=#generate-spend-profile-modal-button
+    When the user clicks the button/link    css=.generate-spend-profile-main-button
+    And the user clicks the button/link     css=#generate-spend-profile-modal-button
     Then the user should see the element    jQuery=.success-alert p:contains("The finance checks have been approved and profiles generated.")
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(4).ok
+    Then the user should see the element    css=#table-project-status tr:nth-of-type(3) td:nth-of-type(4).ok
     And the user reads his email            ${PS_SP_APPLICATION_PM_EMAIL}  Your spend profile is available  The finance checks for all partners in the project have now been completed
 
 Lead partner can view spend profile page
@@ -110,9 +110,9 @@ Lead partner can view spend profile page
     Given the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
     When the user clicks the button/link             link=status of my partners
     Then the user should see the text in the page    Project team status
-    And the user should see the element              jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
+    And the user should see the element              css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
     When the user clicks the button/link             link=Project setup status
-    Then the user should see the element      jQuery=li.require-action:nth-child(6)
+    Then the user should see the element      css=li.require-action:nth-child(6)
     When the user clicks the button/link     link=Spend profile
     And the user should not see the element    link=Total project profile spend
     And the user clicks the button/link      link=${Katz_Name}
@@ -133,7 +133,7 @@ Lead partner can see correct project start date and duration
 Calculations in the spend profile table
     [Documentation]    INFUND-3764, INFUND-6148
     [Tags]    HappyPath
-    Given the user should see the element  jQuery=.spend-profile-table
+    Given the user should see the element  css=.spend-profile-table
     Then the user should see the element   jQuery=th:contains("Labour") ~ td.fix-right:contains("£ 3,081")
     And the user should see the element    jQuery=th:contains("Overheads") ~ td.fix-right:contains("£ 0")
     And the user should see the element    jQuery=th:contains("Materials") ~ td.fix-right:contains("£ 100,200")
@@ -225,16 +225,16 @@ Lead partner marks spend profile as complete
     When the user clicks the button/link            link=Project setup status
     And the user clicks the button/link             link=status of my partners
     Then the user should see the text in the page    Project team status
-    And the user should see the element              jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
+    And the user should see the element              css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
     When the user clicks the button/link             link=Project setup status
-    Then the user should see the element             jQuery=li.require-action:nth-child(6)
+    Then the user should see the element             css=li.require-action:nth-child(6)
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
     [Tags]    HappyPath
     [Setup]    Log in as a different user           ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
     Given the user clicks the button/link           link=${PS_SP_APPLICATION_TITLE}
-    And the user should see the element             jQuery=ul li.complete:nth-child(1)
+    And the user should see the element             css=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
     Then the user should see the element            link = Monitoring Officer
     And the user should see the element             link = Bank details
@@ -249,9 +249,9 @@ Non-lead partner can view spend profile page
     Given the user clicks the button/link           link=${PS_SP_APPLICATION_TITLE}
     When the user clicks the button/link             link=status of my partners
     Then the user should see the text in the page    Project team status
-    And the user should see the element              jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
+    And the user should see the element              css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
     When the user clicks the button/link             link=Project setup status
-    Then the user should see the element             jQuery=li.require-action:nth-child(6)
+    Then the user should see the element             css=li.require-action:nth-child(6)
     When the user clicks the button/link             link=Spend profile
     Then the user should not see an error in the page
     And the user should see the text in the page    We have reviewed and confirmed your project costs.
@@ -284,10 +284,10 @@ Non-lead partner marks Spend Profile as complete
 Status updates for industrial user after spend profile submission
     [Documentation]    INFUND-6881
     When the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
-    Then the user should see the element    jQuery=ul li.complete:nth-child(6)
+    Then the user should see the element    css=ul li.complete:nth-child(6)
     When the user clicks the button/link    link=status of my partners
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(5)
+    Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
+    And the user should see the element    css=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(5)
 
 Project Manager doesn't have the option to send spend profiles until all partners have marked as complete
     [Documentation]    INFUND-3767, INFUND-6138
@@ -296,7 +296,7 @@ Project Manager doesn't have the option to send spend profiles until all partner
     Given the user clicks the button/link       link=${PS_SP_APPLICATION_TITLE}
     And the user clicks the button/link             link=status of my partners
     Then the user should see the text in the page    Project team status
-    And the user should see the element              jQuery=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(5)
+    And the user should see the element              css=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(5)
     When the user clicks the button/link             link=Project setup status
     Then the user should see the element             jQuery=li.require-action:nth-child(6)
     When the user clicks the button/link        link=Spend profile
@@ -383,10 +383,10 @@ Academic partner marks Spend Profile as complete
 Status updates for academic user after spend profile submission
     [Documentation]    INFUND-6881
     When the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
-    Then the user should see the element    jQuery=ul li.complete:nth-child(6)
+    Then the user should see the element    css=ul li.complete:nth-child(6)
     When the user clicks the button/link    link=status of my partners
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(5)
+    Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
+    And the user should see the element    css=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(5)
 
 
 Project Manager can view partners' spend profiles
@@ -466,7 +466,7 @@ Partner can receive edit rights to his SP
     [Tags]    HappyPath
     [Setup]  log in as a different user     ${PS_SP_APPLICATION_PARTNER_EMAIL}  ${short_password}
     Given the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
-    Then the user should see the element    jQuery=li.require-action:nth-child(6)
+    Then the user should see the element    css=li.require-action:nth-child(6)
     When the user clicks the button/link    link=Spend profile
     Then the user should see the element    jQuery=.button:contains("Edit spend profile")
     When the user clicks the button/link    jQuery=a:contains("Submit to lead partner")
@@ -480,7 +480,7 @@ Project Manager can send the project's spend profiles
     When the user clicks the button/link     jQuery=.button:contains("Review and send total project spend profile")
     Then the user clicks the button/link     jQuery=.button:contains("Send project spend profile")
     And the user should see the element      jQuery=button:contains("Cancel")
-    When the user clicks the button/link     jQuery=.modal-confirm-spend-profile-totals .button[value="Send"]
+    When the user clicks the button/link     css=.modal-confirm-spend-profile-totals .button[value="Send"]
 
 PM's Spend profile Summary page gets updated after submit
     [Documentation]    INFUND-3766
@@ -493,7 +493,7 @@ Status updates after spend profile submitted
     [Documentation]    INFUND-6225
     Given the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
     When the user clicks the button/link    link=status of my partners
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(5)
+    And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(5)
 
 
 Partners can see the Spend Profile section completed
@@ -501,23 +501,23 @@ Partners can see the Spend Profile section completed
     [Tags]
     Given Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     And the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
-    Then the user should see the element    jQuery=li.waiting:nth-of-type(6)
+    Then the user should see the element    css=li.waiting:nth-of-type(6)
     Given Log in as a different user    ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}    ${short_password}
     And the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
-    Then the user should see the element    jQuery=li.waiting:nth-of-type(6)
+    Then the user should see the element    css=li.waiting:nth-of-type(6)
     Given Log in as a different user    ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
     And the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
-    Then the user should see the element    jQuery=li.complete:nth-of-type(6)
+    Then the user should see the element    css=li.complete:nth-of-type(6)
     Given Log in as a different user    ${PS_SP_APPLICATION_ACADEMIC_EMAIL}    ${short_password}
     And the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
-    Then the user should see the element    jQuery=li.complete:nth-of-type(6)
+    Then the user should see the element    css=li.complete:nth-of-type(6)
 
 Project Finance is able to see Spend Profile approval page
     [Documentation]    INFUND-2638, INFUND-5617, INFUND-3973, INFUND-5942
     [Tags]    HappyPath
     [Setup]    Log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
-    And the user clicks the button/link      jQuery=#table-project-status tbody tr:nth-child(3) td.status.action:nth-child(6) a
+    And the user clicks the button/link      css=#table-project-status tbody tr:nth-child(3) td.status.action:nth-child(6) a
     Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
     And the user should see the element    jQuery=#content div.grid-row div.column-third.alignright.extra-margin h2:contains("Spend profile")
     And the user should not see the element    jQuery=h2:contains("The spend profile has been approved")
@@ -529,9 +529,9 @@ Project Finance is able to see Spend Profile approval page
     And the user clicks the button/link   link=${Meembee_Name}-spend-profile.csv
     And the user clicks the button/link   link=${Zooveo_Name}-spend-profile.csv
     When the user should see the text in the page    Approved by Innovate UK
-    Then the element should be disabled    jQuery=#accept-profile
+    Then the element should be disabled    css=#accept-profile
     When the user selects the checkbox    approvedByLeadTechnologist
-    Then the user should see the element    jQuery=#accept-profile
+    Then the user should see the element    css=#accept-profile
     And the user should see the element    jQuery=#content .button.button.button-warning:contains("Reject")
 
 Comp Admin is able to see Spend Profile approval page
@@ -540,7 +540,7 @@ Comp Admin is able to see Spend Profile approval page
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
     Then the user should see the element    jQuery=#content div.grid-row div.column-third.alignright.extra-margin h2:contains("Spend profile")
-    And the element should be disabled    jQuery=#accept-profile
+    And the element should be disabled    css=#accept-profile
     And the user should see the element    jQuery=#content .button-warning:contains("Reject")
     And the user should see the text in the page  Innovation Lead
     And the user should see the text in the page  Peter Freeman
@@ -549,7 +549,7 @@ Comp Admin is able to see Spend Profile approval page
     When the user clicks the button/link    jQuery=.modal-reject-profile button:contains("Cancel")
     Then the user should not see an error in the page
     When the user selects the checkbox    approvedByLeadTechnologist
-    Then the user should see the element    jQuery=#accept-profile
+    Then the user should see the element    css=#accept-profile
     When the user clicks the button/link    jQuery=button:contains("Approved")
     Then the user should see the text in the page    Approved by Innovate UK
     When the user clicks the button/link    jQuery=.modal-accept-profile button:contains("Cancel")
@@ -575,14 +575,14 @@ Status updates correctly for internal user's table
     [Tags]    Experian    HappyPath
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
     When the user navigates to the page      ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
-    Then the user should see the element     jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(1).status.ok         # Project details
-    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(2).status.ok         # MO
-    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(3).status.ok         # Bank details
-    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(4).status.ok         # Finance checks
-    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(5).status.action     # Spend Profile
-    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(6).status.ok         # Other Docs
-    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(7).status            # GOL
-    And the user should not see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(7).status.waiting    # specifically checking regression issue INFUND-7119
+    Then the user should see the element     css=#table-project-status tr:nth-of-type(3) td:nth-of-type(1).status.ok         # Project details
+    And the user should see the element      css=#table-project-status tr:nth-of-type(3) td:nth-of-type(2).status.ok         # MO
+    And the user should see the element      css=#table-project-status tr:nth-of-type(3) td:nth-of-type(3).status.ok         # Bank details
+    And the user should see the element      css=#table-project-status tr:nth-of-type(3) td:nth-of-type(4).status.ok         # Finance checks
+    And the user should see the element      css=#table-project-status tr:nth-of-type(3) td:nth-of-type(5).status.action     # Spend Profile
+    And the user should see the element      css=#table-project-status tr:nth-of-type(3) td:nth-of-type(6).status.ok         # Other Docs
+    And the user should see the element      css=#table-project-status tr:nth-of-type(3) td:nth-of-type(7).status            # GOL
+    And the user should not see the element    css=#table-project-status tr:nth-of-type(3) td:nth-of-type(7).status.waiting    # specifically checking regression issue INFUND-7119
 
 Project Finance is able to Reject Spend Profile
     [Documentation]    INFUND-2638, INFUND-5617
@@ -601,16 +601,16 @@ Status updates to a cross for the internal user's table
     [Documentation]    INFUND-6977
     [Tags]
     When the user navigates to the page      ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(5).status.rejected
+    Then the user should see the element    css=#table-project-status tr:nth-of-type(3) td:nth-of-type(5).status.rejected
 
 Lead partner can see that the spend profile has been rejected
     [Documentation]    INFUND-6977
     [Tags]
     Given log in as a different user    ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}    ${short_password}
     When the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
-    Then the user should see the element    jQuery=li.require-action:nth-of-type(6)
+    Then the user should see the element    css=li.require-action:nth-of-type(6)
     When the user clicks the button/link    link=status of my partners
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
+    Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
     [Teardown]    the user goes back to the previous page
 
 Non Lead partners should still see a tick instead of an hourglass when spend profile has been rejected
@@ -618,14 +618,14 @@ Non Lead partners should still see a tick instead of an hourglass when spend pro
     [Tags]
     Given log in as a different user        ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
     When the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
-    Then the user should see the element    jQuery=li.complete:nth-of-type(6)
+    Then the user should see the element    css=li.complete:nth-of-type(6)
     When the user clicks the button/link    link=status of my partners
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(5)
+    Then the user should see the element    css=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(5)
     Given log in as a different user        ${PS_SP_APPLICATION_ACADEMIC_EMAIL}   ${short_password}
     When the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
-    Then the user should see the element    jQuery=li.complete:nth-of-type(6)
+    Then the user should see the element    css=li.complete:nth-of-type(6)
     When the user clicks the button/link    link=status of my partners
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(5)
+    Then the user should see the element    css=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(5)
 
 Lead partner no longer has the 'submitted' view of the spend profiles
     [Documentation]    INFUND-6977, INFUND-7422
@@ -654,9 +654,9 @@ Industrial partner receives edit rights and can submit their spend profile
     [Documentation]    INFUND-6977
     Given log in as a different user    ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
     When the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
-    Then the user should see the element    jQuery=li.require-action:nth-of-type(6)
+    Then the user should see the element    css=li.require-action:nth-of-type(6)
     When the user clicks the button/link    link=status of my partners
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.action:nth-of-type(5)
+    Then the user should see the element    css=#table-project-status tr:nth-of-type(2) td.status.action:nth-of-type(5)
     And the user goes back to the previous page
     When the user clicks the button/link    link=Spend profile
     And the user clicks the button/link    jQuery=a:contains("Submit to lead partner")
@@ -665,15 +665,15 @@ Industrial partner receives edit rights and can submit their spend profile
     When the user goes back to the previous page
     And the user clicks the button/link    link=Project setup status
     And the user clicks the button/link    link=status of my partners
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(5)
+    Then the user should see the element    css=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(5)
 
 Academic partner receives edit rights and can submit their spend profile
     [Documentation]    INFUND-6977
     Given log in as a different user    ${PS_SP_APPLICATION_ACADEMIC_EMAIL}    ${short_password}
     When the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
-    Then the user should see the element    jQuery=li.require-action:nth-of-type(6)
+    Then the user should see the element    css=li.require-action:nth-of-type(6)
     When the user clicks the button/link    link=status of my partners
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(5)
+    Then the user should see the element    css=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(5)
     And the user goes back to the previous page
     And the user clicks the button/link    link=Spend profile
     When the user clicks the button/link    jQuery=a:contains("Submit to lead partner")
@@ -682,7 +682,7 @@ Academic partner receives edit rights and can submit their spend profile
     When the user goes back to the previous page
     And the user clicks the button/link    link=Project setup status
     And the user clicks the button/link    link=status of my partners
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(5)
+    Then the user should see the element    css=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(5)
 
 
 Lead partner can send the combined spend profile
@@ -692,7 +692,7 @@ Lead partner can send the combined spend profile
     When the user clicks the button/link     jQuery=.button:contains("Review and send total project spend profile")
     Then the user clicks the button/link     jQuery=.button:contains("Send project spend profile")
     And the user should see the element      jQuery=button:contains("Cancel")
-    When the user clicks the button/link     jQuery=.modal-confirm-spend-profile-totals .button[value="Send"]
+    When the user clicks the button/link     css=.modal-confirm-spend-profile-totals .button[value="Send"]
 
 
 Project Finance is able to Approve Spend Profile
@@ -717,13 +717,13 @@ Status updates correctly for internal user's table after approval
     [Documentation]    INFUND-5543
     [Tags]
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(5).status.ok
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(7).status.action   # GOL
+    Then the user should see the element    css=#table-project-status tr:nth-of-type(3) td:nth-of-type(5).status.ok
+    And the user should see the element     css=#table-project-status tr:nth-of-type(3) td:nth-of-type(7).status.action   # GOL
 
 Project Finance still has a link to the spend profile after approval
     [Documentation]    INFUND-6046
     [Tags]
-    When the user clicks the button/link           jQuery=td:nth-child(6) a
+    When the user clicks the button/link           css=td:nth-child(6) a
     Then the user should see the text in the page  Project spend profile
     And the user clicks the button/link            link=${Katz_Name}-spend-profile.csv
     And the user clicks the button/link            link=${Meembee_Name}-spend-profile.csv
@@ -749,7 +749,7 @@ the sum of tds equals the total
     ${sum} =    convert to number    0
     ${total} =    convert to number    ${total}
     : FOR    ${i}    IN RANGE    2    ${duration}    # due to header in the first column
-    \    ${text} =    Get Text    jQuery=${table} tr:nth-child(${row}) td:nth-child(${i})
+    \    ${text} =    Get Text    css=${table} tr:nth-child(${row}) td:nth-child(${i})
     \    ${formatted} =    Remove String    ${text}    ,    # Remove the comma from the number
     \    ${cell} =    convert to integer    ${formatted}
     \    ${sum} =    Evaluate    ${sum}+${cell}

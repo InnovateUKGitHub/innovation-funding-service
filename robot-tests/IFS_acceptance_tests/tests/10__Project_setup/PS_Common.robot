@@ -216,17 +216,17 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     log in as a different user              &{internal_finance_credentials}
     the user navigates to the page          ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/funding
-    the user moves focus to the element     jQuery=label[for="app-row-1"]
+    the user moves focus to the element     css=label[for="app-row-1"]
     the user selects the checkbox           app-row-1
-    the user moves focus to the element     jQuery=label[for="app-row-2"]
+    the user moves focus to the element     css=label[for="app-row-2"]
     the user selects the checkbox           app-row-2
     the user clicks the button/link         jQuery=button:contains("Successful")
     the user should see the element         jQuery=td:contains("Successful")
     the user clicks the button/link         jQuery=a:contains("Competition")
     the user clicks the button/link         jQuery=a:contains("Manage funding notifications")
-    the user moves focus to the element     jQuery=label[for="app-row-103"]
+    the user moves focus to the element     css=label[for="app-row-103"]
     the user selects the checkbox           app-row-103
-    the user moves focus to the element     jQuery=label[for="app-row-104"]
+    the user moves focus to the element     css=label[for="app-row-104"]
     the user selects the checkbox           app-row-104
     the user clicks the button/link         jQuery=.button:contains("Write and send email")
     the user enters text to a text field    css=[labelledby="message"]      testMessage
