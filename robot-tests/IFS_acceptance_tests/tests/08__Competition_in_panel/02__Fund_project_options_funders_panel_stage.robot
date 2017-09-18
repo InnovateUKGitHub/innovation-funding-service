@@ -17,6 +17,7 @@ Suite Teardown    the user closes the browser
 Force Tags        CompAdmin  Applicant
 Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
+Resource          ../10__Project_setup/PS_Common.robot
 
 *** Variables ***
 ${funders_panel_competition_url}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}
@@ -136,7 +137,7 @@ Internal user can see the comp in Project Setup once applicant is notified
     Given log in as a different user                       &{Comp_admin1_credentials}
     When the user clicks the button/link                   jQuery=a:contains("Project setup")
     And the user should see the element                    jQuery=h2:contains("Project setup")
-    Then the user clicks the button/link                   link=${FUNDERS_PANEL_APPLICATION_1_TITLE}
+    Then the user clicks the button/link                   link=${FUNDERS_PANEL_COMPETITION_NAME}
     And the user should be redirected to the correct page  ${notified_application_competition_status}
 
 Once all final decisions have been made and emails are sent Comp moves to Inform status
