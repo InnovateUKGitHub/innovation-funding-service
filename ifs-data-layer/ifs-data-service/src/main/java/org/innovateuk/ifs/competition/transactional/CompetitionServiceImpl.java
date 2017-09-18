@@ -166,23 +166,23 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
     }
     
-    private ZonedDateTime findMostRecentFundingInformDate(Competition c1) {
-        return c1.getApplications()
+    private ZonedDateTime findMostRecentFundingInformDate(Competition competition) {
+        return competition.getApplications()
                 .stream()
-                .filter(a -> a.getManageFundingEmailDate() != null)
-                .max(Comparator.comparing(a -> a.getManageFundingEmailDate()))
+                .filter(application -> application.getManageFundingEmailDate() != null)
+                .max(Comparator.comparing(application -> application.getManageFundingEmailDate()))
                 .get().getManageFundingEmailDate();
     }
 
     @Override
     public ServiceResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions() {
         List<Competition> competitions = competitionRepository.findProjectSetup();
-        // IFS-1620 only competitions with at least one funded and informed application can be considered as in project setup
+        // Only competitions with at least one funded and informed application can be considered as in project setup
         return serviceSuccess(simpleMap(
                 CollectionFunctions.reverse(competitions.stream()
-                    .map(c -> Pair.of(findMostRecentFundingInformDate(c), c))
-                    .sorted(Comparator.comparing(p -> p.getKey()))
-                    .map(p -> p.getValue())
+                    .map(competition -> Pair.of(findMostRecentFundingInformDate(competition), competition))
+                    .sorted(Comparator.comparing(pair -> pair.getKey()))
+                    .map(pair -> pair.getValue())
                     .collect(Collectors.toList())),
                 this::searchResultFromCompetition));
     }

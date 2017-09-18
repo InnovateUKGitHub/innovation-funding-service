@@ -17,7 +17,6 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 
 public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<CompetitionRepository> {
 
-
     @Autowired
     private ApplicationRepository applicationRepository;
 
@@ -63,4 +62,27 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Assert.assertTrue(competitions.get(0).getName().equals("Comp2") && competitions.get(1).getName().equals("Comp1") || competitions.get(1).getName().equals("Comp2") && competitions.get(0).getName().equals("Comp1"));
     }
 
+    @Test
+    public void testFundedAndNotInformed() {
+        Competition compFundedAndInformed = newCompetition().withNonIfs(false).withSetupComplete(true).build();
+        compFundedAndInformed = repository.save(compFundedAndInformed);
+
+        Application applicationFundedAndInformed = newApplication().withCompetition(compFundedAndInformed).withFundingDecision(FundingDecisionStatus.FUNDED).build();
+        applicationRepository.save(applicationFundedAndInformed);
+
+        Assert.assertEquals(0L, repository.countProjectSetup().longValue());
+        Assert.assertEquals(0, repository.findProjectSetup().size());
+    }
+
+    @Test
+    public void testNotFundedAndInformed() {
+        Competition compFundedAndInformed = newCompetition().withNonIfs(false).withSetupComplete(true).build();
+        compFundedAndInformed = repository.save(compFundedAndInformed);
+
+        Application applicationFundedAndInformed = newApplication().withCompetition(compFundedAndInformed).withFundingDecision(FundingDecisionStatus.UNFUNDED).withManageFundingEmailDate(ZonedDateTime.now()).build();
+        applicationRepository.save(applicationFundedAndInformed);
+
+        Assert.assertEquals(0L, repository.countProjectSetup().longValue());
+        Assert.assertEquals(0, repository.findProjectSetup().size());
+    }
 }
