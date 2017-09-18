@@ -107,7 +107,7 @@ jmeter/jmeter.log
 **/docker/shibImages/*
 !**/docker/shibImages/PUT_SHIB_IMAGE_HERE.txt
 /.gradletasknamecache
-
+robot-tests-tmp
 classes/
 
 #Node modules, except styledocco as we've made changes in that one.

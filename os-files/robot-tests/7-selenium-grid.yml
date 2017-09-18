@@ -15,17 +15,53 @@ items:
           deploymentconfig: selenium-grid
       spec:
         containers:
-        - image: selenium/hub:3.0.1-dysprosium
+        - image: selenium/hub:3.5.3-astatine
           name: hub
           imagePullPolicy: IfNotPresent
           ports:
           - containerPort: 4444
           - containerPort: 3000
+          resources:
+            limits:
+              memory: 1000M
+              cpu: 400m
+            requests:
+              cpu: 100m
+              memory: 400M
           env:
           - name: GRID_BROWSER_TIMEOUT
             value: "90000"
           - name: GRID_TIMEOUT
             value: "100000"
+          - name: JAVA_OPTS
+            value: "-Xmx512m"
+          - name: POOL_MAX
+            description: Max thread count for incoming and outgoing connections
+            value: "30000"
+          - name: GRID_NEW_SESSION_WAIT_TIMEOUT
+            description: The timeout to wait for new sessions
+            value: "30"
+          - name: GRID_JETTY_MAX_THREADS
+            description: Max Threads for Jetty server
+            value: "100"
+          - name: GRID_NODE_POLLING
+            description: Node Polling setting
+            value: "150"
+          - name: GRID_CLEAN_UP_CYCLE
+            description: How long to wait until cleanup on nodes
+            value: "300"
+          - name: GRID_TIMEOUT
+            description: The timeout for the grid
+            value: "300"
+          - name: GRID_BROWSER_TIMEOUT
+            description: The timeout for the browser
+            value: "30"
+          - name: GRID_MAX_SESSION
+            description: How many sessions max
+            value: "3"
+          - name: GRID_UNREGISTER_IF_STILL_DOWN_AFTER
+            description: Time to wait before unregistering nodes
+            value: "500"
     test: false
     triggers:
     - type: ConfigChange
@@ -35,7 +71,7 @@ items:
   metadata:
     name: chrome
   spec:
-    replicas: 1
+    replicas: 2
     selector:
       deploymentconfig: chrome
     template:
@@ -48,26 +84,18 @@ items:
           emptyDir:
             medium: Memory
         containers:
-        - image: selenium/node-chrome-debug:3.0.1-dysprosium
+        - image: selenium/node-chrome:3.5.3-astatine
           name: chrome
           imagePullPolicy: IfNotPresent
-          lifecycle:
-            postStart:
-              exec:
-                command:
-                  - "sh"
-                  - "-c"
-                  - >
-                    echo "$SHIB_PORT_443_TCP_ADDR <<SHIB-ADDRESS>>" >> /etc/hosts &&
-                    echo "$IDP_PORT_443_TCP_ADDR auth-<<SHIB-ADDRESS>>" >> /etc/hosts
           ports:
           - containerPort: 5900
           resources:
             limits:
-              memory: 1000M
-              cpu: 2000m
+              memory: 1500M
+              cpu: 400m
             requests:
-              cpu: 800m
+              cpu: 100m
+              memory: 1000M
           volumeMounts:
           - mountPath: /dev/shm
             name: dshm
@@ -88,6 +116,10 @@ items:
             value: "localhost"
           - name: HUB_ENV_no_proxy
             value: "localhost"
+          - name: JAVA_OPTS
+            description: Options for the Java command
+            value: "-Xmx512m"
+
     test: false
     triggers:
     - type: ConfigChange
