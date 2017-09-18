@@ -22,7 +22,7 @@
         <ul class="list-overview">
             <li class="grid-row" th:each="competition : ${projectSetupComps}">
                 <th:block
-                    th:insert="competition/dashboard :: dashboard-row"
+                    th:insert="competition/dashboard :: dashboard-row(projectSetup=${true})"
                     th:with="competition=${competition},
                         innovationAreas=competition.innovationAreaNames,
                         cell4=${competition.projectsCount + ' projects'}"/>
