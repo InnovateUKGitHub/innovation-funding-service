@@ -44,6 +44,8 @@ import java.util.List;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_UNEXPECTED_ERROR;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
@@ -90,8 +92,8 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         User user = newUser().withId(userResource.getId()).withRoles(Sets.newLinkedHashSet(newRole().withType(COMP_ADMIN).build())).build();
         setLoggedInUser(userResource);
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
-        List<MilestoneResource> milestones = singletonList(newMilestoneResource().withType(MilestoneType.OPEN_DATE).withDate(ZonedDateTime.now()).build());
-        when(milestoneService.getAllMilestonesByCompetitionId(competitionId)).thenReturn(serviceSuccess(milestones));
+        MilestoneResource milestone = newMilestoneResource().withType(MilestoneType.OPEN_DATE).withDate(ZonedDateTime.now()).build();
+        when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, competitionId)).thenReturn(serviceSuccess(milestone));
     }
 
     @Test
@@ -252,9 +254,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId).build());
         when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(PublicContentResourceBuilder.newPublicContentResource().build()));
         when(competitionRepositoryMock.findFeedbackReleased()).thenReturn(competitions);
-
-        List<MilestoneResource> milestones = singletonList(newMilestoneResource().withType(MilestoneType.ALLOCATE_ASSESSORS).withDate(ZonedDateTime.now()).build());
-        when(milestoneService.getAllMilestonesByCompetitionId(competitionId)).thenReturn(serviceSuccess(milestones));
+        when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, competitionId)).thenReturn(serviceFailure(GENERAL_UNEXPECTED_ERROR));
 
         List<CompetitionSearchResultItem> response = service.findFeedbackReleasedCompetitions().getSuccessObjectOrThrowException();
 

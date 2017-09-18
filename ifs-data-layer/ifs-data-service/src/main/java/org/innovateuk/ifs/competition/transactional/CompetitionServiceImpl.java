@@ -247,12 +247,10 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     private CompetitionSearchResultItem searchResultFromCompetition(Competition c) {
-
-        List<MilestoneResource> milestonesByCompetition = milestoneService.getAllMilestonesByCompetitionId(c.getId()).getSuccessObjectOrThrowException();
         ZonedDateTime openDate;
-        List<MilestoneResource> openDateMilestones = milestonesByCompetition.stream().filter(m -> m.getType().equals(MilestoneType.OPEN_DATE)).collect(Collectors.toList());
-        if (!milestonesByCompetition.isEmpty() && openDateMilestones.size() > 0) {
-            openDate = openDateMilestones.get(0).getDate();
+        ServiceResult<MilestoneResource> openDateMilestone = milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, c.getId());
+        if (openDateMilestone.isSuccess()) {
+            openDate = openDateMilestone.getSuccessObject().getDate();
         } else {
             openDate = null;
         }

@@ -25,7 +25,7 @@
                     th:insert="competition/dashboard :: dashboard-row"
                     th:with="competition=${competition},
                         innovationAreas=competition.innovationAreaNames,
-                        cell4=${competition.openDate != null ? #temporals.format(competition.openDate, 'd/M/yyyy') : ''},
+                        cell4='Opened '+${competition.openDate != null ? #temporals.format(competition.openDate, 'd MMMM yyyy') : ''},
                         customLink='/competition/'+${competition.id}+'/applications/manage'"/>
             </li>
         </ul>

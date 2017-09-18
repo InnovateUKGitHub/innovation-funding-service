@@ -93,7 +93,6 @@ public class CompetitionController {
 
     @GetMapping("/{competitionId}/unsuccessful-applications")
     public RestResult<List<ApplicationResource>> findUnsuccessfulApplications(@PathVariable("competitionId") final Long competitionId) {
-
         return competitionService.findUnsuccessfulApplications(competitionId).toGetResponse();
     }
 
