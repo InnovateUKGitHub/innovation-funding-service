@@ -338,7 +338,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
 
         mockMvc.perform(get("/competitioninvite/getAssessorsNotAcceptedInviteIds/{competitionId}", 1L)
                 .param("innovationArea", "10")
-                .param("statuses[]", "PENDING,REJECTED")
+                .param("statuses", "PENDING,REJECTED")
                 .param("compliant", "1"))
                 .andExpect(status().isOk())
                 .andDo(document("competitioninvite/{method-name}",
@@ -348,7 +348,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
                         requestParameters(
                                 parameterWithName("innovationArea").optional()
                                         .description("Innovation area ID to filter assessors by."),
-                                parameterWithName("statuses[]")
+                                parameterWithName("statuses")
                                         .description("Participant statuses to filter assessors by. Can only be 'REJECTED', 'PENDING' or both."),
                                 parameterWithName("compliant").optional()
                                         .description("Flag to filter assessors by their compliance.")
