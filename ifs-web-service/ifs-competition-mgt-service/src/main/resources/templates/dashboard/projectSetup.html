@@ -20,15 +20,13 @@
         <h2 class="heading-medium"
             th:text="'Project setup ('+${model.counts.projectSetupCount}+')'"></h2>
         <ul class="list-overview">
-            <th:block th:each="competitionByState : ${projectSetupComps}">
-                <li class="grid-row" th:each="competition : ${competitionByState.value}">
-                    <th:block
-                        th:insert="competition/dashboard :: dashboard-row"
-                        th:with="competition=${competition},
-                            innovationAreas=competition.innovationAreaNames,
-                            cell4=${competition.projectsCount + ' projects'}"/>
-                </li>
-            </th:block>
+            <li class="grid-row" th:each="competition : ${projectSetupComps}">
+                <th:block
+                    th:insert="competition/dashboard :: dashboard-row"
+                    th:with="competition=${competition},
+                        innovationAreas=competition.innovationAreaNames,
+                        cell4=${competition.projectsCount + ' projects'}"/>
+            </li>
         </ul>
     </section>
 

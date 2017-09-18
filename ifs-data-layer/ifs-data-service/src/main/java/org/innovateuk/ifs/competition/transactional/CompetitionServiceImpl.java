@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.transactional;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -164,16 +165,26 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         List<Competition> competitions = competitionRepository.findLive();
         return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
     }
-    private static ZonedDateTime compareCompetitionFundingInformDates(Competition c1) {
-        return c1.getApplications().stream().filter(a -> a.getManageFundingEmailDate() != null).max(Comparator.comparing(a -> a.getManageFundingEmailDate())).get().getManageFundingEmailDate();
+    
+    private ZonedDateTime findMostRecentFundingInformDate(Competition c1) {
+        return c1.getApplications()
+                .stream()
+                .filter(a -> a.getManageFundingEmailDate() != null)
+                .max(Comparator.comparing(a -> a.getManageFundingEmailDate()))
+                .get().getManageFundingEmailDate();
     }
 
     @Override
     public ServiceResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions() {
         List<Competition> competitions = competitionRepository.findProjectSetup();
-        // IFS-1620 assumes only competitions with at least one funded and informed application are considered as in project setup
-
-        return serviceSuccess(simpleMap(CollectionFunctions.reverse(competitions.stream().sorted(Comparator.comparing(c -> compareCompetitionFundingInformDates(c))).collect(Collectors.toList())), this::searchResultFromCompetition));
+        // IFS-1620 only competitions with at least one funded and informed application can be considered as in project setup
+        return serviceSuccess(simpleMap(
+                CollectionFunctions.reverse(competitions.stream()
+                    .map(c -> Pair.of(findMostRecentFundingInformDate(c), c))
+                    .sorted(Comparator.comparing(p -> p.getKey()))
+                    .map(p -> p.getValue())
+                    .collect(Collectors.toList())),
+                this::searchResultFromCompetition));
     }
 
     @Override
