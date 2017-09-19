@@ -152,6 +152,7 @@ ${project_in_setup_team_status_page}    ${project_in_setup_page}/team-status
 ${project_start_date_page}              ${project_in_setup_details_page}/start-date
 ${project_address_page}                 ${project_in_setup_details_page}/project-address
 ${internal_competition_status}          ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
+${notified_application_competition_status}   ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/status
 
 
 #Bank details
