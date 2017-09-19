@@ -17,9 +17,9 @@
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=${model.project.name},size='heading-xlarge'" />
 
     <p th:if="${!model.projectDetailsSubmitted}">Please supply the following details for your project and the team. We need these to set up your project.</p>
-    <div th:unless="${!model.projectDetailsSubmitted}" class="success-alert extra-margin-bottom">
+<!--    <div th:unless="${!model.projectDetailsSubmitted}" class="success-alert extra-margin-bottom">
     		<p><strong>The project details have been submitted to Innovate UK</strong></p>
-  	</div>
+  	</div>-->
 
 <h2 class="heading-medium">Project details</h2>
 <p>You are providing these details as the lead on behalf of the overall project.</p>

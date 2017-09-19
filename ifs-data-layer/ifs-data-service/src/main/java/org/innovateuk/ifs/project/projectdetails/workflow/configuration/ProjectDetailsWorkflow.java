@@ -43,15 +43,6 @@ public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<Projec
                 .end(SUBMITTED);
     }
 
-/*    @Override
-    public void configure(StateMachineStateConfigurer<ProjectDetailsState, ProjectDetailsEvent> states) throws Exception {
-        states.withStates()
-                .initial(PENDING)
-                .states(EnumSet.of(PENDING, READY_TO_SUBMIT, SUBMITTED))
-                .choice(DECIDE_IF_READY_TO_SUBMIT)
-                .end(SUBMITTED);
-    }*/
-
     @Override
     public void configure(StateMachineTransitionConfigurer<ProjectDetailsState, ProjectDetailsEvent> transitions) throws Exception {
         transitions
@@ -81,54 +72,4 @@ public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<Projec
                 .last(PENDING);
 
     }
-
-/*    @Override
-    public void configure(StateMachineTransitionConfigurer<ProjectDetailsState, ProjectDetailsEvent> transitions) throws Exception {
-        transitions
-                .withExternal()
-                .source(PENDING)
-                .event(PROJECT_CREATED)
-                .target(PENDING)
-                .and()
-                .withExternal()
-                .source(PENDING)
-                .event(PROJECT_START_DATE_ADDED)
-                .target(DECIDE_IF_READY_TO_SUBMIT)
-                .and()
-                .withExternal()
-                .source(PENDING)
-                .event(PROJECT_ADDRESS_ADDED)
-                .target(DECIDE_IF_READY_TO_SUBMIT)
-                .and()
-                .withExternal()
-                .source(PENDING)
-                .event(PROJECT_MANAGER_ADDED)
-                .target(DECIDE_IF_READY_TO_SUBMIT)
-                .and()
-                .withExternal()
-                .source(READY_TO_SUBMIT)
-                .event(PROJECT_START_DATE_ADDED)
-                .target(DECIDE_IF_READY_TO_SUBMIT)
-                .and()
-                .withExternal()
-                .source(READY_TO_SUBMIT)
-                .event(PROJECT_ADDRESS_ADDED)
-                .target(DECIDE_IF_READY_TO_SUBMIT)
-                .and()
-                .withExternal()
-                .source(READY_TO_SUBMIT)
-                .event(PROJECT_MANAGER_ADDED)
-                .target(DECIDE_IF_READY_TO_SUBMIT)
-                .and()
-                .withChoice()
-                .source(DECIDE_IF_READY_TO_SUBMIT)
-                .first(READY_TO_SUBMIT, allProjectDetailsSuppliedGuard)
-                .last(PENDING)
-                .and()
-                .withExternal()
-                .source(READY_TO_SUBMIT)
-                .event(SUBMIT)
-                .target(SUBMITTED)
-                .guard(allProjectDetailsSuppliedGuard);
-    }*/
 }

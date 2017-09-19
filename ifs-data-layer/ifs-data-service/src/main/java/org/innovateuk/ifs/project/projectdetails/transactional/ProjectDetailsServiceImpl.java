@@ -136,7 +136,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         return validateProjectStartDate(projectStartDate).
                 andOnSuccess(() -> validateIfStartDateCanBeChanged(projectId)).
                 andOnSuccess(() -> getProject(projectId)).
-                //andOnSuccess((project1) -> validateIfProjectAlreadySubmitted(project1)).
                 andOnSuccessReturnVoid(project -> project.setTargetStartDate(projectStartDate));
     }
 
@@ -195,7 +194,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
                 workflowResult ? serviceSuccess() : serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW));
     }
 
-    @Override
+/*    @Override
     @Transactional
     public ServiceResult<Void> submitProjectDetails(final Long projectId, ZonedDateTime date) {
 
@@ -208,12 +207,12 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
                         return serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE);
                     }
                 }));
-    }
+    }*/
 
-    @Override
+/*    @Override
     public ServiceResult<Boolean> isSubmitAllowed(Long projectId) {
         return getProject(projectId).andOnSuccessReturn(this::doIsSubmissionAllowed);
-    }
+    }*/
 
     @Override
     @Transactional
@@ -353,9 +352,9 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         return serviceSuccess();
     }
 
-    private boolean doIsSubmissionAllowed(Project project) {
+/*    private boolean doIsSubmissionAllowed(Project project) {
         return projectDetailsWorkflowHandler.isSubmissionAllowed(project);
-    }
+    }*/
 
     private ServiceResult<Void> inviteContact(Long projectId, InviteProjectResource projectResource, Notifications kindOfNotification) {
 

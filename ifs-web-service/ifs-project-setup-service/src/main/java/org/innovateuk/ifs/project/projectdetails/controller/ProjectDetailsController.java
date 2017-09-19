@@ -106,7 +106,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         List<OrganisationResource> partnerOrganisations
                 = new PrioritySorting<>(getPartnerOrganisations(projectUsers), leadOrganisation, OrganisationResource::getName).unwrap();
-        boolean isSubmissionAllowed = projectDetailsService.isSubmitAllowed(projectId).getSuccessObject();
+        //boolean isSubmissionAllowed = projectDetailsService.isSubmitAllowed(projectId).getSuccessObject();
 
         ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
         SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(teamStatus);
@@ -118,7 +118,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
                 partnerOrganisations, leadOrganisation, applicationResource, projectUsers, competitionResource,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()), projectDetailsSubmitted,
-                getProjectManager(projectResource.getId()).orElse(null), isSubmissionAllowed, spendProfileGenerated, false));
+                getProjectManager(projectResource.getId()).orElse(null), spendProfileGenerated, false));
 
         return "project/detail";
     }
@@ -144,13 +144,13 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
                 partnerOrganisations, leadOrganisation, applicationResource, projectUsers, competitionResource,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()), true,
-                getProjectManager(projectResource.getId()).orElse(null), false, spendProfileGenerated, true));
+                getProjectManager(projectResource.getId()).orElse(null), spendProfileGenerated, true));
 
         return "project/detail";
     }
 
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+/*    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
     @GetMapping("/{projectId}/confirm-project-details")
     //TODO - This call can be deleted
     public String projectDetailConfirmSubmit(@PathVariable("projectId") final Long projectId, Model model,
@@ -168,7 +168,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         model.addAttribute("applicationId", project.getApplication());
         model.addAttribute("currentUser", loggedInUser);
         return "project/confirm-project-details";
-    }
+    }*/
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
     @GetMapping("/{projectId}/details/finance-contact")
@@ -441,13 +441,13 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return viewCurrentAddressForm(model, form, project);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+/*    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
     @PostMapping("/{projectId}/details/submit")
     //TODO - This call and all calls down the line can be deleted
     public String submitProjectDetails(@PathVariable("projectId") Long projectId) {
         projectDetailsService.setApplicationDetailsSubmitted(projectId).getSuccessObjectOrThrowException();
         return redirectToProjectDetails(projectId);
-    }
+    }*/
 
     private String doViewProjectStartDate(Model model, ProjectResource projectResource, ProjectDetailsStartDateForm form) {
         model.addAttribute("model", new ProjectDetailsStartDateViewModel(projectResource));

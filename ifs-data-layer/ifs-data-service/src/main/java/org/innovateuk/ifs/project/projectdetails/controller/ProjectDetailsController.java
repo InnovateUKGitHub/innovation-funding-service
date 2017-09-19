@@ -69,13 +69,15 @@ public class ProjectDetailsController {
         return projectDetailsService.inviteProjectManager(projectId, inviteResource).toPostResponse();
     }
 
+/*
     @PostMapping("/{projectId}/setApplicationDetailsSubmitted")
     public RestResult<Void> setApplicationDetailsSubmitted(@PathVariable("projectId") final Long projectId){
         return projectDetailsService.submitProjectDetails(projectId, ZonedDateTime.now()).toPostResponse();
     }
+*/
 
-    @GetMapping("/{projectId}/isSubmitAllowed")
+/*    @GetMapping("/{projectId}/isSubmitAllowed")
     public RestResult<Boolean> isSubmitAllowed(@PathVariable("projectId") final Long projectId){
         return projectDetailsService.isSubmitAllowed(projectId).toGetResponse();
-    }
+    }*/
 }

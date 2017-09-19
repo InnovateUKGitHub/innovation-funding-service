@@ -21,9 +21,9 @@ public interface ProjectDetailsRestService {
 
     RestResult<Void> updateFinanceContact(ProjectOrganisationCompositeId compositeId, Long financeContactUserId);
 
-    RestResult<Void> setApplicationDetailsSubmitted(Long projectId);
+    //RestResult<Void> setApplicationDetailsSubmitted(Long projectId);
 
-    RestResult<Boolean> isSubmitAllowed(Long projectId);
+    //RestResult<Boolean> isSubmitAllowed(Long projectId);
 
     RestResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource);
 

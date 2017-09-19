@@ -32,10 +32,10 @@ public interface ProjectDetailsService {
 
     @PreAuthorize("hasPermission(#inviteResource, 'SEND_PROJECT_INVITE')")
     ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource);
-
+/*
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
-    ServiceResult<Void> submitProjectDetails(Long projectId, ZonedDateTime date);
+    ServiceResult<Void> submitProjectDetails(Long projectId, ZonedDateTime date);*/
 
-    @PreAuthorize("hasPermission(#projectId, 'UPDATE_FINANCE_CONTACT')")
-    ServiceResult<Boolean> isSubmitAllowed(Long projectId);
+/*    @PreAuthorize("hasPermission(#projectId, 'UPDATE_FINANCE_CONTACT')")
+    ServiceResult<Boolean> isSubmitAllowed(Long projectId);*/
 }

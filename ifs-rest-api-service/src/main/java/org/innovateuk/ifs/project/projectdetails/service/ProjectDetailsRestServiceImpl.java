@@ -37,15 +37,15 @@ public class ProjectDetailsRestServiceImpl extends BaseRestService implements Pr
         return postWithRestResult(projectRestURL + "/" + composite.getProjectId() + "/organisation/" + composite.getOrganisationId() + "/finance-contact?financeContact=" + financeContactUserId, Void.class);
     }
 
-    @Override
+/*    @Override
     public RestResult<Void> setApplicationDetailsSubmitted(Long projectId) {
         return postWithRestResult(projectRestURL + "/" + projectId + "/setApplicationDetailsSubmitted", Void.class);
-    }
+    }*/
 
-    @Override
+/*    @Override
     public RestResult<Boolean> isSubmitAllowed(Long projectId) {
         return getWithRestResult(projectRestURL + "/" + projectId + "/isSubmitAllowed", Boolean.class);
-    }
+    }*/
 
     public RestResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource) {
         return postWithRestResult(projectRestURL + "/" + projectId + "/invite-finance-contact", inviteResource, Void.class);
