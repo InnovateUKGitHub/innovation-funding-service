@@ -43,7 +43,7 @@ public class SetupSectionAccessibilityHelper {
 
     public SectionAccess leadCanAccessProjectManagerPage(OrganisationResource organisation) {
 
-        if (isCompaniesHouseIncompleteOrProjectDetailsSubmittedOrNotLeadPartner(organisation)) {
+        if (isCompaniesHouseIncompleteOrNotLeadPartner(organisation)) {
             return NOT_ACCESSIBLE;
         }
 
@@ -52,7 +52,7 @@ public class SetupSectionAccessibilityHelper {
 
     public SectionAccess leadCanAccessProjectStartDatePage(OrganisationResource organisation) {
 
-        if (isCompaniesHouseIncompleteOrProjectDetailsSubmittedOrNotLeadPartner(organisation)) {
+        if (isCompaniesHouseIncompleteOrNotLeadPartner(organisation)) {
             return NOT_ACCESSIBLE;
         }
 
@@ -61,19 +61,17 @@ public class SetupSectionAccessibilityHelper {
 
     public SectionAccess leadCanAccessProjectAddressPage(OrganisationResource organisation) {
 
-        if (isCompaniesHouseIncompleteOrProjectDetailsSubmittedOrNotLeadPartner(organisation)) {
+        if (isCompaniesHouseIncompleteOrNotLeadPartner(organisation)) {
             return NOT_ACCESSIBLE;
         }
 
         return ACCESSIBLE;
     }
 
-    private boolean isCompaniesHouseIncompleteOrProjectDetailsSubmittedOrNotLeadPartner(OrganisationResource organisation) {
+    private boolean isCompaniesHouseIncompleteOrNotLeadPartner(OrganisationResource organisation) {
 
         return !isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
                 "Unable to access until Companies House details are complete for Organisation")
-
-                //|| setupProgressChecker.isProjectDetailsSubmitted()
                 || !setupProgressChecker.isLeadPartnerOrganisation(organisation);
 
     }
