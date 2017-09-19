@@ -7,9 +7,10 @@ Resource        ../Applicant_Commons.robot
 Resource        ../../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Variables ***
-${compResearch}  Research can lead
-${compPublic}    Public Sector can lead
+${compResearch}     Research can lead
+${compPublic}       Public Sector can lead
 ${researchLeadApp}  Research Leading Application
+${publicLeadApp}    Public Sector leading Application
 
 *** Test Cases ***
 Comp Admin Creates Competitions where Research or Public sector can lead
@@ -22,15 +23,22 @@ Comp Admin Creates Competitions where Research or Public sector can lead
 Applicant Applies to Research leading Competition
     [Documentation]  IFS-1012
     [Tags]  Applicant  HappyPath
-    [Setup]  log in as a different user        antonio.jenkins@jabbertype.example.com  ${short_password}
-    logged in user applies to competition      ${openCompetitionResearch_name}
-    the user clicks the button/link            link=Application details
-    the user fills in the Application details  ${researchLeadApp}  Experimental development  ${tomorrowday}  ${month}  ${nextyear}
-    the user marks every section but one as complete  ${researchLeadApp}
-    the academic user fills in his finances           ${researchLeadApp}
+    [Setup]  log in as a different user  antonio.jenkins@jabbertype.example.com  ${short_password}
+    Given logged in user applies to competition     ${openCompetitionResearch_name}
+    When the user clicks the button/link            link=Application details
+    Then the user fills in the Application details  ${researchLeadApp}  Experimental development  ${tomorrowday}  ${month}  ${nextyear}
+    And the user marks every section but one as complete  ${researchLeadApp}
+    When the academic user fills in his finances           ${researchLeadApp}
+    Then he is not able to submit his application as he exceeds research participation
 
-
-
+Applicant Applies to Public content leading Competition
+    [Documentation]  IFS-1012
+    [Tags]  Applicant  HappyPath
+    [Setup]  log in as a different user  dave.adams@gmail.com  ${short_password}
+    Given logged in user applies to competition  ${openCompetitionPublicSector_name}
+    When the user clicks the button/link         link=Application details
+    Then the user fills in the Application details  ${publicLeadApp}  Industrial research  ${tomorrowday}  ${month}  ${nextyear}
+    And the user marks every section but one as complete  ${researchLeadApp}
 
 *** Keywords ***
 Custom Suite Setup
@@ -60,3 +68,10 @@ The competition admin creates a competition for
     the user clicks the button/link  jQuery=a:contains("Done")
     the user navigates to the page   ${CA_UpcomingComp}
     the user should see the element  jQuery=h2:contains("Ready to open") ~ ul a:contains("${competition}")
+
+he is not able to submit his application as he exceeds research participation
+    the user navigates to the page   ${dashboard_url}
+    the user clicks the button/link  link=${researchLeadApp}
+    the user clicks the button/link  link=Review and submit
+    the user should see the element  jQuery=.warning-alert:contains("The participation levels of this project are not within the required range")
+    the user should see the element  jQuery=button:disabled:contains("Submit application")
