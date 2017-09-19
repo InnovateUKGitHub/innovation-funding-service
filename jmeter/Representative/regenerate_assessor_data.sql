@@ -52,8 +52,11 @@ FROM user u
   JOIN question adding_value
     ON adding_value.competition_id = c.id
        AND adding_value.short_name = 'Adding value'
-WHERE u.email IN ('paul.plum@gmail.com')
+WHERE u.email IN (  'load-assessor1@load.test',
+                    'load-assessor2@load.test',
+                    'load-assessor3@load.test',
+                    'load-assessor4@load.test',
+                    'load-assessor5@load.test')
       AND p.event = 'accept'
-      AND a.competition = '5'
 ORDER BY u.id
 
