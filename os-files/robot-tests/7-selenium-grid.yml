@@ -29,10 +29,10 @@ items:
               cpu: 100m
               memory: 400M
           env:
-          - name: GRID_BROWSER_TIMEOUT
-            value: "90000"
-          - name: GRID_TIMEOUT
-            value: "100000"
+#          - name: GRID_BROWSER_TIMEOUT
+#            value: "90000"
+#          - name: GRID_TIMEOUT
+#            value: "100000"
           - name: JAVA_OPTS
             value: "-Xmx512m"
           - name: POOL_MAX
@@ -71,7 +71,7 @@ items:
   metadata:
     name: chrome
   spec:
-    replicas: 2
+    replicas: 1
     selector:
       deploymentconfig: chrome
     template:
@@ -119,7 +119,12 @@ items:
           - name: JAVA_OPTS
             description: Options for the Java command
             value: "-Xmx512m"
-
+          - name: SCREEN_WIDTH
+            value: "1920"
+          - name: SCREEN_HEIGHT
+            value: "2800"
+          - name: NODE_UNREGISTER_IF_STILL_DOWN_AFTER
+            value: "20000"
     test: false
     triggers:
     - type: ConfigChange
