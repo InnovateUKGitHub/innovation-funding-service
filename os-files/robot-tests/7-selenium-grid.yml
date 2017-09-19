@@ -14,108 +14,48 @@ items:
         labels:
           deploymentconfig: selenium-grid
       spec:
-        containers:
-        - image: selenium/hub:3.5.3-astatine
-          name: hub
-          imagePullPolicy: IfNotPresent
-          ports:
-          - containerPort: 4444
-          - containerPort: 3000
-          resources:
-            limits:
-              memory: 1000M
-              cpu: 400m
-            requests:
-              cpu: 100m
-              memory: 400M
-          env:
-#          - name: GRID_BROWSER_TIMEOUT
-#            value: "90000"
-#          - name: GRID_TIMEOUT
-#            value: "100000"
-          - name: JAVA_OPTS
-            value: "-Xmx512m"
-          - name: POOL_MAX
-            description: Max thread count for incoming and outgoing connections
-            value: "30000"
-          - name: GRID_NEW_SESSION_WAIT_TIMEOUT
-            description: The timeout to wait for new sessions
-            value: "30"
-          - name: GRID_JETTY_MAX_THREADS
-            description: Max Threads for Jetty server
-            value: "100"
-          - name: GRID_NODE_POLLING
-            description: Node Polling setting
-            value: "150"
-          - name: GRID_CLEAN_UP_CYCLE
-            description: How long to wait until cleanup on nodes
-            value: "300"
-          - name: GRID_TIMEOUT
-            description: The timeout for the grid
-            value: "300"
-          - name: GRID_BROWSER_TIMEOUT
-            description: The timeout for the browser
-            value: "30"
-          - name: GRID_MAX_SESSION
-            description: How many sessions max
-            value: "3"
-          - name: GRID_UNREGISTER_IF_STILL_DOWN_AFTER
-            description: Time to wait before unregistering nodes
-            value: "500"
-    test: false
-    triggers:
-    - type: ConfigChange
-  status: {}
-- apiVersion: v1
-  kind: DeploymentConfig
-  metadata:
-    name: chrome
-  spec:
-    replicas: 1
-    selector:
-      deploymentconfig: chrome
-    template:
-      metadata:
-        labels:
-          deploymentconfig: chrome
-      spec:
         volumes:
         - name: dshm
           emptyDir:
             medium: Memory
         containers:
-        - image: selenium/node-chrome:3.5.3-astatine
-          name: chrome
+        - image: selenium/standalone-chrome:3.5.3-astatine
+          name: hub
           imagePullPolicy: IfNotPresent
-          ports:
-          - containerPort: 5900
-          resources:
-            limits:
-              memory: 1500M
-              cpu: 400m
-            requests:
-              cpu: 100m
-              memory: 1000M
           volumeMounts:
           - mountPath: /dev/shm
             name: dshm
+          ports:
+          - containerPort: 4444
+          - containerPort: 3000
+          resources:
+            limits:
+              memory: 2000M
+              cpu: 500m
+            requests:
+              cpu: 400m
+              memory: 400M
           env:
+#          - name: GRID_BROWSER_TIMEOUT
+#            value: "90000"
+#          - name: GRID_TIMEOUT
+#            value: "100000
           - name: NODE_MAX_SESSION
-            value: "20"
+            value: "10"
           - name: NODE_MAX_INSTANCES
-            value: "20"
+            value: "10"
           - name: NODE_REGISTER_CYCLE
             value: "600"
-          - name: HUB_PORT_4444_TCP_ADDR
-            value: "hub"
-          - name: HUB_PORT_4444_TCP_PORT
-            value: "4444"
+#          - name: HUB_PORT_4444_TCP_ADDR
+#            value: "hub"
+#          - name: HUB_PORT_4444_TCP_PORT
+#            value: "4444"
           - name: DBUS_SESSION_BUS_ADDRESS
             value: "/dev/null"
-          - name: no_proxy
-            value: "localhost"
-          - name: HUB_ENV_no_proxy
-            value: "localhost"
+#          - name: no_proxy
+#            value: "localhost"
+#          - name: HUB_ENV_no_proxy
+#            value: "localhost"
           - name: JAVA_OPTS
             description: Options for the Java command
             value: "-Xmx512m"
@@ -123,12 +63,102 @@ items:
             value: "1920"
           - name: SCREEN_HEIGHT
             value: "2800"
-          - name: NODE_UNREGISTER_IF_STILL_DOWN_AFTER
-            value: "20000"
+          - name: JAVA_OPTS
+            value: "-Xmx512m"
+          - name: POOL_MAX
+            description: Max thread count for incoming and outgoing connections
+            value: "30000"
+#          - name: GRID_NEW_SESSION_WAIT_TIMEOUT
+#            description: The timeout to wait for new sessions
+#            value: "30"
+#          - name: GRID_JETTY_MAX_THREADS
+#            description: Max Threads for Jetty server
+#            value: "100"
+#          - name: GRID_NODE_POLLING
+#            description: Node Polling setting
+#            value: "150"
+#          - name: GRID_CLEAN_UP_CYCLE
+#            description: How long to wait until cleanup on nodes
+#            value: "300"
+#          - name: GRID_TIMEOUT
+#            description: The timeout for the grid
+#            value: "300"
+#          - name: GRID_BROWSER_TIMEOUT
+#            description: The timeout for the browser
+#            value: "30"
+#          - name: GRID_MAX_SESSION
+#            description: How many sessions max
+#            value: "3"
+#          - name: GRID_UNREGISTER_IF_STILL_DOWN_AFTER
+#            description: Time to wait before unregistering nodes
+#            value: "500"
     test: false
     triggers:
     - type: ConfigChange
   status: {}
+#- apiVersion: v1
+#  kind: DeploymentConfig
+#  metadata:
+#    name: chrome
+#  spec:
+#    replicas: 1
+#    selector:
+#      deploymentconfig: chrome
+#    template:
+#      metadata:
+#        labels:
+#          deploymentconfig: chrome
+#      spec:
+#        volumes:
+#        - name: dshm
+#          emptyDir:
+#            medium: Memory
+#        containers:
+#        - image: selenium/node-chrome:3.5.3-astatine
+#          name: chrome
+#          imagePullPolicy: IfNotPresent
+#          ports:
+#          - containerPort: 5900
+#          resources:
+#            limits:
+#              memory: 1500M
+#              cpu: 400m
+#            requests:
+#              cpu: 100m
+#              memory: 1000M
+#          volumeMounts:
+#          - mountPath: /dev/shm
+#            name: dshm
+#          env:
+#          - name: NODE_MAX_SESSION
+#            value: "20"
+#          - name: NODE_MAX_INSTANCES
+#            value: "20"
+#          - name: NODE_REGISTER_CYCLE
+#            value: "600"
+#          - name: HUB_PORT_4444_TCP_ADDR
+#            value: "hub"
+#          - name: HUB_PORT_4444_TCP_PORT
+#            value: "4444"
+#          - name: DBUS_SESSION_BUS_ADDRESS
+#            value: "/dev/null"
+#          - name: no_proxy
+#            value: "localhost"
+#          - name: HUB_ENV_no_proxy
+#            value: "localhost"
+#          - name: JAVA_OPTS
+#            description: Options for the Java command
+#            value: "-Xmx512m"
+#          - name: SCREEN_WIDTH
+#            value: "1920"
+#          - name: SCREEN_HEIGHT
+#            value: "2800"
+#          - name: NODE_UNREGISTER_IF_STILL_DOWN_AFTER
+#            value: "20000"
+#    test: false
+#    triggers:
+#    - type: ConfigChange
+#  status: {}
 - apiVersion: v1
   kind: Service
   metadata:
