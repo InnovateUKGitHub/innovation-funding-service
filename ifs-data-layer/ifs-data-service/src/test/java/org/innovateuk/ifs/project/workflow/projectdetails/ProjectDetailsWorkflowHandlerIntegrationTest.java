@@ -82,9 +82,9 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testAddProjectStartDateAndReadyForSubmission() throws Exception {
+    public void testAddProjectStartDateAndSubmitted() throws Exception {
 
-        assertAddMandatoryValueAndNowReadyForSubmissionFromPending(
+        assertAddMandatoryValueAndNowSubmittedFromPending(
                 (project, projectUser) -> projectDetailsWorkflowHandler.projectStartDateAdded(project, projectUser), PROJECT_START_DATE_ADDED);
     }
 
@@ -96,9 +96,9 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testAddProjectAddressAndReadyForSubmission() throws Exception {
+    public void testAddProjectAddressAndSubmitted() throws Exception {
 
-        assertAddMandatoryValueAndNowReadyForSubmissionFromPending(
+        assertAddMandatoryValueAndNowSubmittedFromPending(
                 (project, projectUser) -> projectDetailsWorkflowHandler.projectAddressAdded(project, projectUser), PROJECT_ADDRESS_ADDED);
     }
 
@@ -110,34 +110,34 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testAddProjectManagerAndReadyForSubmission() throws Exception {
+    public void testAddProjectManagerAndSubmitted() throws Exception {
 
-        assertAddMandatoryValueAndNowReadyForSubmissionFromPending(
+        assertAddMandatoryValueAndNowSubmittedFromPending(
                 (project, projectUser) -> projectDetailsWorkflowHandler.projectManagerAdded(project, projectUser), PROJECT_MANAGER_ADDED);
     }
 
-    @Test
+/*    TODO - This can be deleted @Test
     public void testAddProjectStartDateAndReadyForSubmissionWhenAlreadyInReadyForSubmission() throws Exception {
 
         assertAddMandatoryValueAndNowReadyForSubmissionFromReadyToSubmit(
                 (project, projectUser) -> projectDetailsWorkflowHandler.projectStartDateAdded(project, projectUser), PROJECT_START_DATE_ADDED);
-    }
+    }*/
 
-    @Test
+/*    TODO - Delete this @Test
     public void testAddProjectAddressAndReadyForSubmissionWhenAlreadyInReadyForSubmission() throws Exception {
 
         assertAddMandatoryValueAndNowReadyForSubmissionFromReadyToSubmit(
                 (project, projectUser) -> projectDetailsWorkflowHandler.projectAddressAdded(project, projectUser), PROJECT_ADDRESS_ADDED);
-    }
+    }*/
 
-    @Test
+/*    TODO - Delete this @Test
     public void testAddProjectManagerAndReadyForSubmissionWhenAlreadyInReadyForSubmission() throws Exception {
 
         assertAddMandatoryValueAndNowReadyForSubmissionFromReadyToSubmit(
                 (project, projectUser) -> projectDetailsWorkflowHandler.projectManagerAdded(project, projectUser), PROJECT_MANAGER_ADDED);
-    }
+    }*/
 
-    @Test
+/*    TODO - Delete this @Test
     public void testSubmissionNotAllowedUntilMandatoryValuesAvailable() {
 
         Project project = newProject().build();
@@ -156,9 +156,9 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
         verify(projectDetailsProcessRepositoryMock, never()).save(any(ProjectDetailsProcess.class));
 
         verifyNoMoreInteractionsWithMocks();
-    }
+    }*/
 
-    @Test
+/*    TODO - Delete this @Test
     public void testSubmissionNotAllowedUntilMandatoryValuesAvailableCheckMethod() {
 
         Project project = newProject().build();
@@ -177,9 +177,9 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
         verify(projectDetailsProcessRepositoryMock, never()).save(any(ProjectDetailsProcess.class));
 
         verifyNoMoreInteractionsWithMocks();
-    }
+    }*/
 
-    @Test
+/*    TODO - Delete this @Test
     public void testSubmissionNotAllowedUntilMandatoryValuesAvailableButInCorrectState() {
 
         Project project = newProject().build();
@@ -198,9 +198,9 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
         verify(projectDetailsProcessRepositoryMock, never()).save(any(ProjectDetailsProcess.class));
 
         verifyNoMoreInteractionsWithMocks();
-    }
+    }*/
 
-    @Test
+/*   TODO - Delete this  @Test
     public void testSubmissionAllowedWhenMandatoryValuesAvailable() {
 
         List<Organisation> partnerOrgs = newOrganisation().build(2);
@@ -242,9 +242,9 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
         verify(projectDetailsProcessRepositoryMock).save(processExpectations(project.getId(), projectUser.getId(), ProjectDetailsState.SUBMITTED, SUBMIT));
 
         verifyNoMoreInteractionsWithMocks();
-    }
+    }*/
 
-    @Test
+/*   TODO - Delete this @Test
     public void testSubmissionAllowedWhenMandatoryValuesAvailableCheckDoesNotUpdateAnything() {
 
         List<Organisation> partnerOrgs = newOrganisation().build(2);
@@ -278,7 +278,7 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
         verify(projectDetailsProcessRepositoryMock, atLeastOnce()).findOneByTargetId(project.getId());
 
         verifyNoMoreInteractionsWithMocks();
-    }
+    }*/
 
     /**
      * Test that adding one of the mandatory values prior to being able to submit the project details works and keeps the
@@ -309,19 +309,19 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
         verifyNoMoreInteractionsWithMocks();
     }
 
-    private void assertAddMandatoryValueAndNowReadyForSubmissionFromPending(BiFunction<Project, ProjectUser, Boolean> handlerFn, ProjectDetailsEvent expectedEvent) {
-        assertAddMandatoryValueAndNowReadyForSubmission(ProjectDetailsState.READY_TO_SUBMIT, handlerFn, expectedEvent);
+    private void assertAddMandatoryValueAndNowSubmittedFromPending(BiFunction<Project, ProjectUser, Boolean> handlerFn, ProjectDetailsEvent expectedEvent) {
+        assertAddMandatoryValueAndNowSubmitted(ProjectDetailsState.PENDING, handlerFn, expectedEvent);
     }
 
-    private void assertAddMandatoryValueAndNowReadyForSubmissionFromReadyToSubmit(BiFunction<Project, ProjectUser, Boolean> handlerFn, ProjectDetailsEvent expectedEvent) {
+/*    private void assertAddMandatoryValueAndNowReadyForSubmissionFromReadyToSubmit(BiFunction<Project, ProjectUser, Boolean> handlerFn, ProjectDetailsEvent expectedEvent) {
         assertAddMandatoryValueAndNowReadyForSubmission(ProjectDetailsState.PENDING, handlerFn, expectedEvent);
-    }
+    }*/
 
         /**
          * This asserts that triggering the given handler method with a fully filled in Project will move the process into
-         * Ready to Submit because all the mandatory values are now provided
+         * Submitted state because all the mandatory values are now provided
          */
-    private void assertAddMandatoryValueAndNowReadyForSubmission(ProjectDetailsState originalState, BiFunction<Project, ProjectUser, Boolean> handlerFn, ProjectDetailsEvent expectedEvent) {
+    private void assertAddMandatoryValueAndNowSubmitted(ProjectDetailsState originalState, BiFunction<Project, ProjectUser, Boolean> handlerFn, ProjectDetailsEvent expectedEvent) {
 
         List<Organisation> partnerOrgs = newOrganisation().build(2);
 
@@ -347,9 +347,9 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
         ProjectDetailsProcess originalProcess = new ProjectDetailsProcess(projectUser, project, originalActivityState);
         ProjectDetailsProcess updatedProcess = new ProjectDetailsProcess(projectUser, project, originalActivityState);
 
-        ActivityState readyToSubmitState = new ActivityState(PROJECT_SETUP_PROJECT_DETAILS, State.READY_TO_SUBMIT);
+        ActivityState submittedState = new ActivityState(PROJECT_SETUP_PROJECT_DETAILS, State.SUBMITTED);
 
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(PROJECT_SETUP_PROJECT_DETAILS, State.READY_TO_SUBMIT)).thenReturn(readyToSubmitState);
+        when(activityStateRepositoryMock.findOneByActivityTypeAndState(PROJECT_SETUP_PROJECT_DETAILS, State.SUBMITTED)).thenReturn(submittedState);
 
         when(projectDetailsProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(originalProcess);
         when(projectDetailsProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(updatedProcess);
@@ -357,11 +357,11 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
         // now call the method under test
         assertTrue(handlerFn.apply(project, projectUser));
 
-        verify(activityStateRepositoryMock, atLeastOnce()).findOneByActivityTypeAndState(PROJECT_SETUP_PROJECT_DETAILS, State.READY_TO_SUBMIT);
+        verify(activityStateRepositoryMock, atLeastOnce()).findOneByActivityTypeAndState(PROJECT_SETUP_PROJECT_DETAILS, State.SUBMITTED);
 
         verify(projectDetailsProcessRepositoryMock, atLeastOnce()).findOneByTargetId(project.getId());
 
-        verify(projectDetailsProcessRepositoryMock).save(processExpectations(project.getId(), projectUser.getId(), ProjectDetailsState.READY_TO_SUBMIT, expectedEvent));
+        verify(projectDetailsProcessRepositoryMock).save(processExpectations(project.getId(), projectUser.getId(), ProjectDetailsState.SUBMITTED, expectedEvent));
 
         verifyNoMoreInteractionsWithMocks();
     }
