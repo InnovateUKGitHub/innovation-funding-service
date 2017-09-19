@@ -82,7 +82,7 @@ Applicant visits his Finances
     When the user clicks the button/link   link=Your finances
     Then the user should see the element   jQuery=li:contains("Your project costs") > .action-required
     And the user should see the element    jQuery=li:contains("Your organisation") > .action-required
-    And the the user should see that the funding depends on the research area
+    And the user should see that the funding depends on the research area
     And the user should see his finances empty
     [Teardown]  the user clicks the button/link  jQuery=a:contains("Return to application overview")
 
@@ -360,7 +360,7 @@ Custom Suite Setup
 the user should see the dates in full format
     the user should see the element  jQuery=td:contains("Allocate assessors") ~ td:contains("3 ${nextMonthWord} ${nextyear}")
 
-the the user should see that the funding depends on the research area
+the user should see that the funding depends on the research area
     the user should see the element  jQuery=h3:contains("Your funding") + p:contains("You must select a research category in"):contains("application details")
 
 the user should see his finances empty
