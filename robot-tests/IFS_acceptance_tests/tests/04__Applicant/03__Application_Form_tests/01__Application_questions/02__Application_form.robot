@@ -93,7 +93,9 @@ Word count works
     [Tags]    HappyPath
     When the user enters multiple strings into a text field         css=.editor  a${SPACE}  31
     Then the word count should be correct for the Project summary
-
+#    When the user clicks the button/link                            link=Mark as complete
+#    then the word count should be correct for the Project summary
+                                                                                 
 Guidance of the questions
     [Documentation]    INFUND-190
     [Tags]
@@ -106,6 +108,7 @@ Marking a question as complete
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=button:contains("Mark as complete")
     Then the text box should turn to green
+    And the word count should be correct for the Project summary
     And the user should see the element    jQuery=button:contains("Edit")
     And the question should be marked as complete on the application overview page
 
