@@ -192,7 +192,7 @@ Assessor overview information
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Invite declined as not available")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Assembly / disassembly / joining")
     And the user should see the element    jQuery=td:contains("${assessor_to_add}") ~ td:nth-of-type(6):contains("Awaiting response")
-    And the user should see the element    jQuery=td:contains("${assessor_to_add}") ~ td:nth-of-type(6):contains("Invite sent:")
+    And the user should see the element    jQuery=td:contains("${assessor_to_add}") ~ td:nth-of-type(7):contains("Invite sent:")
 
 Assessor accepted information
     [Documentation]  IFS-1445
