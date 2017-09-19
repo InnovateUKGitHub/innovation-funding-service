@@ -223,7 +223,7 @@ Bulk resend email updates the invite sent date
     [Documentation]  IFS-1146
     [Tags]
     Given the user clicks the button/link  jQuery=button:contains("Send invite")
-    Then the user should see the element    jQuery=td:contains("David Peters") ~ td:contains("Invite sent: ${today}")
+    Then the user should see the element   jQuery=td:contains("David Peters") ~ td:contains("Invite sent: ${today}")
 
 *** Keywords ***
 Custom Suite Setup
