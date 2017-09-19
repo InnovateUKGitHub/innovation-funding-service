@@ -93,9 +93,7 @@ Word count works
     [Tags]    HappyPath
     When the user enters multiple strings into a text field         css=.editor  a${SPACE}  31
     Then the word count should be correct for the Project summary
-#    When the user clicks the button/link                            link=Mark as complete
-#    then the word count should be correct for the Project summary
-                                                                                 
+
 Guidance of the questions
     [Documentation]    INFUND-190
     [Tags]
