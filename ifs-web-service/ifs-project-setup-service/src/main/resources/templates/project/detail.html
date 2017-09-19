@@ -49,8 +49,8 @@
             </tr>
             <tr>
                 <td>
-                    <a th:if="${model.userLeadPartner and !model.projectDetailsSubmitted}" th:href="@{/project/{id}/details/project-address(id=${model.project.getId()})}">Project address</a>
-                    <th:block th:unless="${model.userLeadPartner and !model.projectDetailsSubmitted}">Project address</th:block>
+                    <a th:if="${model.userLeadPartner and model.addressEditable}" th:href="@{/project/{id}/details/project-address(id=${model.project.getId()})}">Project address</a>
+                    <th:block th:unless="${model.userLeadPartner and model.addressEditable}">Project address</th:block>
                 </td>
                 <td id="project-address">
                     <th:block th:if="${model.project.address.id == null}">-</th:block>
@@ -63,8 +63,8 @@
             </tr>
             <tr>
                 <td>
-                    <a th:if="${model.userLeadPartner and !model.projectDetailsSubmitted}" th:href="@{/project/{id}/details/project-manager(id=${model.project.getId()})}">Project Manager</a>
-                    <th:block th:unless="${model.userLeadPartner and !model.projectDetailsSubmitted}">Project Manager</th:block>
+                    <a th:if="${model.userLeadPartner and model.pmEditable}" th:href="@{/project/{id}/details/project-manager(id=${model.project.getId()})}">Project Manager</a>
+                    <th:block th:unless="${model.userLeadPartner and model.pmEditable}">Project Manager</th:block>
                 </td>
                 <td id="project-manager" th:if="${model.projectManager != null}" th:text="${model.projectManager?.userName}">John Smith</td>
                 <td id="no-project-manager" th:if="${model.projectManager == null}">-</td>
