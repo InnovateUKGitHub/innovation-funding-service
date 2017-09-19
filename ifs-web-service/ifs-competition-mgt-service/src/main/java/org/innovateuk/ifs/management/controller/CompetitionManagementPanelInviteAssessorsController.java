@@ -231,11 +231,11 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
         model.addAttribute("model", panelInviteAssessorsInviteModelPopulator.populateModel(competitionId, page, originQuery));
         model.addAttribute("originQuery", originQuery);
 
-        return "assessors/invite";
+        return "assessors/panel-invite";
     }
 
     private String redirectToInvite(long competitionId, int page) {
-        return "redirect:" + UriComponentsBuilder.fromPath("/competition/{competitionId}/assessors/invite")
+        return "redirect:" + UriComponentsBuilder.fromPath("/assessment/panel/competition/{competitionId}/assessors/invite")
                 .queryParam("page", page)
                 .buildAndExpand(asMap("competitionId", competitionId))
                 .toUriString();
