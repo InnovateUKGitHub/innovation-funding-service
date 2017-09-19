@@ -53,11 +53,10 @@ public class CompetitionDashboardSearchServiceImplTest extends BaseServiceUnitTe
         CompetitionSearchResultItem resource2 = new CompetitionSearchResultItem(2L, "21", singleton("innovation area 2"), 123, "12/02/2016", CompetitionStatus.PROJECT_SETUP, "Special", 0, null, null);
         when(competitionsRestService.findProjectSetupCompetitions()).thenReturn(restSuccess(Lists.newArrayList(resource1, resource2)));
 
-        Map<CompetitionStatus, List<CompetitionSearchResultItem>> result = service.getProjectSetupCompetitions();
+        List<CompetitionSearchResultItem> result = service.getProjectSetupCompetitions();
 
-        assertTrue(result.get(CompetitionStatus.PROJECT_SETUP).contains(resource1));
-        assertTrue(result.get(CompetitionStatus.PROJECT_SETUP).contains(resource2));
-        assertEquals(result.get(CompetitionStatus.ASSESSOR_FEEDBACK), null);
+        assertTrue(result.contains(resource1));
+        assertTrue(result.contains(resource2));
     }
 
     @Test

@@ -25,6 +25,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -107,6 +108,35 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
         assertEquals("tom@poly.io", retrievedInvite.getEmail());
         assertEquals("hash", retrievedInvite.getHash());
         assertEquals(saved.getTarget().getId(), retrievedInvite.getTarget().getId());
+    }
+
+    @Test
+    public void getByInviteIds() {
+        List<CompetitionInvite> invites = newCompetitionInvite()
+                .withName("fred", "jake")
+                .withEmail("fred@test.com", "jake@test.com")
+                .withHash("hash1", "hash2")
+                .withCompetition(competition)
+                .withInnovationArea(innovationArea)
+                .build(2);
+
+        CompetitionInvite saved1 = repository.save(invites.get(0));
+        CompetitionInvite saved2 = repository.save(invites.get(1));
+
+        flushAndClearSession();
+
+        List<CompetitionInvite> retrievedInvites = repository.getByIdIn(asList(saved1.getId(), saved2.getId()));
+        assertNotNull(retrievedInvites);
+
+        assertEquals("fred", retrievedInvites.get(0).getName());
+        assertEquals("fred@test.com", retrievedInvites.get(0).getEmail());
+        assertEquals("hash1", retrievedInvites.get(0).getHash());
+        assertEquals(saved1.getId(), retrievedInvites.get(0).getId());
+
+        assertEquals("jake", retrievedInvites.get(1).getName());
+        assertEquals("jake@test.com", retrievedInvites.get(1).getEmail());
+        assertEquals("hash2", retrievedInvites.get(1).getHash());
+        assertEquals(saved2.getId(), retrievedInvites.get(1).getId());
     }
 
     @Test

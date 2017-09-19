@@ -27,6 +27,7 @@ public class CompetitionManagementAssessorProfileController {
         ASSESSOR_FIND("/competition/{competitionId}/assessors/find"),
         ASSESSOR_INVITE("/competition/{competitionId}/assessors/invite"),
         ASSESSOR_OVERVIEW("/competition/{competitionId}/assessors/overview"),
+        ASSESSOR_ACCEPTED("/competition/{competitionId}/assessors/accepted"),
         MANAGE_ASSESSORS("/assessment/competition/{competitionId}/assessors"),
         ASSESSOR_PROGRESS("/assessment/competition/{competitionId}/assessors/{assessorId}"),
         PANEL_FIND("/assessment/panel/competition/{competitionId}/assessors/find"),

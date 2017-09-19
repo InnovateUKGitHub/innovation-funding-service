@@ -5,13 +5,15 @@ import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 
 import java.util.Optional;
 
+import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
+
 /**
- * Form for the list filters on the Invite Assessors Overview tab.
+ * Form for the list filters on the Invite Assessors Accepted tab.
  */
-public class OverviewAssessorsFilterForm extends BaseBindingResultTarget {
+public class AcceptedAssessorsFilterForm extends BaseBindingResultTarget {
 
     private Optional<Long> innovationArea = Optional.empty();
-    private Optional<ParticipantStatusResource> status = Optional.empty();
+    private static final ParticipantStatusResource status = ACCEPTED;
     private Optional<Boolean> compliant = Optional.empty();
 
     public Optional<Long> getInnovationArea() {
@@ -23,12 +25,9 @@ public class OverviewAssessorsFilterForm extends BaseBindingResultTarget {
     }
 
     public Optional<ParticipantStatusResource> getStatus() {
-        return status;
+        return Optional.of(status);
     }
 
-    public void setStatus(Optional<ParticipantStatusResource> status) {
-        this.status = status;
-    }
 
     public Optional<Boolean> getCompliant() {
         return compliant;
@@ -36,10 +35,5 @@ public class OverviewAssessorsFilterForm extends BaseBindingResultTarget {
 
     public void setCompliant(Optional<Boolean> compliant) {
         this.compliant = compliant;
-    }
-
-    public boolean anyFilterIsActive() {
-        return (this.innovationArea.isPresent() && !this.innovationArea.get().equals(0L)) ||
-                this.status.isPresent() || this.compliant.isPresent();
     }
 }

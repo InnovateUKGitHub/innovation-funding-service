@@ -32,6 +32,7 @@ public interface CompetitionInviteRepository extends PagingAndSortingRepository<
 
     int countByCompetitionIdAndStatusIn(long competitionId, Set<InviteStatus> statuses);
 
+    List<CompetitionInvite> getByIdIn(List<Long> inviteIds);
 
     String USERS_WITH_COMPETITION_INVITE = "SELECT invite.user.id " +
             "FROM CompetitionInvite invite " +
