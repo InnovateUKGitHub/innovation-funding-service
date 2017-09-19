@@ -32,6 +32,8 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...               IFS-33 As a comp exec I can select and add multiple assessors to the invite list
 ...
 ...               IFS-1146 Assessor management - Resending invite emails in bulk
+...
+...               IFS-1445 Assessor management- 'Accepted' tab on invite assessors dashboard
 Suite Setup       Custom suite setup
 Suite Teardown    Custom teardown
 Force Tags        CompAdmin  Assessor
@@ -182,21 +184,22 @@ Invite non-registered users
 
 Assessor overview information
     [Documentation]    INFUND-6450 INFUND-6449
-    [Tags]  Pending
-    #TODO IFS-1445 (this will be merged in before these changes are merged into dev)
+    [Tags]
     Given The user clicks the button/link  link=Overview
-    And the user clicks the button/link    jQuery=.pagination-label:contains("Next")
-    And the user clicks the button/link    jQuery=.pagination-label:contains("Next")
-    Then the user should see the element   jQuery=td:contains("Paul Plum") ~ td:contains("Invite accepted")
-    And the user clicks the button/link    jQuery=.pagination-label:contains("Previous")
-    And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:nth-of-type(5):contains("Invite declined")
+    And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:nth-of-type(6):contains("Invite declined")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Academic")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Yes")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Invite declined as not available")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Assembly / disassembly / joining")
-    And the user clicks the button/link    jQuery=.pagination-label:contains("Previous")
-    And the user should see the element    jQuery=td:contains("${assessor_to_add}") ~ td:nth-of-type(5):contains("Awaiting response")
+    And the user should see the element    jQuery=td:contains("${assessor_to_add}") ~ td:nth-of-type(6):contains("Awaiting response")
     And the user should see the element    jQuery=td:contains("${assessor_to_add}") ~ td:nth-of-type(6):contains("Invite sent:")
+
+Assessor accepted information
+    [Documentation]  IFS-1445
+    [Tags]
+    Given the user clicks the button/link  link=Accepted
+    And the user clicks the button/link    jQuery=.pagination-label:contains("Next")
+    Then the user should see the element   jQuery=td:contains("Paul Plum")
 
 Select to add all assessors to invite list
     [Documentation]  IFS-33
