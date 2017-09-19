@@ -87,9 +87,10 @@ Applicant visits his Finances
     [Teardown]  the user clicks the button/link  jQuery=a:contains("Return to application overview")
 
 Applicant fills in the Application Details
-    [Documentation]    INFUND-6895  INFUND-9151
+    [Documentation]  INFUND-6895  INFUND-9151
     [Tags]
-    The user fills in the Application details  ${applicationWithoutGrowth}
+    When the user clicks the button/link  link=Application details
+    Then The user fills in the Application details  ${applicationWithoutGrowth}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
 
 Turnover and Staff count fields
     [Documentation]    INFUND-6393
@@ -283,8 +284,9 @@ Applicant can view and edit project growth table
 The Lead Applicant fills in the Application Details for App with Growth
     [Documentation]  This step is required for following test cases
     [Tags]
-    Given the user clicks the button/link          link=Application overview
-    And the user fills in the Application details  ${applicationWithGrowth}
+    Given the user clicks the button/link           link=Application overview
+    When the user clicks the button/link            link=Application details
+    Then the user fills in the Application details  ${applicationWithGrowth}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
 
 Newly created collaborator can view and edit project Growth table
     [Documentation]    INFUND-8426
@@ -363,12 +365,6 @@ the the user should see that the funding depends on the research area
 
 the user should see his finances empty
     the user should see the element  jQuery=thead:contains("Total project costs") ~ *:contains("£0")
-
-the user selects feasibility studies and no to resubmission
-    the user clicks the button/link   jQuery=label:contains("Research category")
-    the user clicks the button twice  jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
-    the user clicks the button/link   jQuery=button:contains(Save)
-    the user clicks the button twice  jQuery=label[for="application.resubmission-no"]
 
 the user decides about the growth table
     [Arguments]  ${edit}  ${read}
@@ -526,22 +522,6 @@ the user fills in the Open-All Initial details
     the user clicks the button/link                      jQuery=button:contains("Done")
     the user clicks the button/link                      link=Competition setup
     the user should see the element                      jQuery=div:contains("Initial details") ~ .task-status-complete
-
-the user fills in the Application details
-    # I am not using a global keyword, because in this suite we are testing differently the innovation areas
-    [Arguments]  ${appTitle}
-    the user should see the element       jQuery=h1:contains("Application overview")
-    the user clicks the button/link       link=Application details
-    the user enters text to a text field  css=#application_details-title  ${appTitle}
-    The user should not see the element   link=Choose your innovation area
-    the user selects feasibility studies and no to resubmission
-    the user enters text to a text field  css=#application_details-startdate_day    ${tomorrowday}
-    the user enters text to a text field  css=#application_details-startdate_month    ${month}
-    the user enters text to a text field  css=#application_details-startdate_year    ${nextyear}
-    the user enters text to a text field  css=#application_details-duration    24
-    The user clicks the button/link       jQuery=button[name="mark_as_complete"]
-    the user clicks the button/link       link=Application overview
-    the user should see the element       jQuery=li:contains("Application details") > .task-status-complete
 
 the logged in user should not be able to apply in a competition he has not right to
     [Arguments]  ${email}  ${competition}
