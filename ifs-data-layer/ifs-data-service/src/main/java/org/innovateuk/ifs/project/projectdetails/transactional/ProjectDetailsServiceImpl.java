@@ -55,7 +55,6 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_D
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_START_DATE_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED;
@@ -139,6 +138,19 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
                 andOnSuccessReturnVoid(project -> project.setTargetStartDate(projectStartDate));
     }
 
+    private ServiceResult<Void> validateProjectStartDate(LocalDate date) {
+
+        if (date.getDayOfMonth() != 1) {
+            return serviceFailure(PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH);
+        }
+
+        if (date.isBefore(LocalDate.now())) {
+            return serviceFailure(PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE);
+        }
+
+        return serviceSuccess();
+    }
+
     private ServiceResult<Void> validateIfStartDateCanBeChanged(Long projectId) {
 
         if (isSpendProfileIsGenerated(projectId)) {
@@ -193,26 +205,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
                 projectDetailsWorkflowHandler.projectAddressAdded(project, user)).andOnSuccess(workflowResult ->
                 workflowResult ? serviceSuccess() : serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW));
     }
-
-/*    @Override
-    @Transactional
-    public ServiceResult<Void> submitProjectDetails(final Long projectId, ZonedDateTime date) {
-
-        return getProject(projectId).andOnSuccess(project ->
-                getCurrentlyLoggedInPartner(project).andOnSuccess(projectUser -> {
-
-                    if (projectDetailsWorkflowHandler.submitProjectDetails(project, projectUser)) {
-                        return serviceSuccess();
-                    } else {
-                        return serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE);
-                    }
-                }));
-    }*/
-
-/*    @Override
-    public ServiceResult<Boolean> isSubmitAllowed(Long projectId) {
-        return getProject(projectId).andOnSuccessReturn(this::doIsSubmissionAllowed);
-    }*/
 
     @Override
     @Transactional
@@ -288,19 +280,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         return getOnlyElementOrEmpty(projectManagers);
     }
 
-    private ServiceResult<Void> validateProjectStartDate(LocalDate date) {
-
-        if (date.getDayOfMonth() != 1) {
-            return serviceFailure(PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH);
-        }
-
-        if (date.isBefore(LocalDate.now())) {
-            return serviceFailure(PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE);
-        }
-
-        return serviceSuccess();
-    }
-
     private ServiceResult<Project> validateProjectIsInSetup(final Project project) {
         if(!ProjectState.SETUP.equals(projectWorkflowHandler.getState(project))) {
             return serviceFailure(PROJECT_SETUP_ALREADY_COMPLETE);
@@ -351,10 +330,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         project.addProjectUser(newFinanceContact);
         return serviceSuccess();
     }
-
-/*    private boolean doIsSubmissionAllowed(Project project) {
-        return projectDetailsWorkflowHandler.isSubmissionAllowed(project);
-    }*/
 
     private ServiceResult<Void> inviteContact(Long projectId, InviteProjectResource projectResource, Notifications kindOfNotification) {
 

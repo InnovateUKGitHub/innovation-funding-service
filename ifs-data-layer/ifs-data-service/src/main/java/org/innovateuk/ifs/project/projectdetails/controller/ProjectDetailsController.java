@@ -8,7 +8,6 @@ import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsSer
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 
 /**
  * ProjectController exposes Project Details data and operations through a REST API.
@@ -68,16 +66,4 @@ public class ProjectDetailsController {
                                                  @RequestBody @Valid final InviteProjectResource inviteResource) {
         return projectDetailsService.inviteProjectManager(projectId, inviteResource).toPostResponse();
     }
-
-/*
-    @PostMapping("/{projectId}/setApplicationDetailsSubmitted")
-    public RestResult<Void> setApplicationDetailsSubmitted(@PathVariable("projectId") final Long projectId){
-        return projectDetailsService.submitProjectDetails(projectId, ZonedDateTime.now()).toPostResponse();
-    }
-*/
-
-/*    @GetMapping("/{projectId}/isSubmitAllowed")
-    public RestResult<Boolean> isSubmitAllowed(@PathVariable("projectId") final Long projectId){
-        return projectDetailsService.isSubmitAllowed(projectId).toGetResponse();
-    }*/
 }

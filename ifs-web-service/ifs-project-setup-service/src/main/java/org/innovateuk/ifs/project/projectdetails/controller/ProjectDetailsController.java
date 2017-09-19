@@ -106,7 +106,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         List<OrganisationResource> partnerOrganisations
                 = new PrioritySorting<>(getPartnerOrganisations(projectUsers), leadOrganisation, OrganisationResource::getName).unwrap();
-        //boolean isSubmissionAllowed = projectDetailsService.isSubmitAllowed(projectId).getSuccessObject();
 
         ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
         SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(teamStatus);
@@ -148,27 +147,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         return "project/detail";
     }
-
-
-/*    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
-    @GetMapping("/{projectId}/confirm-project-details")
-    //TODO - This call can be deleted
-    public String projectDetailConfirmSubmit(@PathVariable("projectId") final Long projectId, Model model,
-                                UserResource loggedInUser) {
-
-        ProjectResource project = projectService.getById(projectId);
-
-        Boolean isSubmissionAllowed = projectDetailsService.isSubmitAllowed(projectId).getSuccessObject();
-        if (!isSubmissionAllowed) {
-            return "redirect:/project/" + projectId + "/details";
-        }
-
-        model.addAttribute("projectId", projectId);
-        model.addAttribute("projectName", project.getName());
-        model.addAttribute("applicationId", project.getApplication());
-        model.addAttribute("currentUser", loggedInUser);
-        return "project/confirm-project-details";
-    }*/
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
     @GetMapping("/{projectId}/details/finance-contact")
@@ -440,14 +418,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         ProjectResource project = projectService.getById(projectId);
         return viewCurrentAddressForm(model, form, project);
     }
-
-/*    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
-    @PostMapping("/{projectId}/details/submit")
-    //TODO - This call and all calls down the line can be deleted
-    public String submitProjectDetails(@PathVariable("projectId") Long projectId) {
-        projectDetailsService.setApplicationDetailsSubmitted(projectId).getSuccessObjectOrThrowException();
-        return redirectToProjectDetails(projectId);
-    }*/
 
     private String doViewProjectStartDate(Model model, ProjectResource projectResource, ProjectDetailsStartDateForm form) {
         model.addAttribute("model", new ProjectDetailsStartDateViewModel(projectResource));

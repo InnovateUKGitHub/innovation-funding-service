@@ -45,16 +45,6 @@ public class ProjectDetailsServiceImpl implements ProjectDetailsService {
         return projectDetailsRestService.updateProjectAddress(leadOrganisationId, projectId, addressType, address).toServiceResult();
     }
 
-/*    @Override
-    public ServiceResult<Void> setApplicationDetailsSubmitted(Long projectId) {
-        return projectDetailsRestService.setApplicationDetailsSubmitted(projectId).toServiceResult();
-    }*/
-
-/*    @Override
-    public ServiceResult<Boolean> isSubmitAllowed(Long projectId) {
-        return projectDetailsRestService.isSubmitAllowed(projectId).toServiceResult();
-    }*/
-
     @Override
     public ServiceResult<Void> saveProjectInvite (InviteProjectResource inviteProjectResource) {
         return projectInviteRestService.saveProjectInvite(inviteProjectResource).toServiceResult();

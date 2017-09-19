@@ -59,14 +59,6 @@ public class ProjectDetailsWorkflowHandler extends BaseWorkflowEventHandler<Proj
         return fireEvent(mandatoryValueAddedEvent(project, projectUser, PROJECT_MANAGER_ADDED), project);
     }
 
-/*    public boolean submitProjectDetails(Project project, ProjectUser projectUser) {
-        return fireEvent(submitProjectDetailsMessage(projectUser, project), project);
-    }*/
-
-/*    public boolean isSubmissionAllowed(Project project) {
-        return testEvent(submitProjectDetailsMessage(null, project), project);
-    }*/
-
     @Override
     protected ProjectDetailsProcess createNewProcess(Project target, ProjectUser participant) {
         return new ProjectDetailsProcess(participant, target, null);
@@ -121,11 +113,4 @@ public class ProjectDetailsWorkflowHandler extends BaseWorkflowEventHandler<Proj
                 .setHeader("target", project)
                 .setHeader("participant", projectUser);
     }
-
-/*    private MessageBuilder<ProjectDetailsEvent> submitProjectDetailsMessage(ProjectUser projectUser, Project project) {
-        return MessageBuilder
-                .withPayload(SUBMIT)
-                .setHeader("target", project)
-                .setHeader("participant", projectUser);
-    }*/
 }

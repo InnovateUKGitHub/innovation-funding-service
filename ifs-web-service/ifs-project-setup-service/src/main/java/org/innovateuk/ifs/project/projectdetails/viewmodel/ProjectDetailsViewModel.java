@@ -30,7 +30,6 @@ public class ProjectDetailsViewModel {
     private boolean projectDetailsSubmitted;
     private boolean spendProfileGenerated;
     private ProjectUserResource projectManager;
-    //private boolean submissionAllowed;
     private boolean isFinanceContactSubmitted;
     private boolean readOnlyView;
 
@@ -47,7 +46,6 @@ public class ProjectDetailsViewModel {
                                    boolean userIsLeadPartner,
                                    boolean projectDetailsSubmitted,
                                    ProjectUserResource projectManager,
-                                   //boolean submissionAllowed,
                                    boolean spendProfileGenerated,
                                    boolean readOnlyView) {
         this.project = project;
@@ -60,7 +58,6 @@ public class ProjectDetailsViewModel {
         this.projectDetailsSubmitted = projectDetailsSubmitted;
         this.spendProfileGenerated = spendProfileGenerated;
         this.projectManager = projectManager;
-        //this.submissionAllowed = submissionAllowed;
         this.readOnlyView = readOnlyView;
 
         List<ProjectUserResource> financeRoles = simpleFilter(projectUsers, ProjectUserResource::isFinanceContact);
@@ -127,19 +124,7 @@ public class ProjectDetailsViewModel {
         return projectManager;
     }
 
-/*    public boolean isSubmissionAllowed() {
-        return submissionAllowed;
-    }*/
-
     public boolean isFinanceContactSubmitted() {
         return isFinanceContactSubmitted;
     }
-
-/*    public boolean isSubmitProjectDetailsAllowed() {
-        return userLeadPartner && submissionAllowed && !projectDetailsSubmitted;
-    }
-
-    public boolean isAnySectionIncomplete() {
-        return userLeadPartner && !submissionAllowed && !projectDetailsSubmitted;
-    }*/
 }
