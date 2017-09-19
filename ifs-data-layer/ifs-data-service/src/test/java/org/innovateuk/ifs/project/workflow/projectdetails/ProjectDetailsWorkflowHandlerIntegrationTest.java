@@ -117,8 +117,8 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
     }
 
     /**
-     * Test that adding one of the mandatory values prior to being able to submit the project details works and keeps the
-     * state in pending until ready to submit
+     * Test that adding one of the mandatory values (when other mandatory values are not yet filled in) keeps the
+     * state in pending
      */
     private void assertAddMandatoryValue(BiFunction<Project, ProjectUser, Boolean> handlerMethod, ProjectDetailsEvent expectedEvent) {
 
@@ -151,7 +151,7 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
 
     /**
      * This asserts that triggering the given handler method with a fully filled in Project will move the process into
-     * Submitted state because all the mandatory values are now provided
+     * 'Submitted' state because all the mandatory values are now provided
      */
     private void assertAddMandatoryValueAndNowSubmitted(ProjectDetailsState originalState, BiFunction<Project, ProjectUser, Boolean> handlerFn, ProjectDetailsEvent expectedEvent) {
 
