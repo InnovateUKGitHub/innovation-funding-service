@@ -166,7 +166,10 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
                                         project.setAddress(newAddress);
                                     }
 
-                                    return serviceSuccess();
+                                    return getCurrentlyLoggedInPartner(project).andOnSuccess(user -> {
+                                        projectDetailsWorkflowHandler.projectAddressAdded(project, user);
+                                        return serviceSuccess();
+                                    });
                                 })
                 );
     }
@@ -249,7 +252,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
         Optional<ProjectUser> existingProjectManager = getExistingProjectManager(project);
 
-        return existingProjectManager.map(pm -> {
+        ServiceResult<Void> setProjectManagerResult = existingProjectManager.map(pm -> {
             pm.setUser(leadPartnerUser.getUser());
             pm.setOrganisation(leadPartnerUser.getOrganisation());
             return serviceSuccess();
@@ -258,6 +261,11 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
             ProjectUser projectUser = new ProjectUser(leadPartnerUser.getUser(), leadPartnerUser.getProcess(),
                     PROJECT_MANAGER, leadPartnerUser.getOrganisation());
             project.addProjectUser(projectUser);
+            return serviceSuccess();
+        });
+
+        return setProjectManagerResult.andOnSuccess(result -> {
+            projectDetailsWorkflowHandler.projectManagerAdded(project, leadPartnerUser);
             return serviceSuccess();
         });
     }
