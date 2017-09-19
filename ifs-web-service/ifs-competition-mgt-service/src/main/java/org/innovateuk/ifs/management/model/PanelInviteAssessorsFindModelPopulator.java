@@ -13,9 +13,11 @@ import org.innovateuk.ifs.management.viewmodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
@@ -47,7 +49,7 @@ public class PanelInviteAssessorsFindModelPopulator extends PanelInviteAssessors
                 competition.getId(),
                 page,
                 empty(),
-                of(ACCEPTED),
+                singletonList(ACCEPTED),
                 empty()
         )
                 .getSuccessObjectOrThrowException();

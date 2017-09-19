@@ -5,6 +5,7 @@ import org.innovateuk.ifs.invite.domain.AssessmentPanelInvite;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -16,6 +17,8 @@ public interface AssessmentPanelInviteRepository extends PagingAndSortingReposit
     List<AssessmentPanelInvite> getByCompetitionId(long competitionId);
 
     List<AssessmentPanelInvite> getByCompetitionIdAndStatus(long competitionId, InviteStatus status);
+
+    int countByCompetitionIdAndStatusIn(long competitionId, Set<InviteStatus> statuses);
 
 }
 
