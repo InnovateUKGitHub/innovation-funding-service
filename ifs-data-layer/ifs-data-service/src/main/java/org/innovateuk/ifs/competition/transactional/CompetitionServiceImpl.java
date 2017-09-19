@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.transactional;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -26,6 +27,7 @@ import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -162,11 +165,26 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         List<Competition> competitions = competitionRepository.findLive();
         return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
     }
+    
+    private ZonedDateTime findMostRecentFundingInformDate(Competition competition) {
+        return competition.getApplications()
+                .stream()
+                .filter(application -> application.getManageFundingEmailDate() != null)
+                .max(Comparator.comparing(application -> application.getManageFundingEmailDate()))
+                .get().getManageFundingEmailDate();
+    }
 
     @Override
     public ServiceResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions() {
         List<Competition> competitions = competitionRepository.findProjectSetup();
-        return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
+        // Only competitions with at least one funded and informed application can be considered as in project setup
+        return serviceSuccess(simpleMap(
+                CollectionFunctions.reverse(competitions.stream()
+                    .map(competition -> Pair.of(findMostRecentFundingInformDate(competition), competition))
+                    .sorted(Comparator.comparing(pair -> pair.getKey()))
+                    .map(pair -> pair.getValue())
+                    .collect(Collectors.toList())),
+                this::searchResultFromCompetition));
     }
 
     @Override
