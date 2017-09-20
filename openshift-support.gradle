@@ -95,6 +95,11 @@ task dbResetSysint(type:Exec) {
     args = [openshiftEnv, "sysint", project.version]
 }
 
+task osDeployFractalSysint(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-deploy-fractal.sh'
+    args = [openshiftEnv, "sysint", project.version]
+}
+
 
 // Perf tasks
 
@@ -156,6 +161,11 @@ task dbAnonymisedDumpLocal(type:Exec) {
 
 task osStageRemote(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-stage.sh'
+    args = [openshiftEnv, "remote", project.version]
+}
+
+task osDeployFractalRemote(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-deploy-fractal.sh'
     args = [openshiftEnv, "remote", project.version]
 }
 
