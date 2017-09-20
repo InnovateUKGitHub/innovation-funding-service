@@ -62,11 +62,11 @@ public class CompetitionManagementDashboardController {
 
     @GetMapping("/dashboard/project-setup")
     public String projectSetup(Model model) {
-        final Map<CompetitionStatus, List<CompetitionSearchResultItem>> projectSetupCompetitions = competitionDashboardSearchService.getProjectSetupCompetitions();
+        final List<CompetitionSearchResultItem> projectSetupCompetitions = competitionDashboardSearchService.getProjectSetupCompetitions();
 
-        model.addAttribute(MODEL_ATTR, new ProjectSetupDashboardViewModel(projectSetupCompetitions,
-                competitionDashboardSearchService.getCompetitionCounts(),
-                formatInnovationAreaNames(projectSetupCompetitions)));
+        model.addAttribute(MODEL_ATTR,
+                new ProjectSetupDashboardViewModel(projectSetupCompetitions,
+                        competitionDashboardSearchService.getCompetitionCounts()));
 
         return TEMPLATE_PATH + "projectSetup";
     }

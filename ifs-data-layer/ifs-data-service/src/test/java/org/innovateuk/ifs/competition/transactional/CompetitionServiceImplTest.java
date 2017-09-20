@@ -3,6 +3,8 @@ package org.innovateuk.ifs.competition.transactional;
 import com.google.common.collect.Lists;
 import org.assertj.core.util.Sets;
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.Error;
@@ -22,6 +24,7 @@ import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -35,6 +38,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -166,6 +170,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         verify(competitionParticipantRepositoryMock).delete(competitionParticipant);
     }
 
+    @Test
     public void getCompetitionsByUserId() throws Exception {
         List<Competition> competitions = Lists.newArrayList(new Competition());
         List<CompetitionResource> resources = Lists.newArrayList(new CompetitionResource());
@@ -206,13 +211,19 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Test
     public void findProjectSetupCompetitions() throws Exception {
-        List<Competition> competitions = Lists.newArrayList(new Competition());
+        Competition comp1 = newCompetition().withName("Comp1").build();
+        Competition comp2 = newCompetition().withName("Comp2").build();
+        Application fundedAndInformedApplication1 = newApplication().withCompetition(comp1).withManageFundingEmailDate(ZonedDateTime.now()).withFundingDecision(FundingDecisionStatus.FUNDED).build();
+        comp1.setApplications(singletonList(fundedAndInformedApplication1));
+        Application fundedAndInformedApplication2 = newApplication().withCompetition(comp2).withManageFundingEmailDate(ZonedDateTime.now().plusHours(1L)).withFundingDecision(FundingDecisionStatus.FUNDED).build();
+        comp2.setApplications(singletonList(fundedAndInformedApplication2));
+        List<Competition> competitions = Lists.newArrayList(comp1, comp2);
         when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(PublicContentResourceBuilder.newPublicContentResource().build()));
         when(competitionRepositoryMock.findProjectSetup()).thenReturn(competitions);
 
         List<CompetitionSearchResultItem> response = service.findProjectSetupCompetitions().getSuccessObjectOrThrowException();
 
-        assertCompetitionSearchResultsEqualToCompetitions(competitions, response);
+        assertCompetitionSearchResultsEqualToCompetitions(CollectionFunctions.reverse(competitions), response);
     }
 
     @Test
