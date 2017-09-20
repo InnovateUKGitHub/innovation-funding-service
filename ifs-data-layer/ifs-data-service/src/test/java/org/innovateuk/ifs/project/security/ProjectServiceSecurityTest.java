@@ -235,6 +235,8 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             return serviceSuccess(newProjectUserResource().withProject(projectId).withRoleName("project-manager").build());
         }
 
+        @Override
+        public ServiceResult<ProjectResource> createSingletonProjectFromApplicationId(final Long applicationId) { return null; }
     }
 }
 

@@ -30,8 +30,9 @@ import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -181,7 +182,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return createSingletonProjectFromApplicationId(applicationId);
     }
 
-    private ServiceResult<ProjectResource> createSingletonProjectFromApplicationId(final Long applicationId) {
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public ServiceResult<ProjectResource> createSingletonProjectFromApplicationId(final Long applicationId) {
 
         return checkForExistingProjectWithApplicationId(applicationId).handleSuccessOrFailure(
                 failure -> createProjectFromApplicationId(applicationId),
