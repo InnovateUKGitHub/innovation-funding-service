@@ -58,7 +58,7 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
     private PanelInviteAssessorsInviteModelPopulator panelInviteAssessorsInviteModelPopulator;
 
     protected String getCookieName() {
-        return "assessorSelectionForm";
+        return SELECTION_FORM;
     }
 
     protected Class<AssessorPanelSelectionForm> getFormType() {
@@ -67,7 +67,7 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
 
     @GetMapping
     public String assessors(@PathVariable("competitionId") long competitionId) {
-        return format("redirect:/competition/%s/assessors/find", competitionId);
+        return format("redirect:/competition/%s/assessors/panel-find", competitionId);
     }
 
     @GetMapping("/find")

@@ -69,7 +69,6 @@ public class PanelInviteAssessorsFindModelPopulator extends PanelInviteAssessors
                 assessorInviteOverviewResource.getName(),
                 assessorInviteOverviewResource.getInnovationAreas(),
                 assessorInviteOverviewResource.isCompliant(),
-                "email",
                 assessorInviteOverviewResource.getBusinessType()
         );
     }
