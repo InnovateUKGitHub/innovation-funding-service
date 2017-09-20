@@ -34,9 +34,7 @@ $wide-page-width: 1400px;
 
   }
 
-  .phase-banner,
-  #footer .footer-wrapper{
-
+  %wide-page-margins{
     @include media-down(mobile){
       margin-left: $gutter-half;
       margin-right: $gutter-half;
@@ -50,6 +48,16 @@ $wide-page-width: 1400px;
     max-width: $wide-page-width;
     margin-left: $gutter;
     margin-right: $gutter;
+  }
+
+  .phase-banner{
+    @extend %wide-page-margins;
+  }
+
+  #footer{
+    .footer-wrapper{
+      @extend %wide-page-margins;
+    }
   }
 }
 
