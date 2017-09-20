@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.Assessment;
@@ -9,6 +10,7 @@ import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
+import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.*;
@@ -65,6 +67,9 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private CompetitionMapper competitionMapper;
 
     private static final Long COMPETITION_ID = 1L;
 
@@ -496,6 +501,9 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
 
         CompetitionResource projectSetup = createWithDates(eightDaysAgo, sevenDaysAgo, sixDaysAgo, fiveDaysAgo, fourDaysAgo, threeDaysAgo, twoDaysAgo, oneDayAgo);
         assertThat(projectSetup.getCompetitionStatus(), equalTo(CompetitionStatus.PROJECT_SETUP));
+
+        Application app = newApplication().withManageFundingEmailDate(ZonedDateTime.now()).withFundingDecision(FundingDecisionStatus.FUNDED).withCompetition(competitionMapper.mapToDomain(projectSetup)).build();
+        applicationRepository.save(app);
 
         CompetitionCountResource counts = controller.count().getSuccessObjectOrThrowException();
 

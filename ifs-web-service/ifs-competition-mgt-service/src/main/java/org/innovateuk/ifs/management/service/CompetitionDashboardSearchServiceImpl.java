@@ -28,8 +28,8 @@ public class CompetitionDashboardSearchServiceImpl implements CompetitionDashboa
     }
 
     @Override
-    public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getProjectSetupCompetitions() {
-        return mapToStatus(competitionsRestService.findProjectSetupCompetitions().getSuccessObjectOrThrowException());
+    public List<CompetitionSearchResultItem> getProjectSetupCompetitions() {
+        return competitionsRestService.findProjectSetupCompetitions().getSuccessObjectOrThrowException();
     }
 
     @Override

@@ -10,6 +10,19 @@ include::{snippets}/competitioninvite/get-all-invites-to-send/response-fields.ad
 ==== Curl Example
 include::{snippets}/competitioninvite/get-all-invites-to-send/curl-request.adoc[]
 
+=== Get all invites to resend
+==== Request
+include::{snippets}/competitioninvite/get-all-invites-to-resend/http-request.adoc[]
+include::{snippets}/competitioninvite/get-all-invites-to-resend/path-parameters.adoc[]
+include::{snippets}/competitioninvite/get-all-invites-to-resend/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/competitioninvite/get-all-invites-to-resend/http-response.adoc[]
+include::{snippets}/competitioninvite/get-all-invites-to-resend/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/get-all-invites-to-resend/curl-request.adoc[]
+
 === Get invite by hash
 ==== Request
 include::{snippets}/competitioninvite/get-invite/http-request.adoc[]
@@ -106,6 +119,20 @@ include::{snippets}/competitioninvite/get-invitation-overview/response-fields.ad
 ==== Curl Example
 include::{snippets}/competitioninvite/get-invitation-overview/curl-request.adoc[]
 
+=== Get invite ids of assessors not accepted by competition
+==== Request
+include::{snippets}/competitioninvite/get-assessors-not-accepted-invite-ids/http-request.adoc[]
+include::{snippets}/competitioninvite/get-assessors-not-accepted-invite-ids/path-parameters.adoc[]
+include::{snippets}/competitioninvite/get-assessors-not-accepted-invite-ids/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/competitioninvite/get-assessors-not-accepted-invite-ids/http-response.adoc[]
+include::{snippets}/competitioninvite/get-assessors-not-accepted-invite-ids/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/get-assessors-not-accepted-invite-ids/curl-request.adoc[]
+
+
 === Get the invite statistics by competition
 ==== Request
 include::{snippets}/competitioninvite/get-invite-statistics/http-request.adoc[]
@@ -184,3 +211,12 @@ include::{snippets}/competitioninvite/send-all-invites/request-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/competitioninvite/send-all-invites/curl-request.adoc[]
+
+=== Resend invites
+==== Request
+include::{snippets}/competitioninvite/resend-invites/http-request.adoc[]
+include::{snippets}/competitioninvite/resend-invites/request-parameters.adoc[]
+include::{snippets}/competitioninvite/resend-invites/request-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/resend-invites/curl-request.adoc[]
