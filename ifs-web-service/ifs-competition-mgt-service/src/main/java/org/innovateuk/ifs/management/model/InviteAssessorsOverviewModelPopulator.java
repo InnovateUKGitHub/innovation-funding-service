@@ -14,9 +14,12 @@ import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
+import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.REJECTED;
+import static org.innovateuk.ifs.management.controller.CompetitionManagementCookieController.SELECTION_LIMIT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -49,11 +52,14 @@ public class InviteAssessorsOverviewModelPopulator extends InviteAssessorsModelP
         List<InnovationAreaResource> innovationAreasOptions = categoryRestService.getInnovationAreas()
                 .getSuccessObjectOrThrowException();
 
+        List<ParticipantStatusResource> statuses = status.map(Collections::singletonList)
+                .orElseGet(() -> asList(REJECTED, PENDING));
+
         AssessorInviteOverviewPageResource pageResource = competitionInviteRestService.getInvitationOverview(
                 competition.getId(),
                 page,
                 innovationArea,
-                status,
+                statuses,
                 compliant
         )
                 .getSuccessObjectOrThrowException();
@@ -63,6 +69,8 @@ public class InviteAssessorsOverviewModelPopulator extends InviteAssessorsModelP
         model.setAssessors(assessors);
         model.setInnovationAreaOptions(innovationAreasOptions);
         model.setPagination(new PaginationViewModel(pageResource, originQuery));
+        model.setSelectAllDisabled(pageResource.getTotalElements() > SELECTION_LIMIT);
+        model.setOriginQuery(originQuery);
 
         return model;
     }

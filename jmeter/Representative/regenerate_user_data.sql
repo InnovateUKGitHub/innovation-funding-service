@@ -1,17 +1,5 @@
 -- Useful query to regenerate the data in user_data.csv after a change in the database.
 
--- Add some indexes and shortern some varchar columns to make the query execute faster.
--- Execute the query in a local (non docker) instance otherwise it will take a very long time to return 
-alter table question modify short_name varchar(63);
-alter table question add index short_name (short_name);
-alter table question add index short_name_competition_id (short_name, competition_id);
-alter table question modify name varchar(63);
-alter table question add index name (name);
-alter table form_input modify description varchar(63);
-alter table form_input add index description (description);
-alter table user add index email (email);
-alter table section add index name (name);
-
 select concat_ws(',', u.email, 'Passw0rd', a.id, c.id, application_details_question.id, project_summary_question.id, public_description_question.id, project_exploitation_question.id, economic_benefit_question.id, funding_question.id, adding_value_question.id, your_finance_section.id, finance_overview_section.id, project_summary_form_input.id, public_description_form_input.id, project_exploitation_form_input.id, economic_benefit_form_input.id, funding_form_input.id, adding_value_form_input.id, travel_subsistence_row.id, travel_subsistence_question.id, other_funding_row.id, other_funding_question.id)
             from user u
             join process_role pr
