@@ -298,6 +298,7 @@
               th:unless="${model.assignedToCurrentUser}"
               th:text="${fullButtonText} ? |Assigned to ${name}. | : 'Assigned to'"
               th:with="name=${model.assignee.name}">
+            <span class="assign-name" th:text="${name}">NAME</span>
         </span>
     </th:block>
 
@@ -318,8 +319,8 @@
 
         <div class="assign-team">
             <!--/* Reassign question */-->
-            <label th:for="'assign'+${question.id}">Assign question to</label>
-            <select name="assign_question" th:id="'assign'+${question.id}" class="prog-menu">
+            <label th:for="'assign'+${question.id}">Reassign question to</label>
+            <select name="assign_question" th:id="'assign'+${question.id}" class="prog-menu form-control">
                 <th:block th:each="assignableApplicant : ${model.assignableApplicants}">
                     <option th:value="${question.id}+'_'+${assignableApplicant.processRole.id}"
                             th:unless="${model.isAssignedTo(assignableApplicant)}"
@@ -334,7 +335,7 @@
                     <option th:text="${pendingAssignableUser.name + ' (pending)'}"  disabled="disabled"/>
                 </th:block>
             </select>
-            <button type="submit">Reassign</button>
+            <button type="submit" class="button">Reassign</button>
         </div>
         <th:block th:unless="${hideAssignedTo}"
                   th:include="question-type/form-elements :: current-assignee (${model})" />
