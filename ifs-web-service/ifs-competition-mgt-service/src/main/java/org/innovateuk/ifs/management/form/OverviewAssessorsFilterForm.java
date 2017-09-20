@@ -37,4 +37,9 @@ public class OverviewAssessorsFilterForm extends BaseBindingResultTarget {
     public void setCompliant(Optional<Boolean> compliant) {
         this.compliant = compliant;
     }
+
+    public boolean anyFilterIsActive() {
+        return (this.innovationArea.isPresent() && !this.innovationArea.get().equals(0L)) ||
+                this.status.isPresent() || this.compliant.isPresent();
+    }
 }
