@@ -68,11 +68,11 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
         }));
     }
 
-    public ProjectDataBuilder submitProjectDetails() {
+/*    public ProjectDataBuilder submitProjectDetails() {
         return with(data -> doAs(data.getProjectManager(), () -> {
             projectDetailsService.submitProjectDetails(data.getProject().getId(), ZonedDateTime.now()).getSuccessObjectOrThrowException();
         }));
-    }
+    }*/
 
     public ProjectDataBuilder withFinanceContact(String organisationName, String financeContactEmail) {
         return with(data -> {

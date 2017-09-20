@@ -85,7 +85,7 @@ public class ProjectDetailsServiceImplTest {
         verify(projectDetailsRestService).updateProjectAddress(leadOrgId, projectId, REGISTERED, addressResource);
     }
 
-    @Test
+/*    @Test
     public void testSetApplicationDetailsSubmitted() {
         when(projectDetailsRestService.setApplicationDetailsSubmitted(1L)).thenReturn(restSuccess());
 
@@ -105,7 +105,7 @@ public class ProjectDetailsServiceImplTest {
         assertTrue(result.isSuccess());
 
         verify(projectDetailsRestService).isSubmitAllowed(1L);
-    }
+    }*/
 
     @Test
     public void testInviteProjectFinanceUser() throws Exception {

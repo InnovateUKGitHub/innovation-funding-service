@@ -12,10 +12,12 @@ import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.project.builder.ProjectBuilder;
+import org.innovateuk.ifs.project.builder.SpendProfileBuilder;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.transactional.EmailService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.OrganisationType;
@@ -30,7 +32,6 @@ import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,9 +52,9 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_D
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_START_DATE_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newProjectInvite;
@@ -240,37 +241,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdateProjectStartDate() {
-
-        LocalDate now = LocalDate.now();
-        LocalDate validDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
-
-        Project existingProject = newProject().build();
-        assertNull(existingProject.getTargetStartDate());
-
-        when(projectRepositoryMock.findOne(123L)).thenReturn(existingProject);
-
-        ServiceResult<Void> updateResult = service.updateProjectStartDate(123L, validDate);
-        assertTrue(updateResult.isSuccess());
-
-        verify(projectRepositoryMock).findOne(123L);
-        assertEquals(validDate, existingProject.getTargetStartDate());
-    }
-
-    @Test
-    public void testUpdateProjectStartDateButProjectDoesntExist() {
-
-        LocalDate now = LocalDate.now();
-        LocalDate validDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
-
-        when(projectRepositoryMock.findOne(123L)).thenReturn(null);
-
-        ServiceResult<Void> updateResult = service.updateProjectStartDate(123L, validDate);
-        assertTrue(updateResult.isFailure());
-        assertTrue(updateResult.getFailure().is(notFoundError(Project.class, 123L)));
-    }
-
-    @Test
     public void testUpdateProjectStartDateButStartDateDoesntBeginOnFirstDayOfMonth() {
 
         LocalDate now = LocalDate.now();
@@ -309,7 +279,43 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdateProjectStartDateWhenProjectDetailsAlreadySubmitted() {
+    public void testUpdateProjectStartDateWhenSpendProfileHasAlreadyBeenGenerated() {
+
+        LocalDate now = LocalDate.now();
+        LocalDate validDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
+
+        Project existingProject = newProject().build();
+        assertNull(existingProject.getTargetStartDate());
+
+        List<SpendProfile> spendProfiles = SpendProfileBuilder.newSpendProfile().build(2);
+
+        when(projectRepositoryMock.findOne(123L)).thenReturn(existingProject);
+        when(spendProfileRepositoryMock.findByProjectId(123L)).thenReturn(spendProfiles);
+
+        ServiceResult<Void> updateResult = service.updateProjectStartDate(123L, validDate);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_START_DATE_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED));
+
+        verify(projectRepositoryMock, never()).findOne(123L);
+        verify(spendProfileRepositoryMock).findByProjectId(123L);
+        assertNull(existingProject.getTargetStartDate());
+    }
+
+    @Test
+    public void testUpdateProjectStartDateButProjectDoesntExist() {
+
+        LocalDate now = LocalDate.now();
+        LocalDate validDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
+
+        when(projectRepositoryMock.findOne(123L)).thenReturn(null);
+
+        ServiceResult<Void> updateResult = service.updateProjectStartDate(123L, validDate);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(notFoundError(Project.class, 123L)));
+    }
+
+    @Test
+    public void testUpdateProjectStartDateSuccess() {
 
         LocalDate now = LocalDate.now();
         LocalDate validDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
@@ -319,14 +325,11 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         when(projectRepositoryMock.findOne(123L)).thenReturn(existingProject);
 
-        when(projectDetailsWorkflowHandlerMock.isSubmitted(existingProject)).thenReturn(true);
-
         ServiceResult<Void> updateResult = service.updateProjectStartDate(123L, validDate);
-        assertTrue(updateResult.isFailure());
-        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED));
+        assertTrue(updateResult.isSuccess());
 
         verify(projectRepositoryMock).findOne(123L);
-        assertNull(existingProject.getTargetStartDate());
+        assertEquals(validDate, existingProject.getTargetStartDate());
     }
 
     @Test
@@ -687,35 +690,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), PROJECT, newAddressResource);
         assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void testSubmitProjectDetails() {
-
-        ZonedDateTime now = ZonedDateTime.now();
-
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
-        when(projectDetailsWorkflowHandlerMock.submitProjectDetails(project, leadPartnerProjectUser)).thenReturn(true);
-
-        setLoggedInUser(newUserResource().withId(user.getId()).build());
-
-        ServiceResult<Void> result = service.submitProjectDetails(project.getId(), now);
-        assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void testSubmitProjectDetailsButSubmissionNotAllowed() {
-
-        ZonedDateTime now = ZonedDateTime.now();
-
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
-        when(projectDetailsWorkflowHandlerMock.submitProjectDetails(project, leadPartnerProjectUser)).thenReturn(false);
-
-        setLoggedInUser(newUserResource().withId(user.getId()).build());
-
-        ServiceResult<Void> result = service.submitProjectDetails(project.getId(), now);
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
     }
 
     @Test

@@ -43,7 +43,7 @@ public class ProjectDetailsRestServiceImplTest extends BaseRestServiceUnitTest<P
 
     }
 
-    @Test
+/*    @Test
     public void testSetApplicationDetailsSubmitted() {
         setupPostWithRestResultExpectations(projectRestURL + "/" + 123L + "/setApplicationDetailsSubmitted", null, OK);
 
@@ -63,7 +63,7 @@ public class ProjectDetailsRestServiceImplTest extends BaseRestServiceUnitTest<P
         assertTrue(result.isSuccess());
 
         Assert.assertEquals(isAllowed, result.getSuccessObject());
-    }
+    }*/
 
     @Test
     public void testInviteProjectManager() {

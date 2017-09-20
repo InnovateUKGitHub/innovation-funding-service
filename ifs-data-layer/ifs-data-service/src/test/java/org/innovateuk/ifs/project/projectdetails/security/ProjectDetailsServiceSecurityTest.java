@@ -115,7 +115,7 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
             return null;
         }
 
-        @Override
+/*        @Override
         public ServiceResult<Void> submitProjectDetails(Long id, ZonedDateTime date) {
             return null;
         }
@@ -123,7 +123,7 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
         @Override
         public ServiceResult<Boolean> isSubmitAllowed(Long projectId) {
             return null;
-        }
+        }*/
 
         @Override
         public ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource) {
