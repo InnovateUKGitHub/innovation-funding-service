@@ -207,6 +207,11 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     @Override
+    public ServiceResult<ApplicationInvite> findOneByHash(String hash) {
+        return find(applicationInviteRepository.getByHash(hash), notFoundError(ApplicationInvite.class, hash));
+    }
+
+    @Override
     @Transactional
     public ServiceResult<InviteResultsResource> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource, Optional<Long> applicationId) {
         return validateInviteOrganisationResource(inviteOrganisationResource).andOnSuccess(() ->

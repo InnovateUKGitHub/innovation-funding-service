@@ -615,15 +615,15 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         SpendProfileTableResource table = new SpendProfileTableResource();
 
         table.setEligibleCostPerCategoryMap(asMap(
-                1L, new BigDecimal("100"),
-                2L, new BigDecimal("180"),
-                3L, new BigDecimal("55")));
+                173L, new BigDecimal("100"),
+                174L, new BigDecimal("180"),
+                175L, new BigDecimal("55")));
 
         table.setMonthlyCostsPerCategoryMap(asMap(
-                1L, asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("40")),
-                2L, asList(new BigDecimal("70"), new BigDecimal("50"), new BigDecimal("60")),
-                3L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0"))));
-        List<Cost> spendProfileFigures = buildCostsForCategories(Arrays.asList(1L, 2L, 3L), 3);
+                173L, asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("40")),
+                174L, asList(new BigDecimal("70"), new BigDecimal("50"), new BigDecimal("60")),
+                175L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0"))));
+        List<Cost> spendProfileFigures = buildCostsForCategories(Arrays.asList(173L, 174L, 175L), 3);
         User generatedBy = newUser().build();
         Calendar generatedDate = Calendar.getInstance();
 
@@ -634,30 +634,30 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
 
         // Before the call (ie before the SpendProfile is updated), ensure that the values are set to 1
-        assertCostForCategoryForGivenMonth(spendProfileInDB, 1L, 0, BigDecimal.ONE);
-        assertCostForCategoryForGivenMonth(spendProfileInDB, 1L, 1, BigDecimal.ONE);
-        assertCostForCategoryForGivenMonth(spendProfileInDB, 1L, 2, BigDecimal.ONE);
-        assertCostForCategoryForGivenMonth(spendProfileInDB, 2L, 0, BigDecimal.ONE);
-        assertCostForCategoryForGivenMonth(spendProfileInDB, 2L, 1, BigDecimal.ONE);
-        assertCostForCategoryForGivenMonth(spendProfileInDB, 2L, 2, BigDecimal.ONE);
-        assertCostForCategoryForGivenMonth(spendProfileInDB, 3L, 0, BigDecimal.ONE);
-        assertCostForCategoryForGivenMonth(spendProfileInDB, 3L, 1, BigDecimal.ONE);
-        assertCostForCategoryForGivenMonth(spendProfileInDB, 3L, 2, BigDecimal.ONE);
+        assertCostForCategoryForGivenMonth(spendProfileInDB, 173L, 0, BigDecimal.ONE);
+        assertCostForCategoryForGivenMonth(spendProfileInDB, 173L, 1, BigDecimal.ONE);
+        assertCostForCategoryForGivenMonth(spendProfileInDB, 173L, 2, BigDecimal.ONE);
+        assertCostForCategoryForGivenMonth(spendProfileInDB, 174L, 0, BigDecimal.ONE);
+        assertCostForCategoryForGivenMonth(spendProfileInDB, 174L, 1, BigDecimal.ONE);
+        assertCostForCategoryForGivenMonth(spendProfileInDB, 174L, 2, BigDecimal.ONE);
+        assertCostForCategoryForGivenMonth(spendProfileInDB, 175L, 0, BigDecimal.ONE);
+        assertCostForCategoryForGivenMonth(spendProfileInDB, 175L, 1, BigDecimal.ONE);
+        assertCostForCategoryForGivenMonth(spendProfileInDB, 175L, 2, BigDecimal.ONE);
 
         ServiceResult<Void> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
 
         assertTrue(result.isSuccess());
 
         // Assert that the SpendProfile domain is correctly updated
-        assertCostForCategoryForGivenMonth(spendProfileInDB, 1L, 0, new BigDecimal("30"));
-        assertCostForCategoryForGivenMonth(spendProfileInDB, 1L, 1, new BigDecimal("30"));
-        assertCostForCategoryForGivenMonth(spendProfileInDB, 1L, 2, new BigDecimal("40"));
-        assertCostForCategoryForGivenMonth(spendProfileInDB, 2L, 0, new BigDecimal("70"));
-        assertCostForCategoryForGivenMonth(spendProfileInDB, 2L, 1, new BigDecimal("50"));
-        assertCostForCategoryForGivenMonth(spendProfileInDB, 2L, 2, new BigDecimal("60"));
-        assertCostForCategoryForGivenMonth(spendProfileInDB, 3L, 0, new BigDecimal("50"));
-        assertCostForCategoryForGivenMonth(spendProfileInDB, 3L, 1, new BigDecimal("5"));
-        assertCostForCategoryForGivenMonth(spendProfileInDB, 3L, 2, new BigDecimal("0"));
+        assertCostForCategoryForGivenMonth(spendProfileInDB, 173L, 0, new BigDecimal("30"));
+        assertCostForCategoryForGivenMonth(spendProfileInDB, 173L, 1, new BigDecimal("30"));
+        assertCostForCategoryForGivenMonth(spendProfileInDB, 173L, 2, new BigDecimal("40"));
+        assertCostForCategoryForGivenMonth(spendProfileInDB, 174L, 0, new BigDecimal("70"));
+        assertCostForCategoryForGivenMonth(spendProfileInDB, 174L, 1, new BigDecimal("50"));
+        assertCostForCategoryForGivenMonth(spendProfileInDB, 174L, 2, new BigDecimal("60"));
+        assertCostForCategoryForGivenMonth(spendProfileInDB, 175L, 0, new BigDecimal("50"));
+        assertCostForCategoryForGivenMonth(spendProfileInDB, 175L, 1, new BigDecimal("5"));
+        assertCostForCategoryForGivenMonth(spendProfileInDB, 175L, 2, new BigDecimal("0"));
 
         verify(spendProfileRepositoryMock).save(spendProfileInDB);
 
@@ -908,7 +908,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     private void assertCostForCategoryForGivenMonth(SpendProfile spendProfileInDB, Long category, Integer whichMonth, BigDecimal expectedValue) {
 
         boolean thisCostShouldExist = spendProfileInDB.getSpendProfileFigures().getCosts().stream()
-                .anyMatch(cost -> cost.getCostCategory().getId() == category
+                .anyMatch(cost -> Objects.equals(cost.getCostCategory().getId(), category)
                         && cost.getCostTimePeriod().getOffsetAmount().equals(whichMonth)
                         && cost.getValue().equals(expectedValue));
         Assert.assertTrue(thisCostShouldExist);

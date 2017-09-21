@@ -50,7 +50,7 @@ items:
           - name: IDP_REST_BASEURL
             value: 'https://<<SHIB-IDP-ADDRESS>>/regapi'
           - name: JAVA_OPTS
-            value: -Xms1000m -Xmx1000m -javaagent:/newrelic.jar
+            value: -Xms1500m -Xmx1500m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
             value: "ifs-data-service (<<NEWRELIC-ENVIRONMENT>>)"
           - name: NEW_RELIC_LICENSE_KEY
@@ -63,6 +63,9 @@ items:
           - containerPort: 8080
           resources:
             limits:
+              cpu: 2000m
+            requests:
+              cpu: 400m
               memory: 1500M
           volumeMounts:
           - mountPath: /mnt/ifs_storage

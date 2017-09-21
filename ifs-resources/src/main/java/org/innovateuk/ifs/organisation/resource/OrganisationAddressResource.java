@@ -18,6 +18,11 @@ public class OrganisationAddressResource {
         this.addressType = addressType;
     }
 
+    public OrganisationAddressResource(AddressResource address, AddressTypeResource addressType) {
+        this.address = address;
+        this.addressType = addressType;
+    }
+
     public OrganisationAddressResource() {
     	// no-arg constructor
     }

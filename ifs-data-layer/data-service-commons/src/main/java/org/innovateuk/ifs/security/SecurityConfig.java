@@ -40,6 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
                 .antMatchers("/silstub/**").permitAll()
                 .antMatchers(monitoringEndpoint+"/**").permitAll()
+                .antMatchers("/benchmark/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
             .exceptionHandling().and()

@@ -37,6 +37,9 @@ ${openCompetitionBusinessRTO_name}      Home and industrial efficiency programme
 ${openCompetitionBusinessRTO}           ${competition_ids['${openCompetitionBusinessRTO_name}']}
 ${openCompetitionBusinessRTO_overview}  ${SERVER}/competition/${openCompetitionBusinessRTO}/overview/
 
+${openCompetitionResearch_name}  Photonics for Research
+${openCompetitionResearch}       ${competition_ids['${openCompetitionResearch_name}']}
+
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}    Aerospace technology investment sector
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}    ${competition_ids['${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}']}
 
@@ -162,6 +165,7 @@ ${database_password}    password
 ${database_host}    ifs-database
 ${database_port}    3306
 ${CLOSED_COMPETITION_NAME}    Machine learning for transport infrastructure
+${CLOSED_COMPETITION}  ${competition_ids['${CLOSED_COMPETITION_NAME}']}
 ${CLOSED_COMPETITION_APPLICATION_TITLE}   Neural networks to optimise freight train routing
 ${CLOSED_COMPETITION_APPLICATION}   ${application_ids["${CLOSED_COMPETITION_APPLICATION_TITLE}"]}
 ${UPCOMING_COMPETITION_TO_ASSESS_NAME}    Home and industrial efficiency programme

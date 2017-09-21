@@ -11,10 +11,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static com.google.common.primitives.Longs.asList;
 import static java.lang.Boolean.TRUE;
+import static java.util.Collections.singletonList;
 import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -31,8 +34,9 @@ import static org.innovateuk.ifs.documentation.CompetitionInviteStatisticsResour
 import static org.innovateuk.ifs.documentation.CompetitionInviteStatisticsResourceDocs.competitionInviteStatisticsResourceFields;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewPageResourceBuilder.newAssessorInviteOverviewPageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
-import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -70,6 +74,31 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
                 ));
 
         verify(competitionInviteServiceMock, only()).getAllInvitesToSend(competitionId);
+    }
+
+    @Test
+    public void getAllInvitesToResend() throws Exception {
+        long competitionId = 1L;
+        List<Long> inviteIds = asList(1L, 2L);
+        AssessorInvitesToSendResource assessorInvitesToSendResource = assessorInvitesToSendResourceBuilder.build();
+
+        when(competitionInviteServiceMock.getAllInvitesToResend(competitionId, inviteIds)).thenReturn(serviceSuccess(assessorInvitesToSendResource));
+
+        mockMvc.perform(get("/competitioninvite/getAllInvitesToResend/{competitionId}", competitionId)
+                .param("inviteIds", simpleJoiner(inviteIds, ",")))
+                .andExpect(status().isOk())
+                .andDo(document("competitioninvite/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of the competition to get invites for")
+                        ),
+                        requestParameters(
+                                parameterWithName("inviteIds")
+                                        .description("Ids of invites to resend")
+                        ),
+                        responseFields(assessorInvitesToSendResourceFields)
+                ));
+
+        verify(competitionInviteServiceMock, only()).getAllInvitesToResend(competitionId, inviteIds);
     }
 
     @Test
@@ -249,7 +278,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
     public void getInvitationOverview() throws Exception {
         long competitionId = 1L;
         Optional<Long> innovationArea = of(10L);
-        Optional<ParticipantStatus> status = of(ACCEPTED);
+        List<ParticipantStatus> status = singletonList(PENDING);
         Optional<Boolean> compliant = of(TRUE);
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
@@ -267,7 +296,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
                 .param("page", "0")
                 .param("sort", "invite.name,asc")
                 .param("innovationArea", "10")
-                .param("status", "ACCEPTED")
+                .param("statuses", "PENDING")
                 .param("compliant", "1"))
                 .andExpect(status().isOk())
                 .andDo(document("competitioninvite/{method-name}",
@@ -283,17 +312,51 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
                                         .description("The property to sort the elements on. For example `sort=invite.name,asc`. Defaults to `invite.name,asc`"),
                                 parameterWithName("innovationArea").optional()
                                         .description("Innovation area ID to filter assessors by."),
-                                parameterWithName("status").optional()
-                                        .description("Participant status to filter assessors by. Can only be 'ACCEPTED', 'REJECTED' or 'PENDING'."),
+                                parameterWithName("statuses")
+                                        .description("Participant statuses to filter assessors by. Can be a single status or a combination of 'ACCEPTED', 'PENDING' or 'REJECTED'"),
                                 parameterWithName("compliant").optional()
                                         .description("Flag to filter assessors by their compliance.")
-
                         ),
                         responseFields(assessorInviteOverviewPageResourceFields)
                                 .andWithPrefix("content[].", assessorInviteOverviewResourceFields)
                 ));
 
         verify(competitionInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, innovationArea, status, compliant);
+    }
+
+    @Test
+    public void getAssessorsNotAcceptedInviteIds() throws Exception {
+        long competitionId = 1L;
+        Optional<Long> innovationArea = of(10L);
+        List<ParticipantStatus> statuses = Arrays.asList(PENDING, REJECTED);
+        Optional<Boolean> compliant = of(TRUE);
+
+        List<Long> expectedInviteIds = asList(1L, 2L);
+
+        when(competitionInviteServiceMock.getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, statuses, compliant))
+                .thenReturn(serviceSuccess(expectedInviteIds));
+
+        mockMvc.perform(get("/competitioninvite/getAssessorsNotAcceptedInviteIds/{competitionId}", 1L)
+                .param("innovationArea", "10")
+                .param("statuses", "PENDING,REJECTED")
+                .param("compliant", "1"))
+                .andExpect(status().isOk())
+                .andDo(document("competitioninvite/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of the competition")
+                        ),
+                        requestParameters(
+                                parameterWithName("innovationArea").optional()
+                                        .description("Innovation area ID to filter assessors by."),
+                                parameterWithName("statuses")
+                                        .description("Participant statuses to filter assessors by. Can only be 'REJECTED', 'PENDING' or both."),
+                                parameterWithName("compliant").optional()
+                                        .description("Flag to filter assessors by their compliance.")
+                        ),
+                        responseFields(fieldWithPath("[]").description("List of invite ids of Assessors who have not accepted for a competition"))
+                ));
+
+        verify(competitionInviteServiceMock, only()).getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, statuses, compliant);
     }
 
     @Test
@@ -453,6 +516,27 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
                 .andDo(document("competitioninvite/{method-name}",
                         pathParameters(
                                 parameterWithName("inviteId").description("Id of the invite being resent")
+                        ),
+                        requestFields(assessorInviteSendResourceFields)
+                ));
+    }
+
+    @Test
+    public void resendInvites() throws Exception {
+        List<Long> inviteIds = asList(1L, 2L);
+
+        AssessorInviteSendResource assessorInviteSendResource = assessorInviteSendResourceBuilder.build();
+        when(competitionInviteServiceMock.resendInvites(inviteIds, assessorInviteSendResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competitioninvite/resendInvites")
+                .param("inviteIds", simpleJoiner(inviteIds, ","))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(assessorInviteSendResource)))
+                .andExpect(status().isOk())
+                .andDo(document("competitioninvite/{method-name}",
+                        requestParameters(
+                                parameterWithName("inviteIds")
+                                        .description("Ids of invites to resend")
                         ),
                         requestFields(assessorInviteSendResourceFields)
                 ));

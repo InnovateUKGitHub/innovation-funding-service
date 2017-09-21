@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.application.service;
 
-import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -22,15 +20,13 @@ public interface OrganisationService {
 
     OrganisationResource getOrganisationByIdForAnonymousUserFlow(Long organisationId);
 
-    OrganisationResource saveForAnonymousUserFlow(OrganisationResource organisation);
+    OrganisationResource createOrMatch(OrganisationResource organisation);
 
-    OrganisationResource save(OrganisationResource organisation);
+    OrganisationResource createAndLinkByInvite(OrganisationResource organisation, String inviteHash);
 
     OrganisationResource updateNameAndRegistration(OrganisationResource organisation);
 
     OrganisationSearchResult getCompanyHouseOrganisation(String organisationId);
-
-    OrganisationResource addAddress(OrganisationResource organisation, AddressResource address, OrganisationAddressType type);
 
     Long getOrganisationType(Long userId, Long applicationId);
 

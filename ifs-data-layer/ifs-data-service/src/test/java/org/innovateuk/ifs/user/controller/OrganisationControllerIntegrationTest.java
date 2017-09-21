@@ -1,10 +1,7 @@
 package org.innovateuk.ifs.user.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
-import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.repository.AddressRepository;
-import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.repository.OrganisationTypeRepository;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -120,32 +117,6 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
         OrganisationResource org = controller.findById(organisationResource.getId()).getSuccessObject();
         assertEquals(companyHouseId, org.getCompanyHouseNumber());
         assertEquals(companyName, org.getName());
-    }
-
-    @Rollback
-    @Test
-    public void testAddAddress() throws Exception {
-
-        loginSystemRegistrationUser();
-
-        OrganisationResource organisationResource = createOrganisation();
-
-        AddressResource addressResource = new AddressResource("Line1", "Line2",  "Line3", "town", "county", "postcode");
-        controller.addAddress(organisationResource.getId(), OrganisationAddressType.OPERATING, addressResource);
-
-        flushAndClearSession();
-
-        OrganisationResource cleanOrganisation = controller.findById(organisationResource.getId()).getSuccessObject();
-        assertEquals(1, cleanOrganisation.getAddresses().size());
-        Long addressId = cleanOrganisation.getAddresses().get(0).getAddress().getId();
-        Address address = addressRepository.findOne(addressId);
-
-        assertEquals("Line1", address.getAddressLine1());
-        assertEquals("Line2", address.getAddressLine2());
-        assertEquals("Line3", address.getAddressLine3());
-        assertEquals("town", address.getTown());
-        assertEquals("postcode", address.getPostcode());
-        assertEquals("county", address.getCounty());
     }
 
     @Rollback

@@ -26,7 +26,7 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...               INFUND-8590 Lead applicant can Delete a partner Organisation
 ...
 ...               IFS-951  Display 'Organisation type' against user
-Suite Setup       log in and create new application for collaboration if there is not one already
+Suite Setup       log in and create new application if there is not one already  Invite robot test application
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
@@ -161,7 +161,7 @@ Business organisation (partner accepts invitation)
     And the user clicks the button/link                jQuery=.button:contains("Continue")
     And the user clicks the button/link                jQuery=.button:contains("Save and continue")
     And the user fills the create account form         Adrian  Booth
-    And the user reads his email locally               ${invite_email}  Please verify your email address    Once verified you can sign into your account
+    And the user reads his email                       ${invite_email}  Please verify your email address  Once verified you can sign into your account
 
 Partner requests new verification email via password reset
     [Documentation]  IFS-52

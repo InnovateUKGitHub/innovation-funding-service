@@ -38,19 +38,10 @@ function deploy() {
         oc create -f os-files-tmp/spring-admin/ ${SVC_ACCOUNT_CLAUSE}
         oc create -f os-files-tmp/ ${SVC_ACCOUNT_CLAUSE}
     fi
+
 }
 
-function blockUntilServiceIsUp() {
-    UNREADY_PODS=1
-    while [ ${UNREADY_PODS} -ne "0" ]
-    do
-        UNREADY_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} -o custom-columns='NAME:{.metadata.name},READY:{.status.conditions[?(@.type=="Ready")].status}' | grep -v True | sed 1d | wc -l)
-        oc get pods ${SVC_ACCOUNT_CLAUSE}
-        echo "$UNREADY_PODS pods still not ready"
-        sleep 5s
-    done
-    oc get routes ${SVC_ACCOUNT_CLAUSE}
-}
+
 
 function shibInit() {
      oc rsh ${SVC_ACCOUNT_CLAUSE} $(oc get pods  ${SVC_ACCOUNT_CLAUSE} | awk '/ldap/ { print $1 }') /usr/local/bin/ldap-sync-from-ifs-db.sh ifs-database
