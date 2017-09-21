@@ -81,4 +81,6 @@ sleep 5
 
 if [[ "$(oc get po dbreset -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" != "Succeeded" ]]; then exit -1; fi
 
+# tidy up the pod afterwards
+oc delete pod dbreset ${SVC_ACCOUNT_CLAUSE}
 exit 0

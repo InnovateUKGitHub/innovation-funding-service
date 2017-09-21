@@ -16,8 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.google.common.primitives.Longs.asList;
 import static java.lang.Boolean.TRUE;
@@ -45,7 +44,10 @@ import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceB
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.innovateuk.ifs.util.JsonMappingUtil.fromJson;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
@@ -74,6 +76,20 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .andExpect(status().isOk());
 
         verify(competitionInviteServiceMock, only()).getAllInvitesToSend(COMPETITION_ID);
+    }
+
+    @Test
+    public void getAllInvitesToResend() throws Exception {
+        AssessorInvitesToSendResource resource = newAssessorInvitesToSendResource().build();
+        List<Long> inviteIds = asList(1L, 2L);
+
+        when(competitionInviteServiceMock.getAllInvitesToResend(COMPETITION_ID, inviteIds)).thenReturn(serviceSuccess(resource));
+
+        mockMvc.perform(get("/competitioninvite/getAllInvitesToResend/{competitionId}", COMPETITION_ID).contentType(MediaType.APPLICATION_JSON)
+                .param("inviteIds", simpleJoiner(inviteIds, ",")))
+                .andExpect(status().isOk());
+
+        verify(competitionInviteServiceMock, only()).getAllInvitesToResend(COMPETITION_ID, inviteIds);
     }
 
     @Test
@@ -506,7 +522,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         int page = 2;
         int size = 10;
         Optional<Long> innovationArea = of(3L);
-        Optional<ParticipantStatus> status = of(ACCEPTED);
+        List<ParticipantStatus> status = Collections.singletonList(ACCEPTED);
         Optional<Boolean> compliant = of(TRUE);
 
         AssessorInviteOverviewPageResource expectedPageResource = newAssessorInviteOverviewPageResource()
@@ -523,7 +539,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .param("size", "10")
                 .param("sort", "invite.email")
                 .param("innovationArea", "3")
-                .param("status", "ACCEPTED")
+                .param("statuses", "ACCEPTED")
                 .param("compliant", "1"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedPageResource)));
@@ -537,7 +553,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         int page = 0;
         int size = 20;
         Optional<Long> innovationArea = empty();
-        Optional<ParticipantStatus> status = empty();
+        List<ParticipantStatus> statuses = Arrays.asList(PENDING, REJECTED);
         Optional<Boolean> compliant = empty();
 
         Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.ASC, "invite.name"));
@@ -546,14 +562,35 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .withContent(newAssessorInviteOverviewResource().build(2))
                 .build();
 
-        when(competitionInviteServiceMock.getInvitationOverview(competitionId, pageable, innovationArea, status, compliant))
+        when(competitionInviteServiceMock.getInvitationOverview(competitionId, pageable, innovationArea, statuses, compliant))
                 .thenReturn(serviceSuccess(expectedPageResource));
 
-        mockMvc.perform(get("/competitioninvite/getInvitationOverview/{competitionId}", competitionId))
+        mockMvc.perform(get("/competitioninvite/getInvitationOverview/{competitionId}", competitionId)
+                .param("statuses", "PENDING, REJECTED"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedPageResource)));
 
-        verify(competitionInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, innovationArea, status, compliant);
+        verify(competitionInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, innovationArea, statuses, compliant);
+    }
+
+    @Test
+    public void getAssessorsNotAcceptedInviteIds() throws Exception {
+        long competitionId = 1L;
+        Optional<Long> innovationArea = empty();
+        List<ParticipantStatus> statuses = Arrays.asList(PENDING, REJECTED);
+        Optional<Boolean> compliant = empty();
+
+        List<Long> expectedInviteIds = asList(1L, 2L);
+
+        when(competitionInviteServiceMock.getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, statuses, compliant))
+                .thenReturn(serviceSuccess(expectedInviteIds));
+
+        mockMvc.perform(get("/competitioninvite/getAssessorsNotAcceptedInviteIds/{competitionId}", competitionId)
+                .param("statuses", "PENDING, REJECTED"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expectedInviteIds)));
+
+        verify(competitionInviteServiceMock, only()).getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, statuses, compliant);
     }
 
     @Test
@@ -706,5 +743,25 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .andExpect(status().isOk());
 
         verify(competitionInviteServiceMock, only()).resendInvite(inviteId, assessorInviteSendResource);
+    }
+
+    @Test
+    public void resendInvites() throws Exception {
+        List<Long> inviteIds = asList(1L, 2L);
+
+        AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
+                .withSubject("subject")
+                .withContent("content")
+                .build();
+
+        when(competitionInviteServiceMock.resendInvites(inviteIds, assessorInviteSendResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competitioninvite/resendInvites")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(assessorInviteSendResource))
+                .param("inviteIds", simpleJoiner(inviteIds, ",")))
+                .andExpect(status().isOk());
+
+        verify(competitionInviteServiceMock).resendInvites(inviteIds, assessorInviteSendResource);
     }
 }
