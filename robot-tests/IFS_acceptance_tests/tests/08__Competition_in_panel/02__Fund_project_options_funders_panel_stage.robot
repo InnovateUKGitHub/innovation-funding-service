@@ -10,11 +10,14 @@ Documentation     INFUND-2601 As a competition administrator I want a view of al
 ...               INFUND-8624 Successful applications moved to 'Project setup' upon receiving funding decision notification email
 ...
 ...               INFUND-8854 Set competition state to Inform when ALL applications either set to Successful or Unsuccessful and final decision email sent
+...
+...               IFS-1620 Internal Project Setup dashboard: project visibility needed after successful notification not feedback released
 Suite Setup       Custom Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin  Applicant
 Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
+Resource          ../10__Project_setup/PS_Common.robot
 
 *** Variables ***
 ${funders_panel_competition_url}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}
@@ -58,7 +61,7 @@ Proj Finance user can send Fund Decision notification
     When the user clicks the button/link     jQuery=summary:contains("Review list of recipients")[aria-expanded="false"]
     Then the user should see the element     jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
     And the user should not see the element  jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_2_TITLE}")
-    When the user clicks the button/link     jQuery=button[data-js-modal="send-to-all-applicants-modal"]
+    When the user clicks the button/link     css=button[data-js-modal="send-to-all-applicants-modal"]
     When the user clicks the button/link     jQuery=.send-to-all-applicants-modal button:contains("Send email to all applicants")
     Then the user should see a field and summary error  Please enter the email message.
     When the user cancels the process needs to re-select the reciepients
@@ -117,9 +120,9 @@ Once Successful and Sent you cannot change your mind
     [Tags]
     Given log in as a different user          &{internal_finance_credentials}
     When the user navigates to the page       ${funders_panel_competition_url}/funding
-    Then the user should not see the element  jQuery=input[type="checkbox"][value="${FUNDERS_PANEL_APPLICATION_1_NUMBER}"]
+    Then the user should not see the element  css=input[type="checkbox"][value="${FUNDERS_PANEL_APPLICATION_1_NUMBER}"]
     When the user navigates to the page       ${funders_panel_competition_url}/manage-funding-applications
-    Then the user should not see the element  jQuery=input[type="checkbox"][value="${FUNDERS_PANEL_APPLICATION_1_NUMBER}"]
+    Then the user should not see the element  css=input[type="checkbox"][value="${FUNDERS_PANEL_APPLICATION_1_NUMBER}"]
     # TODO Add a check that button is disabled IFS-359
 
 Successful applications are turned into Project
@@ -127,6 +130,15 @@ Successful applications are turned into Project
     [Tags]  HappyPath
     Given log in as a different user      ${test_mailbox_one}+fundsuccess@gmail.com  ${short_password}
     Then the user should see the element  jQuery=.projects-in-setup li:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
+
+Internal user can see the comp in Project Setup once applicant is notified
+    [Documentation]  IFS-1620
+    [Tags]
+    Given log in as a different user                       &{Comp_admin1_credentials}
+    When the user clicks the button/link                   jQuery=a:contains("Project setup")
+    And the user should see the element                    jQuery=h2:contains("Project setup")
+    Then the user clicks the button/link                   link=${FUNDERS_PANEL_COMPETITION_NAME}
+    And the user should be redirected to the correct page  ${notified_application_competition_status}
 
 Once all final decisions have been made and emails are sent Comp moves to Inform status
     [Documentation]  INFUND-8854

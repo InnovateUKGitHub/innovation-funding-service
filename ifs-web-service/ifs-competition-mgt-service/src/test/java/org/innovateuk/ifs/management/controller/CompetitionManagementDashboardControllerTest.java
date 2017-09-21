@@ -1,6 +1,4 @@
-
 package org.innovateuk.ifs.management.controller;
-
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
@@ -98,7 +96,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     @Test
     public void projectSetupDashboard() throws Exception {
 
-        Mockito.when(competitionDashboardSearchService.getProjectSetupCompetitions()).thenReturn(competitions);
+        Mockito.when(competitionDashboardSearchService.getProjectSetupCompetitions()).thenReturn(competitions.get(INNOVATION_AREA_NAME_ONE));
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/project-setup"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -109,9 +107,8 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         assertTrue(model.getClass().equals(ProjectSetupDashboardViewModel.class));
 
         ProjectSetupDashboardViewModel viewModel = (ProjectSetupDashboardViewModel) model;
-        assertEquals(competitions, viewModel.getCompetitions());
+        assertEquals(competitions.get(INNOVATION_AREA_NAME_ONE), viewModel.getCompetitions());
         assertEquals(counts, viewModel.getCounts());
-        assertEquals(asList(INNOVATION_AREA_NAME_ONE + ", " + INNOVATION_AREA_NAME_TWO), viewModel.getFormattedInnovationAreas());
     }
 
     private void addInnovationAreaNamesToCompetitions(Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitions ) {

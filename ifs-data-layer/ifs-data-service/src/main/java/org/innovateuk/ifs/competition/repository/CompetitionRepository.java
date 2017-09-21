@@ -26,13 +26,14 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "NOT EXISTS (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' AND m.competition.id = c.id) AND " +
             "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
-    public static final String PROJECT_SETUP_QUERY = "SELECT c FROM Competition c WHERE " +
-            "EXISTS (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = c.id) AND " +
-            "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
+    // Assume competition cannot be in project setup until at least one application is funded and informed
+    public static final String PROJECT_SETUP_QUERY = "SELECT c FROM Competition c WHERE ( " +
+            "EXISTS (SELECT a.manageFundingEmailDate  FROM Application a WHERE a.competition.id = c.id AND a.fundingDecision = 'FUNDED' AND a.manageFundingEmailDate IS NOT NULL) " +
+            ") AND c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
-    public static final String PROJECT_SETUP_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c WHERE " +
-            "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = c.id) AND " +
-            "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
+    public static final String PROJECT_SETUP_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c WHERE ( " +
+            "EXISTS (SELECT a.manageFundingEmailDate  FROM Application a WHERE a.competition.id = c.id AND a.fundingDecision = 'FUNDED' AND a.manageFundingEmailDate IS NOT NULL) " +
+            ") AND c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
     public static final String UPCOMING_QUERY = "SELECT c FROM Competition c WHERE (CURRENT_TIMESTAMP <= " +
             "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) AND c.setupComplete = TRUE) OR " +

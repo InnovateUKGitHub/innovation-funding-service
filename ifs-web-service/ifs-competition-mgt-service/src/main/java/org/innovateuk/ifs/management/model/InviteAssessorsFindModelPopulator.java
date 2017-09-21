@@ -56,6 +56,7 @@ public class InviteAssessorsFindModelPopulator extends InviteAssessorsModelPopul
         model.setAssessors(assessors);
         model.setPagination(new PaginationViewModel(pageResource, originQuery));
         model.setSelectAllDisabled(pageResource.getTotalElements() > SELECTION_LIMIT);
+        model.setOriginQuery(originQuery);
 
         return model;
     }

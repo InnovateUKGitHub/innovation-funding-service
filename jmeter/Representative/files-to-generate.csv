@@ -1,0 +1,3 @@
+"regenerating user data","regenerate_user_data.sql","user_data.csv"
+"regenerating invite data","regenerate_invites_data.sql","invite_data.csv"
+"regenerating assessor data","regenerate_assessor_data.sql","assessor_data.csv"

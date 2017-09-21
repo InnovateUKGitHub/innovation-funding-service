@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    name: fractal
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: fractal
+    strategy:
+      resources: {}
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: fractal
+      spec:
+        containers:
+        - image: innovateuk/fractal:1.0-SNAPSHOT
+          name: fractal
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 3000
+          resources:
+            limits:
+              memory: 100M
+    test: false
+    triggers:
+    - type: ConfigChange
+  status: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: fractal
+  spec:
+    ports:
+    - name: 443-tcp
+      port: 3000
+      targetPort: 3000
+    selector:
+      deploymentconfig: fractal
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Route
+  metadata:
+    name: fractal
+  spec:
+    host: <<FRACTAL-ADDRESS>>
+    port:
+      targetPort: 443-tcp
+    tls:
+      termination: edge
+      insecureEdgeTerminationPolicy: Redirect
+    to:
+      kind: Service
+      name: fractal
