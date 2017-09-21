@@ -93,7 +93,7 @@ public class ProjectFinanceHandlerImpl implements ProjectFinanceHandler {
             OrganisationFinanceHandler organisationFinanceHandler =
                     organisationFinanceDelegate.getOrganisationFinanceHandler(finance.getOrganisation().getOrganisationType().getId());
             EnumMap<FinanceRowType, FinanceRowCostCategory> costs =
-                    new EnumMap<>(organisationFinanceHandler.getProjectOrganisationFinanceTotals(financeResource.getId(),
+                    new EnumMap<>(organisationFinanceHandler.getProjectOrganisationFinances(financeResource.getId(),
                             finance.getProject().getApplication().getCompetition()));
             financeResource.setFinanceOrganisationDetails(costs);
             financeResources.add(financeResource);

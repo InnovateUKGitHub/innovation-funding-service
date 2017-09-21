@@ -183,7 +183,7 @@ public class OrganisationFinanceHandlerTest {
     public void testGetOrganisationFinanceTotals() throws Exception {
         Map<FinanceRowType, FinanceRowCostCategory> expected = handler.getOrganisationFinances(applicationFinance.getId(), competition);
         expected.values().forEach(costCategory -> costCategory.setCosts(new ArrayList<>()));
-        Map<FinanceRowType, FinanceRowCostCategory> obtained = handler.getOrganisationFinanceTotals(applicationFinance.getId(), competition);
+        Map<FinanceRowType, FinanceRowCostCategory> obtained = handler.getOrganisationFinances(applicationFinance.getId(), competition);
 
         assertEquals(obtained.size(), expected.size());
         assertTrue(obtained.keySet().stream().allMatch(key -> expected.containsKey(key)));

@@ -19,7 +19,6 @@ import java.util.Map;
 public interface OrganisationFinanceHandler {
     Iterable<ApplicationFinanceRow> initialiseCostType(ApplicationFinance applicationFinance, FinanceRowType costType);
     Map<FinanceRowType,FinanceRowCostCategory> getOrganisationFinances(Long applicationFinanceId, Competition competition);
-    Map<FinanceRowType,FinanceRowCostCategory> getOrganisationFinanceTotals(Long id, Competition competition);
 
     ApplicationFinanceRow costItemToCost(FinanceRowItem costItem);
     ProjectFinanceRow costItemToProjectCost(FinanceRowItem costItem);
@@ -34,5 +33,4 @@ public interface OrganisationFinanceHandler {
 
     Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinances(Long projectFinanceId, Competition competition);
     Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> getProjectOrganisationFinanceChanges(Long projectFinanceId);
-    Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinanceTotals(Long projectFinanceId, Competition competition);
 }

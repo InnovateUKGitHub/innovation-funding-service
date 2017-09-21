@@ -122,7 +122,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
         });
     }
 
-    @Override
+    /*@Override
     public Map<FinanceRowType, FinanceRowCostCategory> getOrganisationFinanceTotals(Long applicationFinanceId, Competition competition) {
         Map<FinanceRowType, FinanceRowCostCategory> costCategories = getOrganisationFinances(applicationFinanceId, competition);
         return resetCosts(costCategories);
@@ -132,7 +132,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
     public Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinanceTotals(Long projectFinanceId, Competition competition) {
         Map<FinanceRowType, FinanceRowCostCategory> costCategories = getProjectOrganisationFinances(projectFinanceId, competition);
         return resetCosts(costCategories);
-    }
+    }*/
 
     private Map<FinanceRowType, FinanceRowCostCategory> createCostCategories() {
         Map<FinanceRowType, FinanceRowCostCategory> costCategories = new EnumMap<>(FinanceRowType.class);

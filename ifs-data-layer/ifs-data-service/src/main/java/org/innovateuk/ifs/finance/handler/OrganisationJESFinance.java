@@ -52,13 +52,13 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
     @Override
     public Map<FinanceRowType, FinanceRowCostCategory> getOrganisationFinances(Long applicationFinanceId, Competition competition) {
         List<ApplicationFinanceRow> costs = applicationFinanceRowRepository.findByTargetId(applicationFinanceId);
-        return addCostsAndTotalsToCategories(costs, competition);
+        return updateCostCategoryValuesForTotals(competition, addCostsAndTotalsToCategories(costs, competition));
     }
 
     @Override
     public Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinances(Long projectFinanceId, Competition competition) {
         List<ProjectFinanceRow> costs = projectFinanceRowRepository.findByTargetId(projectFinanceId);
-        return addCostsAndTotalsToCategories(costs, competition);
+        return updateCostCategoryValuesForTotals(competition, addCostsAndTotalsToCategories(costs, competition));
     }
 
     @Override
@@ -70,7 +70,7 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
         return emptyMap();
     }
 
-    @Override
+    /*@Override
     public Map<FinanceRowType, FinanceRowCostCategory> getOrganisationFinanceTotals(Long applicationFinanceId, Competition competition) {
         Map<FinanceRowType, FinanceRowCostCategory> costCategories = getOrganisationFinances(applicationFinanceId, competition);
         return updateCostCategoryValuesForTotals(competition, costCategories);
@@ -80,13 +80,12 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
     public Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinanceTotals(Long projectFinanceId, Competition competition) {
         Map<FinanceRowType, FinanceRowCostCategory> costCategories = getProjectOrganisationFinances(projectFinanceId, competition);
         return updateCostCategoryValuesForTotals(competition, costCategories);
-    }
+    }*/
 
     private Map<FinanceRowType, FinanceRowCostCategory> addCostsAndTotalsToCategories(List<? extends FinanceRow> costs, Competition competition) {
         Map<FinanceRowType, FinanceRowCostCategory> costCategories = createCostCategories();
         costCategories = addCostsToCategories(costCategories, costs);
         costCategories = calculateTotals(costCategories);
-        costCategories = setGrantClaimPercentage(costCategories, competition);
         return costCategories;
     }
 
