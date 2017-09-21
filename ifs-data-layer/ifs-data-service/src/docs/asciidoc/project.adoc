@@ -126,30 +126,6 @@ include::{snippets}/project/save-mo-when-project-details-not-yet-submitted/http-
 ==== Save Monitoring Officer when unable to send notifications
 include::{snippets}/project/save-mo-when-unable-to-send-notifications/http-response.adoc[]
 
-=== Is Submit Allowed
-==== Success
-===== Request
-include::{snippets}/project/is-submit-allowed/http-request.adoc[]
-include::{snippets}/project/is-submit-allowed/path-parameters.adoc[]
-
-===== Response
-include::{snippets}/project/is-submit-allowed/http-response.adoc[]
-
-===== Curl Example
-include::{snippets}/project/is-submit-allowed/curl-request.adoc[]
-
-==== false when details not provided
-===== Success
-====== Request
-include::{snippets}/project/is-submit-allowed-returns-false-when-details-not-provided/http-request.adoc[]
-include::{snippets}/project/is-submit-allowed-returns-false-when-details-not-provided/path-parameters.adoc[]
-
-====== Response
-include::{snippets}/project/is-submit-allowed-returns-false-when-details-not-provided/http-response.adoc[]
-
-====== Curl Example
-include::{snippets}/project/is-submit-allowed-returns-false-when-details-not-provided/curl-request.adoc[]
-
 === Upload Collaboration Agreement Document during Project Setup
 For failure cases, please refer to the documentation for Form Input Response File Uploads.
 
