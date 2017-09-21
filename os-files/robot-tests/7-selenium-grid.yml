@@ -64,7 +64,7 @@ items:
           - name: SCREEN_HEIGHT
             value: "2800"
           - name: JAVA_OPTS
-            value: "-Xmx512m"
+            value: "-Xms1024m -Xmx1024m"
           - name: POOL_MAX
             description: Max thread count for incoming and outgoing connections
             value: "30000"

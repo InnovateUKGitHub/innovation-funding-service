@@ -30,8 +30,8 @@ items:
           - containerPort: 443
           - containerPort: 8143
           resources:
-            limits:
-              memory: 100M
+            requests:
+              memory: 50M
     test: false
     triggers:
     - type: ConfigChange

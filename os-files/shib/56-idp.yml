@@ -69,8 +69,10 @@ items:
           - containerPort: 9443
           - containerPort: 9080
           resources:
+            requests:
+              memory: 500M
             limits:
-              memory: 1024M
+              memory: 2058M
           test: false
   triggers:
   - type: ConfigChange
