@@ -145,7 +145,7 @@ public class OrganisationFinanceHandlerTest {
 
     @Test
     public void testGetOrganisationFinancesMaterials() throws Exception {
-        Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId());
+        Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId(), competition);
 
         assertEquals("Testing equality for: " + FinanceRowType.MATERIALS.getType(),
                 new BigDecimal(500), organisationFinances.get(FinanceRowType.MATERIALS).getTotal());
@@ -153,24 +153,24 @@ public class OrganisationFinanceHandlerTest {
 
     @Test
     public void testGetOrganisationFinancesOtherCosts() throws Exception {
-        Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId());
+        Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId(), competition);
         assertEquals("Testing equality for; "+ FinanceRowType.OTHER_COSTS.getType(), new BigDecimal(0), organisationFinances.get(FinanceRowType.OTHER_COSTS).getTotal());
     }
 
     @Test
     public void testGetOrganisationFinancesCapitalUsage() throws Exception {
-        Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId());
+        Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId(), competition);
         assertEquals("Testing equality for; "+ FinanceRowType.CAPITAL_USAGE.getType(), new BigDecimal(20000).setScale(2), organisationFinances.get(FinanceRowType.CAPITAL_USAGE).getTotal().setScale(2));
     }
     @Test
     public void testGetOrganisationFinancesSubcontractingCost() throws Exception {
-        Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId());
+        Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId(), competition);
         assertEquals("Testing equality for; "+ FinanceRowType.SUBCONTRACTING_COSTS.getType(), new BigDecimal(11).setScale(2), organisationFinances.get(FinanceRowType.SUBCONTRACTING_COSTS).getTotal().setScale(2));
     }
 
     @Test
     public void testGetOrganisationFinancesLabour() throws Exception {
-        Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId());
+        Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId(), competition);
         LabourCostCategory labourCategory = (LabourCostCategory) organisationFinances.get(FinanceRowType.LABOUR);
         labourCategory.getWorkingDaysPerYearCostItem().setLabourDays(25);
         labourCategory.calculateTotal();
@@ -181,7 +181,7 @@ public class OrganisationFinanceHandlerTest {
 
     @Test
     public void testGetOrganisationFinanceTotals() throws Exception {
-        Map<FinanceRowType, FinanceRowCostCategory> expected = handler.getOrganisationFinances(applicationFinance.getId());
+        Map<FinanceRowType, FinanceRowCostCategory> expected = handler.getOrganisationFinances(applicationFinance.getId(), competition);
         expected.values().forEach(costCategory -> costCategory.setCosts(new ArrayList<>()));
         Map<FinanceRowType, FinanceRowCostCategory> obtained = handler.getOrganisationFinanceTotals(applicationFinance.getId(), competition);
 
