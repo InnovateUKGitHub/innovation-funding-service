@@ -319,8 +319,8 @@
 
         <div class="assign-team">
             <!--/* Reassign question */-->
-            <label th:for="'assign'+${question.id}">Reassign question to</label>
-            <select name="assign_question" th:id="'assign'+${question.id}" class="prog-menu form-control">
+            <label th:for="'assign'+${question.id}">Assign question to</label>
+            <select name="assign_question" th:id="'assign'+${question.id}" class="prog-menu">
                 <th:block th:each="assignableApplicant : ${model.assignableApplicants}">
                     <option th:value="${question.id}+'_'+${assignableApplicant.processRole.id}"
                             th:unless="${model.isAssignedTo(assignableApplicant)}"
@@ -335,7 +335,7 @@
                     <option th:text="${pendingAssignableUser.name + ' (pending)'}"  disabled="disabled"/>
                 </th:block>
             </select>
-            <button type="submit" class="button">Reassign</button>
+            <button type="submit">Reassign</button>
         </div>
         <th:block th:unless="${hideAssignedTo}"
                   th:include="question-type/form-elements :: current-assignee (${model})" />

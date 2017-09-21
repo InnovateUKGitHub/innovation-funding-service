@@ -131,16 +131,20 @@
     .assign-team {
       background: $grey-4;
     }
+
+    .assign-button {
+      @extend .visuallyhidden;
+    }
   }
 
   .assign-button {
     position: absolute;
-    top: -25px;
+    top: -28px;
     left: 88px;
 
     .action-required {
       position: relative;
-      top: 5px;
+      top: 8px;
       left: 8px;
     }
   }
