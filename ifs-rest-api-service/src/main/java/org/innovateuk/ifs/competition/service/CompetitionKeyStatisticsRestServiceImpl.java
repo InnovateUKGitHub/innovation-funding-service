@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.service;
 
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelInviteStatisticsResource;
 import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelKeyStatisticsResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
@@ -48,5 +49,10 @@ public class CompetitionKeyStatisticsRestServiceImpl extends BaseRestService imp
     @Override
     public RestResult<AssessmentPanelKeyStatisticsResource> getAssessmentPanelKeyStatisticsByCompetition(long competitionId) {
         return getWithRestResult(format("%s/%s/%s",competitionKeyStatisticsRestURL, competitionId, "panel"), AssessmentPanelKeyStatisticsResource.class);
+    }
+
+    @Override
+    public RestResult<AssessmentPanelInviteStatisticsResource> getAssessmentPanelInviteStatisticsByCompetition(long competitionId) {
+        return getWithRestResult(format("%s/%s/%s",competitionKeyStatisticsRestURL, competitionId, "panelInvites"), AssessmentPanelInviteStatisticsResource.class);
     }
 }
