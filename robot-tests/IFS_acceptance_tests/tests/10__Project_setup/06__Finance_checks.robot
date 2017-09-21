@@ -208,7 +208,7 @@ Project finance user can view finance overview for the consortium
     When the user clicks the button/link    link=Project finance overview
     Then the user should see the element    jQuery=h1:contains("Finance overview")
     # the below figures are listed as:    RowNumber    StartDate    Duration    TotalProjectCost    GrantAppliedFor    OtherPublicSectorFunding    Total%Grant
-    And the categories are verified for Overview section    1    1 Oct 2020    3 months    £ 402,797    £ 116,596    £ 4,936    29%
+    And the categories are verified for Overview section    1    1 Oct 2020    3 months    £ 402,797    £ 117,586    £ 4,936    29%
 
 Project finance user can view finances summary for the consortium
     [Documentation]    INFUND-4846
@@ -220,13 +220,13 @@ Project finance user can view finances summary for the consortium
     And the Categories Are Verified For Finances Summary Section    1    £ 200,903    30%    £ 60,271    £ 2,468    £ 138,164
     #Check finances summary for academic user
     When the user should see the text in the element               jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(2) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
-    Then the Categories Are Verified For Finances Summary Section    2    £ 990    0%    £ 0    £ 0    £ 990
+    Then the Categories Are Verified For Finances Summary Section    2    £ 990    100%    £ 990    £ 0    £ 0
     #Check finances summary for non lead partner
     When the user should see the text in the element               jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(3) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
     Then the Categories Are Verified For Finances Summary Section    3    £ 200,903    30%    £ 60,271    £ 2,468    £ 138,164
     #Check total
     When the user should see the text in the element               jQuery=h3:contains("Finances summary") + * tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
-    And The Total Calculation For Finances Summary Are Verified    1    £ 402,797    £ 120,542    £ 4,936    £ 277,319
+    And The Total Calculation For Finances Summary Are Verified    1    £ 402,797    £ 121,532    £ 4,936    £ 276,329
 
 Project finance can see finance breakdown for different categories
     [Documentation]    INFUND-4846
@@ -632,7 +632,7 @@ Project finance user can see updated finance overview after lead changes to elig
     [Tags]
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(3)    £ 373,928
-    And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(4)    £ 107,935
+    And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(4)    £ 108,925
     And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(6)    29%
 
 Project finance user can see the Eligibility check page for the partner
@@ -776,7 +776,7 @@ Project finance user can see updated finance overview after partner changes to e
     Given log in as a different user    &{internal_finance_credentials}
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/
     Then the user should see the text in the element   css=.table-overview tr:nth-child(1) td:nth-child(3)    £ 345,059
-    And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(4)    £ 99,275
+    And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(4)    £ 100,265
     And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(6)    29%
 
 Project finance can see updated finance breakdown for different categories
@@ -817,7 +817,7 @@ Project finance user can view Updated finance overview for the consortium
     When the user clicks the button/link    link=Project finance overview
     Then the user should see the element    jQuery=h1:contains("Finance overview")
     # the below figures are listed as:       RowNumber  StartDate      Duration    TotalProjectCost    GrantAppliedFor     OtherPublicSectorFunding    Total%Grant
-    And the categories are verified for Overview section    1   1 Oct 2020  3 months    £ 345,059   £ 99,275    £ 4,936     29%
+    And the categories are verified for Overview section    1   1 Oct 2020  3 months    £ 345,059   £ 100,265    £ 4,936     29%
 
 Project finance user can view updated finances summary for the consortium
     [Documentation]    INFUND-4846
@@ -829,13 +829,13 @@ Project finance user can view updated finances summary for the consortium
     And the Categories Are Verified For Finances Summary Section   1   £ 172,034   30%     £ 51,610    £ 2,468     £ 117,956
     #check breakdown for academic user
     When the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tbody tr:nth-of-type(2) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
-    Then the Categories Are Verified For Finances Summary Section   2   £ 990   0%  £ 0     £ 0     £ 990
+    Then the Categories Are Verified For Finances Summary Section   2   £ 990   100%  £ 990     £ 0     £ 0
     #check breakdown for non lead partner
     When the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tbody tr:nth-of-type(3) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
     Then the Categories Are Verified For Finances Summary Section   3   £ 172,034  30%     £ 51,610    £ 2,468     £ 117,956
     #check total
     And the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
-    And The Total Calculation For Finances Summary Are Verified    1   £ 345,059   £ 103,221    £ 4,936     £ 236,902
+    And The Total Calculation For Finances Summary Are Verified    1   £ 345,059   £ 104,211    £ 4,936     £ 235,912
 
 Project finance user can view Lead Partner's changes to finances
     [Documentation]    INFUND-4837
@@ -1100,7 +1100,7 @@ Custom suite setup
 the table row has expected values
     the user sees the text in the element    css=.table-overview tbody td:nth-child(2)    3 months
     the user sees the text in the element    css=.table-overview tbody td:nth-child(3)    £ 402,797
-    the user sees the text in the element    css=.table-overview tbody td:nth-child(4)    £ 116,596
+    the user sees the text in the element    css=.table-overview tbody td:nth-child(4)    £ 117,586
     the user sees the text in the element    css=.table-overview tbody td:nth-child(5)    £ 4,936
     the user sees the text in the element    css=.table-overview tbody td:nth-child(6)    29%
 
