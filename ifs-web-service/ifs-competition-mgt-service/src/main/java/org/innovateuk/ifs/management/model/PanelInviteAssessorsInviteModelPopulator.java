@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.model;
 
+import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
@@ -22,7 +23,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public class PanelInviteAssessorsInviteModelPopulator extends PanelInviteAssessorsModelPopulator<PanelInviteAssessorsInviteViewModel> {
 
     @Autowired
-    private CompetitionInviteRestService competitionInviteRestService;
+    private AssessmentPanelInviteRestService assessmentPanelInviteRestService;
 
     @Autowired
     private CompetitionsRestService competitionsRestService;
@@ -34,7 +35,7 @@ public class PanelInviteAssessorsInviteModelPopulator extends PanelInviteAssesso
 
         PanelInviteAssessorsInviteViewModel model = super.populateModel(competition);
 
-        AssessorCreatedInvitePageResource pageResource = competitionInviteRestService.getCreatedInvites(competition.getId(), page)
+        AssessorCreatedInvitePageResource pageResource = assessmentPanelInviteRestService.getCreatedInvites(competition.getId(), page)
                 .getSuccessObjectOrThrowException();
 
         List<PanelInvitedAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);

@@ -2,11 +2,8 @@ package org.innovateuk.ifs.management.model;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelInviteStatisticsResource;
-import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
-import org.innovateuk.ifs.invite.resource.CompetitionInviteStatisticsResource;
-import org.innovateuk.ifs.management.viewmodel.InviteAssessorsViewModel;
 import org.innovateuk.ifs.management.viewmodel.PanelInviteAssessorsViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,7 +37,7 @@ abstract class PanelInviteAssessorsModelPopulator<ViewModelType extends PanelInv
         model.setAssessorsInvited(statisticsResource.getInvited());
         model.setAssessorsAccepted(statisticsResource.getAccepted());
         model.setAssessorsDeclined(statisticsResource.getDeclined());
-        model.setAssessorsStaged(statisticsResource.getInviteList());
+        model.setAssessorsStaged(statisticsResource.getPending());
         return model;
     }
 

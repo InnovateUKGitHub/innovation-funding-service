@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.model;
 
+import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
@@ -31,7 +32,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public class PanelInviteAssessorsFindModelPopulator extends PanelInviteAssessorsModelPopulator<PanelInviteAssessorsFindViewModel> {
 
     @Autowired
-    private CompetitionInviteRestService competitionInviteRestService;
+    private AssessmentPanelInviteRestService assessmentPanelInviteRestService;
 
     @Autowired
     private CompetitionsRestService competitionsRestService;
@@ -45,13 +46,9 @@ public class PanelInviteAssessorsFindModelPopulator extends PanelInviteAssessors
 
         PanelInviteAssessorsFindViewModel model = super.populateModel(competition);
 
-        AssessorInviteOverviewPageResource pageResource = competitionInviteRestService.getInvitationOverview(
+        AvailableAssessorPageResource pageResource = assessmentPanelInviteRestService.getAvailableAssessors(
                 competition.getId(),
-                page,
-                empty(),
-                singletonList(ACCEPTED),
-                empty()
-        )
+                page)
                 .getSuccessObjectOrThrowException();
 
         List<PanelAvailableAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
@@ -63,7 +60,7 @@ public class PanelInviteAssessorsFindModelPopulator extends PanelInviteAssessors
         return model;
     }
 
-    private PanelAvailableAssessorRowViewModel getRowViewModel(AssessorInviteOverviewResource assessorInviteOverviewResource) {
+    private PanelAvailableAssessorRowViewModel getRowViewModel(AvailableAssessorResource assessorInviteOverviewResource) {
         return new PanelAvailableAssessorRowViewModel(
                 assessorInviteOverviewResource.getId(),
                 assessorInviteOverviewResource.getName(),

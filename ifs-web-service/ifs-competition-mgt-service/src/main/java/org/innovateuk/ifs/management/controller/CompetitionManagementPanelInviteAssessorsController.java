@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -50,6 +51,9 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
 
     @Autowired
     private CompetitionInviteRestService competitionInviteRestService;
+
+    @Autowired
+    private AssessmentPanelInviteRestService assessmentPanelInviteRestService;
 
     @Autowired
     private PanelInviteAssessorsFindModelPopulator panelInviteAssessorsFindModelPopulator;
@@ -199,7 +203,7 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
         Supplier<String> failureView = () -> redirectToFind(competitionId, page, innovationArea);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            RestResult<Void> restResult = competitionInviteRestService.inviteUsers(
+            RestResult<Void> restResult = assessmentPanelInviteRestService.inviteUsers(
                     newSelectionFormToResource(submittedSelectionForm, competitionId));
 
             return validationHandler.addAnyErrors(restResult)

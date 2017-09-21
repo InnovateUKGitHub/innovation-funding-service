@@ -10,7 +10,7 @@ public class AssessmentPanelInviteStatisticsResource {
     private int invited;
     private int accepted;
     private int declined;
-    private int inviteList;
+    private int pending;
 
     public int getInvited() {
         return invited;
@@ -36,12 +36,12 @@ public class AssessmentPanelInviteStatisticsResource {
         this.declined = declined;
     }
 
-    public int getInviteList() {
-        return inviteList;
+    public int getPending() {
+        return pending;
     }
 
-    public void setInviteList(int inviteList) {
-        this.inviteList = inviteList;
+    public void setPending(int pending) {
+        this.pending = pending;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class AssessmentPanelInviteStatisticsResource {
                 .append(invited, that.invited)
                 .append(accepted, that.accepted)
                 .append(declined, that.declined)
-                .append(inviteList, that.inviteList)
+                .append(pending, that.pending)
                 .isEquals();
     }
 
@@ -66,7 +66,7 @@ public class AssessmentPanelInviteStatisticsResource {
                 .append(invited)
                 .append(accepted)
                 .append(declined)
-                .append(inviteList)
+                .append(pending)
                 .toHashCode();
     }
 }

@@ -13,11 +13,11 @@ import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
-import org.innovateuk.ifs.invite.resource.CompetitionInviteStatisticsResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
@@ -32,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.WITHDRAWN;
@@ -44,8 +43,6 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
-import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
-import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.workflow.resource.State.*;
@@ -154,27 +151,12 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     public ServiceResult<AssessmentPanelKeyStatisticsResource> getAssessmentPanelKeyStatistics(long competitionId) {
         AssessmentPanelKeyStatisticsResource assessmentPanelKeyStatisticsResource = new AssessmentPanelKeyStatisticsResource();
         assessmentPanelKeyStatisticsResource.setApplicationsInPanel(
-                applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateState(competitionId, IN_PANEL)
-        );
-        List<ParticipantStatus> assessmentPanelStatuses = assessmentPanelInviteRepository.getByCompetitionId(competitionId)
-                .stream()
-                .map(Invite::getId)
-                .map(id -> competitionParticipantRepository
-                        .getByInviteId(id)
-                        .getStatus())
-                .collect(toList());
-        assessmentPanelKeyStatisticsResource.setAssessorsAccepted(
-                (int) assessmentPanelStatuses
-                        .stream()
-                        .filter(status -> status.equals(ParticipantStatus.ACCEPTED))
-                        .count()
-        );
-        assessmentPanelKeyStatisticsResource.setAssessorsPending(
-                (int) assessmentPanelStatuses
-                        .stream()
-                        .filter(status -> status.equals(ParticipantStatus.PENDING))
-                        .count()
-        );
+                applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateState(competitionId, IN_PANEL));
+        List<Long> assessmentPanelInviteIds = simpleMap(assessmentPanelInviteRepository.getByCompetitionId(competitionId), Invite::getId);
+
+        assessmentPanelKeyStatisticsResource.setAssessorsAccepted(getParticipantCountStatistic(competitionId, ParticipantStatus.ACCEPTED, assessmentPanelInviteIds));
+        assessmentPanelKeyStatisticsResource.setAssessorsPending(getParticipantCountStatistic(competitionId, ParticipantStatus.PENDING, assessmentPanelInviteIds));
+
         return serviceSuccess(assessmentPanelKeyStatisticsResource);
     }
 
@@ -182,28 +164,17 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     public ServiceResult<AssessmentPanelInviteStatisticsResource> getAssessmentPanelInviteStatistics(long competitionId) {
         AssessmentPanelInviteStatisticsResource statisticsResource = new AssessmentPanelInviteStatisticsResource();
         statisticsResource.setInvited(assessmentPanelInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT)));
-        statisticsResource.setInviteList(assessmentPanelInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(CREATED)));
+        List<Long> assessmentPanelInviteIds = simpleMap(assessmentPanelInviteRepository.getByCompetitionId(competitionId), Invite::getId);
 
-        List<ParticipantStatus> assessmentPanelStatuses = assessmentPanelInviteRepository.getByCompetitionId(competitionId)
-                .stream()
-                .map(Invite::getId)
-                .map(id -> competitionParticipantRepository
-                        .getByInviteId(id)
-                        .getStatus())
-                .collect(toList());
-        statisticsResource.setAccepted(
-                (int) assessmentPanelStatuses
-                        .stream()
-                        .filter(status -> status.equals(ParticipantStatus.ACCEPTED))
-                        .count()
-        );
-        statisticsResource.setDeclined(
-                (int) assessmentPanelStatuses
-                        .stream()
-                        .filter(status -> status.equals(ParticipantStatus.REJECTED))
-                        .count()
-        );
+        statisticsResource.setAccepted(getParticipantCountStatistic(competitionId, ParticipantStatus.ACCEPTED, assessmentPanelInviteIds));
+        statisticsResource.setDeclined(getParticipantCountStatistic(competitionId, ParticipantStatus.REJECTED, assessmentPanelInviteIds));
+        statisticsResource.setPending(getParticipantCountStatistic(competitionId, ParticipantStatus.PENDING, assessmentPanelInviteIds));
+
         return serviceSuccess(statisticsResource);
+    }
+
+    private int getParticipantCountStatistic(long competitionId, ParticipantStatus status, List<Long> inviteIds) {
+        return competitionParticipantRepository.countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, ASSESSOR, status, inviteIds);
     }
 
     @Override
