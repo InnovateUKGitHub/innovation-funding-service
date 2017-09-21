@@ -62,7 +62,7 @@ Mark application details as incomplete
 
 
 the Application details are completed
-    ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  jQuery=img.complete[alt*="Application details"]
+    ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=img.complete[alt*="Application details"]
     Run Keyword If  '${status}' == 'FAIL'  the applicant completes the application details
 
 the applicant completes the application details
@@ -72,8 +72,8 @@ the applicant completes the application details
     the user clicks the button/link       jQuery=label[for^="researchCategoryChoice"]:contains("Experimental development")
     the user clicks the button/link       jQuery=label[for^="researchCategoryChoice"]:contains("Experimental development")
     the user clicks the button/link       jQuery=button:contains(Save)
-    the user clicks the button/link       jQuery=label[for="application.resubmission-no"]
-    the user clicks the button/link       jQuery=label[for="application.resubmission-no"]
+    the user clicks the button/link       css=label[for="application.resubmission-no"]
+    the user clicks the button/link       css=label[for="application.resubmission-no"]
     # those Radio buttons need to be clicked twice.
     The user enters text to a text field  id=application_details-startdate_day  18
     The user enters text to a text field  id=application_details-startdate_year  2018
@@ -115,7 +115,7 @@ the user has read only view once section is marked complete
 the user fills in Labour
     the user clicks the button/link            jQuery=button:contains("Labour")
     the user should see the element            css=.labour-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input
-    the user enters text to a text field       jQuery=input[id$="labourDaysYearly"]    230
+    the user enters text to a text field       css=input[id$="labourDaysYearly"]    230
     the user should see the element            jQuery=input.form-control[name^=labour-role]:text[value=""]:first
     the user enters text to a text field       jQuery=input.form-control[name^=labour-role]:text[value=""]:first    anotherrole
     the user enters text to a text field       jQuery=input.form-control[name^=labour-gross][value=""]:first    120000
@@ -159,22 +159,22 @@ the user fills in Material
 
 the user fills in Capital usage
     the user clicks the button/link       jQuery=button:contains("Capital usage")
-    the user enters text to a text field  jQuery=textarea.form-control[name^=capital_usage-description]  some description
+    the user enters text to a text field  css=textarea.form-control[name^=capital_usage-description]  some description
     Click Element                         jQuery=label:contains("New")
     the user enters text to a text field  css=.form-finances-capital-usage-depreciation  10
     the user enters text to a text field  css=.form-finances-capital-usage-npv  5000
     the user enters text to a text field  css=.form-finances-capital-usage-residual-value  25
     the user enters text to a text field  css=.form-finances-capital-usage-utilisation   100
-    focus                                 jQuery=.section-total-summary > [data-mirror^="#section-total"]
+    focus                                 css=.section-total-summary > [data-mirror^="#section-total"]
     textfield should contain              css=#capital_usage .form-row:nth-of-type(1) [readonly]  £ 4,975
     the user clicks the button/link       jQuery=button:contains("Capital usage")
 
 the user fills in Subcontracting costs
     the user clicks the button/link       jQuery=button:contains("Subcontracting costs")
     the user enters text to a text field  css=.form-finances-subcontracting-company  SomeName
-    the user enters text to a text field  jQuery=input.form-control[name^=subcontracting-country]  Netherlands
-    the user enters text to a text field  jQuery=textarea.form-control[name^=subcontracting-role]  Quality Assurance
-    the user enters text to a text field  jQuery=input.form-control[name^=subcontracting-subcontractingCost]  1000
+    the user enters text to a text field  css=input.form-control[name^=subcontracting-country]  Netherlands
+    the user enters text to a text field  css=textarea.form-control[name^=subcontracting-role]  Quality Assurance
+    the user enters text to a text field  css=input.form-control[name^=subcontracting-subcontractingCost]  1000
     the user clicks the button/link       jQuery=button:contains("Subcontracting costs")
 
 the user fills in Travel and subsistence
@@ -187,12 +187,12 @@ the user fills in Travel and subsistence
 the user fills in Other costs
     the user clicks the button/link       jQuery=button:contains("Other costs")
     the user removes prev costs if there are any
-    the user enters text to a text field  jQuery=textarea.form-control[name^=other_costs-description]  some other costs
-    the user enters text to a text field  jQuery=input.form-control[name^=other_costs-otherCost]  50
+    the user enters text to a text field  css=textarea.form-control[name^=other_costs-description]  some other costs
+    the user enters text to a text field  css=input.form-control[name^=other_costs-otherCost]  50
     the user clicks the button/link       jQuery=button:contains("Other costs")
 
 the user removes prev costs if there are any
-    ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  jQuery=table[id="other-costs-table"] tr:contains("Remove")
+    ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=table[id="other-costs-table"] tr:contains("Remove")
     Run Keyword If    '${status}' == 'PASS'    the user clicks the button/link  jQuery=table[id="other-costs-table"] tr:contains("Remove")
 
 the user fills the organisation details with Project growth table
@@ -247,13 +247,13 @@ the user fills in the funding information
     the user has read only view once section is marked complete
 
 the user should see all finance subsections complete
-    the user should see the element  jQuery=li:nth-of-type(1) .task-status-complete
-    the user should see the element  jQuery=li:nth-of-type(2) .task-status-complete
-    the user should see the element  jQuery=li:nth-of-type(3) .task-status-complete
+    the user should see the element  css=li:nth-of-type(1) .task-status-complete
+    the user should see the element  css=li:nth-of-type(2) .task-status-complete
+    the user should see the element  css=li:nth-of-type(3) .task-status-complete
 
 the user should see all finance subsections incomplete
-    the user should see the element  jQuery=li:nth-of-type(1) .action-required
-    the user should see the element  jQuery=li:nth-of-type(2) .action-required
+    the user should see the element  css=li:nth-of-type(1) .action-required
+    the user should see the element  css=li:nth-of-type(2) .action-required
     the user should see the element  jQuery=h3:contains("Your funding")
 
 Remove previous rows
@@ -313,8 +313,8 @@ the user completes the new account creation
     the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     the user clicks the button/link             link=Sign in
     then the user should see the text in the page    Sign in
-    the user enters text to a text field         jQuery=input[id="username"]  ${email}
-    the user enters text to a text field        jQuery=input[id="password"]  ${correct_password}
+    the user enters text to a text field         css=input[id="username"]  ${email}
+    the user enters text to a text field        css=input[id="password"]  ${correct_password}
     the user clicks the button/link              jQuery=button:contains("Sign in")
 
 the applicant adds some content and marks this section as complete
