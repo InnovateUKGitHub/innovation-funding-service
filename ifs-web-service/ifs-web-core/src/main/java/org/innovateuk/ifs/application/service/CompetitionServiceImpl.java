@@ -180,4 +180,5 @@ public class CompetitionServiceImpl implements CompetitionService {
     public CompetitionResource createNonIfs() {
         return competitionsRestService.createNonIfs().getSuccessObjectOrThrowException();
     }
+
 }

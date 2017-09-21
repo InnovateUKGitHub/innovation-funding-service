@@ -117,7 +117,6 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
         assertFalse(rules.innovationLeadCanViewCompetitionAssignedToThem(competition, innovationLeadNotAssignedToCompetition));
     }
 
-
     @Test
     public void testOnlyInnovationLeadUsersAssignedToCompCanAccessCompInSearchResults() {
         List<RoleResource> innovationLeadRoles = singletonList(newRoleResource().withType(UserRoleType.INNOVATION_LEAD).build());
@@ -131,4 +130,5 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
         assertTrue(rules.innovationLeadCanViewCompetitionAssignedToThemInSearchResults(competitionSearchResultItem, innovationLeadAssignedToCompetition));
         assertFalse(rules.innovationLeadCanViewCompetitionAssignedToThemInSearchResults(competitionSearchResultItem, innovationLeadNotAssignedToCompetition));
     }
+
 }

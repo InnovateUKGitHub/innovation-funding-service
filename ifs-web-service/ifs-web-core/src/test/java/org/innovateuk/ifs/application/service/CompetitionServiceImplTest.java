@@ -277,4 +277,5 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         service.removeInnovationLead(competitionId, innovationLeadUserId);
         verify(competitionsRestService, only()).removeInnovationLead(competitionId, innovationLeadUserId);
     }
+
 }

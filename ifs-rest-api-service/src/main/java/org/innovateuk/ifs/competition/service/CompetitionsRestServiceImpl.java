@@ -174,4 +174,9 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     public RestResult<CompetitionResource> createNonIfs() {
         return postWithRestResult(competitionsRestURL + "/non-ifs", CompetitionResource.class);
     }
+
+    @Override
+    public RestResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions() {
+        return getWithRestResult(competitionsRestURL +  "/feedback-released", competitionSearchResultItemListType());
+    }
 }

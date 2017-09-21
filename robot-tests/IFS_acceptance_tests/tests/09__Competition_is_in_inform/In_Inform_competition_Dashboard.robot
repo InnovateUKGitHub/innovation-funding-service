@@ -20,10 +20,20 @@ Documentation     INFUND-7365 Inflight competition dashboards: Inform dashboard
 ...               INFUND-8876 No back navigation on applicant feedback view
 ...
 ...               INFUND-8066 Filter on 'Manage funding notifications' dashboard
+...
+...               IFS-1458 View unsuccessful applications after Inform state: initial navigation
+...
+...               IFS-1459 View unsuccessful applications after Inform state: list
+...
+...               IFS-1517 Internal user: competitions listing in Previous tab
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    Close browser and delete emails
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
+
+*** Variables ***
+${proj_electric_drive}  ${application_ids['Electric Drive']}
+${proj_app_with_ineligible}  ${application_ids['Application with ineligible']}
 
 *** Test Cases ***
 Competition Dashboard
@@ -87,6 +97,26 @@ Unsuccessful applicant sees unsuccessful alert
     When the user clicks the button/link    jQuery=a:contains("Electric Drive")
     And the user should see the element    jQuery=.warning-alert:contains("Your application has not been successful in this competition")
 
+Internal user can view ineligible and unsuccessful applications in previous tab
+    [Documentation]  IFS-1458 IFS-1459 IFS-1517
+    [Tags]  HappyPath
+    Given log in as a different user         &{Comp_admin1_credentials}
+    When the user clicks the button/link     jQuery=a:contains("Previous")
+    And the user clicks the button/link      jQuery=a:contains("${NOT_EDITABLE_COMPETITION_NAME}")
+    And the user clicks the button/link      jQuery=a:contains("Unsuccessful applications")
+    Then the user should see the element     jQuery=td:contains("${proj_electric_drive}") + td:contains("Electric Drive")
+    And the user should see the element      jQuery=td:contains("${proj_electric_drive}") ~ td:contains("Unsuccessful")
+    And the user should not see the element  jQuery=td:contains("${INFORM_COMPETITION_NAME_1}")
+    And the user should not see the element  jQuery=td:contains("${INFORM_COMPETITION_NAME_2} ")
+    When the user navigates to the page      ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/unsuccessful
+    Then the user should see the element     jQuery=td:contains("${proj_app_with_ineligible}") + td:contains("Application with ineligible")
+    And the user should see the element      jQuery=td:contains("${proj_app_with_ineligible}") ~ td:contains("Ineligible")
+    When the user clicks the button/link     jQuery=a:contains("${proj_app_with_ineligible}")
+    # TODO To uncomment below line once IFS-1654 is resolved
+    # Then the user should not see the element   jQuery=a.button:contains("Reinstate application")
+    And the user clicks the button/link      link=Back
+    Then the user should see the element     jQuery=h1:contains("Unsuccessful applications")
+
 Successful applicant see successful alert
     [Documentation]    INFUND-7861
     [Tags]    Email    HappyPath
@@ -119,9 +149,9 @@ User can see feedback to individual questions
 The finance details are shown
     [Documentation]    INFUND-8168
     [Tags]    Email
-    When the user clicks the button/link    jQuery=.collapsible button
-    Then the user should see the element    jQuery=.collapsible div[aria-hidden="false"]
-    And the user should not see the element    jQuery=.collapsible div[aria-hidden="true"]
+    When the user clicks the button/link    css=.collapsible button
+    Then the user should see the element    css=.collapsible div[aria-hidden="false"]
+    And the user should not see the element    css=.collapsible div[aria-hidden="true"]
 
 Selecting the dashboard link takes user back to the dashboard
     [Documentation]    INFUND-8876
@@ -158,7 +188,7 @@ User sends the notification to enable release feedback
     the user clicks the button/link    jQuery=a:contains("Manage funding notifications")
     the user selects the checkbox     app-row-${application_ids['Electric Drive']}
     the user clicks the button/link    jQuery=button:contains("Write and send email")
-    the user enters text to a text field    jQuery=.editor    Text
+    the user enters text to a text field    css=.editor    Text
     the user clicks the button/link    jQuery=button:contains("Send email to all applicants")
     the user clicks the button/link    jQuery=.send-to-all-applicants-modal button:contains("Send email to all applicants")
     the user clicks the button/link    jQuery=.link-back:contains("Competition")

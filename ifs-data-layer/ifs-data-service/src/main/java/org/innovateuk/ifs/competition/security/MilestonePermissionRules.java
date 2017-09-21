@@ -25,4 +25,9 @@ public class MilestonePermissionRules extends BasePermissionRules {
     public boolean allInternalUsersCanViewCompetitionMilestonesOtherThanInnovationLeads(Long competitionId, UserResource user) {
         return isInternal(user) && !isInnovationLead(user);
     }
+
+    @PermissionRule(value = "VIEW_MILESTONE_BY_TYPE", description = "Internal users can view milestones, by type, on any competition.")
+    public boolean allInternalUsersCanViewCompetitionMilestonesByType(Long competitionId, UserResource user) {
+        return isInternal(user);
+    }
 }
