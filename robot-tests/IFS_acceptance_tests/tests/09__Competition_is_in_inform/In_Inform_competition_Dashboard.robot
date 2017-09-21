@@ -119,9 +119,9 @@ User can see feedback to individual questions
 The finance details are shown
     [Documentation]    INFUND-8168
     [Tags]    Email
-    When the user clicks the button/link    jQuery=.collapsible button
-    Then the user should see the element    jQuery=.collapsible div[aria-hidden="false"]
-    And the user should not see the element    jQuery=.collapsible div[aria-hidden="true"]
+    When the user clicks the button/link    css=.collapsible button
+    Then the user should see the element    css=.collapsible div[aria-hidden="false"]
+    And the user should not see the element    css=.collapsible div[aria-hidden="true"]
 
 Selecting the dashboard link takes user back to the dashboard
     [Documentation]    INFUND-8876
@@ -158,7 +158,7 @@ User sends the notification to enable release feedback
     the user clicks the button/link    jQuery=a:contains("Manage funding notifications")
     the user selects the checkbox     app-row-${application_ids['Electric Drive']}
     the user clicks the button/link    jQuery=button:contains("Write and send email")
-    the user enters text to a text field    jQuery=.editor    Text
+    the user enters text to a text field    css=.editor    Text
     the user clicks the button/link    jQuery=button:contains("Send email to all applicants")
     the user clicks the button/link    jQuery=.send-to-all-applicants-modal button:contains("Send email to all applicants")
     the user clicks the button/link    jQuery=.link-back:contains("Competition")

@@ -64,7 +64,6 @@ Project Finance can see the status of projects in PS
     And the user should not see the element  css=#table-project-status tr:nth-of-type(2) td:nth-of-type(3).status.waiting
     And the user should see the element     css=#table-project-status tr:nth-of-type(2) td:nth-of-type(4).status.action
 
-
 # Project Finance can see Bank Details - testcase moved to 04__experian_feedback.robot
 Other internal users cannot see Bank details or Finance checks
     [Documentation]    INFUND-4903, INFUND-5720

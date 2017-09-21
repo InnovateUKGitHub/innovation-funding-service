@@ -118,5 +118,5 @@ the user should see the correct inputs in the declaration form
 
 the user should not see the validation error
     [Arguments]    ${ERROR_TEXT}
-    Wait Until Page Contains Element Without Screenshots    jQuery=.error-message
+    Wait Until Page Contains Element Without Screenshots    css=.error-message
     Wait Until Page Contains Without Screenshots    ${ERROR_TEXT}
