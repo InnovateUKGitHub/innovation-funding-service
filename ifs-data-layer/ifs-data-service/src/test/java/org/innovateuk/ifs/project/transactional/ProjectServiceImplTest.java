@@ -18,8 +18,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.test.context.transaction.BeforeTransaction;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -28,6 +26,9 @@ import java.util.*;
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
@@ -54,7 +55,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-@Transactional
 public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> {
 
     @Mock
@@ -365,69 +365,24 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         verify(projectMapperMock).mapToResource(savedProject);
     }
 
-    @BeforeTransaction
-    public void setupDb() {
-
-    }
     @Test
-    @Transactional
-    public void testCreateProjectsFromFundingDecisionsConstrainViolation() throws Exception {
+    public void testCreateProjectsFromFundingDecisionsSaveFails() throws Exception {
 
         Role partnerRole = newRole().withType(PARTNER).build();
-
-        ProjectResource newProjectResource = newProjectResource().build();
-
-        PartnerOrganisation savedProjectPartnerOrganisation = newPartnerOrganisation().
-                withOrganisation(organisation).
-                withLeadOrganisation(true).
-                build();
-
-        Project savedProject = newProject().
-                withId(newProjectResource.getId()).
-                withApplication(application).
-                withProjectUsers(asList(leadPartnerProjectUser, newProjectUser().build())).
-                withPartnerOrganisations(singletonList(savedProjectPartnerOrganisation)).
-                build();
 
         when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
 
         Project newProjectExpectations = createProjectExpectationsFromOriginalApplication();
         when(projectRepositoryMock.save(newProjectExpectations)).thenThrow(new DataIntegrityViolationException("dummy constraint violation"));
 
-        CostCategoryType costCategoryTypeForOrganisation = newCostCategoryType().
-                withCostCategoryGroup(newCostCategoryGroup().
-                        withCostCategories(newCostCategory().withName("Cat1", "Cat2").build(2)).
-                        build()).
-                build();
-
-        when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(savedProject.getId(),
-                organisation.getId())).thenReturn(serviceSuccess(costCategoryTypeForOrganisation));
-
-        when(financeChecksGeneratorMock.createMvpFinanceChecksFigures(savedProject, organisation, costCategoryTypeForOrganisation)).thenReturn(serviceSuccess());
-        when(financeChecksGeneratorMock.createFinanceChecksFigures(savedProject, organisation)).thenReturn(serviceSuccess());
-
-        when(projectDetailsWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
-        when(viabilityWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
-        when(eligibilityWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
-        when(golWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
-        when(projectWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
-
-        when(projectMapperMock.mapToResource(savedProject)).thenReturn(newProjectResource);
-
         Map<Long, FundingDecision> fundingDecisions = new HashMap<>();
         fundingDecisions.put(applicationId, FundingDecision.FUNDED);
-        ServiceResult<Void> project = service.createProjectsFromFundingDecisions(fundingDecisions);
-        assertTrue(project.isSuccess());
-
-        verify(costCategoryTypeStrategyMock).getOrCreateCostCategoryTypeForSpendProfile(savedProject.getId(), organisation.getId());
-        verify(financeChecksGeneratorMock).createMvpFinanceChecksFigures(savedProject, organisation, costCategoryTypeForOrganisation);
-        verify(financeChecksGeneratorMock).createFinanceChecksFigures(savedProject, organisation);
-        verify(projectDetailsWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
-        verify(viabilityWorkflowHandlerMock).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);
-        verify(eligibilityWorkflowHandlerMock).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);
-        verify(golWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
-        verify(projectWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
-        verify(projectMapperMock).mapToResource(savedProject);
+        try {
+            service.createProjectsFromFundingDecisions(fundingDecisions);
+            assertThat("Service failed to throw expected exception.", false);
+        } catch (Exception e) {
+            assertEquals(e.getCause().getCause().getCause().getMessage(),"dummy constraint violation");
+        }
     }
 
     private Project createProjectExpectationsFromOriginalApplication() {

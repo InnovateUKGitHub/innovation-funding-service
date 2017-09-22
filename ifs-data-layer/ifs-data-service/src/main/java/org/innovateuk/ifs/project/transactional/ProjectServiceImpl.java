@@ -104,8 +104,10 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     @Transactional
     public ServiceResult<Void> createProjectsFromFundingDecisions(Map<Long, FundingDecision> applicationFundingDecisions) {
-        long failedProjectCreationCount = applicationFundingDecisions.keySet().stream().filter(d -> applicationFundingDecisions.get(d).equals(FundingDecision.FUNDED)).map(this::createSingletonProjectFromApplicationId).filter(r -> r.isFailure()).count();
+        List<ServiceResult<ProjectResource>> projectCreationResults = applicationFundingDecisions.keySet().stream().filter(d -> applicationFundingDecisions.get(d).equals(FundingDecision.FUNDED)).map(this::createSingletonProjectFromApplicationId).collect(toList());
+        long failedProjectCreationCount = projectCreationResults.stream().filter(r -> r.isFailure()).count();
         if (failedProjectCreationCount > 0) {
+            // this transaction will be rolled back
             return serviceFailure(CREATE_PROJECT_FROM_APPLICATION_FAILS);
         } else {
             return serviceSuccess();
