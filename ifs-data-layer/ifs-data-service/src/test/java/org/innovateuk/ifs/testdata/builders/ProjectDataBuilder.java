@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -67,12 +66,6 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
             projectDetailsService.updateProjectAddress(leadOrganisation.getId(), data.getProject().getId(), OrganisationAddressType.PROJECT, address).getSuccessObjectOrThrowException();
         }));
     }
-
-/*    public ProjectDataBuilder submitProjectDetails() {
-        return with(data -> doAs(data.getProjectManager(), () -> {
-            projectDetailsService.submitProjectDetails(data.getProject().getId(), ZonedDateTime.now()).getSuccessObjectOrThrowException();
-        }));
-    }*/
 
     public ProjectDataBuilder withFinanceContact(String organisationName, String financeContactEmail) {
         return with(data -> {

@@ -323,9 +323,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         UnaryOperator<ProjectDataBuilder> setProjectAddressIfNecessary =
                 builder -> line.projectAddressAdded ? builder.withProjectAddressOrganisationAddress() : builder;
 
-/*        UnaryOperator<ProjectDataBuilder> submitProjectDetailsIfNecessary =
-                builder -> line.projectDetailsSubmitted ? builder.submitProjectDetails() : builder;*/
-
         UnaryOperator<ProjectDataBuilder> setMonitoringOfficerIfNecessary =
                 builder -> !isBlank(line.moFirstName) ?
                         builder.withMonitoringOfficer(line.moFirstName, line.moLastName, line.moEmail, line.moPhoneNumber) : builder;
@@ -355,7 +352,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         testService.doWithinTransaction(() ->
             assignProjectManagerIfNecessary.
                     andThen(setProjectAddressIfNecessary).
-                    //andThen(submitProjectDetailsIfNecessary).
                     andThen(setMonitoringOfficerIfNecessary).
                     andThen(selectFinanceContactsIfNecessary).
                     andThen(submitBankDetailsIfNecessary).
