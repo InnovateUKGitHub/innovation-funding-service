@@ -27,7 +27,7 @@ public class AssessmentPanelInviteStatisticsResourceBuilderTest {
         assertEquals(expectedAssessorInvites, inviteStatisticsResource.getInvited());
         assertEquals(expectedAssessorAccepts, inviteStatisticsResource.getAccepted());
         assertEquals(expectedAssessorRejects, inviteStatisticsResource.getDeclined());
-        assertEquals(expectedAssessorsListed, inviteStatisticsResource.getInviteList());
+        assertEquals(expectedAssessorsListed, inviteStatisticsResource.getPending());
     }
 
     @Test
@@ -48,7 +48,7 @@ public class AssessmentPanelInviteStatisticsResourceBuilderTest {
             assertEquals((int) expectedAssessorInvites[i], inviteStatisticsResources.get(i).getInvited());
             assertEquals((int) expectedAssessorAccepts[i], inviteStatisticsResources.get(i).getAccepted());
             assertEquals((int) expectedAssessorRejects[i], inviteStatisticsResources.get(i).getDeclined());
-            assertEquals((int) expectedAssessorsListed[i], inviteStatisticsResources.get(i).getInviteList());
+            assertEquals((int) expectedAssessorsListed[i], inviteStatisticsResources.get(i).getPending());
         }
     }
 }

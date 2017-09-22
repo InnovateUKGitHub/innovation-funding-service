@@ -18,6 +18,18 @@ import java.util.List;
  */
 public interface CompetitionParticipantRepository extends PagingAndSortingRepository<CompetitionParticipant, Long> {
 
+    String USERS_WITH_ASSESSMENT_PANEL_INVITE = "SELECT invite.user.id " +
+            "FROM AssessmentPanelInvite invite " +
+            "WHERE invite.competition.id = :competitionId " +
+            "AND invite.user IS NOT NULL";
+
+    String PARTICIPANTS_NOT_ON_PANEL = "SELECT competitionParticipant " +
+            "FROM CompetitionParticipant competitionParticipant " +
+            "WHERE competitionParticipant.competition.id = :competitionId " +
+            "AND competitionParticipant.role = 'ASSESSOR' " +
+            "AND competitionParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED " +
+            "AND competitionParticipant.user.id NOT IN (" + USERS_WITH_ASSESSMENT_PANEL_INVITE + ")";
+
     String BY_COMP_AND_STATUS = "SELECT competitionParticipant " +
             "FROM CompetitionParticipant competitionParticipant " +
             "WHERE competitionParticipant.competition.id = :competitionId " +
@@ -119,6 +131,11 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
 
     int countByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
 
+    int countByCompetitionIdAndRoleAndStatusAndInviteIdIn(Long competitionId,
+                                                          CompetitionParticipantRole role,
+                                                          ParticipantStatus status,
+                                                          List<Long> inviteIds);
+
     @Query(PARTICIPANTS_WITHOUT_ASSESSMENTS)
     Page<CompetitionParticipant> findParticipantsWithoutAssessments(@Param("compId") long competitionId,
                                                                     @Param("role") CompetitionParticipantRole role,
@@ -133,4 +150,7 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
             @Param("role") CompetitionParticipantRole role,
             @Param("status") ParticipantStatus status,
             @Param("appId") Long applicationId);
+
+    @Query(PARTICIPANTS_NOT_ON_PANEL)
+    Page<CompetitionParticipant> findParticipantsNotOnPanel(@Param("competitionId") Long competitionId, Pageable pageable);
 }
