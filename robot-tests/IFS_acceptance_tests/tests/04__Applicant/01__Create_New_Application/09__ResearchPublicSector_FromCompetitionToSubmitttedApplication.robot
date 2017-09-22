@@ -17,14 +17,15 @@ ${collaborator}     ${test_mailbox_one}+amy@gmail.com
 Comp Admin Creates Competitions where Research or Public sector can lead
     [Documentation]  IFS-1012
     [Tags]  CompAdmin
-    Given the user logs-in in new browser                 &{Comp_admin1_credentials}
+    Given Logging in and Error Checking                   &{Comp_admin1_credentials}
     Then The competition admin creates a competition for  ${RTO_TYPE_ID}  ${compResearch}  Research
     And The competition admin creates a competition for   ${PUBLIC_SECTOR_TYPE_ID}  ${compPublic}  Public
+    [Teardown]  logout as user
 
 Applicant Applies to Research leading Competition
     [Documentation]  IFS-1012
     [Tags]  Applicant  HappyPath
-    [Setup]  log in as a different user                   antonio.jenkins@jabbertype.example.com  ${short_password}
+    [Setup]  Logging in and Error Checking                antonio.jenkins@jabbertype.example.com  ${short_password}
     Given logged in user applies to competition           ${openCompetitionResearch_name}
     When the user clicks the button/link                  link=Application details
     Then the user fills in the Application details        ${researchLeadApp}  Experimental development  ${tomorrowday}  ${month}  ${nextyear}
@@ -57,6 +58,7 @@ Custom Suite Setup
     Set suite variable  ${nextyear}
     ${tomorrowday} =    get tomorrow day
     Set suite variable  ${tomorrowday}
+    The guest user opens the browser
 
 The competition admin creates a competition for
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}
