@@ -102,7 +102,7 @@ Internal user can view ineligible and unsuccessful applications in previous tab
     [Tags]  HappyPath
     [Setup]  log in as a different user      &{Comp_admin1_credentials}
     Given the user clicks the button/link    jQuery=a:contains("Previous")
-    When the user clicks the button/link     link${NOT_EDITABLE_COMPETITION_NAME}
+    When the user clicks the button/link     link=${NOT_EDITABLE_COMPETITION_NAME}
     And the user clicks the button/link      link=Unsuccessful applications
     Then the user should see the element     jQuery=td:contains("${proj_electric_drive}") ~ td:contains("Unsuccessful")
     And the user should not see the element  jQuery=td:contains("${INFORM_COMPETITION_NAME_1}")
