@@ -213,6 +213,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
             ProcessRole leadApplicantRole = simpleFindFirst(application.getProcessRoles(), ProcessRole::isLeadApplicant).get();
             List<ProcessRole> collaborativeRoles = simpleFilter(application.getProcessRoles(), ProcessRole::isCollaborator);
             List<ProcessRole> allRoles = combineLists(leadApplicantRole, collaborativeRoles);
+
             List<ServiceResult<ProjectUser>> correspondingProjectUsers = simpleMap(allRoles,
                     role -> {
                         Organisation organisation = organisationRepository.findOne(role.getOrganisationId());
