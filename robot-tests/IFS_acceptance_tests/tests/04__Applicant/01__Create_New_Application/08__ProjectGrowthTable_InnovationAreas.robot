@@ -479,15 +479,15 @@ the user navigates to the growth table finances
 Invite a non-existing collaborator in Application with Growth table
     the user should see the element       jQuery=h1:contains("Application overview")
     the user fills in the inviting steps  ${newUsersEmail}
+    logout as user
     newly invited collaborator can create account and sign in  ${newUsersEmail}  ${compWithGrowth}
 
 Newly invited collaborator can create account and sign in
     [Arguments]  ${newUsersEmail}  ${compWithGrowth}
-    logout as user
     the user reads his email and clicks the link  ${newUsersEmail}  Invitation to collaborate in ${compWithGrowth}  You will be joining as part of the organisation  2
     the user clicks the button/link               jQuery=a:contains("Yes, accept invitation")
     the user should see the element               jquery=h1:contains("Choose your organisation type")
-    the user completes the new account creation
+    the user completes the new account creation   ${newUsersEmail}
 
 the user fills in the Open-All Initial details
     [Arguments]  ${compTitle}  ${month}  ${nextyear}

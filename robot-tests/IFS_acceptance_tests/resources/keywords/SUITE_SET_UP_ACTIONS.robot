@@ -111,18 +111,19 @@ create new submit application
 
 Invite and accept the invitation
     [Arguments]    ${recipient}    ${subject}    ${pattern}
-    Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Academic robot test application
-    the user fills in the inviting steps   ${test_mailbox_one}+academictest@gmail.com
-    When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}    2
-    And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
-    When the user selects the radio button    organisationType    2
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
+    Given the user navigates to the page                ${DASHBOARD_URL}
+    And the user clicks the button/link                 link=Academic robot test application
+    the user fills in the inviting steps                ${test_mailbox_one}+academictest@gmail.com
+    logout as user
+    When the user reads his email and clicks the link   ${recipient}    ${subject}    ${pattern}    2
+    And the user clicks the button/link                 jQuery=.button:contains("Yes, accept invitation")
+    When the user selects the radio button              organisationType    2
+    And the user clicks the button/link                 jQuery=.button:contains("Continue")
     the research user finds org in company house
-    And the invited user fills the create account form    Arsene    Wenger
+    And the invited user fills the create account form  Arsene    Wenger
     And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    We now need you to verify your email address
-    And the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And Logging in and Error Checking      ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
+    And the user clicks the button/link                 jQuery=.button:contains("Sign in")
+    And Logging in and Error Checking                   ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
 
 # The search results are specific to Research Organisation type
 the research user finds org in company house
@@ -147,7 +148,6 @@ the user fills in the inviting steps
     the user enters text to a text field  css=input[id="applicants0.name"]  Partner's name
     the user enters text to a text field  css=input[id="applicants0.email"]  ${email}
     the user clicks the button/link       jQuery=button:contains("Add organisation and invite applicants")
-    logout as user
 
 The user navigates to the summary page of the Robot test application
     Given the user navigates to the page    ${DASHBOARD_URL}
@@ -184,7 +184,7 @@ invite a registered user
     the user clicks the button/link                            link=Add a collaborator organisation
     the user enters text to a text field                       css=#organisationName  New Organisation's Name
     the user enters text to a text field                       css=input[id="applicants0.name"]  Partner's name
-    the user enters text to a text field                       css=input[id="applicants0.email"]  ${email}
+    the user enters text to a text field                       css=input[id="applicants0.email"]  ${EMAIL_INVITED}
     the user clicks the button/link                            jQuery=button:contains("Add organisation and invite applicants")
     the user clicks the button/link                            jQuery=a:contains("Begin application")
     the user should see the text in the page                   Application overview
