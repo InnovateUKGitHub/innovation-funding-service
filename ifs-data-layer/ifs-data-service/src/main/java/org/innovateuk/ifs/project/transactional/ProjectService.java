@@ -36,11 +36,7 @@ public interface ProjectService {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only comp admin and project finance user are able to create a projects (by making decisions)" )
     ServiceResult<Void> createProjectsFromFundingDecisions(Map<Long, FundingDecision> applicationFundingDecisions);
-
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-    @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only comp admin and project finance user are able to create a project from an application" )
-    ServiceResult<ProjectResource> createSingletonProjectFromApplicationId(final Long applicationId);
-
+    
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ProjectResource>> findByUserId(Long userId);
 

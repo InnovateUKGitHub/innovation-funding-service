@@ -188,8 +188,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return createSingletonProjectFromApplicationId(applicationId);
     }
 
-    @Override
-    public ServiceResult<ProjectResource> createSingletonProjectFromApplicationId(final Long applicationId) {
+    private ServiceResult<ProjectResource> createSingletonProjectFromApplicationId(final Long applicationId) {
         return checkForExistingProjectWithApplicationId(applicationId).handleSuccessOrFailure(
                 failure -> createProjectFromApplicationId(applicationId),
                 success -> serviceSuccess(success)
