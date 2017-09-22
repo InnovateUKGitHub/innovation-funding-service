@@ -2,10 +2,16 @@ version: '2'
 services:
   hub:
     container_name: hub
-    image: selenium/hub:3.5.3-astatine
+    image: selenium/standalone-chrome:3.5.3-astatine
     environment:
       - GRID_BROWSER_TIMEOUT=90000
       - GRID_TIMEOUT=100000
+      - NODE_MAX_SESSION=20
+      - NODE_MAX_INSTANCES=20
+      - NODE_REGISTER_CYCLE=600
+#      - HUB_PORT_4444_TCP_ADDR=hub
+#      - HUB_PORT_4444_TCP_PORT=4444
+      - DBUS_SESSION_BUS_ADDRESS=/dev/null
     ports:
       - '4444:4444'
       - '3000:3000'
@@ -13,28 +19,28 @@ services:
       selenium-network:
         aliases:
           - hub
-  chrome:
-    image: selenium/node-chrome-debug:3.5.3-astatine
-    environment:
-      - NODE_MAX_SESSION=20
-      - NODE_MAX_INSTANCES=20
-      - NODE_REGISTER_CYCLE=600
-      - HUB_PORT_4444_TCP_ADDR=hub
-      - HUB_PORT_4444_TCP_PORT=4444
-      - DBUS_SESSION_BUS_ADDRESS=/dev/null
-      - no_proxy=localhost
-      - HUB_ENV_no_proxy=localhost
-    volumes:
-      - /dev/shm:/dev/shm
-    ports:
-      - '5900'
-    links:
-      - "hub:hub"
-    depends_on:
-      - hub
-    networks:
-      - selenium-network
-      - innovationfundingservice_ifs
+#  chrome:
+#    image: selenium/node-chrome-debug:3.5.3-astatine
+#    environment:
+#      - NODE_MAX_SESSION=20
+#      - NODE_MAX_INSTANCES=20
+#      - NODE_REGISTER_CYCLE=600
+#      - HUB_PORT_4444_TCP_ADDR=hub
+#      - HUB_PORT_4444_TCP_PORT=4444
+#      - DBUS_SESSION_BUS_ADDRESS=/dev/null
+#      - no_proxy=localhost
+#      - HUB_ENV_no_proxy=localhost
+#    volumes:
+#      - /dev/shm:/dev/shm
+#    ports:
+#      - '5900'
+#    links:
+#      - "hub:hub"
+#    depends_on:
+#      - hub
+#    networks:
+#      - selenium-network
+#      - innovationfundingservice_ifs
 
 networks:
   selenium-network:

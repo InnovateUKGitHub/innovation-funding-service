@@ -41,9 +41,9 @@ items:
 #          - name: GRID_TIMEOUT
 #            value: "100000
           - name: NODE_MAX_SESSION
-            value: "10"
+            value: "20"
           - name: NODE_MAX_INSTANCES
-            value: "10"
+            value: "20"
           - name: NODE_REGISTER_CYCLE
             value: "600"
 #          - name: HUB_PORT_4444_TCP_ADDR
@@ -58,11 +58,11 @@ items:
 #            value: "localhost"
           - name: JAVA_OPTS
             description: Options for the Java command
-            value: "-Xmx512m"
+            value: "-Xmx1024m"
           - name: SCREEN_WIDTH
             value: "1920"
           - name: SCREEN_HEIGHT
-            value: "2800"
+            value: "5000"
           - name: JAVA_OPTS
             value: "-Xms1024m -Xmx1024m"
           - name: POOL_MAX

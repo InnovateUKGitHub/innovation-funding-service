@@ -50,7 +50,7 @@ Guest user can see the opening and closing status of competitions
     And Change the open date of the Competition in the database to one day before   ${READY_TO_OPEN_COMPETITION_NAME}
     Given the user navigates to the page  ${frontDoor}
     Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Open now    Opened
-    And Change the close date of the Competition in the database to a fortnight   ${READY_TO_OPEN_COMPETITION_NAME}
+    And Change the close date of the Competition in the database to fifteen days  ${READY_TO_OPEN_COMPETITION_NAME}
     Given the user navigates to the page  ${frontDoor}
     Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Open now    Opened
     And Change the close date of the Competition in the database to thirteen days   ${READY_TO_OPEN_COMPETITION_NAME}
