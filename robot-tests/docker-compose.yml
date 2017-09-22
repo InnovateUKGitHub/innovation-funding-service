@@ -4,14 +4,16 @@ services:
     container_name: hub
     image: selenium/standalone-chrome:3.5.3-astatine
     environment:
-      - GRID_BROWSER_TIMEOUT=90000
-      - GRID_TIMEOUT=100000
+#      - GRID_BROWSER_TIMEOUT=90000
+#      - GRID_TIMEOUT=100000
       - NODE_MAX_SESSION=20
       - NODE_MAX_INSTANCES=20
       - NODE_REGISTER_CYCLE=600
 #      - HUB_PORT_4444_TCP_ADDR=hub
 #      - HUB_PORT_4444_TCP_PORT=4444
       - DBUS_SESSION_BUS_ADDRESS=/dev/null
+    volumes:
+      - /dev/shm:/dev/shm
     ports:
       - '4444:4444'
       - '3000:3000'
@@ -19,6 +21,10 @@ services:
       selenium-network:
         aliases:
           - hub
+    networks:
+      - innovationfundingservice_ifs
+
+
 #  chrome:
 #    image: selenium/node-chrome-debug:3.5.3-astatine
 #    environment:

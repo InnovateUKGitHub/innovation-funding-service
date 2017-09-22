@@ -60,7 +60,8 @@ Enter address manually: Postcode Validations
     [Documentation]    INFUND-888
     [Tags]    HappyPath
 #    Pretty certain this will break tests on local as it will close the section
-    When the user clicks the button/link    jQuery=summary:contains("Enter details manually")
+    When the user expands the section            Enter details manually
+#    When the user clicks the button/link    jQuery=summary:contains("Enter details manually")
     Then the user enters text to a text field    id=addressForm.postcodeInput    ${EMPTY}
     And the user clicks the button/link    jQuery=button:contains("Find UK address")
     And the user should see the element    css=.form-label .error-message
