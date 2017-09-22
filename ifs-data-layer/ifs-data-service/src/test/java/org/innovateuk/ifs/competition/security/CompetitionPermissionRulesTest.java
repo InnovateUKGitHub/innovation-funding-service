@@ -78,15 +78,29 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     }
 
     @Test
-    public void testInternalUsersAndIFSAdminCanViewUnsuccessfulApplications() {
+    public void testInternalUsersBarringInnovationLeadAndIFSAdminCanViewUnsuccessfulApplications() {
         allGlobalRoleUsers.forEach(user -> {
-            if (allInternalUsers.contains(user)
+            if ((allInternalUsers.contains(user) && !user.hasRoles(UserRoleType.INNOVATION_LEAD))
                     || getUserWithRole(UserRoleType.IFS_ADMINISTRATOR).equals(user)) {
                 assertTrue(rules.internalUsersAndIFSAdminCanViewUnsuccessfulApplications(newCompetitionResource().build(), user));
             } else {
                 assertFalse(rules.internalUsersAndIFSAdminCanViewUnsuccessfulApplications(newCompetitionResource().build(), user));
             }
         });
+    }
+
+    @Test
+    public void testOnlyInnovationLeadUsersAssignedToCompCanViewUnsuccessfulApplications() {
+        List<RoleResource> innovationLeadRoles = singletonList(newRoleResource().withType(UserRoleType.INNOVATION_LEAD).build());
+        UserResource innovationLeadAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
+        UserResource innovationLeadNotAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
+        List<CompetitionParticipant> competitionParticipants = newCompetitionParticipant().withUser(newUser().withId(innovationLeadAssignedToCompetition.getId()).build()).build(1);
+        CompetitionResource competition = newCompetitionResource().withId(1L).build();
+
+        when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(1L, CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(competitionParticipants);
+
+        assertTrue(rules.innovationLeadForCompetitionCanViewUnsuccessfulApplications(competition, innovationLeadAssignedToCompetition));
+        assertFalse(rules.innovationLeadForCompetitionCanViewUnsuccessfulApplications(competition, innovationLeadNotAssignedToCompetition));
     }
 
     @Test
