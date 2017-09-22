@@ -30,7 +30,7 @@ Applicant Applies to Research leading Competition
     Then the user fills in the Application details        ${researchLeadApp}  Experimental development  ${tomorrowday}  ${month}  ${nextyear}
     And the user marks every section but one as complete  ${researchLeadApp}
     When the academic user fills in his finances          ${researchLeadApp}
-    Then he is not able to submit his application as he exceeds research participation
+    Then user is not able to submit his application as he exceeds research participation
     And the user clicks the button/link                   link=Application overview
     And If Research participation is not 100pc collaborating is required to submit the application  ${openCompetitionResearch_name}  ${researchLeadApp}  antonio.jenkins@jabbertype.example.com
 
@@ -76,7 +76,7 @@ The competition admin creates a competition for
     the user navigates to the page   ${CA_UpcomingComp}
     the user should see the element  jQuery=h2:contains("Ready to open") ~ ul a:contains("${competition}")
 
-he is not able to submit his application as he exceeds research participation
+user is not able to submit his application as he exceeds research participation
     the user navigates to the page   ${dashboard_url}
     the user clicks the button/link  link=${researchLeadApp}
     the user clicks the button/link  link=Review and submit
