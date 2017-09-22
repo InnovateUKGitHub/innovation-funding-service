@@ -14,12 +14,22 @@ Assement panel link is deactivated if the assessment panel is not set
     Given The user clicks the button/link  link=${CLOSED_COMPETITION_NAME}
     Then the user should see the element   jQuery=.disabled:contains("Manage assessment panel")
 
-Assement panel link is active if the assesment panel is set
+Assessment panel links are active if the assessment panel has been set
     [Documentation]  IFS-786
     [Tags]
     [Setup]  enable assessment panel for the competition
     Given the user clicks the button/link  link=Manage assessment panel
-    Then the user navigates to the page  ${assessment_panel}
+    When the user clicks the button/link   link=Invite assessors to attend
+    Then the user should see the element   jQuery=h1:contains("Invite assessors to panel")
+
+CompAdmin can add assessor to invite list
+    [Documentation]  IFS-31
+    [Tags]
+    Given the user clicks the button/link    jQuery=tr:contains("Benjamin Nixon") label
+    When the user clicks the button/link     jQuery=button:contains("Add selected to invite list")
+    Then the user should see the element     jQuery=td:contains("Benjamin Nixon") + td:contains("benjamin.nixon@gmail.com")
+    And the user clicks the button/link      link=Find
+    And the user should not see the element  jQuery=td:contains("Benjamin Nixon")
 
 *** Keywords ***
 
