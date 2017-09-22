@@ -262,7 +262,7 @@ Funding information: should have a green check
     And the user should not see the element    jQuery=button:contains("Complete")
 
 Eligibility: Contain the correct options
-    [Documentation]  INFUND-2989 INFUND-2990 INFUND-9225 IFS
+    [Documentation]  INFUND-2989 INFUND-2990 INFUND-9225
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link    link=Eligibility

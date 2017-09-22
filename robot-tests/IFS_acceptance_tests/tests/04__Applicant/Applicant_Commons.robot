@@ -239,7 +239,6 @@ the academic fills in the project costs
     the user should see the element       link=testing.pdf (opens in a new window)
     the user clicks the button/link       css=#mark-all-as-complete[type="submit"]
 
-
 the user fills the organisation details with Project growth table
     [Arguments]   ${Application}  ${org_size}
     the user navigates to Your-finances page                ${Application}
