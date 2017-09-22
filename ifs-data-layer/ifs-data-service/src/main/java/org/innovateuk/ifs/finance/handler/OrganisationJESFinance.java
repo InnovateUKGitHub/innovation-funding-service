@@ -20,7 +20,6 @@ import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -52,13 +51,13 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
     @Override
     public Map<FinanceRowType, FinanceRowCostCategory> getOrganisationFinances(Long applicationFinanceId, Competition competition) {
         List<ApplicationFinanceRow> costs = applicationFinanceRowRepository.findByTargetId(applicationFinanceId);
-        return updateCostCategoryValuesForTotals(competition, addCostsAndTotalsToCategories(costs, competition));
+        return updateCostCategoryValuesForTotals(competition, addCostsAndTotalsToCategories(costs));
     }
 
     @Override
     public Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinances(Long projectFinanceId, Competition competition) {
         List<ProjectFinanceRow> costs = projectFinanceRowRepository.findByTargetId(projectFinanceId);
-        return updateCostCategoryValuesForTotals(competition, addCostsAndTotalsToCategories(costs, competition));
+        return updateCostCategoryValuesForTotals(competition, addCostsAndTotalsToCategories(costs));
     }
 
     @Override
@@ -70,19 +69,7 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
         return emptyMap();
     }
 
-    /*@Override
-    public Map<FinanceRowType, FinanceRowCostCategory> getOrganisationFinanceTotals(Long applicationFinanceId, Competition competition) {
-        Map<FinanceRowType, FinanceRowCostCategory> costCategories = getOrganisationFinances(applicationFinanceId, competition);
-        return updateCostCategoryValuesForTotals(competition, costCategories);
-    }
-
-    @Override
-    public Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinanceTotals(Long projectFinanceId, Competition competition) {
-        Map<FinanceRowType, FinanceRowCostCategory> costCategories = getProjectOrganisationFinances(projectFinanceId, competition);
-        return updateCostCategoryValuesForTotals(competition, costCategories);
-    }*/
-
-    private Map<FinanceRowType, FinanceRowCostCategory> addCostsAndTotalsToCategories(List<? extends FinanceRow> costs, Competition competition) {
+    private Map<FinanceRowType, FinanceRowCostCategory> addCostsAndTotalsToCategories(List<? extends FinanceRow> costs) {
         Map<FinanceRowType, FinanceRowCostCategory> costCategories = createCostCategories();
         costCategories = addCostsToCategories(costCategories, costs);
         costCategories = calculateTotals(costCategories);
@@ -92,7 +79,7 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
     private Map<FinanceRowType, FinanceRowCostCategory> updateCostCategoryValuesForTotals(Competition competition, Map<FinanceRowType, FinanceRowCostCategory> costCategories) {
         costCategories = setGrantClaimPercentage(costCategories, competition);
         costCategories = calculateTotals(costCategories);
-        return resetCosts(costCategories);
+        return costCategories;
     }
 
     private Map<FinanceRowType, FinanceRowCostCategory> setGrantClaimPercentage(Map<FinanceRowType, FinanceRowCostCategory> costCategories, Competition competition) {
@@ -104,12 +91,6 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
     private Map<FinanceRowType, FinanceRowCostCategory> calculateTotals(Map<FinanceRowType, FinanceRowCostCategory> costCategories) {
         costCategories.values()
                 .forEach(cc -> cc.calculateTotal());
-        return costCategories;
-    }
-
-    private Map<FinanceRowType, FinanceRowCostCategory> resetCosts(Map<FinanceRowType, FinanceRowCostCategory> costCategories) {
-        costCategories.values()
-                .forEach(cc -> cc.setCosts(new ArrayList<>()));
         return costCategories;
     }
 
