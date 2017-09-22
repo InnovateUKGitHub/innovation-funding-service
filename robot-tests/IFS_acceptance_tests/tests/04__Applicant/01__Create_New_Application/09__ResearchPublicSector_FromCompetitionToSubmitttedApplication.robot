@@ -32,7 +32,7 @@ Applicant Applies to Research leading Competition
     When the academic user fills in his finances          ${researchLeadApp}
     Then user is not able to submit his application as he exceeds research participation
     And the user clicks the button/link                   link=Application overview
-    And If Research participation is not 100pc collaborating is required to submit the application  ${openCompetitionResearch_name}  ${researchLeadApp}  antonio.jenkins@jabbertype.example.com
+    And collaborating is required to submit the application if Research participation is not 100pc   ${openCompetitionResearch_name}  ${researchLeadApp}  antonio.jenkins@jabbertype.example.com
 
 Applicant Applies to Public content leading Competition
     [Documentation]  IFS-1012
@@ -44,7 +44,7 @@ Applicant Applies to Public content leading Competition
     And the user marks every section but one as complete  ${publicLeadApp}
     When the user navigates to Your-finances page         ${publicLeadApp}
     Then the user marks the finances as complete          ${publicLeadApp}
-#    And If Research participation is not 100pc collaborating is required to submit the application  ${openCompetitionPublicSector_name}  ${publicLeadApp}  dave.adams@gmail.com
+#    And collaborating is required to submit the application if Research participation is not 100pc  ${openCompetitionPublicSector_name}  ${publicLeadApp}  dave.adams@gmail.com
     # TODO pending due to IFS-1707. There is a bug not allowing the Application submit.
 
 *** Keywords ***
@@ -82,7 +82,7 @@ user is not able to submit his application as he exceeds research participation
     the user clicks the button/link  link=Review and submit
     the user should see the element  jQuery=button:disabled:contains("Submit application")
 
-If Research participation is not 100pc collaborating is required to submit the application
+Collaborating is required to submit the application if Research participation is not 100pc
     [Arguments]  ${competition}  ${application}  ${lead}
     the user fills in the inviting steps  ${collaborator}
     the user logs out if they are logged in
