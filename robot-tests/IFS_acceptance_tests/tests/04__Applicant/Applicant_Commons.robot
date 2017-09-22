@@ -71,7 +71,7 @@ the applicant completes the application details
     the user clicks the button/link       jQuery=button:contains("research category")
     the user clicks the button twice      jQuery=label[for^="researchCategoryChoice"]:contains("Experimental development")
     the user clicks the button/link       jQuery=button:contains("Save")
-    the user clicks the button twice      jQuery=label[for="application.resubmission-no"]
+    the user clicks the button twice      css=label[for="application.resubmission-no"]
     # those Radio buttons need to be clicked twice.
     The user enters text to a text field  id=application_details-startdate_day  18
     The user enters text to a text field  id=application_details-startdate_year  2018
@@ -79,7 +79,7 @@ the applicant completes the application details
     The user enters text to a text field  id=application_details-duration  20
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
     the user should see the element       jQuery=button:contains("Edit")
-    the user should not see the element     css=input
+    the user should not see the element   css=input
 
 the user fills in the Application details
     [Arguments]  ${appTitle}  ${res_category}  ${tomorrowday}  ${month}  ${nextyear}
@@ -89,7 +89,7 @@ the user fills in the Application details
     the user enters text to a text field  css=#application_details-startdate_month  ${month}
     the user enters text to a text field  css=#application_details-startdate_year  ${nextyear}
     the user enters text to a text field  css=#application_details-duration  24
-    the user clicks the button twice      jQuery=label[for="application.resubmission-no"]
+    the user clicks the button twice      css=label[for="application.resubmission-no"]
     the user selects Research category    ${res_category}
     the user should not see the element   link=Choose your innovation area
     The user clicks the button/link       css=button[name="mark_as_complete"]
@@ -221,7 +221,7 @@ the academic user fills in his finances
 
 the academic fills in the project costs
     [Arguments]  ${application}
-    the user clicks the button/link  link=Your project costs
+    the user clicks the button/link       link=Your project costs
     The user enters text to a text field  id=tsb-ref  ${application}
     The user enters text to a text field  id=incurred-staff  999.999
     The user enters text to a text field  id=travel    999.999
