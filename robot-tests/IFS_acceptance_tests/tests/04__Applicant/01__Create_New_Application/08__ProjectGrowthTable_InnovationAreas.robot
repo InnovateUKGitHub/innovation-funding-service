@@ -416,20 +416,20 @@ the user populates the project growth table
 the user should view the project growth table
     the user should see the text in the element    css=table.extra-margin-bottom tr:nth-of-type(1) th:nth-of-type(1)    Section
     the user should see the text in the element    css=table.extra-margin-bottom tr:nth-of-type(1) th:nth-of-type(2)    Last financial year (£)
-    the user should see the text in the element    jQuery=tr:nth-child(1) td:nth-child(1) span    Annual turnover
-    the user should see the element                jQuery=td input[value="65000"]
-    the user should see the text in the element    jQuery=tr:nth-child(2) td:nth-child(1) span    Annual profits
-    the user should see the element                jQuery=td input[value="2000"]
-    the user should see the text in the element    jQuery=tr:nth-child(3) td:nth-child(1) span    Annual export
-    the user should see the element                jQuery=td input[value="3000"]
-    the user should see the text in the element    jQuery=tr:nth-child(4) td:nth-child(1) span    Research and development spend
-    the user should see the element                jQuery=td input[value="15000"]
+    the user should see the text in the element    css=tr:nth-child(1) td:nth-child(1) span    Annual turnover
+    the user should see the element                css=td input[value="65000"]
+    the user should see the text in the element    css=tr:nth-child(2) td:nth-child(1) span    Annual profits
+    the user should see the element                css=td input[value="2000"]
+    the user should see the text in the element    css=tr:nth-child(3) td:nth-child(1) span    Annual export
+    the user should see the element                css=td input[value="3000"]
+    the user should see the text in the element    css=tr:nth-child(4) td:nth-child(1) span    Research and development spend
+    the user should see the element                css=td input[value="15000"]
 
 the user can edit the project growth table
     the user clicks the button/link         jQuery=button.buttonlink:contains('Edit')
     the user selects the radio button       financePosition-organisationSize    ${SMALL_ORGANISATION_SIZE}
-    the user enters text to a text field    jQuery=tr:nth-child(1) .form-control    4000
-    the user enters text to a text field    jQuery=td input[value="65000"]    5000
+    the user enters text to a text field    css=tr:nth-child(1) .form-control    4000
+    the user enters text to a text field    css=td input[value="65000"]    5000
 
 the applicant enters valid inputs
     The user clicks the button/link         jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
@@ -494,9 +494,7 @@ the user completes the new account creation
     the user reads his email and clicks the link       ${newUsersEmail}  Please verify your email address  Once verified you can sign into your account.
     the user should be redirected to the correct page  ${REGISTRATION_VERIFIED}
     the user clicks the button/link                    link=Sign in
-    the user enters text to a text field               jQuery=input[id="username"]  ${newUsersEmail}
-    the user enters text to a text field               jQuery=input[id="password"]  ${correct_password}
-    the user clicks the button/link                    jQuery=button:contains("Sign in")
+    Logging in and Error Checking                      ${newUsersEmail}  ${correct_password}
 
 the user fills in the Open-All Initial details
     [Arguments]  ${compTitle}  ${month}  ${nextyear}

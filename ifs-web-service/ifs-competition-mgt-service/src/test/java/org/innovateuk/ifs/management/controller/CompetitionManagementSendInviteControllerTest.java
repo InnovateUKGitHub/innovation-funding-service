@@ -1,11 +1,16 @@
 package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
+import org.innovateuk.ifs.management.form.AssessorSelectionForm;
+import org.innovateuk.ifs.management.form.OverviewSelectionForm;
+import org.innovateuk.ifs.management.form.ResendInviteForm;
 import org.innovateuk.ifs.management.form.SendInviteForm;
 import org.innovateuk.ifs.management.viewmodel.SendInviteViewModel;
 import org.innovateuk.ifs.management.viewmodel.SendInvitesViewModel;
+import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,11 +18,21 @@ import org.mockito.InOrder;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 
+import javax.servlet.http.Cookie;
+import java.util.Arrays;
+import java.util.List;
+
+import static com.google.common.primitives.Longs.asList;
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInvitesToSendResourceBuilder.newAssessorInvitesToSendResource;
+import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
+import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
+import static org.innovateuk.ifs.util.CompressionUtil.getCompressedString;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -28,6 +43,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(locations = "classpath:application.properties")
 public class CompetitionManagementSendInviteControllerTest extends BaseControllerMockMVCTest<CompetitionManagementSendInviteController> {
 
+    private CompetitionResource competition;
+
     @Override
     protected CompetitionManagementSendInviteController supplyControllerUnderTest() {
         return new CompetitionManagementSendInviteController();
@@ -37,7 +54,14 @@ public class CompetitionManagementSendInviteControllerTest extends BaseControlle
     @Before
     public void setUp() {
         super.setUp();
+        this.setupCookieUtil();
 
+        competition = newCompetitionResource()
+                .withCompetitionStatus(IN_ASSESSMENT)
+                .withName("Technology inspired")
+                .withInnovationSectorName("Infrastructure systems")
+                .withInnovationAreaNames(asLinkedSet("Transport Systems", "Urban living"))
+                .build();
     }
 
     @Test
@@ -67,35 +91,38 @@ public class CompetitionManagementSendInviteControllerTest extends BaseControlle
         verify(competitionInviteRestService, only()).getAllInvitesToSend(competitionId);
     }
 
-
     @Test
-    public void getInviteToResend() throws Exception {
-        long competitionId = 1L;
-        long inviteId = 4L;
+    public void getInvitesToResend() throws Exception {
+        List<Long> inviteIds = asList(1L, 2L);
+        List<String> recipients = Arrays.asList("Jessica Doe", "Fred Smith");
         AssessorInvitesToSendResource invite = newAssessorInvitesToSendResource()
-                .withRecipients(singletonList("Jessica Doe"))
-                .withCompetitionId(1L)
+                .withRecipients(recipients)
+                .withCompetitionId(competition.getId())
                 .withCompetitionName("Photonics for health")
-                .withContent("Editable content...")
+                .withContent("Readonly content")
                 .build();
 
-        when(competitionInviteRestService.getInviteToSend(inviteId)).thenReturn(restSuccess(invite));
+        OverviewSelectionForm expectedSelectionForm = new OverviewSelectionForm();
+        expectedSelectionForm.setSelectedInviteIds(inviteIds);
+        Cookie selectionFormCookie = createFormCookie(expectedSelectionForm);
 
-        SendInviteForm expectedForm = new SendInviteForm();
+        when(competitionInviteRestService.getAllInvitesToResend(competition.getId(), inviteIds)).thenReturn(restSuccess(invite));
+
+        ResendInviteForm expectedForm = new ResendInviteForm();
         expectedForm.setSubject("Invitation to assess 'Photonics for health'");
-        expectedForm.setContent("Editable content...");
+        expectedForm.setInviteIds(inviteIds);
 
-        SendInviteViewModel expectedViewModel = new SendInviteViewModel(competitionId, inviteId, "Photonics for health", "Jessica Doe", "Editable content...");
+        SendInvitesViewModel expectedViewModel = new SendInvitesViewModel(competition.getId(), "Photonics for health", recipients, "Readonly content");
 
-        mockMvc.perform(get("/competition/{competitionId}/assessors/invite/{inviteId}/resend", competitionId, inviteId))
+        mockMvc.perform(post("/competition/{competitionId}/assessors/invite/reviewResend", competition.getId())
+                .cookie(selectionFormCookie))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(model().attribute("model", expectedViewModel))
-                .andExpect(view().name("assessors/resend-invite"));
+                .andExpect(view().name("assessors/resend-invites"));
 
-        verify(competitionInviteRestService, only()).getInviteToSend(inviteId);
+        verify(competitionInviteRestService, only()).getAllInvitesToResend(competition.getId(), inviteIds);
     }
-
 
     @Test
     public void sendInvites() throws Exception {
@@ -121,30 +148,34 @@ public class CompetitionManagementSendInviteControllerTest extends BaseControlle
     }
 
     @Test
-    public void resendInvite() throws Exception {
-        long inviteId = 4L;
-        long competitionId = 5L;
+    public void resendInvites() throws Exception {
+        List<Long> inviteIds = asList(1L, 2L);
 
-        AssessorInvitesToSendResource invite = newAssessorInvitesToSendResource().withCompetitionId(competitionId).build();
+        AssessorInvitesToSendResource invite = newAssessorInvitesToSendResource().withCompetitionId(competition.getId()).build();
 
         AssessorInviteSendResource expectedAssessorInviteSendResource = newAssessorInviteSendResource()
                 .withSubject("Subject...")
                 .withContent("Editable content...")
                 .build();
 
-        when(competitionInviteRestService.getInviteToSend(inviteId)).thenReturn(restSuccess(invite));
-        when(competitionInviteRestService.resendInvite(inviteId, expectedAssessorInviteSendResource)).thenReturn(restSuccess());
+        when(competitionInviteRestService.resendInvites(inviteIds, expectedAssessorInviteSendResource)).thenReturn(restSuccess());
 
-        mockMvc.perform(post("/competition/{competitionId}/assessors/invite/{inviteId}/resend", competitionId, inviteId)
+        mockMvc.perform(post("/competition/{competitionId}/assessors/invite/resend", competition.getId())
                 .contentType(APPLICATION_FORM_URLENCODED)
+                .param("inviteIds[0]", inviteIds.get(0).toString())
+                .param("inviteIds[1]", inviteIds.get(1).toString())
                 .param("subject", "Subject...")
                 .param("content", "Editable content..."))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/competition/%s/assessors/overview", competitionId)));
+                .andExpect(redirectedUrl(format("/competition/%s/assessors/overview?page=0", competition.getId())));
 
         InOrder inOrder = inOrder(competitionInviteRestService);
-        inOrder.verify(competitionInviteRestService).getInviteToSend(inviteId);
-        inOrder.verify(competitionInviteRestService).resendInvite(inviteId, expectedAssessorInviteSendResource);
+        inOrder.verify(competitionInviteRestService).resendInvites(inviteIds, expectedAssessorInviteSendResource);
         inOrder.verifyNoMoreInteractions();
+    }
+
+    private Cookie createFormCookie(OverviewSelectionForm form) throws Exception {
+        String cookieContent = JsonUtil.getSerializedObject(form);
+        return new Cookie(format("overviewSelectionForm_comp_%s", competition.getId()), getCompressedString(cookieContent));
     }
 }
