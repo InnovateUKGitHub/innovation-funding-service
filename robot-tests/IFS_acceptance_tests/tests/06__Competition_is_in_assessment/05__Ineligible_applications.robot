@@ -50,7 +50,7 @@ Clicking the ineligible button
     #There are 2 buttons with the same name so we need to be careful
     Then the user should see the element    css=[aria-hidden="false"] [id="ineligibleReason"]
     And browser validations have been disabled
-    When the user clicks the button/link    jQuery=button[name="markAsIneligible"]
+    When the user clicks the button/link    css=button[name="markAsIneligible"]
     Then the user should see a field and summary error  This field cannot be left blank.
 
 Cancel marking the application as ineligible

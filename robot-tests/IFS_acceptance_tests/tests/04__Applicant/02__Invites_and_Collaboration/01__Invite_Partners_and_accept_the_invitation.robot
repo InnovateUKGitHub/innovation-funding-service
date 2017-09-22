@@ -54,9 +54,9 @@ Lead Adds/Removes rows
     When The user clicks the button/link      jquery=a:contains("Update and add contributors from ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}")
     And the user clicks the button/link       jQuery=button:contains("Add another contributor")
     And The user should not see the element   jQuery=.modal-delete-organisation button:contains('Delete organisation')
-    Then The user should see the element      jQuery=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)
+    Then The user should see the element      css=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)
     And The user clicks the button/link       jQuery=button:contains('Remove')
-    Then The user should not see the element  jQuery=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)
+    Then The user should not see the element  css=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)
 
 Lead cannot be removed
     [Documentation]    INFUND-901  INFUND-7974
@@ -67,8 +67,8 @@ Lead organisation server-side validations
     [Documentation]    INFUND-901  INFUND-7974
     [Tags]    HappyPath
     When The user clicks the button/link      jQuery=button:contains("Add another contributor")
-    And The user enters text to a text field  jQuery=tr:nth-of-type(2) td:nth-of-type(1) input    ${EMPTY}
-    And The user enters text to a text field  jQuery=tr:nth-of-type(2) td:nth-of-type(2) input    @test.co.uk
+    And The user enters text to a text field  css=tr:nth-of-type(2) td:nth-of-type(1) input    ${EMPTY}
+    And The user enters text to a text field  css=tr:nth-of-type(2) td:nth-of-type(2) input    @test.co.uk
     And browser validations have been disabled
     And the user clicks the button/link       jQuery=.button:contains("Invite")
     Then the user should see an error         Please enter a valid email address.
@@ -77,8 +77,8 @@ Lead organisation server-side validations
 Lead organisation client-side validations
     [Documentation]    INFUND-901  INFUND-7974
     [Tags]    HappyPath
-    When The user enters text to a text field      jQuery=tr:nth-of-type(2) td:nth-of-type(1) input    Florian
-    And The user enters text to a text field       jQuery=tr:nth-of-type(2) td:nth-of-type(2) input    florian21@florian.com
+    When The user enters text to a text field      css=tr:nth-of-type(2) td:nth-of-type(1) input    Florian
+    And The user enters text to a text field       css=tr:nth-of-type(2) td:nth-of-type(2) input    florian21@florian.com
     Then the user cannot see a validation error in the page
     [Teardown]    The user clicks the button/link  link=Application team
 
@@ -205,8 +205,8 @@ Partner can invite others to his own organisation
     [Tags]    Email
     When the user clicks the button/link      jQuery=a:contains("Update and add contributors from NOMENSA LTD")
     And the user clicks the button/link       jQuery=button:contains("Add another contributor")
-    And The user enters text to a text field  jQuery=tr:nth-of-type(2) td:nth-of-type(1) input    Mark
-    And The user enters text to a text field  jQuery=tr:nth-of-type(2) td:nth-of-type(2) input    mark21@innovateuk.com
+    And The user enters text to a text field  css=tr:nth-of-type(2) td:nth-of-type(1) input    Mark
+    And The user enters text to a text field  css=tr:nth-of-type(2) td:nth-of-type(2) input    mark21@innovateuk.com
     And the user clicks the button/link       jQuery=button:contains("Invite")
     Then The user should see the element      jQuery=td:contains("mark21@innovateuk.com") + td:contains("Invite pending")
 
@@ -287,7 +287,7 @@ the user can see the updated company name throughout the application
     Then the user should see the element  jQuery=h2:contains("NOMENSA LTD")+h3:contains("Organisation type")+p:contains("Business")
 
 the lead applicant cannot be removed
-    the user should see the text in the element  jQuery=tr:nth-of-type(1) td:nth-of-type(3)    Lead
+    the user should see the text in the element  css=tr:nth-of-type(1) td:nth-of-type(3)    Lead
     the user should not see the element          jQuery=#applicant-table tbody > tr:nth-child(1) button:contains("Remove")
 
 the applicant's inputs should be visible
