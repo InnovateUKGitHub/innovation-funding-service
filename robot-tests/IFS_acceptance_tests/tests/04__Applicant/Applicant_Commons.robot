@@ -106,7 +106,7 @@ the user marks the finances as complete
     [Arguments]  ${Application}
     the user fills in the project costs     ${Application}
     the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
-    the user checks Your Funding section     ${Application}
+    the user checks Your Funding section        ${Application}
     the user should see all finance subsections complete
     the user clicks the button/link  link=Application overview
     the user should see the element  jQuery=li:contains("Your finances") > .task-status-complete
@@ -262,7 +262,7 @@ the user fills in the organisation information
     Run Keyword If    '${status}' == 'PASS'    the user clicks the button/link  jQuery=button:contains("Edit")
     the user selects the radio button  financePosition-organisationSize  ${org_size}
     the user enters text to a text field    jQuery=label:contains("Turnover") + input    150
-    the user enters text to a text field    jQuery=label:contains("employees") + input    0
+    the user enters text to a text field    jQuery=label:contains("employees") + input   3
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
     the user clicks the button/link  link=Your organisation
     the user should see the element       jQuery=button:contains("Edit")
@@ -316,6 +316,7 @@ Invite a non-existing collaborator
     [Arguments]   ${email}  ${competition_name}
     the user should see the element       jQuery=h1:contains("Application overview")
     the user fills in the inviting steps   ${email}
+    logout as user
     newly invited collaborator can create account and sign in   ${email}  ${competition_name}
 
 the user fills in the inviting steps
@@ -326,7 +327,14 @@ the user fills in the inviting steps
     the user enters text to a text field  css=input[id="applicants0.name"]  Partner's name
     the user enters text to a text field  css=input[id="applicants0.email"]  ${email}
     the user clicks the button/link       jQuery=button:contains("Add organisation and invite applicants")
-    logout as user
+
+the user is able to confirm the invite
+    [Arguments]  ${email}  ${password}
+    the user clicks the button/link                 jQuery=.button:contains("Continue or sign in")
+    The guest user inserts user email and password  ${email}  ${password}
+    The guest user clicks the log-in button
+    the user should see the text in the page        Confirm your organisation
+    the user clicks the button/link                 jQuery=.button:contains("Confirm and accept invitation")
 
 Newly invited collaborator can create account and sign in
     [Arguments]    ${email}  ${competition_name}

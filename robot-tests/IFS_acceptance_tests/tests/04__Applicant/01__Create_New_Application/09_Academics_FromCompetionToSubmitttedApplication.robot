@@ -11,45 +11,41 @@ ${compResearch}     Research can lead
 ${compPublic}       Public Sector can lead
 ${researchLeadApp}  Research Leading Application
 ${publicLeadApp}    Public Sector leading Application
+${collaborator}     ${test_mailbox_one}+amy@gmail.com
 
 *** Test Cases ***
 Comp Admin Creates Competitions where Research or Public sector can lead
     [Documentation]  IFS-1012
     [Tags]  CompAdmin
-    Given the user logs-in in new browser  &{Comp_admin1_credentials}
+    Given the user logs-in in new browser                 &{Comp_admin1_credentials}
     Then The competition admin creates a competition for  ${RTO_TYPE_ID}  ${compResearch}  Research
-    And The competition admin creates a competition for  ${PUBLIC_SECTOR_TYPE_ID}  ${compPublic}  Public
+    And The competition admin creates a competition for   ${PUBLIC_SECTOR_TYPE_ID}  ${compPublic}  Public
 
 Applicant Applies to Research leading Competition
     [Documentation]  IFS-1012
     [Tags]  Applicant  HappyPath
-    [Setup]  log in as a different user  antonio.jenkins@jabbertype.example.com  ${short_password}
-    Given logged in user applies to competition     ${openCompetitionResearch_name}
-    When the user clicks the button/link            link=Application details
-    Then the user fills in the Application details  ${researchLeadApp}  Experimental development  ${tomorrowday}  ${month}  ${nextyear}
+    [Setup]  log in as a different user                   antonio.jenkins@jabbertype.example.com  ${short_password}
+    Given logged in user applies to competition           ${openCompetitionResearch_name}
+    When the user clicks the button/link                  link=Application details
+    Then the user fills in the Application details        ${researchLeadApp}  Experimental development  ${tomorrowday}  ${month}  ${nextyear}
     And the user marks every section but one as complete  ${researchLeadApp}
-    When the academic user fills in his finances           ${researchLeadApp}
+    When the academic user fills in his finances          ${researchLeadApp}
     Then he is not able to submit his application as he exceeds research participation
-
-If Research participation is not 100pc collaborating is required to submit the application
-    [Documentation]  IFS-1012
-    [Tags]  Applicant
-    [Setup]  the user clicks the button/link   link=Application overview
-    When the user fills in the inviting steps  ${test_mailbox_one}+amy@gmail.com
-    Then the user logs out if they are logged in
-    When the collaborator accepts and fills in his part in the application  ${test_mailbox_one}+amy@gmail.com
-
+    And the user clicks the button/link                   link=Application overview
+    And If Research participation is not 100pc collaborating is required to submit the application  ${openCompetitionResearch_name}  ${researchLeadApp}  antonio.jenkins@jabbertype.example.com
 
 Applicant Applies to Public content leading Competition
     [Documentation]  IFS-1012
     [Tags]  Applicant  HappyPath
-    [Setup]  log in as a different user  dave.adams@gmail.com  ${short_password}
-    Given logged in user applies to competition  ${openCompetitionPublicSector_name}
-    When the user clicks the button/link         link=Application details
-    Then the user fills in the Application details  ${publicLeadApp}  Industrial research  ${tomorrowday}  ${month}  ${nextyear}
+    [Setup]  log in as a different user                   dave.adams@gmail.com  ${short_password}
+    Given logged in user applies to competition           ${openCompetitionPublicSector_name}
+    When the user clicks the button/link                  link=Application details
+    Then the user fills in the Application details        ${publicLeadApp}  Industrial research  ${tomorrowday}  ${month}  ${nextyear}
     And the user marks every section but one as complete  ${publicLeadApp}
-    When the user navigates to Your-finances page  ${publicLeadApp}
-    And the user marks the finances as complete    ${publicLeadApp}
+    When the user navigates to Your-finances page         ${publicLeadApp}
+    Then the user marks the finances as complete          ${publicLeadApp}
+#    And If Research participation is not 100pc collaborating is required to submit the application  ${openCompetitionPublicSector_name}  ${publicLeadApp}  dave.adams@gmail.com
+    # TODO pending due to IFS-1707. There is a bug not allowing the Application submit.
 
 *** Keywords ***
 Custom Suite Setup
@@ -86,8 +82,27 @@ he is not able to submit his application as he exceeds research participation
     the user clicks the button/link  link=Review and submit
     the user should see the element  jQuery=button:disabled:contains("Submit application")
 
+If Research participation is not 100pc collaborating is required to submit the application
+    [Arguments]  ${competition}  ${application}  ${lead}
+    the user fills in the inviting steps  ${collaborator}
+    the user logs out if they are logged in
+    the collaborator accepts and fills in his part in the application  ${competition}  ${application}
+    the lead is able to submit the application  ${lead}  ${application}
+
 the collaborator accepts and fills in his part in the application
-    [Arguments]  ${collaborator}
-    the user reads his email and clicks the link  ${collaborator}  Invitation to collaborate in ${openCompetitionResearch_name}  You are invited by  2
-    the user is able to confirm the invite  ${collaborator}  ${short_password}
-    Capture Page Screenshot
+    [Arguments]  ${competition}  ${application}
+    the user reads his email and clicks the link  ${collaborator}  Invitation to collaborate in ${competition}  You are invited by  2
+    the user is able to confirm the invite        ${collaborator}  ${short_password}
+    the user navigates to Your-finances page      ${application}
+    the user marks the finances as complete       ${application}
+
+the lead is able to submit the application
+    [Arguments]  ${user}  ${application}
+    log in as a different user       ${user}  ${short_password}
+    the user clicks the button/link  link=${application}
+    the user clicks the button/link  link=Review and submit
+    the user should see the element  jQuery=.message-alert:contains("You will not be able to make changes")
+    the user clicks the button/link  css=#submit-application-button
+    the user clicks the button/link  css=button[type="submit"][data-submitted-text]
+    the user clicks the button/link  link=Finished
+
