@@ -100,22 +100,12 @@ Unsuccessful applicant sees unsuccessful alert
 Internal user can view ineligible and unsuccessful applications in previous tab
     [Documentation]  IFS-1458 IFS-1459 IFS-1517
     [Tags]  HappyPath
-    Given log in as a different user         &{Comp_admin1_credentials}
-    When the user clicks the button/link     jQuery=a:contains("Previous")
-    And the user clicks the button/link      jQuery=a:contains("${NOT_EDITABLE_COMPETITION_NAME}")
-    And the user clicks the button/link      jQuery=a:contains("Unsuccessful applications")
-    Then the user should see the element     jQuery=td:contains("${proj_electric_drive}") + td:contains("Electric Drive")
-    And the user should see the element      jQuery=td:contains("${proj_electric_drive}") ~ td:contains("Unsuccessful")
+    [Setup]  log in as a different user      &{Comp_admin1_credentials}
+    Given the user clicks the button/link    jQuery=a:contains("Previous")
+    When the user clicks the button/link     link${NOT_EDITABLE_COMPETITION_NAME}
+    And the user clicks the button/link      link=Unsuccessful applications
+    Then the user should see the element     jQuery=td:contains("${proj_electric_drive}") ~ td:contains("Unsuccessful")
     And the user should not see the element  jQuery=td:contains("${INFORM_COMPETITION_NAME_1}")
-    And the user should not see the element  jQuery=td:contains("${INFORM_COMPETITION_NAME_2} ")
-    When the user navigates to the page      ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/unsuccessful
-    Then the user should see the element     jQuery=td:contains("${proj_app_with_ineligible}") + td:contains("Application with ineligible")
-    And the user should see the element      jQuery=td:contains("${proj_app_with_ineligible}") ~ td:contains("Ineligible")
-    When the user clicks the button/link     jQuery=a:contains("${proj_app_with_ineligible}")
-    # TODO To uncomment below line once IFS-1654 is resolved
-    # Then the user should not see the element   jQuery=a.button:contains("Reinstate application")
-    And the user clicks the button/link      link=Back
-    Then the user should see the element     jQuery=h1:contains("Unsuccessful applications")
 
 Successful applicant see successful alert
     [Documentation]    INFUND-7861
