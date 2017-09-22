@@ -189,6 +189,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private ServiceResult<ProjectResource> createSingletonProjectFromApplicationId(final Long applicationId) {
+
         return checkForExistingProjectWithApplicationId(applicationId).handleSuccessOrFailure(
                 failure -> createProjectFromApplicationId(applicationId),
                 success -> serviceSuccess(success)
@@ -307,7 +308,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     private ServiceResult<Void> generateFinanceCheckEntitiesForNewProject(Project newProject) {
         List<Organisation> organisations = newProject.getOrganisations();
-                List<ServiceResult<Void>> financeCheckResults = simpleMap(organisations, organisation ->
+
+        List<ServiceResult<Void>> financeCheckResults = simpleMap(organisations, organisation ->
                 financeChecksGenerator.createFinanceChecksFigures(newProject, organisation).andOnSuccess(() ->
                         costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(newProject.getId(), organisation.getId()).andOnSuccess(costCategoryType ->
                                 financeChecksGenerator.createMvpFinanceChecksFigures(newProject, organisation, costCategoryType))));
@@ -318,5 +320,4 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private ServiceResult<Project> getProjectByApplication(long applicationId) {
         return find(projectRepository.findOneByApplicationId(applicationId), notFoundError(Project.class, applicationId));
     }
-
 }
