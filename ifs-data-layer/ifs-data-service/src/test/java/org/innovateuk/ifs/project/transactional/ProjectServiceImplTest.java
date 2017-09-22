@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
@@ -18,8 +17,10 @@ import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.test.context.transaction.BeforeTransaction;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -30,7 +31,6 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newProjectInvite;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
@@ -54,6 +54,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+@Transactional
 public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> {
 
     @Mock
@@ -61,7 +62,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     @Mock
     private FinanceChecksGenerator financeChecksGeneratorMock;
-
 
     private Long applicationId = 456L;
     private Long userId = 7L;
@@ -192,7 +192,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         when(projectMapperMock.mapToResource(savedProject)).thenReturn(newProjectResource);
 
-
         ServiceResult<ProjectResource> project = service.createProjectFromApplication(applicationId);
         assertTrue(project.isSuccess());
         assertEquals(newProjectResource, project.getSuccessObject());
@@ -231,8 +230,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         verify(projectDetailsWorkflowHandlerMock, never()).projectCreated(any(Project.class), any(ProjectUser.class));
         verify(golWorkflowHandlerMock, never()).projectCreated(any(Project.class), any(ProjectUser.class));
         verify(projectWorkflowHandlerMock, never()).projectCreated(any(Project.class), any(ProjectUser.class));
-
-
     }
 
     @Test
@@ -368,8 +365,13 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         verify(projectMapperMock).mapToResource(savedProject);
     }
 
+    @BeforeTransaction
+    public void setupDb() {
+
+    }
     @Test
-    public void testCreateProjectsFromFundingDecisionsTransactionRollback() {
+    @Transactional
+    public void testCreateProjectsFromFundingDecisionsConstrainViolation() throws Exception {
 
         Role partnerRole = newRole().withType(PARTNER).build();
 
@@ -390,7 +392,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
 
         Project newProjectExpectations = createProjectExpectationsFromOriginalApplication();
-        when(projectRepositoryMock.save(newProjectExpectations)).thenThrow(new SQLException());
+        when(projectRepositoryMock.save(newProjectExpectations)).thenThrow(new DataIntegrityViolationException("dummy constraint violation"));
 
         CostCategoryType costCategoryTypeForOrganisation = newCostCategoryType().
                 withCostCategoryGroup(newCostCategoryGroup().
@@ -415,7 +417,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Map<Long, FundingDecision> fundingDecisions = new HashMap<>();
         fundingDecisions.put(applicationId, FundingDecision.FUNDED);
         ServiceResult<Void> project = service.createProjectsFromFundingDecisions(fundingDecisions);
-        assertTrue(project.isFailure());
+        assertTrue(project.isSuccess());
 
         verify(costCategoryTypeStrategyMock).getOrCreateCostCategoryTypeForSpendProfile(savedProject.getId(), organisation.getId());
         verify(financeChecksGeneratorMock).createMvpFinanceChecksFigures(savedProject, organisation, costCategoryTypeForOrganisation);
@@ -461,7 +463,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
             assertTrue(partnerOrganisations.get(0).isLeadOrganisation());
         });
     }
-
 
     @Test
     public void testGetProjectManager() {
