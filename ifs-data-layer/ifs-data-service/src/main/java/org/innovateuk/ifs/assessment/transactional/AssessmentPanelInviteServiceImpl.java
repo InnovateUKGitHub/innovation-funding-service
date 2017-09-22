@@ -146,6 +146,13 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
         ));
     }
 
+    @Override
+    public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId) {
+        List<CompetitionParticipant> result = competitionParticipantRepository.findParticipantsNotOnPanel(competitionId);
+
+        return serviceSuccess(simpleMap(result, competitionParticipant -> competitionParticipant.getUser().getId()));
+    }
+
     private AvailableAssessorResource mapToAvailableAssessorResource(CompetitionParticipant participant) {
         User assessor = participant.getUser();
         Profile profile = profileRepository.findOne(assessor.getProfileId());

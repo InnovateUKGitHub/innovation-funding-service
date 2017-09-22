@@ -16,4 +16,6 @@ public interface AssessmentPanelInviteRestService {
     RestResult<Void> inviteUsers(ExistingUserStagedInviteListResource existingUserStagedInvite);
 
     RestResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, int page);
+
+    RestResult<List<Long>> getAvailableAssessorIds(long competitionId);
 }

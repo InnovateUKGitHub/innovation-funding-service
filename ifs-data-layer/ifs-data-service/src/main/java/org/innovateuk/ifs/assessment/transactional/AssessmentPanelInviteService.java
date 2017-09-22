@@ -24,6 +24,12 @@ public interface AssessmentPanelInviteService {
     ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "READ_ASSESSORS_BY_COMPETITION",
+            description = "Competition Admins and Project Finance can retrieve available assessor ids by competition",
+            additionalComments = "The available assessors must have accepted a competition invite and not have an assessment panel invite")
+    ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_INVITES_BY_COMPETITION",
             description = "Competition Admins and Project Finance users can retrieve created invites by competition")
     ServiceResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, Pageable pageable);

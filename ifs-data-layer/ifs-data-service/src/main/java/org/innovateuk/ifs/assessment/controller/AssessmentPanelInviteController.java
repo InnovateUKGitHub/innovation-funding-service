@@ -48,4 +48,10 @@ public class AssessmentPanelInviteController {
             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = {"user.firstName", "user.lastName"}, direction = Sort.Direction.ASC) Pageable pageable) {
         return assessmentPanelInviteService.getAvailableAssessors(competitionId, pageable).toGetResponse();
     }
+
+    @GetMapping(value = "/getAvailableAssessorIds/{competitionId}")
+    public RestResult<List<Long>> getAvailableAssessorIds(
+            @PathVariable long competitionId) {
+        return assessmentPanelInviteService.getAvailableAssessorIds(competitionId).toGetResponse();
+    }
 }

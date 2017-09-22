@@ -100,7 +100,7 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
                                      AssessorPanelSelectionForm selectionForm) {
         AssessorPanelSelectionForm storedSelectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new AssessorPanelSelectionForm());
 
-        AssessorPanelSelectionForm trimmedAssessorForm = trimSelectionByFilteredResult(storedSelectionForm, empty(), competitionId);
+        AssessorPanelSelectionForm trimmedAssessorForm = trimSelectionByFilteredResult(storedSelectionForm, competitionId);
         selectionForm.setSelectedAssessorIds(trimmedAssessorForm.getSelectedAssessorIds());
         selectionForm.setAllSelected(trimmedAssessorForm.getAllSelected());
 
@@ -108,9 +108,8 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
     }
 
     private AssessorPanelSelectionForm trimSelectionByFilteredResult(AssessorPanelSelectionForm selectionForm,
-                                                                     Optional<Long> innovationArea,
                                                                      Long competitionId) {
-        List<Long> filteredResults = getAllAssessorIds(competitionId, innovationArea);
+        List<Long> filteredResults = getAllAssessorIds(competitionId);
         AssessorPanelSelectionForm updatedSelectionForm = new AssessorPanelSelectionForm();
 
         selectionForm.getSelectedAssessorIds().retainAll(filteredResults);
@@ -135,7 +134,7 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
 
         boolean limitExceeded = false;
         try {
-            List<Long> assessorIds = getAllAssessorIds(competitionId, empty());
+            List<Long> assessorIds = getAllAssessorIds(competitionId);
             AssessorPanelSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new AssessorPanelSelectionForm());
             if (isSelected) {
                 int predictedSize = selectionForm.getSelectedAssessorIds().size() + 1;
@@ -168,7 +167,7 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
             AssessorPanelSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new AssessorPanelSelectionForm());
 
             if (addAll) {
-                selectionForm.setSelectedAssessorIds(getAllAssessorIds(competitionId, empty()));
+                selectionForm.setSelectedAssessorIds(getAllAssessorIds(competitionId));
                 selectionForm.setAllSelected(true);
             } else {
                 selectionForm.getSelectedAssessorIds().clear();
@@ -183,8 +182,8 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
         }
     }
 
-    private List<Long> getAllAssessorIds(long competitionId, Optional<Long> innovationArea) {
-        return competitionInviteRestService.getAvailableAssessorIds(competitionId, innovationArea).getSuccessObjectOrThrowException();
+    private List<Long> getAllAssessorIds(long competitionId) {
+        return assessmentPanelInviteRestService.getAvailableAssessorIds(competitionId).getSuccessObjectOrThrowException();
     }
 
     @PostMapping(value = "/find/addSelected")
