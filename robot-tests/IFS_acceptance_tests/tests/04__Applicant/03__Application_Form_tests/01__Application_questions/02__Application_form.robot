@@ -106,6 +106,7 @@ Marking a question as complete
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=button:contains("Mark as complete")
     Then the text box should turn to green
+    And the word count should be correct for the Project summary
     And the user should see the element    jQuery=button:contains("Edit")
     And the question should be marked as complete on the application overview page
 
@@ -172,7 +173,7 @@ the text box should be editable
 
 the question should not be marked as complete on the application overview page
     The user clicks the button/link    link=Application overview
-    the user should see the element    jQuery=li:nth-child(2)
+    the user should see the element    css=li:nth-child(2)
     the user should not see the element    jQuery=li:nth-child(2) span:contains("Complete")
 
 the finance summary page should show a warning
