@@ -22,7 +22,10 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -33,7 +36,6 @@ import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newAp
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.eq;
@@ -180,18 +182,6 @@ public class OrganisationFinanceHandlerTest {
     }
 
     @Test
-    public void testGetOrganisationFinanceTotals() throws Exception {
-        Map<FinanceRowType, FinanceRowCostCategory> expected = handler.getOrganisationFinances(applicationFinance.getId(), competition);
-        expected.values().forEach(costCategory -> costCategory.setCosts(new ArrayList<>()));
-        Map<FinanceRowType, FinanceRowCostCategory> obtained = handler.getOrganisationFinances(applicationFinance.getId(), competition);
-
-        assertEquals(obtained.size(), expected.size());
-        assertTrue(obtained.keySet().stream().allMatch(key -> expected.containsKey(key)));
-        assertTrue(obtained.keySet().stream().allMatch(key -> obtained.get(key).getCosts().isEmpty()
-                            && expected.get(key).getCosts().equals(obtained.get(key).getCosts())));
-    }
-
-    @Test
     public void testCostItemToCost() throws Exception {
         FinanceRow materialCostTmp = handler.costItemToCost(material);
         assertEquals(new BigDecimal(100), materialCostTmp.getCost());
@@ -238,6 +228,5 @@ public class OrganisationFinanceHandlerTest {
     public void testGetProjectOrganisationFinanceChanges() throws Exception {
     //TODO
     }
-
 
 }
