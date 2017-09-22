@@ -269,8 +269,9 @@ Remove previous rows
 
 Invite a non-existing collaborator
     [Arguments]   ${email}  ${competition_name}
-    the user should see the element       jQuery=h1:contains("Application overview")
+    the user should see the element        jQuery=h1:contains("Application overview")
     the user fills in the inviting steps   ${email}
+    logout as user
     newly invited collaborator can create account and sign in   ${email}  ${competition_name}
 
 Newly invited collaborator can create account and sign in
