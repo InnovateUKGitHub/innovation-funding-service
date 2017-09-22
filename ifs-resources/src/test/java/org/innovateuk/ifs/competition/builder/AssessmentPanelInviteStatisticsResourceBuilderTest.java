@@ -12,43 +12,43 @@ public class AssessmentPanelInviteStatisticsResourceBuilderTest {
 
     @Test
     public void buildOne() {
-        int expectedAssessorInvites = 1;
-        int expectedAssessorAccepts = 2;
-        int expectedAssessorRejects = 3;
-        int expectedAssessorsListed = 4;
+        int expectedAssessorInvites = 9;
+        int expectedAssessorsAccepted = 2;
+        int expectedAssessorsRejected = 3;
+        int expectedAssessorsPending = 4;
 
         AssessmentPanelInviteStatisticsResource inviteStatisticsResource = newAssessmentPanelInviteStatisticsResource()
                 .withAssessorsInvited(expectedAssessorInvites)
-                .withAssessorsAccepted(expectedAssessorAccepts)
-                .withAssessorsRejected(expectedAssessorRejects)
-                .withAssessorsListed(expectedAssessorsListed)
+                .withAssessorsAccepted(expectedAssessorsAccepted)
+                .withAssessorsRejected(expectedAssessorsRejected)
+                .withAssessorsPending(expectedAssessorsPending)
                 .build();
 
         assertEquals(expectedAssessorInvites, inviteStatisticsResource.getInvited());
-        assertEquals(expectedAssessorAccepts, inviteStatisticsResource.getAccepted());
-        assertEquals(expectedAssessorRejects, inviteStatisticsResource.getDeclined());
-        assertEquals(expectedAssessorsListed, inviteStatisticsResource.getPending());
+        assertEquals(expectedAssessorsAccepted, inviteStatisticsResource.getAccepted());
+        assertEquals(expectedAssessorsRejected, inviteStatisticsResource.getDeclined());
+        assertEquals(expectedAssessorsPending, inviteStatisticsResource.getPending());
     }
 
     @Test
     public void buildMany() {
-        Integer[] expectedAssessorInvites = {1, 11};
-        Integer[] expectedAssessorAccepts = {2, 12};
-        Integer[] expectedAssessorRejects = {3, 13};
-        Integer[] expectedAssessorsListed = {4, 14};
+        Integer[] expectedAssessorInvites = {9, 39};
+        Integer[] expectedAssessorsAccepted = {2, 12};
+        Integer[] expectedAssessorsRejected = {3, 13};
+        Integer[] expectedAssessorsPending = {4, 14};
 
         List<AssessmentPanelInviteStatisticsResource> inviteStatisticsResources = newAssessmentPanelInviteStatisticsResource()
                 .withAssessorsInvited(expectedAssessorInvites)
-                .withAssessorsAccepted(expectedAssessorAccepts)
-                .withAssessorsRejected(expectedAssessorRejects)
-                .withAssessorsListed(expectedAssessorsListed)
+                .withAssessorsAccepted(expectedAssessorsAccepted)
+                .withAssessorsRejected(expectedAssessorsRejected)
+                .withAssessorsPending(expectedAssessorsPending)
                 .build(2);
 
         for (int i = 0; i < inviteStatisticsResources.size(); i++) {
             assertEquals((int) expectedAssessorInvites[i], inviteStatisticsResources.get(i).getInvited());
-            assertEquals((int) expectedAssessorAccepts[i], inviteStatisticsResources.get(i).getAccepted());
-            assertEquals((int) expectedAssessorRejects[i], inviteStatisticsResources.get(i).getDeclined());
-            assertEquals((int) expectedAssessorsListed[i], inviteStatisticsResources.get(i).getPending());
+            assertEquals((int) expectedAssessorsAccepted[i], inviteStatisticsResources.get(i).getAccepted());
+            assertEquals((int) expectedAssessorsRejected[i], inviteStatisticsResources.get(i).getDeclined());
+            assertEquals((int) expectedAssessorsPending[i], inviteStatisticsResources.get(i).getPending());
         }
     }
 }
