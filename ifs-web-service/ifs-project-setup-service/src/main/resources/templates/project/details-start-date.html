@@ -12,7 +12,7 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{id}/details(id=${model.projectId})}" />
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Target start date',subTitle=${model.projectName},size='heading-xlarge'" />
-            <p>The following steps need to be taken before your project can begin. If required, the start date can be changed later.</p>
+            <p>Your target start date can be changed up until the spend profile is generated.</p>
             <p>The project can only start when:</p>
 
             <ol class="list list-number">
@@ -30,7 +30,7 @@
                                 <span class="error-message" th:each="err : ${#fields.errors('projectStartDate')}" th:text="${err}" />
                             </th:block>
                         </legend>
-                        <p class="form-hint">Please select the date you want the project to start. Projects must start on the first day of a month.</p>
+                        <p class="form-hint">Projects must start on the first day of a month so please choose the month and year of your project start.</p>
 
                         <th:block th:insert="question-type/form-elements :: form-dateinput (id=${'projectStartDate'}, field=${'projectStartDate'}, dayReadonly=true)" />
                     </fieldset>
