@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -52,6 +53,10 @@ public class CompetitionSearchResultItemBuilder extends BaseBuilder<CompetitionS
 
     public CompetitionSearchResultItemBuilder withProjectsCount(Integer... projectsCount) {
         return withArray((number, competition) -> competition.setProjectsCount(number), projectsCount);
+    }
+
+    public CompetitionSearchResultItemBuilder withOpenDate(ZonedDateTime... openDates) {
+        return withArray((openDate, competition) -> competition.setOpenDate(openDate), openDates);
     }
 
     @Override
