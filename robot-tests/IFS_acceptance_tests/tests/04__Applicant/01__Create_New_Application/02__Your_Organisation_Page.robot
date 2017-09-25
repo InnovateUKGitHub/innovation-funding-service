@@ -59,9 +59,7 @@ Companies House: Empty company name field
 Enter address manually: Postcode Validations
     [Documentation]    INFUND-888
     [Tags]    HappyPath
-#    Pretty certain this will break tests on local as it will close the section
-    When the user expands the section            Enter details manually
-#    When the user clicks the button/link    jQuery=summary:contains("Enter details manually")
+    Given the user expands enter details manually
     Then the user enters text to a text field    id=addressForm.postcodeInput    ${EMPTY}
     And the user clicks the button/link    jQuery=button:contains("Find UK address")
     And the user should see the element    css=.form-label .error-message
@@ -111,3 +109,7 @@ Applicant goes to the organisation search page
 the backslash doesnt give errors
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    the user should see the element    id=addressForm.selectedPostcodeIndex
     Run Keyword If    '${status}' == 'FAIL'    Wait Until Page Contains Without Screenshots    No results were found
+
+the user expands enter details manually
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=summary:contains("Enter details manually")[aria-expanded="false"]
+    run keyword if  '${status}'=='PASS'  the user clicks the button/link  jQuery=summary:contains("Enter details manually")[aria-expanded="false"]
