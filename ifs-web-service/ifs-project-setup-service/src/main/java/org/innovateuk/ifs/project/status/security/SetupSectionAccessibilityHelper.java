@@ -83,13 +83,13 @@ public class SetupSectionAccessibilityHelper {
         return !isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
                 "Unable to access until Companies House details are complete for Organisation")
 
-                || setupProgressChecker.isGrantOfferLetterAvailable()
+                || isGrantOfferLetterGenerated()
                 || !setupProgressChecker.isLeadPartnerOrganisation(organisation);
 
     }
 
-    public boolean isGrantOfferLetterAvailable(){
-        return setupProgressChecker.isGrantOfferLetterAvailable();
+    public boolean isGrantOfferLetterGenerated(){
+        return setupProgressChecker.isSpendProfileApproved();
     }
 
     public SectionAccess canAccessMonitoringOfficerSection(OrganisationResource organisation) {

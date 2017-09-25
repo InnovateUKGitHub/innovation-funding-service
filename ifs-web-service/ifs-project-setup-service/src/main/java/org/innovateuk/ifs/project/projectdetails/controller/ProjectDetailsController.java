@@ -117,7 +117,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 partnerOrganisations, leadOrganisation, applicationResource, projectUsers, competitionResource,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()), projectDetailsSubmitted,
                 getProjectManager(projectResource.getId()).orElse(null), isSubmissionAllowed, false,
-                !statusAccessor.isGrantOfferLetterAvailable(), !statusAccessor.isGrantOfferLetterAvailable()));
+                !statusAccessor.isGrantOfferLetterGenerated(), !statusAccessor.isGrantOfferLetterGenerated()));
 
         return "project/detail";
     }
