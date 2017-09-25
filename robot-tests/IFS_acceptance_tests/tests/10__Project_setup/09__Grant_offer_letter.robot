@@ -28,6 +28,10 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...               INFUND-7170 Approved signed-GOL cannot be seen/downloaded by external users
 ...
 ...               INFUND-6780 As a project manager, I have the option to remove an uploaded signed GOL before submitting it, so that an can upload a different file if required
+...
+...               IFS-1577 Allow change of Project address until generation of GOL
+...
+...               IFS-1578 Allow change of Project Manager until generation of GOL
 Suite Setup       all the other sections of the project are completed (except spend profile approval)
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup    Upload
@@ -98,6 +102,12 @@ Lead should not be able to see GOL until it is sent by IUK
     And the user should see the element              css=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
     When the user clicks the button/link             link=Project setup status
     Then the user should not see the element         link=Grant offer letter
+
+Lead cannot change project manager and project address after GOL generation
+    [Documentation]  INFUND-1577, IFS-1578
+    [Tags]
+    Given the user navigates to the page and gets a custom error message  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/details/project-manager  ${403_error_message}
+    When the user navigates to the page and gets a custom error message  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/details/project-address  ${403_error_message}
 
 Non lead should not be able to see GOL until it is sent by IUK
     [Documentation]  INFUND-7027
@@ -452,6 +462,38 @@ all the other sections of the project are completed (except spend profile approv
     the user logs-in in new browser              &{internal_finance_credentials}
     project finance approves bank details for ${PS_GOL_APPLICATION_TITLE}
     project manager submits other documents      ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}  ${PS_GOL_APPLICATION_PROJECT}
+    check if project manager and project address fields are editable
     project finance approves other documents     ${PS_GOL_APPLICATION_PROJECT}
     project finance generates the Spend Profile  ${Gabtype_Id}  ${Kazio_Id}  ${Cogilith_Id}  ${PS_GOL_APPLICATION_PROJECT}
+    log in as a different user                   ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
+    check if project manager and project address fields are editable
     all partners submit their Spend Profile
+
+check if project manager and project address fields are editable
+    the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/details
+    check if project address can be changed
+    check if project manager can be changed
+
+check if project address can be changed
+    the user clicks the button/link  jQuery=a:contains("Project address")
+    ${reg_address}  ${value}=  Run Keyword And Ignore Error Without Screenshots  the user sees that the radio button is selected  addressType  address-use-org
+    run keyword if  '${reg_address}' == 'PASS'  the user selects the radio button  addressType  address-use-operating
+    run keyword if  '${reg_address}' == 'FAIL'  the user selects the radio button  addressType  address-use-org
+    the user clicks the button/link  jQuery=button:contains("Save")
+    the user clicks the button/link  jQuery=a:contains("Project address")
+    ${reg_address}  ${value}=  Run Keyword And Ignore Error Without Screenshots  the user sees that the radio button is selected  addressType  address-use-org
+    run keyword if  '${reg_address}' == 'PASS'  the user sees that the radio button is selected  addressType  address-use-org
+    run keyword if  '${reg_address}' == 'FAIL'  the user sees that the radio button is selected  addressType  address-use-operating
+    the user clicks the button/link  jQuery=a:contains("Project details")
+
+check if project manager can be changed
+    the user clicks the button/link  jQuery=a:contains("Project Manager")
+    ${manager}  ${value}=  Run Keyword And Ignore Error Without Screenshots  the user sees that the radio button is selected  projectManager  projectManager1
+    run keyword if  '${manager}' == 'PASS'  the user selects the radio button  projectManager  projectManager2
+    run keyword if  '${manager}' == 'FAIL'  the user selects the radio button  projectManager  projectManager1
+    the user clicks the button/link  jQuery=button:contains("Save")
+    the user clicks the button/link  jQuery=a:contains("Project Manager")
+    ${manager}  ${value}=  Run Keyword And Ignore Error Without Screenshots  the user sees that the radio button is selected  projectManager  projectManager1
+    run keyword if  '${manager}' == 'PASS'  the user sees that the radio button is selected  projectManager  projectManager1
+    run keyword if  '${manager}' == 'FAIL'  the user sees that the radio button is selected  projectManager  projectManager2
+    the user clicks the button/link  jQuery=a:contains("Project details")
