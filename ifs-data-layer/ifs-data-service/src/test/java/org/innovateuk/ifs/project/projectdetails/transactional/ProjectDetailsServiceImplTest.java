@@ -150,7 +150,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void testInvalidProjectManagerProvided() {
-        when(statusServiceMock.getProjectStatusByProjectId(projectId)).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
         ServiceResult<Void> result = service.setProjectManager(projectId, otherUserId);
         assertFalse(result.isSuccess());
         assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER));
@@ -164,8 +164,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         assertTrue(existingProject.getProjectUsers().isEmpty());
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(existingProject);
-        when(golWorkflowHandlerMock.isAlreadySent(existingProject)).thenReturn(true);
-        when(statusServiceMock.getProjectStatusByProjectId(projectId)).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.COMPLETE).build()));
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.COMPLETE).build()));
 
         ServiceResult<Void> result = service.setProjectManager(projectId, userId);
         assertTrue(result.isFailure());
@@ -181,7 +180,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         when(projectDetailsWorkflowHandlerMock.projectManagerAdded(project, leadPartnerProjectUser)).thenReturn(true);
 
-        when(statusServiceMock.getProjectStatusByProjectId(project.getId())).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
@@ -218,7 +217,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         when(projectDetailsWorkflowHandlerMock.projectManagerAdded(project, leadPartnerProjectUser)).thenReturn(true);
 
-        when(statusServiceMock.getProjectStatusByProjectId(project.getId())).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
 
         setLoggedInUser(newUserResource().withId(leadPartnerProjectUser.getId()).build());
 
@@ -502,7 +501,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .build();
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
-        when(statusServiceMock.getProjectStatusByProjectId(projectId)).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.COMPLETE).build()));
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.COMPLETE).build()));
 
         ServiceResult<Void> result = service.inviteProjectManager(projectId, inviteResource);
 
@@ -542,7 +541,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite().withEmail("a@b.com").withName("A B").build());
 
-        when(statusServiceMock.getProjectStatusByProjectId(projectId)).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
 
         ServiceResult<Void> result = service.inviteProjectManager(projectId, inviteResource);
 
@@ -571,7 +570,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
 
-        when(statusServiceMock.getProjectStatusByProjectId(projectId)).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
 
         NotificationTarget to = new ExternalUserNotificationTarget("A B", "a@b.com");
         Map<String, Object> globalArgs = new HashMap<>();
@@ -635,7 +634,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         when(addressRepositoryMock.exists(existingRegisteredAddressResource.getId())).thenReturn(true);
         when(addressRepositoryMock.findOne(existingRegisteredAddressResource.getId())).thenReturn(registeredAddress);
 
-        when(statusServiceMock.getProjectStatusByProjectId(projectId)).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
@@ -654,7 +653,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         when(addressRepositoryMock.exists(existingOperatingAddressResource.getId())).thenReturn(true);
         when(addressRepositoryMock.findOne(existingOperatingAddressResource.getId())).thenReturn(operatingAddress);
 
-        when(statusServiceMock.getProjectStatusByProjectId(projectId)).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
@@ -679,7 +678,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         when(addressTypeRepositoryMock.findOne(PROJECT.getOrdinal())).thenReturn(projectAddressType);
         when(organisationAddressRepositoryMock.findByOrganisationIdAndAddressType(leadOrganisation.getId(), projectAddressType)).thenReturn(emptyList());
         when(organisationAddressRepositoryMock.save(organisationAddress)).thenReturn(organisationAddress);
-        when(statusServiceMock.getProjectStatusByProjectId(project.getId())).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
         when(projectDetailsWorkflowHandlerMock.projectAddressAdded(project, leadPartnerProjectUser)).thenReturn(true);
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());

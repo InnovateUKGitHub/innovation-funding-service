@@ -24,7 +24,6 @@ import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -94,9 +93,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     @Autowired
     private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandler;
-
-    @Autowired
-    private GrantOfferLetterWorkflowHandler grantOfferLetterWorkflowHandler;
 
     @Autowired
     private ProjectWorkflowHandler projectWorkflowHandler;
@@ -225,7 +221,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     }
 
     private ServiceResult<Project> validateGOLGenerated(Project project, CommonFailureKeys failKey){
-        return statusService.getProjectStatusByProjectId(project.getId()).andOnSuccess(
+        return statusService.getProjectStatusByProject(project).andOnSuccess(
                 projectStatus -> {
                     if(projectStatus.getSpendProfileStatus().equals(COMPLETE)){
                         return serviceFailure(failKey);
