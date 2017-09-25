@@ -298,6 +298,7 @@
               th:unless="${model.assignedToCurrentUser}"
               th:text="${fullButtonText} ? |Assigned to ${name}. | : 'Assigned to'"
               th:with="name=${model.assignee.name}">
+            <span class="assign-name" th:text="${name}">NAME</span>
         </span>
     </th:block>
 

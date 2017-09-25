@@ -68,6 +68,12 @@ public class AssessmentPanelInviteServiceSecurityTest extends BaseServiceSecurit
                 COMP_ADMIN, PROJECT_FINANCE);
     }
 
+    @Test
+    public void getAvailableAssessorIds() throws Exception {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAvailableAssessorIds(1L),
+                COMP_ADMIN, PROJECT_FINANCE);
+    }
+
     public static class TestAssessmentPanelInviteService implements AssessmentPanelInviteService {
 
         @Override
@@ -82,6 +88,11 @@ public class AssessmentPanelInviteServiceSecurityTest extends BaseServiceSecurit
 
         @Override
         public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId) {
             return null;
         }
     }

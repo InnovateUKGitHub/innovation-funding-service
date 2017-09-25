@@ -30,4 +30,6 @@ public interface AssessmentPanelInviteRestService {
 
     RestResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, int page);
 
+    RestResult<List<Long>> getAvailableAssessorIds(long competitionId);
+
 }

@@ -32,7 +32,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
-import static java.lang.String.format;
+
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -51,7 +51,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.util.StringFunctions.plainTextToHtml;
 import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
-import static org.springframework.security.config.Elements.DEBUG;
+
 
 /*
  * Service for managing {@link AssessmentPanelInvite}s.
@@ -150,7 +150,6 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
         });
     }
 
-
         @Override
         public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors ( long competitionId, Pageable
         pageable){
@@ -164,6 +163,14 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
                     pagedResult.getSize()
             ));
         }
+
+
+    @Override
+    public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId) {
+        List<CompetitionParticipant> result = competitionParticipantRepository.findParticipantsNotOnPanel(competitionId);
+
+        return serviceSuccess(simpleMap(result, competitionParticipant -> competitionParticipant.getUser().getId()));
+    }
 
 
     private AvailableAssessorResource mapToAvailableAssessorResource(CompetitionParticipant participant) {

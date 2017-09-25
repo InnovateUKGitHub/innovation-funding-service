@@ -11,13 +11,13 @@ public class AssessmentPanelInviteStatisticsResourceDocs {
             fieldWithPath("invited").description("The number of assessors invited to the assessment panel"),
             fieldWithPath("accepted").description("The number of assessors who have accepted an invitation to the assessment panel"),
             fieldWithPath("declined").description("The number of assessors who have rejected an invitation to the assessment panel"),
-            fieldWithPath("inviteList").description("The number of assessors on the invite list")
+            fieldWithPath("pending").description("The number of assessors withh pending invites")
     };
 
     public static final AssessmentPanelInviteStatisticsResourceBuilder assessmentPanelInviteStatisticsResourceBuilder =
             newAssessmentPanelInviteStatisticsResource()
-                    .withAssessorsInvited(5)
+                    .withAssessorsInvited(11)
                     .withAssessorsAccepted(3)
                     .withAssessorsRejected(2)
-                    .withAssessorsListed(6);
+                    .withAssessorsPending(6);
 }

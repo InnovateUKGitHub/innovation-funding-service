@@ -153,4 +153,7 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
 
     @Query(PARTICIPANTS_NOT_ON_PANEL)
     Page<CompetitionParticipant> findParticipantsNotOnPanel(@Param("competitionId") Long competitionId, Pageable pageable);
+
+    @Query(PARTICIPANTS_NOT_ON_PANEL)
+    List<CompetitionParticipant> findParticipantsNotOnPanel(@Param("competitionId") Long competitionId);
 }

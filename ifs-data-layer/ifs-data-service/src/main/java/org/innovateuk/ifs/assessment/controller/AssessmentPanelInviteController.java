@@ -7,16 +7,16 @@ import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * Controller for managing Invites to Assessment Panels.
- */
-
-
 import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import javax.validation.Valid;
+import java.util.List;
+
+/**
+ * Controller for managing Invites to Assessment Panels.
+ */
 
 
 @RestController
@@ -59,6 +59,12 @@ public class AssessmentPanelInviteController {
             @PathVariable long competitionId,
             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = {"user.firstName", "user.lastName"}, direction = Sort.Direction.ASC) Pageable pageable) {
         return assessmentPanelInviteService.getAvailableAssessors(competitionId, pageable).toGetResponse();
+    }
+
+    @GetMapping(value = "/getAvailableAssessorIds/{competitionId}")
+    public RestResult<List<Long>> getAvailableAssessorIds(
+            @PathVariable long competitionId) {
+        return assessmentPanelInviteService.getAvailableAssessorIds(competitionId).toGetResponse();
     }
 
 }

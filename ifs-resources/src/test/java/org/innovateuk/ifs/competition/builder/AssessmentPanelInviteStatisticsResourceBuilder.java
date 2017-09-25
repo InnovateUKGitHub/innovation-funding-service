@@ -45,7 +45,7 @@ public class AssessmentPanelInviteStatisticsResourceBuilder
         return withArraySetFieldByReflection("declined", assessorsDeclined);
     }
 
-    public AssessmentPanelInviteStatisticsResourceBuilder withAssessorsListed(Integer ...assessorsListed) {
-        return withArraySetFieldByReflection("inviteList", assessorsListed);
+    public AssessmentPanelInviteStatisticsResourceBuilder withAssessorsPending(Integer ...assessorsListed) {
+        return withArraySetFieldByReflection("pending", assessorsListed);
     }
 }

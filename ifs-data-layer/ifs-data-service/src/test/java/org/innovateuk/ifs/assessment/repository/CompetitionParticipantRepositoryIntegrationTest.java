@@ -9,6 +9,7 @@ import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.*;
+import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
@@ -17,6 +18,7 @@ import org.innovateuk.ifs.user.domain.Agreement;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.AgreementRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.RoleRepository;
@@ -71,6 +73,9 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     private UserRepository userRepository;
 
     @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
     private CompetitionRepository competitionRepository;
 
     @Autowired
@@ -99,6 +104,9 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
     @Autowired
     private AgreementRepository agreementRepository;
+
+    @Autowired
+    private AssessmentPanelInviteRepository assessmentPanelInviteRepository;
 
     @Autowired
     @Override
@@ -964,5 +972,44 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         assertEquals(REJECTED, content.get(2).getStatus());
         assertEquals("Jane Pritchard", content.get(3).getInvite().getName());
         assertEquals(PENDING, content.get(3).getStatus());
+    }
+
+    @Test
+    public void findAssessorAvailableForAssessmentPanel() {
+        CompetitionParticipant availableParticipant = saveNewCompetitionParticipant(
+                newCompetitionInviteWithoutId()
+                        .withName("name1")
+                        .withEmail(user.getEmail())
+                        .withHash(Invite.generateInviteHash())
+                        .withCompetition(competition)
+                        .withInnovationArea(innovationArea)
+                        .withStatus(OPENED)
+                        .withUser(user)
+                        .build()
+        );
+        availableParticipant.acceptAndAssignUser(user);
+
+        User assessor = userMapper.mapToDomain(getFelixWilson());
+        CompetitionParticipant unavailableParticipant = saveNewCompetitionParticipant(
+                newCompetitionInviteWithoutId()
+                        .withName(assessor.getName())
+                        .withEmail(assessor.getEmail())
+                        .withHash(Invite.generateInviteHash())
+                        .withCompetition(competition)
+                        .withInnovationArea(innovationArea)
+                        .withStatus(OPENED)
+                        .withUser(assessor)
+                        .build()
+        );
+        unavailableParticipant.acceptAndAssignUser(assessor);
+
+        AssessmentPanelInvite invite = new AssessmentPanelInvite(userMapper.mapToDomain(getFelixWilson()), "hash", competition);
+        assessmentPanelInviteRepository.save(invite);
+
+        flushAndClearSession();
+
+        List<CompetitionParticipant> retrievedParticipants = repository.findParticipantsNotOnPanel(competition.getId());
+        assertEquals(1, retrievedParticipants.size());
+        assertEqualParticipants(availableParticipant, retrievedParticipants.get(0));
     }
 }
