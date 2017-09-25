@@ -56,6 +56,10 @@ public class SetupSectionAccessibilityHelper {
             return NOT_ACCESSIBLE;
         }
 
+        if (isSpendProfileGenerated()) {
+            return NOT_ACCESSIBLE;
+        }
+
         return ACCESSIBLE;
     }
 
