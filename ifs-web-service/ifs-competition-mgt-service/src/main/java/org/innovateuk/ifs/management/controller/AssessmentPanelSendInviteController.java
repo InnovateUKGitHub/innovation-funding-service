@@ -41,7 +41,7 @@ public class AssessmentPanelSendInviteController {
         AssessorInvitesToSendResource invites = assessmentPanelInviteRestService.getAllInvitesToSend(competitionId).getSuccessObjectOrThrowException();
 
         if (invites.getRecipients().isEmpty()) {
-            return redirectToPanelInviteListView(competitionId);
+            return redirectToPanelOverviewTab(competitionId);
         }
 
         model.addAttribute("model", new SendInvitesViewModel(
@@ -74,7 +74,7 @@ public class AssessmentPanelSendInviteController {
                     .toServiceResult();
 
             return validationHandler.addAnyErrors(sendResult, fieldErrorsToFieldErrors(), asGlobalErrors())
-                    .failNowOrSucceedWith(failureView, () -> redirectToPanelInviteListView(competitionId));
+                    .failNowOrSucceedWith(failureView, () -> redirectToPanelOverviewTab(competitionId));
         });
     }
 
@@ -82,8 +82,7 @@ public class AssessmentPanelSendInviteController {
         form.setSubject(format("Invitation to assess '%s'", assessorInviteToSendResource.getCompetitionName()));
     }
 
-
-    private String redirectToPanelInviteListView(long competitionId) {
-        return format("redirect:/panel/competition/%s/assessors/invite", competitionId);
+    private String redirectToPanelOverviewTab(long competitionId) {
+        return format("redirect:/assessment/panel/competition/%s/assessors/overview", competitionId);
     }
 }
