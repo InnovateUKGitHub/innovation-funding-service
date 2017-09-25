@@ -90,6 +90,10 @@ ${IN_ASSESSMENT_APPLICATION_5_TITLE}      Products and Services Personalised
 ${IN_ASSESSMENT_APPLICATION_5_NUMBER}     ${application_ids['${IN_ASSESSMENT_APPLICATION_5_TITLE}']}
 ${IN_ASSESSMENT_APPLICATION_5_LEAD_PARTNER_EMAIL}    paula.fuller@example.com
 ${INFORM_COMPETITION_NAME}                Integrated delivery programme - low carbon vehicles
+${INFORM_COMPETITION_NAME_1}              Climate control solution
+${INFORM_COMPETITION_NAME_1_NUMBER}       ${application_ids['${INFORM_COMPETITION_NAME_1}']}
+${INFORM_COMPETITION_NAME_2}              High Performance Gasoline Stratified
+${INFORM_COMPETITION_NAME_2_NUMBER}       ${application_ids['${INFORM_COMPETITION_NAME_2}']}
 ${NON_IFS_COMPETITION_NAME}     Transforming big data
 ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
 ${SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/summary

@@ -12,6 +12,10 @@ Documentation     INFUND-8942 - Filter and sorting on 'Ineligible applications' 
 ...               INFUND-8941 - As a member of the competitions team I can reinstate an application that as been marked as Ineligible
 ...
 ...               IFS-986 - Innovation Leads: Enable 'Mark as ineligible' for applications
+...
+...               IFS-1458 View unsuccessful applications after Inform state: initial navigation
+...
+...               IFS-1459 View unsuccessful applications after Inform state: list
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
@@ -96,6 +100,12 @@ Filter ineligible applications
     When the user clicks the button/link       jQuery=a:contains("Clear all filters")
     Then the user should see the element       jQuery=td:contains("Informed ineligible application") ~ td span:contains("Informed")
 
+Internal user can view ineligible applications in unsuccessful list
+    [Documentation]  IFS-1458 IFS-1459
+    [Tags]  HappyPath
+    Given the user navigates to the page  ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/unsuccessful
+    Then the user should see the element  jQuery=td:contains("${ineligibleApplication}")
+
 Inform a user their application is ineligible
     [Documentation]  INFUND-7374
     [Tags]  HappyPath  Applicant
@@ -122,7 +132,7 @@ Innovation Lead is not able to reinstate an application
     Then the user should not see the element  jQuery=a[role="button"]:contains("Reinstate application")
 
 Reinstate an application
-    [Documentation]  INFUND-8941 IFS-986
+    [Documentation]  INFUND-8941 IFS-986 IFS-1458 IFS-1459
     [Tags]  HappyPath
     Given Log in as a different user          &{Comp_admin1_credentials}
     When the user navigates to the page       ${ineligibleApplicationOverview}
@@ -130,7 +140,9 @@ Reinstate an application
     When the user clicks the button/link      jQuery=button:contains("Reinstate application")
     And the user navigates to the page  ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/submitted
     Then the user should see the element      jQuery=td:contains("${ineligibleApplication}")
+    And the reinstated application in no longer shown in the unsuccessful list
     And the applicant can see his application in the right section  Applications in progress
+
 
 *** Keywords ***
 the applicant can see his application in the right section
@@ -142,3 +154,7 @@ the user navigates to ineligible applications
     the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     the user clicks the button/link    link = Applications: All, submitted, ineligible
     the user clicks the button/link    link = Ineligible applications
+
+the reinstated application in no longer shown in the unsuccessful list
+    the user navigates to the page       ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/unsuccessful
+    the user should not see the element  jQuery=td:contains("${ineligibleApplication}")

@@ -150,7 +150,6 @@ Once all final decisions have been made and emails are sent Comp moves to Inform
     When the user navigates to the page   ${CA_Live}
     Then the user should see the element  jQuery=section:contains("Inform") > ul:contains("${FUNDERS_PANEL_COMPETITION_NAME}")
 
-
 *** Keywords ***
 Custom Suite Setup
     The user logs-in in new browser  &{Comp_admin1_credentials}

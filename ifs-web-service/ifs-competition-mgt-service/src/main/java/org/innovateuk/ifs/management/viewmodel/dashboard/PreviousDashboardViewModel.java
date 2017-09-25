@@ -8,12 +8,23 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * View model for showing the Complete competitions
+ * View model for showing the Previous competitions
  */
-public class CompleteDashboardViewModel extends DashboardViewModel {
-    public CompleteDashboardViewModel(Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitions,
+public class PreviousDashboardViewModel {
+    protected List<CompetitionSearchResultItem> competitions;
+    protected CompetitionCountResource counts;
+
+    public PreviousDashboardViewModel(List<CompetitionSearchResultItem> competitions,
                                       CompetitionCountResource counts) {
         this.competitions = competitions;
         this.counts = counts;
+    }
+
+    public List<CompetitionSearchResultItem> getCompetitions() {
+        return competitions;
+    }
+
+    public CompetitionCountResource getCounts() {
+        return counts;
     }
 }
