@@ -18,7 +18,7 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application team',subTitle=${applicationName},size='heading-xlarge'" />
     </th:block>
 
-    <p>View team members for both the lead and collaborating organisations.</p>
+    <p>View contributors for both the lead and collaborating organisations.</p>
 
     <th:block th:insert="fragments/application-team :: organisation(${model.team.leadOrganisation}, true, '0')" />
     <br />
