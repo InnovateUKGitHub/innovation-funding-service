@@ -175,7 +175,7 @@ Mark Organisation as complete when no
     Then the user should see the element          jQuery=li:contains("Your organisation") > .task-status-complete
     When the user clicks the button/link          link=Your organisation
     Then The user should not see the element      css=input
-    and the user should see the element           jQuery=button:contains("Edit")
+    And the user should see the element           jQuery=button:contains("Edit")
     And the user clicks the button/link           jQuery=a:contains("Return to finances")
 
 The Lead applicant is able to edit and re-submit when no
@@ -465,14 +465,11 @@ the user navigates to the growth table finances
 Invite a non-existing collaborator in Application with Growth table
     the user should see the element       jQuery=h1:contains("Application overview")
     the user fills in the inviting steps  ${newUsersEmail}
-    newly invited collaborator can create account and sign in
+    newly invited collaborator can create account and sign in  ${newUsersEmail}
 
 Newly invited collaborator can create account and sign in
+    [Arguments]  ${newUsersEmail}
     logout as user
-    newly invited collaborator can create account and sign in  ${newUsersEmail}  ${compWithGrowth}
-
-Newly invited collaborator can create account and sign in
-    [Arguments]  ${newUsersEmail}  ${compWithGrowth}
     the user reads his email and clicks the link  ${newUsersEmail}  Invitation to collaborate in ${compWithGrowth}  You will be joining as part of the organisation  2
     the user clicks the button/link               jQuery=a:contains("Yes, accept invitation")
     the user should see the element               jquery=h1:contains("Choose your organisation type")

@@ -140,15 +140,6 @@ the research user finds org in company house
     the user clicks the button/link       jQuery=.button:contains("Save organisation and continue")
     the user clicks the button/link       jQuery=.button:contains("Save and continue")
 
-the user fills in the inviting steps
-    [Arguments]  ${email}
-    the user clicks the button/link       link=view and manage contributors and collaborators
-    the user clicks the button/link       link=Add a collaborator organisation
-    the user enters text to a text field  css=#organisationName  New Organisation's Name
-    the user enters text to a text field  css=input[id="applicants0.name"]  Partner's name
-    the user enters text to a text field  css=input[id="applicants0.email"]  ${email}
-    the user clicks the button/link       jQuery=button:contains("Add organisation and invite applicants")
-
 The user navigates to the summary page of the Robot test application
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
