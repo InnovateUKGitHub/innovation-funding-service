@@ -27,6 +27,7 @@ import org.innovateuk.ifs.project.projectdetails.viewmodel.*;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.status.StatusService;
+import org.innovateuk.ifs.project.status.populator.SetupStatusViewModelPopulator;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.security.SetupSectionAccessibilityHelper;
@@ -93,6 +94,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     @Autowired
     private OrganisationAddressRestService organisationAddressRestService;
 
+    @Autowired
+    private SetupStatusViewModelPopulator setupStatusViewModelPopulator;
+
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
     @GetMapping("/{projectId}/details")
     public String viewProjectDetails(@PathVariable("projectId") final Long projectId, Model model,
@@ -109,14 +113,14 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
         SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(teamStatus);
-        boolean projectDetailsSubmitted = statusAccessor.isProjectDetailsSubmitted();
         boolean spendProfileGenerated = statusAccessor.isSpendProfileGenerated();
 
+        boolean projectDetailsCompleteAndAllFinanceContactsAssigned = setupStatusViewModelPopulator.checkLeadPartnerProjectDetailsProcessCompleted(teamStatus);
 
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource, loggedInUser,
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
                 partnerOrganisations, leadOrganisation, applicationResource, projectUsers, competitionResource,
-                projectService.isUserLeadPartner(projectId, loggedInUser.getId()), projectDetailsSubmitted,
+                projectService.isUserLeadPartner(projectId, loggedInUser.getId()), projectDetailsCompleteAndAllFinanceContactsAssigned,
                 getProjectManager(projectResource.getId()).orElse(null), spendProfileGenerated, false));
 
         return "project/detail";
