@@ -92,7 +92,7 @@ Research and technology organisations (RTO) search (accept invitation flow)
     And the user should see the text in the page   Operating Address
     And the user clicks the button/link            jQuery=.button:contains("Save and continue")
     When the user navigates to the page            ${server}/registration/register
-    Then the user fills the create account form    Thierry    Henry
+    Then the invited user fills the create account form    Thierry    Henry
 
 Research and technology organisations (RTO) search (accept invitation flow with email step)
     [Documentation]    INFUND-1230

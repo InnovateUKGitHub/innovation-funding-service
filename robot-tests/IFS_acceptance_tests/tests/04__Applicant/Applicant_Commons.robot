@@ -269,19 +269,10 @@ Remove previous rows
 
 Invite a non-existing collaborator
     [Arguments]   ${email}  ${competition_name}
-    the user should see the element       jQuery=h1:contains("Application overview")
+    the user should see the element        jQuery=h1:contains("Application overview")
     the user fills in the inviting steps   ${email}
-    newly invited collaborator can create account and sign in   ${email}  ${competition_name}
-
-the user fills in the inviting steps
-    [Arguments]  ${email}
-    the user clicks the button/link       link=view and manage contributors and collaborators
-    the user clicks the button/link       link=Add a collaborator organisation
-    the user enters text to a text field  css=#organisationName  New Organisation's Name
-    the user enters text to a text field  css=input[id="applicants0.name"]  Partner's name
-    the user enters text to a text field  css=input[id="applicants0.email"]  ${email}
-    the user clicks the button/link       jQuery=button:contains("Add organisation and invite applicants")
     logout as user
+    newly invited collaborator can create account and sign in   ${email}  ${competition_name}
 
 Newly invited collaborator can create account and sign in
     [Arguments]    ${email}  ${competition_name}
@@ -307,7 +298,7 @@ the user completes the new account creation
     then the user should not see an error in the page
     the user clicks the button/link             jQuery=.button:contains("Save and continue")
     the user should be redirected to the correct page    ${SERVER}/registration/register
-    the user fills the create account form       liam  smithson
+    the invited user fills the create account form       liam  smithson
     the user should see the text in the page     Please verify your email address
     the user reads his email and clicks the link   ${email}  Please verify your email address  Once verified you can sign into your account.
     the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}

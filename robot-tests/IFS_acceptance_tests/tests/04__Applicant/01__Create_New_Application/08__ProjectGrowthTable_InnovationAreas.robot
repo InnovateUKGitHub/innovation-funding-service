@@ -479,45 +479,15 @@ the user navigates to the growth table finances
 Invite a non-existing collaborator in Application with Growth table
     the user should see the element       jQuery=h1:contains("Application overview")
     the user fills in the inviting steps  ${newUsersEmail}
-    newly invited collaborator can create account and sign in
-
-the user fills in the inviting steps
-    [Arguments]  ${email}
-    the user clicks the button/link       link=view and manage contributors and collaborators
-    the user clicks the button/link       link=Add a collaborator organisation
-    the user enters text to a text field  css=#organisationName  New Organisation's Name
-    the user enters text to a text field  css=input[id="applicants0.name"]  Partner's name
-    the user enters text to a text field  css=input[id="applicants0.email"]  ${email}
-    the user clicks the button/link       jQuery=button:contains("Add organisation and invite applicants")
+    logout as user
+    newly invited collaborator can create account and sign in  ${newUsersEmail}  ${compWithGrowth}
 
 Newly invited collaborator can create account and sign in
-    logout as user
+    [Arguments]  ${newUsersEmail}  ${compWithGrowth}
     the user reads his email and clicks the link  ${newUsersEmail}  Invitation to collaborate in ${compWithGrowth}  You will be joining as part of the organisation  2
     the user clicks the button/link               jQuery=a:contains("Yes, accept invitation")
     the user should see the element               jquery=h1:contains("Choose your organisation type")
-    the user completes the new account creation
-
-the user completes the new account creation
-    the user selects the radio button                  organisationTypeId  radio-${PUBLIC_SECTOR_TYPE_ID}
-    the user clicks the button/link                    jQuery=button:contains("Continue")
-    the user should see the element                    jQuery=span:contains("Create your account")
-    the user enters text to a text field               id=organisationSearchName    innovate
-    the user should see the element                    jQuery=a:contains("Back to choose your organisation type")
-    the user clicks the button/link                    jQuery=button:contains("Search")
-    wait for autosave
-    the user clicks the button/link                    jQuery=a:contains("INNOVATE LTD")
-    the user should see the element                    jQuery=h3:contains("Organisation type")
-    the user selects the checkbox                      address-same
-    wait for autosave
-    the user clicks the button/link                    jQuery=button:contains("Continue")
-    the user should not see an error in the page
-    the user clicks the button/link                    jQuery=.button:contains("Save and continue")
-    the user should be redirected to the correct page  ${SERVER}/registration/register
-    the user fills the create account form             liam  smithson
-    the user reads his email and clicks the link       ${newUsersEmail}  Please verify your email address  Once verified you can sign into your account.
-    the user should be redirected to the correct page  ${REGISTRATION_VERIFIED}
-    the user clicks the button/link                    link=Sign in
-    Logging in and Error Checking                      ${newUsersEmail}  ${correct_password}
+    the user completes the new account creation   ${newUsersEmail}
 
 the user fills in the Open-All Initial details
     [Arguments]  ${compTitle}  ${month}  ${nextyear}
