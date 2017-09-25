@@ -9,6 +9,7 @@ import org.innovateuk.ifs.address.repository.AddressRepository;
 import org.innovateuk.ifs.address.repository.AddressTypeRepository;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -28,6 +29,7 @@ import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectD
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.innovateuk.ifs.project.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.transactional.EmailService;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
@@ -54,6 +56,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -107,6 +110,9 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
 
+    @Autowired
+    private StatusService statusService;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -119,7 +125,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     @Transactional
     public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerUserId) {
         return getProject(projectId).
-                andOnSuccess(this::validateGOLGenerated).
+                andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_PROJECT_MANAGER_CANNOT_BE_UPDATED_IF_GOL_GENERATED)).
                 andOnSuccess(project -> validateProjectManager(project, projectManagerUserId).
                         andOnSuccess(leadPartner -> createOrUpdateProjectManagerForProject(project, leadPartner)));
     }
@@ -147,7 +153,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     @Transactional
     public ServiceResult<Void> updateProjectAddress(Long organisationId, Long projectId, OrganisationAddressType organisationAddressType, AddressResource address) {
         return getProject(projectId).
-                andOnSuccess(this::validateGOLGenerated).
+                andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_PROJECT_ADDRESS_CANNOT_BE_UPDATED_IF_GOL_GENERATED)).
                 andOnSuccess(() ->
                         find(getProject(projectId), getOrganisation(organisationId)).
                                 andOnSuccess((project, organisation) -> {
@@ -205,7 +211,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     public ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource) {
 
         return getProject(projectId)
-                .andOnSuccess(this::validateGOLGenerated)
+                .andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_PROJECT_MANAGER_CANNOT_BE_UPDATED_IF_GOL_GENERATED))
                 .andOnSuccess(() -> inviteContact(projectId, inviteResource, Notifications.INVITE_PROJECT_MANAGER));
     }
 
@@ -218,11 +224,15 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         return serviceSuccess(project);
     }
 
-    private ServiceResult<Project> validateGOLGenerated(Project project){
-        if(grantOfferLetterWorkflowHandler.isAlreadySent(project)){
-            return serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_GOL_GENERATED);
-        }
-        return serviceSuccess(project);
+    private ServiceResult<Project> validateGOLGenerated(Project project, CommonFailureKeys failKey){
+        return statusService.getProjectStatusByProjectId(project.getId()).andOnSuccess(
+                projectStatus -> {
+                    if(projectStatus.getSpendProfileStatus().equals(COMPLETE)){
+                        return serviceFailure(failKey);
+                    }
+                    return serviceSuccess(project);
+                }
+        );
     }
 
     private ServiceResult<ProjectUser> validateProjectManager(Project project, Long projectManagerUserId) {
