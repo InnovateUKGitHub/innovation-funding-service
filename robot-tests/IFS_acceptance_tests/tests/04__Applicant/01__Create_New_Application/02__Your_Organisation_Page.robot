@@ -59,6 +59,7 @@ Companies House: Empty company name field
 Enter address manually: Postcode Validations
     [Documentation]    INFUND-888
     [Tags]    HappyPath
+    When the user expands the section            Enter details manually
     Then the user enters text to a text field    id=addressForm.postcodeInput    ${EMPTY}
     And the user clicks the button/link    jQuery=button:contains("Find UK address")
     And the user should see the element    css=.form-label .error-message
@@ -108,3 +109,6 @@ Applicant goes to the organisation search page
 the backslash doesnt give errors
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    the user should see the element    id=addressForm.selectedPostcodeIndex
     Run Keyword If    '${status}' == 'FAIL'    Wait Until Page Contains Without Screenshots    No results were found
+
+
+

@@ -150,18 +150,18 @@ Pending users visible in the assign list but not clickable
 Business organisation (partner accepts invitation)
     [Documentation]  INFUND-1005 INFUND-2286 INFUND-1779 INFUND-2336
     [Tags]  HappyPath  Email  SmokeTest
-    When the user reads his email and clicks the link  ${invite_email}  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation  2
-    And the user clicks the button/link                jQuery=.button:contains("Yes, accept invitation")
-    And the user selects the radio button              organisationType    1
-    And the user clicks the button/link                jQuery=.button:contains("Continue")
-    And the user enters text to a text field           id=organisationSearchName    Nomensa
-    And the user clicks the button/link                id=org-search
-    And the user clicks the button/link                link=NOMENSA LTD
-    And the user selects the checkbox                  address-same
-    And the user clicks the button/link                jQuery=.button:contains("Continue")
-    And the user clicks the button/link                jQuery=.button:contains("Save and continue")
-    And the user fills the create account form         Adrian  Booth
-    And the user reads his email                       ${invite_email}  Please verify your email address  Once verified you can sign into your account
+    When the user reads his email and clicks the link   ${invite_email}  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation  2
+    And the user clicks the button/link                 jQuery=.button:contains("Yes, accept invitation")
+    And the user selects the radio button               organisationType    1
+    And the user clicks the button/link                 jQuery=.button:contains("Continue")
+    And the user enters text to a text field            id=organisationSearchName    Nomensa
+    And the user clicks the button/link                 id=org-search
+    And the user clicks the button/link                 link=NOMENSA LTD
+    And the user selects the checkbox                   address-same
+    And the user clicks the button/link                 jQuery=.button:contains("Continue")
+    And the user clicks the button/link                 jQuery=.button:contains("Save and continue")
+    And the invited user fills the create account form  Adrian  Booth
+    And the user reads his email                        ${invite_email}  Please verify your email address  Once verified you can sign into your account
 
 Partner requests new verification email via password reset
     [Documentation]  IFS-52
@@ -244,7 +244,7 @@ Registered partner should not create new org but should follow the create accoun
     And the user should see the text in the page           Confirm your organisation
     And the user should see the element                    link=email the lead applicant
     And the user clicks the button/link                    jQuery=.button:contains("Confirm and continue")
-    And the user fills the create account form             Roger    Axe
+    And the invited user fills the create account form     Roger  Axe
     And the user reads his email and clicks the link       ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Please verify your email address    Once verified you can sign into your account
     And the user should be redirected to the correct page  ${REGISTRATION_VERIFIED}
 
