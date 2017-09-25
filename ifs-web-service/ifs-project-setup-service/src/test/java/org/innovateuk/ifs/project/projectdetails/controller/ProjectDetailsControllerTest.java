@@ -14,6 +14,7 @@ import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsStartDateFor
 import org.innovateuk.ifs.project.projectdetails.viewmodel.*;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.status.populator.SetupStatusViewModelPopulator;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -22,6 +23,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
@@ -69,6 +71,9 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     private static final String SAVE_PM = "save_pm";
     private static final String INVITE_PM = "invite_pm";
 
+    @Mock
+    SetupStatusViewModelPopulator setupStatusViewModelPopulatorMock;
+
 	@Before
 	public void setUp() {
 		super.setUp();
@@ -109,6 +114,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(organisationService.getOrganisationById(leadOrganisation.getId())).thenReturn(leadOrganisation);
         when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
+        when(setupStatusViewModelPopulatorMock.checkLeadPartnerProjectDetailsProcessCompleted(teamStatus)).thenReturn(true);
 
         when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
 
@@ -124,7 +130,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(project, model.getProject());
         assertEquals(singletonList(leadOrganisation), model.getPartnerOrganisations());
         assertEquals(null, model.getProjectManager());
-        assertFalse(model.isProjectDetailsSubmitted());
+        assertTrue(model.isProjectDetailsCompleteAndAllFinanceContactsAssigned());
         assertTrue(model.isUserLeadPartner());
         assertFalse(model.isSpendProfileGenerated());
         assertFalse(model.isReadOnly());
@@ -174,7 +180,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(project, model.getProject());
         assertEquals(singletonList(leadOrganisation), model.getPartnerOrganisations());
         assertEquals(null, model.getProjectManager());
-        assertTrue(model.isProjectDetailsSubmitted());
         assertTrue(model.isUserLeadPartner());
         assertFalse(model.isSpendProfileGenerated());
         assertTrue(model.isReadOnly());
@@ -812,7 +817,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(competitionResource, model.getCompetition());
         assertEquals(project, model.getProject());
         assertEquals(projectManagerProjectUsers.get(0), model.getProjectManager());
-        assertTrue(model.isProjectDetailsSubmitted());
         assertFalse(model.isSpendProfileGenerated());
         assertTrue(model.isReadOnly());
     }
