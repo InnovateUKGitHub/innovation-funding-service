@@ -36,7 +36,7 @@ public class ProjectDetailsViewModel {
     private Map<Long, ProjectUserResource> financeContactsByOrganisationId;
     private boolean userLeadPartner;
 
-    private boolean pmEditable;
+    private boolean projectManagerEditable;
     private boolean addressEditable;
 
     public ProjectDetailsViewModel(ProjectResource project, UserResource currentUser,
@@ -51,7 +51,7 @@ public class ProjectDetailsViewModel {
                                    ProjectUserResource projectManager,
                                    boolean submissionAllowed,
                                    boolean readOnlyView,
-                                   boolean pmEditable,
+                                   boolean projectManagerEditable,
                                    boolean addressEditable) {
         this.project = project;
         this.currentUser = currentUser;
@@ -68,7 +68,7 @@ public class ProjectDetailsViewModel {
         this.financeContactsByOrganisationId = simpleToMap(financeRoles, ProjectUserResource::getOrganisation, Function.identity());
         this.isFinanceContactSubmitted = usersPartnerOrganisations.stream().anyMatch(organisation -> financeContactsByOrganisationId.containsKey(organisation));
         this.userLeadPartner = userIsLeadPartner;
-        this.pmEditable = pmEditable;
+        this.projectManagerEditable = projectManagerEditable;
         this.addressEditable = addressEditable;
     }
 
@@ -142,8 +142,8 @@ public class ProjectDetailsViewModel {
         return userLeadPartner && !submissionAllowed && !projectDetailsSubmitted;
     }
 
-    public boolean isPmEditable() {
-        return pmEditable;
+    public boolean isProjectManagerEditable() {
+        return projectManagerEditable;
     }
 
     public boolean isAddressEditable() {
