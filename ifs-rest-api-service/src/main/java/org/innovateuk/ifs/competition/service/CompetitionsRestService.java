@@ -45,4 +45,5 @@ public interface CompetitionsRestService {
     RestResult<Void> releaseFeedback(long competitionId);
     RestResult<CompetitionResource> createNonIfs();
     RestResult<List<OrganisationTypeResource>> getCompetitionOrganisationType(long id);
+    RestResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions();
 }

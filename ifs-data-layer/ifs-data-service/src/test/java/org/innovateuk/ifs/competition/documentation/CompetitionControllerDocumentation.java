@@ -405,4 +405,19 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
                         )
                 );
     }
+
+    @Test
+    public void feedbackReleased() throws Exception {
+        when(competitionService.findFeedbackReleasedCompetitions()).thenReturn(serviceSuccess(newCompetitionSearchResultItem().build(2)));
+
+        mockMvc.perform(get("/competition/feedback-released"))
+                .andExpect(status().isOk())
+                .andDo(document(
+                        "competition/{method-name}",
+                        responseFields(
+                                fieldWithPath("[]").description("list of competitions, which have had feedback released, that the authenticated user has access to")
+                        )
+                ));
+    }
+
 }

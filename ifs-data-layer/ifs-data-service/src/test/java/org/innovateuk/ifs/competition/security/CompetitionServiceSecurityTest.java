@@ -176,6 +176,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
 
         assertAccessDenied(() -> classUnderTest.findUnsuccessfulApplications(competitionId, 0, 0, ""), () -> {
             verify(rules).internalUsersAndIFSAdminCanViewUnsuccessfulApplications(any(CompetitionResource.class), any(UserResource.class));
+            verify(rules).innovationLeadForCompetitionCanViewUnsuccessfulApplications(any(CompetitionResource.class), any(UserResource.class));
             verifyNoMoreInteractions(rules);
         });
     }
@@ -215,6 +216,19 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     public void manageInformState() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.manageInformState(1L), PROJECT_FINANCE, COMP_ADMIN);
     }
+
+    @Test
+    public void findPreviousCompetitions() {
+        setLoggedInUser(null);
+
+        ServiceResult<List<CompetitionSearchResultItem>> results = classUnderTest.findFeedbackReleasedCompetitions();
+        assertEquals(0, results.getSuccessObject().size());
+
+        verify(rules, times(2)).internalUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
+        verify(rules, times(2)).innovationLeadCanViewCompetitionAssignedToThemInSearchResults(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
+        verifyNoMoreInteractions(rules);
+    }
+
 
     private void runAsRole(UserRoleType roleType, Runnable serviceCall) {
         setLoggedInUser(
@@ -323,6 +337,11 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         @Override
         public ServiceResult<Void> manageInformState(long competitionId) {
             return null;
+        }
+
+        @Override
+        public ServiceResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions() {
+            return serviceSuccess(newCompetitionSearchResultItem().build(2));
         }
     }
 }

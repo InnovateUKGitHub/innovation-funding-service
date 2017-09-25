@@ -111,6 +111,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private CompetitionKeyStatisticsService competitionKeyStatisticsService;
 
+    @Autowired
+    private MilestoneService milestoneService;
+
     private static final Map<String, Sort> APPLICATION_SORT_FIELD_MAP = new HashMap<String, Sort>() {{
         put("id", new Sort(ASC, "id"));
         put("name", new Sort(ASC, "name", "id"));
@@ -228,6 +231,13 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
+    public ServiceResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions() {
+
+        List<Competition> competitions = competitionRepository.findFeedbackReleased();
+        return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
+    }
+
+    @Override
     public ServiceResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId,
                                                                                int pageIndex,
                                                                                int pageSize,
@@ -278,6 +288,13 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     private CompetitionSearchResultItem searchResultFromCompetition(Competition c) {
+        ZonedDateTime openDate;
+        ServiceResult<MilestoneResource> openDateMilestone = milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, c.getId());
+        if (openDateMilestone.isSuccess()) {
+            openDate = openDateMilestone.getSuccessObject().getDate();
+        } else {
+            openDate = null;
+        }
         return getCurrentlyLoggedInUser().andOnSuccess(currentUser -> serviceSuccess(new CompetitionSearchResultItem(c.getId(),
                 c.getName(),
                 ofNullable(c.getInnovationAreas()).orElseGet(Collections::emptySet)
@@ -290,7 +307,8 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                 ofNullable(c.getCompetitionType()).map(CompetitionType::getName).orElse(null),
                 projectRepository.findByApplicationCompetitionId(c.getId()).size(),
                 publicContentService.findByCompetitionId(c.getId()).getSuccessObjectOrThrowException().getPublishDate(),
-                isSupport(currentUser) ? "/competition/" + c.getId() + "/applications/all" : "/competition/" + c.getId()
+                isSupport(currentUser) ? "/competition/" + c.getId() + "/applications/all" : "/competition/" + c.getId(),
+                openDate
         ))).getSuccessObjectOrThrowException();
     }
 
@@ -298,7 +316,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<CompetitionCountResource> countCompetitions() {
         //TODO INFUND-3833 populate complete count
         return serviceSuccess(new CompetitionCountResource(competitionRepository.countLive(), competitionRepository.countProjectSetup(),
-                competitionRepository.countUpcoming(), 0L, competitionRepository.countNonIfs()));
+                competitionRepository.countUpcoming(), competitionRepository.countFeedbackReleased(), competitionRepository.countNonIfs()));
     }
 
     @Override

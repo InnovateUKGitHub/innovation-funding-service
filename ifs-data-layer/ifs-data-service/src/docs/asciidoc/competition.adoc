@@ -144,3 +144,13 @@ include::{snippets}/competition/remove-innovation-lead/http-response.adoc[]
 ==== Curl Example
 include::{snippets}/competition/remove-innovation-lead/curl-request.adoc[]
 
+=== Retrieve feedback released competitions
+==== Request
+include::{snippets}/competition/feedback-released/http-request.adoc[]
+
+==== Response
+include::{snippets}/competition/feedback-released/http-response.adoc[]
+include::{snippets}/competition/feedback-released/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/feedback-released/curl-request.adoc[]

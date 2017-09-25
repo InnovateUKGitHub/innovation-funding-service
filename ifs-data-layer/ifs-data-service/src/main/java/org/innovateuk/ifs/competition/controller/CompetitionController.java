@@ -98,6 +98,8 @@ public class CompetitionController {
     }
 
     @GetMapping("/{competitionId}/unsuccessful-applications")
+    public RestResult<List<ApplicationResource>> findUnsuccessfulApplications(@PathVariable("competitionId") final Long competitionId) {
+        return competitionService.findUnsuccessfulApplications(competitionId).toGetResponse();
     public RestResult<ApplicationPageResource> findUnsuccessfulApplications(@PathVariable("competitionId") final Long competitionId,
                                                                             @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                                             @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
@@ -196,4 +198,10 @@ public class CompetitionController {
                 .andOnSuccess(() -> applicationService.notifyApplicantsByCompetition(competitionId))
                 .toPutResponse();
     }
+
+    @GetMapping("/feedback-released")
+    public RestResult<List<CompetitionSearchResultItem>> feedbackReleased() {
+        return competitionService.findFeedbackReleasedCompetitions().toGetResponse();
+    }
+
 }

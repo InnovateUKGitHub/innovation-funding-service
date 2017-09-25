@@ -382,7 +382,7 @@ the user decides about the growth table
     the user clicks the button/link   link=Application
     the user clicks the button/link   link=Finances
     the user clicks the button/link   jQuery=a:contains("Edit this question")
-    the user clicks the button twice  jQuery=label[for="include-growth-table-${edit}"]
+    the user clicks the button twice  css=label[for="include-growth-table-${edit}"]
     the user enters text to a text field  css=.editor  Funding rules for the competition added
     the user clicks the button/link   jQuery=button:contains("Save and close")
     the user clicks the button/link   link=Finances
@@ -430,20 +430,20 @@ the user populates the project growth table
 the user should view the project growth table
     the user should see the text in the element    css=table.extra-margin-bottom tr:nth-of-type(1) th:nth-of-type(1)    Section
     the user should see the text in the element    css=table.extra-margin-bottom tr:nth-of-type(1) th:nth-of-type(2)    Last financial year (£)
-    the user should see the text in the element    jQuery=tr:nth-child(1) td:nth-child(1) span    Annual turnover
-    the user should see the element                jQuery=td input[value="65000"]
-    the user should see the text in the element    jQuery=tr:nth-child(2) td:nth-child(1) span    Annual profits
-    the user should see the element                jQuery=td input[value="2000"]
-    the user should see the text in the element    jQuery=tr:nth-child(3) td:nth-child(1) span    Annual export
-    the user should see the element                jQuery=td input[value="3000"]
-    the user should see the text in the element    jQuery=tr:nth-child(4) td:nth-child(1) span    Research and development spend
-    the user should see the element                jQuery=td input[value="15000"]
+    the user should see the text in the element    css=tr:nth-child(1) td:nth-child(1) span    Annual turnover
+    the user should see the element                css=td input[value="65000"]
+    the user should see the text in the element    css=tr:nth-child(2) td:nth-child(1) span    Annual profits
+    the user should see the element                css=td input[value="2000"]
+    the user should see the text in the element    css=tr:nth-child(3) td:nth-child(1) span    Annual export
+    the user should see the element                css=td input[value="3000"]
+    the user should see the text in the element    css=tr:nth-child(4) td:nth-child(1) span    Research and development spend
+    the user should see the element                css=td input[value="15000"]
 
 the user can edit the project growth table
     the user clicks the button/link         jQuery=button.buttonlink:contains('Edit')
     the user selects the radio button       financePosition-organisationSize    ${SMALL_ORGANISATION_SIZE}
-    the user enters text to a text field    jQuery=tr:nth-child(1) .form-control    4000
-    the user enters text to a text field    jQuery=td input[value="65000"]    5000
+    the user enters text to a text field    css=tr:nth-child(1) .form-control    4000
+    the user enters text to a text field    css=td input[value="65000"]    5000
 
 the applicant enters valid inputs
     The user clicks the button/link         jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
@@ -479,47 +479,15 @@ the user navigates to the growth table finances
 Invite a non-existing collaborator in Application with Growth table
     the user should see the element       jQuery=h1:contains("Application overview")
     the user fills in the inviting steps  ${newUsersEmail}
-    newly invited collaborator can create account and sign in
-
-the user fills in the inviting steps
-    [Arguments]  ${email}
-    the user clicks the button/link       link=view and manage contributors and collaborators
-    the user clicks the button/link       link=Add a collaborator organisation
-    the user enters text to a text field  css=#organisationName  New Organisation's Name
-    the user enters text to a text field  css=input[id="applicants0.name"]  Partner's name
-    the user enters text to a text field  css=input[id="applicants0.email"]  ${email}
-    the user clicks the button/link       jQuery=button:contains("Add organisation and invite applicants")
+    logout as user
+    newly invited collaborator can create account and sign in  ${newUsersEmail}  ${compWithGrowth}
 
 Newly invited collaborator can create account and sign in
-    logout as user
+    [Arguments]  ${newUsersEmail}  ${compWithGrowth}
     the user reads his email and clicks the link  ${newUsersEmail}  Invitation to collaborate in ${compWithGrowth}  You will be joining as part of the organisation  2
     the user clicks the button/link               jQuery=a:contains("Yes, accept invitation")
     the user should see the element               jquery=h1:contains("Choose your organisation type")
-    the user completes the new account creation
-
-the user completes the new account creation
-    the user selects the radio button                  organisationTypeId  radio-${PUBLIC_SECTOR_TYPE_ID}
-    the user clicks the button/link                    jQuery=button:contains("Continue")
-    the user should see the element                    jQuery=span:contains("Create your account")
-    the user enters text to a text field               id=organisationSearchName    innovate
-    the user should see the element                    jQuery=a:contains("Back to choose your organisation type")
-    the user clicks the button/link                    jQuery=button:contains("Search")
-    wait for autosave
-    the user clicks the button/link                    jQuery=a:contains("INNOVATE LTD")
-    the user should see the element                    jQuery=h3:contains("Organisation type")
-    the user selects the checkbox                      address-same
-    wait for autosave
-    the user clicks the button/link                    jQuery=button:contains("Continue")
-    the user should not see an error in the page
-    the user clicks the button/link                    jQuery=.button:contains("Save and continue")
-    the user should be redirected to the correct page  ${SERVER}/registration/register
-    the user fills the create account form             liam  smithson
-    the user reads his email and clicks the link       ${newUsersEmail}  Please verify your email address  Once verified you can sign into your account.
-    the user should be redirected to the correct page  ${REGISTRATION_VERIFIED}
-    the user clicks the button/link                    link=Sign in
-    the user enters text to a text field               jQuery=input[id="username"]  ${newUsersEmail}
-    the user enters text to a text field               jQuery=input[id="password"]  ${correct_password}
-    the user clicks the button/link                    jQuery=button:contains("Sign in")
+    the user completes the new account creation   ${newUsersEmail}
 
 the user fills in the Open-All Initial details
     [Arguments]  ${compTitle}  ${month}  ${nextyear}
@@ -549,7 +517,7 @@ the user fills in the Application details
     the user enters text to a text field  css=#application_details-startdate_month    ${month}
     the user enters text to a text field  css=#application_details-startdate_year    ${nextyear}
     the user enters text to a text field  css=#application_details-duration    24
-    The user clicks the button/link       jQuery=button[name="mark_as_complete"]
+    The user clicks the button/link       css=button[name="mark_as_complete"]
     the user clicks the button/link       link=Application overview
     the user should see the element       jQuery=li:contains("Application details") > .task-status-complete
 

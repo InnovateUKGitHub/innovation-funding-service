@@ -29,7 +29,6 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
         return new CompetitionController();
     }
 
-
     @Test
     public void getCompetitionsByUserId() throws Exception {
         final Long userId = 1L;

@@ -268,5 +268,5 @@ Steve smith assigns a question to the collaborator
     When the applicant assigns the question to the collaborator  Jessica Doe
 
 the user fills out the research category
-    the user clicks the button/link    jQuery=label[for="researchCategoryChoice-33"]
+    the user clicks the button/link    css=label[for="researchCategoryChoice-33"]
     the user clicks the button/link    jQuery=button:contains(Save)
