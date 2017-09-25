@@ -19,7 +19,7 @@ items:
           emptyDir:
             medium: Memory
         containers:
-        - image: selenium/standalone-chrome:3.5.3-astatine
+        - image: selenium/standalone-chrome:3.0.1-dysprosium
           name: hub
           imagePullPolicy: IfNotPresent
           volumeMounts:
@@ -30,7 +30,7 @@ items:
           - containerPort: 3000
           resources:
             limits:
-              memory: 2000M
+              memory: 3000M
               cpu: 900m
             requests:
               cpu: 400m

@@ -2,7 +2,7 @@ version: '2'
 services:
   hub:
     container_name: hub
-    image: selenium/standalone-chrome:3.5.3-astatine
+    image: selenium/standalone-chrome:3.0.1-dysprosium
     environment:
 #      - GRID_BROWSER_TIMEOUT=90000
 #      - GRID_TIMEOUT=100000
