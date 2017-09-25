@@ -177,6 +177,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
 
         assertAccessDenied(() -> classUnderTest.findUnsuccessfulApplications(competitionId), () -> {
             verify(rules).internalUsersAndIFSAdminCanViewUnsuccessfulApplications(any(CompetitionResource.class), any(UserResource.class));
+            verify(rules).innovationLeadForCompetitionCanViewUnsuccessfulApplications(any(CompetitionResource.class), any(UserResource.class));
             verifyNoMoreInteractions(rules);
         });
     }

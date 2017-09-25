@@ -31,8 +31,8 @@ import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.innovateuk.ifs.util.CollectionFunctions;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -185,7 +185,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         List<Competition> competitions = competitionRepository.findLive();
         return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
     }
-    
+
     private ZonedDateTime findMostRecentFundingInformDate(Competition competition) {
         return competition.getApplications()
                 .stream()
