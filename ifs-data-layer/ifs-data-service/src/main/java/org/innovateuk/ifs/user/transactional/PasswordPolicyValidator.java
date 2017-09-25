@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -125,13 +126,17 @@ public class PasswordPolicyValidator {
         ExclusionRule containsFirstName = new ExclusionRule(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME, 4, true, user -> singletonList(user.getFirstName()));
         ExclusionRule containsLastName = new ExclusionRule(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME, 4, true, user -> singletonList(user.getLastName()));
         ExclusionRule containsFullName = new ExclusionRule(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME, 5, true, user -> asList(user.getFirstName(), user.getLastName()));
-        ExclusionRule containsOrganisationName = new ExclusionRule(PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME, 4, false, user -> {
-            List<Organisation> organisations = organisationRepository.findByUsersId(user.getId());
-            return simpleMap(organisations, Organisation::getName);
-        });
+        ExclusionRule containsOrganisationName = new ExclusionRule(PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME, 4, false, user -> getOrganisationsWithExistingNamesForUser(user));
 
         exclusionRules = asList(containsFirstName, containsLastName, containsFullName, containsOrganisationName);
         exclusionRulePatternGenerators = asList(lettersForNumbersGenerator);
+    }
+
+    private List<String> getOrganisationsWithExistingNamesForUser(UserResource user) {
+        List<Organisation> organisations = organisationRepository.findByUsersId(user.getId()).stream()
+                .filter(organisation -> organisation.getName() != null).collect(Collectors.toList());
+
+        return simpleMap(organisations, Organisation::getName);
     }
 
     /**
