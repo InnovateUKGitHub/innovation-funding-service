@@ -1,10 +1,7 @@
 package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.management.form.IneligibleApplicationsForm;
-import org.innovateuk.ifs.management.model.AllApplicationsPageModelPopulator;
-import org.innovateuk.ifs.management.model.ApplicationsMenuModelPopulator;
-import org.innovateuk.ifs.management.model.IneligibleApplicationsModelPopulator;
-import org.innovateuk.ifs.management.model.SubmittedApplicationsModelPopulator;
+import org.innovateuk.ifs.management.model.*;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +22,6 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/applications")
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
 public class CompetitionManagementApplicationsController {
 
     private static final String FILTER_FORM_ATTR_NAME = "filterForm";
@@ -42,12 +38,20 @@ public class CompetitionManagementApplicationsController {
     @Autowired
     private IneligibleApplicationsModelPopulator ineligibleApplicationsModelPopulator;
 
+    @Autowired
+    private UnsuccessfulApplicationsModelPopulator unsuccessfulApplicationsModelPopulator;
+
+    @Autowired
+    private NavigateApplicationsModelPopulator navigateApplicationsModelPopulator;
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @GetMapping
     public String applicationsMenu(Model model, @PathVariable("competitionId") long competitionId, UserResource user) {
         model.addAttribute("model", applicationsMenuModelPopulator.populateModel(competitionId, user));
         return "competition/applications-menu";
     }
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @GetMapping("/all")
     public String allApplications(Model model,
                                   @PathVariable("competitionId") long competitionId,
@@ -63,6 +67,7 @@ public class CompetitionManagementApplicationsController {
         return "competition/all-applications";
     }
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @GetMapping("/submitted")
     public String submittedApplications(Model model,
                                         @PathVariable("competitionId") long competitionId,
@@ -77,6 +82,7 @@ public class CompetitionManagementApplicationsController {
         return "competition/submitted-applications";
     }
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @GetMapping("/ineligible")
     public String ineligibleApplications(Model model,
                                          @Valid @ModelAttribute(FILTER_FORM_ATTR_NAME) IneligibleApplicationsForm filterForm,
@@ -90,5 +96,25 @@ public class CompetitionManagementApplicationsController {
         model.addAttribute("originQuery", originQuery);
 
         return "competition/ineligible-applications";
+    }
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'ifs_admin')")
+    @GetMapping("/unsuccessful")
+    public String unsuccessfulApplications(Model model,
+                                           @PathVariable("competitionId") long competitionId,
+                                           UserResource loggedInUser) {
+
+        model.addAttribute("model", unsuccessfulApplicationsModelPopulator.populateModel(competitionId));
+        return "competition/unsuccessful-applications";
+    }
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'ifs_admin')")
+    @GetMapping("/manage")
+    public String manageApplications(Model model,
+                                     @PathVariable("competitionId") long competitionId,
+                                     UserResource loggedInUser) {
+
+        model.addAttribute("model", navigateApplicationsModelPopulator.populateModel(competitionId));
+        return "competition/navigate-applications";
     }
 }

@@ -104,7 +104,7 @@ Innovation area on assessor profile for invited user
     [Setup]    Log in as a different user  &{Comp_admin1_credentials}
     Given the user clicks the button/link  link=${openCompetitionRTO_name}
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
-    And the user clicks the button/link    jQuery=a:contains("81 to")
+    And the user clicks the button/link    jQuery=a:contains("101 to")
     When the user clicks the button/link   link=Thomas Fister
     Then the user should see the element   jQuery=h3:contains("Innovation areas") ~ ul li:contains("Emerging and enabling") li:contains("Satellite applications")
     [Teardown]    Logout as user

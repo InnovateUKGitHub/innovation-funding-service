@@ -2,6 +2,8 @@
 package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
+import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -171,7 +173,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     @Test
     public void findLiveCompetitions() {
         List<CompetitionSearchResultItem> returnedResponse =
-                singletonList(new CompetitionSearchResultItem(1L, "Name", singleton(""), 0, "", CompetitionStatus.OPEN, "Comp Type", 0, null, null));
+                singletonList(new CompetitionSearchResultItem(1L, "Name", singleton(""), 0, "", CompetitionStatus.OPEN, "Comp Type", 0, null, null, null));
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/live", competitionSearchResultItemListType(), returnedResponse);
 
@@ -184,7 +186,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     public void findProjectSetupCompetitions() {
 
         List<CompetitionSearchResultItem> returnedResponse =
-                singletonList(new CompetitionSearchResultItem(1L, "Name", singleton(""), 0, "", CompetitionStatus.OPEN, "Comp Type", 0, null, null));
+                singletonList(new CompetitionSearchResultItem(1L, "Name", singleton(""), 0, "", CompetitionStatus.OPEN, "Comp Type", 0, null, null, null));
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/project-setup", competitionSearchResultItemListType(), returnedResponse);
 
@@ -197,7 +199,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     public void findUpcomingCompetitions() {
 
         List<CompetitionSearchResultItem> returnedResponse =
-                singletonList(new CompetitionSearchResultItem(1L, "Name", Collections.EMPTY_SET, 0, "", CompetitionStatus.OPEN, "Comp Type", 0, null, null));
+                singletonList(new CompetitionSearchResultItem(1L, "Name", Collections.EMPTY_SET, 0, "", CompetitionStatus.OPEN, "Comp Type", 0, null, null, null));
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/upcoming", competitionSearchResultItemListType(), returnedResponse);
 
@@ -210,13 +212,25 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     public void findNonIfsCompetitions() {
 
         List<CompetitionSearchResultItem> returnedResponse =
-                singletonList(new CompetitionSearchResultItem(1L, "Name", Collections.EMPTY_SET, 0, "", CompetitionStatus.OPEN, "Comp Type", 0, null, null));
+                singletonList(new CompetitionSearchResultItem(1L, "Name", Collections.EMPTY_SET, 0, "", CompetitionStatus.OPEN, "Comp Type", 0, null, null, null));
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/non-ifs", competitionSearchResultItemListType(), returnedResponse);
 
         List<CompetitionSearchResultItem> responses = service.findNonIfsCompetitions().getSuccessObject();
         assertNotNull(responses);
         assertEquals(returnedResponse, responses);
+    }
+
+    @Test
+    public void findUnsuccessfulApplications() {
+
+        List<ApplicationResource> unsuccessfulApplications = ApplicationResourceBuilder.newApplicationResource().build(2);
+
+        setupGetWithRestResultExpectations(competitionsRestURL + "/123" + "/unsuccessful-applications", applicationResourceListType(), unsuccessfulApplications);
+
+        List<ApplicationResource> result = service.findUnsuccessfulApplications(123L).getSuccessObject();
+        assertNotNull(result);
+        Assert.assertEquals(unsuccessfulApplications, result);
     }
 
     @Test
@@ -287,5 +301,18 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
 
         RestResult<Void> result = service.releaseFeedback(competitionId);
         assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void findFeedbackReleasedCompetitions() {
+
+        List<CompetitionSearchResultItem> returnedResponse =
+                singletonList(new CompetitionSearchResultItem(1L, "Name", Collections.EMPTY_SET, 0, "", CompetitionStatus.OPEN, "Comp Type", 0, null, null, null));
+
+        setupGetWithRestResultExpectations(competitionsRestURL + "/feedback-released", competitionSearchResultItemListType(), returnedResponse);
+
+        List<CompetitionSearchResultItem> responses = service.findFeedbackReleasedCompetitions().getSuccessObject();
+        assertNotNull(responses);
+        assertEquals(returnedResponse, responses);
     }
 }

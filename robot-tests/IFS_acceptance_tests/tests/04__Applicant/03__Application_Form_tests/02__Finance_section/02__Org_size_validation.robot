@@ -86,7 +86,7 @@ Funding section can be completed with under 60%
     [Documentation]    INFUND-1110
     [Tags]    HappyPath
     When the user completes the funding section with funding level    35
-    Then the user should not see the element    jQuery=.error-message
+    Then the user should not see the element    css=.error-message
 
 
 User still sees warning that the funding section will be reset
@@ -141,7 +141,7 @@ The user marks their organisation as
     the user enters text to a text field    jQuery=label:contains("Turnover") + input    150
     the user enters text to a text field    jQuery=label:contains("employees") + input    0
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
-    the user should not see the element  jQuery=.error-message
+    the user should not see the element  css=.error-message
     the user should see the text in the page    Please complete your project finances.
 
 
