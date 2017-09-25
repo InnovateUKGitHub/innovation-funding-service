@@ -113,7 +113,7 @@ New Research user applies to Competition and starts application
     the user creates new account and organisation  radio-2  ${openCompetitionResearch}
     the user inserts the address of his research organisation  p.o. box 42  coventry  cv4 7al
     the user enters text to a text field    email  ${bob}
-    the user fills the create account form  Bob  Minion
+    the invited user fills the create account form  Bob  Minion
     the user verifies account and starts his application  ${bob}
     logout as user
 
@@ -121,7 +121,7 @@ Another Research user applies to Competition and starts application
     the user creates new account and organisation  radio-2  ${openCompetitionResearch}
     the user inserts the address of his research organisation  P.O. BOX 42  Coventry  CV4 7AL
     the user enters text to a text field    email  ${stuart}
-    the user fills the create account form  Stuart  Minion
+    the invited user fills the create account form  Stuart  Minion
     the user verifies account and starts his application  ${stuart}
 
 The latter researcher is able to invite the first one to his application

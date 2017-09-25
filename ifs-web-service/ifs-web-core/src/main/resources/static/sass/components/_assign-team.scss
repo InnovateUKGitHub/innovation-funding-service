@@ -106,6 +106,12 @@
 .no-js {
 
   .assign-container {
+    position: relative;
+    padding-left: 20px;
+
+    &.action-required {
+      background-position: 0 3px;
+    }
 
     .assign-team {
       border: none;
@@ -125,13 +131,21 @@
     .assign-team {
       background: $grey-4;
     }
+
+    .assign-button {
+      @extend .visuallyhidden;
+    }
   }
 
-  .assign-button,
-  .secondary-notification-button {
+  .assign-button {
+    position: absolute;
+    top: -28px;
+    left: 88px;
 
-    > span {
-      @extend .visuallyhidden;
+    .action-required {
+      position: relative;
+      top: 8px;
+      left: 8px;
     }
   }
 }

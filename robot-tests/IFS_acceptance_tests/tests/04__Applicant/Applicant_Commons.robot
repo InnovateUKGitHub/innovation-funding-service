@@ -313,7 +313,7 @@ Remove previous rows
 
 Invite a non-existing collaborator
     [Arguments]   ${email}  ${competition_name}
-    the user should see the element       jQuery=h1:contains("Application overview")
+    the user should see the element        jQuery=h1:contains("Application overview")
     the user fills in the inviting steps   ${email}
     logout as user
     newly invited collaborator can create account and sign in   ${email}  ${competition_name}
@@ -359,7 +359,7 @@ the user completes the new account creation
     the user should not see an error in the page
     the user clicks the button/link             jQuery=.button:contains("Save and continue")
     the user should be redirected to the correct page    ${SERVER}/registration/register
-    the user fills the create account form       liam  smithson
+    the invited user fills the create account form       liam  smithson
     the user should see the text in the page     Please verify your email address
     the user reads his email and clicks the link   ${email}  Please verify your email address  Once verified you can sign into your account.
     the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
