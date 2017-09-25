@@ -43,6 +43,11 @@ public class CompetitionDashboardSearchServiceImpl implements CompetitionDashboa
     }
 
     @Override
+    public List<CompetitionSearchResultItem> getPreviousCompetitions() {
+        return competitionsRestService.findFeedbackReleasedCompetitions().getSuccessObjectOrThrowException();
+    }
+
+    @Override
     public CompetitionSearchResult searchCompetitions(String searchQuery, int page) {
         CompetitionSearchResult searchResult = competitionsRestService.searchCompetitions(searchQuery, page, COMPETITION_PAGE_SIZE).getSuccessObjectOrThrowException();
         searchResult.setMappedCompetitions(mapToStatus(searchResult.getContent()));
