@@ -31,7 +31,8 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
 public class AssessmentPanelSendInviteController {
 
     @Autowired
-    AssessmentPanelInviteRestService assessmentPanelInviteRestService;
+    private AssessmentPanelInviteRestService assessmentPanelInviteRestService;
+
     @GetMapping("/send")
     public String getInvitesToSend(Model model,
                                    @PathVariable("competitionId") long competitionId,
@@ -54,7 +55,7 @@ public class AssessmentPanelSendInviteController {
             populateGroupInviteFormWithExistingValues(form, invites);
         }
 
-        return "assessors/send-invites";
+        return "assessors/panel-send-invites";
     }
 
     @PostMapping("/send")
