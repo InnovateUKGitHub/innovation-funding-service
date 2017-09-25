@@ -44,9 +44,6 @@ items:
             value: "600"
           - name: DBUS_SESSION_BUS_ADDRESS
             value: "/dev/null"
-          - name: JAVA_OPTS
-            description: Options for the Java command
-            value: "-Xmx1024m"
           - name: SCREEN_WIDTH
             value: "1920"
           - name: SCREEN_HEIGHT
