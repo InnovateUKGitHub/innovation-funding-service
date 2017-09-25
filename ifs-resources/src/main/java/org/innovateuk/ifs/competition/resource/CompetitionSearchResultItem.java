@@ -22,6 +22,7 @@ public class CompetitionSearchResultItem {
     private Integer projectsCount;
     private ZonedDateTime publishDate;
     private String topLevelNavigationLink;
+    private ZonedDateTime openDate;
 
 
     // for JSON marshalling
@@ -31,7 +32,7 @@ public class CompetitionSearchResultItem {
     public CompetitionSearchResultItem(Long id, String name, Set<String> innovationAreaNames, Integer numberOfApplications,
                                        String startDateDisplay, CompetitionStatus competitionStatus,
                                        String competitionTypeName, Integer projectsCount, ZonedDateTime publishDate,
-                                       String topLevelNavigationLink) {
+                                       String topLevelNavigationLink, ZonedDateTime openDate) {
         this.id = id;
         this.name = name;
         this.innovationAreaNames = new TreeSet<>(innovationAreaNames);
@@ -42,6 +43,7 @@ public class CompetitionSearchResultItem {
         this.projectsCount = projectsCount;
         this.publishDate = publishDate;
         this.topLevelNavigationLink = topLevelNavigationLink;
+        this.openDate = openDate;
     }
 
     public Long getId() {
@@ -120,6 +122,10 @@ public class CompetitionSearchResultItem {
         return topLevelNavigationLink;
     }
 
+    public ZonedDateTime getOpenDate() { return openDate; }
+
+    public void setOpenDate(ZonedDateTime openDate) { this.openDate = openDate; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -138,6 +144,7 @@ public class CompetitionSearchResultItem {
                 .append(competitionTypeName, that.competitionTypeName)
                 .append(projectsCount, that.projectsCount)
                 .append(publishDate, that.publishDate)
+                .append(openDate, that.openDate)
                 .isEquals();
     }
 
@@ -153,6 +160,7 @@ public class CompetitionSearchResultItem {
                 .append(competitionTypeName)
                 .append(projectsCount)
                 .append(publishDate)
+                .append(openDate)
                 .toHashCode();
     }
 }

@@ -20,10 +20,20 @@ Documentation     INFUND-7365 Inflight competition dashboards: Inform dashboard
 ...               INFUND-8876 No back navigation on applicant feedback view
 ...
 ...               INFUND-8066 Filter on 'Manage funding notifications' dashboard
+...
+...               IFS-1458 View unsuccessful applications after Inform state: initial navigation
+...
+...               IFS-1459 View unsuccessful applications after Inform state: list
+...
+...               IFS-1517 Internal user: competitions listing in Previous tab
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    Close browser and delete emails
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
+
+*** Variables ***
+${proj_electric_drive}  ${application_ids['Electric Drive']}
+${proj_app_with_ineligible}  ${application_ids['Application with ineligible']}
 
 *** Test Cases ***
 Competition Dashboard
@@ -86,6 +96,16 @@ Unsuccessful applicant sees unsuccessful alert
     Given the user should see the element    jQuery=.status:contains("Unsuccessful")
     When the user clicks the button/link    jQuery=a:contains("Electric Drive")
     And the user should see the element    jQuery=.warning-alert:contains("Your application has not been successful in this competition")
+
+Internal user can view ineligible and unsuccessful applications in previous tab
+    [Documentation]  IFS-1458 IFS-1459 IFS-1517
+    [Tags]  HappyPath
+    [Setup]  log in as a different user      &{Comp_admin1_credentials}
+    Given the user clicks the button/link    jQuery=a:contains("Previous")
+    When the user clicks the button/link     link=${NOT_EDITABLE_COMPETITION_NAME}
+    And the user clicks the button/link      link=Unsuccessful applications
+    Then the user should see the element     jQuery=td:contains("${proj_electric_drive}") ~ td:contains("Unsuccessful")
+    And the user should not see the element  jQuery=td:contains("${INFORM_COMPETITION_NAME_1}")
 
 Successful applicant see successful alert
     [Documentation]    INFUND-7861
