@@ -12,7 +12,6 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{id}/details(id=${model.projectId})}" />
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Target start date',subTitle=${model.projectName},size='heading-xlarge'" />
-            <p>Your target start date can be changed up until the spend profile is generated.</p>
             <p>The project can only start when:</p>
 
             <ol class="list list-number">
@@ -34,6 +33,7 @@
 
                         <th:block th:insert="question-type/form-elements :: form-dateinput (id=${'projectStartDate'}, field=${'projectStartDate'}, dayReadonly=true)" />
                     </fieldset>
+                    <p>You can change your target start date up until the spend profile is generated.</p>
                 </div>
 
                 <h2 class="heading-medium">Project duration</h2>
