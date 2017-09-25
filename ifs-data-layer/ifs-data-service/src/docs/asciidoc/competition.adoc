@@ -77,6 +77,17 @@ include::{snippets}/competition/close-assessment/http-response.adoc[]
 ==== Curl Example
 include::{snippets}/competition/close-assessment/curl-request.adoc[]
 
+=== Find Unsuccessful Applications
+==== Request
+include::{snippets}/competition/find-unsuccessful-applications/http-request.adoc[]
+include::{snippets}/competition/find-unsuccessful-applications/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition/find-unsuccessful-applications/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/find-unsuccessful-applications/curl-request.adoc[]
+
 === Update Competition Initial Details
 ==== Request
 include::{snippets}/competition/update-competition-initial-details/http-request.adoc[]
@@ -132,3 +143,14 @@ include::{snippets}/competition/remove-innovation-lead/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/competition/remove-innovation-lead/curl-request.adoc[]
+
+=== Retrieve feedback released competitions
+==== Request
+include::{snippets}/competition/feedback-released/http-request.adoc[]
+
+==== Response
+include::{snippets}/competition/feedback-released/http-response.adoc[]
+include::{snippets}/competition/feedback-released/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/feedback-released/curl-request.adoc[]

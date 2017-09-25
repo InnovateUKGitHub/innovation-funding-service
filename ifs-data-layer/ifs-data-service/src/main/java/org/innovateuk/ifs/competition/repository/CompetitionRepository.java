@@ -51,6 +51,14 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     public static final String NON_IFS_COUNT_QUERY = "SELECT count(c) FROM Competition c WHERE nonIfs = TRUE";
 
+    public static final String FEEDBACK_RELEASED_QUERY = "SELECT c FROM Competition c WHERE " +
+            "EXISTS (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = c.id) AND " +
+            "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
+
+    public static final String FEEDBACK_RELEASED_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c WHERE " +
+            "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = c.id) AND " +
+            "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
+
 
     @Query(LIVE_QUERY)
     List<Competition> findLive();
@@ -93,4 +101,10 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     Competition findByTemplateForTypeId(Long id);
 
     List<Competition> findByInnovationSectorCategoryId(Long id);
+
+    @Query(FEEDBACK_RELEASED_QUERY)
+    List<Competition> findFeedbackReleased();
+
+    @Query(FEEDBACK_RELEASED_COUNT_QUERY)
+    Long countFeedbackReleased();
 }
