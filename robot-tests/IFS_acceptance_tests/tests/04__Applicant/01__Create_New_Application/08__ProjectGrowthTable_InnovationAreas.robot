@@ -26,7 +26,7 @@ ${applicationWithoutGrowth}  NewApplFromNewComp without GrowthTable
 ${compWithGrowth}            All-Innov-Areas With GrowthTable
 ${applicationWithGrowth}     All-Innov-Areas Application With GrowthTable
 ${newUsersEmail}             liam@innovate.com
-${ineligibleMessage}         Your organisation type is not eligible to start an application in this competition.
+${ineligibleMessage}         The application must be started by the lead applicant. Your organisation is not eligible to be the lead applicant in this competition.
 
 *** Test Cases ***
 Comp Admin starts a new Competition
