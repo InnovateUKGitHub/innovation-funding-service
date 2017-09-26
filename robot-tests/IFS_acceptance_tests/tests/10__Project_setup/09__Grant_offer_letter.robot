@@ -462,38 +462,7 @@ all the other sections of the project are completed (except spend profile approv
     the user logs-in in new browser              &{internal_finance_credentials}
     project finance approves bank details for ${PS_GOL_APPLICATION_TITLE}
     project manager submits other documents      ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}  ${PS_GOL_APPLICATION_PROJECT}
-    check if project manager and project address fields are editable
     project finance approves other documents     ${PS_GOL_APPLICATION_PROJECT}
     project finance generates the Spend Profile  ${Gabtype_Id}  ${Kazio_Id}  ${Cogilith_Id}  ${PS_GOL_APPLICATION_PROJECT}
     log in as a different user                   ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
-    check if project manager and project address fields are editable
     all partners submit their Spend Profile
-
-check if project manager and project address fields are editable
-    the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/details
-    check if project address can be changed
-    check if project manager can be changed
-
-check if project address can be changed
-    the user clicks the button/link  jQuery=a:contains("Project address")
-    ${reg_address}  ${value}=  Run Keyword And Ignore Error Without Screenshots  the user sees that the radio button is selected  addressType  address-use-org
-    run keyword if  '${reg_address}' == 'PASS'  the user selects the radio button  addressType  address-use-operating
-    run keyword if  '${reg_address}' == 'FAIL'  the user selects the radio button  addressType  address-use-org
-    the user clicks the button/link  jQuery=button:contains("Save")
-    the user clicks the button/link  jQuery=a:contains("Project address")
-    ${reg_address}  ${value}=  Run Keyword And Ignore Error Without Screenshots  the user sees that the radio button is selected  addressType  address-use-org
-    run keyword if  '${reg_address}' == 'PASS'  the user sees that the radio button is selected  addressType  address-use-org
-    run keyword if  '${reg_address}' == 'FAIL'  the user sees that the radio button is selected  addressType  address-use-operating
-    the user clicks the button/link  jQuery=a:contains("Project details")
-
-check if project manager can be changed
-    the user clicks the button/link  jQuery=a:contains("Project Manager")
-    ${manager}  ${value}=  Run Keyword And Ignore Error Without Screenshots  the user sees that the radio button is selected  projectManager  projectManager1
-    run keyword if  '${manager}' == 'PASS'  the user selects the radio button  projectManager  projectManager2
-    run keyword if  '${manager}' == 'FAIL'  the user selects the radio button  projectManager  projectManager1
-    the user clicks the button/link  jQuery=button:contains("Save")
-    the user clicks the button/link  jQuery=a:contains("Project Manager")
-    ${manager}  ${value}=  Run Keyword And Ignore Error Without Screenshots  the user sees that the radio button is selected  projectManager  projectManager1
-    run keyword if  '${manager}' == 'PASS'  the user sees that the radio button is selected  projectManager  projectManager1
-    run keyword if  '${manager}' == 'FAIL'  the user sees that the radio button is selected  projectManager  projectManager2
-    the user clicks the button/link  jQuery=a:contains("Project details")
