@@ -61,14 +61,14 @@ the user fills in the CS Funding Information
 
 the user fills in the CS Eligibility
     the user clicks the button/link  link=Eligibility
-    the user clicks the button/link  jQuery=label[for="single-or-collaborative-collaborative"]
-    the user clicks the button/link  jQuery=label[for="single-or-collaborative-collaborative"]
-    the user clicks the button/link  jQuery=label[for="research-categories-33"]
-    the user clicks the button/link  jQuery=label[for="research-categories-33"]
-    the user clicks the button twice  jQuery=label[for="lead-applicant-type-1"]
+    the user clicks the button/link  css=label[for="single-or-collaborative-collaborative"]
+    the user clicks the button/link  css=label[for="single-or-collaborative-collaborative"]
+    the user clicks the button/link  css=label[for="research-categories-33"]
+    the user clicks the button/link  css=label[for="research-categories-33"]
+    the user clicks the button twice  css=label[for="lead-applicant-type-1"]
     the user selects the option from the drop-down menu  1  researchParticipation
-    the user clicks the button/link  jQuery=label[for="comp-resubmissions-yes"]
-    the user clicks the button/link  jQuery=label[for="comp-resubmissions-yes"]
+    the user clicks the button/link  css=label[for="comp-resubmissions-yes"]
+    the user clicks the button/link  css=label[for="comp-resubmissions-yes"]
     the user clicks the button/link  jQuery=button:contains("Done")
     the user clicks the button/link  link=Competition setup
     the user should see the element   jQuery=div:contains("Eligibility") ~ .task-status-complete
@@ -176,14 +176,14 @@ the user fills in the Public content and publishes
     # Fill in the How to apply
     the user clicks the button/link         link=How to apply
     the user enters text to a text field    id=heading-0    Heading 1
-    the user enters text to a text field    jQuery=div.editor:first-of-type  Content 1
+    the user enters text to a text field    css=div.editor:first-of-type  Content 1
     the user clicks the button/link         jQuery=button:contains("Save and review")
     the user clicks the button/link         jQuery=.button:contains("Return to public content")
     the user should see the element         jQuery=div:contains("How to apply") ~ .task-status-complete
     # Fill in the Supporting information
     the user clicks the button/link         link=Supporting information
     the user enters text to a text field    id=heading-0    Heading 1
-    the user enters text to a text field    jQuery=div.editor:first-of-type  Content 1
+    the user enters text to a text field    css=div.editor:first-of-type  Content 1
     the user clicks the button/link         jQuery=button:contains("Save and review")
     the user clicks the button/link         jQuery=.button:contains("Return to public content")
     the user should see the element         jQuery=div:contains("Supporting information") ~ .task-status-complete

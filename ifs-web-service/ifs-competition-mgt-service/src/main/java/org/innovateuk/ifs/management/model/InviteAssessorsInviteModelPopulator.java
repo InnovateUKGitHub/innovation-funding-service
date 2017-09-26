@@ -47,6 +47,7 @@ public class InviteAssessorsInviteModelPopulator extends InviteAssessorsModelPop
         model.setAssessors(assessors);
         model.setPagination(new PaginationViewModel(pageResource, originQuery));
         model.setInnovationSectorOptions(getInnovationSectors());
+        model.setOriginQuery(originQuery);
 
         return model;
     }

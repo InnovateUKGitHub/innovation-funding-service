@@ -113,3 +113,4 @@ the backslash doesnt give errors
 the user expands enter details manually
     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=summary:contains("Enter details manually")[aria-expanded="false"]
     run keyword if  '${status}'=='PASS'  the user clicks the button/link  jQuery=summary:contains("Enter details manually")[aria-expanded="false"]
+
