@@ -12,7 +12,7 @@ public class PanelAvailableAssessorRowViewModel extends PanelInviteAssessorsRowV
 
     private BusinessType businessType;
 
-    public PanelAvailableAssessorRowViewModel(Long id,
+    public PanelAvailableAssessorRowViewModel(long id,
                                               String name,
                                               List<InnovationAreaResource> innovationAreas,
                                               boolean compliant,

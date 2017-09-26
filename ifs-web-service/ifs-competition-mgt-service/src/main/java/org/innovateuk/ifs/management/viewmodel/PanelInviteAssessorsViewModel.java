@@ -21,7 +21,7 @@ public abstract class PanelInviteAssessorsViewModel<ViewModelRowType extends Pan
     protected PanelInviteAssessorsViewModel() {
     }
 
-    public Long getCompetitionId() {
+    public long getCompetitionId() {
         return competitionId;
     }
 

@@ -133,7 +133,6 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
         ReflectionTestUtils.setField(service, "webBaseUrl", "https://ifs-local-dev");
     }
 
-
     @Test
     public void getAvailableAssessors() throws Exception {
         long competitionId = 1L;

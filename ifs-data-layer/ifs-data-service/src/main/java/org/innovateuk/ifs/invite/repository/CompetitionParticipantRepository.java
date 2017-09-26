@@ -131,7 +131,7 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
 
     int countByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
 
-    int countByCompetitionIdAndRoleAndStatusAndInviteIdIn(Long competitionId,
+    int countByCompetitionIdAndRoleAndStatusAndInviteIdIn(long competitionId,
                                                           CompetitionParticipantRole role,
                                                           ParticipantStatus status,
                                                           List<Long> inviteIds);
@@ -146,14 +146,14 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
 
     @Query(PARTICIPANTS_WITH_ASSESSMENTS)
     List<CompetitionParticipant> findParticipantsWithAssessments(
-            @Param("compId") Long competitionId,
+            @Param("compId") long competitionId,
             @Param("role") CompetitionParticipantRole role,
             @Param("status") ParticipantStatus status,
-            @Param("appId") Long applicationId);
+            @Param("appId") long applicationId);
 
     @Query(PARTICIPANTS_NOT_ON_PANEL)
-    Page<CompetitionParticipant> findParticipantsNotOnPanel(@Param("competitionId") Long competitionId, Pageable pageable);
+    Page<CompetitionParticipant> findParticipantsNotOnPanel(@Param("competitionId") long competitionId, Pageable pageable);
 
     @Query(PARTICIPANTS_NOT_ON_PANEL)
-    List<CompetitionParticipant> findParticipantsNotOnPanel(@Param("competitionId") Long competitionId);
+    List<CompetitionParticipant> findParticipantsNotOnPanel(@Param("competitionId") long competitionId);
 }

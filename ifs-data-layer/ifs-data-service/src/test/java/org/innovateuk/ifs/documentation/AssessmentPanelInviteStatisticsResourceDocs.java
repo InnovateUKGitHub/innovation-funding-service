@@ -11,7 +11,7 @@ public class AssessmentPanelInviteStatisticsResourceDocs {
             fieldWithPath("invited").description("The number of assessors invited to the assessment panel"),
             fieldWithPath("accepted").description("The number of assessors who have accepted an invitation to the assessment panel"),
             fieldWithPath("declined").description("The number of assessors who have rejected an invitation to the assessment panel"),
-            fieldWithPath("pending").description("The number of assessors withh pending invites")
+            fieldWithPath("pending").description("The number of assessors with pending invites")
     };
 
     public static final AssessmentPanelInviteStatisticsResourceBuilder assessmentPanelInviteStatisticsResourceBuilder =
