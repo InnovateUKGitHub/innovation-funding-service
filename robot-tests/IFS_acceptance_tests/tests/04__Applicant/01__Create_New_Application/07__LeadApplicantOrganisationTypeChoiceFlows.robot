@@ -38,7 +38,7 @@ User cannot choose Research when both Research and Public sector types are ineli
     [Teardown]    go back
     When the user chooses an organisation type    ${ACADEMIC_TYPE_ID}
     And the user clicks the button/link    jQuery=button:contains("Save and continue")
-    And the user should see the text in the element  css=#content p    The application must be started by the lead applicant. Your organisation is not eligible to be the lead applicant in this competition..
+    And the user should see the text in the element  css=#content p    The application must be started by the lead applicant. Your organisation is not eligible to be the lead applicant in this competition.
 
 User cannot choose Public Sector when both Research and Public sector types are ineligible
     [Documentation]    IFS-1014
