@@ -20,8 +20,14 @@ public interface OverheadFileService {
     @PreAuthorize("hasPermission(#overheadId, 'org.innovateuk.ifs.finance.domain.FinanceRow', 'READ_OVERHEAD_CONTENTS')")
     ServiceResult<FileAndContents> getFileEntryContents(long overheadId);
 
+    @PreAuthorize("hasAnyAuthority('project_finance')")
+    ServiceResult<FileAndContents> getProjectFileEntryContents(long overheadId);
+
     @PreAuthorize("hasPermission(#overheadId, 'org.innovateuk.ifs.finance.domain.FinanceRow', 'READ_OVERHEAD_DETAILS')")
     ServiceResult<FileEntryResource> getFileEntryDetails(long overheadId);
+
+    @PreAuthorize("hasAnyAuthority('project_finance')")
+    ServiceResult<FileEntryResource> getProjectFileEntryDetails(long overheadId);
 
     @PreAuthorize("hasPermission(#overheadId, 'org.innovateuk.ifs.finance.domain.FinanceRow', 'UPDATE_OVERHEAD_FILE')")
     ServiceResult<FileEntryResource> updateFileEntry(long overheadId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);

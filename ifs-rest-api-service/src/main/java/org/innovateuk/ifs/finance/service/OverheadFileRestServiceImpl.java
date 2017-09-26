@@ -38,8 +38,20 @@ public class OverheadFileRestServiceImpl extends BaseRestService implements Over
     }
 
     @Override
+    public RestResult<ByteArrayResource> getOverheadFileUsingProjectFinanceRowId(Long projectFinanceRowId) {
+        String url = restUrl + "/projectOverheadCalculationDocument?overheadId=" + projectFinanceRowId;
+        return getWithRestResult(url, ByteArrayResource.class);
+    }
+
+    @Override
     public RestResult<FileEntryResource> getOverheadFileDetails(Long overheadId) {
         String url = restUrl + "/overheadCalculationDocumentDetails?overheadId=" + overheadId;
+        return getWithRestResult(url, FileEntryResource.class);
+    }
+
+    @Override
+    public RestResult<FileEntryResource> getOverheadFileDetailsUsingProjectFinanceRowId(Long overheadId) {
+        String url = restUrl + "/projectOverheadCalculationDocumentDetails?overheadId=" + overheadId;
         return getWithRestResult(url, FileEntryResource.class);
     }
 
