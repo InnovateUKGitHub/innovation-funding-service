@@ -17,7 +17,7 @@ IFS.core.formValidation = (function () {
       },
       passwordPolicy: {
         fields: {
-          password: '[name="password"],[name="retypedPassword"]',
+          password: '[name="password"]',
           firstname: '#firstName',
           lastname: '#lastName'
         },
@@ -135,13 +135,16 @@ IFS.core.formValidation = (function () {
       var isFilledOut = IFS.core.formValidation.checkRequired(field)
       var formGroup = field.closest('.form-group')
       var confirmsToPasswordPolicy = hasUppercase && hasNumber && isMinlength && isFilledOut
-
       if (errorStyles) {
         if (confirmsToPasswordPolicy) {
           formGroup.removeClass('form-group-error')
           field.removeClass('form-control-error')
           //  clear tooWeakPassword message as this is validated in the back end.
           IFS.core.formValidation.setValid(field, IFS.core.formValidation.getErrorMessage(field, 'passwordPolicy-tooWeak', 'visuallyhidden'))
+          // clear the customError if it has been set by a server validation error
+          if (s.html5validationMode && field[0].validity.customError) {
+            field[0].setCustomValidity('')
+          }
         } else {
           formGroup.addClass('form-group-error')
           field.addClass('form-control-error')
@@ -685,7 +688,6 @@ IFS.core.formValidation = (function () {
       //     <td><input aria-labelledby="rowlabel" type="text" name="field2" class="form-control form-control-error" required /></td>
       // <tr>
       if (formGroupRow.length) {
-        console.log('remove formgrouprow', '[data-errorfield="' + name + '"]:contains(' + message + ')')
         formGroupRow.find('[data-errorfield="' + name + '"]:contains(' + message + ')').remove()
         if (formGroupRow.find('[data-errorfield="' + name + '"]').length === 0) {
           field.removeClass('form-control-error')
