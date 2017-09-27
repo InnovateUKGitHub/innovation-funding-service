@@ -4,8 +4,18 @@ RUN apk --update add curl
 EXPOSE 8009
 EXPOSE 8000
 EXPOSE 8080
+
 ENV JAVA_OPTS -Xmx300m
 ENV JMX_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=8001 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
+
+# LDAP-specific environment variables
+ENV SHIBBOLETH_LDAP_BASE_DN="dc=nodomain" \
+    SHIBBOLETH_LDAP_PASSWORD="default" \
+    SHIBBOLETH_LDAP_PPOLICY_ATTRIB="cn=PPolicy,ou=Policies" \
+    SHIBBOLETH_LDAP_PORT="8389" \
+    SHIBBOLETH_LDAP_USER="cn=admin,dc=nodomain" \
+    SHIBBOLETH_LDAP_URL="ldaps://ldap:8389"
+
 VOLUME /tmp
 
 ADD newrelic.jar /
