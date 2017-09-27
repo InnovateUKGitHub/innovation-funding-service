@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.viewmodel;
 
+import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 
 import java.util.List;
@@ -33,8 +34,8 @@ abstract class PanelInviteAssessorsRowViewModel {
     }
 
     public String getInnovationAreas() {
-        return innovationAreas == null ? EMPTY : innovationAreas.stream()
-                .map(i -> i.getName())
+        return innovationAreas == null ? "" : innovationAreas.stream()
+                .map(CategoryResource::getName)
                 .collect(joining(", "));
     }
 

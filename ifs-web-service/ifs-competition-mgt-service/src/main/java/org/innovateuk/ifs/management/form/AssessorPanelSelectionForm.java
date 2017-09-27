@@ -36,8 +36,7 @@ public class AssessorPanelSelectionForm extends BaseBindingResultTarget {
     }
 
     public boolean anySelectionIsMade() {
-        return this.allSelected != false ||
-                this.selectedAssessorIds.size() > 0;
+        return this.selectedAssessorIds.size() > 0;
     }
 
     @Override

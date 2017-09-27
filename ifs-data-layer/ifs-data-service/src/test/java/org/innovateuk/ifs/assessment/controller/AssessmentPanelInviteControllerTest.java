@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class AssessmentPanelInviteControllerTest extends BaseControllerMockMVCTest<AssessmentPanelInviteController> {
 
-    private final long COMPETITION_ID = 1L;
+    private static final long COMPETITION_ID = 1L;
 
     @Override
     protected AssessmentPanelInviteController supplyControllerUnderTest() {

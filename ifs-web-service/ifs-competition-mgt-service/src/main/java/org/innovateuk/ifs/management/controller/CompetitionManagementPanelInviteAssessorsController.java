@@ -108,7 +108,7 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
     }
 
     private AssessorPanelSelectionForm trimSelectionByFilteredResult(AssessorPanelSelectionForm selectionForm,
-                                                                     Long competitionId) {
+                                                                     long competitionId) {
         List<Long> filteredResults = getAllAssessorIds(competitionId);
         AssessorPanelSelectionForm updatedSelectionForm = new AssessorPanelSelectionForm();
 
