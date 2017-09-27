@@ -1,5 +1,6 @@
-package org.innovateuk.ifs.shibboleth.api;
+package org.innovateuk.ifs;
 
+import org.innovateuk.ifs.shibboleth.api.LdapProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

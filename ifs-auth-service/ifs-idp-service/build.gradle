@@ -1,10 +1,6 @@
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import org.apache.tools.ant.filters.ReplaceTokens
 
-dependencies{
-    runtime project(path: ':ifs-auth-service:ifs-registration-service', configuration: 'war')
-}
-
 def String oracleJdkDomain = project.properties['oracle.jdk.domain'] ?:"http://download.oracle.com"
 
 def String idpCertsVolume = 'src/main/docker/certs'
