@@ -4,15 +4,15 @@ items:
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
-    name: selenium-grid
+    name: chrome
   spec:
     replicas: 1
     selector:
-      deploymentconfig: selenium-grid
+      deploymentconfig: chrome
     template:
       metadata:
         labels:
-          deploymentconfig: selenium-grid
+          deploymentconfig: chrome
       spec:
         volumes:
         - name: dshm
@@ -20,7 +20,7 @@ items:
             medium: Memory
         containers:
         - image: selenium/standalone-chrome:3.0.1-dysprosium
-          name: hub
+          name: chrome
           imagePullPolicy: IfNotPresent
           volumeMounts:
           - mountPath: /dev/shm
@@ -60,14 +60,14 @@ items:
 - apiVersion: v1
   kind: Service
   metadata:
-    name: hub
+    name: chrome
   spec:
     ports:
     - name: 4444-tcp
       port: 4444
       targetPort: 4444
     selector:
-      deploymentconfig: selenium-grid
+      deploymentconfig: chrome
   status:
     loadBalancer: {}
 

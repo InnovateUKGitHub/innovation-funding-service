@@ -174,7 +174,7 @@ Initial details - should have a green check
     [Documentation]    INFUND-3002
     [Tags]    HappyPath
     When The user clicks the button/link    link=Competition setup
-    Then the user should see the element    jQuery=li:nth-child(1) .task-status-complete
+    Then the user should see the element    css=li:nth-child(1) .task-status-complete
     And the user should not see the element    jQuery=button:contains("Complete")
 
 User should have access to all the sections
@@ -258,7 +258,7 @@ Funding information: should have a green check
     [Documentation]    INFUND-3002
     [Tags]    HappyPath
     When The user clicks the button/link    link=Competition setup
-    Then the user should see the element    jQuery=li:nth-child(2) .task-status-complete
+    Then the user should see the element    css=li:nth-child(2) .task-status-complete
     And the user should not see the element    jQuery=button:contains("Complete")
 
 Eligibility: Contain the correct options
@@ -308,7 +308,7 @@ Eligibility: Should have a Green Check
     [Documentation]    INFUND-3002
     [Tags]    HappyPath
     When The user clicks the button/link    link=Competition setup
-    Then the user should see the element    jQuery=li:nth-child(3) .task-status-complete
+    Then the user should see the element    css=li:nth-child(3) .task-status-complete
     And the user should not see the element    jQuery=button:contains("Complete")
 
 Milestones: Page should contain the correct fields
@@ -438,7 +438,7 @@ Application: Project Summary
     And the user should see the text in the page    You can edit this question for the applicant as well as the guidance for assessors.
     When the user clicks the button/link    jQuery=a:contains("Edit this question")
     And The user fills the empty question fields
-    And The user clicks the button/link    jQuery=.button[value="Save and close"]
+    And The user clicks the button/link    css=.button[value="Save and close"]
     And the user clicks the button/link    link=Project summary
     Then The user should see the text in the page    Project summary
     And the user checks the question fields
@@ -469,7 +469,7 @@ Application: Mark as done should display green tick
     Given The user clicks the button/link       jQuery=button:contains(Done)
     Then The user should not see the element    jQuery=button:contains(Done)
     And The user clicks the button/link         link=Competition setup
-    Then the user should see the element        jQuery=li:nth-child(5) .task-status-complete
+    Then the user should see the element        css=li:nth-child(5) .task-status-complete
 
 Complete button disabled when sections are edited
     [Documentation]  IFs-648
@@ -494,7 +494,7 @@ Application: Edit again should mark as incomplete
     And The user clicks the button/link         jQuery=button:contains("Save and close")
     Then The user should see the element        jQuery=button:contains(Done)
     And The user clicks the button/link         link=Competition setup
-    Then the user should not see the element    jQuery=li:nth-child(5) .task-status-complete
+    Then the user should not see the element    css=li:nth-child(5) .task-status-complete
 
 Ready To Open button is visible when the user re-opens a section
     [Documentation]    INFUND-4468
@@ -590,7 +590,7 @@ the total should be correct
     [Arguments]    ${Total}
     mouse out    css=input
     Focus    jQuery=button:contains("Done")
-    Wait Until Element Contains Without Screenshots    jQuery=p.no-margin    ${Total}
+    Wait Until Element Contains Without Screenshots    css=p.no-margin    ${Total}
 
 the user fills the milestones with valid data
     The user enters text to a text field    name=milestoneEntries[OPEN_DATE].day    10

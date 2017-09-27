@@ -1,8 +1,8 @@
 version: '2'
 services:
-  hub:
-    container_name: hub
-    image: selenium/standalone-chrome:3.0.1-dysprosium
+  chrome:
+    container_name: chrome
+    image: selenium/standalone-chrome-debug:3.0.1-dysprosium
     environment:
       - NODE_MAX_SESSION=20
       - NODE_MAX_INSTANCES=20

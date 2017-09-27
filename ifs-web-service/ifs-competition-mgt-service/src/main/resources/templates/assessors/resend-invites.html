@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite to be an assessor'" />
+    </head>
+
+    <body th:with="context='comp-management'" class="competition-management competition-overview">
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
+
+        <main tabindex="-1" id="content">
+            <th:block th:insert="fragments/layout :: main-content-start" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to invite assessor',linkClass='link-back',linkUrl=@{/competition/{competitionId}/assessors/overview(competitionId=${model.competitionId})}" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite to be an assessor',subTitle=${model.competitionName},size='heading-xlarge'" />
+
+            <h2 class="heading-medium no-margin">Recipients</h2>
+
+            <p th:text="${#strings.listJoin(model.recipients, ', ')}">Paul Plum, Felix Wilson</p>
+
+            <form th:action="@{/competition/{competitionId}/assessors/invite/resend(competitionId=${model.competitionId})}" method="post" enctype="multipart/form-data" th:object="${form}">
+                <div class="form-group extra-margin-bottom">
+                    <label class="form-label-bold" for="subject">Subject</label>
+                    <input class="form-control width-full" id="subject" type="text" th:field="*{subject}" />
+                </div>
+
+                <h3 class="heading-small">Message</h3>
+                <p th:utext="${model.content}" class="form-hint" style="white-space: pre-wrap">Read-only email content</p>
+
+                <div class="form-group extra-margin">
+                    <label class="form-label-bold" for="message">Additional text</label>
+                    <textarea
+                        id="message" rows="8" class="form-control width-full"
+                        th:field="*{content}">
+                    </textarea>
+                </div>
+
+                <p class="form-hint">
+                    Yours sincerely,
+                </p>
+
+                <p class="form-hint extra-margin">
+                    Competitions Team <br />
+                    Innovate UK <br />
+                    Tel: 0300 321 4357 <br />
+                    Email: competitions@innovateuk.gov.uk
+                </p>
+
+                <div class="extra-margin">
+                    <button type="submit" class="button">Send invite</button>
+                    <a th:href="@{/competition/{competitionId}/assessors/overview(competitionId=${model.competitionId})}"
+                       class="button button-clear">Cancel</a>
+                </div>
+
+                <input type="hidden" name="selections" th:field="*{inviteIds}"/>
+            </form>
+
+            <th:block th:insert="fragments/layout :: main-content-end" />
+        </main>
+
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
+    </body>
+</html>

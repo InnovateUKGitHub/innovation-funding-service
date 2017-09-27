@@ -718,7 +718,7 @@ the user accepts invitation and signs in
     the user reads his email and clicks the link  ${email}  ${title}  ${pattern}
     the user should see the element               jQuery=h1:contains("Join a project")
     the user clicks the button/link               link=Create account
-    the user fills the create account form        ${name}  ${famName}
+    the invited user fills the create account form  ${name}  ${famName}
     the user reads his email and clicks the link  ${email}  Please verify your email address  Dear ${name} ${famName}
     the user should see the element               jQuery=h1:contains("Account verified")
     the user clicks the button/link               jQuery=.button:contains("Sign in")

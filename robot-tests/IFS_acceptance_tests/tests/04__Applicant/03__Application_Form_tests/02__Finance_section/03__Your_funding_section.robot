@@ -32,7 +32,7 @@ Funding level validations
     Then the user should see the element    jQuery=span.error-message:contains("This field should be 25% or lower.")
     When the user enters text to a text field    id=cost-financegrantclaim    25
     Then the user should not see the element    jQuery=span.error-message:contains("This field should be 25% or lower.")
-    And the user should not see the element    jQuery=.error-message
+    And the user should not see the element    css=.error-message
 
 Other funding validations
     [Documentation]    INFUND-6794
@@ -141,6 +141,6 @@ the user adds more rows in other funding
 the user changes the research category
     [Documentation]    INFUND-8260
     # Often those labels need double click. Thus i made a separate keyword to looks more tidy
-    the user clicks the button/link    jQuery=label[for="researchCategoryChoice-34"]
-    the user clicks the button/link    jQuery=label[for="researchCategoryChoice-34"]
+    the user clicks the button/link    css=label[for="researchCategoryChoice-34"]
+    the user clicks the button/link    css=label[for="researchCategoryChoice-34"]
     the user clicks the button/link    jQuery=button:contains(Save)
