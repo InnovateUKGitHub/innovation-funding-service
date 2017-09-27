@@ -69,11 +69,9 @@ the applicant completes the application details
     [Arguments]   ${Application_details}
     the user clicks the button/link       link=${Application_details}
     the user clicks the button/link       jQuery=button:contains("research category")
-    the user clicks the button/link       jQuery=label[for^="researchCategoryChoice"]:contains("Experimental development")
-    the user clicks the button/link       jQuery=label[for^="researchCategoryChoice"]:contains("Experimental development")
-    the user clicks the button/link       jQuery=button:contains(Save)
-    the user clicks the button/link       css=label[for="application.resubmission-no"]
-    the user clicks the button/link       css=label[for="application.resubmission-no"]
+    the user clicks the button twice      jQuery=label[for^="researchCategoryChoice"]:contains("Experimental development")
+    the user clicks the button/link       jQuery=button:contains("Save")
+    the user clicks the button twice      css=label[for="application.resubmission-no"]
     # those Radio buttons need to be clicked twice.
     The user enters text to a text field  id=application_details-startdate_day  18
     The user enters text to a text field  id=application_details-startdate_year  2018
@@ -81,13 +79,34 @@ the applicant completes the application details
     The user enters text to a text field  id=application_details-duration  20
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
     the user should see the element       jQuery=button:contains("Edit")
-    the user should not see the element     css=input
+    the user should not see the element   css=input
+
+the user fills in the Application details
+    [Arguments]  ${appTitle}  ${res_category}  ${tomorrowday}  ${month}  ${nextyear}
+    the user should see the element       jQuery=h1:contains("Application details")
+    the user enters text to a text field  css=#application_details-title  ${appTitle}
+    the user enters text to a text field  css=#application_details-startdate_day  ${tomorrowday}
+    the user enters text to a text field  css=#application_details-startdate_month  ${month}
+    the user enters text to a text field  css=#application_details-startdate_year  ${nextyear}
+    the user enters text to a text field  css=#application_details-duration  24
+    the user clicks the button twice      css=label[for="application.resubmission-no"]
+    the user selects Research category    ${res_category}
+    the user should not see the element   link=Choose your innovation area
+    The user clicks the button/link       css=button[name="mark_as_complete"]
+    the user clicks the button/link       link=Application overview
+    the user should see the element       jQuery=li:contains("Application details") > .task-status-complete
+
+the user selects Research category
+    [Arguments]  ${res_category}
+    the user clicks the button/link   jQuery=label:contains("Research category")
+    the user clicks the button twice  jQuery=label[for^="researchCategoryChoice"]:contains("${res_category}")
+    the user clicks the button/link   jQuery=button:contains("Save")
 
 the user marks the finances as complete
     [Arguments]  ${Application}
     the user fills in the project costs     ${Application}
     the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
-    the user checks Your Funding section     ${Application}
+    the user checks Your Funding section        ${Application}
     the user should see all finance subsections complete
     the user clicks the button/link  link=Application overview
     the user should see the element  jQuery=li:contains("Your finances") > .task-status-complete
@@ -195,6 +214,31 @@ the user removes prev costs if there are any
     ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=table[id="other-costs-table"] tr:contains("Remove")
     Run Keyword If    '${status}' == 'PASS'    the user clicks the button/link  jQuery=table[id="other-costs-table"] tr:contains("Remove")
 
+the academic user fills in his finances
+    [Arguments]  ${application}
+    the user navigates to Your-finances page  ${application}
+    the academic fills in the project costs   ${application}
+
+the academic fills in the project costs
+    [Arguments]  ${application}
+    the user clicks the button/link       link=Your project costs
+    The user enters text to a text field  id=tsb-ref  ${application}
+    The user enters text to a text field  id=incurred-staff  999.999
+    The user enters text to a text field  id=travel    999.999
+    The user enters text to a text field  id=other    999.999
+    the user should see the element       css=#subtotal-resources[data-calculation-rawvalue^="2999"]
+    The user enters text to a text field  id=investigators    999.999
+    The user enters text to a text field  id=estates    999.999
+    The user enters text to a text field  id=other-direct    999.999
+    the user should see the element       css=#subtotal-directly-allocated[data-calculation-rawvalue^="2999"]
+    The user enters text to a text field  id=indirect    999.999
+    The user enters text to a text field  id=exceptions-staff    999.999
+    The user enters text to a text field  id=exceptions-other-direct    999.999
+    the user should see the element       css=#total[data-calculation-rawvalue^="8999"]
+    the user uploads the file             css=.inputfile  ${valid_pdf}
+    the user should see the element       link=testing.pdf (opens in a new window)
+    the user clicks the button/link       css=#mark-all-as-complete[type="submit"]
+
 the user fills the organisation details with Project growth table
     [Arguments]   ${Application}  ${org_size}
     the user navigates to Your-finances page                ${Application}
@@ -217,7 +261,7 @@ the user fills in the organisation information
     Run Keyword If    '${status}' == 'PASS'    the user clicks the button/link  jQuery=button:contains("Edit")
     the user selects the radio button  financePosition-organisationSize  ${org_size}
     the user enters text to a text field    jQuery=label:contains("Turnover") + input    150
-    the user enters text to a text field    jQuery=label:contains("employees") + input    0
+    the user enters text to a text field    jQuery=label:contains("employees") + input   3
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
     the user clicks the button/link  link=Your organisation
     the user should see the element       jQuery=button:contains("Edit")
@@ -269,19 +313,18 @@ Remove previous rows
 
 Invite a non-existing collaborator
     [Arguments]   ${email}  ${competition_name}
-    the user should see the element       jQuery=h1:contains("Application overview")
+    the user should see the element        jQuery=h1:contains("Application overview")
     the user fills in the inviting steps   ${email}
+    logout as user
     newly invited collaborator can create account and sign in   ${email}  ${competition_name}
 
-the user fills in the inviting steps
-    [Arguments]  ${email}
-    the user clicks the button/link       link=view and manage contributors and collaborators
-    the user clicks the button/link       link=Add a collaborator organisation
-    the user enters text to a text field  css=#organisationName  New Organisation's Name
-    the user enters text to a text field  css=input[id="applicants0.name"]  Partner's name
-    the user enters text to a text field  css=input[id="applicants0.email"]  ${email}
-    the user clicks the button/link       jQuery=button:contains("Add organisation and invite applicants")
-    logout as user
+the user is able to confirm the invite
+    [Arguments]  ${email}  ${password}
+    the user clicks the button/link                 jQuery=.button:contains("Continue or sign in")
+    The guest user inserts user email and password  ${email}  ${password}
+    The guest user clicks the log-in button
+    the user should see the text in the page        Confirm your organisation
+    the user clicks the button/link                 jQuery=.button:contains("Confirm and accept invitation")
 
 Newly invited collaborator can create account and sign in
     [Arguments]    ${email}  ${competition_name}
@@ -304,18 +347,18 @@ the user completes the new account creation
     the user selects the checkbox               address-same
     wait for autosave
     the user clicks the button/link             jQuery=button:contains("Continue")
-    then the user should not see an error in the page
+    the user should not see an error in the page
     the user clicks the button/link             jQuery=.button:contains("Save and continue")
     the user should be redirected to the correct page    ${SERVER}/registration/register
-    the user fills the create account form       liam  smithson
+    the invited user fills the create account form       liam  smithson
     the user should see the text in the page     Please verify your email address
     the user reads his email and clicks the link   ${email}  Please verify your email address  Once verified you can sign into your account.
     the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     the user clicks the button/link             link=Sign in
-    then the user should see the text in the page    Sign in
-    the user enters text to a text field         css=input[id="username"]  ${email}
+    the user should see the text in the page    Sign in
+    the user enters text to a text field        css=input[id="username"]  ${email}
     the user enters text to a text field        css=input[id="password"]  ${correct_password}
-    the user clicks the button/link              jQuery=button:contains("Sign in")
+    the user clicks the button/link             jQuery=button:contains("Sign in")
 
 the applicant adds some content and marks this section as complete
     Focus    css=.textarea-wrapped .editor
@@ -326,3 +369,16 @@ the applicant adds some content and marks this section as complete
 the applicant edits the "economic benefit" question
     the user clicks the button/link    name=mark_as_incomplete
     the user should see the element    name=mark_as_complete
+
+logged in user applies to competition
+    [Arguments]  ${competition}
+    the user navigates to the page  ${frontDoor}
+    navigate to next page if not found  ${competition}
+    the user clicks the button/link  link=${competition}
+    the user clicks the button/link  link=Start new application
+    the user clicks the button/link  link=Begin application
+
+navigate to next page if not found
+    [Arguments]  ${competition}
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  link=${competition}
+    Run Keyword If    '${status}' == 'FAIL'    the user clicks the button/link  jQuery=a:contains("Next")

@@ -17,7 +17,7 @@
 
     <section>
         <h2 class="heading-medium"
-            th:text="'Non-IFS competitions ('+${model.competitions.size()}+')'"></h2>
+            th:text="'Non-IFS competitions ('+${model.counts.nonIfsCount}+')'"></h2>
         <ul class="list-overview">
             <li class="grid-row" th:each="competition : ${model.competitions}">
                 <th:block

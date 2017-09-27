@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.competition.resource.*;
@@ -56,6 +57,11 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     @Override
     public RestResult<List<CompetitionSearchResultItem>> findNonIfsCompetitions() {
         return getWithRestResult(competitionsRestURL + "/non-ifs", competitionSearchResultItemListType());
+    }
+
+    @Override
+    public RestResult<List<ApplicationResource>> findUnsuccessfulApplications(Long competitionId) {
+        return getWithRestResult(competitionsRestURL +  "/" + competitionId + "/unsuccessful-applications", applicationResourceListType());
     }
 
     @Override
@@ -167,5 +173,10 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     @Override
     public RestResult<CompetitionResource> createNonIfs() {
         return postWithRestResult(competitionsRestURL + "/non-ifs", CompetitionResource.class);
+    }
+
+    @Override
+    public RestResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions() {
+        return getWithRestResult(competitionsRestURL +  "/feedback-released", competitionSearchResultItemListType());
     }
 }
