@@ -14,13 +14,18 @@ public class UnsuccessfulApplicationsViewModel {
     private Long competitionId;
     private String competitionName;
     private List<ApplicationResource> unsuccessfulApplications;
-    private int unsuccessfulApplicationsSize;
+    private long unsuccessfulApplicationsSize;
+    private PaginationViewModel unsuccessfulApplicationsPagination;
 
-    public UnsuccessfulApplicationsViewModel(Long competitionId, String competitionName, List<ApplicationResource> unsuccessfulApplications, int unsuccessfulApplicationsSize) {
+    public UnsuccessfulApplicationsViewModel(Long competitionId, String competitionName,
+                                             List<ApplicationResource> unsuccessfulApplications,
+                                             long unsuccessfulApplicationsSize,
+                                             PaginationViewModel unsuccessfulApplicationsPagination) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.unsuccessfulApplications = unsuccessfulApplications;
         this.unsuccessfulApplicationsSize = unsuccessfulApplicationsSize;
+        this.unsuccessfulApplicationsPagination = unsuccessfulApplicationsPagination;
     }
 
     public Long getCompetitionId() {
@@ -48,12 +53,20 @@ public class UnsuccessfulApplicationsViewModel {
         this.unsuccessfulApplications = unsuccessfulApplications;
     }
 
-    public int getUnsuccessfulApplicationsSize() {
+    public long getUnsuccessfulApplicationsSize() {
         return unsuccessfulApplicationsSize;
     }
 
-    public void setUnsuccessfulApplicationsSize(int unsuccessfulApplicationsSize) {
+    public void setUnsuccessfulApplicationsSize(long unsuccessfulApplicationsSize) {
         this.unsuccessfulApplicationsSize = unsuccessfulApplicationsSize;
+    }
+
+    public PaginationViewModel getUnsuccessfulApplicationsPagination() {
+        return unsuccessfulApplicationsPagination;
+    }
+
+    public void setUnsuccessfulApplicationsPagination(PaginationViewModel unsuccessfulApplicationsPagination) {
+        this.unsuccessfulApplicationsPagination = unsuccessfulApplicationsPagination;
     }
 
     @Override
@@ -62,13 +75,14 @@ public class UnsuccessfulApplicationsViewModel {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        UnsuccessfulApplicationsViewModel that = (UnsuccessfulApplicationsViewModel) o;
+        UnsuccessfulApplicationsViewModel viewModel = (UnsuccessfulApplicationsViewModel) o;
 
         return new EqualsBuilder()
-                .append(unsuccessfulApplicationsSize, that.unsuccessfulApplicationsSize)
-                .append(competitionId, that.competitionId)
-                .append(competitionName, that.competitionName)
-                .append(unsuccessfulApplications, that.unsuccessfulApplications)
+                .append(unsuccessfulApplicationsSize, viewModel.unsuccessfulApplicationsSize)
+                .append(competitionId, viewModel.competitionId)
+                .append(competitionName, viewModel.competitionName)
+                .append(unsuccessfulApplications, viewModel.unsuccessfulApplications)
+                .append(unsuccessfulApplicationsPagination, viewModel.unsuccessfulApplicationsPagination)
                 .isEquals();
     }
 
@@ -79,6 +93,7 @@ public class UnsuccessfulApplicationsViewModel {
                 .append(competitionName)
                 .append(unsuccessfulApplications)
                 .append(unsuccessfulApplicationsSize)
+                .append(unsuccessfulApplicationsPagination)
                 .toHashCode();
     }
 }

@@ -185,7 +185,7 @@ Support User can see read only view of Your organisation
     When the user clicks the button/link           jQuery=a:contains("Your organisation")
     Then the user should see the text in the page  Organisation size
     And the user should see the element            jQuery=dt:contains("Turnover") + dd:contains("150")
-    And the user should see the element            jQuery=dt:contains("employees") + dd:contains("0")
+    And the user should see the element            jQuery=dt:contains("employees") + dd:contains("3")
 
 Support User can see read only view of Your funding
     [Documentation]  IFS-401
@@ -245,7 +245,7 @@ Innovation lead can see read only view of Your organisation
     When the user clicks the button/link           jQuery=a:contains("Your organisation")
     Then the user should see the text in the page  Organisation size
     And the user should see the element            jQuery=dt:contains("Turnover") + dd:contains("150")
-    And the user should see the element            jQuery=dt:contains("employees") + dd:contains("0")
+    And the user should see the element            jQuery=dt:contains("employees") + dd:contains("3")
 
 Innovation lead can see read only view of Your funding
     [Documentation]  IFS-802

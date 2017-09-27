@@ -9,13 +9,11 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.service.CategoryFormatter;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
-import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
@@ -47,9 +45,7 @@ public class EligibilityModelPopulator implements CompetitionSetupSectionModelPo
 		model.addAttribute("collaborationLevels", CollaborationLevel.values());
         List<OrganisationTypeResource> organisationTypes = organisationTypeRestService.getAll().getSuccessObject();
 
-        // TODO INFUND-9225 remove the researchFilter once the first competition has gone live
-        Predicate<OrganisationTypeResource> notResearchFilter = organisationTypeResource -> !"Research".equals(organisationTypeResource.getName());
-		List<OrganisationTypeResource> leadApplicantTypes = simpleFilter(organisationTypes, CollectionFunctions.and(OrganisationTypeResource::getVisibleInSetup, notResearchFilter));
+        List<OrganisationTypeResource> leadApplicantTypes = simpleFilter(organisationTypes, OrganisationTypeResource::getVisibleInSetup);
 
 		model.addAttribute("leadApplicantTypes", leadApplicantTypes);
         model.addAttribute("leadApplicantTypesText", leadApplicantTypes.stream()
