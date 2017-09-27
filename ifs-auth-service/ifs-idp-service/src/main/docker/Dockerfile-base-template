@@ -2,25 +2,25 @@ FROM debian:jessie-slim
 
 ENV DEBIAN_FRONTEND=noninteractive \
   JAVAVER=8 \
-  JAVAUPD=131 \
-  JAVABLD=11 \
-  JAVASIG=d54c1d3a095b4ff2b6607d096fa80163 \
-  ORACLE_JDK_DOMAIN=@oracle_jdk_domain@ \
+  JAVAUPD=144 \
+  JAVABLD=01 \
+  JAVASIG=090f390dda5b47b9b721c7dfaa008135 \
   IDPVER="3.3.1"
 
 ENV JAVA_HOME=/usr/lib/jvm/java-${JAVAVER}-oracle
 ENV JRE_HOME=${JAVA_HOME}/jre
 
 # packages and stuff \
-COPY idp/* /idp/
+COPY idp/default-jre-headless-dummy_1.0_all.deb /idp/
+COPY idp/build.xml /idp/
 RUN apt-get update --fix-missing && \
 
 # Oracle JDK \
-  apt-get -y install ca-certificates gcc libc6-dev libssl-dev make java-common openssl unzip curl apt-transport-https bsdtar && \
-  curl --connect-timeout 30 -m 120 -L -s --retry 5 --cacert /etc/ssl/certs/GeoTrust_Global_CA.pem --header "Cookie: oraclelicense=accept-securebackup-cookie;" \
-    ${ORACLE_JDK_DOMAIN}/otn-pub/java/jdk/${JAVAVER}u${JAVAUPD}-b${JAVABLD}/${JAVASIG}/jdk-${JAVAVER}u${JAVAUPD}-linux-x64.tar.gz | bsdtar -C /tmp -xf - && \
+  apt-get -y install ca-certificates java-common openssl unzip curl apt-transport-https bsdtar && \
+  curl --connect-timeout 30 -L -s --retry 3 --cacert /etc/ssl/certs/GeoTrust_Global_CA.pem --header "Cookie: oraclelicense=accept-securebackup-cookie;" \
+    "http://download.oracle.com/otn-pub/java/jdk/${JAVAVER}u${JAVAUPD}-b${JAVABLD}/${JAVASIG}/jdk-${JAVAVER}u${JAVAUPD}-linux-x64.tar.gz" | bsdtar -C /tmp -xf - && \
   mkdir -p /usr/lib/jvm && mv /tmp/jdk1.${JAVAVER}.0_${JAVAUPD} ${JAVA_HOME} && \
-  curl -jksSLH "Cookie: oraclelicense=accept-securebackup-cookie" -o /tmp/unlimited_jce_policy.zip "${ORACLE_JDK_DOMAIN}/otn-pub/java/jce/8/jce_policy-8.zip" && \
+  curl -jksSLH "Cookie: oraclelicense=accept-securebackup-cookie" -o /tmp/unlimited_jce_policy.zip "http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip" && \
   unzip -jo -d ${JAVA_HOME}/jre/lib/security /tmp/unlimited_jce_policy.zip && \
   update-alternatives --install "/usr/bin/java" "java" "${JRE_HOME}/bin/java" 1 && \
   update-alternatives --install "/usr/bin/javac" "javac" "${JAVA_HOME}/bin/javac" 1 && \
@@ -31,13 +31,13 @@ RUN apt-get update --fix-missing && \
 # tomcat for IDP and Regapi \
   apt-get -y install tomcat8 libtcnative-1 tomcat8-common libtomcat8-java libecj-java ucf && \
 # jstl lib for IDP status page
-  curl --connect-timeout 30 -m 120 -s -L --retry 3 -O https://build.shibboleth.net/nexus/service/local/repositories/thirdparty/content/javax/servlet/jstl/1.2/jstl-1.2.jar && \
+  curl --connect-timeout 30 -s -L --retry 3 -O https://build.shibboleth.net/nexus/service/local/repositories/thirdparty/content/javax/servlet/jstl/1.2/jstl-1.2.jar && \
   mv jstl-1.2.jar /usr/share/tomcat8/lib/ && \
 # Shibboleth IDP \
-  curl --connect-timeout 30 -m 120 -s -L --retry 3 http://shibboleth.net/downloads/identity-provider/$IDPVER/shibboleth-identity-provider-$IDPVER.tar.gz | bsdtar -C /root -xf - && \
+  curl --connect-timeout 30 -s -L --retry 3 http://shibboleth.net/downloads/identity-provider/$IDPVER/shibboleth-identity-provider-$IDPVER.tar.gz | bsdtar -C /root -xf - && \
   cat /idp/build.xml|tr "3.2.1" "$IDPVER" > /root/shibboleth-identity-provider-$IDPVER/bin/build.xml && rm -f /idp/build.xml && \
   (cd /root/shibboleth-identity-provider-$IDPVER/bin; ./install.sh) && rm -rf /root/shibboleth-identity-provider-$IDPVER && \
 # apache. not strictly needed \
   apt-get -y install grep lsof net-tools ldap-utils apache2 && \
-  apt-get autoclean && apt-get remove --purge --auto-remove -y gcc libc6-dev libssl-dev make unzip && apt-get --purge -y autoremove && rm -rf /var/lib/apt/lists/* && \
+  apt-get autoclean && apt-get remove --purge --auto-remove -y unzip && apt-get --purge -y autoremove && rm -rf /var/lib/apt/lists/* && \
   rm -rf /tmp/* /var/tmp/* /idp
