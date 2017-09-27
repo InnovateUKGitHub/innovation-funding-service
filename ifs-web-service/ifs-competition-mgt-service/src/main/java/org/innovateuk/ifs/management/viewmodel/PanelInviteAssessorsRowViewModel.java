@@ -13,7 +13,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
  */
 abstract class PanelInviteAssessorsRowViewModel {
 
-    private long id;
+    private Long id;
     private String name;
     private List<InnovationAreaResource> innovationAreas;
     private boolean compliant;

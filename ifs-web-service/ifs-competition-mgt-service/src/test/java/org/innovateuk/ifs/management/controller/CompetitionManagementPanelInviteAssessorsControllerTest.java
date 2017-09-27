@@ -413,7 +413,7 @@ public class CompetitionManagementPanelInviteAssessorsControllerTest extends Bas
     private void assertCompetitionDetails(CompetitionResource expectedCompetition, MvcResult result) {
         PanelInviteAssessorsViewModel model = (PanelInviteAssessorsViewModel) result.getModelAndView().getModel().get("model");
 
-        assertEquals(expectedCompetition.getId(), model.getCompetitionId());
+        assertEquals((long) expectedCompetition.getId(), model.getCompetitionId());
         assertEquals(expectedCompetition.getName(), model.getCompetitionName());
         assertInnovationSectorAndArea(expectedCompetition, model);
         assertStatistics(model);
