@@ -120,7 +120,6 @@ function startSeleniumGrid() {
 
     docker-compose up -d --force-recreate --build
     sleep 2
-    docker-compose scale chrome=${suiteCount}
 
     unset suiteCount
     if [[ ${quickTest} -eq 1 ]]

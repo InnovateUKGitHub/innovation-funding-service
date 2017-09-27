@@ -45,8 +45,7 @@ Applicant Applies to Public content leading Competition
     And the user marks every section but one as complete  ${publicLeadApp}
     When the user navigates to Your-finances page         ${publicLeadApp}
     Then the user marks the finances as complete          ${publicLeadApp}
-#    And collaborating is required to submit the application if Research participation is not 100pc  ${openCompetitionPublicSector_name}  ${publicLeadApp}  dave.adams@gmail.com
-    # TODO pending due to IFS-1707. There is a bug not allowing the Application submit.
+    And collaborating is required to submit the application if Research participation is not 100pc  ${openCompetitionPublicSector_name}  ${publicLeadApp}  dave.adams@gmail.com
 
 *** Keywords ***
 Custom Suite Setup

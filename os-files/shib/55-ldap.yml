@@ -60,7 +60,9 @@ items:
           - containerPort: 8636
           resources:
             limits:
-              memory: 1G
+              memory: 1200M
+            requests:
+              memory: 800M
     test: false
     triggers:
     - type: ConfigChange

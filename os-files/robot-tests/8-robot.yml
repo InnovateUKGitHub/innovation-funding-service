@@ -20,17 +20,14 @@ items:
         - image: innovateuk/robot-framework:1.0-SNAPSHOT
           name: robot-framework
           imagePullPolicy: Always
-          lifecycle:
-            postStart:
-              exec:
-                command:
-                  - "sh"
-                  - "-c"
-                  - >
-                    echo "$SHIB_PORT_443_TCP_ADDR <<SHIB-ADDRESS>>" >> /etc/hosts &&
-                    echo "$IDP_PORT_443_TCP_ADDR auth-<<SHIB-ADDRESS>>" >> /etc/hosts
+          resources:
+            limits:
+              memory: 600M
+              cpu: 400m
+            requests:
+              cpu: 100m
+              memory: 400M
           ports: {}
-          resources: {}
           restartPolicy:
             never: {}
     test: false
