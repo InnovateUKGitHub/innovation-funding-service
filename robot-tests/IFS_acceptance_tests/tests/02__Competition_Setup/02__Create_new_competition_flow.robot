@@ -685,7 +685,7 @@ The competition should show in the correct section
     Element should contain    ${SECTION}    ${COMP_NAME}
 
 the user fills the scope assessment questions
-    The user clicks the button/link    jQuery=Button:contains("+Add guidance row")
+    The user clicks the button/link    jQuery=button:contains("+Add guidance row")
     The user enters text to a text field    id=guidancerow-2-subject    New subject
     The user enters text to a text field    id=guidancerow-2-justification    This is a justification
     The user enters text to a text field    id=question.assessmentGuidance    Guidance for assessing scope section
