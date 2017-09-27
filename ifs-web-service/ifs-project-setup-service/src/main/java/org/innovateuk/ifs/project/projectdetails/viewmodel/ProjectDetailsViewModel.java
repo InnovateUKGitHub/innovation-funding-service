@@ -36,6 +36,9 @@ public class ProjectDetailsViewModel {
     private Map<Long, ProjectUserResource> financeContactsByOrganisationId;
     private boolean userLeadPartner;
 
+    private boolean projectManagerEditable;
+    private boolean addressEditable;
+
     public ProjectDetailsViewModel(ProjectResource project, UserResource currentUser,
                                    List<Long> usersPartnerOrganisations,
                                    List<OrganisationResource> partnerOrganisations,
@@ -47,7 +50,9 @@ public class ProjectDetailsViewModel {
                                    boolean projectDetailsSubmitted,
                                    ProjectUserResource projectManager,
                                    boolean submissionAllowed,
-                                   boolean readOnlyView) {
+                                   boolean readOnlyView,
+                                   boolean projectManagerEditable,
+                                   boolean addressEditable) {
         this.project = project;
         this.currentUser = currentUser;
         this.usersPartnerOrganisations = usersPartnerOrganisations;
@@ -59,11 +64,12 @@ public class ProjectDetailsViewModel {
         this.projectManager = projectManager;
         this.submissionAllowed = submissionAllowed;
         this.readOnlyView = readOnlyView;
-
         List<ProjectUserResource> financeRoles = simpleFilter(projectUsers, ProjectUserResource::isFinanceContact);
         this.financeContactsByOrganisationId = simpleToMap(financeRoles, ProjectUserResource::getOrganisation, Function.identity());
         this.isFinanceContactSubmitted = usersPartnerOrganisations.stream().anyMatch(organisation -> financeContactsByOrganisationId.containsKey(organisation));
         this.userLeadPartner = userIsLeadPartner;
+        this.projectManagerEditable = projectManagerEditable;
+        this.addressEditable = addressEditable;
     }
 
     public ProjectResource getProject() {
@@ -134,5 +140,13 @@ public class ProjectDetailsViewModel {
 
     public boolean isAnySectionIncomplete() {
         return userLeadPartner && !submissionAllowed && !projectDetailsSubmitted;
+    }
+
+    public boolean isProjectManagerEditable() {
+        return projectManagerEditable;
+    }
+
+    public boolean isAddressEditable() {
+        return addressEditable;
     }
 }

@@ -291,17 +291,26 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<ApprovalType> getSpendProfileStatusByProjectId(Long projectId) {
+        return serviceSuccess(getSpendProfileStatusBy(projectId));
+    }
+
+    @Override
+    public ServiceResult<ApprovalType> getSpendProfileStatus(Long projectId) {
+        return serviceSuccess(getSpendProfileStatusBy(projectId));
+    }
+
+    private ApprovalType getSpendProfileStatusBy(Long projectId) {
         List<SpendProfile> spendProfiles = getSpendProfileByProjectId(projectId);
 
         if (spendProfiles.isEmpty()) {
-            return serviceSuccess(ApprovalType.EMPTY);
+            return ApprovalType.EMPTY;
         } else if (spendProfiles.stream().anyMatch(spendProfile -> spendProfile.getApproval().equals(ApprovalType.REJECTED))) {
-            return serviceSuccess(ApprovalType.REJECTED);
+            return ApprovalType.REJECTED;
         } else if (spendProfiles.stream().allMatch(spendProfile -> spendProfile.getApproval().equals(ApprovalType.APPROVED))) {
-            return serviceSuccess(ApprovalType.APPROVED);
+            return ApprovalType.APPROVED;
         }
 
-        return serviceSuccess(ApprovalType.UNSET);
+        return ApprovalType.UNSET;
     }
 
     @Override

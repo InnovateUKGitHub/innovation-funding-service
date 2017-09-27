@@ -557,14 +557,14 @@ Lead partner can see the status update when all Project details are submitted
     And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
     And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3)
 
-Project details read only after submission
+Target start date is read only after submission
     [Documentation]    INFUND-3381
     [Tags]
     Given the user navigates to the page    ${project_in_setup_details_page}
     Then all the fields are completed
     And The user should not see the element    link=Target start date
-    And The user should not see the element    link=Project address
-    And The user should not see the element    link=Project Manager
+    And the user should see the element        link=Project address
+    And the user should see the element        link=Project Manager
 
 All partners can view submitted project details
     [Documentation]    INFUND-3382, INFUND-2621
@@ -718,7 +718,7 @@ the user accepts invitation and signs in
     the user reads his email and clicks the link  ${email}  ${title}  ${pattern}
     the user should see the element               jQuery=h1:contains("Join a project")
     the user clicks the button/link               link=Create account
-    the user fills the create account form        ${name}  ${famName}
+    the invited user fills the create account form  ${name}  ${famName}
     the user reads his email and clicks the link  ${email}  Please verify your email address  Dear ${name} ${famName}
     the user should see the element               jQuery=h1:contains("Account verified")
     the user clicks the button/link               jQuery=.button:contains("Sign in")

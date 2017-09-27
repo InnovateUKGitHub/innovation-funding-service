@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.competition.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.controller.CompetitionController;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -198,6 +200,28 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
     }
 
     @Test
+    public void findUnsuccessfulApplications() throws Exception {
+        final Long competitionId = 1L;
+
+        List<ApplicationResource> unsuccessfulApplications = ApplicationResourceBuilder.newApplicationResource().build(2);
+
+        when(competitionService.findUnsuccessfulApplications(competitionId)).thenReturn(serviceSuccess(unsuccessfulApplications));
+
+        mockMvc.perform(get("/competition/{id}/unsuccessful-applications", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(unsuccessfulApplications)))
+                .andDo(document(
+                        "competition/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("The competition for which unsuccessful applications need to be found")
+                        )
+                ));
+
+        verify(competitionService, only()).findUnsuccessfulApplications(competitionId);
+
+    }
+
+    @Test
     public void count() throws Exception {
         CompetitionCountResource resource = new CompetitionCountResource();
         when(competitionService.countCompetitions()).thenReturn(serviceSuccess(resource));
@@ -379,4 +403,19 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
                         )
                 );
     }
+
+    @Test
+    public void feedbackReleased() throws Exception {
+        when(competitionService.findFeedbackReleasedCompetitions()).thenReturn(serviceSuccess(newCompetitionSearchResultItem().build(2)));
+
+        mockMvc.perform(get("/competition/feedback-released"))
+                .andExpect(status().isOk())
+                .andDo(document(
+                        "competition/{method-name}",
+                        responseFields(
+                                fieldWithPath("[]").description("list of competitions, which have had feedback released, that the authenticated user has access to")
+                        )
+                ));
+    }
+
 }
