@@ -13,14 +13,9 @@ services:
     ports:
       - '4444:4444'
       - '3000:3000'
-    networks:
-      selenium-network:
-        aliases:
-          - hub
+      - '5900'
     networks:
       - innovationfundingservice_ifs
 networks:
-  selenium-network:
-    driver: bridge
   innovationfundingservice_ifs:
     external: true
