@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
@@ -535,15 +536,21 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
     public void unsuccessfulApplications() throws Exception {
 
         Long competitionId = 1L;
+        int pageIndex = 0;
+        int pageSize = 20;
+        String sortField = "id";
+
         String competitionName = "Competition One";
         List<ApplicationResource> unsuccessfulApplications = ApplicationResourceBuilder.newApplicationResource().build(2);
+        ApplicationPageResource applicationPageResource = new ApplicationPageResource();
         UnsuccessfulApplicationsViewModel viewModel = new UnsuccessfulApplicationsViewModel(competitionId,
-                competitionName, unsuccessfulApplications, unsuccessfulApplications.size());
+                competitionName, unsuccessfulApplications, unsuccessfulApplications.size(), new PaginationViewModel(applicationPageResource, ""));
 
-        when(unsuccessfulApplicationsModelPopulator.populateModel(competitionId))
+        when(unsuccessfulApplicationsModelPopulator.populateModel(eq(competitionId), eq(pageIndex), eq(pageSize), eq(sortField), any()))
                 .thenReturn(viewModel);
 
-        mockMvc.perform(get("/competition/{competitionId}/applications/unsuccessful", competitionId))
+        mockMvc.perform(get("/competition/{competitionId}/applications/unsuccessful?page={pageIndex}&size={pageSize}&sort={sortField}",
+                competitionId, pageIndex, pageSize, sortField))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/unsuccessful-applications"))
                 .andExpect(model().attribute("model", viewModel))

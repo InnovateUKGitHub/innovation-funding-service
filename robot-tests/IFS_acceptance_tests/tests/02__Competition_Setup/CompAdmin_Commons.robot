@@ -15,7 +15,7 @@ the user edits the assessed question information
     the user enters text to a text field    id=question.maxWords    100
     the user enters text to a text field    id=question.scoreTotal    100
     the user enters text to a text field    id=question.assessmentGuidance    Business opportunity guidance
-    the user clicks the button/link    jQuery=Button:contains("+Add guidance row")
+    the user clicks the button/link    jQuery=button:contains("+Add guidance row")
     the user enters text to a text field    id=guidancerow-5-scorefrom    11
     the user enters text to a text field    id=guidancerow-5-scoreto    12
     the user enters text to a text field    id=guidancerow-5-justification    This is a justification
@@ -220,6 +220,12 @@ Change the close date of the Competition in the database to a fortnight
     [Arguments]  ${competition}
     ${fortnight} =  get fortnight
     execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${fortnight}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'SUBMISSION_DATE';
+
+Change the close date of the Competition in the database to fifteen days
+    [Arguments]  ${competition}
+    ${fifteen} =  get fifteen days
+    execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${fifteen}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'SUBMISSION_DATE';
+
 
 Change the close date of the Competition in the database to thirteen days
     [Arguments]  ${competition}

@@ -36,7 +36,7 @@ function buildAndPushTestImages() {
 }
 
 function deployTests() {
-    oc create -f os-files-tmp/robot-tests/7-selenium-grid.yml
+    oc create -f os-files-tmp/robot-tests/7-chrome.yml
     sleep 5
     oc create -f os-files-tmp/robot-tests/8-robot.yml
     sleep 2
