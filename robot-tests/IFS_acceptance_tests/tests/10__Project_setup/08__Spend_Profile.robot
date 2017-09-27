@@ -538,7 +538,7 @@ Check if project manager and project address fields are still editable
    [Documentation]    IFS-1577, IFS-1578
    [Tags]
    Given Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
-   When check if project manager and project address fields are editable  ${PS_SP_APPLICATION_PROJECT}
+   Then check if project manager and project address fields are editable  ${PS_SP_APPLICATION_PROJECT}
 
 Comp Admin is able to see Spend Profile approval page
     [Documentation]    INFUND-2638, INFUND-5617, INFUND-6226, INFUND-5549
