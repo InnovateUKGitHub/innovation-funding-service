@@ -50,7 +50,6 @@ COPY newrelic.yml /
 COPY apache /apache/
 RUN  mkdir /etc/apache2/certs && \
 # configure apache \
-  mv /apache/ssl.conf /etc/apache2/mods-available/ssl.conf && \
   mv /apache/z-defaults.conf /etc/apache2/conf-available/ && a2enconf z-defaults.conf && \
   rm -f /etc/apache2/sites-enabled/000-default.conf && \
   a2enmod socache_shmcb ssl status proxy_ajp proxy headers rewrite proxy_http reqtimeout && \
