@@ -17,6 +17,9 @@ import org.innovateuk.ifs.invite.domain.*;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 
 import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.Notification;
+import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
@@ -66,6 +69,9 @@ import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
+import static org.innovateuk.ifs.util.StringFunctions.plainTextToHtml;
+import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
 
 
 /*
