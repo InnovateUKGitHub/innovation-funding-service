@@ -74,6 +74,25 @@ public class OverheadFileControllerTest extends BaseControllerMockMVCTest<Overhe
     }
 
     @Test
+    public void getProjectFileDetailsTest() throws Exception {
+        Long overHeadIdSuccess = 123L;
+        Long overHeadIdFailure = 456L;
+
+        FileEntryResource fileEntryResource = newFileEntryResource().withId(overHeadIdSuccess).build();
+
+        when(overheadFileService.getProjectFileEntryDetails(overHeadIdSuccess)).thenReturn(serviceSuccess(fileEntryResource));
+        when(overheadFileService.getProjectFileEntryDetails(overHeadIdFailure)).thenReturn(serviceFailure(new Error("GENERAL_NOT_FOUND", HttpStatus.BAD_REQUEST)));
+
+        mockMvc.perform(get(OVERHEAD_BASE_URL + "/projectOverheadCalculationDocumentDetails?overheadId={overHeadIdSuccess}", overHeadIdSuccess))
+                .andExpect(status().isOk())
+                .andExpect(content().string(objectMapper.writeValueAsString(fileEntryResource)));
+
+        mockMvc.perform(get(OVERHEAD_BASE_URL + "/projectOverheadCalculationDocumentDetails?overheadId={overHeadIdFailure}", overHeadIdFailure))
+                .andExpect(status().is4xxClientError())
+                .andExpect(contentError(new Error("GENERAL_NOT_FOUND", HttpStatus.BAD_REQUEST)));
+    }
+
+    @Test
     public void getFileContentsTest() throws Exception {
         Long overHeadIdSuccess = 123L;
         Long overHeadIdFailure = 456L;
@@ -102,6 +121,39 @@ public class OverheadFileControllerTest extends BaseControllerMockMVCTest<Overhe
         when(overheadFileService.getFileEntryContents(overHeadIdFailure)).thenReturn(serviceFailure(new Error("GENERAL_NOT_FOUND", HttpStatus.BAD_REQUEST)));
 
         mockMvc.perform(get(OVERHEAD_BASE_URL + "/overheadCalculationDocument?overheadId={overHeadIdFailure}", overHeadIdFailure))
+                .andExpect(status().is5xxServerError())
+                .andExpect(contentError(new Error(FILES_EXCEPTION_WHILE_RETRIEVING_FILE, INTERNAL_SERVER_ERROR)));
+    }
+
+    @Test
+    public void getProjectFileContentsTest() throws Exception {
+        Long overHeadIdSuccess = 123L;
+        Long overHeadIdFailure = 456L;
+
+        FileEntryResource fileEntryResource = newFileEntryResource().withId(overHeadIdSuccess).build();
+        FileAndContents successResult = new BasicFileAndContents(fileEntryResource, () -> mock(InputStream.class));
+        ResponseEntity<Object> objectResponseEntity = new ResponseEntity(successResult, HttpStatus.OK);
+
+        mockStatic(FileControllerUtils.class);
+        when(FileControllerUtils.handleFileDownload(any(Supplier.class))).thenReturn(objectResponseEntity);
+
+        when(overheadFileService.getProjectFileEntryContents(overHeadIdSuccess)).thenReturn(serviceSuccess(successResult));
+
+
+        mockMvc.perform(get(OVERHEAD_BASE_URL + "/projectOverheadCalculationDocument?overheadId={overHeadIdSuccess}", overHeadIdSuccess))
+                .andExpect(status().isOk())
+                .andExpect(content().string(objectMapper.writeValueAsString(successResult)));
+
+        ValidationMessages validationMessages = new ValidationMessages();
+        validationMessages.addError(new Error("GENERAL_NOT_FOUND", HttpStatus.BAD_REQUEST));
+        objectResponseEntity = new ResponseEntity(new RestErrorResponse(new Error(FILES_EXCEPTION_WHILE_RETRIEVING_FILE)), INTERNAL_SERVER_ERROR);
+
+        mockStatic(FileControllerUtils.class);
+        when(FileControllerUtils.handleFileDownload(any(Supplier.class))).thenReturn(objectResponseEntity);
+
+        when(overheadFileService.getProjectFileEntryContents(overHeadIdFailure)).thenReturn(serviceFailure(new Error("GENERAL_NOT_FOUND", HttpStatus.BAD_REQUEST)));
+
+        mockMvc.perform(get(OVERHEAD_BASE_URL + "/projectOverheadCalculationDocument?overheadId={overHeadIdFailure}", overHeadIdFailure))
                 .andExpect(status().is5xxServerError())
                 .andExpect(contentError(new Error(FILES_EXCEPTION_WHILE_RETRIEVING_FILE, INTERNAL_SERVER_ERROR)));
     }
