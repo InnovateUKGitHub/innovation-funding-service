@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.status.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
@@ -59,6 +60,11 @@ public class StatusServiceSecurityTest extends BaseServiceSecurityTest<StatusSer
 
         @Override
         public ServiceResult<ProjectStatusResource> getProjectStatusByProjectId(Long projectId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<ProjectStatusResource> getProjectStatusByProject(Project project) {
             return null;
         }
 
