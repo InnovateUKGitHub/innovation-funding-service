@@ -72,7 +72,7 @@ items:
             requests:
               memory: 500M
             limits:
-              memory: 2058M
+              memory: 2048M
           test: false
   triggers:
   - type: ConfigChange

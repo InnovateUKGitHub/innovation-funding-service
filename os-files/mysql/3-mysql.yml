@@ -36,6 +36,8 @@ items:
           resources:
             requests:
               memory: 500M
+            limits:
+              memory: 600M
         volumes:
           - emptyDir: {}
             name: mysql-tmp-storage

@@ -32,6 +32,8 @@ items:
           resources:
             requests:
               memory: 50M
+            limits:
+              memory: 60M
     test: false
     triggers:
     - type: ConfigChange
