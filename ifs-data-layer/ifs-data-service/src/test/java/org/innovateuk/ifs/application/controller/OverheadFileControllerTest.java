@@ -52,7 +52,7 @@ public class OverheadFileControllerTest extends BaseControllerMockMVCTest<Overhe
     @Mock
     private OverheadFileService overheadFileService;
 
-    private static final String OVERHEAD_BASE_URL = "/overheadcalculation";
+    public static final String OVERHEAD_BASE_URL = "/overheadcalculation";
 
     @Test
     public void getFileDetailsTest() throws Exception {
