@@ -77,7 +77,7 @@ task prepareDockerInput {
 
     doFirst {
         copy {
-            from '../docker/'
+            from "${project.projectDir}/docker/"
             into inputDir
             include 'Dockerfile-template'
             rename 'Dockerfile-template', 'Dockerfile'
