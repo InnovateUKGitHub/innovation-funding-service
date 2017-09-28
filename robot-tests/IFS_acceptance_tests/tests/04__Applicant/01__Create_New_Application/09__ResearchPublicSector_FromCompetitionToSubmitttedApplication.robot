@@ -38,14 +38,14 @@ Applicant Applies to Research leading Competition
 Applicant Applies to Public content leading Competition
     [Documentation]  IFS-1012
     [Tags]  Applicant  HappyPath
-    [Setup]  log in as a different user                   dave.adams@gmail.com  ${short_password}
+    [Setup]  log in as a different user                   becky.mason@gmail.com  ${short_password}
     Given logged in user applies to competition           ${openCompetitionPublicSector_name}
     When the user clicks the button/link                  link=Application details
     Then the user fills in the Application details        ${publicLeadApp}  Industrial research  ${tomorrowday}  ${month}  ${nextyear}
     And the user marks every section but one as complete  ${publicLeadApp}
     When the user navigates to Your-finances page         ${publicLeadApp}
     Then the user marks the finances as complete          ${publicLeadApp}
-    And collaborating is required to submit the application if Research participation is not 100pc  ${openCompetitionPublicSector_name}  ${publicLeadApp}  dave.adams@gmail.com
+    And collaborating is required to submit the application if Research participation is not 100pc  ${openCompetitionPublicSector_name}  ${publicLeadApp}  becky.mason@gmail.com
 
 *** Keywords ***
 Custom Suite Setup
