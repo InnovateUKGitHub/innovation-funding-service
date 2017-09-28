@@ -180,35 +180,63 @@ function tailorAppInstance() {
         then
             if [ -z "${bamboo_demo_ldap_password}" ]; then echo "Set bamboo_${TARGET}_ldap_password environment variable"; exit -1; fi
             sed -i.bak "s/<<LDAP-PASSWORD>>/${bamboo_demo_ldap_password}/g" os-files-tmp/shib/named-envs/*.yml
-            sed -i.bak "s/<<SHIBBOLETH-LDAP-PASSWORD>>/${bamboo_demo_ldap_password}/g" os-files-tmp/45-registration-svc.yml
         fi
         if [[ ${TARGET} == "sysint" ]]
         then
             if [ -z "${bamboo_sysint_ldap_password}" ]; then echo "Set bamboo_${TARGET}_ldap_password environment variable"; exit -1; fi
             sed -i.bak "s/<<LDAP-PASSWORD>>/${bamboo_sysint_ldap_password}/g" os-files-tmp/shib/named-envs/*.yml
-            sed -i.bak "s/<<SHIBBOLETH-LDAP-PASSWORD>>/${bamboo_sysint_ldap_password}/g" os-files-tmp/45-registration-svc.yml
         fi
         if [[ ${TARGET} == "perf" ]]
         then
             if [ -z "${bamboo_perf_ldap_password}" ]; then echo "Set bamboo_${TARGET}_ldap_password environment variable"; exit -1; fi
             sed -i.bak "s/<<LDAP-PASSWORD>>/${bamboo_perf_ldap_password}/g" os-files-tmp/shib/named-envs/*.yml
-            sed -i.bak "s/<<SHIBBOLETH-LDAP-PASSWORD>>/${bamboo_perf_ldap_password}/g" os-files-tmp/45-registration-svc.yml
         fi
         if [[ ${TARGET} == "uat" ]]
         then
             if [ -z "${bamboo_uat_ldap_password}" ]; then echo "Set bamboo_${TARGET}_ldap_password environment variable"; exit -1; fi
             sed -i.bak "s/<<LDAP-PASSWORD>>/${bamboo_uat_ldap_password}/g" os-files-tmp/shib/named-envs/*.yml
-            sed -i.bak "s/<<SHIBBOLETH-LDAP-PASSWORD>>/${bamboo_uat_ldap_password}/g" os-files-tmp/45-registration-svc.yml
         fi
         if [[ ${TARGET} == "production" ]]
         then
             if [ -z "${bamboo_production_ldap_password}" ]; then echo "Set bamboo_${TARGET}_ldap_password environment variable"; exit -1; fi
             sed -i.bak "s/<<LDAP-PASSWORD>>/${bamboo_production_ldap_password}/g" os-files-tmp/shib/named-envs/*.yml
+        fi
+    fi
+
+    ## TODO DW - when we remove the tech debt of having multiple files for the shib yml files per named environment,
+    ## we can do away with this more complex configuration block and that of the one above that this one mirrors
+    if $(isNamedEnvironment ${TARGET}); then
+
+        sed -i.bak "s#<<SHIBBOLETH_LDAP_PORT>>#389#g" os-files-tmp/45-registration-svc.yml
+        sed -i.bak "s#<<SHIBBOLETH_LDAP_BASE_DN>>#dc=int,dc=g2g3digital,dc=net#g" os-files-tmp/45-registration-svc.yml
+        sed -i.bak "s#<<SHIBBOLETH_LDAP_USER>>#cn=admin,dc=int,dc=g2g3digital,dc=net#g" os-files-tmp/45-registration-svc.yml
+
+        if [[ ${TARGET} == "demo" ]]
+        then
+            sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldap://oldap.${TARGET}.org.iuk.local:389#g" os-files-tmp/45-registration-svc.yml
+            sed -i.bak "s/<<SHIBBOLETH-LDAP-PASSWORD>>/${bamboo_demo_ldap_password}/g" os-files-tmp/45-registration-svc.yml
+        fi
+        if [[ ${TARGET} == "sysint" ]]
+        then
+            sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldap://oldap.${TARGET}.org.iuk.local:389#g" os-files-tmp/45-registration-svc.yml
+            sed -i.bak "s/<<SHIBBOLETH-LDAP-PASSWORD>>/${bamboo_sysint_ldap_password}/g" os-files-tmp/45-registration-svc.yml
+        fi
+        if [[ ${TARGET} == "perf" ]]
+        then
+            sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldap://oldap.${TARGET}.org.iuk.local:389#g" os-files-tmp/45-registration-svc.yml
+            sed -i.bak "s/<<SHIBBOLETH-LDAP-PASSWORD>>/${bamboo_perf_ldap_password}/g" os-files-tmp/45-registration-svc.yml
+        fi
+        if [[ ${TARGET} == "uat" ]]
+        then
+            sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldap://oldap.${TARGET}.org.iuk.local:389#g" os-files-tmp/45-registration-svc.yml
+            sed -i.bak "s/<<SHIBBOLETH-LDAP-PASSWORD>>/${bamboo_uat_ldap_password}/g" os-files-tmp/45-registration-svc.yml
+        fi
+        if [[ ${TARGET} == "production" ]]
+        then
+            sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldap://oldap.org.iuk.local:389#g" os-files-tmp/45-registration-svc.yml
             sed -i.bak "s/<<SHIBBOLETH-LDAP-PASSWORD>>/${bamboo_production_ldap_password}/g" os-files-tmp/45-registration-svc.yml
         fi
     else
-        ## TODO DW - when we remove the tech debt of having multiple files for the shib yml files per named environment,
-        ## we can do away with this more complex configuration
         sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldaps://ldap:389#g" os-files-tmp/45-registration-svc.yml
         sed -i.bak "s#<<SHIBBOLETH_LDAP_PORT>>#389#g" os-files-tmp/45-registration-svc.yml
         sed -i.bak "s#<<SHIBBOLETH_LDAP_BASE_DN>>#dc=nodomain#g" os-files-tmp/45-registration-svc.yml
