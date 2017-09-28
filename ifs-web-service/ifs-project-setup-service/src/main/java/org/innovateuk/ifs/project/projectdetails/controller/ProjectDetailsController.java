@@ -121,7 +121,8 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
                 partnerOrganisations, leadOrganisation, applicationResource, projectUsers, competitionResource,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()), projectDetailsCompleteAndAllFinanceContactsAssigned,
-                getProjectManager(projectResource.getId()).orElse(null), spendProfileGenerated, false));
+                getProjectManager(projectResource.getId()).orElse(null), spendProfileGenerated, false,
+                /*!statusAccessor.isGrantOfferLetterSent()*/ !statusAccessor.isGrantOfferLetterGenerated(), /*!statusAccessor.isGrantOfferLetterSent()*/ !statusAccessor.isGrantOfferLetterGenerated()));
 
         return "project/detail";
     }
@@ -147,7 +148,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
                 partnerOrganisations, leadOrganisation, applicationResource, projectUsers, competitionResource,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()), true,
-                getProjectManager(projectResource.getId()).orElse(null), spendProfileGenerated, true));
+                getProjectManager(projectResource.getId()).orElse(null), spendProfileGenerated, true, false, false));
 
         return "project/detail";
     }

@@ -9,6 +9,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
+import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsAddressForm;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsStartDateForm;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.*;
@@ -103,7 +104,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 build(1);
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectPartnerStatusResource().withIsLeadPartner(true).build()).
+                withProjectLeadStatus(newProjectPartnerStatusResource().withIsLeadPartner(true).withSpendProfileStatus(ProjectActivityStates.PENDING).withGrantOfferStatus(ProjectActivityStates.NOT_REQUIRED).build()).
                 build();
 
         when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
@@ -132,8 +133,10 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(null, model.getProjectManager());
         assertTrue(model.isProjectDetailsCompleteAndAllFinanceContactsAssigned());
         assertTrue(model.isUserLeadPartner());
-        assertFalse(model.isSpendProfileGenerated());
+        assertTrue(model.isSpendProfileGenerated());
         assertFalse(model.isReadOnly());
+        assertTrue(model.isProjectManagerEditable());
+        assertTrue(model.isAddressEditable());
     }
 
     @Test
@@ -262,6 +265,48 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/project/" + projectId + "/details"));
 
+    }
+
+    @Test
+    public void testProjectManagerAndAddressCannotBeChangedWhenGOLAlreadyGenerated() throws Exception {
+        Long projectId = 20L;
+
+        CompetitionResource competitionResource = newCompetitionResource().build();
+        ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
+        ProjectResource project = newProjectResource().withId(projectId).build();
+
+        OrganisationResource leadOrganisation = newOrganisationResource().build();
+
+        List<ProjectUserResource> projectUsers = newProjectUserResource().
+                withUser(loggedInUser.getId()).
+                withOrganisation(leadOrganisation.getId()).
+                withRoleName(PARTNER.getName()).
+                build(1);
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectPartnerStatusResource().withIsLeadPartner(true).withSpendProfileStatus(ProjectActivityStates.COMPLETE).build()).
+                build();
+
+        when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
+        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
+        when(organisationService.getOrganisationById(leadOrganisation.getId())).thenReturn(leadOrganisation);
+        when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
+        when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
+
+        when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
+
+        MvcResult result = mockMvc.perform(get("/project/{id}/details", projectId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/detail"))
+                .andExpect(model().attributeDoesNotExist("readOnlyView"))
+                .andReturn();
+
+        ProjectDetailsViewModel model = (ProjectDetailsViewModel) result.getModelAndView().getModel().get("model");
+        assertFalse(model.isProjectManagerEditable());
+        assertFalse(model.isAddressEditable());
     }
 
     @Test
