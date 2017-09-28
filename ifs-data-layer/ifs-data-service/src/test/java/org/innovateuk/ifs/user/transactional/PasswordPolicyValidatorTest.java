@@ -240,8 +240,8 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
     public void testValidatePasswordOrganisationConstraintIgnoresOrganisationMissingName() {
 
         User user = newUser().withId(13L).withFirstName("William").withLastName("Lo").build();
-        Organisation org1 = newOrganisation().withName(null).withId(123L).build();
-        Organisation org2 = newOrganisation().withName(null).withId(456L).build();
+        Organisation org1 = newOrganisation().withName().withId(123L).build();
+        Organisation org2 = newOrganisation().withName().withId(456L).build();
 
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
         when(organisationRepositoryMock.findByUsersId(user.getId())).thenReturn(asList(org1, org2));
