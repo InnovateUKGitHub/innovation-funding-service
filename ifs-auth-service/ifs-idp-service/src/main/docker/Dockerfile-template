@@ -6,14 +6,11 @@ ENV DEBIAN_FRONTEND=noninteractive \
   JAVAVER=8 \
   JAVA_KEYSTORE_PASSWORD="@java_keystore_password@" \
   LDAPURL="ldaps://ldap:8389" \
-  LDAPPORT="8389" \
   LDAPUSESTARTTLS=false \
   LDAPUSESSL=true \
   LDAPBASEDN="dc=nodomain" \
   LDAPBINDDN="cn=admin,dc=nodomain" \
   LDAPBINDDNCRED="default" \
-  LDAPPPOLICYDN="cn=PPolicy,ou=Policies" \
-  LDAPPPOLICY="true" \
   LDAPUSERFILTER="(&(mail={user})(!(employeeType=inactive)))" \
   LDAPRURL="%{idp.authn.LDAP.ldapURL}" \
   LDAPAUTHENTICATOR="anonSearchAuthenticator" \
