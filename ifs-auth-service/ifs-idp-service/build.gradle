@@ -46,7 +46,6 @@ task prepareDockerFileBase {
 }
 
 task buildDockerBaseImage(type: DockerBuildImage) {
-    dependsOn ':ifs-auth-service:ifs-registration-service:build'
     dependsOn prepareDockerFileBase
 
     tag = 'ifshibdev/idp-base:latest'
@@ -55,7 +54,6 @@ task buildDockerBaseImage(type: DockerBuildImage) {
 
 task prepareDockerFile {
     dependsOn ':ifs-auth-service:prepareSecrets'
-    dependsOn ':ifs-auth-service:ifs-registration-service:build'
 
     def String idpProxyKey = file(idpProxyKeyFile).text.trim().replace('\n', '\\n')
     def String idpProxyCertificate = file(idpProxyCertificateFile).text.trim().replace('\n', '\\n')

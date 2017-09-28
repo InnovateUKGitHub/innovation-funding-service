@@ -51,6 +51,26 @@ services:
     networks:
       - ifs
 
+  registration-svc:
+    image: innovateuk/registration-service
+    healthcheck:
+      test: ["CMD", "curl", "-k", "-f", "http://localhost:8080/monitoring/health"]
+      interval: 15s
+      timeout: 8s
+#      ports:
+#        - "9443:9443"
+#      environment:
+#        - "SPHOST=ifs.local-dev"
+#        - "IDPHOST=auth.local-dev:9443"
+#        - "HTTPSPORT=9443"
+#        - "HTTPPORT=9080"
+    networks:
+      - ifs
+#        ifs:
+#          aliases:
+#            - auth.local-dev
+#            - iuk-auth-localdev
+
   application-svc:
     image: innovateuk/application-service
     healthcheck:

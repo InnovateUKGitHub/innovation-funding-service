@@ -1,4 +1,4 @@
-FROM ifshibdev/idp-base:1.1.11
+FROM ifshibdev/idp-base:1.1.15
 
 ENV DEBIAN_FRONTEND=noninteractive \
   HTTPPORT=9080 \
@@ -39,9 +39,6 @@ ENV DEBIAN_FRONTEND=noninteractive \
   JAVA_OPTS="-Xms384M -Xmx768M" \
   MEMCACHE_ENDPOINT=
 
-ENV JAVA_HOME=/usr/lib/jvm/java-${JAVAVER}-oracle
-ENV JRE_HOME=${JAVA_HOME}/jre
-
 # packages and stuff \
 COPY idp/* /idp/
 # Apache layer
@@ -67,7 +64,6 @@ RUN mv /idp/idpproxy.conf /etc/apache2/sites-available/ && \
 # directory for certificates, added in entrypoint \
   mkdir /etc/tomcat8/certs && \
   mv /idp/server.xml /etc/tomcat8/ && \
-  mv /idp/ifs-registration-service-@version@.war /var/lib/tomcat8/webapps/shibboleth-api.war && \
   sed -i -e 's#%{idp.signing.key}#/opt/shibboleth-idp/credentials/idp-signing.key#g' \
          -e 's#%{idp.signing.cert}#/opt/shibboleth-idp/credentials/idp-signing.crt#g' \
          -e 's#%{idp.encryption.key}#/opt/shibboleth-idp/credentials/idp-encryption.key#g' \
@@ -78,7 +74,6 @@ RUN mv /idp/idpproxy.conf /etc/apache2/sites-available/ && \
   mv /idp/*.properties . && \
   mv /idp/*.xml . && \
   mv /idp/sealer.* /opt/shibboleth-idp/credentials/ && \
-  mv /opt/shibboleth-idp/war/idp.war /var/lib/tomcat8/webapps/ && \
   mkdir /var/log/shibboleth && rm -rf /opt/shibboleth-idp/logs && ln -s /var/log/shibboleth /opt/shibboleth-idp/logs && \
   mkdir -p /var/run/tomcat8 && \
   chown -R www-data:0 /etc/shibboleth /etc/apache2 /opt/shibboleth-idp /var/run/tomcat8 /usr/local/bin \

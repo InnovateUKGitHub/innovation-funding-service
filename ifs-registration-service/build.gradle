@@ -73,6 +73,8 @@ task getNewRelicAgent {
 task prepareDockerInput {
     dependsOn getNewRelicAgent
     dependsOn build
+    dependsOn ':ifs-auth-service:prepareLDAPEncryptionSecrets'
+
     def inputDir = project.file("$project.buildDir/docker")
 
     doFirst {
@@ -96,6 +98,10 @@ task prepareDockerInput {
         copy {
             from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar")
             from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml")
+            into inputDir
+        }
+        copy {
+            from file("${rootProject.projectDir}/ifs-auth-service/ifs-ldap-service/src/main/docker/certs/ldap-encryption.crt")
             into inputDir
         }
     }
