@@ -28,10 +28,10 @@ services:
     ports:
       - "9443:9443"
     environment:
-      - "SPHOST=ifs.local-dev"
-      - "IDPHOST=auth.local-dev:9443"
-      - "HTTPSPORT=9443"
-      - "HTTPPORT=9080"
+      - "SP_DOMAIN=ifs.local-dev"
+      - "IDP_DOMAIN=auth.local-dev:9443"
+      - "HTTPS_PORT=9443"
+      - "HTTP_PORT=9080"
     networks:
       ifs:
         aliases:

@@ -11,9 +11,8 @@
     <Connector
            protocol="org.apache.coyote.http11.Http11AprProtocol"
            port="8009"
-           proxyName="idp"
-           proxyPort="443"
-           redirectPort="8443"
+           proxyName="${idp.domain}"
+           proxyPort="${idp.port}"
            scheme="https" secure="true" SSLEnabled="true"
            SSLCertificateFile="/etc/tomcat8/certs/server.crt"
            SSLCertificateKeyFile="/etc/tomcat8/certs/server.key"
