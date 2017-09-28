@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.builder.ApplicationBuilder;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder;
 import org.innovateuk.ifs.commons.error.CommonErrors;
@@ -294,13 +295,20 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void findUnsuccessfulApplicationsWhenNoneFound() throws Exception {
 
         Long competitionId = 1L;
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateIn(eq(competitionId), any())).thenReturn(emptyList());
 
-        ServiceResult<List<ApplicationResource>> result = service.findUnsuccessfulApplications(competitionId);
+        Page<Application> pagedResult = mock(Page.class);
+        when(pagedResult.getContent()).thenReturn(emptyList());
+        when(pagedResult.getTotalElements()).thenReturn(0L);
+        when(pagedResult.getTotalPages()).thenReturn(0);
+        when(pagedResult.getNumber()).thenReturn(0);
+        when(pagedResult.getSize()).thenReturn(0);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateIn(eq(competitionId), any(), any())).thenReturn(pagedResult);
+
+        ServiceResult<ApplicationPageResource> result = service.findUnsuccessfulApplications(competitionId, 0, 20, "id");
         assertTrue(result.isSuccess());
 
-        List<ApplicationResource> unsuccessfulApplications = result.getSuccessObjectOrThrowException();
-        assertTrue(unsuccessfulApplications.isEmpty());
+        ApplicationPageResource unsuccessfulApplicationsPage = result.getSuccessObjectOrThrowException();
+        assertTrue(unsuccessfulApplicationsPage.getContent().isEmpty());
 
     }
 
@@ -337,19 +345,26 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         ApplicationResource applicationResource1 = ApplicationResourceBuilder.newApplicationResource().build();
         ApplicationResource applicationResource2 = ApplicationResourceBuilder.newApplicationResource().build();
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateIn(eq(competitionId), any())).thenReturn(unsuccessfulApplications);
+        Page<Application> pagedResult = mock(Page.class);
+        when(pagedResult.getContent()).thenReturn(unsuccessfulApplications);
+        when(pagedResult.getTotalElements()).thenReturn(2L);
+        when(pagedResult.getTotalPages()).thenReturn(1);
+        when(pagedResult.getNumber()).thenReturn(0);
+        when(pagedResult.getSize()).thenReturn(2);
+
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateIn(eq(competitionId), any(), any())).thenReturn(pagedResult);
         when(applicationMapperMock.mapToResource(application1)).thenReturn(applicationResource1);
         when(applicationMapperMock.mapToResource(application2)).thenReturn(applicationResource2);
         when(organisationRepositoryMock.findOne(leadOrganisationId)).thenReturn(leadOrganisation);
 
-        ServiceResult<List<ApplicationResource>> result = service.findUnsuccessfulApplications(competitionId);
+        ServiceResult<ApplicationPageResource> result = service.findUnsuccessfulApplications(competitionId, 0, 20, "id");
         assertTrue(result.isSuccess());
 
-        List<ApplicationResource> unsuccessfulApplicationsResult = result.getSuccessObjectOrThrowException();
-        assertTrue(unsuccessfulApplicationsResult.size() == 2);
-        assertEquals(applicationResource1, unsuccessfulApplicationsResult.get(0));
-        assertEquals(applicationResource2, unsuccessfulApplicationsResult.get(1));
-        assertEquals(leadOrganisationName, unsuccessfulApplicationsResult.get(0).getLeadOrganisationName());
+        ApplicationPageResource unsuccessfulApplicationsPage = result.getSuccessObjectOrThrowException();
+        assertTrue(unsuccessfulApplicationsPage.getSize() == 2);
+        assertEquals(applicationResource1, unsuccessfulApplicationsPage.getContent().get(0));
+        assertEquals(applicationResource2, unsuccessfulApplicationsPage.getContent().get(1));
+        assertEquals(leadOrganisationName, unsuccessfulApplicationsPage.getContent().get(0).getLeadOrganisationName());
     }
 
     @Test

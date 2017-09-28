@@ -39,6 +39,7 @@
                 </th:block>
             </label>
             <input class="form-control"
+                   id="firstName"
                    th:classappend="${#fields.hasErrors('firstName')} ? 'form-control-error'"
                    type="text"
                    th:field="*{firstName}"
@@ -80,6 +81,7 @@
                 </th:block>
             </label>
             <input class="form-control"
+                   id="phoneNumber"
                    th:classappend="${#fields.hasErrors('phoneNumber')} ? 'form-control-error'"
                    type="tel"
                    th:field="*{phoneNumber}"
@@ -111,6 +113,7 @@
 
             <th:block th:unless="${invitee}">
                 <input class="form-control"
+                       id="email"
                        th:classappend="${#fields.hasErrors('email')} ? 'form-control-error'"
                        type="email"
                        th:field="*{email}"

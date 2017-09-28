@@ -81,7 +81,7 @@ function startPybot() {
     -v DOWNLOAD_FOLDER:download_files \
     -v BROWSER=chrome \
     -v SAUCELABS_RUN:0 \
-    -v REMOTE_URL:'http://hub:4444/wd/hub' \
+    -v REMOTE_URL:'http://chrome:4444/wd/hub' \
     $includeHappyPath \
     $includeBespokeTags \
     $excludeBespokeTags \
