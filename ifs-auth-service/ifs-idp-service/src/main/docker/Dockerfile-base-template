@@ -30,6 +30,7 @@ RUN apt-get update --fix-missing && \
   dpkg -i --force-depends /idp/default-jre-headless-dummy_1.0_all.deb && rm -f /idp/default-jre-headless-dummy_1.0_all.deb && \
 # tomcat for IDP and Regapi. Permission changes here due to https://github.com/docker-library/tomcat/issues/35#issuecomment-238014866 \
   apt-get -y install tomcat8 libtcnative-1 tomcat8-common libtomcat8-java libecj-java ucf && \
+  rm -Rf /var/lib/tomcat8/webapps/ROOT/ && \
   chown -R www-data:0 /var/cache/tomcat8 && \
   chmod -R u=rwX,g=rwX,o= /var/cache/tomcat8 && \
 # jstl lib for IDP status page
